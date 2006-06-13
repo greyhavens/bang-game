@@ -2,10 +2,10 @@
 
 <model>
 
-  <triMesh name="polySurface32" translation="0.00817367, -14.2371, -1.75068" rotation="0.0, 0.0, 0.0, 1.0" scale="40.4242, 41.1942, 48.894" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
+  <triMesh name="polySurface32" translation="0.0437906, -29.0353, -1.41571" rotation="0.0, 0.0, 0.0, 1.0" scale="48.8122, 41.1942, 58.2181" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
   </triMesh>
 
-  <triMesh name="leather_hide" translation="0.00817367, -14.2371, -1.75068" rotation="0.0, 0.0, 0.0, 1.0" scale="40.4242, 41.1942, 48.894" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
+  <triMesh name="leather_hide" translation="0.0437906, -29.0353, -1.41571" rotation="0.0, 0.0, 0.0, 1.0" scale="48.8122, 41.1942, 58.2181" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
     <vertex location="-0.952333, -2.62317, 3.05697" normal="-0.350312, -0.708893, 0.61217" tcoords="0.385653, 0.351492"/>
     <vertex location="-0.889737, -2.36005, 0.998484" normal="-0.698484, -0.706872, -0.111593" tcoords="0.385653, 0.041001"/>
     <vertex location="-0.52777, -2.38922, 1.28366" normal="-0.00241203, -0.991944, -0.126658" tcoords="0.425647, 0.084015"/>
@@ -53,7 +53,7 @@
     <vertex location="0.952332, -2.62317, 3.05697" normal="0.310084, -0.933138, 0.181935" tcoords="0.377876, 0.353629"/>
   </triMesh>
 
-  <triMesh name="leather_hanger" translation="0.00817367, -14.2371, -1.75068" rotation="0.0, 0.0, 0.0, 1.0" scale="40.4242, 41.1942, 48.894" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
+  <triMesh name="leather_hanger" translation="0.0437906, -29.0353, -1.41571" rotation="0.0, 0.0, 0.0, 1.0" scale="48.8122, 41.1942, 58.2181" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
     <vertex location="-1.02454, -2.61733, 2.98055" normal="0.0, 0.600339, -0.799745" tcoords="0.814559, 0.637964"/>
     <vertex location="-1.02735, -2.50321, 3.06622" normal="0.0, 0.600339, -0.799745" tcoords="0.846945, 0.637964"/>
     <vertex location="1.00859, -2.61733, 2.98055" normal="0.0, 0.600339, -0.799745" tcoords="0.814559, 0.999101"/>
@@ -80,7 +80,7 @@
     <vertex location="1.01307, -2.65264, 3.11938" normal="0.0, 0.335221, 0.942139" tcoords="0.622284, 0.645202"/>
   </triMesh>
 
-  <triMesh name="door_frame" translation="0.00817367, -14.2371, -1.75068" rotation="0.0, 0.0, 0.0, 1.0" scale="40.4242, 41.1942, 48.894" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
+  <triMesh name="door_frame" translation="0.0437906, -29.0353, -1.41571" rotation="0.0, 0.0, 0.0, 1.0" scale="48.8122, 41.1942, 58.2181" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
     <vertex location="-1.39788, -2.94779, 3.27598" normal="0.0, 0.599175, -0.800618" tcoords="0.814559, 0.637964"/>
     <vertex location="-1.40167, -2.83333, 3.36165" normal="0.0, 0.599175, -0.800618" tcoords="0.846945, 0.637964"/>
     <vertex location="1.38178, -2.94779, 3.27598" normal="0.0, 0.599175, -0.800618" tcoords="0.814559, 0.999101"/>
@@ -143,7 +143,7 @@
     <vertex location="-1.38294, -2.87838, 3.36507" normal="-0.675127, 0.735855, 0.0521697" tcoords="0.952845, 0.999101"/>
   </triMesh>
 
-  <triMesh name="ropes" translation="0.00817367, -14.2371, -1.75068" rotation="0.0, 0.0, 0.0, 1.0" scale="40.4242, 41.1942, 48.894" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
+  <triMesh name="ropes" translation="0.0437906, -29.0353, -1.41571" rotation="0.0, 0.0, 0.0, 1.0" scale="48.8122, 41.1942, 58.2181" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
     <vertex location="-0.800537, -2.59971, 3.0932" normal="0.0, -0.994728, -0.102549" tcoords="0.486215, 0.563624"/>
     <vertex location="-0.671141, -2.62737, 3.36154" normal="0.0, -0.994728, -0.102549" tcoords="0.528619, 0.638706"/>
     <vertex location="-0.807388, -2.62737, 3.36154" normal="0.0, -0.994728, -0.102549" tcoords="0.486215, 0.638706"/>
@@ -158,7 +158,7 @@
     <vertex location="0.802047, -2.62737, 3.36154" normal="0.0, -0.994728, -0.102549" tcoords="0.528619, 0.638706"/>
   </triMesh>
 
-  <triMesh name="sign" translation="0.00817367, -14.2371, -1.75068" rotation="0.0, 0.0, 0.0, 1.0" scale="40.4242, 41.1942, 48.894" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
+  <triMesh name="sign" translation="0.0437906, -29.0353, -1.41571" rotation="0.0, 0.0, 0.0, 1.0" scale="48.8122, 41.1942, 58.2181" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
     <vertex location="-1.678, -3.73179, 4.36488" normal="0.0, -0.991171, -0.132591" tcoords="0.145327, 0.374096"/>
     <vertex location="-1.74819, -3.91437, 5.72969" normal="0.0, -0.991171, -0.132591" tcoords="0.145327, 0.543904"/>
     <vertex location="-3.21837, -3.73179, 4.36488" normal="0.0, -0.991171, -0.132591" tcoords="0.006509, 0.374096"/>
@@ -245,7 +245,7 @@
     <vertex location="-3.32251, -3.4532, 5.42057" normal="-0.192672, -5.47107e-007, 0.981263" tcoords="0.100456, 0.648678"/>
   </triMesh>
 
-  <triMesh name="roof_frames" translation="0.00817367, -14.2371, -1.75068" rotation="0.0, 0.0, 0.0, 1.0" scale="40.4242, 41.1942, 48.894" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
+  <triMesh name="roof_frames" translation="0.0437906, -29.0353, -1.41571" rotation="0.0, 0.0, 0.0, 1.0" scale="48.8122, 41.1942, 58.2181" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
     <vertex location="0.0, -3.59777, 6.79586" normal="0.0, -0.994787, -0.101975" tcoords="0.590549, 0.763266"/>
     <vertex location="4.2375, -3.21938, 3.66019" normal="0.00456462, -0.993853, -0.110615" tcoords="0.008603, 0.763266"/>
     <vertex location="0.0, -3.71356, 7.92542" normal="0.0, -0.993863, -0.110616" tcoords="0.590549, 0.8688"/>
@@ -368,7 +368,7 @@
     <vertex location="-4.36488, 5.503, 4.61973" normal="-0.991304, 0.0, -0.131595" tcoords="0.158847, 0.804468"/>
   </triMesh>
 
-  <triMesh name="slats" translation="0.00817367, -14.2371, -1.75068" rotation="0.0, 0.0, 0.0, 1.0" scale="40.4242, 41.1942, 48.894" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
+  <triMesh name="slats" translation="0.0437906, -29.0353, -1.41571" rotation="0.0, 0.0, 0.0, 1.0" scale="48.8122, 41.1942, 58.2181" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
     <vertex location="3.58775, 5.26823, 4.57111" normal="0.0, 0.421991, -0.9066" tcoords="0.599975, 0.630353"/>
     <vertex location="3.57433, 5.00438, 4.4483" normal="0.0, 0.421991, -0.9066" tcoords="0.599975, 0.603214"/>
     <vertex location="-3.64028, 5.26823, 4.57111" normal="0.0, 0.421991, -0.9066" tcoords="0.997788, 0.630353"/>
@@ -695,7 +695,7 @@
     <vertex location="-1.21788, -4.64682, 7.07386" normal="0.279059, 0.0780284, 0.957099" tcoords="0.997788, 0.603214"/>
   </triMesh>
 
-  <triMesh name="wood_beam_06" translation="0.00817367, -10.572, -1.75068" rotation="0.0, 0.0, 0.0, 1.0" scale="40.4242, 41.1942, 48.894" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
+  <triMesh name="wood_beam_06" translation="0.0437906, -25.3701, -1.41571" rotation="0.0, 0.0, 0.0, 1.0" scale="48.8122, 41.1942, 58.2181" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
     <vertex location="3.43625, -2.19389, -0.0356059" normal="0.654889, 0.755541, -0.0166783" tcoords="0.00261, 0.601839"/>
     <vertex location="3.14027, -2.19389, -0.0356059" normal="-0.32387, 0.938774, 0.11752" tcoords="0.00261, 0.567574"/>
     <vertex location="4.36391, -2.8382, 7.20235" normal="0.327444, 0.943934, 0.0420591" tcoords="0.481024, 0.60184"/>
@@ -1418,7 +1418,7 @@
     <vertex location="-3.98319, 1.20121, 4.45691" normal="-0.325268, 0.943806, -0.0585682" tcoords="0.481024, 0.60184"/>
   </triMesh>
 
-  <triMesh name="main_frame" translation="0.00817367, -14.2371, -1.75068" rotation="0.0, 0.0, 0.0, 1.0" scale="40.4242, 41.1942, 48.894" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
+  <triMesh name="main_frame" translation="0.0437906, -29.0353, -1.41571" rotation="0.0, 0.0, 0.0, 1.0" scale="48.8122, 41.1942, 58.2181" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_saloon.png" transparent="false">
     <vertex location="-3.64762, -3.00937, 4.57992" normal="-3.97945e-007, -0.993907, -0.110222" tcoords="0.595618, 0.637758"/>
     <vertex location="-1.30575, -2.87337, 3.35357" normal="-3.63981e-007, -0.993907, -0.110222" tcoords="0.409577, 0.863403"/>
     <vertex location="0.0, -3.00937, 4.57992" normal="0.0, -0.993907, -0.110222" tcoords="0.595617, 0.996984"/>

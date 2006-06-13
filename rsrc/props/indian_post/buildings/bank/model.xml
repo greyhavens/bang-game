@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="bank" translation="-37.0508, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="28.341, 28.341, 28.341" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_bank.png" transparent="false">
+  <triMesh name="bank" translation="-63.9048, -17.3981, -9.16882" rotation="0.0, 0.0, 0.0, 1.0" scale="29.9761, 31.1752, 32.5922" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="indian_bank.png" transparent="false">
     <vertex location="-5.60285, 1.71734, 11.7249" normal="0.125035, 0.281545, 0.951367" tcoords="0.996607, 0.757089"/>
     <vertex location="-5.6403, 0.00286115, 11.9231" normal="0.133887, -0.000404829, 0.990996" tcoords="0.996607, 0.641743"/>
     <vertex location="-0.459209, 1.71734, 11.0368" normal="-0.020552, 0.240046, 0.970544" tcoords="0.604536, 0.757089"/>
