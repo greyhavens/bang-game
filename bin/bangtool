@@ -25,11 +25,16 @@ fi
 
 # set up our java arguments
 JAVA_ARGS="-server -mx$TOOL_MEMORY \
-    -XX:+UseMembar \
     -Dno_unpack_resources=true \
     -Dbang.home=$BANG_HOME \
     -Dresource_dir=$BANG_HOME/rsrc \
     -Drsrc_cache_dir=/tmp"
+
+# Some temporary business for multiprocessor FreeBSD machines
+NEEDS_MEMBAR=`$JAVA_VM -fullversion 2>&1 | grep diablo`
+if [ ! -z "$NEEDS_MEMBAR" ]; then
+     JAVA_ARGS="$JAVA_ARGS -XX:+UseMembar"
+fi
 
 # add all necessary JAR files and $BANG_HOME to the CLASSPATH
 CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"

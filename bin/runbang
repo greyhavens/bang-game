@@ -34,7 +34,6 @@ fi
 
 CLASS=com.threerings.bang.server.BangServer
 JAVA_ARGS="-server -mx$SERVER_MEMORY \
-    -XX:+UseMembar \
     -Dbang.home=$BANG_HOME \
     -Dresource_dir=$BANG_HOME/rsrc \
     -Drsrc_cache_dir=/tmp -Dlog_level=$LOGLEVEL"
@@ -48,6 +47,13 @@ JAVA_VM="$JAVA_HOME/bin/java"
 if [ ! -e $JAVA_VM ]; then
     echo "$0: Cannot find JVM in $JAVA_HOME. Exiting."
     exit 255
+fi
+
+# Some temporary business for multiprocessor FreeBSD machines
+NEEDS_MEMBAR=`$JAVA_VM -fullversion 2>&1 | grep diablo`
+if [ ! -z "$NEEDS_MEMBAR" ]; then
+     JAVA_ARGS="$JAVA_ARGS -XX:+UseMembar"
+     export ANT_OPTS="-XX:+UseMembar"
 fi
 
 # Start with the standard Java classes
@@ -74,7 +80,6 @@ touch $LOGFILE
 
 # Reload the board database from the source files
 cd $BANG_HOME
-export ANT_OPTS="-XX:+UseMembar"
 echo "Rebuilding board database:" >>$LOGFILE
 $TOOLS_HOME/bin/ant boards >>$LOGFILE 2>&1
 
