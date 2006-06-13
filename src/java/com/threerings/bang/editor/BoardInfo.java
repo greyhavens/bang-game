@@ -59,14 +59,14 @@ public class BoardInfo extends JPanel
         JCheckBox box;
 
         // prop visibility combo box
-        JComboBox props = new JComboBox();
-        props.addItem(new ScenarioLabel(null));
+        _props = new JComboBox();
+        _props.addItem(new ScenarioLabel(null));
 
         for (int ii = 0; ii < scids.length; ii++) {
             String sname = gmsgs.get("m.scenario_" + scids[ii]);
             spanel.add(box = new JCheckBox(sname));
             _sboxes.put(scids[ii], box);
-            props.addItem(new ScenarioLabel(scids[ii]));
+            _props.addItem(new ScenarioLabel(scids[ii]));
         }
 
         // add a selection for the tutorial scenario
@@ -85,8 +85,8 @@ public class BoardInfo extends JPanel
         // create the prop visibility panel
         JPanel ppanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
         ppanel.add(new JLabel(_msgs.get("m.props")), HGroupLayout.FIXED);
-        ppanel.add(props);
-        props.addItemListener(this);
+        ppanel.add(_props);
+        _props.addItemListener(this);
         add(ppanel);
     }
 
@@ -127,13 +127,22 @@ public class BoardInfo extends JPanel
     {
         board.name = _name.getText();
         board.players = _players;
+        ArrayList<String> scenids = getSelectedScenarios();
+        board.setScenarios(scenids.toArray(new String[scenids.size()]));
+    }
+
+    /**
+     * Get an ArrayList of selected scenario ids.
+     */
+    public ArrayList<String> getSelectedScenarios ()
+    {
         ArrayList<String> scenids = new ArrayList<String>();
         for (String scid : _sboxes.keySet()) {
             if (_sboxes.get(scid).isSelected()) {
                 scenids.add(scid);
             }
         }
-        board.setScenarios(scenids.toArray(new String[scenids.size()]));
+        return scenids;
     }
 
     /**
@@ -148,11 +157,19 @@ public class BoardInfo extends JPanel
         }
     }
 
+    /**
+     * Get the currently selected prop id.
+     */
+    public String getPropId ()
+    {
+        return ((ScenarioLabel)_props.getSelectedItem()).id;
+    }
+
     // inherited from iterface ItemListener
     public void itemStateChanged (ItemEvent ie)
     {
         ScenarioLabel sl = (ScenarioLabel)ie.getItem();
-        ((EditorController)_panel.getController()).toggleProps(sl.id);
+        ((EditorController)_panel.getController()).setViewingProps(sl.id);
     }
     
     protected class ScenarioLabel {
@@ -181,6 +198,7 @@ public class BoardInfo extends JPanel
 
     protected JTextField _name;
     protected JLabel _pcount;
+    protected JComboBox _props;
     protected int _players;
 
     protected EditorPanel _panel;

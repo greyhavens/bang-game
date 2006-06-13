@@ -48,9 +48,11 @@ import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.server.scenario.ScenarioFactory;
 import com.threerings.bang.game.util.ScenarioUtil;
+import com.threerings.bang.game.util.ArrayDiffUtil;
 import com.threerings.bang.server.persist.BoardRecord;
 
 import static com.threerings.bang.Log.log;
+import com.threerings.bang.game.data.ScenarioCodes;
 
 /**
  * Handles the logic and flow for the Bang! board editor.
@@ -464,14 +466,40 @@ public class EditorController extends GameController
      * the {@link #GENERATE_SHADOWS} command. */
     public void handleGenerateShadows (Object source)
     {
-        _panel.view.getTerrainNode().generateShadows(
-            new TerrainNode.ProgressListener() {
-            public void update (float complete) {
-                _ctx.displayStatus(_msgs.get("m.generating",
-                    Integer.toString((int)(complete*100))), true);
+        byte[] shadows = _bangobj.board.getShadows();
+        ArrayList<String> scenids = _panel.info.getSelectedScenarios();
+        for (int ii = -1, size = scenids.size(); ii < size; ii++) {
+            String scenid = (ii > -1 ? scenids.get(ii) : null);
+            String name;
+            if (ScenarioCodes.TUTORIAL.equals(scenid)) {
+                continue;
             }
-        });
+            toggleProps(scenid);
+            byte[] tmpShadows;
+            if (scenid == null) {
+                tmpShadows = shadows;
+                name = "m.scenario_oa";
+            } else {
+                tmpShadows = new byte[shadows.length];
+                name = "m.scenario_" + scenid;
+            }
+            final String sname = name;
+            _panel.view.getTerrainNode().generateShadows(tmpShadows,
+                new TerrainNode.ProgressListener() {
+                public void update (float complete) {
+                    _ctx.displayStatus(_msgs.get("m.generating",
+                            _ctx.xlate("game", sname),
+                        Integer.toString((int)(complete*100))), true);
+                }
+            });
+            if (scenid != null) {
+                _bangobj.board.addShadowPatch(scenid,
+                        ArrayDiffUtil.createPatch(shadows, tmpShadows));
+            }
+        }
+        
         _ctx.displayStatus(_msgs.get("m.generated"));
+        toggleProps(_panel.info.getPropId());
         _panel.view.getTerrainNode().refreshShadows();
     }
     
@@ -488,6 +516,18 @@ public class EditorController extends GameController
     public void handleRecenterCamera (Object source)
     {
         _panel.tools.cameraDolly.recenter();
+    }
+
+    /**
+     * Called by BoardInfo to change which scneario is being viewed.
+     */
+    public void setViewingProps (String id)
+    {
+        _bangobj.board.applyShadowPatch(_viewScenId);
+        _viewScenId = id;
+        toggleProps(id);
+        _bangobj.board.applyShadowPatch(id);
+        _panel.view.getTerrainNode().refreshShadows();
     }
 
     /** 
@@ -847,6 +887,9 @@ public class EditorController extends GameController
 
     /** Store pieces that are currently hidden from view. */
     protected ArrayList<Piece> _hiddenPieces = new ArrayList<Piece>();
+
+    /** The scenario id of the props/shadows currently being viewed. */
+    protected String _viewScenId = null;
     
     /** The maximum number of edits to keep on the undo stack. */
     protected static final int UNDO_STACK_MAXIMUM = 20;

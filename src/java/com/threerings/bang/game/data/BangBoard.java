@@ -6,6 +6,7 @@ package com.threerings.bang.game.data;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -20,6 +21,7 @@ import com.samskivert.util.TermUtil;
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.SimpleStreamableObject;
 
+import com.threerings.util.StreamableHashMap;
 import com.threerings.media.util.AStarPathUtil;
 
 import com.threerings.bang.data.TerrainConfig;
@@ -33,6 +35,7 @@ import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Train;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
+import com.threerings.bang.game.util.ArrayDiffUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -79,6 +82,7 @@ public class BangBoard extends SimpleStreamableObject
         _terrain = new byte[_hfwidth * _hfheight];
         fillTerrain((byte)2); // dirt!
         _shadows = new byte[_hfwidth * _hfheight];
+        _patchMap = new StreamableHashMap<String, byte[]>();
         fillShadows(0);
         _shadowIntensity = 1f;
 
@@ -276,6 +280,21 @@ public class BangBoard extends SimpleStreamableObject
     public byte[] getShadows ()
     {
         return _shadows;
+    }
+
+    /** Adds a shadow patch associated to the id */
+    public void addShadowPatch (String id, byte[] patch)
+    {
+        _patchMap.put(id, patch);
+    }
+
+    /** Applies the specified diff to the shadows. */
+    public void applyShadowPatch (String id)
+    {
+        byte[] patch = _patchMap.get(id);
+        if (patch != null) {
+            ArrayDiffUtil.applyPatch(_shadows, patch);
+        }
     }
 
     /** Returns the intensity of the shadows on the board. */
@@ -1288,6 +1307,9 @@ public class BangBoard extends SimpleStreamableObject
     
     /** The density of the board fog. */
     protected float _fogDensity;
+
+    /** The shadow patches for different prop configurations. */
+    protected StreamableHashMap<String, byte[]> _patchMap;
     
     /** The dimensions of the heightfield and terrain arrays. */
     protected transient int _hfwidth, _hfheight;

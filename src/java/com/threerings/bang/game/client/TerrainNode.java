@@ -567,12 +567,12 @@ public class TerrainNode extends Node
     }
     
     /**
-     * Populates the board's shadow map by finding the height of the shadow
+     * Populates the a shadow map by finding the height of the shadow
      * volume above each heightfield vertex.
      *
      * @param listener a listener to notify periodically with progress updates
      */
-    public void generateShadows (ProgressListener listener)
+    public void generateShadows (byte[] shadows, ProgressListener listener)
     {
         int hfwidth = _board.getHeightfieldWidth(),
             hfheight = _board.getHeightfieldHeight();
@@ -587,7 +587,6 @@ public class TerrainNode extends Node
         updateGeometricState(0, true);
         
         // generate the shadow buffer
-        byte[] shadows = _board.getShadows();
         float azimuth = _board.getLightAzimuth(0),
             elevation = _board.getLightElevation(0),
             hstep = _elevationScale, theight,
@@ -625,7 +624,8 @@ public class TerrainNode extends Node
                     middle = (lower + upper) / 2;
                 }
                 
-                _board.setShadowValue(x, y, Math.max(sheight, middle));
+                shadows[y*hfwidth + x] = (byte)
+                    (Math.max(sheight, middle) - 128);
             }
         }
     }
