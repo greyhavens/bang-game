@@ -35,12 +35,14 @@ import com.jmex.bui.util.Point;
 
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.Interval;
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
+
+import com.threerings.util.MessageBundle;
+import com.threerings.util.StreamablePoint;
+
 import com.threerings.media.util.AStarPathUtil;
 import com.threerings.media.util.MathUtil;
-import com.threerings.util.MessageBundle;
-import com.threerings.util.RandomUtil;
-import com.threerings.util.StreamablePoint;
 
 import com.threerings.jme.camera.CameraHandler;
 import com.threerings.jme.camera.CameraPath;

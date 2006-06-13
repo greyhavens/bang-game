@@ -4,8 +4,7 @@
 package com.threerings.bang.game.server.ai;
 
 import com.samskivert.util.ArrayUtil;
-
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.UnitConfig;
 

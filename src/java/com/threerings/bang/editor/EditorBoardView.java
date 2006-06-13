@@ -32,14 +32,14 @@ import com.jmex.terrain.util.FaultFractalHeightMap;
 import com.jmex.terrain.util.MidPointHeightMap;
 import com.jmex.terrain.util.ParticleDepositionHeightMap;
 
+import com.samskivert.util.RandomUtil;
+
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.jme.sprite.Sprite;
-
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.game.client.BoardView;

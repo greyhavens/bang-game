@@ -21,8 +21,8 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.text.LengthLimitedDocument;
 
+import com.samskivert.util.RandomUtil;
 import com.threerings.util.MessageBundle;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.bui.StatusLabel;

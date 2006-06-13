@@ -5,7 +5,7 @@ package com.threerings.bang.game.data;
 
 import java.util.HashSet;
 
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.parlor.game.data.GameAI;
 

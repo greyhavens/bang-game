@@ -29,12 +29,12 @@ import com.jme.util.geom.BufferUtils;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
 
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
 import com.threerings.jme.sprite.PathUtil;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.game.client.effect.ParticlePool;

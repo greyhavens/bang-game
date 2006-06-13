@@ -10,9 +10,10 @@ import java.util.HashMap;
 import java.util.logging.Level;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.RandomUtil;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;

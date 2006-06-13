@@ -20,11 +20,11 @@ import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
-import com.threerings.util.RandomUtil;
 import com.threerings.util.StreamablePoint;
 
 import com.threerings.presents.data.ClientObject;

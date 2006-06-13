@@ -27,13 +27,13 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientAdapter;

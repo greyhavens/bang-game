@@ -20,13 +20,13 @@ import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
 
 import com.samskivert.util.ObserverList;
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.media.image.Colorization;
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.LinePath;

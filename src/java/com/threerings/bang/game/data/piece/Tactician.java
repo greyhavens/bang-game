@@ -5,7 +5,7 @@ package com.threerings.bang.game.data.piece;
 
 import java.util.Iterator;
 
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;

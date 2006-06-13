@@ -6,12 +6,12 @@ package com.threerings.bang.game.client;
 import com.jme.math.FastMath;
 
 import com.samskivert.util.Interval;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.SoundGroup;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.client.sprite.BisonSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;

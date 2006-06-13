@@ -7,7 +7,7 @@ import java.awt.Point;
 
 import java.util.List;
 
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.media.util.AStarPathUtil;
 

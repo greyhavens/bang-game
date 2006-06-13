@@ -29,6 +29,7 @@ import com.jmex.bui.util.Point;
 
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.BangUI;
@@ -43,7 +44,6 @@ import com.threerings.bang.game.util.ScenarioUtil;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.util.MessageBundle;
-import com.threerings.util.RandomUtil;
 
 /**
  * Displays game stats.

@@ -18,6 +18,8 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 
+import com.samskivert.util.RandomUtil;
+
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
@@ -30,9 +32,7 @@ import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.client.BangMetrics.*;
-
 import static com.threerings.bang.Log.*;
-import com.threerings.util.RandomUtil;
 
 /**
  * An effect visualization that floats a damage indicator and possible

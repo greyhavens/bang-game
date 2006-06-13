@@ -11,8 +11,7 @@ import java.util.Map;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntListUtil;
-
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.UnitConfig;
 

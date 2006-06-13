@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.samskivert.util.RandomUtil;
+
 import com.threerings.media.image.ColorPository.ClassRecord;
 import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.media.image.ColorPository;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.PlayerObject;

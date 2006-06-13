@@ -9,11 +9,10 @@ import java.util.HashMap;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.ResultListenerList;
 import com.samskivert.util.StringUtil;
-
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.server.persist.BoardRecord;

@@ -16,8 +16,8 @@ import com.jme.math.Vector3f;
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.event.MouseEvent;
 
+import com.samskivert.util.RandomUtil;
 import com.threerings.jme.sprite.Sprite;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.data.piece.Piece;

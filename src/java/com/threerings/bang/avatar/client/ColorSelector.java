@@ -22,10 +22,11 @@ import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.BlankIcon;
 
+import com.samskivert.util.RandomUtil;
+
 import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.util.BangContext;
 

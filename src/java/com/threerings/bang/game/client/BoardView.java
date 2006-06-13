@@ -61,9 +61,9 @@ import com.jmex.bui.layout.BorderLayout;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.sprite.Path;

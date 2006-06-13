@@ -13,8 +13,9 @@ import com.jme.scene.Node;
 import com.jme.scene.state.MaterialState;
 import com.jmex.effects.particles.ParticleMesh;
 
+import com.samskivert.util.RandomUtil;
+
 import com.threerings.jme.model.Model;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ModelAttacher;

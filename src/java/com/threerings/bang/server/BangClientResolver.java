@@ -6,7 +6,7 @@ package com.threerings.bang.server;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;

@@ -55,10 +55,10 @@ import com.jme.util.geom.BufferUtils;
 import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.HashIntMap;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.jme.JmeCanvasApp;
 import com.threerings.media.image.Colorization;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.data.TerrainConfig;

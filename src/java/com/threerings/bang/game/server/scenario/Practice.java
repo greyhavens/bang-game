@@ -6,7 +6,7 @@ package com.threerings.bang.game.server.scenario;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;

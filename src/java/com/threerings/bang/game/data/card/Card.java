@@ -6,8 +6,9 @@ package com.threerings.bang.game.data.card;
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.samskivert.util.RandomUtil;
+
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.presents.dobj.DSet;
 

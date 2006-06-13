@@ -5,7 +5,7 @@ package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
 
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TrainSprite;

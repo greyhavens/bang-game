@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.samskivert.util.CollectionUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.openal.SoundGroup;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;

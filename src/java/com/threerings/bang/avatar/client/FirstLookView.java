@@ -23,13 +23,13 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.cast.CharacterComponent;
 import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.NoSuchComponentException;
 import com.threerings.util.MessageBundle;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.StatusLabel;

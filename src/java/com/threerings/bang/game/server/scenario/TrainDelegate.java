@@ -9,8 +9,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.samskivert.util.QuickSort;
-
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.MoveEffect;

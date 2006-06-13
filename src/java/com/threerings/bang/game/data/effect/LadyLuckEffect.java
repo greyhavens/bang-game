@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.data.effect;
 
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;

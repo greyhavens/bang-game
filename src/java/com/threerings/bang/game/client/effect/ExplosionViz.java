@@ -18,7 +18,7 @@ import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
 import com.jmex.effects.particles.ParticleMesh;
 
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.data.TerrainConfig;

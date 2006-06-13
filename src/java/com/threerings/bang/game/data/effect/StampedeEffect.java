@@ -14,9 +14,9 @@ import java.util.Iterator;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.ListUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.io.SimpleStreamableObject;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.StampedeHandler;

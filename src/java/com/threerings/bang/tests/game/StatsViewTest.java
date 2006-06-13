@@ -9,8 +9,8 @@ import com.jme.util.LoggingSystem;
 
 import com.jmex.bui.BWindow;
 
+import com.samskivert.util.RandomUtil;
 import com.threerings.util.Name;
-import com.threerings.util.RandomUtil;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Handle;

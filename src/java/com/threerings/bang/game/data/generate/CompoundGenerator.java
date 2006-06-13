@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import com.samskivert.util.IntTuple;
-import com.threerings.util.RandomUtil;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.BigPiece;
