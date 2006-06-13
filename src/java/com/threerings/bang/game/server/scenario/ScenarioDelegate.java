@@ -1,0 +1,72 @@
+//
+// $Id$
+
+package com.threerings.bang.game.server.scenario;
+
+import com.threerings.presents.server.InvocationException;
+
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.server.BangManager;
+
+/**
+ * Handles aspects of a scenario's logic in a way that can be combined with
+ * other scenario delegates.
+ *
+ * <p><em>Note:</em> this class is intentionally minimal. As we discover other
+ * aspects of scenarios that need to be shared among various scenarios, we can
+ * expand the delegate to support them.
+ */
+public class ScenarioDelegate
+{
+    /**
+     * Configures this delegate with its parent scenario.
+     */
+    public void init (BangManager bangmgr, Scenario parent)
+    {
+        _bangmgr = bangmgr;
+        _parent = parent;
+    }
+
+    /**
+     * Called at the start of every round. See {@link Scenario#roundWillStart}.
+     */
+    public void roundWillStart (BangObject bangobj)
+        throws InvocationException
+    {
+    }
+
+    /**
+     * Called at the start of every game tick. See {@link Scenario#tick}.
+     */
+    public void tick (BangObject bangobj, short tick)
+    {
+    }
+
+    /**
+     * Called when a piece is moved. See {@link Scenario#pieceMoved}.
+     */
+    public void pieceMoved (BangObject bangobj, Piece piece)
+    {
+    }
+
+    /**
+     * Called when a piece was killed. See {@link Scenario#pieceWasKilled}.
+     */
+    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    {
+    }
+
+    /**
+     * Called after each round ends. See {@link Scenario#roundDidEnd}.
+     */
+    public void roundDidEnd (BangObject bangobj)
+    {
+    }
+
+    /** A reference to the game manager we're working for. */
+    protected BangManager _bangmgr;
+
+    /** A reference to the scenario for whom we're delegating. */
+    protected Scenario _parent;
+}

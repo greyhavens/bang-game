@@ -2267,10 +2267,7 @@ public class BangManager extends GameManager
 
         public void pieceKilled (Piece piece) {
             piece.wasKilled(_bangobj.tick);
-            Effect deatheff = _scenario.pieceWasKilled(_bangobj, piece);
-            if (deatheff != null) {
-                deployEffect(-1, deatheff);
-            }
+            _scenario.pieceWasKilled(_bangobj, piece);
         }
 
         public void pieceRemoved (Piece piece) {

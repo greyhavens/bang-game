@@ -5,6 +5,7 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import com.threerings.util.RandomUtil;
@@ -48,6 +49,17 @@ import static com.threerings.bang.Log.log;
  */
 public class CattleRustling extends Scenario
 {
+    /**
+     * Creates a cattle rustling scenario and registers its delegates.
+     */
+    public CattleRustling ()
+    {
+        registerDelegate(new RespawnDelegate());
+        registerDelegate(new TrainDelegate());
+        registerDelegate(new CattleDelegate());
+        registerDelegate(new RustlingPostDelegate());
+    }
+
     @Override // documentation inherited
     public AILogic createAILogic (GameAI ai)
     {
@@ -72,37 +84,11 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
-    {
-        super.tick(bangobj, tick);
-
-        // Update the counters with new values
-        int size = _counters.size();
-        int[] newCounts = new int[size];
-        Piece[] pieces = bangobj.getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
-                newCounts[pieces[ii].owner]++;
-            }
-        }
-        for (int ii = 0; ii < size; ii++) {
-            Counter counter = _counters.get(ii);
-            if (counter.count != newCounts[ii]) {
-                _bangmgr.deployEffect(-1, CountEffect.changeCount(
-                            counter.pieceId, newCounts[counter.owner]));
-            }
-        }
-    }
-
-    @Override // documentation inherited
-    public void roundWillStart (BangObject bangobj, ArrayList<Piece> markers,
+    public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
                                 PieceSet purchases)
         throws InvocationException
     {
-        super.roundWillStart(bangobj, markers, purchases);
-
-        // locate all the rustlin posts, assign them to players
-        assignCounters(bangobj, markers, 0);
+        super.roundWillStart(bangobj, starts, purchases);
 
         // now place the cattle near the cattle starting spots
         int placed = 0, players = bangobj.players.length, cps = (int)
@@ -157,22 +143,10 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    protected boolean respawnPieces ()
-    {
-        return true;
-    }
-
-    @Override // documentation inherited
     protected short getBaseDuration ()
     {
         // cattle herding should be a bit shorter than the normal scenario
         return 4 * BASE_SCENARIO_TICKS / 5;
-    }
-
-    @Override // documentation inherited
-    protected int pointsPerCounter ()
-    {
-        return ScenarioCodes.POINTS_PER_COW;
     }
 
     /**
@@ -204,6 +178,55 @@ public class CattleRustling extends Scenario
             }
         }
         return newOwner;
+    }
+
+    protected static class RustlingPostDelegate extends CounterDelegate
+    {
+        @Override // documentation inherited
+        public void roundWillStart (BangObject bangobj)
+            throws InvocationException
+        {
+            super.roundWillStart(bangobj);
+            _counts = new int[_counters.size()];
+        }
+
+        @Override // documentation inherited
+        public void tick (BangObject bangobj, short tick) {
+            // if we have no counters, then avoid freakoutage
+            if (_counters.size() == 0) {
+                return;
+            }
+
+            // update the counters with new values
+            Arrays.fill(_counts, 0);
+            Piece[] pieces = bangobj.getPieceArray();
+            for (int ii = 0; ii < pieces.length; ii++) {
+                if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
+                    _counts[pieces[ii].owner]++;
+                }
+            }
+            for (int ii = 0; ii < _counts.length; ii++) {
+                Counter counter = _counters.get(ii);
+                if (counter.count != _counts[ii]) {
+                    log.info("Updating counter " + counter);
+                    _bangmgr.deployEffect(
+                        -1, CountEffect.changeCount(
+                            counter.pieceId, _counts[counter.owner]));
+                }
+            }
+        }
+
+        @Override // documentation inherited
+        protected int pointsPerCounter () {
+            return ScenarioCodes.POINTS_PER_COW;
+        }
+
+        @Override // documentation inherited
+        protected void checkAdjustedCounter (BangObject bangobj, Unit unit) {
+            // nothing to do here
+        }
+
+        protected int[] _counts;
     }
 
     protected ArrayList<Marker> _cattleSpots = new ArrayList<Marker>();

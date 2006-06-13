@@ -45,6 +45,29 @@ public class Tutorial extends Scenario
     implements PlaceManager.MessageHandler
 {
     @Override // documentation inherited
+    public void init (BangManager bangmgr)
+    {
+        // load up the tutorial configuraton
+        BangConfig bconfig = (BangConfig)bangmgr.getConfig();
+        _config = TutorialUtil.loadTutorial(
+            BangServer.rsrcmgr, bconfig.scenarios[0]);
+
+        // create the various delegates we might need
+        if (_config.ident.equals("cattle_rustling")) {
+            registerDelegate(new CattleDelegate());
+            registerDelegate(new CattleRustling.RustlingPostDelegate());
+        } else if (_config.ident.equals("claim_jumping")) {
+            registerDelegate(
+                new NuggetDelegate(true, ClaimJumping.NUGGET_COUNT));
+        } else if (_config.ident.equals("gold_rush")) {
+            registerDelegate(new NuggetDelegate(false, 0));
+        }
+
+        // now that our delegates are registered we can call super.init
+        super.init(bangmgr);
+    }
+
+    @Override // documentation inherited
     public void startNextPhase (BangObject bangobj)
     {
         switch (bangobj.state) {
@@ -81,14 +104,6 @@ public class Tutorial extends Scenario
 
         // register to receive various tutorial specific messages
         _bangmgr.registerMessageHandler(TutorialCodes.ACTION_PROCESSED, this);
-
-        // load up the tutorial configuraton
-        BangConfig bconfig = (BangConfig)_bangmgr.getConfig();
-        _config = TutorialUtil.loadTutorial(
-            BangServer.rsrcmgr, bconfig.scenarios[0]);
-
-        // assign counters in case this is a claim jumping tutorial
-        assignCounters(bangobj, starts, _config.nuggets);
 
         // set up our game object listeners; we only ever have one round in a
         // scenario, so this is OK to do in roundWillStart()

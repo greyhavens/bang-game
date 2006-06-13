@@ -1,0 +1,98 @@
+//
+// $Id$
+
+package com.threerings.bang.game.server.scenario;
+
+import com.threerings.bang.data.BonusConfig;
+import com.threerings.bang.data.Stat;
+
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.data.effect.NuggetEffect;
+import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.piece.Counter;
+import com.threerings.bang.game.data.piece.Unit;
+
+/**
+ * Handles the deposit and extraction of nuggets from claims/steam tanks.
+ */
+public class NuggetDelegate extends CounterDelegate
+{
+    public NuggetDelegate (boolean allowClaimWithdrawal, int startingCount)
+    {
+        _allowClaimWithdrawal = allowClaimWithdrawal;
+        _startingCount = startingCount;
+    }
+
+    @Override // documentation inherited
+    public void roundDidEnd (BangObject bangobj)
+    {
+        // increment each players' nugget related stats
+        for (Counter counter : _counters) {
+            if (counter.count > 0) {
+                bangobj.stats[counter.owner].incrementStat(
+                    Stat.Type.NUGGETS_CLAIMED, counter.count);
+            }
+        }
+    }
+
+    @Override // documentation inherited
+    protected int startingCount ()
+    {
+        return _startingCount;
+    }
+
+    @Override // documentation inherited
+    protected int pointsPerCounter ()
+    {
+        return ScenarioCodes.POINTS_PER_NUGGET;
+    }
+
+    @Override // documentation inherited
+    protected void checkAdjustedCounter (BangObject bangobj, Unit unit)
+    {
+        if (_counters == null || _counters.size() == 0) {
+            return;
+        }
+
+        // if this unit landed next to one of the counters, do some stuff
+        Counter counter = null;
+        for (Counter c : _counters) {
+            if (c.getDistance(unit) <= 1) {
+                counter = c;
+                break;
+            }
+        }
+        if (counter == null) {
+            return;
+        }
+
+        // deposit or withdraw a nugget as appropriate
+        NuggetEffect effect = null;
+        if (counter.owner == unit.owner && unit.benuggeted) {
+            effect = new NuggetEffect();
+            effect.init(unit);
+            effect.claimId = counter.pieceId;
+            effect.dropping = true;
+
+        } else if (_allowClaimWithdrawal && counter.owner != unit.owner &&
+                   counter.count > 0 && unit.canActivateBonus(_nuggetBonus)) {
+            effect = new NuggetEffect();
+            effect.init(unit);
+            effect.claimId = counter.pieceId;
+            effect.dropping = false;
+        }
+
+        if (effect != null) {
+            _bangmgr.deployEffect(unit.owner, effect);
+        }
+    }
+
+    protected boolean _allowClaimWithdrawal;
+    protected int _startingCount;
+
+    /** A prototype nugget bonus used to ensure that pieces can be
+     * benuggeted. */
+    protected Bonus _nuggetBonus =
+        Bonus.createBonus(BonusConfig.getConfig(NuggetEffect.NUGGET_BONUS));
+}

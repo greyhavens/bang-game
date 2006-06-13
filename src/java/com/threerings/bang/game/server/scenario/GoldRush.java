@@ -40,8 +40,18 @@ import com.threerings.bang.game.server.ai.GoldLogic;
  * starting marker.
  * </ul>
  */
-public class GoldRush extends GoldScenario
+public class GoldRush extends Scenario
 {
+    /**
+     * Creates a gold rush scenario and registers its delegates.
+     */
+    public GoldRush ()
+    {
+        registerDelegate(new RespawnDelegate());
+        registerDelegate(new TrainDelegate());
+        registerDelegate(new NuggetDelegate(false, 0));
+    }
+
     @Override // documentation inherited
     public AILogic createAILogic (GameAI ai)
     {
@@ -71,10 +81,6 @@ public class GoldRush extends GoldScenario
         throws InvocationException
     {
         super.roundWillStart(bangobj, starts, purchases);
-
-        // locate all the cargo tanks, assign them to players;
-        // no starting nuggets
-        assignCounters(bangobj, starts, 0);
 
         // start with nuggets at every lode spot
         for (int ii = 0; ii < _lodes.size(); ii++) {
@@ -106,20 +112,6 @@ public class GoldRush extends GoldScenario
     }
 
     @Override // documentation inherited
-    public void roundDidEnd (BangObject bangobj)
-    {
-        super.roundDidEnd(bangobj);
-
-        // increment each players' nugget related stats
-        for (Counter counter : _counters) {
-            if (counter.count > 0) {
-                bangobj.stats[counter.owner].incrementStat(
-                    Stat.Type.NUGGETS_CLAIMED, counter.count);
-            }
-        }
-    }
-
-    @Override // documentation inherited
     public void recordStats (
         BangObject bangobj, int gameTime, int pidx, PlayerObject user)
     {
@@ -130,18 +122,6 @@ public class GoldRush extends GoldScenario
         if (nuggets > 0) {
             user.stats.incrementStat(Stat.Type.NUGGETS_CLAIMED, nuggets);
         }
-    }
-
-    @Override // documentation inherited
-    protected boolean respawnPieces ()
-    {
-        return true;
-    }
-
-    @Override // documentation inherited
-    protected boolean allowClaimWithdrawal ()
-    {
-        return false;
     }
 
     /** Used to track the locations of all lode spots. */

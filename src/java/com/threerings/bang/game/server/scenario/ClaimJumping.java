@@ -49,27 +49,66 @@ import static com.threerings.bang.Log.log;
  * starting marker.
  * </ul>
  */
-public class ClaimJumping extends GoldScenario
+public class ClaimJumping extends Scenario
 {
     /** The number of nuggets in each claim. TODO: put in BangConfig. */
     public static final int NUGGET_COUNT = 2;
+
+    /**
+     * Creates a claim jumping scenario and registers its delegates.
+     */
+    public ClaimJumping ()
+    {
+        registerDelegate(new RespawnDelegate());
+        registerDelegate(new TrainDelegate());
+        registerDelegate(new NuggetDelegate(true, NUGGET_COUNT) {
+            public void tick (BangObject bangobj, short tick) {
+                super.tick(bangobj, tick);
+
+                // if we're not at least half-way through the round, don't do
+                // our empty claim calculations
+                if (bangobj.tick < bangobj.duration/2) {
+                    return;
+                }
+
+                // check to see if there are empty claims
+                boolean empty = false;
+                for (Counter claim : _counters) {
+                    if (claim.count == 0) {
+                        empty = true;
+                        break;
+                    }
+                }
+
+                // if we are not already ending early, and one or more claims
+                // are empty, adjust the lastTick...
+                short realLastTick = (short)(bangobj.duration - 1);
+                if (bangobj.lastTick == realLastTick && empty) {
+                    short lastTick = (short)(tick + EMPTY_CLAIM_TICKS);
+                    if (lastTick < realLastTick) {
+                        bangobj.setLastTick(lastTick);
+                    }
+
+                // ...if no claims are empty clear the early ending tick
+                } else if (bangobj.lastTick != realLastTick && !empty) {
+                    bangobj.setLastTick(realLastTick);
+                }
+            }
+        });
+    }
 
     @Override // documentation inherited
     public AILogic createAILogic (GameAI ai)
     {
         return new GoldLogic(true);
     }
-    
+
     @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
                                 PieceSet purchases)
         throws InvocationException
     {
         super.roundWillStart(bangobj, starts, purchases);
-
-        // locate all the claims, assign them to players and fill them with
-        // nuggets
-        assignCounters(bangobj, starts, NUGGET_COUNT);
 
         // sort the bonus spots by distance to nearest claim, put up to one
         // nugget per player in the spots that are maximally distant from the
@@ -105,55 +144,6 @@ public class ClaimJumping extends GoldScenario
     }
 
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
-    {
-        super.tick(bangobj, tick);
-
-        // if we're not at least half-way through the round, don't do our empty
-        // claim calculations
-        if (bangobj.tick < bangobj.duration/2) {
-            return;
-        }
-
-        // check to see if there are empty claims
-        boolean empty = false;
-        for (Counter claim : _counters) {
-            if (claim.count == 0) {
-                empty = true;
-                break;
-            }
-        }
-
-        // if we are not already ending early, and one or more claims are
-        // empty, adjust the lastTick...
-        short realLastTick = (short)(bangobj.duration - 1);
-        if (bangobj.lastTick == realLastTick && empty) {
-            short lastTick = (short)(tick + EMPTY_CLAIM_TICKS);
-            if (lastTick < realLastTick) {
-                bangobj.setLastTick(lastTick);
-            }
-
-        // ...if no claims are empty clear the early ending tick
-        } else if (bangobj.lastTick != realLastTick && !empty) {
-            bangobj.setLastTick(realLastTick);
-        }
-    }
-
-    @Override // documentation inherited
-    public void roundDidEnd (BangObject bangobj)
-    {
-        super.roundDidEnd(bangobj);
-
-        // increment each players' nugget related stats
-        for (Counter claim : _counters) {
-            if (claim.count > 0) {
-                bangobj.stats[claim.owner].incrementStat(
-                    Stat.Type.NUGGETS_CLAIMED, claim.count);
-            }
-        }
-    }
-
-    @Override // documentation inherited
     public void recordStats (
         BangObject bangobj, int gameTime, int pidx, PlayerObject user)
     {
@@ -164,12 +154,6 @@ public class ClaimJumping extends GoldScenario
         if (nuggets > 0) {
             user.stats.incrementStat(Stat.Type.NUGGETS_CLAIMED, nuggets);
         }
-    }
-
-    @Override // documentation inherited
-    protected boolean respawnPieces ()
-    {
-        return true;
     }
 
     /**
