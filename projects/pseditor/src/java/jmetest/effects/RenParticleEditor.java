@@ -281,8 +281,7 @@ public class RenParticleEditor extends JFrame {
                     }
                 }
             }.start();
-            
-            updateFromManager();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -1144,6 +1143,7 @@ public class RenParticleEditor extends JFrame {
         createNewLayer();
         layerModel.fireTableDataChanged();
         layerTable.setRowSelectionInterval(0, 0);
+        deleteLayerButton.setEnabled(false);
     }
     
     private void showOpenDialog() {
@@ -1202,7 +1202,7 @@ public class RenParticleEditor extends JFrame {
     }
     
     private void createNewLayer() {
-        particleMesh = ParticleFactory.buildParticles("New Layer", 300);
+        particleMesh = ParticleFactory.buildParticles(createLayerName(), 300);
         particleMesh.setGravityForce(new Vector3f(0.0f, -0.0040f, 0.0f));
         particleMesh.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
         particleMesh.setMaximumAngle(0.2268928f);
@@ -1224,6 +1224,19 @@ public class RenParticleEditor extends JFrame {
         
         particleNode.attachChild(particleMesh);
         particleMesh.updateRenderState();
+    }
+    
+    private String createLayerName () {
+        int max = -1;
+        for (int ii = 0, nn = particleNode.getQuantity(); ii < nn; ii++) {
+            String name = particleNode.getChild(ii).getName();
+            if (name.startsWith("Layer #")) {
+                try {
+                    max = Math.max(max, Integer.parseInt(name.substring(7)));
+                } catch (NumberFormatException e) {}
+            }
+        }
+        return "Layer #" + (max + 1);
     }
     
     private void deleteLayer() {
