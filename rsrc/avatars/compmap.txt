@@ -1,4 +1,4 @@
-311
+315
 female/clothing_back := bodice := 174
 female/clothing_back := frontier_dress := 175
 female/clothing_back := frontier_dress_holding := 176
@@ -73,7 +73,9 @@ female/hat := sombrero := 198
 female/hat := stetson := 110
 female/hat_back := bonnet := 199
 female/hat_back := feather_double := 144
+female/hat_back := feather_one := 312
 female/hat_back := feather_single := 145
+female/hat_back := feather_two := 313
 female/hat_back := longbrim := 131
 female/hat_back := sombrero := 200
 female/hat_back := stetson := 111
@@ -95,8 +97,10 @@ female/head := round := 207
 female/head := sharp := 113
 female/jewelry := earing_hoop := 114
 female/jewelry := earring_hoop := 132
+female/makeup := badger := 314
 female/makeup := bear := 153
 female/makeup := beautymark := 115
+female/makeup := brave := 315
 female/makeup := bridge := 154
 female/makeup := bridge_cheek := 155
 female/makeup := butterfly := 156
