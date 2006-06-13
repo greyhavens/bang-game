@@ -156,6 +156,7 @@ public class RenParticleEditor extends JFrame {
     JLabel startAlphaLabel = new JLabel();
     JLabel endAlphaLabel = new JLabel();
     JSpinner endAlphaSpinner = new JSpinner();
+    JCheckBox additiveBlendingBox = new JCheckBox();
     JPanel sizePanel = new JPanel();
     JLabel startSizeLabel = new JLabel();
     JSlider startSizeSlider = new JSlider();
@@ -429,6 +430,13 @@ public class RenParticleEditor extends JFrame {
         startAlphaLabel.setText("alpha:");
         endAlphaLabel.setFont(new java.awt.Font("Arial", 0, 11));
         endAlphaLabel.setText("alpha:");
+        additiveBlendingBox.setFont(new java.awt.Font("Arial", 1, 13));
+        additiveBlendingBox.setText("Additive Blending");
+        additiveBlendingBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateAlphaState(additiveBlendingBox.isSelected());
+            }
+        });
         startSizeLabel.setFont(new java.awt.Font("Arial", 1, 13));
         startSizeLabel.setText("Start Size:  0.0");
         sizePanel.setLayout(new GridBagLayout());
@@ -956,6 +964,9 @@ public class RenParticleEditor extends JFrame {
         colorPanel.add(endAlphaSpinner, new GridBagConstraints(4, 3, 1, 1,
                 0.25, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets(0, 0, 0, 0), 20, 0));
+        colorPanel.add(additiveBlendingBox, new GridBagConstraints(0, 4, 5, 1,
+                0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets(0, 0, 0, 0), 0, 0));
         appPanel.add(sizePanel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(
                         10, 5, 5, 10), 0, 0));
@@ -1071,12 +1082,12 @@ public class RenParticleEditor extends JFrame {
         codePanel.add(codeSP, new GridBagConstraints(0, 1, 2, 1, 1.0, 1.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
                 new Insets(5, 10, 10, 10), 0, 0));
-        countPanel.add(countLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(
-                        10, 10, 5, 10), 0, 0));
-        countPanel.add(countButton, new GridBagConstraints(0, 1, 1, 1, 1.0,
+        countPanel.add(countLabel, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(
+                        5, 10, 5, 10), 0, 0));
+        countPanel.add(countButton, new GridBagConstraints(1, 0, 1, 1, 0.0,
                 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                new Insets(5, 10, 10, 10), 0, 0));
+                new Insets(5, 10, 5, 10), 0, 0));
         codeSP.setViewportView(codeTextArea);
 
         mainTabbedPane1.add(layerPanel, "Layers");
@@ -1215,6 +1226,8 @@ public class RenParticleEditor extends JFrame {
         particleMesh.setRandomMod(1.0f);
         particleMesh.warmUp(120);
 
+        updateAlphaState(true);
+        
         TextureState ts = impl.getRenderer().createTextureState();
         ts.setTexture(TextureManager.loadTexture(
             RenParticleEditor.class.getClassLoader().getResource(
@@ -1237,6 +1250,22 @@ public class RenParticleEditor extends JFrame {
             }
         }
         return "Layer #" + (max + 1);
+    }
+    
+    private void updateAlphaState(boolean additive) {
+        AlphaState as = (AlphaState)particleMesh.getRenderState(
+            RenderState.RS_ALPHA);
+        if (as == null) {
+            as = impl.getRenderer().createAlphaState();
+            as.setBlendEnabled(true);
+            as.setSrcFunction(AlphaState.SB_SRC_ALPHA);
+            as.setTestEnabled(true);
+            as.setTestFunction(AlphaState.TF_GREATER);
+            particleMesh.setRenderState(as);
+            particleMesh.updateRenderState();
+        }
+        as.setDstFunction(additive ?
+            AlphaState.DB_ONE : AlphaState.DB_ONE_MINUS_SRC_ALPHA);
     }
     
     private void deleteLayer() {
@@ -1457,6 +1486,10 @@ public class RenParticleEditor extends JFrame {
         endAlphaSpinner.setValue(new Integer(makeColor(
                 particleMesh.getEndColor(), true).getAlpha()));
         updateColorLabels();
+        AlphaState as = (AlphaState)particleMesh.getRenderState(
+            RenderState.RS_ALPHA);
+        additiveBlendingBox.setSelected(as == null ||
+            as.getDstFunction() == AlphaState.DB_ONE);
         startSizeSlider.setValue((int) (particleMesh
                 .getStartSize() * 10));
         endSizeSlider
@@ -2100,20 +2133,11 @@ public class RenParticleEditor extends JFrame {
             particleNode = new Node("particles");
             root.attachChild(particleNode);
 
-            AlphaState as1 = renderer.createAlphaState();
-            as1.setBlendEnabled(true);
-            as1.setSrcFunction(AlphaState.SB_SRC_ALPHA);
-            as1.setDstFunction(AlphaState.DB_ONE);
-            as1.setTestEnabled(true);
-            as1.setTestFunction(AlphaState.TF_GREATER);
-            as1.setEnabled(true);
-
             ZBufferState zbuf = renderer.createZBufferState();
             zbuf.setWritable( false );
             zbuf.setEnabled( true );
             zbuf.setFunction( ZBufferState.CF_LEQUAL );
 
-            particleNode.setRenderState(as1);
             particleNode.setRenderState(zbuf);
             particleNode.updateRenderState();
             
