@@ -3,8 +3,11 @@
 
 package com.threerings.bang.game.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+
+import com.samskivert.util.CollectionUtil;
 
 import com.threerings.openal.SoundGroup;
 import com.threerings.util.RandomUtil;
@@ -36,7 +39,8 @@ public class ScenarioUtil
     }
 
     /**
-     * Returns the scenarios that are valid in the specified town.
+     * Returns the scenarios that are valid in the specified town (this
+     * includes all scenarios from previous towns).
      */
     public static String[] getScenarios (String townId)
     {
@@ -94,15 +98,21 @@ public class ScenarioUtil
     protected static HashMap<String,String[]> _scenmap =
         new HashMap<String,String[]>();
     static {
+        ArrayList<String> scens = new ArrayList<String>();
+        CollectionUtil.addAll(scens, ScenarioCodes.FRONTIER_TOWN_SCENARIOS);
         _scenmap.put(BangCodes.FRONTIER_TOWN,
-                     ScenarioCodes.FRONTIER_TOWN_SCENARIOS);
+                     scens.toArray(new String[scens.size()]));
+        CollectionUtil.addAll(scens, ScenarioCodes.INDIAN_POST_SCENARIOS);
         _scenmap.put(BangCodes.INDIAN_POST,
-                     ScenarioCodes.INDIAN_POST_SCENARIOS);
+                     scens.toArray(new String[scens.size()]));
+        CollectionUtil.addAll(scens, ScenarioCodes.BOOM_TOWN_SCENARIOS);
         _scenmap.put(BangCodes.BOOM_TOWN,
-                     ScenarioCodes.BOOM_TOWN_SCENARIOS);
+                     scens.toArray(new String[scens.size()]));
+        CollectionUtil.addAll(scens, ScenarioCodes.GHOST_TOWN_SCENARIOS);
         _scenmap.put(BangCodes.GHOST_TOWN,
-                     ScenarioCodes.GHOST_TOWN_SCENARIOS);
+                     scens.toArray(new String[scens.size()]));
+        CollectionUtil.addAll(scens, ScenarioCodes.CITY_OF_GOLD_SCENARIOS);
         _scenmap.put(BangCodes.CITY_OF_GOLD,
-                     ScenarioCodes.CITY_OF_GOLD_SCENARIOS);
+                     scens.toArray(new String[scens.size()]));
     }
 }
