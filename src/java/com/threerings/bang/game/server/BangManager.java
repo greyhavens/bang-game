@@ -1473,7 +1473,8 @@ public class BangManager extends GameManager
                     deployEffect(unit.owner, effect);
 
                     // small hackery: note that this player collected a bonus
-                    if (lapper instanceof Bonus) {
+                    if (lapper instanceof Bonus &&
+                        !((Bonus)lapper).isScenarioBonus()) {
                         _bangobj.stats[munit.owner].incrementStat(
                             Stat.Type.BONUSES_COLLECTED, 1);
                     }

@@ -200,6 +200,15 @@ public class Bonus extends Piece
     }
 
     /**
+     * If this bonus is not randomly selected, but rather used by a scenario
+     * for some specific purpose, we won't count it toward certain statistics.
+     */
+    public boolean isScenarioBonus ()
+    {
+        return (_config.baseWeight <= 0);
+    }
+
+    /**
      * Called when a piece has landed on this bonus and is activating it,
      * this should return an object indicating the effect that the bonus
      * has on this piece or the entire board. Those effects will be
