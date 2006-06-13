@@ -12,7 +12,7 @@
 
 -dontobfuscate
 
--outjars ../dist/vmodel-pro.jar
+-outjars ../dist/pseditor-pro.jar
 
 -keep public class * implements com.jme.util.export.Savable {
     *;
