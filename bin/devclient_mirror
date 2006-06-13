@@ -23,4 +23,7 @@ $MIRROR $ROOT/pages/devclient/*-install.???
 # mirror the Hemiptera Proguard mapping
 $MIRROR $* $ROOT/../threerings/etc/proguard/bang/0.map
 
+# mirror some random other pages
+$MIRROR $ROOT/pages/units.html
+
 echo "*** Finished mirror at" `date`
