@@ -22,11 +22,10 @@
   <target name="prepare">
     <mkdir dir="${deploy.dir}"/>
     <mkdir dir="${deploy.dir}/classes"/>
-    <mkdir dir="${deploy.dir}/classes/rsrc"/>
     <copy todir="${deploy.dir}/classes">
       <fileset dir="${src.dir}" includes="**/*.properties"/>
     </copy>
-    <copy todir="${deploy.dir}/classes/rsrc">
+    <copy todir="${deploy.dir}/classes">
       <fileset dir="rsrc" includes="**/*"/>
     </copy>
   </target>
