@@ -172,13 +172,6 @@ public class UnitConfig
         return list.toArray(new UnitConfig[list.size()]);
     }
 
-    public static void main (String[] args)
-    {
-        for (UnitConfig config : _types.values()) {
-            System.err.println("" + config);
-        }
-    }
-
     /**
      * Computes and returns the damage adjustment to be used when a unit
      * of this type attacks a unit of the specified type.
