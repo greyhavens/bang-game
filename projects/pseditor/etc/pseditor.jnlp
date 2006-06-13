@@ -4,7 +4,7 @@
      download and install the Sun JRE 1.4 and/or Java Web Start from
      http://java.sun.com/j2se/ -->
 
-<jnlp spec="1.0+" codebase="@application_uri@" href="vmodel.jnlp">
+<jnlp spec="1.0+" codebase="@application_uri@" href="pseditor.jnlp">
   <information>
     <title>Particle System Editor</title>
     <vendor>Seuss and Asseusciates</vendor>
