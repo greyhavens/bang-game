@@ -1527,7 +1527,7 @@ public class RenParticleEditor extends JFrame {
     public void resetManager(int particles) {
         ParticleMesh omesh = particleMesh;
         particleNode.detachChild(particleMesh);
-        particleMesh = ParticleFactory.buildParticles("particles", particles);
+        particleMesh = ParticleFactory.buildParticles(omesh.getName(), particles);
 
         ColorRGBA rgba = makeColorRGBA(startColorPanel.getBackground());
         rgba.a = (Integer.parseInt(startAlphaSpinner.getValue().toString()) / 255f);
