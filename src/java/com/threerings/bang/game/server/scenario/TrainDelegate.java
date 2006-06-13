@@ -28,11 +28,6 @@ import com.threerings.bang.game.util.PieceUtil;
 public class TrainDelegate extends ScenarioDelegate
 {
     @Override // documentation inherited
-    public void roundWillStart (BangObject bangobj)
-    {
-    }
-
-    @Override // documentation inherited
     public void tick (BangObject bangobj, short tick)
     {
         // find the trains and terminals on the board; if there are no trains
@@ -67,16 +62,6 @@ public class TrainDelegate extends ScenarioDelegate
             createTrain(bangobj, last, terminal,
                 Math.random() < 1f/AVG_TRAIN_CARS);
         }
-    }
-
-    @Override // documentation inherited
-    public void pieceMoved (BangObject bangobj, Piece piece)
-    {
-    }
-
-    @Override // documentation inherited
-    public void pieceWasKilled (BangObject bangobj, Piece piece)
-    {
     }
 
     /**
@@ -147,8 +132,8 @@ public class TrainDelegate extends ScenarioDelegate
     /**
      * Adds a new train car or caboose to the board.
      */
-    protected void createTrain (BangObject bangobj, Train last,
-        Track terminal, boolean caboose)
+    protected void createTrain (
+        BangObject bangobj, Train last, Track terminal, boolean caboose)
     {
         Train train = new Train();
         train.assignPieceId(bangobj);
@@ -219,8 +204,8 @@ public class TrainDelegate extends ScenarioDelegate
      * specified coordinates.  If there's a {@link Unit}, return that;
      * otherwise, return any blocking piece.
      */
-    protected Piece getBlockingPiece (BangObject bangobj, Train train, int x,
-        int y)
+    protected Piece getBlockingPiece (
+        BangObject bangobj, Train train, int x, int y)
     {
         Piece blocker = null;
         for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
@@ -262,8 +247,8 @@ public class TrainDelegate extends ScenarioDelegate
      * the given train, or <code>null</code> if the unit can't be pushed
      * anywhere.
      */
-    protected Point getPushLocation (BangObject bangobj, Train train,
-        Unit unit)
+    protected Point getPushLocation (
+        BangObject bangobj, Train train, Unit unit)
     {
         // only consider passable locations; prefer locations without tracks
         // and the location in front in that order
