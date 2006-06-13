@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- If you're seeing this in your web browser, you probably need to
+     download and install the Sun JRE 1.4 and/or Java Web Start from
+     http://java.sun.com/j2se/ -->
+
+<jnlp spec="1.0+" codebase="@application_uri@" href="vmodel.jnlp">
+  <information>
+    <title>Particle System Editor</title>
+    <vendor>Seuss and Asseusciates</vendor>
+    <homepage href="/pseditor/index.html"/>
+    <icon href="/pseditor/icon.gif"/>
+    <description>Used to edit JME particle systems.</description>
+    <description kind="short">Used to edit JME particle systems.</description>
+    <offline-allowed/>
+  </information>
+  <security>
+    <all-permissions/>
+  </security>
+  <resources>
+    <j2se version="1.5+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="pseditor-pro.jar"/>
+    <jar href="lwjgl.jar"/>
+  </resources>
+  <resources os="Windows">
+    <nativelib href="lwjgl-windows.jar"/>
+    <property name="java.library.path" value="." />
+  </resources>
+  <resources os="Linux" arch="i386">
+    <nativelib href="lwjgl-linux.jar"/>
+    <property name="java.library.path" value="." />
+  </resources> 
+  <resources os="Mac OS X">
+    <nativelib href="lwjgl-macos.jar"/>
+    <property name="java.library.path" value="." />
+  </resources> 
+  <application-desc main-class="jmetest.effects.RenParticleEditor"/>
+</jnlp>
