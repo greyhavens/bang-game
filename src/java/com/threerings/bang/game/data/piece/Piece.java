@@ -328,11 +328,14 @@ public abstract class Piece extends SimpleStreamableObject
         int minfdist = getMinFireDistance(), maxfdist = getMaxFireDistance();
         int moves = Integer.MAX_VALUE;
 
-        // first check if we can fire without moving
-        int tdist = target.getDistance(x, y);
-        if (tdist >= minfdist && tdist <= maxfdist &&
-            checkLineOfSight(board, x, y, target)) {
-            return new Point(x, y);
+        // first check if we can fire without moving (assuming our current
+        // location is in our move set)
+        if (moveSet.contains(x, y)) {
+            int tdist = target.getDistance(x, y);
+            if (tdist >= minfdist && tdist <= maxfdist &&
+                checkLineOfSight(board, x, y, target)) {
+                return new Point(x, y);
+            }
         }
 
         // next search the move set for the closest location
@@ -340,7 +343,7 @@ public abstract class Piece extends SimpleStreamableObject
         for (int ii = 0, ll = moveSet.size(); ii < ll; ii++) {
             int px = moveSet.getX(ii), py = moveSet.getY(ii);
             int dist = getDistance(px, py);
-            tdist = target.getDistance(px, py);
+            int tdist = target.getDistance(px, py);
             if (dist < moves && tdist >= minfdist && tdist <= maxfdist &&
                 checkLineOfSight(board, px, py, target)) {
                 moves = dist;
