@@ -596,8 +596,8 @@ public abstract class Piece extends SimpleStreamableObject
             ddamage = ((Unit)target).influence.adjustDefend(this, ddamage);
         }
 
-        // finally, always do at least 1 point of damage (TODO: iron plate?)
-        return Math.max(1, Math.round(scale * ddamage));
+        // finally scale the damage by the desired value
+        return Math.round(scale * ddamage);
     }
 
     /**
