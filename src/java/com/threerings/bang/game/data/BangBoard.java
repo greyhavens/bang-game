@@ -796,7 +796,8 @@ public class BangBoard extends SimpleStreamableObject
             _heightfieldChanged = false;
         }
         int idx = y * _width + x;
-        if (_maxHeight[idx] > Integer.MIN_VALUE) {
+        if (idx >= 0 && idx < _maxHeight.length && 
+                _maxHeight[idx] > Integer.MIN_VALUE) {
             return _maxHeight[idx];
         }
         int hx = Math.min((x + 1) * HEIGHTFIELD_SUBDIVISIONS, _hfwidth);
