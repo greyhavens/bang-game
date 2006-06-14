@@ -165,11 +165,25 @@ public class PlayerRepository extends JORARepository
     public void disablePlayer (String accountName, String disabledName)
         throws PersistenceException
     {
-        if (update("update PLAYERS set ACCOUNT_NAME = " +
-                   JDBCUtil.escape(disabledName) + " where ACCOUNT_NAME = " +
-                   JDBCUtil.escape(accountName)) == 1) {
+        int mods = update(
+            "update PLAYERS set ACCOUNT_NAME = " +
+            JDBCUtil.escape(disabledName) + " where ACCOUNT_NAME = " +
+            JDBCUtil.escape(accountName));
+        switch (mods) {
+        case 0:
+            // they never played our game, no problem
+            break;
+
+        case 1:
             log.info("Disabled deleted player [oname=" + accountName +
                      ", dname=" + disabledName + "].");
+            break;
+
+        default:
+            log.warning("Attempt to disable player account resulted in " +
+                        "weirdness [aname=" + accountName +
+                        ", dname=" + disabledName + ", mods=" + mods + "].");
+            break;
         }
     }
 

@@ -92,8 +92,8 @@ public class BangServer extends CrowdServer
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
 
-    /** Provides visibility into global OOO account actions. */
-    public static AccountActionRepository actionrepo;
+    /** Handles the processing of account actions. */
+    public static AccountActionManager actionmgr;
 
     /** Manages global player related bits. */
     public static PlayerManager playmgr;
@@ -168,15 +168,19 @@ public class BangServer extends CrowdServer
 
         // create our database connection provider and repositories
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
-        actionrepo = new AccountActionRepository(conprov);
         playrepo = new PlayerRepository(conprov);
         itemrepo = new ItemRepository(conprov);
         statrepo = new StatRepository(conprov);
         ratingrepo = new RatingRepository(conprov);
         lookrepo = new LookRepository(conprov);
+        AccountActionRepository actionrepo =
+            new AccountActionRepository(conprov);
+
+        // create our various supporting managers
         playmgr = new PlayerManager();
-        coinmgr = new BangCoinManager(conprov);
+        coinmgr = new BangCoinManager(conprov, actionrepo);
         coinexmgr = new BangCoinExchangeManager(conprov);
+        actionmgr = new AccountActionManager(omgr, actionrepo);
 
         // create and set up our configuration registry and admin service
         confreg = new DatabaseConfigRegistry(conprov, invoker);

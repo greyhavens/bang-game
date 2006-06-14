@@ -11,6 +11,7 @@ import com.samskivert.util.AuditLogger;
 import com.samskivert.util.Invoker;
 
 import com.threerings.coin.server.CoinManager;
+import com.threerings.user.AccountActionRepository;
 
 import com.threerings.bang.data.PlayerObject;
 
@@ -27,10 +28,11 @@ public class BangCoinManager extends CoinManager
     /**
      * Creates the coin manager and its associated repository.
      */
-    public BangCoinManager (ConnectionProvider conprov)
+    public BangCoinManager (ConnectionProvider conprov,
+                            AccountActionRepository actionrepo)
         throws PersistenceException
     {
-        super(conprov, ServerConfig.serverName, coinlog, BangServer.actionrepo,
+        super(conprov, ServerConfig.serverName, coinlog, actionrepo,
               BangServer.invoker);
     }
 
