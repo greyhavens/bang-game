@@ -810,7 +810,9 @@ public class BangBoard extends SimpleStreamableObject
                 height = Math.max(height, _heightfield[dy * _hfwidth + dx]);
             }
         }
-        _maxHeight[idx] = height;
+        if (idx >= 0 && idx < _maxHeight.length) { 
+            _maxHeight[idx] = height;
+        }
         return height;
     }
 
