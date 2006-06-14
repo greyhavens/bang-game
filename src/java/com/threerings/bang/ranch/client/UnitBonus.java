@@ -95,6 +95,9 @@ public class UnitBonus extends BContainer
         }
 
         int size = bonusList.size();
+        if (size == 0) {
+            return;
+        }
         if (size > _maxBonusPerRow) {
             if (size - _maxBonusPerRow == 1) {
                 size = _maxBonusPerRow - 1;
