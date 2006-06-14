@@ -50,8 +50,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -71,7 +69,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -105,6 +102,8 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
+import com.jme.util.RenderThreadActionQueue;
+import com.jme.util.RenderThreadExecutable;
 import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryExporter;
 import com.jme.util.export.binary.BinaryImporter;
@@ -117,7 +116,8 @@ import com.jmex.effects.particles.ParticleMesh;
  * <code>RenParticleControlFrame</code>
  *
  * @author Joshua Slack
- * @version $Id: RenParticleEditor.java,v 1.26 2006/05/11 19:39:42 nca Exp $
+ * @author Andrzej Kapolka - additions for multiple layers, save/load from jme format
+ * @version $Id: RenParticleEditor.java,v 1.27 2006/06/13 23:54:47 renanse Exp $
  *
  */
 
@@ -278,7 +278,11 @@ public class RenParticleEditor extends JFrame {
                 public void run() {
                     while (true) {
                         glCanvas.repaint();
-                        yield();
+                        try {
+                            sleep(2);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }.start();
@@ -298,6 +302,7 @@ public class RenParticleEditor extends JFrame {
         file.setMnemonic(KeyEvent.VK_F);
         mbar.add(file);
         Action newaction = new AbstractAction("New") {
+            private static final long serialVersionUID = 1L;
             public void actionPerformed(ActionEvent e) {
                 createNewSystem();
             }
@@ -305,6 +310,7 @@ public class RenParticleEditor extends JFrame {
         newaction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
         file.add(newaction);
         Action open = new AbstractAction("Open...") {
+            private static final long serialVersionUID = 1L;
             public void actionPerformed(ActionEvent e) {
                 showOpenDialog();
             }
@@ -312,6 +318,7 @@ public class RenParticleEditor extends JFrame {
         open.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_O);
         file.add(open);
         Action save = new AbstractAction("Save...") {
+            private static final long serialVersionUID = 1L;
             public void actionPerformed(ActionEvent e) {
                 showSaveDialog();
             }
@@ -320,6 +327,7 @@ public class RenParticleEditor extends JFrame {
         file.add(save);
         file.addSeparator();
         Action quit = new AbstractAction("Quit") {
+            private static final long serialVersionUID = 1L;
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
@@ -2013,35 +2021,40 @@ public class RenParticleEditor extends JFrame {
         Point last = new Point(0,0);
         Matrix3f incr = new Matrix3f();
 
-        public void mouseDragged(MouseEvent arg0) {
-            int difX = last.x - arg0.getX();
-            int difY = last.y - arg0.getY();
-            last.x = arg0.getX();
-            last.y = arg0.getY();
-            
-            if (arg0.isShiftDown()) {
-                difX *=5;
-                difY *=5;
-            }
-            
-            Camera camera = impl.getRenderer().getCamera();
-            
-            if (difY != 0) {
-                incr.fromAxisAngle(camera.getLeft(), -difY*.001f);
-                incr.mult(camera.getLeft(), camera.getLeft());
-                incr.mult(camera.getDirection(), camera.getDirection());
-                incr.mult(camera.getUp(), camera.getUp());
-                camera.normalize();
-                camera.update();
-            }
-            if (difX != 0) {
-                incr.fromAxisAngle(Vector3f.UNIT_Y, difX*.001f);
-                incr.mult(camera.getUp(), camera.getUp());
-                incr.mult(camera.getLeft(), camera.getLeft());
-                incr.mult(camera.getDirection(), camera.getDirection());
-                camera.normalize();
-                camera.update();
-            }
+        public void mouseDragged(final MouseEvent arg0) {
+            RenderThreadExecutable exe = new RenderThreadExecutable() {
+                public void doAction() {
+                    int difX = last.x - arg0.getX();
+                    int difY = last.y - arg0.getY();
+                    last.x = arg0.getX();
+                    last.y = arg0.getY();
+                    
+                    if (arg0.isShiftDown()) {
+                        difX *=5;
+                        difY *=5;
+                    }
+                    
+                    Camera camera = impl.getRenderer().getCamera();
+                    
+                    if (difY != 0) {
+                        incr.fromAxisAngle(camera.getLeft(), -difY*.001f);
+                        incr.mult(camera.getLeft(), camera.getLeft());
+                        incr.mult(camera.getDirection(), camera.getDirection());
+                        incr.mult(camera.getUp(), camera.getUp());
+                        camera.normalize();
+                        camera.update();
+                    }
+                    if (difX != 0) {
+                        incr.fromAxisAngle(Vector3f.UNIT_Y, difX*.001f);
+                        incr.mult(camera.getUp(), camera.getUp());
+                        incr.mult(camera.getLeft(), camera.getLeft());
+                        incr.mult(camera.getDirection(), camera.getDirection());
+                        camera.normalize();
+                        camera.update();
+                    }
+                }
+            };
+            RenderThreadActionQueue.addToQueue(exe);
         }
         public void mouseMoved(MouseEvent arg0) {}
 
@@ -2050,16 +2063,22 @@ public class RenParticleEditor extends JFrame {
             last.y = arg0.getY();
         }
 
-        public void mouseWheelMoved(MouseWheelEvent arg0) {
-            int amnt = arg0.getWheelRotation();
-            
-            if (arg0.isShiftDown()) {
-                amnt *=5;
-            }
-            
-            Camera cam = impl.getRenderer().getCamera();
-            cam.getLocation().addLocal(cam.getDirection().mult(amnt*-20));
-            cam.update();
+        public void mouseWheelMoved(final MouseWheelEvent arg0) {
+            RenderThreadExecutable exe = new RenderThreadExecutable() {
+                public void doAction() {
+                    int amnt = arg0.getWheelRotation();
+
+                    if (arg0.isShiftDown()) {
+                        amnt *= 5;
+                    }
+
+                    Camera cam = impl.getRenderer().getCamera();
+                    cam.getLocation().addLocal(
+                            cam.getDirection().mult(amnt * -20));
+                    cam.update();
+                }
+            };
+            RenderThreadActionQueue.addToQueue(exe);
         }
         
     }
@@ -2070,6 +2089,8 @@ public class RenParticleEditor extends JFrame {
 
     class LayerTableModel extends AbstractTableModel {
         
+        private static final long serialVersionUID = 1L;
+
         public int getRowCount() {
             return particleNode == null ? 0 : particleNode.getQuantity();
         }
@@ -2082,7 +2103,7 @@ public class RenParticleEditor extends JFrame {
             return columnIndex == 0 ? "Name" : "Visible";
         }
         
-        public Class getColumnClass(int columnIndex) {
+        public Class<?> getColumnClass(int columnIndex) {
             return columnIndex == 0 ? String.class : Boolean.class;
         }
         
