@@ -378,6 +378,7 @@ public class IconPalette extends BContainer
         _icont.removeAll();
         _back.setEnabled(false);
         _forward.setEnabled(false);
+        _page = 0;
     }
 
     protected void iconUpdated (SelectableIcon icon, boolean selected)
