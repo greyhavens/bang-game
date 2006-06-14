@@ -2168,7 +2168,10 @@ public class RenParticleEditor extends JFrame {
         };
 
         public void simpleUpdate() {
-            
+            while (!RenderThreadActionQueue.isEmpty()) {
+                RenderThreadActionQueue.processQueueItem();
+            }
+                        
             if (newTexture != null) {
                 loadApplyTexture();
             }
