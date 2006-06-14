@@ -758,6 +758,17 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
+     * Returns the combined elevation (max heightfield elevation plus piece
+     * elevation, or the water height if underwater) at the specified tile
+     * coordinates.
+     */
+    public int getMaxElevation (int x, int y)
+    {
+        return Math.max(_waterLevel,
+            getMaxHeightfieldElevation(x, y) + getPieceElevation(x, y));
+    }
+
+    /**
      * Returns the heightfield elevation (the elevation of the terrain in
      * elevation units) at the specified tile coordinates.
      */

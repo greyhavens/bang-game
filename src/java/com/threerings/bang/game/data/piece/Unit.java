@@ -171,13 +171,12 @@ public class Unit extends Piece
      */
     public int computeAreaFlightElevation (BangBoard board, int tx, int ty)
     {
-        int elevation = Integer.MIN_VALUE;
-        for (int ii = tx - 1; ii <= tx + 1; ii++) {
-            for (int jj = ty - 1; jj <= ty + 1; jj++) {
-                elevation = Math.max(elevation, computeFlightElevation(
-                            board, ii, jj));
-            }
-        }
+        int nsElevation = Math.min(computeFlightElevation(board, tx - 1, ty),
+                computeFlightElevation(board, tx + 1, ty));
+        int ewElevation = Math.min(computeFlightElevation(board, tx, ty - 1),
+                computeFlightElevation(board, tx, ty + 1));
+        int elevation = Math.max(computeFlightElevation(board, tx, ty),
+                Math.max(nsElevation, ewElevation));
         return elevation;
     }
     
@@ -187,9 +186,9 @@ public class Unit extends Piece
     public int computeFlightElevation (BangBoard board, int tx, int ty)
     {
         int groundel = Math.max(board.getWaterLevel(),
-            super.computeElevation(board, tx, ty)) +
+            board.getMaxElevation(tx, ty)) +
                 (int)(FLYER_GROUND_HEIGHT * board.getElevationUnitsPerTile()),
-            propel = board.getElevation(tx, ty) +
+            propel = board.getMaxElevation(tx, ty) +
                 (int)(FLYER_PROP_HEIGHT * board.getElevationUnitsPerTile());
         return Math.max(groundel, propel);
     }
