@@ -81,7 +81,7 @@ public class StatsViewTest extends TestApp
                 RandomUtil.getInt(100) > 50);
             bangobj.stats[ii] = new StatSet();
             bangobj.stats[ii].setStat(Stat.Type.CATTLE_RUSTLED,
-                    RandomUtil.getInt(10));
+                    RandomUtil.getInt(5) * ii);
             bangobj.stats[ii].setStat(Stat.Type.NUGGETS_CLAIMED, 
                     RandomUtil.getInt(10));
             bangobj.stats[ii].setStat(Stat.Type.DAMAGE_DEALT,
@@ -102,6 +102,8 @@ public class StatsViewTest extends TestApp
                     RandomUtil.getInt(250));
             bangobj.stats[ii].setStat(Stat.Type.SHOTS_FIRED,
                     RandomUtil.getInt(50));
+            bangobj.stats[ii].setStat(Stat.Type.BRAND_POINTS,
+                    RandomUtil.getInt(400));
         }
         bangobj.scenarioId = ScenarioCodes.CATTLE_RUSTLING;
         //bangobj.scenarioId = ScenarioCodes.CLAIM_JUMPING;

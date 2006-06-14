@@ -213,6 +213,11 @@ public class CattleRustling extends Scenario
                         -1, CountEffect.changeCount(
                             counter.pieceId, _counts[counter.owner]));
                 }
+                // you get points for your branded cows at each tick
+                int points = _counts[ii] * ScenarioCodes.POINTS_PER_BRAND;
+                bangobj.stats[counter.owner].incrementStat(
+                        Stat.Type.BRAND_POINTS, points); 
+                bangobj.grantPoints(counter.owner, points);
             }
         }
 

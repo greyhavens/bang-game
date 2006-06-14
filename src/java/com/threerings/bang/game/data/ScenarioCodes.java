@@ -32,6 +32,9 @@ public interface ScenarioCodes
     /** Points earned for each branded cow. */
     public static final int POINTS_PER_COW = 50;
 
+    /** Points earned at each tick per branded cow. */
+    public static final int POINTS_PER_BRAND = 1;
+
     /** Scenarios available in Frontier Town. */
     public static final String[] FRONTIER_TOWN_SCENARIOS = {
         CLAIM_JUMPING, CATTLE_RUSTLING, GOLD_RUSH };

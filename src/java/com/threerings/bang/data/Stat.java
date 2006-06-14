@@ -57,6 +57,7 @@ public abstract class Stat
         SHOTS_FIRED(new IntStat()),
 
         CATTLE_RUSTLED(new IntStat()),
+        BRAND_POINTS(new IntStat()),
         NUGGETS_CLAIMED(new IntStat()),
 
         // stats derived from in-game statistics
