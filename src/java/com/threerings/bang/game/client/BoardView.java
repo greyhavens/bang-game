@@ -84,6 +84,7 @@ import com.threerings.bang.client.Config;
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
+import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -1294,6 +1295,11 @@ public class BoardView extends BComponent
         _high.setLocation(-1, -1);
         float dist = Float.MAX_VALUE;
         TerrainNode.Highlight hover = null;
+        Piece piece = null;
+        // If it's a bonus piece, we'll highlight the tile beneath it
+        if (_hover != null && _hover instanceof BonusSprite) {
+            piece = ((BonusSprite)_hover).getPiece();
+        }
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
             PickData pdata = _pick.getPickData(ii);
             if (notReallyAHit(pdata)) {
@@ -1304,14 +1310,13 @@ public class BoardView extends BComponent
             float hdist = FastMath.sqr(camloc.x - highlight.x) +
                 FastMath.sqr(camloc.y - highlight.y);
             if (hdist < dist) {
-                _high.setLocation(highlight.getTileX(), highlight.getTileY());
+                int x = highlight.getTileX(), y = highlight.getTileY();
+                _high.setLocation(x, y);
                 dist = hdist;
-                hover = highlight;
+                if (piece == null || (piece.x == x && piece.y == y)) {
+                    hover = highlight;
+                }
             }
-        }
-        // if we're already hovering over a sprite, don't highlight a tile
-        if (_hover != null) {
-            hover = null;
         }
         hoverHighlightChanged(hover);
         if (_high.x != -1 && _high.y != -1) {
