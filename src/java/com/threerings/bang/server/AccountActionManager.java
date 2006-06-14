@@ -11,11 +11,14 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 
+import com.threerings.util.Name;
+
 import com.threerings.presents.server.PresentsDObjectMgr;
 
 import com.threerings.user.AccountAction;
 import com.threerings.user.AccountActionRepository;
 
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.ServerConfig;
 
 import static com.threerings.bang.Log.log;
@@ -147,9 +150,14 @@ public class AccountActionManager
     /**
      * Handles notification that a user had their coins amount updated.
      */
-    protected void coinsUpdated (final String accountName)
+    protected void coinsUpdated (String accountName)
     {
-        // TODO
+        // if this player is online, update their coin count
+        PlayerObject player =
+            BangServer.lookupByAccountName(new Name(accountName));
+        if (player != null) {
+            BangServer.coinmgr.updateCoinCount(player);
+        }
     }
 
     /**
