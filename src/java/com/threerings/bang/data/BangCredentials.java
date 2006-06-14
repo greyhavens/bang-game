@@ -33,7 +33,7 @@ public class BangCredentials extends UsernamePasswordCreds
     }
 
     @Override // documentation inherited
-    protected void toString (StringBuffer buf)
+    protected void toString (StringBuilder buf)
     {
         super.toString(buf);
         buf.append(", ident=").append(ident);

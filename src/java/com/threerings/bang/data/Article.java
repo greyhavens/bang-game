@@ -126,7 +126,7 @@ public class Article extends Item
     }
 
     @Override // documentation inherited
-    protected void toString (StringBuffer buf)
+    protected void toString (StringBuilder buf)
     {
         super.toString(buf);
         buf.append(", slot=").append(_slot);

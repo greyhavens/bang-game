@@ -172,7 +172,7 @@ public abstract class Item
     @Override // documentation inherited
     public String toString ()
     {
-        StringBuffer buf = new StringBuffer("[");
+        StringBuilder buf = new StringBuilder("[");
         toString(buf);
         return buf.append("]").toString();
     }
@@ -193,7 +193,7 @@ public abstract class Item
     /**
      * Allows derived classes to augment our {@link #toString} output.
      */
-    protected void toString (StringBuffer buf)
+    protected void toString (StringBuilder buf)
     {
         buf.append("itemId=").append(_itemId);
         buf.append(", ownerId=").append(_ownerId);

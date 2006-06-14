@@ -122,7 +122,7 @@ public class TutorialConfig
     /** Generates a string representation of this instance. */
     public String toString ()
     {
-        StringBuffer buf = new StringBuffer("[");
+        StringBuilder buf = new StringBuilder("[");
         StringUtil.fieldsToString(buf, this);
         buf.append(", actions=");
         StringUtil.toString(buf, _actions);

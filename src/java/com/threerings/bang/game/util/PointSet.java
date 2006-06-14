@@ -72,7 +72,7 @@ public class PointSet extends ArrayIntSet
     /** Generates a string representation of this instance. */
     public String toString ()
     {
-        StringBuffer buf = new StringBuffer("(");
+        StringBuilder buf = new StringBuilder("(");
         for (int ii = 0, ll = size(); ii < ll; ii++) {
             if (ii > 0) {
                 buf.append(", ");

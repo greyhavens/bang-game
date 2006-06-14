@@ -230,7 +230,7 @@ public class Prop extends BigPiece
     }
 
     @Override // documentation inherited
-    protected void toString (StringBuffer buf)
+    protected void toString (StringBuilder buf)
     {
         buf.append(_type).append(", ");
         super.toString(buf);

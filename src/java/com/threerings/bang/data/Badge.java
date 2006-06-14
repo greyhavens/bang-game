@@ -377,7 +377,7 @@ public class Badge extends Item
 
         Type () {
             // compute our unique code
-            StringBuffer codestr = new StringBuffer();
+            StringBuilder codestr = new StringBuilder();
             _code = BangUtil.crc32(name());
 
             if (_codeToType.containsKey(_code)) {
@@ -510,7 +510,7 @@ public class Badge extends Item
     }
 
     @Override // documentation inherited
-    protected void toString (StringBuffer buf)
+    protected void toString (StringBuilder buf)
     {
         super.toString(buf);
         buf.append(", type=").append(getType());
