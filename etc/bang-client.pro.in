@@ -37,6 +37,7 @@
 # -dontoptimize
 # -dontobfuscate
 
+-dontskipnonpubliclibraryclasses
 -outjars ../dist/bang-pcode.jar
 -printseeds ../dist/proguard.seeds
 @apply_mapping@ @apply_file@
