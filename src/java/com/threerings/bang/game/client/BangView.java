@@ -306,6 +306,7 @@ public class BangView extends BWindow
         BangConfig config, int pidx, BangBoard board, Piece[] pieces)
     {
         _bangobj.board = (BangBoard)board.clone();
+        _bangobj.board.applyShadowPatch(_bangobj.scenarioId);
         ArrayList<Piece> plist = new ArrayList<Piece>();
         _bangobj.maxPieceId = 0;
         for (int ii = 0; ii < pieces.length; ii++) {

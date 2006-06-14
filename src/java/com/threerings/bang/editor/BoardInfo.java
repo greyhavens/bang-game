@@ -106,6 +106,7 @@ public class BoardInfo extends JPanel
     public void fromBoard (BoardRecord board)
     {
         _name.setText(board.name);
+        _props.setSelectedIndex(0);
         updatePlayers(board.players);
 
         // first turn off all the scenario check boxes
