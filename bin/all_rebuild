@@ -13,6 +13,7 @@ fi
 ROOT=`dirname $0`
 ROOT=`cd $ROOT ; cd .. ; pwd`
 LOCKFILE=/tmp/rebuild-bang.lock
+ANT_OPTS=-mx128M
 export JAVA_HOME=/usr/local/jdk1.5
 
 # load up some handy shell functions
@@ -75,7 +76,7 @@ fi
 
 # build the main thang
 cd $ROOT
-ant distclean dist mdist
+$ANT distclean dist mdist
 if [ $? != 0 ]; then
     rm -f $LOCKFILE
     exit 255
@@ -90,7 +91,7 @@ if [ ! -z "$CLIENT" ]; then
     echo "config_version=$BUILD_VERSION" >> $ROOT/build.properties
 
     cd $ROOT
-    ant models client
+    $ANT models client
     if [ $? != 0 ]; then
         rm -f $LOCKFILE
         exit 255
@@ -101,15 +102,15 @@ if [ ! -z "$CLIENT" ]; then
         $ROOT/../threerings/etc/proguard/bang
 
     cd $ROOT/projects/installers
-    ant client
+    $ANT client
 fi
 
 # build the development client if requested
 if [ ! -z "$DEVCLIENT" ]; then
     cd $ROOT
-    ant models devclient
+    $ANT models devclient
     cd $ROOT/projects/installers
-    ant devclient
+    $ANT devclient
 
     # make our Proguard mapping file accessible to Hemiptera
     cp $ROOT/etc/proguard/0.map $ROOT/../threerings/etc/proguard/bang
