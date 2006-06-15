@@ -4,6 +4,8 @@
 package com.threerings.bang.game.client;
 
 import com.threerings.bang.game.client.effect.DamageIconViz;
+import com.threerings.bang.game.client.sprite.MobileSprite;
+import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.effect.TrainEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -18,11 +20,29 @@ public class CollisionHandler extends EffectHandler
         _damage = damage;
     }
 
+    @Override // documentation inherited
     public void pieceAffected (Piece piece, String effect)
     {
         super.pieceAffected(piece, effect);
         if (effect.equals(TrainEffect.DAMAGED)) {
             DamageIconViz.displayDamageIconViz(piece, _damage, _ctx, _view);
+        }
+    }
+
+    @Override // documentation inherited
+    public void pieceMoved (Piece piece)
+    {
+        MobileSprite ms = null;
+        PieceSprite sprite = _view.getPieceSprite(piece);
+        if (sprite != null && sprite instanceof MobileSprite) {
+            ms = (MobileSprite)sprite;
+            ms.setMoveType(MobileSprite.MOVE_PUSH);
+        }
+
+        super.pieceMoved(piece);
+
+        if (ms != null) {
+            ms.setMoveType(MobileSprite.MOVE_NORMAL);
         }
     }
 

@@ -91,6 +91,9 @@ public class ShotEffect extends Effect
 
     /** Defend influence icon name. */
     public String defendIcon;
+
+    /** Direction location the target is pushed. */
+    public int pushx = -1, pushy = -1;
     
     /**
      * Constructor used when creating a new shot effect.
@@ -258,6 +261,10 @@ public class ShotEffect extends Effect
         // finally do the damage
         String effect = shooter.getConfig().mode == UnitConfig.Mode.RANGE ?
             EXPLODED : DAMAGED;
+        if (pushx != -1) {
+            return collide(bangobj, obs, shooter.owner, target, newDamage,
+                    pushx, pushy, effect);
+        }
         return damage(bangobj, obs, shooter.owner, target, newDamage, effect);
     }
 

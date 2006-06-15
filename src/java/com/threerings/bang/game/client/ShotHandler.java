@@ -74,6 +74,25 @@ public abstract class ShotHandler extends EffectHandler
         }
     }
 
+    @Override // documentation inherited
+    public void pieceMoved (Piece piece)
+    {
+        MobileSprite ms = null;
+        if (_shot.pushx != -1) {
+            PieceSprite sprite = _view.getPieceSprite(piece);
+            if (sprite != null && sprite instanceof MobileSprite) {
+                ms = (MobileSprite)sprite;
+                ms.setMoveType(MobileSprite.MOVE_PUSH);
+            }
+        }
+
+        super.pieceMoved(piece);
+
+        if (ms != null) {
+            ms.setMoveType(MobileSprite.MOVE_NORMAL);
+        }
+    }
+
     /**
      * Prepares the sounds we'll need during the animation of this shot.
      */

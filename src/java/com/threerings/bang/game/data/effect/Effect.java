@@ -89,6 +89,25 @@ public abstract class Effect extends SimpleStreamableObject
             return false;
         }
 
+        return collide(bangobj, obs, collider, target, 
+                Math.min(100, target.damage + damage), x, y, effect);
+
+    }
+
+    /**
+     * Handles a collision that moves and damages a unit.
+     *
+     * @param collider the index of the user causing the collision, or -1.
+     * @param newDamage the new total damage to assign to the damaged piece.
+     *
+     * @return true if all went well, false if we failed to collide or do
+     * damage.
+     */
+    public static boolean collide (
+        BangObject bangobj, Observer obs, int collider, Piece target,
+        int newDamage, int x, int y, String effect)
+    {
+
         // move the target to its new coordinates
         if (target.x != x || target.y != y) {
             moveAndReport(bangobj, target, x, y, obs);
@@ -96,8 +115,7 @@ public abstract class Effect extends SimpleStreamableObject
 
         // damage the target if it's still alive
         if (target.isAlive()) {
-            return damage(bangobj, obs, collider, target,
-                          Math.min(100, target.damage + damage), effect);
+            return damage(bangobj, obs, collider, target, newDamage, effect);
         }
 
         return true;

@@ -24,11 +24,20 @@ public class MoveUnitPath extends LineSegmentPath
     public MoveUnitPath (
         MobileSprite sprite, Vector3f[] coords, float[] durations)
     {
+        this(sprite, coords, durations, null);
+    }
+    
+    public MoveUnitPath (MobileSprite sprite, Vector3f[] coords,
+            float[] durations, String action)
+    {
         super(sprite, UP, FORWARD, coords, durations);
 
         // either we do "walking" the whole time, or we break our path
         // down into "start", "cycle" and "end"
-        if (sprite.hasAction("walking_start")) {
+        if (action != null) {
+            sprite.setAction(action);
+
+        } else if (sprite.hasAction("walking_start")) {
             float total = 0;
             for (int ii = 0; ii < durations.length; ii++) {
                 total += durations[ii];

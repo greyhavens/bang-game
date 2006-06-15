@@ -67,6 +67,12 @@ public class MobileSprite extends PieceSprite
     /** A fake action that is queued up to indicate that this sprite
      * should be removed when all other actions are completed. */
     public static final String REMOVED = "__removed__";
+
+    /** Normal movement. */
+    public static final int MOVE_NORMAL = 0;
+
+    /** Pushed movement. */
+    public static final int MOVE_PUSH = 1;
     
     /**
      * Creates a mobile sprite with the specified model type and name.
@@ -169,6 +175,22 @@ public class MobileSprite extends PieceSprite
     public Shadow getShadowType ()
     {
         return Shadow.DYNAMIC;
+    }
+
+    /**
+     * Sets the move type of the sprite.
+     */
+    public void setMoveType (int moveType)
+    {
+        _moveType = moveType;
+    }
+
+    /**
+     * Get the move type of the sprite.
+     */
+    public int getMoveType ()
+    {
+        return _moveType;
     }
 
     /**
@@ -562,7 +584,11 @@ public class MobileSprite extends PieceSprite
                 durations[ii-1] = 1f / speed;
             }
         }
-        return new MoveUnitPath(this, coords, durations);
+        String action = null;
+        if (_moveType == MOVE_PUSH) {
+            action = "reacting";
+        }
+        return new MoveUnitPath(this, coords, durations, action);
     }
 
     /**
@@ -633,6 +659,8 @@ public class MobileSprite extends PieceSprite
     protected ArrayList<String> _actions = new ArrayList<String>();
 
     protected PieceSprite _tsprite;
+
+    protected int _moveType = MOVE_NORMAL;
 
     /** The colorizations to use for this sprite's textures. */
     protected Colorization[] _zations;

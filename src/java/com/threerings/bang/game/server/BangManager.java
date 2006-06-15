@@ -342,6 +342,7 @@ public class BangManager extends GameManager
             int dam1 = (target == null) ? 0 : target.damage;
 
             // if they specified a non-NOOP move, execute it
+            int oldx = unit.x, oldy = unit.y;
             if (x != unit.x || y != unit.y) {
                 munit = moveUnit(unit, x, y, target);
                 shooter = munit;
@@ -359,7 +360,10 @@ public class BangManager extends GameManager
                 // effect the initial shot
                 log.fine("Shooting " + target.info() +
                          " with " + shooter.info());
-                ShotEffect effect = shooter.shoot(_bangobj, target, 1f);
+                // computer the damage scale
+                int dist = Math.abs(oldx - munit.x) + Math.abs(oldy - munit.y);
+                float scale = shooter.moveDamageScale(dist);
+                ShotEffect effect = shooter.shoot(_bangobj, target, scale);
                 // the initial shot updates the shooter's last acted
                 effect.shooterLastActed = _bangobj.tick;
 
