@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+
+<model>
+
+  <triMesh name="billboard_pine" translation="1.8137, 1.13951, 314.309" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="pine_billboard.png" transparent="true">
+    <vertex location="-388.805, 605.724, 2.49859e-005" normal="0.0, 0.0, 1.0" tcoords="0.00775307, 0.982386"/>
+    <vertex location="-388.805, -303.726, -8.25023e-006" normal="0.0, 0.0, 1.0" tcoords="0.00775261, 0.00956894"/>
+    <vertex location="388.805, 605.724, 2.49859e-005" normal="0.0, 0.0, 1.0" tcoords="0.993518, 0.982386"/>
+    <vertex location="388.805, -303.726, -8.25023e-006" normal="0.0, 0.0, 1.0" tcoords="0.993518, 0.00956894"/>
+    <vertex location="388.805, 605.724, 2.49859e-005" normal="0.0, 0.0, 1.0" tcoords="0.993518, 0.982386"/>
+    <vertex location="-388.805, -303.726, -8.25023e-006" normal="0.0, 0.0, 1.0" tcoords="0.00775261, 0.00956894"/>
+  </triMesh>
+
+</model>
