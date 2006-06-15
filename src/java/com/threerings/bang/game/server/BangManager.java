@@ -994,10 +994,13 @@ public class BangManager extends GameManager
             }
             // now add the cards to the BangObject
             _bangobj.startTransaction();
-            for (Iterator<Card> iter = _cardSet.iterator(); iter.hasNext(); ) {
-                _bangobj.addToCards(iter.next());
+            try {
+                for (Card card : _cardSet) {
+                    _bangobj.addToCards(card);
+                }
+            } finally {
+                _bangobj.commitTransaction();
             }
-            _bangobj.commitTransaction();
             _cardSet.clear();
             _scenario.startNextPhase(_bangobj);
         }
