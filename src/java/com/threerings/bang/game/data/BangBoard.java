@@ -802,8 +802,8 @@ public class BangBoard extends SimpleStreamableObject
         }
         int hx = Math.min((x + 1) * HEIGHTFIELD_SUBDIVISIONS, _hfwidth);
         int hy = Math.min((y + 1) * HEIGHTFIELD_SUBDIVISIONS, _hfheight);
-        x = Math.max(x * HEIGHTFIELD_SUBDIVISIONS, 0);
-        y = Math.max(y * HEIGHTFIELD_SUBDIVISIONS, 0);
+        x = Math.min(_hfwidth, Math.max(x * HEIGHTFIELD_SUBDIVISIONS, 0));
+        y = Math.min(_hfheight, Math.max(y * HEIGHTFIELD_SUBDIVISIONS, 0));
         int height = _minEdgeHeight;
         for (int dy = y; dy <= hy; dy++) {
             for (int dx = x; dx <= hx; dx++) {
