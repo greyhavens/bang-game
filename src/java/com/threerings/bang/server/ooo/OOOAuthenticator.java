@@ -160,7 +160,7 @@ public class OOOAuthenticator extends Authenticator
             }
 
             // load up their user account record
-            OOOUser user = (OOOUser)_authrep.loadUser(username);
+            OOOUser user = _authrep.loadUser(username, true);
             if (user == null) {
                 rdata.code = NO_SUCH_USER;
                 return;
