@@ -43,5 +43,11 @@ public class BuffaloRider extends Unit
         return shot;
     }
 
+    @Override // documentation inherited
+    public boolean validTarget (Piece target, boolean allowSelf)
+    {
+        return !target.isFlyer() && super.validTarget(target, allowSelf);
+    }
+
     protected int _moveDist;
 }
