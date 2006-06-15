@@ -168,6 +168,17 @@ public class UnitSprite extends MobileSprite
             displayTextureQuad(_modquad[ModIcon.ARROW_DOWN.idx()],
                     _modtst[ModIcon.ARROW_DOWN.ordinal()]);
         }
+        if (_piece instanceof Unit) {
+            Unit unit = (Unit)_piece;
+            if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+                displayTextureQuad(_modquad[ModIcon.STAR.idx()],
+                        _modtst[ModIcon.STAR.ordinal()]);
+            }
+            if (unit.benuggeted) {
+                displayTextureQuad(_modquad[ModIcon.NUGGET.idx()],
+                        _modtst[ModIcon.NUGGET.ordinal()]);
+            }
+        }
     }
 
     /**
@@ -571,7 +582,9 @@ public class UnitSprite extends MobileSprite
     protected enum ModIcon {
         ARROW_UP (2, "arrow_up"),
         ARROW_DOWN (3, "arrow_down"),
-        CANNOT (2, "cannot");
+        CANNOT (2, "cannot"),
+        STAR (1, "star"),
+        NUGGET (0, "nugget");
 
         ModIcon (int idx, String png) {
             _idx = idx;
