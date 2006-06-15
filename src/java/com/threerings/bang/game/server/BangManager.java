@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -866,11 +867,11 @@ public class BangManager extends GameManager
         try {
             _bangobj.startTransaction();
 
-            // if they supplied cards, fill those in
+            // if they supplied cards, store those to be added later
             if (cards != null) {
                 for (int ii = 0; ii < cards.length; ii++) {
                     if (cards[ii] != null) {
-                        _bangobj.addToCards(cards[ii]);
+                        _cardSet.add(cards[ii]);
                     }
                 }
             }
@@ -991,6 +992,13 @@ public class BangManager extends GameManager
                     return;
                 }
             }
+            // now add the cards to the BangObject
+            _bangobj.startTransaction();
+            for (Iterator<Card> iter = _cardSet.iterator(); iter.hasNext(); ) {
+                _bangobj.addToCards(iter.next());
+                iter.remove();
+            }
+            _bangobj.commitTransaction();
             _scenario.startNextPhase(_bangobj);
         }
     }
@@ -2329,6 +2337,9 @@ public class BangManager extends GameManager
 
     /** Maps card id to a {@link StartingCard} record. */
     protected HashIntMap<StartingCard> _scards = new HashIntMap<StartingCard>();
+
+    /** Stores cards to be added to the BangObject. */
+    protected HashSet<Card> _cardSet = new HashSet<Card>();
 
     /** The time for which the next tick is scheduled. */
     protected long _nextTickTime;
