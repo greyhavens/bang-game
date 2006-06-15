@@ -996,9 +996,9 @@ public class BangManager extends GameManager
             _bangobj.startTransaction();
             for (Iterator<Card> iter = _cardSet.iterator(); iter.hasNext(); ) {
                 _bangobj.addToCards(iter.next());
-                iter.remove();
             }
             _bangobj.commitTransaction();
+            _cardSet.clear();
             _scenario.startNextPhase(_bangobj);
         }
     }
