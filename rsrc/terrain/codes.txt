@@ -10,7 +10,6 @@ bone = 8
 prairie_grass_green = 9
 prairie_grass_gold = 10
 autumn_leaves = 11
-green_leaves = 12
 moss = 13
 river_pebbles = 14
 dry_mud_gray = 15
