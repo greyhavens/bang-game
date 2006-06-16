@@ -56,13 +56,13 @@ public class TrainSprite extends MobileSprite
         float[] durations = new float[ncoords - 1];
 
         if (last) {
-            setCoord(board, coords, idx++, _lastLastX, _lastLastY);
+            setCoord(board, coords, idx++, _lastLastX, _lastLastY, false);
         }
         durations[idx] = 1f / Config.getMovementSpeed();
-        setCoord(board, coords, idx++, train.lastX, train.lastY);
-        setCoord(board, coords, idx++, train.x, train.y);
+        setCoord(board, coords, idx++, train.lastX, train.lastY, false);
+        setCoord(board, coords, idx++, train.x, train.y, false);
         if (next) {
-            setCoord(board, coords, idx, train.nextX, train.nextY);
+            setCoord(board, coords, idx, train.nextX, train.nextY, false);
         }
         return new TrainPath(coords, durations, last);
     }

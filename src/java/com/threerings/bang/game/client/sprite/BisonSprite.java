@@ -68,10 +68,10 @@ public class BisonSprite extends MobileSprite
     }
     
     @Override // documentation inherited
-    protected void setCoord (
-        BangBoard board, Vector3f[] coords, int idx, int nx, int ny)
+    protected void setCoord (BangBoard board, Vector3f[] coords, int idx, 
+                             int nx, int ny, boolean moving)
     {
-        super.setCoord(board, coords, idx, nx, ny);
+        super.setCoord(board, coords, idx, nx, ny, moving);
         coords[idx].addLocal(_offset);
     }
     
