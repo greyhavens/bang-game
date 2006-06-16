@@ -1370,14 +1370,13 @@ public class BoardView extends BComponent
     }
 
     /** Creates geometry to highlight the supplied set of tiles. */
-    protected void highlightTiles (PointSet set, boolean forFlyer)
+    protected void highlightTiles (PointSet set)
     {
-        highlightTiles(set, forFlyer, MOVEMENT_HIGHLIGHT_COLOR);
+        highlightTiles(set, MOVEMENT_HIGHLIGHT_COLOR);
     }
 
     /** Creates geometry to highlight the supplied set of tiles. */
-    protected void highlightTiles (
-        PointSet set, boolean forFlyer, ColorRGBA highlightColor)
+    protected void highlightTiles (PointSet set, ColorRGBA highlightColor)
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             int tx = set.getX(ii), ty = set.getY(ii);

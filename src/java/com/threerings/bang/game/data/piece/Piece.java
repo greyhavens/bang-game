@@ -181,6 +181,17 @@ public abstract class Piece extends SimpleStreamableObject
     /** Returns the elevation of this piece in the board's elevation units. */
     public int computeElevation (BangBoard board, int tx, int ty)
     {
+        return computeElevation(board, tx, ty, false);
+    }
+
+    /** 
+     * Returns the elevation of this piece in the board's elevation units.
+     *
+     * @param moving is true if this elevation is part of a movement path
+     */
+    public int computeElevation (
+            BangBoard board, int tx, int ty, boolean moving)
+    {
         return board.getHeightfieldElevation(tx, ty);
     }
     
@@ -318,10 +329,19 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Returns true if this piece is a flying piece, false if it is a
-     * walking piece.
+     * Returns true if this piece can pass non-traversable tiles during
+     * movement, false otherwise.
      */
     public boolean isFlyer ()
+    {
+        return false;
+    }
+
+    /**
+     * Returns true if this piece can remain on non-traversable tiles after
+     * movement, false otherwise.
+     */
+    public boolean isAirborn ()
     {
         return false;
     }

@@ -47,7 +47,7 @@ public class TrackSprite extends PieceSprite
     public void setOrientation (int orientation)
     {
         super.setOrientation(orientation);
-        snapToTerrain();
+        snapToTerrain(false);
     }
 
     @Override // documentation inherited

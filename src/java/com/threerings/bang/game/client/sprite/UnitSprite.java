@@ -516,16 +516,16 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    protected void setCoord (
-        BangBoard board, Vector3f[] coords, int idx, int nx, int ny)
+    protected void setCoord (BangBoard board, Vector3f[] coords, int idx,
+                             int nx, int ny, boolean moving)
     {
         // make an exception for the death flights of flyers: only the
         // last coordinate is on the ground
         int elev;
-        if (_piece.isFlyer() && !_piece.isAlive() && idx != coords.length-1) {
+        if (_piece.isAirborn() && !_piece.isAlive() && idx != coords.length-1) {
             elev = ((Unit)_piece).computeAreaFlightElevation(board, nx, ny);
         } else {
-            elev = _piece.computeElevation(board, nx, ny);
+            elev = _piece.computeElevation(board, nx, ny, moving);
         }
         coords[idx] = new Vector3f();
         toWorldCoords(nx, ny, elev, coords[idx]);

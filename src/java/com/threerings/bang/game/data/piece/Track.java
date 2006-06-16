@@ -57,7 +57,7 @@ public class Track extends Piece
     public boolean preventsOverlap (Piece lapper)
     {
         return preventsGroundOverlap() && !(lapper instanceof Train) &&
-            !lapper.isFlyer();
+            !lapper.isAirborn();
     }
     
     /**

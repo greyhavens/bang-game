@@ -754,7 +754,7 @@ public class BangBoardView extends BoardView
             // if we have no path left, just blip to our starting spot
             if (path == null || path.size() == 0) {
                 sprite.setLocation(_board, unit.x, unit.y);
-                sprite.snapToTerrain();
+                sprite.snapToTerrain(false);
                 continue;
             }
 
@@ -919,8 +919,7 @@ public class BangBoardView extends BoardView
         // reduce the highlighted move tiles to just the selected tile
         PointSet moves = new PointSet();
         moves.add(tx, ty);
-        highlightTiles(moves, _selection.isFlyer(),
-                       getHighlightColor(_selection));
+        highlightTiles(moves, getHighlightColor(_selection));
 
         if (_attackEnabled) {
             // display our potential attacks
@@ -1097,7 +1096,7 @@ public class BangBoardView extends BoardView
             _attackSet.clear();
             pruneAttackSet(_moveSet, _attackSet);
         }
-        highlightTiles(_moveSet, piece.isFlyer(), getHighlightColor(piece));
+        highlightTiles(_moveSet, getHighlightColor(piece));
 
         // report that the user took an action (for tutorials)
         _ctrl.postEvent(TutorialCodes.UNIT_SELECTED);

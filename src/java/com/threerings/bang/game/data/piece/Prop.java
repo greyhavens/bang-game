@@ -124,7 +124,7 @@ public class Prop extends BigPiece
     @Override // documentation inherited
     public boolean preventsOverlap (Piece lapper)
     {
-        return !_config.passable && !lapper.isFlyer();
+        return !_config.passable && !lapper.isAirborn();
     }
 
     @Override // documentation inherited

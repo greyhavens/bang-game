@@ -188,10 +188,10 @@ public class PieceSprite extends Sprite
      * the terrain, and its pitch and roll based on the slope of the terrain.
      * The units's x coordinate, y coordinate, and heading are unaffected.
      */
-    public void snapToTerrain ()
+    public void snapToTerrain (boolean moving)
     {
         // flyers simply fly from point to point
-        if (_piece.isFlyer()) {
+        if (moving ? _piece.isFlyer() : _piece.isAirborn()) {
             return;
         }
 

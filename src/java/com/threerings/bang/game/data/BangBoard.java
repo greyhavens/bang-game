@@ -919,7 +919,7 @@ public class BangBoard extends SimpleStreamableObject
 
     // documentation inherited from interface AStarPathUtil.TraversalPred
     public boolean canTraverse (Object traverser, int x, int y) {
-        return canOccupy((Piece)traverser, x, y);
+        return canTravel((Piece)traverser, x, y, false);
     }
     
     /**
@@ -927,6 +927,16 @@ public class BangBoard extends SimpleStreamableObject
      * coordinate.
      */
     public boolean canOccupy (Piece piece, int x, int y)
+    {
+        return canTravel(piece, x, y, true);
+    }
+
+    /**
+     * If remain is true, returns true if the specified piece can occupy the
+     * specified coordinate.  If remain is false, returns true if the piece
+     * can traverse (but not necessarily remain on) the specified coordinate.
+     */
+    protected boolean canTravel (Piece piece, int x, int y, boolean remain)
     {
         if (!_playarea.contains(x, y)) {
             return false;
@@ -941,8 +951,9 @@ public class BangBoard extends SimpleStreamableObject
         // props, but will otherwise not do funny things
         int idx = y*_width+x;
         byte tstate = _tstate[idx];
-        if ((piece.isFlyer() && (tstate > O_PROP ||
-            (tstate & TALL_FLAG) != 0)) || piece instanceof Train) {
+        boolean flightstate = (remain ? piece.isAirborn() : piece.isFlyer());
+        if ((flightstate && (tstate > O_PROP || (tstate & TALL_FLAG) != 0)) ||
+                piece instanceof Train) {
             return true;
         } else {
             return (tstate == O_FLAT) ||
@@ -1007,7 +1018,7 @@ public class BangBoard extends SimpleStreamableObject
         // to stop ontop of another unit)
         for (int ii = 0, ll = moves.size(); ii < ll; ii++) {
             int x = moves.getX(ii), y = moves.getY(ii), idx = y*_width+x;
-            if (_tstate[idx] >= 0) {
+            if (!canOccupy(piece, x, y) || _tstate[idx] >= 0) {
                 moves.remove(x, y);
                 _pgrid[idx] = 0;
                 ii--;
@@ -1186,8 +1197,8 @@ public class BangBoard extends SimpleStreamableObject
     protected void considerMoving (
         Piece piece, PointSet moves, int xx, int yy, byte remain)
     {
-        // make sure this coordinate is occupiable
-        if (!_playarea.contains(xx, yy) || !canOccupy(piece, xx, yy)) {
+        // make sure this coordinate is traversable
+        if (!_playarea.contains(xx, yy) || !canTraverse(piece, xx, yy)) {
             return;
         }
 

@@ -255,7 +255,7 @@ public class StampedeEffect extends Effect
         ArrayList<Piece> units = new ArrayList<Piece>();
         for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
             Piece piece = (Piece)it.next();
-            if (piece instanceof Unit && !piece.isFlyer()) {
+            if (piece instanceof Unit && !piece.isAirborn()) {
                 units.add((Piece)piece.clone());
             }
         }

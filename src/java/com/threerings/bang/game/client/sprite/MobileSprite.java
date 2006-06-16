@@ -138,7 +138,7 @@ public class MobileSprite extends PieceSprite
                 localTranslation).normalizeLocal();
             localRotation.fromAngleNormalAxis(
                 FastMath.atan2(dir.x, -dir.y), Vector3f.UNIT_Z);
-            snapToTerrain();
+            snapToTerrain(false);
         }
     }
 
@@ -247,7 +247,7 @@ public class MobileSprite extends PieceSprite
     public void setOrientation (int orientation)
     {
         super.setOrientation(orientation);
-        snapToTerrain();
+        snapToTerrain(false);
     }
 
     @Override // documentation inherited
@@ -296,7 +296,7 @@ public class MobileSprite extends PieceSprite
      */
     public void pathUpdate ()
     {
-        snapToTerrain();
+        snapToTerrain(true);
         updateHighlight();
         updateShadowValue();
     }
@@ -579,7 +579,7 @@ public class MobileSprite extends PieceSprite
         int ii = 0;
         for (Iterator iter = path.iterator(); iter.hasNext(); ii++) {
             Point p = (Point)iter.next();
-            setCoord(board, coords, ii, p.x, p.y);
+            setCoord(board, coords, ii, p.x, p.y, (ii > 0 && iter.hasNext()));
             if (ii > 0) {
                 durations[ii-1] = 1f / speed;
             }
@@ -594,11 +594,11 @@ public class MobileSprite extends PieceSprite
     /**
      * Sets the coordinate in the given array at the specified index.
      */
-    protected void setCoord (
-        BangBoard board, Vector3f[] coords, int idx, int nx, int ny)
+    protected void setCoord (BangBoard board, Vector3f[] coords, int idx, 
+                             int nx, int ny, boolean moving)
     {
         coords[idx] = new Vector3f();
-        toWorldCoords(nx, ny, _piece.computeElevation(board, nx, ny),
+        toWorldCoords(nx, ny, _piece.computeElevation(board, nx, ny, moving),
             coords[idx]);
     }
 
