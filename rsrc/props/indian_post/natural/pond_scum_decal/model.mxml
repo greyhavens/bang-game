@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+
+<model>
+
+  <triMesh name="pond_scum" translation="0.0, 0.0, 3.40934" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="pond_scum.png" transparent="true">
+    <vertex location="-100.0, 100.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0192308, 0.971154"/>
+    <vertex location="-100.0, -100.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0192308, 0.00961539"/>
+    <vertex location="100.0, 100.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.980769, 0.971154"/>
+    <vertex location="100.0, -100.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.980769, 0.00961539"/>
+    <vertex location="100.0, 100.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.980769, 0.971154"/>
+    <vertex location="-100.0, -100.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0192308, 0.00961539"/>
+  </triMesh>
+
+</model>
