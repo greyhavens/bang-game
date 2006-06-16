@@ -76,11 +76,17 @@ public class TextureCache
             return texture;
         }
 
-        Image img = (zations == null) ?
-            _ctx.getImageCache().getImage(path, scale) :
-            _ctx.getImageCache().createImage(
-                _ctx.getImageCache().getBufferedImage(path), zations,
-                scale, true);
+        // if the image is not recolorable, try again without the colorizations
+        Image img;
+        if (zations != null) {
+            BufferedImage bimg = _ctx.getImageCache().getBufferedImage(path);
+            if (bimg.getType() != BufferedImage.TYPE_BYTE_INDEXED) {
+                return getTexture(path, scale);
+            }
+            img = _ctx.getImageCache().createImage(bimg, zations, scale, true);
+        } else {
+            img = _ctx.getImageCache().getImage(path, scale);
+        }
         texture = RenderUtil.createTexture(img);
         _textures.put(tkey, new WeakReference<Texture>(texture));
         return texture;
