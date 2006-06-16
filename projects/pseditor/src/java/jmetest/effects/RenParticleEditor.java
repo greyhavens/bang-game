@@ -67,6 +67,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -95,7 +96,10 @@ import javax.swing.table.TableColumn;
 
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
+import com.jme.math.Line;
 import com.jme.math.Matrix3f;
+import com.jme.math.Rectangle;
+import com.jme.math.Ring;
 import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
@@ -165,6 +169,24 @@ public class RenParticleEditor extends JFrame {
         new ValuePanel("End Size: ", "", 0, 400, 0.1f);
     JLabel imageLabel = new JLabel();
 
+    // origin panel components
+    JComboBox originTypeBox;
+    JPanel originParamsPanel;
+    JPanel pointParamsPanel;
+    JPanel lineParamsPanel;
+    ValuePanel lineLengthPanel =
+        new ValuePanel("Length: ", "", 0, 1000, 0.1f);
+    JPanel rectParamsPanel;
+    ValuePanel rectWidthPanel =
+        new ValuePanel("Width: ", "", 0, 1000, 0.1f);
+    ValuePanel rectHeightPanel =
+        new ValuePanel("Height: ", "", 0, 1000, 0.1f);
+    JPanel ringParamsPanel;
+    ValuePanel ringInnerPanel =
+        new ValuePanel("Inner Radius: ", "", 0, 1000, 0.1f);
+    ValuePanel ringOuterPanel =
+        new ValuePanel("Outer Radius: ", "", 0, 1000, 0.1f);
+    
     // emission panel components
     UnitVectorPanel directionPanel = new UnitVectorPanel();
     ValuePanel minAnglePanel =
@@ -278,6 +300,7 @@ public class RenParticleEditor extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();                
         tabbedPane.add(createLayerPanel(), "Layers");
         tabbedPane.add(createAppearancePanel(), "Appearance");
+        tabbedPane.add(createOriginPanel(), "Origin");
         tabbedPane.add(createEmissionPanel(), "Emission");
         tabbedPane.add(createFlowPanel(), "Flow");
         tabbedPane.add(createWorldPanel(), "World");
@@ -561,6 +584,98 @@ public class RenParticleEditor extends JFrame {
             GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
             new Insets(5, 10, 5, 5), 0, 0));
         return appPanel;
+    }
+    
+    private JPanel createOriginPanel() {
+        originTypeBox = new JComboBox(new String[] {
+            "Point", "Line", "Rectangle", "Ring" });
+        originTypeBox.setBorder(createTitledBorder(" EMITTER TYPE "));
+        originTypeBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateOriginParams();
+            }
+        });
+        
+        originParamsPanel = new JPanel(new BorderLayout());
+        
+        pointParamsPanel = createPointParamsPanel();
+        lineParamsPanel = createLineParamsPanel();
+        rectParamsPanel = createRectParamsPanel();
+        ringParamsPanel = createRingParamsPanel();
+        
+        JPanel originPanel = new JPanel(new GridBagLayout());
+        originPanel.add(originTypeBox, new GridBagConstraints(0, 0, 1, 1, 1.0,
+            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(10, 10, 10, 10), 0, 0));
+        originPanel.add(originParamsPanel, new GridBagConstraints(0, 1, 1, 1,
+            1.0, 1.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
+            new Insets(5, 10, 5, 5), 0, 0));
+        return originPanel;
+    }
+
+    private JPanel createPointParamsPanel() {
+        return new JPanel();
+    }
+    
+    private JPanel createLineParamsPanel() {
+        lineLengthPanel.setBorder(createTitledBorder(" LINE PARAMETERS "));
+        lineLengthPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                Line line = particleMesh.getLine();
+                float val = lineLengthPanel.getValue();
+                line.getOrigin().set(-val/2, 0f, 0f);
+                line.getDirection().set(val/2, 0f, 0f);
+            }
+        });
+        return lineLengthPanel;
+    }
+    
+    private JPanel createRectParamsPanel() {
+        rectWidthPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                updateRectangle();
+            }
+        });
+        rectHeightPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                updateRectangle();
+            }
+        });
+       
+        JPanel rectParamsPanel = new JPanel(new GridBagLayout());
+        rectParamsPanel.setBorder(createTitledBorder(" RECTANGLE PARAMETERS "));
+        rectParamsPanel.add(rectWidthPanel, new GridBagConstraints(0, 0, 1, 1, 1.0,
+            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(5, 10, 5, 10), 0, 0));
+        rectParamsPanel.add(rectHeightPanel, new GridBagConstraints(0, 1, 1, 1, 1.0,
+            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(5, 10, 5, 10), 0, 0));
+        return rectParamsPanel;
+    }
+    
+    private JPanel createRingParamsPanel() {
+        ringInnerPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                Ring ring = particleMesh.getRing();
+                ring.setInnerRadius(ringInnerPanel.getValue());
+            }
+        });
+        ringOuterPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                Ring ring = particleMesh.getRing();
+                ring.setOuterRadius(ringOuterPanel.getValue());
+            }
+        }); 
+        
+        JPanel ringParamsPanel = new JPanel(new GridBagLayout());
+        ringParamsPanel.setBorder(createTitledBorder(" RING PARAMETERS "));
+        ringParamsPanel.add(ringInnerPanel, new GridBagConstraints(0, 0, 1, 1, 1.0,
+            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(5, 10, 5, 10), 0, 0));
+        ringParamsPanel.add(ringOuterPanel, new GridBagConstraints(0, 1, 1, 1, 1.0,
+            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(5, 10, 5, 10), 0, 0));
+        return ringParamsPanel;
     }
     
     private JPanel createEmissionPanel() {
@@ -1312,6 +1427,22 @@ public class RenParticleEditor extends JFrame {
             0 : particleMesh.getForces().size();
         forceModel.fireContentsChanged(0, fcount - 1);
         
+        switch (particleMesh.getEmitType()) {
+            case ParticleMesh.ET_POINT:
+                originTypeBox.setSelectedItem("Point");
+                break;
+            case ParticleMesh.ET_LINE:
+                originTypeBox.setSelectedItem("Line");
+                break;
+            case ParticleMesh.ET_RECTANGLE:
+                originTypeBox.setSelectedItem("Rectangle");
+                break;
+            case ParticleMesh.ET_RING:
+                originTypeBox.setSelectedItem("Ring"); 
+                break;
+        } 
+        updateOriginParams();
+        
         validate();
     }
 
@@ -1326,6 +1457,58 @@ public class RenParticleEditor extends JFrame {
         validate();
     }
 
+    /**
+     * updateOriginParams
+     */
+    private void updateOriginParams() {
+        originParamsPanel.removeAll();
+        String type = (String)originTypeBox.getSelectedItem();
+        if (type.equals("Point")) {
+            particleMesh.setEmitType(ParticleMesh.ET_POINT);
+            originParamsPanel.add(pointParamsPanel);
+            
+        } else if (type.equals("Line")) {
+            particleMesh.setEmitType(ParticleMesh.ET_LINE);
+            Line line = particleMesh.getLine();
+            if (line == null) {
+                particleMesh.setGeometry(line = new Line());
+            }
+            lineLengthPanel.setValue(line.getOrigin().distance(
+                line.getDirection()));
+            originParamsPanel.add(lineParamsPanel);
+            
+        } else if (type.equals("Rectangle")) {
+            particleMesh.setEmitType(ParticleMesh.ET_RECTANGLE);
+            Rectangle rect = particleMesh.getRectangle();
+            if (rect == null) {
+                particleMesh.setGeometry(rect = new Rectangle());
+            }
+            rectWidthPanel.setValue(rect.getA().distance(rect.getB()));
+            rectHeightPanel.setValue(rect.getA().distance(rect.getC()));
+            originParamsPanel.add(rectParamsPanel);
+            
+        } else if (type.equals("Ring")) {
+            particleMesh.setEmitType(ParticleMesh.ET_RING);
+            Ring ring = particleMesh.getRing();
+            if (ring == null) {
+                particleMesh.setGeometry(ring = new Ring());
+            }
+            ringInnerPanel.setValue(ring.getInnerRadius());
+            ringOuterPanel.setValue(ring.getOuterRadius());
+            originParamsPanel.add(ringParamsPanel);
+        }
+        originParamsPanel.validate();
+    }
+    
+    private void updateRectangle() {
+        Rectangle rect = particleMesh.getRectangle();
+        float width = rectWidthPanel.getValue(),
+            height = rectHeightPanel.getValue();
+        rect.getA().set(-width/2, 0f, -height/2);
+        rect.getB().set(width/2, 0f, -height/2);
+        rect.getC().set(-width/2, 0f, height/2);
+    }
+    
     /**
      * updateForceParams
      */
