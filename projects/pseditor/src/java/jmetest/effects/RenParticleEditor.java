@@ -62,7 +62,6 @@ import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -81,7 +80,6 @@ import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
@@ -119,16 +117,16 @@ import com.jme.util.export.binary.BinaryImporter;
 import com.jmex.awt.JMECanvas;
 import com.jmex.awt.SimpleCanvasImpl;
 import com.jmex.effects.particles.ParticleFactory;
-import com.jmex.effects.particles.ParticleForce;
+import com.jmex.effects.particles.ParticleInfluence;
 import com.jmex.effects.particles.ParticleMesh;
-import com.jmex.effects.particles.SimpleParticleForceFactory;
+import com.jmex.effects.particles.SimpleParticleInfluenceFactory;
 
 /**
  * <code>RenParticleControlFrame</code>
  *
  * @author Joshua Slack
  * @author Andrzej Kapolka - additions for multiple layers, save/load from jme format
- * @version $Id: RenParticleEditor.java,v 1.28 2006/06/14 03:42:20 renanse Exp $
+ * @version $Id: RenParticleEditor.java,v 1.29 2006/06/16 03:48:08 renanse Exp $
  *
  */
 
@@ -214,18 +212,18 @@ public class RenParticleEditor extends JFrame {
     ValuePanel randomPanel =
         new ValuePanel("Random Factor: ", "", 0, 100, 0.1f);
         
-    // force panel components
-    ForceListModel forceModel = new ForceListModel();
-    JList forceList = new JList(forceModel);
-    JButton deleteForceButton;
-    JPanel forceParamsPanel;
+    // influence panel components
+    InfluenceListModel influenceModel = new InfluenceListModel();
+    JList influenceList = new JList(influenceModel);
+    JButton deleteInfluenceButton;
+    JPanel influenceParamsPanel;
     JPanel windParamsPanel;
     ValuePanel windStrengthPanel =
         new ValuePanel("Strength: ", "", 0, 100, 0.1f);
     UnitVectorPanel windDirectionPanel = new UnitVectorPanel();
     JCheckBox windRandomBox;
     JPanel gravityParamsPanel;
-    VectorPanel gravityForcePanel = new VectorPanel(-100, 100, 0.1f);
+    VectorPanel gravityInfluencePanel = new VectorPanel(-100, 100, 0.1f);
     JPanel dragParamsPanel;
     ValuePanel dragCoefficientPanel =
         new ValuePanel("Drag Coefficient: ", "", 0, 100, 0.1f);
@@ -259,7 +257,7 @@ public class RenParticleEditor extends JFrame {
   
     public RenParticleEditor() {
         try {
-            jbInit();
+            init();
             // center the frame
             setLocationRelativeTo(null);
             // show frame
@@ -287,7 +285,7 @@ public class RenParticleEditor extends JFrame {
         }
     }
 
-    private void jbInit() throws Exception {
+    private void init() throws Exception {
         setTitle("Particle System Editor");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setFont(new Font("Arial", 0, 12));
@@ -304,7 +302,7 @@ public class RenParticleEditor extends JFrame {
         tabbedPane.add(createEmissionPanel(), "Emission");
         tabbedPane.add(createFlowPanel(), "Flow");
         tabbedPane.add(createWorldPanel(), "World");
-        tabbedPane.add(createForcePanel(), "Forces");
+        tabbedPane.add(createInfluencePanel(), "Influences");
         tabbedPane.add(createExamplesPanel(), "Examples");
         tabbedPane.setPreferredSize(new Dimension(300, 10));
         
@@ -633,12 +631,20 @@ public class RenParticleEditor extends JFrame {
     private JPanel createRectParamsPanel() {
         rectWidthPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                updateRectangle();
+                Rectangle rect = particleMesh.getRectangle();
+                float width = rectWidthPanel.getValue();
+                rect.getA().x = -width/2;
+                rect.getB().x = width/2;
+                rect.getC().x = -width/2;
             }
         });
         rectHeightPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                updateRectangle();
+                Rectangle rect = particleMesh.getRectangle();
+                float height = rectHeightPanel.getValue();
+                rect.getA().z = -height/2;
+                rect.getB().z = -height/2;
+                rect.getC().z = height/2;
             }
         });
        
@@ -864,120 +870,120 @@ public class RenParticleEditor extends JFrame {
         return worldPanel;
     }
     
-    private JPanel createForcePanel() {
-        forceList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        forceList.addListSelectionListener(new ListSelectionListener() {
+    private JPanel createInfluencePanel() {
+        influenceList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        influenceList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-                int idx = forceList.getSelectedIndex();
-                deleteForceButton.setEnabled(idx != -1);
-                updateForceParams();
+                int idx = influenceList.getSelectedIndex();
+                deleteInfluenceButton.setEnabled(idx != -1);
+                updateInfluenceParams();
             }
         });
         
         JButton newWindButton = new JButton(new AbstractAction("New Wind") {
             public void actionPerformed(ActionEvent e) {
-                particleMesh.addForce(
-                    SimpleParticleForceFactory.createBasicWind(
+                particleMesh.addInfluence(
+                    SimpleParticleInfluenceFactory.createBasicWind(
                         1f, new Vector3f(Vector3f.UNIT_X), true));
-                int idx = particleMesh.getForces().size() - 1;
-                forceModel.fireIntervalAdded(idx, idx);
-                forceList.setSelectedIndex(idx);
+                int idx = particleMesh.getInfluences().size() - 1;
+                influenceModel.fireIntervalAdded(idx, idx);
+                influenceList.setSelectedIndex(idx);
             }
         });
         newWindButton.setMargin(new Insets(2, 14, 2, 14));
         
         JButton newGravityButton = new JButton(new AbstractAction("New Gravity") {
             public void actionPerformed(ActionEvent e) {
-                particleMesh.addForce(
-                    SimpleParticleForceFactory.createBasicGravity(
+                particleMesh.addInfluence(
+                    SimpleParticleInfluenceFactory.createBasicGravity(
                         new Vector3f(Vector3f.ZERO)));
-                int idx = particleMesh.getForces().size() - 1;
-                forceModel.fireIntervalAdded(idx, idx);
-                forceList.setSelectedIndex(idx);
+                int idx = particleMesh.getInfluences().size() - 1;
+                influenceModel.fireIntervalAdded(idx, idx);
+                influenceList.setSelectedIndex(idx);
             }
         });
         newGravityButton.setMargin(new Insets(2, 14, 2, 14));
 
         JButton newDragButton = new JButton(new AbstractAction("New Drag") {
             public void actionPerformed(ActionEvent e) {
-                particleMesh.addForce(
-                    SimpleParticleForceFactory.createBasicDrag(1f));
-                int idx = particleMesh.getForces().size() - 1;
-                forceModel.fireIntervalAdded(idx, idx);
-                forceList.setSelectedIndex(idx);
+                particleMesh.addInfluence(
+                    SimpleParticleInfluenceFactory.createBasicDrag(1f));
+                int idx = particleMesh.getInfluences().size() - 1;
+                influenceModel.fireIntervalAdded(idx, idx);
+                influenceList.setSelectedIndex(idx);
             }
         });
         newDragButton.setMargin(new Insets(2, 14, 2, 14));
         
-        deleteForceButton = new JButton(new AbstractAction("Delete") {
+        deleteInfluenceButton = new JButton(new AbstractAction("Delete") {
             public void actionPerformed(ActionEvent e) {
-                int idx = forceList.getSelectedIndex();
-                particleMesh.getForces().remove(idx);
-                forceModel.fireIntervalRemoved(idx, idx);
-                forceList.setSelectedIndex(
-                    idx >= particleMesh.getForces().size() ? idx - 1 : idx);
+                int idx = influenceList.getSelectedIndex();
+                particleMesh.getInfluences().remove(idx);
+                influenceModel.fireIntervalRemoved(idx, idx);
+                influenceList.setSelectedIndex(
+                    idx >= particleMesh.getInfluences().size() ? idx - 1 : idx);
             }
         });
-        deleteForceButton.setMargin(new Insets(2, 14, 2, 14));
-        deleteForceButton.setEnabled(false);
+        deleteInfluenceButton.setMargin(new Insets(2, 14, 2, 14));
+        deleteInfluenceButton.setEnabled(false);
         
-        JPanel forceListPanel = new JPanel(new GridBagLayout());
-        forceListPanel.setBorder(createTitledBorder("PARTICLE FORCES"));
-        forceListPanel.add(forceList, new GridBagConstraints(0, 0, 1, 4, 0.5,
+        JPanel influenceListPanel = new JPanel(new GridBagLayout());
+        influenceListPanel.setBorder(createTitledBorder("PARTICLE INFLUENCES"));
+        influenceListPanel.add(influenceList, new GridBagConstraints(0, 0, 1, 4, 0.5,
             0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(5, 10, 10, 5), 0, 0));
-        forceListPanel.add(newWindButton, new GridBagConstraints(1, 0, 1, 1,
+        influenceListPanel.add(newWindButton, new GridBagConstraints(1, 0, 1, 1,
             0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(5, 10, 10, 5), 0, 0));
-        forceListPanel.add(newGravityButton, new GridBagConstraints(1, 1, 1, 1,
+        influenceListPanel.add(newGravityButton, new GridBagConstraints(1, 1, 1, 1,
             0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(5, 10, 10, 5), 0, 0));
-        forceListPanel.add(newDragButton, new GridBagConstraints(1, 2, 1, 1,
+        influenceListPanel.add(newDragButton, new GridBagConstraints(1, 2, 1, 1,
             0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(5, 10, 10, 5), 0, 0));
-        forceListPanel.add(deleteForceButton, new GridBagConstraints(1, 3, 1, 1,
+        influenceListPanel.add(deleteInfluenceButton, new GridBagConstraints(1, 3, 1, 1,
             0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(5, 10, 10, 5), 0, 0));
         
-        forceParamsPanel = new JPanel(new BorderLayout());
+        influenceParamsPanel = new JPanel(new BorderLayout());
         
         windParamsPanel = createWindParamsPanel();
         gravityParamsPanel = createGravityParamsPanel();
         dragParamsPanel = createDragParamsPanel();
         
-        JPanel forcePanel = new JPanel(new GridBagLayout());
-        forcePanel.add(forceListPanel, new GridBagConstraints(0, 0, 1, 1, 0.5,
+        JPanel influencePanel = new JPanel(new GridBagLayout());
+        influencePanel.add(influenceListPanel, new GridBagConstraints(0, 0, 1, 1, 0.5,
             0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets(5, 10, 10, 5), 0, 0));
-        forcePanel.add(forceParamsPanel, new GridBagConstraints(0, 1, 1, 1, 0.5,
+        influencePanel.add(influenceParamsPanel, new GridBagConstraints(0, 1, 1, 1, 0.5,
             1.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
             new Insets(5, 10, 10, 5), 0, 0));
-        return forcePanel;
+        return influencePanel;
     }
     
     private JPanel createWindParamsPanel() {
         windDirectionPanel.setBorder(createTitledBorder(" DIRECTION "));
         windDirectionPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                ParticleForce force = particleMesh.getForces().get(
-                    forceList.getSelectedIndex());
-                ((SimpleParticleForceFactory.BasicWind)force).setWindDirection(
+                ParticleInfluence influence = particleMesh.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicWind)influence).setWindDirection(
                     windDirectionPanel.getValue());
             }
         });
         windStrengthPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                ParticleForce force = particleMesh.getForces().get(
-                    forceList.getSelectedIndex());
-                ((SimpleParticleForceFactory.BasicWind)force).setStrength(
+                ParticleInfluence influence = particleMesh.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicWind)influence).setStrength(
                     windStrengthPanel.getValue());
             }
         });
         windRandomBox = new JCheckBox(new AbstractAction("Vary Randomly") {
             public void actionPerformed(ActionEvent e) {
-                ParticleForce force = particleMesh.getForces().get(
-                    forceList.getSelectedIndex());
-                ((SimpleParticleForceFactory.BasicWind)force).setRandom(
+                ParticleInfluence influence = particleMesh.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicWind)influence).setRandom(
                     windRandomBox.isSelected());
             }
         });
@@ -997,25 +1003,25 @@ public class RenParticleEditor extends JFrame {
     }
     
     private JPanel createGravityParamsPanel() {
-        gravityForcePanel.setBorder(createTitledBorder(" GRAVITY FORCE "));
-        gravityForcePanel.addChangeListener(new ChangeListener() {
+        gravityInfluencePanel.setBorder(createTitledBorder(" GRAVITY INFLUENCE "));
+        gravityInfluencePanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                ParticleForce force = particleMesh.getForces().get(
-                    forceList.getSelectedIndex());
-                ((SimpleParticleForceFactory.BasicGravity)force).setGravityForce(
-                    gravityForcePanel.getValue());
+                ParticleInfluence influence = particleMesh.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicGravity)influence).setGravityForce(
+                    gravityInfluencePanel.getValue());
             }
         });
-        return gravityForcePanel;
+        return gravityInfluencePanel;
     }
     
     private JPanel createDragParamsPanel() {
         dragCoefficientPanel.setBorder(createTitledBorder(" DRAG PARAMETERS "));
         dragCoefficientPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                ParticleForce force = particleMesh.getForces().get(
-                    forceList.getSelectedIndex());
-                ((SimpleParticleForceFactory.BasicDrag)force).setDragCoefficient(
+                ParticleInfluence influence = particleMesh.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicDrag)influence).setDragCoefficient(
                     dragCoefficientPanel.getValue());
             }
         });
@@ -1136,7 +1142,7 @@ public class RenParticleEditor extends JFrame {
     
     private void createNewLayer() {
         particleMesh = ParticleFactory.buildParticles(createLayerName(), 300);
-        particleMesh.addForce(SimpleParticleForceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
+        particleMesh.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
         particleMesh.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
         particleMesh.setMaximumAngle(0.2268928f);
         particleMesh.getParticleController().setSpeed(1.0f);
@@ -1210,7 +1216,7 @@ public class RenParticleEditor extends JFrame {
         if (exampleList == null || exampleList.getSelectedValue() == null)
             return;
         String examType = exampleList.getSelectedValue().toString();
-        particleMesh.clearForces();
+        particleMesh.clearInfluences();
         if ("FIRE".equalsIgnoreCase(examType)) {
             particleMesh.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
             particleMesh.setMaximumAngle(0.20943952f);
@@ -1229,7 +1235,7 @@ public class RenParticleEditor extends JFrame {
             particleMesh.setInitialVelocity(0.3f);
             particleMesh.getParticleController().setRepeatType(Controller.RT_WRAP);
         } else if ("FOUNTAIN".equalsIgnoreCase(examType)) {
-            particleMesh.addForce(SimpleParticleForceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
+            particleMesh.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
             particleMesh.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
             particleMesh.setMaximumAngle(0.2268928f);
             particleMesh.setMinimumAngle(0);
@@ -1247,7 +1253,7 @@ public class RenParticleEditor extends JFrame {
             particleMesh.setInitialVelocity(1.1f);
             particleMesh.getParticleController().setRepeatType(Controller.RT_WRAP);
         } else if ("LAVA".equalsIgnoreCase(examType)) {
-            particleMesh.addForce(SimpleParticleForceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
+            particleMesh.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
             particleMesh.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
             particleMesh.setMaximumAngle(0.418f);
             particleMesh.setMinimumAngle(0);
@@ -1282,7 +1288,7 @@ public class RenParticleEditor extends JFrame {
             particleMesh.setInitialVelocity(0.58f);
             particleMesh.setParticleSpinSpeed(0.08f);
         } else if ("RAIN".equalsIgnoreCase(examType)) {
-            particleMesh.addForce(SimpleParticleForceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
+            particleMesh.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
             particleMesh.setEmissionDirection(new Vector3f(0.0f, -1.0f, 0.0f));
             particleMesh.setMaximumAngle(3.1415927f);
             particleMesh.setMinimumAngle(0);
@@ -1302,7 +1308,7 @@ public class RenParticleEditor extends JFrame {
             particleMesh.setInitialVelocity(0.58f);
             particleMesh.getParticleController().setRepeatType(Controller.RT_WRAP);
         } else if ("SNOW".equalsIgnoreCase(examType)) {
-            particleMesh.addForce(SimpleParticleForceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
+            particleMesh.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
             particleMesh.setEmissionDirection(new Vector3f(0.0f, -1.0f, 0.0f));
             particleMesh.setMaximumAngle(1.5707964f);
             particleMesh.setMinimumAngle(0);
@@ -1422,10 +1428,10 @@ public class RenParticleEditor extends JFrame {
         velocityPanel.setValue(particleMesh.getInitialVelocity());
         spinPanel.setValue(particleMesh.getParticleSpinSpeed());
         
-        forceList.clearSelection();
-        int fcount = (particleMesh.getForces() == null) ?
-            0 : particleMesh.getForces().size();
-        forceModel.fireContentsChanged(0, fcount - 1);
+        influenceList.clearSelection();
+        int fcount = (particleMesh.getInfluences() == null) ?
+            0 : particleMesh.getInfluences().size();
+        influenceModel.fireContentsChanged(0, fcount - 1);
         
         switch (particleMesh.getEmitType()) {
             case ParticleMesh.ET_POINT:
@@ -1497,48 +1503,41 @@ public class RenParticleEditor extends JFrame {
             ringOuterPanel.setValue(ring.getOuterRadius());
             originParamsPanel.add(ringParamsPanel);
         }
-        originParamsPanel.validate();
-    }
-    
-    private void updateRectangle() {
-        Rectangle rect = particleMesh.getRectangle();
-        float width = rectWidthPanel.getValue(),
-            height = rectHeightPanel.getValue();
-        rect.getA().set(-width/2, 0f, -height/2);
-        rect.getB().set(width/2, 0f, -height/2);
-        rect.getC().set(-width/2, 0f, height/2);
+        originParamsPanel.getParent().validate();
+        originParamsPanel.getParent().repaint();
     }
     
     /**
-     * updateForceParams
+     * updateInfluenceParams
      */
-    private void updateForceParams() {
-        forceParamsPanel.removeAll();
-        int idx = forceList.getSelectedIndex();
+    private void updateInfluenceParams() {
+        influenceParamsPanel.removeAll();
+        int idx = influenceList.getSelectedIndex();
         if (idx == -1) {
-            forceParamsPanel.validate();
+            influenceParamsPanel.validate();
             return;
         }
-        ParticleForce force = particleMesh.getForces().get(idx);
-        if (force instanceof SimpleParticleForceFactory.BasicWind) {
-            SimpleParticleForceFactory.BasicWind wind =
-                (SimpleParticleForceFactory.BasicWind)force;
+        ParticleInfluence influence = particleMesh.getInfluences().get(idx);
+        if (influence instanceof SimpleParticleInfluenceFactory.BasicWind) {
+            SimpleParticleInfluenceFactory.BasicWind wind =
+                (SimpleParticleInfluenceFactory.BasicWind)influence;
             windDirectionPanel.setValue(wind.getWindDirection());
             windStrengthPanel.setValue(wind.getStrength());
             windRandomBox.setSelected(wind.isRandom());
-            forceParamsPanel.add(windParamsPanel);
+            influenceParamsPanel.add(windParamsPanel);
             
-        } else if (force instanceof SimpleParticleForceFactory.BasicGravity) {
-            gravityForcePanel.setValue(
-                ((SimpleParticleForceFactory.BasicGravity)force).getGravityForce());
-            forceParamsPanel.add(gravityParamsPanel);
+        } else if (influence instanceof SimpleParticleInfluenceFactory.BasicGravity) {
+            gravityInfluencePanel.setValue(
+                ((SimpleParticleInfluenceFactory.BasicGravity)influence).getGravityForce());
+            influenceParamsPanel.add(gravityParamsPanel);
             
-        } else if (force instanceof SimpleParticleForceFactory.BasicDrag) {
+        } else if (influence instanceof SimpleParticleInfluenceFactory.BasicDrag) {
             dragCoefficientPanel.setValue(
-                ((SimpleParticleForceFactory.BasicDrag)force).getDragCoefficient());
-            forceParamsPanel.add(dragParamsPanel);
+                ((SimpleParticleInfluenceFactory.BasicDrag)influence).getDragCoefficient());
+            influenceParamsPanel.add(dragParamsPanel);
         }
-        forceParamsPanel.validate();
+        influenceParamsPanel.getParent().validate();
+        influenceParamsPanel.getParent().repaint();
     }
     
     /**
@@ -1854,21 +1853,21 @@ public class RenParticleEditor extends JFrame {
         }
     }
     
-    class ForceListModel extends AbstractListModel {
+    class InfluenceListModel extends AbstractListModel {
         
         private static final long serialVersionUID = 1L;
         
         public int getSize() {
-            return particleMesh == null ? 0 : particleMesh.getForces().size();
+            return particleMesh == null ? 0 : particleMesh.getInfluences().size();
         }
         
         public Object getElementAt(int index) {
-            ParticleForce pf = particleMesh.getForces().get(index);
-            if (pf instanceof SimpleParticleForceFactory.BasicWind) {
+            ParticleInfluence pf = particleMesh.getInfluences().get(index);
+            if (pf instanceof SimpleParticleInfluenceFactory.BasicWind) {
                 return "Wind";
-            } else if (pf instanceof SimpleParticleForceFactory.BasicGravity) {
+            } else if (pf instanceof SimpleParticleInfluenceFactory.BasicGravity) {
                 return "Gravity";
-            } else if (pf instanceof SimpleParticleForceFactory.BasicDrag) {
+            } else if (pf instanceof SimpleParticleInfluenceFactory.BasicDrag) {
                 return "Drag";
             } else {
                 return "???";
@@ -2112,11 +2111,11 @@ public class RenParticleEditor extends JFrame {
             startTime = System.currentTimeMillis() + 5000;
         };
 
-        public void simpleUpdate() {            
+        public void simpleUpdate() {
             while (!RenderThreadActionQueue.isEmpty()) {
                 RenderThreadActionQueue.processQueueItem();
             }
-
+            
             if (newTexture != null) {
                 loadApplyTexture();
             }
