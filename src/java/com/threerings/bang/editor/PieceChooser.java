@@ -50,6 +50,7 @@ public class PieceChooser extends JPanel
         addPiece(root, "markers/bonus", new Marker(Marker.BONUS));
         addPiece(root, "markers/cattle", new Marker(Marker.CATTLE));
         addPiece(root, "markers/lode", new Marker(Marker.LODE));
+        addPiece(root, "markers/totem", new Marker(Marker.TOTEM));
         
         ArrayList<PropConfig> configs =
             new ArrayList<PropConfig>(PropConfig.getConfigs());

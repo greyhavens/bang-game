@@ -252,6 +252,16 @@ public class BangUtil
     }
 
     /**
+     * Extracts and converts a boolean property from a properties instance.
+     */
+    public static boolean getBooleanProperty (
+        String type, Properties props, String key, boolean defval)
+    {
+        String value = props.getProperty(key);
+        return (value != null) ? Boolean.parseBoolean(value) : defval;
+    }
+
+    /**
      * Computes and returns the CRC32 hash value for the supplied string.
      */
     public static int crc32 (String value)

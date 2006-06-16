@@ -21,7 +21,7 @@ public class Sharpshooter extends Unit
         // they die or not
         if (target instanceof Unit) {
             Unit unit = (Unit)target;
-            if (unit.benuggeted) {
+            if (NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
                 return NuggetEffect.dropNugget(bangobj, unit, pieceId);
             }
         }

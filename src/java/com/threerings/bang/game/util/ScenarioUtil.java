@@ -80,6 +80,14 @@ public class ScenarioUtil
     }
 
     /**
+     * Returns true if this scenario involves totem building.
+     */
+    public static boolean totemBuilding (String scenarioId)
+    {
+        return (ScenarioCodes.TOTEM_BUILDING.equals(scenarioId));
+    }
+
+    /**
      * Returns true if this maker is valid for the scenario.
      */
     public static boolean isValidMarker (Marker m, String scenarioId)
@@ -89,6 +97,9 @@ public class ScenarioUtil
             return false;
         } else if (m.getType() == Marker.LODE &&
                 !ScenarioCodes.GOLD_RUSH.equals(scenarioId)) {
+            return false;
+        } else if (m.getType() == Marker.TOTEM &&
+                !ScenarioCodes.TOTEM_BUILDING.equals(scenarioId)) {
             return false;
         }
         return true;

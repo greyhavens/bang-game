@@ -174,7 +174,7 @@ public class UnitSprite extends MobileSprite
                 displayTextureQuad(_modquad[ModIcon.STAR.idx()],
                         _modtst[ModIcon.STAR.ordinal()]);
             }
-            if (unit.benuggeted) {
+            if (NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
                 displayTextureQuad(_modquad[ModIcon.NUGGET.idx()],
                         _modtst[ModIcon.NUGGET.ordinal()]);
             }
@@ -281,11 +281,13 @@ public class UnitSprite extends MobileSprite
         configureOwnerColors();
 
         // display our nugget if appropriate
-        if (unit.benuggeted && _nugget.getParent() == null) {
+        // TODO: make this a generic bonus displaying system
+        boolean nuggeted = NuggetEffect.NUGGET_BONUS.equals(unit.holding);
+        if (nuggeted && _nugget.getParent() == null) {
             attachChild(_nugget);
             _nugget.updateRenderState();
 
-        } else if (!unit.benuggeted && _nugget.getParent() != null) {
+        } else if (!nuggeted && _nugget.getParent() != null) {
             detachChild(_nugget);
         }
 

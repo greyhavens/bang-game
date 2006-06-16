@@ -20,7 +20,7 @@ public interface ScenarioCodes
     /** The code for the claim jumping scenario. */
     public static final String CLAIM_JUMPING = "cj";
 
-    /** The code for the claim jumping scenario. */
+    /** The code for the gold rush scenario. */
     public static final String GOLD_RUSH = "gr";
 
     /** The amount of points earned per nugget at the end of the game. */
@@ -39,8 +39,15 @@ public interface ScenarioCodes
     public static final String[] FRONTIER_TOWN_SCENARIOS = {
         CLAIM_JUMPING, CATTLE_RUSTLING, GOLD_RUSH };
 
+    /** The code for the totem building scenario. */
+    public static final String TOTEM_BUILDING = "tb";
+
+    /** Points earned for each totem piece. */
+    public static final int POINTS_PER_TOTEM = 50;
+
     /** Scenarios available in Indian Trading Post. */
-    public static final String[] INDIAN_POST_SCENARIOS = { };
+    public static final String[] INDIAN_POST_SCENARIOS = { 
+        TOTEM_BUILDING };
 
     /** Scenarios available in Boom Town. */
     public static final String[] BOOM_TOWN_SCENARIOS = { };

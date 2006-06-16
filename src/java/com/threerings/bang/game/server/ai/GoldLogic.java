@@ -79,9 +79,10 @@ public class GoldLogic extends AILogic
             } else if (pieces[ii] instanceof Unit &&
                 pieces[ii].owner != _pidx) {
                 Unit target = (Unit)pieces[ii];
-                if (target.benuggeted && (ctarget == null ||
-                    unit.getDistance(target) < unit.getDistance(ctarget)) &&
-                    unit.validTarget(target, false)) {
+                if (NuggetEffect.NUGGET_BONUS.equals(target.holding) && 
+                    (ctarget == null ||
+                     unit.getDistance(target) < unit.getDistance(ctarget)) &&
+                     unit.validTarget(target, false)) {
                     ctarget = target;
                 }
                 if (_stealing && _claimloc != null && target.getDistance(
@@ -95,8 +96,9 @@ public class GoldLogic extends AILogic
         }
         
         // if we have a nugget or our claim is in danger, haul ass back home
-        if ((unit.benuggeted || (breached && oclaim.count > 0 &&
-            unit.getDistance(oclaim) > DEFENSIVE_PERIMETER)) &&
+        if ((NuggetEffect.NUGGET_BONUS.equals(unit.holding) || 
+             (breached && oclaim.count > 0 &&
+              unit.getDistance(oclaim) > DEFENSIVE_PERIMETER)) &&
             moveUnit(pieces, unit, moves, oclaim)) {
             return;
         
@@ -110,7 +112,7 @@ public class GoldLogic extends AILogic
             moveUnit(pieces, unit, moves, cclaim)) {
             return;
         
-        // if there's a benuggeted target within reach, shoot it
+        // if there's a nugget holding target within reach, shoot it
         } else if (ctarget != null && attacks.contains(ctarget.x, ctarget.y)) {
             executeOrder(unit, Short.MAX_VALUE, 0, ctarget);
         
@@ -122,7 +124,7 @@ public class GoldLogic extends AILogic
         } else if (cclaim != null && moveUnit(pieces, unit, moves, cclaim)) {
             return;
             
-        // or nearest benuggeted target
+        // or nearest nugget holding target
         } else if (ctarget != null && moveUnit(pieces, unit, moves, ctarget)) {
             return;
             
@@ -179,13 +181,14 @@ public class GoldLogic extends AILogic
         }
     };
     
-    /** Ranks potential targets by benuggetedness, the amount of damage the
+    /** Ranks potential targets by nugget holdingness, the amount of damage the
      * unit will do, and the amount of damage the target has already taken. */
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
         public int getWeight (Unit unit, Unit target) {
             UnitConfig.Rank rank = target.getConfig().rank;
-            return (target.benuggeted ? 1000 : 0) +
+            return (NuggetEffect.NUGGET_BONUS.equals(target.holding) ? 
+                    1000 : 0) +
                 unit.computeScaledDamage(target, 1f) * 100 + target.damage;
         }
     };

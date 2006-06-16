@@ -69,7 +69,8 @@ public class NuggetDelegate extends CounterDelegate
 
         // deposit or withdraw a nugget as appropriate
         NuggetEffect effect = null;
-        if (counter.owner == unit.owner && unit.benuggeted) {
+        if (counter.owner == unit.owner && 
+                NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
             effect = new NuggetEffect();
             effect.init(unit);
             effect.claimId = counter.pieceId;
@@ -91,8 +92,7 @@ public class NuggetDelegate extends CounterDelegate
     protected boolean _allowClaimWithdrawal;
     protected int _startingCount;
 
-    /** A prototype nugget bonus used to ensure that pieces can be
-     * benuggeted. */
+    /** A prototype nugget bonus used to ensure that pieces can hold it. */ 
     protected Bonus _nuggetBonus =
         Bonus.createBonus(BonusConfig.getConfig(NuggetEffect.NUGGET_BONUS));
 }

@@ -95,7 +95,9 @@ public class GoldRush extends Scenario
         int nuggets = 0;
         for (int ii = 0; ii < pieces.length; ii++) {
             if (Bonus.isBonus(pieces[ii], NuggetEffect.NUGGET_BONUS) ||
-                (pieces[ii] instanceof Unit && ((Unit)pieces[ii]).benuggeted)) {
+                (pieces[ii] instanceof Unit && 
+                 NuggetEffect.NUGGET_BONUS.equals(
+                     ((Unit)pieces[ii]).holding))) {
                 nuggets++;
             }
         }

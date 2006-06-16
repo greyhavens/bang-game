@@ -74,7 +74,7 @@ public class DefectEffect extends BonusEffect
             }
             Unit unit = (Unit)pieces[ii];
             if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT ||
-                unit.benuggeted) {
+                NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
                 continue;
             }
             pieceIds = new int[] { unit.pieceId };

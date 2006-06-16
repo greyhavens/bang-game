@@ -17,6 +17,7 @@ import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
+import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
@@ -34,8 +35,8 @@ public class Unit extends Piece
     /** Any influence currently acting on this unit. */
     public Influence influence;
 
-    /** Indicates whether this unit is carrying a nugget. */
-    public boolean benuggeted;
+    /** Type of thing being held, or null for nothing. */
+    public String holding;
 
     /**
      * Instantiates a unit of the specified type.
@@ -118,8 +119,7 @@ public class Unit extends Piece
     public boolean canActivateBonus (Bonus bonus)
     {
         return isAlive() &&
-            (bonus.getConfig().type.equals(NuggetEffect.NUGGET_BONUS) ?
-             !benuggeted : true);
+            (bonus.getConfig().holdable ?  holding == null : true);
     }
 
     /** Configures the instance after unserialization. */
@@ -238,8 +238,8 @@ public class Unit extends Piece
     @Override // documentation inherited
     public Effect willDie (BangObject bangobj, int shooterId)
     {
-        return benuggeted ?
-            NuggetEffect.dropNugget(bangobj, this, shooterId) : null;
+        return holding != null ?
+            HoldEffect.dropBonus(bangobj, this, shooterId, holding) : null;
     }
     
     @Override // documentation inherited

@@ -42,6 +42,9 @@ public class BonusConfig
     /** The bonus's affinity for the late game. */
     public float lateGameAffinity;
 
+    /** If the bonus can be held by a unit. */
+    public boolean holdable;
+
     /** The custom bonus class use for this bonus, if specified. */
     public String bonusClass;
 
@@ -160,6 +163,9 @@ public class BonusConfig
             type, props, "early_game_affinity", 0f);
         config.lateGameAffinity = BangUtil.getFloatProperty(
             type, props, "late_game_affinity", 0f);
+
+        config.holdable = BangUtil.getBooleanProperty(
+            type, props, "holdable", false);
 
         // map this config into the proper towns
         String towns = BangUtil.requireProperty(type, props, "towns");

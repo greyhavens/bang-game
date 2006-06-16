@@ -23,6 +23,9 @@ public class Marker extends Piece
     /** A particular marker type. */
     public static final int LODE = 3;
 
+    /** A particular marker type. */
+    public static final int TOTEM = 4;
+
     /**
      * Handy function for checking if this piece is a marker and of the
      * specified type.

@@ -85,5 +85,7 @@ public class ScenarioFactory
             CattleRustling.class);
         map(ScenarioCodes.GOLD_RUSH, BangCodes.FRONTIER_TOWN,
             GoldRush.class);
+        map(ScenarioCodes.TOTEM_BUILDING, BangCodes.INDIAN_POST,
+            TotemBuilding.class);
     }
 }
