@@ -211,6 +211,31 @@ public class PlayerRepository extends JORARepository
         checkedUpdate(update.toString(), 1);
     }
 
+    /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
+    protected void updateScrip (String where, int amount, String type)
+        throws PersistenceException
+    {
+        if (amount <= 0) {
+            throw new PersistenceException(
+                "Illegal scrip " + type + " [where=" + where +
+                ", amount=" + amount + "]");
+        }
+
+        String action = type.equals("grant") ? "+" : "-";
+        String query = "update PLAYERS set SCRIP = SCRIP " + action + " " +
+            amount + " where " + where;
+        int mods = update(query);
+        if (mods == 0) {
+            throw new PersistenceException(
+                "Scrip " + type + " modified zero rows [where=" + where +
+                ", amount=" + amount + "]");
+        } else if (mods > 1) {
+            log.warning("Scrip " + type + " modified multiple rows " +
+                        "[where=" + where + ", amount=" + amount +
+                        ", mods=" + mods + "].");
+        }
+    }
+
     @Override // documentation inherited
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
@@ -245,31 +270,6 @@ public class PlayerRepository extends JORARepository
     {
 	_ptable = new Table<Player>(
             Player.class, "PLAYERS", "PLAYER_ID", true);
-    }
-
-    /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
-    protected void updateScrip (String where, int amount, String type)
-        throws PersistenceException
-    {
-        if (amount <= 0) {
-            throw new PersistenceException(
-                "Illegal scrip " + type + " [where=" + where +
-                ", amount=" + amount + "]");
-        }
-
-        String action = type.equals("grant") ? "+" : "-";
-        String query = "update PLAYERS set SCRIP = SCRIP " + action + " " +
-            amount + " where " + where;
-        int mods = update(query);
-        if (mods == 0) {
-            throw new PersistenceException(
-                "Scrip " + type + " modified zero rows [where=" + where +
-                ", amount=" + amount + "]");
-        } else if (mods > 1) {
-            log.warning("Scrip " + type + " modified multiple rows " +
-                        "[where=" + where + ", amount=" + amount +
-                        ", mods=" + mods + "].");
-        }
     }
 
     protected Table<Player> _ptable;

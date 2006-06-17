@@ -176,4 +176,17 @@ public class RatingRepository extends SimpleRepository
         });
         return lists;
     }
+
+    @Override // documentation inherited
+    protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
+        throws SQLException, PersistenceException
+    {
+        JDBCUtil.createTableIfMissing(conn, "RATINGS", new String[] {
+            "PLAYER_ID INTEGER NOT NULL",
+            "SCENARIO VARCHAR(2) NOT NULL",
+            "RATING SMALLINT NOT NULL",
+            "EXPERIENCE INTEGER NOT NULL",
+            "PRIMARY KEY (PLAYER_ID, SCENARIO)",
+        }, "");
+    }
 }
