@@ -322,4 +322,18 @@ public class ItemRepository extends SimpleRepository
             }
         });
     }
+
+    @Override // documentation inherited
+    protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
+        throws SQLException, PersistenceException
+    {
+        JDBCUtil.createTableIfMissing(conn, "ITEMS", new String[] {
+            "ITEM_ID INTEGER NOT NULL AUTO_INCREMENT",
+            "OWNER_ID INTEGER NOT NULL",
+            "ITEM_TYPE INTEGER NOT NULL",
+            "ITEM_DATA BLOB NOT NULL",
+            "PRIMARY KEY (ITEM_ID)",
+            "KEY (OWNER_ID)",
+        }, "");
+    }
 }

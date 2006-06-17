@@ -254,6 +254,19 @@ public class PardnerRepository extends SimpleRepository
             "PLAYER_ID2 = " + playerId1 + ")";
     }
 
+    @Override // documentation inherited
+    protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
+        throws SQLException, PersistenceException
+    {
+        JDBCUtil.createTableIfMissing(conn, "PARDNERS", new String[] {
+            "PLAYER_ID1 INTEGER UNSIGNED NOT NULL",
+            "PLAYER_ID2 INTEGER UNSIGNED NOT NULL",
+            "ACTIVE TINYINT UNSIGNED NOT NULL",
+            "UNIQUE (PLAYER_ID1, PLAYER_ID2)",
+            "INDEX (PLAYER_ID2)",
+        }, "");
+    }
+
     /** Used by {@link #getPardnerRecords}. */
     protected static final String PARD_SELECT =
         "select HANDLE, LAST_SESSION, ACTIVE from PARDNERS " +
