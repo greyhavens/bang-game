@@ -48,8 +48,7 @@ public abstract class CounterDelegate extends ScenarioDelegate
             bangobj.updatePieces(counter);
 
             // start the player with points for each nugget
-            int points = bangobj.points[midx] +
-                counter.count * pointsPerCounter();
+            int points = counter.count * pointsPerCounter();
             bangobj.grantPoints(midx, points);
             _counters.add(counter);
             assigned.add(midx);
