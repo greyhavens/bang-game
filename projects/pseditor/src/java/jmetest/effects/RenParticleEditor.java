@@ -234,6 +234,13 @@ public class RenParticleEditor extends JFrame {
     JPanel dragParamsPanel;
     ValuePanel dragCoefficientPanel =
         new ValuePanel("Drag Coefficient: ", "", 0, 100, 0.1f);
+    JPanel vortexParamsPanel;
+    ValuePanel vortexStrengthPanel =
+        new ValuePanel("Strength: ", "", 0, 100, 0.1f);
+    ValuePanel vortexDivergencePanel =
+        new ValuePanel("Divergence: ", "", -90, 90, 1f);
+    UnitVectorPanel vortexDirectionPanel = new UnitVectorPanel();
+    JCheckBox vortexRandomBox;
     
     // examples panel components
     JList exampleList;
@@ -940,7 +947,7 @@ public class RenParticleEditor extends JFrame {
                 influenceList.setSelectedIndex(idx);
             }
         });
-        newWindButton.setMargin(new Insets(2, 14, 2, 14));
+        newWindButton.setMargin(new Insets(2, 2, 2, 2));
         
         JButton newGravityButton = new JButton(new AbstractAction("New Gravity") {
             public void actionPerformed(ActionEvent e) {
@@ -952,7 +959,7 @@ public class RenParticleEditor extends JFrame {
                 influenceList.setSelectedIndex(idx);
             }
         });
-        newGravityButton.setMargin(new Insets(2, 14, 2, 14));
+        newGravityButton.setMargin(new Insets(2, 2, 2, 2));
 
         JButton newDragButton = new JButton(new AbstractAction("New Drag") {
             public void actionPerformed(ActionEvent e) {
@@ -963,7 +970,20 @@ public class RenParticleEditor extends JFrame {
                 influenceList.setSelectedIndex(idx);
             }
         });
-        newDragButton.setMargin(new Insets(2, 14, 2, 14));
+        newDragButton.setMargin(new Insets(2, 2, 2, 2));
+        
+        JButton newVortexButton = new JButton(new AbstractAction("New Vortex") {
+            public void actionPerformed(ActionEvent e) {
+                particleMesh.addInfluence(
+                    SimpleParticleInfluenceFactory.createBasicVortex(
+                        1f, 0f, new Line(new Vector3f(),
+                            new Vector3f(Vector3f.UNIT_Y)), true));
+                int idx = particleMesh.getInfluences().size() - 1;
+                influenceModel.fireIntervalAdded(idx, idx);
+                influenceList.setSelectedIndex(idx);
+            }
+        });
+        newVortexButton.setMargin(new Insets(2, 2, 2, 2));
         
         deleteInfluenceButton = new JButton(new AbstractAction("Delete") {
             public void actionPerformed(ActionEvent e) {
@@ -974,32 +994,36 @@ public class RenParticleEditor extends JFrame {
                     idx >= particleMesh.getInfluences().size() ? idx - 1 : idx);
             }
         });
-        deleteInfluenceButton.setMargin(new Insets(2, 14, 2, 14));
+        deleteInfluenceButton.setMargin(new Insets(2, 2, 2, 2));
         deleteInfluenceButton.setEnabled(false);
         
         JPanel influenceListPanel = new JPanel(new GridBagLayout());
         influenceListPanel.setBorder(createTitledBorder("PARTICLE INFLUENCES"));
-        influenceListPanel.add(influenceList, new GridBagConstraints(0, 0, 1, 4, 0.5,
+        influenceListPanel.add(influenceList, new GridBagConstraints(0, 0, 1, 3, 0.5,
             0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(5, 10, 10, 5), 0, 0));
         influenceListPanel.add(newWindButton, new GridBagConstraints(1, 0, 1, 1,
             0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets(5, 10, 10, 5), 0, 0));
-        influenceListPanel.add(newGravityButton, new GridBagConstraints(1, 1, 1, 1,
+            new Insets(5, 5, 5, 5), 0, 0));
+        influenceListPanel.add(newGravityButton, new GridBagConstraints(2, 0, 1, 1,
             0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets(5, 10, 10, 5), 0, 0));
-        influenceListPanel.add(newDragButton, new GridBagConstraints(1, 2, 1, 1,
+            new Insets(5, 5, 5, 5), 0, 0));
+        influenceListPanel.add(newDragButton, new GridBagConstraints(1, 1, 1, 1,
             0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets(5, 10, 10, 5), 0, 0));
-        influenceListPanel.add(deleteInfluenceButton, new GridBagConstraints(1, 3, 1, 1,
+            new Insets(5, 5, 5, 5), 0, 0));
+        influenceListPanel.add(newVortexButton, new GridBagConstraints(2, 1, 1, 1,
             0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-            new Insets(5, 10, 10, 5), 0, 0));
+            new Insets(5, 5, 5, 5), 0, 0));
+        influenceListPanel.add(deleteInfluenceButton, new GridBagConstraints(1, 2, 2, 1,
+            0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+            new Insets(5, 5, 10, 5), 0, 0));
         
         influenceParamsPanel = new JPanel(new BorderLayout());
         
         windParamsPanel = createWindParamsPanel();
         gravityParamsPanel = createGravityParamsPanel();
         dragParamsPanel = createDragParamsPanel();
+        vortexParamsPanel = createVortexParamsPanel();
         
         JPanel influencePanel = new JPanel(new GridBagLayout());
         influencePanel.add(influenceListPanel, new GridBagConstraints(0, 0, 1, 1, 0.5,
@@ -1076,6 +1100,59 @@ public class RenParticleEditor extends JFrame {
             }
         });
         return dragCoefficientPanel;
+    }
+    
+    private JPanel createVortexParamsPanel() {
+        vortexDirectionPanel.setBorder(createTitledBorder(" DIRECTION "));
+        vortexDirectionPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                ParticleInfluence influence = particleMesh.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicVortex)
+                    influence).getAxis().setDirection(
+                        vortexDirectionPanel.getValue());
+            }
+        });
+        vortexStrengthPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                ParticleInfluence influence = particleMesh.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicVortex)influence).setStrength(
+                    vortexStrengthPanel.getValue());
+            }
+        });
+        vortexDivergencePanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                ParticleInfluence influence = particleMesh.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicVortex)influence).setDivergence(
+                    vortexDivergencePanel.getValue() * FastMath.DEG_TO_RAD);
+            }
+        });
+        vortexRandomBox = new JCheckBox(new AbstractAction("Vary Randomly") {
+            public void actionPerformed(ActionEvent e) {
+                ParticleInfluence influence = particleMesh.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicVortex)influence).setRandom(
+                    vortexRandomBox.isSelected());
+            }
+        });
+        
+        JPanel vortexParamsPanel = new JPanel(new GridBagLayout());
+        vortexParamsPanel.setBorder(createTitledBorder(" VORTEX PARAMETERS "));
+        vortexParamsPanel.add(vortexDirectionPanel, new GridBagConstraints(0,
+            0, 1, 1, 0.5, 0.0, GridBagConstraints.CENTER,
+            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 10, 5), 0, 0));
+        vortexParamsPanel.add(vortexStrengthPanel, new GridBagConstraints(0, 1,
+            1, 1, 0.5, 0.0, GridBagConstraints.CENTER,
+            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 10, 5), 0, 0));
+        vortexParamsPanel.add(vortexDivergencePanel, new GridBagConstraints(0, 2,
+            1, 1, 0.5, 0.0, GridBagConstraints.CENTER,
+            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 10, 5), 0, 0));
+        vortexParamsPanel.add(vortexRandomBox, new GridBagConstraints(0, 3, 1,
+            1, 0.5, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets(5, 5, 10, 5), 0, 0));
+        return vortexParamsPanel;
     }
     
     private JPanel createExamplesPanel() {
@@ -1635,6 +1712,15 @@ public class RenParticleEditor extends JFrame {
             dragCoefficientPanel.setValue(
                 ((SimpleParticleInfluenceFactory.BasicDrag)influence).getDragCoefficient());
             influenceParamsPanel.add(dragParamsPanel);
+            
+        } else if (influence instanceof SimpleParticleInfluenceFactory.BasicVortex) {
+            SimpleParticleInfluenceFactory.BasicVortex vortex =
+                (SimpleParticleInfluenceFactory.BasicVortex)influence;
+            vortexDirectionPanel.setValue(vortex.getAxis().getDirection());
+            vortexStrengthPanel.setValue(vortex.getStrength());
+            vortexDivergencePanel.setValue(vortex.getDivergence() * FastMath.RAD_TO_DEG);
+            vortexRandomBox.setSelected(vortex.isRandom());
+            influenceParamsPanel.add(vortexParamsPanel);
         }
         influenceParamsPanel.getParent().validate();
         influenceParamsPanel.getParent().repaint();
@@ -2002,6 +2088,8 @@ public class RenParticleEditor extends JFrame {
                 return "Gravity";
             } else if (pf instanceof SimpleParticleInfluenceFactory.BasicDrag) {
                 return "Drag";
+            } else if (pf instanceof SimpleParticleInfluenceFactory.BasicVortex) {
+                return "Vortex";
             } else {
                 return "???";
             }
