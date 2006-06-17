@@ -54,7 +54,7 @@ public class TotemLogic extends AILogic
                 TotemBase base = (TotemBase)pieces[ii];
                 if (base.owner == _pidx) {
                     obase = base;
-                } else if (base.pieces > 0 && (cbase == null ||
+                } else if (base.getTotemHeight() > 0 && (cbase == null ||
                     unit.getDistance(base) < unit.getDistance(cbase))) {
                     cbase = base;
                 }
@@ -69,8 +69,9 @@ public class TotemLogic extends AILogic
             _baseloc = new Point(obase.x, obase.y);
         }
         // if we have a totem or our base is in danger, haul ass back home
-        if ((TotemBonus.isHolding(unit) || (breached && obase.pieces > 0 &&
-            unit.getDistance(obase) > DEFENSIVE_PERIMETER)) &&
+        if ((TotemBonus.isHolding(unit) || 
+             (breached && obase.getTotemHeight() > 0 &&
+              unit.getDistance(obase) > DEFENSIVE_PERIMETER)) &&
             moveUnit(pieces, unit, moves, obase)) {
             return;
 
@@ -102,7 +103,7 @@ public class TotemLogic extends AILogic
 
         // or just try to find something to shoot
         } else {
-            Unit target = getBestTarget(pieces, unit, attacks,
+            Piece target = getBestTarget(pieces, unit, attacks,
                 TARGET_EVALUATOR);
             if (target != null) {
                 executeOrder(unit, Short.MAX_VALUE, 0, target);
@@ -154,9 +155,9 @@ public class TotemLogic extends AILogic
      * unit will do, and the amount of damage the target has already taken. */
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
-        public int getWeight (Unit unit, Unit target) {
-            UnitConfig.Rank rank = target.getConfig().rank;
-            return (TotemBonus.isHolding(target) ? 1000 : 0) +
+        public int getWeight (Unit unit, Piece target) {
+            return ((target instanceof Unit) && 
+                    TotemBonus.isHolding((Unit)target) ? 1000 : 0) +
                 unit.computeScaledDamage(target, 1f) * 100 + target.damage;
         }
     };

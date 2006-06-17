@@ -6,11 +6,13 @@ package com.threerings.bang.game.data.effect;
 import java.awt.Point;
 
 import com.samskivert.util.ArrayUtil;
- 
+
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.ScenarioCodes;
 
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.TotemBase;
 import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
@@ -25,6 +27,10 @@ public class TotemEffect extends HoldEffect
 
     /** The bonus identifier for the totem crown piece. */
     public static final String TOTEM_CROWN_BONUS = "indian_post/totem_crown";
+
+    /** The identifier for the type of effect that we produce. */
+    public static final String TOTEM_ADDED =
+        "bonuses/indian_post/totem/added";
 
     /** The id of the totem base involved in this totem transfer or -1 if
      * we're dealing for board based totems. */
@@ -45,7 +51,18 @@ public class TotemEffect extends HoldEffect
     {
         super.apply(bangobj, obs);
 
-        // TODO: interact with totem bases
+        if (baseId > 0) {
+            TotemBase base = (TotemBase)bangobj.pieces.get(baseId);
+            if (dropping) {
+                // if we're on the server, grant points ot the player
+                if (bangobj.getManager().isManager(bangobj)) {
+                    bangobj.grantPoints(
+                            base.owner, ScenarioCodes.POINTS_PER_TOTEM);
+                }
+                base.addPiece(type);
+                reportEffect(obs, base, TOTEM_ADDED);
+            }
+        }
         return true;
     }
 }

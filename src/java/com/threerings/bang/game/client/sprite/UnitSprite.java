@@ -280,15 +280,19 @@ public class UnitSprite extends MobileSprite
         // update our colors in the event that our owner changes
         configureOwnerColors();
 
-        // display our nugget if appropriate
-        // TODO: make this a generic bonus displaying system
-        boolean nuggeted = NuggetEffect.NUGGET_BONUS.equals(unit.holding);
-        if (nuggeted && _nugget.getParent() == null) {
-            attachChild(_nugget);
-            _nugget.updateRenderState();
-
-        } else if (!nuggeted && _nugget.getParent() != null) {
-            detachChild(_nugget);
+        // display our bonus if appropriate
+        if (unit.holding != null) {
+            if (!unit.holding.equals(_holdingType)) {
+                _holding.detachAllChildren();
+                _ctx.loadModel("bonuses", unit.holding,
+                               new ModelAttacher(_holding));
+            }
+            if (_holding.getParent() == null) {
+                attachChild(_holding);
+                _holding.updateRenderState();
+            }
+        } else if (_holding.getParent() != null) {
+            detachChild(_holding);
         }
 
         // if our pending node is showing, update it to reflect our correct
@@ -453,13 +457,11 @@ public class UnitSprite extends MobileSprite
         bbn.attachChild(_ptquad);
         _ptquad.setCullMode(CULL_ALWAYS);
 
-        // the nugget is shown when we're carrying a nugget
-        _nugget = new Node("nugget");
-        _nugget.addController(new Spinner(_nugget, FastMath.PI/2));
-        _nugget.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
-        _nugget.setLocalScale(0.5f);
-        ctx.loadModel("bonuses", NuggetEffect.NUGGET_BONUS,
-                      new ModelAttacher(_nugget));
+        // when holding a bonus it is shown over our head
+        _holding = new Node("holding");
+        _holding.addController(new Spinner(_holding, FastMath.PI/2));
+        _holding.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
+        _holding.setLocalScale(0.5f);
 
         // configure our colors
         configureOwnerColors();
@@ -633,7 +635,8 @@ public class UnitSprite extends MobileSprite
     protected boolean _hovered;
     protected int _attackers;
 
-    protected Node _nugget;
+    protected Node _holding;
+    protected String _holdingType;
 
     protected static TextureState[] _crosstst;
     protected static HashMap<String,Texture[]> _pendtexmap =

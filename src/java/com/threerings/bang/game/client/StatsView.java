@@ -178,6 +178,14 @@ public class StatsView extends SteelWindow
             _statType = Stat.Type.NUGGETS_CLAIMED;
             _ppo = ScenarioCodes.POINTS_PER_NUGGET;
             _secStatType = null;
+        } else if (ScenarioUtil.totemBuilding(_bobj.scenarioId)) {
+            _objectiveIcon = new ImageIcon(_ctx.loadImage(
+                        "ui/postgame/icons/nugget.png"));
+            _objectiveTitle = "m.title_totem_stacked";
+            _objectivePoints = "m.totem_points";
+            _statType = Stat.Type.TOTEM_HEIGHT;
+            _ppo = ScenarioCodes.POINTS_PER_TOTEM;
+            _secStatType = null;
         }
     }
 
@@ -703,6 +711,7 @@ public class StatsView extends SteelWindow
             Stat.Type.BONUSES_COLLECTED, Stat.Type.CARDS_PLAYED,
             Stat.Type.DISTANCE_MOVED, Stat.Type.SHOTS_FIRED,
             Stat.Type.UNITS_LOST, Stat.Type.CATTLE_RUSTLED,
-            Stat.Type.BRAND_POINTS, Stat.Type.NUGGETS_CLAIMED
+            Stat.Type.BRAND_POINTS, Stat.Type.NUGGETS_CLAIMED,
+            Stat.Type.TOTEM_HEIGHT
     };
 }

@@ -195,17 +195,17 @@ public abstract class AILogic
      * Finds and returns the best target that the unit can reach according to
      * the provided evaluator.
      */
-    protected Unit getBestTarget (
+    protected Piece getBestTarget (
         Piece[] pieces, Unit unit, PointSet attacks, TargetEvaluator evaluator)
     {
-        Unit best = null;
+        Piece best = null;
         int bweight = -1;
         for (int ii = 0; ii < pieces.length; ii++) {
             if (!unit.validTarget(pieces[ii], false) ||
                 !attacks.contains(pieces[ii].x, pieces[ii].y)) {
                 continue;
             }
-            Unit target = (Unit)pieces[ii];
+            Piece target = (Unit)pieces[ii];
             int tweight = evaluator.getWeight(unit, target);
             if (tweight > bweight) {
                 best = target;
@@ -254,7 +254,7 @@ public abstract class AILogic
     protected interface TargetEvaluator
     {
         /** Returns the weight of the specified target for the given unit. */
-        public int getWeight (Unit unit, Unit target);
+        public int getWeight (Unit unit, Piece target);
     }
     
     /** The game manager. */

@@ -193,6 +193,12 @@ public class Unit extends Piece
                 (int)(FLYER_PROP_HEIGHT * board.getElevationUnitsPerTile());
         return Math.max(groundel, propel);
     }
+
+    @Override // documentation inherited
+    public boolean isTargetable ()
+    {
+        return true;
+    }
     
     @Override // documentation inherited
     public boolean checkLineOfSight (

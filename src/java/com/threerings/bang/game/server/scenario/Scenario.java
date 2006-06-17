@@ -17,6 +17,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.BonusConfig;
 
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Marker;
@@ -40,6 +41,20 @@ import static com.threerings.bang.Log.log;
  */
 public abstract class Scenario
 {
+    /**
+     * Drops a bonus at the specified location.
+     */
+    protected static Bonus dropBonus (
+            BangObject bangobj, String bonusName, int x, int y)
+    {
+        Bonus drop = Bonus.createBonus(BonusConfig.getConfig(bonusName));
+        drop.assignPieceId(bangobj);
+        drop.position(x, y);
+        bangobj.board.shadowPiece(drop);
+        bangobj.addToPieces(drop);
+        return drop;
+    }
+    
     /**
      * Allows a scenario to filter out custom marker pieces and scenario
      * specific props prior to the start of the round.
