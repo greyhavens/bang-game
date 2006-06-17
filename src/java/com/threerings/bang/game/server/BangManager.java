@@ -1619,7 +1619,7 @@ public class BangManager extends GameManager
         int earnings = 0;
         for (int rr = 0; rr < _bconfig.getRounds(); rr++) {
             // if the round was not played, skip it
-            if (_rounds[rr].duration == 0) {
+            if (_rounds[rr].duration == 0 || _rounds[rr].lastTick == 0) {
                 continue;
             }
 
