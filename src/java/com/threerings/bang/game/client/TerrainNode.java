@@ -1540,8 +1540,12 @@ public class TerrainNode extends Node
                 // initialize the texture state
                 TextureState tstate =
                     _ctx.getDisplay().getRenderer().createTextureState();
-                Texture ground =
-                    getGroundTexture(code = layers[ii]-1).getTexture();
+                TextureState gtstate = getGroundTexture(code = layers[ii]-1);
+                if (gtstate == null) {
+                    continue; // something's funny, skip it
+                }
+
+                Texture ground = gtstate.getTexture();
                 tstate.setTexture(ground, 0);
                 tstate.setTexture(createAlphaTexture(code, rect), 1);
                 tstates.add(tstate);
