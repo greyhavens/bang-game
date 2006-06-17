@@ -4,7 +4,7 @@
 # Configuration for a Bang! server installation
 
 #
-# Defines the name for this server installation.
+# Identifies this server to the Account Action system.
 
 server_name = bang
 
