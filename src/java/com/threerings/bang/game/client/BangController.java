@@ -171,9 +171,9 @@ public class BangController extends GameController
         // we'll use this one at the end of the game
         _postRoundMultex = new Multex(new Runnable() {
             public void run () {
-                _statMap.put(_bangobj.roundId, _bangobj.stats);
                 _ctx.getBangClient().displayPopup(
-                    new StatsView(_ctx, BangController.this, _bangobj, true),
+                    new StatsView(_ctx, BangController.this, _bangobj, 
+                        _lastScenario, true),
                                   true);
             }
         }, 2);
@@ -500,6 +500,11 @@ public class BangController extends GameController
         if (event.getName().equals(BangObject.STATS) &&
             // we handle things specially in the tutorial and practice
             !_config.tutorial && !_config.practice) {
+            _statMap.put(_bangobj.roundId, _bangobj.stats);
+            // Since the server may have already advanced to the next
+            // scenario by the time we display the stats view, we need to
+            // store the previous scneario id
+            _lastScenario = _bangobj.scenarioId;
             _postRoundMultex.satisfied(Multex.CONDITION_TWO);
         }
     }
@@ -772,6 +777,9 @@ public class BangController extends GameController
     /** Used to show the stats once we've faded in our Round/Game Over 
      * marquee and the stats have arrived. */
     protected Multex _postRoundMultex;
+
+    /** The last scenario played. */
+    protected String _lastScenario;
 
     /** The units we cycle through when we press tab. */
     protected ArrayList<Unit> _selections = new ArrayList<Unit>();
