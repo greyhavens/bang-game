@@ -23,6 +23,7 @@ import com.threerings.bang.game.client.effect.WreckViz;
 
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.client.sprite.Targetable;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
@@ -117,7 +118,7 @@ public class EffectHandler extends BoardView.BoardAction
 
         // if they were damaged, go ahead and clear any pending shot
         if (wasDamaged) {
-            ((UnitSprite)sprite).setPendingShot(false);
+            ((Targetable)sprite).setPendingShot(false);
         }
 
         // add wreck effect for steam-powered units

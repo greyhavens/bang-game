@@ -75,6 +75,7 @@ import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.Spinner;
+import com.threerings.bang.game.client.sprite.Targetable;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -129,7 +130,7 @@ public class BangBoardView extends BoardView
     {
         Piece piece = (Piece)_bangobj.pieces.get(targetId);
         if (piece != null) {
-            getUnitSprite(piece).setPendingShot(false);
+            getTargetableSprite(piece).setPendingShot(false);
         }
     }
 
@@ -960,7 +961,7 @@ public class BangBoardView extends BoardView
             }
             // note the piece we desire to fire upon
             _action[3] = piece.pieceId;
-            getUnitSprite(piece).setPendingShot(true);
+            getTargetableSprite(piece).setPendingShot(true);
             executeAction();
             return true;
         }
@@ -977,7 +978,7 @@ public class BangBoardView extends BoardView
                 if (target != null && _selection.validTarget(target, false)) {
                     log.info("Randomly targeting " + target.info());
                     _action[3] = target.pieceId;
-                    UnitSprite tsprite = getUnitSprite(target);
+                    Targetable tsprite = getTargetableSprite(target);
                     if (tsprite != null) {
                         tsprite.setPendingShot(true);
                     }
@@ -1004,11 +1005,11 @@ public class BangBoardView extends BoardView
                 continue;
             }
 
-            UnitSprite sprite = getUnitSprite(p);
-            if (sprite != null) {
-                sprite.setTargeted(_selection.lastActed >= p.lastActed ?
-                                   UnitSprite.TargetMode.MAYBE :
-                                   UnitSprite.TargetMode.SURE_SHOT,
+            Targetable target = getTargetableSprite(p);
+            if (target != null) {
+                target.setTargeted(_selection.lastActed >= p.lastActed ?
+                                   Targetable.TargetMode.MAYBE :
+                                   Targetable.TargetMode.SURE_SHOT,
                                    (Unit)_selection);
                 dest.add(p.x, p.y);
             } else {
@@ -1066,6 +1067,15 @@ public class BangBoardView extends BoardView
     protected UnitSprite getUnitSprite (Piece piece)
     {
         return (UnitSprite)getPieceSprite(piece);
+    }
+
+    /**
+     * Convenience method for getting the sprite for a piece we know to be
+     * targetable.
+     */
+    protected Targetable getTargetableSprite (Piece piece)
+    {
+        return (Targetable)getPieceSprite(piece);
     }
 
     protected void selectUnit (Unit piece, boolean scrollCamera)
@@ -1187,8 +1197,9 @@ public class BangBoardView extends BoardView
             _attackSet.clear();
         }
         for (PieceSprite s : _pieces.values()) {
-            if (s instanceof UnitSprite) {
-                ((UnitSprite)s).setTargeted(UnitSprite.TargetMode.NONE);
+            if (s instanceof Targetable) {
+                ((Targetable)s).setTargeted(
+                        Targetable.TargetMode.NONE, null);
             }
         }
     }
@@ -1359,7 +1370,7 @@ public class BangBoardView extends BoardView
             // mark our attacker as targeted
             Piece target = (Piece)_bangobj.pieces.get(targetId);
             if (target != null) {
-                _target = getUnitSprite(target);
+                _target = getTargetableSprite(target);
                 if (_target != null) {
                     _target.configureAttacker(_pidx, 1);
                 }
@@ -1378,7 +1389,8 @@ public class BangBoardView extends BoardView
             }
         }
 
-        protected UnitSprite _unit, _target;
+        protected UnitSprite _unit;
+        protected Targetable _target;
         protected TerrainNode.Highlight _highlight;
     }
 

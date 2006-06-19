@@ -54,6 +54,7 @@ import static com.threerings.bang.client.BangMetrics.*;
  * Displays a particular unit.
  */
 public class UnitSprite extends MobileSprite
+    implements Targetable
 {
     /** Used to notify observers of updates to this sprite. */
     public interface UpdateObserver extends SpriteObserver
@@ -63,7 +64,6 @@ public class UnitSprite extends MobileSprite
     }
 
     public static enum AdvanceOrder { NONE, MOVE, MOVE_SHOOT };
-    public static enum TargetMode { NONE, SURE_SHOT, MAYBE };
 
     /** For sprites added before the first tick, this flag indicates whether
      * the sprite has started running towards its initial position. */
@@ -132,53 +132,10 @@ public class UnitSprite extends MobileSprite
         setTargeted(mode, null);
     }
 
-    /**
-     * Indicates that this piece is a potential target.
-     */
+    // documentation inherited from Targetable
     public void setTargeted (TargetMode mode, Unit attacker)
     {
-        boolean addModifiers = false;
-        if (_pendingTick == -1) {
-            _tgtquad.setDefaultColor(ColorRGBA.white);
-            switch (mode) {
-            case NONE:
-                _tgtquad.setCullMode(CULL_ALWAYS);
-                break;
-            case SURE_SHOT:
-                displayTextureQuad(_tgtquad, _crosstst[0]);
-                addModifiers = true;
-                break;
-            case MAYBE:
-                displayTextureQuad(_tgtquad, _crosstst[1]);
-                addModifiers = true;
-                break;
-            }
-        }
-        if (!addModifiers) {
-            for (int ii = 0; ii < _modquad.length; ii++) {
-                _modquad[ii].setCullMode(CULL_ALWAYS);
-            }
-            return;
-        }
-        int diff = attacker.computeDamageDiff(_piece);
-        if (diff > 0) {
-            displayTextureQuad(_modquad[ModIcon.ARROW_UP.idx()],
-                    _modtst[ModIcon.ARROW_UP.ordinal()]);
-        } else if (diff < 0) {
-            displayTextureQuad(_modquad[ModIcon.ARROW_DOWN.idx()],
-                    _modtst[ModIcon.ARROW_DOWN.ordinal()]);
-        }
-        if (_piece instanceof Unit) {
-            Unit unit = (Unit)_piece;
-            if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
-                displayTextureQuad(_modquad[ModIcon.STAR.idx()],
-                        _modtst[ModIcon.STAR.ordinal()]);
-            }
-            if (NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
-                displayTextureQuad(_modquad[ModIcon.NUGGET.idx()],
-                        _modtst[ModIcon.NUGGET.ordinal()]);
-            }
-        }
+        _target.setTargeted(mode, attacker);
     }
 
     /**
@@ -200,21 +157,10 @@ public class UnitSprite extends MobileSprite
         return _pendo;
     }
 
-    /**
-     * Indicates that we have requested to shoot this piece but it is not
-     * yet confirmed by the server.
-     */
+    // documentation inherited from Targetable
     public void setPendingShot (boolean pending)
     {
-        if (pending) {
-            if (_pendingTick == -1) {
-                _tgtquad.setDefaultColor(ColorRGBA.red);
-            }
-            _pendingTick = _tick;
-        } else {
-            _pendingTick = -1;
-        }
-        _tgtquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
+        _target.setPendingShot(pending);
     }
 
     /**
@@ -237,28 +183,10 @@ public class UnitSprite extends MobileSprite
         }
     }
 
-    /**
-     * Adds or removes an attacker from this sprite.
-     */
+    // documentation inhertied from Targetable
     public void configureAttacker (int pidx, int delta)
     {
-        // sanity check
-        if (_attackers == 0 && delta < 0) {
-            log.warning("Requested to decrement attackers but we have none! " +
-                        "[sprite=" + this + ", pidx=" + pidx +
-                        ", delta=" + delta + "].");
-            Thread.dumpStack();
-            return;
-        }
-
-        _attackers += delta;
-
-        if (_attackers > 0) {
-            displayTextureQuad(_ptquad, _crosstst[Math.min(_attackers, 3)+1],
-                    JPIECE_COLORS[pidx]);
-        } else {
-            _ptquad.setCullMode(CULL_ALWAYS);
-        }
+        _target.configureAttacker(pidx, delta);
     }
 
     @Override // documentation inherited
@@ -269,10 +197,7 @@ public class UnitSprite extends MobileSprite
         Unit unit = (Unit)piece;
         int ticks = unit.ticksUntilMovable(_tick);
 
-        // clear our pending shot once we've been ticked (or if we die)
-        if (!piece.isAlive() || (_pendingTick != -1 && tick > _pendingTick)) {
-            setPendingShot(false);
-        }
+        _target.updated(piece, tick);
 
         // update our status display
         updateUnitStatus();
@@ -377,8 +302,6 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     protected void createGeometry (BasicContext ctx)
     {
-        loadTextures(ctx);
-
         // set our colorization
         _zations = new Colorization[] {
             ctx.getAvatarLogic().getColorPository().getColorization("unit",
@@ -419,43 +342,8 @@ public class UnitSprite extends MobileSprite
         attachHighlight(_status = new UnitStatus(ctx, _tlight));
         _status.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
 
-        // we'll use this to keep a few things rotated toward the camera
-        BillboardNode bbn = new BillboardNode("billboard");
-        bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
-        attachChild(bbn);
-
-        // this icon is displayed when we're highlighted as a potential target
-        _tgtquad = RenderUtil.createIcon(_crosstst[0]);
-        _tgtquad.setLocalTranslation(new Vector3f(0, 0, 0));
-        _tgtquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        _tgtquad.setRenderState(RenderUtil.alwaysZBuf);
-        _tgtquad.updateRenderState();
-        bbn.attachChild(_tgtquad);
-        _tgtquad.setCullMode(CULL_ALWAYS);
-
-        // these icons are displayed when there are modifiers for a
-        // potential target
-        _modquad = new Quad[MOD_COORDS.length];
-        for (int ii = 0; ii < _modquad.length; ii++) {
-            _modquad[ii] = RenderUtil.createIcon(
-                    _modtst[0], TILE_SIZE/4f, TILE_SIZE/4f);
-            _modquad[ii].setLocalTranslation(MOD_COORDS[ii]);
-            _modquad[ii].setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-            _modquad[ii].setRenderState(RenderUtil.alwaysZBuf);
-            _modquad[ii].updateRenderState();
-            bbn.attachChild(_modquad[ii]);
-            _modquad[ii].setCullMode(CULL_ALWAYS);
-        }
-
-        // this icon is displayed when we have pending shots aimed at us
-        _ptquad = RenderUtil.createIcon(_crosstst[2]);
-        _ptquad.setLocalTranslation(new Vector3f(0, TILE_SIZE/2, 0));
-        _ptquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        _ptquad.setRenderState(RenderUtil.alwaysZBuf);
-        _ptquad.updateRenderState();
-        _ptquad.setTextureBuffer(0, BufferUtils.createFloatBuffer(PTARG_COORDS));
-        bbn.attachChild(_ptquad);
-        _ptquad.setCullMode(CULL_ALWAYS);
+        _target = new PieceTarget(_piece, ctx);
+        attachChild(_target);
 
         // when holding a bonus it is shown over our head
         _holding = new Node("holding");
@@ -480,29 +368,6 @@ public class UnitSprite extends MobileSprite
             _tlight.setPosition(tx, ty);
             _status.updateTranslations(_tlight);
         }
-    }
-
-    /**
-     * Helper function to update a quad with a texture state and display it.
-     */
-    protected void displayTextureQuad (Quad quad, TextureState tst)
-    {
-        displayTextureQuad(quad, tst, null);
-    }
-
-    /**
-     * Helper function to update a quad with a texture state and color
-     * then display it.
-     */
-    protected void displayTextureQuad (
-            Quad quad, TextureState tst, ColorRGBA color)
-    {
-        quad.setRenderState(tst);
-        quad.setCullMode(CULL_DYNAMIC);
-        if (color != null) {
-            quad.setDefaultColor(color);
-        }
-        quad.updateRenderState();
     }
 
     /**
@@ -559,54 +424,6 @@ public class UnitSprite extends MobileSprite
         return gpendtex;
     }
 
-    protected static void loadTextures (BasicContext ctx)
-    {
-        if (_crosstst == null) {
-            _crosstst = new TextureState[CROSS_TEXS.length];
-            for (int ii = 0; ii < CROSS_TEXS.length; ii++) {
-                _crosstst[ii] = RenderUtil.createTextureState(ctx,
-                    "textures/ustatus/crosshairs" + CROSS_TEXS[ii] + ".png");
-                _crosstst[ii].getTexture().setWrap(
-                        Texture.WM_BCLAMP_S_BCLAMP_T);
-            }
-        }
-
-        if (_modtst == null) {
-            EnumSet<ModIcon> icons = EnumSet.allOf(ModIcon.class);
-            _modtst = new TextureState[icons.size()];
-            for (ModIcon icon : icons) {
-                int idx = icon.ordinal();
-                _modtst[idx] = RenderUtil.createTextureState(ctx, icon.png());
-                _modtst[idx].getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-            }
-        }
-    }
-
-    /** Used when displaying bonus or penalty modifiers. */
-    protected enum ModIcon {
-        ARROW_UP (2, "arrow_up"),
-        ARROW_DOWN (3, "arrow_down"),
-        CANNOT (2, "cannot"),
-        STAR (1, "star"),
-        NUGGET (0, "nugget");
-
-        ModIcon (int idx, String png) {
-            _idx = idx;
-            _png = png;
-        }
-
-        public int idx () {
-            return _idx;
-        }
-
-        public String png () {
-            return "/textures/ustatus/icon_" + _png + ".png";
-        }
-
-        protected final int _idx;
-        protected final String _png;
-    }
-
     /** Used to dispatch {@link UpdateObserver#updated}. */
     protected ObserverList.ObserverOp<SpriteObserver> _updater =
         new ObserverList.ObserverOp<SpriteObserver>() {
@@ -618,8 +435,6 @@ public class UnitSprite extends MobileSprite
         }
     };
 
-    protected Quad _tgtquad, _ptquad;
-    protected Quad[] _modquad;
     protected TerrainNode.Highlight _tlight, _pendnode;
     protected TextureState _pendtst;
     protected Texture[] _pendtexs;
@@ -630,41 +445,21 @@ public class UnitSprite extends MobileSprite
     protected Vector3f _gcamtrans = new Vector3f();
 
     protected UnitStatus _status;
-    protected short _pendingTick = -1;
+    protected PieceTarget _target;
     protected AdvanceOrder _pendo = AdvanceOrder.NONE;
     protected boolean _hovered;
-    protected int _attackers;
 
     protected Node _holding;
     protected String _holdingType;
 
-    protected static TextureState[] _crosstst;
     protected static HashMap<String,Texture[]> _pendtexmap =
         new HashMap<String,Texture[]>();
-    protected static TextureState[] _modtst;
 
     protected static final Vector3f HALF_UNIT = new Vector3f(0.5f, 0.5f, 0f);
     protected static final Vector3f WHOLE_UNIT = new Vector3f(1f, 1f, 0f);
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;
     protected static final float DBAR_HEIGHT = (TILE_SIZE-2)/6f;
-
-    protected static final String[] CROSS_TEXS = { "", "_q", "_1", "_2", "_n" };
-
-    protected static final Vector2f[] PTARG_COORDS = {
-        new Vector2f(0, 2),
-        new Vector2f(0, 0),
-        new Vector2f(2, 0),
-        new Vector2f(2, 2),
-    };
-
-    protected static final float MOD_OFFSET = 3f * TILE_SIZE / 8f;
-    protected static final Vector3f[] MOD_COORDS = {
-        new Vector3f(-MOD_OFFSET,  MOD_OFFSET, 0f),
-        new Vector3f(-MOD_OFFSET, -MOD_OFFSET, 0f),
-        new Vector3f( MOD_OFFSET,  MOD_OFFSET, 0f),
-        new Vector3f( MOD_OFFSET, -MOD_OFFSET, 0f),
-    };
 
     /** The height above ground at which flyers fly (in tile lengths). */
     protected static final int FLYER_GROUND_HEIGHT = 1;
