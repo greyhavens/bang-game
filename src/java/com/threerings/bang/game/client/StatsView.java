@@ -55,9 +55,9 @@ public class StatsView extends SteelWindow
      * The constructor the game uses.
      */
     public StatsView (BangContext ctx, BangController ctrl,
-                      BangObject bangobj, String scenarioId, boolean animate)
+                      BangObject bangobj, boolean animate)
     {
-        this((BasicContext)ctx, ctrl, bangobj, scenarioId, animate);
+        this((BasicContext)ctx, ctrl, bangobj, animate);
         _bctx = ctx;
     }
 
@@ -65,7 +65,7 @@ public class StatsView extends SteelWindow
      * The constructor the test harness uses.
      */
     public StatsView (BasicContext ctx, BangController ctrl,
-                      BangObject bangobj, String scenarioId, boolean animate)
+                      BangObject bangobj, boolean animate)
     {
         super(ctx, ctx.xlate(GameCodes.GAME_MSGS, "m.stats_title"));
         setLayer(1);
@@ -104,7 +104,7 @@ public class StatsView extends SteelWindow
         _forward.setEnabled(false);
         _contents.add(bcont, BorderLayout.SOUTH);
 
-        loadGameData(scenarioId);
+        loadGameData();
         if (animate) {
             showObjective();
         } else {
@@ -158,9 +158,9 @@ public class StatsView extends SteelWindow
     /**
      * Load media associated with the game data.
      */
-    protected void loadGameData (String scenarioId)
+    protected void loadGameData ()
     {
-        if (ScenarioUtil.cattleRustling(scenarioId)) {
+        if (ScenarioUtil.cattleRustling(_bobj.scenarioId)) {
             _objectiveIcon = new ImageIcon(_ctx.loadImage(
                         "ui/postgame/icons/cattle.png"));
             _objectiveTitle = "m.title_cattle_rustled";
@@ -170,7 +170,7 @@ public class StatsView extends SteelWindow
             _secStatType = Stat.Type.BRAND_POINTS;
             _secIcon = new ImageIcon(_ctx.loadImage(
                         "ui/postgame/icons/brand.png"));
-        } else if (ScenarioUtil.nuggetClaiming(scenarioId)) {
+        } else if (ScenarioUtil.nuggetClaiming(_bobj.scenarioId)) {
             _objectiveIcon = new ImageIcon(_ctx.loadImage(
                         "ui/postgame/icons/nugget.png"));
             _objectiveTitle = "m.title_nuggets_claimed";
@@ -178,7 +178,7 @@ public class StatsView extends SteelWindow
             _statType = Stat.Type.NUGGETS_CLAIMED;
             _ppo = ScenarioCodes.POINTS_PER_NUGGET;
             _secStatType = null;
-        } else if (ScenarioUtil.totemBuilding(scenarioId)) {
+        } else if (ScenarioUtil.totemBuilding(_bobj.scenarioId)) {
             _objectiveIcon = new ImageIcon(_ctx.loadImage(
                         "ui/postgame/icons/nugget.png"));
             _objectiveTitle = "m.title_totem_stacked";
