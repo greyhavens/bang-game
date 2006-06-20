@@ -1,0 +1,76 @@
+Movin' Right Along
+
+First off, we've got some belated release notes as we've done a few updates
+since my last posting. We've been making tweaks and fixes all over the place
+but here are the main things:
+
+<ul>
+<li>We've added a damage display that tells ya how much damage a shot did and
+reports whether any special effects were involved like the <span
+class="highlight">Lucky Horseshoe</span> or the <span class="highlight">Iron
+Plate</span>.</li>
+
+<li>We've added a star near the crosshairs when yer targeting an opponent's
+<span class="highlight">Big Shot</span> so that you kin easily factor that into
+yer plannin'.</li>
+
+<li>We changed the <span class="highlight">Claim</span> into a <span
+class="highlight">Steam Tank</span> for the <span class="highlight">Gold
+Rush</span> scenario to make it clearer which scenario yer playin' and we've
+added a <span class="highlight">Rustling Post</span> to the <span
+class="highlight">Cattle Rustling</span> scenario to remind ya of where yer
+units are going to respawn. We also show ya how many cattle are in yer herd
+over the <span class="highlight">Rustling Post</span>.</li>
+
+<li>We modified <span class="highlight">Cattle Rustling</span> to grant one
+point per branded cattle per tick in addition to the 50 points ya get fer
+havin' a cattle at the end of the game. We're aimin' to reward players for
+holdin' onto cattle for a longer time without taking away the fun and
+excitement of last minute rebrandin'.</li>
+
+<li>We added hotkeys for selecting cards. You can press 1, 2 or 3 to activate a
+card instead of clickin' on it. We also now open the chat input window when ya
+press return as well as space.</li>
+
+<li>We rebalanced some of the units. The <span
+class="highlight">Gunslinger</span> is now better against ground units, the
+<span class="highlight">Dirigible</span> is no longer weak versus just about
+everything, and the <span class="highlight">Cavalry</span> has been toned down
+a bit so that he doesn't outshine the other <span class="highlight">Big
+Shots</span>. We appreciate yer patience as we tune these things up.</li>
+
+<li>We've also fixed a bunch of bugs, introduced some new ones, fixed those and
+no doubt introduced some more. Yee haw!</li>
+</ul>
+</p>
+
+<p>We've been makin' great progress on the <span class="highlight">Indian
+Tradin' Post</span> content. We've got a sneak peek at the new main town scene
+that mighty we're excited ta show ya. Rest yer eyes on this a spell:</p>
+
+<script language="JavaScript">
+//<![CDATA[
+function show(image) {
+  window.open("/screenshots/2006/06/shot.html?" + image, "image",
+    "resizable=no,status=no,width=1034,height=778,dependent=yes");
+  return false;
+}
+//]]>
+</script>
+<p align="center"><a href="/screenshots/2006/06/shot.html?indian_post"
+ onclick="return show('indian_post')">
+<img src="/screenshots/2006/06/thumbs/indian_post.jpg"
+ border="0" alt=""/></a></p>
+
+<p>As some of ya have discovered, we've got one of the new ITP scenarios up and
+running here at the OOO ranch: <span class="highlight">Totem Building</span>.
+We'll let ya stew on how that one works fer a little while and spill the beans
+on it in the next update.</p>
+
+<p>We also have some new cards up our sleeve that we're going to roll out in an
+update purdy soon, so you kin look forward to some new fun stuff to tide ya
+over until ITP is ready for action.</p>
+
+<p>That's all fer now pardners,</p>
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
