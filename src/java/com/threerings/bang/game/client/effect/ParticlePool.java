@@ -5,6 +5,7 @@ package com.threerings.bang.game.client.effect;
 
 import java.util.ArrayList;
 
+import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -52,6 +53,7 @@ public class ParticlePool
     {
         _dusttex = RenderUtil.createTextureState(
             ctx, "textures/effects/dust.png");
+        _dusttex.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
     }
 
     public static ParticleMesh getDustRing ()

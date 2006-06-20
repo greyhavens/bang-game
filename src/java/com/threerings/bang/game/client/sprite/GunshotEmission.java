@@ -13,6 +13,7 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Properties;
 
+import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -115,6 +116,7 @@ public class GunshotEmission extends SpriteEmission
     {
         if (_smoketex == null) {
             _smoketex = tprov.getTexture("/textures/effects/dust.png");
+            _smoketex.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
             _ftex = tprov.getTexture("/textures/effects/flash.png");
         }
         if (_smoke != null) {

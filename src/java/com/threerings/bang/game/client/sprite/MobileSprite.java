@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -353,6 +354,7 @@ public class MobileSprite extends PieceSprite
         if (_dusttex == null) {
             _dusttex = RenderUtil.createTextureState(
                 ctx, "textures/effects/dust.png");
+            _dusttex.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         }
         _dust.setRenderState(_dusttex);
         _dust.setRenderState(RenderUtil.blendAlpha);

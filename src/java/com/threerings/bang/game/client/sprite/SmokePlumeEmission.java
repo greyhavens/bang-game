@@ -10,6 +10,7 @@ import java.io.ObjectOutput;
 import java.util.Properties;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
@@ -105,6 +106,7 @@ public class SmokePlumeEmission extends SpriteEmission
     {
         if (_smoketex == null) {
             _smoketex = tprov.getTexture("/textures/effects/dust.png");
+            _smoketex.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         }
         if (_smoke != null) {
             _smoke.setRenderState(_smoketex);
