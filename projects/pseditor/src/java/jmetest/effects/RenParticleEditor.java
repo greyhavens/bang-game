@@ -1333,6 +1333,7 @@ public class RenParticleEditor extends JFrame {
             RenParticleEditor.class.getClassLoader().getResource(
                 "jmetest/data/texture/flaresmall.jpg"),
             Texture.FM_LINEAR, Texture.FM_LINEAR));
+        ts.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         particleMesh.setRenderState(ts);
         
         particleNode.attachChild(particleMesh);
@@ -2417,6 +2418,7 @@ public class RenParticleEditor extends JFrame {
                             newTexture.getAbsolutePath(),
                             Texture.MM_LINEAR,
                             Texture.FM_LINEAR));
+            ts.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
             ts.setEnabled(true);
             particleMesh.setRenderState(ts);
             particleMesh.updateRenderState();
