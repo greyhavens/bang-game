@@ -33,6 +33,9 @@ while [ ! -z "$1" ]; do
     if [ $1 = "--devclient" ]; then
         DEVCLIENT=true
     fi
+    if [ $1 = "--pseditor" ]; then
+        PSEDITOR=true
+    fi
     if [ $1 = "--revdate" ]; then
         REVDATE="-r {$2}"
         shift
@@ -118,6 +121,12 @@ if [ ! -z "$DEVCLIENT" ]; then
     # update our unit damage table
     $ROOT/bin/bangtool com.threerings.bang.game.tools.PrintDamageTable \
         frontier_town > $ROOT/pages/units.html
+fi
+
+# build the particle system editor if requested
+if [ ! -z "$PSEDITOR" ]; then
+    cd $ROOT/projects/pseditor
+    $ANT proguard
 fi
 
 # remove the lockfile

@@ -23,6 +23,9 @@ $MIRROR $ROOT/pages/devclient/*-install.???
 # mirror the Hemiptera Proguard mapping
 $MIRROR $* $ROOT/../threerings/etc/proguard/bang/0.map
 
+# mirror the particle system editor files
+$MIRROR $ROOT/pages/pseditor/*
+
 # mirror some random other pages
 $MIRROR $ROOT/pages/units.html
 
