@@ -68,9 +68,6 @@
   <text message="damage_and_respawn3"/>
   <wait event="text_clicked"/>
 
-  <text message="finish_him"/>
-  <wait event="unit_killed" allowAttack="true"/>
-
   <!-- wrap up and end the tutorial -->
   <text message="done"/>
   <wait event="text_clicked"/>
