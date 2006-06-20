@@ -302,8 +302,8 @@ public class BangBoardView extends BoardView
     public boolean isSelectable (Piece piece)
     {
         PieceSprite psprite;
-        return !(piece.owner != _pidx || !piece.isAlive() ||
-            _pendmap.get(piece.pieceId) > 0 ||
+        return !(!(piece instanceof Unit) || piece.owner != _pidx || 
+            !piece.isAlive() || _pendmap.get(piece.pieceId) > 0 ||
             (psprite = getPieceSprite(piece)) == null || psprite.isMoving());
     }
 
@@ -852,10 +852,10 @@ public class BangBoardView extends BoardView
         }
 
         // check for a piece under the mouse
-        UnitSprite sprite = null;
+        PieceSprite sprite = null;
         Piece piece = null;
-        if (_hover instanceof UnitSprite) {
-            sprite = (UnitSprite)_hover;
+        if (_hover instanceof Targetable) {
+            sprite = (PieceSprite)_hover;
             piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
             if (piece != null && !piece.isAlive()) {
                 sprite = null;

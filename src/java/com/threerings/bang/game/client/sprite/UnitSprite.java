@@ -124,14 +124,6 @@ public class UnitSprite extends MobileSprite
         updateUnitStatus();
     }
 
-    /**
-     * Indicates that this piece is a potential target.
-     */
-    public void setTargeted (TargetMode mode)
-    {
-        setTargeted(mode, null);
-    }
-
     // documentation inherited from Targetable
     public void setTargeted (TargetMode mode, Unit attacker)
     {

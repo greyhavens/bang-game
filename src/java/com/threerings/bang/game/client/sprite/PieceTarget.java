@@ -45,6 +45,7 @@ public class PieceTarget extends Node
 {
     public PieceTarget (Piece piece, BasicContext ctx)
     {
+        super("piece_target");
         _piece = piece;
         createGeometry(ctx);
     }

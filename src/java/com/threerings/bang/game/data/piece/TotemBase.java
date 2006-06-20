@@ -58,8 +58,7 @@ public class TotemBase extends Prop
     @Override // documentation inherited
     public boolean isTargetable ()
     {
-        //TODO create a targetablesprite interface
-        return false;
+        return true;
     }
 
     @Override // documentation inherited

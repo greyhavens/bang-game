@@ -648,10 +648,6 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public String attackInfluenceIcon ()
     {
-        Influence influence = ((Unit)this).influence;
-        if (influence != null && influence.didAdjustAttack()) {
-            return influence.getIcon();
-        }
         return null;
     }
     
@@ -661,7 +657,8 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public String defendInfluenceIcon (Piece target)
     {
-        Influence influence = ((Unit)target).influence;
+        Influence influence = (target instanceof Unit ? 
+                ((Unit)target).influence : null);
         if (influence != null && influence.didAdjustDefend()) {
             return influence.getIcon();
         }

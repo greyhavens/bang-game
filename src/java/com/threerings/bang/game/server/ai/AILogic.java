@@ -205,10 +205,9 @@ public abstract class AILogic
                 !attacks.contains(pieces[ii].x, pieces[ii].y)) {
                 continue;
             }
-            Piece target = (Unit)pieces[ii];
-            int tweight = evaluator.getWeight(unit, target);
+            int tweight = evaluator.getWeight(unit, pieces[ii]);
             if (tweight > bweight) {
-                best = target;
+                best = pieces[ii];
                 bweight = tweight;
             }
         }
@@ -219,10 +218,10 @@ public abstract class AILogic
      * Finds and returns the best target that the unit can reach after moving
      * to the given destination, according to the provided evaluator.
      */
-    protected Unit getBestTarget (
+    protected Piece getBestTarget (
         Piece[] pieces, Unit unit, int dx, int dy, TargetEvaluator evaluator)
     {
-        Unit best = null;
+        Piece best = null;
         int bweight = -1;
         for (int ii = 0; ii < pieces.length; ii++) {
             if (!unit.validTarget(pieces[ii], false)) {
@@ -233,10 +232,9 @@ public abstract class AILogic
                 dist > unit.getMaxFireDistance()) {
                 continue;
             }
-            Unit target = (Unit)pieces[ii];
-            int tweight = evaluator.getWeight(unit, target);
+            int tweight = evaluator.getWeight(unit, pieces[ii]);
             if (tweight > bweight) {
-                best = target;
+                best = pieces[ii];
                 bweight = tweight;
             }
         }

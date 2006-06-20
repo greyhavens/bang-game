@@ -260,6 +260,15 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public String attackInfluenceIcon ()
+    {
+        if (influence != null && influence.didAdjustAttack()) {
+            return influence.getIcon();
+        }
+        return null;
+    }
+
+    @Override // documentation inherited
     protected int getTicksPerMove ()
     {
         return (influence == null) ? super.getTicksPerMove() :

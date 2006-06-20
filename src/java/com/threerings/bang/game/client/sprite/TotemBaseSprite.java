@@ -21,8 +21,10 @@ import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TotemBase;
+import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.jme.model.Model;
+
 import static com.threerings.bang.client.BangMetrics.*;
 import static com.threerings.bang.Log.log;
 
@@ -30,6 +32,7 @@ import static com.threerings.bang.Log.log;
  * Does something extraordinary.
  */
 public class TotemBaseSprite extends PropSprite
+    implements Targetable
 {
     public TotemBaseSprite ()
     {
@@ -47,6 +50,24 @@ public class TotemBaseSprite extends PropSprite
     public boolean isHoverable ()
     {
         return true;
+    }
+
+    // documentation inherited from Targetable
+    public void setTargeted (TargetMode mode, Unit attacker)
+    {
+        _target.setTargeted(mode, attacker);
+    }
+
+    // documentation inherited from Targetable
+    public void setPendingShot (boolean pending)
+    {
+        _target.setPendingShot(pending);
+    }
+
+    // documentation inherited from Targetable
+    public void configureAttacker ( int pidx, int delta)
+    {
+        _target.configureAttacker(pidx, delta);
     }
 
     @Override // documentation inherited
@@ -68,7 +89,6 @@ public class TotemBaseSprite extends PropSprite
         } else if (baseHeight > size) {
             String type = base.getTopPiece();
             final Node totemPiece = new Node(type);
-            totemPiece.setLocalTranslation(new Vector3f(0, 0, _totHeight));
             _ctx.loadModel("bonuses", type, new ModelAttacher(totemPiece) {
                 public void requestCompleted (Model model) {
                     model.updateGeometricState(0f, true);
@@ -79,6 +99,8 @@ public class TotemBaseSprite extends PropSprite
                     } else if (bound instanceof BoundingSphere) {
                         height += ((BoundingSphere)bound).radius;
                     }
+                    totemPiece.setLocalTranslation(
+                        new Vector3f(0, 0, _totHeight + height / 2f));
                     _totemHeights.add(size, height);
                     _totHeight += height;
                     super.requestCompleted(model);
@@ -91,6 +113,8 @@ public class TotemBaseSprite extends PropSprite
             _totemPieces.add(totemPiece);
             totemPiece.updateRenderState();
         } 
+
+        _target.updated(piece, tick);
     }
 
     @Override // documentation inherited
@@ -98,6 +122,8 @@ public class TotemBaseSprite extends PropSprite
     {
         super.createGeometry(ctx);
         _ctx = ctx;
+        _target = new PieceTarget(_piece, ctx);
+        attachChild(_target);
     }
 
     protected ArrayList<Node> _totemPieces = new ArrayList<Node>();
@@ -105,4 +131,6 @@ public class TotemBaseSprite extends PropSprite
     protected float _totHeight;
 
     protected BasicContext _ctx;
+
+    protected PieceTarget _target;
 }
