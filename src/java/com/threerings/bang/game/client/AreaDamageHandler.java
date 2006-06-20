@@ -60,7 +60,7 @@ public class AreaDamageHandler extends EffectHandler
         AreaDamageEffect effect = (AreaDamageEffect)_effect;
         for (int ii = 0; ii < effect.pieces.length; ii++) {
             ShotSprite ssprite = new ShotSprite(
-                _ctx, "bonuses", "missile", null);
+                _ctx, "bonuses", "frontier_town/missile", null);
             Piece target = (Piece)_bangobj.pieces.get(
                 Integer.valueOf(effect.pieces[ii]));
             if (target == null) {
