@@ -21,6 +21,8 @@ import com.jme.scene.Line;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.WireframeState;
+import com.jme.util.RenderThreadActionQueue;
+import com.jme.util.RenderThreadExecutable;
 import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.event.MouseEvent;
@@ -123,9 +125,13 @@ public class EditorBoardView extends BoardView
     {
         super.refreshBoard();
 
-        // recenter the camera
-        _panel.tools.cameraDolly.recenter();
-
+        // recenter the camera after we're sure the context is valid
+        RenderThreadActionQueue.addToQueue(new RenderThreadExecutable() {
+            public void doAction () {
+                _panel.tools.cameraDolly.recenter();
+            }
+        });
+        
         // make sure highlights are reset to new size
         _hnode.detachAllChildren();
         _highlights = null;
