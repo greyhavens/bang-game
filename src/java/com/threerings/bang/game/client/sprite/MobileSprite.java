@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
@@ -351,6 +352,7 @@ public class MobileSprite extends PieceSprite
         _dust.setParticleSpinSpeed(0.05f);
         _dust.setStartSize(TILE_SIZE / 5);
         _dust.setEndSize(TILE_SIZE / 3);
+        _dust.setModelBound(new BoundingBox());
         if (_dusttex == null) {
             _dusttex = RenderUtil.createTextureState(
                 ctx, "textures/effects/dust.png");

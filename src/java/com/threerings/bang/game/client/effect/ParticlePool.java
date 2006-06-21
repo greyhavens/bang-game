@@ -5,6 +5,7 @@ package com.threerings.bang.game.client.effect;
 
 import java.util.ArrayList;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
@@ -163,6 +164,7 @@ public class ParticlePool
         particles.setStartSize(TILE_SIZE / 5);
         particles.setEndSize(TILE_SIZE / 3);
         particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
+        particles.setModelBound(new BoundingBox());
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);
@@ -188,6 +190,7 @@ public class ParticlePool
         particles.setStartColor(new ColorRGBA(1f, 1f, 0.5f, 1f));
         particles.setEndColor(new ColorRGBA(1f, 0.25f, 0f, 0f));
         particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
+        particles.setModelBound(new BoundingBox());
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
@@ -213,6 +216,7 @@ public class ParticlePool
         particles.setEndSize(TILE_SIZE / 10);
         particles.setStartColor(new ColorRGBA(1f, 1f, 0.5f, 1f));
         particles.setEndColor(new ColorRGBA(1f, 0.25f, 0f, 1f));
+        particles.setModelBound(new BoundingBox());
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
@@ -239,6 +243,7 @@ public class ParticlePool
         particles.setStartColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0.75f));
         particles.setEndColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0f));
         particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
+        particles.setModelBound(new BoundingBox());
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);
@@ -264,6 +269,7 @@ public class ParticlePool
         particles.setEndSize(TILE_SIZE / 10);
         particles.setStartColor(new ColorRGBA(0.75f, 0.75f, 0.75f, 1f));
         particles.setEndColor(new ColorRGBA(0f, 0f, 0f, 1f));
+        particles.setModelBound(new BoundingBox());
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
@@ -290,6 +296,7 @@ public class ParticlePool
         particles.setStartColor(new ColorRGBA(0.75f, 0.75f, 0.75f, 0.75f));
         particles.setEndColor(new ColorRGBA(0.75f, 0.75f, 0.75f, 0f));
         particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
+        particles.setModelBound(new BoundingBox());
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);

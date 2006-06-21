@@ -13,6 +13,7 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Properties;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
@@ -89,7 +90,6 @@ public class GunshotEmission extends SpriteEmission
         _smoke = new ParticleMesh("smoke", 16);
         _smoke.addController(
             new ParticlePool.TransientParticleController(_smoke));
-        _smoke = ParticleFactory.buildParticles("smoke", 16);
         _smoke.setMinimumLifeTime(500f);
         _smoke.setMaximumLifeTime(1500f);
         _smoke.setInitialVelocity(0.005f);
@@ -104,6 +104,7 @@ public class GunshotEmission extends SpriteEmission
         _smoke.setEndColor(new ColorRGBA(0.35f, 0.35f, 0.35f, 0f));
         _smoke.getParticleController().setRepeatType(Controller.RT_CLAMP);
         _smoke.getParticleController().setActive(false);
+        _smoke.setModelBound(new BoundingBox());
         if (_smoketex != null) {
             _smoke.setRenderState(_smoketex);
         }
