@@ -1416,7 +1416,7 @@ public class TerrainNode extends Node
             IntBuffer tbuf = BufferUtils.createIntBuffer(ebounds.width * 3 *
                 (ebounds.height - 1));
             
-            boolean even = true, ud = false, nud;
+            boolean even = true, ud = true, nud;
             for (int y = ebounds.y, ymax = y + (ebounds.height - 1);
                 y < ymax; y++) {
                 int x1 = even ? ebounds.x : (ebounds.x + ebounds.width - 1),
@@ -1427,7 +1427,13 @@ public class TerrainNode extends Node
                     ix = x - ebounds.x;
                     if (x != x2 - dx) {
                         nud = even ^ _diags[y + 2][x + (even ? 2 : 1)];
-                        if ((nud != ud && x != x1) || (nud == ud && x == x1)) {
+                        if (x == x1 && y != ebounds.y) {
+                            tbuf.put(iy*ebounds.width + ix);
+                            tbuf.put(iy*ebounds.width + ix);
+                            if (nud == ud) {
+                                tbuf.put(iy*ebounds.width + ix);
+                            }
+                        } else if (nud != ud) {
                             if (nud) {
                                 tbuf.put(iy*ebounds.width + ix);
                             } else {
