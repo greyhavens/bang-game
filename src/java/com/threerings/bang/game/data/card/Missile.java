@@ -11,7 +11,7 @@ import com.threerings.bang.game.data.effect.Effect;
  * A card that allows the player to launch a missile that does an area of
  * effect damage.
  */
-public class Missile extends Card
+public class Missile extends AreaCard
 {
     public int power = 60;
 

@@ -1357,11 +1357,13 @@ public class BoardView extends BComponent
     protected void hoverHighlightChanged (TerrainNode.Highlight hover)
     {
         if (hover != _highlightHover) {
-            if (_highlightHover != null) {
+            if (_highlightHover != null && _highlightHover.getRenderState(
+                        RenderState.RS_TEXTURE) == _movstate) {
                 _highlightHover.setDefaultColor(_oldHighlightColor);
             }
             _highlightHover = hover;
-            if (_highlightHover != null) {
+            if (_highlightHover != null && _highlightHover.getRenderState(
+                        RenderState.RS_TEXTURE) == _movstate) {
                 _oldHighlightColor = 
                     _highlightHover.getBatch(0).getDefaultColor();
                 _highlightHover.setDefaultColor(HOVER_HIGHLIGHT_COLOR);
@@ -1389,13 +1391,21 @@ public class BoardView extends BComponent
         }
     }
 
-    /** Creates geometry to "target" the supplied set of tiles. */
-    protected void targetTiles (PointSet set)
+    /** 
+     * Creates geometry to "target" the supplied set of tiles. 
+     * 
+     * @param valid: If true then render normally, if false, make them
+     * semi-transparent and red.
+     */
+    protected void targetTiles (PointSet set, boolean valid)
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             TerrainNode.Highlight highlight = _tnode.createHighlight(
                 set.getX(ii), set.getY(ii), true, true);
             highlight.setRenderState(_tgtstate);
+            if (!valid) {
+                highlight.setDefaultColor(INVALID_TARGET_HIGHLIGHT_COLOR);
+            }
             highlight.updateRenderState();
             _hnode.attachChild(highlight);
         }
@@ -1635,6 +1645,10 @@ public class BoardView extends BComponent
     /** The color of the movement highglights when the mouse is hovering. */
     protected static final ColorRGBA HOVER_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0.5f, 1f, 0.5f);
+
+    /** The color of the target highlights when the target is invalid. */
+    protected static final ColorRGBA INVALID_TARGET_HIGHLIGHT_COLOR =
+        new ColorRGBA(1f, 0f, 0f, 0.5f);
 
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;

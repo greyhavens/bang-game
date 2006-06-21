@@ -229,7 +229,7 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void playCard (ClientObject caller, int cardId, short x, short y,
+    public void playCard (ClientObject caller, int cardId, Object target,
                           BangService.ConfirmListener listener)
         throws InvocationException
     {
@@ -242,11 +242,34 @@ public class BangManager extends GameManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        log.info("Playing card: " + card);
 
-        // create and deploy the card's effect
-        Effect effect = card.activate(x, y);
-        if (!deployEffect(card.owner, effect)) {
+        Effect effect = null;
+
+        switch (card.getPlacementMode()) {
+          case VS_AREA:
+            // create and deploy the card's effect
+            int[] coords = (int[])target;
+            effect = card.activate(coords[0], coords[1]);
+            break;
+
+          case VS_PIECE:
+            int pieceId = (Integer)target;
+            for (Piece p : _bangobj.pieces) {
+                if (p.pieceId == pieceId) {
+                    effect = card.activate(p.x, p.y);
+                    break;
+                }
+            }
+            break;
+
+          case VS_CARD:
+            int targetCardId = (Integer)target;
+            // TODO: perform card effect
+            break;
+        }
+
+        log.info("Playing card: " + card);
+        if (effect == null || !deployEffect(card.owner, effect)) {
             throw new InvocationException(CARD_UNPLAYABLE);
         }
 

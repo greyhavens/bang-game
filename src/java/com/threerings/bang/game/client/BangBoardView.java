@@ -119,7 +119,17 @@ public class BangBoardView extends BoardView
         // set up the display of our card attack set
         _card = card;
         updatePlacingCard(_mouse.x, _mouse.y);
+        _ctx.getChatDirector().displayFeedback(
+                "cards", "m.placement_" + _card.getPlacementMode().name());
         log.info("Placing " + _card);
+    }
+
+    /**
+     * Returns the currently active card.
+     */
+    public Card getCard ()
+    {
+        return _card;
     }
 
     /**
@@ -301,10 +311,13 @@ public class BangBoardView extends BoardView
      */
     public boolean isSelectable (Piece piece)
     {
+        if (_card != null) {
+            return _card.isValidPiece(_bangobj, piece);
+        }
         PieceSprite psprite;
-        return !(!(piece instanceof Unit) || piece.owner != _pidx || 
-            !piece.isAlive() || _pendmap.get(piece.pieceId) > 0 ||
-            (psprite = getPieceSprite(piece)) == null || psprite.isMoving());
+        return (piece instanceof Unit && piece.owner == _pidx && 
+            piece.isAlive() && !(_pendmap.get(piece.pieceId) > 0 ||
+            (psprite = getPieceSprite(piece)) == null || psprite.isMoving()));
     }
 
     /**
@@ -641,6 +654,21 @@ public class BangBoardView extends BoardView
                     _tiptext = _ctx.xlate(GameCodes.GAME_MSGS, msg);
                 }
             }
+            Piece piece;
+            if (_card != null && 
+                    _card.getPlacementMode() == Card.PlacementMode.VS_PIECE) {
+                piece = ((PieceSprite)hover).getPiece();
+                clearHighlights();
+                _attackSet.clear();
+                _attackSet.add(piece.x, piece.y);
+                targetTiles(_attackSet, _card.isValidPiece(_bangobj, piece));
+            }
+
+        // If we just stopped hovering over a sprite, possibly update the tile
+        // location for a card placement
+        } else if (_card != null &&
+                _card.getPlacementMode() == Card.PlacementMode.VS_PIECE) {
+            updatePlacingCard(_mouse.x, _mouse.y);
         }
 
         // force an update to the tooltip window as we're one big window with
@@ -865,10 +893,31 @@ public class BangBoardView extends BoardView
 
         // if we are placing a card, activate it
         if (_card != null) {
-            log.info("Activating " + _card);
-            _ctrl.activateCard(_card.cardId, _mouse.x, _mouse.y);
-            _card = null;
-            clearAttackSet();
+            Object target = null;
+            switch (_card.getPlacementMode()) {
+              case VS_AREA:
+                if (_card.isValidLocation(_bangobj, _mouse.x, _mouse.y)) {
+                    log.info("Activating " + _card);
+                    target = new int[] { _mouse.x, _mouse.y };
+                }
+                break;
+
+              case VS_PIECE:
+                if (_hover != null && _hover instanceof PieceSprite) {
+                    Piece p = ((PieceSprite)_hover).getPiece();
+                    if (_card.isValidPiece(_bangobj, p)) {
+                        log.info("Activating " + _card);
+                        target = new Integer(piece.pieceId);
+                    }
+                }
+                break;
+            }
+
+            if (target != null) {
+                _ctrl.activateCard(_card.cardId, target);
+                _card = null;
+                clearAttackSet();
+            }
             return;
         }
 
@@ -1234,15 +1283,30 @@ public class BangBoardView extends BoardView
 
     protected void updatePlacingCard (int tx, int ty)
     {
-        clearHighlights();
-        _attackSet.clear();
-        if (_card.getRadius() > 0) {
+        switch (_card.getPlacementMode()) {
+          case VS_AREA:
+            clearHighlights();
+            _attackSet.clear();
             _bangobj.board.computeAttacks(
-                0, _card.getRadius(), _mouse.x, _mouse.y, _attackSet);
-        } else {
-            _attackSet.add(_mouse.x, _mouse.y);
+                0, _card.getRadius(), tx, ty, _attackSet);
+            if (_bangobj.board.getPlayableArea().contains(tx, ty)) {
+                _attackSet.add(tx, ty);
+            }
+            targetTiles(_attackSet, _card.isValidLocation(_bangobj, tx, ty));
+            break;
+
+          case VS_PIECE:
+            // if we're hovering over a piece it will get set properly in
+            // hoverSpriteChanged()
+            if (_hover == null) {
+                clearHighlights();
+                _attackSet.clear();
+                if (_bangobj.board.getPlayableArea().contains(tx, ty)) {
+                    _attackSet.add(tx, ty);
+                    targetTiles(_attackSet, false);
+                }
+            }
         }
-        targetTiles(_attackSet);
     }
 
     protected boolean clearPlacingCard ()

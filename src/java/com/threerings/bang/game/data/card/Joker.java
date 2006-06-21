@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.data.BonusConfig;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
@@ -13,7 +14,7 @@ import com.threerings.bang.game.data.piece.Bonus;
  * When a unit tries to claim it, it explodes in a burst of the placing team's
  * color, causing damage and removing influences.
  */
-public class Joker extends Card
+public class Joker extends AreaCard
 {
     @Override // documentation inherited
     public String getType ()
@@ -25,6 +26,12 @@ public class Joker extends Card
     public int getRadius ()
     {
         return 0;
+    }
+
+    @Override // documentation inherited
+    public boolean isValidLocation (BangObject bangobj, int tx, int ty)
+    {
+        return (bangobj.board.isOccupiable(tx, ty));
     }
 
     @Override // documentation inherited

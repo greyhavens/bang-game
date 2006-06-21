@@ -450,9 +450,15 @@ public class BangController extends GameController
         }
 
         Card card = (Card)_bangobj.cards.get(cardId);
+        Card activeCard = _view.view.getCard();
         if (card == null) {
             log.warning("Requested to place non-existent card '" +
                         cardId + "'.");
+
+        } else if (activeCard != null && activeCard.getPlacementMode() == 
+                Card.PlacementMode.VS_CARD && card.owner != _pidx) {
+            activateCard(cardId, new Integer(card.cardId));
+
         } else if (card.owner == _pidx) {
             // instruct the board view to activate placement mode
             _view.view.placeCard(card);
@@ -461,7 +467,7 @@ public class BangController extends GameController
     }
 
     /** Handles a request to activate a card. */
-    public void activateCard (int cardId, int tx, int ty)
+    public void activateCard (int cardId, Object target)
     {
         if (_bangobj.cards.get(cardId) == null) {
             log.warning("Requested to activate expired card " +
@@ -477,7 +483,7 @@ public class BangController extends GameController
                 }
             };
             _bangobj.service.playCard(
-                _ctx.getClient(), cardId, (short)tx, (short)ty, cl);
+                _ctx.getClient(), cardId, target, cl);
         }
     }
 

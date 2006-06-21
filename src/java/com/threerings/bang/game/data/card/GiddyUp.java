@@ -3,8 +3,11 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AdjustTickEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 
 /**
  * A card that allows the player to move a unit again immediately.
@@ -27,6 +30,12 @@ public class GiddyUp extends Card
     public int getWeight ()
     {
         return 40;
+    }
+
+    @Override // documentation inherited
+    public boolean isValidPiece (BangObject bangobj, Piece target)
+    {
+        return (target instanceof Unit && target.isAlive());
     }
 
     @Override // documentation inherited

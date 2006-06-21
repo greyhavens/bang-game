@@ -3,8 +3,11 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AreaRepairEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.client.sprite.Targetable;
 
 /**
  * A card that allows the player to repair a single unit.
@@ -21,6 +24,12 @@ public class Repair extends Card
     public int getRadius ()
     {
         return 0;
+    }
+
+    @Override // documentation inherited
+    public boolean isValidPiece (BangObject bangobj, Piece target)
+    {
+        return (target.isTargetable());
     }
 
     @Override // documentation inherited

@@ -14,6 +14,7 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
 
@@ -25,6 +26,9 @@ import static com.threerings.bang.Log.log;
 public abstract class Card extends SimpleStreamableObject
     implements DSet.Entry, Cloneable
 {
+    /** The different card placement targets. */
+    public static enum PlacementMode { VS_PIECE, VS_AREA, VS_CARD };
+
     /** Every card has a unique id which is how we reference them. */
     public int cardId;
 
@@ -60,7 +64,7 @@ public abstract class Card extends SimpleStreamableObject
     }
 
     /**
-     * Returns a lsit of all registered card types.
+     * Returns a list of all registered card types.
      */
     public static Collection<Card> getCards ()
     {
@@ -70,9 +74,34 @@ public abstract class Card extends SimpleStreamableObject
     /** Returns a string type identifier for this card. */
     public abstract String getType ();
 
+    /**
+     * Returns the placement mode of this card.
+     */
+    public PlacementMode getPlacementMode ()
+    {
+        // default to vs unit
+        return PlacementMode.VS_PIECE;
+    }
+
     /** Returns the radius that should be used when displaying this
      * card's area of effect. */
     public abstract int getRadius ();
+
+    /**
+     * Returns true if the piece is a valid target for the card.
+     */
+    public boolean isValidPiece (BangObject bangobj, Piece target)
+    {
+        return false;
+    }
+
+    /**
+     * Returns true if ths location is a valid target for the card.
+     */
+    public boolean isValidLocation (BangObject bangobj, int tx, int ty)
+    {
+        return false;
+    }
 
     /**
      * Activates the specified card at the supplied coordinates. The

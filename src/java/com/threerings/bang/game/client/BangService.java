@@ -58,7 +58,7 @@ public interface BangService extends InvocationService
      * Requests that the specified card be activated at the specified
      * location.
      */
-    public void playCard (Client client, int cardId, short x, short y,
+    public void playCard (Client client, int cardId, Object target,
                           ConfirmListener listener);
 
     /**
