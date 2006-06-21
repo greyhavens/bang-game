@@ -186,12 +186,6 @@ public class BangServer extends CrowdServer
         confreg = new DatabaseConfigRegistry(conprov, invoker);
         AdminProvider.init(invmgr, confreg);
 
-        // set up our authenticator
-        Authenticator auth = ServerConfig.getAuthenticator();
-        if (auth != null) {
-            conmgr.setAuthenticator(auth);
-        }
-
         // now initialize our runtime configuration, postponing the remaining
         // server initialization until our configuration objects are available
         RuntimeConfig.init(omgr);
@@ -397,6 +391,17 @@ public class BangServer extends CrowdServer
     public static AuditLogger createAuditLog (String logname)
     {
         return new AuditLogger(_logdir, logname);
+    }
+
+    @Override // documentation inherited
+    protected Authenticator createAuthenticator ()
+    {
+        // set up our authenticator
+        Authenticator auth = ServerConfig.getAuthenticator();
+        if (auth != null) {
+            return auth;
+        }
+        return super.createAuthenticator();
     }
 
     @Override // documentation inherited
