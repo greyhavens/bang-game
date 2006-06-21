@@ -22,7 +22,7 @@ public class BonusSprite extends PieceSprite
     public BonusSprite (String type)
     {
         _type = type;
-        if (!_type.endsWith("mine")) {
+        if (!_type.endsWith("mine") && !_type.endsWith("spring")) {
             addController(new Spinner(this, FastMath.PI/2));
         }
     }

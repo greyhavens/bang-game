@@ -53,6 +53,9 @@ public abstract class Piece extends SimpleStreamableObject
     /** The percentage damage this piece has taken. */
     public int damage;
 
+    /** The piece's last occupied location. */
+    public transient short lastX, lastY;
+    
     /**
      * Combines the supplied x and y coordintes into a single integer.
      */
@@ -709,6 +712,8 @@ public abstract class Piece extends SimpleStreamableObject
     {
         // determine our new orientation
         orientation = (short)computeOrientation(nx, ny);
+        lastX = x;
+        lastY = y;
         x = (short)nx;
         y = (short)ny;
     }

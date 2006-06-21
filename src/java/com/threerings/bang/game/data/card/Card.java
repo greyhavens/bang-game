@@ -213,7 +213,8 @@ public abstract class Card extends SimpleStreamableObject
         register(new GiddyUp());
         register(new Joker());
         register(new Mine());
-
+        register(new Spring());
+        
         // collect the weights of each card into an array used to select
         // randomly based on said weights
         _weights = new int[_cards.size()];
