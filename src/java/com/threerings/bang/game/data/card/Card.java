@@ -221,6 +221,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new Spring());
         register(new HalfGiddyUp());
         register(new Ramblin());
+        register(new Hustle());
         
         // collect the weights of each card into an array used to select
         // randomly based on said weights
