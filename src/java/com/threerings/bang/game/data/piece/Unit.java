@@ -160,7 +160,7 @@ public class Unit extends Piece
     public int computeElevation (
             BangBoard board, int tx, int ty, boolean moving)
     {
-        if ((moving ? isFlyer() : isAirborn()) && isAlive()) {
+        if ((moving ? isFlyer() : isAirborne()) && isAlive()) {
             return computeAreaFlightElevation(board, tx, ty);
         } else {
             return super.computeElevation(board, tx, ty, moving);
@@ -324,7 +324,7 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public boolean isAirborn ()
+    public boolean isAirborne ()
     {
         return _config.mode == UnitConfig.Mode.AIR;
     }

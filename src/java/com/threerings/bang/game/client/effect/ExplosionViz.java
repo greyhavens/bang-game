@@ -75,7 +75,7 @@ public class ExplosionViz extends ParticleEffectViz
     protected void didInit ()
     {
         // create the dust ring for explosions on the ground
-        if (!_target.isAirborn() && BangPrefs.isHighDetail()) {
+        if (!_target.isAirborne() && BangPrefs.isHighDetail()) {
             _dustring = ParticlePool.getDustRing();
         }
         

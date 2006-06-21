@@ -341,7 +341,7 @@ public abstract class Piece extends SimpleStreamableObject
      * Returns true if this piece can remain on non-traversable tiles after
      * movement, false otherwise.
      */
-    public boolean isAirborn ()
+    public boolean isAirborne ()
     {
         return false;
     }

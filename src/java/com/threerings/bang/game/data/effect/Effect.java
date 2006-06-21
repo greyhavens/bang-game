@@ -159,7 +159,7 @@ public abstract class Effect extends SimpleStreamableObject
         reportKill(obs, target);
 
         // airborn targets must land when they die
-        if (target.isAirborn()) {
+        if (target.isAirborne()) {
             Point pt = bangobj.board.getOccupiableSpot(
                 target.x, target.y, 5, new Random(bangobj.tick));
             if (pt != null) {

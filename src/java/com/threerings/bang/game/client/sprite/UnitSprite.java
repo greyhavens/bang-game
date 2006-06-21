@@ -383,7 +383,7 @@ public class UnitSprite extends MobileSprite
         // make an exception for the death flights of flyers: only the
         // last coordinate is on the ground
         int elev;
-        if (_piece.isAirborn() && !_piece.isAlive() && idx != coords.length-1) {
+        if (_piece.isAirborne() && !_piece.isAlive() && idx != coords.length-1) {
             elev = ((Unit)_piece).computeAreaFlightElevation(board, nx, ny);
         } else {
             elev = _piece.computeElevation(board, nx, ny, moving);

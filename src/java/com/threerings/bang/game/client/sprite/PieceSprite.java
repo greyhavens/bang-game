@@ -191,7 +191,7 @@ public class PieceSprite extends Sprite
     public void snapToTerrain (boolean moving)
     {
         // flyers simply fly from point to point
-        if (moving ? _piece.isFlyer() : _piece.isAirborn()) {
+        if (moving ? _piece.isFlyer() : _piece.isAirborne()) {
             return;
         }
 

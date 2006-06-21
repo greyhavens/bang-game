@@ -9,7 +9,7 @@ package com.threerings.bang.game.data.piece;
 public class TricksterRaven extends Unit
 {
     @Override // documentation inherited
-    public boolean isAirborn ()
+    public boolean isAirborne ()
     {
         return false;
     }
