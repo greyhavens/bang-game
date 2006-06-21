@@ -21,12 +21,6 @@ public class GiddyUp extends Card
     }
 
     @Override // documentation inherited
-    public int getRadius ()
-    {
-        return 0;
-    }
-
-    @Override // documentation inherited
     public int getWeight ()
     {
         return 40;

@@ -9,14 +9,14 @@ import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 /**
- * A card that allows the player to repair a single unit.
+ * A card that allows the player to half repair a single unit.
  */
-public class Repair extends Card
+public class HalfRepair extends Card
 {
     @Override // documentation inherited
     public String getType ()
     {
-        return "repair";
+        return "half_repair";
     }
 
     @Override // documentation inherited
@@ -28,19 +28,21 @@ public class Repair extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 50;
+        return 75;
     }
 
     @Override // documentation inherited
     public Effect activate (Object target)
     {
-        return new RepairEffect((Integer)target);
+        RepairEffect effect = new RepairEffect((Integer)target);
+        effect.baseRepair = 50;
+        return effect;
     }
 
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 150;
+        return 80;
     }
 
     @Override // documentation inherited

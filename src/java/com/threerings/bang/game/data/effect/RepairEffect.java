@@ -22,6 +22,12 @@ public class RepairEffect extends BonusEffect
     /** The identifier of the piece to be repaired. */
     public int pieceId;
 
+    /** The base amount by which to repair the piece. */
+    public int baseRepair = 100;
+
+    /** The updated damage for the affected piece. */
+    public int newDamage;
+
     /**
      * The constructor used when we're created by a bonus.
      */
@@ -53,7 +59,11 @@ public class RepairEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // nothing doing
+        // compute the new total damage for the affected piece
+        Piece target = bangobj.pieces.get(pieceId);
+        if (target != null) {
+            newDamage = Math.max(0, target.damage - baseRepair);
+        }
     }
 
     @Override // documentation inherited
@@ -68,7 +78,7 @@ public class RepairEffect extends BonusEffect
             return false;
         }
 
-        piece.damage = 0;
+        piece.damage = newDamage;
         reportEffect(obs, piece, REPAIRED);
         return true;
     }

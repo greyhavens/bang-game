@@ -85,7 +85,10 @@ public abstract class Card extends SimpleStreamableObject
 
     /** Returns the radius that should be used when displaying this
      * card's area of effect. */
-    public abstract int getRadius ();
+    public int getRadius ()
+    {
+        return 0;
+    }
 
     /**
      * Returns true if the piece is a valid target for the card.
@@ -213,6 +216,8 @@ public abstract class Card extends SimpleStreamableObject
         register(new GiddyUp());
         register(new Joker());
         register(new Mine());
+        register(new HalfRepair());
+        register(new JackRabbit());
         register(new Spring());
         
         // collect the weights of each card into an array used to select
