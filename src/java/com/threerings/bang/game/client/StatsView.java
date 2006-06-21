@@ -337,6 +337,28 @@ public class StatsView extends SteelWindow
             }
         }
 
+        if (isAdded()) {
+            startObjectiveAnimation();
+        } else {
+            _startAnimationWhenAdded = true;
+        }
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        if (_startAnimationWhenAdded) {
+            _startAnimationWhenAdded = false;
+            startObjectiveAnimation();
+        }
+    }
+
+    /**
+     * Called to animate the objective icons.
+     */
+    protected void startObjectiveAnimation ()
+    {
         // Add an interval to have the icons appear in sequence after
         // a short delay
         _showing = 0;
@@ -369,6 +391,7 @@ public class StatsView extends SteelWindow
             }
         };
         showObjectives.schedule(1000L);
+
     }
 
     /**
@@ -693,6 +716,9 @@ public class StatsView extends SteelWindow
 
     /** Which page is currently displayed.*/
     protected int _page = 0;
+
+    /** Set to true if we animate when the window is added to the hierarchy. */
+    protected boolean _startAnimationWhenAdded = false;
 
     protected static final long ANIM_DELAY = 300L;
     protected static final long OBJECTIVE_DISPLAY = 2000L;
