@@ -315,9 +315,9 @@ public class BangBoardView extends BoardView
             return _card.isValidPiece(_bangobj, piece);
         }
         PieceSprite psprite;
-        return (piece instanceof Unit && piece.owner == _pidx && 
-            piece.isAlive() && !(_pendmap.get(piece.pieceId) > 0 ||
-            (psprite = getPieceSprite(piece)) == null || psprite.isMoving()));
+        return (piece instanceof Unit) && (piece.owner == _pidx) && 
+            piece.isAlive() && (_pendmap.get(piece.pieceId) <= 0) &&
+            ((psprite = getPieceSprite(piece)) != null) && !psprite.isMoving();
     }
 
     /**
