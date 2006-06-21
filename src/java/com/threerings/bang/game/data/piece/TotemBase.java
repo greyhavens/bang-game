@@ -71,7 +71,9 @@ public class TotemBase extends Prop
     public Object clone ()
     {
         TotemBase base = (TotemBase)super.clone();
-        base._pieces = (StreamableArrayList<String>)base._pieces.clone();
+        @SuppressWarnings("unchecked") StreamableArrayList<String> npieces =
+            (StreamableArrayList<String>)base._pieces.clone();
+        base._pieces = npieces;
         return base;
     }
     
