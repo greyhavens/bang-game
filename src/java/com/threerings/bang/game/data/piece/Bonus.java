@@ -217,6 +217,10 @@ public class Bonus extends Piece
      */
     public BonusEffect affect (Piece piece)
     {
+        // ground-only bonuses do not affect flyers
+        if (_config.groundOnly && piece.isFlyer()) {
+            return null;
+        }        
         try {
             BonusEffect effect = (BonusEffect)Class.forName(
                 _config.effectClass).newInstance();

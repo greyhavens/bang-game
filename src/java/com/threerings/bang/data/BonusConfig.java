@@ -45,6 +45,9 @@ public class BonusConfig
     /** If the bonus can be held by a unit. */
     public boolean holdable;
 
+    /** If true, the bonus can only be activated by ground units. */
+    public boolean groundOnly;
+    
     /** The custom bonus class use for this bonus, if specified. */
     public String bonusClass;
 
@@ -167,6 +170,9 @@ public class BonusConfig
         config.holdable = BangUtil.getBooleanProperty(
             type, props, "holdable", false);
 
+        config.groundOnly = BangUtil.getBooleanProperty(
+            type, props, "ground_only", false);
+            
         // map this config into the proper towns
         String towns = BangUtil.requireProperty(type, props, "towns");
         boolean andSoOn = false;
