@@ -148,6 +148,10 @@ public class BangServer extends CrowdServer
     public void init ()
         throws Exception
     {
+        // create out database connection provider 
+        // this must be done before calling super.init()
+        conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
+
         // do the base server initialization
         super.init();
 
@@ -166,8 +170,7 @@ public class BangServer extends CrowdServer
             rsrcmgr, null, AvatarCodes.AVATAR_RSRC_SET);
         alogic = new AvatarLogic(rsrcmgr, comprepo);
 
-        // create our database connection provider and repositories
-        conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
+        // create our repositories
         playrepo = new PlayerRepository(conprov);
         itemrepo = new ItemRepository(conprov);
         statrepo = new StatRepository(conprov);
