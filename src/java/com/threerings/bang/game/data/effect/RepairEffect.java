@@ -22,6 +22,22 @@ public class RepairEffect extends BonusEffect
     /** The identifier of the piece to be repaired. */
     public int pieceId;
 
+    /**
+     * The constructor used when we're created by a bonus.
+     */
+    public RepairEffect ()
+    {
+    }
+
+    /**
+     * The constructor used when we're created by a card. Note, in this case
+     * {@link #init} will not be called.
+     */
+    public RepairEffect (int pieceId)
+    {
+        this.pieceId = pieceId;
+    }
+
     @Override // documentation inherited
     public void init (Piece piece)
     {

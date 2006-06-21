@@ -39,9 +39,9 @@ public class GiddyUp extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (int x, int y)
+    public Effect activate (Object target)
     {
-        return new AdjustTickEffect(x, y, -4);
+        return new AdjustTickEffect((Integer)target, -4);
     }
 
     @Override // documentation inherited

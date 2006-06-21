@@ -54,9 +54,11 @@ public class Missile extends AreaCard
     }
 
     @Override // documentation inherited
-    public Effect activate (int x, int y)
+    public Effect activate (Object target)
     {
-        return new AreaDamageEffect(owner, power, getRadius(), x, y);
+        int[] coords = (int[])target;
+        return new AreaDamageEffect(
+            owner, power, getRadius(), coords[0], coords[1]);
     }
 
     @Override // documentation inherited

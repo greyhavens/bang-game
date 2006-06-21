@@ -41,11 +41,12 @@ public class Joker extends AreaCard
     }
 
     @Override // documentation inherited
-    public Effect activate (int x, int y)
+    public Effect activate (Object target)
     {
+        int[] coords = (int[])target;
         Bonus bonus = Bonus.createBonus(
             BonusConfig.getConfig("frontier_town/joker"));
-        bonus.position(x, y);
+        bonus.position(coords[0], coords[1]);
         return new AddPieceEffect(bonus);
     }
 

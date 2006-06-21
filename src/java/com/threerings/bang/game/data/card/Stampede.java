@@ -47,9 +47,10 @@ public class Stampede extends AreaCard
     }
 
     @Override // documentation inherited
-    public Effect activate (int x, int y)
+    public Effect activate (Object target)
     {
-        return new StampedeEffect(owner, x, y, getRadius());
+        int[] coords = (int[])target;
+        return new StampedeEffect(owner, coords[0], coords[1], getRadius());
     }
 
     @Override // documentation inherited

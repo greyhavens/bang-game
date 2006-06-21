@@ -4,10 +4,9 @@
 package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.effect.AreaRepairEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.client.sprite.Targetable;
 
 /**
  * A card that allows the player to repair a single unit.
@@ -39,9 +38,9 @@ public class Repair extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (int x, int y)
+    public Effect activate (Object target)
     {
-        return new AreaRepairEffect(100, getRadius(), x, y);
+        return new RepairEffect((Integer)target);
     }
 
     @Override // documentation inherited

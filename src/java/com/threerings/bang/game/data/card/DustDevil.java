@@ -40,9 +40,9 @@ public class DustDevil extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (int x, int y)
+    public Effect activate (Object target)
     {
-        return new ResurrectEffect(owner, x, y);
+        return new ResurrectEffect((Integer)target, owner);
     }
 
     @Override // documentation inherited

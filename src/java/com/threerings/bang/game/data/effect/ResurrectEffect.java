@@ -9,14 +9,19 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Resurrects a single unit at half health and converts them temporarily to the
  * resurrector's team.
  */
-public class ResurrectEffect extends AreaEffect
+public class ResurrectEffect extends Effect
 {
     /** An effect reported on resurrected units. */
     public static final String RESURRECTED = "resurrected";
+
+    /** The identifier of the piece to be resurrected. */
+    public int pieceId;
 
     /** The index of the resurrecting player. */
     public int resurrector;
@@ -25,26 +30,38 @@ public class ResurrectEffect extends AreaEffect
     {
     }
 
-    public ResurrectEffect (int resurrector, int x, int y)
+    public ResurrectEffect (int pieceId, int resurrector)
     {
-        super(0, x, y);
+        this.pieceId = pieceId;
         this.resurrector = resurrector;
     }
 
     @Override // documentation inherited
-    protected boolean isPieceAffected (Piece piece)
+    public int[] getAffectedPieces ()
     {
-        // we only work on dead pieces
-        return (piece instanceof Unit && piece.owner >= 0 && !piece.isAlive());
+        return new int[] { pieceId };
     }
 
     @Override // documentation inherited
-    protected void apply (
-        BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
+    public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        // nothing doing
+    }
+
+    @Override // documentation inherited
+    public boolean apply (BangObject bangobj, Observer obs)
+    {
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null) {
+            log.warning("Missing target for resurrect effect " +
+                        "[id=" + pieceId + "].");
+            return false;
+        }
+
         piece.owner = resurrector;
         piece.damage = 50;
         piece.lastActed = (short)(bangobj.tick - 4);
         reportEffect(obs, piece, RESURRECTED);
+        return true;
     }
 }

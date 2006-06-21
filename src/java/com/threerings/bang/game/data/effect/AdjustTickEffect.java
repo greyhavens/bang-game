@@ -21,9 +21,6 @@ public class AdjustTickEffect extends Effect
     /** Identifies the use of this effect by the Giddy Up card. */
     public static final String GIDDY_UPPED = "cards/giddy_up/activate";
 
-    /** The coordinates at which we were activated. */
-    public short x, y;
-
     /** The piece that we will be affecting. */
     public int pieceId;
 
@@ -34,10 +31,9 @@ public class AdjustTickEffect extends Effect
     {
     }
 
-    public AdjustTickEffect (int x, int y, int delta)
+    public AdjustTickEffect (int pieceId, int delta)
     {
-        this.x = (short)x;
-        this.y = (short)y;
+        this.pieceId = pieceId;
         _delta = delta;
     }
 
@@ -51,14 +47,10 @@ public class AdjustTickEffect extends Effect
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         newLastActed = (short)(bangobj.tick + _delta);
-        for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
-            if (p.x == x && p.y == y && p.isAlive() &&
-                // make sure we're actually changing something
-                p.lastActed != newLastActed) {
-                pieceId = p.pieceId;
-                break;
-            }
+        // make sure we're actually changing something
+        Piece p = bangobj.pieces.get(pieceId);
+        if (!p.isAlive() || p.lastActed == newLastActed) {
+            pieceId = 0; // mark ourselves as inapplicable
         }
     }
 

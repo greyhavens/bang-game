@@ -109,7 +109,7 @@ public abstract class Card extends SimpleStreamableObject
      *
      * @return the effect of the card activation.
      */
-    public abstract Effect activate (int x, int y);
+    public abstract Effect activate (Object target);
 
     /**
      * Returns the weight of this card compared to the others which is used to
