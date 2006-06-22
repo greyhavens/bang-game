@@ -54,6 +54,9 @@ public class BonusConfig
     /** The effect class associated with this bonus. */
     public String effectClass;
 
+    /** The card type associated with this bonus. */
+    public String cardType;
+    
     /** Returns a string representation of this instance. */
     public String toString ()
     {
@@ -149,7 +152,8 @@ public class BonusConfig
         config.type = type;
         config.bonusClass = props.getProperty("class");
         config.effectClass = BangUtil.requireProperty(type, props, "effect");
-
+        config.cardType = props.getProperty("card");
+        
         config.baseWeight = BangUtil.getIntProperty(
             type, props, "base_weight", 50);
         config.damageAffinity = BangUtil.getFloatProperty(

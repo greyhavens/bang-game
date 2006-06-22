@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.data.effect;
 
-import java.util.Iterator;
-
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
@@ -38,14 +36,7 @@ public class GrantCardEffect extends BonusEffect
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // make sure our player has room for another card
-        int have = 0;
-        for (Iterator iter = bangobj.cards.iterator(); iter.hasNext(); ) {
-            Card card = (Card)iter.next();
-            if (card.owner == player) {
-                have++;
-            }
-        }
-        if (have >= GameCodes.MAX_CARDS) {
+        if (bangobj.countPlayerCards(player) >= GameCodes.MAX_CARDS) {
             log.info("No soup four you! " + player + ".");
             return;
         }

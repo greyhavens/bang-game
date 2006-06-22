@@ -227,6 +227,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new IronPlate());
         register(new Reinforcements());
         register(new Roadblock());
+        register(new Lasso());
         
         // collect the weights of each card into an array used to select
         // randomly based on said weights

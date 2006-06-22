@@ -975,7 +975,7 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
-     * Returns true if the specified coordiante is traversable.
+     * Returns true if the specified coordinate is traversable.
      */
     public boolean isTraversable (int x, int y)
     {
@@ -985,6 +985,17 @@ public class BangBoard extends SimpleStreamableObject
         return (_btstate[y*_width+x] == O_FLAT);
     }
 
+    /**
+     * Returns true if the specified coordinate contains a bonus.
+     */
+    public boolean containsBonus (int x, int y)
+    {
+        if (!_playarea.contains(x, y)) {
+            return false;
+        }
+        return (_tstate[y*_width+x] == O_BONUS);
+    }
+    
     /**
      * Computes the supplied piece's move sets based on its current
      * location and the state of the board. A set of attackable locations
