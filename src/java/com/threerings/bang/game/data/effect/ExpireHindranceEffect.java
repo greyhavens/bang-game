@@ -7,16 +7,16 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**
- * Expires the currently active hinderance on a unit.
+ * Expires the currently active hindrance on a unit.
  */
-public class ExpireHinderanceEffect extends ExpireInfluenceEffect
+public class ExpireHindranceEffect extends ExpireInfluenceEffect
 {
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit != null) {
-            unit.hinderance = null;
+            unit.hindrance = null;
             reportEffect(obs, unit, UPDATED);
         }
         return true;
