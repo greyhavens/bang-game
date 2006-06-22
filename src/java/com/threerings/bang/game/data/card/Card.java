@@ -71,9 +71,25 @@ public abstract class Card extends SimpleStreamableObject
         return _cards.values();
     }
 
+    /**
+     * Returns the prototype card of the specified type.
+     */
+    public static Card getCard (String type)
+    {
+        return _cards.get(type);
+    }
+    
     /** Returns a string type identifier for this card. */
     public abstract String getType ();
 
+    /**
+     * Determines whether this card can be played in the identified game.
+     */
+    public boolean isPlayable (BangObject bangobj)
+    {
+        return true;
+    }
+    
     /**
      * Returns the placement mode of this card.
      */
@@ -229,6 +245,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new Roadblock());
         register(new Lasso());
         register(new DropNugget());
+        register(new FoolsGold());
         
         // collect the weights of each card into an array used to select
         // randomly based on said weights

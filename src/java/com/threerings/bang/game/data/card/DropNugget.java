@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.game.data.BangObject;
 
+import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
@@ -25,7 +26,7 @@ public class DropNugget extends Card
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
         return (target instanceof Unit && target.isAlive() &&
-                NuggetEffect.NUGGET_BONUS.equals(((Unit)target).holding));
+                NuggetEffect.isNuggetBonus(((Unit)target).holding));
     }
 
     @Override // documentation inherited
@@ -38,7 +39,7 @@ public class DropNugget extends Card
     public Effect activate (BangObject bangobj, Object target)
     {
         Unit unit = (Unit)bangobj.pieces.get((Integer)target);
-        return NuggetEffect.dropNugget(bangobj, unit, -1);
+        return HoldEffect.dropBonus(bangobj, unit, -1, unit.holding);
     }
 
     @Override // documentation inherited

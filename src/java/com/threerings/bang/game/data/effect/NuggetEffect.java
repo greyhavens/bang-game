@@ -48,19 +48,15 @@ public class NuggetEffect extends HoldEffect
     public int claimId = -1;
 
     /**
-     * Creates a nugget effect configured to cause the specified unit to drop
-     * their nugget. Returns null if a location for the nugget to fall could
-     * not be found.
-     *
-     * @param causerId the piece id of the piece that caused this piece to drop
-     * this nugget, used for animation sequencing.
+     * Determines whether the given bonus type represents either a real nugget
+     * or a nugget of fool's gold.
      */
-    public static NuggetEffect dropNugget (
-        BangObject bangobj, Unit unit, int causerId)
+    public static boolean isNuggetBonus (String type)
     {
-        return (NuggetEffect)dropBonus(bangobj, unit, causerId, NUGGET_BONUS);
+        return NUGGET_BONUS.equals(type) ||
+            FoolsNuggetEffect.FOOLS_NUGGET_BONUS.equals(type);
     }
-
+    
     public NuggetEffect ()
     {
         type = NUGGET_BONUS;
@@ -70,7 +66,7 @@ public class NuggetEffect extends HoldEffect
     public int[] getAffectedPieces ()
     {
         int[] affected = super.getAffectedPieces();
-        if (drop == null) {
+        if (claimId > 0) {
             return ArrayUtil.append(affected, claimId);
         }
         return affected;
@@ -80,31 +76,37 @@ public class NuggetEffect extends HoldEffect
     public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
-
         if (claimId > 0) {
-            Counter claim = (Counter)bangobj.pieces.get(claimId);
-            if (dropping) {
-                // if we're on the server, grant points to the player
-                if (bangobj.getManager().isManager(bangobj)) {
-                    bangobj.grantPoints(
-                        claim.owner, ScenarioCodes.POINTS_PER_NUGGET);
-                }
-                claim.count++;
-                reportEffect(obs, claim, NUGGET_ADDED);
-            } else {
-                // if we're on the server, deduct points from the player
-                if (bangobj.getManager().isManager(bangobj)) {
-                    bangobj.grantPoints(
-                        claim.owner, -ScenarioCodes.POINTS_PER_NUGGET);
-                }
-                claim.count--;
-                reportEffect(obs, claim, NUGGET_REMOVED);
-            }
+            applyToClaim(bangobj, obs);
         }
-
         return true;
     }
 
+    /**
+     * Applies the effect on the claim.
+     */
+    protected void applyToClaim (BangObject bangobj, Observer obs)
+    {
+        Counter claim = (Counter)bangobj.pieces.get(claimId);
+        if (dropping) {
+            // if we're on the server, grant points to the player
+            if (bangobj.getManager().isManager(bangobj)) {
+                bangobj.grantPoints(
+                    claim.owner, ScenarioCodes.POINTS_PER_NUGGET);
+            }
+            claim.count++;
+            reportEffect(obs, claim, NUGGET_ADDED);
+        } else {
+            // if we're on the server, deduct points from the player
+            if (bangobj.getManager().isManager(bangobj)) {
+                bangobj.grantPoints(
+                    claim.owner, -ScenarioCodes.POINTS_PER_NUGGET);
+            }
+            claim.count--;
+            reportEffect(obs, claim, NUGGET_REMOVED);
+        }
+    }
+    
     @Override // documentation inherited
     protected String getDroppedEffect ()
     {

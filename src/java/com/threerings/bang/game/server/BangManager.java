@@ -141,7 +141,13 @@ public class BangManager extends GameManager
                     continue;
                 }
                 // TODO: get pissy if they try to use the same card twice
-                cards[ii] = item.getCard();
+                Card card = item.getCard();
+                if (!card.isPlayable(_bangobj)) {
+                    log.warning("Rejecting request to use nonplayable card " +
+                        "[who=" + user.who() + ", card=" + card + "].");
+                    continue;
+                }
+                cards[ii] = card;
                 cards[ii].init(_bangobj, pidx);
                 _scards.put(cards[ii].cardId, new StartingCard(pidx, item));
             }

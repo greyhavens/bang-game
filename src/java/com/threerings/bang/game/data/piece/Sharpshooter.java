@@ -5,6 +5,8 @@ package com.threerings.bang.game.data.piece;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.HoldEffect;
+import com.threerings.bang.game.data.effect.FoolsNuggetEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
@@ -21,8 +23,9 @@ public class Sharpshooter extends Unit
         // they die or not
         if (target instanceof Unit) {
             Unit unit = (Unit)target;
-            if (NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
-                return NuggetEffect.dropNugget(bangobj, unit, pieceId);
+            if (NuggetEffect.isNuggetBonus(unit.holding)) {
+                return HoldEffect.dropBonus(bangobj, unit, pieceId,
+                    unit.holding);
             }
         }
         return null;

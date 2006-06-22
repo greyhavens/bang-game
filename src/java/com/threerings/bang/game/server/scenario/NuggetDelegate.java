@@ -8,6 +8,7 @@ import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.data.effect.FoolsNuggetEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Counter;
@@ -72,19 +73,22 @@ public class NuggetDelegate extends CounterDelegate
         if (counter.owner == unit.owner && 
                 NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
             effect = new NuggetEffect();
-            effect.init(unit);
-            effect.claimId = counter.pieceId;
             effect.dropping = true;
 
+        } else if (counter.owner == unit.owner &&
+            FoolsNuggetEffect.FOOLS_NUGGET_BONUS.equals(unit.holding)) {
+            effect = new FoolsNuggetEffect();
+            effect.dropping = true;
+            
         } else if (_allowClaimWithdrawal && counter.owner != unit.owner &&
                    counter.count > 0 && unit.canActivateBonus(_nuggetBonus)) {
             effect = new NuggetEffect();
-            effect.init(unit);
-            effect.claimId = counter.pieceId;
             effect.dropping = false;
         }
 
         if (effect != null) {
+            effect.init(unit);
+            effect.claimId = counter.pieceId;
             _bangmgr.deployEffect(unit.owner, effect);
         }
     }
