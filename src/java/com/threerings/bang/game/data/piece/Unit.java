@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import com.threerings.io.ObjectInputStream;
@@ -16,6 +17,7 @@ import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.ExpireHinderanceEffect;
 import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
@@ -34,6 +36,9 @@ public class Unit extends Piece
 
     /** Any influence currently acting on this unit. */
     public Influence influence;
+
+    /** Any hinderance currently acting on this unit. */
+    public Hinderance hinderance;
 
     /** Type of thing being held, or null for nothing. */
     public String holding;
@@ -66,6 +71,15 @@ public class Unit extends Piece
     {
         influence.init(tick);
         this.influence = influence;
+    }
+
+    /**
+     * Configures this piece with a new hinderance.
+     */
+    public void setHinderance (Hinderance hinderance, short tick)
+    {
+        hinderance.init(tick);
+        this.hinderance = hinderance;
     }
 
     /** Returns the type of the unit. */
@@ -258,14 +272,20 @@ public class Unit extends Piece
     }
     
     @Override // documentation inherited
-    public Effect tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
     {
+        ArrayList<Effect> effects = new ArrayList<Effect>();
         if (influence != null && influence.isExpired(tick)) {
             ExpireInfluenceEffect effect = new ExpireInfluenceEffect();
             effect.init(this);
-            return effect;
+            effects.add(effect);
         }
-        return null;
+        if (hinderance != null && hinderance.isExpired(tick)) {
+            ExpireHinderanceEffect effect = new ExpireHinderanceEffect();
+            effect.init(this);
+            effects.add(effect);
+        }
+        return effects;
     }
 
     @Override // documentation inherited
@@ -280,36 +300,46 @@ public class Unit extends Piece
     @Override // documentation inherited
     protected int getTicksPerMove ()
     {
-        return (influence == null) ? super.getTicksPerMove() :
+        int ticks = (influence == null) ? super.getTicksPerMove() :
             influence.adjustTicksPerMove(super.getTicksPerMove());
+        return (hinderance == null) ? ticks :
+            hinderance.adjustTicksPerMove(ticks);
     }
 
     @Override // documentation inherited
     public int getSightDistance ()
     {
-        return (influence == null) ? _config.sightDistance :
+        int distance = (influence == null) ? _config.sightDistance :
             influence.adjustSightDistance(_config.sightDistance);
+        return (hinderance == null) ? distance :
+            hinderance.adjustSightDistance(distance);
     }
 
     @Override // documentation inherited
     public int getMoveDistance ()
     {
-        return (influence == null) ? _config.moveDistance :
+        int distance = (influence == null) ? _config.moveDistance :
             influence.adjustMoveDistance(_config.moveDistance);
+        return (hinderance == null) ? distance :
+            hinderance.adjustMoveDistance(distance);
     }
 
     @Override // documentation inherited
     public int getMinFireDistance ()
     {
-        return (influence == null) ? _config.minFireDistance :
+        int distance = (influence == null) ? _config.minFireDistance :
             influence.adjustMinFireDistance(_config.minFireDistance);
+        return (hinderance == null) ? distance :
+            hinderance.adjustMinFireDistance(distance);
     }
 
     @Override // documentation inherited
     public int getMaxFireDistance ()
     {
-        return (influence == null) ? _config.maxFireDistance :
+        int distance = (influence == null) ? _config.maxFireDistance :
             influence.adjustMaxFireDistance(_config.maxFireDistance);
+        return (hinderance == null) ? distance :
+            hinderance.adjustMaxFireDistance(distance);
     }
 
     @Override // documentation inherited
@@ -357,6 +387,9 @@ public class Unit extends Piece
         }
         if (influence != null) {
             cost = influence.adjustTraversalCost(terrain, cost);
+        }
+        if (hinderance != null) {
+            cost = hinderance.adjustTraversalCost(terrain, cost);
         }
         return cost;
     }

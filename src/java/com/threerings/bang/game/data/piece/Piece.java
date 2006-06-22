@@ -97,10 +97,10 @@ public abstract class Piece extends SimpleStreamableObject
      * @param board the current board.
      * @param pieces all the pieces on the board in easily accessible form.
      *
-     * @return any effect to apply to the unit as a result of having been
-     * ticked or null.
+     * @return a list of effects to apply to the unit as a result of having 
+     * been ticked or null.
      */
-    public Effect tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
     {
         return null;
     }

@@ -30,7 +30,7 @@ public class ExpireInfluenceEffect extends Effect
     }
 
     @Override // documentation inherited
-        public void prepare (BangObject bangobj, IntIntMap dammap)
+    public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         // nothing doing
     }
