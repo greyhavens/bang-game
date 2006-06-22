@@ -45,7 +45,7 @@ public class Ramblin extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 300;
+        return 0;
     }
 
     @Override // documentation inherited

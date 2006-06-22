@@ -52,7 +52,7 @@ public class Spring extends AreaCard
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 150;
+        return 0;
     }
 
     @Override // documentation inherited

@@ -30,7 +30,7 @@ public class IronPlate extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 40;
+        return 30;
     }
 
     @Override // documentation inherited
@@ -44,7 +44,7 @@ public class IronPlate extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 250;
+        return 0;
     }
 
     @Override // documentation inherited

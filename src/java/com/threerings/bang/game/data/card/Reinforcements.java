@@ -31,7 +31,7 @@ public class Reinforcements extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 30;
+        return 10;
     }
 
     @Override // documentation inherited
@@ -46,7 +46,7 @@ public class Reinforcements extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 300;
+        return 0;
     }
 
     @Override // documentation inherited

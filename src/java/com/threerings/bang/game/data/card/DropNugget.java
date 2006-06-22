@@ -44,7 +44,7 @@ public class DropNugget extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 300;
+        return 150;
     }
 
     @Override // documentation inherited

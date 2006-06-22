@@ -37,7 +37,7 @@ public class Joker extends AreaCard
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 25;
+        return 35;
     }
 
     @Override // documentation inherited

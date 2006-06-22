@@ -36,7 +36,7 @@ public class Staredown extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 50;
+        return 60;
     }
 
     @Override // documentation inherited
@@ -48,7 +48,7 @@ public class Staredown extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 100;
+        return 50;
     }
 
     @Override // documentation inherited

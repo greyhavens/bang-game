@@ -30,7 +30,7 @@ public class HollowPoint extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 40;
+        return 60;
     }
 
     @Override // documentation inherited
@@ -44,7 +44,7 @@ public class HollowPoint extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 300;
+        return 75;
     }
 
     @Override // documentation inherited

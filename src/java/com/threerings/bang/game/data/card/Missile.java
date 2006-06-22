@@ -50,7 +50,7 @@ public class Missile extends AreaCard
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 25;
+        return 30;
     }
 
     @Override // documentation inherited

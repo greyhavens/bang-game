@@ -48,7 +48,7 @@ public class JackRabbit extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 150;
+        return 100;
     }
 
     @Override // documentation inherited

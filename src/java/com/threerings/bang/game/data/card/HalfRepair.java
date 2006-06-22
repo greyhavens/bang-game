@@ -42,7 +42,7 @@ public class HalfRepair extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 80;
+        return 50;
     }
 
     @Override // documentation inherited

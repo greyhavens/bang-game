@@ -23,7 +23,7 @@ public class GiddyUp extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 40;
+        return 30;
     }
 
     @Override // documentation inherited

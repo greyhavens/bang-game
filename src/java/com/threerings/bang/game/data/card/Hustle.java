@@ -30,7 +30,7 @@ public class Hustle extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 25;
+        return 50;
     }
 
     @Override // documentation inherited
@@ -44,7 +44,7 @@ public class Hustle extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 400;
+        return 200;
     }
 
     @Override // documentation inherited

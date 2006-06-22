@@ -31,7 +31,7 @@ public class LuckyHorseshoe extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 40;
+        return 75;
     }
 
     @Override // documentation inherited
@@ -45,7 +45,7 @@ public class LuckyHorseshoe extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 300;
+        return 75;
     }
 
     @Override // documentation inherited

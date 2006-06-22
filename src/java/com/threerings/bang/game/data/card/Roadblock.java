@@ -36,7 +36,7 @@ public class Roadblock extends AreaCard
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 50;
+        return 60;
     }
 
     @Override // documentation inherited
