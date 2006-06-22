@@ -106,14 +106,14 @@ public class NuggetEffect extends HoldEffect
     }
 
     @Override // documentation inherited
-    protected static void reportEffect (
-            Observer obs, Piece piece, String effect)
+    protected String getDroppedEffect ()
     {
-        if (DROPPED_BONUS.equals(effect)) {
-            effect = DROPPED_NUGGET;
-        } else if (PICKED_UP_BONUS.equals(effect)) {
-            effect = PICKED_UP_NUGGET;
-        }
-        Effect.reportEffect(obs, piece, effect);
+        return DROPPED_NUGGET;
+    }
+    
+    @Override // documentation inherited
+    protected String getPickedUpEffect ()
+    {
+        return PICKED_UP_NUGGET;
     }
 }

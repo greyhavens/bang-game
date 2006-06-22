@@ -135,10 +135,10 @@ public class HoldEffect extends BonusEffect
         if (unit != null) {
             if (dropping) {
                 unit.holding = null;
-                reportEffect(obs, unit, DROPPED_BONUS);
+                reportEffect(obs, unit, getDroppedEffect());
             } else {
                 unit.holding = type;
-                reportEffect(obs, unit, PICKED_UP_BONUS);
+                reportEffect(obs, unit, getPickedUpEffect());
             }
         }
 
@@ -147,5 +147,21 @@ public class HoldEffect extends BonusEffect
             reportAddition(obs, drop);
         }
         return true;
+    }
+    
+    /**
+     * Returns the identifier for the dropped bonus effect.
+     */
+    protected String getDroppedEffect ()
+    {
+        return DROPPED_BONUS;
+    }
+    
+    /**
+     * Returns the identifier for the picked up bonus effect.
+     */
+    protected String getPickedUpEffect ()
+    {
+        return PICKED_UP_BONUS;
     }
 }
