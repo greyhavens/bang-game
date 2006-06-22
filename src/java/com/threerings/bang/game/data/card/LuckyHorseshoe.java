@@ -35,7 +35,7 @@ public class LuckyHorseshoe extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (Object target)
+    public Effect activate (BangObject bangobj, Object target)
     {
         LadyLuckEffect effect = new LadyLuckEffect();
         effect.pieceId = (Integer)target;

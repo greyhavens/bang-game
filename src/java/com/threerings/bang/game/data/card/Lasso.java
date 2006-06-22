@@ -50,7 +50,7 @@ public class Lasso extends AreaCard
     }
 
     @Override // documentation inherited
-    public Effect activate (Object target)
+    public Effect activate (BangObject bangobj, Object target)
     {
         int[] coords = (int[])target;
         return new LassoBonusEffect(owner, coords[0], coords[1]);

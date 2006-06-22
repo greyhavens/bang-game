@@ -243,7 +243,7 @@ public class BangManager extends GameManager
         }
 
         log.info("Playing card: " + card);
-        Effect effect = card.activate(target);
+        Effect effect = card.activate(_bangobj, target);
         if (effect == null || !deployEffect(card.owner, effect)) {
             throw new InvocationException(CARD_UNPLAYABLE);
         }

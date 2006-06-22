@@ -35,7 +35,7 @@ public class Ramblin extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (Object target)
+    public Effect activate (BangObject bangobj, Object target)
     {
         RamblinEffect effect = new RamblinEffect();
         effect.pieceId = (Integer)target;

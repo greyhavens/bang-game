@@ -34,7 +34,7 @@ public class Hustle extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (Object target)
+    public Effect activate (BangObject bangobj, Object target)
     {
         HustleEffect effect = new HustleEffect();
         effect.pieceId = (Integer)target;

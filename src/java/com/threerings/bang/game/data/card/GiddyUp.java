@@ -33,7 +33,7 @@ public class GiddyUp extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (Object target)
+    public Effect activate (BangObject bangobj, Object target)
     {
         return new AdjustTickEffect((Integer)target, -4);
     }

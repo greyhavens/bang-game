@@ -35,7 +35,7 @@ public class JackRabbit extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (Object target)
+    public Effect activate (BangObject bangobj, Object target)
     {
         AdjustMoveInfluenceEffect effect = 
             new AdjustMoveInfluenceEffect(3, 4);

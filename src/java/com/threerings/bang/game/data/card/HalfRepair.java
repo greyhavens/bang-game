@@ -32,7 +32,7 @@ public class HalfRepair extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (Object target)
+    public Effect activate (BangObject bangobj, Object target)
     {
         RepairEffect effect = new RepairEffect((Integer)target);
         effect.baseRepair = 50;

@@ -93,7 +93,10 @@ public class HoldEffect extends BonusEffect
     @Override // documentation inherited
     public int[] getWaitPieces ()
     {
-        return new int[] { causerId };
+        if (causerId != -1) {
+            return new int[] { causerId };
+        }
+        return super.getWaitPieces();
     }
 
     @Override // documentation inherited

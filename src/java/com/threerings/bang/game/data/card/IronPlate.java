@@ -34,7 +34,7 @@ public class IronPlate extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (Object target)
+    public Effect activate (BangObject bangobj, Object target)
     {
         IronPlateEffect effect = new IronPlateEffect();
         effect.pieceId = (Integer)target;

@@ -112,7 +112,7 @@ public abstract class Card extends SimpleStreamableObject
      *
      * @return the effect of the card activation.
      */
-    public abstract Effect activate (Object target);
+    public abstract Effect activate (BangObject bangobj, Object target);
 
     /**
      * Returns the weight of this card compared to the others which is used to
@@ -228,6 +228,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new Reinforcements());
         register(new Roadblock());
         register(new Lasso());
+        register(new DropNugget());
         
         // collect the weights of each card into an array used to select
         // randomly based on said weights
