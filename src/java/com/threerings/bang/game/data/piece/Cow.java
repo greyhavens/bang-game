@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.piece;
 
+import java.util.ArrayList;
+
 import com.samskivert.util.ArrayUtil;
 
 import com.threerings.bang.data.UnitConfig;
@@ -73,7 +75,7 @@ public class Cow extends Piece
     }
 
     @Override // documentation inherited
-    public Effect tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
     {
         // if we're corralled, stop moving
         if (corralled) {
@@ -92,11 +94,13 @@ public class Cow extends Piece
                 walls++;
             }
         }
-        if (walls < 3) {
-            direction = -1;
+        if (walls < 3 || direction == -1) {
+            return null;
         }
 
-        return (direction == -1) ? null : move(board, direction, -1, -1);
+        ArrayList<Effect> effects = new ArrayList<Effect>();
+        effects.add(move(board, direction, -1, -1));
+        return effects;
     }
 
     protected SpookEffect move (BangBoard board, int direction,

@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.piece;
 
+import java.util.ArrayList;
+
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.Effect;
 
@@ -12,7 +14,7 @@ import com.threerings.bang.game.data.effect.Effect;
 public class WindupSlinger extends Unit
 {
     @Override // documentation inherited
-    public Effect tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
     {
 //         int odamage = damage;
 //         damage = Math.min(100, damage + 5);
