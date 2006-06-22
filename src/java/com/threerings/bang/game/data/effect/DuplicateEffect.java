@@ -57,7 +57,7 @@ public class DuplicateEffect extends BonusEffect
         }
 
         // position our new unit
-        duplicate = unit.duplicate(bangobj);
+        duplicate = duplicate(bangobj, unit);
         duplicate.position(spot.x, spot.y);
 
         // update the board shadow to reflect its future existence
@@ -87,5 +87,10 @@ public class DuplicateEffect extends BonusEffect
         }
 
         return true;
+    }
+
+    protected Unit duplicate (BangObject bangobj, Unit unit)
+    {
+        return unit.duplicate(bangobj);
     }
 }

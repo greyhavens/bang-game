@@ -225,6 +225,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new HollowPoint());
         register(new LuckyHorseshoe());
         register(new IronPlate());
+        register(new Reinforcements());
         register(new Roadblock());
         
         // collect the weights of each card into an array used to select

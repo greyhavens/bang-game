@@ -88,7 +88,16 @@ public class Unit extends Piece
      */
     public Unit duplicate (BangObject bangobj)
     {
-        Unit dup = getUnit(_config.dupeType);
+        return duplicate(bangobj, _config.dupeType);
+    }
+
+    /**
+     * Creates a new unit of a specific type that is otherwise an exact
+     * duplicate of this unit.
+     */
+    public Unit duplicate (BangObject bangobj, String unitType)
+    {
+        Unit dup = getUnit(unitType);
         dup.owner = owner;
         dup.lastActed = lastActed;
         dup.damage = damage;
