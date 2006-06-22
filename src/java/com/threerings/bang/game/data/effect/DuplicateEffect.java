@@ -25,9 +25,29 @@ public class DuplicateEffect extends BonusEffect
     /** Reported when a duplicate could not be placed for lack of room. */
     public static final String WASTED_DUP = "wasted_dup";
 
+    /** The piece to duplicate. */
     public int pieceId;
 
+    /** The duplicate piece. */
     public Piece duplicate;
+
+    /**
+     * The constructor used when created by a duplicate bonus.
+     */
+    public DuplicateEffect ()
+    {
+    }
+
+    /**
+     * The constructor used when created by a duplicate card.
+     *
+     * @param type the type of unit to create instead of duplicating the unit
+     * in question or null if we should use the unit's dup-type.
+     */
+    public DuplicateEffect (String type)
+    {
+        _type = type;
+    }
 
     @Override // documentation inherited
     public void init (Piece piece)
@@ -57,7 +77,11 @@ public class DuplicateEffect extends BonusEffect
         }
 
         // position our new unit
-        duplicate = duplicate(bangobj, unit);
+        if (_type == null) {
+            duplicate = unit.duplicate(bangobj);
+        } else {
+            duplicate = unit.duplicate(bangobj, _type);
+        }
         duplicate.position(spot.x, spot.y);
 
         // update the board shadow to reflect its future existence
@@ -89,8 +113,5 @@ public class DuplicateEffect extends BonusEffect
         return true;
     }
 
-    protected Unit duplicate (BangObject bangobj, Unit unit)
-    {
-        return unit.duplicate(bangobj);
-    }
+    protected transient String _type;
 }

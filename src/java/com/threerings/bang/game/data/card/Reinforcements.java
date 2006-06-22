@@ -5,7 +5,7 @@ package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.game.data.BangObject;
 
-import com.threerings.bang.game.data.effect.DuplicateGunslingerEffect;
+import com.threerings.bang.game.data.effect.DuplicateEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -37,7 +37,8 @@ public class Reinforcements extends Card
     @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
-        DuplicateGunslingerEffect effect = new DuplicateGunslingerEffect();
+        DuplicateEffect effect =
+            new DuplicateEffect("frontier_town/gunslinger");
         effect.pieceId = (Integer)target;
         return effect;
     }
