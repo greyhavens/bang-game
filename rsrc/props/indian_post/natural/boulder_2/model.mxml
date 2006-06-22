@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="boulder2" translation="0.0, 2.72171, 11.3191" rotation="0.0, 0.0, 0.0, 1.0" scale="21.8092, 21.8092, 21.8092" offsetTranslation="0.0, 9.15808, 0.771077" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rockface.png" transparent="false">
+  <triMesh name="boulder2" translation="0.0, -3.46857, 11.3191" rotation="0.0, 0.0, 0.0, 1.0" scale="34.2405, 34.2405, 34.2405" offsetTranslation="0.0, 9.15808, 0.771077" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rockface.png" transparent="false">
     <vertex location="-1.39416, -8.64464, 1.72908" normal="-0.879328, 0.153482, 0.450806" tcoords="0.109628, 0.612417"/>
     <vertex location="-0.929804, -10.1129, 1.94994" normal="-0.595427, -0.595391, 0.539421" tcoords="0.23553, 0.181251"/>
     <vertex location="-0.692363, -8.65379, 2.33691" normal="-0.57532, 0.168157, 0.800456" tcoords="0.299908, 0.60973"/>
