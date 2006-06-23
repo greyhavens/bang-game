@@ -11,7 +11,10 @@ import java.util.Iterator;
 import com.samskivert.util.QuickSort;
 import com.samskivert.util.RandomUtil;
 
+import com.threerings.presents.server.InvocationException;
+
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.ControlTrainEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.TrainEffect;
 import com.threerings.bang.game.data.piece.Piece;
@@ -27,36 +30,52 @@ import com.threerings.bang.game.util.PieceUtil;
 public class TrainDelegate extends ScenarioDelegate
 {
     @Override // documentation inherited
+    public void roundWillStart (BangObject bangobj)
+        throws InvocationException
+    {
+        // create lists of tracks and terminals
+        ArrayList<Track> tracks = new ArrayList<Track>(),
+            terminals = new ArrayList<Track>();
+        for (Piece piece : bangobj.pieces) {
+            if (piece instanceof Track) {
+                Track track = (Track)piece;
+                tracks.add(track);
+                if (track.type == Track.TERMINAL) {
+                    terminals.add(track);
+                }
+            }
+        }
+        _tracks = tracks.toArray(new Track[tracks.size()]);
+        _terminals = terminals.toArray(new Track[terminals.size()]);
+    }
+    
+    @Override // documentation inherited
     public void tick (BangObject bangobj, short tick)
     {
         // find the trains and terminals on the board; if there are no trains
         // but there are terminals, consider creating a train
-        ArrayList<Train> trains = getTrains(bangobj);
-        ArrayList<Track> terminals = getTerminals(bangobj);
-        if (trains.size() == 0) {
-            if (terminals.size() > 0 && Math.random() < 1f/AVG_TRAIN_TICKS) {
-                createTrain(bangobj, terminals);
+        if (_trains.size() == 0) {
+            if (_terminals.length > 0 && Math.random() < 1f/AVG_TRAIN_TICKS) {
+                createTrain(bangobj);
             }
             return;
         }
 
         // update the oldest train first; if it moves, move the rest in order
-        QuickSort.sort(trains, new Comparator<Train>() {
-            public int compare (Train t1, Train t2) {
-                return t1.pieceId - t2.pieceId;
-            }
-        });
-        if (updateTrain(bangobj, trains.get(0))) {
-            for (int i = 1, size = trains.size(); i < size; i++) {
-                Train previous = trains.get(i-1);
-                moveTrain(bangobj, trains.get(i), previous.x, previous.y);
+        _mtrains = _trains.toArray(_mtrains);
+        Train last = _mtrains[0];
+        if (updateTrain(bangobj, _mtrains[0])) {
+            for (int ii = 1; ii < _mtrains.length && _mtrains[ii] != null;
+                ii++) {
+                Train previous = _mtrains[ii - 1];
+                moveTrain(bangobj, last = _mtrains[ii], previous.x,
+                    previous.y);
             }
         }
 
         // see if there is a terminal that can pump out another car; if so,
         // consider pumping another one out
-        Train last = trains.get(trains.size() - 1);
-        Track terminal = getTerminalBehind(last, terminals);
+        Track terminal = getTerminalBehind(last);
         if (terminal != null && last.type != Train.CABOOSE) {
             createTrain(bangobj, last, terminal,
                 Math.random() < 1f/AVG_TRAIN_CARS);
@@ -64,45 +83,14 @@ public class TrainDelegate extends ScenarioDelegate
     }
 
     /**
-     * Gets a list of all trains on the board.
-     */
-    protected ArrayList<Train> getTrains (BangObject bangobj)
-    {
-        ArrayList<Train> trains = new ArrayList<Train>();
-        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
-            Object piece = it.next();
-            if (piece instanceof Train) {
-                trains.add((Train)piece);
-            }
-        }
-        return trains;
-    }
-
-    /**
-     * Gets a list of all terminals on the board.
-     */
-    protected ArrayList<Track> getTerminals (BangObject bangobj)
-    {
-        ArrayList<Track> terminals = new ArrayList<Track>();
-        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
-            Object piece = it.next();
-            if (piece instanceof Track &&
-                ((Track)piece).type == Track.TERMINAL) {
-                terminals.add((Track)piece);
-            }
-        }
-        return terminals;
-    }
-
-    /**
      * Returns the terminal behind the specified train, or <code>null</code>
      * if there isn't one.
      */
-    protected Track getTerminalBehind (Train train, ArrayList<Track> terminals)
+    protected Track getTerminalBehind (Train train)
     {
-        for (int i = 0, size = terminals.size(); i < size; i++) {
-            if (train.isBehind(terminals.get(i))) {
-                return terminals.get(i);
+        for (int ii = 0; ii < _terminals.length; ii++) {
+            if (train.isBehind(_terminals[ii])) {
+                return _terminals[ii];
             }
         }
         return null;
@@ -111,10 +99,10 @@ public class TrainDelegate extends ScenarioDelegate
     /**
      * Adds a new train engine to the board.
      */
-    protected void createTrain (BangObject bangobj, ArrayList<Track> terminals)
+    protected void createTrain (BangObject bangobj)
     {
         // pick a random terminal
-        Track terminal = RandomUtil.pickRandom(terminals);
+        Track terminal = RandomUtil.pickRandom(_terminals);
 
         // create the engine there
         Train train = new Train();
@@ -126,6 +114,7 @@ public class TrainDelegate extends ScenarioDelegate
         train.nextX = (short)(train.x + PieceCodes.DX[train.orientation]);
         train.nextY = (short)(train.y + PieceCodes.DY[train.orientation]);
         bangobj.addToPieces(train);
+        _trains.add(train);
     }
 
     /**
@@ -144,6 +133,7 @@ public class TrainDelegate extends ScenarioDelegate
         train.nextX = last.x;
         train.nextY = last.y;
         bangobj.addToPieces(train);
+        _trains.add(train);
     }
 
     /**
@@ -158,6 +148,7 @@ public class TrainDelegate extends ScenarioDelegate
         if (train.nextX == Train.UNSET) {
             bangobj.board.clearShadow(train);
             bangobj.removeFromPieces(train.getKey());
+            _trains.remove(train);
             train.position(Train.UNSET, Train.UNSET); // suck the rest in
             return true;
         }
@@ -174,24 +165,45 @@ public class TrainDelegate extends ScenarioDelegate
             return false;
         }
 
-        // find the adjacent track pieces excluding the one behind
-        ArrayList<Track> tracks = new ArrayList<Track>();
-        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
-            Piece piece = (Piece)it.next();
-            if (piece instanceof Track &&
-                ((Track)piece).isConnectedTo(train.nextX, train.nextY) &&
-                (piece.x != train.x || piece.y != train.y)) {
-                tracks.add((Track)piece);
+        // make sure we have a reference to the next piece of track
+        if (train.nextTrack == null) {
+            for (int ii = 0; ii < _tracks.length; ii++) {
+                if (_tracks[ii].intersects(train.nextX, train.nextY)) {
+                    train.nextTrack = _tracks[ii];
+                    break;
+                }
             }
         }
-
+        
+        // if the train is under control and there's a path, follow it;
+        // otherwise, choose a random adjacent section of track excluding
+        // the one currently occupied
+        Track track;
+        if (train.path != null && !train.path.isEmpty()) {
+            track = train.path.remove(0);
+        } else {
+            if (train.path != null && train.path.isEmpty()) {
+                // release the train from control
+                _bangmgr.deployEffect(-1, new ControlTrainEffect());
+            }
+            Track[] adjacent = train.nextTrack.getAdjacent(bangobj);
+            Track behind = null;
+            for (int ii = 0; ii < adjacent.length; ii++) {
+                if (train.intersects(adjacent[ii])) {
+                    behind = adjacent[ii];
+                    break;
+                }
+            }
+            track = (behind == null) ? RandomUtil.pickRandom(adjacent) :
+                RandomUtil.pickRandom(adjacent, behind);
+        }
+        
         // if there's nowhere to go, flag to disappear on next tick; otherwise,
         // move to a random piece of track
-        if (tracks.size() == 0) {
+        if (track == null) {
             moveTrain(bangobj, train, Train.UNSET, Train.UNSET);
-
         } else {
-            Track track = RandomUtil.pickRandom(tracks);
+            train.nextTrack = track;
             moveTrain(bangobj, train, track.x, track.y);
         }
 
@@ -206,6 +218,9 @@ public class TrainDelegate extends ScenarioDelegate
     protected Piece getBlockingPiece (
         BangObject bangobj, Train train, int x, int y)
     {
+        if (bangobj.board.isOccupiable(x, y)) {
+            return null; // quick check for common case
+        }
         Piece blocker = null;
         for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
             Piece piece = (Piece)it.next();
@@ -283,9 +298,8 @@ public class TrainDelegate extends ScenarioDelegate
      */
     protected boolean hasTracks (BangObject bangobj, int tx, int ty)
     {
-        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
-            Piece piece = (Piece)it.next();
-            if (piece instanceof Track && piece.intersects(tx, ty)) {
+        for (int ii = 0; ii < _tracks.length; ii++) {
+            if (_tracks[ii].intersects(tx, ty)) {
                 return true;
             }
         }
@@ -307,6 +321,18 @@ public class TrainDelegate extends ScenarioDelegate
         _bangmgr.deployEffect(-1, effect);
     }
 
+    /** The pieces of track on the board. */
+    protected Track[] _tracks;
+    
+    /** The terminals on the board. */
+    protected Track[] _terminals;
+
+    /** The train pieces on the board. */
+    protected ArrayList<Train> _trains = new ArrayList<Train>();
+    
+    /** Used to hold trains in the process of moving them. */
+    protected Train[] _mtrains = new Train[0];
+    
     /** The average number of ticks to let pass before we create a train when
      * there is no train on the board. */
     protected static final int AVG_TRAIN_TICKS = 3;

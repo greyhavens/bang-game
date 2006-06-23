@@ -10,6 +10,7 @@ import com.samskivert.util.RandomUtil;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TrainSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Bonus;
 
 /**
@@ -43,7 +44,37 @@ public class Train extends Piece
 
     /** The next position that the piece will occupy. */
     public short nextX, nextY;
-
+    
+    /** The next piece of track. */
+    public transient Track nextTrack;
+    
+    /** The path being followed by the train, if any. */
+    public transient ArrayList<Track> path;
+    
+    /**
+     * Attempts to find a path from the train's next position to the given
+     * destination.
+     *
+     * @return the computed path, or <code>null</code> if a path couldn't
+     * be found
+     */
+    public ArrayList<Track> findPath (BangObject bangobj, Track dest)
+    {
+        // clear the visited flags and find the next track piece
+        nextTrack = null;
+        for (Piece piece : bangobj.pieces) {
+            if (piece instanceof Track) {
+                Track track = (Track)piece;
+                track.visited = false;
+                if (track.intersects(nextX, nextY)) {
+                    nextTrack = track;
+                }
+            }
+        }
+        return (nextTrack == null) ?
+            null : nextTrack.findPath(bangobj, dest, this);
+    }
+    
     /**
      * Determines whether the specified piece is behind this one.
      */
