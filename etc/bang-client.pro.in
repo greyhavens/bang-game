@@ -8,12 +8,13 @@
 -injars ../lib/getdown.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-base.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/narya-distrib.jar(!META-INF/*,!**/tools/**)
--injars ../lib/narya-media.jar(!META-INF/*,!**/tools/**)
--injars ../lib/narya-parlor.jar(!META-INF/*,!**/tools/**)
--injars ../lib/narya-cast.jar(!META-INF/*,!**/tools/**)
--injars ../lib/narya-jme.jar(
+-injars ../lib/nenya-rsrc.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/nenya-media.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/nenya-cast.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/nenya-jme.jar(
   !META-INF/*,!**/jme/tools/*Task.class,**/jme/tools/**,!**/tools/**)
--injars ../lib/narya-openal.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/nenya-openal.jar(!META-INF/*,!**/tools/**)
+-injars ../lib/vilya-parlor.jar(!META-INF/*,!**/tools/**)
 -injars ../lib/samskivert.jar(!META-INF/*,!**/velocity/**)
 -injars ../lib/jme.jar(!META-INF/*)
 -injars ../lib/jme-effects.jar(!META-INF/*)
