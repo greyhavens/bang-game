@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.dobj.DSet;
@@ -20,6 +21,7 @@ import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceUtil;
 
@@ -516,6 +518,23 @@ public class BangObject extends GameObject
         return apoints;
     }
 
+    /**
+     * Returns a lazily computed mapping from encoded tile coordinates to
+     * pieces of track on the board.
+     */
+    public HashIntMap<Track> getTracks ()
+    {
+        if (_tracks == null) {
+            _tracks = new HashIntMap<Track>();
+            for (Piece piece : pieces) {
+                if (piece instanceof Track) {
+                    _tracks.put(piece.getCoord(), (Track)piece);
+                }
+            }
+        }
+        return _tracks;
+    }
+    
     @Override // documentation inherited
     public boolean isInPlay ()
     {
@@ -1048,4 +1067,7 @@ public class BangObject extends GameObject
         this.awards[index] = value;
     }
     // AUTO-GENERATED: METHODS END
+    
+    /** Maps encoded tile coordinates to pieces of track on the board. */
+    protected transient HashIntMap<Track> _tracks;
 }

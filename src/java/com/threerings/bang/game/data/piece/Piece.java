@@ -59,7 +59,7 @@ public abstract class Piece extends SimpleStreamableObject
     /**
      * Combines the supplied x and y coordintes into a single integer.
      */
-    public static int coord (short x, short y)
+    public static int coord (int x, int y)
     {
         return (x << 16) | y;
     }

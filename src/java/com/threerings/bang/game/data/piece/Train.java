@@ -3,9 +3,12 @@
 
 package com.threerings.bang.game.data.piece;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.RandomUtil;
+
+import com.threerings.media.util.AStarPathUtil;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TrainSprite;
@@ -44,12 +47,9 @@ public class Train extends Piece
 
     /** The next position that the piece will occupy. */
     public short nextX, nextY;
-    
-    /** The next piece of track. */
-    public transient Track nextTrack;
-    
+
     /** The path being followed by the train, if any. */
-    public transient ArrayList<Track> path;
+    public transient List path;
     
     /**
      * Attempts to find a path from the train's next position to the given
@@ -58,32 +58,38 @@ public class Train extends Piece
      * @return the computed path, or <code>null</code> if a path couldn't
      * be found
      */
-    public ArrayList<Track> findPath (BangObject bangobj, Track dest)
+    public List findPath (final BangObject bangobj, Track dest)
     {
-        // clear the visited flags and find the next track piece
-        nextTrack = null;
-        for (Piece piece : bangobj.pieces) {
-            if (piece instanceof Track) {
-                Track track = (Track)piece;
-                track.visited = false;
-                if (track.intersects(nextX, nextY)) {
-                    nextTrack = track;
+        AStarPathUtil.TraversalPred tpred = new AStarPathUtil.TraversalPred() {
+            public boolean canTraverse (Object traverser, int x, int y) {
+                return !intersects(x, y); // don't go back to previous position
+            }
+        };
+        AStarPathUtil.Stepper stepper = new AStarPathUtil.Stepper() {
+            public void considerSteps (int x, int y) {
+                Track[] adj = bangobj.getTracks().get(
+                    coord(x, y)).getAdjacent(bangobj);
+                for (int ii = 0; ii < adj.length; ii++) {
+                    considerStep(adj[ii].x, adj[ii].y, 1);
                 }
             }
+        };
+        List path = AStarPathUtil.getPath(tpred, stepper, this,
+            bangobj.getTracks().size(), nextX, nextY, dest.x, dest.y, false);
+        if (path != null) {
+            path.remove(0); // the first element is redundant
         }
-        return (nextTrack == null) ?
-            null : nextTrack.findPath(bangobj, dest, this);
+        return path;
     }
     
     /**
-     * Determines whether the specified piece is behind this one.
+     * Returns the encoded coordinate for the location behind the train.
      */
-    public boolean isBehind (Piece piece)
+    public int getCoordBehind ()
     {
-        return piece.x == (x + REV_X_MAP[orientation]) &&
-            piece.y == (y + REV_Y_MAP[orientation]);
+        return coord(x + REV_X_MAP[orientation], y + REV_Y_MAP[orientation]);
     }
-
+    
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {

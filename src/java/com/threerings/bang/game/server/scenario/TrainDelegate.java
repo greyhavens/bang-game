@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import com.samskivert.util.QuickSort;
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
@@ -33,19 +33,16 @@ public class TrainDelegate extends ScenarioDelegate
     public void roundWillStart (BangObject bangobj)
         throws InvocationException
     {
-        // create lists of tracks and terminals
-        ArrayList<Track> tracks = new ArrayList<Track>(),
-            terminals = new ArrayList<Track>();
+        // create array of terminals
+        ArrayList<Track> terminals = new ArrayList<Track>();
         for (Piece piece : bangobj.pieces) {
             if (piece instanceof Track) {
                 Track track = (Track)piece;
-                tracks.add(track);
                 if (track.type == Track.TERMINAL) {
                     terminals.add(track);
                 }
             }
         }
-        _tracks = tracks.toArray(new Track[tracks.size()]);
         _terminals = terminals.toArray(new Track[terminals.size()]);
     }
     
@@ -75,25 +72,12 @@ public class TrainDelegate extends ScenarioDelegate
 
         // see if there is a terminal that can pump out another car; if so,
         // consider pumping another one out
-        Track terminal = getTerminalBehind(last);
-        if (terminal != null && last.type != Train.CABOOSE) {
-            createTrain(bangobj, last, terminal,
+        Track behind = bangobj.getTracks().get(last.getCoordBehind());
+        if (behind != null && behind.type == Track.TERMINAL &&
+            last.type != Train.CABOOSE) {
+            createTrain(bangobj, last, behind,
                 Math.random() < 1f/AVG_TRAIN_CARS);
         }
-    }
-
-    /**
-     * Returns the terminal behind the specified train, or <code>null</code>
-     * if there isn't one.
-     */
-    protected Track getTerminalBehind (Train train)
-    {
-        for (int ii = 0; ii < _terminals.length; ii++) {
-            if (train.isBehind(_terminals[ii])) {
-                return _terminals[ii];
-            }
-        }
-        return null;
     }
 
     /**
@@ -165,48 +149,38 @@ public class TrainDelegate extends ScenarioDelegate
             return false;
         }
 
-        // make sure we have a reference to the next piece of track
-        if (train.nextTrack == null) {
-            for (int ii = 0; ii < _tracks.length; ii++) {
-                if (_tracks[ii].intersects(train.nextX, train.nextY)) {
-                    train.nextTrack = _tracks[ii];
-                    break;
-                }
+        // if the train is following a non-empty path, keep following it;
+        // if it's empty, release the train from control
+        if (train.path != null) {
+            if (train.path.isEmpty()) {
+                _bangmgr.deployEffect(-1, new ControlTrainEffect());    
+            } else {
+                Point pt = (Point)train.path.remove(0);
+                moveTrain(bangobj, train, pt.x, pt.y);
+                return true;
             }
         }
         
-        // if the train is under control and there's a path, follow it;
-        // otherwise, choose a random adjacent section of track excluding
-        // the one currently occupied
-        Track track;
-        if (train.path != null && !train.path.isEmpty()) {
-            track = train.path.remove(0);
-        } else {
-            if (train.path != null && train.path.isEmpty()) {
-                // release the train from control
-                _bangmgr.deployEffect(-1, new ControlTrainEffect());
+        // find the adjacent pieces of track, excluding the one behind, and
+        // chooise one randomly
+        Track[] adjacent = bangobj.getTracks().get(
+            Piece.coord(train.nextX, train.nextY)).getAdjacent(bangobj);
+        Track behind = null;
+        for (int ii = 0; ii < adjacent.length; ii++) {
+            if (train.intersects(adjacent[ii])) {
+                behind = adjacent[ii];
+                break;
             }
-            Track[] adjacent = train.nextTrack.getAdjacent(bangobj);
-            Track behind = null;
-            for (int ii = 0; ii < adjacent.length; ii++) {
-                if (train.intersects(adjacent[ii])) {
-                    behind = adjacent[ii];
-                    break;
-                }
-            }
-            track = (behind == null) ? RandomUtil.pickRandom(adjacent) :
-                RandomUtil.pickRandom(adjacent, behind);
         }
+        Track next = (behind == null) ? RandomUtil.pickRandom(adjacent) :
+            RandomUtil.pickRandom(adjacent, behind);
         
-        // if there's nowhere to go, flag to disappear on next tick; otherwise,
-        // move to a random piece of track
-        if (track == null) {
+        // if there's nowhere to go, flag to disappear on next tick
+        if (next == null) {
             moveTrain(bangobj, train, Train.UNSET, Train.UNSET);
         } else {
-            train.nextTrack = track;
-            moveTrain(bangobj, train, track.x, track.y);
+            moveTrain(bangobj, train, next.x, next.y);
         }
-
         return true;
     }
 
@@ -279,7 +253,7 @@ public class TrainDelegate extends ScenarioDelegate
             if (bangobj.board.isOccupiable(x, y)) {
                 Point pt = new Point(x, y);
                 passable.add(pt);
-                if (!hasTracks(bangobj, x, y)) {
+                if (!bangobj.getTracks().containsKey(Piece.coord(x, y))) {
                     trackless.add(pt);
                 }
             }
@@ -291,19 +265,6 @@ public class TrainDelegate extends ScenarioDelegate
         ArrayList<Point> pts = (trackless.isEmpty() ? passable : trackless);
         return (pts.size() == 2) ? RandomUtil.pickRandom(pts) :
             pts.get(0);
-    }
-
-    /**
-     * Determines whether there is a track piece at the specified coordinates.
-     */
-    protected boolean hasTracks (BangObject bangobj, int tx, int ty)
-    {
-        for (int ii = 0; ii < _tracks.length; ii++) {
-            if (_tracks[ii].intersects(tx, ty)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -321,9 +282,6 @@ public class TrainDelegate extends ScenarioDelegate
         _bangmgr.deployEffect(-1, effect);
     }
 
-    /** The pieces of track on the board. */
-    protected Track[] _tracks;
-    
     /** The terminals on the board. */
     protected Track[] _terminals;
 

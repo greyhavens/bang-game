@@ -35,10 +35,6 @@ public class Track extends Piece
     /** The type of this track (singleton, terminal, etc.) */
     public byte type;
     
-    /** Whether or not this piece of track has been visited in the path
-     * search. */
-    public transient boolean visited;
-    
     /**
      * Creates a piece of track with the default type, for use in the editor.
      */
@@ -77,44 +73,17 @@ public class Track extends Piece
     }
     
     /**
-     * Attempts to find a path from this piece of track to the supplied
-     * destination.
-     *
-     * @return the computed path, or <code>null</code> if no path could be
-     * found
-     */
-    public ArrayList<Track> findPath (
-        BangObject bangobj, Track dest, Train train)
-    {
-        if (this == dest) {
-            return new ArrayList<Track>();
-        }
-        visited = true;
-        Track[] adj = getAdjacent(bangobj);
-        for (int ii = 0; ii < adj.length; ii++) {
-            if (adj[ii].visited || adj[ii].intersects(train)) {
-                continue;
-            }
-            ArrayList<Track> path = adj[ii].findPath(bangobj, dest, train);
-            if (path != null) {
-                path.add(0, adj[ii]);
-                return path;
-            }
-        }
-        return null;
-    }
-    
-    /**
      * Returns an array containing the pieces of track adjacent to this one.
      */
     public Track[] getAdjacent (BangObject bangobj)
     {
         if (_adjacent == null) {
             ArrayList<Track> adjacent = new ArrayList<Track>();
-            for (Piece piece : bangobj.pieces) {
-                if (piece instanceof Track &&
-                    isConnectedTo(piece.x, piece.y)) {
-                    adjacent.add((Track)piece);
+            for (int ii = 0; ii < DIRECTIONS.length; ii++) {
+                Track adj = bangobj.getTracks().get(
+                    coord(x + DX[ii], y + DY[ii]));
+                if (adj != null && isConnectedTo(adj.x, adj.y)) {
+                    adjacent.add(adj);
                 }
             }
             _adjacent = adjacent.toArray(new Track[adjacent.size()]);
