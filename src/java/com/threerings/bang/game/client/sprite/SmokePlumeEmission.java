@@ -77,6 +77,7 @@ public class SmokePlumeEmission extends SpriteEmission
         _smoke.setStartColor(_startColor);
         _smoke.setEndColor(_endColor);
         _smoke.setModelBound(new BoundingBox());
+        _smoke.setIsCollidable(false);
         if (RenderUtil.blendAlpha == null) {
             RenderUtil.initStates();
         }

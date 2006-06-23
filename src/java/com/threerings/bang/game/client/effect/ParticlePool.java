@@ -165,6 +165,7 @@ public class ParticlePool
         particles.setEndSize(TILE_SIZE / 3);
         particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
         particles.setModelBound(new BoundingBox());
+        particles.setIsCollidable(false);
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);
@@ -191,6 +192,7 @@ public class ParticlePool
         particles.setEndColor(new ColorRGBA(1f, 0.25f, 0f, 0f));
         particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
         particles.setModelBound(new BoundingBox());
+        particles.setIsCollidable(false);
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
@@ -217,6 +219,7 @@ public class ParticlePool
         particles.setStartColor(new ColorRGBA(1f, 1f, 0.5f, 1f));
         particles.setEndColor(new ColorRGBA(1f, 0.25f, 0f, 1f));
         particles.setModelBound(new BoundingBox());
+        particles.setIsCollidable(false);
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
@@ -244,6 +247,7 @@ public class ParticlePool
         particles.setEndColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0f));
         particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
         particles.setModelBound(new BoundingBox());
+        particles.setIsCollidable(false);
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);
@@ -270,6 +274,7 @@ public class ParticlePool
         particles.setStartColor(new ColorRGBA(0.75f, 0.75f, 0.75f, 1f));
         particles.setEndColor(new ColorRGBA(0f, 0f, 0f, 1f));
         particles.setModelBound(new BoundingBox());
+        particles.setIsCollidable(false);
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
@@ -297,6 +302,7 @@ public class ParticlePool
         particles.setEndColor(new ColorRGBA(0.75f, 0.75f, 0.75f, 0f));
         particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
         particles.setModelBound(new BoundingBox());
+        particles.setIsCollidable(false);
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.blendAlpha);

@@ -105,6 +105,7 @@ public class GunshotEmission extends SpriteEmission
         _smoke.getParticleController().setRepeatType(Controller.RT_CLAMP);
         _smoke.getParticleController().setActive(false);
         _smoke.setModelBound(new BoundingBox());
+        _smoke.setIsCollidable(false);
         if (_smoketex != null) {
             _smoke.setRenderState(_smoketex);
         }
