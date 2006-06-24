@@ -1264,17 +1264,6 @@ public class BoardView extends BComponent
                 dist = sdist;
             }
         }
-        if (hit == null) {
-            for (Iterator<PieceSprite> it = _pieces.values().iterator();
-                    it.hasNext(); ) {
-                PieceSprite ps = it.next();
-                if (ps.getPiece().intersects(_mouse.x, _mouse.y) &&
-                        isHoverable(ps)) {
-                    hit = ps;
-                    break;
-                }
-            }
-        }
         if (hit != _hover) {
             hoverSpriteChanged(hit);
         }
