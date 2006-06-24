@@ -11,7 +11,6 @@ import com.jme.scene.shape.Box;
 
 import com.threerings.jme.model.Model;
 
-import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.data.piece.Piece;
@@ -36,7 +35,7 @@ public class TrackSprite extends PieceSprite
         // refresh the geometry when the type changes
         if (ntrack.type != otrack.type) {
             detachAllChildren();
-            createGeometry(_ctx);
+            createGeometry();
         }
 
         // make sure it's lying on the terrain
@@ -51,26 +50,23 @@ public class TrackSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
-        _ctx = ctx;
-        loadModel(ctx, "extras/frontier_town/tracks",
-                  MODEL_NAMES[((Track)_piece).type]);
+        loadModel("extras/frontier_town/tracks",
+            MODEL_NAMES[((Track)_piece).type]);
     }
 
     @Override // documentation inherited
-    protected void modelLoaded (BasicContext ctx, Model model)
+    protected void modelLoaded (Model model)
     {
         // in the game, we can lock the bounds and transforms of tracks
         // because we know they won't move
-        super.modelLoaded(ctx, model);
+        super.modelLoaded(model);
         if (!_editorMode) {
             updateWorldVectors();
             model.lockInstance();
         }
     }
-    
-    protected BasicContext _ctx;
 
     /* The models for each type of track. */
     protected static final String[] MODEL_NAMES = { "node", "node", "straight",

@@ -7,8 +7,9 @@ import com.jme.math.Vector3f;
 
 import com.threerings.jme.sprite.Path;
 
+import com.threerings.media.image.Colorization;
+
 import com.threerings.bang.client.Config;
-import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
@@ -23,11 +24,11 @@ public class TrainSprite extends MobileSprite
     {
         super("extras/frontier_town/train", TYPE_NAMES[type]);
     }
-
+    
     @Override // documentation inherited
-    protected void createDustManager (BasicContext ctx)
+    public Coloring getColoringType ()
     {
-        // trains do not kick up dust
+        return Coloring.DYNAMIC;
     }
     
     @Override // documentation inherited
@@ -43,6 +44,12 @@ public class TrainSprite extends MobileSprite
         // unless we're the last car on the train, proceed immediately to the
         // next car's update so that all cars move simultaneously
         return train.isLast();
+    }
+    
+    @Override // documentation inherited
+    protected void createDustManager ()
+    {
+        // trains do not kick up dust
     }
     
     @Override // documentation inherited
@@ -104,7 +111,10 @@ public class TrainSprite extends MobileSprite
     /** The position two ticks back, used to form curves. */
     protected short _lastLastX = Train.UNSET, _lastLastY = Train.UNSET;
 
+    /** The owner corresponding to the current colorizations. */
+    protected int _owner = -1;
+    
     /** The model names for each train type. */
     protected static final String[] TYPE_NAMES = { "locomotive", "caboose",
-        "cattle", "freight" };
+        "cattle", "freight", "coal" };
 }

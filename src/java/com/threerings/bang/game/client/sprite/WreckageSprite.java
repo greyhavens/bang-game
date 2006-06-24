@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
-import com.threerings.bang.util.BasicContext;
 
 /**
  * Displays a piece of wreckage.
@@ -15,11 +14,11 @@ import com.threerings.bang.util.BasicContext;
 public class WreckageSprite extends PieceSprite
 {
     @Override // documentation inherited
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
         // use the "dead" model of a steam unit chosen with the piece id
-        UnitConfig[] configs =
-            UnitConfig.getTownUnits(((BangContext)ctx).getUserObject().townId);
+        UnitConfig[] configs = UnitConfig.getTownUnits(
+            ((BangContext)_ctx).getUserObject().townId);
         ArrayList<UnitConfig> sunits = new ArrayList<UnitConfig>();
         for (UnitConfig config : configs) {
             if (config.make == UnitConfig.Make.STEAM) {
@@ -28,6 +27,6 @@ public class WreckageSprite extends PieceSprite
         }
         String type = sunits.get(_piece.pieceId % sunits.size()).type;
         System.out.println(type);
-        loadModel(ctx, "units", type + "/dead");
+        loadModel("units", type + "/dead");
     }
 }

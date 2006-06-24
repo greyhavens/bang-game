@@ -33,8 +33,12 @@ public class Train extends Piece
     /** A car carrying freight. */
     public static final byte FREIGHT_CAR = 3;
 
+    /** A car carrying coal. */
+    public static final byte COAL_CAR = 4;
+    
     /** The types of cars to insert between the engine and the caboose. */
-    public static final byte[] CAR_TYPES = { CATTLE_CAR, FREIGHT_CAR };
+    public static final byte[] CAR_TYPES =
+        { CATTLE_CAR, FREIGHT_CAR, COAL_CAR };
 
     /** A special value indicating that a short value is unset. */
     public static final short UNSET = Short.MIN_VALUE;

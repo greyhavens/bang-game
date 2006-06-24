@@ -15,7 +15,6 @@ import com.jme.scene.state.TextureState;
 import com.jme.util.geom.BufferUtils;
 
 import com.threerings.bang.client.BangUI;
-import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.data.piece.Counter;
@@ -46,6 +45,12 @@ public class CounterSprite extends PropSprite
     }
 
     @Override // documentation inherited
+    public Coloring getColoringType ()
+    {
+        return Coloring.DYNAMIC;
+    }
+    
+    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
@@ -74,14 +79,13 @@ public class CounterSprite extends PropSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
-        super.createGeometry(ctx);
-        _ctx = ctx;
+        super.createGeometry();
 
         // create a billboard to display this mine's current nugget count
         _counter = new Quad("counter", 25, 25);
-        _tstate = ctx.getRenderer().createTextureState();
+        _tstate = _ctx.getRenderer().createTextureState();
         _tstate.setEnabled(true);
         _counter.setRenderState(_tstate);
         _counter.setRenderState(RenderUtil.blendAlpha);
@@ -96,7 +100,6 @@ public class CounterSprite extends PropSprite
         _counter.setCullMode(CULL_ALWAYS);
     }
 
-    protected BasicContext _ctx;
     protected Quad _counter;
     protected TextureState _tstate;
     protected int _dcount = -1;

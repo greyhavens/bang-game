@@ -25,7 +25,6 @@ import com.samskivert.util.ObserverList;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.media.image.Colorization;
 import com.threerings.media.util.MathUtil;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
@@ -42,7 +41,6 @@ import com.threerings.bang.game.data.piece.Piece;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.Config;
-import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
 
@@ -304,22 +302,21 @@ public class MobileSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
-        super.createGeometry(ctx);
-        _ctx = ctx;
+        super.createGeometry();
 
         // create the dust particle system
-        createDustManager(ctx);
+        createDustManager();
         
         // load our model
-        loadModel(ctx, _type, _name, _zations);
+        loadModel(_type, _name);
     }
 
     @Override // documentation inherited
-    protected void modelLoaded (BasicContext ctx, Model model)
+    protected void modelLoaded (Model model)
     {
-        super.modelLoaded(ctx, model);
+        super.modelLoaded(model);
         _wtypes = StringUtil.parseStringArray(
             _model.getProperties().getProperty("wreckage", ""));
         _ianims = StringUtil.parseStringArray(
@@ -330,7 +327,7 @@ public class MobileSprite extends PieceSprite
     /**
      * Creates the dust particle manager, if this unit kicks up dust.
      */
-    protected void createDustManager (BasicContext ctx)
+    protected void createDustManager ()
     {
         // flyers don't kick up dust for now; eventually, we may want to add
         // prop wash effects.  only show dust on high detail setting
@@ -356,7 +353,7 @@ public class MobileSprite extends PieceSprite
         _dust.setIsCollidable(false);
         if (_dusttex == null) {
             _dusttex = RenderUtil.createTextureState(
-                ctx, "textures/effects/dust.png");
+                _ctx, "textures/effects/dust.png");
             _dusttex.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         }
         _dust.setRenderState(_dusttex);
@@ -463,7 +460,7 @@ public class MobileSprite extends PieceSprite
     {
         _action = _actions.remove(0);
         if (_action.equals(DEAD)) {
-            loadModel(_ctx, _type, _name + "/dead", _zations);
+            loadModel(_type, _name + "/dead");
             _dead = true;
             _action = null;
             
@@ -650,9 +647,6 @@ public class MobileSprite extends PieceSprite
         protected String _action;
     }
 
-    protected BasicContext _ctx;
-
-    protected String _type, _name;
     protected String[] _wtypes;
     protected String[] _ianims;
     
@@ -666,9 +660,6 @@ public class MobileSprite extends PieceSprite
     protected PieceSprite _tsprite;
 
     protected int _moveType = MOVE_NORMAL;
-
-    /** The colorizations to use for this sprite's textures. */
-    protected Colorization[] _zations;
     
     /** Whether or not we have switched to the dead model. */
     protected boolean _dead;

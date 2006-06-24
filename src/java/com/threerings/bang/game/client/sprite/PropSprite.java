@@ -17,7 +17,6 @@ import com.threerings.jme.model.Model;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.data.PropConfig;
-import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -81,32 +80,21 @@ public class PropSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
-//         // draw a footprint if we're in editor mode
-//         if (_editorMode) {
-//             Quad foot = new Quad("footprint", TILE_SIZE*_config.width,
-//                                  TILE_SIZE*_config.height);
-//             foot.setRenderState(RenderUtil.overlayZBuf);
-//             foot.setRenderState(RenderUtil.blendAlpha);
-//             foot.setSolidColor(FOOT_COLOR);
-//             foot.setLightCombineMode(LightState.OFF);
-//             foot.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-//             foot.setLocalTranslation(new Vector3f(0, 0, 0.1f));
-//             attachChild(foot);
-//         }
-
+        super.createGeometry();
+        
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
-        loadModel(ctx, "props", _config.type);
+        loadModel("props", _config.type);
     }
 
     @Override // documentation inherited
-    protected void modelLoaded (BasicContext ctx, Model model)
+    protected void modelLoaded (Model model)
     {
         // in the game, we can lock the bounds and transforms of props
         // because we know they won't move
-        super.modelLoaded(ctx, model);
+        super.modelLoaded(model);
         if (!_editorMode) {
             updateWorldVectors();
             model.lockInstance();

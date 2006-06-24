@@ -9,7 +9,6 @@ import com.jme.scene.Spatial;
 
 import com.threerings.openal.SoundGroup;
 
-import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.SoundUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
@@ -47,12 +46,12 @@ public class BonusSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
-        super.createGeometry(ctx);
+        super.createGeometry();
 
         // load up the model for this bonus
-        loadModel(ctx, "bonuses", _type);
+        loadModel("bonuses", _type);
     }
 
     @Override // documentation inherited

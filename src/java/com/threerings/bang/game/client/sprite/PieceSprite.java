@@ -51,6 +51,11 @@ public class PieceSprite extends Sprite
     /** The types of shadow that can be cast by this piece. */
     public enum Shadow { NONE, STATIC, DYNAMIC };
 
+    /** The type of owner colorization used by this piece: none, static
+     * colorization determined at the time of creation, or dynamic colorization
+     * that reflects the current owner. */
+    public enum Coloring { NONE, STATIC, DYNAMIC };
+    
     /**
      * Called by the editor to make pieces warp to their new locations for
      * rapid draggability.
@@ -99,6 +104,7 @@ public class PieceSprite extends Sprite
     public void init (BasicContext ctx, BoardView view, BangBoard board,
                       SoundGroup sounds, Piece piece, short tick)
     {
+        _ctx = ctx;
         _view = view;
         _piece = piece;
         _tick = tick;
@@ -122,7 +128,7 @@ public class PieceSprite extends Sprite
         setOrientation(piece.orientation);
         
         // create our sprite geometry
-        createGeometry(ctx);
+        createGeometry();
 
         // create any sounds associated with this sprite
         createSounds(sounds);
@@ -244,7 +250,25 @@ public class PieceSprite extends Sprite
     {
         return false;
     }
-
+    
+    /**
+     * Indicates the type of owner recolorization applied to this sprite: none,
+     * static colorization determined at the time of creation, or dynamic
+     * recoloring that reflects the current owner.
+     */
+    public Coloring getColoringType ()
+    {
+        return Coloring.NONE;
+    }
+    
+    /**
+     * Returns the colorizations applied to the sprite.
+     */
+    public Colorization[] getColorizations ()
+    {
+        return _zations;
+    }
+    
     /**
      * Determines how much of this piece lies in shadow and darkens it
      * accordingly.
@@ -278,6 +302,15 @@ public class PieceSprite extends Sprite
     {
         _piece = (Piece)piece.clone();
         _tick = tick;
+        
+        // update colorizations for dynamically colored pieces when their
+        // owners change
+        if (_powner != piece.owner && getColoringType() == Coloring.DYNAMIC &&
+            _type != null && _name != null) {
+            updateColorizations();
+            loadModel(_type, _name);
+            _powner = piece.owner;
+        }
     }
 
     /**
@@ -325,8 +358,12 @@ public class PieceSprite extends Sprite
      * Sprites should create and attach their scene geometry by overriding
      * this method.
      */
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
+        if (getColoringType() != Coloring.NONE) {
+            _powner = _piece.owner;
+            updateColorizations();
+        }
         if (getShadowType() == Shadow.DYNAMIC) {
             // the dynamic shadow is a highlight with wider geometry
             float length = TILE_SIZE, // _view.getShadowLength(),
@@ -336,12 +373,22 @@ public class PieceSprite extends Sprite
                 localTranslation.x, localTranslation.y, length, length);
             _shadow.setIsCollidable(false);
             _shadow.setRenderState(RenderUtil.createShadowTexture(
-                                       ctx, length, rotation, intensity));
+                _ctx, length, rotation, intensity));
             _shadow.updateRenderState();
             attachHighlight(_shadow);
         }
     }
 
+    /**
+     * Sets the sprite's colorizations to correspond to its piece's owner.
+     */
+    protected void updateColorizations ()
+    {
+        _zations = (_piece.owner == -1) ? null : new Colorization[] {
+            _ctx.getAvatarLogic().getColorPository().getColorization("unit",
+                PIECE_COLOR_IDS[_piece.owner] ) };
+    }
+    
     /**
      * Attaches geometry to our highlight node, creating the highlight node if
      * necessary.
@@ -409,31 +456,22 @@ public class PieceSprite extends Sprite
     /**
      * Loads the identified model and attaches it to this sprite.
      */
-    protected void loadModel (BasicContext ctx, String type, String name)
+    protected void loadModel (String type, String name)
     {
-        loadModel(ctx, type, name, null);
-    }
-    
-    /**
-     * Loads the identified model and attaches it to this sprite.
-     *
-     * @param zations the colorizations to apply to the model's textures
-     */
-    protected void loadModel (
-        final BasicContext ctx, String type, String name,
-        Colorization[] zations)
-    {
+        _type = type;
+        _name = name;
+        
         // if we're not displaying units, don't load any models
         if (!Config.displayUnits) {
             return;
         }
         _view.addResolving(this);
-        ctx.getModelCache().getModel(type, name, zations,
+        _ctx.getModelCache().getModel(type, name, _zations,
             new ModelAttacher(this) {
             public void requestCompleted (Model model) {
                 super.requestCompleted(model);
                 _view.clearResolving(PieceSprite.this);
-                modelLoaded(ctx, model);
+                modelLoaded(model);
             }
             public void requestFailed (Exception cause) {
                 _view.clearResolving(PieceSprite.this);
@@ -444,7 +482,7 @@ public class PieceSprite extends Sprite
     /**
      * Called when our model has been loaded.
      */
-    protected void modelLoaded (BasicContext ctx, Model model)
+    protected void modelLoaded (Model model)
     {
         // if we already have a model, remove it
         if (_model != null) {
@@ -470,10 +508,11 @@ public class PieceSprite extends Sprite
         }
     }
     
+    protected BasicContext _ctx;
     protected BoardView _view;
 
     protected Piece _piece;
-    protected int _px, _py;
+    protected int _px, _py, _powner;
     protected short _tick;
 
     protected boolean _selected;
@@ -481,6 +520,12 @@ public class PieceSprite extends Sprite
     /** Most pieces have an underlying model, so we provide a reference. */
     protected Model _model;
 
+    /** The type and name of the loaded model. */
+    protected String _type, _name;
+    
+    /** Colorizations to apply to the model. */
+    protected Colorization[] _zations;
+    
     /** The material state used to manipulate shadow values. */
     protected MaterialState _mstate;
 

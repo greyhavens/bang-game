@@ -37,7 +37,6 @@ import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.client.util.ModelAttacher;
 import com.threerings.bang.data.UnitConfig;
-import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
@@ -74,6 +73,12 @@ public class UnitSprite extends MobileSprite
         super("units", type);
     }
 
+    @Override // documentation inherited
+    public Coloring getColoringType ()
+    {
+        return Coloring.STATIC;
+    }
+    
     /**
      * Indicates that the mouse is hovering over this piece.
      */
@@ -101,14 +106,6 @@ public class UnitSprite extends MobileSprite
     public UnitStatus getUnitStatus ()
     {
         return _status;
-    }
-
-    /**
-     * Returns this unit's colorizations.
-     */
-    public Colorization[] getColorizations ()
-    {
-        return _zations;
     }
 
     @Override // documentation inherited
@@ -227,7 +224,7 @@ public class UnitSprite extends MobileSprite
         // pose
         if (_dead && piece.isAlive()) {
             log.info("Resurrected " + piece.info());
-            loadModel(_ctx, _type, _name, _zations);
+            loadModel(_type, _name);
             _dead = false;
         }
     }
@@ -292,25 +289,20 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
-        // set our colorization
-        _zations = new Colorization[] {
-            ctx.getAvatarLogic().getColorPository().getColorization("unit",
-                PIECE_COLOR_IDS[_piece.owner] ) };
-
         // load up our model
-        super.createGeometry(ctx);
+        super.createGeometry();
 
         // if we're a range unit, make sure the "bullet" model is loaded
         Unit unit = (Unit)_piece;
         if (unit.getConfig().mode == UnitConfig.Mode.RANGE) {
-            ctx.loadModel("units", "frontier_town/artillery/shell", null);
+            _ctx.loadModel("units", "frontier_town/artillery/shell", null);
         }
 
         // if we're a mechanized unit, make sure the "dead" model is loaded
         if (unit.getConfig().make == UnitConfig.Make.STEAM) {
-            ctx.loadModel(_type, _name + "/dead", null);
+            _ctx.loadModel(_type, _name + "/dead", null);
         }
 
         // make sure the pending move textures for our unit type are loaded
@@ -319,22 +311,22 @@ public class UnitSprite extends MobileSprite
         if (_pendtexs == null) {
             _pendtexmap.put(type, _pendtexs = new Texture[4]);
             for (int ii = 0; ii < _pendtexs.length; ii++) {
-                _pendtexs[ii] = ctx.getTextureCache().getTexture(
+                _pendtexs[ii] = _ctx.getTextureCache().getTexture(
                     "units/" + type + "/pending.png", 64, 64, 2, ii);
                 _pendtexs[ii].setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
-                RenderUtil.createTextureState(ctx, _pendtexs[ii]).load();
+                RenderUtil.createTextureState(_ctx, _pendtexs[ii]).load();
             }
         }
         _pendtst = RenderUtil.createTextureState(
-            ctx, createPendingTexture(0));
+            _ctx, createPendingTexture(0));
 
         // this composite of icons combines to display our status
         _tlight = _view.getTerrainNode().createHighlight(
             _piece.x, _piece.y, true, true);
-        attachHighlight(_status = new UnitStatus(ctx, _tlight));
+        attachHighlight(_status = new UnitStatus(_ctx, _tlight));
         _status.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
 
-        _target = new PieceTarget(_piece, ctx);
+        _target = new PieceTarget(_piece, _ctx);
         attachChild(_target);
 
         // when holding a bonus it is shown over our head

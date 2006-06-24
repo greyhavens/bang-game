@@ -15,7 +15,6 @@ import com.jme.scene.state.MaterialState;
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Path;
 
-import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.StampedeHandler;
@@ -76,10 +75,10 @@ public class BisonSprite extends MobileSprite
     }
     
     @Override // documentation inherited
-    protected void modelLoaded (BasicContext ctx, Model model)
+    protected void modelLoaded (Model model)
     {
         // set the bison on its stored path when it's finished loading
-        super.modelLoaded(ctx, model);
+        super.modelLoaded(model);
         if (_pendingPath != null) {
             move(_view.getBoard(), _pendingPath, StampedeEffect.BISON_SPEED);
             _pendingPath = null;

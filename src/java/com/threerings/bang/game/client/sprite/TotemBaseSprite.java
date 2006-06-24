@@ -17,8 +17,6 @@ import com.jme.scene.Node;
 
 import com.threerings.bang.client.util.ModelAttacher;
 
-import com.threerings.bang.util.BasicContext;
-
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TotemBase;
 import com.threerings.bang.game.data.piece.Unit;
@@ -118,19 +116,16 @@ public class TotemBaseSprite extends PropSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
-        super.createGeometry(ctx);
-        _ctx = ctx;
-        _target = new PieceTarget(_piece, ctx);
+        super.createGeometry();
+        _target = new PieceTarget(_piece, _ctx);
         attachChild(_target);
     }
 
     protected ArrayList<Node> _totemPieces = new ArrayList<Node>();
     protected ArrayList<Float> _totemHeights = new ArrayList<Float>();
     protected float _totHeight;
-
-    protected BasicContext _ctx;
 
     protected PieceTarget _target;
 }

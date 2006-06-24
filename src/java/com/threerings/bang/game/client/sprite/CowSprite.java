@@ -43,14 +43,13 @@ public class CowSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
+        super.createGeometry();
         if (_owntex == null) {
-            loadTextures(ctx);
+            loadTextures(_ctx);
         }
-
-        super.createGeometry(ctx);
-
+        
         // this is used to indicate who owns us
         _owner = new SharedMesh("owner", _shadow);
         _owner.setRenderState(_owntex);
