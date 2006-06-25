@@ -56,7 +56,7 @@ public class GoodsInspector extends BContainer
         add(_title = new BLabel("", "medium_title"),
             new Rectangle(190, 105, 320, 40));
         add(_descrip = new BLabel("", "goods_descrip"),
-            new Rectangle(190, 45, 320, 60));
+            new Rectangle(190, 45, 400, 60));
 
         BContainer ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
         ccont.add(new BLabel(_ctx.xlate("store", "m.price"), "table_data"));
