@@ -179,14 +179,15 @@ public class ServerStatusView extends BDecoratedWindow
     protected void updateConMgrStats ()
     {
         ConMgrStats cms = _statobj.connStats;
-        _constats[0].setText(String.valueOf(cms.authQueueSize[cms.current]));
-        _constats[1].setText(String.valueOf(cms.bytesIn[cms.current]));
-        _constats[2].setText(String.valueOf(cms.deathQueueSize[cms.current]));
-        _constats[3].setText(String.valueOf(cms.bytesOut[cms.current]));
-        _constats[4].setText(String.valueOf(cms.outQueueSize[cms.current]));
-        _constats[5].setText(String.valueOf(cms.msgsIn[cms.current]));
-        _constats[6].setText(String.valueOf(cms.overQueueSize[cms.current]));
-        _constats[7].setText(String.valueOf(cms.msgsOut[cms.current]));
+        int slot = cms.mostRecent();
+        _constats[0].setText(String.valueOf(cms.authQueueSize[slot]));
+        _constats[1].setText(String.valueOf(cms.bytesIn[slot]));
+        _constats[2].setText(String.valueOf(cms.deathQueueSize[slot]));
+        _constats[3].setText(String.valueOf(cms.bytesOut[slot]));
+        _constats[4].setText(String.valueOf(cms.outQueueSize[slot]));
+        _constats[5].setText(String.valueOf(cms.msgsIn[slot]));
+        _constats[6].setText(String.valueOf(cms.overQueueSize[slot]));
+        _constats[7].setText(String.valueOf(cms.msgsOut[slot]));
     }
 
     protected BangContext _ctx;
