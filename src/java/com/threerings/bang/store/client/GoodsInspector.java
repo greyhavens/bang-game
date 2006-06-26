@@ -150,8 +150,8 @@ public class GoodsInspector extends BContainer
 
         StoreService.ConfirmListener cl = new StoreService.ConfirmListener() {
             public void requestProcessed () {
-                _descrip.setText(_ctx.xlate("store", "m.purchased"));
                 _parent.goodPurchased();
+                _descrip.setText(_ctx.xlate("store", "m.purchased"));
                 BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
             }
             public void requestFailed (String cause) {
