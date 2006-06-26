@@ -63,7 +63,7 @@ public class StoreView extends ShopView
      */
     protected void goodPurchased ()
     {
-        _goods.reinitGoods(false);
+        _goods.reinitGoods(true);
     }
 
     protected GoodsPalette _goods;

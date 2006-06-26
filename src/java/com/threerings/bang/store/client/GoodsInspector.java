@@ -165,7 +165,7 @@ public class GoodsInspector extends BContainer
     {
         BImage image;
         if (_zations != null) {
-            image = new BImage(ImageUtil.recolorImage(_srcimg, _zations));;
+            image = new BImage(ImageUtil.recolorImage(_srcimg, _zations));
         } else {
             image = new BImage(_srcimg);
         }

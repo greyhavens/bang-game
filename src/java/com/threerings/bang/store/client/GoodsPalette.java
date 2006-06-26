@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import com.samskivert.util.ListUtil;
+
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
@@ -37,7 +39,7 @@ public class GoodsPalette extends IconPalette
     {
         _stobj = stobj;
         if (_filter != null) {
-            reinitGoods(true);
+            reinitGoods(false);
         }
     }
 
@@ -45,12 +47,15 @@ public class GoodsPalette extends IconPalette
     {
         _filter = filter;
         if (_stobj != null) {
-            reinitGoods(true);
+            reinitGoods(false);
         }
     }
 
-    public void reinitGoods (boolean selectFirst)
+    public void reinitGoods (boolean reselectPrevious)
     {
+        Good sgood = (getSelectedIcon() == null) ?
+            null : ((GoodsIcon)getSelectedIcon()).getGood();
+        int opage = _page;
         clear();
 
         // filter out all matching goods
@@ -74,10 +79,26 @@ public class GoodsPalette extends IconPalette
         for (int ii = 0; ii < goods.length; ii++) {
             addIcon(new GoodsIcon(_ctx, goods[ii]));
         }
-
-        if (isAdded() && selectFirst && _icons.size() > 0) {
-            _icons.get(0).setSelected(true);
+        
+        // reselect the previously selected good if specified and it's still
+        // there; otherwise, flip to the previous page (if it still exists)
+        if (!isAdded() || _icons.isEmpty()) {
+            return;
         }
+        if (reselectPrevious && sgood != null) {
+            int sidx = ListUtil.indexOf(goods, sgood);
+            if (sidx != -1) {
+                displayPage(sidx / (_rows * _cols), false);
+                _icons.get(sidx).setSelected(true);
+                return;
+                
+            } else if (opage * (_rows * _cols) < goods.length) {
+                displayPage(opage, false);
+            }
+        }
+        
+        // select the first thing on the current page
+        _icons.get(_page * _rows * _cols).setSelected(true);
     }
 
     public void shutdown ()
