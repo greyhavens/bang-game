@@ -456,5 +456,7 @@ public class UnitSprite extends MobileSprite
         "launch",
         "shooting",
         "returning_fire",
+        "dud",
+        "misfire",
     };
 }

@@ -35,6 +35,12 @@ public class ShotEffect extends Effect
     
     /** Indicates that a shooter shot without moving. */
     public static final String SHOT_NOMOVE = "shot_nomove";
+    
+    /** Indication that the shot was a dud. */
+    public static final String DUDED = "duded";
+
+    /** Indication that the shot misfired. */
+    public static final String MISFIRED = "misfired";
 
     /** A normal shot. */
     public static final int NORMAL = 0;
@@ -45,9 +51,15 @@ public class ShotEffect extends Effect
     /** A collateral damage shot. */
     public static final int COLLATERAL_DAMAGE = 2;
 
+    /** A dud shot. */
+    public static final int DUD = 3;
+
+    /** A misfired shot. */
+    public static final int MISFIRE = 4;
+
     /** Maps shot types to animation identifiers. */
     public static final String[] SHOT_ACTIONS = {
-        "shooting", "returning_fire", "collateral_damage"
+        "shooting", "returning_fire", "collateral_damage", "dud", "misfire"
     };
 
     /** The type of shot. */
@@ -243,6 +255,15 @@ public class ShotEffect extends Effect
             reportEffect(obs, shooter, SHOT_NOMOVE);
         }
 
+        return applyTarget(bangobj, shooter, obs);
+    }
+
+    /**
+     * Apply the shot to the target.
+     */
+    protected boolean applyTarget (
+            BangObject bangobj, Unit shooter, Observer obs)
+    {
         // if we were deflected into la la land, we can stop here
         if (targetId == -1) {
             return true;

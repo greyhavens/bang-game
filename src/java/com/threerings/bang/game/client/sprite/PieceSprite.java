@@ -355,6 +355,14 @@ public class PieceSprite extends Sprite
     }
 
     /**
+     * Returns the model controllers attached to the model.
+     */
+    public ArrayList getModelControllers ()
+    {
+        return (_model == null ? null : _model.getControllers());
+    }
+
+    /**
      * Sprites should create and attach their scene geometry by overriding
      * this method.
      */

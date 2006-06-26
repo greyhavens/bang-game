@@ -69,7 +69,8 @@ public abstract class ShotHandler extends EffectHandler
     {
         super.pieceAffected(piece, effect);
         if (effect.equals(ShotEffect.DAMAGED) || 
-                effect.equals(ShotEffect.EXPLODED)) {
+                effect.equals(ShotEffect.EXPLODED) ||
+                effect.equals(ShotEffect.DUDED)) {
             DamageIconViz.displayDamageIconViz(piece, _effect, _ctx, _view);
         }
     }
@@ -123,8 +124,7 @@ public abstract class ShotHandler extends EffectHandler
                 PieceSprite ssprite = _view.getPieceSprite(_shooter);
                 // on the first shot, we animate the shooter
                 if (ssprite instanceof MobileSprite) {
-                    queueAction((MobileSprite)ssprite,
-                                ShotEffect.SHOT_ACTIONS[_shot.type]);
+                    animateShooter((MobileSprite)ssprite);
                 }
             }
 
@@ -152,6 +152,14 @@ public abstract class ShotHandler extends EffectHandler
             fireShot();
             return true;
         }
+    }
+
+    /**
+     * Called to add the shot animation for the shooter.
+     */
+    protected void animateShooter (MobileSprite sprite)
+    {
+        queueAction(sprite, ShotEffect.SHOT_ACTIONS[_shot.type]);
     }
 
     protected abstract void fireShot (int sx, int sy, int tx, int ty);

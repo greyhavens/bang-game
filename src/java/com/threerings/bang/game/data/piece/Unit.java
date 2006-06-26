@@ -239,6 +239,19 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
+    {
+        ShotEffect shot = null;
+        if (hindrance != null) {
+            shot = hindrance.shoot(bangobj, this, target, scale);
+        }
+        if (shot == null) {
+            shot = super.shoot(bangobj, target, scale);
+        }
+        return shot;
+    }
+
+    @Override // documentation inherited
     public Effect maybeInteract (Piece other)
     {
         if (other instanceof Bonus && canActivateBonus((Bonus)other)) {

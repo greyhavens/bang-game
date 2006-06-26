@@ -172,7 +172,8 @@ public class GunshotEmission extends SpriteEmission
     // documentation inherited
     public void update (float time)
     {
-        if (_shotFrames == null || _idx >= _shotFrames.length) {
+        if (!isActive() || !isActiveEmission() || 
+                _shotFrames == null || _idx >= _shotFrames.length) {
             return;
         }
         int frame = (int)((_elapsed += time) / _frameDuration);

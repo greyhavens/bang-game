@@ -1,0 +1,93 @@
+//
+// $Id$
+
+package com.threerings.bang.game.data.effect;
+
+import com.samskivert.util.IntIntMap;
+
+import com.threerings.bang.game.client.DudShotHandler;
+import com.threerings.bang.game.client.EffectHandler;
+
+import com.threerings.bang.game.data.BangObject;
+
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
+
+import static com.threerings.bang.Log.log;
+
+/**
+ * Communicates that a shot failed to fire properly.
+ */
+public class FailedShotEffect extends ShotEffect
+{
+    public FailedShotEffect ()
+    {
+    }
+
+    public FailedShotEffect (Piece shooter, Piece target, int damage)
+    {
+        shooterId = shooter.pieceId;
+        type = (short)(damage == 0 ? DUD : MISFIRE);
+        baseDamage = damage;
+        newDamage = Math.min(100, shooter.damage + damage);
+        setTarget(target, damage, null, null);
+    }
+
+    /**
+     * Configures this shot effect with a target and damage amount.  The
+     * damage value will be applied to the shooter since the shot failed.
+     */
+    public void setTarget (Piece target, int damage, 
+                      String attackIcon, String defendIcon)
+    {
+        targetId = target.pieceId;
+        xcoords = append(null, target.x);
+        ycoords = append(null, target.y);
+    }
+
+    @Override // documentation inherited
+    public void prepare (BangObject bangobj, IntIntMap dammap)
+    {
+        Piece shooter = bangobj.pieces.get(shooterId);
+        if (shooter != null) {
+            dammap.increment(shooter.owner, newDamage - shooter.damage);
+            if (newDamage == 100) {
+                preShotEffect = shooter.willDie(bangobj, shooterId);
+            }
+            if (preShotEffect != null) {
+                preShotEffect.prepare(bangobj, dammap);
+            }
+            
+        } else {
+            log.warning("FailedShot effect missing shooter [id=" +
+                    shooterId + "].");
+        }
+    }
+
+    @Override // documentation inherited
+    public boolean applyTarget (
+            BangObject bangobj, Unit shooter, Observer obs)
+    {
+        if (baseDamage > 0) {
+            return damage(
+                    bangobj, obs, shooter.owner, shooter, newDamage, MISFIRED);
+        }
+        Piece target;
+        if (targetId != -1 && 
+                (target = (Piece)bangobj.pieces.get(targetId)) != null) {
+            reportEffect(obs, target, DUDED);
+        }
+        return true;
+    }
+
+    @Override // documentation inherited
+    public EffectHandler createHandler (BangObject bangobj)
+    {
+        if (baseDamage == 0) {
+            return new DudShotHandler();
+        } else {
+            return null;
+            //return new MisfiredShotHandler();
+        }
+    }
+}

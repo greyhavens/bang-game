@@ -109,6 +109,9 @@ public class UnitConfig
     /** A custom class for this unit, if one was specified. */
     public String unitClass;
 
+    /** If this unit uses a gun. */
+    public boolean gunUser;
+
     /** Returns a translatable name for the specified unit type. */
     public static String getName (String type)
     {
@@ -282,6 +285,8 @@ public class UnitConfig
         config.returnFire =
             BangUtil.getIntProperty(type, props, "return_fire", 0);
         config.damage = BangUtil.getIntProperty(type, props, "damage", 25);
+        config.gunUser = BangUtil.getBooleanProperty(
+                type, props, "gun_user", true);
 
         config.initiative =
             BangUtil.getIntProperty(type, props, "initiative", 0);

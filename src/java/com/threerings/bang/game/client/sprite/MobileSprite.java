@@ -60,6 +60,18 @@ public class MobileSprite extends PieceSprite
         public void actionCompleted (Sprite sprite, String action);
     }
 
+    /** Used to handle custom sprite actions. */
+    public interface ActionHandler
+    {
+        /** 
+         * Called to handle the specified action.
+         * 
+         * @return null if the action is not handled, or the name used to
+         * pass into setAction
+         */
+        public String handleAction (MobileSprite sprite, String action);
+    }
+
     /** A fake action that is queued up to indicate that this sprite
      * should switch to its dead model when all other actions are complete. */
     public static final String DEAD = "__dead__";
@@ -250,22 +262,43 @@ public class MobileSprite extends PieceSprite
         snapToTerrain(false);
     }
 
+    /**
+     * Tells the sprite if we're performing a complex action.
+     */
+    public void startComplexAction ()
+    {
+        if (_complexAction == ComplexAction.NONE) {
+            _complexAction = ComplexAction.ACTIVE;
+        }
+    }
+
+    /**
+     * Tells the sprite we finished a complex action.
+     */
+    public void stopComplexAction ()
+    {
+        if (_complexAction == ComplexAction.ACTIVE) {
+            _complexAction = ComplexAction.OVER;
+        }
+    }
+
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
         // wait until we're done moving to do any actions or idle animations
-        if (isMoving()) {
+        if (isMoving() || _complexAction == ComplexAction.ACTIVE) {
             super.updateWorldData(time);
             return;
         }
         
         // expire any actions first before we update our children
-        if (_nextAction > 0) {
+        if (_nextAction > 0 || _complexAction == ComplexAction.OVER) {
             _nextAction -= time;
-            if (_nextAction <= 0) {
+            if (_nextAction <= 0 || _complexAction == ComplexAction.OVER) {
                 String action = _action;
                 _nextAction = 0;
                 _action = null;
+                _complexAction = ComplexAction.NONE;
 
                 // report that we completed this action
                 if (_observers != null) {
@@ -299,6 +332,29 @@ public class MobileSprite extends PieceSprite
         snapToTerrain(true);
         updateHighlight();
         updateShadowValue();
+    }
+
+    /** 
+     * Adds an action handler to hadle specific actions. 
+     */
+    public void addActionHandler (ActionHandler handler)
+    {
+        if (handler != null) {
+            if (_actionHandlers.contains(handler)) {
+                log.warning("Attempting to add duplicate ActionHandler " +
+                        "[handler=" + handler + "].");
+                return;
+            }
+            _actionHandlers.add(handler);
+        }
+    }
+
+    /** 
+     * Removes an action handler.
+     */
+    public boolean removeActionHandler (ActionHandler handler)
+    {
+        return _actionHandlers.remove(handler);
     }
 
     @Override // documentation inherited
@@ -459,6 +515,13 @@ public class MobileSprite extends PieceSprite
     protected void startNextAction ()
     {
         _action = _actions.remove(0);
+        String action = null;
+        for (ActionHandler handler : _actionHandlers) {
+            if ((action = handler.handleAction(this, _action)) != null) {
+                _action = action;
+                break;
+            }
+        }
         if (_action.equals(DEAD)) {
             loadModel(_type, _name + "/dead");
             _dead = true;
@@ -656,6 +719,8 @@ public class MobileSprite extends PieceSprite
     protected String _action, _idle;
     protected float _nextAction, _nextIdle;
     protected ArrayList<String> _actions = new ArrayList<String>();
+    protected ArrayList<ActionHandler> _actionHandlers = 
+        new ArrayList<ActionHandler>();
 
     protected PieceSprite _tsprite;
 
@@ -663,6 +728,9 @@ public class MobileSprite extends PieceSprite
     
     /** Whether or not we have switched to the dead model. */
     protected boolean _dead;
+
+    /** Whether we are in a complex action state. */
+    protected ComplexAction _complexAction = ComplexAction.NONE;
         
     protected static TextureState _dusttex;
 
@@ -671,4 +739,7 @@ public class MobileSprite extends PieceSprite
 
     /** The number of seconds it takes dead pieces to fade out. */
     protected static final float REMOVAL_DURATION = 3f;
+
+    /** Complex action states. */
+    protected static enum ComplexAction { NONE, ACTIVE, OVER };
 }
