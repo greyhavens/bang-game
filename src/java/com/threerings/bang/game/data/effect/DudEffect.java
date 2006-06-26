@@ -16,16 +16,9 @@ import com.threerings.bang.game.data.piece.Piece;
 public class DudEffect extends SetHindranceEffect
 {
     @Override // documentation inherited
-    public void prepare (BangObject bangobj, IntIntMap dammap)
-    {
-        Unit unit = (Unit)bangobj.pieces.get(pieceId);
-        gunUser = unit.getConfig().gunUser;
-    }
-
-    @Override // documentation inherited
     public boolean isApplicable ()
     {
-        return gunUser;
+        return super.isApplicable() && unit.getConfig().gunUser;
     }
 
     @Override // documentation inherited
@@ -57,6 +50,4 @@ public class DudEffect extends SetHindranceEffect
     {
         return "dud";
     }
-
-    protected transient boolean gunUser = false;
 }
