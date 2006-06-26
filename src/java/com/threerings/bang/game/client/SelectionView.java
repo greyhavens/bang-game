@@ -260,7 +260,7 @@ public class SelectionView extends SteelWindow
             _team[ii].setText("");
         }
 
-        _ready.setEnabled(selected > 0);
+        _ready.setEnabled(selected == _team.length);
     }
 
     protected IconPalette.Inspector _enabler = new IconPalette.Inspector() {
