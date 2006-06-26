@@ -266,9 +266,6 @@ public class TerrainNode extends Node
             this.x = x;
             this.y = y;
             updateVertices();
-            if (isCollidable()) {
-                updateCollisionTree();
-            }
         }
 
         /**
@@ -340,6 +337,9 @@ public class TerrainNode extends Node
                 }
             }
             updateModelBound();
+            if (isCollidable()) {
+                updateCollisionTree();
+            }
 
             // if the highlight is aligned with a tile, we're done; otherwise,
             // we must update the texture coords as well
