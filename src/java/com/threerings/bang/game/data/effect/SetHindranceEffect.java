@@ -47,6 +47,7 @@ public abstract class SetHindranceEffect extends Effect
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
+        unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit == null) {
             log.warning("Missing target for set hindrance effect " +
                         "[id=" + pieceId + "].");
