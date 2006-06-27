@@ -4,6 +4,8 @@
 package com.threerings.bang.client;
 
 import com.samskivert.util.ResultListener;
+import com.samskivert.util.StringUtil;
+import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.presents.dobj.MessageEvent;
@@ -13,6 +15,7 @@ import com.threerings.crowd.chat.client.SpeakService;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -24,7 +27,39 @@ public class BangChatDirector extends ChatDirector
     {
         super(ctx, ctx.getMessageManager(), BangCodes.CHAT_MSGS);
         _ctx = ctx;
-        // nothing currently doing, but eventually we'll have something
+        
+        // add mute command handlers
+        MessageBundle msg = _msgmgr.getBundle(_bundle);
+        registerCommandHandler(msg, "mute", new CommandHandler() {
+            public String handleCommand (
+                SpeakService speaksvc, String command, String args,
+                String[] history) {
+                if (StringUtil.isBlank(args)) {
+                    return "m.usage_mute";
+                }
+                Handle name = new Handle(args);
+                if (_ctx.getMuteDirector().isMuted(name)) {
+                    return MessageBundle.tcompose("m.already_muted", name);
+                }
+                _ctx.getMuteDirector().setMuted(name, true);
+                return SUCCESS;
+            }
+        });
+        registerCommandHandler(msg, "unmute", new CommandHandler() {
+            public String handleCommand (
+                SpeakService speaksvc, String command, String args,
+                String[] history) {
+                if (StringUtil.isBlank(args)) {
+                    return "m.usage_unmute";
+                }
+                Handle name = new Handle(args);
+                if (!_ctx.getMuteDirector().isMuted(name)) {
+                    return MessageBundle.tcompose("m.not_muted", name);
+                }
+                _ctx.getMuteDirector().setMuted(name, false);
+                return SUCCESS;
+            }
+        });
     }
 
     @Override // documentation inherited

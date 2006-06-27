@@ -394,6 +394,20 @@ vslider {
   border: 1 solid #000000;
 }
 
+list {
+  padding: 5 5 5 5;
+}
+
+list_entry {
+  padding: 5 5 5 5;
+  color: #524129;
+  font: "Dom Casual" plain 20;
+}
+
+list_entry:selected {
+  background: image "ui/popupmenu/highlight.png" framexy;
+}
+
 //
 // Global styles
 
@@ -630,6 +644,18 @@ logon_status {
   parent: "status_label";
   font: "Helvetica" plain 14;
   color: #E8BB2E;
+}
+
+//
+// Options View styles
+
+options_tab {
+  padding: 25 0;
+}
+
+mute_list_pane {
+  background: image "ui/popupmenu/background.png" framexy;
+  padding: 5 5 5 5;
 }
 
 //

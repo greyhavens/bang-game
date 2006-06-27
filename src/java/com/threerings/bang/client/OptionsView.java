@@ -14,6 +14,8 @@ import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BList;
+import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BSlider;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.BoundedRangeModel;
@@ -33,7 +35,9 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
 import com.threerings.util.MessageBundle;
+import com.threerings.util.Name;
 
+import com.threerings.bang.client.bui.TabbedPane;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -48,15 +52,22 @@ public class OptionsView extends BDecoratedWindow
     public OptionsView (BangContext ctx, BWindow parent)
     {
         super(ctx.getStyleSheet(), ctx.xlate("options", "m.title"));
-        setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
-        ((GroupLayout)getLayoutManager()).setGap(25);
+        
+        ((GroupLayout)getLayoutManager()).setGap(15);
         setModal(true);
 
         _ctx = ctx;
         _parent = parent;
         _msgs = ctx.getMessageManager().getBundle("options");
 
-        BContainer cont = new BContainer(new TableLayout(2, 10, 10));
+        TabbedPane tabs = new TabbedPane(false);
+        tabs.setPreferredSize(new Dimension(375, 275));
+        
+        TableLayout layout = new TableLayout(2, 10, 10);
+        layout.setHorizontalAlignment(TableLayout.CENTER);
+        layout.setVerticalAlignment(TableLayout.CENTER);
+        BContainer cont = new BContainer(layout);
+        cont.setStyleClass("options_tab");
         cont.add(new BLabel(_msgs.get("m.video_mode"), "right_label"));
         cont.add(_modes = new BComboBox());
 
@@ -68,19 +79,41 @@ public class OptionsView extends BDecoratedWindow
         cont.add(new BLabel(_msgs.get("m.detail_lev"), "right_label"));
         cont.add(createDetailSlider());
         
-        
         cont.add(new BLabel(_msgs.get("m.music_vol"), "right_label"));
         cont.add(createSoundSlider(SoundType.MUSIC));
         cont.add(new BLabel(_msgs.get("m.effects_vol"), "right_label"));
         cont.add(createSoundSlider(SoundType.EFFECTS));
 
-        add(cont);
+        tabs.addTab(_msgs.get("t.general"), cont);
+        
+        // the mute director/list is only available after logging in
+        if (ctx.getMuteDirector() != null) {
+            cont = new BContainer(GroupLayout.makeVert(GroupLayout.STRETCH,
+                GroupLayout.CENTER, GroupLayout.CONSTRAIN));
+            ((GroupLayout)cont.getLayoutManager()).setGap(10);
+            cont.setStyleClass("options_tab");
+        
+            BScrollPane sp = new BScrollPane(
+                _muted = new BList(ctx.getMuteDirector().getMuted()));
+            sp.setStyleClass("mute_list_pane");
+            sp.setPreferredSize(new Dimension(250, 50));
+            cont.add(sp);
+            _muted.addListener(this);
+        
+            cont.add(_remove = new BButton(_msgs.get("b.remove"), this, "remove"),
+                GroupLayout.FIXED);
+            _remove.setEnabled(false);
+        
+            tabs.addTab(_msgs.get("t.mute_list"), cont);
+        }
+            
+        add(tabs);
 
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ((GroupLayout)bcont.getLayoutManager()).setGap(25);
         bcont.add(new BButton(_msgs.get("m.exit"), this, "exit"));
         bcont.add(new BButton(_msgs.get("m.resume"), this, "dismiss"));
-        add(bcont);
+        add(bcont, GroupLayout.FIXED);
 
         _mode = Display.getDisplayMode();
         refreshDisplayModes();
@@ -94,6 +127,13 @@ public class OptionsView extends BDecoratedWindow
             _ctx.getBangClient().clearPopup(this, true);
         } else if ("exit".equals(event.getAction())) {
             _ctx.getApp().stop();
+        } else if (BList.SELECT.equals(event.getAction())) {
+            _remove.setEnabled(_muted.getSelectedValue() != null);
+        } else if ("remove".equals(event.getAction())) {
+            Name name = (Name)_muted.getSelectedValue();
+            _ctx.getMuteDirector().setMuted(name, false);
+            _muted.removeValue(name);
+            _remove.setEnabled(false);
         }
     }
 
@@ -324,5 +364,8 @@ public class OptionsView extends BDecoratedWindow
     protected BComboBox _modes;
     protected BCheckBox _fullscreen;
 
+    protected BList _muted;
+    protected BButton _remove;
+    
     protected static enum SoundType { MUSIC, EFFECTS };
 }
