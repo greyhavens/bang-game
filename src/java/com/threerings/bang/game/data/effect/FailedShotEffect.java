@@ -7,6 +7,7 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.client.DudShotHandler;
 import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.MisfireHandler;
 
 import com.threerings.bang.game.data.BangObject;
 
@@ -20,6 +21,8 @@ import static com.threerings.bang.Log.log;
  */
 public class FailedShotEffect extends ShotEffect
 {
+    public int animType;
+
     public FailedShotEffect ()
     {
     }
@@ -27,7 +30,6 @@ public class FailedShotEffect extends ShotEffect
     public FailedShotEffect (Piece shooter, Piece target, int damage)
     {
         shooterId = shooter.pieceId;
-        type = (short)(damage == 0 ? DUD : MISFIRE);
         baseDamage = damage;
         newDamage = Math.min(100, shooter.damage + damage);
         setTarget(target, damage, null, null);
@@ -48,6 +50,8 @@ public class FailedShotEffect extends ShotEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        animType = type;
+        type = (short)(baseDamage == 0 ? DUD : MISFIRE);
         Piece shooter = bangobj.pieces.get(shooterId);
         if (shooter != null) {
             dammap.increment(shooter.owner, newDamage - shooter.damage);
@@ -70,7 +74,7 @@ public class FailedShotEffect extends ShotEffect
     {
         if (baseDamage > 0) {
             return damage(
-                    bangobj, obs, shooter.owner, shooter, newDamage, MISFIRED);
+                    bangobj, obs, shooter.owner, shooter, newDamage, DAMAGED);
         }
         Piece target;
         if (targetId != -1 && 
@@ -84,10 +88,9 @@ public class FailedShotEffect extends ShotEffect
     public EffectHandler createHandler (BangObject bangobj)
     {
         if (baseDamage == 0) {
-            return new DudShotHandler();
+            return new DudShotHandler(animType);
         } else {
-            return null;
-            //return new MisfiredShotHandler();
+            return new MisfireHandler(animType);
         }
     }
 }

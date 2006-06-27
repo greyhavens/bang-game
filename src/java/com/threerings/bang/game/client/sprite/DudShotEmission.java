@@ -40,12 +40,47 @@ import com.threerings.jme.model.TextureProvider;
 import com.threerings.jme.sprite.PathUtil;
 
 import static com.threerings.bang.Log.log;
+import java.io.Serializable;
+import java.io.Externalizable;
 
 /**
  * A dud shot effect.
  */
 public class DudShotEmission extends SpriteEmission
 {
+    public static class EmissionData 
+        implements Externalizable
+    {
+        public int frame;
+        public boolean continueForward;
+        public boolean stop;
+        public float pause;
+        
+        public EmissionData ()
+        {
+        }
+
+        // documentation inherited from Externalizable
+        public void writeExternal (ObjectOutput out)
+            throws IOException
+        {
+            out.writeInt(frame);
+            out.writeBoolean(continueForward);
+            out.writeBoolean(stop);
+            out.writeFloat(pause);
+        }
+
+        // documentation inherited from Externalizable
+        public void readExternal (ObjectInput in)
+            throws IOException, ClassNotFoundException
+        {
+            frame = in.readInt();
+            continueForward = in.readBoolean();
+            stop = in.readBoolean();
+            pause = in.readFloat();
+        }
+    }
+
     @Override // documentation inherited
     public void configure (Properties props, Spatial target)
     {
@@ -53,17 +88,19 @@ public class DudShotEmission extends SpriteEmission
         if (_animations == null) {
             return;
         }
-        _animShotFrame = new HashMap<String, Integer>();
+        _animData = new HashMap<String, EmissionData>();
         for (String anim : _animations) {
-            _animShotFrame.put(anim, Integer.valueOf(
-                        props.getProperty(anim + ".shot_frame", "-1")));
+            EmissionData ed = new EmissionData();
+            ed.frame = Integer.valueOf(
+                        props.getProperty(anim + ".shot_frame", "-1"));
+            ed.pause = Float.valueOf(props.getProperty(anim + ".pause", "1"));
+            ed.continueForward = Boolean.valueOf(props.getProperty(
+                        anim + ".continue_forward", "false"));
+            ed.stop = Boolean.valueOf(props.getProperty(
+                        anim + ".stop", "true"));
+            _animData.put(anim, ed);
         }
         _size = Float.valueOf(props.getProperty("size", "1"));
-        _pause = Float.valueOf(props.getProperty("pause", "1"));
-        _continueForward = Boolean.valueOf(props.getProperty(
-                    "continue_forward", "false"));
-        _stop = Boolean.valueOf(props.getProperty(
-                    "stop", "true"));
     }
 
     @Override // documentation inherited
@@ -105,11 +142,8 @@ public class DudShotEmission extends SpriteEmission
             dstore = (DudShotEmission)store;
         }
         super.putClone(dstore, properties);
-        dstore._animShotFrame = _animShotFrame;
+        dstore._animData = _animData;
         dstore._size = _size;
-        dstore._pause = _pause;
-        dstore._continueForward = _continueForward;
-        dstore._stop = _stop;
         return dstore;
     }
 
@@ -118,11 +152,8 @@ public class DudShotEmission extends SpriteEmission
         throws IOException
     {
         super.writeExternal(out);
-        out.writeObject(_animShotFrame);
+        out.writeObject(_animData);
         out.writeFloat(_size);
-        out.writeFloat(_pause);
-        out.writeBoolean(_continueForward);
-        out.writeBoolean(_stop);
     }
 
     @Override // documentation inherited
@@ -130,27 +161,24 @@ public class DudShotEmission extends SpriteEmission
         throws IOException, ClassNotFoundException
     {
         super.readExternal(in);
-        @SuppressWarnings("unchecked") HashMap<String,Integer> casted =
-            (HashMap<String,Integer>)in.readObject();
-        _animShotFrame = casted;
+        @SuppressWarnings("unchecked") HashMap<String,EmissionData> casted =
+            (HashMap<String,EmissionData>)in.readObject();
+        _animData = casted;
         _size = in.readFloat();
-        _pause = in.readFloat();
-        _continueForward = in.readBoolean();
-        _stop = in.readBoolean();
     }
 
     @Override // documentation inherited
     public void update (float time)
     {
-        if (!isActive() || !isActiveEmission() || _shotFrame == -1) {
+        if (!isActive() || !isActiveEmission() || _data == null) {
             return;
         }
         switch (_stage) {
           case DUD_START:
             int frame = (int)((_elapsed += time) / _frameDuration);
-            if (frame >= _shotFrame) {
+            if (frame >= _data.frame) {
                 fireShot();
-                if (_stop) {
+                if (_data.stop) {
                     _model.pauseAnimation(true);
                 }
                 _elapsed = 0f;
@@ -159,12 +187,12 @@ public class DudShotEmission extends SpriteEmission
             break;
 
           case DUD_PAUSE:
-            if ((_elapsed += time) >= _pause) {
+            if ((_elapsed += time) >= _data.pause) {
                 _model.getEmissionNode().detachChild(_dud);
-                if (!_continueForward && _stop) {
+                if (!_data.continueForward && _data.stop) {
                     _model.reverseAnimation();
                 }
-                if (_stop) {
+                if (_data.stop) {
                     _model.pauseAnimation(false);
                 }
                 _stage = DudStage.DUD_FINISH;
@@ -180,10 +208,8 @@ public class DudShotEmission extends SpriteEmission
             return;
         }
         // get the frame at which the dud appears
-        Integer frame = (_animShotFrame == null) ? 
-            null : _animShotFrame.get(name);
-        _shotFrame = (frame == null ? -1 : frame);
-        if (_shotFrame == -1) {
+        _data = (_animData == null) ?  null : _animData.get(name);
+        if (_data == null) {
             return;
         }
 
@@ -204,7 +230,7 @@ public class DudShotEmission extends SpriteEmission
     @Override // documentation inherited
     protected void animationStopped (String name)
     {
-        if (!isActive() || !isActiveEmission() || _shotFrame == -1) {
+        if (!isActive() || !isActiveEmission() || _data == null) {
             return;
         }
         if (_sprite instanceof MobileSprite) {
@@ -293,22 +319,13 @@ public class DudShotEmission extends SpriteEmission
     }
 
     /** For each animation, the frames at which the shots go off. */
-    protected HashMap<String, Integer> _animShotFrame;
+    protected HashMap<String, EmissionData> _animData;
 
     /** The size of the shots. */
     protected float _size;
 
-    /** The length to pause the animation. */
-    protected float _pause;
-
-    /** Whether to continue animating forward or backward. */
-    protected boolean _continueForward;
-
-    /** Whethre to stop the animation while pausing. */
-    protected boolean _stop;
-
-    /** The frames at which the shots go off for the current animation. */
-    protected int _shotFrame;
+    /** The emission data for the current animation. */
+    protected EmissionData _data;
 
     /** The duration of a single frame in seconds. */
     protected float _frameDuration;

@@ -187,6 +187,9 @@ public class GunshotEmission extends SpriteEmission
     protected void animationStarted (String name)
     {
         super.animationStarted(name);
+        if (!isActiveEmission()) {
+            return;
+        }
         
         // get the frames at which shots go off, if any
         _shotFrames = (_animShotFrames == null) ?

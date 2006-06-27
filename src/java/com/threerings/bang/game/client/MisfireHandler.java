@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client;
 
-import com.threerings.bang.game.client.sprite.DudShotEmission;
+import com.threerings.bang.game.client.sprite.MisfireEmission;
 import com.threerings.bang.game.client.sprite.GunshotEmission;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 
@@ -13,11 +13,11 @@ import static com.threerings.bang.Log.log;
 
 /**
  * Waits for all the sprites involved in a shot to stop moving and then
- * animates the dud shot.
+ * animates the misfire.
  */
-public class DudShotHandler extends InstantShotHandler
+public class MisfireHandler extends InstantShotHandler
 {
-    public DudShotHandler (int animType) {
+    public MisfireHandler (int animType) {
         _animType = animType;
     }
 
@@ -34,8 +34,8 @@ public class DudShotHandler extends InstantShotHandler
                 for (Object ctrl : sprite.getModelControllers()) {
                     if (ctrl instanceof GunshotEmission) {
                         ((GunshotEmission)ctrl).setActiveEmission(false);
-                    } else if (ctrl instanceof DudShotEmission) {
-                        ((DudShotEmission)ctrl).setActiveEmission(true);
+                    } else if (ctrl instanceof MisfireEmission) {
+                        ((MisfireEmission)ctrl).setActiveEmission(true);
                     }
                 }
                 sprite.removeActionHandler(this);

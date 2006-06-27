@@ -248,6 +248,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new FoolsGold());
         register(new Engineer());
         register(new Dud());
+        register(new Misfire());
         
         // collect the weights of each card into an array used to select
         // randomly based on said weights
