@@ -5,6 +5,8 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;
@@ -55,6 +57,18 @@ public abstract class SetInfluenceEffect extends BonusEffect
         return true;
     }
 
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (!(piece instanceof Unit) || piece.owner != pidx) {
+            return null;
+        }
+        String name = ((Unit)piece).influence.getName();
+        return (name == null) ? null : MessageBundle.compose(
+            "m.effect_influence", piece.getName(), "m.influence_" + name);
+    }
+    
     /** Creates the influence that will be applied to the target unit. */
     protected abstract Influence createInfluence (Unit target);
 

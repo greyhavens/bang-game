@@ -17,7 +17,7 @@ public class IronPlateEffect extends SetInfluenceEffect
     protected Influence createInfluence (Unit target)
     {
         return new Influence() {
-            public String getIcon () {
+            public String getName () {
                 return "iron_plate";
             }
             public int adjustDefend (Piece shooter, int damage) {

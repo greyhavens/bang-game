@@ -8,6 +8,8 @@ import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
@@ -104,5 +106,14 @@ public class DefectEffect extends BonusEffect
         }
 
         return true;
+    }
+    
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        String names = getPieceNames(bangobj, pidx, pieceIds);
+        return (names == null) ? null :
+            MessageBundle.compose("m.effect_defect", names,
+                MessageBundle.taint(bangobj.players[activator]));
     }
 }

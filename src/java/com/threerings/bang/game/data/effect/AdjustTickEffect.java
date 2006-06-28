@@ -7,6 +7,8 @@ import java.util.Iterator;
 
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -72,7 +74,18 @@ public class AdjustTickEffect extends Effect
         }
         return true;
     }
-
+    
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null || piece.owner != pidx ||
+            newLastActed < bangobj.tick) {
+            return null;
+        }
+        return MessageBundle.compose("m.effect_staredown", piece.getName());
+    }
+    
     /** The delta from the board tick at activation time. */
     protected transient int _delta;
 }

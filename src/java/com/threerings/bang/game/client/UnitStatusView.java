@@ -167,7 +167,7 @@ public class UnitStatusView extends BWindow
                     // we don't worry about refetching the image from the cache
                     // if our influence didn't actually change, it's cheap
                     String path =
-                        "influences/" + unit.influence.getIcon() + ".png";
+                        "influences/" + unit.influence.getName() + ".png";
                     setInfluence(_ctx.getImageCache().getBImage(path));
                 }
             }

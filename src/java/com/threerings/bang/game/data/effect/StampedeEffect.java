@@ -16,6 +16,8 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.RandomUtil;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.bang.game.client.EffectHandler;
@@ -173,6 +175,18 @@ public class StampedeEffect extends Effect
         return new StampedeHandler();
     }
 
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        int[] pieceIds = new int[collisions.length];
+        for (int ii = 0; ii < pieceIds.length; ii++) {
+            pieceIds[ii] = collisions[ii].targetId;
+        }
+        String names = getPieceNames(bangobj, pidx, pieceIds);
+        return (names == null) ?
+            null : MessageBundle.compose("m.effect_stampede", names);
+    }
+    
     /**
      * Creates a path for the bison.
      */

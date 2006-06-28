@@ -17,7 +17,7 @@ public class PowerUpEffect extends SetInfluenceEffect
     protected Influence createInfluence (Unit target)
     {
         return new Influence() {
-            public String getIcon () {
+            public String getName () {
                 return "power_up";
             }
             public int adjustAttack (Piece target, int damage) {

@@ -5,9 +5,12 @@ package com.threerings.bang.game.data.effect;
 
 import java.awt.Point;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.samskivert.util.IntIntMap;
+
+import com.threerings.util.MessageBundle;
 
 import com.threerings.io.SimpleStreamableObject;
 
@@ -262,7 +265,18 @@ public abstract class Effect extends SimpleStreamableObject
     {
         return new EffectHandler();
     }
-
+    
+    /**
+     * Returns a translatable description of the effect to display on the
+     * client, or <code>null</code> for none.
+     *
+     * @param pidx the client's player index
+     */
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        return null;
+    }
+    
     @Override // documentation inherited
     public String toString ()
     {
@@ -331,6 +345,29 @@ public abstract class Effect extends SimpleStreamableObject
         System.arraycopy(a1, 0, result, 0, a1.length);
         System.arraycopy(a2, 0, result, a1.length, a2.length);
         return result;
+    }
+    
+    /** Returns a translatable string representing the names of the pieces
+     * identified in the piece id array owned by the specified player. */
+    protected String getPieceNames (
+        BangObject bangobj, int pidx, int[] pieceIds)
+    {
+        ArrayList<String> names = new ArrayList<String>();
+        for (int pieceId : pieceIds) {
+            Piece piece = bangobj.pieces.get(pieceId);
+            if (piece != null && piece.owner == pidx) {
+                names.add(piece.getName());
+            }
+        }
+        int nsize = names.size();
+        if (nsize == 0) {
+            return null;
+        } else if (nsize == 1) {
+            return names.get(0);
+        } else {
+            return MessageBundle.compose("m.times_" + nsize,
+                names.toArray(new String[nsize]));
+        }
     }
     
     /** Used by {@link #getWaitPieces}. */

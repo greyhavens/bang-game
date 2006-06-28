@@ -25,7 +25,7 @@ public class DudEffect extends SetHindranceEffect
     protected Hindrance createHindrance (Unit target)
     {
         return new Hindrance() {
-            public String getIcon () {
+            public String getName () {
                 return null;
             }
 

@@ -6,7 +6,10 @@ package com.threerings.bang.game.data.effect;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -71,11 +74,13 @@ public class TrapEffect extends BonusEffect
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
-        // find out who owns the bonus
+        // find out who owns the bonus and what kind it is
         int causer = -1;
         Piece bonus = bangobj.pieces.get(bonusId);
         if (bonus != null) {
             causer = bonus.owner;
+            _type = ((Bonus)bonus).getConfig().type;
+            _type = _type.substring(_type.lastIndexOf('/') + 1);
         }
         
         // remove the bonus
@@ -96,6 +101,16 @@ public class TrapEffect extends BonusEffect
         return true;
     }
     
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null || piece.owner != pidx) {
+            return null;
+        }
+        return MessageBundle.compose("m.effect_" + _type, piece.getName());
+    }
+    
     /**
      * Returns the amount of damage to apply to the victim.
      */
@@ -103,4 +118,7 @@ public class TrapEffect extends BonusEffect
     {
         return Math.min(50, 100-piece.damage);
     }
+    
+    /** The type of the trap. */
+    protected transient String _type;
 }

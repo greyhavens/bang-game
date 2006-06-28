@@ -5,6 +5,8 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.client.DudShotHandler;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.MisfireHandler;
@@ -91,6 +93,21 @@ public class FailedShotEffect extends ShotEffect
             return new DudShotHandler(animType);
         } else {
             return new MisfireHandler(animType);
+        }
+    }
+    
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        Piece piece = bangobj.pieces.get(shooterId);
+        if (piece == null || piece.owner != pidx) {
+            return null;
+        }
+        if (baseDamage == 0) {
+            return MessageBundle.compose("m.effect_dud", piece.getName());
+        } else {
+            return MessageBundle.compose("m.effect_misfire", piece.getName(),
+                MessageBundle.taint(baseDamage));
         }
     }
 }

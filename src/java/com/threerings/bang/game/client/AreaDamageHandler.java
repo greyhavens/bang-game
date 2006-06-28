@@ -97,7 +97,7 @@ public class AreaDamageHandler extends EffectHandler
         // when the last bomb finishes its path, start the explosions
         if (_penders.size() == 1 && !_applied) {
             _applied = true;
-            _effect.apply(_bangobj, this);
+            apply(_effect);
         }
         super.maybeComplete(penderId);
     }

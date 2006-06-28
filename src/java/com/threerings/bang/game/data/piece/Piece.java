@@ -12,6 +12,7 @@ import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.media.util.AStarPathUtil;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.DSet;
 
@@ -282,6 +283,13 @@ public abstract class Piece extends SimpleStreamableObject
             " x:" + x + " y:" + y + " d:" + damage;
     }
 
+    /** Returns a translatable name for this piece (or <code>null</code> if
+     * none exists). */
+    public String getName ()
+    {
+        return null;
+    }
+    
     /** Returns the stepper used to compute paths for this type of piece. */
     public AStarPathUtil.Stepper getStepper ()
     {
@@ -663,7 +671,7 @@ public abstract class Piece extends SimpleStreamableObject
         Influence influence = (target instanceof Unit ? 
                 ((Unit)target).influence : null);
         if (influence != null && influence.didAdjustDefend()) {
-            return influence.getIcon();
+            return influence.getName();
         }
         return null;
     }

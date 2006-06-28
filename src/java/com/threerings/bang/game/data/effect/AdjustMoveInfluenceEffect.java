@@ -38,7 +38,7 @@ public class AdjustMoveInfluenceEffect extends SetInfluenceEffect
     protected Influence createInfluence (Unit target)
     {
         return new Influence() {
-            public String getIcon () {
+            public String getName () {
                 return icon;
             }
             public int adjustMoveDistance (int moveDistance) {

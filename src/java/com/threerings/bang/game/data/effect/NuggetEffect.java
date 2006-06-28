@@ -8,6 +8,8 @@ import java.awt.Point;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.data.BonusConfig;
 
 import com.threerings.bang.game.data.BangObject;
@@ -82,6 +84,17 @@ public class NuggetEffect extends HoldEffect
         return true;
     }
 
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null || piece.owner != pidx || !dropping ||
+            claimId > 0) {
+            return null;
+        }
+        return MessageBundle.compose("m.effect_drop_nugget", piece.getName());
+    }
+    
     /**
      * Applies the effect on the claim.
      */

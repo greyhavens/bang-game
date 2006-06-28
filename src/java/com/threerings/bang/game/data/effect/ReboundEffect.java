@@ -6,6 +6,8 @@ package com.threerings.bang.game.data.effect;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -65,5 +67,15 @@ public class ReboundEffect extends BonusEffect
         }
         moveAndReport(bangobj, target, x, y, obs);
         return true;
+    }
+    
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null || piece.owner != pidx) {
+            return null;
+        }
+        return MessageBundle.compose("m.effect_spring", piece.getName());
     }
 }

@@ -16,7 +16,7 @@ public class HustleEffect extends SetInfluenceEffect
     protected Influence createInfluence (Unit target)
     {
         return new Influence() {
-            public String getIcon () {
+            public String getName () {
                 return "hustle";
             }
             public int adjustTicksPerMove (int ticksPerMove) {

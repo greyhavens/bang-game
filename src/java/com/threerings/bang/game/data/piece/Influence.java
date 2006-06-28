@@ -14,8 +14,9 @@ import com.threerings.bang.data.TerrainConfig;
  */
 public abstract class Influence extends SimpleStreamableObject
 {
-    /** Returns the name of our icon image. */
-    public abstract String getIcon ();
+    /** Returns the name of this influence, used for icons and
+     * messages (can be <code>null</code> for none). */
+    public abstract String getName ();
 
     /** Returns true if this influence has expired. */
     public boolean isExpired (short tick)
@@ -110,7 +111,7 @@ public abstract class Influence extends SimpleStreamableObject
     @Override // documentation inherited
     public String toString ()
     {
-        return getIcon();
+        return getName();
     }
 
     /** Configures an influence instance with its starting tick. */

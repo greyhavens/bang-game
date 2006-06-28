@@ -36,6 +36,7 @@ import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.TeleportEffect;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
@@ -48,12 +49,14 @@ public class EffectHandler extends BoardView.BoardAction
     implements Effect.Observer
 {
     /** Initializes the handler. */
-    public void init (BangContext ctx, BangObject bangobj, BangBoardView view,
-                      SoundGroup sounds, Effect effect)
+    public void init (
+        BangContext ctx, BangObject bangobj, int pidx, BangBoardView view,
+        SoundGroup sounds, Effect effect)
     {
         _ctx = ctx;
         _tick = bangobj.tick;
         _bangobj = bangobj;
+        _pidx = pidx;
         _view = view;
         _sounds = sounds;
         _effect = effect;
@@ -79,6 +82,7 @@ public class EffectHandler extends BoardView.BoardAction
         // trigger visualizations or animations which we will then notice and
         // report that the view should wait
         _effect.apply(_bangobj, this);
+        apply(_effect);
         _applying = false;
 
         // now determine whether or not anything remained pending
@@ -256,6 +260,15 @@ public class EffectHandler extends BoardView.BoardAction
         return super.toString() + ":" + _effect;
     }
 
+    protected void apply (Effect effect)
+    {
+        effect.apply(_bangobj, this);
+        String desc = effect.getDescription(_bangobj, _pidx);
+        if (desc != null) {
+            _ctx.getChatDirector().displayInfo(GameCodes.GAME_MSGS, desc);
+        }
+    }
+    
     protected void queueEffect (
         final PieceSprite sprite, final Piece piece, EffectViz viz)
     {
@@ -323,6 +336,7 @@ public class EffectHandler extends BoardView.BoardAction
 
     protected BangContext _ctx;
     protected BangObject _bangobj;
+    protected int _pidx;
     protected BangBoardView _view;
     protected short _tick;
     protected boolean _applying;

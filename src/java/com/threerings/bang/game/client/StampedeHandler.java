@@ -91,7 +91,7 @@ public class StampedeHandler extends CollisionHandler
         {
             // this may queue up
             if (_collision.deathEffect != null) {
-                _collision.deathEffect.apply(_bangobj, StampedeHandler.this);
+                apply(_collision.deathEffect);
             }
             Effect.collide(_bangobj, StampedeHandler.this, _stampede.causer,
                            _collision.targetId, StampedeEffect.COLLISION_DAMAGE,

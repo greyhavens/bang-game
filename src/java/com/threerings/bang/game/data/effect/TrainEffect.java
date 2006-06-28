@@ -6,6 +6,8 @@ package com.threerings.bang.game.data.effect;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.client.EffectHandler;
@@ -98,5 +100,15 @@ public class TrainEffect extends Effect
     public EffectHandler createHandler (BangObject bangobj)
     {
         return new CollisionHandler(COLLISION_DAMAGE);
+    }
+    
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        Piece piece = bangobj.pieces.get(targetId);
+        if (piece == null || piece.owner != pidx) {
+            return null;
+        }
+        return MessageBundle.compose("m.effect_train", piece.getName());
     }
 }

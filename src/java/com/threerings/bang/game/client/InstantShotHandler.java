@@ -18,7 +18,7 @@ public class InstantShotHandler extends ShotHandler
 
         // apply the effect and complete our handling if that did not result in
         // anything that needs waiting for
-        _effect.apply(_bangobj, this);
+        apply(_effect);
         maybeComplete(-1);
     }
 }

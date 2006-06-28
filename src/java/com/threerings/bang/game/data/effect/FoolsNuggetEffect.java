@@ -5,7 +5,10 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.ArrayUtil;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.piece.Piece;
 
 /**
  * Represents a unit's picking up or dropping a fool's nugget.
@@ -23,6 +26,17 @@ public class FoolsNuggetEffect extends NuggetEffect
     public FoolsNuggetEffect ()
     {
         type = FOOLS_NUGGET_BONUS;
+    }
+    
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null || piece.owner != pidx || claimId <= 0 ||
+            !dropping) {
+            return null;
+        }
+        return MessageBundle.compose("m.effect_fools_gold", piece.getName());
     }
     
     @Override // documentation inherited

@@ -1390,7 +1390,7 @@ public class BangBoardView extends BoardView
         log.info("Applying effect " + effect + ".");
         EffectHandler handler = effect.createHandler(_bangobj);
         if (handler != null) {
-            handler.init(_ctx, _bangobj, this, _sounds, effect);
+            handler.init(_ctx, _bangobj, _pidx, this, _sounds, effect);
             executeAction(handler);
         }
     }

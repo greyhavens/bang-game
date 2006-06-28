@@ -7,6 +7,8 @@ import java.awt.Point;
 
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -113,5 +115,15 @@ public class DuplicateEffect extends BonusEffect
         return true;
     }
 
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null || piece.owner != pidx) {
+            return null;
+        }
+        return MessageBundle.compose("m.effect_duplicate", piece.getName());
+    }
+    
     protected transient String _type;
 }

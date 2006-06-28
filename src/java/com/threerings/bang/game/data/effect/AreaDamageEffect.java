@@ -5,6 +5,8 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.AreaDamageHandler;
 import com.threerings.bang.game.data.BangObject;
@@ -94,6 +96,14 @@ public class AreaDamageEffect extends AreaEffect
         return new AreaDamageHandler();
     }
 
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        String names = getPieceNames(bangobj, pidx, pieces);
+        return (names == null) ?
+            null : MessageBundle.compose("m.effect_missile", names);
+    }
+    
     /**
      * Returns the damage done to the specified piece.
      */

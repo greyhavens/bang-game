@@ -169,7 +169,13 @@ public class Unit extends Piece
     {
         return computeDamage(target) - _config.damage;
     }
-
+    
+    @Override // documentation inherited
+    public String getName ()
+    {
+        return UnitConfig.getName(_config.type);
+    }
+    
     @Override // documentation inherited
     public void init ()
     {
@@ -307,7 +313,7 @@ public class Unit extends Piece
     public String attackInfluenceIcon ()
     {
         if (influence != null && influence.didAdjustAttack()) {
-            return influence.getIcon();
+            return influence.getName();
         }
         return null;
     }

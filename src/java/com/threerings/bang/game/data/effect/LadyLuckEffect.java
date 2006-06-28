@@ -19,7 +19,7 @@ public class LadyLuckEffect extends SetInfluenceEffect
     protected Influence createInfluence (Unit target)
     {
         return new Influence() {
-            public String getIcon () {
+            public String getName () {
                 return "lady_luck";
             }
             public int adjustAttack (Piece target, int damage) {
