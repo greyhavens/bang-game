@@ -47,7 +47,7 @@ public class MisfireEmission extends SpriteEmission
         _animShotFrame = new HashMap<String, Integer>();
         for (String anim : _animations) {
             _animShotFrame.put(anim, Integer.valueOf(
-                        props.getProperty(anim + ".shot_frame", "")));
+                        props.getProperty(anim + ".shot_frame", "-1")));
         }
         _size = Float.valueOf(props.getProperty("size", "1"));
     }
