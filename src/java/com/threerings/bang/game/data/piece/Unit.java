@@ -256,6 +256,8 @@ public class Unit extends Piece
     {
         if (other instanceof Bonus && canActivateBonus((Bonus)other)) {
             return ((Bonus)other).affect(this);
+        } else if (other instanceof Teleporter) {
+            return ((Teleporter)other).affect(this);
         }
         return super.maybeInteract(other);
     }
