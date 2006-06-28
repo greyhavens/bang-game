@@ -262,6 +262,7 @@
   <!-- fully cleans out the installed application -->
   <target name="distclean">
     <delete dir="${deploy.dir}"/>
+    <delete><fileset dir="rsrc" includes="**/model.dat"/></delete>
     <delete><fileset dir="rsrc" includes="**/*.jar"/></delete>
   </target>
 
