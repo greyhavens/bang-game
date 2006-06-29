@@ -150,6 +150,18 @@ public class PieceSprite extends Sprite
     {
         if (_selected != selected) {
             _selected = selected;
+            updateStatus();
+        }
+    }
+
+    /**
+     * Indicates that the mouse is hovering over this piece.
+     */
+    public void setHovered (boolean hovered)
+    {
+        if (_hovered != hovered) {
+            _hovered = hovered;
+            updateStatus();
         }
     }
 
@@ -173,6 +185,7 @@ public class PieceSprite extends Sprite
 //                      ": " + _temp);
             updateShadowValue();
             updateHighlight();
+            updateTileHighlight(tx, ty);
         }
     }
 
@@ -311,6 +324,8 @@ public class PieceSprite extends Sprite
             loadModel(_type, _name);
             _powner = piece.owner;
         }
+
+        updateStatus();
     }
 
     /**
@@ -362,6 +377,27 @@ public class PieceSprite extends Sprite
         return (_model == null ? null : _model.getControllers());
     }
 
+    @Override // documentation inherited
+    public void updateWorldData (float time)
+    {
+        super.updateWorldData(time);
+
+        if (_status != null) {
+            // of up and forward, use the one with the greater x/y
+            Vector3f dir = _ctx.getCameraHandler().getCamera().getDirection(),
+                up = _ctx.getCameraHandler().getCamera().getUp(),
+                vec = (dir.x * dir.x + dir.y * dir.y > 
+                        up.x * up.x + up.y * up.y) ? dir : up;
+            _angle = -FastMath.atan2(-vec.x, vec.y);
+            _camrot.fromAngleAxis(_angle, Vector3f.UNIT_Z);
+            _camrot.mult(HALF_UNIT, _camtrans);
+            _camtrans.set(0.5f - _camtrans.x, 0.5f - _camtrans.y, 0f);
+
+            // rotate our unit status with the camera
+            _status.rotateWithCamera(_camrot, _camtrans);
+        }
+    }
+
     /**
      * Sprites should create and attach their scene geometry by overriding
      * this method.
@@ -392,9 +428,9 @@ public class PieceSprite extends Sprite
      */
     protected void updateColorizations ()
     {
-        _zations = (_piece.owner == -1) ? null : new Colorization[] {
+        _zations = new Colorization[] {
             _ctx.getAvatarLogic().getColorPository().getColorization("unit",
-                PIECE_COLOR_IDS[_piece.owner] ) };
+                PIECE_COLOR_IDS[_piece.owner + 1] ) };
     }
     
     /**
@@ -407,6 +443,32 @@ public class PieceSprite extends Sprite
             _hnode = createHighlightNode();
         }
         _hnode.attachChild(spatial);
+    }
+
+    /**
+     * Updates the position of the highlight geometry that covers or floats
+     * over the nearest tile.
+     */
+    protected void updateTileHighlight (int tx, int ty)
+    {
+        if (_tlight == null) {
+            return;
+        }
+        if (_tlight.getTileX() != tx || _tlight.getTileY() != ty) {
+            _tlight.setPosition(tx, ty);
+            _status.updateTranslations(_tlight);
+        }
+    }
+
+    /**
+     * Updates the visibility and location of the status display.
+     */
+    protected void updateStatus ()
+    {
+        if (_status != null) {
+            _status.update(_piece, _selected || _hovered);
+            _status.setCullMode(CULL_DYNAMIC);
+        }
     }
 
     /**
@@ -524,6 +586,7 @@ public class PieceSprite extends Sprite
     protected short _tick;
 
     protected boolean _selected;
+    protected boolean _hovered;
 
     /** Most pieces have an underlying model, so we provide a reference. */
     protected Model _model;
@@ -553,12 +616,22 @@ public class PieceSprite extends Sprite
     /** Used when updating our shadow location. */
     protected Vector2f _result = new Vector2f();
 
+    /** Our status. */
+    protected PieceStatus _status;
+    protected TerrainNode.Highlight _tlight;
+
+    protected float _angle;
+    protected Quaternion _camrot = new Quaternion();
+    protected Vector3f _camtrans = new Vector3f();
+
     /** When activated, causes all pieces to warp instead of smoothly
      * follow a path. */
     protected static boolean _editorMode;
 
     /** Used for temporary calculations. */
     protected static Vector3f _temp = new Vector3f();
+
+    protected static final Vector3f HALF_UNIT = new Vector3f(0.5f, 0.5f, 0f);
 
     protected static float[] ROTATIONS = {
         0, // NORTH

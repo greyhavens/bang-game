@@ -118,8 +118,8 @@ public class DamageIconViz extends IconViz
         _dmgTState.setEnabled(true);
         Vector2f[] tcoords = new Vector2f[4];
         Texture tex = RenderUtil.createTextTexture(
-                _ctx, BangUI.DAMAGE_FONT, JPIECE_COLORS[_target.owner],
-                DARKER_COLORS[_target.owner], String.valueOf(_damage),
+                _ctx, BangUI.DAMAGE_FONT, JPIECE_COLORS[_target.owner + 1],
+                DARKER_COLORS[_target.owner + 1], String.valueOf(_damage),
                 tcoords, null);
         _dmgTState.setTexture(tex);
         float width = ICON_SIZE * tcoords[2].x / tcoords[2].y;

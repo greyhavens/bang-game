@@ -56,7 +56,8 @@ public class IconViz extends EffectViz
     {
         final Quad icon = createIconQuad(
                 "textures/effects/" + _iname + ".png", ICON_SIZE);
-        icon.setDefaultColor(new ColorRGBA(JPIECE_COLORS[_target.owner]));
+        icon.setDefaultColor(new ColorRGBA(JPIECE_COLORS[
+                    _target.owner + 1]));
         
         createBillboard();
         _billboard.attachChild(icon);

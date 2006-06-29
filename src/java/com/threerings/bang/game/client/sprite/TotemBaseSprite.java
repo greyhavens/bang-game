@@ -23,6 +23,8 @@ import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.jme.model.Model;
 
+import com.threerings.media.image.Colorization;
+
 import static com.threerings.bang.client.BangMetrics.*;
 import static com.threerings.bang.Log.log;
 
@@ -83,11 +85,15 @@ public class TotemBaseSprite extends PropSprite
             _totHeight -= _totemHeights.remove(size - 1);
             Node totemPiece = _totemPieces.remove(size - 1);
             detachChild(totemPiece);
-            totemPiece.detachAllChildren();
         } else if (baseHeight > size) {
             String type = base.getTopPiece();
+            int owner = base.getTopOwner();
+            Colorization[] zations = new Colorization[] {
+                _ctx.getAvatarLogic().getColorPository().getColorization(
+                        "unit", PIECE_COLOR_IDS[owner + 1]) };
             final Node totemPiece = new Node(type);
-            _ctx.loadModel("bonuses", type, new ModelAttacher(totemPiece) {
+            _ctx.getModelCache().getModel("bonuses", type, zations,
+                    new ModelAttacher(totemPiece) {
                 public void requestCompleted (Model model) {
                     model.updateGeometricState(0f, true);
                     BoundingVolume bound = model.getWorldBound();
@@ -111,6 +117,7 @@ public class TotemBaseSprite extends PropSprite
             _totemPieces.add(totemPiece);
             totemPiece.updateRenderState();
         } 
+        updateRenderState();
 
         _target.updated(piece, tick);
     }
@@ -119,6 +126,11 @@ public class TotemBaseSprite extends PropSprite
     protected void createGeometry ()
     {
         super.createGeometry();
+        
+        _tlight = _view.getTerrainNode().createHighlight(
+                        _piece.x, _piece.y, false, false);
+        attachHighlight(_status = new PieceStatus(_ctx, _tlight));
+        updateStatus();
         _target = new PieceTarget(_piece, _ctx);
         attachChild(_target);
     }

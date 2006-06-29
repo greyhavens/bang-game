@@ -51,15 +51,11 @@ public class TotemEffect extends HoldEffect
     {
         super.apply(bangobj, obs);
 
-        if (baseId > 0) {
+        Unit unit = (Unit)bangobj.pieces.get(pieceId);
+        if (baseId > 0 && unit != null) {
             TotemBase base = (TotemBase)bangobj.pieces.get(baseId);
             if (dropping) {
-                // if we're on the server, grant points ot the player
-                if (bangobj.getManager().isManager(bangobj)) {
-                    bangobj.grantPoints(
-                            base.owner, ScenarioCodes.POINTS_PER_TOTEM);
-                }
-                base.addPiece(type);
+                base.addPiece(type, unit.owner);
                 reportEffect(obs, base, TOTEM_ADDED);
             }
         }

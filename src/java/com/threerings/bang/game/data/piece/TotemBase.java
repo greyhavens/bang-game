@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import com.threerings.util.StreamableArrayList;
+import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.bang.game.client.sprite.MarkerSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -25,15 +26,32 @@ public class TotemBase extends Prop
         // the only time you can't is if a crown is on top
         int idx = _pieces.size() - 1;
         return !(idx > -1 && 
-                _pieces.get(idx).equals(TotemEffect.TOTEM_CROWN_BONUS));
+                _pieces.get(idx).type.equals(TotemEffect.TOTEM_CROWN_BONUS));
     }
 
     /**
      * Add a totem piece to the base.
      */
-    public void addPiece (String type)
+    public void addPiece (String type, int owner)
     {
-        _pieces.add(type);
+        int idx = _pieces.size() - 1;
+        if (idx > -1) {
+            _pieces.get(idx).damage = damage;
+        }
+        _pieces.add(new PieceData(type, owner));
+        damage = 0;
+    }
+
+    @Override // documentation inherited
+    public void wasKilled (short tick)
+    {
+        int idx = _pieces.size() - 1;
+        _pieces.remove(idx--);
+        if (idx > -1) {
+            damage = _pieces.get(idx).damage;
+        } else {
+            damage = 0;
+        }
     }
 
     /** 
@@ -52,13 +70,30 @@ public class TotemBase extends Prop
         if (_pieces.isEmpty()) {
             return null;
         }
-        return _pieces.get(_pieces.size() - 1);
+        return _pieces.get(_pieces.size() - 1).type;
+    }
+
+    /**
+     * Returns the owner id of the piece on top.
+     */
+    public int getTopOwner ()
+    {
+        if (_pieces.isEmpty()) {
+            return -1;
+        }
+        return _pieces.get(_pieces.size() - 1).owner;
     }
 
     @Override // documentation inherited
     public boolean isTargetable ()
     {
-        return true;
+        return _pieces.size() > 0;
+    }
+
+    @Override // documentation inherited
+    public int getTicksPerMove ()
+    {
+        return Integer.MAX_VALUE;
     }
 
     @Override // documentation inherited
@@ -71,12 +106,29 @@ public class TotemBase extends Prop
     public Object clone ()
     {
         TotemBase base = (TotemBase)super.clone();
-        @SuppressWarnings("unchecked") StreamableArrayList<String> npieces =
-            (StreamableArrayList<String>)base._pieces.clone();
+        @SuppressWarnings("unchecked") StreamableArrayList<PieceData> npieces =
+            (StreamableArrayList<PieceData>)base._pieces.clone();
         base._pieces = npieces;
         return base;
     }
+
+    protected class PieceData extends SimpleStreamableObject
+    {
+        public int owner;
+        public String type;
+        public int damage;
+
+        public PieceData ()
+        {
+        }
+
+        public PieceData (String type, int owner)
+        {
+            this.type = type;
+            this.owner = owner;
+        }
+    }
     
-    protected transient StreamableArrayList<String> _pieces = 
-        new StreamableArrayList<String>();
+    protected transient StreamableArrayList<PieceData> _pieces = 
+        new StreamableArrayList<PieceData>();
 }

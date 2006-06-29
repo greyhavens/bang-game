@@ -18,6 +18,7 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 
@@ -112,7 +113,7 @@ public abstract class Effect extends SimpleStreamableObject
     {
 
         // move the target to its new coordinates
-        if (target.x != x || target.y != y) {
+        if (target instanceof Unit && (target.x != x || target.y != y)) {
             moveAndReport(bangobj, target, x, y, obs);
         }
 
@@ -159,6 +160,7 @@ public abstract class Effect extends SimpleStreamableObject
         }
 
         // report that the target was killed
+        target.wasKilled(bangobj.tick);
         reportKill(obs, target);
 
         // airborn targets must land when they die
@@ -171,7 +173,8 @@ public abstract class Effect extends SimpleStreamableObject
         }
 
         // if we have a shooter and we're on the server, record the kill
-        if (shooter != -1 && bangobj.getManager().isManager(bangobj)) {
+        if (shooter != -1 && bangobj.getManager().isManager(bangobj) &&
+                target instanceof Unit) {
             // record the kill statistics
             bangobj.stats[shooter].incrementStat(Stat.Type.UNITS_KILLED, 1);
             bangobj.stats[target.owner].incrementStat(Stat.Type.UNITS_LOST, 1);

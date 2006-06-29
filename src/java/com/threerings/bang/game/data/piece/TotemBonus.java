@@ -3,6 +3,9 @@
 
 package com.threerings.bang.game.data.piece;
 
+import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.client.sprite.TotemSprite;
+
 import com.threerings.bang.game.data.effect.BonusEffect;
 import com.threerings.bang.game.data.effect.TotemEffect;
 
@@ -28,5 +31,11 @@ public class TotemBonus extends Bonus
             effect.type = _config.type;
         }
         return effect;
+    }
+
+    @Override // documentation inherited
+    public PieceSprite createSprite ()
+    {
+        return new TotemSprite(_config.type);
     }
 }

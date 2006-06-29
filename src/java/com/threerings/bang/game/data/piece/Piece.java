@@ -592,8 +592,7 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public boolean validTarget (Piece target, boolean allowSelf)
     {
-        boolean valid = (target.isTargetable() && target.owner != -1 &&
-                         target.damage < 100);
+        boolean valid = (target.isTargetable() && target.isAlive());
         if (!allowSelf) {
             valid = (target.owner != owner) && valid;
         }

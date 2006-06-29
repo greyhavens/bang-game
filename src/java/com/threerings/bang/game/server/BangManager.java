@@ -2287,7 +2287,6 @@ public class BangManager extends GameManager
         }
 
         public void pieceKilled (Piece piece) {
-            piece.wasKilled(_bangobj.tick);
             _scenario.pieceWasKilled(_bangobj, piece);
         }
 

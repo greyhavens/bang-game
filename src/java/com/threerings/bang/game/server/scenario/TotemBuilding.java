@@ -110,9 +110,9 @@ public class TotemBuilding extends Scenario
             }
         }
 
-        // if there is not at least one totem in play for every player in the
+        // if there is not at least two totems in play for every player in the
         // game, try to spawn another one
-        if (totems < bangobj.getActivePlayerCount()) {
+        if (totems < bangobj.getActivePlayerCount() * 2) {
             return placeBonus(bangobj, pieces, Bonus.createBonus(
                         BonusConfig.getConfig(TotemEffect.TOTEM_MIDDLE_BONUS)),
                     _totems);
@@ -140,43 +140,20 @@ public class TotemBuilding extends Scenario
         public void roundWillStart (BangObject bangobj)
             throws InvocationException
         {
-            ArrayIntSet assigned = new ArrayIntSet();
             Piece[] pieces = bangobj.getPieceArray();
             for (int ii = 0; ii < pieces.length; ii++) {
                 if (!(pieces[ii] instanceof TotemBase)) {
                     continue;
                 }
 
-                // determine which start marker to which it is nearest
                 TotemBase base = (TotemBase)pieces[ii];
-                int midx = _parent.getOwner(base);
-                if (midx == -1 || assigned.contains(midx)) {
-                    throw new InvocationException("m.no_start_marker_for_base");
-                }
-
-                // make sure we have a player associated with this start marker
-                if (midx >= bangobj.players.length) {
-                    continue;
-                }
-
-                // configure this totem base for play
-                base.owner = midx;
-                bangobj.updatePieces(base);
                 _bases.add(base);
-                assigned.add(midx);
             }
         }
 
         @Override // documentation inherited
         public void roundDidEnd (BangObject bangobj)
         {
-            // increment each players' totem related stats
-            for (TotemBase base : _bases) {
-                if (base.getTotemHeight() > 0) {
-                    bangobj.stats[base.owner].incrementStat(
-                            Stat.Type.TOTEM_HEIGHT, base.getTotemHeight());
-                }
-            }
         }
 
         @Override // documentation inherited
@@ -209,8 +186,7 @@ public class TotemBuilding extends Scenario
             }
 
             // add a totem piece to the base if we can
-            if (base.owner == unit.owner && TotemBonus.isHolding(unit) &&
-                    base.canAddPiece()) {
+            if (TotemBonus.isHolding(unit) && base.canAddPiece()) {
                 TotemEffect effect = new TotemEffect();
                 effect.init(unit);
                 effect.type = unit.holding;

@@ -79,25 +79,21 @@ public class UnitSprite extends MobileSprite
         return Coloring.STATIC;
     }
     
-    /**
-     * Indicates that the mouse is hovering over this piece.
-     */
+    @Override // documentation inherited
     public void setHovered (boolean hovered)
     {
         if (_hovered != hovered) {
-            _hovered = hovered;
-            updateUnitStatus();
-
             // if we have a pending node, adjust its highlight as well
             if (_pendnode != null) {
-                if (_hovered) {
+                if (hovered) {
                     _pendnode.setDefaultColor(ColorRGBA.white);
                 } else {
-                    _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner]);
+                    _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner + 1]);
                 }
                 _pendnode.updateRenderState();
             }
         }
+        super.setHovered(hovered);
     }
 
     /**
@@ -105,20 +101,13 @@ public class UnitSprite extends MobileSprite
      */
     public UnitStatus getUnitStatus ()
     {
-        return _status;
+        return _ustatus;
     }
 
     @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {
         return "unit_" + ((Unit)_piece).getType();
-    }
-
-    @Override // documentation inherited
-    public void setSelected (boolean selected)
-    {
-        super.setSelected(selected);
-        updateUnitStatus();
     }
 
     // documentation inherited from Targetable
@@ -134,7 +123,7 @@ public class UnitSprite extends MobileSprite
     {
         if (_pendo != pendo) {
             _pendo = pendo;
-            updateUnitStatus();
+            updateStatus();
         }
     }
 
@@ -167,7 +156,7 @@ public class UnitSprite extends MobileSprite
             }
             _pendtst.setTexture(createPendingTexture(ticks-1));
             _pendnode.setRenderState(_pendtst);
-            _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner]);
+            _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner + 1]);
             _pendnode.updateRenderState();
         }
     }
@@ -188,9 +177,6 @@ public class UnitSprite extends MobileSprite
 
         _target.updated(piece, tick);
 
-        // update our status display
-        updateUnitStatus();
-
         // update our colors in the event that our owner changes
         configureOwnerColors();
 
@@ -198,8 +184,8 @@ public class UnitSprite extends MobileSprite
         if (unit.holding != null) {
             if (!unit.holding.equals(_holdingType)) {
                 _holding.detachAllChildren();
-                _ctx.loadModel("bonuses", unit.holding,
-                               new ModelAttacher(_holding));
+                _ctx.getModelCache().getModel("bonuses", unit.holding, 
+                        _zations, new ModelAttacher(_holding));
             }
             if (_holding.getParent() == null) {
                 attachChild(_holding);
@@ -230,17 +216,10 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public void setLocation (int tx, int ty, int elevation)
-    {
-        super.setLocation(tx, ty, elevation);
-        updateTileHighlight(tx, ty);
-    }
-
-    @Override // documentation inherited
     public void move (Path path)
     {
         super.move(path);
-        _status.setCullMode(CULL_ALWAYS);
+        _ustatus.setCullMode(CULL_ALWAYS);
     }
 
     @Override // documentation inherited
@@ -248,7 +227,7 @@ public class UnitSprite extends MobileSprite
     {
         super.cancelMove();
         updateTileHighlight(_piece.x, _piece.y);
-        updateUnitStatus();
+        updateStatus();
     }
 
     @Override // documentation inherited
@@ -256,7 +235,7 @@ public class UnitSprite extends MobileSprite
     {
         super.pathCompleted();
         updateTileHighlight(_piece.x, _piece.y);
-        updateUnitStatus();
+        updateStatus();
     }
 
     @Override // documentation inherited
@@ -264,23 +243,11 @@ public class UnitSprite extends MobileSprite
     {
         super.updateWorldData(time);
 
-        // of up and forward, use the one with the greater x/y
-        Vector3f dir = _ctx.getCameraHandler().getCamera().getDirection(),
-            up = _ctx.getCameraHandler().getCamera().getUp(),
-            vec = (dir.x*dir.x+dir.y*dir.y > up.x*up.x+up.y*up.y) ? dir : up;
-        float angle = -FastMath.atan2(-vec.x, vec.y);
-        _camrot.fromAngleAxis(angle, Vector3f.UNIT_Z);
-        _camrot.mult(HALF_UNIT, _camtrans);
-        _camtrans.set(0.5f - _camtrans.x, 0.5f - _camtrans.y, 0f);
-
-        // rotate our unit status with the camera
-        _status.rotateWithCamera(_camrot, _camtrans);
-
         // we have to do extra fiddly business here because our texture is
         // additionally scaled and translated to center the texture at half
         // size within the highlight node
         Texture gptex = _pendtst.getTexture();
-        _gcamrot.fromAngleAxis(angle, Vector3f.UNIT_Z);
+        _gcamrot.fromAngleAxis(_angle, Vector3f.UNIT_Z);
         _gcamrot.mult(WHOLE_UNIT, _gcamtrans);
         _gcamtrans.set(1f - _gcamtrans.x - 0.5f,
                        1f - _gcamtrans.y - 0.5f, 0f);
@@ -324,7 +291,8 @@ public class UnitSprite extends MobileSprite
         _tlight = _view.getTerrainNode().createHighlight(
             _piece.x, _piece.y, true, true);
         attachHighlight(_status = new UnitStatus(_ctx, _tlight));
-        _status.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
+        _ustatus = (UnitStatus)_status;
+        _ustatus.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
 
         _target = new PieceTarget(_piece, _ctx);
         attachChild(_target);
@@ -340,31 +308,16 @@ public class UnitSprite extends MobileSprite
     }
 
     /**
-     * Updates the position of the highlight geometry that covers or floats
-     * over the nearest tile.
-     */
-    protected void updateTileHighlight (int tx, int ty)
-    {
-        if (_tlight == null) {
-            return;
-        }
-        if (_tlight.getTileX() != tx || _tlight.getTileY() != ty) {
-            _tlight.setPosition(tx, ty);
-            _status.updateTranslations(_tlight);
-        }
-    }
-
-    /**
      * Updates the visibility and location of the status display.
      */
-    protected void updateUnitStatus ()
+    protected void updateStatus ()
     {
         if (_piece.isAlive() && !isMoving()) {
             int ticks = _piece.ticksUntilMovable(_tick);
-            _status.update(_piece, ticks, _pendo, _hovered || _selected);
-            _status.setCullMode(CULL_DYNAMIC);
+            _ustatus.update(_piece, ticks, _pendo, _hovered || _selected);
+            _ustatus.setCullMode(CULL_DYNAMIC);
         } else {
-            _status.setCullMode(CULL_ALWAYS);
+            _ustatus.setCullMode(CULL_ALWAYS);
         }
     }
 
@@ -419,19 +372,18 @@ public class UnitSprite extends MobileSprite
         }
     };
 
-    protected TerrainNode.Highlight _tlight, _pendnode;
+    protected TerrainNode.Highlight _pendnode;
     protected TextureState _pendtst;
     protected Texture[] _pendtexs;
 
-    protected Quaternion _camrot = new Quaternion();
     protected Quaternion _gcamrot = new Quaternion();
-    protected Vector3f _camtrans = new Vector3f();
     protected Vector3f _gcamtrans = new Vector3f();
 
-    protected UnitStatus _status;
+    /** Casted reference to our status. */
+    protected UnitStatus _ustatus;
+
     protected PieceTarget _target;
     protected AdvanceOrder _pendo = AdvanceOrder.NONE;
-    protected boolean _hovered;
 
     protected Node _holding;
     protected String _holdingType;
@@ -439,7 +391,6 @@ public class UnitSprite extends MobileSprite
     protected static HashMap<String,Texture[]> _pendtexmap =
         new HashMap<String,Texture[]>();
 
-    protected static final Vector3f HALF_UNIT = new Vector3f(0.5f, 0.5f, 0f);
     protected static final Vector3f WHOLE_UNIT = new Vector3f(1f, 1f, 0f);
 
     protected static final float DBAR_WIDTH = TILE_SIZE-2;

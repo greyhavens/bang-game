@@ -42,20 +42,20 @@ public class TotemLogic extends AILogic
     protected void moveUnit (
         Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
     {
-        // search for own totem, closest enemy totem with pieces,
-        // closest enemy with a totem piece, closest free totem piece, 
-        // and enemies near our base
-        TotemBase obase = null, cbase = null;
+        TotemBase obase = null, cbase = null, ebase = null, lbase = null;
         Unit ctarget = null;
         Piece ctotem = null;
         boolean breached = false;
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof TotemBase) {
                 TotemBase base = (TotemBase)pieces[ii];
-                if (base.owner == _pidx) {
+                if (base.getTopOwner() == _pidx || base.getTopOwner() == -1 && 
+                    (obase == null ||
+                     unit.getDistance(base) < unit.getDistance(obase))) {
                     obase = base;
                 } else if (base.getTotemHeight() > 0 && (cbase == null ||
                     unit.getDistance(base) < unit.getDistance(cbase))) {
+                    lbase = cbase;
                     cbase = base;
                 }
             } else if (pieces[ii] instanceof TotemBonus) {
@@ -63,7 +63,20 @@ public class TotemLogic extends AILogic
                         unit.getDistance(ctotem)) {
                     ctotem = pieces[ii];
                 }
+            } else if (pieces[ii] instanceof Unit &&
+                    pieces[ii].owner != _pidx) {
+                Unit target = (Unit)pieces[ii];
+                if (TotemBonus.isHolding(target) &&
+                    (ctarget == null ||
+                     unit.getDistance(target) < unit.getDistance(ctarget)) &&
+                    unit.validTarget(target, false)) {
+                    ctarget = target;
+                }
             }
+        }
+        if (obase == null) {
+            obase = cbase;
+            cbase = lbase;
         }
         if (_baseloc == null) {
             _baseloc = new Point(obase.x, obase.y);
@@ -80,14 +93,13 @@ public class TotemLogic extends AILogic
             executeOrder(unit, ctotem.x, ctotem.y, getBestTarget(
                 pieces, unit, ctotem.x, ctotem.y, TARGET_EVALUATOR));
 
-        // if there's a loaded base within reach, steal from it
-        } else if (cbase != null && containsAdjacent(moves, cbase) &&
-            moveUnit(pieces, unit, moves, cbase)) {
-            return;
-
         // if there's a totem holding target within reach, shoot it
         } else if (ctarget != null && attacks.contains(ctarget.x, ctarget.y)) {
             executeOrder(unit, Short.MAX_VALUE, 0, ctarget);
+
+        // if there's a loaded base within reach, shoot it 
+        } else if (cbase != null && attacks.contains(cbase.x, cbase.y)) {
+            executeOrder(unit, Short.MAX_VALUE, 0, cbase);
 
         // otherwise, move towards nearest free totem
         } else if (ctotem != null && moveUnit(pieces, unit, moves, ctotem)) {

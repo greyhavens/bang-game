@@ -31,11 +31,12 @@ public class BangMetrics
 
     /** Java colors for each of the players. */
     public static final Color[] PIECE_COLORS = {
-        Color.blue.brighter(), Color.red, Color.green, Color.yellow
+        Color.gray, Color.blue.brighter(), Color.red, Color.green, Color.yellow
     };
 
     /** JME colors for each of the players. */
     public static final ColorRGBA[] JPIECE_COLORS = {
+        ColorRGBA.gray,
         new ColorRGBA(0, 0.5f, 1, 1),
         ColorRGBA.red,
         ColorRGBA.green,
@@ -47,9 +48,10 @@ public class BangMetrics
         JPIECE_COLORS[0].mult(ColorRGBA.darkGray),
         JPIECE_COLORS[1].mult(ColorRGBA.darkGray),
         JPIECE_COLORS[2].mult(ColorRGBA.darkGray),
-        JPIECE_COLORS[3].mult(ColorRGBA.darkGray)
+        JPIECE_COLORS[3].mult(ColorRGBA.darkGray),
+        JPIECE_COLORS[4].mult(ColorRGBA.darkGray),
     };
     
     /** Colorization ids for each of the players. */
-    public static final int[] PIECE_COLOR_IDS = { 1, 2, 3, 4 };
+    public static final int[] PIECE_COLOR_IDS = { 5, 1, 2, 3, 4 };
 }

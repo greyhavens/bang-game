@@ -72,7 +72,7 @@ public class CowSprite extends MobileSprite
         if (_piece.owner < 0) {
             _owner.setCullMode(CULL_ALWAYS);
         } else {
-            _owner.setDefaultColor(JPIECE_COLORS[_piece.owner]);
+            _owner.setDefaultColor(JPIECE_COLORS[_piece.owner + 1]);
             _owner.updateRenderState();
             _owner.setCullMode(CULL_DYNAMIC);
         }
