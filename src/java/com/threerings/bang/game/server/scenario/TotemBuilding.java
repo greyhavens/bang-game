@@ -123,6 +123,19 @@ public class TotemBuilding extends Scenario
         }
     }
 
+    @Override // documentation inherited
+    public void recordStats (
+        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+    {
+        super.recordStats(bangobj, gameTime, pidx, user);
+
+        // record the number of totem pieces stacked
+        int totems = bangobj.stats[pidx].getIntStat(Stat.Type.TOTEMS_STACKED);
+        if (totems > 0) {
+            user.stats.incrementStat(Stat.Type.TOTEMS_STACKED, totems);
+        }
+    }
+
     protected class TotemBaseDelegate extends ScenarioDelegate
     {
         @Override // documentation inherited
@@ -247,7 +260,7 @@ public class TotemBuilding extends Scenario
                     bangobj.grantPoints(ii, points[ii] - _points[ii]);
                     _points[ii] = points[ii];
                     bangobj.stats[ii].setStat(
-                            Stat.Type.TOTEM_PIECES, numPieces[ii]);
+                            Stat.Type.TOTEMS_STACKED, numPieces[ii]);
                     bangobj.stats[ii].setStat(Stat.Type.TOTEM_POINTS, 
                             points[ii] - numPieces[ii] * POINTS_PER_TOTEM); 
                 }
