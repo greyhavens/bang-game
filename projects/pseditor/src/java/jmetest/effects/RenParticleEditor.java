@@ -35,6 +35,8 @@ package jmetest.effects;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -93,6 +95,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -173,9 +176,9 @@ public class RenParticleEditor extends JFrame {
         new SpinnerNumberModel(0, 0, 255, 1));
     JCheckBox additiveBlendingBox;
     ValuePanel startSizePanel =
-        new ValuePanel("Start Size: ", "", 0, 400, 0.1f);
+        new ValuePanel("Start Size: ", "", 0f, Float.MAX_VALUE, 1f);
     ValuePanel endSizePanel =
-        new ValuePanel("End Size: ", "", 0, 400, 0.1f);
+        new ValuePanel("End Size: ", "", 0f, Float.MAX_VALUE, 1f);
     JLabel imageLabel = new JLabel();
 
     // origin panel components
@@ -184,47 +187,48 @@ public class RenParticleEditor extends JFrame {
     JPanel pointParamsPanel;
     JPanel lineParamsPanel;
     ValuePanel lineLengthPanel =
-        new ValuePanel("Length: ", "", 0, 1000, 0.1f);
+        new ValuePanel("Length: ", "", 0f, Float.MAX_VALUE, 1f);
     JPanel rectParamsPanel;
     ValuePanel rectWidthPanel =
-        new ValuePanel("Width: ", "", 0, 1000, 0.1f);
+        new ValuePanel("Width: ", "", 0f, Float.MAX_VALUE, 1f);
     ValuePanel rectHeightPanel =
-        new ValuePanel("Height: ", "", 0, 1000, 0.1f);
+        new ValuePanel("Height: ", "", 0f, Float.MAX_VALUE, 1f);
     JPanel ringParamsPanel;
     ValuePanel ringInnerPanel =
-        new ValuePanel("Inner Radius: ", "", 0, 1000, 0.1f);
+        new ValuePanel("Inner Radius: ", "", 0f, Float.MAX_VALUE, 1f);
     ValuePanel ringOuterPanel =
-        new ValuePanel("Outer Radius: ", "", 0, 1000, 0.1f);
+        new ValuePanel("Outer Radius: ", "", 0f, Float.MAX_VALUE, 1f);
     
     // emission panel components
     UnitVectorPanel directionPanel = new UnitVectorPanel();
     ValuePanel minAnglePanel =
-        new ValuePanel("Min Degrees Off Direction: ", "", 0, 180, 1f);
+        new ValuePanel("Min Degrees Off Dir.: ", "", 0f, 180f, 1f);
     ValuePanel maxAnglePanel =
-        new ValuePanel("Max Degrees Off Direction: ", "", 0, 180, 1f);
+        new ValuePanel("Max Degrees Off Dir.: ", "", 0f, 180f, 1f);
     ValuePanel velocityPanel =
-        new ValuePanel("Initial Velocity: ", "", 0, 1000, 0.01f);
-    ValuePanel spinPanel = new ValuePanel("Spin Speed: ", "", -200, 200, 0.1f);
+        new ValuePanel("Initial Velocity: ", "", 0f, Float.MAX_VALUE, 0.1f);
+    ValuePanel spinPanel = new ValuePanel("Spin Speed: ", "",
+        -Float.MAX_VALUE, Float.MAX_VALUE, 0.1f);
     
     // flow panel components
     JCheckBox rateBox;
     ValuePanel releaseRatePanel =
-        new ValuePanel("Particles per second: ", "", 0, 1500, 1f);
-    ValuePanel rateVarPanel = new ValuePanel("Variance: ", "%", 0, 100, 0.01f);
+        new ValuePanel("Particles per second: ", "", 0, Integer.MAX_VALUE, 1);
+    ValuePanel rateVarPanel = new ValuePanel("Variance: ", "%", 0f, 1f, 0.01f);
     JCheckBox spawnBox;
     Action spawnAction;
     
     // world panel components
     ValuePanel speedPanel =
-        new ValuePanel("Speed Mod: ", "x", 0, 500, 0.01f);
+        new ValuePanel("Speed Mod: ", "x", 0, Float.MAX_VALUE, 0.01f);
     ValuePanel massPanel =
-        new ValuePanel("Particle Mass: ", "", 0, 100, 0.1f);
+        new ValuePanel("Particle Mass: ", "", 0f, Float.MAX_VALUE, 0.1f);
     ValuePanel minAgePanel =
-        new ValuePanel("Minimum Age: ", "ms", 0, 10000, 1f);
+        new ValuePanel("Minimum Age: ", "ms", 0f, Float.MAX_VALUE, 10f);
     ValuePanel maxAgePanel =
-        new ValuePanel("Maximum Age: ", "ms", 0, 10000, 1f);    
+        new ValuePanel("Maximum Age: ", "ms", 0f, Float.MAX_VALUE, 10f);    
     ValuePanel randomPanel =
-        new ValuePanel("Random Factor: ", "", 0, 100, 0.1f);
+        new ValuePanel("Random Factor: ", "", 0f, Float.MAX_VALUE, 0.1f);
         
     // influence panel components
     InfluenceListModel influenceModel = new InfluenceListModel();
@@ -237,15 +241,16 @@ public class RenParticleEditor extends JFrame {
     UnitVectorPanel windDirectionPanel = new UnitVectorPanel();
     JCheckBox windRandomBox;
     JPanel gravityParamsPanel;
-    VectorPanel gravityInfluencePanel = new VectorPanel(-100, 100, 0.1f);
+    VectorPanel gravityInfluencePanel =
+        new VectorPanel(-Float.MAX_VALUE, Float.MAX_VALUE, 0.1f);
     JPanel dragParamsPanel;
     ValuePanel dragCoefficientPanel =
-        new ValuePanel("Drag Coefficient: ", "", 0, 100, 0.1f);
+        new ValuePanel("Drag Coefficient: ", "", 0f, Float.MAX_VALUE, 0.1f);
     JPanel vortexParamsPanel;
     ValuePanel vortexStrengthPanel =
-        new ValuePanel("Strength: ", "", 0, 100, 0.1f);
+        new ValuePanel("Strength: ", "", 0f, Float.MAX_VALUE, 0.1f);
     ValuePanel vortexDivergencePanel =
-        new ValuePanel("Divergence: ", "", -90, 90, 1f);
+        new ValuePanel("Divergence: ", "", -90f, 90f, 1f);
     UnitVectorPanel vortexDirectionPanel = new UnitVectorPanel();
     JCheckBox vortexRandomBox;
     
@@ -616,22 +621,22 @@ public class RenParticleEditor extends JFrame {
         
         startSizePanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                particleMesh.setStartSize(startSizePanel.getValue());
+                particleMesh.setStartSize(startSizePanel.getFloatValue());
             }
         });        
         endSizePanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                particleMesh.setEndSize(endSizePanel.getValue());
+                particleMesh.setEndSize(endSizePanel.getFloatValue());
             }
         });
         JPanel sizePanel = new JPanel(new GridBagLayout());
         sizePanel.setBorder(createTitledBorder("PARTICLE SIZE"));
         sizePanel.add(startSizePanel, new GridBagConstraints(0, 0, 1, 1, 1.0,
                 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets(0, 4, 0, 0), 100, 0));
+                new Insets(0, 0, 0, 0), 0, 0));
         sizePanel.add(endSizePanel, new GridBagConstraints(0, 1, 1, 1, 1.0,
                 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets(0, 4, 0, 0), 100, 0));
+                new Insets(0, 0, 0, 0), 0, 0));
                 
         JLabel textureLabel = createBoldLabel("Texture Image:");
         JButton changeTextureButton = new JButton(
@@ -714,7 +719,7 @@ public class RenParticleEditor extends JFrame {
         lineLengthPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 Line line = particleMesh.getLine();
-                float val = lineLengthPanel.getValue();
+                float val = lineLengthPanel.getFloatValue();
                 line.getOrigin().set(-val/2, 0f, 0f);
                 line.getDirection().set(val/2, 0f, 0f);
             }
@@ -726,7 +731,7 @@ public class RenParticleEditor extends JFrame {
         rectWidthPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 Rectangle rect = particleMesh.getRectangle();
-                float width = rectWidthPanel.getValue();
+                float width = rectWidthPanel.getFloatValue();
                 rect.getA().x = -width/2;
                 rect.getB().x = width/2;
                 rect.getC().x = -width/2;
@@ -735,7 +740,7 @@ public class RenParticleEditor extends JFrame {
         rectHeightPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 Rectangle rect = particleMesh.getRectangle();
-                float height = rectHeightPanel.getValue();
+                float height = rectHeightPanel.getFloatValue();
                 rect.getA().z = -height/2;
                 rect.getB().z = -height/2;
                 rect.getC().z = height/2;
@@ -757,13 +762,13 @@ public class RenParticleEditor extends JFrame {
         ringInnerPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 Ring ring = particleMesh.getRing();
-                ring.setInnerRadius(ringInnerPanel.getValue());
+                ring.setInnerRadius(ringInnerPanel.getFloatValue());
             }
         });
         ringOuterPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 Ring ring = particleMesh.getRing();
-                ring.setOuterRadius(ringOuterPanel.getValue());
+                ring.setOuterRadius(ringOuterPanel.getFloatValue());
             }
         }); 
         
@@ -793,13 +798,13 @@ public class RenParticleEditor extends JFrame {
         minAnglePanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 particleMesh.setMinimumAngle(
-                    minAnglePanel.getValue() * FastMath.DEG_TO_RAD);
+                    minAnglePanel.getFloatValue() * FastMath.DEG_TO_RAD);
             }
         });
         maxAnglePanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 particleMesh.setMaximumAngle(
-                    maxAnglePanel.getValue() * FastMath.DEG_TO_RAD);
+                    maxAnglePanel.getFloatValue() * FastMath.DEG_TO_RAD);
             }
         });
         JPanel anglePanel = new JPanel(new GridBagLayout());
@@ -814,14 +819,14 @@ public class RenParticleEditor extends JFrame {
         velocityPanel.setBorder(createTitledBorder("VELOCITY"));
         velocityPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                particleMesh.setInitialVelocity(velocityPanel.getValue());
+                particleMesh.setInitialVelocity(velocityPanel.getFloatValue());
             }
         });
         
         spinPanel.setBorder(createTitledBorder("PARTICLE SPIN"));
         spinPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                particleMesh.setParticleSpinSpeed(spinPanel.getValue());
+                particleMesh.setParticleSpinSpeed(spinPanel.getFloatValue());
             }
         });
         
@@ -853,13 +858,13 @@ public class RenParticleEditor extends JFrame {
         
         releaseRatePanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                particleMesh.setReleaseRate((int)releaseRatePanel.getValue());
+                particleMesh.setReleaseRate(releaseRatePanel.getIntValue());
             }
         });
         
         rateVarPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                particleMesh.setReleaseVariance(rateVarPanel.getValue());
+                particleMesh.setReleaseVariance(rateVarPanel.getFloatValue());
             }
         });
 
@@ -915,25 +920,25 @@ public class RenParticleEditor extends JFrame {
         speedPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 particleMesh.getParticleController().setSpeed(
-                    speedPanel.getValue());
+                    speedPanel.getFloatValue());
             }
         });
         
         massPanel.setBorder(createTitledBorder("PHYSICAL PROPERTIES"));
         massPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                particleMesh.setParticleMass(massPanel.getValue());
+                particleMesh.setParticleMass(massPanel.getFloatValue());
             }
         });
         
         minAgePanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                particleMesh.setMinimumLifeTime(minAgePanel.getValue());
+                particleMesh.setMinimumLifeTime(minAgePanel.getFloatValue());
             }
         });
         maxAgePanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                particleMesh.setMaximumLifeTime(maxAgePanel.getValue());
+                particleMesh.setMaximumLifeTime(maxAgePanel.getFloatValue());
             }
         });
         JPanel agePanel = new JPanel(new GridBagLayout());
@@ -948,7 +953,7 @@ public class RenParticleEditor extends JFrame {
         randomPanel.setBorder(createTitledBorder("SYSTEM RANDOMNESS"));
         randomPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                particleMesh.setRandomMod(randomPanel.getValue());
+                particleMesh.setRandomMod(randomPanel.getFloatValue());
             }
         });
         
@@ -1096,7 +1101,7 @@ public class RenParticleEditor extends JFrame {
                 ParticleInfluence influence = particleMesh.getInfluences().get(
                     influenceList.getSelectedIndex());
                 ((SimpleParticleInfluenceFactory.BasicWind)influence).setStrength(
-                    windStrengthPanel.getValue());
+                    windStrengthPanel.getFloatValue());
             }
         });
         windRandomBox = new JCheckBox(new AbstractAction("Vary Randomly") {
@@ -1143,7 +1148,7 @@ public class RenParticleEditor extends JFrame {
                 ParticleInfluence influence = particleMesh.getInfluences().get(
                     influenceList.getSelectedIndex());
                 ((SimpleParticleInfluenceFactory.BasicDrag)influence).setDragCoefficient(
-                    dragCoefficientPanel.getValue());
+                    dragCoefficientPanel.getFloatValue());
             }
         });
         return dragCoefficientPanel;
@@ -1165,7 +1170,7 @@ public class RenParticleEditor extends JFrame {
                 ParticleInfluence influence = particleMesh.getInfluences().get(
                     influenceList.getSelectedIndex());
                 ((SimpleParticleInfluenceFactory.BasicVortex)influence).setStrength(
-                    vortexStrengthPanel.getValue());
+                    vortexStrengthPanel.getFloatValue());
             }
         });
         vortexDivergencePanel.addChangeListener(new ChangeListener() {
@@ -1173,7 +1178,7 @@ public class RenParticleEditor extends JFrame {
                 ParticleInfluence influence = particleMesh.getInfluences().get(
                     influenceList.getSelectedIndex());
                 ((SimpleParticleInfluenceFactory.BasicVortex)influence).setDivergence(
-                    vortexDivergencePanel.getValue() * FastMath.DEG_TO_RAD);
+                    vortexDivergencePanel.getFloatValue() * FastMath.DEG_TO_RAD);
             }
         });
         vortexRandomBox = new JCheckBox(new AbstractAction("Vary Randomly") {
@@ -1681,7 +1686,6 @@ public class RenParticleEditor extends JFrame {
         // update flow controls
         rateBox.setSelected(particleMesh.getParticleController().isControlFlow());
         releaseRatePanel.setValue(particleMesh.getReleaseRate());
-        releaseRatePanel.slider.setMaximum(particleMesh.getNumParticles() * 5);
         rateVarPanel.setValue(particleMesh.getReleaseVariance());
         updateRateLabels();
         spawnBox.setSelected(particleMesh.getParticleController().getRepeatType() ==
@@ -2206,36 +2210,45 @@ public class RenParticleEditor extends JFrame {
     
         private static final long serialVersionUID = 1L;
         
-        private JSlider xSlider, ySlider, zSlider;
-        private int min, max;
-        private float scale;
+        private ValuePanel xPanel, yPanel, zPanel;
         private ArrayList<ChangeListener> changeListeners =
             new ArrayList<ChangeListener>();
         private boolean setting;
         
-        public VectorPanel(int min, int max, float scale) {
+        public VectorPanel(float min, float max, float step) {
             super(new GridBagLayout());
-            this.min = min;
-            this.max = max;
-            this.scale = scale;
             
-            xSlider = addLabeledSlider("X", 0);
-            ySlider = addLabeledSlider("Y", 1);
-            zSlider = addLabeledSlider("Z", 2);
+            xPanel = new ValuePanel("X: ", "", min, max, step);
+            xPanel.addChangeListener(this);
+            
+            yPanel = new ValuePanel("Y: ", "", min, max, step);
+            yPanel.addChangeListener(this);
+            
+            zPanel = new ValuePanel("Z: ", "", min, max, step);
+            zPanel.addChangeListener(this);
+            
+            add(xPanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets(5, 5, 5, 5), 0, 0));
+            add(yPanel, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets(5, 5, 5, 5), 0, 0));
+            add(zPanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets(5, 5, 5, 5), 0, 0));
         }
         
         public void setValue(Vector3f value) {
             setting = true;
-            xSlider.setValue((int)(value.x / scale));
-            ySlider.setValue((int)(value.y / scale));
-            zSlider.setValue((int)(value.z / scale));
+            xPanel.setValue(value.x);
+            yPanel.setValue(value.y);
+            zPanel.setValue(value.z);
             setting = false;
         }
         
         public Vector3f getValue() {
-            return new Vector3f(xSlider.getValue() * scale,
-                ySlider.getValue() * scale,
-                zSlider.getValue() * scale);
+            return new Vector3f(xPanel.getFloatValue(), yPanel.getFloatValue(),
+                zPanel.getFloatValue());
         }
         
         public void addChangeListener(ChangeListener l) {
@@ -2249,21 +2262,6 @@ public class RenParticleEditor extends JFrame {
                 }
             }
         }
-
-        private JSlider addLabeledSlider(String text, int xpos) {
-            JSlider slider = new JSlider(SwingConstants.VERTICAL, min, max, 0);
-            slider.addChangeListener(this);
-            slider.setPaintTicks(true);
-            slider.setMajorTickSpacing((max - min) / 5);
-            slider.setMinorTickSpacing((max - min) / 10);
-            add(slider, new GridBagConstraints(xpos, 0, 1, 1, 0.0, 1.0,
-                GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
-                new Insets(5, 5, 5, 5), 0, 0));
-            add(createBoldLabel(text), new GridBagConstraints(xpos, 1, 1, 1,
-                0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-                new Insets(5, 5, 5, 5), 0, 0));
-            return slider;
-        }
     }
     
     class UnitVectorPanel extends JPanel
@@ -2271,8 +2269,8 @@ public class RenParticleEditor extends JFrame {
         
         private static final long serialVersionUID = 1L;
         
-        private ValuePanel azimuthPanel = new ValuePanel("Azimuth: ", "", -180, +180, 1f);
-        private ValuePanel elevationPanel = new ValuePanel("Elevation: ", "", -90, +90, 1f);
+        private ValuePanel azimuthPanel = new ValuePanel("Azimuth: ", "", -180f, +180f, 1f);
+        private ValuePanel elevationPanel = new ValuePanel("Elevation: ", "", -90f, +90f, 1f);
         private ArrayList<ChangeListener> changeListeners = new ArrayList<ChangeListener>();
         private boolean setting;
         private Vector3f vector = new Vector3f();
@@ -2299,8 +2297,8 @@ public class RenParticleEditor extends JFrame {
         }
         
         public Vector3f getValue() {
-            vector.set(1f, azimuthPanel.getValue() * FastMath.DEG_TO_RAD,
-                elevationPanel.getValue() * FastMath.DEG_TO_RAD);
+            vector.set(1f, azimuthPanel.getFloatValue() * FastMath.DEG_TO_RAD,
+                elevationPanel.getFloatValue() * FastMath.DEG_TO_RAD);
             Vector3f result = new Vector3f();
             FastMath.sphericalToCartesian(vector, result);
             return result;
@@ -2322,64 +2320,109 @@ public class RenParticleEditor extends JFrame {
     class ValuePanel extends JPanel {
         private static final long serialVersionUID = 1L;
         
-        public JSlider slider;
+        public ValueSpinner spinner;
         
-        private JLabel label;
-        private String prefix, suffix;
+        private JLabel plabel, slabel;
         private float scale;
         private NumberFormat format;
         
+        public ValuePanel(String prefix, String suffix, float min, float max,
+            float step) {
+            add(plabel = createBoldLabel(prefix));
+            add(spinner = new ValueSpinner(min, max, step));
+            add(slabel = createBoldLabel(suffix));
+        }
+        
         public ValuePanel(String prefix, String suffix, int min, int max,
-            float scale) {
-            super(new GridBagLayout());
-            
-            label = createBoldLabel("");
-            add(label, new GridBagConstraints(0, 0, 1, 1, 0.0,
-                0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
-                new Insets(5, 5, 5, 0), 0, 0));
-                
-            slider = new JSlider(min, max);
-            slider.addChangeListener(new ChangeListener() {
-                public void stateChanged(ChangeEvent e) {
-                    updateLabel();
-                }
-            });
-            add(slider, new GridBagConstraints(0, 1, 1, 1, 1.0,
-                0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets(0, 5, 5, 5), 0, 0));
-            
-            this.prefix = prefix;
-            this.suffix = suffix;
-            this.scale = scale;
-            format = NumberFormat.getInstance();
-            int digits = (int)FastMath.log(1/scale, 10f);
-            format.setMinimumFractionDigits(digits);
-            format.setMaximumFractionDigits(digits);
-            
-            updateLabel();
+            int step) {
+            add(plabel = createBoldLabel(prefix));
+            add(spinner = new ValueSpinner(min, max, step));
+            add(slabel = createBoldLabel(suffix));
         }
         
         public void setEnabled(boolean enabled) {
             super.setEnabled(enabled);
-            slider.setEnabled(enabled);
-            label.setEnabled(enabled);
+            plabel.setEnabled(enabled);
+            spinner.setEnabled(enabled);
+            slabel.setEnabled(enabled);
         }
         
         public void setValue(float value) {
-            slider.setValue((int)(value / scale));
+            spinner.setValue(Float.valueOf(value));
         }
         
-        public float getValue() {
-            return slider.getValue() * scale;
+        public void setValue(int value) {
+            spinner.setValue(Integer.valueOf(value));
+        }
+        
+        public float getFloatValue() {
+            return ((Number)spinner.getValue()).floatValue();
+        }
+        
+        public int getIntValue() {
+            return ((Number)spinner.getValue()).intValue();
         }
         
         public void addChangeListener(ChangeListener l) {
-            slider.addChangeListener(l);
+            spinner.addChangeListener(l);
+        }
+    }
+    
+    class ValueSpinner extends JSpinner {
+    
+        public ValueSpinner(float minimum, float maximum, float stepSize) {
+            this(Float.valueOf(minimum), Float.valueOf(maximum),
+                Float.valueOf(stepSize));
+            ((NumberEditor)getEditor()).getFormat().setMinimumFractionDigits(
+                (int)FastMath.log(1f/stepSize, 10f));
         }
         
-        private void updateLabel() {
-            label.setText(prefix + format.format(slider.getValue() * scale) +
-                suffix);
+        public ValueSpinner(int minimum, int maximum, int stepSize) {
+            this(Integer.valueOf(minimum), Integer.valueOf(maximum),
+                Integer.valueOf(stepSize));
+        }
+        
+        public ValueSpinner(Number minimum, Number maximum, Number stepSize) {
+            super(new SpinnerNumberModel(minimum, (Comparable)minimum,
+                (Comparable)maximum, stepSize));
+            MouseInputAdapter mia = new MouseInputAdapter() {
+                public void mousePressed(MouseEvent e) {
+                    _last.setLocation(e.getPoint());
+                } 
+                public void mouseDragged(MouseEvent e) {
+                    int delta = (e.getX() - _last.x) + (_last.y - e.getY());
+                    _last.setLocation(e.getPoint());
+                    for (int ii = 0, nn = Math.abs(delta); ii < nn; ii++) {
+                        Object next = (delta > 0) ? getModel().getNextValue() :
+                            getModel().getPreviousValue();
+                        if (next != null) {
+                            getModel().setValue(next);
+                        }
+                    }
+                }
+                protected Point _last = new Point();
+            };
+            setEditor(new NumberEditor(this) {
+                public Dimension preferredLayoutSize(Container parent) {
+                    Dimension d = super.preferredLayoutSize(parent);
+                    d.width = Math.max(Math.min(d.width, 50), 65);
+                    return d;
+                }
+            });
+            addMouseInputListener(this, mia);
+        }
+        
+        protected void addMouseInputListener(Container c, MouseInputAdapter mia) {
+            for (int ii = 0, nn = c.getComponentCount(); ii < nn; ii++) {
+                Component comp = c.getComponent(ii);
+                if (comp instanceof JButton) {
+                    comp.addMouseListener(mia);
+                    comp.addMouseMotionListener(mia);
+                    
+                } else if (comp instanceof Container) {
+                    addMouseInputListener((Container)comp, mia);
+                }
+            }
         }
     }
     
