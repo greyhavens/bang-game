@@ -7,18 +7,18 @@ import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.Effect;
-import com.threerings.bang.game.data.piece.Wreckage;
+import com.threerings.bang.game.data.piece.Piece;
 
 /**
- * Allows players to put an impassable road block on the board that
+ * Allows players to put an impassable barricade on the board that
  * expires after some number of ticks.
  */
-public class Roadblock extends AreaCard
+public class Barricade extends AreaCard
 {
     @Override // documentation inherited
     public String getType ()
     {
-        return "roadblock";
+        return "barricade";
     }
 
     @Override // documentation inherited
@@ -43,9 +43,9 @@ public class Roadblock extends AreaCard
     public Effect activate (BangObject bangobj, Object target)
     {
         int[] coords = (int[])target;
-        Wreckage wreckage = new Wreckage();
-        wreckage.position(coords[0], coords[1]);
-        return new AddPieceEffect(wreckage);
+        Piece barricade = new com.threerings.bang.game.data.piece.Barricade();
+        barricade.position(coords[0], coords[1]);
+        return new AddPieceEffect(barricade);
     }
 
     @Override // documentation inherited

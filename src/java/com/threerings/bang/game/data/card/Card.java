@@ -242,7 +242,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new LuckyHorseshoe());
         register(new IronPlate());
         register(new Reinforcements());
-        register(new Roadblock());
+        register(new Barricade());
         register(new Lasso());
         register(new DropNugget());
         register(new FoolsGold());
