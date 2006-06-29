@@ -78,10 +78,16 @@ public class TotemBase extends Prop
      */
     public int getTopOwner ()
     {
-        if (_pieces.isEmpty()) {
-            return -1;
-        }
-        return _pieces.get(_pieces.size() - 1).owner;
+        return getOwner(_pieces.size() - 1);
+    }
+
+    /**
+     * Returns the owner of the piece at index idx.
+     */
+    public int getOwner (int idx)
+    {
+        return (idx < 0 || idx >= _pieces.size()) ? 
+            -1 : _pieces.get(idx).owner;
     }
 
     @Override // documentation inherited

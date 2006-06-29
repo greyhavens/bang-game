@@ -43,7 +43,7 @@ public interface ScenarioCodes
     public static final String TOTEM_BUILDING = "tb";
 
     /** Points earned for each totem piece. */
-    public static final int POINTS_PER_TOTEM = 50;
+    public static final int POINTS_PER_TOTEM = 25;
 
     /** Scenarios available in Indian Trading Post. */
     public static final String[] INDIAN_POST_SCENARIOS = { 

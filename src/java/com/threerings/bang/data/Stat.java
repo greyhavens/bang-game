@@ -59,7 +59,8 @@ public abstract class Stat
         CATTLE_RUSTLED(new IntStat()),
         BRAND_POINTS(new IntStat()),
         NUGGETS_CLAIMED(new IntStat()),
-        TOTEM_HEIGHT(new IntStat()),
+        TOTEM_PIECES(new IntStat()),
+        TOTEM_POINTS(new IntStat()),
 
         // stats derived from in-game statistics
         HIGHEST_POINTS(new IntStat()),

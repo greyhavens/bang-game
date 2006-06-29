@@ -81,7 +81,6 @@ public class EffectHandler extends BoardView.BoardAction
         // applying the effect may result in calls to pieceAffected() which may
         // trigger visualizations or animations which we will then notice and
         // report that the view should wait
-        _effect.apply(_bangobj, this);
         apply(_effect);
         _applying = false;
 

@@ -226,7 +226,7 @@ public class UnitSprite extends MobileSprite
     public void cancelMove ()
     {
         super.cancelMove();
-        updateTileHighlight(_piece.x, _piece.y);
+        updateTileHighlight();
         updateStatus();
     }
 
@@ -234,7 +234,7 @@ public class UnitSprite extends MobileSprite
     public void pathCompleted ()
     {
         super.pathCompleted();
-        updateTileHighlight(_piece.x, _piece.y);
+        updateTileHighlight();
         updateStatus();
     }
 

@@ -185,7 +185,6 @@ public class PieceSprite extends Sprite
 //                      ": " + _temp);
             updateShadowValue();
             updateHighlight();
-            updateTileHighlight(tx, ty);
         }
     }
 
@@ -345,6 +344,8 @@ public class PieceSprite extends Sprite
         if (_editorMode) {
             moveSprite(board);
             setOrientation(_piece.orientation);
+            updateTileHighlight();
+            updateStatus();
             return false;
         }
         
@@ -449,13 +450,13 @@ public class PieceSprite extends Sprite
      * Updates the position of the highlight geometry that covers or floats
      * over the nearest tile.
      */
-    protected void updateTileHighlight (int tx, int ty)
+    protected void updateTileHighlight ()
     {
         if (_tlight == null) {
             return;
         }
-        if (_tlight.getTileX() != tx || _tlight.getTileY() != ty) {
-            _tlight.setPosition(tx, ty);
+        if (_tlight.getTileX() != _piece.x || _tlight.getTileY() != _piece.y) {
+            _tlight.setPosition(_piece.x, _piece.y);
             _status.updateTranslations(_tlight);
         }
     }
@@ -576,6 +577,7 @@ public class PieceSprite extends Sprite
         if (_shadow != null) {
             _shadow.setPosition(localTranslation.x, localTranslation.y);
         }
+        updateTileHighlight();
     }
     
     protected BasicContext _ctx;
