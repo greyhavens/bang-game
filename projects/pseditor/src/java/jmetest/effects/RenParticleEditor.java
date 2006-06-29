@@ -204,7 +204,7 @@ public class RenParticleEditor extends JFrame {
         new ValuePanel("Max Degrees Off Direction: ", "", 0, 180, 1f);
     ValuePanel velocityPanel =
         new ValuePanel("Initial Velocity: ", "", 0, 1000, 0.01f);
-    ValuePanel spinPanel = new ValuePanel("Spin Speed: ", "", -50, 50, 0.01f);
+    ValuePanel spinPanel = new ValuePanel("Spin Speed: ", "", -200, 200, 0.1f);
     
     // flow panel components
     JCheckBox rateBox;
