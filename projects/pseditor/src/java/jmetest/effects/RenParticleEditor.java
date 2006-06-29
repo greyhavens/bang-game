@@ -1968,7 +1968,8 @@ public class RenParticleEditor extends JFrame {
 
             newTexture = textFile;
 
-            ImageIcon icon = new ImageIcon(textFile.getAbsolutePath());
+            ImageIcon icon = new ImageIcon(
+                getToolkit().createImage(textFile.getAbsolutePath()));
             imageLabel.setIcon(icon);
             validate();
         } catch (Exception ex) {
@@ -2506,6 +2507,7 @@ public class RenParticleEditor extends JFrame {
 
         private void loadApplyTexture() {
             TextureState ts = (TextureState)particleMesh.getRenderState(RenderState.RS_TEXTURE);
+            TextureManager.clearCache();
             ts.setTexture(
                     TextureManager.loadTexture(
                             newTexture.getAbsolutePath(),
