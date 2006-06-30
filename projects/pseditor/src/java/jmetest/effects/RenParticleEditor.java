@@ -220,7 +220,7 @@ public class RenParticleEditor extends JFrame {
     
     // world panel components
     ValuePanel speedPanel =
-        new ValuePanel("Speed Mod: ", "x", 0, Float.MAX_VALUE, 0.01f);
+        new ValuePanel("Speed Mod: ", "x", 0f, Float.MAX_VALUE, 0.01f);
     ValuePanel massPanel =
         new ValuePanel("Particle Mass: ", "", 0f, Float.MAX_VALUE, 0.1f);
     ValuePanel minAgePanel =
@@ -237,7 +237,7 @@ public class RenParticleEditor extends JFrame {
     JPanel influenceParamsPanel;
     JPanel windParamsPanel;
     ValuePanel windStrengthPanel =
-        new ValuePanel("Strength: ", "", 0, 100, 0.1f);
+        new ValuePanel("Strength: ", "", 0f, 100f, 0.1f);
     UnitVectorPanel windDirectionPanel = new UnitVectorPanel();
     JCheckBox windRandomBox;
     JPanel gravityParamsPanel;
@@ -264,6 +264,7 @@ public class RenParticleEditor extends JFrame {
   
     JFileChooser fileChooser = new JFileChooser(),
         textureChooser = new JFileChooser();
+    File openFile;
     
     Preferences prefs = Preferences.userNodeForPackage(RenParticleEditor.class);
     
@@ -320,7 +321,7 @@ public class RenParticleEditor extends JFrame {
     }
 
     private void init() throws Exception {
-        setTitle("Particle System Editor");
+        updateTitle();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setFont(new Font("Arial", 0, 12));
         
@@ -341,6 +342,11 @@ public class RenParticleEditor extends JFrame {
         getContentPane().add(getGlCanvas(), BorderLayout.CENTER);
         
         setSize(new Dimension(1024, 768));
+    }
+    
+    private void updateTitle() {
+        setTitle("Particle System Editor" +
+            (openFile == null ? "" : (" - " + openFile)));
     }
     
     private JMenuBar createMenuBar() {
@@ -368,13 +374,21 @@ public class RenParticleEditor extends JFrame {
         };
         importAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_I);
         
-        Action save = new AbstractAction("Save...") {
+        AbstractAction save = new AbstractAction("Save") {
             private static final long serialVersionUID = 1L;
             public void actionPerformed(ActionEvent e) {
-                showSaveDialog();
+                saveAs(openFile);
             }
         };
         save.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_S);
+        
+        Action saveAs = new AbstractAction("Save As...") {
+            private static final long serialVersionUID = 1L;
+            public void actionPerformed(ActionEvent e) {
+                saveAs(null);
+            }
+        };
+        saveAs.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
 
         Action quit = new AbstractAction("Quit") {
             private static final long serialVersionUID = 1L;
@@ -390,6 +404,7 @@ public class RenParticleEditor extends JFrame {
         file.add(open);
         file.add(importAction);
         file.add(save);
+        file.add(saveAs);
         file.addSeparator();
         file.add(quit);
         
@@ -1264,9 +1279,12 @@ public class RenParticleEditor extends JFrame {
         layerModel.fireTableDataChanged();
         layerTable.setRowSelectionInterval(0, 0);
         deleteLayerButton.setEnabled(false);
+        openFile = null;
+        updateTitle();
     }
     
     private void showOpenDialog() {
+        fileChooser.setSelectedFile(new File(""));
         if (fileChooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
         }
@@ -1300,6 +1318,8 @@ public class RenParticleEditor extends JFrame {
             particleNode.updateRenderState();
             layerModel.fireTableDataChanged();
             layerTable.setRowSelectionInterval(0, 0);
+            openFile = file;
+            updateTitle();
             
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Couldn't open '" + file +
@@ -1309,6 +1329,7 @@ public class RenParticleEditor extends JFrame {
     }
     
     private void showImportDialog() {
+        fileChooser.setSelectedFile(new File(""));
         if (fileChooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
             return;
         }
@@ -1351,15 +1372,21 @@ public class RenParticleEditor extends JFrame {
         }
     }
     
-    private void showSaveDialog() {
-        if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
-            return;
+    private void saveAs(File file) {
+        if (file == null) {
+            fileChooser.setSelectedFile(openFile == null ?
+                new File("") : openFile);
+            if (fileChooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+            file = fileChooser.getSelectedFile();
+            prefs.put("particle_dir", file.getParent().toString());
         }
-        File file = fileChooser.getSelectedFile();
-        prefs.put("particle_dir", file.getParent().toString());
         try {
             BinaryExporter.getInstance().save(particleNode.getQuantity() > 1 ?
                 particleNode : particleMesh, file);
+            openFile = file;
+            updateTitle();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Couldn't save '" + file +
                 "': " + e, "File Error", JOptionPane.ERROR_MESSAGE);
