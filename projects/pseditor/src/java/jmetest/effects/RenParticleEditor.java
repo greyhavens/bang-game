@@ -683,22 +683,36 @@ public class RenParticleEditor extends JFrame {
         });
         changeTextureButton.setFont(new Font("Arial", Font.BOLD, 12));
         changeTextureButton.setMargin(new Insets(2, 2, 2, 2));
-        changeTextureButton.setText("Browse...");
 
+        JButton clearTextureButton = new JButton(new AbstractAction("Clear") {
+            private static final long serialVersionUID = 1L;
+            public void actionPerformed(ActionEvent e) {
+                ((TextureState)particleGeom.getRenderState(
+                    RenderState.RS_TEXTURE)).setTexture(null);
+                imageLabel.setIcon(null);
+            }
+        });
+        clearTextureButton.setFont(new Font("Arial", Font.BOLD, 12));
+        clearTextureButton.setMargin(new Insets(2, 2, 2, 2));
+        
         imageLabel.setBackground(Color.lightGray);
         imageLabel.setMaximumSize(new Dimension(128, 128));
         imageLabel.setMinimumSize(new Dimension(0, 0));
+        imageLabel.setHorizontalAlignment(JLabel.CENTER);
         imageLabel.setOpaque(false);
         
         JPanel texturePanel = new JPanel(new GridBagLayout());
         texturePanel.setBorder(createTitledBorder("PARTICLE TEXTURE"));
-        texturePanel.add(textureLabel, new GridBagConstraints(0, 0, 1, 1, 0.0,
+        texturePanel.add(textureLabel, new GridBagConstraints(0, 0, 2, 1, 0.0,
             0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
-            new Insets(10, 10, 5, 5), 0, 0));
+            new Insets(5, 5, 5, 5), 0, 0));
         texturePanel.add(changeTextureButton, new GridBagConstraints(0, 1, 1,
             1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
-            new Insets(5, 10, 10, 5), 0, 0));
-        texturePanel.add(imageLabel, new GridBagConstraints(1, 0, 1, 2, 1.0,
+            new Insets(5, 5, 5, 5), 0, 0));
+        texturePanel.add(clearTextureButton, new GridBagConstraints(1, 1, 1,
+            1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
+            new Insets(5, 5, 5, 5), 0, 0));
+        texturePanel.add(imageLabel, new GridBagConstraints(2, 0, 1, 2, 1.0,
             1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH,
             new Insets(5, 5, 5, 5), 0, 0));
                 
@@ -1704,6 +1718,8 @@ public class RenParticleEditor extends JFrame {
                 else
                     imageLabel.setIcon(
                         new ImageIcon(new URL(tex.getImageLocation())));
+            } else {
+                imageLabel.setIcon(null);
             }
         } catch (Exception e) {
             System.err.println("image: "+tex+" : "+tex.getImageLocation());
