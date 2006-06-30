@@ -185,6 +185,12 @@ public class RenParticleEditor extends JFrame {
     JLabel imageLabel = new JLabel();
 
     // origin panel components
+    VectorPanel translationPanel =
+        new VectorPanel(-Float.MAX_VALUE, Float.MAX_VALUE, 1f);
+    VectorPanel rotationPanel =
+        new VectorPanel(-180f, 180f, 1f);
+    ValuePanel scalePanel =
+        new ValuePanel("Scale: ", "", 0f, Float.MAX_VALUE, 0.01f);
     JComboBox originTypeBox;
     JPanel originParamsPanel;
     JPanel pointParamsPanel;
@@ -736,6 +742,45 @@ public class RenParticleEditor extends JFrame {
     }
     
     private JPanel createOriginPanel() {
+        
+        
+        JPanel transformPanel = new JPanel(new GridBagLayout());
+        transformPanel.setBorder(createTitledBorder(" EMITTER TRANSFORM "));
+        
+        translationPanel.setBorder(createTitledBorder(" TRANSLATION "));
+        translationPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                particleGeom.getLocalTranslation().set(
+                    translationPanel.getValue());
+            }
+        });
+        
+        rotationPanel.setBorder(createTitledBorder(" ROTATION "));
+        rotationPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                Vector3f val = rotationPanel.getValue().multLocal(
+                    FastMath.DEG_TO_RAD);
+                particleGeom.getLocalRotation().fromAngles(val.x, val.y,
+                    val.z);
+            }
+        });
+        
+        scalePanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                particleGeom.setLocalScale(scalePanel.getFloatValue());
+            }
+        });
+        
+        transformPanel.add(translationPanel, new GridBagConstraints(0, 0, 1, 1,
+            0.5, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(0, 0, 0, 0), 0, 0));
+        transformPanel.add(rotationPanel, new GridBagConstraints(1, 0, 1, 1,
+            0.5, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(0, 0, 0, 0), 0, 0));
+        transformPanel.add(scalePanel, new GridBagConstraints(0, 1, 2, 1,
+            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets(0, 0, 0, 0), 0, 0));
+        
         originTypeBox = new JComboBox(new String[] {
             "Point", "Line", "Rectangle", "Ring" });
         originTypeBox.setBorder(createTitledBorder(" EMITTER TYPE "));
@@ -753,10 +798,13 @@ public class RenParticleEditor extends JFrame {
         ringParamsPanel = createRingParamsPanel();
         
         JPanel originPanel = new JPanel(new GridBagLayout());
-        originPanel.add(originTypeBox, new GridBagConstraints(0, 0, 1, 1, 1.0,
+        originPanel.add(transformPanel, new GridBagConstraints(0, 0, 1, 1, 1.0,
             0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets(10, 10, 10, 10), 0, 0));
-        originPanel.add(originParamsPanel, new GridBagConstraints(0, 1, 1, 1,
+        originPanel.add(originTypeBox, new GridBagConstraints(0, 1, 1, 1, 1.0,
+            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(10, 10, 10, 10), 0, 0));
+        originPanel.add(originParamsPanel, new GridBagConstraints(0, 2, 1, 1,
             1.0, 1.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
             new Insets(5, 10, 5, 5), 0, 0));
         return originPanel;
@@ -1727,6 +1775,11 @@ public class RenParticleEditor extends JFrame {
         }
 
         // update origin controls
+        translationPanel.setValue(particleGeom.getLocalTranslation());
+        float[] angles = particleGeom.getLocalRotation().toAngles(null);
+        rotationPanel.setValue(new Vector3f(angles[0], angles[1],
+            angles[2]).multLocal(FastMath.RAD_TO_DEG));
+        scalePanel.setValue(particleGeom.getLocalScale().length());
         switch (particleGeom.getEmitType()) {
             case ParticleGeometry.ET_POINT:
                 originTypeBox.setSelectedItem("Point");
