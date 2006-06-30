@@ -49,7 +49,10 @@ public class TotemLogic extends AILogic
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof TotemBase) {
                 TotemBase base = (TotemBase)pieces[ii];
-                if (base.getTopOwner() == _pidx || base.getTopOwner() == -1 && 
+                if (!base.canAddPiece()) {
+                    continue;
+                } else if (base.getTopOwner() == _pidx || 
+                        base.getTopOwner() == -1 && 
                     (obase == null ||
                      unit.getDistance(base) < unit.getDistance(obase))) {
                     obase = base;
@@ -133,8 +136,8 @@ public class TotemLogic extends AILogic
     protected boolean moveUnit (
         Piece[] pieces, Unit unit, PointSet moves, Piece target)
     {
-        return moveUnit(pieces, unit, moves, target.x, target.y,
-            TARGET_EVALUATOR);
+        return (target != null) && 
+            moveUnit(pieces, unit, moves, target.x, target.y, TARGET_EVALUATOR);
     }
 
     /**

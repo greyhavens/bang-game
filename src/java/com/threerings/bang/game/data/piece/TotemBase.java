@@ -24,9 +24,7 @@ public class TotemBase extends Prop
     public boolean canAddPiece ()
     {
         // the only time you can't is if a crown is on top
-        int idx = _pieces.size() - 1;
-        return !(idx > -1 && 
-                _pieces.get(idx).type.equals(TotemEffect.TOTEM_CROWN_BONUS));
+        return !TotemEffect.TOTEM_CROWN_BONUS.equals(getTopPiece());
     }
 
     /**
@@ -93,7 +91,7 @@ public class TotemBase extends Prop
     @Override // documentation inherited
     public boolean isTargetable ()
     {
-        return _pieces.size() > 0;
+        return _pieces.size() > 0 && canAddPiece();
     }
 
     @Override // documentation inherited

@@ -14,6 +14,7 @@ import com.jme.bounding.BoundingVolume;
 import com.jme.math.Vector3f;
 
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 
 import com.threerings.bang.client.util.ModelAttacher;
 
@@ -37,7 +38,7 @@ public class TotemBaseSprite extends PropSprite
     public TotemBaseSprite ()
     {
         super("indian_post/special/totem_base");
-        _totHeight += _config.height * TILE_SIZE / 2f;
+        _totHeight += _config.height * TILE_SIZE;
     }
 
     @Override // documentation inherited
@@ -84,7 +85,12 @@ public class TotemBaseSprite extends PropSprite
         if (baseHeight < size) {
             _totHeight -= _totemHeights.remove(size - 1);
             Node totemPiece = _totemPieces.remove(size - 1);
+            float height = (size > 1) ? 
+                _totHeight - _totemHeights.get(size - 2) : 0f;
+            setLocalTranslation(_baseTrans.add(new Vector3f(0, 0, height)));
             detachChild(totemPiece);
+            adjustTotemPieces();
+
         } else if (baseHeight > size) {
             String type = base.getTopPiece();
             int owner = base.getTopOwner();
@@ -92,9 +98,11 @@ public class TotemBaseSprite extends PropSprite
                 _ctx.getAvatarLogic().getColorPository().getColorization(
                         "unit", PIECE_COLOR_IDS[owner + 1]) };
             final Node totemPiece = new Node(type);
+            _totemPieces.add(totemPiece);
             _ctx.getModelCache().getModel("bonuses", type, zations,
                     new ModelAttacher(totemPiece) {
                 public void requestCompleted (Model model) {
+                    // calculate the height of the model
                     model.updateGeometricState(0f, true);
                     BoundingVolume bound = model.getWorldBound();
                     float height = bound.getCenter().z;
@@ -103,10 +111,12 @@ public class TotemBaseSprite extends PropSprite
                     } else if (bound instanceof BoundingSphere) {
                         height += ((BoundingSphere)bound).radius;
                     }
-                    totemPiece.setLocalTranslation(
-                        new Vector3f(0, 0, _totHeight + height / 2f));
+                    // translate the base node to the new height
+                    setLocalTranslation(_baseTrans.add(
+                            new Vector3f(0, 0, _totHeight)));
                     _totemHeights.add(size, height);
                     _totHeight += height;
+                    adjustTotemPieces();
                     super.requestCompleted(model);
                 }
                 public void requestFailed (Exception cause) {
@@ -114,12 +124,29 @@ public class TotemBaseSprite extends PropSprite
                 }
             });
             attachChild(totemPiece);
-            _totemPieces.add(totemPiece);
             totemPiece.updateRenderState();
         } 
         updateRenderState();
 
         _target.updated(piece, tick);
+    }
+
+    /**
+     * Adjusts the translations of all the totem pieces to compensate for
+     * the rising node translation.
+     */
+    protected void adjustTotemPieces ()
+    {
+        float height = 0f;
+        for (int ii = _totemPieces.size() - 1; ii >= 0; ii--) {
+            Node piece = _totemPieces.get(ii);
+            log.info("Adjust translation of piece " + ii + " to height: " +
+                    height);
+            piece.setLocalTranslation(new Vector3f(0, 0, height));
+            if (ii > 0) {
+                height -= _totemHeights.get(ii - 1);
+            }
+        }
     }
 
     @Override // documentation inherited
@@ -133,6 +160,7 @@ public class TotemBaseSprite extends PropSprite
         updateStatus();
         _target = new PieceTarget(_piece, _ctx);
         attachChild(_target);
+        _baseTrans = getLocalTranslation();
     }
 
     protected ArrayList<Node> _totemPieces = new ArrayList<Node>();
@@ -140,4 +168,6 @@ public class TotemBaseSprite extends PropSprite
     protected float _totHeight;
 
     protected PieceTarget _target;
+
+    protected Vector3f _baseTrans;
 }

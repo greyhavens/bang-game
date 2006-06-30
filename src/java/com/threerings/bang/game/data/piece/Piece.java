@@ -255,7 +255,8 @@ public abstract class Piece extends SimpleStreamableObject
      */
     public int getDistance (Piece other)
     {
-        return getDistance(other.x, other.y);
+        return (other == null) ? Integer.MAX_VALUE : 
+                                 getDistance(other.x, other.y);
     }
 
     /**

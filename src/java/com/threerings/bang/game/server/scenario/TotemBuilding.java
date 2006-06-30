@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.PlayerObject;
@@ -33,6 +34,8 @@ import com.threerings.bang.game.util.PointSet;
 import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.presents.server.InvocationException;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * A gameplay scenario wherein:
@@ -104,19 +107,42 @@ public class TotemBuilding extends Scenario
     {
         // count up the totem pieces that are "in play"
         int totems = 0;
+        int crowns = 0;
+        int bases = 0;
         for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof TotemBonus ||
-                    (pieces[ii] instanceof Unit && 
-                     TotemBonus.isHolding((Unit)pieces[ii]))) {
+            String type = null;
+            if (pieces[ii] instanceof TotemBonus) {
                 totems++;
+                type = ((TotemBonus)pieces[ii]).getConfig().type;
+            } else if (pieces[ii] instanceof Unit && 
+                     TotemBonus.isHolding((Unit)pieces[ii])) {
+                totems++;
+                type = ((Unit)pieces[ii]).holding;
+            } else if (pieces[ii] instanceof TotemBase) {
+                bases++;
+                if (!((TotemBase)pieces[ii]).canAddPiece()) {
+                    crowns++;
+                }
+            }
+            if (TotemEffect.TOTEM_CROWN_BONUS.equals(type)) {
+                crowns++;
             }
         }
 
         // if there is not at least two totems in play for every player in the
         // game, try to spawn another one
-        if (totems < bangobj.getActivePlayerCount() * 2) {
+        int numPlayers = bangobj.getActivePlayerCount();
+        if (totems < numPlayers * 2) {
+            String type = TotemEffect.TOTEM_MIDDLE_BONUS;
+            float progress = (float)bangobj.tick / bangobj.duration;
+            // if we're far enough along in the round and there isn't a
+            // crown for each base, maybe spawn one
+            if (progress > CROWN_SPAWN && crowns < bases && 
+                    RandomUtil.getInt(100) > 50) {
+                type = TotemEffect.TOTEM_CROWN_BONUS;
+            }
             return placeBonus(bangobj, pieces, Bonus.createBonus(
-                        BonusConfig.getConfig(TotemEffect.TOTEM_MIDDLE_BONUS)),
+                        BonusConfig.getConfig(type)),
                     _totems);
         } else {
             return super.addBonus(bangobj, pieces);
@@ -150,6 +176,18 @@ public class TotemBuilding extends Scenario
 
                 TotemBase base = (TotemBase)pieces[ii];
                 _bases.add(base);
+            }
+        }
+
+        @Override // documentation inherited
+        public void tick (BangObject bangobj, short tick)
+        {
+            boolean alive = false;
+            for (TotemBase base : _bases) {
+                alive = alive || base.canAddPiece();
+            }
+            if (!alive) {
+                bangobj.setLastTick(tick);
             }
         }
 
@@ -282,4 +320,7 @@ public class TotemBuilding extends Scenario
     
     /** Used to track the locations of all the totem generating spots. */
     protected PointSet _totems = new PointSet();    
+
+    /** How long into the round before crowns will spawn. */
+    protected static final float CROWN_SPAWN = 0.7f;
 }
