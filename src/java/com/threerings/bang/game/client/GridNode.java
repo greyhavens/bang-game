@@ -39,7 +39,7 @@ public class GridNode extends Line
             (parea.width + 1) *
             (parea.height * BangBoard.HEIGHTFIELD_SUBDIVISIONS) * 2;
         setVertexBuffer(0, BufferUtils.createFloatBuffer(vertices * 3));
-        generateIndices();
+        generateIndices(0);
         updateVertices();
         
         setModelBound(new BoundingBox());

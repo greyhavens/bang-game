@@ -131,7 +131,7 @@ public class TerrainNode extends Node
             }
             setVertexBuffer(0, BufferUtils.createFloatBuffer(
                 _verts.toArray(new Vector3f[_verts.size()])));
-            generateIndices();
+            generateIndices(0);
         }
 
         /**
