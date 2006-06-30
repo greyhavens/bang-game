@@ -594,7 +594,7 @@ public abstract class Piece extends SimpleStreamableObject
     {
         boolean valid = (target.isTargetable() && target.isAlive());
         if (!allowSelf) {
-            valid = (target.owner != owner) && valid;
+            valid = !target.isSameTeam(this) && valid;
         }
         return valid;
     }
@@ -605,6 +605,14 @@ public abstract class Piece extends SimpleStreamableObject
     public boolean isTargetable ()
     {
         return false;
+    }
+
+    /**
+     * Returns true if this piece is on the same team as the target.
+     */
+    public boolean isSameTeam (Piece target)
+    {
+        return target.owner == owner;
     }
 
     /**

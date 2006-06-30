@@ -97,6 +97,12 @@ public class TotemBase extends Prop
     }
 
     @Override // documentation inherited
+    public boolean isSameTeam (Piece target)
+    {
+        return getTopOwner() == target.owner;
+    }
+
+    @Override // documentation inherited
     public int getTicksPerMove ()
     {
         return Integer.MAX_VALUE;
