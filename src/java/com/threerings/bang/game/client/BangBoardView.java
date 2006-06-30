@@ -27,6 +27,7 @@ import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.Spacer;
+import com.jmex.bui.event.InputEvent;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
 import com.jmex.bui.layout.AbsoluteLayout;
@@ -358,6 +359,8 @@ public class BangBoardView extends BoardView
         if (_tpath != null) {
             _ctx.getCameraHandler().skipPath();
         }
+
+        _shiftDown = (e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) != 0;
 
         switch (_downButton = e.getButton()) {
         case MouseEvent.BUTTON2:
@@ -971,7 +974,7 @@ public class BangBoardView extends BoardView
         moves.add(tx, ty);
         highlightTiles(moves, getHighlightColor(_selection));
 
-        if (_attackEnabled) {
+        if (!_shiftDown && _attackEnabled) {
             // display our potential attacks
             _attackSet.clear();
             pruneAttackSet(moves, _attackSet);
@@ -1517,6 +1520,9 @@ public class BangBoardView extends BoardView
     protected SwingPath _tpath;
 
     protected ArrayList<UnitSprite> _readyUnits = new ArrayList<UnitSprite>();
+
+    /** Set to true if shift was down during the mouse press. */
+    protected boolean _shiftDown = false;
 
     /** A traversal predicate for units running to their initial positions. */
     protected AStarPathUtil.TraversalPred _tpred =
