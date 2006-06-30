@@ -190,7 +190,7 @@ public class RenParticleEditor extends JFrame {
     VectorPanel rotationPanel =
         new VectorPanel(-180f, 180f, 1f);
     ValuePanel scalePanel =
-        new ValuePanel("Scale: ", "", 0f, Float.MAX_VALUE, 0.01f);
+        new ValuePanel("System Scale: ", "", 0f, Float.MAX_VALUE, 0.01f);
     JComboBox originTypeBox;
     JPanel originParamsPanel;
     JPanel pointParamsPanel;
@@ -209,6 +209,7 @@ public class RenParticleEditor extends JFrame {
         new ValuePanel("Outer Radius: ", "", 0f, Float.MAX_VALUE, 1f);
     
     // emission panel components
+    JCheckBox rotateWithEmitterBox;
     UnitVectorPanel directionPanel = new UnitVectorPanel();
     ValuePanel minAnglePanel =
         new ValuePanel("Min Degrees Off Dir.: ", "", 0f, 180f, 1f);
@@ -742,8 +743,6 @@ public class RenParticleEditor extends JFrame {
     }
     
     private JPanel createOriginPanel() {
-        
-        
         JPanel transformPanel = new JPanel(new GridBagLayout());
         transformPanel.setBorder(createTitledBorder(" EMITTER TRANSFORM "));
         
@@ -884,6 +883,14 @@ public class RenParticleEditor extends JFrame {
     }
     
     private JPanel createEmissionPanel() {
+        rotateWithEmitterBox = new JCheckBox(
+            new AbstractAction("Rotate With Emitter") {
+            public void actionPerformed(ActionEvent e) {
+                particleGeom.setRotateWithScene(rotateWithEmitterBox.isSelected());
+            }
+        });
+        rotateWithEmitterBox.setFont(new Font("Arial", Font.BOLD, 12));
+        
         directionPanel.setBorder(createTitledBorder("DIRECTION"));
         directionPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -894,6 +901,9 @@ public class RenParticleEditor extends JFrame {
                 }
             }
         });
+        directionPanel.add(rotateWithEmitterBox, new GridBagConstraints(0, 2, 1, 1,
+            1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets(5, 5, 5, 5), 0, 0));
         
         minAnglePanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -1088,7 +1098,7 @@ public class RenParticleEditor extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 particleGeom.addInfluence(
                     SimpleParticleInfluenceFactory.createBasicWind(
-                        1f, new Vector3f(Vector3f.UNIT_X), true));
+                        1f, new Vector3f(Vector3f.UNIT_X), true, true));
                 int idx = particleGeom.getInfluences().size() - 1;
                 influenceModel.fireIntervalAdded(idx, idx);
                 influenceList.setSelectedIndex(idx);
@@ -1101,7 +1111,7 @@ public class RenParticleEditor extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 particleGeom.addInfluence(
                     SimpleParticleInfluenceFactory.createBasicGravity(
-                        new Vector3f(Vector3f.ZERO)));
+                        new Vector3f(Vector3f.ZERO), true));
                 int idx = particleGeom.getInfluences().size() - 1;
                 influenceModel.fireIntervalAdded(idx, idx);
                 influenceList.setSelectedIndex(idx);
@@ -1127,7 +1137,7 @@ public class RenParticleEditor extends JFrame {
                 particleGeom.addInfluence(
                     SimpleParticleInfluenceFactory.createBasicVortex(
                         1f, 0f, new Line(new Vector3f(),
-                            new Vector3f(Vector3f.UNIT_Y)), true));
+                            new Vector3f(Vector3f.UNIT_Y)), true, true));
                 int idx = particleGeom.getInfluences().size() - 1;
                 influenceModel.fireIntervalAdded(idx, idx);
                 influenceList.setSelectedIndex(idx);
@@ -1494,7 +1504,8 @@ public class RenParticleEditor extends JFrame {
     
     private void createNewLayer() {
         particleGeom = ParticleFactory.buildParticles(createLayerName(), 300);
-        particleGeom.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
+        particleGeom.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(
+            new Vector3f(0,-3f,0), true));
         particleGeom.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
         particleGeom.setMaximumAngle(0.2268928f);
         particleGeom.getParticleController().setSpeed(1.0f);
@@ -1587,7 +1598,8 @@ public class RenParticleEditor extends JFrame {
             particleGeom.setInitialVelocity(0.3f);
             particleGeom.getParticleController().setRepeatType(Controller.RT_WRAP);
         } else if ("FOUNTAIN".equalsIgnoreCase(examType)) {
-            particleGeom.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
+            particleGeom.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(
+                new Vector3f(0,-3f,0), true));
             particleGeom.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
             particleGeom.setMaximumAngle(0.2268928f);
             particleGeom.setMinimumAngle(0);
@@ -1605,7 +1617,8 @@ public class RenParticleEditor extends JFrame {
             particleGeom.setInitialVelocity(1.1f);
             particleGeom.getParticleController().setRepeatType(Controller.RT_WRAP);
         } else if ("LAVA".equalsIgnoreCase(examType)) {
-            particleGeom.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
+            particleGeom.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(
+                new Vector3f(0,-3f,0), true));
             particleGeom.setEmissionDirection(new Vector3f(0.0f, 1.0f, 0.0f));
             particleGeom.setMaximumAngle(0.418f);
             particleGeom.setMinimumAngle(0);
@@ -1640,7 +1653,8 @@ public class RenParticleEditor extends JFrame {
             particleGeom.setInitialVelocity(0.58f);
             particleGeom.setParticleSpinSpeed(0.08f);
         } else if ("RAIN".equalsIgnoreCase(examType)) {
-            particleGeom.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
+            particleGeom.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(
+                new Vector3f(0,-3f,0), true));
             particleGeom.setEmissionDirection(new Vector3f(0.0f, -1.0f, 0.0f));
             particleGeom.setMaximumAngle(3.1415927f);
             particleGeom.setMinimumAngle(0);
@@ -1660,7 +1674,8 @@ public class RenParticleEditor extends JFrame {
             particleGeom.setInitialVelocity(0.58f);
             particleGeom.getParticleController().setRepeatType(Controller.RT_WRAP);
         } else if ("SNOW".equalsIgnoreCase(examType)) {
-            particleGeom.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(new Vector3f(0,-3f,0)));
+            particleGeom.addInfluence(SimpleParticleInfluenceFactory.createBasicGravity(
+                new Vector3f(0,-3f,0), true));
             particleGeom.setEmissionDirection(new Vector3f(0.0f, -1.0f, 0.0f));
             particleGeom.setMaximumAngle(1.5707964f);
             particleGeom.setMinimumAngle(0);
@@ -1779,7 +1794,8 @@ public class RenParticleEditor extends JFrame {
         float[] angles = particleGeom.getLocalRotation().toAngles(null);
         rotationPanel.setValue(new Vector3f(angles[0], angles[1],
             angles[2]).multLocal(FastMath.RAD_TO_DEG));
-        scalePanel.setValue(particleGeom.getLocalScale().length());
+        scalePanel.setValue(particleGeom.getLocalScale().x);
+        
         switch (particleGeom.getEmitType()) {
             case ParticleGeometry.ET_POINT:
                 originTypeBox.setSelectedItem("Point");
@@ -1797,6 +1813,7 @@ public class RenParticleEditor extends JFrame {
         updateOriginParams();
         
         // update emission controls
+        rotateWithEmitterBox.setSelected(particleGeom.isRotateWithScene());
         directionPanel.setValue(particleGeom.getEmissionDirection());
         minAnglePanel.setValue(particleGeom.getMinimumAngle() * FastMath.RAD_TO_DEG);
         maxAnglePanel.setValue(particleGeom.getMaximumAngle() * FastMath.RAD_TO_DEG);
@@ -1850,6 +1867,9 @@ public class RenParticleEditor extends JFrame {
         newGeom.setEndSize(oldGeom.getEndSize());
         
         // copy origin parameters
+        newGeom.setLocalTranslation(oldGeom.getLocalTranslation());
+        newGeom.setLocalRotation(oldGeom.getLocalRotation());
+        newGeom.setLocalScale(oldGeom.getLocalScale());
         newGeom.setOriginOffset(oldGeom.getOriginOffset());
         newGeom.setGeometry(oldGeom.getLine());
         newGeom.setGeometry(oldGeom.getRectangle());
@@ -1857,6 +1877,7 @@ public class RenParticleEditor extends JFrame {
         newGeom.setEmitType(oldGeom.getEmitType());
         
         // copy emission parameters
+        newGeom.setRotateWithScene(oldGeom.isRotateWithScene());
         newGeom.setEmissionDirection(oldGeom.getEmissionDirection());
         newGeom.setMinimumAngle(oldGeom.getMinimumAngle());
         newGeom.setMaximumAngle(oldGeom.getMaximumAngle());
