@@ -167,7 +167,13 @@ public class TotemLogic extends AILogic
      * unit will do, and the amount of damage the target has already taken. */
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
-        public int getWeight (Unit unit, Piece target) {
+
+        public int getWeight (Unit unit, Piece target, int dist) {
+            // don't go an shoot the totem we just put our piece on
+            if ((target instanceof TotemBase) && TotemBonus.isHolding(unit) &&
+                    dist == 1) {
+                return -1;
+            }
             return ((target instanceof Unit) && 
                     TotemBonus.isHolding((Unit)target) ? 1000 : 0) +
                 unit.computeScaledDamage(target, 1f) * 100 + target.damage;

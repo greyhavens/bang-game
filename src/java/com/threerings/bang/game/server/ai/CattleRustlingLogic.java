@@ -327,7 +327,7 @@ public class CattleRustlingLogic extends AILogic
      * and the amount of damage the target has already taken. */
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
-        public int getWeight (Unit unit, Piece target) {
+        public int getWeight (Unit unit, Piece target, int dist) {
             UnitConfig.Rank rank = (target instanceof Unit ? 
                     ((Unit)target).getConfig().rank : null);
             return (rank == UnitConfig.Rank.BIGSHOT ? 1000 : 0) +
