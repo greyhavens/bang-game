@@ -97,7 +97,8 @@ public class TotemBuilding extends Scenario
 
         // start with totem pieces at every totem spot
         for (int ii = 0; ii < _totems.size(); ii++) {
-            dropBonus(bangobj, TotemEffect.TOTEM_MIDDLE_BONUS,
+            dropBonus(bangobj, TotemEffect.TOTEM_PIECES[
+                    RandomUtil.getInt(TotemEffect.TOTEM_PIECES.length)],
                     _totems.getX(ii), _totems.getY(ii));
         }
     }
@@ -133,7 +134,8 @@ public class TotemBuilding extends Scenario
         // game, try to spawn another one
         int numPlayers = bangobj.getActivePlayerCount();
         if (totems < numPlayers * 2) {
-            String type = TotemEffect.TOTEM_MIDDLE_BONUS;
+            String type = TotemEffect.TOTEM_PIECES[RandomUtil.getInt(
+                    TotemEffect.TOTEM_PIECES.length)];
             float progress = (float)bangobj.tick / bangobj.duration;
             // if we're far enough along in the round and there isn't a
             // crown for each base, maybe spawn one
@@ -262,11 +264,11 @@ public class TotemBuilding extends Scenario
 
             for (int ii = 0; ii < piecePerTotem.length; ii++) {
                 TotemBase base = _bases.get(ii);
-                totemHeight[ii] = base.getTotemHeight();
-                for (int jj = 0; jj < totemHeight[ii]; jj++) {
+                for (int jj = 0, nn = base.numPieces(); jj < nn; jj++) {
                     int owner = base.getOwner(jj);
                     piecePerTotem[ii][owner]++;
                     numPieces[owner]++;
+                    totemHeight[ii] = base.getType(jj).height();
                 }
                 for (int pieces : piecePerTotem[ii]) {
                     maxPiece[ii] = Math.max(maxPiece[ii], pieces);
@@ -315,7 +317,7 @@ public class TotemBuilding extends Scenario
 
         /** Point bonuses. */
         protected static final int MAX_PIECE_BONUS = 50;
-        protected static final int HEIGHT_BONUS = 5;
+        protected static final int HEIGHT_BONUS = 3;
     }
     
     /** Used to track the locations of all the totem generating spots. */

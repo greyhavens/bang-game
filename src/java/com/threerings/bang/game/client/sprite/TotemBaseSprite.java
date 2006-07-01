@@ -78,7 +78,7 @@ public class TotemBaseSprite extends PropSprite
         
         TotemBase base = (TotemBase)piece;
         final int size = _totemPieces.size();
-        int baseHeight = base.getTotemHeight();
+        int baseHeight = base.numPieces();
 
         // This assumes updated is called after any piece has been added
         // or removed from the TotemBase

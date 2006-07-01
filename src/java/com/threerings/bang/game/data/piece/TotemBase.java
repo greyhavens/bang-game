@@ -61,14 +61,20 @@ public class TotemBase extends Prop
     }
 
     /**
+     * Returns the number of pieces on the totem.
+     */
+    public int numPieces ()
+    {
+        return _pieces.size();
+    }
+
+    /**
      * Returns the type of piece on the top.
      */
     public String getTopPiece ()
     {
-        if (_pieces.isEmpty()) {
-            return null;
-        }
-        return _pieces.get(_pieces.size() - 1).type;
+        TotemEffect.Type type = getType(_pieces.size() - 1);
+        return (type == null) ? null : type.bonus();
     }
 
     /**
@@ -86,6 +92,15 @@ public class TotemBase extends Prop
     {
         return (idx < 0 || idx >= _pieces.size()) ? 
             -1 : _pieces.get(idx).owner;
+    }
+
+    /**
+     * Returns the type of the piece at index idx.
+     */
+    public TotemEffect.Type getType (int idx)
+    {
+        return (idx < 0 || idx >= _pieces.size()) ?
+            null : _pieces.get(idx).type;
     }
 
     @Override // documentation inherited
@@ -125,7 +140,7 @@ public class TotemBase extends Prop
     protected class PieceData extends SimpleStreamableObject
     {
         public int owner;
-        public String type;
+        public TotemEffect.Type type;
         public int damage;
 
         public PieceData ()
@@ -134,7 +149,7 @@ public class TotemBase extends Prop
 
         public PieceData (String type, int owner)
         {
-            this.type = type;
+            this.type = TotemEffect.TOTEM_LOOKUP.get(type);
             this.owner = owner;
         }
     }

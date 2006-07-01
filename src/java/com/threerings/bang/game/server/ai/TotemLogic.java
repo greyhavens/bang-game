@@ -56,7 +56,7 @@ public class TotemLogic extends AILogic
                     (obase == null ||
                      unit.getDistance(base) < unit.getDistance(obase))) {
                     obase = base;
-                } else if (base.getTotemHeight() > 0 && (cbase == null ||
+                } else if (base.numPieces() > 0 && (cbase == null ||
                     unit.getDistance(base) < unit.getDistance(cbase))) {
                     lbase = cbase;
                     cbase = base;
@@ -86,7 +86,7 @@ public class TotemLogic extends AILogic
         }
         // if we have a totem or our base is in danger, haul ass back home
         if ((TotemBonus.isHolding(unit) || 
-             (breached && obase.getTotemHeight() > 0 &&
+             (breached && obase.numPieces() > 0 &&
               unit.getDistance(obase) > DEFENSIVE_PERIMETER)) &&
             moveUnit(pieces, unit, moves, obase)) {
             return;
