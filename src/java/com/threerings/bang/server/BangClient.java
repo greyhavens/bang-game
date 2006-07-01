@@ -89,7 +89,7 @@ public class BangClient extends CrowdClient
         }
 
         // configure the player in the town for this server
-        user.townId = ServerConfig.getTownId();
+        user.townId = ServerConfig.townId;
 
         // make a note of their current avatar poses for later comparison and
         // potential updating

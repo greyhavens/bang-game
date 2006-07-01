@@ -93,8 +93,7 @@ public class StoreManager extends PlaceManager
                               new StoreDispatcher(this), false));
 
         // populate the store object with our salable goods
-        _stobj.setGoods(
-            new DSet<Good>(_goods.getGoods(ServerConfig.getTownId())));
+        _stobj.setGoods(new DSet<Good>(_goods.getGoods(ServerConfig.townId)));
     }
 
     protected StoreObject _stobj;

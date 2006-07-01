@@ -11,6 +11,7 @@ DESC="Bang game server"
 BANG_HOME=`dirname $0 | sed s:/bin$::`
 BANG_USER=www-data
 TOOLS_HOME=/export/tools
+HOSTNAME=`hostname`
 
 LOGFILE=$BANG_HOME/log/stdout.log
 LOG_EMAIL=nightly-logs@threerings.net
@@ -36,6 +37,7 @@ CLASS=com.threerings.bang.server.BangServer
 JAVA_ARGS="-server -mx$SERVER_MEMORY \
     -Dbang.home=$BANG_HOME \
     -Dresource_dir=$BANG_HOME/rsrc \
+    -Dhostname=$HOSTNAME \
     -Drsrc_cache_dir=/tmp -Dlog_level=$LOGLEVEL"
 
 #    -XX:+UseParNewGC -XX:+UseAdaptiveSizePolicy -XX:MaxNewSize=64m \
@@ -94,7 +96,6 @@ $JAVA_VM $JAVA_ARGS $CLASS >>$LOGFILE 2>&1
 EXIT_CODE=$?
 
 # Mail out some reports
-HOSTNAME=`hostname`
 # cat $LOGFILE | /export/tools/bin/sum_invokers | \
 #     $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
 # cat $LOGFILE | /export/tools/bin/lfilter | \

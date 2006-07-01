@@ -9,9 +9,35 @@
 server_name = bang
 
 #
+# Indicates which town is handled by this server. Valid values:
+# frontier_town, indian_post, boom_town, ghost_town, and city_of_gold.
+
+town_id = frontier_town
+
+#
 # The port on which the server listens for client connections.
 
 # server_ports = 47624, 443
+
+#
+# These can be used to override server_name, town_id and server_ports for
+# specific nodes. This is used in a clustered deployment where multiple nodes
+# will run from the same deployment directory and need to identify themselves
+# accordingly.
+
+# NODENAME1.server_name = bang
+# NODENAME1.town_id = frontier_town
+# NODENAME1.server_ports = 4007
+# NODENAME2.server_name = bang
+# NODENAME2.town_id = indian_post
+# NODENAME2.server_ports = 4008
+
+#
+# If this server is running as a part of a cluster, this value should be set to
+# a shared secret that will be used to authenticate with other servers in the
+# cluster. If it is left commented out, the server will run standalone.
+
+# server_secret = Is it secret? Is it safe?
 
 #
 # The directory from which the server is run. Used to put log files in the
@@ -29,12 +55,6 @@ webapp_dir = /export/threerings/webapps
 # Defines the client authenticator used by the server.
 
 server_auth = com.threerings.bang.server.ooo.OOOAuthenticator
-
-#
-# Indicates which town is handled by this server. Valid values:
-# frontier_town, indian_post, boom_town, ghost_town, city_of_gold.
-
-town_id = frontier_town
 
 #
 # The default database mapping; all other definitions will inherit from

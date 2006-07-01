@@ -97,13 +97,13 @@ public class GoodsCatalog
 
         // register our unit passes
         pf = new UnitPassProviderFactory();
-        UnitConfig[] units = UnitConfig.getTownUnits(ServerConfig.getTownId());
+        UnitConfig[] units = UnitConfig.getTownUnits(ServerConfig.townId);
         for (int ii = 0; ii < units.length; ii++) {
             UnitConfig uc = units[ii];
             if (uc.badgeCode != 0 && uc.scripCost > 0) {
                 UnitPassGood good =
                     new UnitPassGood(uc.type, uc.scripCost, uc.coinCost);
-                registerGood(ServerConfig.getTownId(), good, pf);
+                registerGood(ServerConfig.townId, good, pf);
             }
         }
     }

@@ -34,11 +34,10 @@ public class LobbyManager extends PlaceManager
     {
         super.didStartup();
 
-        String townId = ServerConfig.getTownId();
         _lobobj = (LobbyObject)_plobj;
         _lobobj.addListener(_emptyListener);
-        _lobobj.setTownId(townId);
-        _lobobj.setScenarios(ScenarioFactory.getScenarios(townId));
+        _lobobj.setTownId(ServerConfig.townId);
+        _lobobj.setScenarios(ScenarioFactory.getScenarios(ServerConfig.townId));
         _tablemgr = new TableManager(this);
     }
 

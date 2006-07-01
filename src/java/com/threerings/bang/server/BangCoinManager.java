@@ -23,7 +23,7 @@ import static com.threerings.bang.Log.log;
 public class BangCoinManager extends CoinManager
 {
     /** An audit log for coin related information. */
-    public static AuditLogger coinlog = BangServer.createAuditLog("coin.log");
+    public static AuditLogger coinlog = BangServer.createAuditLog("coin");
 
     /**
      * Creates the coin manager and its associated repository.

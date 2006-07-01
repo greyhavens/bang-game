@@ -26,7 +26,14 @@ import com.threerings.util.Name;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
+import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.server.Authenticator;
+import com.threerings.presents.server.ClientFactory;
+import com.threerings.presents.server.ClientResolver;
+import com.threerings.presents.server.PresentsClient;
+import com.threerings.presents.server.peer.PeerManager;
+import com.threerings.presents.server.peer.PeerAuthenticator;
+import com.threerings.presents.server.peer.PeerClientFactory;
 
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceObject;
@@ -88,6 +95,9 @@ public class BangServer extends CrowdServer
 
     /** Handles the heavy lifting relating to avatar looks and articles. */
     public static AvatarLogic alogic;
+
+    /** Communicates with the other servers in our cluster. */
+    public static PeerManager peermgr;
 
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
@@ -156,10 +166,14 @@ public class BangServer extends CrowdServer
         super.init();
 
         // configure the client manager to use the appropriate client class
-        clmgr.setClientClass(BangClient.class);
-
-        // configure the client manager to use our resolver
-        clmgr.setClientResolverClass(BangClientResolver.class);
+        clmgr.setClientFactory(new ClientFactory() {
+            public PresentsClient createClient (AuthRequest areq) {
+                return new BangClient();
+            }
+            public ClientResolver createClientResolver (Name username) {
+                return new BangClientResolver();
+            }
+        });
 
         // create our resource manager and other resource bits
         rsrcmgr = new ResourceManager("rsrc");
@@ -185,6 +199,27 @@ public class BangServer extends CrowdServer
         coinexmgr = new BangCoinExchangeManager(conprov);
         actionmgr = new AccountActionManager(omgr, actionrepo);
 
+        // if we have a shared secret, assume we're running in a cluster
+        String hostname = System.getProperty("hostname");
+        if (hostname == null) {
+            log.warning("Missing 'hostname' system property?");
+            hostname = "unknown";
+        }
+        String node = System.getProperty("node");
+        if (node != null && ServerConfig.sharedSecret != null) {
+            log.info("Running in cluster mode as node '" +
+                     ServerConfig.serverName + "'.");
+            peermgr = new PeerManager(
+                ServerConfig.serverName, ServerConfig.sharedSecret,
+                hostname, getListenPorts()[0], conprov, invoker);
+            // chain our authenticator with one that supports peers
+            conmgr.setAuthenticator(
+                new PeerAuthenticator(peermgr, conmgr.getAuthenticator()));
+            // chain our client factory as well
+            clmgr.setClientFactory(
+                new PeerClientFactory(clmgr.getClientFactory()));
+        }
+
         // create and set up our configuration registry and admin service
         confreg = new DatabaseConfigRegistry(conprov, invoker);
         AdminProvider.init(invmgr, confreg);
@@ -208,6 +243,11 @@ public class BangServer extends CrowdServer
     public void shutdown ()
     {
         super.shutdown();
+
+        // logoff of our peer nodes
+        if (peermgr != null) {
+            peermgr.shutdown();
+        }
 
         // close our audit logs
         _glog.close();
@@ -238,6 +278,9 @@ public class BangServer extends CrowdServer
         boardmgr.init(conprov);
         playmgr.init(conprov);
         coinexmgr.init();
+        if (peermgr != null) {
+            peermgr.init();
+        }
 
         // create our managers
         PlaceRegistry.CreationObserver crobs =
@@ -393,7 +436,12 @@ public class BangServer extends CrowdServer
      */
     public static AuditLogger createAuditLog (String logname)
     {
-        return new AuditLogger(_logdir, logname);
+        // qualify our log file if we're running as a cluster node
+        String hostname = System.getProperty("hostname");
+        if (hostname != null) {
+            logname = logname + "_" + hostname;
+        }
+        return new AuditLogger(_logdir, logname + ".log");
     }
 
     @Override // documentation inherited
@@ -451,8 +499,8 @@ public class BangServer extends CrowdServer
         new HashIntMap<PlayerObject>();
 
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
-    protected static AuditLogger _glog = createAuditLog("server.log");
-    protected static AuditLogger _ilog = createAuditLog("item.log");
-    protected static AuditLogger _stlog = createAuditLog("state.log");
-    protected static AuditLogger _plog = createAuditLog("perf.log");
+    protected static AuditLogger _glog = createAuditLog("server");
+    protected static AuditLogger _ilog = createAuditLog("item");
+    protected static AuditLogger _stlog = createAuditLog("state");
+    protected static AuditLogger _plog = createAuditLog("perf");
 }

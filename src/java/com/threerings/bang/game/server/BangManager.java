@@ -575,7 +575,7 @@ public class BangManager extends GameManager
         }
 
         // configure the town associated with this server
-        _bangobj.setTownId(ServerConfig.getTownId());
+        _bangobj.setTownId(ServerConfig.townId);
 
         // create our per-player arrays
         int slots = getPlayerSlots();

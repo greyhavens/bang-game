@@ -163,8 +163,7 @@ public class ParlorManager extends PlaceManager
             game.tinCans = MathUtil.bound(
                 0, game.tinCans, GameCodes.MAX_PLAYERS - game.players);
             if (game.scenarios == null || game.scenarios.length == 0) {
-                game.scenarios = ScenarioUtil.getScenarios(
-                    ServerConfig.getTownId());
+                game.scenarios = ScenarioUtil.getScenarios(ServerConfig.townId);
             }
 
             // update the game config with the desired config

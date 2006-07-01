@@ -28,6 +28,12 @@ public class ServerConfig
     /** The name assigned to this server installation. */
     public static String serverName;
 
+    /** The id of the town this server is handling. */
+    public static String townId;
+
+    /** The secret used to authenticate other servers in our cluster. */
+    public static String sharedSecret;
+
     /** The root directory of the server installation. */
     public static File serverRoot;
 
@@ -65,14 +71,6 @@ public class ServerConfig
     }
 
     /**
-     * Returns the town that is handled by this server instance.
-     */
-    public static String getTownId ()
-    {
-        return config.getValue("town_id", BangCodes.FRONTIER_TOWN);
-    }
-
-    /**
      * Configures the install config with the path to our installation
      * properties file. This method is called automatically.
      */
@@ -96,9 +94,19 @@ public class ServerConfig
 
         // fill in our standard properties
         serverName = config.getValue("server_name", "bang");
+        townId = config.getValue("town_id", BangCodes.FRONTIER_TOWN);
         serverRoot = new File(config.getValue("server_root", "/tmp"));
         serverPorts = config.getValue(
             "server_ports", Client.DEFAULT_SERVER_PORTS);
+        sharedSecret = config.getValue("server_secret", (String)null);
+
+        // if we're configured as a particular node, override some things
+        String node = System.getProperty("node");
+        if (node != null) {
+            serverName = config.getValue(node + ".server_name", serverName);
+            townId = config.getValue(node + ".town_id", townId);
+            serverPorts = config.getValue(node + ".server_ports", serverPorts);
+        }
     }
 
     static {

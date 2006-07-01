@@ -6,7 +6,8 @@
 
 ROOT=`dirname $0`/..
 CLASS=com.threerings.bang.server.BangServer
+HOSTNAME=`hostname`
 SARGS="-server -Djava.awt.headless=true"
-SARGS="$SARGS -Dbang.home=$ROOT"
+SARGS="$SARGS -Dbang.home=$ROOT -Dhostname=$HOSTNAME"
 SARGS="$SARGS -Dresource_dir=$ROOT/rsrc -Dno_unpack_resources=true"
-$ROOT/bin/runjava -- $SARGS $CLASS
+$ROOT/bin/runjava -- $SARGS "$@" $CLASS
