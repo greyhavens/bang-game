@@ -34,6 +34,9 @@ public class ServerConfig
     /** The secret used to authenticate other servers in our cluster. */
     public static String sharedSecret;
 
+    /** The host on which this server is running. */
+    public static String hostname;
+
     /** The root directory of the server installation. */
     public static File serverRoot;
 
@@ -91,6 +94,13 @@ public class ServerConfig
                     "[path=" + propPath + "].", e);
         }
         config = new Config("server", props);
+
+        // figure out our hostname
+        hostname = System.getProperty("hostname");
+        if (hostname == null) {
+            log.warning("Missing 'hostname' system property?");
+            hostname = "unknown";
+        }
 
         // fill in our standard properties
         serverName = config.getValue("server_name", "bang");

@@ -31,9 +31,8 @@ import com.threerings.presents.server.Authenticator;
 import com.threerings.presents.server.ClientFactory;
 import com.threerings.presents.server.ClientResolver;
 import com.threerings.presents.server.PresentsClient;
-import com.threerings.presents.server.peer.PeerManager;
-import com.threerings.presents.server.peer.PeerAuthenticator;
-import com.threerings.presents.server.peer.PeerClientFactory;
+
+import com.threerings.presents.peer.server.PeerManager;
 
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceObject;
@@ -200,24 +199,11 @@ public class BangServer extends CrowdServer
         actionmgr = new AccountActionManager(omgr, actionrepo);
 
         // if we have a shared secret, assume we're running in a cluster
-        String hostname = System.getProperty("hostname");
-        if (hostname == null) {
-            log.warning("Missing 'hostname' system property?");
-            hostname = "unknown";
-        }
         String node = System.getProperty("node");
         if (node != null && ServerConfig.sharedSecret != null) {
             log.info("Running in cluster mode as node '" +
                      ServerConfig.serverName + "'.");
-            peermgr = new PeerManager(
-                ServerConfig.serverName, ServerConfig.sharedSecret,
-                hostname, getListenPorts()[0], conprov, invoker);
-            // chain our authenticator with one that supports peers
-            conmgr.setAuthenticator(
-                new PeerAuthenticator(peermgr, conmgr.getAuthenticator()));
-            // chain our client factory as well
-            clmgr.setClientFactory(
-                new PeerClientFactory(clmgr.getClientFactory()));
+            peermgr = new PeerManager(conprov, invoker);
         }
 
         // create and set up our configuration registry and admin service
@@ -279,7 +265,8 @@ public class BangServer extends CrowdServer
         playmgr.init(conprov);
         coinexmgr.init();
         if (peermgr != null) {
-            peermgr.init();
+            peermgr.init(ServerConfig.serverName, ServerConfig.sharedSecret,
+                         ServerConfig.hostname, getListenPorts()[0]);
         }
 
         // create our managers
@@ -436,11 +423,8 @@ public class BangServer extends CrowdServer
      */
     public static AuditLogger createAuditLog (String logname)
     {
-        // qualify our log file if we're running as a cluster node
-        String hostname = System.getProperty("hostname");
-        if (hostname != null) {
-            logname = logname + "_" + hostname;
-        }
+        // qualify our log file with the hostname to avoid collisions
+        logname = logname + "_" + ServerConfig.hostname;
         return new AuditLogger(_logdir, logname + ".log");
     }
 
