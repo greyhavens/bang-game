@@ -1,0 +1,320 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="-0.210384, 0.133124, -152.16" rotation="0.0, 0.0, 0.0, 1.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="0.0435457, 0.133124, -151.034" rotation="0.0, 0.0, 1.0, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944861, 0.0" rotation="0.0, -0.382683, 0.0, 0.92388" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="-0.210384, 0.133116, 29.1128" rotation="0.0, 0.0, 0.0, 1.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="0.0435457, 0.133116, 30.2386" rotation="0.0, 0.0, 1.0, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944858, -87.3479" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="2.94554, 0.133113, 116.325" rotation="0.0, -0.0417123, 0.0, 0.99913" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="-7.36757, 0.133113, 117.144" rotation="-0.134581, 0.0, 0.990903, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="8.80655, 0.133112, 118.191" rotation="0.0, 0.156434, 0.0, 0.987688" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="-20.6568, 0.133112, 118.498" rotation="-0.309017, 0.0, 0.951057, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="14.6676, 0.133114, 86.9995" rotation="0.0, 0.366755, 0.0, 0.930318" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="-30.6264, 0.133114, 87.204" rotation="-0.420887, 0.0, 0.907113, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133114, 75.0374" rotation="0.0, 0.382683, 0.0, 0.92388" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="-28.0786, 0.133114, 76.1632" rotation="-0.382683, 0.0, 0.92388, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133114, 91.0197" rotation="0.0, -0.707107, 0.0, 0.707107" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="-11.4804, 0.133114, 94.1927" rotation="0.707107, 0.0, 0.707107, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133113, 104.117" rotation="0.0, -0.713179, -0.00190748, 0.700979" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="0.501931, 0.133113, 108.768" rotation="0.701195, -0.00190591, 0.712967, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133113, 114.328" rotation="0.0, -0.727593, -0.00653888, 0.685978" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="7.86838, 0.133112, 119.888" rotation="0.686448, -0.00653361, 0.727149, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133112, 119.458" rotation="0.0, -0.744925, -0.0122557, 0.667035" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="11.3777, 0.133112, 125.45" rotation="0.667786, -0.012246, 0.744253, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133113, 117.308" rotation="0.0, -0.760169, -0.0174207, 0.649491" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="11.7887, 0.133112, 123.351" rotation="0.650525, -0.0174075, 0.759285, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133113, 105.681" rotation="0.0, -0.768826, -0.0204065, 0.639132" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="9.86017, 0.133113, 111.486" rotation="0.640423, -0.0203918, 0.767751, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133114, 84.578" rotation="0.0, -0.766563, -0.0195922, 0.64187" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="1.74552, 0.133114, 81.7152" rotation="0.643356, -0.0195789, 0.765317, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133115, 55.463" rotation="0.0, -0.748427, -0.013343, 0.663083" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="-9.21453, 0.133116, 43.5811" rotation="0.664665, -0.0133345, 0.747022, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133117, 18.3362" rotation="0.0, -0.707685, 0.0, 0.706528" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="-11.4804, 0.133117, 21.5093" rotation="0.70807, 0.0, 0.706142, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133117, 18.3362" rotation="0.00200857, -0.401976, 0.0789225, 0.91224" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="-1.20559, 0.133117, 23.6413" rotation="0.912739, 0.0788812, 0.40085, -0.0020056" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133117, 18.3362" rotation="0.0, -1.32269e-007, 0.156434, 0.987688" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="17.7634, 0.133116, 41.8354" rotation="0.987688, 0.156435, 0.0, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133117, 18.3362" rotation="-0.0143634, -0.0403742, 0.164047, 0.985521" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="17.7634, 0.133116, 41.8354" rotation="0.985514, 0.164058, 0.0405106, 0.0143627" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133117, 18.3362" rotation="-0.0251457, -0.158764, 0.1544, 0.974845" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="17.7634, 0.133116, 41.8354" rotation="0.974845, 0.1544, 0.158764, 0.0251457" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133117, 18.3362" rotation="-0.0157578, -0.0994907, 0.155639, 0.982665" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="17.7634, 0.133116, 41.8354" rotation="0.982665, 0.155639, 0.0994906, 0.0157578" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+  <frame>
+    <transform name="Spot01.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03.Target" translation="-0.195511, -2.75257e-006, 62.9716" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Illustrate! Art Materials" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01" translation="378.579, -44.9136, 206.975" rotation="0.415012, 0.429757, 0.576852, 0.55706" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot01" translation="340.527, 138.913, 1386.32" rotation="-0.0444834, 0.0792251, 0.0275675, 0.995482" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
+    <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="trap 01" translation="17.8235, 0.133117, 18.3362" rotation="0.0, -1.23038e-007, 0.156434, 0.987688" scale="1.25, 1.0, 1.0"/>
+    <transform name="trap 02" translation="17.7634, 0.133116, 41.8354" rotation="0.987688, 0.156435, 0.0, 0.0" scale="1.25, 1.0, 1.0"/>
+    <transform name="trigger" translation="-20.1, -0.944854, -174.696" rotation="0.0, 0.0, 0.0, 1.0" scale="1.7, 1.7, 1.7"/>
+  </frame>
+
+</animation>
