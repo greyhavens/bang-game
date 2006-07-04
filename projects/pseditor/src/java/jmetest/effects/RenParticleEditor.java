@@ -169,6 +169,7 @@ public class RenParticleEditor extends JFrame {
     // appearance panel components
     JLabel countLabel;
     JComboBox geomTypeBox;
+    JCheckBox velocityAlignedBox;
     JPanel startColorPanel = new JPanel();
     JPanel endColorPanel = new JPanel();
     JLabel startColorHex = new JLabel();
@@ -231,6 +232,8 @@ public class RenParticleEditor extends JFrame {
     // world panel components
     ValuePanel speedPanel =
         new ValuePanel("Speed Mod: ", "x", 0f, Float.MAX_VALUE, 0.01f);
+    ValuePanel precisionPanel =
+        new ValuePanel("Precision: ", "s", 0f, Float.MAX_VALUE, 0.001f);
     ValuePanel massPanel =
         new ValuePanel("Particle Mass: ", "", 0f, Float.MAX_VALUE, 0.1f);
     ValuePanel minAgePanel =
@@ -571,6 +574,14 @@ public class RenParticleEditor extends JFrame {
             }
         });
         
+        velocityAlignedBox = new JCheckBox(
+            new AbstractAction("Align with Velocity") {
+            public void actionPerformed(ActionEvent e) {
+                particleGeom.setVelocityAligned(velocityAlignedBox.isSelected());
+            }
+        });
+        velocityAlignedBox.setFont(new Font("Arial", Font.BOLD, 13));
+        
         JPanel geomPanel = new JPanel(new GridBagLayout());
         geomPanel.setBorder(createTitledBorder("PARTICLE GEOMETRY"));
         geomPanel.add(createBoldLabel("Type:"), new GridBagConstraints(0, 0,
@@ -579,7 +590,10 @@ public class RenParticleEditor extends JFrame {
         geomPanel.add(geomTypeBox, new GridBagConstraints(1, 0, 1, 1, 1.0, 0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets(5, 5, 5, 5), 0, 0));
-        
+        geomPanel.add(velocityAlignedBox, new GridBagConstraints(0, 1, 2, 1,
+            1.0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets(5, 5, 5, 5), 0, 0));
+            
         JLabel startColorLabel = createBoldLabel("Starting Color:"),
             colorLabel = createBoldLabel(">>"),
             endColorLabel = createBoldLabel("End Color:"),
@@ -1039,6 +1053,14 @@ public class RenParticleEditor extends JFrame {
             }
         });
         
+        precisionPanel.setBorder(createTitledBorder("UPDATE PRECISION"));
+        precisionPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                particleGeom.getParticleController().setPrecision(
+                    precisionPanel.getFloatValue());
+            }
+        });
+        
         massPanel.setBorder(createTitledBorder("PHYSICAL PROPERTIES"));
         massPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -1076,13 +1098,16 @@ public class RenParticleEditor extends JFrame {
         worldPanel.add(speedPanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets(10, 10, 5, 5), 0, 0));
-        worldPanel.add(massPanel, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
+        worldPanel.add(precisionPanel, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets(10, 10, 5, 5), 0, 0));
-        worldPanel.add(agePanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0,
+        worldPanel.add(massPanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0,
+            GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(10, 10, 5, 5), 0, 0));
+        worldPanel.add(agePanel, new GridBagConstraints(0, 3, 1, 1, 1.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets(5, 10, 5, 5), 0, 0));
-        worldPanel.add(randomPanel, new GridBagConstraints(0, 3, 1, 1, 1.0,
+        worldPanel.add(randomPanel, new GridBagConstraints(0, 4, 1, 1, 1.0,
             1.0, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
             new Insets(5, 10, 10, 5), 0, 0));
         return worldPanel;
@@ -1806,6 +1831,7 @@ public class RenParticleEditor extends JFrame {
         // update appearance controls
         updateCountLabels();
         geomTypeBox.setSelectedIndex(particleGeom.getParticleType());
+        velocityAlignedBox.setSelected(particleGeom.isVelocityAligned());
         startColorPanel.setBackground(makeColor(particleGeom
                 .getStartColor(), false));
         endColorPanel.setBackground(makeColor(particleGeom
@@ -1880,6 +1906,7 @@ public class RenParticleEditor extends JFrame {
         
         // update world controls
         speedPanel.setValue(particleGeom.getParticleController().getSpeed());
+        precisionPanel.setValue(particleGeom.getParticleController().getPrecision());
         massPanel.setValue(particleGeom.getParticle(0).getMass());
         minAgePanel.setValue(particleGeom.getMinimumLifeTime());
         maxAgePanel.setValue(particleGeom.getMaximumLifeTime());
@@ -1911,6 +1938,7 @@ public class RenParticleEditor extends JFrame {
                 oldGeom.getNumParticles(), newType);
         }
         // copy appearance parameters
+        newGeom.setVelocityAligned(oldGeom.isVelocityAligned());
         newGeom.setStartColor(oldGeom.getStartColor());
         newGeom.setEndColor(oldGeom.getEndColor());
         newGeom.setStartSize(oldGeom.getStartSize());
@@ -1942,6 +1970,8 @@ public class RenParticleEditor extends JFrame {
         
         // copy world parameters
         newGeom.setSpeed(oldGeom.getParticleController().getSpeed());
+        newGeom.getParticleController().setPrecision(
+            oldGeom.getParticleController().getPrecision());
         newGeom.setParticleMass(oldGeom.getParticle(0).getMass());
         newGeom.setMinimumLifeTime(oldGeom.getMinimumLifeTime());
         newGeom.setMaximumLifeTime(oldGeom.getMaximumLifeTime());
