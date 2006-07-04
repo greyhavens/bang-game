@@ -12,6 +12,8 @@ import com.threerings.bang.game.client.sprite.TotemBaseSprite;
 
 import com.threerings.bang.game.data.effect.TotemEffect;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * A totem base can have totem pieces added to it and toped off by a 
  * totem crown.
@@ -99,8 +101,14 @@ public class TotemBase extends Prop
      */
     public TotemEffect.Type getType (int idx)
     {
-        return (idx < 0 || idx >= _pieces.size()) ?
-            null : _pieces.get(idx).type;
+        if (idx < 0 || idx >= _pieces.size()) {
+            log.warning("Requested type of OOB totem " +
+                        "[idx=" + idx + ", have=" + _pieces.size() + "].");
+            Thread.dumpStack();
+            return TotemEffect.Type.TOTEM_SMALL;
+        } else {
+            return _pieces.get(idx).type;
+        }
     }
 
     @Override // documentation inherited
