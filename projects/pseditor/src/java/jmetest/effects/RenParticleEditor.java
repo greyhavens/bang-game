@@ -257,6 +257,11 @@ public class RenParticleEditor extends JFrame {
     ValuePanel dragCoefficientPanel =
         new ValuePanel("Drag Coefficient: ", "", 0f, Float.MAX_VALUE, 0.1f);
     JPanel vortexParamsPanel;
+    JComboBox vortexTypeBox;
+    ValuePanel vortexRadiusPanel =
+        new ValuePanel("Radius: ", "", 0f, Float.MAX_VALUE, 1f);
+    ValuePanel vortexHeightPanel =
+        new ValuePanel("Height: ", "", -Float.MAX_VALUE, Float.MAX_VALUE, 1f);
     ValuePanel vortexStrengthPanel =
         new ValuePanel("Strength: ", "", 0f, Float.MAX_VALUE, 0.1f);
     ValuePanel vortexDivergencePanel =
@@ -571,7 +576,7 @@ public class RenParticleEditor extends JFrame {
         geomPanel.add(createBoldLabel("Type:"), new GridBagConstraints(0, 0,
             1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets(5, 5, 5, 5), 0, 0));
-        geomPanel.add(geomTypeBox, new GridBagConstraints(1, 0, 1, 1, 0, 0,
+        geomPanel.add(geomTypeBox, new GridBagConstraints(1, 0, 1, 1, 1.0, 0,
             GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             new Insets(5, 5, 5, 5), 0, 0));
         
@@ -1265,6 +1270,39 @@ public class RenParticleEditor extends JFrame {
     }
     
     private JPanel createVortexParamsPanel() {
+        vortexTypeBox = new JComboBox(new String[] { "Cylinder", "Torus" });
+        vortexTypeBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ParticleInfluence influence = particleGeom.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                int type = vortexTypeBox.getSelectedIndex();
+                ((SimpleParticleInfluenceFactory.BasicVortex)influence).setType(
+                    type);
+                vortexRadiusPanel.setEnabled(type ==
+                    SimpleParticleInfluenceFactory.BasicVortex.VT_TORUS);
+                vortexHeightPanel.setEnabled(type ==
+                    SimpleParticleInfluenceFactory.BasicVortex.VT_TORUS);
+            }
+        });
+        
+        vortexRadiusPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                ParticleInfluence influence = particleGeom.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicVortex)influence).setRadius(
+                    vortexRadiusPanel.getFloatValue());
+            }
+        });
+        
+        vortexHeightPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                ParticleInfluence influence = particleGeom.getInfluences().get(
+                    influenceList.getSelectedIndex());
+                ((SimpleParticleInfluenceFactory.BasicVortex)influence).setHeight(
+                    vortexHeightPanel.getFloatValue());
+            }
+        });
+        
         vortexDirectionPanel.setBorder(createTitledBorder(" DIRECTION "));
         vortexDirectionPanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -1303,16 +1341,28 @@ public class RenParticleEditor extends JFrame {
         
         JPanel vortexParamsPanel = new JPanel(new GridBagLayout());
         vortexParamsPanel.setBorder(createTitledBorder(" VORTEX PARAMETERS "));
+        vortexParamsPanel.add(createBoldLabel("Type:"), new GridBagConstraints(
+            0, 0, 1, 1, 0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE,
+            new Insets(5, 5, 5, 5), 0, 0));
+        vortexParamsPanel.add(vortexTypeBox, new GridBagConstraints(1, 0, 1, 1,
+            1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
+            new Insets(5, 5, 5, 5), 0, 0));
+        vortexParamsPanel.add(vortexRadiusPanel, new GridBagConstraints(0,
+            1, 2, 1, 0.5, 0.0, GridBagConstraints.CENTER,
+            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 10, 5), 0, 0));
+        vortexParamsPanel.add(vortexHeightPanel, new GridBagConstraints(0,
+            2, 2, 1, 0.5, 0.0, GridBagConstraints.CENTER,
+            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 10, 5), 0, 0));
+            vortexParamsPanel.add(vortexStrengthPanel, new GridBagConstraints(0, 3,
+            2, 1, 0.5, 0.0, GridBagConstraints.CENTER,
+            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 10, 5), 0, 0));
+        vortexParamsPanel.add(vortexDivergencePanel, new GridBagConstraints(0, 4,
+            2, 1, 0.5, 0.0, GridBagConstraints.CENTER,
+            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 10, 5), 0, 0));
         vortexParamsPanel.add(vortexDirectionPanel, new GridBagConstraints(0,
-            0, 1, 1, 0.5, 0.0, GridBagConstraints.CENTER,
+            5, 2, 1, 0.5, 0.0, GridBagConstraints.CENTER,
             GridBagConstraints.HORIZONTAL, new Insets(5, 5, 10, 5), 0, 0));
-        vortexParamsPanel.add(vortexStrengthPanel, new GridBagConstraints(0, 1,
-            1, 1, 0.5, 0.0, GridBagConstraints.CENTER,
-            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 10, 5), 0, 0));
-        vortexParamsPanel.add(vortexDivergencePanel, new GridBagConstraints(0, 2,
-            1, 1, 0.5, 0.0, GridBagConstraints.CENTER,
-            GridBagConstraints.HORIZONTAL, new Insets(5, 5, 10, 5), 0, 0));
-        vortexParamsPanel.add(vortexRandomBox, new GridBagConstraints(0, 3, 1,
+        vortexParamsPanel.add(vortexRandomBox, new GridBagConstraints(0, 6, 2,
             1, 0.5, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
             new Insets(5, 5, 10, 5), 0, 0));
         return vortexParamsPanel;
@@ -2006,6 +2056,13 @@ public class RenParticleEditor extends JFrame {
         } else if (influence instanceof SimpleParticleInfluenceFactory.BasicVortex) {
             SimpleParticleInfluenceFactory.BasicVortex vortex =
                 (SimpleParticleInfluenceFactory.BasicVortex)influence;
+            vortexTypeBox.setSelectedIndex(vortex.getType());
+            vortexHeightPanel.setValue(vortex.getHeight());
+            vortexHeightPanel.setEnabled(vortex.getType() ==
+                SimpleParticleInfluenceFactory.BasicVortex.VT_TORUS);
+            vortexRadiusPanel.setValue(vortex.getRadius());
+            vortexRadiusPanel.setEnabled(vortex.getType() ==
+                SimpleParticleInfluenceFactory.BasicVortex.VT_TORUS);
             vortexDirectionPanel.setValue(vortex.getAxis().getDirection());
             vortexStrengthPanel.setValue(vortex.getStrength());
             vortexDivergencePanel.setValue(vortex.getDivergence() * FastMath.RAD_TO_DEG);
@@ -2617,7 +2674,7 @@ public class RenParticleEditor extends JFrame {
             setEditor(new NumberEditor(this) {
                 public Dimension preferredLayoutSize(Container parent) {
                     Dimension d = super.preferredLayoutSize(parent);
-                    d.width = Math.max(Math.min(d.width, 50), 65);
+                    d.width = 50;
                     return d;
                 }
             });
