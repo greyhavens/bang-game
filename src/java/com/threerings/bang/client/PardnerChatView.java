@@ -96,9 +96,7 @@ public class PardnerChatView extends BDecoratedWindow
         if (!_ctx.getBangClient().canDisplayPopup(MainView.Type.CHAT)) {
             return false;
         }
-        if (addPardnerTab(handle) == null) {
-            return false;
-        }
+        addPardnerTab(handle);
         _ctx.getBangClient().displayPopup(this, false);
         pack(-1, -1);
         center();
@@ -137,12 +135,10 @@ public class PardnerChatView extends BDecoratedWindow
             if (tab == null) {
                 tab = addPardnerTab((Handle)umsg.speaker);
             }
-            if (tab != null) {
-                if (tab != _tabs.getSelectedTab()) {
-                    _tabs.getTabButton(tab).setIcon(_alert);
-                }
-                tab.appendReceived(umsg);
+            if (tab != _tabs.getSelectedTab()) {
+                _tabs.getTabButton(tab).setIcon(_alert);
             }
+            tab.appendReceived(umsg);
 
 // TODO: right now this shows up in the main UI which is weird but we need to
 // differentiate between feedback as a result of our tell and general chat
@@ -194,10 +190,8 @@ public class PardnerChatView extends BDecoratedWindow
     protected PardnerTab addPardnerTab (Handle handle)
     {
         PardnerEntry entry = _ctx.getUserObject().pardners.get(handle);
-        if (entry == null) {
-            return null;
-        }
-        PardnerTab tab = new PardnerTab(_ctx, entry);
+        PardnerTab tab = new PardnerTab(
+            _ctx, handle, (entry == null) ? null : entry.avatar);
         _tabs.addTab(handle.toString(), tab);
         _pardners.put(handle, tab);
         return tab;
@@ -208,10 +202,11 @@ public class PardnerChatView extends BDecoratedWindow
      */
     protected class PardnerTab extends ComicChatView
     {
-        public PardnerTab (BangContext ctx, PardnerEntry pardner)
+        public PardnerTab (BangContext ctx, Handle pardner, int[] avatar)
         {
             super(ctx, false);
             _pardner = pardner;
+            _avatar = avatar;
         }
 
         /**
@@ -220,7 +215,7 @@ public class PardnerChatView extends BDecoratedWindow
         public void requestTell (final String msg)
         {
             _ctx.getChatDirector().requestTell(
-                _pardner.handle, msg, new ResultListener<Name>() {
+                _pardner, msg, new ResultListener<Name>() {
                     public void requestCompleted (Name result) {
                         appendSent(msg);
                     }
@@ -236,7 +231,7 @@ public class PardnerChatView extends BDecoratedWindow
         public void mute ()
         {
             close();
-            _ctx.getMuteDirector().setMuted(_pardner.handle, true);
+            _ctx.getMuteDirector().setMuted(_pardner, true);
         }
 
         /**
@@ -245,7 +240,7 @@ public class PardnerChatView extends BDecoratedWindow
         public void close ()
         {
             _tabs.removeTab(this);
-            _pardners.remove(_pardner.handle);
+            _pardners.remove(_pardner);
             if (_tabs.getTabCount() == 0) {
                 _ctx.getBangClient().clearPopup(PardnerChatView.this, false);
             }
@@ -271,18 +266,19 @@ public class PardnerChatView extends BDecoratedWindow
                 Look look = player.getLook(Look.Pose.DEFAULT);
                 return (look == null) ? null : look.getAvatar(player);
 
-            } else if (speaker.equals(_pardner.handle)) {
-                return _pardner.avatar;
+            } else if (speaker.equals(_pardner)) {
+                return _avatar;
 
             } else {
                 // this should never happen
                 log.warning("Unknown speaker [speaker=" + speaker +
-                            ", pardner=" + _pardner.handle + "].");
+                            ", pardner=" + _pardner + "].");
                 return null;
             }
         }
 
-        protected PardnerEntry _pardner;
+        protected Handle _pardner;
+        protected int[] _avatar;
     }
 
     protected BangContext _ctx;
