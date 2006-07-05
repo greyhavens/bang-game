@@ -40,7 +40,7 @@ import static com.threerings.bang.Log.log;
  * Displays the status of the running server.
  */
 public class ServerStatusView extends BDecoratedWindow
-    implements ActionListener, Subscriber, AttributeChangeListener
+    implements ActionListener, Subscriber<StatusObject>, AttributeChangeListener
 {
     public ServerStatusView (BangContext ctx)
     {
@@ -50,7 +50,7 @@ public class ServerStatusView extends BDecoratedWindow
         _msgs = ctx.getMessageManager().getBundle("admin");
         BangBootstrapData bbd = (BangBootstrapData)
             ctx.getClient().getBootstrapData();
-        _safesub = new SafeSubscriber(bbd.statusOid, this);
+        _safesub = new SafeSubscriber<StatusObject>(bbd.statusOid, this);
 
         // create our general stats interface
         add(new BLabel(_msgs.get("m.general_stats"), "medium_title"),
@@ -111,9 +111,9 @@ public class ServerStatusView extends BDecoratedWindow
     }
 
     // documentation inherited from interface Subscriber
-    public void objectAvailable (DObject object)
+    public void objectAvailable (StatusObject object)
     {
-        _statobj = (StatusObject)object;
+        _statobj = object;
         _statobj.addListener(this);
 
         // update the UI
@@ -192,7 +192,7 @@ public class ServerStatusView extends BDecoratedWindow
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
-    protected SafeSubscriber _safesub;
+    protected SafeSubscriber<StatusObject> _safesub;
     protected StatusObject _statobj;
 
     protected BLabel[] _genstats = new BLabel[SERVER_STATS.length];

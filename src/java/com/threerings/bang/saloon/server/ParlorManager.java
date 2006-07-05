@@ -17,6 +17,7 @@ import com.threerings.media.util.MathUtil;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
@@ -249,7 +250,7 @@ public class ParlorManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected Class getPlaceObjectClass ()
+    protected Class<? extends PlaceObject> getPlaceObjectClass ()
     {
         return ParlorObject.class;
     }

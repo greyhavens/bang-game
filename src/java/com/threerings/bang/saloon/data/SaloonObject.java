@@ -54,7 +54,7 @@ public class SaloonObject extends PlaceObject
      * <code>parlors</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToParlors (DSet.Entry elem)
+    public void addToParlors (ParlorInfo elem)
     {
         requestEntryAdd(PARLORS, parlors, elem);
     }
@@ -74,7 +74,7 @@ public class SaloonObject extends PlaceObject
      * <code>parlors</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateParlors (DSet.Entry elem)
+    public void updateParlors (ParlorInfo elem)
     {
         requestEntryUpdate(PARLORS, parlors, elem);
     }
@@ -100,7 +100,7 @@ public class SaloonObject extends PlaceObject
      * <code>topRanked</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToTopRanked (DSet.Entry elem)
+    public void addToTopRanked (TopRankedList elem)
     {
         requestEntryAdd(TOP_RANKED, topRanked, elem);
     }
@@ -120,7 +120,7 @@ public class SaloonObject extends PlaceObject
      * <code>topRanked</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateTopRanked (DSet.Entry elem)
+    public void updateTopRanked (TopRankedList elem)
     {
         requestEntryUpdate(TOP_RANKED, topRanked, elem);
     }

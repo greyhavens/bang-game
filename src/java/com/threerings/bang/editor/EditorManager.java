@@ -3,6 +3,7 @@
 
 package com.threerings.bang.editor;
 
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.game.data.BangObject;
@@ -13,7 +14,7 @@ import com.threerings.bang.game.data.BangObject;
 public class EditorManager extends GameManager
 {
     // documentation inherited
-    protected Class getPlaceObjectClass ()
+    protected Class<? extends PlaceObject> getPlaceObjectClass ()
     {
         return BangObject.class;
     }

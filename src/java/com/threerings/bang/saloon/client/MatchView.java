@@ -39,7 +39,7 @@ import static com.threerings.bang.Log.log;
  * when all is ready to roll.
  */
 public class MatchView extends BContainer
-    implements Subscriber
+    implements Subscriber<MatchObject>
 {
     public MatchView (BangContext ctx, SaloonController ctrl, int matchOid)
     {
@@ -49,7 +49,7 @@ public class MatchView extends BContainer
         _ctx = ctx;
         _ctrl = ctrl;
         _msgs = _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
-        _msub = new SafeSubscriber(matchOid, this);
+        _msub = new SafeSubscriber<MatchObject>(matchOid, this);
         _msub.subscribe(_ctx.getDObjectManager());
 
         // this will contain the players and game info
@@ -98,9 +98,9 @@ public class MatchView extends BContainer
     }
 
     // documentation inherited from interface Subscriber
-    public void objectAvailable (DObject object)
+    public void objectAvailable (MatchObject object)
     {
-        _mobj = (MatchObject)object;
+        _mobj = object;
         _mobj.addListener(_elup);
         _mobj.addListener(_atch);
 
@@ -190,7 +190,7 @@ public class MatchView extends BContainer
     protected BangContext _ctx;
     protected SaloonController _ctrl;
     protected MessageBundle _msgs;
-    protected SafeSubscriber _msub;
+    protected SafeSubscriber<MatchObject> _msub;
     protected MatchObject _mobj;
 
     protected BLabel _players, _rounds, _ranked, _range, _opponents;

@@ -48,7 +48,7 @@ public class StoreObject extends PlaceObject
      * <code>goods</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToGoods (DSet.Entry elem)
+    public void addToGoods (Good elem)
     {
         requestEntryAdd(GOODS, goods, elem);
     }
@@ -68,7 +68,7 @@ public class StoreObject extends PlaceObject
      * <code>goods</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateGoods (DSet.Entry elem)
+    public void updateGoods (Good elem)
     {
         requestEntryUpdate(GOODS, goods, elem);
     }

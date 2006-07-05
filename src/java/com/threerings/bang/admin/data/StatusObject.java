@@ -55,7 +55,7 @@ public class StatusObject extends DObject
     public long serverStartTime;
 
     /** Information on all active games. */
-    public DSet games = new DSet();
+    public DSet<GameInfo> games = new DSet<GameInfo>();
 
     /** The number of matches waiting for players. */
     public int pendingMatches;
@@ -101,7 +101,7 @@ public class StatusObject extends DObject
      * <code>games</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToGames (DSet.Entry elem)
+    public void addToGames (StatusObject.GameInfo elem)
     {
         requestEntryAdd(GAMES, games, elem);
     }
@@ -121,7 +121,7 @@ public class StatusObject extends DObject
      * <code>games</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateGames (DSet.Entry elem)
+    public void updateGames (StatusObject.GameInfo elem)
     {
         requestEntryUpdate(GAMES, games, elem);
     }
@@ -136,7 +136,7 @@ public class StatusObject extends DObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setGames (DSet value)
+    public void setGames (DSet<com.threerings.bang.admin.data.StatusObject.GameInfo> value)
     {
         requestAttributeChange(GAMES, value, this.games);
         this.games = (value == null) ? null : value.typedClone();

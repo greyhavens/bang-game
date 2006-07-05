@@ -16,6 +16,7 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.ResultListener;
+import com.threerings.util.Name;
 
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
@@ -219,8 +220,8 @@ public class PardnerChatView extends BDecoratedWindow
         public void requestTell (final String msg)
         {
             _ctx.getChatDirector().requestTell(
-                _pardner.handle, msg, new ResultListener() {
-                    public void requestCompleted (Object result) {
+                _pardner.handle, msg, new ResultListener<Name>() {
+                    public void requestCompleted (Name result) {
                         appendSent(msg);
                     }
                     public void requestFailed (Exception cause) {

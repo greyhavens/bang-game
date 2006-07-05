@@ -89,17 +89,16 @@ public class RuntimeConfigView extends BDecoratedWindow
     }
 
     protected class ObjectView extends BContainer
-        implements Subscriber
+        implements Subscriber<ConfigObject>
     {
         public ObjectView (String key, int oid) {
             super(new TableLayout(2, 5, 5));
             setStyleClass("config_object_view");
             _key = key;
-            _safesub = new SafeSubscriber(oid, this);
+            _safesub = new SafeSubscriber<ConfigObject>(oid, this);
         }
 
-        public void objectAvailable (DObject object) {
-            ConfigObject confobj = (ConfigObject)object;
+        public void objectAvailable (ConfigObject confobj) {
             Field[] fields = confobj.getClass().getFields();
             for (int ii = 0; ii < fields.length; ii++) {
                 // if the field is anything but a plain old public (non-static)
@@ -128,7 +127,7 @@ public class RuntimeConfigView extends BDecoratedWindow
         }
 
         protected String _key;
-        protected SafeSubscriber _safesub;
+        protected SafeSubscriber<ConfigObject> _safesub;
     }
 
     protected BangContext _ctx;

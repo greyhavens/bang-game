@@ -174,7 +174,7 @@ public class TownView extends BWindow
 
     /** A simple viewer for the town board. */
     protected class TownBoardView extends BoardView
-        implements Subscriber, AttributeChangeListener
+        implements Subscriber<TownObject>, AttributeChangeListener
     {
         public TownBoardView (BangContext ctx)
         {
@@ -200,7 +200,7 @@ public class TownView extends BWindow
             
             BangBootstrapData bbd =
                 (BangBootstrapData)_bctx.getClient().getBootstrapData();
-            _safesub = new SafeSubscriber(bbd.townOid, this);
+            _safesub = new SafeSubscriber<TownObject>(bbd.townOid, this);
         }
 
         /**
@@ -255,9 +255,9 @@ public class TownView extends BWindow
         }
  
         // documentation inherited from interface Subscriber
-        public void objectAvailable (DObject object)
+        public void objectAvailable (TownObject object)
         {
-            _townobj = (TownObject)object;
+            _townobj = object;
             _townobj.addListener(this);
             updatePopulationSign(_townobj.population);
         }
@@ -529,7 +529,7 @@ public class TownView extends BWindow
         protected ViewpointSprite _vpsprite;
         protected Vector3f _pos = new Vector3f();
         
-        protected SafeSubscriber _safesub;
+        protected SafeSubscriber<TownObject> _safesub;
         protected TownObject _townobj;
         protected Texture _poptex;
     }

@@ -29,7 +29,7 @@ public class LobbyObject extends PlaceObject
 
     /** A set containing all of the tables being managed by this lobby.
      * This may be empty if we're not using tables to match-make. */
-    public DSet tableSet = new DSet();
+    public DSet<Table> tableSet = new DSet<Table>();
 
     /** The town in which this lobby resides. */
     public String townId;
@@ -67,7 +67,7 @@ public class LobbyObject extends PlaceObject
      * <code>tableSet</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToTableSet (DSet.Entry elem)
+    public void addToTableSet (Table elem)
     {
         requestEntryAdd(TABLE_SET, tableSet, elem);
     }
@@ -87,7 +87,7 @@ public class LobbyObject extends PlaceObject
      * <code>tableSet</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateTableSet (DSet.Entry elem)
+    public void updateTableSet (Table elem)
     {
         requestEntryUpdate(TABLE_SET, tableSet, elem);
     }
@@ -102,7 +102,7 @@ public class LobbyObject extends PlaceObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setTableSet (DSet value)
+    public void setTableSet (DSet<com.threerings.parlor.data.Table> value)
     {
         requestAttributeChange(TABLE_SET, value, this.tableSet);
         this.tableSet = (value == null) ? null : value.typedClone();
