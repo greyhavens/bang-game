@@ -85,6 +85,7 @@
        <include name="**/*"/>
        <exclude name="units/**"/>
        <exclude name="props/**"/>
+       <exclude name="effects/**"/>
        <exclude name="extras/**"/>
        <exclude name="bonuses/**"/>
        <exclude name="fences/**"/>
@@ -155,6 +156,12 @@
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
       <include name="**/*.wav"/>
+      <exclude name="**/source/**"/>
+    </jar>
+    <jar file="rsrc/effects/${town}/bundle.jar" basedir="rsrc/effects/${town}">
+      <include name="**/effect.properties"/>
+      <include name="**/effect.jme"/>
+      <include name="**/*.png"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/extras/${town}/bundle.jar" basedir="rsrc/extras/${town}">
@@ -451,6 +458,7 @@
         <exclude name="rsrc/avatars/*/**/*.dat"/>
         <exclude name="rsrc/units/**"/>
         <exclude name="rsrc/props/**"/>
+        <exclude name="rsrc/effects/**"/>
         <exclude name="rsrc/bonuses/**"/>
         <exclude name="rsrc/extras/**"/>
       </fileset>
