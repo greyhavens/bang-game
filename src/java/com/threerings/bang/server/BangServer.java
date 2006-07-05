@@ -32,13 +32,13 @@ import com.threerings.presents.server.ClientFactory;
 import com.threerings.presents.server.ClientResolver;
 import com.threerings.presents.server.PresentsClient;
 
-import com.threerings.presents.peer.server.PeerManager;
-
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.CrowdServer;
 import com.threerings.crowd.server.PlaceManager;
 import com.threerings.crowd.server.PlaceRegistry;
+
+import com.threerings.crowd.peer.server.CrowdPeerManager;
 
 import com.threerings.parlor.server.ParlorManager;
 
@@ -96,7 +96,7 @@ public class BangServer extends CrowdServer
     public static AvatarLogic alogic;
 
     /** Communicates with the other servers in our cluster. */
-    public static PeerManager peermgr;
+    public static CrowdPeerManager peermgr;
 
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
@@ -203,7 +203,7 @@ public class BangServer extends CrowdServer
         if (node != null && ServerConfig.sharedSecret != null) {
             log.info("Running in cluster mode as node '" +
                      ServerConfig.serverName + "'.");
-            peermgr = new PeerManager(conprov, invoker);
+            peermgr = new CrowdPeerManager(conprov, invoker);
         }
 
         // create and set up our configuration registry and admin service
