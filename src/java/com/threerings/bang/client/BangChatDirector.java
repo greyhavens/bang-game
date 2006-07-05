@@ -76,7 +76,10 @@ public class BangChatDirector extends ChatDirector
     @Override // documentation inherited
     public void requestTell (Name target, String msg, ResultListener<Name> rl)
     {
-        super.requestTell(target, msg, rl);
+        // we need to convert Name to Handle so that things are properly
+        // dispatched on the server
+        Handle thandle = new Handle(target.toString());
+        super.requestTell(thandle, msg, rl);
         BangUI.play(BangUI.FeedbackSound.CHAT_SEND);
     }
 
