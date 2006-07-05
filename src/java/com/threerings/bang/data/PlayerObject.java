@@ -298,7 +298,7 @@ public class PlayerObject extends BodyObject
      * <code>inventory</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToInventory (DSet.Entry elem)
+    public void addToInventory (Item elem)
     {
         requestEntryAdd(INVENTORY, inventory, elem);
     }
@@ -318,7 +318,7 @@ public class PlayerObject extends BodyObject
      * <code>inventory</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateInventory (DSet.Entry elem)
+    public void updateInventory (Item elem)
     {
         requestEntryUpdate(INVENTORY, inventory, elem);
     }
@@ -392,7 +392,7 @@ public class PlayerObject extends BodyObject
      * <code>stats</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToStats (DSet.Entry elem)
+    public void addToStats (Stat elem)
     {
         requestEntryAdd(STATS, stats, elem);
     }
@@ -412,7 +412,7 @@ public class PlayerObject extends BodyObject
      * <code>stats</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateStats (DSet.Entry elem)
+    public void updateStats (Stat elem)
     {
         requestEntryUpdate(STATS, stats, elem);
     }
@@ -438,7 +438,7 @@ public class PlayerObject extends BodyObject
      * <code>ratings</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToRatings (DSet.Entry elem)
+    public void addToRatings (Rating elem)
     {
         requestEntryAdd(RATINGS, ratings, elem);
     }
@@ -458,7 +458,7 @@ public class PlayerObject extends BodyObject
      * <code>ratings</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateRatings (DSet.Entry elem)
+    public void updateRatings (Rating elem)
     {
         requestEntryUpdate(RATINGS, ratings, elem);
     }
@@ -517,7 +517,7 @@ public class PlayerObject extends BodyObject
      * <code>looks</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToLooks (DSet.Entry elem)
+    public void addToLooks (Look elem)
     {
         requestEntryAdd(LOOKS, looks, elem);
     }
@@ -537,7 +537,7 @@ public class PlayerObject extends BodyObject
      * <code>looks</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateLooks (DSet.Entry elem)
+    public void updateLooks (Look elem)
     {
         requestEntryUpdate(LOOKS, looks, elem);
     }
@@ -563,7 +563,7 @@ public class PlayerObject extends BodyObject
      * <code>pardners</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToPardners (DSet.Entry elem)
+    public void addToPardners (PardnerEntry elem)
     {
         requestEntryAdd(PARDNERS, pardners, elem);
     }
@@ -583,7 +583,7 @@ public class PlayerObject extends BodyObject
      * <code>pardners</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updatePardners (DSet.Entry elem)
+    public void updatePardners (PardnerEntry elem)
     {
         requestEntryUpdate(PARDNERS, pardners, elem);
     }

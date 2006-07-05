@@ -20,6 +20,7 @@ import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.cast.CharacterComponent;
@@ -328,7 +329,7 @@ public class BarberManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected Class getPlaceObjectClass ()
+    protected Class<? extends PlaceObject> getPlaceObjectClass ()
     {
         return BarberObject.class;
     }

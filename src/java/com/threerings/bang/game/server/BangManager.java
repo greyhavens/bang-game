@@ -36,6 +36,7 @@ import com.threerings.presents.server.PresentsServer;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.admin.data.StatusObject;
@@ -498,7 +499,7 @@ public class BangManager extends GameManager
     }
 
     @Override // documentation inherited
-    protected Class getPlaceObjectClass ()
+    protected Class<? extends PlaceObject> getPlaceObjectClass ()
     {
         return BangObject.class;
     }

@@ -849,7 +849,7 @@ public class BangObject extends GameObject
      * <code>pieces</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToPieces (DSet.Entry elem)
+    public void addToPieces (Piece elem)
     {
         requestEntryAdd(PIECES, pieces, elem);
     }
@@ -869,7 +869,7 @@ public class BangObject extends GameObject
      * <code>pieces</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updatePieces (DSet.Entry elem)
+    public void updatePieces (Piece elem)
     {
         requestEntryUpdate(PIECES, pieces, elem);
     }
@@ -895,7 +895,7 @@ public class BangObject extends GameObject
      * <code>cards</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void addToCards (DSet.Entry elem)
+    public void addToCards (Card elem)
     {
         requestEntryAdd(CARDS, cards, elem);
     }
@@ -915,7 +915,7 @@ public class BangObject extends GameObject
      * <code>cards</code> set. The set will not change until the event is
      * actually propagated through the system.
      */
-    public void updateCards (DSet.Entry elem)
+    public void updateCards (Card elem)
     {
         requestEntryUpdate(CARDS, cards, elem);
     }
