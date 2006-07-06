@@ -31,7 +31,7 @@ import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.client.Config;
-import com.threerings.bang.client.util.ModelAttacher;
+import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -538,7 +538,7 @@ public class PieceSprite extends Sprite
         }
         _view.addResolving(this);
         _ctx.getModelCache().getModel(type, name, _zations,
-            new ModelAttacher(this) {
+            new ResultAttacher<Model>(this) {
             public void requestCompleted (Model model) {
                 super.requestCompleted(model);
                 _view.clearResolving(PieceSprite.this);

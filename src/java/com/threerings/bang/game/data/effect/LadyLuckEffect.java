@@ -5,6 +5,8 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.RandomUtil;
 
+import com.threerings.bang.game.client.effect.InfluenceViz;
+import com.threerings.bang.game.client.effect.ParticleInfluenceViz;
 import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -21,6 +23,9 @@ public class LadyLuckEffect extends SetInfluenceEffect
         return new Influence() {
             public String getName () {
                 return "lady_luck";
+            }
+            public InfluenceViz createViz () {
+                return new ParticleInfluenceViz("frontier_town/lucky");
             }
             public int adjustAttack (Piece target, int damage) {
                 _didAdjustAttack = RandomUtil.getInt(100) >= 50;

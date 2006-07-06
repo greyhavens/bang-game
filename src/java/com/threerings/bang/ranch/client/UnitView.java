@@ -17,7 +17,7 @@ import com.jmex.bui.util.Dimension;
 
 import com.threerings.jme.model.Model;
 
-import com.threerings.bang.client.util.ModelAttacher;
+import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
@@ -49,7 +49,8 @@ public class UnitView extends BGeomView
         _config = config;
         
         ((Node)_geom).detachAllChildren();
-        _ctx.loadModel("units", config.type, new ModelAttacher((Node)_geom) {
+        _ctx.loadModel("units", config.type,
+            new ResultAttacher<Model>((Node)_geom) {
             public void requestCompleted (Model model) {
                 // make sure unit hasn't changed since we started loading
                 if (_config != config) {

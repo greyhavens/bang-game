@@ -15,6 +15,7 @@ import com.samskivert.util.ResultListener;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.system.DisplaySystem;
 
 import com.jmex.bui.BDecoratedWindow;
@@ -41,6 +42,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.client.BangApp;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.GlobalKeyManager;
+import com.threerings.bang.client.util.EffectCache;
 import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.client.util.TextureCache;
@@ -74,6 +76,7 @@ public abstract class TestApp extends JmeApp
         _icache = new ImageCache(_ctx);
         _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
+        _ecache = new EffectCache(_ctx);
         _keymgr.init(_ctx);
 
         // create and start invoker
@@ -219,6 +222,10 @@ public abstract class TestApp extends JmeApp
             return _mcache;
         }
         
+        public EffectCache getEffectCache () {
+            return _ecache;
+        }
+        
         public CharacterManager getCharacterManager () {
             return _charmgr;
         }
@@ -237,6 +244,10 @@ public abstract class TestApp extends JmeApp
             _mcache.getModel(type, name, rl);
         }
 
+        public void loadEffect (String name, ResultListener<Spatial> rl) {
+            _ecache.getEffect(name, rl);
+        }
+        
         public BImage loadImage (String rsrcPath) {
             return _icache.getBImage(rsrcPath);
         }
@@ -251,6 +262,7 @@ public abstract class TestApp extends JmeApp
     protected ImageCache _icache;
     protected TextureCache _tcache;
     protected ModelCache _mcache;
+    protected EffectCache _ecache;
     protected CharacterManager _charmgr;
     protected AvatarLogic _alogic;
     protected GlobalKeyManager _keymgr = new GlobalKeyManager();

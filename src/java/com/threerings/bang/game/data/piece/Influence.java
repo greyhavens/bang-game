@@ -7,6 +7,8 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.bang.data.TerrainConfig;
 
+import com.threerings.bang.game.client.effect.InfluenceViz;
+
 /**
  * Represents a temporary influence on a unit. Influences can adjust a
  * unit's various basic properties and they can expire after a certain
@@ -18,6 +20,13 @@ public abstract class Influence extends SimpleStreamableObject
      * messages (can be <code>null</code> for none). */
     public abstract String getName ();
 
+    /** Creates a visualization for the influence, or returns <code>null</code>
+     * for none. */
+    public InfluenceViz createViz ()
+    {
+        return null;
+    }
+    
     /** Returns true if this influence has expired. */
     public boolean isExpired (short tick)
     {

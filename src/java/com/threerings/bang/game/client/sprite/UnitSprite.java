@@ -28,21 +28,24 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 
+import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ObserverList;
 
+import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.SpriteObserver;
 
 import com.threerings.media.image.Colorization;
 
-import com.threerings.bang.client.util.ModelAttacher;
+import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
-import com.threerings.bang.game.client.sprite.Spinner;
+import com.threerings.bang.game.client.effect.InfluenceViz;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.NuggetEffect;
+import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
@@ -185,7 +188,7 @@ public class UnitSprite extends MobileSprite
             if (!unit.holding.equals(_holdingType)) {
                 _holding.detachAllChildren();
                 _ctx.getModelCache().getModel("bonuses", unit.holding, 
-                        _zations, new ModelAttacher(_holding));
+                        _zations, new ResultAttacher<Model>(_holding));
             }
             if (_holding.getParent() == null) {
                 attachChild(_holding);
@@ -195,6 +198,32 @@ public class UnitSprite extends MobileSprite
             detachChild(_holding);
         }
 
+        // display visualizations for influences and hindrances
+        if (!ObjectUtil.equals(unit.influence, _influence)) {
+            if (_influenceViz != null) {
+                _influenceViz.destroy();
+            }
+            _influence = unit.influence;
+            if (_influence != null) {
+                _influenceViz = _influence.createViz();
+                if (_influenceViz != null) {
+                    _influenceViz.init(_ctx, this);
+                }
+            }
+        }
+        if (!ObjectUtil.equals(unit.hindrance, _hindrance)) {
+            if (_hindranceViz != null) {
+                _hindranceViz.destroy();
+            }
+            _hindrance = unit.hindrance;
+            if (_hindrance != null) {
+                _hindranceViz = _hindrance.createViz();
+                if (_hindranceViz != null) {
+                    _hindranceViz.init(_ctx, this);
+                }
+            }
+        }
+        
         // if our pending node is showing, update it to reflect our correct
         // ticks until movable
         if (_pendnode != null && ticks > 0) {
@@ -388,6 +417,9 @@ public class UnitSprite extends MobileSprite
     protected Node _holding;
     protected String _holdingType;
 
+    protected InfluenceViz _influenceViz, _hindranceViz;
+    protected Influence _influence, _hindrance;
+    
     protected static HashMap<String,Texture[]> _pendtexmap =
         new HashMap<String,Texture[]>();
 

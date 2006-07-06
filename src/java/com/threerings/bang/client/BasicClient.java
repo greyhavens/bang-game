@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import com.jme.input.InputHandler;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.system.DisplaySystem;
 
 import com.jmex.bui.BImage;
@@ -55,6 +56,7 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
 
+import com.threerings.bang.client.util.EffectCache;
 import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.client.util.PerfMonitor;
@@ -132,7 +134,8 @@ public class BasicClient
         _icache = new ImageCache(_ctx);
         _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
-
+        _ecache = new EffectCache(_ctx);
+        
         // intialize our performance monitor
         PerfMonitor.init(_ctx);
 
@@ -293,6 +296,10 @@ public class BasicClient
             return _mcache;
         }
         
+        public EffectCache getEffectCache () {
+            return _ecache;
+        }
+        
         public DisplaySystem getDisplay () {
             return _app.getContext().getDisplay();
         }
@@ -343,6 +350,10 @@ public class BasicClient
             _mcache.getModel(type, name, rl);
         }
 
+        public void loadEffect (String name, ResultListener<Spatial> rl) {
+            _ecache.getEffect(name, rl);
+        }
+        
         public BImage loadImage (String rsrcPath) {
             return _icache.getBImage(rsrcPath);
         }
@@ -361,6 +372,7 @@ public class BasicClient
     protected ImageCache _icache;
     protected TextureCache _tcache;
     protected ModelCache _mcache;
+    protected EffectCache _ecache;
     protected CharacterManager _charmgr;
     protected AvatarLogic _alogic;
 

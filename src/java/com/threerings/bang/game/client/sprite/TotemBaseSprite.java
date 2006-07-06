@@ -16,7 +16,7 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
-import com.threerings.bang.client.util.ModelAttacher;
+import com.threerings.bang.client.util.ResultAttacher;
 
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TotemBase;
@@ -100,7 +100,7 @@ public class TotemBaseSprite extends PropSprite
             final Node totemPiece = new Node(type);
             _totemPieces.add(totemPiece);
             _ctx.getModelCache().getModel("bonuses", type, zations,
-                    new ModelAttacher(totemPiece) {
+                    new ResultAttacher<Model>(totemPiece) {
                 public void requestCompleted (Model model) {
                     // calculate the height of the model
                     model.updateGeometricState(0f, true);

@@ -18,7 +18,7 @@ import com.samskivert.util.RandomUtil;
 import com.threerings.jme.model.Model;
 
 import com.threerings.bang.client.BangPrefs;
-import com.threerings.bang.client.util.ModelAttacher;
+import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -137,7 +137,7 @@ public class WreckViz extends ParticleEffectViz
         public void bind (String type)
         {
             _ctx.loadModel("units", "wreckage/" + type,
-                new ModelAttacher(this));
+                new ResultAttacher<Model>(this));
         }
         
         public void updateWorldVectors ()

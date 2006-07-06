@@ -62,7 +62,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.bui.WindowFader;
-import com.threerings.bang.client.util.ModelAttacher;
+import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
@@ -500,7 +500,7 @@ public class BangBoardView extends BoardView
         _cursor.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
         // _cursor.setLocalScale(0.75f);
         _ctx.loadModel("bonuses", "frontier_town/bonus_point",
-                       new ModelAttacher(_cursor));
+                       new ResultAttacher<Model>(_cursor));
         _cursor.addController(new Spinner(_cursor, FastMath.PI));
         _cursor.addController(new Bouncer(_cursor, TILE_SIZE, TILE_SIZE/4));
         _cursor.setRenderState(RenderUtil.lequalZBuf);

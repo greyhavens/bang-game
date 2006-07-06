@@ -93,6 +93,20 @@ public class PardnerChatView extends BDecoratedWindow
      * @return true if we managed to display the view, false if we can't
      * at the moment
      */
+    public boolean display (Handle pardner, boolean grabFocus)
+    {
+        UserMessage umsg = new UserMessage();
+        umsg.speaker = pardner;
+        return display(umsg, grabFocus);
+    }
+    
+    /**
+     * Displays the chat view, if possible, with a tab for talking to the
+     * named pardner.
+     *
+     * @return true if we managed to display the view, false if we can't
+     * at the moment
+     */
     public boolean display (UserMessage message, boolean grabFocus)
     {
         if (!_ctx.getBangClient().canDisplayPopup(MainView.Type.CHAT)) {
