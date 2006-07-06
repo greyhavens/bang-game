@@ -1,8 +1,10 @@
-315
+323
 female/clothing_back := bodice := 174
 female/clothing_back := frontier_dress := 175
 female/clothing_back := frontier_dress_holding := 176
 female/clothing_back := gunslinger := 80
+female/clothing_back := madam_cash := 316
+female/clothing_back := madam_hips := 317
 female/clothing_back := pancho := 177
 female/clothing_back := pancho_closed := 178
 female/clothing_back := peasant_dress := 179
@@ -14,6 +16,7 @@ female/clothing_front := arms_down_bodice := 181
 female/clothing_front := book_frontier_dress := 182
 female/clothing_front := fan_bodice := 183
 female/clothing_front := flirt_peasant_dress := 184
+female/clothing_front := madam_cash := 318
 female/clothing_front := pistol_peasant_dress := 185
 female/clothing_props := rifle_squaw := 82
 female/eyebrows := arched := 186
@@ -149,10 +152,12 @@ male/beard := sideburns := 211
 male/beard_back := grant := 268
 male/beard_back := grizzly := 4
 male/clothing_back := a_duster := 212
+male/clothing_back := a_fat_suspenders := 319
 male/clothing_back := a_fringe := 254
 male/clothing_back := a_longjohns := 213
 male/clothing_back := a_suit := 255
 male/clothing_back := duster := 214
+male/clothing_back := fat_suspenders := 320
 male/clothing_back := fringe := 215
 male/clothing_back := ironplate_poncho := 256
 male/clothing_back := plate_poncho := 216
@@ -168,6 +173,7 @@ male/clothing_front := flask_fringe := 251
 male/clothing_front := ironplate_poncho := 252
 male/clothing_front := lapels_suit := 222
 male/clothing_front := rifle_duster := 253
+male/clothing_front := smoking_fat_suspenders := 321
 male/clothing_props := cards_suit := 223
 male/clothing_props := cigarette_jacket := 23
 male/clothing_props := flask_fringe := 224
@@ -216,6 +222,7 @@ male/hair_front := sweptback := 231
 male/hair_middle := braids := 127
 male/hair_middle := fro := 128
 male/hair_middle := long_messy := 129
+male/hat := coonskin := 322
 male/hat := cowboy := 11
 male/hat := sombrero := 258
 male/hat := stetson := 232
@@ -225,6 +232,7 @@ male/hat := widebrim := 44
 male/hat := wolf_mask := 298
 male/hat band := thunderbird_war_bonnet := 295
 male/hat band := tree_war_bonnet := 296
+male/hat_back := coonskin := 323
 male/hat_back := cowboy := 12
 male/hat_back := feather_double := 45
 male/hat_back := feather_one := 294
