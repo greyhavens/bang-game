@@ -32,6 +32,7 @@ import com.threerings.presents.server.ClientFactory;
 import com.threerings.presents.server.ClientResolver;
 import com.threerings.presents.server.PresentsClient;
 
+import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.CrowdServer;
@@ -54,6 +55,7 @@ import com.threerings.bang.admin.data.StatusObject;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
+import com.threerings.bang.chat.server.BangChatProvider;
 import com.threerings.bang.ranch.data.RanchConfig;
 import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.saloon.data.SaloonConfig;
@@ -251,6 +253,12 @@ public class BangServer extends CrowdServer
                 return _players.get(visibleName);
             }
         };
+    }
+
+    @Override // documentation inherited
+    protected ChatProvider createChatProvider ()
+    {
+        return new BangChatProvider();
     }
 
     /**

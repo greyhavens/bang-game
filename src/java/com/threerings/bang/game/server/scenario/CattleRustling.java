@@ -93,6 +93,10 @@ public class CattleRustling extends Scenario
         // now place the cattle near the cattle starting spots
         int placed = 0, players = bangobj.players.length, cps = (int)
             Math.ceil(_cattleSpots.size() / (float)players);
+
+        log.info("Placing " + cps + " per spot in " +
+                 _cattleSpots.size() + " spots.");
+
       MARKER_LOOP:
         for (Marker cspot : _cattleSpots) {
             ArrayList<Point> spots = bangobj.board.getOccupiableSpots(
@@ -102,12 +106,13 @@ public class CattleRustling extends Scenario
                 cow.assignPieceId(bangobj);
                 cow.position(spot.x, spot.y);
                 cow.orientation = (short)RandomUtil.getInt(4);
-//                cow.owner = determineOwner(cow);
                 bangobj.board.shadowPiece(cow);
                 bangobj.addToPieces(cow);
 
-                // stop when we've placed three cattle per player
+                log.info("Placed " + cow + ".");
+                // stop when we've placed two cattle per player
                 if (++placed >= players * 3) {
+                    log.info("Stopping (" + placed + ").");
                     break MARKER_LOOP;
                 }
             }

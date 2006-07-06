@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.client;
+package com.threerings.bang.chat.client;
 
 import java.util.ArrayList;
 
@@ -23,6 +23,7 @@ import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
+import com.threerings.bang.client.MainView;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 

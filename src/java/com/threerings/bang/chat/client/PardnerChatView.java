@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.client;
+package com.threerings.bang.chat.client;
 
 import java.util.HashMap;
 
@@ -25,7 +25,9 @@ import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.chat.data.PlayerMessage;
 
+import com.threerings.bang.client.MainView;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.TabbedPane;
 import com.threerings.bang.data.BangCodes;
@@ -91,12 +93,12 @@ public class PardnerChatView extends BDecoratedWindow
      * @return true if we managed to display the view, false if we can't
      * at the moment
      */
-    public boolean display (Handle handle, boolean grabFocus)
+    public boolean display (UserMessage message, boolean grabFocus)
     {
         if (!_ctx.getBangClient().canDisplayPopup(MainView.Type.CHAT)) {
             return false;
         }
-        addPardnerTab(handle);
+        addPardnerTab(message);
         _ctx.getBangClient().displayPopup(this, false);
         pack(-1, -1);
         center();
@@ -128,12 +130,12 @@ public class PardnerChatView extends BDecoratedWindow
         if (msg instanceof UserMessage &&
             ChatCodes.USER_CHAT_TYPE.equals(msg.localtype)) {
             UserMessage umsg = (UserMessage)msg;
-            if (!isAdded() && !display((Handle)umsg.speaker, false)) {
+            if (!isAdded() && !display(umsg, false)) {
                 return;
             }
             PardnerTab tab = _pardners.get(umsg.speaker);
             if (tab == null) {
-                tab = addPardnerTab((Handle)umsg.speaker);
+                tab = addPardnerTab(umsg);
             }
             if (tab != _tabs.getSelectedTab()) {
                 _tabs.getTabButton(tab).setIcon(_alert);
@@ -187,11 +189,20 @@ public class PardnerChatView extends BDecoratedWindow
     /**
      * Creates, adds, and maps a tab for the named pardner.
      */
-    protected PardnerTab addPardnerTab (Handle handle)
+    protected PardnerTab addPardnerTab (UserMessage message)
     {
-        PardnerEntry entry = _ctx.getUserObject().pardners.get(handle);
-        PardnerTab tab = new PardnerTab(
-            _ctx, handle, (entry == null) ? null : entry.avatar);
+        Handle handle = (Handle)message.speaker;
+        int[] avatar = null;
+        if (message instanceof PlayerMessage) {
+            avatar = ((PlayerMessage)message).avatar;
+        } else {
+            PardnerEntry entry = _ctx.getUserObject().pardners.get(handle);
+            if (entry != null) {
+                avatar = entry.avatar;
+            }
+        }
+
+        PardnerTab tab = new PardnerTab(_ctx, handle, avatar);
         _tabs.addTab(handle.toString(), tab);
         _pardners.put(handle, tab);
         return tab;

@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.client;
+package com.threerings.bang.chat.client;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

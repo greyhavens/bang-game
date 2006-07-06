@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.client;
+package com.threerings.bang.chat.client;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;

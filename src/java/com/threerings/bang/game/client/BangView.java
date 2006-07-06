@@ -22,6 +22,7 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.chat.client.OverlayChatView;
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.BangContext;
 

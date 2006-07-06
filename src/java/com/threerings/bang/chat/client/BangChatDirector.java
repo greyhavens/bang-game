@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.client;
+package com.threerings.bang.chat.client;
 
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;

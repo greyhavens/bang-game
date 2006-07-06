@@ -50,6 +50,10 @@ import com.threerings.crowd.client.PlaceView;
 import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.ranch.client.FirstBigShotView;
 
+import com.threerings.bang.chat.client.BangChatDirector;
+import com.threerings.bang.chat.client.PardnerChatView;
+import com.threerings.bang.chat.client.SystemChatView;
+
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticlePool;
 

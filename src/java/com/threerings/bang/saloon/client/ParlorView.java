@@ -24,7 +24,7 @@ import com.threerings.presents.dobj.SetAdapter;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
-import com.threerings.bang.client.PlaceChatView;
+import com.threerings.bang.chat.client.PlaceChatView;
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
