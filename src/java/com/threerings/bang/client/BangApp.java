@@ -44,6 +44,7 @@ import com.threerings.bang.game.client.GameCameraHandler;
 import com.threerings.bang.game.client.GameInputHandler;
 
 import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.DeploymentConfig;
 import com.threerings.bang.util.RenderUtil;
@@ -126,8 +127,9 @@ public class BangApp extends JmeApp
         // set up our application icons
         BangUI.configIcons();
 
-        String server = DeploymentConfig.getServerHost();
-        int[] ports = DeploymentConfig.getServerPorts();
+        // default to connecting to the frontier town server
+        String server = DeploymentConfig.getServerHost(BangCodes.FRONTIER_TOWN);
+        int[] ports = DeploymentConfig.getServerPorts(BangCodes.FRONTIER_TOWN);
         String username = (args.length > 0) ? args[0] : null;
         String password = (args.length > 1) ? args[1] : null;
         BangApp app = new BangApp();

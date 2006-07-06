@@ -39,8 +39,6 @@ import com.threerings.crowd.server.CrowdServer;
 import com.threerings.crowd.server.PlaceManager;
 import com.threerings.crowd.server.PlaceRegistry;
 
-import com.threerings.crowd.peer.server.CrowdPeerManager;
-
 import com.threerings.parlor.server.ParlorManager;
 
 import com.threerings.user.AccountActionRepository;
@@ -98,7 +96,7 @@ public class BangServer extends CrowdServer
     public static AvatarLogic alogic;
 
     /** Communicates with the other servers in our cluster. */
-    public static CrowdPeerManager peermgr;
+    public static BangPeerManager peermgr;
 
     /** The parlor manager in operation on this server. */
     public static ParlorManager parmgr = new ParlorManager();
@@ -204,8 +202,8 @@ public class BangServer extends CrowdServer
         String node = System.getProperty("node");
         if (node != null && ServerConfig.sharedSecret != null) {
             log.info("Running in cluster mode as node '" +
-                     ServerConfig.serverName + "'.");
-            peermgr = new CrowdPeerManager(conprov, invoker);
+                     ServerConfig.nodename + "'.");
+            peermgr = new BangPeerManager(conprov, invoker);
         }
 
         // create and set up our configuration registry and admin service
@@ -273,8 +271,9 @@ public class BangServer extends CrowdServer
         playmgr.init(conprov);
         coinexmgr.init();
         if (peermgr != null) {
-            peermgr.init(ServerConfig.serverName, ServerConfig.sharedSecret,
-                         ServerConfig.hostname, getListenPorts()[0]);
+            peermgr.init(ServerConfig.nodename, ServerConfig.sharedSecret,
+                         ServerConfig.hostname, ServerConfig.publicHostname,
+                         getListenPorts()[0]);
         }
 
         // create our managers
@@ -450,7 +449,7 @@ public class BangServer extends CrowdServer
     @Override // documentation inherited
     protected int[] getListenPorts ()
     {
-        return ServerConfig.serverPorts;
+        return DeploymentConfig.getServerPorts(ServerConfig.townId);
     }
 
     @Override // documentation inherited

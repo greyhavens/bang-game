@@ -131,9 +131,19 @@ public class LogonView extends BWindow
             String username = _username.getText();
             String password = _password.getText();
             _status.setStatus(_msgs.get("m.logging_on"), false);
+
+            // configure the client to connect to the town lobby server that
+            // this player last accessed
+            String townId = BangPrefs.getLastTownId(username);
+            _ctx.getClient().setServer(DeploymentConfig.getServerHost(townId),
+                                       DeploymentConfig.getServerPorts(townId));
+
+            // configure the client with the supplied credentials
             _ctx.getClient().setCredentials(
                 _ctx.getBangClient().createCredentials(
                     new Name(username), password));
+
+            // now we can log on
             _ctx.getClient().logon();
 
         } else if ("options".equals(event.getAction())) {

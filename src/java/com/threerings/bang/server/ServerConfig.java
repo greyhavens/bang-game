@@ -25,8 +25,16 @@ import static com.threerings.bang.Log.log;
  */
 public class ServerConfig
 {
-    /** The name assigned to this server installation. */
-    public static String serverName;
+    /** The name assigned to this server node. */
+    public static String nodename;
+
+    /** The back-channel DNS name of the host on which this server is
+     * running. */
+    public static String hostname;
+
+    /** The publicly accessible DNS name of the host on which this server is
+     * running. */
+    public static String publicHostname;
 
     /** The id of the town this server is handling. */
     public static String townId;
@@ -34,14 +42,8 @@ public class ServerConfig
     /** The secret used to authenticate other servers in our cluster. */
     public static String sharedSecret;
 
-    /** The host on which this server is running. */
-    public static String hostname;
-
     /** The root directory of the server installation. */
     public static File serverRoot;
-
-    /** The ports on which we are listening for client connections. */
-    public static int[] serverPorts;
 
     /** Provides access to our config properties. <em>Do not</em> modify
      * these properties! */
@@ -95,28 +97,28 @@ public class ServerConfig
         }
         config = new Config("server", props);
 
-        // figure out our hostname
-        hostname = System.getProperty("hostname");
-        if (hostname == null) {
-            log.warning("Missing 'hostname' system property?");
-            hostname = "unknown";
+        // our server name and hostname is our node identifier and comes from a
+        // system property passed by our startup scripts
+        nodename = System.getProperty("node");
+        if (StringUtil.isBlank(nodename)) {
+            log.warning("Missing 'node' system property. Cannot start.");
         }
+        hostname = System.getProperty("hostname");
+        if (StringUtil.isBlank(hostname)) {
+            log.warning("Missing 'hostname' system property. Cannot start.");
+        }
+        if (StringUtil.isBlank(nodename) || StringUtil.isBlank(hostname)) {
+            System.exit(-1);
+        }
+
+        // fill in our node-specific properties
+        publicHostname = config.getValue(nodename + ".server_host", hostname);
+        townId = config.getValue(
+            nodename + ".town_id", BangCodes.FRONTIER_TOWN);
 
         // fill in our standard properties
-        serverName = config.getValue("server_name", "bang");
-        townId = config.getValue("town_id", BangCodes.FRONTIER_TOWN);
         serverRoot = new File(config.getValue("server_root", "/tmp"));
-        serverPorts = config.getValue(
-            "server_ports", Client.DEFAULT_SERVER_PORTS);
         sharedSecret = config.getValue("server_secret", (String)null);
-
-        // if we're configured as a particular node, override some things
-        String node = System.getProperty("node");
-        if (node != null) {
-            serverName = config.getValue(node + ".server_name", serverName);
-            townId = config.getValue(node + ".town_id", townId);
-            serverPorts = config.getValue(node + ".server_ports", serverPorts);
-        }
     }
 
     static {

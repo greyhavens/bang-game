@@ -32,7 +32,7 @@ public class BangCoinManager extends CoinManager
                             AccountActionRepository actionrepo)
         throws PersistenceException
     {
-        super(conprov, ServerConfig.serverName, coinlog, actionrepo,
+        super(conprov, ServerConfig.nodename, coinlog, actionrepo,
               BangServer.invoker);
     }
 

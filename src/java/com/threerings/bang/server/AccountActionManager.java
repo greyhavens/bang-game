@@ -67,7 +67,7 @@ public class AccountActionManager
             public boolean invoke () {
                 try {
                     _actions = _repo.getActions(
-                        ServerConfig.serverName, MAX_ACTIONS);
+                        ServerConfig.nodename, MAX_ACTIONS);
                 } catch (PersistenceException pe) {
                     log.log(Level.WARNING,
                             "Failed to get list of new account actions!", pe);
@@ -109,7 +109,7 @@ public class AccountActionManager
         BangServer.invoker.postUnit(new Invoker.Unit(uname) {
             public boolean invoke () {
                 try {
-                    _repo.updateActions(actions, ServerConfig.serverName);
+                    _repo.updateActions(actions, ServerConfig.nodename);
                 } catch (PersistenceException pe) {
                     log.warning("Failed to mark processed actions! " +
                                 "[cause=" + pe + "].");

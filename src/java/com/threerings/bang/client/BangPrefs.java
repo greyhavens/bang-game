@@ -12,9 +12,11 @@ import com.jme.system.PropertiesIO;
 
 import com.samskivert.util.Config;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.TutorialCodes;
+import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
 
@@ -207,6 +209,25 @@ public class BangPrefs
     public static void setDeclinedTutorials (PlayerObject user)
     {
         config.setValue(user.username + ".declined_tuts", true);
+    }
+
+    /**
+     * Returns the id of the last town to which the specified user logged
+     * on. If the user has never logged on, the default town (Frontier Town)
+     * will be returned.
+     */
+    public static String getLastTownId (String username)
+    {
+        return config.getValue(username + ".town_id", BangCodes.FRONTIER_TOWN);
+    }
+
+    /**
+     * Stores the id of the town to which the specified user has connected so
+     * we can go directly to that town next time.
+     */
+    public static void setLastTownId (String username, String townId)
+    {
+        config.setValue(username + ".town_id", townId);
     }
 
     /**

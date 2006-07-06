@@ -46,20 +46,24 @@ public class DeploymentConfig
 
     /**
      * Returns the hostname of the server to which we should connect when
-     * logging in.
+     * logging in to the specified town.
      */
-    public static String getServerHost ()
+    public static String getServerHost (String townId)
     {
-        return config.getValue("server_host", "localhost");
+        return config.getValue(townId + ".server_host", "localhost");
     }
 
     /**
-     * Returns the port on which we should connect to the server.
+     * Returns the port on which we should connect to the specified town
+     * server.
+     *
      * @see #getServerHost
      */
-    public static int[] getServerPorts ()
+    public static int[] getServerPorts (String townId)
     {
-        return config.getValue("server_ports", Client.DEFAULT_SERVER_PORTS);
+        int[] ports = config.getValue(
+            "server_ports", Client.DEFAULT_SERVER_PORTS);
+        return config.getValue(townId + ".server_ports", ports);
     }
 
     /**
