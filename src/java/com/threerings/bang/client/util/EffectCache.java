@@ -93,6 +93,7 @@ public class EffectCache extends PrototypeCache<Spatial>
     protected Spatial createInstance (
         String key, Spatial prototype, Colorization[] zations)
     {
+        Spatial instance;
         if (prototype instanceof Node) {
             Node pnode = (Node)prototype,
                 inode = new Node(prototype.getName());
@@ -100,15 +101,13 @@ public class EffectCache extends PrototypeCache<Spatial>
                 inode.attachChild(createInstance(
                     (ParticleGeometry)pnode.getChild(ii)));
             }
-            inode.setRenderState(RenderUtil.overlayZBuf);
-            return inode;
-            
+            instance = inode;
         } else {
-            ParticleGeometry instance = createInstance(
-                (ParticleGeometry)prototype);
-            instance.setRenderState(RenderUtil.overlayZBuf);
-            return instance;
+            instance = createInstance((ParticleGeometry)prototype);
         }
+        instance.setRenderState(RenderUtil.overlayZBuf);
+        instance.setIsCollidable(false);
+        return instance;
     }
 
     protected ParticleGeometry createInstance (ParticleGeometry prototype)

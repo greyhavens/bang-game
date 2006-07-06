@@ -9,6 +9,8 @@ import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.util.BasicContext;
 
+import static com.threerings.bang.client.BangMetrics.*;
+
 /**
  * An influence visualization consisting of a particle system.
  */
@@ -27,6 +29,8 @@ public class ParticleInfluenceViz extends InfluenceViz
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
                 _particles = result;
+                _particles.getLocalTranslation().addLocal(0, 0,
+                    _target.getPiece().getHeight() * TILE_SIZE);
             }
         });
     }
