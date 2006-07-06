@@ -5,6 +5,8 @@ package com.threerings.bang.game.client.sprite;
 
 import com.threerings.jme.model.EmissionController;
 
+import com.threerings.bang.util.BasicContext;
+
 import com.threerings.bang.game.client.BoardView;
 
 /**
@@ -14,11 +16,12 @@ import com.threerings.bang.game.client.BoardView;
 public abstract class SpriteEmission extends EmissionController
 {
     /**
-     * Provides the emission with references to the sprite that created the
-     * model and the view containing the sprite.
+     * Provides the emission with relevant Bang references.
      */
-    public void setSpriteRefs (BoardView view, PieceSprite sprite)
+    public void setSpriteRefs (
+        BasicContext ctx, BoardView view, PieceSprite sprite)
     {
+        _ctx = ctx;
         _view = view;
         _sprite = sprite;
     }
@@ -38,6 +41,9 @@ public abstract class SpriteEmission extends EmissionController
     {
         return _active;
     }
+    
+    /** The application context, or <code>null</code> for none. */
+    protected BasicContext _ctx;
     
     /** The board view containing the piece sprite, or <code>null</code> for
      * none. */

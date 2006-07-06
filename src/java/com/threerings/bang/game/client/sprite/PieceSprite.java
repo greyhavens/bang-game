@@ -564,7 +564,7 @@ public class PieceSprite extends Sprite
         // give any sprite emissions references to the view and sprite
         for (Object ctrl : model.getControllers()) {
             if (ctrl instanceof SpriteEmission) {
-                ((SpriteEmission)ctrl).setSpriteRefs(_view, this);
+                ((SpriteEmission)ctrl).setSpriteRefs(_ctx, _view, this);
             }
         }
     }

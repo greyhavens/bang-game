@@ -3,12 +3,14 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.math.Quaternion;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
+import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 
@@ -98,6 +100,15 @@ public class PropSprite extends PieceSprite
         if (!_editorMode) {
             updateWorldVectors();
             model.lockInstance();
+        } else if (Boolean.parseBoolean(
+            model.getProperties().getProperty("editor_handle"))) {
+            // the prop requires a handle to manipulate it in the editor
+            Box handle = new Box("handle", new Vector3f(), 0.5f, 0.5f, 0.5f);
+            handle.setModelBound(new BoundingBox());
+            handle.updateModelBound();
+            handle.setLightCombineMode(LightState.OFF);
+            attachChild(handle);
+            handle.updateRenderState();        
         }
     }
     

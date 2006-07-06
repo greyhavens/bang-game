@@ -188,7 +188,7 @@ public class EffectCache extends PrototypeCache<Spatial>
     }
     
     /** The rotation from y-up coordinates to z-up coordinates. */
-    protected static final Quaternion Z_UP_ROTATION = new Quaternion();
+    public static final Quaternion Z_UP_ROTATION = new Quaternion();
     static {
         Z_UP_ROTATION.fromAngleNormalAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
     }
