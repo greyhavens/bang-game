@@ -55,6 +55,7 @@ uresource = rsrc/bundle.jar
 uresource = rsrc/goods/bundle.jar
 uresource = rsrc/goods/frontier_town/bundle.jar
 uresource = rsrc/bonuses/frontier_town/bundle.jar
+uresource = rsrc/effects/frontier_town/bundle.jar
 uresource = rsrc/extras/frontier_town/bundle.jar
 uresource = rsrc/props/frontier_town/bundle.jar
 uresource = rsrc/units/frontier_town/bundle.jar
