@@ -11,10 +11,19 @@ root_url = http://localhost
 web_dir = pages
 
 #
-# The host and port to use when connecting to the server
+# The standard ports on which the server listens for client connections. These
+# may be overridden on a server by server basis below.
 
-server_host = game.banghowdy.com
-# server_ports = 4007, 47624
+server_ports = 47624, 443
+
+#
+# The public hostname and ports for the various town lobby servers.
+
+# frontier_town.server_host = bang1.banghowdy.com
+# frontier_town.server_ports = 47624
+
+# indian_post.server_host = bang2.banghowdy.com
+# indian_post.server_ports = 47624
 
 #
 # Various URLs that are needed by the client
