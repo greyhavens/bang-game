@@ -57,6 +57,10 @@ public class BonusConfig
     /** The card type associated with this bonus. */
     public String cardType;
     
+    /** If the bonus should emit particles when it's on the board, the name of
+     * its particle effect. */
+    public String particleEffect;
+    
     /** Returns a string representation of this instance. */
     public String toString ()
     {
@@ -153,6 +157,7 @@ public class BonusConfig
         config.bonusClass = props.getProperty("class");
         config.effectClass = BangUtil.requireProperty(type, props, "effect");
         config.cardType = props.getProperty("card");
+        config.particleEffect = props.getProperty("particles");
         
         config.baseWeight = BangUtil.getIntProperty(
             type, props, "base_weight", 50);

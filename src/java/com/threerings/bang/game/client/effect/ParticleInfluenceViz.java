@@ -29,8 +29,8 @@ public class ParticleInfluenceViz extends InfluenceViz
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
                 _particles = result;
-                _particles.getLocalTranslation().addLocal(0, 0,
-                    _target.getPiece().getHeight() * TILE_SIZE);
+                _particles.getLocalTranslation().set(0, 0,
+                    _target.getPiece().getHeight() * 0.5f * TILE_SIZE);
             }
         });
     }

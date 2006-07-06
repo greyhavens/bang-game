@@ -9,6 +9,8 @@ import com.jme.scene.Spatial;
 
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.client.util.ResultAttacher;
+import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.util.SoundUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
@@ -52,6 +54,19 @@ public class BonusSprite extends PieceSprite
 
         // load up the model for this bonus
         loadModel("bonuses", _type);
+        
+        // if the bonus emits particles while on the board, load those up
+        // as well
+        String effect = BonusConfig.getConfig(_type).particleEffect;
+        if (effect != null) {
+            _ctx.loadEffect(effect, new ResultAttacher<Spatial>(this) {
+                public void requestCompleted (Spatial result) {
+                    super.requestCompleted(result);
+                    result.getLocalTranslation().set(0, 0,
+                        _piece.getHeight() * 0.5f * TILE_SIZE);
+                }
+            });
+        }
     }
 
     @Override // documentation inherited

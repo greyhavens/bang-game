@@ -34,6 +34,9 @@ public class Barricade extends Piece
     public PieceSprite createSprite ()
     {
         return new PieceSprite() {
+            public Shadow getShadowType () {
+                return Shadow.DYNAMIC;
+            }
             protected void createGeometry () {
                 loadModel("extras", "frontier_town/barricade");
             }
