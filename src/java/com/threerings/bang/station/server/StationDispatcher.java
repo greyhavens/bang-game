@@ -41,7 +41,7 @@ public class StationDispatcher extends InvocationDispatcher
         case StationMarshaller.BUY_TICKET:
             ((StationProvider)provider).buyTicket(
                 source,
-                (InvocationService.ResultListener)args[0]
+                (InvocationService.ConfirmListener)args[0]
             );
             return;
 

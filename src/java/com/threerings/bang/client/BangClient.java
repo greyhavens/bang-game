@@ -651,6 +651,9 @@ public class BangClient extends BasicClient
         } else if ("barber".equals(where)) {
             _ctx.getLocationDirector().moveTo(bbd.barberOid);
             return;
+        } else if ("station".equals(where)) {
+            _ctx.getLocationDirector().moveTo(bbd.stationOid);
+            return;
         }
 
         // show the town view to start, this will call checkShowIntro() once

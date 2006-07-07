@@ -15,6 +15,7 @@ import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.server.BangServer;
@@ -25,6 +26,8 @@ import com.threerings.bang.station.data.StationCodes;
 import com.threerings.bang.station.data.StationMarshaller;
 import com.threerings.bang.station.data.StationObject;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Implements the server-side of the Train Station services.
  */
@@ -33,11 +36,31 @@ public class StationManager extends PlaceManager
 {
     // documentation inherited from interface StationProvider
     public void buyTicket (ClientObject caller,
-                           StationService.ResultListener listener)
+                           StationService.ConfirmListener listener)
         throws InvocationException
     {
-        // TODO
-        throw new InvocationException(INTERNAL_ERROR);
+        PlayerObject user = (PlayerObject)caller;
+
+        // determine the town to which this player will be traveling
+        int ticketTownIdx = -1;
+        for (int ii = 1; ii < BangCodes.TOWN_IDS.length; ii++) {
+            if (!user.holdsTicket(BangCodes.TOWN_IDS[ii])) {
+                ticketTownIdx = ii;
+                break;
+            }
+        }
+
+        // sanity check
+        if (ticketTownIdx == -1) {
+            log.warning("Player tried to buy ticket but they have them all " +
+                        "[who=" + user.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // create and deliver the ticket to the player; all the heavy lifting
+        // is handled by the financial action
+        TrainTicket ticket = new TrainTicket(user.playerId, ticketTownIdx);
+        new BuyTicketAction(user, ticket, listener).start();
     }
 
     @Override // documentation inherited
@@ -68,10 +91,10 @@ public class StationManager extends PlaceManager
     /** Used to recruit and deliver a big shot to a player. */
     protected static final class BuyTicketAction extends FinancialAction
     {
-        public BuyTicketAction (PlayerObject user, int scripCost, int coinCost,
-                                TrainTicket ticket,
-                                StationService.ResultListener listener) {
-            super(user, scripCost, coinCost);
+        public BuyTicketAction (PlayerObject user, TrainTicket ticket,
+                                StationService.ConfirmListener listener) {
+            super(user, StationCodes.TICKET_SCRIP[ticket.getTownIndex()],
+                  StationCodes.TICKET_COINS[ticket.getTownIndex()]);
             _ticket = ticket;
             _listener = listener;
         }
@@ -93,14 +116,14 @@ public class StationManager extends PlaceManager
 
         protected void actionCompleted () {
             _user.addToInventory(_ticket);
-            _listener.requestProcessed(_ticket);
+            _listener.requestProcessed();
         }
         protected void actionFailed () {
             _listener.requestFailed(INTERNAL_ERROR);
         }
 
         protected TrainTicket _ticket;
-        protected StationService.ResultListener _listener;
+        protected StationService.ConfirmListener _listener;
     }
 
     protected StationObject _stobj;

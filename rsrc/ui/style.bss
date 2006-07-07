@@ -1212,6 +1212,24 @@ medium_unit_view {
 }
 
 //
+// Train Station styles
+
+station_map {
+  background: image "ui/station/map.png" centerxy;
+}
+
+ticket_header {
+  parent: "label";
+  font: "Old Town Wide" plain 24;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+ticket_info {
+  parent: "label";
+}
+
+//
 // Post-game stats display
 
 endgame_border {

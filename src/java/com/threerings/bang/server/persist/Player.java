@@ -7,6 +7,7 @@ import java.sql.Date;
 
 import com.samskivert.util.StringUtil;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 
 /**
@@ -39,6 +40,9 @@ public class Player
     /** The avatar look selected by this player for their wanted poster. */
     public String wantedLook;
 
+    /** The id of the furthest town to which this player has access. */
+    public String townId;
+
     /** The time at which this player was created (when they first starting
      * playing  this particular game). */
     public Date created;
@@ -67,6 +71,7 @@ public class Player
         this.look = "";
         this.victoryLook = "";
         this.wantedLook = "";
+        this.townId = BangCodes.FRONTIER_TOWN;
     }
 
     /** Returns true if the specified flag is set. */

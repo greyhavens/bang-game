@@ -23,9 +23,9 @@ public class StationMarshaller extends InvocationMarshaller
     public static final int BUY_TICKET = 1;
 
     // documentation inherited from interface
-    public void buyTicket (Client arg1, InvocationService.ResultListener arg2)
+    public void buyTicket (Client arg1, InvocationService.ConfirmListener arg2)
     {
-        InvocationMarshaller.ResultMarshaller listener2 = new InvocationMarshaller.ResultMarshaller();
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
         listener2.listener = arg2;
         sendRequest(arg1, BUY_TICKET, new Object[] {
             listener2

@@ -176,6 +176,20 @@ public class PlayerObject extends BodyObject
         return false;
     }
 
+    /**
+     * Returns true if the player holds a ticket to the specified town.
+     */
+    public boolean holdsTicket (String townId)
+    {
+        for (Item item : inventory) {
+            if (item instanceof TrainTicket &&
+                ((TrainTicket)item).getTownId().equals(townId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override // documentation inherited
     public BangTokenRing getTokens ()
     {

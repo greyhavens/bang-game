@@ -18,6 +18,6 @@ public interface StationProvider extends InvocationProvider
     /**
      * Handles a {@link StationService#buyTicket} request.
      */
-    public void buyTicket (ClientObject caller, InvocationService.ResultListener arg1)
+    public void buyTicket (ClientObject caller, InvocationService.ConfirmListener arg1)
         throws InvocationException;
 }

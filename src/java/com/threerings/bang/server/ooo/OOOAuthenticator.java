@@ -174,6 +174,9 @@ public class OOOAuthenticator extends Authenticator
             // the record twice during authentication
             Player prec = BangServer.playrepo.loadPlayer(username);
 
+            // TODO: if this is a town server, make sure this player has access
+            // to this town
+
             // check to see whether this account has been banned or if this is
             // a first time user logging in from a tainted machine
             int vc = _authrep.validateUser(user, creds.ident, prec == null);

@@ -248,6 +248,7 @@ public class PlayerRepository extends JORARepository
             "LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "VICTORY_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "WANTED_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
+            "TOWN_ID VARCHAR(64) NOT NULL",
             "CREATED DATETIME NOT NULL",
             "SESSIONS INTEGER NOT NULL",
             "SESSION_MINUTES INTEGER NOT NULL",
@@ -258,11 +259,7 @@ public class PlayerRepository extends JORARepository
         }, "");
 
         JDBCUtil.addColumn(
-            conn, "PLAYERS", "VICTORY_LOOK",
-            "VARCHAR(" + Look.MAX_NAME_LENGTH + ")", "LOOK");
-        JDBCUtil.addColumn(
-            conn, "PLAYERS", "WANTED_LOOK",
-            "VARCHAR(" + Look.MAX_NAME_LENGTH + ")", "VICTORY_LOOK");
+            conn, "PLAYERS", "TOWN_ID", "VARCHAR(64)", "WANTED_LOOK");
     }
 
     @Override // documentation inherited

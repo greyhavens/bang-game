@@ -26,7 +26,7 @@ import static com.threerings.bang.Log.log;
  */
 public class StationView extends ShopView
 {
-    public StationView (BangContext ctx)
+    public StationView (BangContext ctx, StationController ctrl)
     {
         super(ctx, StationCodes.STATION_MSGS);
 
@@ -43,12 +43,20 @@ public class StationView extends ShopView
         add(new TownButton(ctx), new Point(870, 25));
         add(_status = new StatusLabel(ctx), new Rectangle(250, 10, 520, 50));
         _status.setStyleClass("shop_status");
+
+        // add our map display
+        add(new MapView(_ctx, ctrl), new Point(200, 180));
+
+        // and our ticket purchase display
+        add(_tview = new TicketView(_ctx, _status),
+            new Rectangle(790, 120, 210, 490));
     }
 
     @Override // documentation inherited
     public void willEnterPlace (PlaceObject plobj)
     {
         super.willEnterPlace(plobj);
+        _tview.init((StationObject)plobj);
     }
 
     @Override // documentation inherited
@@ -58,4 +66,5 @@ public class StationView extends ShopView
     }
 
     protected StatusLabel _status;
+    protected TicketView _tview;
 }

@@ -17,5 +17,5 @@ public interface StationService extends InvocationService
      * Requests the ticket to this client's next available station be
      * purchased.
      */
-    public void buyTicket (Client client, ResultListener listener);
+    public void buyTicket (Client client, ConfirmListener listener);
 }
