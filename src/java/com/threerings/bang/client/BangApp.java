@@ -128,10 +128,11 @@ public class BangApp extends JmeApp
         BangUI.configIcons();
 
         // default to connecting to the frontier town server
-        String server = DeploymentConfig.getServerHost(BangCodes.FRONTIER_TOWN);
-        int[] ports = DeploymentConfig.getServerPorts(BangCodes.FRONTIER_TOWN);
         String username = (args.length > 0) ? args[0] : null;
         String password = (args.length > 1) ? args[1] : null;
+        String townId = (args.length > 2) ? args[2] : BangCodes.FRONTIER_TOWN;
+        String server = DeploymentConfig.getServerHost(townId);
+        int[] ports = DeploymentConfig.getServerPorts(townId);
         BangApp app = new BangApp();
         if (app.init()) {
             app.run(server, ports, username, password);
