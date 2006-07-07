@@ -438,8 +438,8 @@ public class BangServer extends CrowdServer
      */
     public static AuditLogger createAuditLog (String logname)
     {
-        // qualify our log file with the hostname to avoid collisions
-        logname = logname + "_" + ServerConfig.hostname;
+        // qualify our log file with the nodename to avoid collisions
+        logname = logname + "_" + ServerConfig.nodename;
         return new AuditLogger(_logdir, logname + ".log");
     }
 
