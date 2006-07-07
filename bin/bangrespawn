@@ -32,7 +32,7 @@ while (1) {
 
     # actually run the server
     print $LOG "$now Running bang server\n";
-    my $rcode = system("$root/bin/runbang $node");
+    my $rcode = system("$root/bin/runbang" "$node");
 
     # note the time again
     my $finish = time();
@@ -48,10 +48,9 @@ while (1) {
             "after $duration seconds.\n";
     }
 
-    # don't spiral out of control
+    # don't spiral out of control; only restart once per minute
     if ($duration < 60) {
-        print $LOG "$fnow Bang server exited too quickly. Shutting down.\n";
-        warn "$fnow Bang server exited too quickly. Shutting down.\n";
-        exit(-1);
+        print $LOG "$fnow Bang server exited too quickly. Taking a breather.\n";
+        sleep(60-$duration);
     }
 }
