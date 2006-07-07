@@ -60,6 +60,7 @@ import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Viewpoint;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.*;
@@ -498,18 +499,19 @@ public class TownView extends BWindow
             }
             
             // write population into image
-            BufferedImage img = new BufferedImage(bimg.getWidth(),
-                bimg.getHeight(), BufferedImage.TYPE_INT_RGB);
+            int width = bimg.getWidth(), height = bimg.getHeight();
+            BufferedImage img = new BufferedImage(
+                width, height, BufferedImage.TYPE_INT_RGB);
             Graphics2D gfx = img.createGraphics();
             gfx.drawImage(bimg, 0, 0, null);
             gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-            gfx.setColor(Color.white);
+                                 RenderingHints.VALUE_ANTIALIAS_ON);
+            gfx.setColor(TOWN_COLORS[BangUtil.getTownIndex(townId)]);
             gfx.setFont(new Font("Dom Casual", Font.PLAIN, 40));
             String pstr = Integer.toString(pop);
-            gfx.drawString(pstr,
-                (img.getWidth() - gfx.getFontMetrics().stringWidth(pstr)) / 2,
-                img.getHeight() - 32);
+            gfx.drawString(
+                pstr, (width - gfx.getFontMetrics().stringWidth(pstr)) / 2,
+                height - 32);
             gfx.dispose();
             
             // get a reference to the population sign texture (and keep it
@@ -547,4 +549,12 @@ public class TownView extends BWindow
 
     /** Used to ensure that we only "present" each town once per session. */
     protected static HashSet<String> _presented = new HashSet<String>();
+
+    protected static final Color[] TOWN_COLORS = {
+        Color.white, // frontier_town
+        Color.black, // indian_post
+        Color.black, // boom_town
+        Color.black, // ghost_post
+        Color.black, // city_of_gold
+    };
 }
