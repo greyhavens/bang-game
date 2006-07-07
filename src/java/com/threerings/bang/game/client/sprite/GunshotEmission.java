@@ -21,6 +21,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
+import com.jme.scene.Node;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
@@ -29,6 +30,7 @@ import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 import com.jmex.effects.particles.ParticleFactory;
+import com.jmex.effects.particles.ParticleGeometry;
 import com.jmex.effects.particles.ParticleMesh;
 
 import com.samskivert.util.RandomUtil;
@@ -39,8 +41,14 @@ import com.threerings.jme.model.TextureProvider;
 import com.threerings.jme.sprite.PathUtil;
 
 import com.threerings.bang.client.BangPrefs;
-import com.threerings.bang.game.client.effect.ParticlePool;
+import com.threerings.bang.client.util.ResultAttacher;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
+
+import com.threerings.bang.game.client.BoardView;
+import com.threerings.bang.game.client.effect.ParticlePool;
+
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * A gunshot effect with muzzle flash and bullet trail.
@@ -62,6 +70,7 @@ public class GunshotEmission extends SpriteEmission
         _size = Float.valueOf(props.getProperty("size", "1"));
         _trails = new Trail[Integer.valueOf(props.getProperty("trails", "1"))];
         _spread = Float.valueOf(props.getProperty("spread", "0"));
+        _effect = props.getProperty("effect");
     }
     
     @Override // documentation inherited
@@ -114,6 +123,22 @@ public class GunshotEmission extends SpriteEmission
     }
     
     @Override // documentation inherited
+    public void setSpriteRefs (
+        BasicContext ctx, BoardView view, PieceSprite sprite)
+    {
+        super.setSpriteRefs(ctx, view, sprite);
+        if (_effect != null) {
+            _ctx.loadEffect(_effect,
+                new ResultAttacher<Spatial>(_model.getEmissionNode()) {
+                public void requestCompleted (Spatial result) {
+                    super.requestCompleted(result);
+                    _particles = result;
+                }
+            });
+        }
+    }
+    
+    @Override // documentation inherited
     public void resolveTextures (TextureProvider tprov)
     {
         if (_smoketex == null) {
@@ -142,6 +167,7 @@ public class GunshotEmission extends SpriteEmission
         gstore._size = _size;
         gstore._trails = new Trail[_trails.length];
         gstore._spread = _spread;
+        gstore._effect = _effect;
         return gstore;
     }
     
@@ -154,6 +180,7 @@ public class GunshotEmission extends SpriteEmission
         out.writeFloat(_size);
         out.writeInt(_trails.length);
         out.writeFloat(_spread);
+        out.writeObject(_effect);
     }
     
     // documentation inherited from interface Externalizable
@@ -167,6 +194,7 @@ public class GunshotEmission extends SpriteEmission
         _size = in.readFloat();
         _trails = new Trail[in.readInt()];
         _spread = in.readFloat();
+        _effect = (String)in.readObject();
     }
     
     // documentation inherited
@@ -264,6 +292,13 @@ public class GunshotEmission extends SpriteEmission
             _smoke.updateGeometricState(0f, true);
             _smoke.forceRespawn();
         }
+        
+        // activate the effect, if presents
+        if (_particles != null) {
+            _particles.getLocalTranslation().set(
+                _sprite.getWorldTranslation()).addLocal(0f, 0f, TILE_SIZE / 2);
+            forceRespawn(_particles);
+        }
     }
     
     /**
@@ -280,6 +315,22 @@ public class GunshotEmission extends SpriteEmission
             Vector3f.UNIT_X).multLocal(result);
         PathUtil.computeAxisRotation(Vector3f.UNIT_Z, dir, _rot).multLocal(
             result);
+    }
+    
+    /**
+     * Recursively forces a respawn on all particle systems under the given
+     * node.
+     */
+    protected void forceRespawn (Spatial spatial)
+    {
+        if (spatial instanceof ParticleGeometry) {
+            ((ParticleGeometry)spatial).forceRespawn();
+        } else if (spatial instanceof Node) {
+            Node node = (Node)spatial;
+            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                forceRespawn(node.getChild(ii));
+            }
+        }
     }
     
     /** Handles the appearance and fading of the muzzle flare. */
@@ -428,6 +479,9 @@ public class GunshotEmission extends SpriteEmission
     /** The trails' maximum angular distance from the firing direction. */
     protected float _spread;
     
+    /** An effect to display on firing. */
+    protected String _effect;
+    
     /** The frames at which the shots go off for the current animation. */
     protected int[] _shotFrames;
     
@@ -456,6 +510,9 @@ public class GunshotEmission extends SpriteEmission
     
     /** The gunsmoke particle system. */
     protected ParticleMesh _smoke;
+    
+    /** The effect particle system. */
+    protected Spatial _particles;
     
     /** The shared flare mesh. */
     protected static TriMesh _fmesh;

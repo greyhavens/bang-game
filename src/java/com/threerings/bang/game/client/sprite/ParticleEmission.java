@@ -92,7 +92,7 @@ public class ParticleEmission extends SpriteEmission
         throws IOException
     {
         super.writeExternal(out);
-        out.writeUTF(_effect);
+        out.writeObject(_effect);
     }
     
     @Override // documentation inherited
@@ -100,7 +100,7 @@ public class ParticleEmission extends SpriteEmission
         throws IOException, ClassNotFoundException
     {
         super.readExternal(in);
-        _effect = in.readUTF();
+        _effect = (String)in.readObject();
     }
     
     // documentation inherited
