@@ -20,12 +20,6 @@ frontier_town.server_host = localhost
 # itp_game1.server_host = bang4.banghowdy.com
 
 #
-# The standard ports on which the server listens for client connections. These
-# may be overridden in deployment.properties on a server by server basis.
-
-# server_ports = 47624, 443
-
-#
 # If this server is running as a part of a cluster, this value should be set to
 # a shared secret that will be used to authenticate with other servers in the
 # cluster. If it is left commented out, the server will run standalone.
