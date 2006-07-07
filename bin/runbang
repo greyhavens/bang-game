@@ -13,7 +13,14 @@ BANG_USER=www-data
 TOOLS_HOME=/export/tools
 HOSTNAME=`hostname`
 
-LOGFILE=$BANG_HOME/log/stdout.log
+# Make sure our nodename was properly specified
+NODE=$1
+if [ -z "$NODE" ]; then
+    echo "Usage: $0 nodename"
+    exit 255
+fi
+
+LOGFILE=$BANG_HOME/log/stdout-$NODE.log
 LOG_EMAIL=nightly-logs@threerings.net
 LOGLEVEL=info
 SERVER_MEMORY=384M
@@ -38,6 +45,7 @@ JAVA_ARGS="-server -mx$SERVER_MEMORY \
     -Dbang.home=$BANG_HOME \
     -Dresource_dir=$BANG_HOME/rsrc \
     -Dhostname=$HOSTNAME \
+    -Dnode=$NODE \
     -Drsrc_cache_dir=/tmp -Dlog_level=$LOGLEVEL"
 
 #    -XX:+UseParNewGC -XX:+UseAdaptiveSizePolicy -XX:MaxNewSize=64m \
@@ -109,6 +117,6 @@ NOW=`date "+%F-%H:%M"`
 mv $LOGFILE $LOGFILE.$NOW
 
 # Prune old logs
-find $BANG_HOME/log -name 'stdout.log*' -a -mtime +7 | xargs rm -f
+find $BANG_HOME/log -name 'stdout-$NODE.log*' -a -mtime +7 | xargs rm -f
 
 exit $EXIT_CODE

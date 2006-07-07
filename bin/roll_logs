@@ -14,31 +14,35 @@ if [ -f $BANG_HOME/server.conf ]; then
 fi
 
 NOW=`date "+%F-%H:%M"`
-BANGLOG=$BANG_HOME/log/stdout.log
-ARCHLOG=$BANGLOG.$NOW
 FILTLOG=/tmp/bangfiltered.log
 HOSTNAME=`hostname`
 
 # make sure we have a log of non-zero size
-if [ -s $BANGLOG ]; then
-    # roll over the server log file (the hard way)
-    cp $BANGLOG $ARCHLOG
-    cp /dev/null $BANGLOG
-    # mail out some reports
-    cat $ARCHLOG | /export/tools/bin/sum_invokers > $FILTLOG
-    if [ -s $FILTLOG ]; then
-        cat $FILTLOG | \
-            $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
+for BANGLOG in $BANG_HOME/log/stdout-*.log ; do
+    ARCHLOG=$BANGLOG.$NOW
+    if [ -s $BANGLOG ]; then
+        # roll over the server log file (the hard way)
+        cp $BANGLOG $ARCHLOG
+        cp /dev/null $BANGLOG
+        # extract the node name
+        NODE=`echo $BANGLOG | sed 's:.*stdout-\(.*\).log:\1:'`
+        # mail out some reports
+        cat $ARCHLOG | /export/tools/bin/sum_invokers > $FILTLOG
+        if [ -s $FILTLOG ]; then
+            cat $FILTLOG | $MAIL -s \
+                "$HOSTNAME: $BANG_HOME $NODE invoker summary" $LOG_EMAIL
+        fi
+        # change directory to $BANG_HOME so that filter_interesting can
+        # maintain a local DBM file of interesting warning messages
+        cd $BANG_HOME
+        cat $ARCHLOG | /export/tools/bin/filter_interesting > $FILTLOG
+        if [ -s $FILTLOG ]; then
+            cat $FILTLOG | $MAIL -s \
+                "$HOSTNAME: $BANG_HOME $NODE filtered log" $LOG_EMAIL
+        fi
+        rm -f $FILTLOG
     fi
-    # change directory to $BANG_HOME so that filter_interesting can maintain a
-    # local DBM file of interesting warning messages
-    cd $BANG_HOME
-    cat $ARCHLOG | /export/tools/bin/filter_interesting > $FILTLOG
-    if [ -s $FILTLOG ]; then
-        cat $FILTLOG | $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
-    fi
-    rm -f $FILTLOG
-fi
+done
 
 # prune old logs
 find $BANG_HOME/log -name 'stdout.log*' -a -mtime +7 | xargs rm -f

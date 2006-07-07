@@ -5,10 +5,12 @@
 # A script to respawn the Bang server over and over again, assuming that
 # it exits cleanly each time.
 
-my $root = `dirname $0 | sed s:/bin\$::`; chomp($root);
+my $root = `dirname $0`; $root=`cd $root/.. ; pwd`; chomp($root);
+my $node = shift or die "Usage: $0 nodename [pidfile]\n";
+
 my $LOG;
-if (!open($LOG, ">/tmp/bangrespawn.log")) {
-    warn "Unable to log to /tmp/bangrespawn.log: $!\n";
+if (!open($LOG, ">/tmp/bang-$node.log")) {
+    warn "Unable to log to /tmp/bang-$node.log: $!\n";
     $LOG = STDERR;
 }
 
@@ -30,7 +32,7 @@ while (1) {
 
     # actually run the server
     print $LOG "$now Running bang server\n";
-    my $rcode = system("$root/bin/runbang");
+    my $rcode = system("$root/bin/runbang $node");
 
     # note the time again
     my $finish = time();
