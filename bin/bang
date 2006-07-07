@@ -16,21 +16,6 @@ fi
 # Read in our configuration
 . $BANG_HOME/server.conf
 
-# Make sure someone running things as root didn't booch the permissions on
-# the bundles
-BFILE=/tmp/booched.txt
-find $BANG_HOME/rsrc -user root > $BFILE
-if [ -s "$BFILE" ]; then
-    cat $BFILE | xargs chown -R $BANG_USER
-fi
-rm $BFILE
-
-# Let's blow that file descriptor limit wide open baby!
-ulimit -n 4096
-
-# Bump our maximum data segment size to 1.5 gigs
-ulimit -d 1572864
-
 # Obtain our node argument
 NODE=$1
 shift
@@ -48,6 +33,7 @@ case "$1" in
             echo "Run '$0 stop' to stop it first."
 	    exit 1
 	fi
+
         # Make sure there are no hung Bang server processes
         RPIDS=`ps auxww | grep BangServer | grep java | grep $NODE | \
             awk '{ print $2 }' | sort -n | head -1`
@@ -62,6 +48,21 @@ case "$1" in
             echo "And then rerun this script."
             exit -1
         fi
+
+        # Make sure someone running things as root didn't booch the permissions
+        # on the bundles
+        BFILE=/tmp/booched.txt
+        find $BANG_HOME/rsrc -user root > $BFILE
+        if [ -s "$BFILE" ]; then
+            cat $BFILE | xargs chown -R $BANG_USER
+        fi
+        rm $BFILE
+
+        # Let's blow that file descriptor limit wide open baby!
+        ulimit -n 4096
+        # Bump our maximum data segment size to 1.5 gigs
+        ulimit -d 1572864
+
         # Go ahead and start things up
         echo -n "Starting $DAEMON: "
         touch $PIDFILE
