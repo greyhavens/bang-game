@@ -122,12 +122,13 @@ public abstract class ShopView extends BWindow
         _background = _ctx.loadImage("ui/" + ident + "/background.png");
         _shopkeep = _ctx.loadImage(tpath + "/shopkeep.png");
         _shopkbg = _ctx.loadImage(tpath + "/shopkeep_bg.png");
-        _shop = _ctx.loadImage(tpath + "/shop.png");
+        _shopimg = _ctx.loadImage(tpath + "/shop.png");
+        _shopname = _ctx.loadImage(tpath + "/sign.png");
 
         // if there's a custom name label for the shopkeep, use that
         _nameloc = getShopkeepNameLocation();
         if (_nameloc != null) {
-            _shopname = _ctx.loadImage(tpath + "/shopkeep_name.png");
+            _keepname = _ctx.loadImage(tpath + "/shopkeep_name.png");
         }
 
         // add our town label
@@ -144,10 +145,11 @@ public abstract class ShopView extends BWindow
         // reference our images
         _shopkbg.reference();
         _shopkeep.reference();
-        _shop.reference();
+        _shopimg.reference();
+        _shopname.reference();
         _background.reference();
-        if (_shopname != null) {
-            _shopname.reference();
+        if (_keepname != null) {
+            _keepname.reference();
         }
 
         // if this is the first time the player has entered this shop, show
@@ -163,10 +165,11 @@ public abstract class ShopView extends BWindow
         // release our images
         _shopkbg.release();
         _shopkeep.release();
-        _shop.release();
+        _shopimg.release();
+        _shopname.release();
         _background.release();
-        if (_shopname != null) {
-            _shopname.release();
+        if (_keepname != null) {
+            _keepname.release();
         }
 
         // clear out our intro if it's still showing
@@ -183,12 +186,14 @@ public abstract class ShopView extends BWindow
         _shopkbg.render(renderer, 12, _height-_shopkbg.getHeight()-12, _alpha);
         _shopkeep.render(
             renderer, 12, _height-_shopkeep.getHeight()-12, _alpha);
-        _shop.render(renderer, _width-_shop.getWidth()-12,
-                     _height-_shop.getHeight()-12, _alpha);
+        _shopimg.render(renderer, _width-_shopimg.getWidth()-12,
+                     _height-_shopimg.getHeight()-12, _alpha);
         _background.render(renderer, 0, 0, _alpha);
+        _shopname.render(renderer, (_width-_shopname.getWidth())/2,
+                         _height-_shopname.getHeight()-7, _alpha);
 
-        if (_shopname != null) {
-            _shopname.render(renderer, _nameloc.x, _nameloc.y, _alpha);
+        if (_keepname != null) {
+            _keepname.render(renderer, _nameloc.x, _nameloc.y, _alpha);
         }
     }
 
@@ -223,6 +228,7 @@ public abstract class ShopView extends BWindow
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BWindow _intro;
-    protected BImage _background, _shopkeep, _shopkbg, _shop, _shopname;
+    protected BImage _background, _shopimg, _shopname;
+    protected BImage _shopkeep, _shopkbg, _keepname;
     protected Point _nameloc;
 }
