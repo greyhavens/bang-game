@@ -108,10 +108,16 @@ public class StationManager extends PlaceManager
         }
 
         protected void persistentAction () throws PersistenceException {
+            BangServer.playrepo.grantTownAccess(
+                _user.playerId, _ticket.getTownId());
             BangServer.itemrepo.insertItem(_ticket);
         }
         protected void rollbackPersistentAction () throws PersistenceException {
-            BangServer.itemrepo.deleteItem(_ticket, "ticket_rollback");
+            String oldTownId = BangCodes.TOWN_IDS[_ticket.getTownIndex()-1];
+            BangServer.playrepo.grantTownAccess(_user.playerId, oldTownId);
+            if (_ticket.getItemId() > 0) {
+                BangServer.itemrepo.deleteItem(_ticket, "ticket_rollback");
+            }
         }
 
         protected void actionCompleted () {

@@ -27,12 +27,14 @@ import com.threerings.presents.server.net.AuthingConnection;
 import com.threerings.bang.admin.server.RuntimeConfig;
 
 import com.threerings.bang.data.BangAuthResponseData;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.server.BangClientResolver;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.Player;
+import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
@@ -174,8 +176,20 @@ public class OOOAuthenticator extends Authenticator
             // the record twice during authentication
             Player prec = BangServer.playrepo.loadPlayer(username);
 
-            // TODO: if this is a town server, make sure this player has access
-            // to this town
+            // make sure this player has access to this server's town
+            int serverTownIdx = BangUtil.getTownIndex(ServerConfig.townId);
+            if (serverTownIdx > 0) {
+                String townId = (prec == null) ?
+                    BangCodes.FRONTIER_TOWN : prec.townId;
+                if (BangUtil.getTownIndex(townId) < serverTownIdx) {
+                    log.warning("Rejecting access to town server by " +
+                                "non-ticket-holder [who=" + username +
+                                ", stownId=" + ServerConfig.townId +
+                                ", ptownId=" + townId + "].");
+                    rdata.code = NO_TICKET;
+                    return;
+                }
+            }
 
             // check to see whether this account has been banned or if this is
             // a first time user logging in from a tainted machine

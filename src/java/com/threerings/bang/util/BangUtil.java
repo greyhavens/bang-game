@@ -262,6 +262,20 @@ public class BangUtil
     }
 
     /**
+     * Returns the index of the specified town or -1 if the supplied town id is
+     * invalid.
+     */
+    public static int getTownIndex (String townId)
+    {
+        for (int ii = 0; ii < BangCodes.TOWN_IDS.length; ii++) {
+            if (BangCodes.TOWN_IDS[ii].equals(townId)) {
+                return ii;
+            }
+        }
+        return -1;
+    }
+
+    /**
      * Computes and returns the CRC32 hash value for the supplied string.
      */
     public static int crc32 (String value)

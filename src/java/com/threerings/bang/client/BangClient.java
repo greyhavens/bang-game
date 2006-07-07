@@ -41,7 +41,7 @@ import com.threerings.jme.effect.WindowSlider;
 import com.threerings.openal.OggFileStream;
 
 import com.threerings.presents.client.Client;
-import com.threerings.presents.client.SessionObserver;
+import com.threerings.presents.client.ClientObserver;
 
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.MuteDirector;
@@ -78,7 +78,7 @@ import static com.threerings.bang.Log.log;
  * all of the necessary configuration and getting the client bootstrapped.
  */
 public class BangClient extends BasicClient
-    implements SessionObserver, PlayerReceiver, BangCodes
+    implements ClientObserver, PlayerReceiver, BangCodes
 {
     /** A marker interface for non-clearable popups. */
     public static interface NonClearablePopup
@@ -591,7 +591,28 @@ public class BangClient extends BasicClient
         return creds;
     }
 
-    // documentation inherited from interface SessionObserver
+    /**
+     * Logs off of our current server and logs onto the lobby server for the
+     * specified town.
+     */
+    public void switchToTown (String townId)
+    {
+        // note that we're switching towns
+        _pendingTownId = townId;
+
+        // logoff off from our current town; our logged off observer will then
+        // log us onto the pending town (we need to wait until we're fully
+        // logged off before doing so which is why this is structured thusly)
+        _ctx.getClient().logoff(true);
+    }
+
+    // documentation inherited from interface ClientObserver
+    public void clientFailedToLogon (Client client, Exception cause)
+    {
+        // nothing doing
+    }
+
+    // documentation inherited from interface ClientObserver
     public void clientDidLogon (Client client)
     {
         // if we were provided with a machine identifier, write it out
@@ -661,20 +682,50 @@ public class BangClient extends BasicClient
         showTownView();
     }
 
-    // documentation inherited from interface SessionObserver
+    // documentation inherited from interface ClientObserver
     public void clientObjectDidChange (Client client)
     {
         // nada
     }
 
-    // documentation inherited from interface SessionObserver
+    // documentation inherited from interface ClientObserver
+    public void clientConnectionFailed (Client client, Exception cause)
+    {
+        // nothing doing
+    }
+
+    // documentation inherited from interface ClientObserver
+    public boolean clientWillLogoff (Client client)
+    {
+        return true; // always fine with us
+    }
+
+    // documentation inherited from interface ClientObserver
     public void clientDidLogoff (Client client)
     {
         // clear our status view key bindings
         StatusView.clearKeys(_ctx);
 
-        // shut her right on down
-        _ctx.getApp().stop();
+        if (_pendingTownId == null) {
+            // shut her right on down
+            _ctx.getApp().stop();
+
+        }
+    }
+
+    // documentation inherited from interface ClientObserver
+    public void clientDidClear (Client client)
+    {
+        if (_pendingTownId != null) {
+            _ctx.getClient().setServer(
+                DeploymentConfig.getServerHost(_pendingTownId),
+                DeploymentConfig.getServerPorts(_pendingTownId));
+            if (!_ctx.getClient().logon()) {
+                log.warning("Trying to connect to " + _pendingTownId +
+                            " but we're already logged on!?");
+            }
+            _pendingTownId = null;
+        }
     }
 
     // documentation inherited from interface PlayerReceiver
@@ -922,6 +973,7 @@ public class BangClient extends BasicClient
 
     protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
+    protected String _pendingTownId;
 
     protected BangChatDirector _chatdir;
     protected BoardCache _bcache;

@@ -28,6 +28,9 @@ public interface BangAuthCodes extends AuthCodes
     /** A code indicating that this server is not open to the public. */
     public static final String NON_PUBLIC_SERVER = "m.non_public_server";
 
+    /** A code indicating that the player doesn't have the requisite ticket. */
+    public static final String NO_TICKET = "m.no_ticket";
+
     /** A code indicating a bounced check or reversed payment. */
     public static final String DEADBEAT = "m.deadbeat";
 

@@ -157,6 +157,17 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
+     * Updates the specified player's record to reflect that they now have
+     * access to the specified town (and all towns up to that point).
+     */
+    public void grantTownAccess (int playerId, String townId)
+        throws PersistenceException
+    {
+        checkedUpdate("update PLAYERS set TOWN_ID = '" + townId + "' " +
+                      "where PLAYER_ID = " + playerId, 1);
+    }
+
+    /**
      * Mimics the disabling of deleted players by renaming them to an
      * invalid value that we do in our user management system. This is
      * triggered by us receiving a player action indicating that the
