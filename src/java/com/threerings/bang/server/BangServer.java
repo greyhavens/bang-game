@@ -58,6 +58,8 @@ import com.threerings.bang.ranch.data.RanchConfig;
 import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.saloon.data.SaloonConfig;
 import com.threerings.bang.saloon.server.SaloonManager;
+import com.threerings.bang.station.data.StationConfig;
+import com.threerings.bang.station.server.StationManager;
 import com.threerings.bang.store.data.StoreConfig;
 import com.threerings.bang.store.server.StoreManager;
 
@@ -143,6 +145,9 @@ public class BangServer extends CrowdServer
 
     /** Manages the Barber and avatar customization. */
     public static BarberManager barbermgr;
+
+    /** Manages the Train Station and inter-town travel. */
+    public static StationManager stationmgr;
 
     /** Manages our selection of game boards. */
     public static BoardManager boardmgr = new BoardManager();
@@ -290,6 +295,8 @@ public class BangServer extends CrowdServer
                     ranchmgr = (RanchManager)pmgr;
                 } else if (pmgr instanceof BarberManager) {
                     barbermgr = (BarberManager)pmgr;
+                } else if (pmgr instanceof StationManager) {
+                    stationmgr = (StationManager)pmgr;
                 }
             }
         };
@@ -298,6 +305,7 @@ public class BangServer extends CrowdServer
         plreg.createPlace(new BankConfig(), crobs);
         plreg.createPlace(new RanchConfig(), crobs);
         plreg.createPlace(new BarberConfig(), crobs);
+        plreg.createPlace(new StationConfig(), crobs);
 
         // create our server status object
         omgr.createObject(StatusObject.class, new Subscriber<StatusObject>() {
