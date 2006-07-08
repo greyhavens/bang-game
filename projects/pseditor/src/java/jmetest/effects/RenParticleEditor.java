@@ -652,8 +652,9 @@ public class RenParticleEditor extends JFrame {
                 String tfile = tex.getTextureKey().getLocation().getFile();
                 try {
                     if (relative) {
-                        tex.getTextureKey().setLocation(new URL("file:" +
-                            relativize(new File(tfile), parent)));
+                        String path = relativize(new File(tfile),
+                            parent).replace(File.separatorChar, '/');
+                        tex.getTextureKey().setLocation(new URL("file:" + path));
                     } else {
                         tex.getTextureKey().setLocation(
                             new File(parent, tfile).getCanonicalFile().toURL());
@@ -671,17 +672,19 @@ public class RenParticleEditor extends JFrame {
         }
     }
     
-    private File relativize(File absolute, File parent) {
+    private String relativize(File absolute, File parent) {
         String abspath = absolute.toString(); 
         StringBuffer path = new StringBuffer();
         while (!abspath.startsWith(parent.toString())) {
             path.append("..").append(File.separatorChar);
             if ((parent = parent.getParentFile()) == null) {
-                return absolute; // different roots
+                return abspath; // different roots
             }
         }
-        path.append(abspath.substring(parent.toString().length() + 1));
-        return new File(path.toString());
+        String pstr = parent.toString();
+        path.append(abspath.substring(pstr.length() +
+            (pstr.endsWith(File.separator) ? 0 : 1)));
+        return path.toString();
     }
     
     private void showBackgroundDialog() {
