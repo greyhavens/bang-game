@@ -53,6 +53,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
 
@@ -100,6 +102,7 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jme.util.RenderThreadActionQueue;
 import com.jme.util.RenderThreadExecutable;
+import com.jme.util.TextureKey;
 import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryExporter;
 import com.jme.util.export.binary.BinaryImporter;
@@ -521,7 +524,8 @@ public class RenParticleEditor extends JFrame {
         File file = fileChooser.getSelectedFile();
         prefs.put("particle_dir", file.getParent().toString());
         try {
-            Object obj = BinaryImporter.getInstance().load(file);
+            setLocationOverride(file.getParentFile());
+            Spatial obj = (Spatial)BinaryImporter.getInstance().load(file);
             if (obj instanceof Node) {
                 Node node = (Node) obj;
                 for (int ii = node.getQuantity() - 1; ii >= 0; ii--) {
@@ -556,6 +560,7 @@ public class RenParticleEditor extends JFrame {
                     + "': " + e, "File Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
+        TextureKey.setLocationOverride(null);
     }
 
     private void showImportDialog() {
@@ -564,9 +569,10 @@ public class RenParticleEditor extends JFrame {
             return;
         }
         File file = fileChooser.getSelectedFile();
-        prefs.put("particle_dir", file.getParent().toString());
+        prefs.put("particle_dir", file.getParent());
         try {
-            Object obj = BinaryImporter.getInstance().load(file);
+            setLocationOverride(file.getParentFile());
+            Spatial obj = (Spatial)BinaryImporter.getInstance().load(file);
             int lidx = particleNode.getQuantity();
             if (obj instanceof Node) {
                 Node node = (Node) obj;
@@ -600,8 +606,18 @@ public class RenParticleEditor extends JFrame {
                     + "': " + e, "File Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
+        TextureKey.setLocationOverride(null);
     }
 
+    private void setLocationOverride(final File parent) {
+        TextureKey.setLocationOverride(new TextureKey.LocationOverride() {
+            public URL getLocation(String file)
+                throws MalformedURLException {
+                return new URL(parent.toURL(), file);
+            }  
+        });
+    }
+    
     private void saveAs(File file) {
         if (file == null) {
             fileChooser.setSelectedFile(openFile == null ? new File("")
@@ -612,6 +628,7 @@ public class RenParticleEditor extends JFrame {
             file = fileChooser.getSelectedFile();
             prefs.put("particle_dir", file.getParent().toString());
         }
+        setTexturePathsRelative(particleNode, file.getParentFile(), true);
         try {
             BinaryExporter.getInstance().save(
                     particleNode.getQuantity() > 1 ? particleNode
@@ -622,8 +639,51 @@ public class RenParticleEditor extends JFrame {
             JOptionPane.showMessageDialog(this, "Couldn't save '" + file
                     + "': " + e, "File Error", JOptionPane.ERROR_MESSAGE);
         }
+        setTexturePathsRelative(particleNode, file.getParentFile(), false);
     }
 
+    private void setTexturePathsRelative (
+        Spatial spatial, File parent, boolean relative) {
+        TextureState tstate =
+            (TextureState)spatial.getRenderState(RenderState.RS_TEXTURE);
+        if (tstate != null) {
+            Texture tex = tstate.getTexture();
+            if (tex != null && tex.getTextureKey() != null) {
+                String tfile = tex.getTextureKey().getLocation().getFile();
+                try {
+                    if (relative) {
+                        tex.getTextureKey().setLocation(new URL("file:" +
+                            relativize(new File(tfile), parent)));
+                    } else {
+                        tex.getTextureKey().setLocation(
+                            new File(parent, tfile).getCanonicalFile().toURL());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (spatial instanceof Node) {
+            Node node = (Node)spatial;
+            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                setTexturePathsRelative(node.getChild(ii), parent, relative);
+            }
+        }
+    }
+    
+    private File relativize(File absolute, File parent) {
+        String abspath = absolute.toString(); 
+        StringBuffer path = new StringBuffer();
+        while (!abspath.startsWith(parent.toString())) {
+            path.append("..").append(File.separatorChar);
+            if ((parent = parent.getParentFile()) == null) {
+                return absolute; // different roots
+            }
+        }
+        path.append(abspath.substring(parent.toString().length() + 1));
+        return new File(path.toString());
+    }
+    
     private void showBackgroundDialog() {
         final Color bg = JColorChooser.showDialog(this,
                 "Choose Background Color", makeColor(impl.getRenderer()
