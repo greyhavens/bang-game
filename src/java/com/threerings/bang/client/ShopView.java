@@ -189,8 +189,8 @@ public abstract class ShopView extends BWindow
         _shopimg.render(renderer, _width-_shopimg.getWidth()-12,
                      _height-_shopimg.getHeight()-12, _alpha);
         _background.render(renderer, 0, 0, _alpha);
-        _shopname.render(renderer, (_width-_shopname.getWidth())/2,
-                         _height-_shopname.getHeight()-7, _alpha);
+        _shopname.render(
+            renderer, 273, _height-_shopname.getHeight()-7, _alpha);
 
         if (_keepname != null) {
             _keepname.render(renderer, _nameloc.x, _nameloc.y, _alpha);
