@@ -3,6 +3,7 @@
 
 package com.threerings.bang.client.util;
 
+import java.io.File;
 import java.io.IOException;
 
 import java.net.MalformedURLException;
@@ -56,28 +57,22 @@ public class EffectCache extends PrototypeCache<Spatial>
     // documentation inherited
     protected Spatial loadPrototype (final String key)
         throws Exception
-    {
-        final Properties props = new Properties();
-        props.load(_ctx.getResourceManager().getResource(
-            "effects/" + key + "/effect.properties"));
+    {  
+        final File parent = _ctx.getResourceManager().getResourceFile(
+            "effects/" + key);
         TextureKey.setLocationOverride(new TextureKey.LocationOverride() {
-            public URL getLocation (String file) {
-                String path = cleanPath("effects/" + key + "/" +
-                    props.getProperty(file, file));
-                path = path.substring(0, path.lastIndexOf('/') + 1);
-                try {
-                    return _ctx.getResourceManager().getResourceFile(
-                        path).toURL();
-                } catch (MalformedURLException e) {
-                    log.warning("Invalid effect path [path=" + path + "].");
-                    return null;
-                }
+            public URL getLocation (String file)
+                throws MalformedURLException {
+                return new URL(parent.toURL(), file);
             }
         });
         Spatial particles = (Spatial)BinaryImporter.getInstance().load(
             _ctx.getResourceManager().getResource(
                 "effects/" + key + "/effect.jme"));
         TextureKey.setLocationOverride(null);
+        Properties props = new Properties();
+        props.load(_ctx.getResourceManager().getResource(
+            "effects/" + key + "/effect.properties"));
         particles.getLocalScale().multLocal(Float.parseFloat(
             props.getProperty("scale", "0.025")));
         particles.getLocalRotation().multLocal(Z_UP_ROTATION);
@@ -164,7 +159,6 @@ public class EffectCache extends PrototypeCache<Spatial>
         instance.setParticleMass(prototype.getParticle(0).getMass());
         instance.setMinimumLifeTime(prototype.getMinimumLifeTime());
         instance.setMaximumLifeTime(prototype.getMaximumLifeTime());
-        instance.setRandomMod(prototype.getRandomMod());
         
         // copy influence parameters
         ArrayList<ParticleInfluence> infs = prototype.getInfluences();

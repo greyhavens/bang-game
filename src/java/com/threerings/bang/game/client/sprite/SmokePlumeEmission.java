@@ -66,7 +66,6 @@ public class SmokePlumeEmission extends SpriteEmission
         _smoke.setOriginOffset(new Vector3f());
         _smoke.setEmissionDirection(Vector3f.UNIT_Z);
         _smoke.setMaximumAngle(FastMath.PI / 64);
-        _smoke.setRandomMod(0f);
         _smoke.getParticleController().setPrecision(FastMath.FLT_EPSILON);
         _smoke.getParticleController().setControlFlow(true);
         _smoke.setReleaseRate(0);

@@ -70,7 +70,6 @@ public class MisfireEmission extends SpriteEmission
         _smoke.setInitialVelocity(0.01f);
         _smoke.setEmissionDirection(Vector3f.UNIT_Z);
         _smoke.setMaximumAngle(FastMath.PI / 16);
-        _smoke.setRandomMod(0f);
         _smoke.getParticleController().setPrecision(FastMath.FLT_EPSILON);
         _smoke.getParticleController().setControlFlow(false);
         _smoke.setStartSize(0.5f * _size);

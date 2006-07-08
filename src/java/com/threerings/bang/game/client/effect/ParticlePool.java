@@ -4,6 +4,7 @@
 package com.threerings.bang.game.client.effect;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
@@ -11,6 +12,8 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Controller;
+import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.TextureState;
@@ -18,7 +21,10 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jmex.effects.particles.ParticleController;
 import com.jmex.effects.particles.ParticleFactory;
-import com.jmex.effects.particles.ParticleMesh;
+import com.jmex.effects.particles.ParticleMesh;
+import com.samskivert.util.ResultListener;
+
+import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -52,6 +58,7 @@ public class ParticlePool
     
     public static void warmup (BangContext ctx)
     {
+        _ctx = ctx;
         _dusttex = RenderUtil.createTextureState(
             ctx, "textures/effects/dust.png");
         _dusttex.getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
@@ -147,6 +154,31 @@ public class ParticlePool
         return steamCloud;
     }
     
+    public static void getEffect (
+        String name, final ResultAttacher<Spatial> rl)
+    {
+        ArrayList<Spatial> particles = _effects.get(name);
+        if (particles == null) {
+            _effects.put(name, particles = new ArrayList<Spatial>());
+        }
+        for (Spatial spatial : particles) {
+            if (spatial.getParent() == null) {
+                rl.requestCompleted(spatial);
+                return;
+            }
+        }
+        final ArrayList<Spatial> fparticles = particles;
+        _ctx.loadEffect(name, new ResultListener<Spatial>() {
+            public void requestCompleted (Spatial result) {
+                fparticles.add(result);
+                rl.requestCompleted(result);
+            }
+            public void requestFailed (Exception cause) {
+                rl.requestFailed(cause);
+            }
+        });
+    }
+    
     protected static ParticleMesh createDustRing ()
     {
         ParticleMesh particles = new ParticleMesh("dustring", 64);
@@ -157,7 +189,6 @@ public class ParticlePool
         particles.setEmissionDirection(Vector3f.UNIT_Z);
         particles.setMinimumAngle(FastMath.HALF_PI);
         particles.setMaximumAngle(FastMath.HALF_PI);
-        particles.setRandomMod(0f);
         particles.getParticleController().setPrecision(FastMath.FLT_EPSILON);
         particles.getParticleController().setControlFlow(false);
         particles.setParticleSpinSpeed(0.1f);
@@ -182,7 +213,6 @@ public class ParticlePool
         particles.setMaximumLifeTime(750f);
         particles.setInitialVelocity(0.004f);
         particles.setMaximumAngle(FastMath.PI);
-        particles.setRandomMod(0f);
         particles.getParticleController().setPrecision(FastMath.FLT_EPSILON);
         particles.getParticleController().setControlFlow(false);
         particles.setParticleSpinSpeed(0.01f);
@@ -208,7 +238,6 @@ public class ParticlePool
         particles.setMinimumLifeTime(250f);
         particles.setMaximumLifeTime(750f);
         particles.setInitialVelocity(0f);
-        particles.setRandomMod(0f);
         particles.getParticleController().setPrecision(FastMath.FLT_EPSILON);
         particles.getParticleController().setControlFlow(true);
         particles.setReleaseRate(512);
@@ -238,7 +267,6 @@ public class ParticlePool
         particles.setInitialVelocity(0.01f);
         particles.setEmissionDirection(Vector3f.UNIT_Z);
         particles.setMaximumAngle(FastMath.PI / 4);
-        particles.setRandomMod(0f);
         particles.getParticleController().setPrecision(FastMath.FLT_EPSILON);
         particles.getParticleController().setControlFlow(false);
         particles.setStartSize(TILE_SIZE / 2);
@@ -263,7 +291,6 @@ public class ParticlePool
         particles.setMinimumLifeTime(250f);
         particles.setMaximumLifeTime(750f);
         particles.setInitialVelocity(0f);
-        particles.setRandomMod(0f);
         particles.getParticleController().setPrecision(FastMath.FLT_EPSILON);
         particles.getParticleController().setControlFlow(true);
         particles.setReleaseRate(512);
@@ -293,7 +320,6 @@ public class ParticlePool
         particles.setInitialVelocity(0.001f);
         particles.setEmissionDirection(Vector3f.UNIT_Z);
         particles.setMaximumAngle(FastMath.PI / 4);
-        particles.setRandomMod(0f);
         particles.getParticleController().setPrecision(FastMath.FLT_EPSILON);
         particles.getParticleController().setControlFlow(false);
         particles.setStartSize(TILE_SIZE / 2);
@@ -311,6 +337,10 @@ public class ParticlePool
         return particles;
     }
     
+    protected static BangContext _ctx;
+    protected static HashMap<String, ArrayList<Spatial>> _effects =
+        new HashMap<String, ArrayList<Spatial>>();
+        
     protected static ArrayList<ParticleMesh> _dustRings =
         new ArrayList<ParticleMesh>();
     protected static ArrayList<ParticleMesh> _fireballs =
