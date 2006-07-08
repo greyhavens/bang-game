@@ -48,6 +48,7 @@ public class LoadBoardTask extends Task
             throw new BuildException("Missing 'home' task property.");
         }
         System.setProperty("bang.home", _home.getPath());
+        System.setProperty("bang.tool", "true");
 
         if (_brepo == null) {
             try {

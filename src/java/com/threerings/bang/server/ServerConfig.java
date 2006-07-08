@@ -97,6 +97,15 @@ public class ServerConfig
         }
         config = new Config("server", props);
 
+        // fill in our standard properties
+        serverRoot = new File(config.getValue("server_root", "/tmp"));
+        sharedSecret = config.getValue("server_secret", (String)null);
+
+        // if we're running from a tool, stop here
+        if (Boolean.getBoolean("bang.tool")) {
+            return;
+        }
+
         // our server name and hostname is our node identifier and comes from a
         // system property passed by our startup scripts
         nodename = System.getProperty("node");
@@ -115,10 +124,6 @@ public class ServerConfig
         publicHostname = config.getValue(nodename + ".server_host", hostname);
         townId = config.getValue(
             nodename + ".town_id", BangCodes.FRONTIER_TOWN);
-
-        // fill in our standard properties
-        serverRoot = new File(config.getValue("server_root", "/tmp"));
-        sharedSecret = config.getValue("server_secret", (String)null);
     }
 
     static {
