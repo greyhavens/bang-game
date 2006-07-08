@@ -648,7 +648,8 @@ public class RenParticleEditor extends JFrame {
             (TextureState)spatial.getRenderState(RenderState.RS_TEXTURE);
         if (tstate != null) {
             Texture tex = tstate.getTexture();
-            if (tex != null && tex.getTextureKey() != null) {
+            if (tex != null && tex.getTextureKey() != null && "file".equals(
+                    tex.getTextureKey().getLocation().getProtocol())) {
                 String tfile = tex.getTextureKey().getLocation().getFile();
                 try {
                     if (relative) {
