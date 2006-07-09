@@ -10,15 +10,15 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
 
 /**
- * Allows players to put a barely-visible mine on the board that
- * explodes on contact.
+ * Allows players to put a barely-visible trap on the board that
+ * activates on contact.
  */
-public class Mine extends AreaCard
+public class Trap extends AreaCard
 {
     @Override // documentation inherited
     public String getType ()
     {
-        return "mine";
+        return "trap";
     }
 
     @Override // documentation inherited
@@ -44,7 +44,7 @@ public class Mine extends AreaCard
     {
         int[] coords = (int[])target;
         Bonus bonus = Bonus.createBonus(
-            BonusConfig.getConfig("frontier_town/mine"));
+            BonusConfig.getConfig("frontier_town/trap"));
         bonus.position(coords[0], coords[1]);
         return new AddPieceEffect(bonus);
     }

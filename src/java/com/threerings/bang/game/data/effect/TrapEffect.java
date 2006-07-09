@@ -96,7 +96,8 @@ public class TrapEffect extends BonusEffect
         if (deathEffect != null) {
             deathEffect.apply(bangobj, obs);
         }
-        damage(bangobj, obs, causer, piece, newDamage, ShotEffect.EXPLODED);
+        damage(bangobj, obs, causer, piece, newDamage, "trap".equals(_type) ?
+            ShotEffect.DAMAGED : ShotEffect.EXPLODED);
         
         return true;
     }

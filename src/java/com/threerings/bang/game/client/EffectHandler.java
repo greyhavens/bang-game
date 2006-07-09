@@ -160,18 +160,23 @@ public class EffectHandler extends BoardView.BoardAction
             sprite.updated(piece, _tick);
         }
 
-        // if this piece was shot, trigger the reacting or dying animation
-        if (wasDamaged && sprite instanceof MobileSprite) {
+        // queue reacting, dying, or generic effects for mobile sprites
+        if (sprite instanceof MobileSprite) {
             MobileSprite msprite = (MobileSprite)sprite;
-            if (piece.isAlive()) {
-                queueAction(msprite, "reacting");
-            } else if (msprite.hasAction("dying")) {
-                queueAction(msprite,  "dying");
-            } else {
-                // units with no dying animation will react while the explosion
-                // is going off and then switch to their dead model
-                queueAction(msprite, "reacting");
-                queueAction(msprite, MobileSprite.DEAD);
+            if (wasDamaged) {
+                if (piece.isAlive()) {
+                    queueAction(msprite, "reacting");
+                } else if (msprite.hasAction("dying")) {
+                    queueAction(msprite,  "dying");
+                } else {
+                    // units with no dying animation will react while the
+                    // explosion is going off and then switch to their dead
+                    // model
+                    queueAction(msprite, "reacting");
+                    queueAction(msprite, MobileSprite.DEAD);
+                }
+            } else if (msprite.hasAction(effect)) {
+                queueAction(msprite, effect);
             }
         }
 

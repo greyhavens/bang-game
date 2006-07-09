@@ -231,7 +231,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new Staredown());
         register(new GiddyUp());
         register(new Joker());
-        register(new Mine());
+        register(new Trap());
         register(new HalfRepair());
         register(new JackRabbit());
         register(new Spring());

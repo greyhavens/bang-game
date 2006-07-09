@@ -13,6 +13,9 @@ import static com.threerings.bang.Log.log;
  */
 public abstract class BonusEffect extends Effect
 {
+    /** An effect reported when the bonus is activated. */
+    public static final String ACTIVATED = "activated";
+    
     /** The id of the bonus piece that triggered this effect. */
     public int bonusId = -1;
 
@@ -26,6 +29,7 @@ public abstract class BonusEffect extends Effect
                 log.warning("Missing bonus for activated effect? " +
                             "[id=" + bonusId + "].");
             } else {
+                reportEffect(obs, bonus, ACTIVATED);
                 bangobj.removePieceDirect(bonus);
                 reportRemoval(obs, bonus);
             }

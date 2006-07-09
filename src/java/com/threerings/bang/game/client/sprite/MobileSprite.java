@@ -537,7 +537,9 @@ public class MobileSprite extends PieceSprite
             mstate.setAmbient(color);
             mstate.setDiffuse(color);
             setRenderState(mstate);
-            _shadow.setDefaultColor(color);
+            if (_shadow != null) {
+                _shadow.setDefaultColor(color);
+            }
 
             Vector3f start = new Vector3f(localTranslation),
                 finish = localRotation.mult(Vector3f.UNIT_Z);

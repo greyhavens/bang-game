@@ -1359,8 +1359,8 @@ public class BangBoardView extends BoardView
                 log.info("Removing dead unit sprite immediately " +
                          msprite.getPiece() + ".");
             }
-
-        } else if (sprite instanceof BonusSprite) {
+        }
+        if (sprite instanceof BonusSprite) {
             // if this was a bonus, note that it was activated
             _ctrl.postEvent(TutorialCodes.BONUS_ACTIVATED);
         }
