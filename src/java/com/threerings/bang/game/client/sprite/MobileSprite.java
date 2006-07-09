@@ -16,6 +16,7 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
+import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
@@ -539,16 +540,18 @@ public class MobileSprite extends PieceSprite
         
         } else if (_action.equals(RESPAWNED)) {
             // fade the unit in and display the resurrection effect
-            final Vector3f trans = new Vector3f(localTranslation);
-            final Quaternion rot = new Quaternion(localRotation);
-            ParticlePool.getEffect("frontier_town/resurrection",
-                new ResultAttacher<Spatial>(_view.getPieceNode()) {
-                public void requestCompleted (Spatial result) {
-                    super.requestCompleted(result);
-                    result.setLocalTranslation(trans);
-                    result.setLocalRotation(rot);
+            Node container = new Node("respawn") {
+                public int detachChild (Spatial child) {
+                    int idx = super.detachChild(child);
+                    getParent().detachChild(this);
+                    return idx;
                 }
-            });
+            };
+            container.getLocalTranslation().set(localTranslation);
+            container.getLocalRotation().set(localRotation);
+            _view.getPieceNode().attachChild(container);
+            ParticlePool.getEffect("frontier_town/resurrection",
+                new ResultAttacher<Spatial>(container));
             startGroundFade(true, RESPAWN_DURATION);
             
         } else {

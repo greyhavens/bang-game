@@ -96,9 +96,9 @@ public class EffectCache extends PrototypeCache<Spatial>
                 inode.attachChild(createInstance(
                     (ParticleGeometry)pnode.getChild(ii)));
             }
-            inode.setLocalTranslation(pnode.getLocalTranslation());
-            inode.setLocalRotation(pnode.getLocalRotation());
-            inode.setLocalScale(pnode.getLocalScale());
+            inode.getLocalTranslation().set(pnode.getLocalTranslation());
+            inode.getLocalRotation().set(pnode.getLocalRotation());
+            inode.getLocalScale().set(pnode.getLocalScale());
             instance = inode;
         } else {
             instance = createInstance((ParticleGeometry)prototype);
@@ -132,9 +132,9 @@ public class EffectCache extends PrototypeCache<Spatial>
         instance.setEndSize(prototype.getEndSize());
         
         // copy origin parameters
-        instance.setLocalTranslation(prototype.getLocalTranslation());
-        instance.setLocalRotation(prototype.getLocalRotation());
-        instance.setLocalScale(prototype.getLocalScale());
+        instance.getLocalTranslation().set(prototype.getLocalTranslation());
+        instance.getLocalRotation().set(prototype.getLocalRotation());
+        instance.getLocalScale().set(prototype.getLocalScale());
         instance.setOriginOffset(prototype.getOriginOffset());
         instance.setGeometry(prototype.getLine());
         instance.setGeometry(prototype.getRectangle());
