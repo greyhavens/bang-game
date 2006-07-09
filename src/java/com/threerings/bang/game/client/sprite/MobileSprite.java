@@ -12,11 +12,13 @@ import java.util.List;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Geometry;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
@@ -35,14 +37,16 @@ import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.sprite.SpriteObserver;
 
-import com.threerings.bang.game.client.TerrainNode;
-import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.piece.Piece;
-
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.Config;
+import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
+
+import com.threerings.bang.game.client.TerrainNode;
+import com.threerings.bang.game.client.effect.ParticlePool;
+import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -80,6 +84,9 @@ public class MobileSprite extends PieceSprite
      * should be removed when all other actions are completed. */
     public static final String REMOVED = "__removed__";
 
+    /** A fake action that is queued up when the sprite is respawned. */
+    public static final String RESPAWNED = "__respawned__";
+    
     /** Normal movement. */
     public static final int MOVE_NORMAL = 0;
 
@@ -528,28 +535,21 @@ public class MobileSprite extends PieceSprite
             
         } else if (_action.equals(REMOVED)) {
             // have the unit sink into the ground and fade away
-            _nextAction = REMOVAL_DURATION;
-
-            setRenderState(RenderUtil.blendAlpha);
-            final MaterialState mstate =
-                _ctx.getRenderer().createMaterialState();
-            final ColorRGBA color = new ColorRGBA(ColorRGBA.white);
-            mstate.setAmbient(color);
-            mstate.setDiffuse(color);
-            setRenderState(mstate);
-            if (_shadow != null) {
-                _shadow.setDefaultColor(color);
-            }
-
-            Vector3f start = new Vector3f(localTranslation),
-                finish = localRotation.mult(Vector3f.UNIT_Z);
-            finish.multLocal(-TILE_SIZE).addLocal(localTranslation);
-            move(new LinePath(this, start, finish, REMOVAL_DURATION) {
-                public void update (float time) {
-                    super.update(time);
-                    color.a -= time / REMOVAL_DURATION;
+            startGroundFade(false, REMOVAL_DURATION);
+        
+        } else if (_action.equals(RESPAWNED)) {
+            // fade the unit in and display the resurrection effect
+            final Vector3f trans = new Vector3f(localTranslation);
+            final Quaternion rot = new Quaternion(localRotation);
+            ParticlePool.getEffect("frontier_town/resurrection",
+                new ResultAttacher<Spatial>(_view.getPieceNode()) {
+                public void requestCompleted (Spatial result) {
+                    super.requestCompleted(result);
+                    result.setLocalTranslation(trans);
+                    result.setLocalRotation(rot);
                 }
             });
+            startGroundFade(true, RESPAWN_DURATION);
             
         } else {
             // cope when we have units disabled for debugging purposes
@@ -559,6 +559,48 @@ public class MobileSprite extends PieceSprite
         }
     }
 
+    /**
+     * Sinks the sprite into the ground and fades it out, or raises it from the
+     * ground and fades it in.
+     */
+    protected void startGroundFade (final boolean in, final float duration)
+    {
+        setRenderState(RenderUtil.blendAlpha);
+        if (_mstate == null) {
+            _mstate = _ctx.getRenderer().createMaterialState();
+            _mstate.setAmbient(ColorRGBA.white);
+            _mstate.setDiffuse(ColorRGBA.white);
+            setRenderState(_mstate);
+        }
+        updateRenderState();
+
+        Vector3f above = new Vector3f(localTranslation),
+            below = localRotation.mult(Vector3f.UNIT_Z);
+        below.multLocal(-TILE_SIZE * 0.5f).addLocal(localTranslation);
+        move(new LinePath(this, in ? below : above, in ? above : below,
+            duration) {
+            public void update (float time) {
+                super.update(time);
+                float a = Math.min(Math.max(in ? (_accum / _duration) :
+                    (1f - _accum / _duration), 0f), 1f);
+                _mstate.getDiffuse().a = a;
+                if (_shadow != null) {
+                    _shadow.getBatch(0).getDefaultColor().a = a;
+                }
+            }
+            public void wasRemoved () {
+                super.wasRemoved();
+                clearRenderState(RenderState.RS_ALPHA);
+                if (!isShadowable()) {
+                    clearRenderState(RenderState.RS_MATERIAL);
+                    _mstate = null;
+                }
+                updateRenderState();
+            }
+        });
+        _nextAction = duration;
+    }
+    
     /**
      * Starts the next idle animation (if any) and schedules the one after
      * that.
@@ -739,8 +781,11 @@ public class MobileSprite extends PieceSprite
     protected static final int NUM_DUST_PARTICLES = 32;
 
     /** The number of seconds it takes dead pieces to fade out. */
-    protected static final float REMOVAL_DURATION = 3f;
+    protected static final float REMOVAL_DURATION = 2f;
 
+    /** The number of seconds it takes new pieces to fade in. */
+    protected static final float RESPAWN_DURATION = 1f;
+    
     /** Complex action states. */
     protected static enum ComplexAction { NONE, ACTIVE, OVER };
 }

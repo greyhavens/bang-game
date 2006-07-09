@@ -96,6 +96,9 @@ public class EffectCache extends PrototypeCache<Spatial>
                 inode.attachChild(createInstance(
                     (ParticleGeometry)pnode.getChild(ii)));
             }
+            inode.setLocalTranslation(pnode.getLocalTranslation());
+            inode.setLocalRotation(pnode.getLocalRotation());
+            inode.setLocalScale(pnode.getLocalScale());
             instance = inode;
         } else {
             instance = createInstance((ParticleGeometry)prototype);

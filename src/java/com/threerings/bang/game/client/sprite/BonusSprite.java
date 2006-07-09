@@ -79,8 +79,6 @@ public class BonusSprite extends MobileSprite
     @Override // documentation inherited
     protected void createSounds (SoundGroup sounds)
     {
-        super.createSounds(sounds);
-
         // preload any sound associated with activating this bonus
         String spath = "rsrc/bonuses/" + _name + "/activate.wav";
         if (SoundUtil.haveSound(spath)) {

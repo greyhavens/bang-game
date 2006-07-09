@@ -21,6 +21,7 @@ import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
 import com.jmex.effects.particles.ParticleController;
 import com.jmex.effects.particles.ParticleFactory;
+import com.jmex.effects.particles.ParticleGeometry;
 import com.jmex.effects.particles.ParticleMesh;
 import com.samskivert.util.ResultListener;
 
@@ -163,6 +164,7 @@ public class ParticlePool
         }
         for (Spatial spatial : particles) {
             if (spatial.getParent() == null) {
+                forceRespawn(spatial);
                 rl.requestCompleted(spatial);
                 return;
             }
@@ -170,7 +172,9 @@ public class ParticlePool
         final ArrayList<Spatial> fparticles = particles;
         _ctx.loadEffect(name, new ResultListener<Spatial>() {
             public void requestCompleted (Spatial result) {
+                result.addController(new ParticleRemover(result));
                 fparticles.add(result);
+                forceRespawn(result);
                 rl.requestCompleted(result);
             }
             public void requestFailed (Exception cause) {
@@ -335,6 +339,67 @@ public class ParticlePool
         particles.setRenderState(RenderUtil.overlayZBuf);
         
         return particles;
+    }
+    
+    protected static void forceRespawn (Spatial spatial)
+    {
+        if (spatial instanceof ParticleGeometry) {
+            ((ParticleGeometry)spatial).forceRespawn();
+            
+        } else if (spatial instanceof Node) {
+            Node node = (Node)spatial;
+            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                forceRespawn(node.getChild(ii));
+            }
+        }
+    }
+    
+    /**
+     * Removes effects from their parents when all of their particle systems
+     * become inactive.
+     */
+    protected static class ParticleRemover extends Controller
+    {
+        public ParticleRemover (Spatial target)
+        {
+            _target = target;
+            ArrayList<ParticleController> pctrls =
+                new ArrayList<ParticleController>();
+            addParticleControllers(target, pctrls);
+            _pctrls = pctrls.toArray(new ParticleController[pctrls.size()]);
+        }
+        
+        // documentation inherited
+        public void update (float time)
+        {
+            for (ParticleController pctrl : _pctrls) {
+                if (pctrl.isActive()) {
+                    return;
+                }
+            }
+            _target.getParent().detachChild(_target);
+        }
+        
+        public void addParticleControllers (
+            Spatial spatial, ArrayList<ParticleController> pctrls)
+        {
+            if (spatial instanceof ParticleGeometry) {
+                ParticleGeometry pgeom = (ParticleGeometry)spatial;
+                pctrls.add(pgeom.getParticleController());
+                
+            } else if (spatial instanceof Node) {
+                Node node = (Node)spatial;
+                for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                    addParticleControllers(node.getChild(ii), pctrls);
+                }
+            }
+        } 
+        
+        /** The target effect. */
+        protected Spatial _target;
+        
+        /** All of the particle controllers in the effect. */
+        protected ParticleController[] _pctrls;
     }
     
     protected static BangContext _ctx;
