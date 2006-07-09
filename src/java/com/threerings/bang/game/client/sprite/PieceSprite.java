@@ -455,8 +455,8 @@ public class PieceSprite extends Sprite
         if (_tlight == null) {
             return;
         }
-        if (_tlight.getTileX() != _piece.x || _tlight.getTileY() != _piece.y) {
-            _tlight.setPosition(_piece.x, _piece.y);
+        if (_tlight.getTileX() != _px || _tlight.getTileY() != _py) {
+            _tlight.setPosition(_px, _py);
             _status.updateTranslations(_tlight);
         }
     }
