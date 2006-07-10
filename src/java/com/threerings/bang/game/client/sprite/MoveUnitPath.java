@@ -24,43 +24,45 @@ public class MoveUnitPath extends LineSegmentPath
     public MoveUnitPath (
         MobileSprite sprite, Vector3f[] coords, float[] durations)
     {
-        this(sprite, coords, durations, null);
+        this(sprite, coords, durations, "walking", null);
     }
     
     public MoveUnitPath (MobileSprite sprite, Vector3f[] coords,
-            float[] durations, String action)
+            float[] durations, String type, String action)
     {
         super(sprite, UP, FORWARD, coords, durations);
 
-        // either we do "walking" the whole time, or we break our path
+        // either we do _type_ the whole time, or we break our path
         // down into "start", "cycle" and "end"
+        String type_start = type + "_start";
+        String type_cycle = type + "_cycle";
+        String type_end = type + "_end";
         if (action != null) {
             sprite.setAction(action);
 
-        } else if (sprite.hasAction("walking_start")) {
+        } else if (sprite.hasAction(type_start)) {
             float total = 0;
             for (int ii = 0; ii < durations.length; ii++) {
                 total += durations[ii];
             }
-            _actions = new String[] {
-                "walking_start", "walking_cycle", "walking_end" };
+            _actions = new String[] { type_start,  type_cycle, type_end };
             _times = new float[_actions.length];
-            Model.Animation start = sprite.getAction("walking_start");
+            Model.Animation start = sprite.getAction(type_start);
             if (start != null) {
                 _times[0] = start.getDuration() / Config.animationSpeed;
                 total -= _times[0];
             }
-            Model.Animation end = sprite.getAction("walking_end");
+            Model.Animation end = sprite.getAction(type_end);
             if (end != null) {
                 _times[2] = end.getDuration() / Config.animationSpeed;
                 total -= _times[2];
             }
             _times[1] = total + _times[0];
             _times[2] += _times[1];
-            sprite.setAction("walking_start");
+            sprite.setAction(type_start);
 
         } else {
-            sprite.setAction("walking");
+            sprite.setAction(type);
         }
     }
 

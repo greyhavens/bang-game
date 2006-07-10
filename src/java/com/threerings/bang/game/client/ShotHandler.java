@@ -83,14 +83,14 @@ public abstract class ShotHandler extends EffectHandler
             PieceSprite sprite = _view.getPieceSprite(piece);
             if (sprite != null && sprite instanceof MobileSprite) {
                 ms = (MobileSprite)sprite;
-                ms.setMoveType(MobileSprite.MOVE_PUSH);
+                ms.setMoveAction(MobileSprite.MOVE_PUSH);
             }
         }
 
         super.pieceMoved(piece);
 
         if (ms != null) {
-            ms.setMoveType(MobileSprite.MOVE_NORMAL);
+            ms.setMoveAction(MobileSprite.MOVE_NORMAL);
         }
     }
 

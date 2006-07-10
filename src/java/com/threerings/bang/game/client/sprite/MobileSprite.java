@@ -93,6 +93,12 @@ public class MobileSprite extends PieceSprite
 
     /** Pushed movement. */
     public static final int MOVE_PUSH = 1;
+
+    /** Walking movement. */
+    public static final String MOVE_WALKING = "walking";
+
+    /** Flying movement. */
+    public static final String MOVE_FLYING = "flying";
     
     /**
      * Creates a mobile sprite with the specified model type and name.
@@ -198,9 +204,25 @@ public class MobileSprite extends PieceSprite
     }
 
     /**
+     * Sets the move action of the sprite.
+     */
+    public void setMoveAction (int moveAction)
+    {
+        _moveAction = moveAction;
+    }
+
+    /**
+     * Get the move action of the sprite.
+     */
+    public int getMoveAction ()
+    {
+        return _moveAction;
+    }
+
+    /**
      * Sets the move type of the sprite.
      */
-    public void setMoveType (int moveType)
+    public void setMoveType (String moveType)
     {
         _moveType = moveType;
     }
@@ -208,7 +230,7 @@ public class MobileSprite extends PieceSprite
     /**
      * Get the move type of the sprite.
      */
-    public int getMoveType ()
+    public String getMoveType ()
     {
         return _moveType;
     }
@@ -696,10 +718,10 @@ public class MobileSprite extends PieceSprite
             }
         }
         String action = null;
-        if (_moveType == MOVE_PUSH) {
+        if (_moveAction == MOVE_PUSH) {
             action = "reacting";
         }
-        return new MoveUnitPath(this, coords, durations, action);
+        return new MoveUnitPath(this, coords, durations, _moveType, action);
     }
 
     /**
@@ -770,7 +792,9 @@ public class MobileSprite extends PieceSprite
 
     protected PieceSprite _tsprite;
 
-    protected int _moveType = MOVE_NORMAL;
+    protected int _moveAction = MOVE_NORMAL;
+
+    protected String _moveType = MOVE_WALKING;
     
     /** Whether or not we have switched to the dead model. */
     protected boolean _dead;
