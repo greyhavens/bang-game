@@ -45,7 +45,6 @@ import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
-import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -386,7 +385,7 @@ public class MobileSprite extends PieceSprite
     {
         return _actionHandlers.remove(handler);
     }
-
+    
     @Override // documentation inherited
     protected void createGeometry ()
     {
@@ -562,18 +561,7 @@ public class MobileSprite extends PieceSprite
         
         } else if (_action.equals(RESPAWNED)) {
             // fade the unit in and display the resurrection effect
-            Node container = new Node("respawn") {
-                public int detachChild (Spatial child) {
-                    int idx = super.detachChild(child);
-                    getParent().detachChild(this);
-                    return idx;
-                }
-            };
-            container.getLocalTranslation().set(localTranslation);
-            container.getLocalRotation().set(localRotation);
-            _view.getPieceNode().attachChild(container);
-            ParticlePool.getEffect("frontier_town/resurrection",
-                new ResultAttacher<Spatial>(container));
+            displayParticles("frontier_town/resurrection", false);
             startGroundFade(true, RESPAWN_DURATION);
             
         } else {

@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client;
 
+import com.jme.scene.Spatial;
+
 import com.samskivert.util.ArrayIntSet;
 
 import com.threerings.jme.sprite.Path;
@@ -10,6 +12,7 @@ import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.SoundUtil;
@@ -17,6 +20,7 @@ import com.threerings.bang.util.SoundUtil;
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.client.effect.ExplosionViz;
 import com.threerings.bang.game.client.effect.IconViz;
+import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.client.effect.PlaySoundViz;
 import com.threerings.bang.game.client.effect.RepairViz;
 import com.threerings.bang.game.client.effect.WreckViz;
@@ -188,6 +192,14 @@ public class EffectHandler extends BoardView.BoardAction
             iviz.display(sprite);
         }
 
+        // perhaps load a generic particle effect
+        if (effect.startsWith("effects/")) {
+            String name = effect.substring(8);
+            if (_ctx.getEffectCache().haveEffect(name)) {
+                sprite.displayParticles(name, true);
+            }
+        }
+        
         // also play a sound along with any visual effect
         String path = "rsrc/" + effect + ".wav";
         if (SoundUtil.haveSound(path)) {

@@ -159,9 +159,11 @@
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/effects/${town}/bundle.jar" basedir="rsrc/effects/${town}">
+      <include name="**/effects.txt"/>
       <include name="**/effect.properties"/>
       <include name="**/effect.jme"/>
       <include name="**/*.png"/>
+      <include name="**/*.wav"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/extras/${town}/bundle.jar" basedir="rsrc/extras/${town}">

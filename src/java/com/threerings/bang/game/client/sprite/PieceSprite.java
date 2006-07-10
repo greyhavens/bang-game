@@ -31,12 +31,14 @@ import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.client.Config;
+import com.threerings.bang.client.util.EffectCache;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.TerrainNode;
+import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -391,6 +393,31 @@ public class PieceSprite extends Sprite
         return (_model == null ? null : _model.getControllers());
     }
 
+    /**
+     * Fires off a transient particle effect at this sprite's location.
+     *
+     * @param center if true, place the effect at the sprite's vertical center
+     */
+    public void displayParticles (String name, final boolean center)
+    {
+        final Quaternion rot = new Quaternion(localRotation);
+        final Vector3f trans = new Vector3f(localTranslation);
+        ParticlePool.getEffect(name,
+            new ResultAttacher<Spatial>(_view.getPieceNode()) {
+            public void requestCompleted (Spatial result) {
+                super.requestCompleted(result);
+                rot.mult(EffectCache.Z_UP_ROTATION, result.getLocalRotation());
+                if (center) {
+                    rot.multLocal(result.getLocalTranslation().set(
+                        0f, 0f, _piece.getHeight() *
+                            TILE_SIZE * 0.5f)).addLocal(trans);
+                } else {
+                    result.getLocalTranslation().set(trans);
+                }
+            }      
+        });
+    }
+    
     @Override // documentation inherited
     public void updateWorldData (float time)
     {

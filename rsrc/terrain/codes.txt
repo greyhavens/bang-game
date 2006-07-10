@@ -22,3 +22,4 @@ paving_stones_gray = 21
 green_field = 22
 dry_mud_brown = 23
 rock_face = 24
+ice = 25

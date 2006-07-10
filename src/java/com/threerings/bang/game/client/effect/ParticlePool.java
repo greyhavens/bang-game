@@ -164,8 +164,11 @@ public class ParticlePool
         }
         for (Spatial spatial : particles) {
             if (spatial.getParent() == null) {
-                forceRespawn(spatial);
+                System.out.println("reusing " + spatial);
                 rl.requestCompleted(spatial);
+                forceRespawn(spatial);
+                spatial.updateGeometricState(0f, false);
+//                forceRespawn(spatial);
                 return;
             }
         }
@@ -174,8 +177,9 @@ public class ParticlePool
             public void requestCompleted (Spatial result) {
                 result.addController(new ParticleRemover(result));
                 fparticles.add(result);
-                forceRespawn(result);
                 rl.requestCompleted(result);
+                result.updateGeometricState(0f, false);
+                forceRespawn(result);
             }
             public void requestFailed (Exception cause) {
                 rl.requestFailed(cause);

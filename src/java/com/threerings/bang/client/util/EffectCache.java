@@ -10,6 +10,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Properties;
 
 import com.jme.bounding.BoundingBox;
@@ -29,6 +31,7 @@ import com.samskivert.util.ResultListener;
 
 import com.threerings.media.image.Colorization;
 
+import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -38,10 +41,26 @@ import static com.threerings.bang.Log.log;
  * Maintains a cache of particle system effects.
  */
 public class EffectCache extends PrototypeCache<Spatial>
-{
+{    
+    /** The rotation from y-up coordinates to z-up coordinates. */
+    public static final Quaternion Z_UP_ROTATION = new Quaternion();
+    static {
+        Z_UP_ROTATION.fromAngleNormalAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
+    }
+    
     public EffectCache (BasicContext ctx)
     {
         super(ctx);
+        Collections.addAll(_effects, BangUtil.townResourceToStrings(
+            "rsrc/effects/TOWN/effects.txt"));
+    }
+    
+    /**
+     * Determines whether the names effect exists.
+     */
+    public boolean haveEffect (String name)
+    {
+        return _effects.contains(name);
     }
     
     /**
@@ -184,9 +203,6 @@ public class EffectCache extends PrototypeCache<Spatial>
         return instance;
     }
     
-    /** The rotation from y-up coordinates to z-up coordinates. */
-    public static final Quaternion Z_UP_ROTATION = new Quaternion();
-    static {
-        Z_UP_ROTATION.fromAngleNormalAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
-    }
+    /** The effects available for loading. */
+    protected HashSet<String> _effects = new HashSet<String>();
 }
