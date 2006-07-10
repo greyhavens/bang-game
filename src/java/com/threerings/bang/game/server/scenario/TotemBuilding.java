@@ -40,17 +40,7 @@ import static com.threerings.bang.Log.log;
 /**
  * A gameplay scenario wherein:
  * <ul>
- * <li> Players all have a totem base on the board.
- * <li> Totem pieces are generated and scattered randomly around the board.
- * <li> Any player unit can pick up a totem piece and carry it back to their
- * totem base, adding the piece to their totem pole.
- * <li> Players can attack an opponents totem, which has 100 health, and
- * destroy the top piece on the pole.  (Which resets the health to 100).
- * <li> Near the end of the scenario, top totem pieces are generated.
- * <li> The round ends after a top piece is added to a pole, or after a
- * fixed time limit.
- * <li> Points are granted for each totem piece on a players pole, with
- * duplicate pieces counted at half value.
+ * <li>Fill this in once the scenario is finalized
  * </ul>
  */
 public class TotemBuilding extends Scenario
@@ -130,10 +120,10 @@ public class TotemBuilding extends Scenario
             }
         }
 
-        // if there is not at least two totems in play for every player in the
+        // if there is not at least 1.5 totems in play for every player in the
         // game, try to spawn another one
         int numPlayers = bangobj.getActivePlayerCount();
-        if (totems < numPlayers * 2) {
+        if (totems < TOTEM_RATIO * numPlayers) {
             String type = TotemEffect.TOTEM_PIECES[RandomUtil.getInt(
                     TotemEffect.TOTEM_PIECES.length)];
             float progress = (float)bangobj.tick / bangobj.duration;
@@ -326,4 +316,7 @@ public class TotemBuilding extends Scenario
 
     /** How long into the round before crowns will spawn. */
     protected static final float CROWN_SPAWN = 0.7f;
+
+    /** Totem to player ratio. */
+    protected static final float TOTEM_RATIO = 1.5f;
 }
