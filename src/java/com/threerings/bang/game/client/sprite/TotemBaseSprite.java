@@ -44,7 +44,7 @@ public class TotemBaseSprite extends PropSprite
     @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {
-        return (pidx == _piece.owner ? "own_" : "other_") + _config.type;
+        return _config.type;
     }
 
     @Override // documentation inherited
