@@ -23,46 +23,17 @@ import java.util.HashMap;
  */
 public class TotemEffect extends HoldEffect
 {
-    /** The bonus identifier for the totem middle piece. */
-    public static final String TOTEM_MIDDLE_BONUS = "indian_post/totem_middle";
+    /** The bonus identifier for the large totem middle piece. */
+    public static final String TOTEM_LARGE_BONUS = "indian_post/totem_large";
     
-    /** The bonus identifier for the totem middle piece. */
+    /** The bonus identifier for the medium totem middle piece. */
     public static final String TOTEM_MEDIUM_BONUS = "indian_post/totem_medium";
     
-    /** The bonus identifier for the totem middle piece. */
+    /** The bonus identifier for the small totem middle piece. */
     public static final String TOTEM_SMALL_BONUS = "indian_post/totem_small";
 
     /** The bonus identifier for the totem crown piece. */
     public static final String TOTEM_CROWN_BONUS = "indian_post/totem_crown";
-
-    public static enum Type
-    {
-        TOTEM_MIDDLE(TOTEM_MIDDLE_BONUS, 30, 3),
-        TOTEM_MEDIUM(TOTEM_MEDIUM_BONUS, 20, 2),
-        TOTEM_SMALL(TOTEM_SMALL_BONUS, 10, 1);
-
-        Type (String bonus, int value, int height) {
-            _bonus = bonus;
-            _value = value;
-            _height = height;
-        }
-
-        public String bonus () {
-            return _bonus;
-        }
-
-        public int value () {
-            return _value;
-        }
-
-        public int height () {
-            return _height;
-        }
-
-        protected String _bonus;
-        protected int _height;
-        protected int _value;
-    }
 
     /** The identifier for the type of effect that we produce. */
     public static final String TOTEM_ADDED =
@@ -70,17 +41,8 @@ public class TotemEffect extends HoldEffect
 
     /** The normal totem pieces. */
     public static final String[] TOTEM_PIECES = {
-        TOTEM_MIDDLE_BONUS, TOTEM_MEDIUM_BONUS, TOTEM_SMALL_BONUS
+        TOTEM_LARGE_BONUS, TOTEM_MEDIUM_BONUS, TOTEM_SMALL_BONUS
     };
-
-    public static final HashMap<String, Type> TOTEM_LOOKUP = 
-        new HashMap<String, Type>();
-
-    static {
-        TOTEM_LOOKUP.put(TOTEM_MIDDLE_BONUS, Type.TOTEM_MIDDLE);
-        TOTEM_LOOKUP.put(TOTEM_MEDIUM_BONUS, Type.TOTEM_MEDIUM);
-        TOTEM_LOOKUP.put(TOTEM_SMALL_BONUS, Type.TOTEM_SMALL);
-    }
 
     /** The id of the totem base involved in this totem transfer or -1 if
      * we're dealing for board based totems. */

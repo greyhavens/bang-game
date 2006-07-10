@@ -140,8 +140,6 @@ public class TotemBaseSprite extends PropSprite
         float height = 0f;
         for (int ii = _totemPieces.size() - 1; ii >= 0; ii--) {
             Node piece = _totemPieces.get(ii);
-            log.info("Adjust translation of piece " + ii + " to height: " +
-                    height);
             piece.setLocalTranslation(new Vector3f(0, 0, height));
             if (ii > 0) {
                 height -= _totemHeights.get(ii - 1);

@@ -268,7 +268,9 @@ public class TotemBuilding extends Scenario
                     int owner = base.getOwner(jj);
                     piecePerTotem[ii][owner]++;
                     numPieces[owner]++;
-                    totemHeight[ii] = base.getType(jj).height();
+                    TotemBonus.Type type = base.getType(jj);
+                    totemHeight[ii] = type.height();
+                    points[owner] += type.value();
                 }
                 for (int pieces : piecePerTotem[ii]) {
                     maxPiece[ii] = Math.max(maxPiece[ii], pieces);
@@ -278,11 +280,10 @@ public class TotemBuilding extends Scenario
             for (int ii = 0; ii < piecePerTotem.length; ii++) {
                 for (int jj = 0; jj < piecePerTotem[ii].length; jj++) {
                     int pieces = piecePerTotem[ii][jj];
-                    int pts = pieces * POINTS_PER_TOTEM;
-                    points[jj] += pts;
                     
                     // bonus if they have the most pieces on this totem
-                    if (pieces == maxPiece[ii]) {
+                    // and the totem is not empty
+                    if (pieces > 0 && pieces == maxPiece[ii]) {
                         points[jj] += MAX_PIECE_BONUS;
                     }
                     

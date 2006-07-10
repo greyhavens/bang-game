@@ -75,8 +75,10 @@ public class TotemBase extends Prop
      */
     public String getTopPiece ()
     {
-        TotemEffect.Type type = getType(_pieces.size() - 1);
-        return (type == null) ? null : type.bonus();
+        if (_pieces.size() > 0) {
+            return getType(_pieces.size() - 1).bonus();
+        }
+        return null;
     }
 
     /**
@@ -99,13 +101,13 @@ public class TotemBase extends Prop
     /**
      * Returns the type of the piece at index idx.
      */
-    public TotemEffect.Type getType (int idx)
+    public TotemBonus.Type getType (int idx)
     {
         if (idx < 0 || idx >= _pieces.size()) {
             log.warning("Requested type of OOB totem " +
                         "[idx=" + idx + ", have=" + _pieces.size() + "].");
             Thread.dumpStack();
-            return TotemEffect.Type.TOTEM_SMALL;
+            return TotemBonus.Type.TOTEM_SMALL;
         } else {
             return _pieces.get(idx).type;
         }
@@ -148,7 +150,7 @@ public class TotemBase extends Prop
     protected class PieceData extends SimpleStreamableObject
     {
         public int owner;
-        public TotemEffect.Type type;
+        public TotemBonus.Type type;
         public int damage;
 
         public PieceData ()
@@ -157,7 +159,7 @@ public class TotemBase extends Prop
 
         public PieceData (String type, int owner)
         {
-            this.type = TotemEffect.TOTEM_LOOKUP.get(type);
+            this.type = TotemBonus.TOTEM_LOOKUP.get(type);
             this.owner = owner;
         }
     }
