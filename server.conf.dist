@@ -11,6 +11,7 @@ export JAVA_HOME=/usr/local/java
 DBSERVER=localhost
 DBUSER=bang
 DBPASSWD=PASSWORD
+DBPORT=3306
 
 # General configurations
 BANG_USER=bang
