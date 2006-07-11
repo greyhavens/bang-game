@@ -100,15 +100,16 @@ public class PieceSprite extends Sprite
     }
 
     /**
-     * Returns the help text title identifier for this piece, or null if it
-     * has no associate help.
+     * Returns the help text title identifier for this piece, or null if it has
+     * no associated help.
      *
      * @param pidx our player's index for sprites that return different help
      * depending on whether they are ours or an opponent's.
      */
     public String getHelpTitleIdent (int pidx)
     {
-        return null;
+        String hident = getHelpIdent(pidx);
+        return (hident == null) ? null : (hident + "_title");
     }
 
     /**

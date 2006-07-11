@@ -652,12 +652,10 @@ public class BangBoardView extends BoardView
                     _tiptext = _ctx.xlate(BangCodes.UNITS_MSGS, msg);
                 } else {
                     item = "m.help_" + item;
-                    String title = 
+                    String title =
                         ((PieceSprite)hover).getHelpTitleIdent(_pidx);
-                    title = (title == null) ? item + "_title" : 
-                                              "m.help_" + title;
                     String msg = MessageBundle.compose(
-                        "m.help_tip", title, item);
+                        "m.help_tip", "m.help_" + title, item);
                     _tiptext = _ctx.xlate(GameCodes.GAME_MSGS, msg);
                 }
             }
