@@ -117,11 +117,16 @@ public abstract class ShopView extends BWindow
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
         _msgs = ctx.getMessageManager().getBundle(ident);
 
-        // load up our background, shopkeep and other images
-        String tpath = "ui/" + ident + "/" + _ctx.getUserObject().townId;
+        // this is town but not shop specific
+        String townId = _ctx.getUserObject().townId;
+        _shopkbg = _ctx.loadImage("ui/shop/" + townId + "/shopkeep_bg.png");
+
+        // this is shop but not town specific
         _background = _ctx.loadImage("ui/" + ident + "/background.png");
+
+        // these are town and shop specific
+        String tpath = "ui/" + ident + "/" + townId;
         _shopkeep = _ctx.loadImage(tpath + "/shopkeep.png");
-        _shopkbg = _ctx.loadImage(tpath + "/shopkeep_bg.png");
         _shopimg = _ctx.loadImage(tpath + "/shop.png");
         _shopname = _ctx.loadImage(tpath + "/sign.png");
 
@@ -132,7 +137,6 @@ public abstract class ShopView extends BWindow
         }
 
         // add our town label
-        String townId = _ctx.getUserObject().townId;
         add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId),
                        "town_name_label"), new Rectangle(851, 637, 165, 20));
     }
