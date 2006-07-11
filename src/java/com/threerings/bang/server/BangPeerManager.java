@@ -55,8 +55,10 @@ public class BangPeerManager extends CrowdPeerManager
         // grab a snapshot of this player's avatar which is how they'll look to
         // pardners on other servers
         PlayerObject player = (PlayerObject)client.getClientObject();
-        ((BangClientInfo)info).avatar =
-            player.getLook(Look.Pose.DEFAULT).getAvatar(player);
+        Look look = player.getLook(Look.Pose.DEFAULT);
+        if (look != null) {
+            ((BangClientInfo)info).avatar = look.getAvatar(player);
+        }
     }
 
     /**
