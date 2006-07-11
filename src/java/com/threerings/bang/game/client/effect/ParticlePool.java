@@ -164,11 +164,9 @@ public class ParticlePool
         }
         for (Spatial spatial : particles) {
             if (spatial.getParent() == null) {
-                System.out.println("reusing " + spatial);
                 rl.requestCompleted(spatial);
                 forceRespawn(spatial);
                 spatial.updateGeometricState(0f, false);
-//                forceRespawn(spatial);
                 return;
             }
         }
