@@ -77,7 +77,7 @@ case "$1" in
 	    exit 1
 	fi
         echo -n "Shutting down bang, "
-        $BANG_HOME/bin/bangrestart
+        $BANG_HOME/bin/bangrestart $NODE
         echo -n "bangrespawn: "
         kill `cat $PIDFILE`
         echo "stopped."
