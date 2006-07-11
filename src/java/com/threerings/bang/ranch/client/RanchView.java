@@ -61,8 +61,15 @@ public class RanchView extends ShopView
 
         // create our various tabs: recruitable big shots...
         _bigshots = new UnitPalette(ctx, _inspector, 4, 3);
-        _bigshots.setUnits(
-            UnitConfig.getTownUnits(townId, UnitConfig.Rank.BIGSHOT), false);
+        UnitConfig[] units =
+            UnitConfig.getTownUnits(townId, UnitConfig.Rank.BIGSHOT);
+        Arrays.sort(units, new Comparator<UnitConfig>() {
+            public int compare (UnitConfig uc1, UnitConfig uc2) {
+                int rv = uc2.getTownId().compareTo(uc1.getTownId());
+                return (rv != 0) ? rv : uc1.type.compareTo(uc2.type);
+            };
+        });
+        _bigshots.setUnits(units, false);
 
         // ...recruited big shots...
         _recruits = new UnitPalette(ctx, _inspector, 4, 3);
@@ -72,10 +79,15 @@ public class RanchView extends ShopView
         _units = new UnitPalette(ctx, _inspector, 4, 3);
         EnumSet<UnitConfig.Rank> ranks = EnumSet.of(
             UnitConfig.Rank.NORMAL, UnitConfig.Rank.SPECIAL);
-        UnitConfig[] units = UnitConfig.getTownUnits(townId, ranks);
+        units = UnitConfig.getTownUnits(townId, ranks);
         Arrays.sort(units, new Comparator<UnitConfig>() {
             public int compare (UnitConfig uc1, UnitConfig uc2) {
-                return Math.abs(uc1.badgeCode) - Math.abs(uc2.badgeCode);
+                int rv = uc2.getTownId().compareTo(uc1.getTownId());
+                if (rv != 0) {
+                    return rv;
+                }
+                rv = Math.abs(uc1.badgeCode) - Math.abs(uc2.badgeCode);
+                return rv != 0 ? rv : uc1.type.compareTo(uc2.type);
             };
         });
         _units.setUnits(units, false);

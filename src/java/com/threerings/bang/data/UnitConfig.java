@@ -176,6 +176,14 @@ public class UnitConfig
     }
 
     /**
+     * Returns the town in which this unit is introduced.
+     */
+    public String getTownId ()
+    {
+        return type.substring(0, type.indexOf("/"));
+    }
+
+    /**
      * Computes and returns the damage adjustment to be used when a unit
      * of this type attacks a unit of the specified type.
      */
