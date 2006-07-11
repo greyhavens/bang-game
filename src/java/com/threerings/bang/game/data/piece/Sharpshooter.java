@@ -19,11 +19,11 @@ public class Sharpshooter extends Unit
     @Override // documentation inherited
     public Effect willShoot (BangObject bangobj, Piece target, ShotEffect shot)
     {
-        // sharpshooters always cause their target to drop their nugget whether
-        // they die or not
+        // sharpshooters always cause their target to drop any bonus they
+        // are holding whether they die or not
         if (target instanceof Unit) {
             Unit unit = (Unit)target;
-            if (NuggetEffect.isNuggetBonus(unit.holding)) {
+            if (unit.holding != null) {
                 return HoldEffect.dropBonus(bangobj, unit, pieceId,
                     unit.holding);
             }
