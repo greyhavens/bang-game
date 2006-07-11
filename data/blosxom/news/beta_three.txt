@@ -1,0 +1,47 @@
+Dealin' Out Some Cards
+
+After a long spell of roundin' up them dogies, we're finally ready to drive a
+herd back to the ranch. Most of our progress is still focused on the next town,
+<span class="highlight">Indian Trading Post</span>, but we're also making
+improvements and additions to <span class="highlight">Frontier Town</span> as
+well.
+
+<ul>
+<li>We added a whole heap 'o new <span class="highlight">Cards</span> and <span
+class="highlight">Bonuses</span>.  <span class="highlight">Barricade</span>,
+<span class="highlight">Dud</span>, <span class="highlight">Jack Rabbit</span>,
+and a dozen more. Get on into the <span class="highlight">General Store</span>
+and pick up a pack fer yerself and give 'em a whirl.</li>
+
+<li>We've made a whole lot of progress on our effects system, so a bunch more
+stuff sparks, sparkles, explodes, and blings. There'll be even more of that
+coming down the pike, now that we got all the right bits in place.</li>
+
+<li>We've added some new avatar expressions and hairstyles. There's a bunch
+more o' them (and fancy duds) coming in <span class="highlight">Indian Trading
+Post</span> as well.</li>
+
+<li>Of course we fixed a heap of bugs and no doubt added some new ones.</li>
+</ul>
+</p>
+
+<p>We're still workin' hard on ITP, but I've got another screenshot for ya:</p>
+
+<script language="JavaScript">
+//<![CDATA[
+function show07(image) {
+  window.open("/screenshots/2006/07/shot.html?" + image, "image",
+    "resizable=no,status=no,width=1034,height=778,dependent=yes");
+  return false;
+}
+//]]>
+</script>
+<p align="center"><a href="/screenshots/2006/07/shot.html?ip_ranch"
+ onclick="return show07('ip_ranch')">
+<img src="/screenshots/2006/07/thumbs/ip_ranch.jpg"
+ border="0" alt=""/></a></p>
+
+<p>More to come when we get another chance to come up fer air. That's all fer
+now pardners,</p>
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
