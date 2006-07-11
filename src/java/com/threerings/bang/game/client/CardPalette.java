@@ -44,7 +44,8 @@ public class CardPalette extends IconPalette
             Object item = iter.next();
             if (item instanceof CardItem) {
                 CardItem citem = (CardItem)item;
-                if (Card.getCard(citem.getType()).isPlayable(bangobj)) {
+                Card card = Card.getCard(citem.getType());
+                if (card != null && card.isPlayable(bangobj)) {
                     addIcon(new ItemIcon(ctx, citem));
                 }
             }
