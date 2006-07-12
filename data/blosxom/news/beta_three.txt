@@ -21,6 +21,13 @@ coming down the pike, now that we got all the right bits in place.</li>
 more o' them (and fancy duds) coming in <span class="highlight">Indian Trading
 Post</span> as well.</li>
 
+<li>There are now textual descriptions of card effects reported when you play
+cards or when cards are played against your units.</li>
+
+<li>Your Mute List can now be edited from the Options panel. Players can be
+muted by entering <code>/mute "Player Name"</code> in a chat window or by
+clicking the mute button during player to player chat.</li>
+
 <li>Of course we fixed a heap of bugs and no doubt added some new ones.</li>
 </ul>
 </p>
