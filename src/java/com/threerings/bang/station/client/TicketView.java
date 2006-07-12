@@ -8,7 +8,11 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 
 import com.threerings.util.MessageBundle;
 
@@ -28,7 +32,8 @@ public class TicketView extends BContainer
 {
     public TicketView (BangContext ctx, StatusLabel status)
     {
-        super(GroupLayout.makeVStretch());
+        super(new AbsoluteLayout());
+
         _ctx = ctx;
         _status = status;
 
@@ -46,33 +51,30 @@ public class TicketView extends BContainer
 
         MessageBundle msgs = ctx.getMessageManager().getBundle(
             StationCodes.STATION_MSGS);
-        String title, body;
-        if (_ticketTownId == null) {
-            title = "t.have_all_tickets";
-            body = "m.have_all_tickets";
-        } else {
-            title = getTownMessage("t.buy_ticket");
-            body = "m.buy_ticket_" + _ticketTownId;
-        }
-
-        add(new BLabel(msgs.xlate(title), "ticket_header"),
-            GroupLayout.FIXED);
-        add(new BLabel(msgs.get(body), "ticket_info"));
+        String body = (_ticketTownId == null) ? "m.have_all_tickets" :
+            ("m.buy_ticket_" + _ticketTownId);
+        add(new BLabel(msgs.get(body), "ticket_info"),
+            new Rectangle(0, 230, 160, 173));
 
         if (_ticketTownId != null) {
             BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
-            MoneyLabel cost = new MoneyLabel(ctx);
+            row.add(new BLabel(msgs.get("l.price"), "price_label"));
+            MoneyLabel cost = new MoneyLabel(ctx, true);
             cost.setMoney(StationCodes.TICKET_SCRIP[ticketTownIdx],
                           StationCodes.TICKET_COINS[ticketTownIdx], false);
             row.add(cost);
-            add(row, GroupLayout.FIXED);
+            add(row, new Rectangle(0, 80, 160, 23));
 
-            row = GroupLayout.makeHBox(GroupLayout.CENTER);
-            row.add(_buy = new BButton(msgs.get("b.buy_ticket"), this, ""));
-            _buy.setStyleClass("big_button");
-            _buy.setEnabled(_ticketTownId != null);
-            add(row, GroupLayout.FIXED);
+            String ipath = "goods/tickets/" + _ticketTownId + ".png";
+            add(new BLabel(new ImageIcon(ctx.loadImage(ipath))),
+                new Point(16, 112));
         }
+
+        BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
+        row.add(_buy = new BButton(msgs.get("b.buy_ticket"), this, ""));
+        _buy.setStyleClass("big_button");
+        _buy.setEnabled(_ticketTownId != null);
+        add(row, new Rectangle(0, 21, 160, 46));
     }
 
     public void init (StationObject stobj)

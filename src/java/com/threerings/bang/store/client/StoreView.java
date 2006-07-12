@@ -31,7 +31,7 @@ public class StoreView extends ShopView
         add(new BLabel(_msgs.get("m.intro_tip"), "shop_status"),
             new Rectangle(232, 640, 570, 35));
 
-        add(new WalletLabel(_ctx, true), new Rectangle(40, 78, 150, 40));
+        add(new WalletLabel(_ctx, true), new Rectangle(43, 82, 150, 40));
 
         _inspector = new GoodsInspector(_ctx, this);
         add(_inspector, new Rectangle(272, 9, 500, 151));

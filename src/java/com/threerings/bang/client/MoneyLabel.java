@@ -17,14 +17,20 @@ public class MoneyLabel extends BContainer
 {
     public MoneyLabel (BangContext ctx)
     {
+        this(ctx, false);
+    }
+
+    public MoneyLabel (BangContext ctx, boolean compact)
+    {
+        int gap = compact ? 2 : 5;
         _ctx = ctx;
-        setLayoutManager(new BorderLayout(5, 0));
+        setLayoutManager(new BorderLayout(gap, gap));
         add(_scrip = new BLabel(BangUI.scripIcon), BorderLayout.WEST);
-        _scrip.setIconTextGap(5);
+        _scrip.setIconTextGap(gap);
         _scrip.setStyleClass("money_label");
         _scrip.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.scrip_tip"));
         add(_coins = new BLabel(BangUI.coinIcon), BorderLayout.CENTER);
-        _coins.setIconTextGap(5);
+        _coins.setIconTextGap(gap);
         _coins.setStyleClass("money_label");
         _coins.setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, "m.coin_tip"));
     }

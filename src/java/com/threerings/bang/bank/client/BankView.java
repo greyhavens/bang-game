@@ -55,7 +55,7 @@ public class BankView extends ShopView
         add(_fbuy = new FullTransact(ctx, _status, true),
             new Rectangle(630, 85, 330, 315));
 
-        add(new WalletLabel(ctx, true), new Rectangle(25, 37, 150, 40));
+        add(new WalletLabel(ctx, true), new Rectangle(25, 40, 150, 40));
         add(createHelpButton(), new Point(790, 20));
         add(new TownButton(ctx), new Point(880, 20));
     }

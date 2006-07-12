@@ -36,7 +36,7 @@ public class SaloonView extends ShopView
         // add our various interface components
         add(new BLabel(_msgs.get("m.title"), "shop_status"),
             new Rectangle(266, 656, 491, 33));
-        add(new WalletLabel(ctx, true), new Rectangle(25, 37, 150, 40));
+        add(new WalletLabel(ctx, true), new Rectangle(25, 40, 150, 40));
         add(createHelpButton(), new Point(800, 25));
         add(new TownButton(ctx), new Point(870, 25));
         add(_paper = new PaperView(ctx), new Rectangle(48, 68, 516, 576));

@@ -70,7 +70,7 @@ public class UnitInspector extends BContainer
         _recruit = new BContainer(new AbsoluteLayout());
         BContainer row = new BContainer(
                 GroupLayout.makeHoriz(GroupLayout.LEFT));
-        row.add(new BLabel(_msgs.get("m.cost"), "ranch_unit_cost"));
+        row.add(new BLabel(_msgs.get("m.cost"), "price_label"));
         row.add(_cost = new MoneyLabel(ctx));
         _recruit.add(row, new Point(65, 53));
         BButton btn = new BButton(_msgs.get("m.recruit"), this, "recruit");

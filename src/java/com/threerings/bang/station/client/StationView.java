@@ -35,24 +35,21 @@ public class StationView extends ShopView
 
         // add our various interface components
         add(new BLabel(_msgs.get("m.intro_tip"), "shop_status"),
-            new Rectangle(232, 661, 570, 35));
+            new Rectangle(232, 656, 568, 35));
 
-        String townId = _ctx.getUserObject().townId;
-        add(new BLabel(_msgs.get("m.name_" + townId), "shopkeep_name_label"),
-            new Rectangle(12, 513, 155, 25));
-
-        add(new WalletLabel(_ctx, true), new Rectangle(40, 73, 150, 35));
+        add(new WalletLabel(ctx, true), new Rectangle(25, 40, 150, 40));
         add(createHelpButton(), new Point(780, 25));
         add(new TownButton(ctx), new Point(870, 25));
         add(status = new StatusLabel(ctx), new Rectangle(250, 10, 520, 50));
         status.setStyleClass("shop_status");
+        status.setStatus(StationCodes.STATION_MSGS, "m.intro_status", false);
 
         // add our map display
-        add(new MapView(_ctx, ctrl), new Point(200, 180));
+        add(new MapView(_ctx, ctrl), new Point(59, 110));
 
         // and our ticket purchase display
         add(_tview = new TicketView(_ctx, status),
-            new Rectangle(790, 120, 210, 490));
+            new Rectangle(838, 107, 160, 403));
     }
 
     @Override // documentation inherited
@@ -66,6 +63,12 @@ public class StationView extends ShopView
     protected void wasRemoved ()
     {
         super.wasRemoved();
+    }
+
+    @Override // documentation inherited
+    protected Point getShopkeepNameLocation ()
+    {
+        return new Point(21, 528);
     }
 
     protected TicketView _tview;

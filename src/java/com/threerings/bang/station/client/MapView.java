@@ -97,7 +97,7 @@ public class MapView extends BContainer
     protected BComponent[] _towns;
 
     protected static final Point[] TOWN_SPOTS = {
-        new Point(100, 250),
-        new Point(300, 220),
+        new Point(45, 115),
+        new Point(270, 420),
     };
 }

@@ -488,13 +488,19 @@ status_label {
 shop_status {
   parent: "status_label";
   font: "Helvetica" plain 15;
-  color: #D5B586;
+  color: #D1B770;
 }
 
 money_label {
   color: #FFFFFF;
   font: "Helvetica" plain 15;
   text-align: center;
+}
+
+price_label {
+  parent: "label";
+  text-align: right;
+  color: #FFFFFF;
 }
 
 wallet_name {
@@ -1184,11 +1190,6 @@ ranch_unit_info {
   vertical-align: top;
 }
 
-ranch_unit_cost {
-  text-align: right;
-  color: #FFFFFF;
-}
-
 ranch_practice_info {
   font: "Helvetica" plain 14;
   text-align: center;
@@ -1218,15 +1219,12 @@ station_map {
   background: image "ui/station/map.png" centerxy;
 }
 
-ticket_header {
-  parent: "label";
-  font: "Old Town Wide" plain 24;
-  color: #FFFFFF;
-  text-align: center;
-}
-
 ticket_info {
   parent: "label";
+  padding: 5 8;
+  font: "Dom Casual" plain 18;
+  color: #766300;
+  text-align: center;
 }
 
 //

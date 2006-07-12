@@ -64,7 +64,7 @@ public class BarberView extends ShopView
             new Rectangle(450, 621, 235, 30));
         btn.setStyleClass("invisibutton");
 
-        add(new WalletLabel(ctx, true), new Rectangle(40, 37, 150, 35));
+        add(new WalletLabel(ctx, true), new Rectangle(40, 38, 150, 40));
         add(createHelpButton(), new Point(745, 25));
         add(new TownButton(ctx), new Point(835, 25));
     }

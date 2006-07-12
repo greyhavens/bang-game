@@ -50,7 +50,7 @@ public class RanchView extends ShopView
         add(new BLabel(_msgs.get("m.name_" + townId), "shopkeep_name_label"),
             new Rectangle(12, 513, 155, 25));
 
-        add(new WalletLabel(_ctx, true), new Rectangle(40, 73, 150, 35));
+        add(new WalletLabel(_ctx, true), new Rectangle(40, 73, 150, 40));
         add(createHelpButton(), new Point(780, 25));
         add(new TownButton(ctx), new Point(870, 25));
         add(_status = new StatusLabel(ctx), new Rectangle(250, 10, 520, 50));
