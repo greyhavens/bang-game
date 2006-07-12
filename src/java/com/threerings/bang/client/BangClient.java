@@ -90,8 +90,7 @@ public class BangClient extends BasicClient
      * failure and decodes the necessary business to instruct Getdown to update
      * the client on the next invocation.
      */
-    public static boolean checkForUpgrade (
-        final BangContext ctx, String message)
+    public static boolean checkForUpgrade (BangContext ctx, String message)
     {
         if (!message.startsWith(BangAuthCodes.VERSION_MISMATCH)) {
             return false;
@@ -116,34 +115,52 @@ public class BangClient extends BasicClient
         }
 
         // if we can relaunch Getdown automatically, do so
-        File pro = new File(localDataDir("getdown-pro.jar"));
-        if (!LaunchUtil.mustMonitorChildren() && pro.exists()) {
-            String[] args = new String[] {
-                LaunchUtil.getJVMPath(),
-                "-jar",
-                pro.toString(),
-                localDataDir("")
-            };
-            log.info("Running " + StringUtil.join(args, "\n  "));
-            try {
-                Runtime.getRuntime().exec(args, null);
-            } catch (IOException ioe) {
-                log.log(Level.WARNING, "Failed to run getdown", ioe);
-                return false;
-            }
-
-            // now stick a fork in ourselves in about 3 seconds
-            new Interval(ctx.getClient().getRunQueue()) {
-                public void expired () {
-                    log.info("Exiting due to out-of-dateness.");
-                    ctx.getApp().stop();
-                }
-            }.schedule(3000L);
-
+        if (relaunchGetdown(ctx, 3000L)) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Returns true if the specified town has been activated, false otherwise.
+     */
+    public static boolean isTownActive (String townId)
+    {
+        // frontier town is always active
+        return townId.equals(BangCodes.FRONTIER_TOWN) ? true :
+            new File(localDataDir(townId + ".dat")).exists();
+    }
+
+    /**
+     * Creates the auxiliary resource bundle activation file for the specified
+     * town and runs Getdown to download that town's resources, exiting the
+     * application after a short delay.
+     *
+     * @return true if the process is started, false if the town is already
+     * activated.
+     *
+     * @exception IOException thrown if the town activation file could not be
+     * created for some reason.
+     */
+    public static boolean activateTown (BangContext ctx, String townId)
+        throws IOException
+    {
+        File afile = new File(localDataDir(townId + ".dat"));
+        if (afile.exists()) {
+            return false;
+        }
+
+        // create the activation file
+        afile.createNewFile();
+
+        // relaunch getdown (communicating failure with an exception because
+        // returning false means we're already activated)
+        if (!relaunchGetdown(ctx, 500L)) {
+            throw new IOException("m.getdown_relaunch_failed");
+        }
+
+        return true;
     }
 
     /**
@@ -893,6 +910,43 @@ public class BangClient extends BasicClient
 
         // clean up the UI bits
         BangUI.shutdown();
+    }
+
+    /**
+     * Attempts to relaunch Getdown, exiting the application after a short
+     * pause.
+     *
+     * @return true if Getdown was successfully relaunched, false if we were
+     * unable to do so for a variety of reasons (which will have been logged).
+     */
+    protected static boolean relaunchGetdown (
+        final BangContext ctx, long exitDelay)
+    {
+        File pro = new File(localDataDir("getdown-pro.jar"));
+        if (LaunchUtil.mustMonitorChildren() || !pro.exists()) {
+            return false;
+        }
+
+        String[] args = new String[] {
+            LaunchUtil.getJVMPath(), "-jar", pro.toString(), localDataDir("")
+        };
+        log.info("Running " + StringUtil.join(args, "\n  "));
+        try {
+            Runtime.getRuntime().exec(args, null);
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Failed to run getdown", ioe);
+            return false;
+        }
+
+        // now stick a fork in ourselves after the caller specified delay
+        new Interval(ctx.getClient().getRunQueue()) {
+            public void expired () {
+                log.info("Exiting for Getdown relaunch.");
+                ctx.getApp().stop();
+            }
+        }.schedule(exitDelay);
+
+        return true;
     }
 
     /** The context implementation. This provides access to all of the
