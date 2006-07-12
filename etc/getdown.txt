@@ -54,14 +54,27 @@ resource = rsrc/config/resource/manager.properties
 uresource = rsrc/bundle.jar
 uresource = rsrc/goods/bundle.jar
 uresource = rsrc/goods/frontier_town/bundle.jar
+uresource = rsrc/goods/indian_post/bundle.jar
+uresource = rsrc/sounds/effects/bundle.jar
+uresource = rsrc/sounds/feedback/bundle.jar
+uresource = rsrc/sounds/music/bundle.jar
+
+# Frontier Town game resources
 uresource = rsrc/bonuses/frontier_town/bundle.jar
 uresource = rsrc/effects/frontier_town/bundle.jar
 uresource = rsrc/extras/frontier_town/bundle.jar
 uresource = rsrc/props/frontier_town/bundle.jar
 uresource = rsrc/units/frontier_town/bundle.jar
-uresource = rsrc/sounds/effects/bundle.jar
-uresource = rsrc/sounds/feedback/bundle.jar
-uresource = rsrc/sounds/music/bundle.jar
+
+# Define our auxiliary resource groups
+auxgroups = indian_post
+
+# Indian Trading Post game resources
+indian_post.uresource = rsrc/bonuses/indian_post/bundle.jar
+indian_post.uresource = rsrc/effects/indian_post/bundle.jar
+indian_post.uresource = rsrc/extras/indian_post/bundle.jar
+indian_post.uresource = rsrc/props/indian_post/bundle.jar
+indian_post.uresource = rsrc/units/indian_post/bundle.jar
 
 # Parameters passed to the JVM
 jvmarg = -Xmx256M
