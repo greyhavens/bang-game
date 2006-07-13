@@ -331,6 +331,9 @@ public class BangBoardView extends BoardView
 //         if (p != null && p.owner == _pidx) {
 //             log.info("Noting pending " + p.info());
 //         }
+//        if (ACTION_DEBUG) {
+//            log.info("Noting pending [pieceId=" + pieceId + "].");
+//        }
         _pendmap.increment(pieceId, 1);
     }
 
@@ -343,6 +346,9 @@ public class BangBoardView extends BoardView
 //         if (p != null && p.owner == _pidx) {
 //             log.info("Clearing pending " + p.info());
 //         }
+//        if (ACTION_DEBUG) {
+//            log.info("Clearing pending [pieceId=" + pieceId + "].");
+//        }
         _pendmap.increment(pieceId, -1);
     }
 
@@ -1347,6 +1353,11 @@ public class BangBoardView extends BoardView
 
         // clear out our pathfinding shadow for this piece
         _bangobj.board.clearShadow(piece);
+
+        // clear out any possible pending moves
+        if (_pendmap.get(piece.pieceId) > 0) {
+            _pendmap.put(piece.pieceId, 0);
+        }
     }
 
     @Override // documentation inherited
