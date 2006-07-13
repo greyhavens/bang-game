@@ -87,5 +87,7 @@ public class ScenarioFactory
             GoldRush.class);
         map(ScenarioCodes.TOTEM_BUILDING, BangCodes.INDIAN_POST,
             TotemBuilding.class);
+        map(ScenarioCodes.WENDIGO_ATTACK, BangCodes.INDIAN_POST,
+            WendigoAttack.class);
     }
 }

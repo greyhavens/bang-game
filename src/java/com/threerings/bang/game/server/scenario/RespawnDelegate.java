@@ -17,6 +17,19 @@ import static com.threerings.bang.Log.log;
  */
 public class RespawnDelegate extends ScenarioDelegate
 {
+    /** The default number of ticks before a unit respawns. */
+    public static final int RESPAWN_TICKS = 12;
+
+    public RespawnDelegate ()
+    {
+        this(RESPAWN_TICKS);
+    }
+
+    public RespawnDelegate (int respawnTicks)
+    {
+        _respawnTicks = respawnTicks;
+    }
+
     @Override // documentation inherited
     public void roundWillStart (BangObject bangobj)
     {
@@ -46,7 +59,7 @@ public class RespawnDelegate extends ScenarioDelegate
                 log.warning("Unable to locate spawn spot for to-be-respawned " +
                             "unit [unit=" + unit + ", spot=" + spot + "].");
                 // stick him back on the queue for a few ticks later
-                unit.setRespawnTick((short)(tick + RESPAWN_TICKS));
+                unit.setRespawnTick((short)(tick + _respawnTicks));
                 _respawns.add(unit);
                 continue;
             }
@@ -77,7 +90,7 @@ public class RespawnDelegate extends ScenarioDelegate
             return;
         }
         Unit unit = (Unit)piece;
-        unit.setRespawnTick((short)(bangobj.tick + RESPAWN_TICKS));
+        unit.setRespawnTick((short)(bangobj.tick + _respawnTicks));
         _respawns.add(unit);
         log.fine("Queued for respawn " + unit + ".");
     }
@@ -86,5 +99,5 @@ public class RespawnDelegate extends ScenarioDelegate
     protected ArrayList<Unit> _respawns = new ArrayList<Unit>();
 
     /** The number of ticks that must elapse before a unit is respawned. */
-    protected static final int RESPAWN_TICKS = 12;
+    protected int _respawnTicks = RESPAWN_TICKS;
 }

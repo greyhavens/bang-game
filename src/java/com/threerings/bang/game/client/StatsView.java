@@ -188,6 +188,14 @@ public class StatsView extends SteelWindow
             _secStatType = Stat.Type.TOTEM_POINTS;
             _secIcon = new ImageIcon(_ctx.loadImage(
                         "ui/postgame/icons/brand.png"));
+        } else if (ScenarioUtil.wendigoAttack(_bobj.scenarioId)) {
+            _objectiveIcon = new ImageIcon(_ctx.loadImage(
+                        "ui/postgame/icons/nugget.png"));
+            _objectiveTitle = "m.title_wendigo_survivals";
+            _objectivePoints = "m.survival_points";
+            _statType = Stat.Type.WENDIGO_SURVIVALS;
+            _ppo = ScenarioCodes.POINTS_PER_SURVIVAL;
+            _secStatType = null;
         }
     }
 
@@ -740,6 +748,7 @@ public class StatsView extends SteelWindow
             Stat.Type.DISTANCE_MOVED, Stat.Type.SHOTS_FIRED,
             Stat.Type.UNITS_LOST, Stat.Type.CATTLE_RUSTLED,
             Stat.Type.BRAND_POINTS, Stat.Type.NUGGETS_CLAIMED,
-            Stat.Type.TOTEMS_STACKED, Stat.Type.TOTEM_POINTS
+            Stat.Type.TOTEMS_STACKED, Stat.Type.TOTEM_POINTS,
+            Stat.Type.WENDIGO_SURVIVALS
     };
 }

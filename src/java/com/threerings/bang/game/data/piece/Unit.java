@@ -364,6 +364,16 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public void wasKilled (short tick)
+    {
+        super.wasKilled(tick);
+
+        // influences and hindrances do not survive through death
+        influence = null;
+        hindrance = null;
+    }
+
+    @Override // documentation inherited
     public boolean removeWhenDead ()
     {
         return _config.make == UnitConfig.Make.HUMAN;

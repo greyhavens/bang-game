@@ -5,6 +5,7 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
@@ -417,6 +418,42 @@ public abstract class Scenario
             }
         }
         return idx;
+    }
+
+    /**
+     * Returns a list of bonus spot indexes in order descending order based on
+     * distance to starting positions.
+     */
+    protected ArrayList<BonusSorter> sortBonusList ()
+    {
+        // sort the bonus spots by distance to nearest starting point
+        ArrayList<BonusSorter> sorters = new ArrayList<BonusSorter>();
+        for (int ii = 0; ii < _bonusSpots.size(); ii++) {
+            BonusSorter sorter = new BonusSorter();
+            sorter.index = (short)ii;
+            int x = _bonusSpots.getX(ii), y = _bonusSpots.getY(ii);
+            for (int ss = 0; ss < _startSpots.length; ss++) {
+                int distsq = MathUtil.distanceSq(
+                    x, y, _startSpots[ss].x, _startSpots[ss].y);
+                sorter.minDistSq = Math.max(sorter.minDistSq, distsq);
+            }
+            sorters.add(sorter);
+        }
+        Collections.sort(sorters);
+        return sorters;
+    }
+
+    protected static class BonusSorter implements Comparable<BonusSorter>
+    {
+        /** The index of this bonus spot. */
+        public short index;
+
+        /** The distance (squared) from the bonus spot to the closest player. */        public int minDistSq;
+
+        /** Compare based on distance to nearest player. */
+        public int compareTo (BonusSorter other) {
+            return other.minDistSq - minDistSq;
+        }
     }
 
     /** The Bang game manager. */

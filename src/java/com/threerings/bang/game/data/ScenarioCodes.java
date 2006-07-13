@@ -45,9 +45,15 @@ public interface ScenarioCodes
     /** Points earned for each totem piece. */
     public static final int POINTS_PER_TOTEM = 25;
 
+    /** The code for the wendigo attack scenario. */
+    public static final String WENDIGO_ATTACK = "wa";
+
+    /** Points per unit surviving a wendigo attack. */
+    public static final int POINTS_PER_SURVIVAL = 5;
+
     /** Scenarios available in Indian Trading Post. */
     public static final String[] INDIAN_POST_SCENARIOS = { 
-        TOTEM_BUILDING };
+        TOTEM_BUILDING, WENDIGO_ATTACK };
 
     /** Scenarios available in Boom Town. */
     public static final String[] BOOM_TOWN_SCENARIOS = { };

@@ -88,6 +88,14 @@ public class ScenarioUtil
     }
 
     /**
+     * Returns true if this scenario involves a wendigo attacking.
+     */
+    public static boolean wendigoAttack (String scenarioId)
+    {
+        return (ScenarioCodes.WENDIGO_ATTACK.equals(scenarioId));
+    }
+
+    /**
      * Returns true if this maker is valid for the scenario.
      */
     public static boolean isValidMarker (Marker m, String scenarioId)

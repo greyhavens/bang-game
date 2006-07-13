@@ -110,22 +110,7 @@ public class ClaimJumping extends Scenario
     {
         super.roundWillStart(bangobj, starts, purchases);
 
-        // sort the bonus spots by distance to nearest claim, put up to one
-        // nugget per player in the spots that are maximally distant from the
-        // nearest claim
-        ArrayList<BonusSorter> sorters = new ArrayList<BonusSorter>();
-        for (int ii = 0; ii < _bonusSpots.size(); ii++) {
-            BonusSorter sorter = new BonusSorter();
-            sorter.index = (short)ii;
-            int x = _bonusSpots.getX(ii), y = _bonusSpots.getY(ii);
-            for (int ss = 0; ss < _startSpots.length; ss++) {
-                int distsq = MathUtil.distanceSq(
-                    x, y, _startSpots[ss].x, _startSpots[ss].y);
-                sorter.minDistSq = Math.max(sorter.minDistSq, distsq);
-            }
-            sorters.add(sorter);
-        }
-        Collections.sort(sorters);
+        ArrayList<BonusSorter> sorters = sortBonusList();
 
         int placed = 0;
         for (BonusSorter sorter : sorters) {
@@ -162,20 +147,6 @@ public class ClaimJumping extends Scenario
     protected static Bonus dropNugget (BangObject bangobj, int x, int y)
     {
         return dropBonus(bangobj, NuggetEffect.NUGGET_BONUS, x, y);
-    }
-
-    protected static class BonusSorter implements Comparable<BonusSorter>
-    {
-        /** The index of this bonus spot. */
-        public short index;
-
-        /** The distance (squared) from the bonus spot to the closest player. */
-        public int minDistSq;
-
-        /** Compare based on distance to nearest player. */
-        public int compareTo (BonusSorter other) {
-            return other.minDistSq - minDistSq;
-        }
     }
 
     /** Indicates the tick on which we will end the game. */
