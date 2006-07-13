@@ -188,7 +188,7 @@ public abstract class Card extends SimpleStreamableObject
         try {
             return super.clone();
         } catch (CloneNotSupportedException cnse) {
-            throw new RuntimeException("Pigs flying! " + cnse);
+            throw new RuntimeException(cnse);
         }
     }
 

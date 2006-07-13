@@ -120,8 +120,8 @@ public class BangBoard extends SimpleStreamableObject
             board.initTransientFields();
             return board;
             
-        } catch (CloneNotSupportedException e) {
-            return null; // should never happen
+        } catch (CloneNotSupportedException cnse) {
+            throw new RuntimeException(cnse);
         }
     }
     

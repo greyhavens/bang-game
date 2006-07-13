@@ -165,7 +165,7 @@ public abstract class Item
         try {
             return super.clone();
         } catch (CloneNotSupportedException cnse) {
-            throw new RuntimeException("The sky is falling!");
+            throw new RuntimeException(cnse);
         }
     }
 

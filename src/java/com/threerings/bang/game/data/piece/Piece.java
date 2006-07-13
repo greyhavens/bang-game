@@ -574,9 +574,9 @@ public abstract class Piece extends SimpleStreamableObject
     public Object clone ()
     {
         try {
-            return (Piece)super.clone();
+            return super.clone();
         } catch (CloneNotSupportedException cnse) {
-            return null;
+            throw new RuntimeException(cnse);
         }
     }
 

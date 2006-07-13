@@ -167,7 +167,7 @@ public class Look extends SimpleStreamableObject
             look.articles = (int[])look.articles.clone();
             return look;
         } catch (CloneNotSupportedException cnse) {
-            throw new RuntimeException("Clonacy! " + this);
+            throw new RuntimeException(cnse);
         }
     }
 
