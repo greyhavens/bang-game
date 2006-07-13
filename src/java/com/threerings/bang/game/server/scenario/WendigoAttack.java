@@ -134,12 +134,11 @@ public class WendigoAttack extends Scenario
                     }
                     _wendigos = null;
                     _removeWendigo = false;
-                } else if (_wendigos[0].ticksUntilMovable(tick) <= 0) {
-                    for (Wendigo w : _wendigos) {
-                        WendigoEffect effect = w.attack(bangobj);
-                        effect.safePoints = _safePoints;
-                        _bangmgr.deployEffect(-1, effect);
-                    }
+                } else if (_wendigos.get(0).ticksUntilMovable(tick) <= 0) {
+                    WendigoEffect effect = WendigoEffect.wendigosAttack(
+                            bangobj, _wendigos);
+                    effect.safePoints = _safePoints;
+                    _bangmgr.deployEffect(-1, effect);
                     _removeWendigo = true;
                     updatePoints(bangobj);
                 }
@@ -159,7 +158,7 @@ public class WendigoAttack extends Scenario
             Rectangle playarea = bangobj.board.getPlayableArea();
             int numv = playarea.width / 4;
             int numh = playarea.height / 4;
-            _wendigos = new Wendigo[numv+numh];
+            _wendigos = new ArrayList<Wendigo>(numv+numh);
             createWendigo(bangobj, tick, true, numh);
             createWendigo(bangobj, tick, false, numv);
         }
@@ -223,7 +222,7 @@ public class WendigoAttack extends Scenario
                 wendigo.lastActed = tick;
                 log.info("Wendigo Created [wendigo=" + wendigo + "].");
                 bangobj.addToPieces(wendigo);
-                _wendigos[(horiz ? ii : _wendigos.length - ii - 1)] = wendigo;
+                _wendigos.add(wendigo);
             }
         }
 
@@ -256,7 +255,7 @@ public class WendigoAttack extends Scenario
         }
 
         /** Our wendigo. */
-        protected Wendigo[] _wendigos;
+        protected ArrayList<Wendigo> _wendigos;
 
         /** The tick when the next wendigo will spawn. */
         protected short _nextWendigo;

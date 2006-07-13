@@ -29,33 +29,4 @@ public class Wendigo extends Piece
     {
         return 2;
     }
-
-    /**
-     * Returns a WendigoEffect for attacking the board.
-     */
-    public WendigoEffect attack (BangObject bangobj)
-    {
-        WendigoEffect effect = new WendigoEffect();
-        effect.pieceId = pieceId;
-        Rectangle playarea = bangobj.board.getPlayableArea();
-        switch (orientation) {
-          case NORTH:
-            effect.nx = x;
-            effect.ny = playarea.y - 2;
-            break;
-          case SOUTH:
-            effect.nx = x;
-            effect.ny = playarea.y + playarea.height;
-            break;
-          case EAST:
-            effect.ny = y;
-            effect.nx = playarea.x + playarea.width;
-            break;
-          case WEST:
-            effect.ny = y;
-            effect.nx = playarea.x - 2;
-            break;
-        }
-        return effect;
-    }
 }

@@ -27,15 +27,18 @@ public class WendigoHandler extends EffectHandler
     {
         WendigoEffect effect = (WendigoEffect)_effect;
 
-        Piece piece = _bangobj.pieces.get(effect.pieceId);
-        if (piece != null) {
-            _penderId = notePender();
-            _bangobj.board.clearShadow(piece);
-            piece.position(effect.nx, effect.ny);
-            WendigoSprite sprite = (WendigoSprite)_view.getPieceSprite(piece);
-            if (sprite != null) {
-                sprite.move(_bangobj.board, effect.path,
-                        WendigoEffect.WENDIGO_SPEED, WendigoHandler.this);
+        for (WendigoEffect.Movement m : effect.moves) {
+            Piece piece = _bangobj.pieces.get(m.pieceId);
+            if (piece != null) {
+                _bangobj.board.clearShadow(piece);
+                piece.position(m.nx, m.ny);
+                WendigoSprite sprite = 
+                    (WendigoSprite)_view.getPieceSprite(piece);
+                if (sprite != null) {
+                    sprite.move(_bangobj.board, m.path, 
+                            WendigoEffect.WENDIGO_SPEED, 
+                            WendigoHandler.this, notePender());
+                }
             }
         }
         
@@ -58,9 +61,9 @@ public class WendigoHandler extends EffectHandler
     /**
      * Called to let the handler know the wendigo has finished moving.
      */
-    public void pathCompleted ()
+    public void pathCompleted (int penderId)
     {
-        maybeComplete(_penderId);
+        maybeComplete(penderId);
     }
 
     /** An interval to activate collisions on their listed timesteps. */
@@ -92,6 +95,4 @@ public class WendigoHandler extends EffectHandler
 
         protected Collision _collision;
     }
-
-    protected int _penderId;
 }

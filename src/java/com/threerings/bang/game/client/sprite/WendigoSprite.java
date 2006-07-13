@@ -42,9 +42,10 @@ public class WendigoSprite extends MobileSprite
      * Perform a move with an associate penderId for the WendigoHandler.
      */
     public void move (BangBoard board, List path, float speed,
-            WendigoHandler handler)
+            WendigoHandler handler, int penderId)
     {
         _handler = handler;
+        _penderId = penderId;
         move(board, path, speed);
     }
     
@@ -52,8 +53,10 @@ public class WendigoSprite extends MobileSprite
     public void pathCompleted ()
     {
         super.pathCompleted();
-        _handler.pathCompleted();
+        _handler.pathCompleted(_penderId);
     }
 
     protected WendigoHandler _handler;
+
+    protected int _penderId;
 }

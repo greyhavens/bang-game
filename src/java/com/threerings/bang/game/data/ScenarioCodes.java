@@ -49,7 +49,7 @@ public interface ScenarioCodes
     public static final String WENDIGO_ATTACK = "wa";
 
     /** Points per unit surviving a wendigo attack. */
-    public static final int POINTS_PER_SURVIVAL = 5;
+    public static final int POINTS_PER_SURVIVAL = 25;
 
     /** Scenarios available in Indian Trading Post. */
     public static final String[] INDIAN_POST_SCENARIOS = { 
