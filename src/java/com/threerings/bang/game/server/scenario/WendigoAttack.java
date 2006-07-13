@@ -4,6 +4,7 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import java.awt.Rectangle;
 
@@ -126,50 +127,62 @@ public class WendigoAttack extends Scenario
         @Override // documentation inherited
         public void tick (BangObject bangobj, short tick)
         {
-            if (_wendigo != null) {
+            if (_wendigos != null) {
                 if (_removeWendigo) {
-                    bangobj.removeFromPieces(_wendigo.getKey());
-                    _wendigo = null;
+                    for (Wendigo w : _wendigos) {
+                        bangobj.removeFromPieces(w.getKey());
+                    }
+                    _wendigos = null;
                     _removeWendigo = false;
-                } else if (_wendigo.ticksUntilMovable(tick) <= 0) {
-                    WendigoEffect effect = _wendigo.attack(bangobj);
-                    effect.safePoints = _safePoints;
-                    _bangmgr.deployEffect(-1, effect);
+                } else if (_wendigos[0].ticksUntilMovable(tick) <= 0) {
+                    for (Wendigo w : _wendigos) {
+                        WendigoEffect effect = w.attack(bangobj);
+                        effect.safePoints = _safePoints;
+                        _bangmgr.deployEffect(-1, effect);
+                    }
                     _removeWendigo = true;
                     updatePoints(bangobj);
                 }
             }
             if (tick >= _nextWendigo) {
-                createWendigo(bangobj, tick);
+                createWendigos(bangobj, tick);
                 _nextWendigo += (short)RandomUtil.getInt(
                         MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
             }
         }
 
         /**
-         * Create a wendigo that will spawn just outside the playfield.
+         * Create several wendigos that will spawn just outside the playfield.
          */
-        protected void createWendigo (BangObject bangobj, short tick)
+        protected void createWendigos (BangObject bangobj, short tick)
+        {
+            Rectangle playarea = bangobj.board.getPlayableArea();
+            int numv = playarea.width / 4;
+            int numh = playarea.height / 4;
+            _wendigos = new Wendigo[numv+numh];
+            createWendigo(bangobj, tick, true, numh);
+            createWendigo(bangobj, tick, false, numv);
+        }
+
+        protected void createWendigo (BangObject bangobj, short tick, 
+                boolean horiz, int num)
         {
             // First decide horizontal or vertical attack
-            int off = 0;
-            boolean horiz = true;
-            int length = 0;
             Rectangle playarea = bangobj.board.getPlayableArea();
-            if (RandomUtil.getInt(2) == 0) {
+            int off = 0;
+            int length = 0;
+            if (horiz) {
                 off = playarea.y;
                 length = playarea.height - 1;
             } else {
                 off = playarea.x;
                 length = playarea.width - 1;
-                horiz = false;
             }
-            log.info("Creating Wendigo [playarea=" + playarea + ", horiz=" +
-                    horiz + "].");
 
             // pick the set of tiles to attack based on the number of units
             // in the attack zone
             int[] weights = new int[length];
+            Arrays.fill(weights, 1);
             Piece[] pieces = bangobj.getPieceArray();
             for (Piece p : pieces) {
                 if (p instanceof Unit && p.isAlive()) {
@@ -182,27 +195,36 @@ public class WendigoAttack extends Scenario
                     }
                 }
             }
-            int idx;
-            idx = off + (IntListUtil.sum(weights) == 0 ?
-                RandomUtil.getInt(length) :
-                RandomUtil.getWeightedIndex(weights));
-            _wendigo = new Wendigo();
-            _wendigo.assignPieceId(bangobj);
-            int orient = NORTH;
-            if (horiz) {
-                orient = (RandomUtil.getInt(2) == 0) ? EAST : WEST;
-                _wendigo.position(
-                    playarea.x + (orient == EAST ? -2 : playarea.width),
-                    idx);
-            } else {
-                orient = (RandomUtil.getInt(2) == 0) ? NORTH : SOUTH;
-                _wendigo.position(idx,
-                    playarea.y + (orient == SOUTH ? -2 : playarea.height));
+
+            // generate the wendigos spread out along the edge
+            for (int ii = 0; ii < num; ii++) {
+                int idx = (IntListUtil.sum(weights) == 0 ?
+                    RandomUtil.getInt(length) :
+                    RandomUtil.getWeightedIndex(weights));
+                weights[idx] = 0;
+                if (idx + 1 < weights.length) {
+                    weights[idx + 1] = 0;
+                }
+                idx += off;
+                Wendigo wendigo = new Wendigo();
+                wendigo.assignPieceId(bangobj);
+                int orient = NORTH;
+                if (horiz) {
+                    orient = (RandomUtil.getInt(2) == 0) ? EAST : WEST;
+                    wendigo.position(
+                        playarea.x + (orient == EAST ? -2 : playarea.width),
+                        idx);
+                } else {
+                    orient = (RandomUtil.getInt(2) == 0) ? NORTH : SOUTH;
+                    wendigo.position(idx,
+                        playarea.y + (orient == SOUTH ? -2 : playarea.height));
+                }
+                wendigo.orientation = (short)orient;
+                wendigo.lastActed = tick;
+                log.info("Wendigo Created [wendigo=" + wendigo + "].");
+                bangobj.addToPieces(wendigo);
+                _wendigos[(horiz ? ii : _wendigos.length - ii - 1)] = wendigo;
             }
-            _wendigo.orientation = (short)orient;
-            _wendigo.lastActed = tick;
-            log.info("Wendigo Created [_wendigo=" + _wendigo + "].");
-            bangobj.addToPieces(_wendigo);
         }
 
         /**
@@ -234,7 +256,7 @@ public class WendigoAttack extends Scenario
         }
 
         /** Our wendigo. */
-        protected Wendigo _wendigo;
+        protected Wendigo[] _wendigos;
 
         /** The tick when the next wendigo will spawn. */
         protected short _nextWendigo;
