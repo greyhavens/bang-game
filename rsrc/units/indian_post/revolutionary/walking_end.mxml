@@ -1,0 +1,25 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="Bip01 Ponytail11" translation="21.7153, -0.0169383, -0.000114414" rotation="0.00828407, 0.0217763, -0.229689, 0.972985" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01 Ponytail11" translation="21.7225, -0.0189292, 0.000936144" rotation="-0.0260781, -0.0382677, -0.0321593, 0.998409" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01 Ponytail11" translation="21.7191, -0.0183532, 0.000842522" rotation="-0.0340673, -0.0945205, -0.12156, 0.987486" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01 Ponytail11" translation="21.7117, -0.0145918, -0.000803185" rotation="-0.0272085, -0.136871, -0.338759, 0.930467" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="Bip01 Ponytail11" translation="21.7132, -0.0157187, 8.13463e-006" rotation="-0.047206, -0.153654, -0.289105, 0.943706" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>
