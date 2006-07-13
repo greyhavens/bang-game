@@ -97,7 +97,7 @@ case "$1" in
 
   restart)
         echo -n "Restarting bang server: "
-        $BANG_HOME/bin/bangrestart
+        $BANG_HOME/bin/bangrestart $NODE
         echo "restarted."
         exit 1
         ;;

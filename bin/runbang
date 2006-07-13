@@ -44,6 +44,7 @@ CLASS=com.threerings.bang.server.BangServer
 JAVA_ARGS="-server -mx$SERVER_MEMORY \
     -Dbang.home=$BANG_HOME \
     -Dresource_dir=$BANG_HOME/rsrc \
+    -Dno_unpack_resources=true \
     -Dhostname=$HOSTNAME \
     -Dnode=$NODE \
     -Drsrc_cache_dir=/tmp -Dlog_level=$LOGLEVEL"
@@ -88,10 +89,13 @@ export LD_LIBRARY_PATH
 # Create the logfile
 touch $LOGFILE
 
-# Reload the board database from the source files
 cd $BANG_HOME
-echo "Rebuilding board database:" >>$LOGFILE
-$TOOLS_HOME/bin/ant boards >>$LOGFILE 2>&1
+
+# Reload the board database from the source files
+if [ $NODE eq "frontier_town"] ; then
+    echo "Rebuilding board database:" >>$LOGFILE
+    $TOOLS_HOME/bin/ant boards >>$LOGFILE 2>&1
+fi
 
 # Start up the server
 echo "Running Bang server:" >>$LOGFILE
