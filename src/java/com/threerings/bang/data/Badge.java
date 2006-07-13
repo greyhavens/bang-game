@@ -4,7 +4,6 @@
 package com.threerings.bang.data;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -393,7 +392,7 @@ public class Badge extends Item
     };
 
     public static void main (String[] args) {
-        for (Type type : EnumSet.allOf(Type.class)) {
+        for (Type type : Type.values()) {
             if (args.length != 0) {
                 System.err.println(type + " = " + type.code());
             } else {
@@ -419,7 +418,7 @@ public class Badge extends Item
         }
 
         // now check each type in turn for qualification
-        for (Type type : EnumSet.allOf(Type.class)) {
+        for (Type type : Type.values()) {
             if (_badgeCodes.contains(type.code())) {
                 continue;
             }

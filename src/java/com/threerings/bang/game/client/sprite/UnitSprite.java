@@ -3,7 +3,6 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 
 import com.jme.image.Texture;

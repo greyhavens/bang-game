@@ -3,8 +3,6 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.util.EnumSet;
-
 import com.jme.util.geom.BufferUtils;
 
 import com.jme.image.Texture;
@@ -230,9 +228,9 @@ public class PieceTarget extends Node
         }
 
         if (_modtst == null) {
-            EnumSet<ModIcon> icons = EnumSet.allOf(ModIcon.class);
-            _modtst = new TextureState[icons.size()];
-            for (ModIcon icon : icons) {
+            ModIcon[] values = ModIcon.values();
+            _modtst = new TextureState[values.length];
+            for (ModIcon icon : values) {
                 int idx = icon.ordinal();
                 _modtst[idx] = RenderUtil.createTextureState(ctx, icon.png());
                 _modtst[idx].getTexture().setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);

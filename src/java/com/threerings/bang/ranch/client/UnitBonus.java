@@ -4,7 +4,6 @@
 package com.threerings.bang.ranch.client;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -204,7 +203,7 @@ public class UnitBonus extends BContainer
         UP, DOWN, NA
     };
     protected BIcon[] _bonusIcons =
-        new BIcon[EnumSet.allOf(BonusIcons.class).size()];
+        new BIcon[BonusIcons.values().length];
 
     protected static final int _maxBonusPerRow = 3;
     protected static final HashMap<UnitConfig.Mode, BonusIcons> _modeIconMap =

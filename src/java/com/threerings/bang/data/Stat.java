@@ -4,7 +4,6 @@
 package com.threerings.bang.data;
 
 import java.io.IOException;
-import java.util.EnumSet;
 
 import com.samskivert.util.HashIntMap;
 

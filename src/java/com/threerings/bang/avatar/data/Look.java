@@ -4,7 +4,6 @@
 package com.threerings.bang.avatar.data;
 
 import java.util.Arrays;
-import java.util.EnumSet;
 
 import com.samskivert.util.ArrayIntSet;
 import com.threerings.io.SimpleStreamableObject;
@@ -52,7 +51,7 @@ public class Look extends SimpleStreamableObject
     public static final int MAX_NAME_LENGTH = 24;
 
     /** The number of different poses. */
-    public static int POSE_COUNT = EnumSet.allOf(Pose.class).size();
+    public static int POSE_COUNT = Pose.values().length;
 
     /** The name of this look (provided by the player). */
     public String name;

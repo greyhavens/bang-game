@@ -7,7 +7,6 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.EnumSet;
 
 import com.samskivert.io.PersistenceException;
 
@@ -211,7 +210,7 @@ public class PlayerRepository extends JORARepository
         update.append("update PLAYERS set SESSIONS = SESSIONS + 1, ");
         update.append("SESSION_MINUTES = SESSION_MINUTES + ");
         update.append(minutes).append(", ");
-        for (Look.Pose pose : EnumSet.allOf(Look.Pose.class)) {
+        for (Look.Pose pose : Look.Pose.values()) {
             if (changed[pose.ordinal()]) {
                 update.append(pose.getColumnName()).append(" = ");
                 update.append(JDBCUtil.escape(poses[pose.ordinal()]));

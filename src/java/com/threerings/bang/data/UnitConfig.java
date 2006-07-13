@@ -36,14 +36,14 @@ public class UnitConfig
     }
 
     /** The total number of modes. */
-    public static final int MODE_COUNT = EnumSet.allOf(Mode.class).size();
+    public static final int MODE_COUNT = Mode.values().length;
 
     /** The total number of makes. */
-    public static final int MAKE_COUNT = EnumSet.allOf(Make.class).size();
+    public static final int MAKE_COUNT = Make.values().length;
 
     /** The total number of terrain categories. */
     public static final int TERRAIN_CATEGORY_COUNT =
-        EnumSet.allOf(TerrainConfig.Category.class).size();
+        TerrainConfig.Category.values().length;
 
     /** The name of this unit type (ie. <code>frontier_town/gunslinger</code>,
      * etc.). */
@@ -306,14 +306,14 @@ public class UnitConfig
         config.coinCost = BangUtil.getIntProperty(type, props, "coin_cost", 99);
 
         int idx = 0;
-        for (Mode mode : EnumSet.allOf(Mode.class)) {
+        for (Mode mode : Mode.values()) {
             String key = mode.toString().toLowerCase();
             config.damageAdjust[mode.ordinal()] = BangUtil.getIntProperty(
                 type, props, "damage." + key, 0);
             config.defenseAdjust[mode.ordinal()] = BangUtil.getIntProperty(
                 type, props, "defense." + key, 0);
         }
-        for (Make make : EnumSet.allOf(Make.class)) {
+        for (Make make : Make.values()) {
             String key = make.toString().toLowerCase();
             config.damageAdjust[MODE_COUNT + make.ordinal()] =
                 BangUtil.getIntProperty(type, props, "damage." + key, 0);
@@ -321,8 +321,7 @@ public class UnitConfig
                 BangUtil.getIntProperty(type, props, "defense." + key, 0);
         }
 
-        for (TerrainConfig.Category tcat :
-            EnumSet.allOf(TerrainConfig.Category.class)) {
+        for (TerrainConfig.Category tcat : TerrainConfig.Category.values()) {
             String key = tcat.toString().toLowerCase();
             config.movementAdjust[tcat.ordinal()] =
                 BangUtil.getIntProperty(type, props, "movement." + key, 0);
