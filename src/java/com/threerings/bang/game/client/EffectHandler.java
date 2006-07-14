@@ -101,6 +101,13 @@ public class EffectHandler extends BoardView.BoardAction
     // documentation inherited from interface Effect.Observer
     public void pieceAffected (Piece piece, String effect)
     {
+        // clear the pending moves we set earlier
+        if (_effect instanceof MoveEffect) {
+            for (int ii = 0; ii < pieceIds.length; ii++) {
+                _view.clearPendingMove(pieceIds[ii]);
+            }
+        }
+
         final PieceSprite sprite = _view.getPieceSprite(piece);
         if (sprite == null) {
             log.warning("Missing sprite for effect [piece=" + piece +
