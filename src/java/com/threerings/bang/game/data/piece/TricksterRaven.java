@@ -12,9 +12,9 @@ import com.threerings.bang.game.client.sprite.TricksterRavenSprite;
 public class TricksterRaven extends Unit
 {
     @Override // documentation inherited
-    public boolean isAirborne ()
+    public boolean isFlyer ()
     {
-        return false;
+        return true;
     }
 
     @Override // documentation inherited

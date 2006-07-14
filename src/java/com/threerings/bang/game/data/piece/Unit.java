@@ -376,7 +376,8 @@ public class Unit extends Piece
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {
-        return _config.make == UnitConfig.Make.HUMAN;
+        return _config.make == UnitConfig.Make.HUMAN ||
+               _config.make == UnitConfig.Make.SPIRIT;
     }
 
     @Override // documentation inherited
