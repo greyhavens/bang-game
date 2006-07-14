@@ -40,15 +40,18 @@ public class PrintDamageTable
         for (UnitConfig hconfig : configs) {
             String name = hconfig.type.substring(
                 hconfig.type.lastIndexOf("/")+1);
-            System.out.print("<th>" + name + "</th>");
+            System.out.print("<th>" + name.substring(0, 4) + "</th>");
         }
-        System.out.println("</tr>");
+        System.out.print("<td>Average</td><td>Move</td><td>Shoot</td></tr>");
         for (UnitConfig config : configs) {
             String name = config.type.substring(
                 config.type.lastIndexOf("/")+1);
-            System.out.print("<tr><td>" + name + "</td>" +
+            String bits = (config.rank == UnitConfig.Rank.BIGSHOT) ?
+                " style='border: 2px solid'" : "";
+            System.out.print("<tr" + bits + "><td>" + name + "</td>" +
                              "<td>" + config.damage + "</td>");
             Unit attacker = Unit.getUnit(config.type);
+            int total = 0, count = 0;
             for (UnitConfig oconfig : configs) {
                 Unit target = Unit.getUnit(oconfig.type);
                 int damage = attacker.computeScaledDamage(target, 1f);
@@ -63,8 +66,13 @@ public class PrintDamageTable
                     color = " bgcolor='#00FFFF'";
                 }
                 System.out.print("<td" + color + ">" + damage + "</td>");
+                total += damage;
+                count++;
             }
-            System.out.println("</tr>");
+            System.out.println("<td>" + (total/count) + "</td>" +
+                               "<td>" + config.moveDistance +"</td>" +
+                               "<td>" + config.getDisplayFireDistance() +
+                               "</td></tr>");
         }
         System.out.println("</table>");
         System.out.println("</body>");

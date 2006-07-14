@@ -120,7 +120,7 @@ if [ ! -z "$DEVCLIENT" ]; then
 
     # update our unit damage table
     $ROOT/bin/bangtool com.threerings.bang.game.tools.PrintDamageTable \
-        frontier_town > $ROOT/pages/units.html
+        indian_post > $ROOT/pages/units.html
 fi
 
 # build the particle system editor if requested
