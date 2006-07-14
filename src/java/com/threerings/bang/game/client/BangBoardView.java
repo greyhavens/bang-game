@@ -331,6 +331,9 @@ public class BangBoardView extends BoardView
 //         if (p != null && p.owner == _pidx) {
 //             log.info("Noting pending " + p.info());
 //         }
+        if (ACTION_DEBUG) {
+            log.info("Note Pending Move [pieceId=" + pieceId + "].");
+        }
         _pendmap.increment(pieceId, 1);
     }
 
@@ -343,6 +346,9 @@ public class BangBoardView extends BoardView
 //         if (p != null && p.owner == _pidx) {
 //             log.info("Clearing pending " + p.info());
 //         }
+        if (ACTION_DEBUG) {
+            log.info("Clear Pending Move [pieceId=" + pieceId + "].");
+        }
         _pendmap.increment(pieceId, -1);
     }
 

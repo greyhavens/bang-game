@@ -17,6 +17,8 @@ import com.threerings.bang.game.data.effect.WendigoEffect;
 
 import com.threerings.bang.game.data.piece.Piece;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Displays a wendigo.
  */
@@ -39,6 +41,7 @@ public class WendigoHandler extends EffectHandler
                             WendigoEffect.WENDIGO_SPEED, 
                             WendigoHandler.this, notePender());
                 }
+                _bangobj.removePieceDirect(piece);
             }
         }
         

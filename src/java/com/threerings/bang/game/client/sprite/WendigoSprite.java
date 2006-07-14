@@ -54,6 +54,7 @@ public class WendigoSprite extends MobileSprite
     {
         super.pathCompleted();
         _handler.pathCompleted(_penderId);
+        _view.removeSprite(this);
     }
 
     protected WendigoHandler _handler;

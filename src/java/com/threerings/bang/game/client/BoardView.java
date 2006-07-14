@@ -671,7 +671,7 @@ public class BoardView extends BComponent
         }
 
         if (ACTION_DEBUG) {
-            log.info("Completed " + action);
+            log.info("Completed: " + action);
         }
         noteExecuting(action.pieceIds, -1);
         processActions();
@@ -1057,10 +1057,6 @@ public class BoardView extends BComponent
                         }
                         // the action requires us to wait until it completes
                         return;
-                    }
-
-                    if (ACTION_DEBUG) {
-                        log.info("Completed: " + action);
                     }
 
                 } catch (Throwable t) {

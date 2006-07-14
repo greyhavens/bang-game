@@ -53,8 +53,8 @@ public class WendigoAttack extends Scenario
      */
     public WendigoAttack ()
     {
-        registerDelegate(new RespawnDelegate(RespawnDelegate.RESPAWN_TICKS/2));
         registerDelegate(new WendigoDelegate());
+        registerDelegate(new RespawnDelegate(RespawnDelegate.RESPAWN_TICKS/2));
     }
 
     @Override // documentation inherited
@@ -128,20 +128,12 @@ public class WendigoAttack extends Scenario
         public void tick (BangObject bangobj, short tick)
         {
             if (_wendigos != null) {
-                if (_removeWendigo) {
-                    for (Wendigo w : _wendigos) {
-                        bangobj.removeFromPieces(w.getKey());
-                    }
-                    _wendigos = null;
-                    _removeWendigo = false;
-                } else if (_wendigos.get(0).ticksUntilMovable(tick) <= 0) {
-                    WendigoEffect effect = WendigoEffect.wendigosAttack(
-                            bangobj, _wendigos);
-                    effect.safePoints = _safePoints;
-                    _bangmgr.deployEffect(-1, effect);
-                    _removeWendigo = true;
-                    updatePoints(bangobj);
-                }
+                WendigoEffect effect = WendigoEffect.wendigosAttack(
+                        bangobj, _wendigos);
+                effect.safePoints = _safePoints;
+                _bangmgr.deployEffect(-1, effect);
+                updatePoints(bangobj);
+                _wendigos = null;
             }
             if (tick >= _nextWendigo) {
                 createWendigos(bangobj, tick);
@@ -204,6 +196,9 @@ public class WendigoAttack extends Scenario
                 if (idx + 1 < weights.length) {
                     weights[idx + 1] = 0;
                 }
+                if (idx - 1 >= 0) {
+                    weights[idx - 1] = 0;
+                }
                 idx += off;
                 Wendigo wendigo = new Wendigo();
                 wendigo.assignPieceId(bangobj);
@@ -220,7 +215,6 @@ public class WendigoAttack extends Scenario
                 }
                 wendigo.orientation = (short)orient;
                 wendigo.lastActed = tick;
-                log.info("Wendigo Created [wendigo=" + wendigo + "].");
                 bangobj.addToPieces(wendigo);
                 _wendigos.add(wendigo);
             }
@@ -262,9 +256,6 @@ public class WendigoAttack extends Scenario
 
         /** Set of the sacred location markers. */
         protected PointSet _safePoints;
-
-        /** Whether to remove the wendigo on the next tick. */
-        protected boolean _removeWendigo = false;
 
         /** Number of ticks before wendigo appears. **/
         protected static final short MIN_WENDIGO_TICKS = 10;

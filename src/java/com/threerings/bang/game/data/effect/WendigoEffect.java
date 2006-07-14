@@ -151,6 +151,7 @@ public class WendigoEffect extends Effect
             }
             bangobj.board.clearShadow(piece);
             piece.position(m.nx, m.ny);
+            bangobj.removePieceDirect(piece);
 
             // delay the tick by the amount of time it takes for the wendigo
             // to run it's course
