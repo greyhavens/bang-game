@@ -5,6 +5,8 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
@@ -42,11 +44,11 @@ public class RespawnDelegate extends ScenarioDelegate
     {
         // respawn new pieces
         while (_respawns.size() > 0) {
-            if (_respawns.get(0).getRespawnTick() > tick) {
+            if (_respawns.peek().getRespawnTick() > tick) {
                 break;
             }
 
-            Unit unit = _respawns.remove(0);
+            Unit unit = _respawns.poll();
             log.fine("Respawning " + unit + ".");
 
             // reassign the unit to its original owner
@@ -96,7 +98,16 @@ public class RespawnDelegate extends ScenarioDelegate
     }
 
     /** A list of units waiting to be respawned. */
-    protected ArrayList<Unit> _respawns = new ArrayList<Unit>();
+    protected PriorityQueue<Unit> _respawns = new PriorityQueue<Unit>(10,
+            new Comparator<Unit>() {
+                public int compare (Unit u1, Unit u2) {
+                    return u1.getRespawnTick() - u2.getRespawnTick();
+                }
+
+                public boolean equals(Object obj) {
+                    return false;
+                }
+            });
 
     /** The number of ticks that must elapse before a unit is respawned. */
     protected int _respawnTicks = RESPAWN_TICKS;

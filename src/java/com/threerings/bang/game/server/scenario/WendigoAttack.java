@@ -54,7 +54,19 @@ public class WendigoAttack extends Scenario
     public WendigoAttack ()
     {
         registerDelegate(new WendigoDelegate());
-        registerDelegate(new RespawnDelegate(RespawnDelegate.RESPAWN_TICKS/2));
+        registerDelegate(new RespawnDelegate(RespawnDelegate.RESPAWN_TICKS/2) {
+            @Override // documentation inherited
+            public void pieceWasKilled (BangObject bangobj, Piece piece) {
+                int oldRT = _respawnTicks;
+                // if units were killed by a wendigo they respawn quicker
+                if (_wendigoRespawnTicks != null && piece.owner != -1) {
+                    _respawnTicks = Math.min(
+                        _wendigoRespawnTicks[piece.owner]++, _respawnTicks);
+                }
+                super.pieceWasKilled(bangobj, piece);
+                _respawnTicks = oldRT;
+            }
+        });
     }
 
     @Override // documentation inherited
@@ -131,7 +143,10 @@ public class WendigoAttack extends Scenario
                 WendigoEffect effect = WendigoEffect.wendigosAttack(
                         bangobj, _wendigos);
                 effect.safePoints = _safePoints;
+                _wendigoRespawnTicks = new int[bangobj.players.length];
+                Arrays.fill(_wendigoRespawnTicks, 3);
                 _bangmgr.deployEffect(-1, effect);
+                _wendigoRespawnTicks = null;
                 updatePoints(bangobj);
                 _wendigos = null;
             }
@@ -265,4 +280,7 @@ public class WendigoAttack extends Scenario
         protected static final String SACRED_LOCATION =
             "indian_post/special/sacred_location";
     }
+
+    /** Respawn ticks for units. */
+    protected int[] _wendigoRespawnTicks;
 }
