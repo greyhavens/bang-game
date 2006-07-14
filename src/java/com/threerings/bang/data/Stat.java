@@ -61,6 +61,7 @@ public abstract class Stat
         TOTEMS_STACKED(new IntStat()),
         TOTEM_POINTS(new IntStat()),
         WENDIGO_SURVIVALS(new IntStat()),
+        TALISMAN_POINTS(new IntStat()),
 
         // stats derived from in-game statistics
         HIGHEST_POINTS(new IntStat()),

@@ -195,7 +195,9 @@ public class StatsView extends SteelWindow
             _objectivePoints = "m.survival_points";
             _statType = Stat.Type.WENDIGO_SURVIVALS;
             _ppo = ScenarioCodes.POINTS_PER_SURVIVAL;
-            _secStatType = null;
+            _secStatType = Stat.Type.TALISMAN_POINTS;
+            _secIcon = new ImageIcon(_ctx.loadImage(
+                        "ui/postgame/icons/brand.png"));
         }
     }
 
@@ -749,6 +751,6 @@ public class StatsView extends SteelWindow
             Stat.Type.UNITS_LOST, Stat.Type.CATTLE_RUSTLED,
             Stat.Type.BRAND_POINTS, Stat.Type.NUGGETS_CLAIMED,
             Stat.Type.TOTEMS_STACKED, Stat.Type.TOTEM_POINTS,
-            Stat.Type.WENDIGO_SURVIVALS
+            Stat.Type.WENDIGO_SURVIVALS, Stat.Type.TALISMAN_POINTS
     };
 }

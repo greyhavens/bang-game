@@ -163,8 +163,13 @@ public class WendigoAttack extends Scenario
         protected void createWendigos (BangObject bangobj, short tick)
         {
             Rectangle playarea = bangobj.board.getPlayableArea();
-            int numv = playarea.width / 4;
-            int numh = playarea.height / 4;
+            int maxv = playarea.width / 3;
+            int maxh = playarea.height / 3;
+            int maxtot = maxv + maxh;
+            int curnum = Math.min(maxtot, 
+                    Math.max(1, maxtot * ++_numAttacks / 5));
+            int numv = RandomUtil.getInt(maxv+1, Math.max(0, curnum - maxh)-1);
+            int numh = curnum - numv;
             _wendigos = new ArrayList<Wendigo>(numv+numh);
             createWendigo(bangobj, tick, true, numh);
             createWendigo(bangobj, tick, false, numv);
@@ -241,10 +246,16 @@ public class WendigoAttack extends Scenario
         protected void updatePoints (BangObject bangobj)
         {
             int[] points = new int[bangobj.players.length];
+            int[] talpoints = new int[bangobj.players.length];
             Piece[] pieces = bangobj.getPieceArray();
             for (Piece p : pieces) {
                 if (p instanceof Unit && p.isAlive() && p.owner > -1) {
                     points[p.owner]++;
+                    if (TalismanEffect.TALISMAN_BONUS.equals(
+                                ((Unit)p).holding) &&
+                            _safePoints.contains(p.x, p.y)) {
+                        talpoints[p.owner] += TALISMAN_SAFE;
+                    }
                 }
             }
 
@@ -253,9 +264,12 @@ public class WendigoAttack extends Scenario
                 for (int idx = 0; idx < points.length; idx++) {
                     if (points[idx] > 0) {
                         bangobj.grantPoints(idx, points[idx] *
-                                ScenarioCodes.POINTS_PER_SURVIVAL);
+                                ScenarioCodes.POINTS_PER_SURVIVAL +
+                                talpoints[idx]);
                         bangobj.stats[idx].incrementStat(
                                 Stat.Type.WENDIGO_SURVIVALS, points[idx]);
+                        bangobj.stats[idx].incrementStat(
+                                Stat.Type.TALISMAN_POINTS, talpoints[idx]);
                     }
                 }
             } finally {
@@ -272,9 +286,15 @@ public class WendigoAttack extends Scenario
         /** Set of the sacred location markers. */
         protected PointSet _safePoints;
 
+        /** Current wendigo attack number. */
+        protected int _numAttacks;
+
         /** Number of ticks before wendigo appears. **/
-        protected static final short MIN_WENDIGO_TICKS = 10;
-        protected static final short MAX_WENDIGO_TICKS = 16;
+        protected static final short MIN_WENDIGO_TICKS = 9;
+        protected static final short MAX_WENDIGO_TICKS = 15;
+
+        /** Number of points for having a talisman on a safe zone. */
+        protected static final int TALISMAN_SAFE = 50;
 
         /** The sacred locations. */
         protected static final String SACRED_LOCATION =
