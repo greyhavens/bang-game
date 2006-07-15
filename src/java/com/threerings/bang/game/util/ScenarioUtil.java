@@ -48,6 +48,20 @@ public class ScenarioUtil
     }
 
     /**
+     * Returns only the scenarios for the specified town. Scenarios for
+     * previous towns are not included.
+     */
+    public static String[] getTownScenarios (String townId)
+    {
+        for (int ii = 0; ii < BangCodes.TOWN_IDS.length; ii++) {
+            if (BangCodes.TOWN_IDS[ii].equals(townId)) {
+                return ScenarioCodes.TOWN_SCENARIOS[ii];
+            }
+        }
+        return new String[0];
+    }
+
+    /**
      * Called on the client to preload any sounds for this scenario.
      */
     public static void preloadSounds (String scenarioId, SoundGroup sounds)

@@ -388,7 +388,7 @@ public class SaloonManager extends PlaceManager
             public boolean invoke () {
                 ArrayList<String> scens = new ArrayList<String>();
                 CollectionUtil.addAll(
-                    scens, ScenarioUtil.getScenarios(ServerConfig.townId));
+                    scens, ScenarioUtil.getTownScenarios(ServerConfig.townId));
                 scens.add(0, ScenarioCodes.OVERALL);
 
                 try {

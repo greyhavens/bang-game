@@ -63,4 +63,14 @@ public interface ScenarioCodes
 
     /** Scenarios available in the City of Gold. */
     public static final String[] CITY_OF_GOLD_SCENARIOS = { };
+
+    /** The town scenarios in the same order as towns are defined in {@link
+     * BangCodes#TOWN_IDS}. */
+    public static final String[][] TOWN_SCENARIOS = {
+        FRONTIER_TOWN_SCENARIOS,
+        INDIAN_POST_SCENARIOS,
+        BOOM_TOWN_SCENARIOS,
+        GHOST_TOWN_SCENARIOS,
+        CITY_OF_GOLD_SCENARIOS,
+    };
 }
