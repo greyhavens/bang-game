@@ -437,6 +437,8 @@ public class BangManager extends GameManager
         // record our damage if appropriate
         if (effector != -1) {
             recordDamage(effector, _damage);
+        } else {
+            _damage.clear();
         }
 
         // broadcast the effect to the client

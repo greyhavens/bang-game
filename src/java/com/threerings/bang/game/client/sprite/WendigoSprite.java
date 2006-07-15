@@ -7,9 +7,22 @@ import java.util.List;
 
 import com.jme.math.Vector3f;
 
+import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
+
+import com.jme.scene.state.MaterialState;
+
+import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.RenderUtil;
+
+import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.WendigoHandler;
 
 import com.threerings.bang.game.data.BangBoard;
+
+import com.threerings.bang.game.data.piece.Piece;
+
+import com.threerings.openal.SoundGroup;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -21,6 +34,21 @@ public class WendigoSprite extends MobileSprite
     public WendigoSprite ()
     {
         super("extras", "indian_post/wendigo");
+    }
+
+    public void init (BasicContext ctx, BoardView view, BangBoard board,
+            SoundGroup sounds, Piece piece, short tick)
+    {
+        super.init(ctx, view, board, sounds, piece, tick);
+        MaterialState mstate = _ctx.getRenderer().createMaterialState();
+        mstate.getAmbient().set(ColorRGBA.white);
+        mstate.getDiffuse().set(ColorRGBA.white);
+        mstate.getDiffuse().a = .5f;
+        setRenderState(mstate);
+        setRenderState(RenderUtil.blendAlpha);
+        setRenderState(RenderUtil.overlayZBuf);
+        setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+        updateRenderState();
     }
 
     @Override // documentation inherited
