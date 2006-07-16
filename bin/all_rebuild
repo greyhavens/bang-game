@@ -67,7 +67,7 @@ if [ ! -z "$UPDATE" ]; then
 fi
 
 # rebuild our libraries
-build_libraries samskivert getdown jme-bui narya nenya vilya threerings
+build_libraries samskivert snark getdown jme-bui narya nenya vilya threerings
 
 # run proguard on getdown
 cd $ROOT/projects/getdown
