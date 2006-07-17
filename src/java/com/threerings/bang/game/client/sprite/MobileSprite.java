@@ -603,12 +603,14 @@ public class MobileSprite extends PieceSprite
             }
             public void wasRemoved () {
                 super.wasRemoved();
-                clearRenderState(RenderState.RS_ALPHA);
-                if (!isShadowable()) {
-                    clearRenderState(RenderState.RS_MATERIAL);
-                    _mstate = null;
+                if (in) {
+                    clearRenderState(RenderState.RS_ALPHA);
+                    if (!isShadowable()) {
+                        clearRenderState(RenderState.RS_MATERIAL);
+                        _mstate = null;
+                    }
+                    updateRenderState();
                 }
-                updateRenderState();
             }
         });
         _nextAction = duration;
