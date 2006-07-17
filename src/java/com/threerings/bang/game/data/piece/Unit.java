@@ -221,7 +221,7 @@ public class Unit extends Piece
     public int computeFlightElevation (BangBoard board, int tx, int ty)
     {
         int groundel = Math.max(board.getWaterLevel(),
-            board.getMaxElevation(tx, ty)) +
+            board.getMaxHeightfieldElevation(tx, ty)) +
                 (int)(FLYER_GROUND_HEIGHT * board.getElevationUnitsPerTile()),
             propel = board.getMaxElevation(tx, ty) +
                 (int)(FLYER_PROP_HEIGHT * board.getElevationUnitsPerTile());
