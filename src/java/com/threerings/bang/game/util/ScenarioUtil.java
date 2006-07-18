@@ -27,10 +27,16 @@ public class ScenarioUtil
 {
     /**
      * Selects a random list of scenarios for the specified town.
+     *
+     * @param allowPrevious if true, scenarios from the specified and previous
+     * towns will be considered, if false, only scenarios from the specified
+     * town will be considered.
      */
-    public static String[] selectRandom (String townId, int count)
+    public static String[] selectRandom (String townId, int count,
+                                         boolean allowPrevious)
     {
-        String[] avail = getScenarios(townId);
+        String[] avail = allowPrevious ? getScenarios(townId) :
+            getTownScenarios(townId);
         String[] choices = new String[count];
         for (int ii = 0; ii < choices.length; ii++) {
             choices[ii] = (String)RandomUtil.pickRandom(avail);

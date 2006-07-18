@@ -232,7 +232,7 @@ public class Match
         // only games versus at least one other human are rated
         config.rated = (humans > 1) ? _criterion.getDesiredRankedness() : false;
         config.scenarios = ScenarioUtil.selectRandom(
-            ServerConfig.townId, _criterion.getDesiredRounds());;
+            ServerConfig.townId, _criterion.getDesiredRounds(), false);
 
         return config;
     }
