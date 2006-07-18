@@ -8,7 +8,6 @@ import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.layout.AbsoluteLayout;
-import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.threerings.util.MessageBundle;
@@ -37,22 +36,32 @@ public class MapView extends BContainer
         _ctx = ctx;
         MessageBundle msgs = ctx.getMessageManager().getBundle(
             StationCodes.STATION_MSGS);
-        String townId = ctx.getUserObject().townId;
 
         // add buttons or labels for each town
-        _towns = new BComponent[TOWN_SPOTS.length];
-        for (int ii = 0; ii < _towns.length; ii++) {
-            if (BangCodes.TOWN_IDS[ii].equals(townId)) {
-                _towns[ii] = new BLabel(msgs.get("m.you_are_here"));
+        _tbuts = new BComponent[TBUT_RECTS.length];
+        _towns = new PairedButton[_tbuts.length];
+        for (int ii = 0; ii < _tbuts.length; ii++) {
+            String townId = BangCodes.TOWN_IDS[ii];
+            String gocmd = StationController.TAKE_TRAIN + townId;
+
+            _towns[ii] = new PairedButton(ctrl, gocmd, "map_" + townId, null);
+            add(_towns[ii], TOWN_RECTS[ii]);
+            _towns[ii].setEnabled(false);
+
+            if (townId.equals(ctx.getUserObject().townId)) {
+                _tbuts[ii] = new BLabel("", "map_here");
             } else {
-                _towns[ii] = new BButton(msgs.get("b.take_train"), ctrl,
-                                         StationController.TAKE_TRAIN +
-                                         BangCodes.TOWN_IDS[ii]);
-                // frontier town is always enabled, the other towns all start
-                // disabled and we'll enable them if the player has a ticket
-                _towns[ii].setEnabled(ii == 0);
+                _tbuts[ii] = new PairedButton(
+                    ctrl, gocmd, "map_take", _towns[ii]);
+                _towns[ii].setPair((PairedButton)_tbuts[ii]);
+                // frontier town is always enabled (if we're not in frontier
+                // town), the other towns all start disabled and we'll enable
+                // them if the player has a ticket
+                boolean enabled = (ii == 0);
+                _tbuts[ii].setEnabled(enabled);
+                _towns[ii].setEnabled(enabled);
             }
-            add(_towns[ii], TOWN_SPOTS[ii]);
+            add(_tbuts[ii], TBUT_RECTS[ii]);
         }
 
         enableTownButtons();
@@ -74,13 +83,40 @@ public class MapView extends BContainer
 
     protected void enableTownButtons ()
     {
-        for (int ii = 1; ii < _towns.length; ii++) {
-            if (!(_towns[ii] instanceof BButton)) {
+        for (int ii = 1; ii < _tbuts.length; ii++) {
+            if (!(_tbuts[ii] instanceof BButton)) {
                 continue;
             }
-            _towns[ii].setEnabled(
-                _ctx.getUserObject().holdsTicket(BangCodes.TOWN_IDS[ii]));
+            boolean enabled = _ctx.getUserObject().holdsTicket(
+                BangCodes.TOWN_IDS[ii]);
+            _tbuts[ii].setEnabled(enabled);
+            _towns[ii].setEnabled(enabled);
         }
+    }
+
+    protected class PairedButton extends BButton
+    {
+        public PairedButton (StationController ctrl, String command,
+                             String styleClass, PairedButton pair) {
+            super("", ctrl, command);
+            setStyleClass(styleClass);
+            _pair = pair;
+        }
+
+        public void setPair (PairedButton pair) {
+            _pair = pair;
+        }
+
+        public int getState () {
+            int pstate = (_pair == null) ? DEFAULT : _pair.getSelfState();
+            return (pstate == HOVER) ? pstate : super.getState();
+        }
+
+        protected int getSelfState () {
+            return super.getState();
+        }
+
+        protected PairedButton _pair;
     }
 
     /** Listens for additions to the player's inventory and reenables our town
@@ -94,10 +130,16 @@ public class MapView extends BContainer
     };
 
     protected BangContext _ctx;
-    protected BComponent[] _towns;
+    protected PairedButton[] _towns;
+    protected BComponent[] _tbuts;
 
-    protected static final Point[] TOWN_SPOTS = {
-        new Point(45, 115),
-        new Point(270, 420),
+    protected static final Rectangle[] TOWN_RECTS = {
+        new Rectangle(37, 149, 142, 119),
+        new Rectangle(236, 396, 183, 71),
+    };
+
+    protected static final Rectangle[] TBUT_RECTS = {
+        new Rectangle(75, 132, 88, 19),
+        new Rectangle(276, 354, 88, 19),
     };
 }

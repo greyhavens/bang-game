@@ -1231,6 +1231,27 @@ ticket_info {
   text-align: center;
 }
 
+map_here {
+  background: image "ui/station/youarehere.png" centerxy;
+}
+
+map_take {
+  background: image "ui/station/take_train.png" centerxy;
+}
+map_take:hover {
+  background: image "ui/station/take_train_hover.png" centerxy;
+}
+
+map_frontier_town:hover {
+  background: image "ui/station/frontier_town_hover.png" centerxy;
+}
+map_indian_post:hover {
+  background: image "ui/station/indian_post_hover.png" centerxy;
+}
+map_boom_town:hover {
+  background: image "ui/station/boom_town_hover.png" centerxy;
+}
+
 //
 // Post-game stats display
 
