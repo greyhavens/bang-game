@@ -1036,6 +1036,9 @@ public class BangBoard extends SimpleStreamableObject
             }
         }
 
+        // finally add the piece's current location back to the list
+        moves.add(piece.x, piece.y);
+
         // if the attack set is non-null, compute our attacks as well
         if (attacks != null) {
             PointSet set = moves;

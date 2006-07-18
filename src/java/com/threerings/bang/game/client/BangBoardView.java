@@ -1171,6 +1171,9 @@ public class BangBoardView extends BoardView
             _attackSet.clear();
             pruneAttackSet(_moveSet, _attackSet);
         }
+        // clear out our current location as we don't want to highlight that as
+        // a potential move (but we needed it earlier when computing attacks)
+        _moveSet.remove(piece.x, piece.y);
         highlightTiles(_moveSet, getHighlightColor(piece));
 
         // report that the user took an action (for tutorials)
