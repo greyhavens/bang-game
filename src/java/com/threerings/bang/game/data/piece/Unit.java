@@ -34,11 +34,15 @@ public class Unit extends Piece
      * not be respawned. */
     public int originalOwner = -1;
 
-    /** Any influence currently acting on this unit. */
-    public Influence influence;
+    /** Any influence currently acting on this unit. This is not serialized,
+     * but will be filled in at the appropriate time on the client and server
+     * by effects. */
+    public transient Influence influence;
 
-    /** Any hindrance currently acting on this unit. */
-    public Hindrance hindrance;
+    /** Any hindrance currently acting on this unit. This is not serialized,
+     * but will be filled in at the appropriate time on the client and server
+     * by effects. */
+    public transient Hindrance hindrance;
 
     /** Type of thing being held, or null for nothing. */
     public String holding;
