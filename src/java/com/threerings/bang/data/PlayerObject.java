@@ -205,7 +205,9 @@ public class PlayerObject extends BodyObject
     @Override // documentation inherited
     public Name getVisibleName ()
     {
-        return handle;
+        // we don't want to return null for our visible name but we do need
+        // something unique until they choose a name
+        return (handle != null) ? handle : new Name("!!" + username);
     }
 
     @Override // documentation inherited
