@@ -55,11 +55,11 @@ public abstract class Piece extends SimpleStreamableObject
     /** The percentage damage this piece has taken. */
     public int damage;
 
+    /** The scenarioId for this piece (of null for all). */
+    public String scenId;
+
     /** The piece's last occupied location. */
     public transient short lastX, lastY;
-
-    /** The scenarioId for this piece (of null for all). */
-    public transient String scenId;
     
     /**
      * Combines the supplied x and y coordintes into a single integer.
@@ -184,6 +184,13 @@ public abstract class Piece extends SimpleStreamableObject
     public float getHeight ()
     {
         return 1f;
+    }
+
+    /** Returns true if this piece is valid for this scenario. */
+    public boolean isValidScenario (String scenarioId)
+    {
+        return (scenId == null || scenarioId == null || 
+                scenId.equals(scenarioId));
     }
     
     /** Returns the elevation of this piece in the board's elevation units. */

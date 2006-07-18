@@ -169,14 +169,13 @@ public class Prop extends BigPiece
         return _config.passable;
     }
 
-    /**
-     * Returns true if this prop is valid for this scenario.
-     */
+    @Override // documentation inherited
     public boolean isValidScenario (String scenarioId)
     {
-        return (_config.scenario == null || 
-                ScenarioCodes.TUTORIAL.equals(scenarioId) ||
-                _config.scenario.equals(scenarioId));
+        return super.isValidScenario(scenarioId) &&
+            (scenarioId == null || _config.scenario == null || 
+             ScenarioCodes.TUTORIAL.equals(scenarioId) ||
+             _config.scenario.equals(scenarioId));
     }
     
     /**

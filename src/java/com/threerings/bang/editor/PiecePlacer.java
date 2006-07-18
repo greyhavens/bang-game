@@ -97,9 +97,11 @@ public class PiecePlacer extends EditorTool
                 RandomUtil.getInt(DIRECTIONS.length)];
             _dragPiece.position(tx, ty);
 
-            _ctrl.addPiece(_dragPiece);
-            
-            _panel.view.updateHoverState(e);
+            if (!_ctrl.addPiece(_dragPiece)) {
+                _dragPiece = null;
+            } else {
+                _panel.view.updateHoverState(e);
+            }
         }
     }
 

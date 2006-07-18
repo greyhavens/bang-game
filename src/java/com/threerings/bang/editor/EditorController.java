@@ -133,11 +133,16 @@ public class EditorController extends GameController
     }
     
     /** Adds a piece to the board. */
-    public void addPiece (Piece piece)
+    public boolean addPiece (Piece piece)
     {
-        piece.assignPieceId(_bangobj);
-        _bangobj.addToPieces(piece);
-        addEdit(new PieceAdded(piece));
+        if (piece.isValidScenario(_viewScenId)) {
+            piece.assignPieceId(_bangobj);
+            piece.scenId = _viewScenId;
+            _bangobj.addToPieces(piece);
+            addEdit(new PieceAdded(piece));
+            return true;
+        }
+        return false;
     }
 
     /** Removes a piece from the board. */
@@ -544,14 +549,9 @@ public class EditorController extends GameController
         for (Piece p : pieces) {
             boolean valid = false;
             PieceSprite sprite = _panel.view.getPieceSprite(p);
-            if (id == null) {
-                valid = true;
-            } else if (p instanceof Prop) {
-                valid = ((Prop)p).isValidScenario(id);
-            } else if (p instanceof Marker) {
-                valid = ScenarioUtil.isValidMarker(((Marker)p), id);
-            } else {
-                valid = true;
+            valid = p.isValidScenario(id);
+            if (p instanceof Marker) {
+                valid = valid && ScenarioUtil.isValidMarker(((Marker)p), id);
             }
             if (valid && sprite != null) {
                 if (sprite.getParent() == null) {

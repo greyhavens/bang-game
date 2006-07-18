@@ -72,8 +72,7 @@ public abstract class Scenario
         _bonusSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
-            if (p instanceof Prop &&
-                    !((Prop)p).isValidScenario(bangobj.scenarioId)) {
+            if (!p.isValidScenario(bangobj.scenarioId)) {
                 iter.remove();
 
             } else if (Marker.isMarker(p, Marker.BONUS)) {
