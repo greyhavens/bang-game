@@ -244,6 +244,8 @@ Section "Install" InstStuff
   File "${RSRCDIR}\background.png"
   File "${RSRCDIR}\progress.png"
   File "${RSRCDIR}\app_icon.ico"
+  File "${RSRCDIR}\editor_icon.ico"
+  File "${RSRCDIR}\viewer_icon.ico"
 
   !ifdef ASSUME_OFFLINE_INSTALL
     ; Create a blank proxy.txt file
@@ -274,7 +276,12 @@ Section "Install" InstStuff
   ; Create the editor launcher "shortcut"
   CreateShortCut "$INSTDIR\$(editor_shortcut_name).lnk" \
                  "$R8\bin\javaw.exe" "-jar getdown-pro.jar . editor" \
-                 "$INSTDIR\app_icon.ico" "" "" "" "$(shortcut_hint)"
+                 "$INSTDIR\editor_icon.ico" "" "" "" "$(tool_shortcut_hint)"
+
+  ; Create the model viewer launcher "shortcut"
+  CreateShortCut "$INSTDIR\$(viewer_shortcut_name).lnk" \
+                 "$R8\bin\javaw.exe" "-jar getdown-pro.jar . viewer" \
+                 "$INSTDIR\viewer_icon.ico" "" "" "" "$(tool_shortcut_hint)"
 
   ; Create the links to the home page and manual
   WriteINIStr "$INSTDIR\$(homepage_name).url" \

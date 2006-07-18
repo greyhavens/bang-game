@@ -42,7 +42,9 @@ LangString jre_error ${LANG_ENGLISH} \
 
 LangString shortcut_name ${LANG_ENGLISH} "Play ${NAME}"
 LangString editor_shortcut_name ${LANG_ENGLISH} "${NAME} Editor"
+LangString viewer_shortcut_name ${LANG_ENGLISH} "${NAME} Viewer"
 LangString shortcut_hint ${LANG_ENGLISH} "Play ${NAME}"
+LangString tool_shortcut_hint ${LANG_ENGLISH} "${NAME} Tool"
 LangString homepage_name ${LANG_ENGLISH} "${NAME} Home Page"
 LangString manual_name ${LANG_ENGLISH} "Online Manual"
 LangString uninstaller_name ${LANG_ENGLISH} "uninstall.exe"
