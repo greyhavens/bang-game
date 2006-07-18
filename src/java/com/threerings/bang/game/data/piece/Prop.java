@@ -40,6 +40,9 @@ public class Prop extends BigPiece
     
     /** The roll of the piece. */
     public byte roll;
+
+    /** The scale factors of the piece. */
+    public short scalex, scaley, scalez;
     
     /**
      * Instantiates a prop of the specified type.
@@ -90,29 +93,35 @@ public class Prop extends BigPiece
     }
 
     @Override // documentation inherited
-    public void persistTo (ObjectOutputStream oout)
+    public void persistTo (ObjectOutputStream oout, String[] scenIds)
         throws IOException
     {
-        super.persistTo(oout);
+        super.persistTo(oout, scenIds);
         oout.writeByte(fx);
         oout.writeByte(fy);
         oout.writeByte(forient);
         oout.writeByte(felev);
         oout.writeByte(pitch);
         oout.writeByte(roll);
+        oout.writeShort(scalex);
+        oout.writeShort(scaley);
+        oout.writeShort(scalez);
     }
     
     @Override // documentation inherited
-    public void unpersistFrom (ObjectInputStream oin)
+    public void unpersistFrom (ObjectInputStream oin, String[] scenIds)
         throws IOException
     {
-        super.unpersistFrom(oin);
+        super.unpersistFrom(oin, scenIds);
         fx = oin.readByte();
         fy = oin.readByte();
         forient = oin.readByte();
         felev = oin.readByte();
         pitch = oin.readByte();
         roll = oin.readByte();
+        scalex = oin.readShort();
+        scaley = oin.readShort();
+        scalez = oin.readShort();
     }
     
     @Override // documentation inherited

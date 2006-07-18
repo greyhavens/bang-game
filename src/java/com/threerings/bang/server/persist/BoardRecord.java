@@ -12,11 +12,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 import com.samskivert.util.StringUtil;
 
+import com.threerings.io.ObjectInputStream;
+import com.threerings.io.ObjectOutputStream;
+
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BoardData;
+import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
 
@@ -50,7 +56,7 @@ public class BoardRecord extends BoardData
 
     /** The MD5 hash of the board data. */
     public byte[] dataHash;
-    
+
     /**
      * Returns an array of all scenarios for which this board is
      * applicable.
@@ -67,8 +73,9 @@ public class BoardRecord extends BoardData
     public void setScenarios (String[] scenids)
     {
         scenarios = StringUtil.join(scenids, ",");
+        sortScenarios();
     }
-
+     
     /**
      * Saves this board record to the specified target file.
      */
@@ -114,6 +121,7 @@ public class BoardRecord extends BoardData
             log.warning("Invalid players property [prop=" + pstr + "].");
         }
         scenarios = props.getProperty("scenarios");
+        sortScenarios();
         data = StringUtil.unhexlate(props.getProperty("data", ""));
         bin.close();
     }
@@ -123,4 +131,30 @@ public class BoardRecord extends BoardData
     {
         return StringUtil.hexlate(dataHash);
     }
+
+    @Override // documentation inherited
+    protected void writePiece (ObjectOutputStream oout, Piece piece)
+        throws IOException
+    {
+        super.writePiece(oout, piece, _sortedScenIds);
+    }
+
+    @Override // documentation inherited
+    protected Piece readPiece (ObjectInputStream oin)
+        throws IOException
+    {
+        return super.readPiece(oin, _sortedScenIds);
+    }
+
+    /**
+     * Create a sorted array of the scenario ids.
+     */
+    protected void sortScenarios ()
+    {  
+        _sortedScenIds = getScenarios(); 
+        Arrays.sort(_sortedScenIds);
+    }
+
+    /** A sorted array of scenario ids. */
+    protected transient String[] _sortedScenIds;
 }

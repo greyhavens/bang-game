@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
@@ -56,6 +57,9 @@ public abstract class Piece extends SimpleStreamableObject
 
     /** The piece's last occupied location. */
     public transient short lastX, lastY;
+
+    /** The scenarioId for this piece (of null for all). */
+    public transient String scenId;
     
     /**
      * Combines the supplied x and y coordintes into a single integer.
@@ -508,26 +512,44 @@ public abstract class Piece extends SimpleStreamableObject
 
     /**
      * Writes the persistent state of this piece to the specified stream.
+     *
+     * @param scenIds: A sorted array of scenario Ids
      */
-    public void persistTo (ObjectOutputStream oout)
+    public void persistTo (ObjectOutputStream oout, String[] scenIds)
         throws IOException
     {
         oout.writeInt(pieceId);
         oout.writeShort(x);
         oout.writeShort(y);
         oout.writeShort(orientation);
+        if (scenId == null || scenIds == null) {
+            oout.writeShort(-1);
+        } else {
+            short idx = -1;
+            try {
+                idx = (short)Arrays.binarySearch(scenIds, scenId);
+            } catch (ClassCastException cce) {
+                oout.writeShort(idx);
+            }
+        }
     }
     
     /**
      * Reads the persistent state of this piece from the specified stream.
+     *
+     * @param scenIds: A sorted array of scenario Ids
      */
-    public void unpersistFrom (ObjectInputStream oin)
+    public void unpersistFrom (ObjectInputStream oin, String[] scenIds)
         throws IOException
     {
         pieceId = oin.readInt();
         short x = oin.readShort(), y = oin.readShort();
         orientation = oin.readShort();
         position(x, y);
+        short idx = oin.readShort();
+        if (scenIds != null && idx >= 0 && idx < scenIds.length) {
+            scenId = scenIds[idx];
+        }
     }
     
     /**

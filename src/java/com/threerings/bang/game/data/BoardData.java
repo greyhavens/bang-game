@@ -187,6 +187,14 @@ public class BoardData
     protected void writePiece (ObjectOutputStream oout, Piece piece)
         throws IOException
     {
+        writePiece(oout, piece, null);
+    }
+
+    /** Helper method. */
+    protected void writePiece (
+            ObjectOutputStream oout, Piece piece, String[] scenIds)
+        throws IOException
+    {
         if (piece instanceof Prop) {
             oout.writeUTF(((Prop)piece).getType());
         } else if (piece instanceof Marker) {
@@ -202,11 +210,18 @@ public class BoardData
                                   "[type=" + piece.getClass().getName() +
                                   ", piece=" + piece + "].");
         }
-        piece.persistTo(oout);
+        piece.persistTo(oout, scenIds);
     }
 
     /** Helper method. */
     protected Piece readPiece (ObjectInputStream oin)
+        throws IOException
+    {
+        return readPiece(oin, null);
+    }
+
+    /** Helper method. */
+    protected Piece readPiece (ObjectInputStream oin, String[] scenIds)
         throws IOException
     {
         String type = oin.readUTF();
@@ -220,7 +235,7 @@ public class BoardData
         } else {
             piece = Prop.getProp(type);
         }
-        piece.unpersistFrom(oin);
+        piece.unpersistFrom(oin, scenIds);
         return piece;
     }
     

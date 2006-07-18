@@ -38,10 +38,10 @@ public class Viewpoint extends Piece
     }
     
     @Override // documentation inherited
-    public void persistTo (ObjectOutputStream oout)
+    public void persistTo (ObjectOutputStream oout, String[] scenIds)
         throws IOException
     {
-        super.persistTo(oout);
+        super.persistTo(oout, scenIds);
         oout.writeUTF(name);
         oout.writeByte(fx);
         oout.writeByte(fy);
@@ -51,10 +51,10 @@ public class Viewpoint extends Piece
     }
     
     @Override // documentation inherited
-    public void unpersistFrom (ObjectInputStream oin)
+    public void unpersistFrom (ObjectInputStream oin, String[] scenIds)
         throws IOException
     {
-        super.unpersistFrom(oin);
+        super.unpersistFrom(oin, scenIds);
         name = oin.readUTF();
         fx = oin.readByte();
         fy = oin.readByte();
