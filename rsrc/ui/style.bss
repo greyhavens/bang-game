@@ -1137,7 +1137,11 @@ match_header {
   text-align: center;
 }
 
-match_scenarios {
+parlor_scenbox {
+  padding: 1 0 9 0;
+}
+
+parlor_scenarios {
   background: image "ui/textfield.png" framexy;
   padding: 10;
 }
@@ -1324,4 +1328,3 @@ endgame_player3 {
   parent: "avatar_view_unframed_8";
   color: #888800;
 }
-

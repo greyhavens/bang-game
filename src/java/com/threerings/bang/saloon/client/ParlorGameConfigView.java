@@ -50,12 +50,13 @@ public class ParlorGameConfigView extends BContainer
     public ParlorGameConfigView (BangContext ctx)
     {
         super(new BorderLayout(0, 10));
+
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
 
         BContainer main = new BContainer(
             GroupLayout.makeHoriz(GroupLayout.NONE, GroupLayout.CENTER,
-                                  GroupLayout.NONE));
+                                  GroupLayout.CONSTRAIN));
         ((GroupLayout)main.getLayoutManager()).setGap(25);
         add(main, BorderLayout.CENTER);
 
@@ -72,12 +73,12 @@ public class ParlorGameConfigView extends BContainer
 
         // create our scenario toggles
         BContainer scenbox = new BContainer(new BorderLayout());
+        scenbox.setStyleClass("parlor_scenbox");
         scenbox.add(BangUI.createLabel(_msgs, "m.scenarios", "match_header"),
                     BorderLayout.NORTH);
         BContainer checkboxen = new BContainer(
             GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
                                  GroupLayout.EQUALIZE));
-        checkboxen.setStyleClass("match_scenarios");
         _scenIds = ScenarioUtil.getScenarios(_ctx.getUserObject().townId);
         _scens = new BCheckBox[_scenIds.length];
         for (int ii = 0; ii < _scens.length; ii++) {
@@ -88,12 +89,11 @@ public class ParlorGameConfigView extends BContainer
             checkboxen.add(_scens[ii]);
         }
         BScrollPane pane = new BScrollPane(checkboxen);
+        pane.setViewportStyleClass("parlor_scenarios");
         ((BorderLayout)pane.getLayoutManager()).setGaps(3, 5);
         scenbox.add(pane, BorderLayout.CENTER);
         if (_ctx.getUserObject().tokens.isAdmin()) {
             scenbox.add(_board = new BTextField(""), BorderLayout.SOUTH);
-        } else {
-            scenbox.add(new BLabel(" ", "match_header"), BorderLayout.SOUTH);
         }
         main.add(scenbox);
 
