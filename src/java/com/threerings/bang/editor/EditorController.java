@@ -550,7 +550,7 @@ public class EditorController extends GameController
             boolean valid = false;
             PieceSprite sprite = _panel.view.getPieceSprite(p);
             valid = p.isValidScenario(id);
-            if (p instanceof Marker) {
+            if (id != null && p instanceof Marker) {
                 valid = valid && ScenarioUtil.isValidMarker(((Marker)p), id);
             }
             if (valid && sprite != null) {

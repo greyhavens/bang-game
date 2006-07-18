@@ -536,6 +536,7 @@ public abstract class Piece extends SimpleStreamableObject
             try {
                 idx = (short)Arrays.binarySearch(scenIds, scenId);
             } catch (ClassCastException cce) {
+            } finally {
                 oout.writeShort(idx);
             }
         }
