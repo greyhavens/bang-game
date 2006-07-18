@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="pPlane6" translation="-15.8984, 12.5895, 26.2641" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="kindling.png" transparent="true">
+  <triMesh name="pPlane6" translation="-15.8984, 12.5895, 29.7767" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="kindling.png" transparent="true">
     <vertex location="-6.23617, 52.9188, -33.9851" normal="-0.340481, 0.66305, 0.666661" tcoords="0.0, 0.0"/>
     <vertex location="-49.6411, 23.0179, -28.4383" normal="-0.703149, 0.365755, 0.609758" tcoords="0.5, 0.0"/>
     <vertex location="-20.32, 8.72801, 2.77339" normal="-0.504125, 0.437275, 0.744747" tcoords="0.5, 0.5"/>
@@ -29,7 +29,7 @@
     <vertex location="8.77694, -5.56187, 33.9851" normal="-0.503403, 0.505519, 0.70074" tcoords="0.5, 1.0"/>
   </triMesh>
 
-  <triMesh name="pPlane4" translation="-3.8147e-006, -3.8147e-006, 10.9506" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="pPlane4" translation="-3.8147e-006, -3.78154e-006, 14.4632" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="7.54647, 29.9202, 2.05818" normal="0.0814381, 0.322886, 0.942928" tcoords="0.229097, 0.616849"/>
     <vertex location="3.8147e-006, 3.8147e-006, 10.9506" normal="0.0, 0.0, 1.0" tcoords="0.288118, 0.675871"/>
     <vertex location="24.5807, 14.6787, 2.05818" normal="0.302121, 0.210493, 0.929739" tcoords="0.216137, 0.675871"/>
@@ -152,7 +152,7 @@
     <vertex location="-14.6787, 24.5807, 2.05818" normal="-0.166151, 0.328601, 0.929739" tcoords="0.288118, 0.60389"/>
   </triMesh>
 
-  <triMesh name="pPlane7" translation="18.6462, 15.5953, 24.8001" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="kindling.png" transparent="true">
+  <triMesh name="pPlane7" translation="18.6462, 15.5953, 28.3127" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="kindling.png" transparent="true">
     <vertex location="48.1454, -14.9, -35.1689" normal="0.802339, 0.123717, 0.583906" tcoords="0.0, 0.0"/>
     <vertex location="37.2182, 38.068, -31.3768" normal="0.497797, 0.561507, 0.66099" tcoords="0.5, 0.0"/>
     <vertex location="16.2392, 16.4242, 2.03616" normal="0.591543, 0.448696, 0.669887" tcoords="0.5, 0.5"/>
@@ -179,7 +179,7 @@
     <vertex location="-4.73988, -5.21968, 35.4491" normal="0.675839, 0.347964, 0.649741" tcoords="0.5, 1.0"/>
   </triMesh>
 
-  <triMesh name="polySurface10" translation="1.12185, 8.45261, 34.2228" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="polySurface10" translation="1.12185, 8.45261, 37.7354" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="8.745, -48.1458, 33.6913" normal="-0.00399204, -0.915406, 0.402512" tcoords="0.649008, 0.384498"/>
     <vertex location="3.50596, -52.16, 24.5101" normal="-0.00343745, -0.915076, 0.403268" tcoords="0.623643, 0.442612"/>
     <vertex location="13.6897, -52.2528, 24.3194" normal="-0.000785806, -0.915104, 0.403217" tcoords="0.677991, 0.444477"/>
@@ -326,7 +326,7 @@
     <vertex location="3.88678, 46.3282, -33.7723" normal="0.0404158, 0.611489, -0.79022" tcoords="0.647822, 0.494058"/>
   </triMesh>
 
-  <triMesh name="polySurface9" translation="-16.8335, -2.53687, 38.6619" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="polySurface9" translation="-16.8335, -2.53687, 42.1745" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="43.922, 14.9592, 38.5431" normal="0.735611, 0.378402, 0.561862" tcoords="0.649005, 0.384517"/>
     <vertex location="41.7396, 25.3131, 34.4273" normal="0.735734, 0.377498, 0.562309" tcoords="0.62364, 0.442631"/>
     <vertex location="36.6694, 22.5716, 42.8522" normal="0.734376, 0.376783, 0.564558" tcoords="0.677988, 0.444495"/>
@@ -473,7 +473,7 @@
     <vertex location="-48.983, -15.1869, -27.5141" normal="-0.760972, -0.39118, -0.51759" tcoords="0.647819, 0.494076"/>
   </triMesh>
 
-  <triMesh name="pPlane5" translation="0.0, -26.6279, 29.6909" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="kindling.png" transparent="true">
+  <triMesh name="pPlane5" translation="0.0, -26.6279, 33.2035" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="kindling.png" transparent="true">
     <vertex location="-45.0, -17.5536, -33.9851" normal="-0.440282, -0.677989, 0.588627" tcoords="0.0, 0.0"/>
     <vertex location="0.0, -47.2794, -28.4383" normal="0.016126, -0.731207, 0.681965" tcoords="0.5, 0.0"/>
     <vertex location="0.0, -14.8629, 2.77339" normal="-0.0981635, -0.695551, 0.711739" tcoords="0.5, 0.5"/>
@@ -500,7 +500,7 @@
     <vertex location="0.0, 17.5536, 33.9851" normal="-0.176236, -0.652725, 0.736812" tcoords="0.5, 1.0"/>
   </triMesh>
 
-  <triMesh name="pCube16" translation="-25.5897, 71.3101, 7.4776" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="pCube16" translation="-25.5897, 71.3101, 10.9902" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="-23.4104, 12.459, -6.87952" normal="-0.327661, 0.605337, 0.7254" tcoords="0.659847, 0.896499"/>
     <vertex location="14.7394, 16.6209, 6.87952" normal="-0.157133, 0.363583, 0.918214" tcoords="0.86167, 0.920054"/>
     <vertex location="14.4855, 25.0333, -6.87952" normal="0.177012, 0.897085, 0.404853" tcoords="0.868113, 0.98935"/>
@@ -539,7 +539,7 @@
     <vertex location="-5.09067, -18.4216, 5.86145" normal="0.0169998, -0.592389, 0.805473" tcoords="0.762672, 0.721132"/>
   </triMesh>
 
-  <triMesh name="pCube17" translation="-63.4875, 36.6515, 7.53704" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="pCube17" translation="-63.4875, 36.6515, 11.0497" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="-12.7771, 27.5691, -3.04837" normal="-0.714829, 0.698894, -0.0238086" tcoords="0.732847, 0.925349"/>
     <vertex location="-18.8629, 16.6116, -2.73418" normal="-0.751859, 0.282183, 0.595887" tcoords="0.694387, 0.877865"/>
     <vertex location="12.4303, 34.5155, 5.4404" normal="0.0517164, 0.94167, 0.332541" tcoords="0.856917, 0.924624"/>
@@ -608,7 +608,7 @@
     <vertex location="-12.7771, 27.5691, -3.04837" normal="-0.714829, 0.698894, -0.0238086" tcoords="0.732847, 0.925349"/>
   </triMesh>
 
-  <triMesh name="pCube5" translation="-84.1454, -1.77337, 7.52308" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="pCube5" translation="-84.1454, -1.77337, 11.0357" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="-0.354233, 16.4772, 8.75892" normal="-0.267949, 0.56763, 0.77846" tcoords="0.837369, 0.906428"/>
     <vertex location="-18.4553, 4.37185, 3.75061" normal="-0.682617, 0.109977, 0.722453" tcoords="0.667942, 0.879951"/>
     <vertex location="9.72839, -13.1428, 6.99771" normal="0.213792, -0.174807, 0.961112" tcoords="0.9126, 0.771189"/>
@@ -653,7 +653,7 @@
     <vertex location="9.72839, -13.1428, 6.99771" normal="0.213792, -0.174807, 0.961112" tcoords="0.9126, 0.771189"/>
   </triMesh>
 
-  <triMesh name="pCube11" translation="-74.3529, -45.7049, 7.72201" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="pCube11" translation="-74.3529, -45.7049, 11.2346" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="12.2962, 10.4242, 9.52728" normal="0.710121, 0.334599, 0.619493" tcoords="0.886944, 0.881292"/>
     <vertex location="23.2756, -19.7501, 4.17775" normal="0.311636, -0.397814, 0.862918" tcoords="0.921373, 0.783138"/>
     <vertex location="15.1745, 10.6634, -9.27088" normal="0.868046, 0.493959, -0.0500124" tcoords="0.986841, 0.979311"/>
@@ -698,7 +698,7 @@
     <vertex location="-17.6283, 24.6713, 4.97411" normal="-0.555131, 0.0494361, 0.830292" tcoords="0.645716, 0.963453"/>
   </triMesh>
 
-  <triMesh name="pCube12" translation="-21.9437, -72.5777, 8.02708" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="pCube12" translation="-21.9437, -72.5777, 11.5397" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="-15.7297, -15.0209, -8.75817" normal="-0.328005, -0.678217, 0.657598" tcoords="0.676298, 0.688844"/>
     <vertex location="23.7581, -24.5807, -8.978" normal="0.181385, -0.607782, 0.773111" tcoords="0.982918, 0.688982"/>
     <vertex location="-11.9162, 9.18795, 10.0581" normal="-0.189333, -0.10082, 0.976723" tcoords="0.73782, 0.874255"/>
@@ -731,7 +731,7 @@
     <vertex location="-27.7065, 0.650253, 1.85111" normal="-0.657412, 0.0117946, 0.753439" tcoords="0.659242, 0.866187"/>
   </triMesh>
 
-  <triMesh name="pCube7" translation="30.9553, -74.3629, 8.13719" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="pCube7" translation="30.9553, -74.3629, 11.6498" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="12.2895, 19.9615, -6.40175" normal="-0.182379, 0.979307, 0.087723" tcoords="0.86869, 0.978421"/>
     <vertex location="-21.5863, 1.75033, -6.72104" normal="-0.664882, 0.74388, -0.0676402" tcoords="0.601306, 0.98004"/>
     <vertex location="7.61727, 12.4187, 6.80896" normal="-0.0574108, 0.470939, 0.880296" tcoords="0.847042, 0.92178"/>
@@ -782,64 +782,64 @@
     <vertex location="-27.3898, -4.36304, 8.32905" normal="-0.335695, -0.390398, 0.857262" tcoords="0.641873, 0.815272"/>
   </triMesh>
 
-  <triMesh name="pCube9" translation="70.7749, -31.5543, 9.36523" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
-    <vertex location="19.573, -0.0610523, -11.1017" normal="0.943001, -0.00428126, 0.332763" tcoords="0.983704, 0.810822"/>
-    <vertex location="9.95256, 23.9031, -0.0754261" normal="0.549546, 0.582275, -0.599128" tcoords="0.985201, 0.982704"/>
-    <vertex location="8.83141, 28.0701, 11.6926" normal="0.738518, 0.359555, 0.570361" tcoords="0.847441, 0.909032"/>
-    <vertex location="16.5671, -4.54648, -0.187847" normal="0.675841, -0.245557, 0.69494" tcoords="0.888116, 0.832421"/>
-    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0621257, -0.0582574, 0.996367" tcoords="0.808379, 0.87921"/>
-    <vertex location="-16.3392, -29.2021, -11.3954" normal="-0.478526, -0.387985, 0.787706" tcoords="0.676862, 0.774507"/>
-    <vertex location="16.5671, -4.54648, -0.187847" normal="0.675841, -0.245557, 0.69494" tcoords="0.888116, 0.832421"/>
-    <vertex location="-16.3392, -29.2021, -11.3954" normal="-0.478526, -0.387985, 0.787706" tcoords="0.676862, 0.774507"/>
-    <vertex location="0.597794, -37.053, -2.72661" normal="0.0747344, -0.81374, 0.576405" tcoords="0.804148, 0.756066"/>
-    <vertex location="1.62018, -36.4762, -11.6926" normal="0.615615, -0.787892, 0.0156492" tcoords="0.831762, 0.686219"/>
-    <vertex location="0.597794, -37.053, -2.72661" normal="0.0747344, -0.81374, 0.576405" tcoords="0.804148, 0.756068"/>
-    <vertex location="-16.3392, -29.2021, -11.3954" normal="-0.478526, -0.387985, 0.787706" tcoords="0.676862, 0.774508"/>
+  <triMesh name="pCube9" translation="70.7749, -31.5543, 12.8779" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+    <vertex location="19.573, 6.07285, -11.1017" normal="0.956492, 0.0157126, 0.291335" tcoords="0.983704, 0.810822"/>
+    <vertex location="9.95256, 23.9031, -0.0754261" normal="0.517484, 0.60796, -0.602159" tcoords="0.985201, 0.982704"/>
+    <vertex location="8.83141, 28.0701, 11.6926" normal="0.739555, 0.407515, 0.535714" tcoords="0.847441, 0.909032"/>
+    <vertex location="16.5671, -4.54648, -0.187847" normal="0.688958, -0.257134, 0.677657" tcoords="0.888116, 0.832421"/>
+    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0726817, -0.0747428, 0.994551" tcoords="0.808379, 0.87921"/>
+    <vertex location="-16.3392, -29.2021, -9.81722" normal="-0.482373, -0.378139, 0.790144" tcoords="0.676862, 0.774507"/>
+    <vertex location="16.5671, -4.54648, -0.187847" normal="0.688958, -0.257134, 0.677657" tcoords="0.888116, 0.832421"/>
+    <vertex location="-16.3392, -29.2021, -9.81722" normal="-0.482373, -0.378139, 0.790144" tcoords="0.676862, 0.774507"/>
+    <vertex location="0.597794, -37.053, -2.72661" normal="0.10517, -0.809263, 0.577956" tcoords="0.804148, 0.756066"/>
+    <vertex location="1.62018, -36.4762, -11.6926" normal="0.630753, -0.773084, -0.0670281" tcoords="0.831762, 0.686219"/>
+    <vertex location="0.597794, -37.053, -2.72661" normal="0.10517, -0.809263, 0.577956" tcoords="0.804148, 0.756068"/>
+    <vertex location="-16.3392, -29.2021, -9.81722" normal="-0.482373, -0.378139, 0.790144" tcoords="0.676862, 0.774508"/>
     <vertex location="-9.0079, 29.7767, 0.08776" normal="-0.495206, 0.541758, -0.679168" tcoords="0.728658, 0.955167"/>
     <vertex location="-9.03607, -4.30926, -11.2763" normal="-0.0987506, 0.314807, -0.944005" tcoords="0.605576, 0.973949"/>
-    <vertex location="-19.573, -14.1686, -11.2828" normal="-0.977357, 0.195934, -0.0798901" tcoords="0.659858, 0.80982"/>
-    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0621257, -0.0582574, 0.996367" tcoords="0.808379, 0.87921"/>
-    <vertex location="8.83141, 28.0701, 11.6926" normal="0.738518, 0.359555, 0.570361" tcoords="0.847441, 0.909032"/>
+    <vertex location="-19.573, -14.1686, -11.2828" normal="-0.970849, 0.211686, -0.112434" tcoords="0.659858, 0.80982"/>
+    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0726817, -0.0747428, 0.994551" tcoords="0.808379, 0.87921"/>
+    <vertex location="8.83141, 28.0701, 11.6926" normal="0.739555, 0.407515, 0.535714" tcoords="0.847441, 0.909032"/>
     <vertex location="-2.11675, 37.053, 6.13077" normal="-0.220055, 0.875889, 0.429412" tcoords="0.789874, 0.930132"/>
-    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0621257, -0.0582574, 0.996367" tcoords="0.808379, 0.87921"/>
+    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0726817, -0.0747428, 0.994551" tcoords="0.808379, 0.87921"/>
     <vertex location="-2.11675, 37.053, 6.13077" normal="-0.220055, 0.875889, 0.429412" tcoords="0.789874, 0.930132"/>
-    <vertex location="-9.55236, 26.9845, 6.04974" normal="-0.758433, 0.154301, 0.633223" tcoords="0.750776, 0.906482"/>
-    <vertex location="-16.3392, -29.2021, -11.3954" normal="-0.478526, -0.387985, 0.787706" tcoords="0.676862, 0.774507"/>
-    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0621257, -0.0582574, 0.996367" tcoords="0.808379, 0.87921"/>
-    <vertex location="-9.55236, 26.9845, 6.04974" normal="-0.758433, 0.154301, 0.633223" tcoords="0.750776, 0.906482"/>
-    <vertex location="-16.3392, -29.2021, -11.3954" normal="-0.478526, -0.387985, 0.787706" tcoords="0.676862, 0.774507"/>
-    <vertex location="-9.55236, 26.9845, 6.04974" normal="-0.758433, 0.154301, 0.633223" tcoords="0.750776, 0.906482"/>
-    <vertex location="-19.573, -14.1686, -11.2828" normal="-0.977357, 0.195934, -0.0798901" tcoords="0.659859, 0.809819"/>
-    <vertex location="9.95256, 23.9031, -0.0754261" normal="0.549546, 0.582275, -0.599128" tcoords="0.985201, 0.982704"/>
+    <vertex location="-9.55236, 26.9845, 6.04974" normal="-0.770215, 0.169489, 0.614851" tcoords="0.750776, 0.906482"/>
+    <vertex location="-16.3392, -29.2021, -9.81722" normal="-0.482373, -0.378139, 0.790144" tcoords="0.676862, 0.774507"/>
+    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0726817, -0.0747428, 0.994551" tcoords="0.808379, 0.87921"/>
+    <vertex location="-9.55236, 26.9845, 6.04974" normal="-0.770215, 0.169489, 0.614851" tcoords="0.750776, 0.906482"/>
+    <vertex location="-16.3392, -29.2021, -9.81722" normal="-0.482373, -0.378139, 0.790144" tcoords="0.676862, 0.774507"/>
+    <vertex location="-9.55236, 26.9845, 6.04974" normal="-0.770215, 0.169489, 0.614851" tcoords="0.750776, 0.906482"/>
+    <vertex location="-19.573, -14.1686, -11.2828" normal="-0.970849, 0.211686, -0.112434" tcoords="0.659859, 0.809819"/>
+    <vertex location="9.95256, 23.9031, -0.0754261" normal="0.517484, 0.60796, -0.602159" tcoords="0.985201, 0.982704"/>
     <vertex location="-9.03607, -4.30926, -11.2763" normal="-0.0987506, 0.314807, -0.944005" tcoords="0.605576, 0.973949"/>
     <vertex location="-9.0079, 29.7767, 0.08776" normal="-0.495206, 0.541758, -0.679168" tcoords="0.728658, 0.955167"/>
-    <vertex location="9.95256, 23.9031, -0.0754261" normal="0.549546, 0.582275, -0.599128" tcoords="0.985201, 0.982704"/>
+    <vertex location="9.95256, 23.9031, -0.0754261" normal="0.517484, 0.60796, -0.602159" tcoords="0.985201, 0.982704"/>
     <vertex location="-9.0079, 29.7767, 0.08776" normal="-0.495206, 0.541758, -0.679168" tcoords="0.728658, 0.955167"/>
     <vertex location="-2.11675, 37.053, 6.13077" normal="-0.220055, 0.875889, 0.429412" tcoords="0.789874, 0.930131"/>
-    <vertex location="19.573, -0.0610523, -11.1017" normal="0.943001, -0.00428126, 0.332763" tcoords="0.983703, 0.810822"/>
-    <vertex location="8.83141, 28.0701, 11.6926" normal="0.738518, 0.359555, 0.570361" tcoords="0.847441, 0.909032"/>
-    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0621257, -0.0582574, 0.996367" tcoords="0.808379, 0.87921"/>
-    <vertex location="19.573, -0.0610523, -11.1017" normal="0.943001, -0.00428126, 0.332763" tcoords="0.983703, 0.810822"/>
-    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0621257, -0.0582574, 0.996367" tcoords="0.808379, 0.87921"/>
-    <vertex location="16.5671, -4.54648, -0.187847" normal="0.675841, -0.245557, 0.69494" tcoords="0.888116, 0.832421"/>
+    <vertex location="19.573, 6.07285, -11.1017" normal="0.956492, 0.0157126, 0.291335" tcoords="0.983703, 0.810822"/>
+    <vertex location="8.83141, 28.0701, 11.6926" normal="0.739555, 0.407515, 0.535714" tcoords="0.847441, 0.909032"/>
+    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0726817, -0.0747428, 0.994551" tcoords="0.808379, 0.87921"/>
+    <vertex location="19.573, 6.07285, -11.1017" normal="0.956492, 0.0157126, 0.291335" tcoords="0.983703, 0.810822"/>
+    <vertex location="1.40246, 15.3735, 11.1449" normal="0.0726817, -0.0747428, 0.994551" tcoords="0.808379, 0.87921"/>
+    <vertex location="16.5671, -4.54648, -0.187847" normal="0.688958, -0.257134, 0.677657" tcoords="0.888116, 0.832421"/>
     <vertex location="-2.11675, 37.053, 6.13077" normal="-0.220055, 0.875889, 0.429412" tcoords="0.789874, 0.930131"/>
     <vertex location="-9.0079, 29.7767, 0.08776" normal="-0.495206, 0.541758, -0.679168" tcoords="0.728658, 0.955167"/>
-    <vertex location="-9.55236, 26.9845, 6.04974" normal="-0.758433, 0.154301, 0.633223" tcoords="0.750777, 0.906482"/>
+    <vertex location="-9.55236, 26.9845, 6.04974" normal="-0.770215, 0.169489, 0.614851" tcoords="0.750777, 0.906482"/>
     <vertex location="-2.11675, 37.053, 6.13077" normal="-0.220055, 0.875889, 0.429412" tcoords="0.789874, 0.930131"/>
-    <vertex location="8.83141, 28.0701, 11.6926" normal="0.738518, 0.359555, 0.570361" tcoords="0.847441, 0.909032"/>
-    <vertex location="9.95256, 23.9031, -0.0754261" normal="0.549546, 0.582275, -0.599128" tcoords="0.985201, 0.982704"/>
+    <vertex location="8.83141, 28.0701, 11.6926" normal="0.739555, 0.407515, 0.535714" tcoords="0.847441, 0.909032"/>
+    <vertex location="9.95256, 23.9031, -0.0754261" normal="0.517484, 0.60796, -0.602159" tcoords="0.985201, 0.982704"/>
     <vertex location="-9.0079, 29.7767, 0.08776" normal="-0.495206, 0.541758, -0.679168" tcoords="0.728658, 0.955167"/>
-    <vertex location="-19.573, -14.1686, -11.2828" normal="-0.977357, 0.195934, -0.0798901" tcoords="0.659858, 0.80982"/>
-    <vertex location="-9.55236, 26.9845, 6.04974" normal="-0.758433, 0.154301, 0.633223" tcoords="0.750777, 0.906482"/>
-    <vertex location="1.62018, -36.4762, -11.6926" normal="0.615615, -0.787892, 0.0156492" tcoords="0.831762, 0.686219"/>
-    <vertex location="19.573, -0.0610523, -11.1017" normal="0.943001, -0.00428126, 0.332763" tcoords="0.983704, 0.810822"/>
-    <vertex location="16.5671, -4.54648, -0.187847" normal="0.675841, -0.245557, 0.69494" tcoords="0.888116, 0.832421"/>
-    <vertex location="1.62018, -36.4762, -11.6926" normal="0.615615, -0.787892, 0.0156492" tcoords="0.831762, 0.686219"/>
-    <vertex location="16.5671, -4.54648, -0.187847" normal="0.675841, -0.245557, 0.69494" tcoords="0.888116, 0.832421"/>
-    <vertex location="0.597794, -37.053, -2.72661" normal="0.0747344, -0.81374, 0.576405" tcoords="0.804148, 0.756068"/>
+    <vertex location="-19.573, -14.1686, -11.2828" normal="-0.970849, 0.211686, -0.112434" tcoords="0.659858, 0.80982"/>
+    <vertex location="-9.55236, 26.9845, 6.04974" normal="-0.770215, 0.169489, 0.614851" tcoords="0.750777, 0.906482"/>
+    <vertex location="1.62018, -36.4762, -11.6926" normal="0.630753, -0.773084, -0.0670281" tcoords="0.831762, 0.686219"/>
+    <vertex location="19.573, 6.07285, -11.1017" normal="0.956492, 0.0157126, 0.291335" tcoords="0.983704, 0.810822"/>
+    <vertex location="16.5671, -4.54648, -0.187847" normal="0.688958, -0.257134, 0.677657" tcoords="0.888116, 0.832421"/>
+    <vertex location="1.62018, -36.4762, -11.6926" normal="0.630753, -0.773084, -0.0670281" tcoords="0.831762, 0.686219"/>
+    <vertex location="16.5671, -4.54648, -0.187847" normal="0.688958, -0.257134, 0.677657" tcoords="0.888116, 0.832421"/>
+    <vertex location="0.597794, -37.053, -2.72661" normal="0.10517, -0.809263, 0.577956" tcoords="0.804148, 0.756068"/>
   </triMesh>
 
-  <triMesh name="pCube4" translation="69.9062, 19.2471, 6.77689" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="pCube4" translation="69.9062, 19.2471, 10.2895" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="19.9454, 6.94652, 3.23759" normal="0.742987, 0.222681, 0.631176" tcoords="0.927001, 0.886161"/>
     <vertex location="2.47793, 29.0603, 8.08997" normal="0.268299, 0.592784, 0.759357" tcoords="0.762024, 0.898376"/>
     <vertex location="5.02719, -18.2279, 6.06725" normal="-0.19528, -0.243394, 0.950066" tcoords="0.818606, 0.777153"/>
@@ -887,7 +887,7 @@
     <vertex location="5.02719, -18.2279, 6.06725" normal="-0.19528, -0.243394, 0.950066" tcoords="0.818606, 0.777153"/>
   </triMesh>
 
-  <triMesh name="pCube8" translation="31.9618, 72.4125, 7.48991" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="pCube8" translation="31.9618, 72.4125, 11.0025" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="2.63854, 22.1335, 3.04664" normal="0.16149, 0.837326, 0.522308" tcoords="0.799528, 0.932043"/>
     <vertex location="-15.6696, 7.98794, 8.49724" normal="-0.465135, 0.0691219, 0.882537" tcoords="0.720087, 0.871967"/>
     <vertex location="30.3052, -15.118, 6.21884" normal="0.457802, -0.288804, 0.840839" tcoords="0.919577, 0.773835"/>
@@ -929,7 +929,7 @@
     <vertex location="30.3052, -15.118, 6.21884" normal="0.457802, -0.288804, 0.840839" tcoords="0.919577, 0.773835"/>
   </triMesh>
 
-  <triMesh name="polySurface11" translation="20.9326, -11.9423, 41.7746" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
+  <triMesh name="polySurface11" translation="20.9326, -11.9423, 45.2873" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="campfire.png" transparent="false">
     <vertex location="-33.0193, 17.7797, 39.1528" normal="-0.453295, 0.52514, 0.720244" tcoords="0.649008, 0.384498"/>
     <vertex location="-26.3003, 26.5953, 36.954" normal="-0.453894, 0.524475, 0.720352" tcoords="0.623643, 0.442612"/>
     <vertex location="-35.0331, 26.1536, 31.739" normal="-0.455958, 0.524373, 0.719121" tcoords="0.677991, 0.444477"/>
