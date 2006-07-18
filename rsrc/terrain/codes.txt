@@ -24,3 +24,4 @@ dry_mud_brown = 23
 rock_face = 24
 ice = 25
 blackout = 26
+green_leaves = 27
