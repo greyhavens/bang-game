@@ -63,12 +63,16 @@ public class PiecePlacer extends EditorTool
                 
             } else {
                 _dragType = NORMAL_DRAG;
-                if (_dragPiece instanceof Prop &&
-                    (e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) != 0) {
-                    if (e.getButton() == MouseEvent.BUTTON1) {
-                        _dragType = FINE_DRAG;
-                    } else if (e.getButton() == MouseEvent.BUTTON3) {
-                        _dragType = ELEVATION_DRAG;
+                if (_dragPiece instanceof Prop) {
+                    if (_scaleMode != 0) {
+                        _dragType = SCALE_DRAG;
+                    } else if ((e.getModifiers() & 
+                                MouseEvent.SHIFT_DOWN_MASK) != 0) {
+                        if (e.getButton() == MouseEvent.BUTTON1) {
+                            _dragType = FINE_DRAG;
+                        } else if (e.getButton() == MouseEvent.BUTTON3) {
+                            _dragType = ELEVATION_DRAG;
+                        }
                     }
                 }
                 if (_dragType == FINE_DRAG) {
@@ -128,6 +132,20 @@ public class PiecePlacer extends EditorTool
                 (int)(_loc.y / PropSprite.FINE_POSITION_SCALE) -
                     _dragOffset.y);
             
+        } else if (_dragType == SCALE_DRAG) {
+            Vector3f v = p.getScale();
+            if ((_scaleMode & SCALE_ALL) != 0 || (_scaleMode & SCALE_X) != 0) {
+                v.x += (e.getY() - _dragStart.y) * 0.005f;
+            }
+            if ((_scaleMode & SCALE_ALL) != 0 || (_scaleMode & SCALE_Y) != 0) {
+                v.y += (e.getY() - _dragStart.y) * 0.005f;
+            }
+            if ((_scaleMode & SCALE_ALL) != 0 || (_scaleMode & SCALE_Z) != 0) {
+                v.z += (e.getY() - _dragStart.y) * 0.005f;
+            }
+            p.scale(v);
+            _dragStart.setLocation(e.getX(), e.getY());
+
         } else { // _dragType == ELEVATION_DRAG
             p.elevate(e.getY() - _dragStart.y);
             _dragStart.setLocation(e.getX(), e.getY());
@@ -194,6 +212,10 @@ public class PiecePlacer extends EditorTool
              case KeyInput.KEY_A: ad = -1; break;
              case KeyInput.KEY_S: ws = -1; break;
              case KeyInput.KEY_D: ad = +1; break;
+             case KeyInput.KEY_Z: _scaleMode = _scaleMode | SCALE_ALL; break;
+             case KeyInput.KEY_X: _scaleMode = _scaleMode | SCALE_X; break;
+             case KeyInput.KEY_C: _scaleMode = _scaleMode | SCALE_Y; break;
+             case KeyInput.KEY_V: _scaleMode = _scaleMode | SCALE_Z; break;
              default: return;
         }
         Piece piece = _panel.view.getHoverPiece();
@@ -237,7 +259,14 @@ public class PiecePlacer extends EditorTool
     @Override // documentation inherited
     public void keyReleased (KeyEvent e)
     {
-        _ctrl.maybeCommitPieceEdit();
+        switch (e.getKeyCode()) {
+             case KeyInput.KEY_Z: _scaleMode = _scaleMode & ~SCALE_ALL; break;
+             case KeyInput.KEY_X: _scaleMode = _scaleMode & ~SCALE_X; break;
+             case KeyInput.KEY_C: _scaleMode = _scaleMode & ~SCALE_Y; break;
+             case KeyInput.KEY_V: _scaleMode = _scaleMode & ~SCALE_Z; break;
+             default:
+                _ctrl.maybeCommitPieceEdit();
+        }
     }
     
     // documentation inherited
@@ -271,6 +300,13 @@ public class PiecePlacer extends EditorTool
     
     /** A temporary vector to reuse. */
     protected Vector3f _loc = new Vector3f();
+
+    /** Scale mode. */
+    protected int _scaleMode;
+    protected static final int SCALE_ALL = 1;
+    protected static final int SCALE_X = 1 << 1;
+    protected static final int SCALE_Y = 1 << 2;
+    protected static final int SCALE_Z = 1 << 3;
     
     /** The normal drag type: dragging pieces with tile coordinates. */
     protected static final int NORMAL_DRAG = 0;
@@ -280,4 +316,7 @@ public class PiecePlacer extends EditorTool
     
     /** The elevation drag type: dragging pieces vertically. */
     protected static final int ELEVATION_DRAG = 2;
+
+    /** The scale drag type. */
+    protected static final int SCALE_DRAG = 3;
 }

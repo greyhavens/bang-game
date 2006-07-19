@@ -3,8 +3,11 @@
 
 package com.threerings.bang.game.data.piece;
 
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.logging.Level;
+
+import com.jme.math.Vector3f;
 
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
@@ -122,6 +125,7 @@ public class Prop extends BigPiece
         scalex = oin.readShort();
         scaley = oin.readShort();
         scalez = oin.readShort();
+        recomputeScale();
     }
     
     @Override // documentation inherited
@@ -208,7 +212,47 @@ public class Prop extends BigPiece
         fx = (byte)((px % 256) - 128);
         fy = (byte)((py % 256) - 128);
     }
-    
+
+    /**
+     * Scales the prop.  (-32768 - 0) is 0f - 1f and (0 - 32767) is 1f - 10f
+     */
+    public void scale (short x, short y, short z)
+    {
+        scalex = x;
+        scaley = y;
+        scalez = z;
+        recomputeScale();
+        recomputeBounds();
+    }
+
+    /**
+     * Scales the prop.
+     */
+    public void scale (Vector3f v)
+    {
+        v.x = Math.max(0f, Math.min(v.x, 10f));
+        v.y = Math.max(0f, Math.min(v.y, 10f));
+        v.z = Math.max(0f, Math.min(v.z, 10f));
+        scale(ftos(v.x), ftos(v.y), ftos(v.z));
+    }
+
+    /**
+     * Returns a vector3f version of the scale.
+     */
+    public Vector3f getScale ()
+    {
+        if (_vscale == null) {
+            recomputeScale();
+        }
+        return _vscale;
+    }
+
+    @Override // documentation inherited
+    public Rectangle getBounds ()
+    {
+        return _sbounds;
+    }
+
     /**
      * Moves this piece up or down by the specified amount.
      */
@@ -217,7 +261,19 @@ public class Prop extends BigPiece
         felev = (byte)Math.min(Math.max(felev + amount, Byte.MIN_VALUE),
             Byte.MAX_VALUE);
     }
-    
+
+    @Override // documentation inherited
+    public boolean intersects (Rectangle bounds)
+    {
+        return _sbounds.intersects(bounds);
+    }
+
+    @Override // documentation inherited
+    public boolean intersects (int tx, int ty)
+    {
+        return _sbounds.contains(tx, ty);
+    }
+
     @Override // documentation inherited
     protected void updatePosition (int nx, int ny)
     {
@@ -234,7 +290,23 @@ public class Prop extends BigPiece
         _type = config.type;
         _width = _config.width;
         _length = _config.length;
+        recomputeScale();
         recomputeBounds();
+    }
+
+    @Override // documentation inherited
+    protected void recomputeBounds ()
+    {
+        super.recomputeBounds();
+        if (orientation == NORTH || orientation == SOUTH) {
+            int sx = (int)(_vscale.x * _width - _width) / 2;
+            int sy = (int)(_vscale.y * _length - _length) / 2;
+            _sbounds.setBounds(x - sx, y - sy, _width + sx*2, _length + sy*2);
+        } else {
+            int sx = (int)(_vscale.x * _length - _length) / 2;
+            int sy = (int)(_vscale.y * _width - _width) / 2;
+            _sbounds.setBounds(x - sx, y - sy, _length + sx*2, _width + sy*2);
+        }
     }
 
     @Override // documentation inherited
@@ -244,6 +316,27 @@ public class Prop extends BigPiece
         super.toString(buf);
     }
 
+    /** Converts a float scale value to a short scale value. */
+    protected short ftos (float f)
+    {
+        return (short)(f < 1f ? f * 32767 - 32767 : (f - 1) * 32767 / 9);
+    }
+
+    /** Converts a short scale value to a float scale value. */
+    protected float stof (short s)
+    {
+        return (s < 0) ? ((32767f + s) / 32767f) :
+                             (1f + 9f * s / 32767f);
+    }
+
+    /** Recomputes the scale vector. */
+    protected void recomputeScale ()
+    {
+        _vscale = new Vector3f(stof(scalex), stof(scaley), stof(scalez));
+    }
+
     protected String _type;
     protected transient PropConfig _config;
+    protected transient Vector3f _vscale;
+    protected transient Rectangle _sbounds = new Rectangle();
 }

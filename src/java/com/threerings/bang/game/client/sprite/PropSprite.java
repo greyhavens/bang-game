@@ -14,11 +14,16 @@ import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 
+import com.threerings.openal.SoundGroup;
+
 import com.threerings.jme.model.Model;
 
+import com.threerings.bang.game.client.BoardView;
+import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.data.PropConfig;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
@@ -44,6 +49,16 @@ public class PropSprite extends PieceSprite
     public PropSprite (String type)
     {
         _config = PropConfig.getConfig(type);
+    }
+
+    @Override // documentation inherited
+    public void init (BasicContext ctx, BoardView view, BangBoard board,
+                      SoundGroup sounds, Piece piece, short tick)
+    {
+        super.init(ctx, view, board, sounds, piece, tick);
+
+        Prop p = (Prop)piece;
+        setLocalScale(p.getScale());    
     }
 
     @Override // documentation inherited
@@ -79,6 +94,16 @@ public class PropSprite extends PieceSprite
             -prop.pitch * COARSE_ROTATION_SCALE,
             -prop.roll * COARSE_ROTATION_SCALE,
             ROTATIONS[orientation] - prop.forient * FINE_ROTATION_SCALE });
+    }
+
+    @Override // documentation inherited
+    public boolean updatePosition (BangBoard board)
+    {
+        if (_editorMode) {
+            setLocalScale(((Prop)_piece).getScale());
+        }
+
+        return super.updatePosition(board);
     }
 
     @Override // documentation inherited
