@@ -529,7 +529,7 @@ public class BangManager extends GameManager
             }
         }
         info.scenarios = _bconfig.scenarios;
-        BangServer.statobj.addToGames(info);
+        BangServer.adminmgr.statobj.addToGames(info);
 
         // note the time at which we started
         _startStamp = System.currentTimeMillis();
@@ -599,7 +599,7 @@ public class BangManager extends GameManager
     {
         super.didShutdown();
         PresentsServer.invmgr.clearDispatcher(_bangobj.service);
-        BangServer.statobj.removeFromGames(_bangobj.getOid());
+        BangServer.adminmgr.statobj.removeFromGames(_bangobj.getOid());
         log.info("Manager shutdown [where=" + where() + "].");
     }
 
