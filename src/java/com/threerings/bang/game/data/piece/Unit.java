@@ -126,7 +126,8 @@ public class Unit extends Piece
     @Override // documentation inherited
     public boolean expireWreckage (short tick)
     {
-        return (tick >= _respawnTick) || super.expireWreckage(tick);
+        return (_respawnTick > 0 && tick >= _respawnTick) ||
+            super.expireWreckage(tick);
     }
     /**
      * Returns the tick on which this unit should respawn or -1 if it
