@@ -3,10 +3,11 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.samskivert.util.IntIntMap;
-import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
@@ -21,32 +22,32 @@ public class TeleportEffect extends Effect
 {
     /** The effect identifier. */
     public static final String TELEPORTED = "teleported";
-    
+
     /** The id of the teleported piece. */
     public int pieceId;
-    
-    /** The id of the destination teleporter. */
-    public int destId = -1;
-    
+
+    /** The coordinates to which the piece will be moved. */
+    public short[] dest;
+
     /** The id of the source teleporter. */
     public transient int sourceId;
-    
+
     public TeleportEffect ()
     {
     }
-    
+
     public TeleportEffect (Teleporter teleporter, Piece piece)
     {
         sourceId = teleporter.pieceId;
         pieceId = piece.pieceId;
     }
-    
+
     // documentation inherited
     public int[] getAffectedPieces ()
     {
         return new int[] { pieceId };
     }
-    
+
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
@@ -56,8 +57,8 @@ public class TeleportEffect extends Effect
                 sourceId + "].");
             return;
         }
-        
-        // try to find an unoccupied destination
+
+        // select a random destination teleporter
         Teleporter[] group = source.getGroup(bangobj);
         ArrayList<Teleporter> dests = new ArrayList<Teleporter>();
         for (Teleporter tport : group) {
@@ -66,37 +67,38 @@ public class TeleportEffect extends Effect
                 dests.add(tport);
             }
         }
-        if (!dests.isEmpty()) {
-            destId = RandomUtil.pickRandom(dests).pieceId;
+        Collections.shuffle(dests);
+        Point spot = null;
+        for (Teleporter dest : dests) {
+            spot = bangobj.board.getOccupiableSpot(dest.x, dest.y, 2);
+            if (spot != null) {
+                break;
+            }
+        }
+        if (spot != null) {
+            dest = new short[] { (short)spot.x, (short)spot.y };
         }
     }
 
     @Override // documentation inherited
     public boolean isApplicable ()
     {
-        return destId > -1;
+        return dest != null;
     }
-    
+
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Missing teleported piece for teleport effect [id=" +
-                pieceId + "].");
+            log.warning("Missing teleported piece for teleport effect " +
+                        "[id=" + pieceId + "].");
             return false;
         }
-        Teleporter dest = (Teleporter)bangobj.pieces.get(destId);
-        if (dest == null) {
-            log.warning("Missing dest teleporter for teleport effect [id=" +
-                destId + "].");
-            return false;
-        }
-        
+
         // move the piece and report the effect
         bangobj.board.clearShadow(piece);
-        piece.position(dest.x, dest.y);
-        piece.orientation = dest.orientation;
+        piece.position(dest[0], dest[1]);
         bangobj.board.shadowPiece(piece);
         reportEffect(obs, piece, TELEPORTED);
         return true;
