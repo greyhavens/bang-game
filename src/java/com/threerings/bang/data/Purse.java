@@ -31,10 +31,10 @@ public class Purse extends Item
     public static final float[] PURSE_BONUS  = {
         1f, // default
         1.1f, // frontier town
-        1.2f, // indian village
-        1.3f, // boom town
-        1.4f, // ghost town
-        1.5f, // city of gold
+        1.15f, // indian village
+        1.20f, // boom town
+        1.25f, // ghost town
+        1.30f, // city of gold
     };
 
     /**

@@ -45,8 +45,8 @@ public class PurseGood extends Good
     @Override // documentation inherited
     public boolean isAvailable (PlayerObject user)
     {
-        // make sure they don't already have a better purse
-        return (user.getPurse().getTownIndex() < _townIndex);
+        // make sure they have the previous town's purse
+        return (user.getPurse().getTownIndex() == _townIndex-1);
     }
 
     @Override // documentation inherited
