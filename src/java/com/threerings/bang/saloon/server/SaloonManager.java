@@ -110,7 +110,7 @@ public class SaloonManager extends PlaceManager
                         new SpeakDispatcher(new SpeakProvider(object, null)),
                         false));
                 _matches.put(object.getOid(), match);
-                BangServer.statobj.setPendingMatches(_matches.size());
+                BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
                 listener.requestProcessed(object.getOid());
                 checkReadiness(match);
             }
@@ -366,7 +366,7 @@ public class SaloonManager extends PlaceManager
         }
         BangServer.omgr.destroyObject(moid);
         _matches.remove(moid);
-        BangServer.statobj.setPendingMatches(_matches.size());
+        BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
     }
 
     protected void parlorUpdated (ParlorInfo info)

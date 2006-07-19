@@ -8,16 +8,18 @@ import java.util.Date;
 import java.util.Iterator;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
-import com.jmex.bui.util.Dimension;
-import com.samskivert.util.StringUtil;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.data.ConMgrStats;
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -64,7 +66,9 @@ public class ServerStatusView extends BDecoratedWindow
             sstats.add(new BLabel(msg, "table_label"));
             sstats.add(_genstats[ii] = new BLabel("", "table_data"));
         }
-        add(sstats);
+        add(sstats, GroupLayout.FIXED);
+
+        add(new Spacer(1, 1));
 
         // create our connection manager stats interface
         add(new BLabel(_msgs.get("m.conmgr_stats"), "medium_title"),
@@ -74,7 +78,9 @@ public class ServerStatusView extends BDecoratedWindow
             cstats.add(new BLabel(_msgs.get(CONMGR_STATS[ii]), "table_label"));
             cstats.add(_constats[ii] = new BLabel("", "table_data"));
         }
-        add(cstats);
+        add(cstats, GroupLayout.FIXED);
+
+        add(new Spacer(1, 1));
 
         // create an interface for sending a broadcast message
         add(new BLabel(_msgs.get("m.send_broadcast"), "medium_title"),
@@ -87,7 +93,29 @@ public class ServerStatusView extends BDecoratedWindow
         _bcast.setPreferredWidth(400);
         _bcast.addListener(this);
         bcont.add(new BButton(_msgs.get("m.send", this, "send_bcast")));
-        add(bcont);
+        add(bcont, GroupLayout.FIXED);
+
+        add(new Spacer(1, 1));
+
+        // create an interface for scheduling a reboot
+        add(new BLabel(_msgs.get("m.schedule_reboot"), "medium_title"),
+            GroupLayout.FIXED);
+        bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
+        bcont.add(new BLabel(_msgs.get("m.reboot_for"), "table_label"));
+        RebootOption[] opts = new RebootOption[REBOOT_MINS.length];
+        for (int ii = 0; ii < opts.length; ii++) {
+            opts[ii] = new RebootOption(REBOOT_MINS[ii]);
+        }
+        bcont.add(_rebmins = new BComboBox(opts));
+        _rebmins.selectItem(REBOOT_MINS.length-2);
+        bcont.add(new BButton(_msgs.get("m.schedule"), this, "sched_reboot"));
+
+        bcont.add(new Spacer(25, 1));
+        bcont.add(new BLabel(_msgs.get("m.next_reboot"), "table_label"));
+        bcont.add(_nextReboot = new BLabel("", "table_data"));
+        add(bcont, GroupLayout.FIXED);
+
+        add(new Spacer(1, 1));
 
         // add a dismiss button for non-keyboard lovers
         add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"),
@@ -107,6 +135,11 @@ public class ServerStatusView extends BDecoratedWindow
                 _ctx.getChatDirector().requestBroadcast(bcast);
                 _bcast.setText("");
             }
+
+        } else if ("sched_reboot".equals(cmd)) {
+            _statobj.service.scheduleReboot(
+                _ctx.getClient(),
+                ((RebootOption)_rebmins.getSelectedItem()).minutes);
         }
     }
 
@@ -119,6 +152,7 @@ public class ServerStatusView extends BDecoratedWindow
         // update the UI
         updateGeneralStats();
         updateConMgrStats();
+        updateReboot();
     }
 
     // documentation inherited from interface Subscriber
@@ -132,6 +166,8 @@ public class ServerStatusView extends BDecoratedWindow
     {
         if (event.getName().equals(StatusObject.CONN_STATS)) {
             updateConMgrStats();
+        } else if (event.getName().equals(StatusObject.SERVER_REBOOT_TIME)) {
+            updateReboot();
         } else {
             updateGeneralStats();
         }
@@ -190,6 +226,24 @@ public class ServerStatusView extends BDecoratedWindow
         _constats[7].setText(String.valueOf(cms.msgsOut[slot]));
     }
 
+    protected void updateReboot ()
+    {
+        _nextReboot.setText(_statobj.serverRebootTime == 0L ?
+                            _msgs.get("m.reboot_never") :
+                            _ssfmt.format(new Date(_statobj.serverRebootTime)));
+    }
+
+    protected class RebootOption
+    {
+        public int minutes;
+        public RebootOption (int minutes) {
+            this.minutes = minutes;
+        }
+        public String toString () {
+            return _msgs.get("m.minute", minutes);
+        }
+    }
+
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected SafeSubscriber<StatusObject> _safesub;
@@ -198,6 +252,9 @@ public class ServerStatusView extends BDecoratedWindow
     protected BLabel[] _genstats = new BLabel[SERVER_STATS.length];
     protected BLabel[] _constats = new BLabel[CONMGR_STATS.length];
     protected BTextField _bcast;
+
+    protected BComboBox _rebmins;
+    protected BLabel _nextReboot;
 
     protected SimpleDateFormat _ssfmt =
         new SimpleDateFormat("EEE MMM, dd hh:mm aa");
@@ -214,4 +271,6 @@ public class ServerStatusView extends BDecoratedWindow
         "m.outq",   "m.msgsin",
         "m.overq",  "m.msgsout"
     };
+
+    protected static final int[] REBOOT_MINS = { 0, 2, 5, 15, 30, 60 };
 }

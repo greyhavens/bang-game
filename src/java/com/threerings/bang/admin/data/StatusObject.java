@@ -32,6 +32,9 @@ public class StatusObject extends DObject
     }
 
     // AUTO-GENERATED: FIELDS START
+    /** The field name of the <code>service</code> field. */
+    public static final String SERVICE = "service";
+
     /** The field name of the <code>playersOnline</code> field. */
     public static final String PLAYERS_ONLINE = "playersOnline";
 
@@ -46,7 +49,13 @@ public class StatusObject extends DObject
 
     /** The field name of the <code>connStats</code> field. */
     public static final String CONN_STATS = "connStats";
+
+    /** The field name of the <code>serverRebootTime</code> field. */
+    public static final String SERVER_REBOOT_TIME = "serverRebootTime";
     // AUTO-GENERATED: FIELDS END
+
+    /** Provides admin services. */
+    public BangAdminMarshaller service;
 
     /** The number of players online on this server. */
     public int playersOnline;
@@ -63,7 +72,26 @@ public class StatusObject extends DObject
     /** Stats on our connection manager. */
     public ConMgrStats connStats;
 
+    /** The time at which a reboot is scheduled or 0L. */
+    public long serverRebootTime;
+
     // AUTO-GENERATED: METHODS START
+    /**
+     * Requests that the <code>service</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setService (BangAdminMarshaller value)
+    {
+        BangAdminMarshaller ovalue = this.service;
+        requestAttributeChange(
+            SERVICE, value, ovalue);
+        this.service = value;
+    }
+
     /**
      * Requests that the <code>playersOnline</code> field be set to the
      * specified value. The local value will be updated immediately and an
@@ -172,6 +200,22 @@ public class StatusObject extends DObject
         requestAttributeChange(
             CONN_STATS, value, ovalue);
         this.connStats = value;
+    }
+
+    /**
+     * Requests that the <code>serverRebootTime</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setServerRebootTime (long value)
+    {
+        long ovalue = this.serverRebootTime;
+        requestAttributeChange(
+            SERVER_REBOOT_TIME, Long.valueOf(value), Long.valueOf(ovalue));
+        this.serverRebootTime = value;
     }
     // AUTO-GENERATED: METHODS END
 }

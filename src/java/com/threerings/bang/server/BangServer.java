@@ -49,7 +49,7 @@ import com.threerings.bang.avatar.server.BarberManager;
 import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
-import com.threerings.bang.admin.data.StatusObject;
+import com.threerings.bang.admin.server.BangAdminManager;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
@@ -131,6 +131,9 @@ public class BangServer extends CrowdServer
     /** Manages the market for exchange between scrips and coins. */
     public static BangCoinExchangeManager coinexmgr;
 
+    /** Manages administrative services. */
+    public static BangAdminManager adminmgr;
+
     /** Keeps an eye on the Ranch, a good man to have around. */
     public static RanchManager ranchmgr;
 
@@ -151,9 +154,6 @@ public class BangServer extends CrowdServer
 
     /** Manages our selection of game boards. */
     public static BoardManager boardmgr = new BoardManager();
-
-    /** Contains server status information published to admins. */
-    public static StatusObject statobj;
 
     /** Contains information about the whole town. */
     public static TownObject townobj;
@@ -202,6 +202,7 @@ public class BangServer extends CrowdServer
         coinmgr = new BangCoinManager(conprov, actionrepo);
         coinexmgr = new BangCoinExchangeManager(conprov);
         actionmgr = new AccountActionManager(omgr, actionrepo);
+        adminmgr = new BangAdminManager();
 
         // if we have a shared secret, assume we're running in a cluster
         String node = System.getProperty("node");
@@ -275,6 +276,7 @@ public class BangServer extends CrowdServer
         boardmgr.init(conprov);
         playmgr.init(conprov);
         coinexmgr.init();
+        adminmgr.init(this);
         if (peermgr != null) {
             peermgr.init(ServerConfig.nodename, ServerConfig.sharedSecret,
                          ServerConfig.hostname, ServerConfig.publicHostname,
@@ -306,19 +308,6 @@ public class BangServer extends CrowdServer
         plreg.createPlace(new RanchConfig(), crobs);
         plreg.createPlace(new BarberConfig(), crobs);
         plreg.createPlace(new StationConfig(), crobs);
-
-        // create our server status object
-        omgr.createObject(StatusObject.class, new Subscriber<StatusObject>() {
-            public void objectAvailable (StatusObject object) {
-                statobj = object;
-                statobj.serverStartTime = System.currentTimeMillis();
-                // start up our connection manager stat monitor
-                _conmgrStatsUpdater.schedule(5000L, true);
-            }
-            public void requestFailed (int oid, ObjectAccessException cause) {
-                log.warning("Unable to create status object: " + cause + ".");
-            }
-        });
 
         // create the town object and an interval to keep it up-to-date
         omgr.createObject(TownObject.class, new Subscriber<TownObject>() {
@@ -392,7 +381,7 @@ public class BangServer extends CrowdServer
         _playerIds.put(player.playerId, player);
 
         // update our players online count in the status object
-        statobj.setPlayersOnline(clmgr.getClientCount());
+        adminmgr.statobj.setPlayersOnline(clmgr.getClientCount());
     }
 
     /**
@@ -405,7 +394,7 @@ public class BangServer extends CrowdServer
         _playerIds.remove(player.playerId);
 
         // update our players online count in the status object
-        statobj.setPlayersOnline(clmgr.getClientCount());
+        adminmgr.statobj.setPlayersOnline(clmgr.getClientCount());
     }
 
     /**
@@ -481,16 +470,6 @@ public class BangServer extends CrowdServer
             System.exit(-1);
         }
     }
-
-    /** This reads the status from the connection manager and stuffs it
-     * into our server status object every 5 seconds. Because it reads
-     * synchronized data and then just posts an event, it's OK that it
-     * runs directly on the Interval dispatch thread. */
-    protected Interval _conmgrStatsUpdater = new Interval() {
-        public void expired () {
-            statobj.setConnStats(conmgr.getStats());
-        }
-    };
 
     protected static HashMap<Handle,PlayerObject> _players =
         new HashMap<Handle,PlayerObject>();
