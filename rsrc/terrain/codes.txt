@@ -26,3 +26,4 @@ ice = 25
 blackout = 26
 green_leaves = 27
 protective_ground = 28
+giant_tree_bark = 29
