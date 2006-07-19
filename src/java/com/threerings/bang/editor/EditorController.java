@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
@@ -41,6 +42,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
@@ -52,7 +54,6 @@ import com.threerings.bang.game.util.ArrayDiffUtil;
 import com.threerings.bang.server.persist.BoardRecord;
 
 import static com.threerings.bang.Log.log;
-import com.threerings.bang.game.data.ScenarioCodes;
 
 /**
  * Handles the logic and flow for the Bang! board editor.
@@ -678,9 +679,18 @@ public class EditorController extends GameController
     protected void updatePlayerCount ()
     {
         int pcount = 0;
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            if (Marker.isMarker((Piece)iter.next(), Marker.START)) {
-                pcount++;
+        String[] scids = ScenarioFactory.getScenarios(
+            BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1]);
+        ArrayUtil.append(scids, ScenarioCodes.TUTORIAL);
+        int[] pcounts = new int[scids.length];
+        for (Piece p : _bangobj.pieces) {
+            for (int ii = 0; ii < pcounts.length; ii++) {
+                String scenId = scids[ii];
+                if (Marker.isMarker(p, Marker.START) &&
+                        ((Marker)p).isValidScenario(scenId)) {
+                    pcounts[ii]++;
+                    pcount = Math.max(pcounts[ii], pcount);
+                }
             }
         }
         _panel.info.updatePlayers(pcount);
