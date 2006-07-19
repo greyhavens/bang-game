@@ -911,19 +911,19 @@ public class BangBoardView extends BoardView
         if (_card != null) {
             Object target = null;
             switch (_card.getPlacementMode()) {
-              case VS_AREA:
+            case VS_AREA:
                 if (_card.isValidLocation(_bangobj, _mouse.x, _mouse.y)) {
                     log.info("Activating " + _card);
                     target = new int[] { _mouse.x, _mouse.y };
                 }
                 break;
 
-              case VS_PIECE:
+            case VS_PIECE:
                 if (_hover != null && _hover instanceof PieceSprite) {
                     Piece p = ((PieceSprite)_hover).getPiece();
                     if (_card.isValidPiece(_bangobj, p)) {
                         log.info("Activating " + _card);
-                        target = new Integer(piece.pieceId);
+                        target = new Integer(p.pieceId);
                     }
                 }
                 break;
