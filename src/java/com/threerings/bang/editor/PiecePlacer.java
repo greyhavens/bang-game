@@ -134,13 +134,13 @@ public class PiecePlacer extends EditorTool
             
         } else if (_dragType == SCALE_DRAG) {
             Vector3f v = p.getScale();
-            if ((_scaleMode & SCALE_ALL) != 0 || (_scaleMode & SCALE_X) != 0) {
+            if ((_scaleMode & (SCALE_ALL | SCALE_X)) != 0) {
                 v.x += (e.getY() - _dragStart.y) * 0.005f;
             }
-            if ((_scaleMode & SCALE_ALL) != 0 || (_scaleMode & SCALE_Y) != 0) {
+            if ((_scaleMode & (SCALE_ALL | SCALE_Y)) != 0) {
                 v.y += (e.getY() - _dragStart.y) * 0.005f;
             }
-            if ((_scaleMode & SCALE_ALL) != 0 || (_scaleMode & SCALE_Z) != 0) {
+            if ((_scaleMode & (SCALE_ALL | SCALE_Z)) != 0) {
                 v.z += (e.getY() - _dragStart.y) * 0.005f;
             }
             p.scale(v);
@@ -303,7 +303,7 @@ public class PiecePlacer extends EditorTool
 
     /** Scale mode. */
     protected int _scaleMode;
-    protected static final int SCALE_ALL = 1;
+    protected static final int SCALE_ALL = 1 << 0;
     protected static final int SCALE_X = 1 << 1;
     protected static final int SCALE_Y = 1 << 2;
     protected static final int SCALE_Z = 1 << 3;
