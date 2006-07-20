@@ -12,6 +12,7 @@ import java.nio.FloatBuffer;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
@@ -965,7 +966,9 @@ public class EditorBoardView extends BoardView
             _highlights = new TerrainNode.Highlight[_board.getWidth()][
                 _board.getHeight()];
         }
-        _board.shadowPieces(_bangobj.pieces.iterator(), x1, y1, 1 + x2 - x1,
+        _board.shadowPieces(
+                new FilterPieceIterator(_bangobj.pieces.iterator()), 
+                x1, y1, 1 + x2 - x1,
             1 + y2 - y1);
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
@@ -1195,6 +1198,54 @@ public class EditorBoardView extends BoardView
             return _board.getTerrain();
         }
     }
+
+    /** An iterator that filters pieces based on the scenario. */
+    protected class FilterPieceIterator 
+        implements Iterator
+    {
+        public FilterPieceIterator (Iterator iter) {
+            _iter = iter;
+            _scenId = ((EditorController)_panel.getController()).
+                getScenarioId();
+            getNext();
+        }
+
+        public boolean hasNext () {
+            return _piece != null;
+        }
+
+        public Object next () 
+            throws NoSuchElementException
+        {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            Piece ret = _piece;
+            getNext();
+            return ret;
+        }
+
+        public void remove ()
+            throws UnsupportedOperationException
+        {
+            throw new UnsupportedOperationException();
+        }
+
+        protected void getNext () {
+            _piece = null;
+            while (_iter.hasNext()) {
+                Piece p = (Piece)_iter.next();
+                if (p.isValidScenario(_scenId)) {
+                    _piece = p;
+                    break;
+                }
+            }
+        }
+
+        protected Iterator _iter;
+        protected String _scenId;
+        protected Piece _piece;
+    };
     
     /** The panel that contains additional interface elements with which
      * we interact. */

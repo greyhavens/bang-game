@@ -538,6 +538,15 @@ public class EditorController extends GameController
         toggleProps(id);
         _bangobj.board.applyShadowPatch(id);
         _panel.view.getTerrainNode().refreshShadows();
+        _panel.view.updateHighlights();
+    }
+
+    /**
+     * Returns the scenario id of the currently displayed props.
+     */
+    public String getScenarioId ()
+    {
+        return _viewScenId;
     }
 
     /** 
