@@ -437,6 +437,10 @@ public class Unit extends Piece
     }
 
     /**
+     * Generate a move effect for this unit.
+     */
+
+    /**
      * Provides the unit with its configuration.
      */
     protected void init (UnitConfig config)

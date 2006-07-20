@@ -354,7 +354,7 @@ public class BangManager extends GameManager
                 shooter = munit;
             } else {
                 // check that our target is still valid and reachable
-                checkTarget(shooter, target);
+                checkTarget(shooter, target, shooter.x, shooter.y);
             }
 
             // TEMP: for debugging weird shot effect problems
@@ -791,7 +791,8 @@ public class BangManager extends GameManager
         _starts.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
-            if (Marker.isMarker(p, Marker.START)) {
+            if (Marker.isMarker(p, Marker.START) && 
+                    p.isValidScenario(_bangobj.scenarioId)) {
                 _starts.add(p);
                 iter.remove();
             }
@@ -1472,7 +1473,7 @@ public class BangManager extends GameManager
 
         // make sure we can still reach and shoot any potential target before
         // we go ahead with our move
-        checkTarget(munit, target);
+        checkTarget(unit, target, x, y);
 
         // update our board shadow
         _bangobj.board.clearShadow(unit);
@@ -1515,7 +1516,7 @@ public class BangManager extends GameManager
      * (ie. the target moved out of range or died). Target may be null in which
      * case this method does nothing.
      */
-    protected void checkTarget (Piece shooter, Piece target)
+    protected void checkTarget (Piece shooter, Piece target, int x, int y)
         throws InvocationException
     {
         if (target == null) {
@@ -1531,9 +1532,9 @@ public class BangManager extends GameManager
         }
 
         // make sure the target is still reachable
-        if (!shooter.targetInRange(target.x, target.y) ||
+        if (!shooter.targetInRange(x, y, target.x, target.y) ||
             !shooter.checkLineOfSight(
-                _bangobj.board, shooter.x, shooter.y, target)) {
+                _bangobj.board, x, y, target)) {
 //             log.info("Target no longer reachable " +
 //                      "[shooter=" + shooter.info() +
 //                      ", target=" + target.info() + "].");

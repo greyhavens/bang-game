@@ -255,9 +255,9 @@ public abstract class Piece extends SimpleStreamableObject
      * Returns true if the specified target is in range of attack of this
      * piece.
      */
-    public boolean targetInRange (int x, int y)
+    public boolean targetInRange (int nx, int ny, int tx, int ty)
     {
-        int dist = getDistance(x, y);
+        int dist = getDistance(nx, ny, tx, ty);
         return (dist >= getMinFireDistance() && dist <= getMaxFireDistance());
     }
 
@@ -275,6 +275,14 @@ public abstract class Piece extends SimpleStreamableObject
      * location.
      */
     public int getDistance (int tx, int ty)
+    {
+        return getDistance(x, y, tx, ty);
+    }
+
+    /**
+     * Returns the Manhatten distance between two points.
+     */
+    public static int getDistance (int x, int y, int tx, int ty)
     {
         return Math.abs(x - tx) + Math.abs(y - ty);
     }
