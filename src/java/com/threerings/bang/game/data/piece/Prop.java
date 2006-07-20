@@ -96,6 +96,16 @@ public class Prop extends BigPiece
     }
 
     @Override // documentation inherited
+    public Object clone ()
+    {
+        // make a deep copy of the sbounds and vscale
+        Prop piece = (Prop)super.clone();
+        piece._sbounds = (Rectangle)_sbounds.clone();
+        piece._vscale = (Vector3f)_vscale.clone();
+        return piece;
+    }
+
+    @Override // documentation inherited
     public void persistTo (ObjectOutputStream oout, String[] scenIds)
         throws IOException
     {
@@ -303,8 +313,8 @@ public class Prop extends BigPiece
             int sy = (int)(_vscale.y * _length - _length) / 2;
             _sbounds.setBounds(x - sx, y - sy, _width + sx*2, _length + sy*2);
         } else {
-            int sx = (int)(_vscale.x * _length - _length) / 2;
-            int sy = (int)(_vscale.y * _width - _width) / 2;
+            int sx = (int)(_vscale.y * _length - _length) / 2;
+            int sy = (int)(_vscale.x * _width - _width) / 2;
             _sbounds.setBounds(x - sx, y - sy, _length + sx*2, _width + sy*2);
         }
     }
