@@ -13,8 +13,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Properties;
 
+import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.io.ObjectInputStream;
@@ -22,6 +24,7 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BoardData;
+import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -65,6 +68,23 @@ public class BoardRecord extends BoardData
     {
         return (scenarios == null) ? new String[0] :
             StringUtil.split(scenarios, ",");
+    }
+
+    /**
+     * Returns the index of the earliest town in which this board can be used.
+     */
+    public int getMinimumTownIndex ()
+    {
+        HashSet<String> scenarios = new HashSet<String>();
+        CollectionUtil.addAll(scenarios, getScenarios());
+        for (int ii = ScenarioCodes.TOWN_SCENARIOS.length-1; ii >= 0; ii--) {
+            for (String scen : ScenarioCodes.TOWN_SCENARIOS[ii]) {
+                if (scenarios.contains(scen)) {
+                    return ii;
+                }
+            }
+        }
+        return 0;
     }
 
     /**

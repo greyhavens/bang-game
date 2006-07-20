@@ -18,6 +18,7 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.server.persist.BoardRepository.BoardList;
 import com.threerings.bang.server.persist.BoardRepository;
+import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -38,6 +39,10 @@ public class BoardManager
             _byname[ii] = new BoardMap();
         }
 
+        // we'll use this later to filter out boards that are not allowed in
+        // this town
+        int townIndex = BangUtil.getTownIndex(ServerConfig.townId);
+
         // load up and map all of our boards by scenario and player count
         for (BoardRecord record : _brepo.loadBoards()) {
             // sanity check boards as creators are known to fuck up
@@ -45,6 +50,12 @@ public class BoardManager
                 log.warning("Invalid board record [record=" + record + "].");
                 continue;
             }
+
+            // if this board uses scenarios from a later town, skip it
+            if (record.getMinimumTownIndex() > townIndex) {
+                continue;
+            }
+
             int pidx = record.players-2;
             String[] scenarios = StringUtil.split(record.scenarios, ",");
             for (int ii = 0; ii < scenarios.length; ii++) {
