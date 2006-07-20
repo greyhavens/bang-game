@@ -285,7 +285,7 @@ public class Unit extends Piece
         ShotEffect shot = null;
         int oldDamage = this.damage;
         if (_config.returnFire > 0 && newDamage < 100 &&
-            targetInRange(shooter.x, shooter.y)) {
+            targetInRange(x, y, shooter.x, shooter.y)) {
             // return fire shots are always executed at 75% health
             this.damage = 75;
             shot = shoot(bangobj, shooter, _config.returnFire/100f);
