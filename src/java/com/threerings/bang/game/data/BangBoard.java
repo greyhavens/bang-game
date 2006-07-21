@@ -961,6 +961,12 @@ public class BangBoard extends SimpleStreamableObject
         return canTravel(piece, x, y, x, y, remain);
     }
 
+    /**
+     * If remain is true, returns true if the specified piece can move to and
+     * occupy the specified coordinate.  If remain is false, returns true if 
+     * the piece can traverse (but not necessarily remain on) the specified 
+     * coordinate.
+     */
     protected boolean canTravel (
             Piece piece, int sx, int sy, int dx, int dy, boolean remain)
     {
