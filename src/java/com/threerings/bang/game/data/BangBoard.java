@@ -30,6 +30,7 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Train;
@@ -43,7 +44,7 @@ import static com.threerings.bang.Log.log;
  * Describes the terrain of the game board.
  */
 public class BangBoard extends SimpleStreamableObject
-    implements AStarPathUtil.TraversalPred, Cloneable
+    implements AStarPathUtil.ExtendedTraversalPred, Cloneable, PieceCodes
 {
     /** The basic traversal cost. */
     public static final int BASE_TRAVERSAL = 10;
@@ -695,6 +696,18 @@ public class BangBoard extends SimpleStreamableObject
     public void shadowPiece (Piece piece)
     {
         if (piece instanceof Prop && ((Prop)piece).isPassable()) {
+            Prop p = (Prop)piece;
+            int idx = _width*p.y + p.x;
+            byte dstate = _dstate[idx];
+            for (int dir : DIRECTIONS) {
+                if (!p.canEnter(dir)) {
+                    dstate = (byte)(dstate | (ENTER_NORTH << dir));
+                }
+                if (!p.canExit(dir)) {
+                    dstate = (byte)(dstate | (EXIT_NORTH << dir));
+                }
+            }
+            _dstate[idx] = dstate;
             return;
             
         } else if (piece instanceof BigPiece) {
@@ -920,6 +933,14 @@ public class BangBoard extends SimpleStreamableObject
     public boolean canTraverse (Object traverser, int x, int y) {
         return canTravel((Piece)traverser, x, y, false);
     }
+
+    // documentation inherited from interface 
+    // AStarPathUtil.ExtendedTraversalPred
+    public boolean canTraverse (
+            Object traverser, int sx, int sy, int dx, int dy)
+    {
+        return canTravel((Piece)traverser, sx, sy, dx, dy, false);
+    }
     
     /**
      * Returns true if the specified piece can occupy the specified
@@ -937,28 +958,52 @@ public class BangBoard extends SimpleStreamableObject
      */
     protected boolean canTravel (Piece piece, int x, int y, boolean remain)
     {
-        if (!_playarea.contains(x, y)) {
+        return canTravel(piece, x, y, x, y, remain);
+    }
+
+    protected boolean canTravel (
+            Piece piece, int sx, int sy, int dx, int dy, boolean remain)
+    {
+        if (!_playarea.contains(dx, dy)) {
             return false;
         }
 
         // the piece can always occupy it's current location
-        if (piece.x == x && piece.y == y) {
+        if (piece.x == dx && piece.y == dy && canCross(sx, sy, dx, dy)) {
             return true;
         }
 
         // we accord flyer status to trains as they need to go "over" some
         // props, but will otherwise not do funny things
-        int idx = y*_width+x;
+        int idx = dy*_width+dx;
         byte tstate = _tstate[idx];
         boolean flightstate = (remain ? piece.isAirborne() : piece.isFlyer());
         if ((flightstate && (tstate > O_PROP || (tstate & TALL_FLAG) != 0)) ||
                 piece instanceof Train) {
             return true;
-        } else {
-            return (tstate == O_FLAT) ||
-                (piece instanceof Unit && tstate == O_BONUS) ||
-                (tstate == piece.owner && _btstate[idx] == O_FLAT);
+        } else if ((tstate == O_FLAT) ||
+                   (piece instanceof Unit && tstate == O_BONUS) ||
+                   (tstate == piece.owner && _btstate[idx] == O_FLAT)) {
+            return canCross(sx, sy, dx, dy);
         }
+        return false;
+    }
+
+    /**
+     * Returns true if a unit can move between these two tiles.
+     */
+    protected boolean canCross (int sx, int sy, int dx, int dy)
+    {
+        if (sx == dx && sy == dy) {
+            return true;
+        }
+        int dir = (sx == dx) ? (dy > sy ? NORTH : SOUTH) :
+                               (dx < sx ? EAST : WEST);
+        // the source direction is the opposite of the destination
+        int sdir = (dir + 2) % 4;
+        return ((_dstate[dy*_width+dx] & (ENTER_NORTH << dir)) == 0) &&
+               ((_dstate[sy*_width+sx] & (EXIT_NORTH << sdir)) == 0);
+
     }
 
     /**
@@ -1018,10 +1063,14 @@ public class BangBoard extends SimpleStreamableObject
         _pgrid[piece.y*_width+piece.x] = remain;
 
         // now consider each of our four neighbors
-        considerMoving(piece, moves, piece.x+1, piece.y, remain);
-        considerMoving(piece, moves, piece.x-1, piece.y, remain);
-        considerMoving(piece, moves, piece.x, piece.y+1, remain);
-        considerMoving(piece, moves, piece.x, piece.y-1, remain);
+        considerMoving(
+                piece, moves, piece.x, piece.y, piece.x+1, piece.y, remain);
+        considerMoving(
+                piece, moves, piece.x, piece.y, piece.x-1, piece.y, remain);
+        considerMoving(
+                piece, moves, piece.x, piece.y, piece.x, piece.y+1, remain);
+        considerMoving(
+                piece, moves, piece.x, piece.y, piece.x, piece.y-1, remain);
 
         // next prune any moves that "land" us on a tile occupied by a piece
         // (we allow units to move through certain pieces on their way but not
@@ -1173,6 +1222,7 @@ public class BangBoard extends SimpleStreamableObject
         _btstate = new byte[size];
         _estate = new byte[size];
         _tstate = new byte[size];
+        _dstate = new byte[size];
         _pgrid = new byte[size];
 
         _playarea = new Rectangle(BORDER_SIZE, BORDER_SIZE,
@@ -1207,11 +1257,12 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /** Helper function for {@link #computeMoves}. */
-    protected void considerMoving (
-        Piece piece, PointSet moves, int xx, int yy, byte remain)
+    protected void considerMoving (Piece piece, PointSet moves,
+            int sx, int sy, int xx, int yy, byte remain)
     {
         // make sure this coordinate is traversable
-        if (!_playarea.contains(xx, yy) || !canTraverse(piece, xx, yy)) {
+        if (!_playarea.contains(xx, yy) || 
+                !canTraverse(piece, sx, sy, xx, yy)) {
             return;
         }
 
@@ -1230,10 +1281,10 @@ public class BangBoard extends SimpleStreamableObject
         _pgrid[pos] = premain;
 
         // and then check all of our neighbors
-        considerMoving(piece, moves, xx+1, yy, premain);
-        considerMoving(piece, moves, xx-1, yy, premain);
-        considerMoving(piece, moves, xx, yy+1, premain);
-        considerMoving(piece, moves, xx, yy-1, premain);
+        considerMoving(piece, moves, xx, yy, xx+1, yy, premain);
+        considerMoving(piece, moves, xx, yy, xx-1, yy, premain);
+        considerMoving(piece, moves, xx, yy, xx, yy+1, premain);
+        considerMoving(piece, moves, xx, yy, xx, yy-1, premain);
     }
 
     /** Helper function for {@link #computeMoves}. */
@@ -1360,7 +1411,7 @@ public class BangBoard extends SimpleStreamableObject
     protected transient byte[] _pterrain;
 
     /** Tracks coordinate traversability. */
-    protected transient byte[] _tstate, _btstate, _estate;
+    protected transient byte[] _tstate, _btstate, _estate, _dstate;
 
     /** A temporary array for computing move and fire sets. */
     protected transient byte[] _pgrid;
@@ -1400,4 +1451,10 @@ public class BangBoard extends SimpleStreamableObject
     
     /** Flags the prop as penetrable (doesn't affect line of sight). */
     protected static final byte PENETRABLE_FLAG = 1 << 4;
+
+    /** Flags the prop as being unable to enter in this direction. */
+    protected static final byte ENTER_NORTH = 1 << 0;
+
+    /** Flags the prop as being unable to exit in this direction. */
+    protected static final byte EXIT_NORTH = 1 << 4;
 }

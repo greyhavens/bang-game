@@ -43,6 +43,9 @@ public class PropConfig
     
     /** Whether or not units can fire through the prop. */
     public boolean penetrable;
+
+    /** Which directions a unit is blocked by this prop. */
+    public String blockDir;
     
     /** Returns a string representation of this instance. */
     public String toString ()
@@ -103,6 +106,7 @@ public class PropConfig
         config.penetrable = Boolean.parseBoolean(
             props.getProperty("penetrable",
                 (config.width == 1 && config.length == 1) ? "true" : "false"));
+        config.blockDir = props.getProperty("blockDir", "");
         
         // map this config into the proper towns
         String towns = BangUtil.requireProperty(type, props, "towns");

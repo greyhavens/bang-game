@@ -183,6 +183,24 @@ public class Prop extends BigPiece
         return _config.passable;
     }
 
+    /**
+     * Returns true if it's possible to enter this piece from the direction.
+     */
+    public boolean canEnter (int dir)
+    {
+        dir = (dir + orientation) % 4;
+        return _config.blockDir.indexOf(ENTER_DIR[dir]) == -1;
+    }
+
+    /**
+     * Returns true if it's possible to exit this piece from the direction.
+     */
+    public boolean canExit (int dir)
+    {
+        dir = (dir + orientation) % 4;
+        return _config.blockDir.indexOf(EXIT_DIR[dir]) == -1;
+    }
+
     @Override // documentation inherited
     public boolean isValidScenario (String scenarioId)
     {
@@ -349,4 +367,7 @@ public class Prop extends BigPiece
     protected transient PropConfig _config;
     protected transient Vector3f _vscale;
     protected transient Rectangle _sbounds = new Rectangle();
+
+    protected static final String[] ENTER_DIR = {"N", "E", "S", "W"};
+    protected static final String[] EXIT_DIR = {"n", "e", "s", "w"};
 }
