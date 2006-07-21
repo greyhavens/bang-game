@@ -3,7 +3,9 @@
 
 package com.threerings.bang.game.client;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import org.lwjgl.opengl.GL11;
 
@@ -273,8 +275,14 @@ public class BangView extends BWindow
         if (board != null) {
             log.info("Loaded board from cache [board=" + _bangobj.boardName +
                      ", pcount=" + _bangobj.players.length + "].");
-            continuePreparingForRound(config, pidx, board.getBoard(),
-                board.getPieces());
+            try {
+                continuePreparingForRound(
+                    config, pidx, board.getBoard(), board.getPieces());
+            } catch (IOException ioe) {
+                log.log(Level.WARNING, "Failed to decode board " +
+                        board + ".", ioe);
+                // TODO: abandon ship!
+            }
             return true;
         }
 

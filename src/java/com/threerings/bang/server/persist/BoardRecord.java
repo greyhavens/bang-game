@@ -146,10 +146,12 @@ public class BoardRecord extends BoardData
         bin.close();
     }
 
-    /** Helper function for {@link #toString}. */
-    public String dataHashToString ()
+    @Override // from BoardData
+    public String toString ()
     {
-        return StringUtil.hexlate(dataHash);
+        return "[id=" + boardId + ", name=" + name + ", players=" + players +
+            ", data=" + super.toString() +
+            ", hash=" + StringUtil.hexlate(dataHash) + "]";
     }
 
     @Override // documentation inherited

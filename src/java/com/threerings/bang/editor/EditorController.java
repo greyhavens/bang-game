@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
@@ -594,8 +595,8 @@ public class EditorController extends GameController
 
     protected void loadBoard (File board, boolean refresh)
     {
+        BoardRecord brec = new BoardRecord();
         try {
-            BoardRecord brec = new BoardRecord();
             brec.load(board);
             _bangobj.board = brec.getBoard();
             Piece[] pieces = brec.getPieces();
@@ -618,6 +619,7 @@ public class EditorController extends GameController
             _ctx.displayStatus(_msgs.get("m.loaded", _board));
 
         } catch (IOException ioe) {
+            log.log(Level.WARNING, "Failed to load board " + brec + ".", ioe);
             _ctx.displayStatus(_msgs.get("m.load_error", ioe.getMessage()));
         }
     }

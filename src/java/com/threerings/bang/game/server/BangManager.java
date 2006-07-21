@@ -4,6 +4,7 @@
 package com.threerings.bang.game.server;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -97,19 +98,24 @@ public class BangManager extends GameManager
     {
         PlayerObject user = (PlayerObject)caller;
         if (!_bangobj.occupants.contains(user.getOid())) {
-            log.warning("Rejecting request for board by non-occupant [who=" +
-                user.who() + "].");
+            log.warning("Rejecting request for board by non-occupant " +
+                        "[who=" + user.who() + "].");
             throw new InvocationException(INTERNAL_ERROR);
-
         } else if (_bangobj.board == null) {
-            log.warning("Rejecting request for non-existent board [who=" +
-                user.who() + "].");
+            log.warning("Rejecting request for non-existent board " +
+                        "[who=" + user.who() + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
+
         // note that roundId is currently one less than the actual round id (we
         // haven't yet called startGame()) and is thus properly zero indexed
         BoardRecord brec = _rounds[_bangobj.roundId].board;
-        listener.requestProcessed(brec.getBoard(), brec.getPieces());
+        try {
+            listener.requestProcessed(brec.getBoard(), brec.getPieces());
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Failed to decode board " + brec + ".", ioe);
+            throw new InvocationException(INTERNAL_ERROR);
+        }
     }
 
     // documentation inherited from interface BangProvider
@@ -726,9 +732,14 @@ public class BangManager extends GameManager
     protected void continueStartingRound (BoardRecord brec)
     {
         // make sure we've got a board to work with
-        BangBoard board = brec.getBoard();
-        if (board == null) {
-            log.warning("Have no board. We're hosed! " + brec + ".");
+        BangBoard board;
+        Piece[] pvec;
+        try {
+            board = brec.getBoard();
+            pvec = brec.getPieces();
+        } catch (IOException ioe) {
+            log.log(Level.WARNING, "Failed to decode board " + brec + ".", ioe);
+            // TODO: cancel the game or report hoseage to the players
             return;
         }
 
@@ -776,7 +787,6 @@ public class BangManager extends GameManager
         // clone the pieces we get from the board record as we may modify them
         // during the course of the game
         ArrayList<Piece> pieces = new ArrayList<Piece>();
-        Piece[] pvec = brec.getPieces();
         for (int ii = 0; ii < pvec.length; ii++) {
             Piece p = (Piece)pvec[ii].clone();
             // sanity check our pieces

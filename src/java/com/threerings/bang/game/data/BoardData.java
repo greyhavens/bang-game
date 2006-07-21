@@ -37,7 +37,7 @@ public class BoardData
 {
     /** The serialized board data. */
     public byte[] data;
-    
+
     /** The last iteration of the bang board. */
     public static class OldBangBoard extends SimpleStreamableObject
     {
@@ -55,7 +55,7 @@ public class BoardData
         public float skyFalloff;
         public float windDirection, windSpeed;
     }
-    
+
     /**
      * Serializes the supplied board and piece information and stuffs it
      * into the {@link #data} member.
@@ -82,11 +82,12 @@ public class BoardData
             log.log(Level.WARNING, "Failed to encode board " + this, ioe);
         }
     }
-    
+
     /**
      * Decodes and returns the board in this record.
      */
     public BangBoard getBoard ()
+        throws IOException
     {
         if (_board == null) {
             decodeData();
@@ -98,13 +99,14 @@ public class BoardData
      * Decodes and returns the pieces in this record.
      */
     public Piece[] getPieces ()
+        throws IOException
     {
         if (_pieces == null) {
             decodeData();
         }
         return _pieces;
     }
-    
+
     /**
      * Computes and returns the MD5 hash of the board data.
      */
@@ -112,77 +114,72 @@ public class BoardData
     {
         try {
             return MessageDigest.getInstance("MD5").digest(data);
-            
+
         } catch (NoSuchAlgorithmException nsae) {
             throw new RuntimeException("MD5 codec not available");
         }
     }
-    
+
     /** Returns a string representation of this instance. */
     public String toString ()
     {
-        return StringUtil.fieldsToString(this);
+        return ((data == null) ? "0" : String.valueOf(data.length)) + " bytes";
     }
 
-    /** Helper function for {@link #toString}. */
-    public String dataToString ()
-    {
-        return data.length + " bytes";
-    }
-    
     /** Helper for the two load board methods. */
     protected void decodeData ()
+        throws IOException
     {
+        ObjectInputStream oin = new ObjectInputStream(
+            new ByteArrayInputStream(data));
+        /*
+          oin.addTranslation("com.threerings.bang.game.data.BangBoard",
+          "com.threerings.bang.game.data.BoardData$OldBangBoard");
+          OldBangBoard obb = (OldBangBoard)oin.readObject();
+          _board = new BangBoard(obb.width, obb.height);
+          System.arraycopy(obb.heightfield, 0, _board.getHeightfield(), 0,
+          obb.heightfield.length);
+          System.arraycopy(obb.terrain, 0, _board.getTerrain(), 0,
+          obb.terrain.length);
+          System.arraycopy(obb.shadows, 0, _board.getShadows(), 0,
+          obb.shadows.length);
+          _board.setShadowIntensity(obb.shadowIntensity);
+          _board.setWaterParams(obb.waterLevel, obb.waterColor,
+          obb.waterAmplitude);
+          for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
+          _board.setLightParams(i, obb.lightAzimuths[i],
+          obb.lightElevations[i], obb.lightDiffuseColors[i],
+          obb.lightAmbientColors[i]);
+          }
+          _board.setSkyParams(obb.skyHorizonColor, obb.skyOverheadColor,
+          obb.skyFalloff);
+          _board.setWindParams(obb.windDirection, obb.windSpeed);
+        */
+
+        // load up our board
         try {
-            ObjectInputStream oin = new ObjectInputStream(
-                new ByteArrayInputStream(data));
-            /*
-            oin.addTranslation("com.threerings.bang.game.data.BangBoard",
-                "com.threerings.bang.game.data.BoardData$OldBangBoard");
-            OldBangBoard obb = (OldBangBoard)oin.readObject();
-            _board = new BangBoard(obb.width, obb.height);
-            System.arraycopy(obb.heightfield, 0, _board.getHeightfield(), 0,
-                obb.heightfield.length);
-            System.arraycopy(obb.terrain, 0, _board.getTerrain(), 0,
-                obb.terrain.length);
-            System.arraycopy(obb.shadows, 0, _board.getShadows(), 0,
-                obb.shadows.length);
-            _board.setShadowIntensity(obb.shadowIntensity);
-            _board.setWaterParams(obb.waterLevel, obb.waterColor,
-                obb.waterAmplitude);
-            for (int i = 0; i < BangBoard.NUM_LIGHTS; i++) {
-                _board.setLightParams(i, obb.lightAzimuths[i],
-                    obb.lightElevations[i], obb.lightDiffuseColors[i],
-                    obb.lightAmbientColors[i]);
-            }
-            _board.setSkyParams(obb.skyHorizonColor, obb.skyOverheadColor,
-                obb.skyFalloff);
-            _board.setWindParams(obb.windDirection, obb.windSpeed);
-            */
-
-            // load up our board
             _board = (BangBoard)oin.readObject();
-
-            // load and sanity check our pieces
-            int pcount = oin.readInt();
-            Rectangle rect = new Rectangle(
-                0, 0, _board.getWidth(), _board.getHeight());
-            ArrayList<Piece> plist = new ArrayList<Piece>();
-            for (int ii = 0; ii < pcount; ii++) {
-                Piece p = readPiece(oin);
-                if (!(p instanceof Viewpoint) && !rect.contains(p.x, p.y)) {
-                    log.warning("Rececting OOB piece " + p + ".");
-                } else {
-                    plist.add(p);
-                }
-            }
-            _pieces = plist.toArray(new Piece[plist.size()]);
-
-        } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to decode board " + this, e);
+        } catch (ClassNotFoundException cnfe) {
+            throw (IOException)
+                new IOException("Failed to unserialize board.").initCause(cnfe);
         }
+
+        // load and sanity check our pieces
+        int pcount = oin.readInt();
+        Rectangle rect = new Rectangle(
+            0, 0, _board.getWidth(), _board.getHeight());
+        ArrayList<Piece> plist = new ArrayList<Piece>();
+        for (int ii = 0; ii < pcount; ii++) {
+            Piece p = readPiece(oin);
+            if (!(p instanceof Viewpoint) && !rect.contains(p.x, p.y)) {
+                log.warning("Rececting OOB piece " + p + ".");
+            } else {
+                plist.add(p);
+            }
+        }
+        _pieces = plist.toArray(new Piece[plist.size()]);
     }
-    
+
     /** Helper method. */
     protected void writePiece (ObjectOutputStream oout, Piece piece)
         throws IOException
@@ -238,7 +235,7 @@ public class BoardData
         piece.unpersistFrom(oin, scenIds);
         return piece;
     }
-    
+
     protected transient BangBoard _board;
     protected transient Piece[] _pieces;
 }

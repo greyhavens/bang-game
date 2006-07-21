@@ -929,13 +929,12 @@ public class BangBoard extends SimpleStreamableObject
         return (btstate == O_FLAT) || (rough && btstate == O_ROUGH);
     }
 
-    // documentation inherited from interface AStarPathUtil.TraversalPred
+    // from interface AStarPathUtil.TraversalPred
     public boolean canTraverse (Object traverser, int x, int y) {
         return canTravel((Piece)traverser, x, y, false);
     }
 
-    // documentation inherited from interface 
-    // AStarPathUtil.ExtendedTraversalPred
+    // from interface AStarPathUtil.ExtendedTraversalPred
     public boolean canTraverse (
             Object traverser, int sx, int sy, int dx, int dy)
     {
