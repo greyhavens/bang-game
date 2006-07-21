@@ -120,3 +120,9 @@
 -keep public class com.threerings.jme.tools.xml.* {
     public *;
 }
+
+# Bug worky aroundy; Proguard is erroneously stripping all methods out of this
+# interface and -keepclassmembers doesn't seem to fix it only -keep
+-keep public interface com.threerings.media.util.AStarPathUtil$ExtendedTraversalPred {
+    public <methods>;
+}
