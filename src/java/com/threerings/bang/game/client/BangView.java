@@ -187,13 +187,25 @@ public class BangView extends BWindow
         int pcount = _bangobj.players.length;
         _pswins = new BWindow[pcount];
         pstatus = new PlayerStatusView[pcount];
+
+        // create the windows and the player status views
         for (int ii = 0; ii < pcount; ii++) {
             _pswins[ii] = new BWindow(
                 _ctx.getStyleSheet(), GroupLayout.makeHStretch());
             _pswins[ii].setLayer(1);
             _pswins[ii].setStyleClass("player_status_win");
-            _pswins[ii].add(pstatus[ii] = new PlayerStatusView(
-                                _ctx, _bangobj, config, _ctrl, ii));
+            pstatus[ii] = new PlayerStatusView(
+                _ctx, _bangobj, config, _ctrl, ii);
+        }
+
+        // then put the status views in windows, always putting ours leftmost
+        int idx = 1, pidx = _bangobj.getPlayerIndex(
+            _ctx.getUserObject().getVisibleName());
+        _pswins[0].add(pstatus[pidx]);
+        for (int ii = 0; ii < pcount; ii++) {
+            if (ii != pidx) {
+                _pswins[idx++].add(pstatus[ii]);
+            }
         }
 
         // initialize the round timer
