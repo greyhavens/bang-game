@@ -142,7 +142,7 @@
   </article>
 
   <article name="male_ten_gallon" townId="frontier_town"
-           slot="hat" scrip="750" coins="0">
+           slot="hat" scrip="750" coins="0" colors="clothes_p">
     <component cclass="male/hat" name="ten_gallon"/>
     <component cclass="male/hat_back" name="ten_gallon"/>
   </article>
