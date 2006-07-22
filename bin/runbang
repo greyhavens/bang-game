@@ -92,7 +92,7 @@ touch $LOGFILE
 cd $BANG_HOME
 
 # Reload the board database from the source files
-if [ $NODE = "frontier_town"] ; then
+if [ $NODE == "frontier_town"] ; then
     echo "Rebuilding board database:" >>$LOGFILE
     $TOOLS_HOME/bin/ant boards >>$LOGFILE 2>&1
 fi
