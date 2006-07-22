@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import java.awt.Point;
 import java.util.List;
 
 import com.jme.math.FastMath;
@@ -26,7 +27,7 @@ import com.threerings.bang.game.data.effect.StampedeEffect;
  */
 public class BisonSprite extends MobileSprite
 {
-    public BisonSprite (float angle, float distance, List path)
+    public BisonSprite (float angle, float distance, List<Point> path)
     {
         super("extras", "frontier_town/bison");
         _offset = new Vector3f(FastMath.cos(angle) * distance,
@@ -35,7 +36,7 @@ public class BisonSprite extends MobileSprite
     }
     
     @Override // documentation inherited
-    public void move (BangBoard board, List path, float speed)
+    public void move (BangBoard board, List<Point> path, float speed)
     {
         super.move(board, path, speed);
         
@@ -89,7 +90,7 @@ public class BisonSprite extends MobileSprite
     protected Vector3f _offset;
 
     /** The path to take after loading the model. */
-    protected List _pendingPath;
+    protected List<Point> _pendingPath;
     
     /** The time it takes the bison to fade in and out (seconds). */
     protected static float FADE_TIME = 2 / StampedeEffect.BISON_SPEED;

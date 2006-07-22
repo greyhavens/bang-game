@@ -105,7 +105,7 @@ public class ShotEffect extends Effect
     public String defendIcon;
 
     /** Direction location the target is pushed. */
-    public int pushx = -1, pushy = -1;
+    public short pushx = -1, pushy = -1;
     
     /**
      * Constructor used when creating a new shot effect.

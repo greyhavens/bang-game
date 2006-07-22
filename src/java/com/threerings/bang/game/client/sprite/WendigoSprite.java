@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import java.awt.Point;
 import java.util.List;
 
 import com.jme.math.Vector3f;
@@ -69,7 +70,7 @@ public class WendigoSprite extends MobileSprite
     /**
      * Perform a move with an associate penderId for the WendigoHandler.
      */
-    public void move (BangBoard board, List path, float speed,
+    public void move (BangBoard board, List<Point> path, float speed,
             WendigoHandler handler, int penderId)
     {
         _handler = handler;

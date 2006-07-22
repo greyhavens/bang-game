@@ -41,6 +41,7 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
+import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.effect.InfluenceViz;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.NuggetEffect;
@@ -266,6 +267,15 @@ public class UnitSprite extends MobileSprite
         updateStatus();
     }
 
+    /**
+     * Configure an effect handler that gets called during the "shot" part
+     * of a path.
+     */
+    public void setShootHandler (EffectHandler handler)
+    {
+        _effectHandler = handler;
+    }
+
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
@@ -418,6 +428,8 @@ public class UnitSprite extends MobileSprite
 
     protected InfluenceViz _influenceViz, _hindranceViz;
     protected Influence _influence, _hindrance;
+    
+    protected EffectHandler _effectHandler;
     
     protected static HashMap<String,Texture[]> _pendtexmap =
         new HashMap<String,Texture[]>();

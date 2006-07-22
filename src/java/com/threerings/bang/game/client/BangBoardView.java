@@ -768,7 +768,7 @@ public class BangBoardView extends BoardView
         for (UnitSprite sprite : _readyUnits) {
             Piece unit = sprite.getPiece();
             Point corner = getStartCorner(unit.owner);
-            final List path = AStarPathUtil.getPath(
+            final List<java.awt.Point> path = AStarPathUtil.getPath(
                 _tpred, unit.getStepper(), unit, _board.getWidth() / 2,
                 corner.x, corner.y, unit.x, unit.y, false);
 
@@ -777,7 +777,7 @@ public class BangBoardView extends BoardView
             if (path != null) {
                 int startidx = path.size();
                 for (int ii = path.size()-1; ii >= 0; ii--) {
-                    java.awt.Point point = (java.awt.Point)path.get(ii);
+                    java.awt.Point point = path.get(ii);
                     sprite.setLocation(_board, point.x, point.y);
                     sprite.updateGeometricState(0, true);
                     startidx = ii;

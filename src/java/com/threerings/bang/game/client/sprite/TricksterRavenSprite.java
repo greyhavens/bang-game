@@ -25,7 +25,7 @@ public class TricksterRavenSprite extends UnitSprite
     }
 
     @Override // documentation inherited
-    protected Path createPath (BangBoard board, List path, float speed)
+    protected Path createPath (BangBoard board, List<Point> path, float speed)
     {
         boolean walking = path.size() <= 4;
         if (walking) {

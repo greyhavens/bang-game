@@ -20,6 +20,7 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ExpireHindranceEffect;
 import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
 import com.threerings.bang.game.data.effect.HoldEffect;
+import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
@@ -439,6 +440,15 @@ public class Unit extends Piece
     /**
      * Generate a move effect for this unit.
      */
+    public MoveEffect generateMoveEffect (
+            BangObject bangobj, int nx, int ny, Piece target)
+    {
+        MoveEffect meffect = new MoveEffect();
+        meffect.init(this);
+        meffect.nx = (short)nx;
+        meffect.ny = (short)ny;
+        return meffect;
+    }
 
     /**
      * Provides the unit with its configuration.

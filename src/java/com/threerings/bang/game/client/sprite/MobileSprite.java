@@ -239,7 +239,7 @@ public class MobileSprite extends PieceSprite
      *
      * @param speed the speed at which to move, in tiles per second
      */
-    public void move (BangBoard board, List path, float speed)
+    public void move (BangBoard board, List<Point> path, float speed)
     {
         move(createPath(board, path, speed));
         Point pt = (Point)path.get(path.size() - 1);
@@ -656,7 +656,7 @@ public class MobileSprite extends PieceSprite
      */
     protected Path createPath (BangBoard board)
     {
-        List path = null;
+        List<Point> path = null;
         if (board != null) {
             path = board.computePath(_px, _py, _piece);
         }
@@ -693,15 +693,15 @@ public class MobileSprite extends PieceSprite
      *
      * @param speed the speed at which to move, in tiles per second
      */
-    protected Path createPath (BangBoard board, List path, float speed)
+    protected Path createPath (BangBoard board, List<Point> path, float speed)
     {
         // create a world coordinate path from the tile
         // coordinates
         Vector3f[] coords = new Vector3f[path.size()];
         float[] durations = new float[path.size()-1];
         int ii = 0;
-        for (Iterator iter = path.iterator(); iter.hasNext(); ii++) {
-            Point p = (Point)iter.next();
+        for (Iterator<Point> iter = path.iterator(); iter.hasNext(); ii++) {
+            Point p = iter.next();
             setCoord(board, coords, ii, p.x, p.y, (ii > 0 && iter.hasNext()));
             if (ii > 0) {
                 durations[ii-1] = 1f / speed;
@@ -711,6 +711,12 @@ public class MobileSprite extends PieceSprite
         if (_moveAction == MOVE_PUSH) {
             action = "reacting";
         }
+        return createPath(coords, durations, action);
+    }
+
+    protected Path createPath (
+            Vector3f[] coords, float[] durations, String action)
+    {
         return new MoveUnitPath(this, coords, durations, _moveType, action);
     }
 

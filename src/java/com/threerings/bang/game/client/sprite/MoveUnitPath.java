@@ -73,22 +73,9 @@ public class MoveUnitPath extends LineSegmentPath
         if (_current >= _durations.length) {
             return;
         }
-        
-        // see if we're turning a corner
-        int half = _accum < _durations[_current]*0.5f ?
-            FIRST_HALF : SECOND_HALF;
-        if (_pivots[half] != null) {
-            float angle = _startAngles[half] + _angularVels[half] *
-                (_accum / _durations[_current]);
-            _temp.set(CORNERING_RADIUS * FastMath.cos(angle),
-                CORNERING_RADIUS * FastMath.sin(angle), 0f);
-            _temp.addLocal(_pivots[half]);
-            _sprite.setLocalTranslation(_temp);
-            _rotate.fromAngleNormalAxis(_angularVels[half] < 0 ?
-                angle : angle + FastMath.PI, Vector3f.UNIT_Z);
-            _sprite.setLocalRotation(_rotate);
-        }
-        
+
+        updateSpriteRotation();
+
         // adjust to the terrain at the current coordinates
         MobileSprite sprite = (MobileSprite)_sprite;
         sprite.pathUpdate();
@@ -121,6 +108,27 @@ public class MoveUnitPath extends LineSegmentPath
                 
         updateCorneringParams(FIRST_HALF);
         updateCorneringParams(SECOND_HALF);
+    }
+
+    /**
+     * Handles rotating the sprite around turns.
+     */
+    protected void updateSpriteRotation ()
+    {
+        // see if we're turning a corner
+        int half = _accum < _durations[_current]*0.5f ?
+            FIRST_HALF : SECOND_HALF;
+        if (_pivots[half] != null) {
+            float angle = _startAngles[half] + _angularVels[half] *
+                (_accum / _durations[_current]);
+            _temp.set(CORNERING_RADIUS * FastMath.cos(angle),
+                CORNERING_RADIUS * FastMath.sin(angle), 0f);
+            _temp.addLocal(_pivots[half]);
+            _sprite.setLocalTranslation(_temp);
+            _rotate.fromAngleNormalAxis(_angularVels[half] < 0 ?
+                angle : angle + FastMath.PI, Vector3f.UNIT_Z);
+            _sprite.setLocalRotation(_rotate);
+        }
     }
     
     /**

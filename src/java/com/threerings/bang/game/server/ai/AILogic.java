@@ -168,13 +168,14 @@ public abstract class AILogic
      */
     protected Point getClosestPoint (Unit unit, PointSet moves, int dx, int dy)
     {
-        List path = AStarPathUtil.getPath(_bangobj.board, unit.getStepper(),
-            unit, getMaxLookahead(), unit.x, unit.y, dx, dy, true);
+        List<Point> path = AStarPathUtil.getPath(
+                _bangobj.board, unit.getStepper(), unit, 
+                getMaxLookahead(), unit.x, unit.y, dx, dy, true);
         if (path == null || path.size() < 2) {
             return null;
         }
         for (int ii = path.size() - 1; ii >= 0; ii--) {
-            Point pt = (Point)path.get(ii);
+            Point pt = path.get(ii);
             if (moves.contains(pt.x, pt.y)) {
                 return pt;
             }

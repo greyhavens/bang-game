@@ -102,7 +102,7 @@ public class EffectHandler extends BoardView.BoardAction
     public void pieceAffected (Piece piece, String effect)
     {
         // clear the pending moves we set earlier
-        if (_effect instanceof MoveEffect) {
+        if (_effect instanceof MoveEffect && Effect.UPDATED.equals(effect)) {
             for (int ii = 0; ii < pieceIds.length; ii++) {
                 _view.clearPendingMove(pieceIds[ii]);
             }

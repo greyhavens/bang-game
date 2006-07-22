@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.piece;
 
+import java.awt.Point;
 import java.util.List;
 
 import com.samskivert.util.HashIntMap;
@@ -53,7 +54,7 @@ public class Train extends Piece
     public short nextX, nextY;
 
     /** The path being followed by the train, if any. */
-    public transient List path;
+    public transient List<Point> path;
     
     /**
      * Attempts to find a path from the train's next position to the given
@@ -62,7 +63,7 @@ public class Train extends Piece
      * @return the computed path, or <code>null</code> if a path couldn't
      * be found
      */
-    public List findPath (final BangObject bangobj, Track dest)
+    public List<Point> findPath (final BangObject bangobj, Track dest)
     {
         AStarPathUtil.TraversalPred tpred = new AStarPathUtil.TraversalPred() {
             public boolean canTraverse (Object traverser, int x, int y) {
@@ -78,7 +79,7 @@ public class Train extends Piece
                 }
             }
         };
-        List path = AStarPathUtil.getPath(tpred, stepper, this,
+        List<Point> path = AStarPathUtil.getPath(tpred, stepper, this,
             bangobj.getTracks().size(), nextX, nextY, dest.x, dest.y, false);
         if (path != null) {
             path.remove(0); // the first element is redundant

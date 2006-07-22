@@ -502,7 +502,7 @@ public class BangBoard extends SimpleStreamableObject
      * supplied piece's current coordinates. Returns null if no path could be
      * found.
      */
-    public List computePath (int ox, int oy, Piece piece)
+    public List<Point> computePath (int ox, int oy, Piece piece)
     {
 //         log.info("Computing path from " + ox + "/" + oy + " to " +
 //                  piece.x + "/" + piece.y +

@@ -241,17 +241,6 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Computes a damage scale based on the distance moved.
-     *
-     * @param dist distance moved
-     */
-    public float moveDamageScale (int dist)
-    {
-        // default is no scaling
-        return 1f;
-    }
-
-    /**
      * Returns true if the specified target is in range of attack of this
      * piece.
      */

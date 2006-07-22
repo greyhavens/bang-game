@@ -63,6 +63,7 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MoveEffect;
+import com.threerings.bang.game.data.effect.MoveShootEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Marker;
@@ -340,7 +341,6 @@ public class BangManager extends GameManager
         Unit unit, int x, int y, int targetId, boolean recheckOrders)
         throws InvocationException
     {
-        Piece munit = null, shooter = unit;
         try {
             _bangobj.startTransaction();
 
@@ -355,12 +355,14 @@ public class BangManager extends GameManager
 
             // if they specified a non-NOOP move, execute it
             int oldx = unit.x, oldy = unit.y;
+            MoveEffect meffect = null;
             if (x != unit.x || y != unit.y) {
-                munit = moveUnit(unit, x, y, target);
-                shooter = munit;
-            } else {
+                meffect = moveUnit(unit, x, y, target);
+            }
+
+            if (meffect == null) {
                 // check that our target is still valid and reachable
-                checkTarget(shooter, target, shooter.x, shooter.y);
+                checkTarget(unit, target, unit.x, unit.y);
             }
 
             // TEMP: for debugging weird shot effect problems
@@ -369,38 +371,40 @@ public class BangManager extends GameManager
             // if they specified a target, shoot at it (we've already checked
             // in moveUnit() or above that our target is still valid)
             if (target != null) {
-                // effect the initial shot
-                log.fine("Shooting " + target.info() +
-                         " with " + shooter.info());
-                // computer the damage scale
-                int dist = Math.abs(oldx - munit.x) + Math.abs(oldy - munit.y);
-                float scale = shooter.moveDamageScale(dist);
-                ShotEffect effect = shooter.shoot(_bangobj, target, scale);
-                // the initial shot updates the shooter's last acted
-                effect.shooterLastActed = _bangobj.tick;
+                ShotEffect effect;
+                if (meffect == null || !(meffect instanceof MoveShootEffect)) {
+                    // effect the initial shot
+                    log.fine("Shooting " + target.info() +
+                             " with " + unit.info());
+                    effect = unit.shoot(_bangobj, target, 1f);
+                    // the initial shot updates the shooter's last acted
+                    effect.shooterLastActed = _bangobj.tick;
 
-                // apply the shot effect
-                if (!deployEffect(shooter.owner, effect)) {
-                    log.warning("Failed to deploy shot effect " +
-                                "[shooter=" + shooter.info() +
-                                ", move=" + x + "/" + y +
-                                ", target=" + target.info() +
-                                ", dam1=" + dam1 + ", dam2=" + dam2+ "].");
+                    // apply the shot effect
+                    if (!deployEffect(unit.owner, effect)) {
+                        log.warning("Failed to deploy shot effect " +
+                                    "[unit=" + unit.info() +
+                                    ", move=" + x + "/" + y +
+                                    ", target=" + target.info() +
+                                    ", dam1=" + dam1 + ", dam2=" + dam2+ "].");
+                    } else {
+                        _bangobj.stats[unit.owner].incrementStat(
+                            Stat.Type.SHOTS_FIRED, 1);
+                    }
                 } else {
-                    _bangobj.stats[shooter.owner].incrementStat(
-                        Stat.Type.SHOTS_FIRED, 1);
+                    effect = ((MoveShootEffect)meffect).shotEffect;
                 }
 
                 // effect any collateral damage
-                Effect[] ceffects = shooter.collateralDamage(
+                Effect[] ceffects = unit.collateralDamage(
                     _bangobj, target, effect.newDamage);
                 int ccount = (ceffects == null) ? 0 : ceffects.length;
                 for (int ii = 0; ii < ccount; ii++) {
-                    deployEffect(shooter.owner, ceffects[ii]);
+                    deployEffect(unit.owner, ceffects[ii]);
                 }
 
                 // allow the target to return fire
-                effect = target.returnFire(_bangobj, shooter, effect.newDamage);
+                effect = target.returnFire(_bangobj, unit, effect.newDamage);
                 if (effect != null) {
                     deployEffect(target.owner, effect);
                     _bangobj.stats[target.owner].incrementStat(
@@ -1416,7 +1420,7 @@ public class BangManager extends GameManager
      *
      * @return the cloned and moved piece if the piece was moved.
      */
-    protected Unit moveUnit (Unit unit, int x, int y, Piece target)
+    protected MoveEffect moveUnit (Unit unit, int x, int y, Piece target)
         throws InvocationException
     {
         // compute the possible moves for this unit
@@ -1444,12 +1448,12 @@ public class BangManager extends GameManager
 
             // if we decided not to move, just pretend like we did the job
             if (x == unit.x && y == unit.y) {
-                return unit;
+                return null;
             }
         }
 
         // make sure we are alive, and are ready to move
-        int steps = Math.abs(unit.x-x) + Math.abs(unit.y-y);
+        int steps = unit.getDistance(x, y);
         if (!unit.isAlive() || unit.ticksUntilMovable(_bangobj.tick) > 0) {
 //             log.info("Unit no longer movable [unit=" + unit +
 //                      ", alive=" + unit.isAlive() +
@@ -1490,15 +1494,16 @@ public class BangManager extends GameManager
         _bangobj.board.shadowPiece(munit);
 
         // record the move to this player's statistics
-        _bangobj.stats[munit.owner].incrementStat(
+        _bangobj.stats[unit.owner].incrementStat(
             Stat.Type.DISTANCE_MOVED, steps);
 
         // dispatch a move effect to actually move the unit
-        MoveEffect meffect = new MoveEffect();
-        meffect.init(munit);
-        meffect.nx = munit.x;
-        meffect.ny = munit.y;
-        deployEffect(munit.owner, meffect);
+        MoveEffect meffect = unit.generateMoveEffect(_bangobj, x, y, target);
+        if (deployEffect(unit.owner, meffect) &&
+                meffect instanceof MoveShootEffect) { 
+            _bangobj.stats[unit.owner].incrementStat(
+                Stat.Type.SHOTS_FIRED, 1);
+        }
 
         // interact with any pieces occupying our target space
         if (lappers != null) {
@@ -1517,7 +1522,7 @@ public class BangManager extends GameManager
             }
         }
 
-        return munit;
+        return meffect;
     }
 
     /**
@@ -2170,9 +2175,7 @@ public class BangManager extends GameManager
 
             // we are doing a move and shoot, so make sure we can still hit the
             // target from our desired move location
-            int tdist = target.getDistance(x, y);
-            if (tdist < unit.getMinFireDistance() ||
-                tdist > unit.getMaxFireDistance() ||
+            if (!unit.targetInRange(x, y, target.x, target.y) ||
                 !unit.checkLineOfSight(_bangobj.board, x, y, target)) {
                 return TARGET_UNREACHABLE;
             }
