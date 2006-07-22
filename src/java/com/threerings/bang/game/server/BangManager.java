@@ -61,6 +61,7 @@ import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
+import com.threerings.bang.game.data.effect.AdjustTickEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.MoveShootEffect;
@@ -1575,6 +1576,31 @@ public class BangManager extends GameManager
     }
 
     /**
+     * Immediately executes any pending order for the specified unit. This
+     * should be called when a unit becomes ready out of the normal tick
+     * sequence, like via a Giddy Up card.
+     */
+    protected void executeOrders (int unitId)
+    {
+        AdvanceOrder order = null;
+        for (int ii = 0, ll = _orders.size(); ii < ll; ii++) {
+            if (_orders.get(ii).unit.pieceId == unitId) {
+                order = _orders.remove(ii);
+                break;
+            }
+        }
+        if (order != null) {
+            log.info("Immediately executing order " + order + ".");
+            try {
+                executeOrder(
+                    order.unit, order.x, order.y, order.targetId, true);
+            } catch (InvocationException ie) {
+                reportInvalidOrder(order, ie.getMessage());
+            }
+        }
+    }
+
+    /**
      * Clears any advance order for the specified unit.
      */
     protected void clearOrders (int unitId)
@@ -2296,6 +2322,12 @@ public class BangManager extends GameManager
         }
 
         public void pieceAffected (Piece piece, String effect) {
+            // if a piece was giddy upped into readiness, immediately execute
+            // any pending move it has registered
+            if (effect.equals(AdjustTickEffect.GIDDY_UPPED) &&
+                piece.ticksUntilMovable(_bangobj.tick) == 0) {
+                executeOrders(piece.pieceId);
+            }
         }
 
         public void pieceMoved (Piece piece) {
