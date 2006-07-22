@@ -13,12 +13,13 @@ use GrindUtil;
 # add /usr/local/bin to the path for FreeBSD
 $ENV{'PATH'} = $ENV{'PATH'} . ":/usr/local/bin";
 
-my $usage = "Usage: $0 [--dryrun] [year month day (ie. 2006 05 06)]\n";
+my $usage = "Usage: $0 [--dryrun] node [year month day (ie. 2006 05 06)]\n";
 my $root = `dirname $0`; chomp($root);
 $root = `cd $root/.. ; pwd`; chomp($root);
 
 my $dry_run;
 GetOptions("dryrun" => \$dry_run);
+my $node = shift or die $usage;
 
 # read in some server properties
 my %sconf;
@@ -51,7 +52,7 @@ if ($dateWasSpecified) {
 }
 
 # make sure we're being invoked on the actual server host
-if (! -e "$root/log/server.log") {
+if (! -e "$root/log/server_$node.log") {
     # exit quietly because we are run automatically via cron on any machine in
     # a cluster, even machines that are quietly awaiting duty as a backup
     exit(0);
@@ -62,8 +63,8 @@ while (1) {
     $datedir = sprintf("%04d/%02d/%02d", $year, $month, $day);
 
     # if we find a moved or unmoved log file, call it good
-    last if (-e "$root/log/server.log.$datestr" ||
-             -e "$root/logs/$datedir/server.log");
+    last if (-e "$root/log/server_$node.log.$datestr" ||
+             -e "$root/logs/$datedir/server_$node.log");
 
     # if it doesn't exist and it was specified on the command line, die
     if ($dateWasSpecified) {
@@ -94,7 +95,7 @@ if ($dry_run) {
     print "Would create historical log directory: $histlogdir\n";
 } else {
     system_warn("mkdir -p $histlogdir");
-    for $file (glob "$root/log/*.log.$datestr") {
+    for $file (glob "$root/log/*_$node.log.$datestr") {
         $file =~ m:$root/log/(.*).log.$datestr:;
         system_warn("mv $file $histlogdir/$1.log");
     }
@@ -112,7 +113,7 @@ my $date = $datedir;
 $date =~ s:/:-:g;
 
 # run our simple stat summarizer
-$cmd = "$root/bin/summarize_stats $histlogdir/server.log > /tmp/bangstats.tmp";
+$cmd = "$root/bin/summarize_stats $histlogdir/server_$node.log > /tmp/bangstats.tmp";
 if ($dry_run) {
     print("$cmd\n");
 } else {
@@ -120,7 +121,7 @@ if ($dry_run) {
 }
 
 # run our performance stat summarizer
-$cmd = "$root/bin/summarize_perf $histlogdir/perf.log > $statsdir/perf.html";
+$cmd = "$root/bin/summarize_perf $histlogdir/perf_$node.log > $statsdir/perf_$node.html";
 if ($dry_run) {
     print("$cmd\n");
     print("mv *.png *.dat $statsdir\n");
