@@ -110,6 +110,13 @@ public class Tutorial extends Scenario
         _bangobj = bangobj;
         _bangobj.addListener(_acl);
 
+        // determine whether this is the player's first time for this tutorial
+        PlayerObject user = (PlayerObject)_bangmgr.getPlayer(0);
+        if (user != null) {
+            _firstTime = !user.stats.containsValue(
+                Stat.Type.TUTORIALS_COMPLETED, _config.ident);
+        }
+
         // start by executing the zeroth action
         _bangobj.setActionId(0);
     }
@@ -142,7 +149,7 @@ public class Tutorial extends Scenario
     @Override // documentation inherited
     public boolean shouldPayEarnings (PlayerObject user)
     {
-        return !user.stats.containsValue(
+        return _firstTime && user.stats.containsValue(
             Stat.Type.TUTORIALS_COMPLETED, _config.ident);
     }
 
@@ -296,4 +303,5 @@ public class Tutorial extends Scenario
     protected TutorialConfig _config;
     protected BangObject _bangobj;
     protected int _nextActionId;
+    protected boolean _firstTime = false;
 }
