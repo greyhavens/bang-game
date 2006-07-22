@@ -91,16 +91,16 @@ public class CattleRustling extends Scenario
         super.roundWillStart(bangobj, starts, purchases);
 
         // now place the cattle near the cattle starting spots
-        int placed = 0, players = bangobj.players.length, cps = (int)
-            Math.ceil(_cattleSpots.size() / (float)players);
+        int placed = 0, cattle = CATTLE_PER_PLAYER * bangobj.players.length;
+        int perSpot = (int)Math.ceil(cattle / (float)_cattleSpots.size());
 
-        log.info("Placing " + cps + " per spot in " +
+        log.fine("Placing " + perSpot + " per spot in " +
                  _cattleSpots.size() + " spots.");
 
       MARKER_LOOP:
         for (Marker cspot : _cattleSpots) {
             ArrayList<Point> spots = bangobj.board.getOccupiableSpots(
-                cps, cspot.x, cspot.y, 3);
+                perSpot, cspot.x, cspot.y, 3);
             for (Point spot : spots) {
                 Cow cow = new Cow();
                 cow.assignPieceId(bangobj);
@@ -108,11 +108,10 @@ public class CattleRustling extends Scenario
                 cow.orientation = (short)RandomUtil.getInt(4);
                 bangobj.board.shadowPiece(cow);
                 bangobj.addToPieces(cow);
+                log.fine("Placed " + cow + ".");
 
-                log.info("Placed " + cow + ".");
-                // stop when we've placed two cattle per player
-                if (++placed >= players * 3) {
-                    log.info("Stopping (" + placed + ").");
+                // stop when we've placed the desired number of cattle
+                if (++placed >= cattle) {
                     break MARKER_LOOP;
                 }
             }
@@ -241,4 +240,5 @@ public class CattleRustling extends Scenario
     protected ArrayList<Marker> _cattleSpots = new ArrayList<Marker>();
 
     protected static final int MAX_OWNER_DISTANCE = 5;
+    protected static final int CATTLE_PER_PLAYER = 3;
 }
