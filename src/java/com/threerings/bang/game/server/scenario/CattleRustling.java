@@ -6,7 +6,6 @@ package com.threerings.bang.game.server.scenario;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 
 import com.samskivert.util.RandomUtil;
@@ -97,24 +96,31 @@ public class CattleRustling extends Scenario
         log.fine("Placing " + perSpot + " per spot in " +
                  _cattleSpots.size() + " spots.");
 
-        // locate "perSpot" spots near each cattle marker and shuffle them
-        ArrayList<Point> spots = new ArrayList<Point>();
+        ArrayList<ArrayList<Point>> allSpots = 
+            new ArrayList<ArrayList<Point>>();
         for (Marker cspot : _cattleSpots) {
-            spots.addAll(bangobj.board.getOccupiableSpots(
-                             perSpot, cspot.x, cspot.y, 3));
+            allSpots.add(RandomUtil.getInt(allSpots.size() + 1), 
+                    bangobj.board.getOccupiableSpots(
+                        perSpot, cspot.x, cspot.y, 3));
         }
-        Collections.shuffle(spots);
 
-        // now put the desired number of cattle into the first N spots
-        for (int ii = 0; ii < cattle && ii < spots.size(); ii++) {
-            Point spot = spots.get(ii);
-            Cow cow = new Cow();
-            cow.assignPieceId(bangobj);
-            cow.position(spot.x, spot.y);
-            cow.orientation = (short)RandomUtil.getInt(4);
-            bangobj.board.shadowPiece(cow);
-            bangobj.addToPieces(cow);
-            log.fine("Placed " + cow + ".");
+      PLACER_LOOP:
+        while (placed < cattle) {
+            for (ArrayList<Point> spots : allSpots) {
+                Point spot = spots.remove(spots.size() - 1);
+                Cow cow = new Cow();
+                cow.assignPieceId(bangobj);
+                cow.position(spot.x, spot.y);
+                cow.orientation = (short)RandomUtil.getInt(4);
+                bangobj.board.shadowPiece(cow);
+                bangobj.addToPieces(cow);
+                log.fine("Placed " + cow + ".");
+
+                // stop when we've placed the desired number of cattle
+                if (++placed >= cattle) {
+                    break PLACER_LOOP;
+                }
+            }
         }
     }
 
