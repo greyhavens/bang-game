@@ -59,7 +59,6 @@ public class ClaimJumping extends Scenario
      */
     public ClaimJumping ()
     {
-        registerDelegate(new RespawnDelegate());
         registerDelegate(new TrainDelegate());
         registerDelegate(new NuggetDelegate(true, NUGGET_COUNT) {
             public void tick (BangObject bangobj, short tick) {
@@ -95,6 +94,7 @@ public class ClaimJumping extends Scenario
                 }
             }
         });
+        registerDelegate(new RespawnDelegate());
     }
 
     @Override // documentation inherited

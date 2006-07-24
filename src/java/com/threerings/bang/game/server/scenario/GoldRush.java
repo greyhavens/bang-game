@@ -47,9 +47,9 @@ public class GoldRush extends Scenario
      */
     public GoldRush ()
     {
-        registerDelegate(new RespawnDelegate());
         registerDelegate(new TrainDelegate());
         registerDelegate(new NuggetDelegate(false, 0));
+        registerDelegate(new RespawnDelegate());
     }
 
     @Override // documentation inherited

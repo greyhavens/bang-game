@@ -54,10 +54,10 @@ public class CattleRustling extends Scenario
      */
     public CattleRustling ()
     {
-        registerDelegate(new RespawnDelegate());
         registerDelegate(new TrainDelegate());
         registerDelegate(new CattleDelegate());
         registerDelegate(new RustlingPostDelegate());
+        registerDelegate(new RespawnDelegate());
     }
 
     @Override // documentation inherited
@@ -93,15 +93,21 @@ public class CattleRustling extends Scenario
         // now place the cattle near the cattle starting spots
         int placed = 0, cattle = CATTLE_PER_PLAYER * bangobj.players.length;
         int perSpot = (int)Math.ceil(cattle / (float)_cattleSpots.size());
+        ArrayList<ArrayList<Point>> allSpots = 
+            new ArrayList<ArrayList<Point>>();
 
         log.fine("Placing " + perSpot + " per spot in " +
                  _cattleSpots.size() + " spots.");
 
-      MARKER_LOOP:
         for (Marker cspot : _cattleSpots) {
-            ArrayList<Point> spots = bangobj.board.getOccupiableSpots(
-                perSpot, cspot.x, cspot.y, 3);
-            for (Point spot : spots) {
+            allSpots.add(RandomUtil.getInt(allSpots.size() + 1), 
+                    bangobj.board.getOccupiableSpots(
+                        perSpot, cspot.x, cspot.y, 3));
+        }
+      PLACER_LOOP:
+        while (placed < cattle) {
+            for (ArrayList<Point> spots : allSpots) {
+                Point spot = spots.remove(spots.size() - 1);
                 Cow cow = new Cow();
                 cow.assignPieceId(bangobj);
                 cow.position(spot.x, spot.y);
@@ -112,7 +118,7 @@ public class CattleRustling extends Scenario
 
                 // stop when we've placed the desired number of cattle
                 if (++placed >= cattle) {
-                    break MARKER_LOOP;
+                    break PLACER_LOOP;
                 }
             }
         }
