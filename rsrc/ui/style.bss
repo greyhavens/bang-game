@@ -1241,6 +1241,9 @@ map_take {
 map_take:hover {
   background: image "ui/station/take_train_hover.png" centerxy;
 }
+map_take:disabled {
+  background: blank;
+}
 
 map_frontier_town:hover {
   background: image "ui/station/frontier_town_hover.png" centerxy;
