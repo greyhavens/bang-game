@@ -199,9 +199,12 @@ public class BangView extends BWindow
         }
 
         // then put the status views in windows, always putting ours leftmost
-        int idx = 1, pidx = _bangobj.getPlayerIndex(
+        int idx = 0, pidx = _bangobj.getPlayerIndex(
             _ctx.getUserObject().getVisibleName());
-        _pswins[0].add(pstatus[pidx]);
+        if (pidx > -1) {
+            idx++;
+            _pswins[0].add(pstatus[pidx]);
+        }
         for (int ii = 0; ii < pcount; ii++) {
             if (ii != pidx) {
                 _pswins[idx++].add(pstatus[ii]);
