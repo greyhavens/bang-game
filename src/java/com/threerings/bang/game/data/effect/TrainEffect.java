@@ -92,6 +92,8 @@ public class TrainEffect extends Effect
         if (deathEffect != null) {
             deathEffect.apply(bangobj, obs);
         }
+        Piece target = bangobj.pieces.get(targetId);
+        _wasAlive = (target == null) ? false : target.isAlive();
         return collide(bangobj, obs, -1, targetId, COLLISION_DAMAGE,
                        x, y, DAMAGED);
     }
@@ -106,9 +108,12 @@ public class TrainEffect extends Effect
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(targetId);
-        if (piece == null || piece.owner != pidx) {
+        if (piece == null || piece.owner != pidx || !_wasAlive) {
             return null;
         }
         return MessageBundle.compose("m.effect_train", piece.getName());
     }
+    
+    /** Whether or not the piece was alive before the train hit it. */
+    protected boolean _wasAlive;
 }
