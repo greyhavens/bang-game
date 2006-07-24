@@ -58,6 +58,7 @@ uresource = rsrc/goods/indian_post/bundle.jar
 uresource = rsrc/sounds/effects/bundle.jar
 uresource = rsrc/sounds/feedback/bundle.jar
 uresource = rsrc/sounds/music/bundle.jar
+uresource = rsrc/units/wreckage/bundle.jar
 
 # Frontier Town game resources
 uresource = rsrc/bonuses/frontier_town/bundle.jar
