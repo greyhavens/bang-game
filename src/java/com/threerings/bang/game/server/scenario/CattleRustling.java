@@ -6,6 +6,7 @@ package com.threerings.bang.game.server.scenario;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 import com.samskivert.util.RandomUtil;
@@ -93,21 +94,21 @@ public class CattleRustling extends Scenario
         // now place the cattle near the cattle starting spots
         int placed = 0, cattle = CATTLE_PER_PLAYER * bangobj.players.length;
         int perSpot = (int)Math.ceil(cattle / (float)_cattleSpots.size());
+
         log.fine("Placing " + perSpot + " per spot in " +
                  _cattleSpots.size() + " spots.");
 
-        ArrayList<ArrayList<Point>> allSpots = 
-            new ArrayList<ArrayList<Point>>();
-        for (Marker cspot : _cattleSpots) {
-            allSpots.add(RandomUtil.getInt(allSpots.size() + 1), 
-                    bangobj.board.getOccupiableSpots(
-                        perSpot, cspot.x, cspot.y, 3));
-        }
+        Collections.shuffle(_cattleSpots);
 
       PLACER_LOOP:
         while (placed < cattle) {
-            for (ArrayList<Point> spots : allSpots) {
-                Point spot = spots.remove(spots.size() - 1);
+            for (Marker cspot : _cattleSpots) {
+                ArrayList<Point> spots = bangobj.board.getOccupiableSpots(
+                    perSpot, cspot.x, cspot.y, 1);
+                if (spots.isEmpty()) {
+                    break;
+                }
+                Point spot = spots.get(0);
                 Cow cow = new Cow();
                 cow.assignPieceId(bangobj);
                 cow.position(spot.x, spot.y);
