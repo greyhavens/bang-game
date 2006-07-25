@@ -59,206 +59,192 @@ public class OOOAuthenticator extends Authenticator
         }
     }
 
-    // documentation inherited
-    public void authenticateConnection (final AuthingConnection conn)
+    @Override
+    protected AuthResponseData createResponseData ()
     {
-        // fire up an invoker unit that will load the user object just to
-        // make sure they exist
-        String name = "auth:" + conn.getAuthRequest().getCredentials();
-        BangServer.invoker.postUnit(new Invoker.Unit(name) {
-            public boolean invoke () {
-                processAuthentication(conn);
-                return false;
-            }
-        });
+        return new BangAuthResponseData();
     }
 
-    /**
-     * Here we do the actual authentication processing while running
-     * happily on the invoker thread.
-     */
-    protected void processAuthentication (AuthingConnection conn)
+    // from abstract Authenticator
+    protected void processAuthentication (
+            AuthingConnection conn, final AuthResponse rsp)
+        throws PersistenceException
     {
         AuthRequest req = conn.getAuthRequest();
-        BangAuthResponseData rdata = new BangAuthResponseData();
-        AuthResponse rsp = new AuthResponse(rdata);
+        BangAuthResponseData rdata = (BangAuthResponseData) rsp.getData();
 
-        try {
-            // make sure we were properly initialized
-            if (_authrep == null) {
-                rdata.code = SERVER_ERROR;
-                return;
-            }
-
-            // make sure they've got the correct version
-            long cvers = 0L;
-            long svers = DeploymentConfig.getVersion();
-            try {
-                cvers = Long.parseLong(req.getVersion());
-            } catch (Exception e) {
-                // ignore it and fail below
-            }
-            if (svers != cvers) {
-                if (cvers > svers) {
-                    rdata.code = NEWER_VERSION;
-                } else {
-                    // TEMP: force the use of the old auth response data to
-                    // avoid freaking out older clients
-                    rsp = new AuthResponse(new AuthResponseData());
-                    rsp.getData().code = MessageBundle.tcompose(
-                        VERSION_MISMATCH, "" + svers);
-                }
-                log.info("Refusing wrong version " +
-                         "[creds=" + req.getCredentials() +
-                         ", cvers=" + cvers + ", svers=" + svers + "].");
-                return;
-            }
-
-            // make sure they've sent valid credentials
-            if (!(req.getCredentials() instanceof BangCredentials)) {
-                log.warning("Invalid creds " + req.getCredentials() + ".");
-                rdata.code = SERVER_ERROR;
-                return;
-            }
-
-            // check their provided machine identifier
-            BangCredentials creds = (BangCredentials)req.getCredentials();
-            String username = creds.getUsername().toString();
-            if (StringUtil.isBlank(creds.ident)) {
-                log.warning("Received blank ident [creds=" +
-                            req.getCredentials() + "].");
-                BangServer.generalLog(
-                    "refusing_spoofed_ident " + username +
-                    " ip:" + conn.getInetAddress());
-                rdata.code = SERVER_ERROR;
-                return;
-            }
-
-            // if they supplied a known non-unique machine identifier, create
-            // one for them
-            if (IdentUtil.isBogusIdent(creds.ident.substring(1))) {
-                String sident = StringUtil.md5hex(
-                    "" + Math.random() + System.currentTimeMillis());
-                creds.ident = "S" + IdentUtil.encodeIdent(sident);
-                BangServer.generalLog("creating_ident " + username +
-                                      " ip:" + conn.getInetAddress() +
-                                      " id:" + creds.ident);
-                rdata.ident = creds.ident;
-            }
-
-            // convert the encrypted ident to the original MD5 hash
-            try {
-                String prefix = creds.ident.substring(0, 1);
-                creds.ident = prefix +
-                    IdentUtil.decodeIdent(creds.ident.substring(1));
-            } catch (Exception e) {
-                log.warning("Received spoofed ident [who=" + username +
-                            ", err=" + e.getMessage() + "].");
-                BangServer.generalLog("refusing_spoofed_ident " + username +
-                                      " ip:" + conn.getInetAddress() +
-                                      " id:" + creds.ident);
-                rdata.code = SERVER_ERROR;
-                return;
-            }
-
-            // load up their user account record
-            OOOUser user = _authrep.loadUser(username, true);
-            if (user == null) {
-                rdata.code = NO_SUCH_USER;
-                return;
-            }
-
-            // we need to find out if this account has ever logged in so that
-            // we can decide how to handle tainted idents; so we load up the
-            // player record for this account; if this player makes it through
-            // the gauntlet, we'll stash this away in a place that the client
-            // resolver can get its hands on it so that we can avoid loading
-            // the record twice during authentication
-            Player prec = BangServer.playrepo.loadPlayer(username);
-
-            // make sure this player has access to this server's town
-            int serverTownIdx = BangUtil.getTownIndex(ServerConfig.townId);
-            if (serverTownIdx > 0) {
-                String townId = (prec == null) ?
-                    BangCodes.FRONTIER_TOWN : prec.townId;
-                if (BangUtil.getTownIndex(townId) < serverTownIdx) {
-                    log.warning("Rejecting access to town server by " +
-                                "non-ticket-holder [who=" + username +
-                                ", stownId=" + ServerConfig.townId +
-                                ", ptownId=" + townId + "].");
-                    rdata.code = NO_TICKET;
-                    return;
-                }
-            }
-
-            // check to see whether this account has been banned or if this is
-            // a first time user logging in from a tainted machine
-            int vc = _authrep.validateUser(user, creds.ident, prec == null);
-            switch (vc) {
-                // various error conditions
-                case OOOUserRepository.ACCOUNT_BANNED:
-                   rdata.code = BANNED;
-                   return;
-                case OOOUserRepository.NEW_ACCOUNT_TAINTED:
-                   rdata.code = MACHINE_TAINTED;
-                   return;
-            }
-
-            // check whether we're restricting non-insider login
-            if (!RuntimeConfig.server.openToPublic &&
-                !user.holdsToken(OOOUser.INSIDER) &&
-                !user.holdsToken(OOOUser.TESTER) &&
-                !user.isSupportPlus()) {
-                rdata.code = NON_PUBLIC_SERVER;
-                return;
-            }
-
-            // check whether we're restricting non-admin login
-            if (!RuntimeConfig.server.nonAdminsAllowed &&
-                !user.isSupportPlus()) {
-                rdata.code = UNDER_MAINTENANCE;
-                return;
-            }
-
-            // now check their password
-            if (!user.password.equals(creds.getPassword())) {
-                rdata.code = INVALID_PASSWORD;
-                return;
-            }
-
-            // configure a token ring for this user
-            int tokens = 0;
-            if (user.holdsToken(OOOUser.ADMIN)) {
-                tokens |= BangTokenRing.ADMIN;
-                tokens |= BangTokenRing.INSIDER;
-            }
-            if (user.holdsToken(OOOUser.INSIDER)) {
-                tokens |= BangTokenRing.INSIDER;
-            }
-            rsp.authdata = new BangTokenRing(tokens);
-
-            // replace the username in their credentials with the
-            // canonical name in their user record as that username will
-            // later be stuffed into their user object
-            creds.setUsername(new Name(user.username));
-
-            // log.info("User logged on [user=" + user.username + "].");
-            rdata.code = BangAuthResponseData.SUCCESS;
-
-            // pass their player record to the client resolver for retrieval
-            // later in the logging on process
-            if (prec != null) {
-                BangClientResolver.stashPlayer(prec);
-            }
-
-        } catch (PersistenceException pe) {
-            log.log(Level.WARNING, "Error authenticating user " +
-                    "[areq=" + req + "].", pe);
+        // make sure we were properly initialized
+        if (_authrep == null) {
             rdata.code = SERVER_ERROR;
+            return;
+        }
 
-        } finally {
-            // let the powers that be know that we're done authenticating
-            connectionWasAuthenticated(conn, rsp);
+        // make sure they've got the correct version
+        long cvers = 0L;
+        long svers = DeploymentConfig.getVersion();
+        try {
+            cvers = Long.parseLong(req.getVersion());
+        } catch (Exception e) {
+            // ignore it and fail below
+        }
+        if (svers != cvers) {
+            if (cvers > svers) {
+                rdata.code = NEWER_VERSION;
+            } else {
+                // TEMP: an ugly hack to force the use of the old
+                // auth response data to avoid freaking out older clients
+                new AuthResponse() {
+                    { // initializer
+                        // gosh it's easy to access fuck with things
+                        rsp._data = new AuthResponseData();
+                    }
+                };
+                rsp.getData().code = MessageBundle.tcompose(
+                    VERSION_MISMATCH, "" + svers);
+            }
+            log.info("Refusing wrong version " +
+                     "[creds=" + req.getCredentials() +
+                     ", cvers=" + cvers + ", svers=" + svers + "].");
+            return;
+        }
+
+        // make sure they've sent valid credentials
+        BangCredentials creds;
+        try {
+            creds = (BangCredentials) req.getCredentials();
+
+        } catch (ClassCastException cce) {
+            log.warning("Invalid creds " + req.getCredentials() + ".");
+            rdata.code = SERVER_ERROR;
+            return;
+        }
+
+        // check their provided machine identifier
+        String username = creds.getUsername().toString();
+        if (StringUtil.isBlank(creds.ident)) {
+            log.warning("Received blank ident [creds=" + creds + "].");
+            BangServer.generalLog(
+                "refusing_spoofed_ident " + username +
+                " ip:" + conn.getInetAddress());
+            rdata.code = SERVER_ERROR;
+            return;
+        }
+
+        // if they supplied a known non-unique machine identifier, create
+        // one for them
+        if (IdentUtil.isBogusIdent(creds.ident.substring(1))) {
+            String sident = StringUtil.md5hex(
+                "" + Math.random() + System.currentTimeMillis());
+            creds.ident = "S" + IdentUtil.encodeIdent(sident);
+            BangServer.generalLog("creating_ident " + username +
+                                  " ip:" + conn.getInetAddress() +
+                                  " id:" + creds.ident);
+            rdata.ident = creds.ident;
+        }
+
+        // convert the encrypted ident to the original MD5 hash
+        try {
+            String prefix = creds.ident.substring(0, 1);
+            creds.ident = prefix +
+                IdentUtil.decodeIdent(creds.ident.substring(1));
+        } catch (Exception e) {
+            log.warning("Received spoofed ident [who=" + username +
+                        ", err=" + e.getMessage() + "].");
+            BangServer.generalLog("refusing_spoofed_ident " + username +
+                                  " ip:" + conn.getInetAddress() +
+                                  " id:" + creds.ident);
+            rdata.code = SERVER_ERROR;
+            return;
+        }
+
+        // load up their user account record
+        OOOUser user = _authrep.loadUser(username, true);
+        if (user == null) {
+            rdata.code = NO_SUCH_USER;
+            return;
+        }
+
+        // we need to find out if this account has ever logged in so that
+        // we can decide how to handle tainted idents; so we load up the
+        // player record for this account; if this player makes it through
+        // the gauntlet, we'll stash this away in a place that the client
+        // resolver can get its hands on it so that we can avoid loading
+        // the record twice during authentication
+        Player prec = BangServer.playrepo.loadPlayer(username);
+
+        // make sure this player has access to this server's town
+        int serverTownIdx = BangUtil.getTownIndex(ServerConfig.townId);
+        if (serverTownIdx > 0) {
+            String townId = (prec == null) ?
+                BangCodes.FRONTIER_TOWN : prec.townId;
+            if (BangUtil.getTownIndex(townId) < serverTownIdx) {
+                log.warning("Rejecting access to town server by " +
+                            "non-ticket-holder [who=" + username +
+                            ", stownId=" + ServerConfig.townId +
+                            ", ptownId=" + townId + "].");
+                rdata.code = NO_TICKET;
+                return;
+            }
+        }
+
+        // check to see whether this account has been banned or if this is
+        // a first time user logging in from a tainted machine
+        int vc = _authrep.validateUser(user, creds.ident, prec == null);
+        switch (vc) {
+            // various error conditions
+            case OOOUserRepository.ACCOUNT_BANNED:
+               rdata.code = BANNED;
+               return;
+            case OOOUserRepository.NEW_ACCOUNT_TAINTED:
+               rdata.code = MACHINE_TAINTED;
+               return;
+        }
+
+        // check whether we're restricting non-insider login
+        if (!RuntimeConfig.server.openToPublic &&
+            !user.holdsToken(OOOUser.INSIDER) &&
+            !user.holdsToken(OOOUser.TESTER) &&
+            !user.isSupportPlus()) {
+            rdata.code = NON_PUBLIC_SERVER;
+            return;
+        }
+
+        // check whether we're restricting non-admin login
+        if (!RuntimeConfig.server.nonAdminsAllowed &&
+            !user.isSupportPlus()) {
+            rdata.code = UNDER_MAINTENANCE;
+            return;
+        }
+
+        // now check their password
+        if (!user.password.equals(creds.getPassword())) {
+            rdata.code = INVALID_PASSWORD;
+            return;
+        }
+
+        // configure a token ring for this user
+        int tokens = 0;
+        if (user.holdsToken(OOOUser.ADMIN)) {
+            tokens |= BangTokenRing.ADMIN;
+            tokens |= BangTokenRing.INSIDER;
+        }
+        if (user.holdsToken(OOOUser.INSIDER)) {
+            tokens |= BangTokenRing.INSIDER;
+        }
+        rsp.authdata = new BangTokenRing(tokens);
+
+        // replace the username in their credentials with the
+        // canonical name in their user record as that username will
+        // later be stuffed into their user object
+        creds.setUsername(new Name(user.username));
+
+        // log.info("User logged on [user=" + user.username + "].");
+        rdata.code = BangAuthResponseData.SUCCESS;
+
+        // pass their player record to the client resolver for retrieval
+        // later in the logging on process
+        if (prec != null) {
+            BangClientResolver.stashPlayer(prec);
         }
     }
 
