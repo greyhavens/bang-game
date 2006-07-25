@@ -218,35 +218,7 @@ public class ParlorManager extends PlaceManager
     // documentation inherited from interface ParlorProvider
     public void leaveMatch (ClientObject caller)
     {
-        // make sure the match wasn't already cancelled
-        if (_parobj.playerOids == null) {
-            return;
-        }
-
-        // clear this player out of the list
-        PlayerObject user = (PlayerObject)caller;
-        int remain = 0;
-        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
-            if (_parobj.playerOids[ii] == user.getOid()) {
-                _parobj.playerOids[ii] = 0;
-            } else if (_parobj.playerOids[ii] > 0) {
-                remain++;
-            }
-        }
-
-        // either remove this player or cancel the match, depending
-        if (remain == 0) {
-            _parobj.setPlayerOids(null);
-        } else {
-            _parobj.setPlayerOids(_parobj.playerOids);
-        }
-
-        // cancel our game start timer
-        if (_starter != null) {
-            _parobj.setStarting(false);
-            _starter.cancel();
-            _starter = null;
-        }
+        clearPlayer(caller.getOid());
     }
 
     @Override // documentation inherited
@@ -303,6 +275,9 @@ public class ParlorManager extends PlaceManager
     {
         super.bodyLeft(bodyOid);
 
+        // clear this player out of the game in case they were in it
+        clearPlayer(bodyOid);
+
         // update our occupant count in the saloon
         publishOccupants();
     }
@@ -312,6 +287,45 @@ public class ParlorManager extends PlaceManager
         if (!_throttle.throttleOp()) {
             _parobj.info.occupants = _parobj.occupantInfo.size();
             _salmgr.parlorUpdated(_parobj.info);
+        }
+    }
+
+    protected void clearPlayer (int playerOid)
+    {
+        // make sure the match wasn't already cancelled
+        if (_parobj.playerOids == null) {
+            return;
+        }
+
+        // clear this player out of the list
+        boolean cleared = false;
+        int remain = 0;
+        for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
+            if (_parobj.playerOids[ii] == playerOid) {
+                _parobj.playerOids[ii] = 0;
+                cleared = true;
+            } else if (_parobj.playerOids[ii] > 0) {
+                remain++;
+            }
+        }
+
+        // if we didn't find this player in the list, stop here
+        if (!cleared) {
+            return;
+        }
+
+        // either remove this player or cancel the match, depending
+        if (remain == 0) {
+            _parobj.setPlayerOids(null);
+        } else {
+            _parobj.setPlayerOids(_parobj.playerOids);
+        }
+
+        // cancel our game start timer
+        if (_starter != null) {
+            _parobj.setStarting(false);
+            _starter.cancel();
+            _starter = null;
         }
     }
 
