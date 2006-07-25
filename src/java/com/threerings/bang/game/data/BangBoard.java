@@ -955,7 +955,7 @@ public class BangBoard extends SimpleStreamableObject
      * specified coordinate.  If remain is false, returns true if the piece
      * can traverse (but not necessarily remain on) the specified coordinate.
      */
-    protected boolean canTravel (Piece piece, int x, int y, boolean remain)
+    public boolean canTravel (Piece piece, int x, int y, boolean remain)
     {
         return canTravel(piece, x, y, x, y, remain);
     }
@@ -966,7 +966,7 @@ public class BangBoard extends SimpleStreamableObject
      * the piece can traverse (but not necessarily remain on) the specified 
      * coordinate.
      */
-    protected boolean canTravel (
+    public boolean canTravel (
             Piece piece, int sx, int sy, int dx, int dy, boolean remain)
     {
         if (!_playarea.contains(dx, dy)) {
@@ -997,7 +997,7 @@ public class BangBoard extends SimpleStreamableObject
     /**
      * Returns true if a unit can move between these two tiles.
      */
-    protected boolean canCross (int sx, int sy, int dx, int dy)
+    public boolean canCross (int sx, int sy, int dx, int dy)
     {
         if (sx == dx && sy == dy) {
             return true;

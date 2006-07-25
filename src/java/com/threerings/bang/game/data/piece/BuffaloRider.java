@@ -5,14 +5,15 @@ package com.threerings.bang.game.data.piece;
 
 import java.awt.Point;
 
+import com.threerings.bang.game.client.sprite.BuffaloRiderSprite;
+import com.threerings.bang.game.client.sprite.PieceSprite;
+
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.MoveShootEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
-
-import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.client.sprite.BuffaloRiderSprite;
 
 import static com.threerings.bang.Log.log;
 
@@ -37,6 +38,14 @@ public class BuffaloRider extends Unit
     public boolean validTarget (Piece target, boolean allowSelf)
     {
         return !target.isAirborne() && super.validTarget(target, allowSelf);
+    }
+
+    @Override // documentation inherited
+    public boolean checkLineOfSight (
+            BangBoard board, int tx, int ty, Piece target)
+    {
+        return board.canCross(tx, ty, target.x, target.y) &&
+            super.checkLineOfSight(board, tx, ty, target);
     }
 
     @Override // documentation inherited
@@ -67,11 +76,14 @@ public class BuffaloRider extends Unit
         short pushy = (short)(2*target.y - ny);
         // If we've moved at least 3 squares then try to push the target
         // If the target can't be pushed then add an extra .25 to the scle
-        if (dist >= 3 && !bangobj.board.isOccupiable(pushx, pushy)) {
+        boolean pushed = false;
+        if (dist >= 3 && bangobj.board.canTravel(
+                    target, target.x, target.y, pushx, pushy, true)) {
+            pushed = true;
             scale += 0.25f;
         }
         ShotEffect shot = super.shoot(bangobj, target, scale);
-        if (dist >= 3 && bangobj.board.isOccupiable(pushx, pushy)) {
+        if (pushed) {
             shot.pushx = pushx;
             shot.pushy = pushy;
         }
