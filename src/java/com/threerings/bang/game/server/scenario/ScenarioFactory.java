@@ -83,11 +83,13 @@ public class ScenarioFactory
             ClaimJumping.class);
         map(ScenarioCodes.CATTLE_RUSTLING, BangCodes.FRONTIER_TOWN,
             CattleRustling.class);
-        map(ScenarioCodes.GOLD_RUSH, BangCodes.FRONTIER_TOWN,
-            GoldRush.class);
+        map(ScenarioCodes.LAND_GRAB, BangCodes.FRONTIER_TOWN,
+            LandGrab.class);
         map(ScenarioCodes.TOTEM_BUILDING, BangCodes.INDIAN_POST,
             TotemBuilding.class);
         map(ScenarioCodes.WENDIGO_ATTACK, BangCodes.INDIAN_POST,
             WendigoAttack.class);
+        map(ScenarioCodes.GOLD_RUSH, BangCodes.BOOM_TOWN,
+            GoldRush.class);
     }
 }

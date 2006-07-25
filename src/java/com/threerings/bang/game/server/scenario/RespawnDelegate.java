@@ -32,14 +32,14 @@ public class RespawnDelegate extends ScenarioDelegate
         _respawnTicks = respawnTicks;
     }
 
-    @Override // documentation inherited
+    @Override // from ScenarioDelegate
     public void roundWillStart (BangObject bangobj)
     {
         // clear our respawn queue
         _respawns.clear();
     }
 
-    @Override // documentation inherited
+    @Override // from ScenarioDelegate
     public void tick (BangObject bangobj, short tick)
     {
         // respawn new pieces
@@ -55,7 +55,7 @@ public class RespawnDelegate extends ScenarioDelegate
             unit.owner = unit.originalOwner;
 
             // figure out where to put this guy
-            Point spot = _parent._startSpots[unit.owner];
+            Point spot = _parent.getStartSpot(unit.owner);
             Point bspot = bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
             if (bspot == null) {
                 log.warning("Unable to locate spawn spot for to-be-respawned " +
@@ -85,7 +85,7 @@ public class RespawnDelegate extends ScenarioDelegate
         }
     }
 
-    @Override // documentation inherited
+    @Override // from ScenarioDelegate
     public void pieceWasKilled (BangObject bangobj, Piece piece)
     {
         if (!(piece instanceof Unit) || ((Unit)piece).originalOwner == -1) {

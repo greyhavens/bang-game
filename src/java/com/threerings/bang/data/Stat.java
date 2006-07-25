@@ -58,6 +58,8 @@ public abstract class Stat
         CATTLE_RUSTLED(new IntStat()),
         BRAND_POINTS(new IntStat()),
         NUGGETS_CLAIMED(new IntStat()),
+        STEADS_CLAIMED(new IntStat()),
+        STEAD_POINTS(new IntStat()),
         TOTEMS_STACKED(new IntStat()),
         TOTEM_POINTS(new IntStat()),
         WENDIGO_SURVIVALS(new IntStat()),

@@ -3,30 +3,22 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.util.geom.BufferUtils;
-
 import com.jme.image.Texture;
-
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
-
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-
 import com.jme.scene.BillboardNode;
 import com.jme.scene.Node;
-
 import com.jme.scene.shape.Quad;
-
 import com.jme.scene.state.TextureState;
+import com.jme.util.geom.BufferUtils;
 
 import com.threerings.bang.data.UnitConfig;
-
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.data.effect.NuggetEffect;
-
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
@@ -114,7 +106,8 @@ public class PieceTarget extends Node
     {
         // sanity check
         if (_attackers == 0 && delta < 0) {
-            log.warning("Requested to decrement attackers but we have none! " +                        "[sprite=" + this + ", pidx=" + pidx +
+            log.warning("Requested to decrement attackers but we have none! " +
+                        "[sprite=" + this + ", pidx=" + pidx +
                         ", delta=" + delta + "].");
             Thread.dumpStack();
             return;

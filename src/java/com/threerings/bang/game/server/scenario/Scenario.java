@@ -273,6 +273,14 @@ public abstract class Scenario
     }
 
     /**
+     * Returns the respawn location for the specified player index.
+     */
+    protected Point getStartSpot (int pidx)
+    {
+        return _startSpots[pidx];
+    }
+
+    /**
      * Locates a place for the specified bonus, based on the current ranking of
      * the various players.
      *

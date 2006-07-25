@@ -30,10 +30,9 @@ import static com.threerings.bang.client.BangMetrics.*;
 import static com.threerings.bang.Log.log;
 
 /**
- * Does something extraordinary.
+ * Displays the totem base for the Totem Building scenario.
  */
-public class TotemBaseSprite extends PropSprite
-    implements Targetable
+public class TotemBaseSprite extends TargetablePropSprite
 {
     public TotemBaseSprite ()
     {
@@ -48,34 +47,10 @@ public class TotemBaseSprite extends PropSprite
     }
 
     @Override // documentation inherited
-    public boolean isHoverable ()
-    {
-        return true;
-    }
-
-    // documentation inherited from Targetable
-    public void setTargeted (TargetMode mode, Unit attacker)
-    {
-        _target.setTargeted(mode, attacker);
-    }
-
-    // documentation inherited from Targetable
-    public void setPendingShot (boolean pending)
-    {
-        _target.setPendingShot(pending);
-    }
-
-    // documentation inherited from Targetable
-    public void configureAttacker ( int pidx, int delta)
-    {
-        _target.configureAttacker(pidx, delta);
-    }
-
-    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
-        
+
         TotemBase base = (TotemBase)piece;
         final int size = _totemPieces.size();
         int baseHeight = base.numPieces();
@@ -85,7 +60,7 @@ public class TotemBaseSprite extends PropSprite
         if (baseHeight < size) {
             _totHeight -= _totemHeights.remove(size - 1);
             Node totemPiece = _totemPieces.remove(size - 1);
-            float height = (size > 1) ? 
+            float height = (size > 1) ?
                 _totHeight - _totemHeights.get(size - 2) : 0f;
             setLocalTranslation(_baseTrans.add(new Vector3f(0, 0, height)));
             detachChild(totemPiece);
@@ -125,15 +100,13 @@ public class TotemBaseSprite extends PropSprite
             });
             attachChild(totemPiece);
             totemPiece.updateRenderState();
-        } 
+        }
         updateRenderState();
-
-        _target.updated(piece, tick);
     }
 
     /**
-     * Adjusts the translations of all the totem pieces to compensate for
-     * the rising node translation.
+     * Adjusts the translations of all the totem pieces to compensate for the
+     * rising node translation.
      */
     protected void adjustTotemPieces ()
     {
@@ -151,21 +124,11 @@ public class TotemBaseSprite extends PropSprite
     protected void createGeometry ()
     {
         super.createGeometry();
-        
-        _tlight = _view.getTerrainNode().createHighlight(
-                        _piece.x, _piece.y, false, false);
-        attachHighlight(_status = new PieceStatus(_ctx, _tlight));
-        updateStatus();
-        _target = new PieceTarget(_piece, _ctx);
-        attachChild(_target);
         _baseTrans = getLocalTranslation();
     }
 
     protected ArrayList<Node> _totemPieces = new ArrayList<Node>();
     protected ArrayList<Float> _totemHeights = new ArrayList<Float>();
     protected float _totHeight;
-
-    protected PieceTarget _target;
-
     protected Vector3f _baseTrans;
 }

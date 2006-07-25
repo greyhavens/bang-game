@@ -21,7 +21,7 @@ public interface ScenarioCodes
     public static final String CLAIM_JUMPING = "cj";
 
     /** The code for the gold rush scenario. */
-    public static final String GOLD_RUSH = "gr";
+    public static final String LAND_GRAB = "lg";
 
     /** The amount of points earned per nugget at the end of the game. */
     public static final int POINTS_PER_NUGGET = 50;
@@ -35,9 +35,12 @@ public interface ScenarioCodes
     /** Points earned at each tick per branded cow. */
     public static final int POINTS_PER_BRAND = 1;
 
+    /** The points earned per claimed homestead at the end of the game. */
+    public static final int POINTS_PER_STEAD = 50;
+
     /** Scenarios available in Frontier Town. */
     public static final String[] FRONTIER_TOWN_SCENARIOS = {
-        CLAIM_JUMPING, CATTLE_RUSTLING, GOLD_RUSH };
+        CLAIM_JUMPING, CATTLE_RUSTLING, LAND_GRAB };
 
     /** The code for the totem building scenario. */
     public static final String TOTEM_BUILDING = "tb";
@@ -55,8 +58,12 @@ public interface ScenarioCodes
     public static final String[] INDIAN_POST_SCENARIOS = { 
         TOTEM_BUILDING, WENDIGO_ATTACK };
 
+    /** The code for the gold rush scenario. */
+    public static final String GOLD_RUSH = "gr";
+
     /** Scenarios available in Boom Town. */
-    public static final String[] BOOM_TOWN_SCENARIOS = { };
+    public static final String[] BOOM_TOWN_SCENARIOS = {
+        GOLD_RUSH };
 
     /** Scenarios available in Ghost Town. */
     public static final String[] GHOST_TOWN_SCENARIOS = { };
