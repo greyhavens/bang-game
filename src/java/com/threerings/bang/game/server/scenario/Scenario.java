@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
@@ -176,7 +177,13 @@ public abstract class Scenario
     {
         // allow our delegates to participate
         for (ScenarioDelegate delegate : _delegates) {
-            delegate.tick(bangobj, tick);
+            try {
+                delegate.tick(bangobj, tick);
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Delegate choked on tick " +
+                        "[game=" + _bangmgr.where() + ", tick=" + tick +
+                        ", delegate=" + delegate + "].", e);
+            }
         }
     }
 

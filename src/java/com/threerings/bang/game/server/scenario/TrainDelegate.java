@@ -24,6 +24,8 @@ import com.threerings.bang.game.data.piece.Train;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PieceUtil;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Handles the behavior of trains.
  */
@@ -163,21 +165,28 @@ public class TrainDelegate extends ScenarioDelegate
         }
         
         // find the adjacent pieces of track, excluding the one behind, and
-        // chooise one randomly
-        Track[] adjacent = bangobj.getTracks().get(
-            Piece.coord(train.nextX, train.nextY)).getAdjacent(bangobj);
-        Track behind = null;
-        for (int ii = 0; ii < adjacent.length; ii++) {
-            if (train.intersects(adjacent[ii])) {
-                behind = adjacent[ii];
-                break;
+        // choose one randomly
+        Track nnext = null, next = bangobj.getTracks().get(
+            Piece.coord(train.nextX, train.nextY));
+        if (next != null) {
+            Track[] adjacent = next.getAdjacent(bangobj);
+            Track behind = null;
+            for (int ii = 0; ii < adjacent.length; ii++) {
+                if (train.intersects(adjacent[ii])) {
+                    behind = adjacent[ii];
+                    break;
+                }
             }
+            nnext = (behind == null) ? RandomUtil.pickRandom(adjacent) :
+                RandomUtil.pickRandom(adjacent, behind);
+
+        } else {
+            log.warning("Train configured to move to non-existent track!? " +
+                        "[in=" + _bangmgr.where() + ", train=" + train + "].");
         }
-        Track next = (behind == null) ? RandomUtil.pickRandom(adjacent) :
-            RandomUtil.pickRandom(adjacent, behind);
-        
+
         // if there's nowhere to go, flag to disappear on next tick
-        if (next == null) {
+        if (nnext == null) {
             moveTrain(bangobj, train, Train.UNSET, Train.UNSET);
         } else {
             moveTrain(bangobj, train, next.x, next.y);
