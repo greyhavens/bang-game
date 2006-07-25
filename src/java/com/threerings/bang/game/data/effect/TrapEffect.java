@@ -117,9 +117,12 @@ public class TrapEffect extends BonusEffect
      */
     protected int getDamage (Piece piece)
     {
-        return Math.min(50, 100-piece.damage);
+        return Math.min(TRAP_DAMAGE, 100-piece.damage);
     }
     
     /** The type of the trap. */
     protected transient String _type;
+
+    /** The amount of damage done by the trap. */
+    protected static final int TRAP_DAMAGE = 50;
 }
