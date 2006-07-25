@@ -987,8 +987,8 @@ public class BangBoard extends SimpleStreamableObject
                 piece instanceof Train) {
             return true;
         } else if ((tstate == O_FLAT) ||
-                   (piece instanceof Unit && tstate == O_BONUS) ||
-                   (tstate == piece.owner && _btstate[idx] == O_FLAT)) {
+               (piece instanceof Unit && tstate == O_BONUS) ||
+               (tstate == piece.owner && _btstate[idx] == O_FLAT && !remain)) {
             return canCross(sx, sy, dx, dy);
         }
         return false;

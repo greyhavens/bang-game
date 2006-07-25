@@ -56,7 +56,7 @@ public class Practice extends Scenario
 
         // The user gets 3 units of the specified type
         BangConfig bconfig = (BangConfig)_bangmgr.getConfig();
-        Unit[] units = new Unit[3];
+        Unit[] units = new Unit[NUM_UNITS];
         for (int ii = 0; ii < units.length; ii++) {
             units[ii] = Unit.getUnit(bconfig.scenarios[0]);
         }
@@ -71,7 +71,7 @@ public class Practice extends Scenario
         UnitConfig[] ucs = UnitConfig.getTownUnits(bangobj.townId);
         int[] weights = new int[ucs.length];
         Arrays.fill(weights, 1);
-        units = new Unit[3];
+        units = new Unit[NUM_UNITS];
         for (int ii = 0; ii < units.length; ii++) {
             int idx = RandomUtil.getWeightedIndex(weights);
             units[ii] = Unit.getUnit(ucs[idx].type);
@@ -117,4 +117,6 @@ public class Practice extends Scenario
         // but we do want to make sure they end eventually
         return 4000;
     }
+
+    protected static final int NUM_UNITS = 3;
 }

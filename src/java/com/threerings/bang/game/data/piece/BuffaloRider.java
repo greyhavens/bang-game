@@ -70,7 +70,7 @@ public class BuffaloRider extends Unit
     protected ShotEffect shoot (BangObject bangobj, Piece target, 
             float scale, short nx, short ny)
     {
-        int dist = getDistance(x, y, nx, ny);
+        int dist = getDistance(x, y, target.x, target.y) - 1;
         scale *= (0.25f + 0.25f * dist);
         short pushx = (short)(2*target.x - nx);
         short pushy = (short)(2*target.y - ny);

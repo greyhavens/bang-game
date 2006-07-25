@@ -429,7 +429,7 @@ public abstract class Piece extends SimpleStreamableObject
     {
         // create a basic shot effect
         int damage = computeScaledDamage(target, scale);
-        ShotEffect shot = generateShotEffect(target, damage);
+        ShotEffect shot = generateShotEffect(bangobj, target, damage);
         // give the target a chance to deflect the shot
         return target.deflect(bangobj, this, shot, scale);
     }
@@ -788,7 +788,8 @@ public abstract class Piece extends SimpleStreamableObject
     /**
      * Generate a shot effect for this piece.
      */
-    protected ShotEffect generateShotEffect (Piece target, int damage)
+    protected ShotEffect generateShotEffect (
+            BangObject bangobj, Piece target, int damage)
     {
         return new ShotEffect(this, target, damage,
                 attackInfluenceIcon(), defendInfluenceIcon(target));
