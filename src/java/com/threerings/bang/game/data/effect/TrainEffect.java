@@ -93,7 +93,7 @@ public class TrainEffect extends Effect
             deathEffect.apply(bangobj, obs);
         }
         Piece target = bangobj.pieces.get(targetId);
-        _wasAlive = (target == null) ? false : target.isAlive();
+        _wasAlive = (target != null) && target.isAlive();
         return collide(bangobj, obs, -1, targetId, COLLISION_DAMAGE,
                        x, y, DAMAGED);
     }
