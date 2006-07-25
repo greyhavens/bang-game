@@ -90,7 +90,7 @@ public class StatsView extends SteelWindow
         _buttons.add(_closeBtn);
 
         _contents.setLayoutManager(new BorderLayout());
-        _contents.setPreferredSize(CONTENT_DIMENSION);
+        _contents.setPreferredSize(CONTENT_DIMS);
         
         // add forward and back buttons
         GroupLayout hlay = GroupLayout.makeHoriz(GroupLayout.RIGHT);
@@ -160,27 +160,36 @@ public class StatsView extends SteelWindow
      */
     protected void loadGameData ()
     {
+        String oipath = null, sipath = null;
+
         if (ScenarioUtil.cattleRustling(_bobj.scenarioId)) {
-            _objectiveIcon = new ImageIcon(_ctx.loadImage(
-                        "ui/postgame/icons/cattle.png"));
+            oipath = "ui/postgame/icons/cattle.png";
             _objectiveTitle = "m.title_cattle_rustled";
             _objectivePoints = "m.cattle_points";
             _statType = Stat.Type.CATTLE_RUSTLED;
             _ppo = ScenarioCodes.POINTS_PER_COW;
             _secStatType = Stat.Type.BRAND_POINTS;
-            _secIcon = new ImageIcon(_ctx.loadImage(
-                        "ui/postgame/icons/brand.png"));
+            sipath = "ui/postgame/icons/brand.png";
+
         } else if (ScenarioUtil.nuggetClaiming(_bobj.scenarioId)) {
-            _objectiveIcon = new ImageIcon(_ctx.loadImage(
-                        "ui/postgame/icons/nugget.png"));
+            oipath = "ui/postgame/icons/nugget.png";
             _objectiveTitle = "m.title_nuggets_claimed";
             _objectivePoints = "m.nugget_points";
             _statType = Stat.Type.NUGGETS_CLAIMED;
             _ppo = ScenarioCodes.POINTS_PER_NUGGET;
             _secStatType = null;
+
+        } else if (ScenarioUtil.landGrabbing(_bobj.scenarioId)) {
+            oipath = "ui/postgame/icons/nugget.png";
+            _objectiveTitle = "m.title_steads_claimed";
+            _objectivePoints = "m.stead_points";
+            _statType = Stat.Type.STEADS_CLAIMED;
+            _ppo = ScenarioCodes.POINTS_PER_STEAD;
+            _secStatType = Stat.Type.STEAD_POINTS;
+            sipath = "ui/postgame/icons/brand.png";
+
         } else if (ScenarioUtil.totemBuilding(_bobj.scenarioId)) {
-            _objectiveIcon = new ImageIcon(_ctx.loadImage(
-                        "ui/postgame/icons/nugget.png"));
+            oipath = "ui/postgame/icons/nugget.png";
             _objectiveTitle = "m.title_totem_stacked";
             _objectivePoints = "m.totem_points";
             _statType = Stat.Type.TOTEMS_STACKED;
@@ -188,16 +197,22 @@ public class StatsView extends SteelWindow
             _secStatType = Stat.Type.TOTEM_POINTS;
             _secIcon = new ImageIcon(_ctx.loadImage(
                         "ui/postgame/icons/brand.png"));
+
         } else if (ScenarioUtil.wendigoAttack(_bobj.scenarioId)) {
-            _objectiveIcon = new ImageIcon(_ctx.loadImage(
-                        "ui/postgame/icons/nugget.png"));
+            oipath = "ui/postgame/icons/nugget.png";
             _objectiveTitle = "m.title_wendigo_survivals";
             _objectivePoints = "m.survival_points";
             _statType = Stat.Type.WENDIGO_SURVIVALS;
             _ppo = ScenarioCodes.POINTS_PER_SURVIVAL;
             _secStatType = Stat.Type.TALISMAN_POINTS;
-            _secIcon = new ImageIcon(_ctx.loadImage(
-                        "ui/postgame/icons/brand.png"));
+            sipath = "ui/postgame/icons/brand.png";
+        }
+
+        if (oipath != null) {
+            _objectiveIcon = new ImageIcon(_ctx.loadImage(oipath));
+        }
+        if (sipath != null) {
+            _secIcon = new ImageIcon(_ctx.loadImage(sipath));
         }
     }
 
@@ -251,7 +266,7 @@ public class StatsView extends SteelWindow
         _header.setPreferredSize(new Dimension(300, HEADER_HEIGHT));
 
         setContents(_objcont = new BContainer());
-        _objcont.setPreferredSize(TABLE_DIMENSION);
+        _objcont.setPreferredSize(TABLE_DIMS);
         _objcont.setLayoutManager(new TableLayout(3, 2, 3));
 
         int maxobjectives = 0;
@@ -418,7 +433,7 @@ public class StatsView extends SteelWindow
             int size = _bobj.players.length;
 
             setContents(_ptscont = new BContainer(new TableLayout(8, 2, 5)));
-            _ptscont.setPreferredSize(TABLE_DIMENSION);
+            _ptscont.setPreferredSize(TABLE_DIMS);
 
             // add the titles
             if (_bobj.roundId > 1 || _bobj.state != BangObject.GAME_OVER) {
@@ -539,7 +554,7 @@ public class StatsView extends SteelWindow
         hlay.setOffAxisJustification(GroupLayout.TOP);
         hlay.setGap(10);
         statcont = new BContainer(hlay);
-        statcont.setPreferredSize(TABLE_DIMENSION);
+        statcont.setPreferredSize(TABLE_DIMS);
         setContents(statcont);
         _statmap.put(round, statcont);
 
@@ -736,21 +751,20 @@ public class StatsView extends SteelWindow
     protected static final long OBJECTIVE_DISPLAY = 2000L;
     protected static final int MAX_ICONS = 6;
 
-    protected static final Dimension TABLE_DIMENSION = new Dimension(630, 300);
-    protected static final Dimension CONTENT_DIMENSION =
-        new Dimension(630, 500);
+    protected static final Dimension TABLE_DIMS = new Dimension(630, 300);
+    protected static final Dimension CONTENT_DIMS = new Dimension(630, 500);
     protected static final int HEADER_HEIGHT = 40;
     protected static final int GRID_HEIGHT = 100;
     protected static final int NUM_VIEWABLE_COLS = 6;
 
-
     protected static final Stat.Type[] BASE_STAT_TYPES = {
-            Stat.Type.DAMAGE_DEALT, Stat.Type.UNITS_KILLED,
-            Stat.Type.BONUSES_COLLECTED, Stat.Type.CARDS_PLAYED,
-            Stat.Type.DISTANCE_MOVED, Stat.Type.SHOTS_FIRED,
-            Stat.Type.UNITS_LOST, Stat.Type.CATTLE_RUSTLED,
-            Stat.Type.BRAND_POINTS, Stat.Type.NUGGETS_CLAIMED,
-            Stat.Type.TOTEMS_STACKED, Stat.Type.TOTEM_POINTS,
-            Stat.Type.WENDIGO_SURVIVALS, Stat.Type.TALISMAN_POINTS
+        Stat.Type.DAMAGE_DEALT, Stat.Type.UNITS_KILLED,
+        Stat.Type.BONUSES_COLLECTED, Stat.Type.CARDS_PLAYED,
+        Stat.Type.DISTANCE_MOVED, Stat.Type.SHOTS_FIRED,
+        Stat.Type.UNITS_LOST, Stat.Type.CATTLE_RUSTLED,
+        Stat.Type.BRAND_POINTS, Stat.Type.NUGGETS_CLAIMED,
+        Stat.Type.STEADS_CLAIMED, Stat.Type.STEAD_POINTS,
+        Stat.Type.TOTEMS_STACKED, Stat.Type.TOTEM_POINTS,
+        Stat.Type.WENDIGO_SURVIVALS, Stat.Type.TALISMAN_POINTS
     };
 }

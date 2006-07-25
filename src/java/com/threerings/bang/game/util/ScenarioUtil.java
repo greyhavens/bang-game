@@ -100,6 +100,14 @@ public class ScenarioUtil
     }
 
     /**
+     * Returns true if this scenario involves land grabbin'.
+     */
+    public static boolean landGrabbing (String scenarioId)
+    {
+        return (ScenarioCodes.LAND_GRAB.equals(scenarioId));
+    }
+
+    /**
      * Returns true if this scenario involves totem building.
      */
     public static boolean totemBuilding (String scenarioId)
