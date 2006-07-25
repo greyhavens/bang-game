@@ -36,7 +36,6 @@ if (! -d $jhome || ! -x "$jhome/bin/java") {
 
 my $java = "$jhome/bin/java";
 my $jlib = "$jhome/lib/classes.zip";
-my $jargs = "";
 
 # determine our machine architecture
 my $ostype = `uname -s`;
@@ -47,13 +46,7 @@ my $arch = "$machtype-$ostype";
 
 # add our native libraries to the runtime library path
 my $libs = "$root/lib/$arch";
-my $libpath = $ENV{"LD_LIBRARY_PATH"};
-
-if (defined $libpath) {
-    $ENV{"LD_LIBRARY_PATH"} = "$libs:$libpath";
-} else {
-    $ENV{"LD_LIBRARY_PATH"} = $libs;
-}
+my $jargs = "-Djava.library.path='$libs'";
 
 # the classpath needs to start with .
 my $classpath = "$root:$root/dist/classes";
