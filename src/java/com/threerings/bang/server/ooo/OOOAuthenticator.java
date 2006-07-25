@@ -67,7 +67,7 @@ public class OOOAuthenticator extends Authenticator
 
     // from abstract Authenticator
     protected void processAuthentication (
-            AuthingConnection conn, final AuthResponse rsp)
+            AuthingConnection conn, AuthResponse rsp)
         throws PersistenceException
     {
         AuthRequest req = conn.getAuthRequest();
@@ -90,15 +90,6 @@ public class OOOAuthenticator extends Authenticator
         if (svers != cvers) {
             if (cvers > svers) {
                 rdata.code = NEWER_VERSION;
-            } else {
-                // TEMP: an ugly hack to force the use of the old
-                // auth response data to avoid freaking out older clients
-                new AuthResponse() {
-                    { // initializer
-                        // gosh it's easy to access fuck with things
-                        rsp._data = new AuthResponseData();
-                    }
-                };
                 rsp.getData().code = MessageBundle.tcompose(
                     VERSION_MISMATCH, "" + svers);
             }
@@ -112,7 +103,6 @@ public class OOOAuthenticator extends Authenticator
         BangCredentials creds;
         try {
             creds = (BangCredentials) req.getCredentials();
-
         } catch (ClassCastException cce) {
             log.warning("Invalid creds " + req.getCredentials() + ".");
             rdata.code = SERVER_ERROR;
