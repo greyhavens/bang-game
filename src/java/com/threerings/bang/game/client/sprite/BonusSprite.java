@@ -9,6 +9,7 @@ import com.jme.scene.Spatial;
 
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.util.SoundUtil;
@@ -59,7 +60,7 @@ public class BonusSprite extends MobileSprite
         // if the bonus emits particles while on the board, load those up
         // as well
         String effect = BonusConfig.getConfig(_name).particleEffect;
-        if (effect != null) {
+        if (effect != null && BangPrefs.isHighDetail()) {
             _ctx.loadEffect(effect, new ResultAttacher<Spatial>(this) {
                 public void requestCompleted (Spatial result) {
                     super.requestCompleted(result);

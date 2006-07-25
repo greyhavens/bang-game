@@ -562,7 +562,9 @@ public class MobileSprite extends PieceSprite
         
         } else if (_action.equals(RESPAWNED)) {
             // fade the unit in and display the resurrection effect
-            displayParticles("frontier_town/resurrection", false);
+            if (BangPrefs.isMediumDetail()) {
+                displayParticles("frontier_town/resurrection", false);
+            }
             startGroundFade(true, RESPAWN_DURATION);
             
         } else {

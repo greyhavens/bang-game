@@ -12,6 +12,7 @@ import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
@@ -200,7 +201,7 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // perhaps load a generic particle effect
-        if (effect.startsWith("effects/")) {
+        if (effect.startsWith("effects/") && BangPrefs.isMediumDetail()) {
             String name = effect.substring(8);
             if (_ctx.getEffectCache().haveEffect(name)) {
                 sprite.displayParticles(name, true);

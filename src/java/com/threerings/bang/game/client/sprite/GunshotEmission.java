@@ -126,7 +126,7 @@ public class GunshotEmission extends SpriteEmission
         BasicContext ctx, BoardView view, PieceSprite sprite)
     {
         super.setSpriteRefs(ctx, view, sprite);
-        if (_effect != null) {
+        if (_effect != null && BangPrefs.isHighDetail()) {
             _ctx.loadEffect(_effect,
                 new ResultAttacher<Spatial>(_model.getEmissionNode()) {
                 public void requestCompleted (Spatial result) {
