@@ -116,7 +116,10 @@ public class BoardInfo extends JPanel
         // then turn on the ones that are valid for this board
         String[] scids = board.getScenarios();
         for (int ii = 0; ii < scids.length; ii++) {
-            _sboxes.get(scids[ii]).setSelected(true);
+            JCheckBox box = _sboxes.get(scids[ii]);
+            if (box != null) {
+                box.setSelected(true);
+            }
         }
     }
 
