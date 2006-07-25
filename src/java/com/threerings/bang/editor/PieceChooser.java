@@ -5,7 +5,8 @@ package com.threerings.bang.editor;
 
 import java.awt.Color;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 import java.util.Comparator;
 
 import javax.swing.BorderFactory;
@@ -14,11 +15,12 @@ import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.border.EtchedBorder;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.samskivert.swing.VGroupLayout;
-import com.samskivert.util.QuickSort;
+import com.samskivert.util.ListUtil;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PropConfig;
@@ -43,7 +45,7 @@ public class PieceChooser extends JPanel
 
         add(new JLabel(_ctx.xlate("editor", "m.pieces")));
 
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+        PieceCategory root = new PieceCategory("", "");
         
         addPiece(root, "viewpoint", new Viewpoint());
         addPiece(root, "markers/start", new Marker(Marker.START));
@@ -53,17 +55,11 @@ public class PieceChooser extends JPanel
         addPiece(root, "markers/totem", new Marker(Marker.TOTEM));
         addPiece(root, "markers/safe", new Marker(Marker.SAFE));
         
-        ArrayList<PropConfig> configs =
-            new ArrayList<PropConfig>(PropConfig.getConfigs());
-        QuickSort.sort(configs, new Comparator<PropConfig>() {
-            public int compare (PropConfig prop1, PropConfig prop2) {
-                return prop1.type.compareTo(prop2.type);
-            }
-        });
-        for (PropConfig config : configs) {
+        for (PropConfig config : PropConfig.getConfigs()) {
             addPiece(root, config.type, Prop.getProp(config.type));
         }
-
+        root.sortChildren();
+        
         _tree = new JTree(root);
         _tree.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         _tree.setRootVisible(false);
@@ -81,10 +77,8 @@ public class PieceChooser extends JPanel
         if (path == null) {
             return null;
         }
-        DefaultMutableTreeNode node =
-            ((DefaultMutableTreeNode)path.getLastPathComponent());
-        return (node.getUserObject() instanceof NamedPiece) ?
-            ((NamedPiece)node.getUserObject()).piece : null;
+        PieceCategory node = ((PieceCategory)path.getLastPathComponent());
+        return (node instanceof NamedPiece) ? ((NamedPiece)node).piece : null;
     }
     
     /**
@@ -92,43 +86,36 @@ public class PieceChooser extends JPanel
      *
      * @param type the slash-delimited hierarchical type
      */
-    protected void addPiece (DefaultMutableTreeNode root, String type,
-        Piece piece)
+    protected void addPiece (PieceCategory root, String type, Piece piece)
     {
         String prefix = "";
-        if (root.getUserObject() instanceof PieceCategory &&
-            !((PieceCategory)root.getUserObject()).townCategory) {
-            prefix = ((PieceCategory)root.getUserObject()).key + "_";
+        if (root.getParent() != null && !root.townCategory) {
+            prefix = root.key + "_";
         }
         
         int idx = type.indexOf('/');
         if (idx == -1) {
-            root.add(new DefaultMutableTreeNode(
-                new NamedPiece(type, prefix + type, piece), false));
+            root.add(new NamedPiece(type, prefix + type, piece));
             return;
         }
         
         String cat = type.substring(0, idx);
-        DefaultMutableTreeNode child = null;
-        for (int i = 0, count = root.getChildCount(); i < count; i++) {
-            DefaultMutableTreeNode node =
-                (DefaultMutableTreeNode)root.getChildAt(i);
-            if (node.getUserObject() instanceof PieceCategory &&
-                ((PieceCategory)node.getUserObject()).name.equals(cat)) {
+        PieceCategory child = null;
+        for (int ii = 0, nn = root.getChildCount(); ii < nn; ii++) {
+            PieceCategory node = (PieceCategory)root.getChildAt(ii);
+            if (node.name.equals(cat)) {
                 child = node;
                 break;
             }
         }
         if (child == null) {
-            child = new DefaultMutableTreeNode(
-                new PieceCategory(cat, prefix + cat));
-            root.add(child);
+            root.add(child = new PieceCategory(cat, prefix + cat));
         }
         addPiece(child, type.substring(idx + 1), piece);
     }
     
     /** Used to group pieces. */
-    protected class PieceCategory
+    protected class PieceCategory extends DefaultMutableTreeNode
     {
         public String name, key;
         public boolean townCategory;
@@ -137,13 +124,7 @@ public class PieceChooser extends JPanel
         {
             this.name = name;
             this.key = key;
-
-            for (String townId : BangCodes.TOWN_IDS) {
-                if (townId.equals(key)) {
-                    townCategory = true;
-                    break;
-                }
-            }
+            townCategory = ListUtil.contains(BangCodes.TOWN_IDS, key);
         }
         
         public String toString ()
@@ -151,6 +132,23 @@ public class PieceChooser extends JPanel
             String msg = "m.piece_" + key;
             return _ctx.getMessageManager().getBundle("editor").exists(msg) ?
                 _ctx.xlate("editor", msg) : name;
+        }
+        
+        /**
+         * Recursively sorts the children of this node by their names.
+         */
+        public void sortChildren ()
+        {
+            if (children == null) {
+                return;
+            }
+            if (getParent() != null) { // keep top level in original order
+                @SuppressWarnings("unchecked") List<Object> list = children;
+                Collections.sort(list, NAME_COMPARATOR);
+            }
+            for (Object child : children) {
+                ((PieceCategory)child).sortChildren();
+            }
         }
     }
     
@@ -163,9 +161,18 @@ public class PieceChooser extends JPanel
         {
             super(name, key);
             this.piece = piece;
+            allowsChildren = false;
         }
     }
     
     protected BasicContext _ctx;
     protected JTree _tree;
+    
+    /** Compares objects by their string representations. */
+    protected static final Comparator<Object> NAME_COMPARATOR =
+        new Comparator<Object>() {
+        public int compare (Object o1, Object o2) {
+            return o1.toString().compareTo(o2.toString());
+        }
+    };
 }
