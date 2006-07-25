@@ -10,6 +10,7 @@ import com.samskivert.util.RandomUtil;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ShotEffect;
+import com.threerings.bang.game.data.effect.BallisticShotEffect;
 
 import static com.threerings.bang.Log.log;
 
@@ -33,18 +34,9 @@ public class Tactician extends Unit
     public ShotEffect deflect (BangObject bangobj, Piece shooter,
                                ShotEffect effect, float scale)
     {
-        // if it has been less than one one full turn since we fired, our
-        // umbrella is "in use" and we don't deflect anything
-        if ((bangobj.tick - lastFired) < getTicksPerMove()) {
-            return effect;
-        }
-
         // we only deflect fire from range units
-        if (!(shooter instanceof Unit)) {
-            return effect;
-        }
-        Unit ushooter = (Unit)shooter;
-        if (ushooter.getConfig().mode != UnitConfig.Mode.RANGE) {
+        if (!(shooter instanceof Unit) || 
+                !(effect instanceof BallisticShotEffect)) {
             return effect;
         }
 

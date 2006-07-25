@@ -79,7 +79,7 @@ public abstract class ShotHandler extends EffectHandler
     public void pieceMoved (Piece piece)
     {
         MobileSprite ms = null;
-        if (_shot.pushx != -1) {
+        if (_shot.pushx != -1 && _shot.pushAnim) {
             PieceSprite sprite = _view.getPieceSprite(piece);
             if (sprite != null && sprite instanceof MobileSprite) {
                 ms = (MobileSprite)sprite;

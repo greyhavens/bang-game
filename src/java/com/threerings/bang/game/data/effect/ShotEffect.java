@@ -106,7 +106,10 @@ public class ShotEffect extends Effect
 
     /** Direction location the target is pushed. */
     public short pushx = -1, pushy = -1;
-    
+
+    /** If the target should use the push animation. */
+    public boolean pushAnim = true;
+
     /**
      * Constructor used when creating a new shot effect.
      *
@@ -280,8 +283,7 @@ public class ShotEffect extends Effect
         }
 
         // finally do the damage
-        String effect = shooter.getConfig().mode == UnitConfig.Mode.RANGE ?
-            EXPLODED : DAMAGED;
+        String effect = getEffect();
         if (pushx != -1) {
             return collide(bangobj, obs, shooter.owner, target, newDamage,
                     pushx, pushy, effect);
@@ -292,19 +294,15 @@ public class ShotEffect extends Effect
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
-        Unit shooter = (Unit)bangobj.pieces.get(shooterId);
-        if (shooter == null) {
-            log.warning("Missing shooter for shot effect! " +
-                        "[effect=" + this + "].");
-            return null;
-        }
-        if (shooter.getConfig().mode == UnitConfig.Mode.RANGE) {
-            return new BallisticShotHandler();
-        } else {
-            return new InstantShotHandler();
-        }
+        return new InstantShotHandler();
     }
     
+    /** The effect string. */
+    protected String getEffect ()
+    {
+        return DAMAGED;
+    }
+
     /** Helper function for setting targets. */
     protected short[] append (short[] array, short value)
     {

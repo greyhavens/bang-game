@@ -1054,10 +1054,22 @@ public class BangBoard extends SimpleStreamableObject
      */
     public void computeMoves (Piece piece, PointSet moves, PointSet attacks)
     {
+        computeMoves(piece, moves, attacks, piece.getMoveDistance());
+    }
+
+    /**
+     * Computes the supplied piece's move sets based on its current
+     * location and the state of the board. A set of attackable locations
+     * is also computed, but note that these do not take into account a
+     * piece's minimum fire distance. Targets made unfirable due to being
+     * too close must be pruned by the caller.
+     */
+    public void computeMoves (
+            Piece piece, PointSet moves, PointSet attacks, int mdist)
+    {
         // clear out the planning grid
         Arrays.fill(_pgrid, (byte)0);
 
-        int mdist = piece.getMoveDistance();
 //         log.info("Recomputing sets for " + piece.info() +
 //                  " [mdist=" + mdist + "].");
 
