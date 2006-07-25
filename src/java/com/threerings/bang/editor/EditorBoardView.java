@@ -711,6 +711,7 @@ public class EditorBoardView extends BoardView
         }
         _board.setWindParams(direction, speed);
         _wnode.refreshWaveAmplitudes();
+        refreshWindInfluence();
     }
 
     /**

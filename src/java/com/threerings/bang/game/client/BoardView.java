@@ -59,6 +59,10 @@ import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseMotionListener;
 import com.jmex.bui.layout.BorderLayout;
 
+import com.jmex.effects.particles.ParticleGeometry;
+import com.jmex.effects.particles.ParticleInfluence;
+import com.jmex.effects.particles.SimpleParticleInfluenceFactory;
+
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.RandomUtil;
@@ -206,6 +210,10 @@ public class BoardView extends BComponent
             bnode.attachChild(_wnode);
         }
 
+        // create the shared wind influence
+        _wind = new SimpleParticleInfluenceFactory.BasicWind(
+            0f, new Vector3f(), true, false);
+        
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));
         _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -283,9 +291,10 @@ public class BoardView extends BComponent
             createMarquee(_bangobj.boardName);
         }
 
-        // refresh the lights and fog
+        // refresh the lights and fog and wind
         refreshLights();
         refreshFog();
+        refreshWindInfluence();
         
         // create the board geometry
         if (_snode != null) {
@@ -480,6 +489,23 @@ public class BoardView extends BComponent
         ColorRGBA gcolor = RenderUtil.getGroundColor(_ctx, terrain.code);
         result.set(result.r * gcolor.r, result.g * gcolor.g,
             result.b * gcolor.b, terrain.dustiness);
+    }
+    
+    /**
+     * Adds the board's wind influence to all particle systems under the
+     * given node.
+     */
+    public void addWindInfluence (Spatial spatial)
+    {
+        if (spatial instanceof ParticleGeometry) {
+            ((ParticleGeometry)spatial).addInfluence(_wind);
+            
+        } else if (spatial instanceof Node) {
+            Node node = (Node)spatial;
+            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                addWindInfluence(node.getChild(ii));
+            }
+        }
     }
     
     /**
@@ -999,6 +1025,18 @@ public class BoardView extends BComponent
         }
         fstate.setColor(RenderUtil.createColorRGBA(_board.getFogColor()));
         fstate.setDensity(density);
+    }
+    
+    /**
+     * Refreshes the shared wind influence according to the board's wind
+     * parameters.
+     */
+    protected void refreshWindInfluence ()
+    {
+        float wdir = _board.getWindDirection();
+        _wind.getWindDirection().set(
+            -FastMath.cos(wdir), -FastMath.sin(wdir), 0f);
+        _wind.setStrength(_board.getWindSpeed() * 0.0005f);
     }
     
     /**
@@ -1552,6 +1590,7 @@ public class BoardView extends BComponent
     protected SkyNode _snode;
     protected TerrainNode _tnode;
     protected WaterNode _wnode;
+    protected SimpleParticleInfluenceFactory.BasicWind _wind;
     protected Vector3f _worldMouse;
     protected Ray _pray = new Ray();
     protected TrianglePickResults _pick = new TrianglePickResults();

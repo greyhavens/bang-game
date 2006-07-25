@@ -433,6 +433,7 @@ public class MobileSprite extends PieceSprite
         _dust.setParticleSpinSpeed(0.05f);
         _dust.setStartSize(TILE_SIZE / 5);
         _dust.setEndSize(TILE_SIZE / 3);
+        _view.addWindInfluence(_dust);
         _dust.setModelBound(new BoundingBox());
         _dust.setIsCollidable(false);
         if (_dusttex == null) {

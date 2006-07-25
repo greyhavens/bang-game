@@ -26,7 +26,10 @@ import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
 
 import com.threerings.bang.client.BangPrefs;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
+
+import com.threerings.bang.game.client.BoardView;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -91,6 +94,14 @@ public class SmokePlumeEmission extends SpriteEmission
         _smoke.updateRenderState();
         
         super.init(model);
+    }
+    
+    @Override // documentation inherited
+    public void setSpriteRefs (
+        BasicContext ctx, BoardView view, PieceSprite sprite)
+    {
+        super.setSpriteRefs(ctx, view, sprite);
+        view.addWindInfluence(_smoke);
     }
     
     @Override // documentation inherited

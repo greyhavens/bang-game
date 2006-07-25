@@ -35,6 +35,8 @@ public class ParticleEmission extends SpriteEmission
     {
         super.configure(props, target);
         _effect = props.getProperty("effect");
+        _windInfluenced = Boolean.parseBoolean(
+            props.getProperty("wind_influenced"));
     }
     
     @Override // documentation inherited
@@ -55,6 +57,9 @@ public class ParticleEmission extends SpriteEmission
                 public void requestCompleted (Spatial result) {
                     super.requestCompleted(result);
                     _particles = result;
+                    if (_windInfluenced) {
+                        _view.addWindInfluence(_particles);
+                    }
                     if (!isActive()) {
                         setReleaseRates(_particles);
                     }
@@ -84,6 +89,7 @@ public class ParticleEmission extends SpriteEmission
         }
         super.putClone(pstore, properties);
         pstore._effect = _effect;
+        pstore._windInfluenced = _windInfluenced;
         return pstore;
     }
     
@@ -93,6 +99,7 @@ public class ParticleEmission extends SpriteEmission
     {
         super.writeExternal(out);
         out.writeObject(_effect);
+        out.writeBoolean(_windInfluenced);
     }
     
     @Override // documentation inherited
@@ -101,6 +108,7 @@ public class ParticleEmission extends SpriteEmission
     {
         super.readExternal(in);
         _effect = (String)in.readObject();
+        _windInfluenced = in.readBoolean();
     }
     
     // documentation inherited
@@ -164,6 +172,9 @@ public class ParticleEmission extends SpriteEmission
     
     /** The type of effect to create. */
     protected String _effect;
+    
+    /** Whether or not the effect should be influenced by the board wind. */
+    protected boolean _windInfluenced;
     
     /** The model to which we're attached. */
     protected Model _model;
