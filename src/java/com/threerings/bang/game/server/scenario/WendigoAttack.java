@@ -5,6 +5,7 @@ package com.threerings.bang.game.server.scenario;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import java.awt.Rectangle;
 
@@ -24,6 +25,7 @@ import com.threerings.bang.game.data.effect.TalismanEffect;
 import com.threerings.bang.game.data.effect.WendigoEffect;
 
 import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
@@ -76,6 +78,26 @@ public class WendigoAttack extends Scenario
     }
 
     @Override // documentation inherited
+    public void filterPieces (BangObject bangobj, ArrayList<Piece> starts,
+                              ArrayList<Piece> pieces)
+    {
+        super.filterPieces(bangobj, starts, pieces);
+
+        // extract and remove all the safe spots
+        _safePoints.clear();
+        for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = iter.next();
+            if (Marker.isMarker(p, Marker.SAFE)) { 
+                _safePoints.add(p.x, p.y);
+                iter.remove();
+            } else if (p instanceof Prop &&
+                     SACRED_LOCATION.equals(((Prop)p).getType())) {
+                _safePoints.add(p.x, p.y);
+            }
+        }
+    }
+
+    @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
                                 PieceSet purchases)
         throws InvocationException
@@ -120,20 +142,6 @@ public class WendigoAttack extends Scenario
         {
             _nextWendigo = (short)RandomUtil.getInt(
                     MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
-        }
-
-        @Override // documentation inherited
-        public void roundWillStart (BangObject bangobj)
-            throws InvocationException
-        {
-            _safePoints = new PointSet();
-            Piece[] pieces = bangobj.getPieceArray();
-            for (Piece p : pieces) {
-                if (p instanceof Prop && 
-                        SACRED_LOCATION.equals(((Prop)p).getType())) {
-                    _safePoints.add(p.x, p.y);
-                }
-            }
         }
 
         @Override // documentation inherited
@@ -283,9 +291,6 @@ public class WendigoAttack extends Scenario
         /** The tick when the next wendigo will spawn. */
         protected short _nextWendigo;
 
-        /** Set of the sacred location markers. */
-        protected PointSet _safePoints;
-
         /** Current wendigo attack number. */
         protected int _numAttacks;
 
@@ -295,12 +300,15 @@ public class WendigoAttack extends Scenario
 
         /** Number of points for having a talisman on a safe zone. */
         protected static final int TALISMAN_SAFE = 50;
-
-        /** The sacred locations. */
-        protected static final String SACRED_LOCATION =
-            "indian_post/special/sacred_location";
     }
+
+    /** Set of the sacred location markers. */
+    protected PointSet _safePoints = new PointSet();
 
     /** Respawn ticks for units. */
     protected int[] _wendigoRespawnTicks;
+
+    /** The sacred locations. */
+    protected static final String SACRED_LOCATION =
+        "indian_post/special/sacred_location";
 }
