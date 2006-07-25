@@ -157,6 +157,10 @@ public class Bonus extends Piece
      */
     public static Bonus createBonus (BonusConfig config)
     {
+        if (config == null) {
+            return null;
+        }
+
         try {
             Bonus bonus;
             if (config.bonusClass != null) {
