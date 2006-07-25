@@ -19,6 +19,7 @@
     </exec>
     <copy todir="${web.home}/devclient/">
       <fileset dir="${default_locale}" includes="dev-install.exe"/>
+      <fileset dir="${default_locale}" includes="dev-install.dmg"/>
     </copy>
     <ant target="devclient" dir="linux" antfile="build.xml" inheritAll="no"/>
   </target>
