@@ -483,17 +483,17 @@ public class BangManager extends GameManager
         case BangObject.SELECT_PHASE:
             resetPreparingStatus(false);
             _bangobj.setState(BangObject.SELECT_PHASE);
-            log.info("Starting select phase timer.");
-            _preGameTimer.state = BangObject.SELECT_PHASE;
-            _preGameTimer.schedule(15000L);
+//             log.info("Starting select phase timer.");
+//             _preGameTimer.state = BangObject.SELECT_PHASE;
+//             _preGameTimer.schedule(15000L);
             break;
 
         case BangObject.BUYING_PHASE:
             resetPreparingStatus(false);
             _bangobj.setState(BangObject.BUYING_PHASE);
-            log.info("Starting buying phase timer.");
-            _preGameTimer.state = BangObject.BUYING_PHASE;
-            _preGameTimer.schedule(15000L);
+//             log.info("Starting buying phase timer.");
+//             _preGameTimer.state = BangObject.BUYING_PHASE;
+//             _preGameTimer.schedule(15000L);
             break;
 
         case BangObject.IN_PLAY:
