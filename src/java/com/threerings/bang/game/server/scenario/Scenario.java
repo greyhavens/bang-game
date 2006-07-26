@@ -73,7 +73,7 @@ public abstract class Scenario
         _bonusSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
-            if (!p.isValidScenario(bangobj.scenarioId)) {
+            if (!p.isValidScenario(bangobj.scenario.getIdent())) {
                 iter.remove();
 
             } else if (Marker.isMarker(p, Marker.BONUS)) {
@@ -462,7 +462,8 @@ public abstract class Scenario
         /** The index of this bonus spot. */
         public short index;
 
-        /** The distance (squared) from the bonus spot to the closest player. */        public int minDistSq;
+        /** The distance (squared) from the bonus spot to the closest player. */
+        public int minDistSq;
 
         /** Compare based on distance to nearest player. */
         public int compareTo (BonusSorter other) {

@@ -8,7 +8,6 @@ import java.awt.Point;
 import com.samskivert.util.ArrayUtil;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
 
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;

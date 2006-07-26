@@ -16,7 +16,7 @@ import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.data.scenario.TutorialInfo;
 import com.threerings.bang.game.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
@@ -206,7 +206,7 @@ public class Prop extends BigPiece
     {
         return super.isValidScenario(scenarioId) &&
             (scenarioId == null || _config.scenario == null || 
-             ScenarioCodes.TUTORIAL.equals(scenarioId) ||
+             TutorialInfo.IDENT.equals(scenarioId) ||
              _config.scenario.equals(scenarioId));
     }
     

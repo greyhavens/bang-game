@@ -19,7 +19,7 @@ import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.RandomLogic;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.data.scenario.WendigoAttackInfo;
 
 import com.threerings.bang.game.data.effect.TalismanEffect;
 import com.threerings.bang.game.data.effect.WendigoEffect;
@@ -48,7 +48,7 @@ import static com.threerings.bang.Log.log;
  * </ul>
  */
 public class WendigoAttack extends Scenario
-    implements ScenarioCodes, PieceCodes
+    implements PieceCodes
 {
     /**
      * Creates a wendigo attack scenario and registers its delegates.
@@ -272,7 +272,7 @@ public class WendigoAttack extends Scenario
                 for (int idx = 0; idx < points.length; idx++) {
                     if (points[idx] > 0) {
                         bangobj.grantPoints(idx, points[idx] *
-                                ScenarioCodes.POINTS_PER_SURVIVAL +
+                                WendigoAttackInfo.POINTS_PER_SURVIVAL +
                                 talpoints[idx]);
                         bangobj.stats[idx].incrementStat(
                                 Stat.Type.WENDIGO_SURVIVALS, points[idx]);

@@ -64,8 +64,7 @@ public class SelectionView extends SteelWindow
         String msg = MessageBundle.compose(
             "m.round_header",
             MessageBundle.taint(String.valueOf((bangobj.roundId + 1))),
-            "m.scenario_" + bangobj.scenarioId,
-            MessageBundle.taint(bangobj.boardName));
+            bangobj.scenario.getName(), MessageBundle.taint(bangobj.boardName));
         _header.setText(_msgs.xlate(msg));
 
         // set up our main structural bits

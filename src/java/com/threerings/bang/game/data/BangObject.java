@@ -23,6 +23,7 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
@@ -97,8 +98,8 @@ public class BangObject extends GameObject
     /** The field name of the <code>townId</code> field. */
     public static final String TOWN_ID = "townId";
 
-    /** The field name of the <code>scenarioId</code> field. */
-    public static final String SCENARIO_ID = "scenarioId";
+    /** The field name of the <code>scenario</code> field. */
+    public static final String SCENARIO = "scenario";
 
     /** The field name of the <code>boardName</code> field. */
     public static final String BOARD_NAME = "boardName";
@@ -191,8 +192,8 @@ public class BangObject extends GameObject
     /** The id of the town in which this game is being played. */
     public String townId;
 
-    /** The identifier for the current scenario. */
-    public String scenarioId;
+    /** The metadata for the current scenario. */
+    public ScenarioInfo scenario;
 
     /** The name of the current board. */
     public String boardName;
@@ -666,19 +667,19 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Requests that the <code>scenarioId</code> field be set to the
+     * Requests that the <code>scenario</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setScenarioId (String value)
+    public void setScenario (ScenarioInfo value)
     {
-        String ovalue = this.scenarioId;
+        ScenarioInfo ovalue = this.scenario;
         requestAttributeChange(
-            SCENARIO_ID, value, ovalue);
-        this.scenarioId = value;
+            SCENARIO, value, ovalue);
+        this.scenario = value;
     }
 
     /**

@@ -5,10 +5,10 @@ package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.scenario.NuggetScenarioInfo;
 
 /**
  * Places a "fool's nugget" on the board that looks like a gold nugget, but
@@ -25,8 +25,7 @@ public class FoolsGold extends AreaCard
     @Override // documentation inherited
     public boolean isPlayable (BangObject bangobj)
     {
-        return bangobj.scenarioId.equals(ScenarioCodes.CLAIM_JUMPING) ||
-            bangobj.scenarioId.equals(ScenarioCodes.GOLD_RUSH);
+        return (bangobj.scenario instanceof NuggetScenarioInfo);
     }
     
     @Override // documentation inherited

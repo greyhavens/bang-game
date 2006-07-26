@@ -7,12 +7,12 @@ import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.FoolsNuggetEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.NuggetScenarioInfo;
 
 /**
  * Handles the deposit and extraction of nuggets from claims/steam tanks.
@@ -46,7 +46,7 @@ public class NuggetDelegate extends CounterDelegate
     @Override // documentation inherited
     protected int pointsPerCounter ()
     {
-        return ScenarioCodes.POINTS_PER_NUGGET;
+        return NuggetScenarioInfo.POINTS_PER_NUGGET;
     }
 
     @Override // documentation inherited

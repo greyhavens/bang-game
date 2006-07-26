@@ -39,7 +39,6 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.server.scenario.ScenarioFactory;
 
 import static com.threerings.bang.client.BangMetrics.*;
 

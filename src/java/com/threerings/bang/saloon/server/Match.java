@@ -13,8 +13,7 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.ScenarioCodes;
-import com.threerings.bang.game.util.ScenarioUtil;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.server.ServerConfig;
 
 import com.threerings.bang.saloon.data.Criterion;
@@ -45,7 +44,7 @@ public class Match
     {
         players = new PlayerObject[criterion.getDesiredPlayers()];
         players[0] = player;
-        Rating rating = player.getRating(ScenarioCodes.OVERALL);
+        Rating rating = player.getRating(ScenarioInfo.OVERALL_IDENT);
         _minRating = _avgRating = _maxRating = rating.rating;
         _criterion = criterion;
     }
@@ -127,7 +126,7 @@ public class Match
             if (players[ii] == null) {
                 continue;
             }
-            Rating rating = players[ii].getRating(ScenarioCodes.OVERALL);
+            Rating rating = players[ii].getRating(ScenarioInfo.OVERALL_IDENT);
             _minRating = Math.min(_minRating, rating.rating);
             _maxRating = Math.max(_maxRating, rating.rating);
             _avgRating += rating.rating;
@@ -231,8 +230,9 @@ public class Match
         config.teamSize = TEAM_SIZES[config.seats-2];
         // only games versus at least one other human are rated
         config.rated = (humans > 1) ? _criterion.getDesiredRankedness() : false;
-        config.scenarios = ScenarioUtil.selectRandom(
-            ServerConfig.townId, _criterion.getDesiredRounds(), false);
+        config.scenarios = ScenarioInfo.selectRandomIds(
+            ServerConfig.townId, _criterion.getDesiredRounds(),
+            config.seats, false);
 
         return config;
     }

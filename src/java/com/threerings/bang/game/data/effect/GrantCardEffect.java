@@ -10,7 +10,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -45,11 +44,8 @@ public class GrantCardEffect extends BonusEffect
             return;
         }
 
-        // if they are in a tutorial, we always give a missile card, otherwise
-        // select a random card
         Card card = Card.newCard(
-            bangobj.scenarioId.equals(ScenarioCodes.TUTORIAL) ?
-            "missile" : Card.selectRandomCard(bangobj.townId, true));
+            Card.selectRandomCard(bangobj.townId, bangobj.scenario));
         _type = card.getType();
         card.init(bangobj, player);
         bangobj.addToCards(card);

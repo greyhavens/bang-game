@@ -29,7 +29,7 @@ import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.util.ScenarioUtil;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
@@ -164,7 +164,8 @@ public class ParlorManager extends PlaceManager
             game.tinCans = MathUtil.bound(
                 0, game.tinCans, GameCodes.MAX_PLAYERS - game.players);
             if (game.scenarios == null || game.scenarios.length == 0) {
-                game.scenarios = ScenarioUtil.getScenarios(ServerConfig.townId);
+                game.scenarios = ScenarioInfo.getScenarioIds(
+                    ServerConfig.townId, false);
             }
 
             // update the game config with the desired config

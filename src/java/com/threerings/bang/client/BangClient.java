@@ -56,7 +56,7 @@ import com.threerings.bang.chat.client.SystemChatView;
 
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticlePool;
-import com.threerings.bang.game.util.ScenarioUtil;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.util.BoardCache;
@@ -587,8 +587,8 @@ public class BangClient extends BasicClient
                 scenarios = new String[rounds];
                 Arrays.fill(scenarios, scenario);
             } else {
-                scenarios = ScenarioUtil.selectRandom(
-                    _ctx.getUserObject().townId, rounds, false);
+                scenarios = ScenarioInfo.selectRandomIds(
+                    _ctx.getUserObject().townId, rounds, pcount, false);
             }
             psvc.playComputer(
                 _ctx.getClient(), pcount, scenarios,

@@ -20,13 +20,13 @@ import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.CountEffect;
-import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Counter;
+import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.CattleRustlingLogic;
 import com.threerings.bang.game.util.PieceSet;
@@ -226,7 +226,7 @@ public class CattleRustling extends Scenario
                 }
                 // you get points for your branded cows at each tick
                 int points = _counts[counter.owner] * 
-                    ScenarioCodes.POINTS_PER_BRAND;
+                    CattleRustlingInfo.POINTS_PER_BRAND;
                 bangobj.stats[counter.owner].incrementStat(
                         Stat.Type.BRAND_POINTS, points); 
                 bangobj.grantPoints(counter.owner, points);
@@ -235,7 +235,7 @@ public class CattleRustling extends Scenario
 
         @Override // documentation inherited
         protected int pointsPerCounter () {
-            return ScenarioCodes.POINTS_PER_COW;
+            return CattleRustlingInfo.POINTS_PER_COW;
         }
 
         @Override // documentation inherited

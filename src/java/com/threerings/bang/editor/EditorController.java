@@ -43,14 +43,12 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
-import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
-import com.threerings.bang.game.server.scenario.ScenarioFactory;
-import com.threerings.bang.game.util.ScenarioUtil;
 import com.threerings.bang.game.util.ArrayDiffUtil;
 import com.threerings.bang.server.persist.BoardRecord;
 
@@ -481,9 +479,6 @@ public class EditorController extends GameController
         for (int ii = -1, size = scenids.size(); ii < size; ii++) {
             String scenid = (ii > -1 ? scenids.get(ii) : null);
             String name;
-            if (ScenarioCodes.TUTORIAL.equals(scenid)) {
-                continue;
-            }
             toggleProps(scenid);
             byte[] tmpShadows;
             if (scenid == null) {
@@ -562,7 +557,8 @@ public class EditorController extends GameController
             PieceSprite sprite = _panel.view.getPieceSprite(p);
             valid = p.isValidScenario(id);
             if (id != null && p instanceof Marker) {
-                valid = valid && ScenarioUtil.isValidMarker(((Marker)p), id);
+                valid = valid &&
+                    ScenarioInfo.getScenarioInfo(id).isValidMarker((Marker)p);
             }
             if (valid && sprite != null) {
                 if (sprite.getParent() == null) {
@@ -690,15 +686,14 @@ public class EditorController extends GameController
     protected void updatePlayerCount ()
     {
         int pcount = 0;
-        String[] scids = ScenarioFactory.getScenarios(
-            BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1]);
-        ArrayUtil.append(scids, ScenarioCodes.TUTORIAL);
-        int[] pcounts = new int[scids.length];
+        ArrayList<ScenarioInfo> scens = ScenarioInfo.getScenarios(
+            BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1], true);
+        int[] pcounts = new int[scens.size()];
         for (Piece p : _bangobj.pieces) {
             for (int ii = 0; ii < pcounts.length; ii++) {
-                String scenId = scids[ii];
+                String scenId = scens.get(ii).getIdent();
                 if (Marker.isMarker(p, Marker.START) &&
-                        ((Marker)p).isValidScenario(scenId)) {
+                    ((Marker)p).isValidScenario(scenId)) {
                     pcounts[ii]++;
                     pcount = Math.max(pcounts[ii], pcount);
                 }

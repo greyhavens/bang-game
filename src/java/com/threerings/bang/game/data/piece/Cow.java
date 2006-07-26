@@ -13,9 +13,9 @@ import com.threerings.bang.game.client.sprite.CowSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.SpookEffect;
+import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
 import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
@@ -42,10 +42,10 @@ public class Cow extends Piece
             if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
                 if (this.owner != -1) {
                     bangobj.grantPoints(
-                        this.owner, -ScenarioCodes.POINTS_PER_COW);
+                        this.owner, -CattleRustlingInfo.POINTS_PER_COW);
                 }
                 owner = spooker.owner;
-                bangobj.grantPoints(owner, ScenarioCodes.POINTS_PER_COW);
+                bangobj.grantPoints(owner, CattleRustlingInfo.POINTS_PER_COW);
             }
         }
 

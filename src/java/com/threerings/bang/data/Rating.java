@@ -7,7 +7,7 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.media.util.MathUtil;
 import com.threerings.presents.dobj.DSet;
 
-import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 /**
  * Contains the player's ratings and experience for a particular game scenario.
@@ -25,7 +25,7 @@ public class Rating extends SimpleStreamableObject
     public static final int MAXIMUM_RATING = 3000;
 
     /** The scenario for which this rating applies (or {@link
-     * ScenarioCodes#OVERALL} for the player's overall rating. */
+     * ScenarioInfo#OVERALL_IDENT} for the player's overall rating. */
     public String scenario;
 
     /** The actual rating value. */

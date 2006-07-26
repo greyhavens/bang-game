@@ -17,7 +17,7 @@ import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.TotemLogic;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
 
 import com.threerings.bang.game.data.effect.TotemEffect;
 
@@ -44,7 +44,6 @@ import static com.threerings.bang.Log.log;
  * </ul>
  */
 public class TotemBuilding extends Scenario
-    implements ScenarioCodes
 {
     /**
      * Creates a totem building scenario and registers its delegates.
@@ -291,9 +290,11 @@ public class TotemBuilding extends Scenario
                     bangobj.grantPoints(ii, points[ii] - _points[ii]);
                     _points[ii] = points[ii];
                     bangobj.stats[ii].setStat(
-                            Stat.Type.TOTEMS_STACKED, numPieces[ii]);
-                    bangobj.stats[ii].setStat(Stat.Type.TOTEM_POINTS, 
-                            points[ii] - numPieces[ii] * POINTS_PER_TOTEM); 
+                        Stat.Type.TOTEMS_STACKED, numPieces[ii]);
+                    bangobj.stats[ii].setStat(
+                        Stat.Type.TOTEM_POINTS, 
+                        points[ii] - numPieces[ii] *
+                        TotemBuildingInfo.POINTS_PER_TOTEM); 
                 }
             } finally {
                 bangobj.commitTransaction();

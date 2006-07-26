@@ -26,7 +26,7 @@ import com.threerings.bang.game.client.StatsView;
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
+import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
 
 import com.threerings.bang.tests.TestApp;
 
@@ -105,9 +105,7 @@ public class StatsViewTest extends TestApp
             bangobj.stats[ii].setStat(Stat.Type.BRAND_POINTS,
                     RandomUtil.getInt(400));
         }
-        bangobj.scenarioId = ScenarioCodes.CATTLE_RUSTLING;
-        //bangobj.scenarioId = ScenarioCodes.CLAIM_JUMPING;
-        
+        bangobj.scenario = new CattleRustlingInfo();
 
         return new StatsView(_ctx, null, bangobj, true);
     }

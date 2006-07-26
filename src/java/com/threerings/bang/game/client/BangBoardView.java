@@ -85,9 +85,9 @@ import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
-import com.threerings.bang.game.util.ScenarioUtil;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -412,7 +412,9 @@ public class BangBoardView extends BoardView
         _bangobj.addListener(_ticker);
 
         // preload our sounds for this scenario
-        ScenarioUtil.preloadSounds(bangobj.scenarioId, _sounds);
+        for (String clip : bangobj.scenario.getPreLoadClips()) {
+            _sounds.preloadClip(clip);
+        }
 
         // start with the camera controls disabled; the controller will
         // reenable them when we are completely ready to play (starting units
@@ -568,7 +570,7 @@ public class BangBoardView extends BoardView
         String msg = MessageBundle.compose(
             "m.marquee_header",
             MessageBundle.taint(String.valueOf((_bangobj.roundId + 1))),
-            "m.scenario_" + _bangobj.scenarioId);
+            _bangobj.scenario.getName());
         info.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, msg),
                             "marquee_subtitle"));
         info.add(new Spacer(25, 100));
@@ -987,8 +989,18 @@ public class BangBoardView extends BoardView
         moves.add(tx, ty);
         highlightTiles(moves, getHighlightColor(_selection));
 
-        if (!_shiftDown && _attackEnabled) {
-            // display our potential attacks
+        // this is a bit hacky, but if the character is heading to a
+        // teleporter, they don't get to attack
+        boolean willTeleport = false;
+        for (Piece piece : _bangobj.pieces) {
+            if (piece.x == tx && piece.y == ty && piece instanceof Teleporter) {
+                willTeleport = true;
+                break;
+            }
+        }
+
+        // potentially display our potential attacks
+        if (!_shiftDown && _attackEnabled && !willTeleport) {
             _attackSet.clear();
             pruneAttackSet(moves, _attackSet);
         }

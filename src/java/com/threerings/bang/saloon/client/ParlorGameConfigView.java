@@ -35,7 +35,7 @@ import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.util.ScenarioUtil;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 import com.threerings.bang.saloon.data.ParlorGameConfig;
 import com.threerings.bang.saloon.data.ParlorObject;
@@ -79,7 +79,8 @@ public class ParlorGameConfigView extends BContainer
         BContainer checkboxen = new BContainer(
             GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
                                  GroupLayout.EQUALIZE));
-        _scenIds = ScenarioUtil.getScenarios(_ctx.getUserObject().townId);
+        _scenIds = ScenarioInfo.getScenarioIds(
+            _ctx.getUserObject().townId, true);
         _scens = new BCheckBox[_scenIds.length];
         for (int ii = 0; ii < _scens.length; ii++) {
             _scens[ii] = new BCheckBox(

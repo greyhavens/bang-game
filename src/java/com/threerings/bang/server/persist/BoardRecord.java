@@ -24,8 +24,10 @@ import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BoardData;
-import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
+
+import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -75,16 +77,15 @@ public class BoardRecord extends BoardData
      */
     public int getMinimumTownIndex ()
     {
-        HashSet<String> scenarios = new HashSet<String>();
-        CollectionUtil.addAll(scenarios, getScenarios());
-        for (int ii = ScenarioCodes.TOWN_SCENARIOS.length-1; ii >= 0; ii--) {
-            for (String scen : ScenarioCodes.TOWN_SCENARIOS[ii]) {
-                if (scenarios.contains(scen)) {
-                    return ii;
-                }
+        int minTownIdx = 0;
+        for (String scenId : getScenarios()) {
+            ScenarioInfo info = ScenarioInfo.getScenarioInfo(scenId);
+            if (info != null) {
+                minTownIdx = Math.max(
+                    minTownIdx, BangUtil.getTownIndex(info.getTownId()));
             }
         }
-        return 0;
+        return minTownIdx;
     }
 
     /**

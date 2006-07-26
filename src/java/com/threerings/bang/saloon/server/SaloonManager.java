@@ -37,8 +37,7 @@ import com.threerings.bang.server.ServerConfig;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.ScenarioCodes;
-import com.threerings.bang.game.util.ScenarioUtil;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 
@@ -388,8 +387,9 @@ public class SaloonManager extends PlaceManager
             public boolean invoke () {
                 ArrayList<String> scens = new ArrayList<String>();
                 CollectionUtil.addAll(
-                    scens, ScenarioUtil.getTownScenarios(ServerConfig.townId));
-                scens.add(0, ScenarioCodes.OVERALL);
+                    scens, ScenarioInfo.getScenarioIds(
+                        ServerConfig.townId, false));
+                scens.add(0, ScenarioInfo.OVERALL_IDENT);
 
                 try {
                     _lists = BangServer.ratingrepo.loadTopRanked(

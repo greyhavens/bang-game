@@ -76,14 +76,16 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
-import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.server.ai.AILogic;
-import com.threerings.bang.game.server.scenario.Practice;
-import com.threerings.bang.game.server.scenario.Scenario;
-import com.threerings.bang.game.server.scenario.ScenarioFactory;
-import com.threerings.bang.game.server.scenario.Tutorial;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
+
+import com.threerings.bang.game.data.scenario.PracticeInfo;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.game.data.scenario.TutorialInfo;
+import com.threerings.bang.game.server.scenario.Practice;
+import com.threerings.bang.game.server.scenario.Scenario;
+import com.threerings.bang.game.server.scenario.Tutorial;
 
 import static com.threerings.bang.Log.log;
 
@@ -464,6 +466,9 @@ public class BangManager extends GameManager
      */
     public void startPhase (int state)
     {
+        // clear the pregame timer as we just switched phases
+        _preGameTimer.cancel();
+
         switch (state) {
         case BangObject.PRE_TUTORIAL:
             resetPreparingStatus(true);
@@ -478,11 +483,17 @@ public class BangManager extends GameManager
         case BangObject.SELECT_PHASE:
             resetPreparingStatus(false);
             _bangobj.setState(BangObject.SELECT_PHASE);
+            log.info("Starting select phase timer.");
+            _preGameTimer.state = BangObject.SELECT_PHASE;
+            _preGameTimer.schedule(15000L);
             break;
 
         case BangObject.BUYING_PHASE:
             resetPreparingStatus(false);
             _bangobj.setState(BangObject.BUYING_PHASE);
+            log.info("Starting buying phase timer.");
+            _preGameTimer.state = BangObject.BUYING_PHASE;
+            _preGameTimer.schedule(15000L);
             break;
 
         case BangObject.IN_PLAY:
@@ -617,6 +628,8 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void playersAllHere ()
     {
+        log.info("Players all here!");
+
         switch (_bangobj.state) {
         case BangObject.PRE_GAME:
             // create our player records now that we know everyone's in the
@@ -750,7 +763,7 @@ public class BangManager extends GameManager
 
         // create the appropriate scenario to handle this round
         if (_bconfig.tutorial) {
-            _bangobj.setScenarioId(ScenarioCodes.TUTORIAL);
+            _bangobj.setScenario(new TutorialInfo());
             _scenario = new Tutorial();
             // we reuse the playerIsReady() mechanism to wait for the player to
             // be ready to start the tutorial; normally they'd select their
@@ -758,7 +771,7 @@ public class BangManager extends GameManager
             resetPlayerOids();
 
         } else if (_bconfig.practice) {
-            _bangobj.setScenarioId(ScenarioCodes.PRACTICE);
+            _bangobj.setScenario(new PracticeInfo());
             _scenario = new Practice();
             // we reuse the playerIsReady() mechanism to wait for the player to
             // be ready to start the practice; normally they'd select their
@@ -766,8 +779,18 @@ public class BangManager extends GameManager
             resetPlayerOids();
 
         } else {
-            _bangobj.setScenarioId(_bconfig.scenarios[_bangobj.roundId]);
-            _scenario = ScenarioFactory.createScenario(_bangobj.scenarioId);
+            ScenarioInfo info = ScenarioInfo.getScenarioInfo(
+                _bconfig.scenarios[_bangobj.roundId]);
+            _bangobj.setScenario(info);
+            String sclass = info.getScenarioClass();
+            try {
+                _scenario = (Scenario)Class.forName(sclass).newInstance();
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Failed to instantiate scenario class " +
+                        "[class=" + sclass + "].", e);
+                // TODO: cancel the game or something
+                return;
+            }
         }
         _scenario.init(this);
 
@@ -807,7 +830,7 @@ public class BangManager extends GameManager
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (Marker.isMarker(p, Marker.START) && 
-                    p.isValidScenario(_bangobj.scenarioId)) {
+                p.isValidScenario(_bangobj.scenario.getIdent())) {
                 _starts.add(p);
                 iter.remove();
             }
@@ -1276,7 +1299,7 @@ public class BangManager extends GameManager
 
         // update ratings if appropriate
         if (_bconfig.rated &&
-            !_bconfig.scenarios[0].equals(ScenarioCodes.TUTORIAL) &&
+            !_bconfig.scenarios[0].equals(TutorialInfo.IDENT) &&
             gameSecs >= MIN_RATED_DURATION) {
             // update each player's per-scenario ratings
             for (int ii = 0; ii < _bconfig.scenarios.length; ii++) {
@@ -1285,7 +1308,8 @@ public class BangManager extends GameManager
             }
 
             // update each player's overall rating
-            computeRatings(ScenarioCodes.OVERALL, _bangobj.getFilteredPoints());
+            computeRatings(ScenarioInfo.OVERALL_IDENT,
+                           _bangobj.getFilteredPoints());
         }
 
         // these will track awarded cash and badges
@@ -1413,6 +1437,31 @@ public class BangManager extends GameManager
 
         // finally pass the winner info up to the parlor services
         winners[_ranks[0].pidx] = true;
+    }
+
+    /**
+     * During the {@link BangObject#SELECT_PHASE} and {@link
+     * BangObject#BUYING_PHASE} we set a timer that resigns any player that
+     * does not make their selection or purchase within the alotted time frame.
+     */
+    protected void preGameTimerExpired (int targetState)
+    {
+        if (_bangobj.state != targetState) {
+            // we may have expired at *just* the right time to miss the last
+            // player's submission in which case we need do nothing
+            return;
+        }
+
+        // resign anyone that is still "preparing"
+        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+            if (!isAI(ii) &&
+                _bangobj.playerStatus[ii] == BangObject.PLAYER_PREPARING) {
+                log.info("Player failed to make a selection in time " +
+                         "[game=" + where() + ", state=" + targetState +
+                         ", who=" + _bangobj.players[ii] + "].");
+                endPlayerGame(ii);
+            }
+        }
     }
 
     /**
@@ -2295,6 +2344,21 @@ public class BangManager extends GameManager
         public StatSet[] stats;
     }
 
+    /** Used to time out players that don't make a pre-game selection. */
+    protected class PreGameTimer extends Interval
+    {
+        /** The state of the game when the timer was started. */
+        public int state;
+
+        public PreGameTimer () {
+            super(BangServer.omgr);
+        }
+
+        public void expired () {
+            preGameTimerExpired(state);
+        }
+    }
+
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
         public void expired () {
@@ -2388,6 +2452,10 @@ public class BangManager extends GameManager
     /** Used to compute a piece's potential moves or attacks when
      * validating a move request. */
     protected PointSet _moves = new PointSet(), _attacks = new PointSet();
+
+    /** Used to resign players if they do not make a selection during the
+     * pre-game phase. */
+    protected PreGameTimer _preGameTimer = new PreGameTimer();
 
     /** Used to track the locations where players can start. */
     protected ArrayList<Piece> _starts = new ArrayList<Piece>();

@@ -13,11 +13,11 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.BonusConfig;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.NuggetScenarioInfo;
 
 import static com.threerings.bang.Log.log;
 
@@ -105,7 +105,7 @@ public class NuggetEffect extends HoldEffect
             // if we're on the server, grant points to the player
             if (bangobj.getManager().isManager(bangobj)) {
                 bangobj.grantPoints(
-                    claim.owner, ScenarioCodes.POINTS_PER_NUGGET);
+                    claim.owner, NuggetScenarioInfo.POINTS_PER_NUGGET);
             }
             claim.count++;
             reportEffect(obs, claim, NUGGET_ADDED);
@@ -113,7 +113,7 @@ public class NuggetEffect extends HoldEffect
             // if we're on the server, deduct points from the player
             if (bangobj.getManager().isManager(bangobj)) {
                 bangobj.grantPoints(
-                    claim.owner, -ScenarioCodes.POINTS_PER_NUGGET);
+                    claim.owner, -NuggetScenarioInfo.POINTS_PER_NUGGET);
             }
             claim.count--;
             reportEffect(obs, claim, NUGGET_REMOVED);

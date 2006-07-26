@@ -39,8 +39,6 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.ScenarioCodes;
-import com.threerings.bang.game.util.ScenarioUtil;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.util.MessageBundle;
@@ -160,59 +158,19 @@ public class StatsView extends SteelWindow
      */
     protected void loadGameData ()
     {
-        String oipath = null, sipath = null;
+        _statType = _bobj.scenario.getObjective();
+        String obj = _statType.toString().toLowerCase();
+        _objectiveIcon = new ImageIcon(
+            _ctx.loadImage("ui/postgame/icons/" + obj + ".png"));
+        _objectiveTitle = "m.title_" + obj;
+        _objectivePoints = "m." + obj + "_points";
+        _ppo = _bobj.scenario.getPointsPerObjective();
 
-        if (ScenarioUtil.cattleRustling(_bobj.scenarioId)) {
-            oipath = "ui/postgame/icons/cattle.png";
-            _objectiveTitle = "m.title_cattle_rustled";
-            _objectivePoints = "m.cattle_points";
-            _statType = Stat.Type.CATTLE_RUSTLED;
-            _ppo = ScenarioCodes.POINTS_PER_COW;
-            _secStatType = Stat.Type.BRAND_POINTS;
-            sipath = "ui/postgame/icons/brand.png";
-
-        } else if (ScenarioUtil.nuggetClaiming(_bobj.scenarioId)) {
-            oipath = "ui/postgame/icons/nugget.png";
-            _objectiveTitle = "m.title_nuggets_claimed";
-            _objectivePoints = "m.nugget_points";
-            _statType = Stat.Type.NUGGETS_CLAIMED;
-            _ppo = ScenarioCodes.POINTS_PER_NUGGET;
-            _secStatType = null;
-
-        } else if (ScenarioUtil.landGrabbing(_bobj.scenarioId)) {
-            oipath = "ui/postgame/icons/nugget.png";
-            _objectiveTitle = "m.title_steads_claimed";
-            _objectivePoints = "m.stead_points";
-            _statType = Stat.Type.STEADS_CLAIMED;
-            _ppo = ScenarioCodes.POINTS_PER_STEAD;
-            _secStatType = Stat.Type.STEAD_POINTS;
-            sipath = "ui/postgame/icons/brand.png";
-
-        } else if (ScenarioUtil.totemBuilding(_bobj.scenarioId)) {
-            oipath = "ui/postgame/icons/nugget.png";
-            _objectiveTitle = "m.title_totem_stacked";
-            _objectivePoints = "m.totem_points";
-            _statType = Stat.Type.TOTEMS_STACKED;
-            _ppo = ScenarioCodes.POINTS_PER_TOTEM;
-            _secStatType = Stat.Type.TOTEM_POINTS;
-            _secIcon = new ImageIcon(_ctx.loadImage(
-                        "ui/postgame/icons/brand.png"));
-
-        } else if (ScenarioUtil.wendigoAttack(_bobj.scenarioId)) {
-            oipath = "ui/postgame/icons/nugget.png";
-            _objectiveTitle = "m.title_wendigo_survivals";
-            _objectivePoints = "m.survival_points";
-            _statType = Stat.Type.WENDIGO_SURVIVALS;
-            _ppo = ScenarioCodes.POINTS_PER_SURVIVAL;
-            _secStatType = Stat.Type.TALISMAN_POINTS;
-            sipath = "ui/postgame/icons/brand.png";
-        }
-
-        if (oipath != null) {
-            _objectiveIcon = new ImageIcon(_ctx.loadImage(oipath));
-        }
-        if (sipath != null) {
-            _secIcon = new ImageIcon(_ctx.loadImage(sipath));
+        if (_bobj.scenario.getSecondaryObjective() != null) {
+            _secStatType = _bobj.scenario.getSecondaryObjective();
+            String sobj = _secStatType.toString().toLowerCase();
+            _secIcon = new ImageIcon(
+                _ctx.loadImage("ui/postgame/icons/" + sobj + ".png"));
         }
     }
 

@@ -24,8 +24,7 @@ import com.samskivert.swing.HGroupLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.game.data.ScenarioCodes;
-import com.threerings.bang.game.server.scenario.ScenarioFactory;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.util.BasicContext;
 
@@ -54,25 +53,19 @@ public class BoardInfo extends JPanel
         JPanel spanel = new JPanel(
             new VGroupLayout(VGroupLayout.NONE, VGroupLayout.STRETCH,
                              2, VGroupLayout.TOP));
-        String[] scids = ScenarioFactory.getScenarios(
-            BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1]);
+        ArrayList<ScenarioInfo> scens = ScenarioInfo.getScenarios(
+            BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1], true);
         JCheckBox box;
 
         // prop visibility combo box
         _props = new JComboBox();
         _props.addItem(new ScenarioLabel(null));
 
-        for (int ii = 0; ii < scids.length; ii++) {
-            String sname = gmsgs.get("m.scenario_" + scids[ii]);
-            spanel.add(box = new JCheckBox(sname));
-            _sboxes.put(scids[ii], box);
-            _props.addItem(new ScenarioLabel(scids[ii]));
+        for (ScenarioInfo info : scens) {
+            spanel.add(box = new JCheckBox(gmsgs.get(info.getName())));
+            _sboxes.put(info.getIdent(), box);
+            _props.addItem(new ScenarioLabel(info.getIdent()));
         }
-
-        // add a selection for the tutorial scenario
-        String sname = gmsgs.get("m.scenario_" + ScenarioCodes.TUTORIAL);
-        spanel.add(box = new JCheckBox(sname));
-        _sboxes.put(ScenarioCodes.TUTORIAL, box);
 
         add(new JScrollPane(spanel) {
             public Dimension getPreferredSize () {

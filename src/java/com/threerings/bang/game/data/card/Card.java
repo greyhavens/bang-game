@@ -15,6 +15,8 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.game.data.scenario.TutorialInfo;
 
 import static com.threerings.bang.Log.log;
 
@@ -39,13 +41,19 @@ public abstract class Card extends SimpleStreamableObject
      * Selects a random card from the set of all available cards for the
      * specified town.
      *
-     * @param inGame whether this card will immediately be deployed in a game
-     * or not (not generally means the card is being sold in a pack).
+     * @param scenario if this card is being created during a game, this will
+     * indicate the scenario in which it is being created. Otherwise this will
+     * be null (generally meaning the card is being created for a pack).
      */
-    public static String selectRandomCard (String townId, boolean inGame)
+    public static String selectRandomCard (String townId, ScenarioInfo scenario)
     {
-        // select the card based on a weighted random choice
-        return _wcards[RandomUtil.getWeightedIndex(_weights)].getType();
+        if (scenario instanceof TutorialInfo) {
+            // we always return missile cards in the tutorial
+            return "missile";
+        } else {
+            // select the card based on a weighted random choice
+            return _wcards[RandomUtil.getWeightedIndex(_weights)].getType();
+        }
     }
 
     /**

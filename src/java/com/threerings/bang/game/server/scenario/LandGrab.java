@@ -15,11 +15,11 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.ScenarioCodes;
 import com.threerings.bang.game.data.effect.HomesteadEffect;
 import com.threerings.bang.game.data.piece.Homestead;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.LandGrabInfo;
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.RandomLogic;
 import com.threerings.bang.game.util.PieceSet;
@@ -95,7 +95,7 @@ public class LandGrab extends Scenario
             // assign this homestead to its new owner
             nearest.owner = ii;
             bangobj.updatePieces(nearest);
-            bangobj.grantPoints(ii, ScenarioCodes.POINTS_PER_STEAD);
+            bangobj.grantPoints(ii, LandGrabInfo.POINTS_PER_STEAD);
             _claims.add(nearest);
         }
     }
@@ -119,8 +119,7 @@ public class LandGrab extends Scenario
         if (piece instanceof Homestead) {
             Homestead stead = (Homestead)piece;
             bangobj.grantPoints(stead.previousOwner,
-                                -ScenarioCodes.POINTS_PER_STEAD);
-            // TODO: update stats?
+                                -LandGrabInfo.POINTS_PER_STEAD);
         }
     }
 
@@ -186,8 +185,7 @@ public class LandGrab extends Scenario
 
                 // grant this player points for the claimed homestead
                 bangobj.grantPoints(
-                    claimer.owner, ScenarioCodes.POINTS_PER_STEAD);
-                // TODO: update stats?
+                    claimer.owner, LandGrabInfo.POINTS_PER_STEAD);
 
                 // move this homestead to the end of the claims list
                 _claims.remove(stead);

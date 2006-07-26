@@ -50,7 +50,6 @@ import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
-import com.threerings.bang.game.util.ScenarioUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -557,7 +556,7 @@ public class BangController extends GameController
 
         // start up the music for this scenario
         _ctx.getBangClient().queueMusic(
-            "scenario_" + _bangobj.scenarioId, true, 3f);
+            "scenario_" + _bangobj.scenario.getIdent(), true, 3f);
     }
 
     @Override // documentation inherited
