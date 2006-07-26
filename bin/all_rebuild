@@ -71,6 +71,10 @@ fi
 # rebuild our libraries
 build_libraries samskivert jme-bui narya nenya vilya threerings
 
+# make sure our main project symlinks are up to date
+cd $ROOT/lib
+make_symlinks `cat LIBS`
+
 # build the main thang
 cd $ROOT
 $ANT distclean dist mdist
