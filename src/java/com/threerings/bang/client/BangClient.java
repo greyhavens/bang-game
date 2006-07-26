@@ -56,6 +56,7 @@ import com.threerings.bang.chat.client.SystemChatView;
 
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticlePool;
+import com.threerings.bang.game.util.ScenarioUtil;
 
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.util.BoardCache;
@@ -580,8 +581,15 @@ public class BangClient extends BasicClient
                 pcount = 4;
             }
             int rounds = Integer.getInteger("rounds", 1);
-            String[] scenarios = new String[rounds];
-            Arrays.fill(scenarios, System.getProperty("scenario", "gr"));
+            String scenario = System.getProperty("scenario");
+            String[] scenarios;
+            if (scenario != null) {
+                scenarios = new String[rounds];
+                Arrays.fill(scenarios, scenario);
+            } else {
+                scenarios = ScenarioUtil.selectRandom(
+                    _ctx.getUserObject().townId, rounds, false);
+            }
             psvc.playComputer(
                 _ctx.getClient(), pcount, scenarios,
                 System.getProperty("board"), Boolean.parseBoolean(
