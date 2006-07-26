@@ -94,4 +94,10 @@ public class RepairEffect extends BonusEffect
         }
         return MessageBundle.compose("m.effect_repair", piece.getName());
     }
+    
+    @Override // documentation inherited
+    protected String getActivatedEffect ()
+    {
+        return null;
+    }
 }

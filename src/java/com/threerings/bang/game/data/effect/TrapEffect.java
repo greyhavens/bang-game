@@ -19,6 +19,9 @@ import static com.threerings.bang.Log.log;
  */
 public class TrapEffect extends BonusEffect
 {
+    /** The identifier for the type of effect that we produce. */
+    public static final String ACTIVATED_TRAP = "activated";
+    
     /** The victim of the trap. */
     public int pieceId;
     
@@ -110,6 +113,12 @@ public class TrapEffect extends BonusEffect
             return null;
         }
         return MessageBundle.compose("m.effect_" + _type, piece.getName());
+    }
+    
+    @Override // documentation inherited
+    protected String getActivatedEffect ()
+    {
+        return "trap".equals(_type) ? ACTIVATED_TRAP : null;
     }
     
     /**

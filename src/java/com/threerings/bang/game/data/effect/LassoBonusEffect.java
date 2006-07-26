@@ -18,6 +18,9 @@ import static com.threerings.bang.Log.log;
  */
 public class LassoBonusEffect extends BonusEffect
 {
+    /** The identifier for the type of effect that we produce. */
+    public static final String LASSOED_BONUS = "effects/frontier_town/lasso";
+    
     /** The lassoing player. */
     public int player;
     
@@ -82,5 +85,11 @@ public class LassoBonusEffect extends BonusEffect
     public boolean isApplicable ()
     {
         return bonusId > 0;
+    }
+    
+    @Override // documentation inherited
+    protected String getActivatedEffect ()
+    {
+        return LASSOED_BONUS;
     }
 }

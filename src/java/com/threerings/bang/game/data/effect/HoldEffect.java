@@ -149,6 +149,12 @@ public class HoldEffect extends BonusEffect
         return true;
     }
     
+    @Override // documentation inherited
+    protected String getActivatedEffect ()
+    {
+        return null;
+    }
+    
     /**
      * Returns the identifier for the dropped bonus effect.
      */

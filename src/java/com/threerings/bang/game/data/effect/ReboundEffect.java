@@ -78,4 +78,10 @@ public class ReboundEffect extends BonusEffect
         }
         return MessageBundle.compose("m.effect_spring", piece.getName());
     }
+    
+    @Override // documentation inherited
+    protected String getActivatedEffect ()
+    {
+        return null;
+    }
 }
