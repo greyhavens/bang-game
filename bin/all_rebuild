@@ -69,15 +69,7 @@ if [ ! -z "$UPDATE" ]; then
 fi
 
 # rebuild our libraries
-build_libraries samskivert snark getdown jme-bui narya nenya vilya threerings
-
-# run proguard on getdown
-cd $ROOT/projects/getdown
-$ANT proguard
-if [ $? != 0 ]; then
-    rm -f $LOCKFILE
-    exit 255
-fi
+build_libraries samskivert jme-bui narya nenya vilya threerings
 
 # build the main thang
 cd $ROOT

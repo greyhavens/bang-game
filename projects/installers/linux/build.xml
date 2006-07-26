@@ -12,7 +12,7 @@
     <mkdir dir="${temp.dir}"/>
 
     <copy todir="${temp.dir}">
-      <fileset dir="../../getdown/dist" includes="getdown-pro.jar"/>
+      <fileset dir="/export/tools/lib/java" includes="getdown-pro.jar"/>
       <fileset dir="../${default_locale}" includes="license.txt"/>
       <fileset dir="." includes="bang"/>
       <fileset dir="." includes="bangeditor"/>

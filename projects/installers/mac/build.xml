@@ -31,8 +31,7 @@
   <!-- creates the macintosh application directory -->
   <target name="app">
     <mkdir dir="${inst.dir}"/>
-    <copy file="${base.dir}/projects/getdown/dist/getdown-pro.jar"
-          todir="${inst.dir}"/>
+    <copy file="/export/tools/lib/java/getdown-pro.jar" todir="${inst.dir}"/>
 
     <jarbundler dir="${inst.dir}" name="${app_base.name}" 
       mainclass="com.threerings.getdown.launcher.Getdown" 
