@@ -1,0 +1,82 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="4">
+
+  <frame>
+    <transform name="artillery" translation="-0.45281, 0.369224, 56.6452" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheel_FR" translation="-23.6556, -56.0439, -34.3906" rotation="-0.432903, -0.559102, 0.432903, 0.559102" scale="0.332226, 0.332226, 0.332226"/>
+    <transform name="artillery_wheel_FL" translation="24.2467, -56.1649, -34.3356" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelL" translation="40.883, 3.16651, -15.691" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelR" translation="-40.6069, 3.16651, -15.691" rotation="-0.5, 0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_backwheel" translation="0.452807, 70.9912, -32.6054" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="1.50666, -22.4827, 23.1275" rotation="-2.93812e-007, -0.0174523, 0.0, 0.999848" scale="0.890076, 0.952381, 0.952381"/>
+    <transform name="gun" translation="0.452805, 41.6982, 62.5516" rotation="0.216439, 0.0, 0.0, 0.976296" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="artillery" translation="-0.45281, 0.369224, 55.8626" rotation="0.0, -0.00340568, 0.0, 0.999994" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheel_FR" translation="-23.63, -56.0439, -32.6154" rotation="-0.432903, -0.559102, 0.432903, 0.559102" scale="0.332226, 0.332226, 0.332226"/>
+    <transform name="artillery_wheel_FL" translation="24.2537, -56.1649, -34.0633" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelL" translation="40.8773, 3.16651, -15.4421" rotation="0.496676, 0.496676, 0.503302, 0.503302" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelR" translation="-40.5915, 3.16651, -15.688" rotation="0.495006, -0.495006, -0.504945, 0.504945" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_backwheel" translation="0.469988, 70.9912, -31.5152" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="1.50666, -22.4827, 23.1275" rotation="-2.93564e-007, -0.0174523, 0.0, 0.999848" scale="0.890076, 0.952381, 0.952381"/>
+    <transform name="gun" translation="0.452805, 41.6982, 62.5516" rotation="0.221288, -1.69277e-005, -7.64362e-005, 0.975209" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="artillery" translation="-0.45281, 0.369224, 55.3562" rotation="0.0, -0.00412723, 0.0, 0.999991" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheel_FR" translation="-23.6123, -56.0439, -31.6428" rotation="-0.432903, -0.559102, 0.432903, 0.559102" scale="0.332226, 0.332226, 0.332226"/>
+    <transform name="artillery_wheel_FL" translation="24.2565, -56.1649, -33.7118" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelL" translation="40.8736, 3.16651, -15.2811" rotation="0.493222, 0.493222, 0.506687, 0.506687" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelR" translation="-40.5761, 3.16651, -15.685" rotation="0.4898, -0.4898, -0.509996, 0.509996" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_backwheel" translation="0.481105, 70.9912, -30.8098" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="1.50666, -22.4827, 23.1275" rotation="-2.9352e-007, -0.0174523, 0.0, 0.999848" scale="0.890076, 0.952381, 0.952381"/>
+    <transform name="gun" translation="0.452805, 41.6982, 62.5516" rotation="0.226286, -3.44126e-005, -0.000155344, 0.974061" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="artillery" translation="-0.45281, 0.369224, 55.126" rotation="0.0, -0.00248207, 0.0, 0.999997" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheel_FR" translation="-23.6012, -56.0439, -31.718" rotation="-0.432903, -0.559102, 0.432903, 0.559102" scale="0.332226, 0.332226, 0.332226"/>
+    <transform name="artillery_wheel_FL" translation="24.2527, -56.1649, -33.0368" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelL" translation="40.872, 3.16651, -15.2079" rotation="0.491265, 0.491265, 0.508585, 0.508585" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelR" translation="-40.5607, 3.16651, -15.682" rotation="0.486842, -0.486842, -0.512821, 0.512821" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_backwheel" translation="0.486158, 70.9912, -30.4892" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="1.50666, -22.4827, 23.1275" rotation="-2.93604e-007, -0.0174523, 0.0, 0.999848" scale="0.890076, 0.952381, 0.952381"/>
+    <transform name="gun" translation="0.452805, 41.6982, 62.5516" rotation="0.229102, -4.42826e-005, -0.000199832, 0.973402" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="artillery" translation="-0.45281, 0.369224, 55.172" rotation="0.0, -0.000362282, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheel_FR" translation="-23.5984, -56.0439, -32.5412" rotation="-0.432903, -0.559102, 0.432903, 0.559102" scale="0.332226, 0.332226, 0.332226"/>
+    <transform name="artillery_wheel_FL" translation="24.2452, -56.1649, -32.3371" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelL" translation="40.8723, 3.16651, -15.2226" rotation="0.492033, 0.492033, 0.507842, 0.507842" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelR" translation="-40.5576, 3.16651, -15.6814" rotation="0.488004, -0.488004, -0.511715, 0.511715" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_backwheel" translation="0.485147, 70.9912, -30.5533" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="1.50666, -22.4827, 23.1275" rotation="-2.93785e-007, -0.0174523, 0.0, 0.999848" scale="0.890076, 0.952381, 0.952381"/>
+    <transform name="gun" translation="0.452805, 41.6982, 62.5516" rotation="0.227998, -4.04155e-005, -0.000182387, 0.973662" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="artillery" translation="-0.45281, 0.369224, 55.4943" rotation="0.0, 0.00092777, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheel_FR" translation="-23.6087, -56.0439, -33.311" rotation="-0.432903, -0.559102, 0.432903, 0.559102" scale="0.332226, 0.332226, 0.332226"/>
+    <transform name="artillery_wheel_FL" translation="24.2419, -56.1649, -32.4105" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelL" translation="40.8746, 3.16651, -15.325" rotation="0.49473, 0.49473, 0.505215, 0.505215" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelR" translation="-40.5576, 3.16651, -15.6814" rotation="0.492074, -0.492074, -0.507802, 0.507802" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_backwheel" translation="0.478073, 70.9912, -31.0022" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="1.50666, -22.4827, 23.1275" rotation="-2.93537e-007, -0.0174523, 0.0, 0.999848" scale="0.890076, 0.952381, 0.95238"/>
+    <transform name="gun" translation="0.452805, 41.6982, 62.5516" rotation="0.224109, -2.67963e-005, -0.000120969, 0.974564" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="artillery" translation="-0.45281, 0.369224, 56.0928" rotation="0.0, 0.000486648, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheel_FR" translation="-23.6327, -56.0439, -33.9457" rotation="-0.432903, -0.559102, 0.432903, 0.559102" scale="0.332226, 0.332226, 0.332226"/>
+    <transform name="artillery_wheel_FL" translation="24.2437, -56.1649, -33.3386" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelL" translation="40.879, 3.16651, -15.5153" rotation="0.498057, 0.498057, 0.501935, 0.501935" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_wheelR" translation="-40.5576, 3.16651, -15.6814" rotation="0.497083, -0.497083, -0.5029, 0.5029" scale="1.0, 1.0, 1.0"/>
+    <transform name="artillery_backwheel" translation="0.464935, 70.9912, -31.8359" rotation="0.5, 0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="head" translation="1.50666, -22.4827, 23.1275" rotation="-2.93731e-007, -0.0174523, 0.0, 0.999848" scale="0.890076, 0.952381, 0.952381"/>
+    <transform name="gun" translation="0.452805, 41.6982, 62.5516" rotation="0.219277, -9.8924e-006, -4.47294e-005, 0.975663" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>

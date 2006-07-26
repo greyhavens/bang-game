@@ -227,6 +227,7 @@ public abstract class ScenarioInfo
         // indian trading post scenarios
         register(new WendigoAttackInfo());
         register(new TotemBuildingInfo());
+        register(new ForestGuardiansInfo());
 
         // boom town post scenarios
 //         register(new GoldRushInfo());

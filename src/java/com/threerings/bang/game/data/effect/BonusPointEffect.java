@@ -39,7 +39,7 @@ public class BonusPointEffect extends BonusEffect
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
-        if (piece == null) {
+        if (piece == null || piece.owner == -1) {
             return;
         }
         // grant points to the activating player

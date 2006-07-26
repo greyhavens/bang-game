@@ -34,5 +34,6 @@ public class MarkerSprite extends PieceSprite
         new ColorRGBA(1, 1, 0, 1), // LODE
         new ColorRGBA(0, 1, 1, 1), // TOTEM
         new ColorRGBA(1, 0, 1, 1), // SAFE
+        new ColorRGBA(0.5f, 0.5f, 0.5f, 1), // ROBOTS
     };
 }

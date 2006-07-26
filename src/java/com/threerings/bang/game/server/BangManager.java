@@ -390,7 +390,7 @@ public class BangManager extends GameManager
                                     ", move=" + x + "/" + y +
                                     ", target=" + target.info() +
                                     ", dam1=" + dam1 + ", dam2=" + dam2+ "].");
-                    } else {
+                    } else if (unit.owner != -1) {
                         _bangobj.stats[unit.owner].incrementStat(
                             Stat.Type.SHOTS_FIRED, 1);
                     }
@@ -1544,13 +1544,15 @@ public class BangManager extends GameManager
         _bangobj.board.shadowPiece(munit);
 
         // record the move to this player's statistics
-        _bangobj.stats[unit.owner].incrementStat(
-            Stat.Type.DISTANCE_MOVED, steps);
+        if (unit.owner != -1) {
+            _bangobj.stats[unit.owner].incrementStat(
+                Stat.Type.DISTANCE_MOVED, steps);
+        }
 
         // dispatch a move effect to actually move the unit
         MoveEffect meffect = unit.generateMoveEffect(_bangobj, x, y, target);
         if (deployEffect(unit.owner, meffect) &&
-                meffect instanceof MoveShootEffect) { 
+                meffect instanceof MoveShootEffect && unit.owner != -1) {
             _bangobj.stats[unit.owner].incrementStat(
                 Stat.Type.SHOTS_FIRED, 1);
         }
@@ -1564,7 +1566,8 @@ public class BangManager extends GameManager
 
                     // small hackery: note that this player collected a bonus
                     if (lapper instanceof Bonus &&
-                        !((Bonus)lapper).isScenarioBonus()) {
+                        !((Bonus)lapper).isScenarioBonus() &&
+                        munit.owner != -1) {
                         _bangobj.stats[munit.owner].incrementStat(
                             Stat.Type.BONUSES_COLLECTED, 1);
                     }

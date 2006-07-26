@@ -177,7 +177,10 @@ public abstract class Effect extends SimpleStreamableObject
                 target instanceof Unit) {
             // record the kill statistics
             bangobj.stats[shooter].incrementStat(Stat.Type.UNITS_KILLED, 1);
-            bangobj.stats[target.owner].incrementStat(Stat.Type.UNITS_LOST, 1);
+            if (target.owner != -1) {
+                bangobj.stats[target.owner].incrementStat(
+                    Stat.Type.UNITS_LOST, 1);
+            }
         }
 
         // if the should be removed when killed, do so now
