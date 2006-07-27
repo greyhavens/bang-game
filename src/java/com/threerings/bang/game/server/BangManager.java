@@ -1684,14 +1684,17 @@ public class BangManager extends GameManager
     protected void recordDamage (int pidx, IntIntMap damage)
     {
         int total = 0;
-        for (int ii = 0; ii < getPlayerSlots(); ii++) {
+        for (int ii = -1; ii < getPlayerSlots(); ii++) {
             int ddone = damage.get(ii);
             if (ddone <= 0) {
                 continue;
             }
-            // deduct 150% if you shoot yourself
+            // deduct 150% if you shoot yourself; otherwise, give the scenario
+            // a chance to modify the damage
             if (ii == pidx) {
                 ddone = -3 * ddone / 2;
+            } else {
+                ddone = _scenario.modifyDamageDone(pidx, ii, ddone);    
             }
             total += ddone;
         }

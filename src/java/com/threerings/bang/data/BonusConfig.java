@@ -48,6 +48,9 @@ public class BonusConfig
     /** If true, the bonus can only be activated by ground units. */
     public boolean groundOnly;
     
+    /** If specified, the bonus will only be spawned in this scenario. */
+    public String scenario;
+    
     /** The custom bonus class use for this bonus, if specified. */
     public String bonusClass;
 
@@ -102,8 +105,10 @@ public class BonusConfig
     public int getWeight (BangObject bangobj, double averagePower,
                           int averageDamage, int averagePieces)
     {
-        // if the base weight is zero, don't adjust it
-        if (baseWeight == 0) {
+        // bail out if the base weight is zero or it's not the required
+        // scenario
+        if (baseWeight == 0 || (scenario != null &&
+                !bangobj.scenario.getIdent().equals(scenario))) {
             return 0;
         }
 
@@ -179,6 +184,8 @@ public class BonusConfig
         config.holdable = BangUtil.getBooleanProperty(
             type, props, "holdable", false);
 
+        config.scenario = props.getProperty("scenario");
+        
         config.groundOnly = BangUtil.getBooleanProperty(
             type, props, "ground_only", false);
             

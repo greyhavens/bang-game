@@ -6,6 +6,8 @@ package com.threerings.bang.game.data.scenario;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
 
+import com.threerings.bang.game.data.piece.Marker;
+
 /**
  * Contains metadata on the Wendigo Attack scenario.
  */
@@ -17,6 +19,9 @@ public class ForestGuardiansInfo extends ScenarioInfo
     /** Points per tree grown. */
     public static final int POINTS_PER_TREE = 25;
 
+    /** Points earned at each tick for contributing to trees' growth. */
+    public static final int POINTS_PER_TREE_GROWTH = 1;
+    
     @Override // from ScenarioInfo
     public String getIdent ()
     {
@@ -39,5 +44,17 @@ public class ForestGuardiansInfo extends ScenarioInfo
     public int getPointsPerObjective ()
     {
         return POINTS_PER_TREE;
+    }
+    
+    @Override // from ScenarioInfo
+    public Stat.Type getSecondaryObjective ()
+    {
+        return Stat.Type.TREE_POINTS;
+    }
+    
+    @Override // from ScenarioInfo
+    public boolean isValidMarker (Marker marker)
+    {
+        return super.isValidMarker(marker) || marker.getType() == Marker.ROBOTS;
     }
 }

@@ -67,10 +67,12 @@ public class TreeBed extends Prop
         // normal units cause the tree to grow; logging robots cause it to
         // shrink
         int dinc = 0;
+        ArrayList<Piece> growers = new ArrayList<Piece>();
         for (Piece piece : pieces) {
             if (piece instanceof Unit && getDistance(piece) == 1 &&
                 piece.isAlive()) {
                 dinc += ((Unit)piece).getTreeProximityDamage();
+                growers.add(piece);
             }
         }
         if (dinc == 0 || (growth == 0 && damage == 100 && dinc > 0) ||
@@ -78,7 +80,8 @@ public class TreeBed extends Prop
             return null;
         }
         ArrayList<Effect> effects = new ArrayList<Effect>();
-        effects.add(new TreeBedEffect(this, dinc));
+        effects.add(new TreeBedEffect(this,
+            growers.toArray(new Piece[growers.size()]), dinc));
         return effects;
     }
     

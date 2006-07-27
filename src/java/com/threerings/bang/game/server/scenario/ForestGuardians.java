@@ -61,6 +61,14 @@ public class ForestGuardians extends Scenario
             }
         }
     }
+
+    @Override // documentation inherited    
+    public int modifyDamageDone (int pidx, int tidx, int ddone)
+    {
+        // no points are awarded for shooting the other players' units; only
+        // for shooting the robots
+        return (tidx == -1) ? ddone : 0;
+    }
     
     @Override // documentation inherited
     public void roundDidEnd (BangObject bangobj)

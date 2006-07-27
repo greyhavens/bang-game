@@ -244,6 +244,15 @@ public abstract class Scenario
     }
 
     /**
+     * Modifies the damage done by the first player to the second for purposes
+     * of modifying statistics and awarding bonus points.
+     */
+    public int modifyDamageDone (int pidx, int tidx, int ddone)
+    {
+        return ddone;
+    }
+    
+    /**
      * Returns true if this scenario type should pay out earnings to the
      * specified player. False if not.
      */

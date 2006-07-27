@@ -28,7 +28,7 @@ public class LoggingRobot extends BallisticUnit
         ArrayList<Effect> effects = new ArrayList<Effect>();
         for (Piece piece : pieces) {
             if (piece instanceof Unit && getDistance(piece) == 1 &&
-                validTarget(piece, false)) {
+                validTarget(piece, false) && !piece.isAirborne()) {
                 effects.add(new ShotEffect(this, piece, UNIT_PROXIMITY_DAMAGE,
                     null, null));
             }
