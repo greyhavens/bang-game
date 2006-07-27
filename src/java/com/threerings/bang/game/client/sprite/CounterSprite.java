@@ -69,7 +69,7 @@ public class CounterSprite extends PropSprite
             _counter.setTextureBuffer(
                 0, BufferUtils.createFloatBuffer(tcoords));
             // resize our quad to accomodate the text
-            float qrat = TILE_SIZE / tcoords[2].y;
+            float qrat = TILE_SIZE * 0.8f / tcoords[2].y;
             _counter.resize(qrat * tcoords[2].x, qrat * tcoords[2].y);
             _tstate.setTexture(tex);
             _counter.updateRenderState();

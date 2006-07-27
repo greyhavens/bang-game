@@ -19,18 +19,18 @@ import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.RandomLogic;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.scenario.WendigoAttackInfo;
-
+import com.threerings.bang.game.data.effect.CountEffect;
 import com.threerings.bang.game.data.effect.TalismanEffect;
 import com.threerings.bang.game.data.effect.WendigoEffect;
-
 import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.Wendigo;
+import com.threerings.bang.game.data.scenario.WendigoAttackInfo;
 
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
@@ -136,7 +136,7 @@ public class WendigoAttack extends Scenario
         }
     }
 
-    protected class WendigoDelegate extends ScenarioDelegate
+    protected class WendigoDelegate extends CounterDelegate
     {
         public WendigoDelegate ()
         {
@@ -163,6 +163,17 @@ public class WendigoAttack extends Scenario
                 _nextWendigo += (short)RandomUtil.getInt(
                         MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
             }
+        }
+
+        @Override // documentation inherited
+        protected int pointsPerCounter ()
+        {
+            return WendigoAttackInfo.POINTS_PER_SURVIVAL;
+        }
+
+        @Override // documentation inherited
+        protected void checkAdjustedCounter (BangObject bangobj, Unit unit) {
+            // nothing to do here
         }
 
         /**
@@ -282,6 +293,18 @@ public class WendigoAttack extends Scenario
                 }
             } finally {
                 bangobj.commitTransaction();
+            }
+
+            if (_counters.size() == 0) {
+                return;
+            }
+
+            for (Counter counter : _counters) {
+                if (points[counter.owner] > 0) {
+                    _bangmgr.deployEffect(
+                            -1, CountEffect.changeCount(counter.pieceId,
+                                counter.count + points[counter.owner]));
+                }
             }
         }
 
