@@ -1475,7 +1475,7 @@ public class BangManager extends GameManager
     {
         // compute the possible moves for this unit
         _moves.clear();
-        _bangobj.board.computeMoves(unit, _moves, null);
+        unit.computeMoves(_bangobj.board, _moves, null);
 
         // if we have not specified an exact move, locate one now
         if (x == Short.MAX_VALUE) {
@@ -2230,7 +2230,7 @@ public class BangManager extends GameManager
             // compute our potential move and attack set
             _moves.clear();
             _attacks.clear();
-            _bangobj.board.computeMoves(unit, _moves, null);
+            unit.computeMoves(_bangobj.board, _moves, null);
 
             // if no specific location was specified, make sure we can still
             // determine a location from which to fire

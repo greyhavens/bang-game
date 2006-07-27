@@ -978,6 +978,14 @@ public class BangBoardView extends BoardView
             return false;
         }
 
+        // see if this is a move selection after an attack selection
+        if (_action != null) {
+            _action[1] = tx;
+            _action[2] = ty;
+            executeAction();
+            return true;
+        }
+
         // store the coordinates toward which we wish to move
         _action = new int[] { _selection.pieceId, tx, ty, -1 };
 
@@ -1000,8 +1008,8 @@ public class BangBoardView extends BoardView
         }
 
         // potentially display our potential attacks
-        if (!_shiftDown && _attackEnabled && !willTeleport) {
-            _attackSet.clear();
+        if (!_shiftDown && _attackEnabled && !willTeleport &&
+                _selection.getMinFireDistance() > 0) {
             pruneAttackSet(moves, _attackSet);
         }
 
@@ -1032,12 +1040,32 @@ public class BangBoardView extends BoardView
             piece.owner != _pidx) {
             // if we have not yet selected move coordinates, we'll let the
             // server figure it out for us when it processes our move
+            boolean wasnull = false;
             if (_action == null) {
                 _action = new int[] { _selection.pieceId,
                                       Short.MAX_VALUE, Short.MAX_VALUE, -1 };
-            }
+                wasnull = true;
+            } 
             // note the piece we desire to fire upon
             _action[3] = piece.pieceId;
+
+            // if we have an min fire distance of 0 and initially selecting
+            // an attack target, show the remaining move locations
+            if (wasnull && _selection.getMinFireDistance() == 0) {
+                clearAttackSet();
+                _attackSet.add(tx, ty);
+                Targetable target = getTargetableSprite(piece);
+                if (target != null) {
+                    target.setTargeted(_selection.lastActed >= piece.lastActed ?
+                                       Targetable.TargetMode.MAYBE :
+                                       Targetable.TargetMode.SURE_SHOT,
+                                       (Unit)_selection);
+                }
+                pruneMoveSet(_moveSet, tx, ty);
+                highlightTiles(_moveSet, getHighlightColor(_selection));
+                return true;
+            }
+
             getTargetableSprite(piece).setPendingShot(true);
             executeAction();
             return true;
@@ -1091,6 +1119,23 @@ public class BangBoardView extends BoardView
                 dest.add(p.x, p.y);
             } else {
                 log.warning("No sprite for unit! [unit=" + p + "].");
+            }
+        }
+    }
+
+    /**
+     * Removes from the movement set all tiles which are not reachable
+     * after moving to the supplied detination.
+     */
+    protected void pruneMoveSet (PointSet moves, int dx, int dy)
+    {
+        int dist = _selection.getDistance(dx, dy);
+        int remain = _selection.getMoveDistance() - dist;
+        for (Iterator<Integer> iter = moves.iterator(); iter.hasNext(); ) {
+            int coord = iter.next();
+            int x = PointSet.decodeX(coord), y = PointSet.decodeY(coord);
+            if (Piece.getDistance(dx, dy, x, y) > remain) {
+                iter.remove();
             }
         }
     }
@@ -1178,7 +1223,7 @@ public class BangBoardView extends BoardView
         }
 
         // highlight our potential moves and attackable pieces
-        _bangobj.board.computeMoves(piece, _moveSet, null);
+        piece.computeMoves(_bangobj.board, _moveSet, null);
         if (_attackEnabled) {
             _attackSet.clear();
             pruneAttackSet(_moveSet, _attackSet);

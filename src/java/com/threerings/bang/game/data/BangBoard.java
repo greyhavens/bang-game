@@ -504,12 +504,22 @@ public class BangBoard extends SimpleStreamableObject
      */
     public List<Point> computePath (int ox, int oy, Piece piece)
     {
+        return computePath (ox, oy, piece.x, piece.y, piece);
+    }
+
+    /**
+     * Computes and returns a path from the specified coordinates to the
+     * supplied coordinates. Returns null if no path could be found.
+     */
+    public List<Point> computePath (
+            int ox, int oy, int dx, int dy, Piece piece)
+    {
 //         log.info("Computing path from " + ox + "/" + oy + " to " +
 //                  piece.x + "/" + piece.y +
 //                  " maxdist:" + piece.getMoveDistance() + ".");
         return AStarPathUtil.getPath(
             this, piece.getStepper(), piece, piece.getMoveDistance(),
-            ox, oy, piece.x, piece.y, true);
+            ox, oy, dx, dy, true);
     }
 
     /**
@@ -983,7 +993,8 @@ public class BangBoard extends SimpleStreamableObject
         int idx = dy*_width+dx;
         byte tstate = _tstate[idx];
         boolean flightstate = (remain ? piece.isAirborne() : piece.isFlyer());
-        if ((flightstate && (tstate > O_PROP || (tstate & TALL_FLAG) != 0)) ||
+        if ((flightstate && (!remain || tstate <= O_FLAT) &&
+                    (tstate > O_PROP || (tstate & TALL_FLAG) != 0)) ||
                 piece instanceof Train) {
             return true;
         } else if ((tstate == O_FLAT) ||
@@ -1092,10 +1103,15 @@ public class BangBoard extends SimpleStreamableObject
         // next prune any moves that "land" us on a tile occupied by a piece
         // (we allow units to move through certain pieces on their way but not
         // to stop ontop of another unit)
+        remain = (byte)piece.getMaxFireDistance();
         for (int ii = 0, ll = moves.size(); ii < ll; ii++) {
             int x = moves.getX(ii), y = moves.getY(ii), idx = y*_width+x;
-            if (!canOccupy(piece, x, y) || _tstate[idx] >= 0) {
+            if (!canOccupy(piece, x, y)) { 
                 moves.remove(x, y);
+                if (attacks != null && remain == 0 && 
+                        hasReachableNeighbor(piece, x, y)) {
+                    attacks.add(x, y);
+                }
                 _pgrid[idx] = 0;
                 ii--;
                 ll--;
@@ -1106,9 +1122,8 @@ public class BangBoard extends SimpleStreamableObject
         moves.add(piece.x, piece.y);
 
         // if the attack set is non-null, compute our attacks as well
-        if (attacks != null) {
+        if (attacks != null && remain > 0) {
             PointSet set = moves;
-            remain = (byte)piece.getMaxFireDistance();
             considerFiring(attacks, piece.x, piece.y, remain, false);
             for (int ii = 0, ll = moves.size(); ii < ll; ii++) {
                 int mx = moves.getX(ii), my = moves.getY(ii);
@@ -1334,6 +1349,34 @@ public class BangBoard extends SimpleStreamableObject
             considerFiring(attacks, xx, yy+1, premain, true);
             considerFiring(attacks, xx, yy-1, premain, true);
         }
+    }
+
+    /** Helper function for {@link computeMoves} */
+    protected boolean hasReachableNeighbor (Piece piece, int x, int y)
+    {
+        int idx = y * _width + x;
+        byte weight = _pgrid[y * _width + x];
+        return canMoveTo(piece, x + 1, y, weight) ||
+               canMoveTo(piece, x - 1, y, weight) ||
+               canMoveTo(piece, x, y + 1, weight) ||
+               canMoveTo(piece, x, y - 1, weight);
+    }
+
+    /** Helper fucntion for {@link hasReachableNeighbor} */
+    protected boolean canMoveTo (Piece piece, int x, int y, byte weight)
+    {
+        int idx = y * _width + x;
+        weight -= Math.abs(weight - _pgrid[idx]);
+        if (weight <= 0 || (piece.x == x && piece.y == y)) {
+            return false;
+        }
+        if (canOccupy(piece, x, y)) {
+            return true;
+        }
+        return canMoveTo(piece, x + 1, y, weight) ||
+               canMoveTo(piece, x - 1, y, weight) ||
+               canMoveTo(piece, x, y + 1, weight) ||
+               canMoveTo(piece, x, y - 1, weight);
     }
     
     /**

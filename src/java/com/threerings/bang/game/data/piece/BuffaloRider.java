@@ -70,17 +70,17 @@ public class BuffaloRider extends Unit
     protected ShotEffect shoot (BangObject bangobj, Piece target, 
             float scale, short nx, short ny)
     {
-        int dist = getDistance(x, y, target.x, target.y) - 1;
-        scale *= (0.25f + 0.25f * dist);
+        int dist = getDistance(x, y, target.x, target.y);
+        scale *= DISTANCE_DAMAGE_SCALE * dist;
         short pushx = (short)(2*target.x - nx);
         short pushy = (short)(2*target.y - ny);
         // If we've moved at least 3 squares then try to push the target
         // If the target can't be pushed then add an extra .25 to the scle
         boolean pushed = false;
-        if (dist >= 3 && bangobj.board.canTravel(
+        if (dist >= DISTANCE_TO_PUSH && bangobj.board.canTravel(
                     target, target.x, target.y, pushx, pushy, true)) {
             pushed = true;
-            scale += 0.25f;
+            scale += DISTANCE_DAMAGE_SCALE;
         }
         ShotEffect shot = super.shoot(bangobj, target, scale);
         if (pushed) {
@@ -89,4 +89,7 @@ public class BuffaloRider extends Unit
         }
         return shot;
     }
+
+    protected static final float DISTANCE_DAMAGE_SCALE = 0.25f;
+    protected static final int DISTANCE_TO_PUSH = 4;
 }

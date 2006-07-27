@@ -74,7 +74,7 @@ public abstract class AILogic
                 Unit unit = (Unit)pieces[ii];
                 _moves.clear();
                 _attacks.clear();
-                _bangobj.board.computeMoves(unit, _moves, _attacks);
+                unit.computeMoves(_bangobj.board, _moves, _attacks);
                 moveUnit(pieces, unit, _moves, _attacks);
             }
         }

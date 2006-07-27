@@ -23,6 +23,7 @@ import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
+import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 
@@ -418,6 +419,15 @@ public class Unit extends Piece
     public boolean isAirborne ()
     {
         return _config.mode == UnitConfig.Mode.AIR;
+    }
+
+    /**
+     * Compute the valid moves for this piece.
+     */
+    public void computeMoves (
+            BangBoard board, PointSet moves, PointSet attacks)
+    {
+        board.computeMoves(this, moves, attacks);
     }
 
     @Override // documentation inherited
