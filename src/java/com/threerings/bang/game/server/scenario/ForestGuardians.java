@@ -13,6 +13,8 @@ import com.samskivert.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.parlor.game.data.GameAI;
+
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
@@ -25,6 +27,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.ai.AILogic;
+import com.threerings.bang.game.server.ai.ForestGuardiansLogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
@@ -36,6 +39,7 @@ import static com.threerings.bang.Log.log;
  * <li> Trees sprout from fixed locations on the board.
  * <li> Players surround the trees to make them grow.
  * <li> Logging robots attempt to cut down the trees.
+ * <li> Four fetishes grant special powers to the units that hold them.
  * <li> The round ends after a fixed time limit.
  * <li> Players earn money for all trees alive at the end of the round.
  * </ul>
@@ -47,6 +51,12 @@ public class ForestGuardians extends Scenario
         registerDelegate(new TrainDelegate());
         registerDelegate(new RespawnDelegate());
         registerDelegate(new LoggingRobotDelegate());
+    }
+    
+    @Override // documentation inherited
+    public AILogic createAILogic (GameAI ai)
+    {
+        return new ForestGuardiansLogic();
     }
     
     @Override // documentation inherited
