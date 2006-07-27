@@ -6,10 +6,12 @@ package com.threerings.bang.game.server.scenario;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.PriorityQueue;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Revolutionary;
 import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
@@ -93,6 +95,22 @@ public class RespawnDelegate extends ScenarioDelegate
         }
         Unit unit = (Unit)piece;
         unit.setRespawnTick((short)(bangobj.tick + _respawnTicks));
+
+        // the Revolutionary will cause all allied units to respawn on the
+        // next tick
+        if (unit instanceof Revolutionary) {
+            ArrayList<Unit> saved = new ArrayList<Unit>();
+            for (Iterator<Unit> iter = _respawns.iterator(); iter.hasNext(); ) {
+                Unit u = iter.next();
+                if (u.owner == unit.owner) {
+                    iter.remove();
+                    u.setRespawnTick(bangobj.tick);
+                    saved.add(u);
+                }
+            }
+            _respawns.addAll(saved);
+        }
+
         _respawns.add(unit);
         log.fine("Queued for respawn " + unit + ".");
     }
