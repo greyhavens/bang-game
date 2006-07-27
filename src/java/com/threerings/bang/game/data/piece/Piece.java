@@ -676,8 +676,10 @@ public abstract class Piece extends SimpleStreamableObject
         ddamage = (ddamage * undamage) / 100;
 
         // account for any other pieces which have attack adjustments
-        for (Piece p : bangobj.pieces) {
-            ddamage = p.adjustPieceAttack(this, ddamage);
+        if (bangobj != null) {
+            for (Piece p : bangobj.pieces) {
+                ddamage = p.adjustPieceAttack(this, ddamage);
+            }
         }
 
         // account for any influences on the attacker or defender
