@@ -9,6 +9,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TreeBedSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.FetishEffect;
 import com.threerings.bang.game.data.effect.TreeBedEffect;
 
 /**
@@ -66,22 +67,33 @@ public class TreeBed extends Prop
     {
         // normal units cause the tree to grow; logging robots cause it to
         // shrink
-        int dinc = 0;
+        int dinc = 0, ddec = 0;
+        boolean doubleGrowth = false;
         ArrayList<Piece> growers = new ArrayList<Piece>();
         for (Piece piece : pieces) {
             if (piece instanceof Unit && getDistance(piece) == 1 &&
                 piece.isAlive()) {
-                dinc += ((Unit)piece).getTreeProximityDamage();
+                Unit unit = (Unit)piece;
+                if (FetishEffect.FROG_FETISH.equals(unit.holding)) {
+                    doubleGrowth = true;
+                }
+                int pdamage = unit.getTreeProximityDamage();
+                if (pdamage > 0) {
+                    dinc += pdamage;
+                } else {
+                    ddec += pdamage;
+                }
                 growers.add(piece);
             }
         }
-        if (dinc == 0 || (growth == 0 && damage == 100 && dinc > 0) ||
-            (growth == FULLY_GROWN && damage == 0 && dinc < 0)) {
+        int tdamage = dinc + ddec * (doubleGrowth ? 2 : 1);
+        if (tdamage == 0 || (growth == 0 && damage == 100 && tdamage > 0) ||
+            (growth == FULLY_GROWN && damage == 0 && tdamage < 0)) {
             return null;
         }
         ArrayList<Effect> effects = new ArrayList<Effect>();
         effects.add(new TreeBedEffect(this,
-            growers.toArray(new Piece[growers.size()]), dinc));
+            growers.toArray(new Piece[growers.size()]), tdamage));
         return effects;
     }
     

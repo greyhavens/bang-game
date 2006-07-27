@@ -11,17 +11,21 @@ import java.util.Iterator;
 
 import com.samskivert.util.RandomUtil;
 
+import com.threerings.presents.server.InvocationException;
+
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.LoggingRobot;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.ai.AILogic;
+import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
@@ -68,6 +72,25 @@ public class ForestGuardians extends Scenario
         // no points are awarded for shooting the other players' units; only
         // for shooting the robots
         return (tidx == -1) ? ddone : 0;
+    }
+    
+    @Override // documentation inherited    
+    public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
+                                PieceSet purchases)
+        throws InvocationException
+    {
+        super.roundWillStart(bangobj, starts, purchases);
+        
+        // place the four fetishes
+        Piece[] pieces = bangobj.getPieceArray();
+        placeBonus(bangobj, pieces,
+            Bonus.createBonus("indian_post/fetish_bear"), _bonusSpots);
+        placeBonus(bangobj, pieces,
+            Bonus.createBonus("indian_post/fetish_fox"), _bonusSpots);
+        placeBonus(bangobj, pieces,
+            Bonus.createBonus("indian_post/fetish_frog"), _bonusSpots);
+        placeBonus(bangobj, pieces,
+            Bonus.createBonus("indian_post/fetish_turtle"), _bonusSpots);
     }
     
     @Override // documentation inherited
@@ -151,7 +174,6 @@ public class ForestGuardians extends Scenario
                 return;
             }
             
-            // then position it and add it back at its new location
             unit.position(bspot.x, bspot.y);
             bangobj.addToPieces(unit);
             bangobj.board.shadowPiece(unit);

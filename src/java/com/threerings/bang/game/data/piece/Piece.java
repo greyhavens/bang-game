@@ -691,13 +691,9 @@ public abstract class Piece extends SimpleStreamableObject
         }
 
         // account for any influences on the attacker or defender
-        if (this instanceof Unit && ((Unit)this).influence != null) {
-            ddamage = ((Unit)this).influence.adjustAttack(target, ddamage);
-        }
-        if (target instanceof Unit && ((Unit)target).influence != null) {
-            ddamage = ((Unit)target).influence.adjustDefend(this, ddamage);
-        }
-
+        ddamage = adjustAttack(target, ddamage);
+        ddamage = target.adjustDefend(this, ddamage);
+        
         // finally scale the damage by the desired value
         return Math.round(scale * ddamage);
     }
@@ -809,7 +805,23 @@ public abstract class Piece extends SimpleStreamableObject
                     target.getClass() + "?");
         return 10;
     }
-
+    
+    /**
+     * Performs any necessary adjustments to this piece's attack.
+     */
+    protected int adjustAttack (Piece target, int damage)
+    {
+        return damage;
+    }
+    
+    /**
+     * Performs any necessary adjustments to this piece's defense.
+     */
+    protected int adjustDefend (Piece target, int damage)
+    {
+        return damage;
+    }
+    
     /**
      * Generate a shot effect for this piece.
      */

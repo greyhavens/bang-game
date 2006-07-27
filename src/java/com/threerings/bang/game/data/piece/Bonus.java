@@ -155,6 +155,15 @@ public class Bonus extends Piece
     /**
      * Creates a bonus of the specified type.
      */
+    public static Bonus createBonus (String type)
+    {
+        BonusConfig config = BonusConfig.getConfig(type);
+        return (config == null) ? null : createBonus(config);
+    }
+    
+    /**
+     * Creates a bonus with the specified configuration.
+     */
     public static Bonus createBonus (BonusConfig config)
     {
         if (config == null) {

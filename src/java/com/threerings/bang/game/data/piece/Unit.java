@@ -45,10 +45,13 @@ public class Unit extends Piece
      * but will be filled in at the appropriate time on the client and server
      * by effects. */
     public transient Hindrance hindrance;
-
+    
     /** Type of thing being held, or null for nothing. */
     public String holding;
 
+    /** An additional influence caused by the thing being held. */
+    public transient Influence holdingInfluence;
+    
     /**
      * Instantiates a unit of the specified type.
      */
@@ -335,6 +338,8 @@ public class Unit extends Piece
     {
         int ticks = (influence == null) ? super.getTicksPerMove() :
             influence.adjustTicksPerMove(super.getTicksPerMove());
+        ticks = (holdingInfluence == null) ?
+            ticks : holdingInfluence.adjustTicksPerMove(ticks);
         return (hindrance == null) ? ticks :
             hindrance.adjustTicksPerMove(ticks);
     }
@@ -344,6 +349,8 @@ public class Unit extends Piece
     {
         int distance = (influence == null) ? _config.sightDistance :
             influence.adjustSightDistance(_config.sightDistance);
+        distance = (holdingInfluence == null) ?
+            distance : holdingInfluence.adjustSightDistance(distance);
         return (hindrance == null) ? distance :
             hindrance.adjustSightDistance(distance);
     }
@@ -353,6 +360,8 @@ public class Unit extends Piece
     {
         int distance = (influence == null) ? _config.moveDistance :
             influence.adjustMoveDistance(_config.moveDistance);
+        distance = (holdingInfluence == null) ?
+            distance : holdingInfluence.adjustMoveDistance(distance);
         return (hindrance == null) ? distance :
             hindrance.adjustMoveDistance(distance);
     }
@@ -362,6 +371,8 @@ public class Unit extends Piece
     {
         int distance = (influence == null) ? _config.minFireDistance :
             influence.adjustMinFireDistance(_config.minFireDistance);
+        distance = (holdingInfluence == null) ?
+            distance : holdingInfluence.adjustMinFireDistance(distance);
         return (hindrance == null) ? distance :
             hindrance.adjustMinFireDistance(distance);
     }
@@ -371,6 +382,8 @@ public class Unit extends Piece
     {
         int distance = (influence == null) ? _config.maxFireDistance :
             influence.adjustMaxFireDistance(_config.maxFireDistance);
+        distance = (holdingInfluence == null) ?
+            distance : holdingInfluence.adjustMaxFireDistance(distance);
         return (hindrance == null) ? distance :
             hindrance.adjustMaxFireDistance(distance);
     }
@@ -450,6 +463,9 @@ public class Unit extends Piece
         if (influence != null) {
             cost = influence.adjustTraversalCost(terrain, cost);
         }
+        if (holdingInfluence != null) {
+            cost = holdingInfluence.adjustTraversalCost(terrain, cost);
+        }
         if (hindrance != null) {
             cost = hindrance.adjustTraversalCost(terrain, cost);
         }
@@ -493,6 +509,28 @@ public class Unit extends Piece
         return damage;
     }
 
+    @Override // documentation inherited
+    public int adjustAttack (Piece target, int damage)
+    {
+        damage = (influence == null) ?
+            damage : influence.adjustAttack(target, damage);
+        damage = (holdingInfluence == null) ?
+            damage : holdingInfluence.adjustAttack(target, damage);
+        return (hindrance == null) ?
+            damage : hindrance.adjustAttack(target, damage);
+    }
+    
+    @Override // documentation inherited
+    public int adjustDefend (Piece shooter, int damage)
+    {
+        damage = (influence == null) ?
+            damage : influence.adjustDefend(shooter, damage);
+        damage = (holdingInfluence == null) ?
+            damage : holdingInfluence.adjustDefend(shooter, damage);
+        return (hindrance == null) ?
+            damage : hindrance.adjustDefend(shooter, damage);
+    }
+    
     @Override // documentation inherited
     protected void toString (StringBuilder buf)
     {

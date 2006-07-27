@@ -9,6 +9,7 @@ import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.FetishEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
 /**
@@ -23,12 +24,27 @@ public class LoggingRobot extends BallisticUnit
     }
     
     @Override // documentation inherited
+    public boolean canActivateBonus (Bonus bonus)
+    {
+        return false;
+    }
+    
+    @Override // documentation inherited
+    public boolean validTarget (Piece target, boolean allowSelf)
+    {
+        // logging robots can't see units holding the fox fetish
+        return super.validTarget(target, allowSelf) &&
+            (!(target instanceof Unit) ||
+                !FetishEffect.FOX_FETISH.equals(((Unit)target).holding));
+    }
+    
+    @Override // documentation inherited
     public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
     {
         ArrayList<Effect> effects = new ArrayList<Effect>();
         for (Piece piece : pieces) {
             if (piece instanceof Unit && getDistance(piece) == 1 &&
-                validTarget(piece, false) && !piece.isAirborne()) {
+                piece.owner != -1 && !piece.isAirborne()) {
                 effects.add(new ShotEffect(this, piece, UNIT_PROXIMITY_DAMAGE,
                     null, null));
             }
