@@ -187,6 +187,13 @@ public abstract class Effect extends SimpleStreamableObject
         if (target.removeWhenDead()) {
             bangobj.removePieceDirect(target);
             reportRemoval(obs, target);
+
+        // otherwise reshadow the piece to block all ground travel across
+        } else {
+            int owner = target.owner;
+            target.owner = -1;
+            bangobj.board.shadowPiece(target);
+            target.owner = owner;
         }
 
         return true;

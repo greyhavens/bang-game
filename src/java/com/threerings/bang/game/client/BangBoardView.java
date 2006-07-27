@@ -1249,12 +1249,26 @@ public class BangBoardView extends BoardView
         clearSelection();
         selectUnit(oselection, false);
 
-        // if we had already selected a movement, reconfigure that (it might no
-        // longer be valid but handleClickToMove will ignore us in that case
         if (oaction != null) {
-            log.info("Reissuing click to move +" + oaction[1] +
-                "+" + oaction[2]);
-            handleClickToMove(oaction[1], oaction[2]);
+            // if we had already selected a movement, reconfigure that (it 
+            // might no longer be valid but handleClickToMove will ignore 
+            // us in that case
+            if (oaction[3] == -1) {
+                log.info("Reissuing click to move +" + oaction[1] +
+                    "+" + oaction[2]);
+                handleClickToMove(oaction[1], oaction[2]);
+
+            // if we had already selected a target, reconfigure that (it
+            // might no longer be valid but handleClickToAttack will ignore
+            // us in that case
+            } else {
+                for (Piece p : _bangobj.pieces) {
+                    if (p.pieceId == oaction[3]) {
+                        handleClickToAttack(p, p.x, p.y);
+                        break;
+                    }
+                }
+            }
         }
 
         return true;

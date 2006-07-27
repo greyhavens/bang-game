@@ -722,8 +722,8 @@ public class BangBoard extends SimpleStreamableObject
             
         } else if (piece instanceof BigPiece) {
             BigPiece bpiece = (BigPiece)piece;
-            byte ptype =
-                createPropType(bpiece.isTall(), bpiece.isPenetrable());
+            byte ptype = createPropType(bpiece.isTall(), 
+                    bpiece.isPenetrable(), bpiece.willBeTargetable());
             int elevation = (int)Math.ceil(bpiece.getHeight() *
                 _elevationUnitsPerTile);
             if (bpiece instanceof Prop) {
@@ -754,7 +754,7 @@ public class BangBoard extends SimpleStreamableObject
                 (int)Math.ceil(piece.getHeight() * _elevationUnitsPerTile));
             if (((Track)piece).preventsGroundOverlap()) {
                 _tstate[idx] = _btstate[idx] = combinePropTypes(_btstate[idx],
-                    createPropType(false, true));
+                    createPropType(false, true, false));
             }
 
         } else if (piece instanceof Bonus) {
@@ -994,8 +994,9 @@ public class BangBoard extends SimpleStreamableObject
         byte tstate = _tstate[idx];
         boolean flightstate = (remain ? piece.isAirborne() : piece.isFlyer());
         if ((flightstate && (!remain || tstate <= O_FLAT) &&
-                    (tstate > O_PROP || (tstate & TALL_FLAG) != 0)) ||
-                piece instanceof Train) {
+                (tstate > O_PROP || (tstate & TALL_FLAG) != 0 ||
+                (!remain && (tstate & TARGETABLE_FLAG) != 0 && 
+                 piece.getMinFireDistance() == 0))) || piece instanceof Train) {
             return true;
         } else if ((tstate == O_FLAT) ||
                (piece instanceof Unit && tstate == O_BONUS) ||
@@ -1388,16 +1389,19 @@ public class BangBoard extends SimpleStreamableObject
     {
         return (t1 > O_PROP) ? t2 : createPropType(
             (t1 & TALL_FLAG) == 0 || (t2 & TALL_FLAG) == 0,
-            (t1 & PENETRABLE_FLAG) == 0 && (t2 & PENETRABLE_FLAG) == 0);
+            (t1 & PENETRABLE_FLAG) == 0 && (t2 & PENETRABLE_FLAG) == 0,
+            (t1 & TARGETABLE_FLAG) == 0 || (t2 & TARGETABLE_FLAG) == 0);
     }
     
     /**
      * Creates a prop type using the given flags.
      */
-    protected static byte createPropType (boolean tall, boolean penetrable)
+    protected static byte createPropType (
+            boolean tall, boolean penetrable, boolean targetable)
     {
         return (byte)(O_PROP ^ (tall ? TALL_FLAG : 0) ^
-            (penetrable ? PENETRABLE_FLAG : 0));
+            (penetrable ? PENETRABLE_FLAG : 0) ^
+            (targetable ? TARGETABLE_FLAG : 0));
     }
     
     /**
@@ -1511,6 +1515,9 @@ public class BangBoard extends SimpleStreamableObject
     
     /** Flags the prop as penetrable (doesn't affect line of sight). */
     protected static final byte PENETRABLE_FLAG = 1 << 4;
+
+    /** Flags the prop as targetable (can be shot at). */
+    protected static final byte TARGETABLE_FLAG = 1 << 5;
 
     /** Flags the prop as being unable to enter in this direction. */
     protected static final byte ENTER_NORTH = 1 << 0;

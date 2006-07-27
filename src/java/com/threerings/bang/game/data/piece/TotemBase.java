@@ -120,6 +120,12 @@ public class TotemBase extends Prop
     }
 
     @Override // documentation inherited
+    public boolean willBeTargetable ()
+    {
+        return true;
+    }
+
+    @Override // documentation inherited
     public boolean isSameTeam (Piece target)
     {
         return getTopOwner() == target.owner;

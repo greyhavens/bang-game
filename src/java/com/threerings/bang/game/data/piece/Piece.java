@@ -634,6 +634,14 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Returns true if this piece may at some point be targetable.
+     */
+    public boolean willBeTargetable ()
+    {
+        return isTargetable();
+    }
+
+    /**
      * Returns true if this piece is on the same team as the target.
      */
     public boolean isSameTeam (Piece target)
