@@ -995,7 +995,7 @@ public class BangBoard extends SimpleStreamableObject
         boolean flightstate = (remain ? piece.isAirborne() : piece.isFlyer());
         if ((flightstate && (!remain || tstate <= O_FLAT) &&
                 (tstate > O_PROP || (tstate & TALL_FLAG) != 0 ||
-                (!remain && (tstate & TARGETABLE_FLAG) != 0 && 
+                (!remain && (tstate & TARGETABLE_FLAG) == 0 && 
                  piece.getMinFireDistance() == 0))) || piece instanceof Train) {
             return true;
         } else if ((tstate == O_FLAT) ||
