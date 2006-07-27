@@ -221,8 +221,9 @@ public class ForestGuardians extends Scenario
         /** Ranks potential targets by the amount of damage the unit will do,
          * and the amount of damage the target has already taken. */
         protected TargetEvaluator _teval = new TargetEvaluator() {
-            public int getWeight (Unit unit, Piece target, int dist) {
-                return unit.computeScaledDamage(target, 1f) * 100 +
+            public int getWeight (
+                    BangObject bangobj, Unit unit, Piece target, int dist) {
+                return unit.computeScaledDamage(bangobj, target, 1f) * 100 +
                     target.damage;
             }
         };

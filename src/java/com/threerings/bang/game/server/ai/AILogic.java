@@ -206,7 +206,7 @@ public abstract class AILogic
                 !attacks.contains(pieces[ii].x, pieces[ii].y)) {
                 continue;
             }
-            int tweight = evaluator.getWeight(unit, pieces[ii], 
+            int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], 
                     pieces[ii].getDistance(unit.x, unit.y));
             if (tweight > bweight) {
                 best = pieces[ii];
@@ -234,7 +234,7 @@ public abstract class AILogic
                 dist > unit.getMaxFireDistance()) {
                 continue;
             }
-            int tweight = evaluator.getWeight(unit, pieces[ii], dist);
+            int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], dist);
             if (tweight > bweight) {
                 best = pieces[ii];
                 bweight = tweight;
@@ -254,7 +254,8 @@ public abstract class AILogic
     protected interface TargetEvaluator
     {
         /** Returns the weight of the specified target for the given unit. */
-        public int getWeight (Unit unit, Piece target, int dist);
+        public int getWeight (
+                BangObject bangobj, Unit unit, Piece target, int dist);
     }
     
     /** The game manager. */

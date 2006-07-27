@@ -428,7 +428,7 @@ public abstract class Piece extends SimpleStreamableObject
     public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
     {
         // create a basic shot effect
-        int damage = computeScaledDamage(target, scale);
+        int damage = computeScaledDamage(bangobj, target, scale);
         ShotEffect shot = generateShotEffect(bangobj, target, damage);
         // give the target a chance to deflect the shot
         return target.deflect(bangobj, this, shot, scale);
@@ -664,7 +664,8 @@ public abstract class Piece extends SimpleStreamableObject
      * @param scale a value that should be used to scale the damage after all
      * other factors have been considered.
      */
-    public int computeScaledDamage (Piece target, float scale)
+    public int computeScaledDamage (
+            BangObject bangobj, Piece target, float scale)
     {
         // compute the damage we're doing to this piece
         int ddamage = computeDamage(target);
@@ -673,6 +674,11 @@ public abstract class Piece extends SimpleStreamableObject
         // we have at least half hit points
         int undamage = Math.max(50, 100-damage);
         ddamage = (ddamage * undamage) / 100;
+
+        // account for any other pieces which have attack adjustments
+        for (Piece p : bangobj.pieces) {
+            ddamage = p.adjustPieceAttack(this, ddamage);
+        }
 
         // account for any influences on the attacker or defender
         if (this instanceof Unit && ((Unit)this).influence != null) {
@@ -684,6 +690,15 @@ public abstract class Piece extends SimpleStreamableObject
 
         // finally scale the damage by the desired value
         return Math.round(scale * ddamage);
+    }
+
+    /**
+     * Adjusts the attack of other pieces.
+     */
+    public int adjustPieceAttack (Piece attacker, int damage)
+    {
+        // by default do nothing
+        return damage;
     }
 
     /**

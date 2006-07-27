@@ -54,7 +54,7 @@ public class PrintDamageTable
             int total = 0, count = 0;
             for (UnitConfig oconfig : configs) {
                 Unit target = Unit.getUnit(oconfig.type);
-                int damage = attacker.computeScaledDamage(target, 1f);
+                int damage = attacker.computeScaledDamage(null, target, 1f);
                 String color = "";
                 if (damage >= 100) {
                     color = " bgcolor='#FF0000'";

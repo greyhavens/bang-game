@@ -7,6 +7,7 @@ import java.awt.Point;
 
 import com.threerings.bang.data.UnitConfig;
 
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.TotemBase;
@@ -171,7 +172,8 @@ public class TotemLogic extends AILogic
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
 
-        public int getWeight (Unit unit, Piece target, int dist) {
+        public int getWeight (
+                BangObject bangobj, Unit unit, Piece target, int dist) {
             // don't go an shoot the totem we just put our piece on
             if ((target instanceof TotemBase) && TotemBonus.isHolding(unit) &&
                     dist == 1) {
@@ -179,7 +181,8 @@ public class TotemLogic extends AILogic
             }
             return ((target instanceof Unit) && 
                     TotemBonus.isHolding((Unit)target) ? 1000 : 0) +
-                unit.computeScaledDamage(target, 1f) * 100 + target.damage;
+                unit.computeScaledDamage(bangobj, target, 1f) * 
+                100 + target.damage;
         }
     };
 
