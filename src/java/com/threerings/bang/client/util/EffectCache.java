@@ -88,13 +88,19 @@ public class EffectCache extends PrototypeCache<Spatial>
         Spatial particles = (Spatial)BinaryImporter.getInstance().load(
             _ctx.getResourceManager().getResource(
                 "effects/" + key + "/effect.jme"));
+        if (particles instanceof ParticleGeometry) {
+            // wrap geometry in container to preserve relative transforms
+            Node container = new Node("effect");
+            container.attachChild(particles);
+            particles = container;
+        }
         TextureKey.setLocationOverride(null);
         Properties props = new Properties();
         props.load(_ctx.getResourceManager().getResource(
             "effects/" + key + "/effect.properties"));
-        particles.getLocalScale().multLocal(Float.parseFloat(
+        particles.setLocalScale(Float.parseFloat(
             props.getProperty("scale", "0.025")));
-        particles.getLocalRotation().multLocal(Z_UP_ROTATION);
+        particles.getLocalRotation().set(Z_UP_ROTATION);
         return particles;
     }
     

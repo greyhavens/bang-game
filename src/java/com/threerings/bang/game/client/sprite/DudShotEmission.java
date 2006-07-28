@@ -17,6 +17,7 @@ import java.nio.IntBuffer;
 
 import com.jme.util.geom.BufferUtils;
 
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 import com.jme.renderer.ColorRGBA;
@@ -177,7 +178,7 @@ public class DudShotEmission extends SpriteEmission
           case DUD_START:
             int frame = (int)((_elapsed += time) / _frameDuration);
             if (frame >= _data.frame) {
-                fireShot();
+                _dud.activate();
                 if (_data.stop) {
                     _model.pauseAnimation(true);
                 }
@@ -256,10 +257,10 @@ public class DudShotEmission extends SpriteEmission
         IntBuffer ibuf = BufferUtils.createIntBuffer(6);
 
         vbuf.put(0f).put(0f).put(0f);
-        vbuf.put(2f).put(0f).put(0f);
-        vbuf.put(2f).put(0f).put(-1f);
-        vbuf.put(0f).put(0f).put(-1f);
-
+        vbuf.put(0f).put(0f).put(2f);
+        vbuf.put(1f).put(0f).put(2f);
+        vbuf.put(1f).put(0f).put(0f);
+        
         tbuf.put(1f).put(1f);
         tbuf.put(0f).put(1f);
         tbuf.put(0f).put(0f);
@@ -269,17 +270,6 @@ public class DudShotEmission extends SpriteEmission
         ibuf.put(0).put(3).put(2);
 
         _dmesh = new TriMesh("dmesh", vbuf, null, null, tbuf, ibuf);
-    }
-
-    /**
-     * Activates the shot effect.
-     */
-    protected void fireShot ()
-    {
-        getEmitterLocation(_eloc);
-        getEmitterDirection(_edir);
-
-        _dud.activate(_eloc, _edir);
     }
 
     /** Handles the appearance and fading of the dud mesh. */
@@ -294,13 +284,8 @@ public class DudShotEmission extends SpriteEmission
             updateRenderState();
         }
 
-        public void activate (Vector3f eloc, Vector3f edir)
+        public void activate ()
         {
-            // set the dud lcoation based on the marker position/direction
-            getLocalTranslation().set(eloc);
-            PathUtil.computeAxisRotation(Vector3f.UNIT_Z, edir,
-                    getLocalRotation());
-
             _model.getEmissionNode().attachChild(this);
             updateRenderState();
         }
@@ -308,11 +293,8 @@ public class DudShotEmission extends SpriteEmission
         public void updateWorldData (float time)
         {
             super.updateWorldData(time);
-            getEmitterLocation(_eloc);
-            getEmitterDirection(_edir);
-            getLocalTranslation().set(_eloc);
-            PathUtil.computeAxisRotation(Vector3f.UNIT_Z, _edir,
-                    getLocalRotation());
+            getLocalTranslation().set(_target.getWorldTranslation());
+            getLocalRotation().set(_target.getWorldRotation());
         }
 
         protected float _elapsed;
@@ -334,7 +316,8 @@ public class DudShotEmission extends SpriteEmission
     protected float _elapsed;
 
     /** Result variables to reuse. */
-    protected Vector3f _eloc = new Vector3f(), _edir = new Vector3f();
+    protected Vector3f _eloc = new Vector3f();
+    protected Quaternion _erot = new Quaternion();
 
     /** The model to which this emission is bound. */
     protected Model _model;

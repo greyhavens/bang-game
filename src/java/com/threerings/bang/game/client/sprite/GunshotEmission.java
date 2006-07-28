@@ -241,10 +241,10 @@ public class GunshotEmission extends SpriteEmission
         IntBuffer ibuf = BufferUtils.createIntBuffer(12);
         
         vbuf.put(0f).put(0f).put(0f);
+        vbuf.put(-1f).put(0f).put(1f);
+        vbuf.put(0f).put(1f).put(1f);
         vbuf.put(1f).put(0f).put(1f);
-        vbuf.put(1f).put(1f).put(0f);
-        vbuf.put(1f).put(0f).put(-1f);
-        vbuf.put(1f).put(-1f).put(0f);
+        vbuf.put(0f).put(-1f).put(1f);
         
         tbuf.put(0f).put(0.5f);
         tbuf.put(1f).put(1f);
@@ -265,20 +265,19 @@ public class GunshotEmission extends SpriteEmission
      */
     protected void fireShot ()
     {
-        getEmitterLocation(_eloc);
-        getEmitterDirection(_edir);
+        Vector3f trans = _target.getWorldTranslation();
         
         // fire off a flash of light if we're in the real view
         if (_view != null && BangPrefs.isMediumDetail()) {
-            _view.createLightFlash(_eloc, LIGHT_FLASH_COLOR, 0.125f);
+            _view.createLightFlash(trans, LIGHT_FLASH_COLOR, 0.125f);
         }
         
         // and a muzzle flare
-        _flare.activate(_eloc, _edir);
+        _flare.activate();
         
         // and one or more bullet trails
         for (int ii = 0; ii < _trails.length; ii++) {
-            _trails[ii].activate(_eloc, _edir);
+            _trails[ii].activate();
         }
         
         // and a burst of smoke
@@ -287,7 +286,7 @@ public class GunshotEmission extends SpriteEmission
                 _model.getEmissionNode().attachChild(_smoke);
                 _smoke.updateRenderState();
             }
-            _smoke.setOriginOffset(_eloc);
+            _smoke.getLocalTranslation().set(trans);
             _smoke.updateGeometricState(0f, true);
             _smoke.forceRespawn();
         }
@@ -304,16 +303,14 @@ public class GunshotEmission extends SpriteEmission
      * Finds a random direction at most <code>spread</code> radians away from
      * the given direction.
      */
-    protected void getRandomDirection (
-        Vector3f dir, float spread, Vector3f result)
+    protected void getRandomDirection (float spread, Vector3f result)
     {
-        result.set(Vector3f.UNIT_X);
+        result.set(Vector3f.UNIT_Z);
         _rot.fromAngleNormalAxis(RandomUtil.getFloat(spread),
             Vector3f.UNIT_Y).multLocal(result);
         _rot.fromAngleNormalAxis(RandomUtil.getFloat(FastMath.TWO_PI),
-            Vector3f.UNIT_X).multLocal(result);
-        PathUtil.computeAxisRotation(Vector3f.UNIT_Z, dir, _rot).multLocal(
-            result);
+            Vector3f.UNIT_Z).multLocal(result);
+        _target.getWorldRotation().multLocal(result);
     }
     
     /**
@@ -347,12 +344,11 @@ public class GunshotEmission extends SpriteEmission
             updateRenderState();
         }
         
-        public void activate (Vector3f eloc, Vector3f edir)
+        public void activate ()
         {
             // set the flare location based on the marker position/direction
-            getLocalTranslation().set(eloc);
-            PathUtil.computeAxisRotation(Vector3f.UNIT_Z, edir,
-                getLocalRotation());
+            getLocalTranslation().set(_target.getWorldTranslation());
+            getLocalRotation().set(_target.getWorldRotation());
             
             _model.getEmissionNode().attachChild(this);
             updateRenderState();
@@ -400,31 +396,28 @@ public class GunshotEmission extends SpriteEmission
             updateRenderState();
         }
         
-        public void activate (Vector3f eloc, Vector3f edir)
+        public void activate ()
         {
             // set the transation based on the location of the source
-            getLocalTranslation().set(eloc);
+            Vector3f trans = _target.getWorldTranslation();
+            getLocalTranslation().set(trans);
             
             // set the scale based on the distance to the target (if it exists)
             _tdist = 10f;
             if (_sprite instanceof MobileSprite) {
                 PieceSprite target = ((MobileSprite)_sprite).getTargetSprite();
                 if (target != null) {
-                    _tdist = target.getWorldTranslation().distance(eloc);
+                    _tdist = target.getWorldTranslation().distance(trans);
                 }
             }
             getLocalScale().set(0f, 0.175f * _size, 1f);
             
             // choose a direction within the spread range
-            if (_spread > 0) {
-                getRandomDirection(edir, _spread, _sdir);
-            } else {
-                _sdir.set(edir);
-            }
+            getRandomDirection(_spread, _sdir);
             
             // set the orientation based on the eye vector and direction
             Renderer renderer = DisplaySystem.getDisplaySystem().getRenderer();
-            renderer.getCamera().getLocation().subtract(eloc, _eye);
+            renderer.getCamera().getLocation().subtract(trans, _eye);
             _eye.cross(_sdir, _yvec).normalizeLocal();
             _sdir.cross(_yvec, _zvec);
             getLocalRotation().fromAxes(_sdir, _yvec, _zvec);
@@ -494,8 +487,7 @@ public class GunshotEmission extends SpriteEmission
     protected float _elapsed;
     
     /** Result variables to reuse. */
-    protected Vector3f _eloc = new Vector3f(), _edir = new Vector3f(),
-        _sdir = new Vector3f(), _axis = new Vector3f();
+    protected Vector3f _sdir = new Vector3f(), _axis = new Vector3f();
     protected Quaternion _rot = new Quaternion();
     
     /** The model to which this emission is bound. */

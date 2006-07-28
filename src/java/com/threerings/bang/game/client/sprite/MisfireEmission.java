@@ -198,16 +198,13 @@ public class MisfireEmission extends SpriteEmission
      */
     protected void fireShot ()
     {
-        Vector3f eloc = new Vector3f();
-        getEmitterLocation(eloc);
-
         // black smoke
         if (_smoke != null) {
             if (!_smoke.isActive()) {
                 _model.getEmissionNode().attachChild(_smoke);
                 _smoke.updateRenderState();
             }
-            _smoke.setOriginOffset(eloc);
+            _smoke.getLocalTranslation().set(_target.getWorldTranslation());
             _smoke.updateGeometricState(0f, true);
             _smoke.forceRespawn();
         }

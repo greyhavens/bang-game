@@ -80,21 +80,6 @@ public class ParticlePool
         return dustRing;
     }
     
-    public static ParticleMesh getFireball ()
-    {
-        int count = 0, index = -1;
-        for (int x = 0, tSize = _fireballs.size(); x < tSize; x++) {
-            ParticleMesh e = _fireballs.get(x);
-            if (!e.isActive()) {
-                e.getParticleController().setActive(true);
-                return e;
-            }
-        }
-        ParticleMesh fireball = createFireball();
-        _fireballs.add(fireball);
-        return fireball;
-    }
-    
     public static ParticleMesh getStreamer ()
     {
         int count = 0, index = -1;
@@ -108,21 +93,6 @@ public class ParticlePool
         ParticleMesh streamer = createStreamer();
         _streamers.add(streamer);
         return streamer;
-    }
-    
-    public static ParticleMesh getSmokePuff ()
-    {
-        int count = 0, index = -1;
-        for (int x = 0, tSize = _smokePuffs.size(); x < tSize; x++) {
-            ParticleMesh e = _smokePuffs.get(x);
-            if (!e.isActive()) {
-                e.getParticleController().setActive(true);
-                return e;
-            }
-        }
-        ParticleMesh smokePuff = createSmokePuff();
-        _smokePuffs.add(smokePuff);
-        return smokePuff;
     }
     
     public static ParticleMesh getSparkles ()
@@ -211,32 +181,6 @@ public class ParticlePool
         return particles;
     }
     
-    protected static ParticleMesh createFireball ()
-    {
-        ParticleMesh particles = new ParticleMesh("fireball", 16);
-        particles.addController(new TransientParticleController(particles));
-        particles.setMinimumLifeTime(250f);
-        particles.setMaximumLifeTime(750f);
-        particles.setInitialVelocity(0.004f);
-        particles.setMaximumAngle(FastMath.PI);
-        particles.getParticleController().setPrecision(FastMath.FLT_EPSILON);
-        particles.getParticleController().setControlFlow(false);
-        particles.setParticleSpinSpeed(0.01f);
-        particles.setStartSize(TILE_SIZE / 3);
-        particles.setEndSize(TILE_SIZE / 2);
-        particles.setStartColor(new ColorRGBA(1f, 1f, 0.5f, 1f));
-        particles.setEndColor(new ColorRGBA(1f, 0.25f, 0f, 0f));
-        particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
-        particles.setModelBound(new BoundingBox());
-        particles.setIsCollidable(false);
-        
-        particles.setRenderState(_dusttex);
-        particles.setRenderState(RenderUtil.addAlpha);
-        particles.setRenderState(RenderUtil.overlayZBuf);
-        
-        return particles;
-    }
-    
     protected static ParticleMesh createStreamer ()
     {
         ParticleMesh particles =
@@ -258,33 +202,6 @@ public class ParticlePool
         
         particles.setRenderState(_dusttex);
         particles.setRenderState(RenderUtil.addAlpha);
-        particles.setRenderState(RenderUtil.overlayZBuf);
-        
-        return particles;
-    }
-    
-    protected static ParticleMesh createSmokePuff ()
-    {
-        ParticleMesh particles = new ParticleMesh("smokepuff", 32);
-        particles.addController(new TransientParticleController(particles));
-        particles.setMinimumLifeTime(500f);
-        particles.setMaximumLifeTime(1500f);
-        particles.getOriginOffset().z += (TILE_SIZE * 0.75f);
-        particles.setInitialVelocity(0.01f);
-        particles.setEmissionDirection(Vector3f.UNIT_Z);
-        particles.setMaximumAngle(FastMath.PI / 4);
-        particles.getParticleController().setPrecision(FastMath.FLT_EPSILON);
-        particles.getParticleController().setControlFlow(false);
-        particles.setStartSize(TILE_SIZE / 2);
-        particles.setEndSize(TILE_SIZE);
-        particles.setStartColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0.75f));
-        particles.setEndColor(new ColorRGBA(0.1f, 0.1f, 0.1f, 0f));
-        particles.getParticleController().setRepeatType(Controller.RT_CLAMP);
-        particles.setModelBound(new BoundingBox());
-        particles.setIsCollidable(false);
-        
-        particles.setRenderState(_dusttex);
-        particles.setRenderState(RenderUtil.blendAlpha);
         particles.setRenderState(RenderUtil.overlayZBuf);
         
         return particles;
@@ -410,11 +327,7 @@ public class ParticlePool
         
     protected static ArrayList<ParticleMesh> _dustRings =
         new ArrayList<ParticleMesh>();
-    protected static ArrayList<ParticleMesh> _fireballs =
-        new ArrayList<ParticleMesh>();
     protected static ArrayList<ParticleMesh> _streamers =
-        new ArrayList<ParticleMesh>();
-    protected static ArrayList<ParticleMesh> _smokePuffs =
         new ArrayList<ParticleMesh>();
     protected static ArrayList<ParticleMesh> _sparkles =
         new ArrayList<ParticleMesh>();

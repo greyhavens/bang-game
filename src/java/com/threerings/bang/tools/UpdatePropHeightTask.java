@@ -89,17 +89,20 @@ public class UpdatePropHeightTask extends Task
         
         // find the model's vertical size in tiles
         model.updateGeometricState(0f, true);
+        float height = 0f;
         BoundingVolume bound = model.getWorldBound();
-        float height = bound.getCenter().z;
-        if (bound instanceof BoundingBox) {
-            height += ((BoundingBox)bound).zExtent;
-        } else if (bound instanceof BoundingSphere) {
-            height += ((BoundingSphere)bound).radius;
-        } else {
-            System.out.println("Unknown bounding type in " + mfile +
-                ": " + bound);
+        if (bound != null) {
+            height = bound.getCenter().z;
+            if (bound instanceof BoundingBox) {
+                height += ((BoundingBox)bound).zExtent;
+            } else if (bound instanceof BoundingSphere) {
+                height += ((BoundingSphere)bound).radius;
+            } else {
+                System.out.println("Unknown bounding type in " + mfile +
+                    ": " + bound);
+            }
+            height /= TILE_SIZE;
         }
-        height /= TILE_SIZE;
         
         // read in the prop.properties and see if the height needs changing
         // (if not, just touch the file)

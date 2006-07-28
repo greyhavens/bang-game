@@ -21,6 +21,7 @@ import com.jmex.effects.particles.ParticleGeometry;
 import com.threerings.jme.model.Model;
 
 import com.threerings.bang.client.BangPrefs;
+import com.threerings.bang.client.util.EffectCache;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.util.BasicContext;
 
@@ -118,18 +119,9 @@ public class ParticleEmission extends SpriteEmission
         if (!isActive() || _particles == null) {
             return;
         }
-        getEmitterLocation(_particles.getLocalTranslation());
-        getEmitterDirection(_dir);
-        float angle = _dir.angleBetween(Vector3f.UNIT_Y);
-        if (angle == 0f) {
-            _particles.getLocalRotation().set(Quaternion.IDENTITY);
-        } else if (angle == FastMath.PI) {
-            _particles.getLocalRotation().fromAngleNormalAxis(
-                FastMath.PI, Vector3f.UNIT_X);
-        } else {
-            _particles.getLocalRotation().fromAngleAxis(
-                -angle, _dir.crossLocal(Vector3f.UNIT_Y));
-        }
+        _particles.getLocalTranslation().set(_target.getWorldTranslation());
+        _target.getWorldRotation().mult(EffectCache.Z_UP_ROTATION,
+            _particles.getLocalRotation());
     }
     
     /**

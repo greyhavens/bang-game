@@ -180,7 +180,7 @@ public class SmokePlumeEmission extends SpriteEmission
         if (!isActive() || _smoke == null) {
             return;
         }
-        getEmitterLocation(_smoke.getOriginOffset());
+        _smoke.getLocalTranslation().set(_target.getWorldTranslation());
     }
     
     /**
