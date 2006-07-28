@@ -20,6 +20,8 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
+import com.jme.scene.state.AlphaState;
+import com.jme.scene.state.FogState;
 import com.jme.scene.state.RenderState;
 import com.jme.util.TextureKey;
 import com.jme.util.export.binary.BinaryImporter;
@@ -202,6 +204,15 @@ public class EffectCache extends PrototypeCache<Spatial>
             if (rs != null) {
                 instance.setRenderState(rs);
             }
+        }
+        
+        // if the particle system is emissive, disable fog
+        AlphaState astate = (AlphaState)prototype.getRenderState(
+            RenderState.RS_ALPHA);
+        if (astate != null && astate.getDstFunction() == AlphaState.DB_ONE) {
+            FogState fstate = _ctx.getRenderer().createFogState();
+            fstate.setEnabled(false);
+            instance.setRenderState(fstate);
         }
         
         instance.setModelBound(new BoundingBox());
