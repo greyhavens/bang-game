@@ -51,6 +51,17 @@ public class Teleporter extends Prop
         return _group;
     }
     
+    /**
+     * Returns the name of this teleporter's activation effect, which is
+     * derived from its type.
+     */
+    public String getActivateEffect ()
+    {
+        String town = _type.substring(0, _type.indexOf('/') + 1),
+            name = _type.substring(_type.lastIndexOf('/') + 1);
+        return town + name + "/activate";
+    }
+    
     /** The teleporters with the same prop type, including this one. */
     protected transient Teleporter[] _group;
 }

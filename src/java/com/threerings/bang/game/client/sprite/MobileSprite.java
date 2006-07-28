@@ -87,6 +87,12 @@ public class MobileSprite extends PieceSprite
     /** A fake action that is queued up when the sprite is respawned. */
     public static final String RESPAWNED = "__respawned__";
     
+    /** Queued up when the sprite is teleported out of existence. */
+    public static final String TELEPORTED_OUT = "__teleported_out__";
+    
+    /** Queued up when the sprite is teleported back into existence. */
+    public static final String TELEPORTED_IN = "__teleported_in__";
+    
     /** Normal movement. */
     public static final int MOVE_NORMAL = 0;
 
@@ -558,14 +564,20 @@ public class MobileSprite extends PieceSprite
             
         } else if (_action.equals(REMOVED)) {
             // have the unit sink into the ground and fade away
-            startGroundFade(false, REMOVAL_DURATION);
+            startRiseFade(-TILE_SIZE * 0.5f, false, REMOVAL_DURATION);
         
         } else if (_action.equals(RESPAWNED)) {
             // fade the unit in and display the resurrection effect
             if (BangPrefs.isMediumDetail()) {
                 displayParticles("frontier_town/resurrection", false);
             }
-            startGroundFade(true, RESPAWN_DURATION);
+            startRiseFade(-TILE_SIZE * 0.5f, true, RESPAWN_DURATION);
+        
+        } else if (_action.equals(TELEPORTED_OUT)) {
+            startRiseFade(TILE_SIZE * 0.5f, false, TELEPORT_DURATION);
+            
+        } else if (_action.equals(TELEPORTED_IN)) {
+            startRiseFade(TILE_SIZE * 0.5f, true, TELEPORT_DURATION);
             
         } else {
             // cope when we have units disabled for debugging purposes
@@ -576,10 +588,10 @@ public class MobileSprite extends PieceSprite
     }
 
     /**
-     * Sinks the sprite into the ground and fades it out, or raises it from the
-     * ground and fades it in.
+     * Raises or lowers the sprite while fading it in or out.
      */
-    protected void startGroundFade (final boolean in, final float duration)
+    protected void startRiseFade (
+        float height, final boolean in, final float duration)
     {
         setRenderState(RenderUtil.blendAlpha);
         if (_mstate == null) {
@@ -590,10 +602,10 @@ public class MobileSprite extends PieceSprite
         }
         updateRenderState();
 
-        Vector3f above = new Vector3f(localTranslation),
-            below = localRotation.mult(Vector3f.UNIT_Z);
-        below.multLocal(-TILE_SIZE * 0.5f).addLocal(localTranslation);
-        move(new LinePath(this, in ? below : above, in ? above : below,
+        Vector3f tin = new Vector3f(localTranslation),
+            tout = localRotation.mult(Vector3f.UNIT_Z);
+        tout.multLocal(height).addLocal(localTranslation);
+        move(new LinePath(this, in ? tout : tin, in ? tin : tout,
             duration) {
             public void update (float time) {
                 super.update(time);
@@ -811,7 +823,10 @@ public class MobileSprite extends PieceSprite
 
     /** The number of seconds it takes new pieces to fade in. */
     protected static final float RESPAWN_DURATION = 1f;
-    
+
+    /** The number of seconds it takes pieces to teleport in or out. */
+    protected static final float TELEPORT_DURATION = 1f;
+        
     /** Complex action states. */
     protected static enum ComplexAction { NONE, ACTIVE, OVER };
 }

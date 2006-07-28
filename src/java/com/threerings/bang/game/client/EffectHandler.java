@@ -38,7 +38,6 @@ import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.effect.ResurrectEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
-import com.threerings.bang.game.data.effect.TeleportEffect;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
@@ -160,13 +159,6 @@ public class EffectHandler extends BoardView.BoardAction
             // and update them to reset their tick display
             sprite.updated(piece, _tick);
 
-        } else if (effect.equals(TeleportEffect.TELEPORTED)) {
-            // if we've teleported, change the location and orientation
-            // instantly
-            sprite.setLocation(piece.x, piece.y,
-                piece.computeElevation(_bangobj.board, piece.x, piece.y));
-            sprite.setOrientation(piece.orientation);
-            
         } else {
             // since we're not displaying an effect, we update immediately
             sprite.updated(piece, _tick);

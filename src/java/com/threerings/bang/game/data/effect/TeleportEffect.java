@@ -9,6 +9,8 @@ import java.util.Collections;
 
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.TeleportHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Teleporter;
@@ -20,9 +22,6 @@ import static com.threerings.bang.Log.log;
  */
 public class TeleportEffect extends Effect
 {
-    /** The effect identifier. */
-    public static final String TELEPORTED = "teleported";
-
     /** The id of the teleported piece. */
     public int pieceId;
 
@@ -30,7 +29,7 @@ public class TeleportEffect extends Effect
     public short[] dest;
 
     /** The id of the source teleporter. */
-    public transient int sourceId;
+    public int sourceId;
 
     public TeleportEffect ()
     {
@@ -100,7 +99,12 @@ public class TeleportEffect extends Effect
         bangobj.board.clearShadow(piece);
         piece.position(dest[0], dest[1]);
         bangobj.board.shadowPiece(piece);
-        reportEffect(obs, piece, TELEPORTED);
         return true;
+    }
+    
+    @Override // documentation inherited
+    public EffectHandler createHandler (BangObject bangobj)
+    {
+        return new TeleportHandler();
     }
 }
