@@ -32,11 +32,6 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class ExplosionViz extends ParticleEffectViz
 {
-    public ExplosionViz (boolean small)
-    {
-        _small = small;
-    }
-
     @Override // documentation inherited
     public void display (PieceSprite target)
     {
@@ -46,11 +41,8 @@ public class ExplosionViz extends ParticleEffectViz
             displayParticles(target, _dustring, false);
         }
         
-        // add the fireball
-        displayParticles(target, _fireball, true);
-        
-        // add the smoke puff
-        displayParticles(target, _smokepuff, true);
+        // add the explosion effect
+        displayEffect("frontier_town/explosion", target);
         
         // and the streamers
         if (_streamers != null) {
@@ -78,12 +70,6 @@ public class ExplosionViz extends ParticleEffectViz
         if (!_target.isAirborne() && BangPrefs.isHighDetail()) {
             _dustring = ParticlePool.getDustRing();
         }
-        
-        // create the fireball
-        _fireball = ParticlePool.getFireball();
-        
-        // create the smoke puff
-        _smokepuff = ParticlePool.getSmokePuff();
         
         // create a few streamers from the explosion
         if (BangPrefs.isHighDetail()) {
@@ -159,8 +145,7 @@ public class ExplosionViz extends ParticleEffectViz
         protected float _age;
     }
     
-    protected boolean _small;
-    protected ParticleMesh _dustring, _fireball, _smokepuff;
+    protected ParticleMesh _dustring;
     protected Streamer[] _streamers;
     protected PointLight _light;
     

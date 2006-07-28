@@ -5,7 +5,10 @@ package com.threerings.bang.game.client.effect;
 
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jmex.effects.particles.ParticleMesh;
+
+import com.threerings.bang.client.util.ResultAttacher;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 
@@ -42,6 +45,23 @@ public abstract class ParticleEffectViz extends EffectViz
         particles.updateRenderState();
         particles.updateGeometricState(0f, true);
         particles.forceRespawn();
+    }
+    
+    /**
+     * Displays a particle effect on the specified target.
+     */
+    protected void displayEffect (String name, final PieceSprite target)
+    {
+        ParticlePool.getEffect(name,
+            new ResultAttacher<Spatial>(_view.getPieceNode()) {
+            public void requestCompleted (Spatial result) {
+                super.requestCompleted(result);
+                Vector3f trans = result.getLocalTranslation();
+                target.getLocalRotation().multLocal(
+                    trans.set(0f, 0f, TILE_SIZE/2));
+                trans.addLocal(target.getLocalTranslation());
+            }
+        });
     }
     
     /**

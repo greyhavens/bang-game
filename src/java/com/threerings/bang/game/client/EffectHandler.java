@@ -122,10 +122,9 @@ public class EffectHandler extends BoardView.BoardAction
             wasDamaged = true;
         } else if (effect.equals(ShotEffect.EXPLODED)) {
             wasDamaged = true;
-            _effviz = new ExplosionViz(false);
+            _effviz = new ExplosionViz();
         } else if (effect.equals(AreaDamageEffect.MISSILED)) {
             wasDamaged = true;
-            _effviz = new ExplosionViz(true);
         } else if (effect.equals(RepairEffect.REPAIRED) ||
                    effect.equals(NuggetEffect.NUGGET_ADDED) ||
                    effect.equals(ResurrectEffect.RESURRECTED)) {

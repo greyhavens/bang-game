@@ -5,15 +5,20 @@ package com.threerings.bang.game.client;
 
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
+import com.jme.scene.Spatial;
 
 import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 
+import com.threerings.bang.client.util.ResultAttacher;
+
 import com.threerings.bang.game.client.sprite.ShotSprite;
 import com.threerings.bang.game.client.effect.DamageIconViz;
+import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
+import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
 
 import com.threerings.openal.Sound;
@@ -36,7 +41,7 @@ public class AreaDamageHandler extends EffectHandler
         _whistleSound.play(new Sound.StartObserver() {
             public void soundStarted (Sound sound) {
                 // then we create the visualization
-                dropBombs();
+                dropBomb();
             }
         }, false);
 
@@ -53,65 +58,62 @@ public class AreaDamageHandler extends EffectHandler
         }
     }
 
-    protected void dropBombs ()
+    protected void dropBomb ()
     {
-        // create a missile for each piece, scaled according to distance from
-        // the center
+        // drop the bomb at the center
         AreaDamageEffect effect = (AreaDamageEffect)_effect;
-        for (int ii = 0; ii < effect.pieces.length; ii++) {
-            ShotSprite ssprite = new ShotSprite(
-                _ctx, "bonuses", "frontier_town/missile", null);
-            Piece target = (Piece)_bangobj.pieces.get(
-                Integer.valueOf(effect.pieces[ii]));
-            if (target == null) {
-                log.warning("Missing piece for damage target [pieceId=" +
-                            effect.pieces[ii] + "].");
-                continue;
+        _dest = new Vector3f((effect.x + 0.5f) * TILE_SIZE,
+            (effect.y + 0.5f) * TILE_SIZE, 0f);
+        _dest.z = _view.getTerrainNode().getHeightfieldHeight(_dest.x,
+            _dest.y) + TILE_SIZE * 0.5f;
+            
+        ShotSprite ssprite = new ShotSprite(
+            _ctx, "bonuses", "frontier_town/missile", null);
+        _view.addSprite(ssprite);
+        ssprite.getLocalRotation().fromAngleNormalAxis(
+            -FastMath.HALF_PI, FORWARD);
+        Vector3f start = _dest.add(0f, 0f, BOMB_HEIGHT);
+        ssprite.move(new LinePath(ssprite, start, _dest, BOMB_DURATION));
+        final int penderId = notePender();
+        ssprite.addObserver(new PathObserver() {
+            public void pathCompleted (Sprite sprite, Path path) {
+                _view.removeSprite(sprite);
+                _explodeSound.play(true);
+                apply(_effect);
+                maybeComplete(penderId);
             }
-            _view.addSprite(ssprite);
-            ssprite.setLocalScale(
-                1f / (target.getDistance(effect.x, effect.y) + 1));
-            ssprite.getLocalRotation().fromAngleNormalAxis(
-                -FastMath.HALF_PI, FORWARD);
-            Vector3f end = _view.getPieceSprite(target).getLocalTranslation(),
-                start = end.add(0f, 0f, BOMB_HEIGHT);
-            ssprite.move(new LinePath(ssprite, start, end, BOMB_DURATION));
-            final int penderId = notePender();
-            ssprite.addObserver(new PathObserver() {
-                public void pathCompleted (Sprite sprite, Path path) {
-                    _view.removeSprite(sprite);
-                    _explodeSound.play(true);
-                    maybeComplete(penderId);
-                }
-                public void pathCancelled (Sprite sprite, Path path) {
-                    _view.removeSprite(sprite);
-                    maybeComplete(penderId);
-                }
-            });
-        }
+            public void pathCancelled (Sprite sprite, Path path) {
+                _view.removeSprite(sprite);
+                apply(_effect);
+                maybeComplete(penderId);
+            }
+        });
     }
 
     @Override // documentation inherited
-    protected void maybeComplete (int penderId)
+    protected void apply (Effect effect)
     {
-        // when the last bomb finishes its path, start the explosions
-        if (_penders.size() == 1 && !_applied) {
-            _applied = true;
-            apply(_effect);
-        }
-        super.maybeComplete(penderId);
-    }
-
+        ParticlePool.getEffect("frontier_town/mushroom_cloud",
+            new ResultAttacher<Spatial>(_view.getPieceNode()) {
+            public void requestCompleted (Spatial result) {
+                super.requestCompleted(result);
+                result.setLocalTranslation(_dest);
+            }
+        });
+        
+        super.apply(effect);
+    }    
+    
     /** The bomb whistle. */
     protected Sound _whistleSound;
 
     /** The explosion sound. */
     protected Sound _explodeSound;
 
-    /** Whether or not the effect has been applied. */
-    protected boolean _applied;
+    /** The bomb's destination. */
+    protected Vector3f _dest;
 
-    /** The height from which the bombs fall. */
+    /** The height from which the bomb falls. */
     protected static final float BOMB_HEIGHT = 200f;
 
     /** The duration of the bomb flight in seconds. */
