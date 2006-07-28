@@ -188,6 +188,12 @@ public class BackTextureRenderer
     }
     
     // documentation inherited from interface TextureRenderer
+    public void forceCopy (boolean force)
+    {
+        // no-op
+    }
+    
+    // documentation inherited from interface TextureRenderer
     public void cleanup ()
     {
         // leave it to the caller to unbind textures
