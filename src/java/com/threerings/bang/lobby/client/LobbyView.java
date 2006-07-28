@@ -203,7 +203,7 @@ public class LobbyView extends BWindow
         log.info("Table updated [table=" + table + "].");
 
         // locate the table item associated with this table
-        TableItem item = getTableItem(table.getTableId());
+        TableItem item = getTableItem(table.tableId);
         if (item == null) {
             log.warning("Received table updated notification for " +
                         "unknown table [table=" + table + "].");
@@ -316,7 +316,7 @@ public class LobbyView extends BWindow
         int ccount = _penders.getComponentCount();
         for (int i = 0; i < ccount; i++) {
             TableItem child = (TableItem)_penders.getComponent(i);
-            if (child.table.getTableId() == tableId) {
+            if (child.table.tableId == tableId) {
                 return child;
             }
         }
@@ -325,7 +325,7 @@ public class LobbyView extends BWindow
         ccount = _inplay.getComponentCount();
         for (int i = 0; i < ccount; i++) {
             TableItem child = (TableItem)_inplay.getComponent(i);
-            if (child.table.getTableId() == tableId) {
+            if (child.table.tableId == tableId) {
                 return child;
             }
         }
