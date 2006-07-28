@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Rectangle;
+
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
@@ -28,6 +30,14 @@ public class MoveShootEffect extends MoveEffect
     public int[] getWaitPieces ()
     {
         return shotEffect.getWaitPieces();
+    }
+
+    @Override // documentation inherited
+    public Rectangle getBounds ()
+    {
+        Rectangle rect = super.getBounds();
+        rect.add(shotEffect.getBounds());
+        return rect;
     }
 
     @Override // documentation inherited

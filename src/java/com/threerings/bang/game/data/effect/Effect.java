@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Rectangle;
 import java.awt.Point;
 
 import java.util.ArrayList;
@@ -221,6 +222,15 @@ public abstract class Effect extends SimpleStreamableObject
     public int[] getWaitPieces ()
     {
         return NO_PIECES;
+    }
+
+    /**
+     * Returns the bounds we must have exclusive access to before activating
+     * this effect.  Can return null for no area exclusion.
+     */
+    public Rectangle getBounds ()
+    {
+        return null;
     }
 
     /** Returns an array of the ids of all pieces affected by this effect. */

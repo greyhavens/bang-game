@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.effect;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -132,6 +133,24 @@ public class StampedeEffect extends Effect
             }
         }
         return wpieces;
+    }
+
+    @Override // documentation inherited
+    public Rectangle getBounds ()
+    {
+        Rectangle rect = null;
+        for (Point p : path) {
+            if (rect == null) {
+                rect = new Rectangle(p);
+            } else {
+                rect.add(p);
+            }
+        }
+        if (rect != null) {
+            rect.width++;
+            rect.height++;
+        }
+        return rect;
     }
     
     @Override // documentation inherited

@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Rectangle;
+
 import java.util.Observer;
 
 import com.samskivert.util.IntIntMap;
@@ -53,6 +55,17 @@ public class ChainingShotEffect extends ShotEffect
             pieces = concatenate(pieces, chain.getAffectedPieces());
         }
         return pieces;
+    }
+
+    @Override // documentation inherited
+    public Rectangle getBounds ()
+    {
+        Rectangle rect = super.getBounds();
+        for (ShotEffect chain : chainShot) {
+            rect.add(chain.getBounds());
+        }
+        rect.grow(1, 1);
+        return rect;
     }
 
     @Override // documentation inherited

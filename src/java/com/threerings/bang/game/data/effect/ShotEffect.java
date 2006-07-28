@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Rectangle;
+
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
@@ -186,6 +188,23 @@ public class ShotEffect extends Effect
     {
         return (preShotEffect == null) ?
             NO_PIECES : preShotEffect.getWaitPieces();
+    }
+
+    @Override // documentation inherited
+    public Rectangle getBounds ()
+    {
+        Rectangle rect = (pushx > -1) ? 
+            new Rectangle(pushx, pushy, 0, 0) : null;
+        for (int ii = 0; ii < xcoords.length; ii++) {
+            if (rect == null) {
+                rect = new Rectangle(xcoords[ii], ycoords[ii], 0, 0);
+            } else {
+                rect.add(xcoords[ii], ycoords[ii]);
+            }
+        }
+        rect.width++;
+        rect.height++;
+        return rect;
     }
     
     @Override // documentation inherited

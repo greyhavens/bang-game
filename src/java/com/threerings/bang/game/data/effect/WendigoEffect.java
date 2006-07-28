@@ -122,6 +122,12 @@ public class WendigoEffect extends Effect
     }
 
     @Override // documentation inherited
+    public Rectangle getBounds ()
+    {
+        return _bounds;
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         _colMap = new HashIntMap<Collision>();
@@ -178,6 +184,7 @@ public class WendigoEffect extends Effect
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
+        _bounds = (Rectangle)bangobj.board.getPlayableArea().clone();
         return new WendigoHandler();
     }
 
@@ -238,4 +245,7 @@ public class WendigoEffect extends Effect
     
     /** Mapping of target piece Ids to collision records. */
     protected transient HashIntMap<Collision> _colMap;
+
+    /** The bounds of the effect. */
+    protected transient Rectangle _bounds;
 }

@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Rectangle;
+
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
@@ -61,6 +63,13 @@ public abstract class AreaEffect extends Effect
     public int[] getAffectedPieces ()
     {
         return pieces;
+    }
+
+    @Override // documentation inherited
+    public Rectangle getBounds ()
+    {
+        return new Rectangle(x - radius, y - radius, 
+                radius * 2 + 1, radius * 2 + 1);
     }
 
     @Override // documentation inherited

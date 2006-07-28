@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Rectangle;
+
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
@@ -23,17 +25,29 @@ public class ReboundEffect extends BonusEffect
     
     /** The x and y coordinates to which the target was sent. */
     public short x, y;
+
+    /** The x and y coordinates from which the target started. */
+    public short ox, oy;
     
     @Override // documentation inherited
     public void init (Piece piece)
     {
         pieceId = piece.pieceId;
+        ox = piece.x;
+        oy = piece.y;
     }
 
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
         return new int[] { pieceId };
+    }
+
+    @Override // documentation inherited
+    public Rectangle getBounds ()
+    {
+        return new Rectangle(Math.min(ox, x), Math.min(oy, y),
+                Math.abs(ox - x) + 1, Math.abs(oy - y) + 1);
     }
 
     @Override // documentation inherited

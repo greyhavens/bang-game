@@ -67,6 +67,7 @@ public class EffectHandler extends BoardView.BoardAction
         _effect = effect;
         pieceIds = effect.getAffectedPieces();
         waiterIds = effect.getWaitPieces();
+        bounds = effect.getBounds();
 
         // if this is a move effect, note the pending move
         if (_effect instanceof MoveEffect) {

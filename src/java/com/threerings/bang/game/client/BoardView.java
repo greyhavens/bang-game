@@ -14,6 +14,7 @@ import java.nio.IntBuffer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -129,9 +130,15 @@ public class BoardView extends BComponent
          * this action. */
         public int[] waiterIds;
 
+        /** The board action must specify the boundaries affected by the
+         * action.  This will be used to ensure that a piece does not enter
+         * the affected area if not participating in the action. */
+        public Rectangle bounds;
+
         /** Returns true if this action can be executed, false if it operates
          * on a piece that is currently involved in another action. */
-        public boolean canExecute (ArrayIntSet penders)
+        public boolean canExecute (
+                ArrayIntSet penders, HashSet<Rectangle> boundset)
         {
             for (int ii = 0; ii < pieceIds.length; ii++) {
                 if (penders.contains(pieceIds[ii])) {
@@ -141,6 +148,13 @@ public class BoardView extends BComponent
             for (int ii = 0; ii < waiterIds.length; ii++) {
                 if (penders.contains(waiterIds[ii])) {
                     return false;
+                }
+            }
+            if (bounds != null) {
+                for (Rectangle r : boundset) {
+                    if (r.intersects(bounds)) {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -658,7 +672,7 @@ public class BoardView extends BComponent
     public void executeAction (BoardAction action)
     {
         // if we can execute this action immediately, do so
-        if (action.canExecute(_punits)) {
+        if (action.canExecute(_punits, _pbounds)) {
             processAction(action);
         } else {
             if (ACTION_DEBUG) {
@@ -668,7 +682,7 @@ public class BoardView extends BComponent
         }
 
         // we always have to add this action's pieces to the pending set
-        notePending(action.pieceIds);
+        notePending(action.pieceIds, action.bounds);
 
         // scan the running actions and issue a warning for long runners
         long now = System.currentTimeMillis(), since;
@@ -699,7 +713,7 @@ public class BoardView extends BComponent
         if (ACTION_DEBUG) {
             log.info("Completed: " + action);
         }
-        noteExecuting(action.pieceIds, -1);
+        noteExecuting(action.pieceIds, action.bounds, -1);
         processActions();
     }
 
@@ -1052,18 +1066,23 @@ public class BoardView extends BComponent
                 _punits.add(executers[ii]);
             }
         }
+        // clear out _pbounds and repopulate it with what's in _ebounds
+        _pbounds.clear();
+        for (Rectangle r : _ebounds) {
+            _pbounds.add(r);
+        }
 
         Iterator<BoardAction> iter = _pactions.iterator();
         while (iter.hasNext()) {
             BoardAction action = iter.next();
-            if (action.canExecute(_punits)) {
+            if (action.canExecute(_punits, _pbounds)) {
                 iter.remove();
                 // this only queues up the action for processing, so we need
                 // not worry that the action will complete immediately and
                 // result in a recursive call to processActions()
                 processAction(action);
             }
-            notePending(action.pieceIds);
+            notePending(action.pieceIds, action.bounds);
         }
     }
 
@@ -1077,7 +1096,7 @@ public class BoardView extends BComponent
         }
 
         // mark the pieces involved in this action as executing
-        noteExecuting(action.pieceIds, 1);
+        noteExecuting(action.pieceIds, action.bounds, 1);
 
         // throw a runnable on the queue that will execute this action
         _ractions.add(action);
@@ -1450,21 +1469,33 @@ public class BoardView extends BComponent
         return (tris == null || tris.size() == 0 || !(mesh instanceof TriMesh));
     }
 
-    protected void notePending (int[] pieceIds)
+    protected void notePending (int[] pieceIds, Rectangle bounds)
     {
         for (int ii = 0; ii < pieceIds.length; ii++) {
             if (pieceIds[ii] > 0) {
                 _punits.add(pieceIds[ii]);
             }
         }
+        if (bounds != null) {
+            _pbounds.add(bounds);
+        }
     }
 
     /** Used to increment and decrement executing status for pieces. */
-    protected void noteExecuting (int[] pieceIds, int delta)
+    protected void noteExecuting (int[] pieceIds, Rectangle bounds, int delta)
     {
         for (int ii = 0; ii < pieceIds.length; ii++) {
             if (pieceIds[ii] > 0) {
                 _eunits.increment(pieceIds[ii], delta);
+            }
+        }
+        if (bounds != null) {
+            for (int ii = 0; ii < Math.abs(delta); ii++) {
+                if (delta > 0) {
+                    _ebounds.add(bounds);
+                } else {
+                    _ebounds.remove(bounds);
+                }
             }
         }
     }
@@ -1600,6 +1631,8 @@ public class BoardView extends BComponent
     protected ArrayList<BoardAction> _pactions = new ArrayList<BoardAction>();
     protected IntIntMap _eunits = new IntIntMap();
     protected ArrayIntSet _punits = new ArrayIntSet();
+    protected ArrayList<Rectangle> _ebounds = new ArrayList<Rectangle>();
+    protected HashSet<Rectangle> _pbounds = new HashSet<Rectangle>();
 
     /** Used to texture a quad that "targets" a tile. */
     protected TextureState _tgtstate;
