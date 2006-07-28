@@ -21,6 +21,14 @@ import com.threerings.bang.game.data.piece.Piece;
  */
 public class ChainingShotEffect extends ShotEffect
 {
+    /** An effect reported on the primary target. */
+    public static final String PRIMARY_EFFECT =
+        "effects/indian_post/storm_caller/attack";
+    
+    /** An effect reported on the chained targets. */
+    public static final String SECONDARY_EFFECT =
+        "effects/indian_post/storm_caller/damage";
+        
     public ShotEffect[] chainShot;
     
     /**
@@ -80,18 +88,48 @@ public class ChainingShotEffect extends ShotEffect
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
-        if (!super.apply(bangobj, obs)) {
-            return false;
-        }
-        for (ShotEffect chain : chainShot) {
-            chain.shooterLastActed = -1;
-            if (!chain.apply(bangobj, obs)) {
-                return false;
-            }
-        }
+        // process all levels
+        for (int dist = 0; apply(bangobj, obs, dist); dist++);
         return true;
     }
 
+    /**
+     * Applies the shot effects at the specified distance.
+     *
+     * @return true if there are more shot effects, false if this is the
+     * last level
+     */
+    public boolean apply (BangObject bangobj, Observer obs, int dist)
+    {
+        if (dist == 0) {
+            Piece ptarget = bangobj.pieces.get(targetId);
+            if (ptarget != null) {
+                reportEffect(obs, ptarget, PRIMARY_EFFECT);
+            }
+            super.apply(bangobj, obs);
+            return chainShot.length > 0;
+            
+        } else {
+            boolean remaining = false;
+            int px = xcoords[0], py = ycoords[0];
+            for (ShotEffect chain : chainShot) {
+                int cdist = Math.abs(px - chain.xcoords[0]) +
+                    Math.abs(py - chain.ycoords[0]);
+                if (cdist == dist) {
+                    Piece starget = bangobj.pieces.get(chain.targetId);
+                    if (starget != null) {
+                        reportEffect(obs, starget, SECONDARY_EFFECT);
+                    }
+                    chain.apply(bangobj, obs);
+                    
+                } else if (cdist > dist) {
+                    remaining = true;
+                }
+            }
+            return remaining;
+        }
+    }
+    
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {

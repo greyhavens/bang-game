@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client;
 
+import com.samskivert.util.Interval;
+
 import com.threerings.bang.game.data.effect.ChainingShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
@@ -35,18 +37,32 @@ public class ChainingShotHandler extends ShotHandler
         super.pieceAffected(piece, effect);
         _effect = _cseffect;
     }
-        
 
     protected void fireShot (int sx, int sy, int tx, int ty)
     {
-        // play the bang sound
-        if (_bangSound != null) {
-            _bangSound.play(false);
-        }
-
-        apply(_effect);
-        maybeComplete(-1);
+        // schedule an interval for the chain levels, firing the
+        // first off immediately
+        new Interval(_ctx.getClient().getRunQueue()) {
+            public void expired () {
+                // play the bang sound
+                if (_bangSound != null) {
+                    _bangSound.play(false);
+                }
+                
+                // keep applying the next level until done
+                if (!_cseffect.apply(_bangobj, ChainingShotHandler.this,
+                        _level++)) {
+                    cancel();
+                    maybeComplete(-1);
+                }
+            }
+            protected int _level;
+            
+        }.schedule(0L, CHAIN_DELAY);
     }
 
     ChainingShotEffect _cseffect;
+    
+    /** The delay in milliseconds between chain activations. */
+    protected static final long CHAIN_DELAY = 250;
 }
