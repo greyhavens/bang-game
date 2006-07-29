@@ -1060,6 +1060,7 @@ public class BangBoardView extends BoardView
                                        Targetable.TargetMode.MAYBE :
                                        Targetable.TargetMode.SURE_SHOT,
                                        (Unit)_selection);
+                    target.setPendingShot(true);
                 }
                 pruneMoveSet(_moveSet, tx, ty);
                 highlightTiles(_moveSet, getHighlightColor(_selection));
