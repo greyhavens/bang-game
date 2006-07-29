@@ -8,7 +8,7 @@ import com.threerings.bang.game.data.effect.BallisticShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
 /**
- * Does something extraordinary.
+ * The superclass of units that fire arcing ballistic shots.
  */
 public class BallisticUnit extends Unit
 {

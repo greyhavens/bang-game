@@ -31,6 +31,14 @@ public class BallisticShotEffect extends ShotEffect
         return new BallisticShotHandler();
     }
 
+    /**
+     * Returns the type of shot fired, which could be a model or an effect.
+     */
+    public String getShotType ()
+    {
+        return "units/frontier_town/artillery/shell";
+    }
+    
     @Override // documentation inherited
     protected String getEffect ()
     {

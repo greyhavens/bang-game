@@ -20,6 +20,8 @@ import com.threerings.openal.SoundGroup;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.ShotSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.effect.BallisticShotEffect;
+import com.threerings.bang.game.data.piece.BallisticUnit;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.util.SoundUtil;
@@ -66,7 +68,7 @@ public class BallisticShotHandler extends ShotHandler
             tx * TILE_SIZE + TILE_SIZE/2, ty * TILE_SIZE + TILE_SIZE/2,
             _bangobj.board.getElevation(tx, ty) * escale + TILE_SIZE/2);
         _ssprite = new ShotSprite(
-            _ctx, "units", "frontier_town/artillery/shell",
+            _ctx, ((BallisticShotEffect)_shot).getShotType(),
             _view.getUnitSprite(_shooter).getColorizations());
         Vector3f velvec = end.subtract(start);
         float edelta = velvec.z;

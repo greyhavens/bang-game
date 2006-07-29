@@ -3,7 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Sprite;
@@ -12,27 +12,29 @@ import com.threerings.media.image.Colorization;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.util.BangContext;
 
-import static com.threerings.bang.client.BangMetrics.*;
-
 /**
- * Displays a fired shot.
+ * Displays a ballistic shot.
  */
 public class ShotSprite extends Sprite
 {
     /**
      * Creates the shot sprite.
      *
-     * @param type the model type
-     * @param name the model name
+     * @param type the model or effect type
      * @param zations the colorizations to apply, or <code>null</code> for none
      */
-    public ShotSprite (
-        BangContext ctx, String type, String name, Colorization[] zations)
+    public ShotSprite (BangContext ctx, String type, Colorization[] zations)
     {
-        // our models are centered at the origin, but we need to shift
-        // them to the center of the prop's footprint
-        ctx.getModelCache().getModel(type, name, zations,
-            new ResultAttacher<Model>(this));
-        setLocalScale(0.5f);
+        if (type.startsWith("effects/")) {
+            ctx.loadEffect(type.substring(8),
+                new ResultAttacher<Spatial>(this));
+        } else {
+            int idx = type.indexOf('/');
+            String mtype = type.substring(0, idx),
+                name = type.substring(idx + 1);
+            ctx.getModelCache().getModel(mtype, name, zations,
+                new ResultAttacher<Model>(this));
+            setLocalScale(0.5f);
+        }
     }
 }

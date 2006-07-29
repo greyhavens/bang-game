@@ -68,7 +68,7 @@ public class AreaDamageHandler extends EffectHandler
             _dest.y) + TILE_SIZE * 0.5f;
             
         ShotSprite ssprite = new ShotSprite(
-            _ctx, "bonuses", "frontier_town/missile", null);
+            _ctx, "bonuses/frontier_town/missile", null);
         _view.addSprite(ssprite);
         ssprite.getLocalRotation().fromAngleNormalAxis(
             -FastMath.HALF_PI, FORWARD);

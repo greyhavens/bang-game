@@ -4,13 +4,14 @@
 package com.threerings.bang.game.data.piece;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.NightmareShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.util.PointSet;
 
 /**
  * Handles the special abilities of the Dream Catcher.
  */
-public class DreamCatcher extends Unit
+public class DreamCatcher extends BallisticUnit
 {
     @Override // documentation inherited
     public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
@@ -51,5 +52,13 @@ public class DreamCatcher extends Unit
             shot.targetLastActed = bangobj.tick;
         }
         return shot;
+    }
+    
+    @Override // documentation inherited
+    protected ShotEffect generateShotEffect (
+            BangObject bangobj, Piece target, int damage)
+    {
+        return new NightmareShotEffect(this, target, damage,
+                attackInfluenceIcon(), defendInfluenceIcon(target));
     }
 }
