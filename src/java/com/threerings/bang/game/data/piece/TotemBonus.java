@@ -5,9 +5,10 @@ package com.threerings.bang.game.data.piece;
 
 import java.util.HashMap;
 
+import com.threerings.bang.data.Stat;
+
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TotemSprite;
-
 import com.threerings.bang.game.data.effect.BonusEffect;
 import com.threerings.bang.game.data.effect.TotemEffect;
 
@@ -18,15 +19,20 @@ public class TotemBonus extends Bonus
 {
     public static enum Type
     {
-        TOTEM_LARGE(TotemEffect.TOTEM_LARGE_BONUS, 30, 3),
-        TOTEM_MEDIUM(TotemEffect.TOTEM_MEDIUM_BONUS, 20, 2),
-        TOTEM_SMALL(TotemEffect.TOTEM_SMALL_BONUS, 10, 1),
-        TOTEM_CROWN(TotemEffect.TOTEM_CROWN_BONUS, 30, 3);
+        TOTEM_LARGE(TotemEffect.TOTEM_LARGE_BONUS, 30, 3, 
+                Stat.Type.TOTEMS_LARGE),
+        TOTEM_MEDIUM(TotemEffect.TOTEM_MEDIUM_BONUS, 20, 2,
+                Stat.Type.TOTEMS_MEDIUM),
+        TOTEM_SMALL(TotemEffect.TOTEM_SMALL_BONUS, 10, 1,
+                Stat.Type.TOTEMS_SMALL),
+        TOTEM_CROWN(TotemEffect.TOTEM_CROWN_BONUS, 40, 4,
+                Stat.Type.TOTEMS_CROWN);
 
-        Type (String bonus, int value, int height) {
+        Type (String bonus, int value, int height, Stat.Type stat) {
             _bonus = bonus;
             _value = value;
             _height = height;
+            _stat = stat;
         }
 
         public String bonus () {
@@ -41,9 +47,14 @@ public class TotemBonus extends Bonus
             return _height;
         }
 
+        public Stat.Type stat () {
+            return _stat;
+        }
+
         protected String _bonus;
         protected int _height;
         protected int _value;
+        protected Stat.Type _stat;
     }
 
     public static final HashMap<String, Type> TOTEM_LOOKUP =

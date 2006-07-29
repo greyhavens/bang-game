@@ -198,8 +198,7 @@ public class GameOverView extends SteelWindow
             _ctrl.gameOverDismissed(action.equals("to_town"));
         } else if (action.equals("stats")) {
             _bctx.getBangClient().clearPopup(this, true);
-            _bctx.getBangClient().displayPopup(new StatsView(
-                        _bctx, _ctrl, _bobj, false), true);
+            _bctx.getBangClient().displayPopup(_ctrl.getStatsView(), true);
         }
     }
 

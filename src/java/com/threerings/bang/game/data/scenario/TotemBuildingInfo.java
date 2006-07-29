@@ -5,7 +5,12 @@ package com.threerings.bang.game.data.scenario;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.util.BasicContext;
+
+import com.threerings.bang.game.client.StatsView;
+import com.threerings.bang.game.client.TotemStatsView;
 import com.threerings.bang.game.data.piece.Marker;
+import com.threerings.bang.game.data.piece.TotemBonus;
 
 /**
  * Contains metadata on the Totem Building scenario.
@@ -33,13 +38,37 @@ public class TotemBuildingInfo extends ScenarioInfo
     @Override // from ScenarioInfo
     public Stat.Type getObjective ()
     {
-        return Stat.Type.TOTEMS_STACKED;
+        return Stat.Type.TOTEMS_CROWN;
+    }
+
+    /**
+     * Returns an array of objective stat types.
+     */
+    public Stat.Type[] getObjectives ()
+    {
+        return new Stat.Type[] {
+            Stat.Type.TOTEMS_SMALL, Stat.Type.TOTEMS_MEDIUM,
+            Stat.Type.TOTEMS_LARGE, Stat.Type.TOTEMS_CROWN
+        };
     }
 
     @Override // from ScenarioInfo
     public int getPointsPerObjective ()
     {
-        return POINTS_PER_TOTEM;
+        return TotemBonus.Type.TOTEM_CROWN.value();
+    }
+
+    /**
+     * Returns an array of point values mapped to each objective.
+     */
+    public int[] getPointsPerObjectives ()
+    {
+        return new int[] {
+            TotemBonus.Type.TOTEM_SMALL.value(),
+            TotemBonus.Type.TOTEM_MEDIUM.value(),
+            TotemBonus.Type.TOTEM_LARGE.value(),
+            TotemBonus.Type.TOTEM_CROWN.value(),
+        };
     }
 
     @Override // from ScenarioInfo
@@ -52,5 +81,11 @@ public class TotemBuildingInfo extends ScenarioInfo
     public boolean isValidMarker (Marker marker)
     {
         return super.isValidMarker(marker) || marker.getType() == Marker.TOTEM;
+    }
+
+    @Override // from ScenarioInfo
+    public StatsView getStatsView (BasicContext ctx)
+    {
+        return new TotemStatsView(ctx);
     }
 }

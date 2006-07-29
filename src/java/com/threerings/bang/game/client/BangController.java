@@ -494,6 +494,14 @@ public class BangController extends GameController
         return _statMap.get(round);
     }
 
+    /**
+     * Retrieve the StatsView.
+     */
+    public StatsView getStatsView ()
+    {
+        return _statsView;
+    }
+
     @Override // documentation inherited
     public void attributeChanged (AttributeChangedEvent event)
     {
@@ -507,8 +515,8 @@ public class BangController extends GameController
             _statMap.put(_bangobj.roundId, _bangobj.stats);
             // create our stats view now that we have our stats; we'll hold off
             // on showing it until both post-round conditions have been met
-            _statsView = new StatsView(
-                _ctx, BangController.this, _bangobj, true);
+            _statsView = _bangobj.scenario.getStatsView(_ctx);
+            _statsView.init(BangController.this, _bangobj, true);
             _postRoundMultex.satisfied(Multex.CONDITION_TWO);
         }
     }

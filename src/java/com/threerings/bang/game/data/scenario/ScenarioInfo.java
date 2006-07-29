@@ -15,7 +15,9 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.piece.Marker;
+import com.threerings.bang.game.client.StatsView;
 import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Contains metadata about a particular game scenario.
@@ -184,6 +186,15 @@ public abstract class ScenarioInfo
     public String[] getPreLoadClips ()
     {
         return PRELOAD_CLIPS;
+    }
+
+    /**
+     * Returns the StatsView used by the client to display the post-game
+     * scenario stats.
+     */
+    public StatsView getStatsView (BasicContext ctx)
+    {
+        return new StatsView(ctx);
     }
 
     /**

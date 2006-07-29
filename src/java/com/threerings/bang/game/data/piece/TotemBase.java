@@ -46,7 +46,7 @@ public class TotemBase extends Prop
     public void wasKilled (short tick)
     {
         int idx = _pieces.size() - 1;
-        _pieces.remove(idx--);
+        _destroyed = _pieces.remove(idx--);
         if (idx > -1) {
             damage = _pieces.get(idx).damage;
         } else {
@@ -97,6 +97,14 @@ public class TotemBase extends Prop
         return (idx < 0 || idx >= _pieces.size()) ? 
             -1 : _pieces.get(idx).owner;
     }
+    
+    /**
+     * Returns the owner of the last piece destroyed.
+     */
+    public int getDestroyedOwner ()
+    {
+        return (_destroyed == null) ? -1 : _destroyed.owner;
+    }
 
     /**
      * Returns the type of the piece at index idx.
@@ -111,6 +119,14 @@ public class TotemBase extends Prop
         } else {
             return _pieces.get(idx).type;
         }
+    }
+
+    /**
+     * Returns the type of the last piece destroyed.
+     */
+    public TotemBonus.Type getDestroyedType ()
+    {
+        return (_destroyed == null) ? null : _destroyed.type;
     }
 
     @Override // documentation inherited
@@ -172,4 +188,5 @@ public class TotemBase extends Prop
     
     protected transient StreamableArrayList<PieceData> _pieces = 
         new StreamableArrayList<PieceData>();
+    protected transient PieceData _destroyed;
 }

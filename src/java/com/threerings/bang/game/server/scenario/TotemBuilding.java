@@ -18,10 +18,10 @@ import com.threerings.bang.game.server.ai.TotemLogic;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
-
 import com.threerings.bang.game.data.effect.TotemEffect;
-
+import com.threerings.bang.game.data.effect.CountEffect;
 import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TotemBase;
@@ -32,7 +32,6 @@ import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
 import com.threerings.parlor.game.data.GameAI;
-
 import com.threerings.presents.server.InvocationException;
 
 import static com.threerings.bang.Log.log;
@@ -147,18 +146,21 @@ public class TotemBuilding extends Scenario
         super.recordStats(bangobj, gameTime, pidx, user);
 
         // record the number of totem pieces stacked
-        int totems = bangobj.stats[pidx].getIntStat(Stat.Type.TOTEMS_STACKED);
-        if (totems > 0) {
-            user.stats.incrementStat(Stat.Type.TOTEMS_STACKED, totems);
+        for (TotemBonus.Type type : TotemBonus.Type.values()) {
+            int totems = bangobj.stats[pidx].getIntStat(type.stat());
+            if (totems > 0) {
+                user.stats.incrementStat(type.stat(), totems);
+            }
         }
     }
 
-    protected class TotemBaseDelegate extends ScenarioDelegate
+    protected class TotemBaseDelegate extends CounterDelegate
     {
         @Override // documentation inherited
         public void roundWillStart (BangObject bangobj)
             throws InvocationException
         {
+            super.roundWillStart(bangobj);
             Piece[] pieces = bangobj.getPieceArray();
             for (int ii = 0; ii < pieces.length; ii++) {
                 if (!(pieces[ii] instanceof TotemBase)) {
@@ -188,25 +190,37 @@ public class TotemBuilding extends Scenario
         }
 
         @Override // documentation inherited
-        public void pieceMoved (BangObject bangobj, Piece piece)
-        {
-            if (piece instanceof Unit) {
-                checkAddToBase(bangobj, (Unit)piece);
-            }
-        }
-
-        @Override // documentation inherited
         public void pieceWasKilled (BangObject bangobj, Piece piece)
         {
             if (piece instanceof TotemBase) {
+                TotemBase base = (TotemBase)piece;
+                adjustCounter(bangobj, base.getDestroyedOwner(), -1, 
+                        base.getDestroyedType().stat());
                 recalculatePoints(bangobj);
             }
         }
 
-        /**
-         * Checks if the unit as a totem piece to add to the base.
-         */
-        protected void checkAddToBase (BangObject bangobj, Unit unit)
+        protected void adjustCounter (
+                BangObject bangobj, int owner, int delta, Stat.Type stat)
+        {
+            bangobj.stats[owner].incrementStat(stat, delta);
+            for (Counter counter: _counters) {
+                if (counter.owner == owner) {
+                    _bangmgr.deployEffect(
+                            -1, CountEffect.changeCount(counter.pieceId,
+                                counter.count + delta));
+                }
+            }
+        }
+
+        @Override // documentation inherited
+        protected int pointsPerCounter ()
+        {
+            return 0;
+        }
+
+        @Override // documentation inherited
+        protected void checkAdjustedCounter (BangObject bangobj, Unit unit)
         {
             if (_bases == null || _bases.size() == 0) {
                 return;
@@ -232,6 +246,8 @@ public class TotemBuilding extends Scenario
                 effect.baseId = base.pieceId;
                 effect.dropping = true;
                 _bangmgr.deployEffect(unit.owner, effect);
+                adjustCounter(bangobj, unit.owner, 1,  
+                        TotemBonus.TOTEM_LOOKUP.get(effect.type).stat());
                 recalculatePoints(bangobj);
             }
         }
@@ -245,60 +261,57 @@ public class TotemBuilding extends Scenario
                 _points = new int[bangobj.players.length];
             }
             int[] points = new int[_points.length]; 
+            int[] totemPoints = new int[_points.length];
             int[][] piecePerTotem = 
                 new int[_bases.size()][_points.length];
             int[] maxPiece = new int[piecePerTotem.length];
             int[] totemHeight = new int[piecePerTotem.length];
-            int[] numPieces = new int[_points.length];
-
-            for (int ii = 0; ii < piecePerTotem.length; ii++) {
-                TotemBase base = _bases.get(ii);
-                for (int jj = 0, nn = base.numPieces(); jj < nn; jj++) {
-                    int owner = base.getOwner(jj);
-                    piecePerTotem[ii][owner]++;
-                    numPieces[owner]++;
-                    TotemBonus.Type type = base.getType(jj);
-                    totemHeight[ii] = type.height();
-                    points[owner] += type.value();
-                }
-                for (int pieces : piecePerTotem[ii]) {
-                    maxPiece[ii] = Math.max(maxPiece[ii], pieces);
-                }
-            }
-
-            for (int ii = 0; ii < piecePerTotem.length; ii++) {
-                for (int jj = 0; jj < piecePerTotem[ii].length; jj++) {
-                    int pieces = piecePerTotem[ii][jj];
-                    
-                    // bonus if they have the most pieces on this totem
-                    // and the totem is not empty
-                    if (pieces > 0 && pieces == maxPiece[ii]) {
-                        points[jj] += MAX_PIECE_BONUS;
-                    }
-                    
-                    // bonus points for each piece based on the height
-                    // of the totem
-                    if (pieces > 0) {
-                        points[jj] += totemHeight[ii] * HEIGHT_BONUS;
-                    }
-                }
-            }
 
             bangobj.startTransaction();
             try {
+                for (int ii = 0; ii < piecePerTotem.length; ii++) {
+                    TotemBase base = _bases.get(ii);
+                    for (int jj = 0, nn = base.numPieces(); jj < nn; jj++) {
+                        int owner = base.getOwner(jj);
+                        piecePerTotem[ii][owner]++;
+                        TotemBonus.Type type = base.getType(jj);
+                        totemHeight[ii] += type.height();
+                        points[owner] += type.value();
+                    }
+                    for (int pieces : piecePerTotem[ii]) {
+                        maxPiece[ii] = Math.max(maxPiece[ii], pieces);
+                    }
+                }
+
+                for (int ii = 0; ii < piecePerTotem.length; ii++) {
+                    for (int jj = 0; jj < piecePerTotem[ii].length; jj++) {
+                        int pieces = piecePerTotem[ii][jj];
+                        
+                        // bonus if they have the most pieces on this totem
+                        // and the totem is not empty
+                        if (pieces > 0 && pieces == maxPiece[ii]) {
+                            totemPoints[jj] += MAX_PIECE_BONUS;
+                        }
+                        
+                        // bonus points for each piece based on the height
+                        // of the totem
+                        if (pieces > 0) {
+                            totemPoints[jj] += totemHeight[ii] * HEIGHT_BONUS;
+                        }
+                    }
+                }
+
                 for (int ii = 0; ii < points.length; ii++) {
-                    bangobj.grantPoints(ii, points[ii] - _points[ii]);
-                    _points[ii] = points[ii];
+                    bangobj.grantPoints(ii, 
+                            points[ii] + totemPoints[ii] - _points[ii]);
+                    _points[ii] = points[ii] + totemPoints[ii];
                     bangobj.stats[ii].setStat(
-                        Stat.Type.TOTEMS_STACKED, numPieces[ii]);
-                    bangobj.stats[ii].setStat(
-                        Stat.Type.TOTEM_POINTS, 
-                        points[ii] - numPieces[ii] *
-                        TotemBuildingInfo.POINTS_PER_TOTEM); 
+                        Stat.Type.TOTEM_POINTS, totemPoints[ii]); 
                 }
             } finally {
                 bangobj.commitTransaction();
             }
+
         }
         
         /** A list of active totem bases. */

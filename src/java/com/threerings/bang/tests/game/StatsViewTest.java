@@ -10,6 +10,7 @@ import com.jme.util.LoggingSystem;
 import com.jmex.bui.BWindow;
 
 import com.samskivert.util.RandomUtil;
+
 import com.threerings.util.Name;
 
 import com.threerings.bang.data.Badge;
@@ -26,7 +27,9 @@ import com.threerings.bang.game.client.StatsView;
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangObject;
+
 import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
+import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
 
 import com.threerings.bang.tests.TestApp;
 
@@ -104,9 +107,21 @@ public class StatsViewTest extends TestApp
                     RandomUtil.getInt(50));
             bangobj.stats[ii].setStat(Stat.Type.BRAND_POINTS,
                     RandomUtil.getInt(400));
+            bangobj.stats[ii].setStat(Stat.Type.TOTEMS_SMALL,
+                    RandomUtil.getInt(6));
+            bangobj.stats[ii].setStat(Stat.Type.TOTEMS_MEDIUM,
+                    RandomUtil.getInt(6));
+            bangobj.stats[ii].setStat(Stat.Type.TOTEMS_LARGE,
+                    RandomUtil.getInt(6));
+            bangobj.stats[ii].setStat(Stat.Type.TOTEMS_CROWN,
+                    RandomUtil.getInt(3));
+            bangobj.stats[ii].setStat(Stat.Type.TOTEM_POINTS,
+                    RandomUtil.getInt(200));
         }
-        bangobj.scenario = new CattleRustlingInfo();
+        bangobj.scenario = new TotemBuildingInfo();
 
-        return new StatsView(_ctx, null, bangobj, true);
+        StatsView window = bangobj.scenario.getStatsView(_ctx);
+        window.init(null, bangobj, true);
+        return window;
     }
 }

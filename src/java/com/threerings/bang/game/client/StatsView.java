@@ -49,33 +49,27 @@ import com.threerings.util.MessageBundle;
 public class StatsView extends SteelWindow
     implements ActionListener
 {
-    /**
-     * The constructor the game uses.
-     */
-    public StatsView (BangContext ctx, BangController ctrl,
-                      BangObject bangobj, boolean animate)
+    public StatsView (BasicContext ctx)
     {
-        this((BasicContext)ctx, ctrl, bangobj, animate);
-        _bctx = ctx;
+        super(ctx, ctx.xlate(GameCodes.GAME_MSGS, "m.stats_title"));
+        _ctx = ctx;
     }
 
     /**
-     * The constructor the test harness uses.
+     * Used to initialize the stats view.
      */
-    public StatsView (BasicContext ctx, BangController ctrl,
-                      BangObject bangobj, boolean animate)
+    public void init (BangController ctrl, BangObject bangobj, boolean animate)
     {
-        super(ctx, ctx.xlate(GameCodes.GAME_MSGS, "m.stats_title"));
         setLayer(1);
 
-        _ctx = ctx;
         _ctrl = ctrl;
         _bobj = bangobj;
 
-        _msgs = ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
+        _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
-        if (ctx instanceof BangContext) {
-            ((BangContext)ctx).getBangClient().fadeOutMusic(2f);
+        if (_ctx instanceof BangContext) {
+            _bctx = (BangContext)_ctx;
+            ((BangContext)_ctx).getBangClient().fadeOutMusic(2f);
         }
         
         if (bangobj.state == BangObject.GAME_OVER) {
@@ -158,19 +152,29 @@ public class StatsView extends SteelWindow
      */
     protected void loadGameData ()
     {
-        _statType = _bobj.scenario.getObjective();
-        String obj = _statType.toString().toLowerCase();
+        Stat.Type statType = _bobj.scenario.getObjective();
+        String obj = statType.toString().toLowerCase();
         _objectiveIcon = new ImageIcon(
             _ctx.loadImage("ui/postgame/icons/" + obj + ".png"));
         _objectiveTitle = "m.title_" + obj;
         _objectivePoints = "m." + obj + "_points";
-        _ppo = _bobj.scenario.getPointsPerObjective();
 
         if (_bobj.scenario.getSecondaryObjective() != null) {
             _secStatType = _bobj.scenario.getSecondaryObjective();
             String sobj = _secStatType.toString().toLowerCase();
             _secIcon = new ImageIcon(
                 _ctx.loadImage("ui/postgame/icons/" + sobj + ".png"));
+        }
+
+        // calculate the total scenario points for each player
+        _scenPoints = new int[_bobj.players.length];
+        _objectives = new int[_bobj.players.length];
+        for (int ii = 0; ii < _scenPoints.length; ii++) {
+            _objectives[ii] = getIntStat(ii, statType);
+            int secondary = (_secStatType == null ? 0 :
+                    getIntStat(ii, _secStatType));
+            _scenPoints[ii] = _bobj.scenario.getPointsPerObjective() *
+                _objectives[ii] + secondary;
         }
     }
 
@@ -213,11 +217,6 @@ public class StatsView extends SteelWindow
      */
     protected void showObjective ()
     {
-        if (_statType == null) {
-            showPoints(false);
-            return;
-        }
-
         _contents.add(_header = new BLabel(_msgs.get(
                         "m.game_title", _msgs.xlate(_objectiveTitle)), 
                 "endgame_title"), BorderLayout.NORTH);
@@ -227,15 +226,14 @@ public class StatsView extends SteelWindow
         _objcont.setPreferredSize(TABLE_DIMS);
         _objcont.setLayoutManager(new TableLayout(3, 2, 3));
 
-        int maxobjectives = 0;
         int iwidth = _objectiveIcon.getWidth() + 1;
         int size = _bobj.players.length;
         _labels = new BLabel[size][];
-
-        // find the max objective count
-        for (int ii = 0; ii < size; ii++) {
-            maxobjectives = Math.max(maxobjectives, getIntStat(ii, _statType));
+        int maxobjectives = 0;
+        for (int ii = 0; ii < _objectives.length; ii++) {
+            maxobjectives = Math.max(maxobjectives, _objectives[ii]);
         }
+
         int maxIcons = MAX_ICONS;
         int secLabels = 0;
         int offset = 0;
@@ -243,6 +241,9 @@ public class StatsView extends SteelWindow
             maxIcons -= 2;
             secLabels = 3;
             offset = 120;
+        }
+        if (!_showMultiplier) {
+            maxIcons++;
         }
 
         for (int ii = 0; ii < size; ii++) {
@@ -253,11 +254,10 @@ public class StatsView extends SteelWindow
             GroupLayout hlay = GroupLayout.makeHStretch();
             hlay.setGap(0);
             BContainer cont = new BContainer(hlay);
-            BContainer icont = new BContainer(new AbsoluteLayout());
             cont.setPreferredSize(new Dimension(400, 50));
-            int objectives = getIntStat(ii, _statType);
             int secondary = 0;
-            _labels[ii] = new BLabel[objectives + 2 + secLabels];
+            _labels[ii] = new BLabel[_objectives[ii] + secLabels + 
+                (_showMultiplier ? 2 : 1)];
             Dimension apref = aview.getPreferredSize(-1, -1);
             int y = (apref.height - _objectiveIcon.getHeight()) / 2;
 
@@ -278,43 +278,38 @@ public class StatsView extends SteelWindow
                 cont.add(_labels[ii][1], GroupLayout.FIXED);
                 cont.add(_labels[ii][2] = new BLabel("+", "endgame_smalltotal"),
                         GroupLayout.FIXED);
-                if (objectives == 0) {
+                if (_objectives[ii] == 0) {
                     _labels[ii][2].setAlpha(0f);
                     _labels[ii][2] = new BLabel("");
                 }
             }
 
-            // Add the objective icons
-            for (int jj = 0; jj < objectives; jj++) {
-                int x = 0;
-                _labels[ii][jj + secLabels] = new BLabel(_objectiveIcon);
-                if (maxobjectives > maxIcons) {
-                    x += jj * (maxIcons - 1) * iwidth /
-                        (maxobjectives - 1);
-                } else {
-                    x += jj * iwidth;
-                }
-                icont.add(_labels[ii][jj + secLabels], new Point(x, y));
-            }
-            cont.add(icont, GroupLayout.FIXED);
+           
+            cont.add(objectiveIconContainer(
+                        ii, secLabels, maxobjectives, maxIcons, iwidth, y),
+                     GroupLayout.FIXED);
 
             // Add the multiplier label
-            _labels[ii][objectives + secLabels] = new BLabel(_msgs.xlate(
-                        MessageBundle.tcompose("m.multiplier", objectives)),
-                    "endgame_total");
-            if (objectives > 0 || _secStatType == null) {
-                cont.add(_labels[ii][objectives + secLabels]);
+            if (_showMultiplier) {
+                _labels[ii][_objectives[ii] + secLabels] = new BLabel(
+                        _msgs.xlate(MessageBundle.tcompose(
+                                "m.multiplier", _objectives[ii])),
+                        "endgame_total");
+                if (_objectives[ii] > 0 || _secStatType == null) {
+                    cont.add(_labels[ii][_objectives[ii] + secLabels]);
+                } else {
+                    cont.add(new Spacer(1, 1));
+                }
             } else {
                 cont.add(new Spacer(1, 1));
             }
             _objcont.add(cont);
 
             // Add the total label
-            int points = objectives * _ppo + secondary;
-            _labels[ii][objectives + secLabels + 1] = new BLabel(_msgs.xlate(
-                        MessageBundle.tcompose("m.equals", points)),
-                    "endgame_total");
-            _objcont.add(_labels[ii][objectives + secLabels + 1]);
+            _labels[ii][_labels[ii].length - 1] = new BLabel(
+                    _msgs.xlate(MessageBundle.tcompose(
+                            "m.equals", _scenPoints[ii])), "endgame_total");
+            _objcont.add(_labels[ii][_labels[ii].length - 1]);
 
             // Start everything as invisible
             for (int jj = 0; jj < _labels[ii].length; jj++) {
@@ -327,6 +322,29 @@ public class StatsView extends SteelWindow
         } else {
             _startAnimationWhenAdded = true;
         }
+    }
+
+    /**
+     * Returns a container with all the primary and secondary objective
+     * icons and scoring values.
+     */
+    protected BContainer objectiveIconContainer (int pidx, int secLabels, 
+            int maxobjectives, int maxIcons, int iwidth, int y)
+    {
+        BContainer icont = new BContainer(new AbsoluteLayout());
+        // Add the objective icons
+        for (int jj = 0; jj < _objectives[pidx]; jj++) {
+            int x = 0;
+            _labels[pidx][jj + secLabels] = new BLabel(_objectiveIcon);
+            if (maxobjectives > maxIcons) {
+                x += jj * (maxIcons - 1) * iwidth /
+                    (maxobjectives - 1);
+            } else {
+                x += jj * iwidth;
+            }
+            icont.add(_labels[pidx][jj + secLabels], new Point(x, y));
+        }
+        return icont;
     }
 
     @Override // documentation inherited
@@ -423,16 +441,12 @@ public class StatsView extends SteelWindow
             // add the data
             for (int ii = 0; ii < size; ii++) {
                 BLabel[] labels = new BLabel[7];
-                int objectives = getIntStat(ii, _statType);
-                int secondary = (_secStatType == null ? 0 :
-                        getIntStat(ii, _secStatType));
                 int points = getIntStat(ii, Stat.Type.POINTS_EARNED); 
-                int objPoints = objectives * _ppo + secondary;
                 int starPoints = getIntStat(ii, Stat.Type.BONUS_POINTS);
-                int damagePoints = points - objPoints - starPoints;
+                int damagePoints = points - _scenPoints[ii] - starPoints;
                 _ptscont.add(makeAvatarView(ii));
                 _ptscont.add(labels[0] = new BLabel(
-                        String.valueOf(objPoints), "endgame_smalltotal"));
+                        String.valueOf(_scenPoints[ii]), "endgame_smalltotal"));
                 labels[0].setIcon(_objectiveIcon);
                 _ptscont.add(labels[1] = new BLabel("+", "endgame_smalltotal"));
                 _ptscont.add(labels[2] = new BLabel(
@@ -690,11 +704,13 @@ public class StatsView extends SteelWindow
     protected BLabel[][] _labels;
 
     /** Information on the game scenario. */
-    protected Stat.Type _statType, _secStatType;
+    protected Stat.Type _secStatType;
     protected BIcon _objectiveIcon, _secIcon;
     protected String _objectiveTitle;
     protected String _objectivePoints;
-    protected int _ppo;
+    protected int[] _scenPoints;
+    protected int[] _objectives;
+    protected boolean _showMultiplier = true;
 
     /** Counter for animation steps. */
     protected int _showing;
@@ -716,13 +732,24 @@ public class StatsView extends SteelWindow
     protected static final int NUM_VIEWABLE_COLS = 6;
 
     protected static final Stat.Type[] BASE_STAT_TYPES = {
+        // Global Stats
         Stat.Type.DAMAGE_DEALT, Stat.Type.UNITS_KILLED,
         Stat.Type.BONUSES_COLLECTED, Stat.Type.CARDS_PLAYED,
         Stat.Type.DISTANCE_MOVED, Stat.Type.SHOTS_FIRED,
-        Stat.Type.UNITS_LOST, Stat.Type.CATTLE_RUSTLED,
-        Stat.Type.BRAND_POINTS, Stat.Type.NUGGETS_CLAIMED,
+        Stat.Type.UNITS_LOST,
+        // Cattle Rustling
+        Stat.Type.CATTLE_RUSTLED, Stat.Type.BRAND_POINTS, 
+        // Claim Jumping & Gold Rush
+        Stat.Type.NUGGETS_CLAIMED,
+        // Land Grab
         Stat.Type.STEADS_CLAIMED, Stat.Type.STEAD_POINTS,
-        Stat.Type.TOTEMS_STACKED, Stat.Type.TOTEM_POINTS,
-        Stat.Type.WENDIGO_SURVIVALS, Stat.Type.TALISMAN_POINTS
+        // Totem Building
+        Stat.Type.TOTEMS_SMALL, Stat.Type.TOTEMS_MEDIUM,
+        Stat.Type.TOTEMS_LARGE, Stat.Type.TOTEMS_CROWN, 
+        Stat.Type.TOTEM_POINTS,
+        // Wendigo Attack
+        Stat.Type.WENDIGO_SURVIVALS, Stat.Type.TALISMAN_POINTS,
+        // Forest Guardians
+        Stat.Type.TREES_GROWN, Stat.Type.TREE_POINTS,
     };
 }
