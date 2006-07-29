@@ -10,7 +10,6 @@ import java.io.ObjectOutput;
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
 
-import java.util.HashMap;
 import java.util.Properties;
 
 import com.jme.bounding.BoundingBox;
@@ -34,7 +33,6 @@ import com.jmex.effects.particles.ParticleGeometry;
 import com.jmex.effects.particles.ParticleMesh;
 
 import com.samskivert.util.RandomUtil;
-import com.samskivert.util.StringUtil;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
@@ -53,20 +51,12 @@ import static com.threerings.bang.client.BangMetrics.*;
 /**
  * A gunshot effect with muzzle flash and bullet trail.
  */
-public class GunshotEmission extends SpriteEmission
+public class GunshotEmission extends FrameEmission
 {
     @Override // documentation inherited
     public void configure (Properties props, Spatial target)
     {
         super.configure(props, target);
-        if (_animations == null) {
-            return;
-        }
-        _animShotFrames = new HashMap<String, int[]>();
-        for (String anim : _animations) {
-            _animShotFrames.put(anim, StringUtil.parseIntArray(
-                props.getProperty(anim + ".shot_frames", "")));
-        }
         _size = Float.valueOf(props.getProperty("size", "1"));
         _trails = new Trail[Integer.valueOf(props.getProperty("trails", "1"))];
         _spread = Float.valueOf(props.getProperty("spread", "0"));
@@ -77,7 +67,6 @@ public class GunshotEmission extends SpriteEmission
     public void init (Model model)
     {
         super.init(model);
-        _model = model;
         
         if (_fmesh == null) {
             createFlareMesh();
@@ -162,7 +151,6 @@ public class GunshotEmission extends SpriteEmission
             gstore = (GunshotEmission)store;
         }
         super.putClone(gstore, properties);
-        gstore._animShotFrames = _animShotFrames;
         gstore._size = _size;
         gstore._trails = new Trail[_trails.length];
         gstore._spread = _spread;
@@ -175,7 +163,6 @@ public class GunshotEmission extends SpriteEmission
         throws IOException
     {
         super.writeExternal(out);
-        out.writeObject(_animShotFrames);
         out.writeFloat(_size);
         out.writeInt(_trails.length);
         out.writeFloat(_spread);
@@ -187,48 +174,10 @@ public class GunshotEmission extends SpriteEmission
         throws IOException, ClassNotFoundException
     {
         super.readExternal(in);
-        @SuppressWarnings("unchecked") HashMap<String,int[]> casted =
-            (HashMap<String,int[]>)in.readObject();
-        _animShotFrames = casted;
         _size = in.readFloat();
         _trails = new Trail[in.readInt()];
         _spread = in.readFloat();
         _effect = (String)in.readObject();
-    }
-    
-    // documentation inherited
-    public void update (float time)
-    {
-        if (!isActive() || !isActiveEmission() || 
-                _shotFrames == null || _idx >= _shotFrames.length) {
-            return;
-        }
-        int frame = (int)((_elapsed += time) / _frameDuration);
-        if (frame >= _shotFrames[_idx]) {
-            fireShot();
-            _idx++;
-        }
-    }
-    
-    @Override // documentation inherited
-    protected void animationStarted (String name)
-    {
-        super.animationStarted(name);
-        if (!isActiveEmission()) {
-            return;
-        }
-        
-        // get the frames at which shots go off, if any
-        _shotFrames = (_animShotFrames == null) ?
-            null : _animShotFrames.get(name);
-        if (_shotFrames == null) {
-            return;
-        }
-        
-        // set initial animation state
-        _frameDuration = 1f / _model.getAnimation(name).frameRate;
-        _idx = 0;
-        _elapsed = 0f;
     }
     
     /**
@@ -260,10 +209,8 @@ public class GunshotEmission extends SpriteEmission
         _fmesh = new TriMesh("fmesh", vbuf, null, null, tbuf, ibuf);
     }
     
-    /**
-     * Activates the shot effect.
-     */
-    protected void fireShot ()
+    // documentation inherited
+    protected void fireEmission ()
     {
         Vector3f trans = _target.getWorldTranslation();
         
@@ -462,9 +409,6 @@ public class GunshotEmission extends SpriteEmission
         protected ColorRGBA _color = new ColorRGBA();
     }
     
-    /** For each animation, the frames at which the shots go off. */
-    protected HashMap<String, int[]> _animShotFrames;
-    
     /** The size of the shots. */
     protected float _size;
     
@@ -474,24 +418,9 @@ public class GunshotEmission extends SpriteEmission
     /** An effect to display on firing. */
     protected String _effect;
     
-    /** The frames at which the shots go off for the current animation. */
-    protected int[] _shotFrames;
-    
-    /** The duration of a single frame in seconds. */
-    protected float _frameDuration;
-    
-    /** The index of the current frame. */
-    protected int _idx;
-    
-    /** The time elapsed since the start of the animation. */
-    protected float _elapsed;
-    
     /** Result variables to reuse. */
     protected Vector3f _sdir = new Vector3f(), _axis = new Vector3f();
     protected Quaternion _rot = new Quaternion();
-    
-    /** The model to which this emission is bound. */
-    protected Model _model;
     
     /** The muzzle flare handler. */
     protected Flare _flare;
