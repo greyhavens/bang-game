@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="polySurface1" translation="0.0, -9.76698, 53.8211" rotation="0.0, 0.0, 0.0, 1.0" scale="0.6, 0.6, 0.6" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="base.png" transparent="false">
+  <triMesh name="polySurface1" translation="-0.0117464, -5.86093, 53.8211" rotation="0.0, 0.0, 0.0, 1.0" scale="0.6, 0.6, 0.6" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="base.png" transparent="false">
     <vertex location="-72.071, 51.3772, -62.2291" normal="-0.855449, 0.496049, -0.148803" tcoords="0.698361, 0.114723"/>
     <vertex location="-72.071, 51.3772, 6.44229" normal="-0.705726, 0.361461, 0.609342" tcoords="0.698361, 0.358206"/>
     <vertex location="-41.6102, 81.838, 6.44229" normal="-0.429422, 0.663802, 0.612343" tcoords="0.851413, 0.358206"/>
