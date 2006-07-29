@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="polySurface3" translation="0.0, 0.0, 39.7885" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="totem_spawn.png" transparent="false">
+  <triMesh name="polySurface3" translation="0.0, -1.77754e-006, 80.4539" rotation="0.0, 0.0, 0.0, 1.0" scale="2.0, 2.0, 2.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="totem_spawn.png" transparent="false">
     <vertex location="-3.94777, 9.71074, -40.1502" normal="0.0, 1.0, 0.0" tcoords="0.459423, -0.00047"/>
     <vertex location="-7.89555, 9.71074, -40.1502" normal="0.0, 1.0, 0.0" tcoords="0.40478, -0.00047"/>
     <vertex location="-8.61942, 9.71074, -35.7892" normal="0.0, 0.707107, 0.707106" tcoords="0.394761, 0.041675"/>
@@ -767,7 +767,7 @@
     <vertex location="14.0686, -12.0204, 23.4683" normal="0.750953, -0.537722, 0.383307" tcoords="0.692322, 0.595901"/>
   </triMesh>
 
-  <triMesh name="polySurface4" translation="0.768211, 2.6082, 5.54485" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="totem_spawn.png" transparent="false">
+  <triMesh name="polySurface4" translation="0.768211, 2.6082, 12.7593" rotation="0.0, 0.0, 0.0, 1.0" scale="2.0, 2.0, 2.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="totem_spawn.png" transparent="false">
     <vertex location="-23.4941, 30.0629, -5.1584" normal="-0.327661, 0.605337, 0.725401" tcoords="0.043714, 0.9413"/>
     <vertex location="1.15627, 32.7521, 3.73196" normal="-0.158594, 0.385458, 0.908994" tcoords="0.16951, 0.955982"/>
     <vertex location="0.992252, 38.1877, -5.1584" normal="0.177012, 0.897084, 0.404853" tcoords="0.173526, 0.999174"/>
