@@ -19,17 +19,16 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 import com.jme.image.Texture;
-import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
-import com.jme.math.Quaternion;
-import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
@@ -111,7 +110,16 @@ public class TownView extends BWindow
         }
 
         // create our overlay menu buttons
-        add(_menu = new BContainer(GroupLayout.makeHStretch()));
+        add(_menu = new BContainer(GroupLayout.makeHStretch()) {
+            protected void renderComponent (Renderer renderer) {
+                if (_active) {
+                    super.renderComponent(renderer);
+                }
+            }
+            public BComponent getHitComponent (int mx, int my) {
+                return _active ? super.getHitComponent(mx, my) : null;
+            }
+        });
         _menu.setStyleClass("town_menubar");
         BContainer left = GroupLayout.makeHBox(GroupLayout.LEFT);
         _menu.add(left);
