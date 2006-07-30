@@ -117,6 +117,7 @@ public class TownView extends BWindow
         _menu.add(left);
         left.add(new BButton(_msgs.get("m.tutorials"), this, "tutorials"));
         left.add(new BButton(_msgs.get("m.saddlebag"), this, "saddlebag"));
+        left.add(new BButton(_msgs.get("m.pardners"), this, "pardners"));
         _menu.add(new BButton(_msgs.get("m.exit"), this, "exit"),
                   GroupLayout.FIXED);
 
@@ -167,7 +168,10 @@ public class TownView extends BWindow
                 FKeyPopups.Type.TUTORIALS);
 
         } else if ("saddlebag".equals(cmd)) {
-            StatusView.showStatusTab(_bctx, 0);
+            StatusView.showStatusTab(_bctx, StatusView.ITEMS_TAB);
+
+        } else if ("pardners".equals(cmd)) {
+            StatusView.showStatusTab(_bctx, StatusView.PARDNERS_TAB);
         }
     }
 

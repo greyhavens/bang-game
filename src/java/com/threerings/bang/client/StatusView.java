@@ -41,6 +41,21 @@ import com.threerings.bang.util.BangContext;
 public class StatusView extends BWindow
     implements ActionListener
 {
+    /** The index of the items tab. */
+    public static final int ITEMS_TAB = 0;
+
+    /** The index of the Big Shots tab. */
+    public static final int BIGSHOTS_TAB = 1;
+
+    /** The index of the badges tab. */
+    public static final int BADGES_TAB = 2;
+
+    /** The index of the duds tab. */
+    public static final int DUDS_TAB = 3;
+
+    /** The index of the pardners tab. */
+    public static final int PARDNERS_TAB = 4;
+
     /**
      * Binds global key commands that popup the status view when particular
      * keys are pressed.
@@ -276,10 +291,10 @@ public class StatusView extends BWindow
 
     // TODO: sort out how we'll localize these
     protected static final int[] STATUS_KEYMAP = {
-        KeyInput.KEY_I, 0,
-        KeyInput.KEY_S, 1,
-        KeyInput.KEY_B, 2,
-        KeyInput.KEY_D, 3,
-        KeyInput.KEY_P, 4,
+        KeyInput.KEY_I, ITEMS_TAB,
+        KeyInput.KEY_S, BIGSHOTS_TAB,
+        KeyInput.KEY_B, BADGES_TAB,
+        KeyInput.KEY_D, DUDS_TAB,
+        KeyInput.KEY_P, PARDNERS_TAB,
     };
 }
