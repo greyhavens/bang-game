@@ -13,6 +13,7 @@ import com.jmex.bui.event.ActionListener;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
@@ -35,7 +36,8 @@ public class InGameOptionsView extends BDecoratedWindow
 
         MessageBundle msgs = ctx.getMessageManager().getBundle("options");
         BContainer box = GroupLayout.makeHBox(GroupLayout.CENTER);
-        box.add(new BButton(msgs.get("m.exit"), this, "exit"));
+        // box.add(new BButton(msgs.get("m.exit"), this, "exit"));
+        box.add(new BButton(msgs.get("m.to_saloon"), this, "to_saloon"));
         box.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
         box.add(new BButton(msgs.get("m.resume"), this, "dismiss"));
         add(box, GroupLayout.FIXED);
@@ -51,11 +53,16 @@ public class InGameOptionsView extends BDecoratedWindow
                 _ctx.getBangClient().showTownView();
             }
 
+        } else if ("to_saloon".equals(action)) {
+            BangBootstrapData bbd = (BangBootstrapData)
+                _ctx.getClient().getBootstrapData();
+            _ctx.getLocationDirector().moveTo(bbd.saloonOid);
+
         } else if ("dismiss".equals(action)) {
             _ctx.getBangClient().clearPopup(this, true);
 
-        } else if ("exit".equals(action)) {
-            _ctx.getApp().stop();
+//         } else if ("exit".equals(action)) {
+//             _ctx.getApp().stop();
         }
     }
 
