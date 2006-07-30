@@ -37,7 +37,9 @@ import org.lwjgl.opengl.DisplayMode;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.TabbedPane;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
@@ -51,18 +53,18 @@ public class OptionsView extends BDecoratedWindow
 {
     public OptionsView (BangContext ctx, BWindow parent)
     {
-        super(ctx.getStyleSheet(), ctx.xlate("options", "m.title"));
-        
+        super(ctx.getStyleSheet(), ctx.xlate(BangCodes.OPTS_MSGS, "m.title"));
+
         ((GroupLayout)getLayoutManager()).setGap(15);
         setModal(true);
 
         _ctx = ctx;
         _parent = parent;
-        _msgs = ctx.getMessageManager().getBundle("options");
+        _msgs = ctx.getMessageManager().getBundle(BangCodes.OPTS_MSGS);
 
         TabbedPane tabs = new TabbedPane(false);
         tabs.setPreferredSize(new Dimension(375, 275));
-        
+
         TableLayout layout = new TableLayout(2, 10, 10);
         layout.setHorizontalAlignment(TableLayout.CENTER);
         layout.setVerticalAlignment(TableLayout.CENTER);
@@ -78,35 +80,35 @@ public class OptionsView extends BDecoratedWindow
 
         cont.add(new BLabel(_msgs.get("m.detail_lev"), "right_label"));
         cont.add(createDetailSlider());
-        
+
         cont.add(new BLabel(_msgs.get("m.music_vol"), "right_label"));
         cont.add(createSoundSlider(SoundType.MUSIC));
         cont.add(new BLabel(_msgs.get("m.effects_vol"), "right_label"));
         cont.add(createSoundSlider(SoundType.EFFECTS));
 
         tabs.addTab(_msgs.get("t.general"), cont);
-        
+
         // the mute director/list is only available after logging in
         if (ctx.getMuteDirector() != null) {
             cont = new BContainer(GroupLayout.makeVert(GroupLayout.STRETCH,
                 GroupLayout.CENTER, GroupLayout.CONSTRAIN));
             ((GroupLayout)cont.getLayoutManager()).setGap(10);
             cont.setStyleClass("options_tab");
-        
+
             BScrollPane sp = new BScrollPane(
                 _muted = new BList(ctx.getMuteDirector().getMuted()));
             sp.setStyleClass("mute_list_pane");
             sp.setPreferredSize(new Dimension(250, 50));
             cont.add(sp);
             _muted.addListener(this);
-        
-            cont.add(_remove = new BButton(_msgs.get("b.remove"), this, "remove"),
-                GroupLayout.FIXED);
+
+            _remove = new BButton(_msgs.get("b.remove"), this, "remove");
+            cont.add(_remove, GroupLayout.FIXED);
             _remove.setEnabled(false);
-        
+
             tabs.addTab(_msgs.get("t.mute_list"), cont);
         }
-            
+
         add(tabs);
 
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -197,25 +199,25 @@ public class OptionsView extends BDecoratedWindow
                     levels[((BoundedRangeModel)event.getSource()).getValue()];
                 BangPrefs.updateDetailLevel(level);
                 vallbl.setText(getDetailText(level));
-                
+
                 // as soon as the user makes a detail choice on their own, we
                 // can stop making suggestions
                 BangPrefs.setSuggestDetail(false);
             }
         });
-        
+
         // create a wrapper to hold them both
         BContainer wrapper = new BContainer(GroupLayout.makeHStretch());
         wrapper.add(slider);
         wrapper.add(vallbl, GroupLayout.FIXED);
         return wrapper;
     }
-    
+
     protected String getDetailText (BangPrefs.DetailLevel level)
     {
         return _msgs.get("m.detail_" + level.name().toLowerCase());
     }
-    
+
     protected void refreshDisplayModes ()
     {
         int maxwidth = 0, maxheight = 0;
@@ -275,20 +277,21 @@ public class OptionsView extends BDecoratedWindow
         }
     }
 
-    protected void updateDisplayMode (DisplayMode mode)
+    protected void updateDisplayMode (DisplayMode mode, boolean confirm)
     {
-        if (_mode != null && _mode.equals(mode) &&
-            Display.isFullscreen() == _fullscreen.isSelected()) {
+        if (mode == null ||
+            (_mode != null && _mode.equals(mode) &&
+             Display.isFullscreen() == _fullscreen.isSelected())) {
             return;
         }
-        if (mode != null) {
-            log.info("Switching to " + mode + " (from " + _mode + ")");
-            _mode = mode;
-        }
 
-        // we fake up non-full screen display modes above, but there's no
-        // way to set the bit depth to anything but zero, so we have to
-        // adjust that here so that JME doesn't freak out
+        final DisplayMode omode = _mode;
+        _mode = mode;
+        log.info("Switching to " + _mode + " (from " + omode + ")");
+
+        // we fake up non-full screen display modes above, but there's no way
+        // to set the bit depth to anything but zero, so we have to adjust that
+        // here so that JME doesn't freak out
         int bpp = Math.max(16, _mode.getBitsPerPixel());
         int width = _mode.getWidth(), height = _mode.getHeight();
         _ctx.getDisplay().recreateWindow(
@@ -298,15 +301,41 @@ public class OptionsView extends BDecoratedWindow
         _ctx.getCameraHandler().getCamera().setFrustumPerspective(
             45.0f, width/(float)height, 1, 10000);
 
-        // recenter the main view and options window
+        // recenter and invalidate the main view and options window
         if (_parent != null) {
-            _parent.center();
+            if (_parent instanceof ShopView) {
+                _parent.center();
+            } else {
+                _parent.setBounds(0, 0, _ctx.getDisplay().getWidth(),
+                                  _ctx.getDisplay().getHeight());
+            }
         }
         center();
 
-        // store these settings for later
-        BangPrefs.updateDisplayMode(_mode);
-        BangPrefs.updateFullscreen(_fullscreen.isSelected());
+        // if we don't need to confirm, stop here
+        if (!confirm) {
+            return;
+        }
+
+        OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
+            public void resultPosted (int button, Object result) {
+                switch (button) {
+                case OptionDialog.OK_BUTTON:
+                    // store these settings for later
+                    BangPrefs.updateDisplayMode(_mode);
+                    BangPrefs.updateFullscreen(_fullscreen.isSelected());
+                    break;
+
+                default:
+                    // revert to the old mode
+                    updateDisplayMode(omode, false);
+                    break;
+                }
+            }
+        };
+        OptionDialog.showConfirmDialog(
+            _ctx, BangCodes.OPTS_MSGS, "m.keep_mode", rr);
+
     }
 
     protected boolean isCurrent (DisplayMode mode)
@@ -352,7 +381,7 @@ public class OptionsView extends BDecoratedWindow
 
     protected ActionListener _modelist = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
-            updateDisplayMode(((ModeItem)_modes.getSelectedItem()).mode);
+            updateDisplayMode(((ModeItem)_modes.getSelectedItem()).mode, true);
         }
     };
 
@@ -366,6 +395,6 @@ public class OptionsView extends BDecoratedWindow
 
     protected BList _muted;
     protected BButton _remove;
-    
+
     protected static enum SoundType { MUSIC, EFFECTS };
 }

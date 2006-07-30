@@ -34,6 +34,9 @@ public interface BangCodes extends InvocationCodes
     /** The message bundle identifier for our translation messages. */
     public static final String BANG_MSGS = "bang";
 
+    /** The message bundle identifier for options translation messages. */
+    public static final String OPTS_MSGS = "options";
+
     /** The message bundle identifier for chat-related translation messages. */
     public static final String CHAT_MSGS = "chat";
 
