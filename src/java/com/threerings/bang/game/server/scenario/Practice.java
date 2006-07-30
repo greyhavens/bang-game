@@ -113,9 +113,8 @@ public class Practice extends Scenario
     @Override // documentation inherited
     public short getBaseDuration ()
     {
-        // practice scenarios normally expire after one side is dead,
-        // but we do want to make sure they end eventually
-        return 4000;
+        // practice scenarios end after 100 ticks or one side is dead
+        return 100;
     }
 
     protected static final int NUM_UNITS = 3;
