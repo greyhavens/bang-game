@@ -743,14 +743,15 @@ public class BangController extends GameController
                 updateRank();
 
                 // display a marquee when the round is 12 ticks from ending
-                // (but not for objectiveless scenarios like the tutorial or
-                // practice)
-                if (_bangobj.scenario.getObjective() != null &&
+                // (but not for objectiveless scenarios like the tutorial)
+                if (_bangobj.scenario != null &&
+                    _bangobj.scenario.getObjective() != null &&
                     _bangobj.lastTick - _bangobj.tick == ALMOST_OVER_TICKS) {
                     _view.view.fadeMarqueeInOut("m.round_will_end", 1f);
                 }
             }
         }
+
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
                 updateRank();

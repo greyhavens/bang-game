@@ -413,7 +413,7 @@ public class PlayerManager
         config.scenarios = new String[] { unit };
         config.board = "Practice";
         config.practice = true;
-        config.teamSize = 4;
+        config.teamSize = 2;
         
         // create the practice game manager and it will handle the rest
         try {
