@@ -735,6 +735,13 @@ pardner_chat_view {
 }
 
 //
+// Town View styles
+
+town_menubar {
+  padding: 10;
+}
+
+//
 // General chat styles
 
 place_chat_viewport {

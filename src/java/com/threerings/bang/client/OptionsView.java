@@ -113,7 +113,7 @@ public class OptionsView extends BDecoratedWindow
 
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ((GroupLayout)bcont.getLayoutManager()).setGap(25);
-        bcont.add(new BButton(_msgs.get("m.exit"), this, "exit"));
+        // bcont.add(new BButton(_msgs.get("m.exit"), this, "exit"));
         bcont.add(new BButton(_msgs.get("m.resume"), this, "dismiss"));
         add(bcont, GroupLayout.FIXED);
 

@@ -49,17 +49,6 @@ public class StatusView extends BWindow
     {
         GlobalKeyManager.Command showStatus = new GlobalKeyManager.Command() {
             public void invoke (int keyCode, int modifiers) {
-                // determine whether we can pop up the status view right now
-                boolean canShow = ctx.getBangClient().canDisplayPopup(
-                    MainView.Type.STATUS);
-
-                // get the status view from the client; if it is not already
-                // showing we will only create it if we're allowed
-                StatusView status = ctx.getBangClient().getStatusView(canShow);
-                if (status == null) {
-                    return;
-                }
-
                 // determine which tab we want to show
                 int tabidx = 0;
                 for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
@@ -68,25 +57,43 @@ public class StatusView extends BWindow
                         break;
                     }
                 }
-
-                if (status.isAdded()) {
-                    // ignore key strokes if we're not the top window
-                    if (ctx.getRootNode().isOnTop(status)) {
-                        if (tabidx == status.getSelectedTab()) {
-                            ctx.getBangClient().clearPopup(status, true);
-                        } else {
-                            status.setSelectedTab(tabidx);
-                        }
-                    }
-                } else if (canShow) {
-                    status.setSelectedTab(tabidx);
-                    ctx.getBangClient().displayPopup(status, true);
-                }
+                showStatusTab(ctx, tabidx);
             }
         };
 
         for (int ii = 0; ii < STATUS_KEYMAP.length; ii += 2) {
             ctx.getKeyManager().registerCommand(STATUS_KEYMAP[ii], showStatus);
+        }
+    }
+
+    /**
+     * Displays the player status view with the specified tab selected.
+     */
+    public static void showStatusTab (BangContext ctx, int tabidx)
+    {
+        // determine whether we can pop up the status view right now
+        boolean canShow = ctx.getBangClient().canDisplayPopup(
+            MainView.Type.STATUS);
+
+        // get the status view from the client; if it is not already
+        // showing we will only create it if we're allowed
+        StatusView status = ctx.getBangClient().getStatusView(canShow);
+        if (status == null) {
+            return;
+        }
+
+        if (status.isAdded()) {
+            // ignore key strokes if we're not the top window
+            if (ctx.getRootNode().isOnTop(status)) {
+                if (tabidx == status.getSelectedTab()) {
+                    ctx.getBangClient().clearPopup(status, true);
+                } else {
+                    status.setSelectedTab(tabidx);
+                }
+            }
+        } else if (canShow) {
+            status.setSelectedTab(tabidx);
+            ctx.getBangClient().displayPopup(status, true);
         }
     }
 

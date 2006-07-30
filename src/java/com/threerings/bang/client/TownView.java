@@ -29,10 +29,17 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
 
+import com.jmex.bui.BButton;
+import com.jmex.bui.BContainer;
 import com.jmex.bui.BWindow;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
-import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.layout.BLayoutManager;
+import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.Invoker;
 
@@ -72,11 +79,13 @@ import static com.threerings.bang.client.BangMetrics.*;
  * and wherever else we might dream up.
  */
 public class TownView extends BWindow
-    implements MainView
+    implements MainView, ActionListener
 {
     public TownView (BangContext ctx)
     {
-        super(ctx.getStyleSheet(), new BorderLayout());
+        super(ctx.getStyleSheet(), null);
+        setLayoutManager(new TownLayout());
+
         _bctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("town");
 
@@ -101,8 +110,18 @@ public class TownView extends BWindow
             _commands.put(props.getProperty(command), command);
         }
 
+        // create our overlay menu buttons
+        add(_menu = new BContainer(GroupLayout.makeHStretch()));
+        _menu.setStyleClass("town_menubar");
+        BContainer left = GroupLayout.makeHBox(GroupLayout.LEFT);
+        _menu.add(left);
+        left.add(new BButton(_msgs.get("m.tutorials"), this, "tutorials"));
+        left.add(new BButton(_msgs.get("m.saddlebag"), this, "saddlebag"));
+        _menu.add(new BButton(_msgs.get("m.exit"), this, "exit"),
+                  GroupLayout.FIXED);
+
         // create the town display
-        add(_bview = new TownBoardView(ctx), BorderLayout.CENTER);
+        add(_bview = new TownBoardView(ctx));
     }
 
     /**
@@ -115,7 +134,7 @@ public class TownView extends BWindow
         _active = active;
     }
 
-    // documentation inherited from interface MainView
+    // from interface MainView
     public boolean allowsPopup (Type type)
     {
         switch (type) {
@@ -130,10 +149,26 @@ public class TownView extends BWindow
         }
     }
 
-    // documentation inherited from interface MainView
+    // from interface MainView
     public boolean allowsPardnerInvite ()
     {
         return _active;
+    }
+
+    // from interface ActionListener
+    public void actionPerformed (ActionEvent event)
+    {
+        String cmd = event.getAction();
+        if ("exit".equals(cmd)) {
+            _bctx.getApp().stop();
+
+        } else if ("tutorials".equals(cmd)) {
+            _bctx.getBangClient().getPopupManager().showPopup(
+                FKeyPopups.Type.TUTORIALS);
+
+        } else if ("saddlebag".equals(cmd)) {
+            StatusView.showStatusTab(_bctx, 0);
+        }
     }
 
     @Override // documentation inherited
@@ -200,7 +235,7 @@ public class TownView extends BWindow
             _hstate.getAmbient().set(ColorRGBA.white);
             _hstate.getDiffuse().set(ColorRGBA.white);
             _hstate.getEmissive().set(ColorRGBA.white);
-            
+
             BangBootstrapData bbd =
                 (BangBootstrapData)_bctx.getClient().getBootstrapData();
             _safesub = new SafeSubscriber<TownObject>(bbd.townOid, this);
@@ -256,30 +291,30 @@ public class TownView extends BWindow
             }
             return false;
         }
- 
-        // documentation inherited from interface Subscriber
+
+        // from interface Subscriber
         public void objectAvailable (TownObject object)
         {
             _townobj = object;
             _townobj.addListener(this);
             updatePopulationSign(_townobj.population);
         }
-        
-        // documentation inherited from interface Subscriber
+
+        // from interface Subscriber
         public void requestFailed (int oid, ObjectAccessException cause)
         {
             log.warning("Failed to subscribe to town object! [oid=" + oid +
                 ", cause=" + cause + "].");
         }
-        
-        // documentation inherited from interface AttributeChangeListener
+
+        // from interface AttributeChangeListener
         public void attributeChanged (AttributeChangedEvent ace)
         {
             if (ace.getName().equals(TownObject.POPULATION)) {
                 updatePopulationSign(_townobj.population);
             }
         }
-        
+
         @Override // documentation inherited
         protected void wasAdded ()
         {
@@ -287,7 +322,7 @@ public class TownView extends BWindow
 
             // disable camera input handler
             _ctx.getInputHandler().setEnabled(false);
-            
+
             // subscribe to town object
             addResolving(this);
             _safesub.subscribe(_bctx.getDObjectManager());
@@ -304,7 +339,7 @@ public class TownView extends BWindow
                 _townobj.removeListener(this);
                 _townobj = null;
             }
-            
+
             // unbind our camera (doesn't really do anything)
             if (_vpsprite != null) {
                 _vpsprite.unbindCamera();
@@ -317,7 +352,7 @@ public class TownView extends BWindow
             // reenable the input handler
             _ctx.getInputHandler().setEnabled(true);
         }
-        
+
         @Override // documentation inherited
         protected boolean shouldShowStarter (Piece piece)
         {
@@ -327,7 +362,7 @@ public class TownView extends BWindow
                 _commands.containsKey(type) ||
                 type.indexOf("pop_sign") != -1;
         }
-        
+
         @Override // documentation inherited
         protected boolean shouldShowGrid ()
         {
@@ -484,7 +519,7 @@ public class TownView extends BWindow
                 protected int _oldTextureId;
             });
         }
-        
+
         protected int updatePopulationSignTexture (int pop)
         {
             // get a reference to the buffered sign image
@@ -497,7 +532,7 @@ public class TownView extends BWindow
                     path + "].");
                 return 0;
             }
-            
+
             // write population into image
             int width = bimg.getWidth(), height = bimg.getHeight();
             BufferedImage img = new BufferedImage(
@@ -513,7 +548,7 @@ public class TownView extends BWindow
                 pstr, (width - gfx.getFontMetrics().stringWidth(pstr)) / 2,
                 height - 32);
             gfx.dispose();
-            
+
             // get a reference to the population sign texture (and keep it
             // around, so it doesn't disappear from the cache) and update
             if (_poptex == null) {
@@ -527,21 +562,40 @@ public class TownView extends BWindow
             _poptex.setMipmapState(Texture.MM_LINEAR_LINEAR);
             return oldTextureId;
         }
-        
+
         protected MaterialState _hstate;
         protected PieceSprite _hsprite;
         protected ViewpointSprite _vpsprite;
         protected Vector3f _pos = new Vector3f();
-        
+
         protected SafeSubscriber<TownObject> _safesub;
         protected TownObject _townobj;
         protected Texture _poptex;
     }
 
+    /** Used to layout our overlapping town menu components. */
+    protected class TownLayout extends BLayoutManager
+    {
+        public Dimension computePreferredSize (
+            BContainer target, int whint, int hhint) {
+            return _bview.getPreferredSize(whint, hhint);
+        }
+        public void layoutContainer (BContainer target) {
+            // the town view takes up the whole window
+            Rectangle bounds = target.getBounds();
+            _bview.setBounds(0, 0, bounds.width, bounds.height);
+            // then the menu bar is overlayed at the bottom
+            Dimension mps = _menu.getPreferredSize(bounds.width, -1);
+            _menu.setBounds(0, 0, bounds.width, mps.height);
+        }
+    }
+
     protected BangContext _bctx;
     protected MessageBundle _msgs;
-    protected TownBoardView _bview;
     protected boolean _active;
+
+    protected TownBoardView _bview;
+    protected BContainer _menu;
 
     /** Maps prop types to commands. */
     protected HashMap<String, String> _commands =

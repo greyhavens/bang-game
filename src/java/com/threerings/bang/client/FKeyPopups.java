@@ -48,22 +48,119 @@ import static com.threerings.bang.Log.log;
 public class FKeyPopups
     implements GlobalKeyManager.Command
 {
+    /** Enumerates the various types of popups we know about. */
+    public static enum Type {
+        HELP(KeyInput.KEY_F1, 0, false, true),
+        TUTORIALS(KeyInput.KEY_T, 0, false, true),
+        REPORT_BUG(KeyInput.KEY_F2, 0, false, false),
+        CLIENT_LOG(KeyInput.KEY_F3, InputEvent.SHIFT_DOWN_MASK, false, false),
+        SERVER_STATUS(KeyInput.KEY_F4, 0, true, false),
+        SERVER_CONFIG(KeyInput.KEY_F5, 0, true, false),
+        CLIENT_CONFIG(KeyInput.KEY_F6, CTRL_SHIFT, false, false);
+
+        public int keyCode () {
+            return _keyCode;
+        }
+
+        public int modifiers () {
+            return _modifiers;
+        }
+
+        public boolean requiresAdmin () {
+            return _requiresAdmin;
+        }
+
+        public boolean checkCanDisplay () {
+            return _checkCanDisplay;
+        }
+
+        Type (int keyCode, int modifiers, boolean requiresAdmin,
+              boolean checkCanDisplay) {
+            _keyCode = keyCode;
+            _modifiers = modifiers;
+            _requiresAdmin = requiresAdmin;
+            _checkCanDisplay = checkCanDisplay;
+        }
+
+        protected int _keyCode, _modifiers;
+        protected boolean _requiresAdmin, _checkCanDisplay;
+    };
+
     /**
      * Creates the function key popups manager and registers its key bindings.
      */
     public FKeyPopups (BangContext ctx)
     {
         _ctx = ctx;
-        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F1, this);
-        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F2, this);
-        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F3, this);
-        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F4, this);
-        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F5, this);
-        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F6, this);
-        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F11, this);
-        _ctx.getKeyManager().registerCommand(KeyInput.KEY_F12, this);
-        _ctx.getKeyManager().registerCommand(KeyInput.KEY_T, this);
+        for (Type type : Type.values()) {
+            _ctx.getKeyManager().registerCommand(type.keyCode(), this);
+        }
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
+    }
+
+    /**
+     * Shows the popup of the specifide type, clearing any existing popup
+     * prior to doing so.
+     */
+    public void showPopup (Type type)
+    {
+        // don't auto-replace a never clear popup
+        if (_popped != null && _popped.isAdded() &&
+            _popped.getLayer() == BangCodes.NEVER_CLEAR_LAYER) {
+            return;
+        }
+
+        // if this is the same as the current popup window, just dismiss it
+        if (type == _poppedType && _popped != null && _popped.isAdded()) {
+            clearPopup();
+            return;
+        }
+
+        // make sure we can display an FKEY popup right now (but only if we
+        // don't already have one popped up, in which case we'll replace it)
+        if (type.checkCanDisplay() && (_popped == null || !_popped.isAdded()) &&
+            !_ctx.getBangClient().canDisplayPopup(MainView.Type.FKEY)) {
+            return;
+        }
+
+        // if this popup requires admin privileges, make sure we've got 'em
+        boolean isAdmin = (_ctx.getUserObject() != null) &&
+            _ctx.getUserObject().tokens.isAdmin();
+        if (type.requiresAdmin() && !isAdmin) {
+            return;
+        }
+
+        BDecoratedWindow popup = null;
+        switch (type) {
+        default:
+        case HELP:
+            popup = createHelp();
+            break;
+        case REPORT_BUG:
+            popup = createReportBug();
+            break;
+        case TUTORIALS:
+            popup = new PickTutorialView(_ctx, PickTutorialView.Mode.FKEY);
+            break;
+        case CLIENT_LOG:
+            popup = createRecentLog();
+            break;
+        case SERVER_STATUS:
+            popup = new ServerStatusView(_ctx);
+            break;
+        case SERVER_CONFIG:
+            popup = new RuntimeConfigView(_ctx);
+            break;
+        case CLIENT_CONFIG:
+            popup = new ConfigEditorView(_ctx);
+            break;
+        }
+
+        if (popup != null) {
+            clearPopup();
+            _poppedType = type;
+            _ctx.getBangClient().displayPopup(_popped = popup, true, 500);
+        }
     }
 
     // documentation inherited from interface GlobalKeyManager.Command
@@ -88,8 +185,8 @@ public class FKeyPopups
             return;
         }
 
-        boolean isOnline = (_ctx.getUserObject() != null);
-        boolean isAdmin = isOnline && _ctx.getUserObject().tokens.isAdmin();
+        boolean isAdmin = (_ctx.getUserObject() != null) &&
+            _ctx.getUserObject().tokens.isAdmin();
 
         // yet more hackery to handle dumping a copy of your current avatar
         // look to a file (only available to admins currently)
@@ -100,87 +197,18 @@ public class FKeyPopups
             return;
         }
 
-        // if they pressed the same key as the current popup window, just
-        // dismiss it
-        if (keyCode == _poppedKey && _popped.isAdded()) {
-            clearPopup();
-            return;
-        }
-
-        // only some of our popups should check before they popup, others (like
-        // the admin interfaces, debug log and bug report) should work
-        // regardless of what's going on in the game
-        boolean requiresCheck = true;
-        switch (keyCode) {
-        case KeyInput.KEY_F2:
-        case KeyInput.KEY_F3:
-        case KeyInput.KEY_F4:
-        case KeyInput.KEY_F5:
-        case KeyInput.KEY_F6:
-            requiresCheck = false;
-            break;
-        }
-
-        // make sure we can display an FKEY popup right now (but only if we
-        // don't already have one popped up, in which case we'll replace it)
-        if ((_popped == null || !_popped.isAdded()) && requiresCheck &&
-            !_ctx.getBangClient().canDisplayPopup(MainView.Type.FKEY)) {
-            return;
-        }
-
-        // don't auto-replace a never clear popup
-        if (_popped != null && _popped.isAdded() &&
-            _popped.getLayer() == BangCodes.NEVER_CLEAR_LAYER) {
-            return;
-        }
-
         // otherwise pop up the dialog associated with they key they pressed
-        // (clearing any other dialog before doing so)
-        BDecoratedWindow popup = null;
-        switch (keyCode) {
-        default:
-        case KeyInput.KEY_F1:
-            popup = createHelp();
-            break;
-        case KeyInput.KEY_F2:
-            popup = createReportBug();
-            break;
-        case KeyInput.KEY_F3:
-            if (modifiers == InputEvent.SHIFT_DOWN_MASK) {
-                popup = createRecentLog();
+        for (Type type : Type.values()) {
+            if (type.keyCode() == keyCode && type.modifiers() == modifiers) {
+                showPopup(type);
+                return;
             }
-            break;
-        case KeyInput.KEY_F4:
-            if (isAdmin) {
-                popup = new ServerStatusView(_ctx);
-            }
-            break;
-        case KeyInput.KEY_F5:
-            if (isAdmin) {
-                popup = new RuntimeConfigView(_ctx);
-            }
-            break;
-        case KeyInput.KEY_F6:
-            if ((modifiers & InputEvent.SHIFT_DOWN_MASK) != 0 &&
-                (modifiers & InputEvent.CTRL_DOWN_MASK) != 0) {
-                popup = new ConfigEditorView(_ctx);
-            }
-            break;
-        case KeyInput.KEY_T:
-            popup = new PickTutorialView(_ctx, PickTutorialView.Mode.FKEY);
-            break;
-        }
-
-        if (popup != null) {
-            clearPopup();
-            _poppedKey = keyCode;
-            _ctx.getBangClient().displayPopup(_popped = popup, true, 500);
         }
     }
 
     protected void clearPopup ()
     {
-        _poppedKey = -1;
+        _poppedType = null;
         if (_popped != null) {
             _ctx.getBangClient().clearPopup(_popped, true);
             _popped = null;
@@ -293,7 +321,7 @@ public class FKeyPopups
     protected BangContext _ctx;
     protected MessageBundle _msgs;
 
-    protected int _poppedKey = -1;
+    protected Type _poppedType = null;
     protected BDecoratedWindow _popped;
     protected boolean _autoBugged;
 

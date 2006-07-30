@@ -295,6 +295,14 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Returns the entity that manages our popups.
+     */
+    public FKeyPopups getPopupManager ()
+    {
+        return _functionPopup;
+    }
+
+    /**
      * Returns the player status view; creating the view if necessary (as long
      * as <code>create</code> is true). We purge the view from memory every
      * time the main view is switched, but preserve it while in one place.
