@@ -25,7 +25,7 @@ public interface PlayerService extends InvocationService
      * Invite the specified user to be our pardner.
      */
     public void invitePardner (
-        Client client, Handle handle, ConfirmListener listener);
+        Client client, Handle handle, String message, ConfirmListener listener);
 
     /**
      * Respond to another cowpoke's invitation to be pardners.

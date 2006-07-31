@@ -169,7 +169,7 @@ public class PlayerManager
             new ArrayList<PardnerRepository.PardnerRecord>();
         for (int ii = 0, nn = records.size(); ii < nn; ii++) {
             PardnerRepository.PardnerRecord record = records.get(ii);
-            if (record.active) {
+            if (record.isActive()) {
                 pardners.add(
                     getPardnerEntry(record.handle, record.lastSession));
             } else {
@@ -191,7 +191,7 @@ public class PlayerManager
                     return;
                 }
                 for (PardnerRepository.PardnerRecord inviter : inviters) {
-                    sendPardnerInvite(player, inviter.handle,
+                    sendPardnerInvite(player, inviter.handle, inviter.message,
                         inviter.lastSession, true);
                 }
                 player.removeListener(this);
@@ -201,7 +201,7 @@ public class PlayerManager
 
     // documentation inherited from interface PlayerProvider
     public void invitePardner (ClientObject caller, final Handle handle,
-        final PlayerService.ConfirmListener listener)
+        final String message, final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure it's not the player himself, that it's not already
@@ -225,16 +225,15 @@ public class PlayerManager
             respondToPardnerInvite(caller, handle, true, listener);
             return;
         }
-        
+
         // if the invitee is online, send the invite directly; if not, store
         // the invite in the db
         PlayerObject invitee = (PlayerObject)BangServer.lookupBody(handle);
         if (invitee != null) {
             String error = sendPardnerInvite(invitee, inviter.handle,
-                new Date(), false);
+                message, new Date(), false);
             if (error == null) {
                 listener.requestProcessed();
-
             } else {
                 listener.requestFailed(error);
             }
@@ -242,13 +241,12 @@ public class PlayerManager
         }
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
-                _error = _pardrepo.addPardners(inviter.playerId, handle,
-                    false);
+                _error = _pardrepo.addPardners(
+                    inviter.playerId, handle, message);
             }
             public void handleSuccess () {
                 if (_error == null) {
                     listener.requestProcessed();
-
                 } else {
                     listener.requestFailed(_error);
                 }
@@ -281,17 +279,15 @@ public class PlayerManager
             invite.reject(listener);
             return;
         }
+
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
                 if (resp) {
                     if (invite.fromdb) {
-                        _pardrepo.updatePardners(player.playerId, inviter,
-                            true);
-
+                        _pardrepo.updatePardners(player.playerId, inviter);
                     } else {
-                        _pardrepo.addPardners(player.playerId, inviter, true);
+                        _pardrepo.addPardners(player.playerId, inviter, null);
                     }
-
                 } else {
                     _pardrepo.removePardners(player.playerId, inviter);
                 }
@@ -299,7 +295,6 @@ public class PlayerManager
             public void handleSuccess () {
                 if (resp) {
                     invite.accept(listener);
-
                 } else {
                     invite.reject(listener);
                 }
@@ -414,7 +409,7 @@ public class PlayerManager
         config.board = "Practice";
         config.practice = true;
         config.teamSize = 2;
-        
+
         // create the practice game manager and it will handle the rest
         try {
             BangServer.plreg.createPlace(config, null);
@@ -475,7 +470,7 @@ public class PlayerManager
 
         // create the game manager and it will handle the rest
         try {
-            BangServer.plreg.createPlace(config, (!autoplay) ? null : 
+            BangServer.plreg.createPlace(config, (!autoplay) ? null :
                 new PlaceRegistry.CreationObserver() {
                     public void placeCreated (
                         PlaceObject place, PlaceManager pmgr) {
@@ -520,13 +515,13 @@ public class PlayerManager
      * translatable error message indicating what went wrong
      */
     protected String sendPardnerInvite (PlayerObject invitee, Handle inviter,
-        Date lastSession, boolean fromdb)
+        String message, Date lastSession, boolean fromdb)
     {
         InviteKey key = new InviteKey(invitee.playerId, inviter);
         if (_invites.containsKey(key)) {
             return MessageBundle.tcompose("e.already_invited", invitee.handle);
         }
-        PlayerSender.sendPardnerInvite(invitee, inviter);
+        PlayerSender.sendPardnerInvite(invitee, inviter, message);
         new Invite(key, lastSession, invitee, fromdb).add();
         return null;
     }

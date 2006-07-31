@@ -86,9 +86,7 @@ public class OptionDialog extends BDecoratedWindow
     {
         OptionDialog dialog =
             new OptionDialog(ctx, bundle, text, buttons, receiver);
-        ctx.getBangClient().displayPopup(dialog, false);
-        dialog.pack(400, -1);
-        dialog.center();
+        ctx.getBangClient().displayPopup(dialog, true, 400);
     }
 
     /**
@@ -98,7 +96,7 @@ public class OptionDialog extends BDecoratedWindow
      * @param bundle the bundle to to use in translating the text
      * @param text the text to display in the center of the dialog
      * @param buttons the labels for the buttons in the dialog
-     * @param width the width of the text input box
+     * @param width the width of the text input box in pixels
      * @param defaultValue the default value to provide for the string
      * @param receiver a receiver to notify with the result
      */
@@ -109,9 +107,7 @@ public class OptionDialog extends BDecoratedWindow
         OptionDialog dialog =
             new OptionDialog(ctx, bundle, text, buttons, receiver);
         dialog.setRequiresString(width, defaultValue);
-        ctx.getBangClient().displayPopup(dialog, false);
-        dialog.pack(400, -1);
-        dialog.center();
+        ctx.getBangClient().displayPopup(dialog, true, 400);
     }
 
     protected OptionDialog (BangContext ctx, String bundle, String text,
@@ -137,7 +133,7 @@ public class OptionDialog extends BDecoratedWindow
 
     protected void setRequiresString (int width, String defaultValue)
     {
-        add(1, _input = new BTextField(defaultValue));
+        add(1, _input = new BTextField(defaultValue), GroupLayout.FIXED);
         _input.addListener(this);
         _input.setPreferredWidth(width);
         _input.requestFocus();

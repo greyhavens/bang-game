@@ -20,11 +20,11 @@ public class PlayerSender extends InvocationSender
      * PlayerReceiver#receivedPardnerInvite} on a client.
      */
     public static void sendPardnerInvite (
-        ClientObject target, Handle arg1)
+        ClientObject target, Handle arg1, String arg2)
     {
         sendNotification(
             target, PlayerDecoder.RECEIVER_CODE, PlayerDecoder.RECEIVED_PARDNER_INVITE,
-            new Object[] { arg1 });
+            new Object[] { arg1, arg2 });
     }
 
 }

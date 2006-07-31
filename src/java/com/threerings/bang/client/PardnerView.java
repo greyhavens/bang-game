@@ -128,7 +128,10 @@ public class PardnerView extends IconPalette
 
         } else { // src == _name || src == _submit
             if (_submit.isEnabled()) {
-                invitePardner(new Handle(_name.getText()));
+                InvitePardnerDialog popup = new InvitePardnerDialog(
+                    _ctx, new Handle(_name.getText()));
+                _ctx.getBangClient().displayPopup(popup, true, 400);
+                _name.setText("");
             }
         }
     }
@@ -196,29 +199,6 @@ public class PardnerView extends IconPalette
         super.iconDeselected(icon);
         _chat.setEnabled(false);
         _remove.setEnabled(false);
-    }
-
-    /**
-     * Attempts to invite the named player as a pardner.
-     */
-    protected void invitePardner (final Handle handle)
-    {
-        _submit.setEnabled(false);
-        _name.setEnabled(false);
-        _psvc.invitePardner(_ctx.getClient(), handle,
-            new InvocationService.ConfirmListener() {
-                public void requestProcessed () {
-                    _status.setStatus(BANG_MSGS, MessageBundle.tcompose(
-                        "m.pardner_invited", handle), false);
-                    _name.setText("");
-                    _name.setEnabled(true);
-                }
-                public void requestFailed (String cause) {
-                    _status.setStatus(BANG_MSGS, cause, true);
-                    _submit.setEnabled(true);
-                    _name.setEnabled(true);
-                }
-            });
     }
 
     /**

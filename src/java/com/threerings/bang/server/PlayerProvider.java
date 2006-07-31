@@ -20,7 +20,7 @@ public interface PlayerProvider extends InvocationProvider
     /**
      * Handles a {@link PlayerService#invitePardner} request.
      */
-    public void invitePardner (ClientObject caller, Handle arg1, InvocationService.ConfirmListener arg2)
+    public void invitePardner (ClientObject caller, Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 
     /**

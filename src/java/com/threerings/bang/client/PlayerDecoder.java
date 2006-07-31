@@ -40,12 +40,13 @@ public class PlayerDecoder extends InvocationDecoder
         switch (methodId) {
         case RECEIVED_PARDNER_INVITE:
             ((PlayerReceiver)receiver).receivedPardnerInvite(
-                (Handle)args[0]
+                (Handle)args[0], (String)args[1]
             );
             return;
 
         default:
             super.dispatchNotification(methodId, args);
+            return;
         }
     }
 }

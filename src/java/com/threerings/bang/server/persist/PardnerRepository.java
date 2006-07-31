@@ -46,20 +46,27 @@ public class PardnerRepository extends SimpleRepository
         /** The time of the player's last session. */
         public Date lastSession;
 
-        /** Whether the pardnership is active or merely proposed. */
-        public boolean active;
+        /** If null the pardnership is active, if non-null the invitation
+         * message from the pardner. */
+        public String message;
 
         /** Creates a new pardner record. */
-        public PardnerRecord (Handle handle, Date lastSession, boolean active) {
+        public PardnerRecord (Handle handle, Date lastSession, String message) {
             this.handle = handle;
             this.lastSession = lastSession;
-            this.active = active;
+            this.message = message;
+        }
+
+        /** Returns true if this is an active record, false if it's a pending
+         * invitation. */
+        public boolean isActive () {
+            return (message == null);
         }
 
         /** Returns a string representation of this instance. */
         public String toString () {
             return "[handle=" + handle + ", last=" + lastSession +
-                ", active=" + active + "]";
+                ", message=" + message + "]";
         }
     }
 
@@ -85,7 +92,7 @@ public class PardnerRepository extends SimpleRepository
     {
         final ArrayList<PardnerRecord> list = new ArrayList<PardnerRecord>();
         final String query = PARD_SELECT +
-            " where (ACTIVE=1 and PLAYER_ID1=" + playerId +
+            " where (MESSAGE is NULL and PLAYER_ID1=" + playerId +
             " and PLAYER_ID=PLAYER_ID2) union " + PARD_SELECT +
             " where (PLAYER_ID2=" + playerId + " and PLAYER_ID=PLAYER_ID1)";
         execute(new Operation<Object>() {
@@ -98,7 +105,7 @@ public class PardnerRepository extends SimpleRepository
                     while (rs.next()) {
                         list.add(new PardnerRecord(
                                      new Handle(rs.getString(1)),
-                                     rs.getDate(2), rs.getBoolean(3)));
+                                     rs.getDate(2), rs.getString(3)));
                     }
                     return null;
 
@@ -113,14 +120,16 @@ public class PardnerRepository extends SimpleRepository
     /**
      * Adds a pardnership relation to the database.
      *
-     * @param playerId1 the id of the inviter
-     * @param handle2 the handle of the invitee
-     * @param active whether the pardnership is active or merely proposed
+     * @param playerId1 the id of the inviter.
+     * @param handle2 the handle of the invitee.
+     * @param message null if the pardnership is active, an invitation message
+     * if not.
+     *
      * @return null if the invitation was successfully added, otherwise a
-     * translatable error message indicating what went wrong
+     * translatable error message indicating what went wrong.
      */
     public String addPardners (final int playerId1, final Name handle2,
-        final boolean active)
+        final String message)
         throws PersistenceException
     {
         return executeUpdate(new Operation<String>() {
@@ -132,16 +141,18 @@ public class PardnerRepository extends SimpleRepository
                     // first look up the playerId for handle2
                     int playerId2 = getPlayerId(stmt, handle2);
                     if (playerId2 == -1) {
-                        return MessageBundle.tcompose("e.no_such_player",
-                            handle2);
+                        return MessageBundle.tcompose(
+                            "e.no_such_player", handle2);
                     }
 
                     // now update the pardner relation between these two
-                    if (stmt.executeUpdate("insert ignore into PARDNERS set " +
-                        "PLAYER_ID1=" + playerId1 + ", PLAYER_ID2=" +
-                        playerId2 + ", ACTIVE=" + (active ? "1" : "0")) < 1) {
-                        return MessageBundle.tcompose("e.already_invited",
-                            handle2);
+                    String query = "insert ignore into PARDNERS set " +
+                        "PLAYER_ID1 = " + playerId1 +
+                        ", PLAYER_ID2 = " + playerId2 + ", MESSAGE = " +
+                        ((message == null) ? "NULL" : JDBCUtil.escape(message));
+                    if (stmt.executeUpdate(query) < 1) {
+                        return MessageBundle.tcompose(
+                            "e.already_invited", handle2);
                     }
 
                 } finally {
@@ -154,11 +165,10 @@ public class PardnerRepository extends SimpleRepository
     }
 
     /**
-     * Updates the status of the identified pardnership where the playerId for
+     * Confirms the status of the identified pardnership where the playerId for
      * one is known and only the name for the other is known.
      */
-    public void updatePardners (final int playerId1, final Name handle2,
-        final boolean active)
+    public void updatePardners (final int playerId1, final Name handle2)
         throws PersistenceException
     {
         executeUpdate(new Operation<Object>() {
@@ -170,16 +180,16 @@ public class PardnerRepository extends SimpleRepository
                     // first look up the playerId for handle2
                     int playerId2 = getPlayerId(stmt, handle2);
                     if (playerId2 == -1) {
-                        log.warning("Failed to update pardners [pid=" +
-                            playerId1 + ", pardner=" + handle2 + ", active=" +
-                            active + "]. Pardner no longer exists.");
+                        log.warning("Failed to update pardners " +
+                                    "[pid=" + playerId1 +
+                                    ", pardner=" + handle2 + "]. " +
+                                    handle2 + " no longer exists.");
                         return null;
                     }
 
                     // now update the pardner relation between these two
-                    stmt.executeUpdate("update PARDNERS set ACTIVE = " +
-                        (active ? "1" : "0") +
-                        createWhereClause(playerId1, playerId2));
+                    stmt.executeUpdate("update PARDNERS set MESSAGE = NULL" +
+                                       createWhereClause(playerId1, playerId2));
 
                 } finally {
                     JDBCUtil.close(stmt);
@@ -261,14 +271,25 @@ public class PardnerRepository extends SimpleRepository
         JDBCUtil.createTableIfMissing(conn, "PARDNERS", new String[] {
             "PLAYER_ID1 INTEGER UNSIGNED NOT NULL",
             "PLAYER_ID2 INTEGER UNSIGNED NOT NULL",
-            "ACTIVE TINYINT UNSIGNED NOT NULL",
+            "MESSAGE VARCHAR(255)",
             "UNIQUE (PLAYER_ID1, PLAYER_ID2)",
             "INDEX (PLAYER_ID2)",
         }, "");
+
+        // TEMP: transition to our new style
+        if (JDBCUtil.tableContainsColumn(conn, "PARDNERS", "ACTIVE")) {
+            // delete all pending requests, sorry pardners
+            update("delete from PARDNERS where ACTIVE = 0");
+            // now drop ACTIVE and add MESSAGE
+            JDBCUtil.dropColumn(conn, "PARDNERS", "ACTIVE");
+            JDBCUtil.addColumn(
+                conn, "PARDNERS", "MESSAGE", "VARCHAR(255)", null);
+        }
+        // END TEMP
     }
 
     /** Used by {@link #getPardnerRecords}. */
     protected static final String PARD_SELECT =
-        "select HANDLE, LAST_SESSION, ACTIVE from PARDNERS " +
+        "select HANDLE, LAST_SESSION, MESSAGE from PARDNERS " +
         "straight join PLAYERS";
 }

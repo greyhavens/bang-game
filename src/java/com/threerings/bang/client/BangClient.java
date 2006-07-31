@@ -27,6 +27,7 @@ import com.samskivert.util.Interval;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.RunQueue;
 import com.samskivert.util.StringUtil;
+import com.samskivert.util.Tuple;
 import com.threerings.util.IdentUtil;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -351,7 +352,8 @@ public class BangClient extends BasicClient
         
         // if there are any pending pardner invitations, show those
         if (_invites.size() > 0) {
-            displayPardnerInvite(_invites.remove(0));
+            Tuple<Handle,String> invite = _invites.remove(0);
+            displayPardnerInvite(invite.left, invite.right);
             return true;
         }
 
@@ -762,14 +764,14 @@ public class BangClient extends BasicClient
     }
 
     // documentation inherited from interface PlayerReceiver
-    public void receivedPardnerInvite (final Handle handle)
+    public void receivedPardnerInvite (Handle handle, String message)
     {
         if (canDisplayPopup(MainView.Type.PARDNER_INVITE)) {
-            displayPardnerInvite(handle);
+            displayPardnerInvite(handle, message);
         } else {
             // stick it on a list and we'll show the invite next the we're in
             // the town view
-            _invites.add(handle);
+            _invites.add(new Tuple<Handle,String>(handle, message));
         }
     }
 
@@ -808,7 +810,7 @@ public class BangClient extends BasicClient
         ParticlePool.warmup(_ctx);
     }
 
-    protected void displayPardnerInvite (final Handle handle)
+    protected void displayPardnerInvite (final Handle handle, String message)
     {
         OptionDialog.ResponseReceiver rr =
             new OptionDialog.ResponseReceiver() {
@@ -820,9 +822,10 @@ public class BangClient extends BasicClient
                 checkShowIntro();
             }
         };
-        String title = MessageBundle.tcompose("m.pardner_invite", handle);
+        String text = MessageBundle.tcompose(
+            "m.pardner_invite", handle, message);
         OptionDialog.showConfirmDialog(
-            _ctx, BANG_MSGS, title, "m.pardner_accept", "m.pardner_reject", rr);
+            _ctx, BANG_MSGS, text, "m.pardner_accept", "m.pardner_reject", rr);
     }
 
     protected boolean displayLowerDetailSuggestion ()
@@ -1056,7 +1059,8 @@ public class BangClient extends BasicClient
     protected SystemChatView _scview;
     protected StatusView _status;
 
-    protected ArrayList<Handle> _invites = new ArrayList<Handle>();
+    protected ArrayList<Tuple<Handle,String>> _invites =
+        new ArrayList<Tuple<Handle,String>>();
     protected boolean _suggestLowerDetail;
     
     protected String _playingMusic;

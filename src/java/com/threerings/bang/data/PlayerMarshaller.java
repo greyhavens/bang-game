@@ -25,12 +25,12 @@ public class PlayerMarshaller extends InvocationMarshaller
     public static final int INVITE_PARDNER = 1;
 
     // documentation inherited from interface
-    public void invitePardner (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
+    public void invitePardner (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
-        listener3.listener = arg3;
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
         sendRequest(arg1, INVITE_PARDNER, new Object[] {
-            arg2, listener3
+            arg2, arg3, listener4
         });
     }
 

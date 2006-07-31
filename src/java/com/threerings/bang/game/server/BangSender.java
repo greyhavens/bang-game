@@ -23,7 +23,7 @@ public class BangSender extends InvocationSender
     {
         sendNotification(
             target, BangDecoder.RECEIVER_CODE, BangDecoder.ORDER_INVALIDATED,
-            new Object[] { new Integer(arg1), arg2 });
+            new Object[] { Integer.valueOf(arg1), arg2 });
     }
 
 }

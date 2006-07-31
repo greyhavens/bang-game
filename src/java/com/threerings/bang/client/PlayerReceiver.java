@@ -15,5 +15,5 @@ public interface PlayerReceiver extends InvocationReceiver
     /**
      * Called when this user has been invited to be another's pardner.
      */
-    public void receivedPardnerInvite (Handle handle);
+    public void receivedPardnerInvite (Handle handle, String message);
 }

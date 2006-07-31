@@ -43,7 +43,7 @@ public class PlayerDispatcher extends InvocationDispatcher
         case PlayerMarshaller.INVITE_PARDNER:
             ((PlayerProvider)provider).invitePardner(
                 source,
-                (Handle)args[0], (InvocationService.ConfirmListener)args[1]
+                (Handle)args[0], (String)args[1], (InvocationService.ConfirmListener)args[2]
             );
             return;
 

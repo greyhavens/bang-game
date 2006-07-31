@@ -45,6 +45,7 @@ public class BangDecoder extends InvocationDecoder
 
         default:
             super.dispatchNotification(methodId, args);
+            return;
         }
     }
 }
