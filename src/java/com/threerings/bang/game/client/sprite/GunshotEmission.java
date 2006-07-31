@@ -247,9 +247,11 @@ public class GunshotEmission extends FrameEmission
         }
         
         // finally, the hit flash effect on the target
-        PieceSprite target = ((MobileSprite)_sprite).getTargetSprite();
-        if (target != null && _view != null) {
-            target.displayParticles("frontier_town/hit_flash", true);
+        if (_sprite != null) {
+            PieceSprite target = ((MobileSprite)_sprite).getTargetSprite();
+            if (target != null) {
+                target.displayParticles("frontier_town/hit_flash", true);
+            }
         }
     }
     
