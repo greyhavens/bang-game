@@ -180,6 +180,9 @@ public class EditorPanel extends JPanel
         createCheckBoxMenuItem(view, msgs.get("m.menu_highlight"),
             KeyEvent.VK_H, KeyEvent.VK_H, EditorController.TOGGLE_HIGHLIGHTS,
             false);
+        createCheckBoxMenuItem(view, msgs.get("m.menu_markers"),
+            KeyEvent.VK_M, KeyEvent.VK_M, EditorController.TOGGLE_MARKERS,
+            true);
         
         view.addSeparator();
         recenter = createMenuItem(view, msgs.get("m.menu_recenter_camera"),
