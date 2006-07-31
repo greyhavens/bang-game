@@ -298,6 +298,8 @@ public class ShotEffect extends Effect
 
         // if we have a new last acted to assign to the target, do that
         if (targetLastActed != -1) {
+            reportEffect(obs, target, targetLastActed > target.lastActed ?
+                AdjustTickEffect.STARED_DOWN : AdjustTickEffect.GIDDY_UPPED);
             target.lastActed = targetLastActed;
         }
 

@@ -18,7 +18,7 @@ import com.threerings.bang.game.data.piece.Piece;
 public class AdjustTickEffect extends Effect
 {
     /** Identifies the use of this effect by the Staredown card. */
-    public static final String STARED_DOWN = "cards/staredown/activate";
+    public static final String STARED_DOWN = "effects/frontier_town/staredown";
 
     /** Identifies the use of this effect by the Giddy Up card. */
     public static final String GIDDY_UPPED = "cards/giddy_up/activate";
