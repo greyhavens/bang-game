@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -293,6 +294,7 @@ public class EditorController extends GameController
         }
         String id = _viewScenId;
         setViewingProps(id);
+        pruneOrphanPieces();
 
         try {
             File board = _boardChooser.getSelectedFile();
@@ -579,6 +581,23 @@ public class EditorController extends GameController
                 if (sprite.getParent() != null) {
                     _panel.view.removeSprite(sprite);
                 }
+            }
+        }
+    }
+
+    /**
+     * Removes pieces from the board which are not part of a valid scenario.
+     */
+    public void pruneOrphanPieces ()
+    {
+        Piece[] pieces = _bangobj.getPieceArray();
+        String[] scenarios =
+                _panel.info.getSelectedScenarios().toArray(new String[0]);
+        Arrays.sort(scenarios);
+        for (Piece p : pieces) {
+            if (p.scenId != null && 
+                    Arrays.binarySearch(scenarios, p.scenId) == -1) {
+                removePiece(p);
             }
         }
     }
