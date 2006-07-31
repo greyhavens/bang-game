@@ -38,11 +38,13 @@ import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.util.ParticleUtil;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.effect.InfluenceViz;
+import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Influence;
@@ -249,6 +251,19 @@ public class UnitSprite extends MobileSprite
     {
         super.move(path);
         _ustatus.setCullMode(CULL_ALWAYS);
+        
+        // load the fire effect for the death flights of airborne steam units
+        if (!_piece.isAlive() && _piece.isAirborne() &&
+            ((Unit)_piece).getConfig().make == UnitConfig.Make.STEAM) {
+            _ctx.loadEffect(FIRE_EFFECT, new ResultAttacher<Spatial>(this) {
+                public void requestCompleted (Spatial result) {
+                    if (isMoving()) {
+                        super.requestCompleted(result);
+                        _fire = result;
+                    }
+                }
+            });
+        }
     }
 
     @Override // documentation inherited
@@ -265,6 +280,12 @@ public class UnitSprite extends MobileSprite
         super.pathCompleted();
         updateTileHighlight();
         updateStatus();
+        
+        // turn the fire off and remove it when all existing particles are gone
+        if (_fire != null) {
+            ParticleUtil.stopAndRemove(_fire);
+            _fire = null;
+        }
     }
 
     /**
@@ -429,6 +450,8 @@ public class UnitSprite extends MobileSprite
     protected InfluenceViz _influenceViz, _hindranceViz;
     protected Influence _influence, _hindrance;
     
+    protected Spatial _fire;
+    
     protected EffectHandler _effectHandler;
     
     protected static HashMap<String,Texture[]> _pendtexmap =
@@ -453,4 +476,7 @@ public class UnitSprite extends MobileSprite
         "dud",
         "misfire",
     };
+    
+    /** The effect displayed on the death flights of airborne steam units. */
+    protected static final String FIRE_EFFECT = "frontier_town/fire";
 }

@@ -41,6 +41,7 @@ import com.threerings.jme.sprite.PathUtil;
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.ParticleUtil;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.BoardView;
@@ -238,11 +239,17 @@ public class GunshotEmission extends FrameEmission
             _smoke.forceRespawn();
         }
         
-        // activate the effect, if presents
+        // activate the effect, if present
         if (_particles != null) {
             _particles.getLocalTranslation().set(
                 _sprite.getWorldTranslation()).addLocal(0f, 0f, TILE_SIZE / 2);
-            forceRespawn(_particles);
+            ParticleUtil.forceRespawn(_particles);
+        }
+        
+        // finally, the hit flash effect on the target
+        PieceSprite target = ((MobileSprite)_sprite).getTargetSprite();
+        if (target != null && _view != null) {
+            target.displayParticles("frontier_town/hit_flash", true);
         }
     }
     
@@ -258,22 +265,6 @@ public class GunshotEmission extends FrameEmission
         _rot.fromAngleNormalAxis(RandomUtil.getFloat(FastMath.TWO_PI),
             Vector3f.UNIT_Z).multLocal(result);
         _target.getWorldRotation().multLocal(result);
-    }
-    
-    /**
-     * Recursively forces a respawn on all particle systems under the given
-     * node.
-     */
-    protected void forceRespawn (Spatial spatial)
-    {
-        if (spatial instanceof ParticleGeometry) {
-            ((ParticleGeometry)spatial).forceRespawn();
-        } else if (spatial instanceof Node) {
-            Node node = (Node)spatial;
-            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                forceRespawn(node.getChild(ii));
-            }
-        }
     }
     
     /** Handles the appearance and fading of the muzzle flare. */
