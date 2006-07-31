@@ -297,6 +297,28 @@ public class MobileSprite extends PieceSprite
         snapToTerrain(false);
     }
 
+    @Override // documentation inherited
+    public void snapToTerrain (boolean moving)
+    {
+        super.snapToTerrain(moving);
+
+        // flyers simply fly from point to point
+        if (moving ? _piece.isFlyer() : _piece.isAirborne()) {
+            return;
+        }
+
+        // if we're walking on a prop, possibly adjust our height
+        Vector3f pos = getLocalTranslation();
+        int x = (int)(pos.x / TILE_SIZE);
+        int y = (int)(pos.y / TILE_SIZE);
+        BangBoard board = _view.getBoard();
+        int elev = board.getPieceElevation(x, y);
+        if (elev > 0) {
+            pos.z += elev * board.getElevationScale(TILE_SIZE);
+            setLocalTranslation(pos);
+        }
+    }
+
     /**
      * Tells the sprite if we're performing a complex action.
      */

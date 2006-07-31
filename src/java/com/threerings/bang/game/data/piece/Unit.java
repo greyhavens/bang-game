@@ -207,7 +207,7 @@ public class Unit extends Piece
         if ((moving ? isFlyer() : isAirborne()) && isAlive()) {
             return computeAreaFlightElevation(board, tx, ty);
         } else {
-            return super.computeElevation(board, tx, ty, moving);
+            return board.getElevation(tx, ty);
         }
     }
 

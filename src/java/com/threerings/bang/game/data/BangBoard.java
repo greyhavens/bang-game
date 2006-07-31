@@ -707,17 +707,29 @@ public class BangBoard extends SimpleStreamableObject
     {
         if (piece instanceof Prop && ((Prop)piece).isPassable()) {
             Prop p = (Prop)piece;
-            int idx = _width*p.y + p.x;
-            byte dstate = _dstate[idx];
-            for (int dir : DIRECTIONS) {
-                if (!p.canEnter(dir)) {
-                    dstate = (byte)(dstate | (ENTER_NORTH << dir));
-                }
-                if (!p.canExit(dir)) {
-                    dstate = (byte)(dstate | (EXIT_NORTH << dir));
+            Rectangle pbounds = p.getBounds();
+            int elevation = (int)Math.ceil(p.getPassHeight() *
+                _elevationUnitsPerTile) + p.felev;
+            for (int yy = pbounds.y, ly = yy + pbounds.height; yy < ly; yy++) {
+                for (int xx = pbounds.x, lx = xx + pbounds.width;
+                        xx < lx; xx++) {
+                    if (_playarea.contains(xx, yy)) {
+                        int idx = _width*p.y + p.x;
+                        byte dstate = _dstate[idx];
+                        for (int dir : DIRECTIONS) {
+                            if (!p.canEnter(dir)) {
+                                dstate = (byte)(dstate | (ENTER_NORTH << dir));
+                            }
+                            if (!p.canExit(dir)) {
+                                dstate = (byte)(dstate | (EXIT_NORTH << dir));
+                            }
+                        }
+                        _dstate[idx] = dstate;
+                        _estate[idx] = (byte)Math.max(
+                            unsignedToInt(_estate[idx]), elevation);
+                    }
                 }
             }
-            _dstate[idx] = dstate;
             return;
             
         } else if (piece instanceof BigPiece) {

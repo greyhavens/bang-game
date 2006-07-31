@@ -161,6 +161,14 @@ public class Prop extends BigPiece
     {
         return _config.height;
     }
+
+    /**
+     * The height of a passable prop for calculating terrain elevation.
+     */
+    public float getPassHeight ()
+    {
+        return _config.passElev;
+    }
     
     @Override // documentation inherited
     public boolean isTall ()

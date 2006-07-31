@@ -28,6 +28,9 @@ public class PropConfig
 
     /** The height of this prop in tiles. */
     public float height;
+
+    /** The passable elevation of this prop in tiles. */
+    public float passElev;
     
     /** If true, even air units cannot pass over the prop. */
     public boolean tall;
@@ -100,6 +103,8 @@ public class PropConfig
         config.width = BangUtil.getIntProperty(type, props, "width", 1);
         config.length = BangUtil.getIntProperty(type, props, "length", 1);
         config.height = BangUtil.getFloatProperty(type, props, "height", 2f);
+        config.passElev = BangUtil.getFloatProperty(
+                type, props, "passElev", 0f);
         
         config.tall = Boolean.parseBoolean(props.getProperty("tall"));
         config.passable = Boolean.parseBoolean(props.getProperty("passable"));
