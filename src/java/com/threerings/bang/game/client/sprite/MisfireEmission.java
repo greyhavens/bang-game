@@ -208,6 +208,9 @@ public class MisfireEmission extends SpriteEmission
             _smoke.updateGeometricState(0f, true);
             _smoke.forceRespawn();
         }
+        if (_sprite != null) {
+            _sprite.displayParticles("frontier_town/hit_flash", true);
+        }
     }
 
     /** For each animation, the frame at which the misfire goes off. */
