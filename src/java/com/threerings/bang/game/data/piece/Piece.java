@@ -376,8 +376,24 @@ public abstract class Piece extends SimpleStreamableObject
     public Point computeShotLocation (
         BangBoard board, Piece target, PointSet moveSet, boolean any)
     {
+        return computeShotLocation(board, target, moveSet, any, new PointSet());
+    }
+
+    /**
+     * Selects the shortest move that puts us within range of firing on
+     * the specified target.
+     *
+     * @param any if true we don't care about the best shot location, just that
+     * there is at least one valid shot location.
+     * @param preferredSet a set of points we'd prefer to move to
+     */
+    public Point computeShotLocation (BangBoard board, Piece target, 
+            PointSet moveSet, boolean any, PointSet preferredSet)
+    {
         int minfdist = getMinFireDistance(), maxfdist = getMaxFireDistance();
-        int moves = Integer.MAX_VALUE;
+        int moves = Integer.MAX_VALUE, pmoves = Integer.MAX_VALUE;
+
+        Point spot = null, prefer = null;
 
         // first check if we can fire without moving (assuming our current
         // location is in our move set)
@@ -385,29 +401,45 @@ public abstract class Piece extends SimpleStreamableObject
             int tdist = target.getDistance(x, y);
             if (tdist >= minfdist && tdist <= maxfdist &&
                 checkLineOfSight(board, x, y, target)) {
-                return new Point(x, y);
+                spot = new Point(x, y);
+                if (preferredSet.contains(x, y)) {
+                    return spot;
+                }
+                moves = 0;
             }
         }
 
         // next search the move set for the closest location
-        Point spot = null;
         for (int ii = 0, ll = moveSet.size(); ii < ll; ii++) {
             int px = moveSet.getX(ii), py = moveSet.getY(ii);
             int dist = getDistance(px, py);
             int tdist = target.getDistance(px, py);
-            if (dist < moves && tdist >= minfdist && tdist <= maxfdist &&
+            if (tdist >= minfdist && tdist <= maxfdist &&
                 checkLineOfSight(board, px, py, target)) {
-                moves = dist;
-                if (spot == null) {
-                    spot = new Point();
+                if (dist < pmoves && preferredSet.contains(px, py)) {
+                    pmoves = dist;
+                    if (prefer == null) {
+                        prefer = new Point();
+                    }
+                    prefer.setLocation(px, py);
+                } else if (dist < moves && prefer == null) {
+                    moves = dist;
+                    if (spot == null) {
+                        spot = new Point();
+                    }
+                    spot.setLocation(px, py);
+                } else {
+                    continue;
                 }
-                spot.setLocation(px, py);
                 if (any) {
                     break;
                 }
             }
         }
 
+        if (prefer != null) {
+            return prefer;
+        }
         return spot;
     }
 

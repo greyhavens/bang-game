@@ -56,18 +56,19 @@ public class Thunderbird extends Unit
     }
 
     @Override // documentation inherited
-    public Point computeShotLocation (
-        BangBoard board, Piece target, PointSet moveSet, boolean any)
+    public Point computeShotLocation (BangBoard board, Piece target, 
+            PointSet moveSet, boolean any, PointSet preferredSet)
     {
         // check if they are attackable
         if (!_attacks.contains(target.x, target.y)) {
             return null;
         }
         
-        Point spot = null;
+        Point spot = null, prefer = null;
         int tdist = getDistance(target);
         int remain = getMoveDistance() - getDistance(target);
         int totdist = 0, tmove = Integer.MAX_VALUE;
+        int ptotdist = 0, pmove = Integer.MAX_VALUE;
         // find the closest location (with least likelyhood for a u-turn)
         // where we can stop after attacking this target
         for (int ii = 0, ll = moveSet.size(); ii < ll; ii++) {
@@ -75,22 +76,41 @@ public class Thunderbird extends Unit
             int dist = getDistance(px, py);
             int move = target.getDistance(px, py);
             if (move <= remain) {
-                if (spot == null) {
-                    spot = new Point(px, py);
-                } else if ((totdist < tdist) ? 
-                        (dist >= tdist || move < tmove) :
-                        (dist <= totdist && move < tmove)) {
-                    spot.setLocation(px, py);
+                if (preferredSet.contains(px, py)) {
+                    if (prefer == null) {
+                        prefer = new Point(px, py);
+                    } else if ((ptotdist < tdist) ?
+                            (dist >= tdist || move < pmove) :
+                            (dist <= ptotdist && move < pmove)) {
+                        prefer.setLocation(px, py);
+                    } else {
+                        continue;
+                    }
+                    ptotdist = dist;
+                    pmove = move;
+                } else if (prefer == null) {
+                    if (spot == null) {
+                        spot = new Point(px, py);
+                    } else if ((totdist < tdist) ? 
+                            (dist >= tdist || move < tmove) :
+                            (dist <= totdist && move < tmove)) {
+                        spot.setLocation(px, py);
+                    } else {
+                        continue;
+                    }
+                    totdist = dist;
+                    tmove = move;
                 } else {
                     continue;
                 }
-                totdist = dist;
-                tmove = move;
                 if (any) {
                     break;
                 }
             }
         } 
+        if (prefer != null) {
+            return prefer;
+        }
         return spot;
     }
 
