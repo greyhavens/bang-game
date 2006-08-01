@@ -97,8 +97,17 @@ public class PiecePlacer extends EditorTool
             }
             
             _dragPiece = (Piece)piece.clone();
-            _dragPiece.orientation = (short)DIRECTIONS[
-                RandomUtil.getInt(DIRECTIONS.length)];
+            if (_placeRot > 0) {
+                for (int ii = 0; ii < DIRECTIONS.length; ii++) {
+                    if ((_placeRot & (1 << DIRECTIONS[ii])) > 0) {
+                        _dragPiece.orientation = (short)DIRECTIONS[ii];
+                        break;
+                    }
+                }
+            } else {
+                _dragPiece.orientation = (short)DIRECTIONS[
+                    RandomUtil.getInt(DIRECTIONS.length)];
+            }
             _dragPiece.position(tx, ty);
 
             if (!_ctrl.addPiece(_dragPiece)) {
@@ -216,6 +225,10 @@ public class PiecePlacer extends EditorTool
              case KeyInput.KEY_X: _scaleMode = _scaleMode | SCALE_X; break;
              case KeyInput.KEY_C: _scaleMode = _scaleMode | SCALE_Y; break;
              case KeyInput.KEY_V: _scaleMode = _scaleMode | SCALE_Z; break;
+             case KeyInput.KEY_1: _placeRot = _placeRot | ROT_NORTH; break;
+             case KeyInput.KEY_2: _placeRot = _placeRot | ROT_EAST; break;
+             case KeyInput.KEY_3: _placeRot = _placeRot | ROT_SOUTH; break;
+             case KeyInput.KEY_4: _placeRot = _placeRot | ROT_WEST; break;
              default: return;
         }
         Piece piece = _panel.view.getHoverPiece();
@@ -264,6 +277,10 @@ public class PiecePlacer extends EditorTool
              case KeyInput.KEY_X: _scaleMode = _scaleMode & ~SCALE_X; break;
              case KeyInput.KEY_C: _scaleMode = _scaleMode & ~SCALE_Y; break;
              case KeyInput.KEY_V: _scaleMode = _scaleMode & ~SCALE_Z; break;
+             case KeyInput.KEY_1: _placeRot = _placeRot & ~ROT_NORTH; break;
+             case KeyInput.KEY_2: _placeRot = _placeRot & ~ROT_EAST; break;
+             case KeyInput.KEY_3: _placeRot = _placeRot & ~ROT_SOUTH; break;
+             case KeyInput.KEY_4: _placeRot = _placeRot & ~ROT_WEST; break;
              default:
                 _ctrl.maybeCommitPieceEdit();
         }
@@ -307,6 +324,13 @@ public class PiecePlacer extends EditorTool
     protected static final int SCALE_X = 1 << 1;
     protected static final int SCALE_Y = 1 << 2;
     protected static final int SCALE_Z = 1 << 3;
+
+    /** Placement orientation. */
+    protected int _placeRot;
+    protected static final int ROT_NORTH = 1 << NORTH;
+    protected static final int ROT_EAST = 1 << EAST;
+    protected static final int ROT_SOUTH = 1 << SOUTH;
+    protected static final int ROT_WEST = 1 << WEST;
     
     /** The normal drag type: dragging pieces with tile coordinates. */
     protected static final int NORMAL_DRAG = 0;

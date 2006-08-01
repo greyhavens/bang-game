@@ -196,7 +196,7 @@ public class Prop extends BigPiece
      */
     public boolean canEnter (int dir)
     {
-        dir = (dir + orientation) % 4;
+        dir = (4 + dir - orientation) % 4;
         return _config.blockDir.indexOf(ENTER_DIR[dir]) == -1;
     }
 
@@ -205,7 +205,7 @@ public class Prop extends BigPiece
      */
     public boolean canExit (int dir)
     {
-        dir = (dir + orientation) % 4;
+        dir = (4 + dir - orientation) % 4;
         return _config.blockDir.indexOf(EXIT_DIR[dir]) == -1;
     }
 
