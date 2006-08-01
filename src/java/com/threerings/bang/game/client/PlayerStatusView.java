@@ -11,6 +11,8 @@ import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.MouseAdapter;
+import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.icon.SubimageIcon;
@@ -94,6 +96,23 @@ public class PlayerStatusView extends BContainer
             }
         }, RANK_RECT);
 
+        // add a listener for events associated with VS_PLAYER cards
+        addListener(new MouseAdapter() {
+            public void mousePressed (MouseEvent e) {
+                Card card = _ctrl.getPlacingCard();
+                if (card == null) {
+                    return;
+                }
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    if (card.isValidPlayer(_bangobj, _pidx)) {
+                        _ctrl.activateCard(card.cardId, Integer.valueOf(_pidx));
+                    }
+                } else {
+                    _ctrl.cancelCardPlacement();
+                }
+            }
+        });
+        
         updateAvatar();
         updateStatus();
         checkPlayerHere();

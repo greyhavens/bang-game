@@ -441,6 +441,8 @@ public class BangController extends GameController
         _bangobj.service.cancelOrder(_ctx.getClient(), pieceId);
     }
 
+    
+    
     /** Handles a request to place a card. */
     public void placeCard (int cardId)
     {
@@ -449,7 +451,7 @@ public class BangController extends GameController
         }
 
         Card card = (Card)_bangobj.cards.get(cardId);
-        Card activeCard = _view.view.getCard();
+        Card activeCard = getPlacingCard();
         if (card == null) {
             log.warning("Requested to place non-existent card '" +
                         cardId + "'.");
@@ -464,10 +466,23 @@ public class BangController extends GameController
             postEvent(TutorialCodes.CARD_SELECTED);
         }
     }
-
+    
+    /** Returns the card being placed, if any. */
+    public Card getPlacingCard ()
+    {
+        return _view.view.getCard();
+    }
+    
+    /** Cancels the card placement operation. */
+    public void cancelCardPlacement ()
+    {
+        _view.view.clearPlacingCard();
+    }
+    
     /** Handles a request to activate a card. */
     public void activateCard (int cardId, Object target)
     {
+        _view.view.clearPlacingCard();
         if (_bangobj.cards.get(cardId) == null) {
             log.warning("Requested to activate expired card " +
                         "[id=" + cardId + "].");

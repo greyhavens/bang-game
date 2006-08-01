@@ -29,7 +29,7 @@ public abstract class Card extends SimpleStreamableObject
     implements DSet.Entry, Cloneable
 {
     /** The different card placement targets. */
-    public static enum PlacementMode { VS_PIECE, VS_AREA, VS_CARD };
+    public static enum PlacementMode { VS_PIECE, VS_AREA, VS_CARD, VS_PLAYER };
 
     /** Every card has a unique id which is how we reference them. */
     public int cardId;
@@ -130,6 +130,14 @@ public abstract class Card extends SimpleStreamableObject
         return false;
     }
 
+    /**
+     * Returns true if the player is a valid target for this card.
+     */
+    public boolean isValidPlayer (BangObject bangobj, int pidx)
+    {
+        return false;
+    }
+    
     /**
      * Activates the specified card at the supplied coordinates. The
      * returned effect will be prepared and effected immediately.
@@ -257,6 +265,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new Engineer());
         register(new Dud());
         register(new Misfire());
+        register(new CatBallou());
         
         // collect the weights of each card into an array used to select
         // randomly based on said weights

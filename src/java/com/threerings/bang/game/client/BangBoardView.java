@@ -134,6 +134,21 @@ public class BangBoardView extends BoardView
     }
 
     /**
+     * Clears out the card currently being placed.
+     */
+    public boolean clearPlacingCard ()
+    {
+        if (_card == null) {
+            return false;
+        }
+
+        log.info("Clearing " + _card);
+        _card = null;
+        clearAttackSet();
+        return true;
+    }
+
+    /**
      * Called by the controller when we know one way or another regarding a
      * move and shoot request.
      */
@@ -933,8 +948,6 @@ public class BangBoardView extends BoardView
 
             if (target != null) {
                 _ctrl.activateCard(_card.cardId, target);
-                _card = null;
-                clearAttackSet();
             }
             return;
         }
@@ -1398,18 +1411,6 @@ public class BangBoardView extends BoardView
                 }
             }
         }
-    }
-
-    protected boolean clearPlacingCard ()
-    {
-        if (_card == null) {
-            return false;
-        }
-
-        log.info("Clearing " + _card);
-        _card = null;
-        clearAttackSet();
-        return true;
     }
 
     @Override // documentation inherited

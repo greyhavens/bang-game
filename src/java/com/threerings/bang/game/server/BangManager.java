@@ -901,6 +901,7 @@ public class BangManager extends GameManager
             cards = new Card[cardTypes.length];
             for (int ii = 0; ii < cards.length; ii++) {
                 cards[ii] = Card.newCard(cardTypes[ii]);
+                cards[ii].init(_bangobj, pidx);
             }
         }
         selectStarters(pidx, new BigShotItem(-1, bigShotType), cards);
