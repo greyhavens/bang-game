@@ -105,8 +105,11 @@ public class EditorBoardView extends BoardView
             }
             protected void updateHighlights (Piece piece) {
                 if (piece instanceof BigPiece) {
+                    Rectangle bounds = (Rectangle)
+                        ((BigPiece)piece).getBounds().clone();
+                    bounds.grow(1, 1);
                     Rectangle isect = _board.getPlayableArea().intersection(
-                        ((BigPiece)piece).getBounds());
+                        bounds);
                     if (!isect.isEmpty()) {
                         EditorBoardView.this.updateHighlights(isect.x, isect.y,
                             isect.x + isect.width - 1,
@@ -978,18 +981,25 @@ public class EditorBoardView extends BoardView
             1 + y2 - y1);
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
-                if (_showHighlights) {
-                    if (!_board.isOccupiable(x, y)) {
-                        if (_highlights[x][y] == null) {
-                            _highlights[x][y] = _tnode.createHighlight(x, y,
-                                false);
-                            _highlights[x][y].setDefaultColor(HIGHLIGHT_COLOR);
-                        }
-                        _highlights[x][y].updateVertices();
-                        if (_highlights[x][y].getParent() == null) {
-                            _hnode.attachChild(_highlights[x][y]);
-                        }
+                if (_showHighlights && !_board.isOccupiable(x, y)) {
+                    if (_highlights[x][y] == null) {
+                        _highlights[x][y] = _tnode.createHighlight(x, y,
+                            false);
+                        _highlights[x][y].setDefaultColor(HIGHLIGHT_COLOR);
                     }
+                    _highlights[x][y].updateVertices();
+                    if (_highlights[x][y].getParent() == null) {
+                        _hnode.attachChild(_highlights[x][y]);
+                    }
+                } else {
+                    if (_highlights[x][y] != null &&
+                        _highlights[x][y].getParent() != null) {
+                        _hnode.detachChild(_highlights[x][y]);
+                    }
+                }
+
+                if (_showHighlights && 
+                        _board.getPlayableArea().contains(x, y)) {
                     if (_crosslights[x][y] == null) {
                         _crosslights[x][y] = new CrossStatus(_ctx, 
                                 _tnode.createHighlight(x, y, false));
@@ -999,12 +1009,7 @@ public class EditorBoardView extends BoardView
                             _crosslights[x][y].getParent() == null) {
                         _hnode.attachChild(_crosslights[x][y]);
                     }
-
                 } else {
-                    if (_highlights[x][y] != null &&
-                        _highlights[x][y].getParent() != null) {
-                        _hnode.detachChild(_highlights[x][y]);
-                    }
                     if (_crosslights[x][y] != null &&
                             _crosslights[x][y].getParent() != null) {
                         _hnode.detachChild(_crosslights[x][y]);
