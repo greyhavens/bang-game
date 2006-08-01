@@ -317,9 +317,11 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Potentially shows the next phase of the client introduction and
-     * tutorial. This is called after first logging on and then at the
-     * completion of each phase of the intro and tutorial.
+     * Potentially shows the next phase of the client introduction or tutorial
+     * or displays pending pardner invites. Basically anything that should be
+     * popped up once a player is in the town view and ready to go is shown.
+     * This is called after first logging on and then at the completion of each
+     * phase of the intro and tutorial.
      */
     public boolean checkShowIntro ()
     {
@@ -819,6 +821,8 @@ public class BangClient extends BasicClient
         if (_ctx.getMuteDirector().isMuted(handle)) {
             log.info("Auto-rejecting pardner invite [who=" + handle + "].");
             _psvc.respondToPardnerInvite(_client, handle, false, rl);
+            // loop back to checkShowIntro in case there are more invites
+            checkShowIntro();
             return;
         }
 
@@ -834,6 +838,7 @@ public class BangClient extends BasicClient
                 if (button == 2) { // ignore the pesky bugger
                     _ctx.getMuteDirector().setMuted(handle, true);
                 }
+                // loop back to checkShowIntro in case there are more invites
                 checkShowIntro();
             }
         };
