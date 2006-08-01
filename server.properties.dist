@@ -53,13 +53,9 @@ db.default.url = jdbc:mysql://DBHOST:3306/bang
 db.default.username = USERNAME
 db.default.password = PASSWORD
 
-#
-# An example of an overridden database configuration
-
-# db.userdb.username = USERNAME
-# db.userdb.password = PASSWORD
-# db.userdb.url = jdbc:mysql://USERDBHOST:3306/USERDB
-# db.sitedb.url = jdbc:mysql://USERDBHOST:3306/USERDB
+# These overrides are needed for the OOO user database
+db.userdb.url = jdbc:mysql://USERDBHOST:3306/ooouser
+db.sitedb.url = jdbc:mysql://USERDBHOST:3306/ooouser
 
 #
 # Bits for the OOO authenticator
