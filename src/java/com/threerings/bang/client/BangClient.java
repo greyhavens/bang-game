@@ -812,20 +812,32 @@ public class BangClient extends BasicClient
 
     protected void displayPardnerInvite (final Handle handle, String message)
     {
-        OptionDialog.ResponseReceiver rr =
-            new OptionDialog.ResponseReceiver() {
+        final ReportingListener rl =
+            new ReportingListener(_ctx, BANG_MSGS, "e.response_failed");
+
+        // if this person is on our mute list, auto-reject it
+        if (_ctx.getMuteDirector().isMuted(handle)) {
+            log.info("Auto-rejecting pardner invite [who=" + handle + "].");
+            _psvc.respondToPardnerInvite(_client, handle, false, rl);
+            return;
+        }
+
+        // otherwise display the invitation in a dialog
+        String text = MessageBundle.tcompose(
+            "m.pardner_invite", handle, message);
+        String[] buttons = {
+            "m.pardner_accept", "m.pardner_reject",
+            MessageBundle.tcompose("m.pardner_ignore", handle) };
+        OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
-                _psvc.respondToPardnerInvite(
-                    _client, handle, button == 0,
-                    new ReportingListener(
-                        _ctx, BANG_MSGS, "e.response_failed"));
+                _psvc.respondToPardnerInvite(_client, handle, button == 0, rl);
+                if (button == 2) { // ignore the pesky bugger
+                    _ctx.getMuteDirector().setMuted(handle, true);
+                }
                 checkShowIntro();
             }
         };
-        String text = MessageBundle.tcompose(
-            "m.pardner_invite", handle, message);
-        OptionDialog.showConfirmDialog(
-            _ctx, BANG_MSGS, text, "m.pardner_accept", "m.pardner_reject", rr);
+        OptionDialog.showConfirmDialog(_ctx, BANG_MSGS, text, buttons, rr);
     }
 
     protected boolean displayLowerDetailSuggestion ()
