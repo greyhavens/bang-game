@@ -12694,6 +12694,8 @@
     <vertex location="0.828614, -0.633975, -5.19312" normal="-0.997855, 0.0144686, -0.0638493" tcoords="0.0, 1.0"/>
   </triMesh>
 
+  <node name="Bone_AxeT_01" parent="objAxe1" translation="-92.3626, -41.572, 67.109" rotation="-0.200443, 0.732672, -0.405333, 0.508644" scale="1.0, 1.0, 1.0"/>
+
   <node name="sword_bone" translation="71.1313, 9.65912, 112.342" rotation="-0.193214, -0.574301, 0.725759, 0.325761" scale="1.0, 1.0, 1.0"/>
 
   <triMesh name="objsword1" parent="sword_bone" translation="-21.4902, 122.403, 36.7237" rotation="0.24919, 0.564191, -0.607811, 0.500158" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="weapons_skin.png" transparent="false">
@@ -12809,5 +12811,353 @@
     <vertex location="26.0684, 104.414, 140.169" normal="0.393113, -0.14635, 0.907769" tcoords="0.281279, 0.241362"/>
     <vertex location="29.8647, 106.407, 138.847" normal="0.393113, -0.146349, 0.907769" tcoords="0.281279, 0.241362"/>
   </triMesh>
+
+  <node name="Bone_SwordT_01" parent="objsword1" translation="60.9652, 25.9956, 113.637" rotation="-0.209775, -0.55672, 0.60339, 0.531016" scale="2.79994, 1.0, 1.0"/>
+
+  <skinMesh name="Axe_Trail" translation="0.793324, -93.7279, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blur.png" transparent="true">
+    <vertex location="-121.222, -5.89004, 160.842" normal="0.882705, -0.4596, 0.0979801" tcoords="0.0, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-107.814, 17.528, 149.891" normal="0.882705, -0.459599, 0.0979803" tcoords="0.0, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-119.658, 0.797241, 178.121" normal="0.886022, -0.448405, 0.117885" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-104.312, 26.63, 161.035" normal="0.886712, -0.446801, 0.118788" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-119.658, 0.797241, 178.121" normal="0.886022, -0.448405, 0.117885" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-107.814, 17.528, 149.891" normal="0.882705, -0.459599, 0.0979803" tcoords="0.0, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-119.658, 0.797241, 178.121" normal="0.886022, -0.448405, 0.117885" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-104.312, 26.63, 161.035" normal="0.886712, -0.446801, 0.118788" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-115.143, 16.8866, 200.156" normal="0.892569, -0.424629, 0.151695" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-102.644, 37.4153, 183.846" normal="0.895128, -0.418601, 0.153357" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-115.143, 16.8866, 200.156" normal="0.892569, -0.424629, 0.151695" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-104.312, 26.63, 161.035" normal="0.886712, -0.446801, 0.118788" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-115.143, 16.8866, 200.156" normal="0.892569, -0.424629, 0.151695" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-102.644, 37.4153, 183.846" normal="0.895128, -0.418601, 0.153357" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-108.583, 39.0156, 219.336" normal="0.897169, -0.414478, 0.152629" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-99.58, 52.9667, 203.667" normal="0.899452, -0.410173, 0.150812" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-108.583, 39.0156, 219.336" normal="0.897169, -0.414478, 0.152629" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-102.644, 37.4153, 183.846" normal="0.895128, -0.418601, 0.153357" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-108.583, 39.0156, 219.336" normal="0.897169, -0.414478, 0.152629" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-99.58, 52.9667, 203.667" normal="0.899452, -0.410173, 0.150812" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-99.3852, 62.2502, 232.699" normal="0.89469, -0.42717, 0.130594" tcoords="1.0, 1.0">
+      <boneWeight bone="Bone_AxeT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="-94.3331, 69.8106, 222.648" normal="0.895548, -0.425532, 0.130065" tcoords="1.0, 0.0">
+      <boneWeight bone="Bone_AxeT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="-99.3852, 62.2502, 232.699" normal="0.89469, -0.42717, 0.130594" tcoords="1.0, 1.0">
+      <boneWeight bone="Bone_AxeT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="-99.58, 52.9667, 203.667" normal="0.899452, -0.410173, 0.150812" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-107.933, 17.5903, 149.878" normal="-0.882705, 0.459599, -0.0979803" tcoords="0.0, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-121.342, -5.8278, 160.829" normal="-0.882705, 0.4596, -0.0979801" tcoords="0.0, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-119.778, 0.859481, 178.108" normal="-0.886022, 0.448405, -0.117885" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-119.778, 0.859481, 178.108" normal="-0.886022, 0.448405, -0.117885" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-104.431, 26.6923, 161.022" normal="-0.886712, 0.446801, -0.118788" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-107.933, 17.5903, 149.878" normal="-0.882705, 0.459599, -0.0979803" tcoords="0.0, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-104.431, 26.6923, 161.022" normal="-0.886712, 0.446801, -0.118788" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-119.778, 0.859481, 178.108" normal="-0.886022, 0.448405, -0.117885" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-115.263, 16.9488, 200.142" normal="-0.892569, 0.424629, -0.151695" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-115.263, 16.9488, 200.142" normal="-0.892569, 0.424629, -0.151695" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-102.764, 37.4775, 183.833" normal="-0.895128, 0.418601, -0.153357" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-104.431, 26.6923, 161.022" normal="-0.886712, 0.446801, -0.118788" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-102.764, 37.4775, 183.833" normal="-0.895128, 0.418601, -0.153357" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-115.263, 16.9488, 200.142" normal="-0.892569, 0.424629, -0.151695" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-108.703, 39.0779, 219.323" normal="-0.897169, 0.414478, -0.152629" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-108.703, 39.0779, 219.323" normal="-0.897169, 0.414478, -0.152629" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-99.6996, 53.029, 203.654" normal="-0.899452, 0.410173, -0.150812" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-102.764, 37.4775, 183.833" normal="-0.895128, 0.418601, -0.153357" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_AxeT_01" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-99.6996, 53.029, 203.654" normal="-0.899452, 0.410173, -0.150812" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-108.703, 39.0779, 219.323" normal="-0.897169, 0.414478, -0.152629" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-99.5047, 62.3125, 232.685" normal="-0.89469, 0.42717, -0.130594" tcoords="1.0, 1.0">
+      <boneWeight bone="Bone_AxeT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="-99.5047, 62.3125, 232.685" normal="-0.89469, 0.42717, -0.130594" tcoords="1.0, 1.0">
+      <boneWeight bone="Bone_AxeT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="-94.4526, 69.8729, 222.635" normal="-0.895548, 0.425532, -0.130065" tcoords="1.0, 0.0">
+      <boneWeight bone="Bone_AxeT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="-99.6996, 53.029, 203.654" normal="-0.899452, 0.410173, -0.150812" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_AxeT_02" weight="0.75"/>
+      <boneWeight bone="Bone_AxeT_01" weight="0.25"/>
+    </vertex>
+  </skinMesh>
+
+  <skinMesh name="Sword_Trail" translation="0.793324, -154.34, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blur.png" transparent="true">
+    <vertex location="-28.8829, 258.104, 121.191" normal="-0.634587, -0.703039, 0.320991" tcoords="0.0, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="49.4792, 178.948, 102.741" normal="-0.634587, -0.703039, 0.320991" tcoords="0.0, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-35.4474, 271.109, 136.695" normal="-0.634588, -0.703039, 0.32099" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="65.4131, 169.226, 112.948" normal="-0.634588, -0.703039, 0.32099" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-35.4474, 271.109, 136.695" normal="-0.634588, -0.703039, 0.32099" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="49.4792, 178.948, 102.741" normal="-0.634587, -0.703039, 0.320991" tcoords="0.0, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-35.4474, 271.109, 136.695" normal="-0.634588, -0.703039, 0.32099" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="65.4131, 169.226, 112.948" normal="-0.634588, -0.703039, 0.32099" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-24.8683, 271.984, 159.528" normal="-0.634588, -0.703039, 0.32099" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="71.8309, 174.305, 136.76" normal="-0.634588, -0.703039, 0.32099" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-24.8683, 271.984, 159.528" normal="-0.634588, -0.703039, 0.32099" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="65.4131, 169.226, 112.948" normal="-0.634588, -0.703039, 0.32099" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-24.8683, 271.984, 159.528" normal="-0.634588, -0.703039, 0.32099" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="71.8309, 174.305, 136.76" normal="-0.634588, -0.703039, 0.32099" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-6.37469, 264.865, 180.496" normal="-0.634588, -0.703039, 0.32099" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="70.3342, 187.379, 162.435" normal="-0.634587, -0.703039, 0.32099" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-6.37469, 264.865, 180.496" normal="-0.634588, -0.703039, 0.32099" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="71.8309, 174.305, 136.76" normal="-0.634588, -0.703039, 0.32099" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-6.37469, 264.865, 180.496" normal="-0.634588, -0.703039, 0.32099" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="70.3342, 187.379, 162.435" normal="-0.634587, -0.703039, 0.32099" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="19.0757, 250.719, 199.827" normal="-0.634587, -0.703039, 0.320991" tcoords="1.0, 1.0">
+      <boneWeight bone="Bone_SwordT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="61.8808, 207.48, 189.748" normal="-0.634587, -0.703039, 0.320991" tcoords="1.0, 0.0">
+      <boneWeight bone="Bone_SwordT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="19.0757, 250.719, 199.827" normal="-0.634587, -0.703039, 0.320991" tcoords="1.0, 1.0">
+      <boneWeight bone="Bone_SwordT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="70.3342, 187.379, 162.435" normal="-0.634587, -0.703039, 0.32099" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="49.5245, 178.999, 102.718" normal="0.634587, 0.703039, -0.320991" tcoords="0.0, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-28.8376, 258.155, 121.168" normal="0.634588, 0.703039, -0.32099" tcoords="0.0, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-35.4021, 271.159, 136.673" normal="0.634587, 0.703039, -0.32099" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-35.4021, 271.159, 136.673" normal="0.634587, 0.703039, -0.32099" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="65.4584, 169.276, 112.925" normal="0.634588, 0.703039, -0.32099" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="49.5245, 178.999, 102.718" normal="0.634587, 0.703039, -0.320991" tcoords="0.0, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="65.4584, 169.276, 112.925" normal="0.634588, 0.703039, -0.32099" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-35.4021, 271.159, 136.673" normal="0.634587, 0.703039, -0.32099" tcoords="0.25, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="-24.823, 272.035, 159.505" normal="0.634587, 0.703039, -0.320991" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-24.823, 272.035, 159.505" normal="0.634587, 0.703039, -0.320991" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="71.8762, 174.355, 136.737" normal="0.634588, 0.703039, -0.32099" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="65.4584, 169.276, 112.925" normal="0.634588, 0.703039, -0.32099" tcoords="0.25, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="1.0"/>
+    </vertex>
+    <vertex location="71.8762, 174.355, 136.737" normal="0.634588, 0.703039, -0.32099" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-24.823, 272.035, 159.505" normal="0.634587, 0.703039, -0.320991" tcoords="0.5, 1.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="-6.32939, 264.915, 180.473" normal="0.634588, 0.703039, -0.32099" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-6.32939, 264.915, 180.473" normal="0.634588, 0.703039, -0.32099" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="70.3795, 187.429, 162.412" normal="0.634588, 0.703039, -0.320991" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="71.8762, 174.355, 136.737" normal="0.634588, 0.703039, -0.32099" tcoords="0.5, 0.0">
+      <boneWeight bone="Bone_SwordT_01" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_02" weight="0.25"/>
+    </vertex>
+    <vertex location="70.3795, 187.429, 162.412" normal="0.634588, 0.703039, -0.320991" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="-6.32939, 264.915, 180.473" normal="0.634588, 0.703039, -0.32099" tcoords="0.75, 1.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+    <vertex location="19.121, 250.769, 199.804" normal="0.634588, 0.703039, -0.32099" tcoords="1.0, 1.0">
+      <boneWeight bone="Bone_SwordT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="19.121, 250.769, 199.804" normal="0.634588, 0.703039, -0.32099" tcoords="1.0, 1.0">
+      <boneWeight bone="Bone_SwordT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="61.9261, 207.53, 189.726" normal="0.634588, 0.703039, -0.32099" tcoords="1.0, 0.0">
+      <boneWeight bone="Bone_SwordT_02" weight="1.0"/>
+    </vertex>
+    <vertex location="70.3795, 187.429, 162.412" normal="0.634588, 0.703039, -0.320991" tcoords="0.75, 0.0">
+      <boneWeight bone="Bone_SwordT_02" weight="0.75"/>
+      <boneWeight bone="Bone_SwordT_01" weight="0.25"/>
+    </vertex>
+  </skinMesh>
+
+  <node name="Bone_SwordT_02" translation="90.8463, 24.703, 183.16" rotation="-0.158387, -0.56073, 0.728599, 0.360054" scale="2.79994, 1.0, 1.0"/>
+
+  <node name="Bone_AxeT_02" translation="-86.8265, -14.0302, 208.546" rotation="0.5543, -0.379159, 0.735621, -0.0886112" scale="1.0, 1.0, 1.0"/>
 
 </model>
