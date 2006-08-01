@@ -1347,8 +1347,11 @@ public class BoardView extends BComponent
             if (notReallyAHit(pdata)) {
                 continue;
             }
-            TerrainNode.Highlight highlight =
-                (TerrainNode.Highlight)pdata.getTargetMesh().getParentGeom();
+            Spatial hit = pdata.getTargetMesh().getParentGeom();
+            if (!(hit instanceof TerrainNode.Highlight)) {
+                continue;
+            }
+            TerrainNode.Highlight highlight = (TerrainNode.Highlight)hit;
             float hdist = FastMath.sqr(camloc.x - highlight.x) +
                 FastMath.sqr(camloc.y - highlight.y);
             if (hdist < dist) {

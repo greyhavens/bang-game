@@ -673,6 +673,8 @@ public class BangBoard extends SimpleStreamableObject
                 int pos = _width*yy+xx;
                 _tstate[pos] = tvalue;
                 _btstate[pos] = tvalue;
+                _dstate[pos] = 0;
+                _estate[pos] = 0;
             }
         }
         
@@ -1025,6 +1027,9 @@ public class BangBoard extends SimpleStreamableObject
     {
         if (sx == dx && sy == dy) {
             return true;
+        }
+        if (!_playarea.contains(sx, sy) || !_playarea.contains(dx, dy)) {
+            return false;
         }
         int dir = (sx == dx) ? (dy > sy ? NORTH : SOUTH) :
                                (dx < sx ? EAST : WEST);

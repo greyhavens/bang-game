@@ -136,6 +136,7 @@ public class EditorBoardView extends BoardView
         // make sure highlights are reset to new size
         _hnode.detachAllChildren();
         _highlights = null;
+        _crosslights = null;
         updateHighlights();
         
         // clear out the undo stack
@@ -967,26 +968,47 @@ public class EditorBoardView extends BoardView
             _highlights = new TerrainNode.Highlight[_board.getWidth()][
                 _board.getHeight()];
         }
+        if (_crosslights == null) {
+            _crosslights = new CrossStatus[_board.getWidth()][
+                _board.getHeight()];
+        }
         _board.shadowPieces(
                 new FilterPieceIterator(_bangobj.pieces.iterator()), 
                 x1, y1, 1 + x2 - x1,
             1 + y2 - y1);
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
-                if (_showHighlights && !_board.isOccupiable(x, y)) {
-                    if (_highlights[x][y] == null) {
-                        _highlights[x][y] = _tnode.createHighlight(x, y,
-                            false);
-                        _highlights[x][y].setDefaultColor(HIGHLIGHT_COLOR);
+                if (_showHighlights) {
+                    if (!_board.isOccupiable(x, y)) {
+                        if (_highlights[x][y] == null) {
+                            _highlights[x][y] = _tnode.createHighlight(x, y,
+                                false);
+                            _highlights[x][y].setDefaultColor(HIGHLIGHT_COLOR);
+                        }
+                        _highlights[x][y].updateVertices();
+                        if (_highlights[x][y].getParent() == null) {
+                            _hnode.attachChild(_highlights[x][y]);
+                        }
                     }
-                    _highlights[x][y].updateVertices();
-                    if (_highlights[x][y].getParent() == null) {
-                        _hnode.attachChild(_highlights[x][y]);
+                    if (_crosslights[x][y] == null) {
+                        _crosslights[x][y] = new CrossStatus(_ctx, 
+                                _tnode.createHighlight(x, y, false));
+                        _crosslights[x][y].setDefaultColor(CROSS_COLOR);
+                    }
+                    if (_crosslights[x][y].update(_bangobj.board, x, y) &&
+                            _crosslights[x][y].getParent() == null) {
+                        _hnode.attachChild(_crosslights[x][y]);
                     }
 
-                } else if (_highlights[x][y] != null &&
-                    _highlights[x][y].getParent() != null) {
-                    _hnode.detachChild(_highlights[x][y]);
+                } else {
+                    if (_highlights[x][y] != null &&
+                        _highlights[x][y].getParent() != null) {
+                        _hnode.detachChild(_highlights[x][y]);
+                    }
+                    if (_crosslights[x][y] != null &&
+                            _crosslights[x][y].getParent() != null) {
+                        _hnode.detachChild(_crosslights[x][y]);
+                    }
                 }
             }
         }
@@ -1255,6 +1277,9 @@ public class EditorBoardView extends BoardView
     /** Highlights indicating which tiles are occupiable. */
     protected TerrainNode.Highlight[][] _highlights;
 
+    /** Highlights which tile edges can be crossed. */
+    protected CrossStatus[][] _crosslights;
+
     /** Whether or not to show the highlights. */
     protected boolean _showHighlights;
 
@@ -1268,4 +1293,8 @@ public class EditorBoardView extends BoardView
     /** The color to use for highlights. */
     protected static final ColorRGBA HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0f, 0f, 0.25f);
+
+    /** The color to use for crosslights. */
+    protected static final ColorRGBA CROSS_COLOR =
+        new ColorRGBA(1f, 0f, 1f, 0.25f);
 }
