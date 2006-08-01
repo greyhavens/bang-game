@@ -234,13 +234,20 @@ public abstract class ScenarioInfo
         register(new LandGrabInfo());
         register(new CattleRustlingInfo());
         register(new ClaimJumpingInfo());
+        register(new GoldRushInfo());
 
         // indian trading post scenarios
         register(new WendigoAttackInfo());
         register(new TotemBuildingInfo());
         register(new ForestGuardiansInfo());
 
-        // boom town post scenarios
-//         register(new GoldRushInfo());
+        // boom town scenarios
+        // TBD
+
+        // ghost town scenarios
+        // TBD
+
+        // city of gold scenarios
+        // TBD
     }
 }

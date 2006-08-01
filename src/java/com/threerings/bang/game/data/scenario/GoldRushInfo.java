@@ -24,7 +24,7 @@ public class GoldRushInfo extends NuggetScenarioInfo
     @Override // from ScenarioInfo
     public String getTownId ()
     {
-        return BangCodes.BOOM_TOWN;
+        return BangCodes.FRONTIER_TOWN;
     }
 
     @Override // from ScenarioInfo
