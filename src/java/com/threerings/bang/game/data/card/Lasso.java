@@ -30,8 +30,7 @@ public class Lasso extends AreaCard
     @Override // documentation inherited
     public boolean isValidLocation (BangObject bangobj, int tx, int ty)
     {
-        if (!bangobj.board.containsBonus(tx, ty) ||
-            bangobj.countPlayerCards(owner) >= GameCodes.MAX_CARDS) {
+        if (!bangobj.board.containsBonus(tx, ty)) {
             return false;
         }
         for (Piece piece : bangobj.pieces) {

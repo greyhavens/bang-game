@@ -259,14 +259,15 @@ public class BangManager extends GameManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
+        // remove it from their list
+        _bangobj.removeFromCards(cardId);
+        
         log.info("Playing card: " + card);
         Effect effect = card.activate(_bangobj, target);
         if (effect == null || !deployEffect(card.owner, effect)) {
+            _bangobj.addToCards(card); // put it back in the hand
             throw new InvocationException(CARD_UNPLAYABLE);
         }
-
-        // remove it from their list
-        _bangobj.removeFromCards(cardId);
 
         // if this card was a starting card, note that it was consumed
         StartingCard scard = (StartingCard)_scards.get(cardId);
