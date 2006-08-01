@@ -26,9 +26,10 @@ public class InvitePardnerDialog extends OptionDialog
               new String[] { "m.invite", "m.cancel" }, null);
         _handle = handle;
         _receiver = this;
+
+        setRequiresString(300, "");
         // limit the length of the invite message, over 255 will break
         _input.setDocument(new LengthLimitedDocument(200));
-        setRequiresString(300, "");
     }
 
     // from interface OptionDialog.ResponseReceiver

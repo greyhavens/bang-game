@@ -7,13 +7,17 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.event.BEvent;
+import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
+import com.threerings.bang.client.PlayerPopupMenu;
 
 import com.threerings.bang.data.BangOccupantInfo;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
@@ -72,6 +76,27 @@ public class PlayerSlot extends AvatarView
     public ColorRGBA getColor ()
     {
         return _playerOid > 0 ? super.getColor() : GREY_ALPHA;
+    }
+
+    @Override // from BComponent
+    public boolean dispatchEvent (BEvent event)
+    {
+        if (event instanceof MouseEvent) {
+            MouseEvent mev = (MouseEvent)event;
+            if (mev.getType() == MouseEvent.MOUSE_PRESSED &&
+                mev.getButton() == MouseEvent.BUTTON2) {
+                BangOccupantInfo boi = (BangOccupantInfo)
+                    _ctx.getOccupantDirector().getOccupantInfo(_playerOid);
+                if (boi != null) {
+                    PlayerPopupMenu menu = new PlayerPopupMenu(
+                        _ctx, getWindow(), (Handle)boi.username);
+                    menu.popup(mev.getX(), mev.getY(), false);
+                    return true;
+                }
+            }
+        }
+
+        return super.dispatchEvent(event);
     }
 
     @Override // documentation inherited
