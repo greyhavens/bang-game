@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.client.MoveShootHandler;
 import com.threerings.bang.game.client.EffectHandler;
 
@@ -63,5 +64,11 @@ public class MoveShootEffect extends MoveEffect
     public EffectHandler createHandler (BangObject bangobj)
     {
         return new MoveShootHandler();
+    }
+    
+    @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        return shotEffect.getBaseDamage(piece);
     }
 }
