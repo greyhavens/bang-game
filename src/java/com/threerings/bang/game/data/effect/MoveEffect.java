@@ -32,14 +32,6 @@ public class MoveEffect extends Effect
     /** The old location of the piece. */
     public short ox, oy;
 
-    /**
-     * Returns the Manhattan distance moved.
-     */
-    public int getDistance ()
-    {
-        return Math.abs(nx - ox) + Math.abs(ny - oy);
-    }
-    
     @Override // documentation inherited
     public void init (Piece piece)
     {
