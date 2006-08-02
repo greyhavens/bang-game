@@ -20,12 +20,6 @@ import static com.threerings.bang.Log.log;
  */
 public class TrainEffect extends Effect
 {
-    /** The amount of damage taken by units hit by the train. */
-    public static final int COLLISION_DAMAGE = 50;
-    
-    /** The identifier for the type of effect that we produce. */
-    public static final String DAMAGED = "bang";
-
     /** The piece id of the target. */
     public int targetId;
 
@@ -95,13 +89,19 @@ public class TrainEffect extends Effect
         Piece target = bangobj.pieces.get(targetId);
         _wasAlive = (target != null) && target.isAlive();
         return collide(bangobj, obs, -1, targetId, COLLISION_DAMAGE,
-                       x, y, DAMAGED);
+                       x, y, ShotEffect.DAMAGED);
     }
 
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
         return new CollisionHandler(COLLISION_DAMAGE);
+    }
+    
+    @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        return COLLISION_DAMAGE;
     }
     
     @Override // documentation inherited
@@ -116,4 +116,7 @@ public class TrainEffect extends Effect
     
     /** Whether or not the piece was alive before the train hit it. */
     protected boolean _wasAlive;
+    
+    /** The amount of damage taken by units hit by the train. */
+    protected static final int COLLISION_DAMAGE = 50;
 }

@@ -18,6 +18,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.StampedeEffect;
 import com.threerings.bang.game.data.effect.TrainEffect;
 
@@ -95,7 +96,7 @@ public class StampedeHandler extends CollisionHandler
             }
             Effect.collide(_bangobj, StampedeHandler.this, _stampede.causer,
                            _collision.targetId, StampedeEffect.COLLISION_DAMAGE,
-                           _collision.x, _collision.y, StampedeEffect.DAMAGED);
+                           _collision.x, _collision.y, ShotEffect.DAMAGED);
         }
 
         protected StampedeEffect.Collision _collision;

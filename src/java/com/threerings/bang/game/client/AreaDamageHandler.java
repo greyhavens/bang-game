@@ -48,16 +48,6 @@ public class AreaDamageHandler extends EffectHandler
         return true;
     }
 
-    @Override // documentation inherited
-    public void pieceAffected (Piece piece, String effect)
-    {
-        super.pieceAffected(piece, effect);
-        if (effect.equals(AreaDamageEffect.MISSILED)) {
-            DamageIconViz.displayDamageIconViz(
-                    piece, ((AreaDamageEffect)_effect).baseDamage, _ctx, _view);
-        }
-    }
-
     protected void dropBomb ()
     {
         // drop the bomb at the center

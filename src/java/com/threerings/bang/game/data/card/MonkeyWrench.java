@@ -3,28 +3,30 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.UnitConfig;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
-import com.threerings.bang.game.data.effect.MisfireEffect;
+import com.threerings.bang.game.data.effect.MonkeyWrenchEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**
- * A card that allows the player to cause a unit's next shot to injure themself.
+ * A card that makes a unit take damage at every step moved.
  */
-public class Misfire extends Card
+public class MonkeyWrench extends Card
 {
     @Override // documentation inherited
     public String getType ()
     {
-        return "misfire";
+        return "monkey_wrench";
     }
 
     @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
         return (target instanceof Unit && target.isAlive() && 
-                ((Unit)target).getConfig().gunUser);
+                ((Unit)target).getConfig().make == UnitConfig.Make.STEAM);
     }
 
     @Override // documentation inherited
@@ -36,7 +38,7 @@ public class Misfire extends Card
     @Override // documenataion inherited
     public Effect activate (BangObject bangobj, Object target)
     {
-        MisfireEffect effect = new MisfireEffect();
+        MonkeyWrenchEffect effect = new MonkeyWrenchEffect();
         effect.pieceId = (Integer)target;
         return effect;
     }

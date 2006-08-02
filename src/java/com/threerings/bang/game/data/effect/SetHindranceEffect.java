@@ -5,6 +5,8 @@ package com.threerings.bang.game.data.effect;
 
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Hindrance;
 import com.threerings.bang.game.data.piece.Piece;
@@ -59,6 +61,17 @@ public abstract class SetHindranceEffect extends Effect
         return true;
     }
 
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        if (unit == null || unit.owner != pidx) {
+            return null;
+        }
+        String name = unit.hindrance.getName();
+        return (name == null) ? null : MessageBundle.compose(
+            "m.effect_influence", unit.getName(), "m.hindrance_" + name);
+    }
+    
     /** Creates the hindrance that will be applied to the target unit. */
     protected abstract Hindrance createHindrance (Unit target);
 

@@ -40,13 +40,10 @@ public class StampedeEffect extends Effect
 {
     /** The speed of the bison in tiles per second. */
     public static final float BISON_SPEED = 4f;
-
+        
     /** The amount of damage taken by units hit by bison. */
     public static final int COLLISION_DAMAGE = 50;
-
-    /** The identifier for the type of effect that we produce. */
-    public static final String DAMAGED = "bang";
-
+    
     /**
      * Represents a bison's collision with a unit.
      */
@@ -182,7 +179,7 @@ public class StampedeEffect extends Effect
                 collision.deathEffect.apply(bangobj, obs);
             }
             collide(bangobj, obs, causer, collision.targetId, COLLISION_DAMAGE,
-                    collision.x, collision.y, DAMAGED);
+                    collision.x, collision.y, ShotEffect.DAMAGED);
         }
 
         return true;
@@ -194,6 +191,12 @@ public class StampedeEffect extends Effect
         return new StampedeHandler();
     }
 
+    @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        return COLLISION_DAMAGE;
+    }
+    
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {

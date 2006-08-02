@@ -17,7 +17,6 @@ import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.RandomLogic;
-import com.threerings.bang.game.server.ai.WendigoLogic;
 
 import com.threerings.bang.game.data.BangObject;
 
@@ -78,7 +77,7 @@ public class WendigoAttack extends Scenario
     @Override // documentation inherited
     public AILogic createAILogic (GameAI ai)
     {
-        return new WendigoLogic(this);
+        return new RandomLogic();
     }
 
     @Override // documentation inherited

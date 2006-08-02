@@ -266,6 +266,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new Dud());
         register(new Misfire());
         register(new CatBallou());
+        register(new MonkeyWrench());
         
         // collect the weights of each card into an array used to select
         // randomly based on said weights

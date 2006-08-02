@@ -318,6 +318,12 @@ public class ShotEffect extends Effect
         return new InstantShotHandler();
     }
     
+    @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        return baseDamage;
+    }
+    
     /** The effect string. */
     protected String getEffect ()
     {

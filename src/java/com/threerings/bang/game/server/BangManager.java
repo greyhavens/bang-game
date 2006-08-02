@@ -1559,6 +1559,12 @@ public class BangManager extends GameManager
                 Stat.Type.SHOTS_FIRED, 1);
         }
 
+        // possibly generate a post-move effect
+        Effect peffect = unit.didMove(steps);
+        if (peffect != null) {
+            deployEffect(-1, peffect);
+        }
+        
         // interact with any pieces occupying our target space
         if (lappers != null) {
             for (Piece lapper : lappers) {

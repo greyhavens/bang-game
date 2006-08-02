@@ -86,6 +86,9 @@ public class DamageIconViz extends IconViz
             ShotEffect shot = (ShotEffect)effect;
             diviz = new DamageIconViz(iname, shot.baseDamage,
                     shot.attackIcon, shot.defendIcon);
+                    
+        } else {
+            diviz = new DamageIconViz(iname, effect.getBaseDamage(target));
         }
 
         if (diviz != null) {

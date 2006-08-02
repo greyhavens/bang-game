@@ -93,7 +93,17 @@ public class TreeBedEffect extends Effect
             return false;
         }
         bed.damage(damage);
-        reportEffect(observer, bed, UPDATED);
+        if (damage > 0) {
+            reportEffect(observer, bed, ShotEffect.DAMAGED);
+        } else {
+            reportEffect(observer, bed, UPDATED);
+        }
         return true;
+    }
+    
+    @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        return damage;
     }
 }

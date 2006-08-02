@@ -486,6 +486,14 @@ public class Unit extends Piece
     }
 
     /**
+     * Allows the unit to generate a post-move effect.
+     */
+    public Effect didMove (int steps)
+    {
+        return (hindrance == null) ? null : hindrance.didMove(steps);
+    }
+    
+    /**
      * Provides the unit with its configuration.
      */
     protected void init (UnitConfig config)

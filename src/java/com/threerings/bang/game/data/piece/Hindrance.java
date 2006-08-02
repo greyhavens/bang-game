@@ -25,8 +25,17 @@ public abstract class Hindrance extends Influence
         return null;
     }
 
-    public Effect affectTarget (Piece target)
+    /**
+     * Allows the hindrance to generate an effect as a result of the unit's
+     * having moved.
+     */
+    public Effect didMove (int steps)
     {
         return null;
     }
+    
+    public Effect affectTarget (Piece target)
+    {
+        return null;
+    }    
 }

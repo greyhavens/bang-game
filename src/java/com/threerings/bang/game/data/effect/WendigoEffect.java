@@ -188,6 +188,12 @@ public class WendigoEffect extends Effect
         return new WendigoHandler();
     }
 
+    @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        return 100;
+    }
+    
     /**
      * Create the path the wendigo takes.
      */

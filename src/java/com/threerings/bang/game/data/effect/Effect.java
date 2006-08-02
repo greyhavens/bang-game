@@ -290,6 +290,16 @@ public abstract class Effect extends SimpleStreamableObject
     }
     
     /**
+     * Returns the base amount of damage inflicted on the specified piece
+     * (that is, the amount before it's limited by the piece's remaining
+     * health).
+     */
+    public int getBaseDamage (Piece piece)
+    {
+        return 0;
+    }
+    
+    /**
      * Returns a translatable description of the effect to display on the
      * client, or <code>null</code> for none.
      *

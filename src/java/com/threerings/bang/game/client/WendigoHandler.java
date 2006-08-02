@@ -10,9 +10,8 @@ import com.threerings.bang.game.client.effect.DamageIconViz;
 import com.threerings.bang.game.client.sprite.WendigoSprite;
 
 import com.threerings.bang.game.data.effect.Effect;
-
+import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.StampedeEffect.Collision;
-
 import com.threerings.bang.game.data.effect.WendigoEffect;
 
 import com.threerings.bang.game.data.piece.Piece;
@@ -52,15 +51,6 @@ public class WendigoHandler extends EffectHandler
         return !isCompleted();
     }
 
-    @Override // documentation inherited
-    public void pieceAffected (Piece piece, String effect)
-    {
-        super.pieceAffected(piece, effect);
-        if (effect.equals(WendigoEffect.EATEN)) {
-            DamageIconViz.displayDamageIconViz(piece, 100, _ctx, _view);
-        }
-    }
-
     /**
      * Called to let the handler know the wendigo has finished moving.
      */
@@ -92,7 +82,7 @@ public class WendigoHandler extends EffectHandler
             Piece target = (Piece)_bangobj.pieces.get(_collision.targetId);
             if (target != null) {
                 Effect.damage(_bangobj, WendigoHandler.this, -1, target, 100,
-                        WendigoEffect.EATEN);
+                        ShotEffect.DAMAGED);
             }
         }
 

@@ -18,6 +18,7 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.SoundUtil;
 
+import com.threerings.bang.game.client.effect.DamageIconViz;
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.client.effect.ExplosionViz;
 import com.threerings.bang.game.client.effect.IconViz;
@@ -120,11 +121,11 @@ public class EffectHandler extends BoardView.BoardAction
         boolean wasDamaged = false;
         if (effect.equals(ShotEffect.DAMAGED)) {
             wasDamaged = true;
+            
         } else if (effect.equals(ShotEffect.EXPLODED)) {
             wasDamaged = true;
             _effviz = new ExplosionViz();
-        } else if (effect.equals(AreaDamageEffect.MISSILED)) {
-            wasDamaged = true;
+            
         } else if (effect.equals(RepairEffect.REPAIRED) ||
                    effect.equals(NuggetEffect.NUGGET_ADDED) ||
                    effect.equals(ResurrectEffect.RESURRECTED)) {
@@ -136,6 +137,11 @@ public class EffectHandler extends BoardView.BoardAction
             ((Targetable)sprite).setPendingShot(false);
         }
 
+        // display the damage icon/amount
+        if (wasDamaged || effect.equals(ShotEffect.DUDED)) {
+            DamageIconViz.displayDamageIconViz(piece, _effect, _ctx, _view);
+        }
+        
         // add wreck effect for steam-powered units
         if (wasDamaged && piece instanceof Unit &&
             ((Unit)piece).getConfig().make == UnitConfig.Make.STEAM &&

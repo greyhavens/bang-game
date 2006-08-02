@@ -28,7 +28,7 @@ public class CatBallou extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 30;
+        return 35;
     }
     
     @Override // documentation inherited
@@ -46,7 +46,7 @@ public class CatBallou extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 300;
+        return 150;
     }
 
     @Override // documentation inherited

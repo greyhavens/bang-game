@@ -17,9 +17,6 @@ import com.threerings.bang.game.data.piece.Piece;
  */
 public class AreaDamageEffect extends AreaEffect
 {
-    /** The identifier for the type of effect that we produce. */
-    public static final String MISSILED = "howdy";
-
     /** The index of the player causing the damage or -1. */
     public int causer;
 
@@ -97,6 +94,12 @@ public class AreaDamageEffect extends AreaEffect
     }
 
     @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        return getDamage(piece);
+    }
+    
+    @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
         String names = getPieceNames(bangobj, pidx, pieces);
@@ -120,6 +123,7 @@ public class AreaDamageEffect extends AreaEffect
         if (deathEffects[pidx] != null) {
             deathEffects[pidx].apply(bangobj, obs);
         }
-        damage(bangobj, obs, causer, piece, newDamage[pidx], MISSILED);
+        damage(bangobj, obs, causer, piece, newDamage[pidx],
+            ShotEffect.DAMAGED);
     }
 }

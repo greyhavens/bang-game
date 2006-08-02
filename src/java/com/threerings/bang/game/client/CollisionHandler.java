@@ -21,15 +21,6 @@ public class CollisionHandler extends EffectHandler
     }
 
     @Override // documentation inherited
-    public void pieceAffected (Piece piece, String effect)
-    {
-        super.pieceAffected(piece, effect);
-        if (effect.equals(TrainEffect.DAMAGED)) {
-            DamageIconViz.displayDamageIconViz(piece, _damage, _ctx, _view);
-        }
-    }
-
-    @Override // documentation inherited
     public void pieceMoved (Piece piece)
     {
         MobileSprite ms = null;

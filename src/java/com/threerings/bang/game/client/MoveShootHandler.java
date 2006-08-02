@@ -84,17 +84,6 @@ public class MoveShootHandler extends EffectHandler
     }
 
     @Override // documentation inherited
-    public void pieceAffected (Piece piece, String effect)
-    {
-        super.pieceAffected(piece, effect);
-        if (effect.equals(ShotEffect.DAMAGED) ||
-                effect.equals(ShotEffect.EXPLODED) ||
-                effect.equals(ShotEffect.DUDED)) {
-            DamageIconViz.displayDamageIconViz(piece, _shot, _ctx, _view);
-        }
-    }
-
-    @Override // documentation inherited
     public void pieceMoved (Piece piece)
     {
         MobileSprite ms = null;
