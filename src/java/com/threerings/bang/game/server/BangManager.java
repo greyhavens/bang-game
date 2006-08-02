@@ -2095,7 +2095,7 @@ public class BangManager extends GameManager
         
         } else if (_bconfig.allPlayersAIs()) {
             // fast ticks for auto-play test games
-            return 2000L;
+            return 1000L * _bangobj.getAverageUnitCount();
             
         } else {
             // start out with a base tick of two seconds and scale it down as

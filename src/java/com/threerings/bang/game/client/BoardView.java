@@ -1515,6 +1515,7 @@ public class BoardView extends BComponent
             this.tick = tick;
             this.pieceIds = new int[] { piece.pieceId };
             this.waiterIds = new int[0];
+            bounds = new Rectangle(piece.x, piece.y, 1, 1);
         }
 
         public boolean execute () {
