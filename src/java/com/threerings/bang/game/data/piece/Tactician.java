@@ -35,8 +35,7 @@ public class Tactician extends Unit
                                ShotEffect effect, float scale)
     {
         // we only deflect fire from range units
-        if (!(shooter instanceof Unit) || 
-                !(effect instanceof BallisticShotEffect)) {
+        if (!(shooter instanceof Unit) || !effect.isDeflectable()) {
             return effect;
         }
 

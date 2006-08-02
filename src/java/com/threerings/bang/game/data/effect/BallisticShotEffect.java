@@ -26,6 +26,12 @@ public class BallisticShotEffect extends ShotEffect
     }
 
     @Override // documentation inherited
+    public boolean isDeflectable ()
+    {
+        return true;
+    }
+    
+    @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
         return new BallisticShotHandler();

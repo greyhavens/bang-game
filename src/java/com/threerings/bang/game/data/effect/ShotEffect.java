@@ -154,6 +154,14 @@ public class ShotEffect extends Effect
     }
 
     /**
+     * Determines whether the shot can be deflected.
+     */
+    public boolean isDeflectable ()
+    {
+        return false;
+    }
+    
+    /**
      * Deflects this shot away from its original target, clearing out the
      * target information and appending the specified coordinates onto the
      * shot's path. It is assumed that there is no piece at those

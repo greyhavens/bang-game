@@ -22,6 +22,12 @@ public class NightmareShotEffect extends BallisticShotEffect
     }
 
     @Override // documentation inherited
+    public boolean isDeflectable ()
+    {
+        return false;
+    }
+    
+    @Override // documentation inherited
     public String getShotType ()
     {
         return "effects/indian_post/dream_catcher/nightmare";
