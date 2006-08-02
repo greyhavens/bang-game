@@ -97,6 +97,12 @@ public class FailedShotEffect extends ShotEffect
     }
     
     @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        return (piece.pieceId == shooterId) ? baseDamage : 0;
+    }
+    
+    @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(shooterId);
