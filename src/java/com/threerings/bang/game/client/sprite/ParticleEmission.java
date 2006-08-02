@@ -49,6 +49,12 @@ public class ParticleEmission extends SpriteEmission
     }
     
     @Override // documentation inherited
+    public boolean shouldAccumulate ()
+    {
+        return false;
+    }
+    
+    @Override // documentation inherited
     public void setSpriteRefs (
         BasicContext ctx, BoardView view, PieceSprite sprite)
     {
