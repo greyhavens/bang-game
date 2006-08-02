@@ -131,8 +131,8 @@ public class GoldLogic extends AILogic
             
         // or just try to find something to shoot 
         } else {
-            Piece target = getBestTarget(pieces, unit, attacks,
-                TARGET_EVALUATOR);
+            Piece target = getBestTarget(pieces, unit, attacks, 
+                    EMPTY_POINT_SET, TARGET_EVALUATOR);
             if (target != null) {
                 executeOrder(unit, Short.MAX_VALUE, 0, target);
             }
@@ -186,8 +186,8 @@ public class GoldLogic extends AILogic
      * unit will do, and the amount of damage the target has already taken. */
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
-        public int getWeight (
-                BangObject bangobj, Unit unit, Piece target, int dist) {
+        public int getWeight (BangObject bangobj, Unit unit, Piece target, 
+                int dist, PointSet preferredMoves) {
             boolean nuggeted = (target instanceof Unit && 
                     NuggetEffect.NUGGET_BONUS.equals(((Unit)target).holding)); 
             return (nuggeted ?  1000 : 0) +

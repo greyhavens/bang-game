@@ -108,10 +108,7 @@ public class Thunderbird extends Unit
                 }
             }
         } 
-        if (prefer != null) {
-            return prefer;
-        }
-        return spot;
+        return (prefer != null) ? prefer : spot;
     }
 
     @Override // documentation inherited

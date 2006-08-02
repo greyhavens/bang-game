@@ -402,7 +402,7 @@ public abstract class Piece extends SimpleStreamableObject
             if (tdist >= minfdist && tdist <= maxfdist &&
                 checkLineOfSight(board, x, y, target)) {
                 spot = new Point(x, y);
-                if (preferredSet.contains(x, y)) {
+                if (preferredSet.isEmpty() || preferredSet.contains(x, y)) {
                     return spot;
                 }
                 moves = 0;
@@ -437,10 +437,7 @@ public abstract class Piece extends SimpleStreamableObject
             }
         }
 
-        if (prefer != null) {
-            return prefer;
-        }
-        return spot;
+        return (prefer != null) ? prefer : spot; 
     }
 
     /**

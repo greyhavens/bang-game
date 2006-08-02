@@ -17,11 +17,14 @@ import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.RandomLogic;
+import com.threerings.bang.game.server.ai.WendigoLogic;
 
 import com.threerings.bang.game.data.BangObject;
+
 import com.threerings.bang.game.data.effect.CountEffect;
 import com.threerings.bang.game.data.effect.TalismanEffect;
 import com.threerings.bang.game.data.effect.WendigoEffect;
+
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Marker;
@@ -30,6 +33,7 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.Wendigo;
+
 import com.threerings.bang.game.data.scenario.WendigoAttackInfo;
 
 import com.threerings.bang.game.util.PieceSet;
@@ -74,7 +78,7 @@ public class WendigoAttack extends Scenario
     @Override // documentation inherited
     public AILogic createAILogic (GameAI ai)
     {
-        return new RandomLogic();
+        return new WendigoLogic(this);
     }
 
     @Override // documentation inherited
@@ -134,6 +138,14 @@ public class WendigoAttack extends Scenario
         if (survivals > 0) {
             user.stats.incrementStat(Stat.Type.WENDIGO_SURVIVALS, survivals);
         }
+    }
+
+    /**
+     * Returns the set of safe points on the board.
+     */
+    public PointSet getSafePoints ()
+    {
+        return _safePoints;
     }
 
     protected class WendigoDelegate extends CounterDelegate

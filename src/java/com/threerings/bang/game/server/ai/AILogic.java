@@ -196,8 +196,8 @@ public abstract class AILogic
      * Finds and returns the best target that the unit can reach according to
      * the provided evaluator.
      */
-    protected Piece getBestTarget (
-        Piece[] pieces, Unit unit, PointSet attacks, TargetEvaluator evaluator)
+    protected Piece getBestTarget (Piece[] pieces, Unit unit, PointSet attacks,
+            PointSet preferredMoves, TargetEvaluator evaluator)
     {
         Piece best = null;
         int bweight = -1;
@@ -207,7 +207,7 @@ public abstract class AILogic
                 continue;
             }
             int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], 
-                    pieces[ii].getDistance(unit.x, unit.y));
+                    pieces[ii].getDistance(unit.x, unit.y), preferredMoves);
             if (tweight > bweight) {
                 best = pieces[ii];
                 bweight = tweight;
@@ -234,7 +234,8 @@ public abstract class AILogic
                 dist > unit.getMaxFireDistance()) {
                 continue;
             }
-            int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], dist);
+            int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], dist,
+                    EMPTY_POINT_SET);
             if (tweight > bweight) {
                 best = pieces[ii];
                 bweight = tweight;
@@ -254,8 +255,8 @@ public abstract class AILogic
     protected interface TargetEvaluator
     {
         /** Returns the weight of the specified target for the given unit. */
-        public int getWeight (
-                BangObject bangobj, Unit unit, Piece target, int dist);
+        public int getWeight (BangObject bangobj, Unit unit, Piece target, 
+                int dist, PointSet preferredMoves);
     }
     
     /** The game manager. */
@@ -269,4 +270,6 @@ public abstract class AILogic
     
     /** Used to compute a unit's potential moves or attacks. */
     protected PointSet _moves = new PointSet(), _attacks = new PointSet();
+
+    protected static final PointSet EMPTY_POINT_SET = new PointSet();
 }

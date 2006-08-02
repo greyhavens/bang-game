@@ -120,7 +120,7 @@ public class TotemLogic extends AILogic
         // or just try to find something to shoot
         } else {
             Piece target = getBestTarget(pieces, unit, attacks,
-                TARGET_EVALUATOR);
+                EMPTY_POINT_SET, TARGET_EVALUATOR);
             if (target != null) {
                 executeOrder(unit, Short.MAX_VALUE, 0, target);
             }
@@ -172,8 +172,8 @@ public class TotemLogic extends AILogic
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
 
-        public int getWeight (
-                BangObject bangobj, Unit unit, Piece target, int dist) {
+        public int getWeight (BangObject bangobj, Unit unit, Piece target, 
+                int dist, PointSet preferredMoves) {
             // don't go an shoot the totem we just put our piece on
             if ((target instanceof TotemBase) && TotemBonus.isHolding(unit) &&
                     dist == 1) {

@@ -82,8 +82,8 @@ public class ForestGuardiansLogic extends AILogic
     /** Only targets logging robots.  Prefers ones with more damage. */
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
-        public int getWeight (
-                BangObject bangobj, Unit unit, Piece target, int dist) {
+        public int getWeight (BangObject bangobj, Unit unit, Piece target, 
+                int dist, PointSet preferredMoves) {
             return (target.owner == -1) ? (1 + target.damage) : -1;
         }
     };
