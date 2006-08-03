@@ -25,7 +25,7 @@ public abstract class AreaCard extends Card
     {
         int r2 = getRadius() * getRadius();
         for (Piece p : bangobj.pieces) {
-            if (p instanceof Unit && p.isAlive() && 
+            if (p.isTargetable() && p.isAlive() && 
                     MathUtil.distanceSq(p.x, p.y, tx, ty) <= r2) {
                 return true;
             }

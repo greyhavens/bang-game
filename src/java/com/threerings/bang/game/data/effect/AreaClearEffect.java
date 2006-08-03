@@ -7,6 +7,7 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 
 /**
  * An effect that clears out all dead units within a certain area.
@@ -28,7 +29,7 @@ public class AreaClearEffect extends AreaEffect
     @Override // documentation inherited
     protected boolean isPieceAffected (Piece piece)
     {
-        return (piece.owner >= 0 && !piece.isAlive());
+        return (piece instanceof Unit && !piece.isAlive());
     }
 
     @Override // documentation inherited

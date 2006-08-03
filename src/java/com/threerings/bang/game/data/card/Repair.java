@@ -22,7 +22,7 @@ public class Repair extends Card
     @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
-        return (target.isTargetable());
+        return (target.isTargetable() && target.isAlive());
     }
 
     @Override // documentation inherited

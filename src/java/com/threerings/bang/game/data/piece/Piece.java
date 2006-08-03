@@ -656,7 +656,7 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Returns true if this piece can be targetted.
+     * Returns true if this piece can be targeted.
      */
     public boolean isTargetable ()
     {

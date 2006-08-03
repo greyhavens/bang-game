@@ -95,7 +95,7 @@ public abstract class AreaEffect extends Effect
      */
     protected boolean isPieceAffected (Piece piece)
     {
-        return (piece instanceof Unit && piece.owner >= 0 && piece.isAlive());
+        return piece.isAlive() && piece.isTargetable();
     }
 
     /**
