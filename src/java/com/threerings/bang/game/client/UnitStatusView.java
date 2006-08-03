@@ -97,7 +97,7 @@ public class UnitStatusView extends BWindow
         // if this unit was hijacked from another player, or a duplicate,
         // remove this label
         if (((Unit)usprite.getPiece()).originalOwner != _pidx) {
-            remove(ulabel);
+            _labels.remove(ulabel);
             resort();
             reposition();
         }
