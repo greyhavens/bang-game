@@ -316,10 +316,17 @@ public class Unit extends Piece
             effect.init(this);
             effects.add(effect);
         }
-        if (hindrance != null && hindrance.isExpired(tick)) {
-            ExpireHindranceEffect effect = new ExpireHindranceEffect();
-            effect.init(this);
-            effects.add(effect);
+        if (hindrance != null) {
+            if (hindrance.isExpired(tick)) {
+                ExpireHindranceEffect effect = new ExpireHindranceEffect();
+                effect.init(this);
+                effects.add(effect);
+            } else {
+                Effect effect = hindrance.tick();
+                if (effect != null) {
+                    effects.add(effect);
+                }
+            }
         }
         return effects;
     }

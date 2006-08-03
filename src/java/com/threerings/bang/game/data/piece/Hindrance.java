@@ -34,6 +34,14 @@ public abstract class Hindrance extends Influence
         return null;
     }
     
+    /**
+     * Allows the hindrance to generate an effect on the tick.
+     */
+    public Effect tick ()
+    {
+        return null;
+    }
+    
     public Effect affectTarget (Piece target)
     {
         return null;
