@@ -750,7 +750,7 @@ public class BangBoardView extends BoardView
         // action
         if (!_bconfig.tutorial) {
             if (_bangobj.tick < 0) {
-                Point corner = getStartCorner(piece.owner);
+                Point corner = getStartCorner(piece);
                 sprite.setLocation(_board, corner.x, corner.y);
             } else {
                 sprite.queueAction(MobileSprite.RESPAWNED);
@@ -784,7 +784,7 @@ public class BangBoardView extends BoardView
         Camera camera = _ctx.getRenderer().getCamera();
         for (UnitSprite sprite : _readyUnits) {
             Piece unit = sprite.getPiece();
-            Point corner = getStartCorner(unit.owner);
+            Point corner = getStartCorner(unit);
             final List<java.awt.Point> path = AStarPathUtil.getPath(
                 _tpred, unit.getStepper(), unit, _board.getWidth() / 2,
                 corner.x, corner.y, unit.x, unit.y, false);
@@ -842,17 +842,30 @@ public class BangBoardView extends BoardView
     }
 
     /**
-     * Returns the corner of the board nearest to the specified player's start
-     * position.
+     * Returns the corner of the board from which the specified piece
+     * should emerge.
      */
-    protected Point getStartCorner (int pidx)
+    protected Point getStartCorner (Piece piece)
     {
-        StreamablePoint pt = _bangobj.startPositions[pidx];
-        return new Point(
-            (pt.x < _board.getWidth() / 2) ? 0 : _board.getWidth() - 1,
-            (pt.y < _board.getHeight() / 2) ? 0 : _board.getHeight() - 1);
+        if (piece.owner != -1) {
+            StreamablePoint pt = _bangobj.startPositions[piece.owner];
+            return getNearestCorner(pt.x, pt.y);
+        } else {
+            return getNearestCorner(piece.x, piece.y);
+        }
     }
 
+    /**
+     * Returns the location of the corner of the board nearest to the
+     * given coordinates.
+     */
+    protected Point getNearestCorner (int x, int y)
+    {
+        return new Point(
+            (x < _board.getWidth() / 2) ? 0 : _board.getWidth() - 1,
+            (y < _board.getHeight() / 2) ? 0 : _board.getHeight() - 1);
+    }
+    
     /** Called by the {@link EffectHandler} when a piece was affected. */
     protected void pieceWasAffected (Piece piece, String effect)
     {

@@ -140,6 +140,16 @@ public class ForestGuardians extends Scenario
         {
             _rlogic = new LoggingRobotLogic();
             _rlogic.init(_bangmgr, -1);
+            
+            // count trees and spawn initial bots
+            for (Piece piece : bangobj.pieces) {
+                if (piece instanceof TreeBed) {
+                    _rtarget += LOGGING_ROBOTS_PER_TREE;
+                }
+            }
+            for (int ii = 0; ii < _rtarget; ii++) {
+                spawnRobot(bangobj);
+            }
         }
         
         @Override // documentation inherited
@@ -148,18 +158,16 @@ public class ForestGuardians extends Scenario
             // update bots according to logic
             _rlogic.tick(bangobj.getPieceArray(), tick);
             
-            // count trees and bots
-            int tcount = 0, bcount = 0;
+            // count bots
+            int rcount = 0;
             for (Piece piece : bangobj.pieces) {
-                if (piece instanceof TreeBed && ((TreeBed)piece).growth > 0) {
-                    tcount++;
-                } else if (piece instanceof LoggingRobot && piece.isAlive()) {
-                    bcount++;
+                if (piece instanceof LoggingRobot && piece.isAlive()) {
+                    rcount++;
                 }
             }
             
             // consider spawning another bot
-            if (bcount < tcount * LOGGING_ROBOTS_PER_TREE &&
+            if (rcount < _rtarget &&
                 RandomUtil.getInt(100) < 100 / AVG_ROBOT_SPAWN_DELAY) {
                 spawnRobot(bangobj);
             }
@@ -191,6 +199,9 @@ public class ForestGuardians extends Scenario
         
         /** The logic used to control the robots. */
         protected LoggingRobotLogic _rlogic;
+        
+        /** The number of robots to keep alive. */
+        protected int _rtarget;
     }
     
     /** Controls the behavior of the logging robots. */
