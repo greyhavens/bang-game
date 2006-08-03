@@ -110,10 +110,11 @@ public class WendigoLogic extends AILogic
         // if in danger try to run to safety
         if (inDanger && !holdingTalisman && !preferredMoves.isEmpty()) {
             // find someone to shoot while moving to safety
+            Point move = new Point();
             Piece target = getBestTargetInMoves(pieces, unit, attacks,
-                    preferredMoves, TARGET_EVALUATOR);
+                    preferredMoves, move, TARGET_EVALUATOR);
             if (target != null) {
-                executeOrder(unit, Short.MAX_VALUE, 0, target);
+                executeOrder(unit, move.x, move.y, target);
 
             // if we can't find someone to shoot, just move to safety
             } else {
@@ -189,32 +190,6 @@ public class WendigoLogic extends AILogic
         return (target != null) && 
             moveUnit(pieces, unit, moves, target.x, target.y, TARGET_EVALUATOR);
     }
-
-    /**
-     * Returns the best target that can be reached with the supplied
-     * destination moves and evaluator.
-     */
-    protected Piece getBestTargetInMoves (Piece[] pieces, Unit unit,
-            PointSet attacks, PointSet moves, TargetEvaluator evaluator)
-    {
-        Piece best = null;
-        int bweight = -1;
-        for (Piece p : pieces) {
-            if (!unit.validTarget(p, false) || !attacks.contains(p.x, p.y) ||
-                    unit.computeShotLocation(
-                        _bangobj.board, p, moves, true) == null) {
-                continue;
-            }
-            int tweight = evaluator.getWeight(_bangobj, unit, p,
-                    p.getDistance(unit.x, unit.y), EMPTY_POINT_SET);
-            if (tweight > bweight) {
-                best = p;
-                bweight = tweight;
-            }
-        }
-        return best;
-    }
-        
 
     /** Ranks units by properties that should make them good at getting to safe 
      * zones: speed and attack power. */

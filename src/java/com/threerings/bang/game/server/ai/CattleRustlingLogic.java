@@ -58,7 +58,7 @@ public class CattleRustlingLogic extends AILogic
         }
         // find out if we can spook any cows towards the herd (including ones
         // we own; we don't want them straying too far)
-        Point herd = getHerdCenter(pieces);
+        Point herd = getControlCenter(pieces);
         Unit bshot = null;
         Cow ccow = null;
         Piece ctarget = null;
@@ -154,7 +154,7 @@ public class CattleRustlingLogic extends AILogic
     {
         // among the cows that we haven't already branded, find the closest
         // and any that we can reach right now
-        Point herd = getHerdCenter(pieces);
+        Point herd = getControlCenter(pieces);
         Cow ccow = null;
         Piece ctarget = null;
         _sresults.clear();
@@ -198,26 +198,6 @@ public class CattleRustlingLogic extends AILogic
         Point dest = best.getKey();
         executeOrder(unit, dest.x, dest.y,
             getBestTarget(pieces, unit, dest.x, dest.y, TARGET_EVALUATOR));
-    }
-    
-    /**
-     * Computes and returns the average location of all of our (living) units
-     * and cows.
-     */
-    protected Point getHerdCenter (Piece[] pieces)
-    {
-        Point center = new Point();
-        int owned = 0;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii].owner == _pidx && pieces[ii].isAlive()) {
-                center.x += pieces[ii].x;
-                center.y += pieces[ii].y;
-                owned++;
-            }
-        }
-        center.x /= owned;
-        center.y /= owned;
-        return center;
     }
     
     /**
@@ -299,14 +279,6 @@ public class CattleRustlingLogic extends AILogic
             }
             return towards - oresult.towards;
         }
-    }
-    
-    /**
-     * Computes and returns the Manhattan distance between two points.
-     */
-    protected static int getDistance (Point p, int x, int y)
-    {
-        return Math.abs(p.x - x) + Math.abs(p.y - y);
     }
     
     /** Used to store spook results by location. */

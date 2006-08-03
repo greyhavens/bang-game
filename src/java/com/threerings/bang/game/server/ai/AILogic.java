@@ -243,6 +243,59 @@ public abstract class AILogic
         }
         return best;
     }
+
+    /**
+     * Returns the best target that can be reached with the supplied
+     * destination moves and evaluator.
+     *
+     * @param dest will be set to the location to move to for the target
+     * if one is found
+     */
+    protected Piece getBestTargetInMoves (
+            Piece[] pieces, Unit unit, PointSet attacks, PointSet moves,
+            Point dest, TargetEvaluator evaluator)
+    {
+        Piece best = null;
+        int bweight = -1;
+        for (Piece p : pieces) {
+            if (!unit.validTarget(p, false) || !attacks.contains(p.x, p.y)) {
+               continue;
+            }
+            Point move = unit.computeShotLocation(
+                        _bangobj.board, p, moves, true);
+            if (move == null) {
+                continue;
+            }
+            int tweight = evaluator.getWeight(_bangobj, unit, p,
+                    p.getDistance(unit.x, unit.y), EMPTY_POINT_SET);
+            if (tweight > bweight) {
+                best = p;
+                bweight = tweight;
+                dest.setLocation(move);
+            }
+        }
+        return best;
+    }
+
+    /**
+     * Computes and returns the average location of all of our owned and
+     * living pieces.
+     */
+    protected Point getControlCenter (Piece[] pieces)
+    {
+        Point center = new Point();
+        int owned = 0;
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (pieces[ii].owner == _pidx && pieces[ii].isAlive()) {
+                center.x += pieces[ii].x;
+                center.y += pieces[ii].y;
+                owned++;
+            }
+        }
+        center.x /= owned;
+        center.y /= owned;
+        return center;
+    }
     
     /** Used to evaluate unit configs for weighted random selections. */
     protected interface UnitConfigEvaluator

@@ -28,6 +28,12 @@ public class Homestead extends Prop
     }
 
     @Override // documentation inherited
+    public boolean willBeTargetable ()
+    {
+        return true;
+    }
+
+    @Override // documentation inherited
     public int getTicksPerMove ()
     {
         return Integer.MAX_VALUE;

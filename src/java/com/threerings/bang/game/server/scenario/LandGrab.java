@@ -21,7 +21,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.LandGrabInfo;
 import com.threerings.bang.game.server.ai.AILogic;
-import com.threerings.bang.game.server.ai.RandomLogic;
+import com.threerings.bang.game.server.ai.LandGrabLogic;
 import com.threerings.bang.game.util.PieceSet;
 
 import static com.threerings.bang.Log.log;
@@ -40,7 +40,7 @@ public class LandGrab extends Scenario
     @Override // from Scenario
     public AILogic createAILogic (GameAI ai)
     {
-        return new RandomLogic();
+        return new LandGrabLogic(this);
     }
 
     @Override // from Scenario
@@ -152,6 +152,14 @@ public class LandGrab extends Scenario
         if (nuggets > 0) {
             user.stats.incrementStat(Stat.Type.STEADS_CLAIMED, nuggets);
         }
+    }
+
+    /**
+     * Returns the list of homesteads on the board.
+     */
+    public ArrayList<Homestead> getHomesteads ()
+    {
+        return _steads;
     }
 
     @Override // from Scenario
