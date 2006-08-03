@@ -580,7 +580,9 @@ public class MobileSprite extends PieceSprite
             }
         }
         if (_action.equals(DEAD)) {
+            String oname = _name;
             loadModel(_type, _name + "/dead");
+            _name = oname;
             _dead = true;
             _action = null;
             
