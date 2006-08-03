@@ -49,6 +49,7 @@ public class ClearPieceEffect extends Effect
             return false;
         }
         bangobj.removePieceDirect(piece);
+        bangobj.board.clearShadow(piece);
         reportRemoval(obs, piece);
         return true;
     }
