@@ -13160,4 +13160,6 @@
 
   <node name="Bone_AxeT_02" translation="-86.8265, -14.0302, 208.546" rotation="0.5543, -0.379159, 0.735621, -0.0886112" scale="1.0, 1.0, 1.0"/>
 
+  <node name="Dust_Spawn" translation="-97.5011, 92.4959, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 0.768018, 1.0"/>
+
 </model>
