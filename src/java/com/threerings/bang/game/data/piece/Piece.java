@@ -769,6 +769,14 @@ public abstract class Piece extends SimpleStreamableObject
         return null;
     }
     
+    /**
+     * Called on both client and server to notify the piece that it moved of
+     * its own volition.
+     */
+    public void didMove (int steps)
+    {
+    }
+    
     /** Returns the frequency with which this piece can move. */
     protected int getTicksPerMove ()
     {

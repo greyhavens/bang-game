@@ -1563,7 +1563,7 @@ public class BangManager extends GameManager
         }
 
         // possibly generate a post-move effect
-        Effect peffect = unit.didMove(steps);
+        Effect peffect = unit.maybeGeneratePostMoveEffect(steps);
         if (peffect != null) {
             deployEffect(-1, peffect);
         }

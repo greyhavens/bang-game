@@ -500,11 +500,21 @@ public class Unit extends Piece
     }
 
     /**
-     * Allows the unit to generate a post-move effect.
+     * Called on the server to give the unit a chance to generate an effect
+     * to deploy after it has moved of its own volition.
      */
-    public Effect didMove (int steps)
+    public Effect maybeGeneratePostMoveEffect (int steps)
     {
-        return (hindrance == null) ? null : hindrance.didMove(steps);
+        return (hindrance == null) ?
+            null : hindrance.maybeGeneratePostMoveEffect(steps);
+    }
+    
+    @Override // documentation inherited
+    public void didMove (int steps)
+    {
+        if (hindrance != null) {
+            hindrance.didMove(steps, lastActed);
+        }
     }
     
     /**

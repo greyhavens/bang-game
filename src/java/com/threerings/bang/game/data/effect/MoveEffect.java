@@ -9,6 +9,7 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 
@@ -71,10 +72,20 @@ public class MoveEffect extends Effect
         piece.lastActed = newLastActed;
         if (piece.x != nx || piece.y != ny) {
             moveAndReport(bangobj, piece, nx, ny, obs);
+            piece.didMove(getDistance());
+            
         } else {
             // we updated last acted, so we need to report something
             reportEffect(obs, piece, UPDATED);
         }
         return true;
+    }
+    
+    /**
+     * Returns the total Manhattan distance moved.
+     */
+    protected int getDistance ()
+    {
+        return Math.abs(nx - ox) + Math.abs(ny - oy);
     }
 }

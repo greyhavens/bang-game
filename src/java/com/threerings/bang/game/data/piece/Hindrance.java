@@ -26,12 +26,20 @@ public abstract class Hindrance extends Influence
     }
 
     /**
-     * Allows the hindrance to generate an effect as a result of the unit's
-     * having moved.
+     * Gives the hindrance a chance to generate an effect after the affected
+     * unit has moved of its own volition.
      */
-    public Effect didMove (int steps)
+    public Effect maybeGeneratePostMoveEffect (int steps)
     {
         return null;
+    }
+    
+    /**
+     * Called on both client and server to indicate that the piece moved of
+     * its own volition.
+     */
+    public void didMove (int steps, short tick)
+    {
     }
     
     /**

@@ -28,7 +28,7 @@ public class MonkeyWrenchEffect extends SetHindranceEffect
             public String getName () {
                 return "monkey_wrench";
             }
-            public Effect didMove (int steps) {
+            public Effect maybeGeneratePostMoveEffect (int steps) {
                 return new DamageEffect(target, steps * DAMAGE_PER_STEP);
             }
         };
