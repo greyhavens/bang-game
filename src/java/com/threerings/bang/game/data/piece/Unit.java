@@ -442,6 +442,12 @@ public class Unit extends Piece
         return _config.mode == UnitConfig.Mode.AIR;
     }
 
+    @Override // documentation inherited
+    public boolean canBePushed ()
+    {
+        return true;
+    }
+
     /**
      * Compute the valid moves for this piece.
      */

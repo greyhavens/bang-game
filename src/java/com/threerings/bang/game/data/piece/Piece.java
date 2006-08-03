@@ -367,6 +367,14 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Returns true if this piece can be pushed due to an attack.
+     */
+    public boolean canBePushed ()
+    {
+        return false;
+    }
+
+    /**
      * Selects the shortest move that puts us within range of firing on
      * the specified target.
      *

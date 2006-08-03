@@ -12,6 +12,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.FetishEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
+import com.threerings.bang.game.data.effect.ProximityShotEffect;
 
 /**
  * The logging robot for the forest guardians scenario.
@@ -43,15 +44,27 @@ public class LoggingRobot extends BallisticUnit
     @Override // documentation inherited
     public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
     {
-        ArrayList<Effect> effects = new ArrayList<Effect>();
+        ArrayList<Effect> effects = super.tick(tick, board, pieces);
+        ArrayList<ShotEffect> proxShots = new ArrayList<ShotEffect>();
+        ProximityShotEffect proxShot = null;
         for (Piece piece : pieces) {
             if (piece instanceof Unit && getDistance(piece) == 1 &&
-                piece.owner != -1 && !piece.isAirborne()) {
-                effects.add(new ShotEffect(this, piece, UNIT_PROXIMITY_DAMAGE,
-                    null, null));
+                piece.owner != -1 && !piece.isAirborne() &&
+                board.canCross(x, y, piece.x, piece.y)) {
+                if (proxShot == null) {
+                    proxShot = new ProximityShotEffect(this, piece,
+                            UNIT_PROXIMITY_DAMAGE, null, null);
+                } else {
+                    proxShots.add(new ShotEffect(this, piece, 
+                                UNIT_PROXIMITY_DAMAGE, null, null));
+                }
             }
         }
-        return effects.isEmpty() ? null : effects;
+        if (proxShot != null) {
+            proxShot.proxShot = proxShots.toArray(new ShotEffect[0]);
+            effects.add(proxShot);
+        }
+        return effects;
     }
     
     /** The base amount by which logging robots next to trees increase their

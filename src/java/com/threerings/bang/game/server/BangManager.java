@@ -407,8 +407,11 @@ public class BangManager extends GameManager
                     deployEffect(unit.owner, ceffects[ii]);
                 }
 
-                // allow the target to return fire
-                effect = target.returnFire(_bangobj, unit, effect.newDamage);
+                // allow the target to return fire on certain shots
+                if (effect.type != ShotEffect.PROXIMITY) {
+                    effect = target.returnFire(
+                            _bangobj, unit, effect.newDamage);
+                }
                 if (effect != null) {
                     deployEffect(target.owner, effect);
                     _bangobj.stats[target.owner].incrementStat(

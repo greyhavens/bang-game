@@ -22,9 +22,10 @@ import static com.threerings.bang.Log.log;
 public class StormCaller extends Unit
 {
     @Override // documentation inherited
-    protected ShotEffect generateShotEffect (
-            BangObject bangobj, Piece target, int damage)
+    public ShotEffect shoot (
+            BangObject bangobj, Piece target, float scale)
     {
+        int damage = computeScaledDamage(bangobj, target, scale);
         ChainingShotEffect effect = new ChainingShotEffect(this, target, 
                 damage, attackInfluenceIcon(), defendInfluenceIcon(target));
         
@@ -54,10 +55,9 @@ public class StormCaller extends Unit
                     if (p.getDistance(target) < MAX_CHAIN) {
                         points.add(new Point(p.x, p.y));
                     }
-                    chainedShots.add(new ShotEffect(
-                                this, p, (int)(DAMAGE_SCALE[dist]*damage),
-                                attackInfluenceIcon(), 
-                                defendInfluenceIcon(p)));
+                    damage = computeScaledDamage(bangobj, p, 
+                            scale*DAMAGE_SCALE[dist]);
+                    chainedShots.add(generateShotEffect(bangobj, p, damage));
                 }
             }
             if (--size == 0) {
@@ -66,7 +66,7 @@ public class StormCaller extends Unit
             }
         }
         effect.chainShot = chainedShots.toArray(new ShotEffect[0]);
-        return effect;
+        return target.deflect(bangobj, this, effect, scale);
     }
 
     protected static final int MAX_CHAIN = 2;

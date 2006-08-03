@@ -77,12 +77,15 @@ public class BuffaloRider extends Unit
         short pushx = (short)(2*target.x - nx);
         short pushy = (short)(2*target.y - ny);
         // If we've moved at least 3 squares then try to push the target
-        // If the target can't be pushed then add an extra .25 to the scle
+        // If the target can't be pushed then add an extra .25 to the scale
         boolean pushed = false;
-        if (dist >= DISTANCE_TO_PUSH && bangobj.board.canTravel(
+        if (dist >= DISTANCE_TO_PUSH && target.canBePushed()) {
+            if (bangobj.board.canTravel(
                     target, target.x, target.y, pushx, pushy, true)) {
-            pushed = true;
-            scale += DISTANCE_DAMAGE_SCALE;
+                pushed = true;
+            } else {
+                scale += DISTANCE_DAMAGE_SCALE;
+            }
         }
         ShotEffect shot = super.shoot(bangobj, target, scale);
         if (pushed) {

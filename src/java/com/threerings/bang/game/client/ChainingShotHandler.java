@@ -61,7 +61,7 @@ public class ChainingShotHandler extends ShotHandler
         }.schedule(SHOT_DELAY, CHAIN_DELAY);
     }
 
-    ChainingShotEffect _cseffect;
+    protected ChainingShotEffect _cseffect;
     
     /** The delay in milliseconds before the first shot. */
     protected static final long SHOT_DELAY = 750;

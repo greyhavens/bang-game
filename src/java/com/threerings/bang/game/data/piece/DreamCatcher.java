@@ -14,6 +14,12 @@ import com.threerings.bang.game.util.PointSet;
 public class DreamCatcher extends BallisticUnit
 {
     @Override // documentation inherited
+    public boolean validTarget (Piece target, boolean allowSelf)
+    {
+        return (target instanceof Unit) && super.validTarget(target, allowSelf);
+    }
+
+    @Override // documentation inherited
     public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
     {
         // she does no damage
@@ -22,30 +28,33 @@ public class DreamCatcher extends BallisticUnit
         // She will reset the target's tick counter and force them to move.
         // They will try to move away from her, where their movement distance
         // is inversely proportional to the amount their tick was reset
-        int tickDelta = Math.max(0, Math.min(bangobj.tick - target.lastActed,
-                    target.getTicksPerMove()));
-        double tickRatio = 1.0 - (double)tickDelta / 
-            (double)target.getTicksPerMove();
-        int move = (int)Math.ceil(tickRatio * target.getMoveDistance());
-        PointSet moves = new PointSet();
-        bangobj.board.computeMoves(target, moves, null, move);
-        int dist = 0;
-        int nx = -1, ny = -1;
-        for (int ii = 0; ii < moves.size(); ii++) {
-            int x = moves.getX(ii);
-            int y = moves.getY(ii);
-            int d = getDistance(x, y);
-            if (d > dist) {
-                nx = x;
-                ny = y;
-                dist = d;
+        if (target.canBePushed()) {
+            int tickDelta = Math.max(0, Math.min(
+                        bangobj.tick - target.lastActed,
+                        target.getTicksPerMove()));
+            double tickRatio = 1.0 - (double)tickDelta / 
+                (double)target.getTicksPerMove();
+            int move = (int)Math.ceil(tickRatio * target.getMoveDistance());
+            PointSet moves = new PointSet();
+            bangobj.board.computeMoves(target, moves, null, move);
+            int dist = 0;
+            int nx = -1, ny = -1;
+            for (int ii = 0; ii < moves.size(); ii++) {
+                int x = moves.getX(ii);
+                int y = moves.getY(ii);
+                int d = getDistance(x, y);
+                if (d > dist) {
+                    nx = x;
+                    ny = y;
+                    dist = d;
+                }
             }
-        }
 
-        if (nx != target.x || ny != target.y) {
-            shot.pushx = (short)nx;
-            shot.pushy = (short)ny;
-            shot.pushAnim = false;
+            if (nx != target.x || ny != target.y) {
+                shot.pushx = (short)nx;
+                shot.pushy = (short)ny;
+                shot.pushAnim = false;
+            }
         }
 
         if (target.lastActed < bangobj.tick) {

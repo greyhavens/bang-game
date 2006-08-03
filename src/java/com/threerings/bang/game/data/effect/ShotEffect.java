@@ -59,9 +59,13 @@ public class ShotEffect extends Effect
     /** A misfired shot. */
     public static final int MISFIRE = 4;
 
+    /** A proximity shot. */
+    public static final int PROXIMITY = 5;
+
     /** Maps shot types to animation identifiers. */
     public static final String[] SHOT_ACTIONS = {
-        "shooting", "returning_fire", "collateral_damage", "dud", "misfire"
+        "shooting", "returning_fire", "collateral_damage", 
+        "dud", "misfire", "proximity"
     };
 
     /** The type of shot. */
