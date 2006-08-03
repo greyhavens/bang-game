@@ -76,6 +76,17 @@
     <component cclass="male/clothing_back" name="shirt_collar"/>
   </article>
 
+
+
+  <!-- male clothing: indian trading post -->
+  <article name="male_wolf_hunter" townId="indian_post"
+           slot="clothing" scrip="1500" coins="3">
+    <component cclass="male/clothing_back" name="wolf_spear"/>
+    <component cclass="male/clothing_front" name="wolf_hunter"/>
+  </article>
+
+
+
   <!-- male familiars: frontier town -->
 
   <!-- male eye glasses: frontier town -->
@@ -235,6 +246,20 @@
     <component cclass="male/hat" name="wolf_mask"/>
     <component cclass="male/hat_back" name="wolf_mask"/>
   </article>
+
+
+  <article name="male_buffalo" townId="indian_post"
+           slot="hat" scrip="2500" coins="2">
+    <component cclass="male/hat" name="buffalo"/>
+    <component cclass="male/hat_back" name="buffalo"/>
+  </article>
+
+  <article name="male_buffalo_medallion" townId="indian_post"
+           slot="hat" scrip="3000" coins="2">
+    <component cclass="male/hat" name="buffalo"/>
+    <component cclass="male/hat_back" name="buffalo"/>
+    <component cclass="male/hat_band" name="medallion__buffalo"/>
+  </article> 
 
 
   <!-- male jewelry: frontier town -->
@@ -418,9 +443,21 @@
     <component cclass="female/clothing_front" name="pistol_boots"/>
   </article>
 
+
   <!-- female familiars: frontier town -->
 
+
   <!-- female eye glasses: frontier town -->
+  <article name="female_round_glasses" townId="frontier_town"
+           slot="glasses" scrip="1000" coins="2">
+    <component cclass="female/glasses" name="round"/>
+  </article>
+
+  <article name="female_steamgoggles" townId="frontier_town"
+           slot="glasses" scrip="3500" coins="4" colors="clothes_p">
+    <component cclass="female/glasses" name="steamgoggles"/>
+  </article>
+
 
   <!-- female hats: frontier town -->
   <article name="female_longbrim" townId="frontier_town"
@@ -526,6 +563,26 @@
            slot="hat" scrip="2250" coins="2" colors="clothes_p,clothes_s">
     <component cclass="female/hat_back" name="feather_two"/>
   </article>
+
+  <article name="female_war_bonnet" townId="indian_post"
+           slot="hat" scrip="3000" coins="3" colors="clothes_p,clothes_s">
+    <component cclass="female/hat" name="war_bonnet"/>
+    <component cclass="female/hat_back" name="war_bonnet"/>
+  </article>
+
+  <article name="female_war_bonnet_tree" townId="indian_post"
+           slot="hat" scrip="3500" coins="3">
+    <component cclass="female/hat" name="war_bonnet"/>
+    <component cclass="female/hat_back" name="war_bonnet"/>
+    <component cclass="female/hat_band" name="tree_war_bonnet"/>
+  </article>
+
+  <article name="female_eagle_mask" townId="indian_post"
+           slot="hat" scrip="3500" coins="3">
+    <component cclass="female/hat" name="eagle_mask"/>
+    <component cclass="female/hat_back" name="eagle_mask"/>
+  </article>
+
 
   <!-- female jewelry: frontier town -->
 

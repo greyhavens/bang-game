@@ -110,6 +110,12 @@
             scrip="750" coins="0"/>
     <aspect name="spikey" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="wavy" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="bob" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="fairy" townId="frontier_town" scrip="1000" coins="1"/>
+    <aspect name="mohawk" townId="frontier_town" scrip="1000" coins="2"/>
+    <aspect name="shroom" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="straight" townId="frontier_town" scrip="1000" coins="1"/>
+    <aspect name="wings" townId="frontier_town" scrip="500" coins="2"/>
   </class>
 
   <class name="female/eyebrows">
