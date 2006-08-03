@@ -70,10 +70,10 @@ public class CattleRustlingLogic extends AILogic
                 bshot = (Unit)pieces[ii];
                 continue;
             
-            } else if (unit.validTarget(pieces[ii], false) &&
+            } else if (unit.validTarget(_bangobj, pieces[ii], false) &&
                 (ctarget == null || unit.getDistance(pieces[ii]) <
                     unit.getDistance(ctarget)) &&
-                unit.validTarget(pieces[ii], false)) {
+                unit.validTarget(_bangobj, pieces[ii], false)) {
                 ctarget = pieces[ii];
                 continue;
                 
@@ -159,10 +159,10 @@ public class CattleRustlingLogic extends AILogic
         Piece ctarget = null;
         _sresults.clear();
         for (int ii = 0; ii < pieces.length; ii++) {
-            if (unit.validTarget(pieces[ii], false) &&
+            if (unit.validTarget(_bangobj, pieces[ii], false) &&
                 (ctarget == null || unit.getDistance(pieces[ii]) <
                     unit.getDistance(ctarget)) &&
-                unit.validTarget(pieces[ii], false)) {
+                unit.validTarget(_bangobj, pieces[ii], false)) {
                 ctarget = pieces[ii];
                 continue;
                 

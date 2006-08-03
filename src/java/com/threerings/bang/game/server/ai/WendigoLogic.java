@@ -88,7 +88,7 @@ public class WendigoLogic extends AILogic
                 if (TalismanEffect.TALISMAN_BONUS.equals(target.holding) &&
                     (ctarget == null ||
                      unit.getDistance(target) < unit.getDistance(ctarget)) &&
-                    unit.validTarget(target, false)) {
+                    unit.validTarget(_bangobj, target, false)) {
                     ctarget = target;
                 }
             }

@@ -73,7 +73,7 @@ public class TotemLogic extends AILogic
                 if (TotemBonus.isHolding(target) &&
                     (ctarget == null ||
                      unit.getDistance(target) < unit.getDistance(ctarget)) &&
-                    unit.validTarget(target, false)) {
+                    unit.validTarget(_bangobj, target, false)) {
                     ctarget = target;
                 }
             }

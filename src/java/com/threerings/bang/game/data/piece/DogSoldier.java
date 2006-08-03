@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -13,9 +14,11 @@ import static com.threerings.bang.Log.log;
 public class DogSoldier extends Unit
 {
     @Override // documentation inherited
-    public boolean validTarget (Piece target, boolean allowSelf)
+    public boolean validTarget (
+        BangObject bangobj, Piece target, boolean allowSelf)
     {
-        return !target.isAirborne() && super.validTarget(target, allowSelf);
+        return !target.isAirborne() &&
+            super.validTarget(bangobj, target, allowSelf);
     }
 
     @Override // documentation inherited

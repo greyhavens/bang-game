@@ -61,7 +61,7 @@ public class Tactician extends Unit
         }
         // make sure the target is valid, otherwise we just fizzle out at
         // the specified coordinates
-        if (ntarget != null && !shooter.validTarget(ntarget, true)) {
+        if (ntarget != null && !shooter.validTarget(bangobj, ntarget, true)) {
             ntarget = null;
         }
 

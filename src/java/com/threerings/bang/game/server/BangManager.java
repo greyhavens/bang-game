@@ -1600,7 +1600,7 @@ public class BangManager extends GameManager
         }
 
         // make sure the target is still valid
-        if (!shooter.validTarget(target, false)) {
+        if (!shooter.validTarget(_bangobj, target, false)) {
             // target already dead or something
 //             log.info("Target no longer valid [shooter=" + shooter.info() +
 //                      ", target=" + target.info() + "].");

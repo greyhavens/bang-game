@@ -35,9 +35,11 @@ public class BuffaloRider extends Unit
     }
 
     @Override // documentation inherited
-    public boolean validTarget (Piece target, boolean allowSelf)
+    public boolean validTarget (
+        BangObject bangobj, Piece target, boolean allowSelf)
     {
-        return !target.isAirborne() && super.validTarget(target, allowSelf);
+        return !target.isAirborne() &&
+            super.validTarget(bangobj, target, allowSelf);
     }
 
     @Override // documentation inherited

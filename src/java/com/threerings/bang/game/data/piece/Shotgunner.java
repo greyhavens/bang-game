@@ -23,7 +23,7 @@ public class Shotgunner extends Unit
         ArrayList<Effect> shots = new ArrayList<Effect>();
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece p = (Piece)iter.next();
-            if (target.getDistance(p) == 1 && validTarget(p, false) &&
+            if (target.getDistance(p) == 1 && validTarget(bangobj, p, false) &&
                 // if it's not in line with us but is in line with the target,
                 // then it's properly perpendicular
                 (p.x != x && p.y != y) &&

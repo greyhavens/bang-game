@@ -645,11 +645,12 @@ public abstract class Piece extends SimpleStreamableObject
      * Returns true if we can and should fire upon this target. Note that
      * this does not check to see whether the target is in range.
      */
-    public boolean validTarget (Piece target, boolean allowSelf)
+    public boolean validTarget (
+        BangObject bangobj, Piece target, boolean allowSelf)
     {
         boolean valid = (target.isTargetable() && target.isAlive());
         if (!allowSelf) {
-            valid = !target.isSameTeam(this) && valid;
+            valid = !target.isSameTeam(bangobj, this) && valid;
         }
         return valid;
     }
@@ -673,9 +674,10 @@ public abstract class Piece extends SimpleStreamableObject
     /**
      * Returns true if this piece is on the same team as the target.
      */
-    public boolean isSameTeam (Piece target)
+    public boolean isSameTeam (BangObject bangobj, Piece target)
     {
-        return target.owner == owner;
+        return target.owner == owner ||
+            bangobj.scenario.playersAllied(target.owner, owner);
     }
 
     /**

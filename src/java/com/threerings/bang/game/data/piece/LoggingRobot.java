@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.FetishEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
@@ -30,10 +31,11 @@ public class LoggingRobot extends BallisticUnit
     }
     
     @Override // documentation inherited
-    public boolean validTarget (Piece target, boolean allowSelf)
+    public boolean validTarget (
+        BangObject bangobj, Piece target, boolean allowSelf)
     {
         // logging robots can't see units holding the fox fetish
-        return super.validTarget(target, allowSelf) &&
+        return super.validTarget(bangobj, target, allowSelf) &&
             (!(target instanceof Unit) ||
                 !FetishEffect.FOX_FETISH.equals(((Unit)target).holding));
     }

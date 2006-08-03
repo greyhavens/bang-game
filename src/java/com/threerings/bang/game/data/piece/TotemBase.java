@@ -9,7 +9,7 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.bang.game.client.sprite.MarkerSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TotemBaseSprite;
-
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.TotemEffect;
 
 import static com.threerings.bang.Log.log;
@@ -142,7 +142,7 @@ public class TotemBase extends Prop
     }
 
     @Override // documentation inherited
-    public boolean isSameTeam (Piece target)
+    public boolean isSameTeam (BangObject bangobj, Piece target)
     {
         return getTopOwner() == target.owner;
     }

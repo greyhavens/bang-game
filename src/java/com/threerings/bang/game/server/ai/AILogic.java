@@ -202,7 +202,7 @@ public abstract class AILogic
         Piece best = null;
         int bweight = -1;
         for (int ii = 0; ii < pieces.length; ii++) {
-            if (!unit.validTarget(pieces[ii], false) ||
+            if (!unit.validTarget(_bangobj, pieces[ii], false) ||
                 !attacks.contains(pieces[ii].x, pieces[ii].y)) {
                 continue;
             }
@@ -226,7 +226,7 @@ public abstract class AILogic
         Piece best = null;
         int bweight = -1;
         for (int ii = 0; ii < pieces.length; ii++) {
-            if (!unit.validTarget(pieces[ii], false)) {
+            if (!unit.validTarget(_bangobj, pieces[ii], false)) {
                 continue;
             }
             int dist = pieces[ii].getDistance(dx, dy);
@@ -258,7 +258,8 @@ public abstract class AILogic
         Piece best = null;
         int bweight = -1;
         for (Piece p : pieces) {
-            if (!unit.validTarget(p, false) || !attacks.contains(p.x, p.y)) {
+            if (!unit.validTarget(_bangobj, p, false) ||
+                !attacks.contains(p.x, p.y)) {
                continue;
             }
             Point move = unit.computeShotLocation(

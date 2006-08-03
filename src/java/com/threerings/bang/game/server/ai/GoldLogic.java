@@ -83,7 +83,7 @@ public class GoldLogic extends AILogic
                 if (NuggetEffect.NUGGET_BONUS.equals(target.holding) && 
                     (ctarget == null ||
                      unit.getDistance(target) < unit.getDistance(ctarget)) &&
-                     unit.validTarget(target, false)) {
+                     unit.validTarget(_bangobj, target, false)) {
                     ctarget = target;
                 }
                 if (_stealing && _claimloc != null && target.getDistance(

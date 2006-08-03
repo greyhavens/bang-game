@@ -32,7 +32,8 @@ public class StormCaller extends Unit
         // so we don't need to search through the entire piece list each time
         ArrayList<Piece> targetPieces = new ArrayList<Piece>();
         for (Piece p : bangobj.pieces) {
-            if (validTarget(p, true) && target.getDistance(p) <= MAX_CHAIN &&
+            if (validTarget(bangobj, p, true) &&
+                target.getDistance(p) <= MAX_CHAIN &&
                     p.pieceId != target.pieceId) {
                 targetPieces.add(p);
             }

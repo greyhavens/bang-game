@@ -224,8 +224,9 @@ public class ForestGuardians extends Scenario
                         ctree = tree;
                     }
                 } else if (piece instanceof Unit &&
-                    unit.validTarget(piece, false) && (cunit == null ||
-                        unit.getDistance(piece) < unit.getDistance(cunit))) {
+                    unit.validTarget(_bangobj, piece, false) &&
+                        (cunit == null || unit.getDistance(piece) <
+                            unit.getDistance(cunit))) {
                     cunit = (Unit)piece;
                 }
             }

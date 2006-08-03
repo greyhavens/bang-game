@@ -47,7 +47,7 @@ public class RandomLogic extends AILogic
         for (int tt = 0; tt < pieces.length; tt++) {
             Piece p = pieces[tt];
             if (p instanceof Unit && attacks.contains(p.x, p.y) &&
-                unit.validTarget(p, false)) {
+                unit.validTarget(_bangobj, p, false)) {
                 target = p;
                 break;
             }

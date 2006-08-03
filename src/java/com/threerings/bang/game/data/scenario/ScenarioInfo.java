@@ -180,6 +180,15 @@ public abstract class ScenarioInfo
     }
 
     /**
+     * Determines whether the two identified players are allied in
+     * terms of the scenario.
+     */
+    public boolean playersAllied (int pidx1, int pidx2)
+    {
+        return false;
+    }
+    
+    /**
      * Returns the path to sound clips that should be preloaded when playing
      * this scenario.
      */

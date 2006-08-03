@@ -1094,7 +1094,8 @@ public class BangBoardView extends BoardView
                     _attackSet.getX(idx), _attackSet.getY(idx));
                 // TODO: prefer targets that are guaranteed to be there
                 // when we make our move versus those that may be gone
-                if (target != null && _selection.validTarget(target, false)) {
+                if (target != null && _selection.validTarget(
+                        _bangobj, target, false)) {
                     log.info("Randomly targeting " + target.info());
                     _action[3] = target.pieceId;
                     Targetable tsprite = getTargetableSprite(target);
@@ -1118,7 +1119,7 @@ public class BangBoardView extends BoardView
     protected void pruneAttackSet (PointSet moves, PointSet dest)
     {
         for (Piece p : _bangobj.pieces) {
-            if (!_selection.validTarget(p, false) ||
+            if (!_selection.validTarget(_bangobj, p, false) ||
                 _selection.computeShotLocation(
                     _board, p, moves, true) == null) {
                 continue;

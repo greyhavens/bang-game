@@ -57,4 +57,10 @@ public class ForestGuardiansInfo extends ScenarioInfo
     {
         return super.isValidMarker(marker) || marker.getType() == Marker.ROBOTS;
     }
+    
+    @Override // from ScenarioInfo
+    public boolean playersAllied (int pidx1, int pidx2)
+    {
+        return (pidx1 < 0) == (pidx2 < 0);
+    }
 }

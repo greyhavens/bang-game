@@ -415,10 +415,11 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public boolean validTarget (Piece target, boolean allowSelf)
+    public boolean validTarget (
+        BangObject bangobj, Piece target, boolean allowSelf)
     {
         // if we do no damage to this type of target, it is not valid
-        return super.validTarget(target, allowSelf) &&
+        return super.validTarget(bangobj, target, allowSelf) &&
             (computeDamage(target) > 0);
     }
 
