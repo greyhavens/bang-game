@@ -14,9 +14,11 @@ import com.threerings.bang.game.util.PointSet;
 public class DreamCatcher extends BallisticUnit
 {
     @Override // documentation inherited
-    public boolean validTarget (Piece target, boolean allowSelf)
+    public boolean validTarget (
+            BangObject bangobj, Piece target, boolean allowSelf)
     {
-        return (target instanceof Unit) && super.validTarget(target, allowSelf);
+        return (target instanceof Unit) && 
+            super.validTarget(bangobj, target, allowSelf);
     }
 
     @Override // documentation inherited
