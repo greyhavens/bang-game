@@ -106,8 +106,7 @@ public class CardItem extends Item
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "cards/" + Card.newCard(_type).getTownId() + "/" +
-            _type + "/card.png";
+        return Card.newCard(_type).getIconPath("card");
     }
 
     protected String _type;

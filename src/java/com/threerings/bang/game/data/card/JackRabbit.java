@@ -48,7 +48,7 @@ public class JackRabbit extends Card
             new AdjustMoveInfluenceEffect(3, 4);
         effect.pieceId = (Integer)target;
         effect.icon = "jack_rabbit";
-        effect.name = "cards/jack_rabbit/activate";
+        effect.name = "cards/frontier_town/jack_rabbit/activate";
         return effect;
     }
 

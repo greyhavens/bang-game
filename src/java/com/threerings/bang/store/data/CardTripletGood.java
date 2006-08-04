@@ -7,6 +7,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.game.data.card.Card;
 
 /**
  * Represents a three pack of a known card type that is for sale.
@@ -38,7 +39,7 @@ public class CardTripletGood extends Good
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return "cards/" + _cardType + "/card.png";
+        return Card.newCard(_cardType).getIconPath("card");
     }
 
     @Override // documentation inherited

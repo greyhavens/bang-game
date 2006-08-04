@@ -350,21 +350,6 @@ public class BangUI
     }
 
     /**
-     * Configures the supplied label to display the specified card.
-     */
-    public static void configCardLabel (BButton label, CardItem card)
-    {
-        label.setOrientation(BLabel.VERTICAL);
-        if (!label.getStyleClass().equals("card_label")) {
-            label.setStyleClass("card_label");
-        }
-        String path = "cards/" + card.getType() + "/icon.png";
-        label.setIcon(new ImageIcon(_ctx.loadImage(path)));
-        String name = _ctx.xlate(BangCodes.CARDS_MSGS, "m." + card.getType());
-        label.setText(name + ": " + card.getQuantity());
-    }
-
-    /**
      * Returns the icon that represents the specified unit.
      */
     public static BIcon getUnitIcon (UnitConfig config)

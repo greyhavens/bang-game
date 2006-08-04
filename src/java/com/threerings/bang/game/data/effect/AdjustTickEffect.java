@@ -21,7 +21,8 @@ public class AdjustTickEffect extends Effect
     public static final String STARED_DOWN = "effects/frontier_town/staredown";
 
     /** Identifies the use of this effect by the Giddy Up card. */
-    public static final String GIDDY_UPPED = "cards/giddy_up/activate";
+    public static final String GIDDY_UPPED =
+        "cards/frontier_town/giddy_up/activate";
 
     /** The piece that we will be affecting. */
     public int pieceId;

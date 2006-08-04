@@ -84,7 +84,7 @@ public class CardPalette extends IconPalette
             if (card.owner != _selfIdx) {
                 continue;
             }
-            _selcards[iconidx++].setIcon(makeIcon(card.getType()));
+            _selcards[iconidx++].setIcon(makeIcon(card));
         }
 
         // now add selected cards (iterate over _icons rather that _selections
@@ -94,7 +94,7 @@ public class CardPalette extends IconPalette
                 continue;
             }
             CardItem card = (CardItem)((ItemIcon)icon).getItem();
-            _selcards[iconidx++].setIcon(makeIcon(card.getType()));
+            _selcards[iconidx++].setIcon(makeIcon(card.getCard()));
         }
 
         // finally clear out the remaining icons
@@ -103,9 +103,9 @@ public class CardPalette extends IconPalette
         }
     }
 
-    protected ImageIcon makeIcon (String type)
+    protected ImageIcon makeIcon (Card card)
     {
-        return new ImageIcon(_ctx.loadImage("cards/" + type + "/icon.png"));
+        return new ImageIcon(_ctx.loadImage(card.getIconPath("icon")));
     }
 
     protected BangContext _ctx;

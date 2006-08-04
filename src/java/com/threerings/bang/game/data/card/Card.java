@@ -186,6 +186,17 @@ public abstract class Card extends SimpleStreamableObject
         getKey();
     }
 
+    /**
+     * Returns the path to this card's icon image.
+     *
+     * @param which either <code>icon</code> for its tiny icon image or
+     * <code>card</code> for its inventory item image.
+     */
+    public String getIconPath (String which)
+    {
+        return "cards/" + getTownId() + "/" + getType() + "/" + which + ".png";
+    }
+
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {
