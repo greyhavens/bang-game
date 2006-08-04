@@ -235,8 +235,9 @@ public class ShotEffect extends Effect
             int bonus = (newDamage == 100) ? 20 : 0;
             dammap.increment(target.owner, newDamage - target.damage + bonus);
             if (newDamage == 100) {
-                preShotEffects = new Effect[] {
-                    target.willDie(bangobj, shooterId) };
+                Effect effect = target.willDie(bangobj, shooterId);
+                preShotEffects = (effect == null) ?
+                    new Effect[0] : new Effect[] { effect };
             } else {
                 Piece shooter = bangobj.pieces.get(shooterId);
                 if (shooter != null) {
@@ -244,6 +245,7 @@ public class ShotEffect extends Effect
                 } else {
                     log.warning("Shot effect missing shooter [id=" +
                         shooterId + "].");
+                    preShotEffects = new Effect[0];
                 }
             }
             for (Effect effect : preShotEffects) {
