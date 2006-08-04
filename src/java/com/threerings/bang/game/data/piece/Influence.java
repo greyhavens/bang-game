@@ -26,6 +26,12 @@ public abstract class Influence extends SimpleStreamableObject
      * messages (can be <code>null</code> for none). */
     public abstract String getName ();
 
+    /** Configures an influence instance with its starting tick. */
+    public void init (short tick)
+    {
+        _startTick = tick;
+    }
+
     /** Creates a visualization for the influence, or returns <code>null</code>
      * for none. */
     public InfluenceViz createViz ()
@@ -152,12 +158,6 @@ public abstract class Influence extends SimpleStreamableObject
     public String toString ()
     {
         return getName();
-    }
-
-    /** Configures an influence instance with its starting tick. */
-    protected void init (short tick)
-    {
-        _startTick = tick;
     }
 
     /** Returns the duration of this influence in ticks. The default is

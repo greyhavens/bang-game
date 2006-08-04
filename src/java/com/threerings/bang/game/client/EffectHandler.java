@@ -34,6 +34,7 @@ import com.threerings.bang.game.client.sprite.UnitSprite;
 
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.HighNoonEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
@@ -218,6 +219,16 @@ public class EffectHandler extends BoardView.BoardAction
         _view.pieceWasAffected(piece, effect);
     }
 
+    // documentation inherited from interface Effect.Observer
+    public void boardAffected (String effect)
+    {
+        if (HighNoonEffect.HIGH_NOON.equals(effect)) {
+            _view.setHighNoon(true);
+        } else if (effect == null && _view.isHighNoon()) {
+            _view.setHighNoon(false);
+        }
+    }
+    
     // documentation inherited from interface Effect.Observer
     public void pieceMoved (Piece piece)
     {

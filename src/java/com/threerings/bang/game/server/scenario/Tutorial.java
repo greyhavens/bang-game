@@ -252,8 +252,7 @@ public class Tutorial extends Scenario
                 piece.position(add.location[0], add.location[1]);
                 break;
             }
-            _bangobj.addToPieces(piece);
-            _bangobj.board.shadowPiece(piece);
+            _bangmgr.addPiece(piece);
 
         } else if (action instanceof TutorialConfig.MoveUnit) {
             TutorialConfig.MoveUnit mua = (TutorialConfig.MoveUnit)action;

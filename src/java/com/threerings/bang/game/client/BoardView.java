@@ -596,7 +596,7 @@ public class BoardView extends BComponent
     {
         return _pnode;
     }
-
+    
     /**
      * Adds a sprite to the active view.
      */

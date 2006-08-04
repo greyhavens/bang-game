@@ -31,7 +31,8 @@ public abstract class Card extends SimpleStreamableObject
     implements DSet.Entry, Cloneable
 {
     /** The different card placement targets. */
-    public static enum PlacementMode { VS_PIECE, VS_AREA, VS_CARD, VS_PLAYER };
+    public static enum PlacementMode {
+        VS_PIECE, VS_AREA, VS_CARD, VS_PLAYER, VS_NONE };
 
     /** Every card has a unique id which is how we reference them. */
     public int cardId;
@@ -142,6 +143,15 @@ public abstract class Card extends SimpleStreamableObject
         return false;
     }
 
+    /**
+     * Returns true if this card can be played at the moment (only called
+     * for VS_NONE cards).
+     */
+    public boolean isValid (BangObject bangobj)
+    {
+        return false;
+    }
+    
     /**
      * Activates the specified card at the supplied coordinates. The
      * returned effect will be prepared and effected immediately.
@@ -293,6 +303,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new SnakeBite());
         register(new BlownGasket());
         register(new BuggyLogic());
+        register(new HighNoon());
 
         // create arrays of all cards introduced in each town
         HashMap<String,ArrayList<Card>> bytown =

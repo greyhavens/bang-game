@@ -99,7 +99,7 @@ public class TrainDelegate extends ScenarioDelegate
         train.type = Train.ENGINE;
         train.nextX = (short)(train.x + PieceCodes.DX[train.orientation]);
         train.nextY = (short)(train.y + PieceCodes.DY[train.orientation]);
-        bangobj.addToPieces(train);
+        _bangmgr.addPiece(train);
         _trains.add(train);
     }
 
@@ -119,7 +119,7 @@ public class TrainDelegate extends ScenarioDelegate
             Train.CAR_TYPES[RandomUtil.getInt(Train.CAR_TYPES.length)];
         train.nextX = last.x;
         train.nextY = last.y;
-        bangobj.addToPieces(train);
+        _bangmgr.addPiece(train);
         _trains.add(train);
     }
 

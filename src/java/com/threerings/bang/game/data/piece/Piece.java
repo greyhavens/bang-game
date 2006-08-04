@@ -114,6 +114,13 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Called on a piece when it has been added to the board.
+     */
+    public void wasAdded (BangObject bangobj)
+    {
+    }
+    
+    /**
      * Called on a piece when it has been maximally damaged.
      */
     public void wasKilled (short tick)

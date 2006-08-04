@@ -20,6 +20,7 @@ import com.threerings.bang.data.StatSet;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.piece.Hindrance;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Unit;
@@ -176,6 +177,12 @@ public class BangObject extends GameObject
     /** Used to assign ids to pieces added during the game. */
     public transient int maxPieceId;
 
+    /** Identifies an effect applied to the entire board. */
+    public transient String boardEffect;
+    
+    /** A hindrance affecting all units (and applied to new units). */
+    public transient Hindrance globalHindrance;
+    
     /** The avatar fingerprints for each of the players in the game. We keep
      * these here in case the player leaves early and so that we can provide
      * fake fingerprints for AIs. */

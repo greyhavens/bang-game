@@ -458,8 +458,16 @@ public class BangController extends GameController
 
         } else if (activeCard != null && activeCard.getPlacementMode() == 
                 Card.PlacementMode.VS_CARD && card.owner != _pidx) {
-            activateCard(cardId, new Integer(card.cardId));
+            activateCard(activeCard.cardId, new Integer(card.cardId));
 
+        } else if (activeCard != null && activeCard.getPlacementMode() ==
+            Card.PlacementMode.VS_PLAYER && activeCard.isValidPlayer(
+                _bangobj, card.owner)) {
+            activateCard(activeCard.cardId, new Integer(card.owner));
+        
+        } else if (card.getPlacementMode() == Card.PlacementMode.VS_NONE) {
+            activateCard(card.cardId, null);
+            
         } else if (card.owner == _pidx) {
             // instruct the board view to activate placement mode
             _view.view.placeCard(card);

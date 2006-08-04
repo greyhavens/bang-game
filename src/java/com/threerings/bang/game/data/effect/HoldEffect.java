@@ -143,8 +143,7 @@ public class HoldEffect extends BonusEffect
         }
 
         if (drop != null) {
-            bangobj.addPieceDirect(drop);
-            reportAddition(obs, drop);
+            addAndReport(bangobj, drop, obs);
         }
         return true;
     }

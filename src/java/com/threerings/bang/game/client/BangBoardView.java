@@ -18,6 +18,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
 
@@ -513,6 +514,43 @@ public class BangBoardView extends BoardView
         return false;
     }
 
+    /**
+     * Fades into or out of "high noon" mode.
+     */
+    public void setHighNoon (final boolean enable)
+    {
+        if (_highNoon == enable) {
+            return;
+        }
+        if (enable) {
+            _originalAmbient = new ColorRGBA(_lights[0].getAmbient());
+        }
+        _highNoon = enable;
+        _node.addController(new Controller() {
+            public void update (float time) {
+                _elapsed = Math.min(_elapsed + time, NOON_FADE_DURATION);
+                float alpha = _elapsed / NOON_FADE_DURATION;
+                if (!enable) {
+                    alpha = 1f - alpha;
+                }
+                _lights[0].getAmbient().interpolate(
+                    _originalAmbient, ColorRGBA.white, alpha);
+                if (_elapsed >= NOON_FADE_DURATION) {
+                    _node.removeController(this);
+                }
+            }
+            protected float _elapsed;
+        });
+    }
+    
+    /**
+     * Checks whether the board is in "high noon" mode.
+     */
+    public boolean isHighNoon ()
+    {
+        return _highNoon;
+    }
+    
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -1643,6 +1681,12 @@ public class BangBoardView extends BoardView
     protected HashMap<Integer,AdvanceOrder> _orders =
         new HashMap<Integer,AdvanceOrder>();
 
+    /** Whether or not "high noon" mode is active. */
+    protected boolean _highNoon;
+    
+    /** The original, pre-noon ambient light color. */
+    protected ColorRGBA _originalAmbient;
+    
     /** The color of BigShot movement highlights. */
     protected static final ColorRGBA BMOVE_HIGHLIGHT_COLOR =
         new ColorRGBA(0.5f, 1f, 0f, 0.5f);
@@ -1653,4 +1697,7 @@ public class BangBoardView extends BoardView
 
     /** The duration of the board tour in seconds. */
     protected static final float BOARD_TOUR_DURATION = 10f;
+    
+    /** The time it takes to fade in and out of high noon mode. */
+    protected static final float NOON_FADE_DURATION = 1f;
 }

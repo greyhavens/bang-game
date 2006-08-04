@@ -42,21 +42,7 @@ import static com.threerings.bang.Log.log;
  * Implements a particular gameplay scenario.
  */
 public abstract class Scenario
-{
-    /**
-     * Drops a bonus at the specified location.
-     */
-    protected static Bonus dropBonus (
-            BangObject bangobj, String bonusName, int x, int y)
-    {
-        Bonus drop = Bonus.createBonus(BonusConfig.getConfig(bonusName));
-        drop.assignPieceId(bangobj);
-        drop.position(x, y);
-        bangobj.board.shadowPiece(drop);
-        bangobj.addToPieces(drop);
-        return drop;
-    }
-    
+{   
     /**
      * Allows a scenario to filter out custom marker pieces and scenario
      * specific props prior to the start of the round.
@@ -405,12 +391,24 @@ public abstract class Scenario
         // configure our bonus and add it to the game
         bonus.assignPieceId(bangobj);
         bonus.position(bspot.x, bspot.y);
-        bangobj.addToPieces(bonus);
-        bangobj.board.shadowPiece(bonus);
+        _bangmgr.addPiece(bonus);
         log.fine("Placed bonus: " + bonus.info());
         return true;
     }
 
+    /**
+     * Drops a bonus at the specified location.
+     */
+    protected Bonus dropBonus (
+        BangObject bangobj, String bonusName, int x, int y)
+    {
+        Bonus drop = Bonus.createBonus(BonusConfig.getConfig(bonusName));
+        drop.assignPieceId(bangobj);
+        drop.position(x, y);
+        _bangmgr.addPiece(drop);
+        return drop;
+    }
+    
     /**
      * Returns the base duration of the scenario in ticks assuming 1.75 seconds
      * per tick. This will be scaled by the expected average number of units

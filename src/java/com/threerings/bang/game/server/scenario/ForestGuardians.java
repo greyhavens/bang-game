@@ -193,8 +193,7 @@ public class ForestGuardians extends Scenario
             }
             
             unit.position(bspot.x, bspot.y);
-            bangobj.addToPieces(unit);
-            bangobj.board.shadowPiece(unit);
+            _bangmgr.addPiece(unit);
         }
         
         /** The logic used to control the robots. */

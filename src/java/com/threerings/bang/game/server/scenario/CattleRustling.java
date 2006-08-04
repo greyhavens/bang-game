@@ -115,8 +115,7 @@ public class CattleRustling extends Scenario
                 cow.assignPieceId(bangobj);
                 cow.position(spot.x, spot.y);
                 cow.orientation = (short)RandomUtil.getInt(4);
-                bangobj.board.shadowPiece(cow);
-                bangobj.addToPieces(cow);
+                _bangmgr.addPiece(cow);
                 log.fine("Placed " + cow + ".");
 
                 // stop when we've placed the desired number of cattle

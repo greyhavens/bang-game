@@ -61,6 +61,7 @@ import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
+import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.AdjustTickEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MoveEffect;
@@ -439,6 +440,15 @@ public class BangManager extends GameManager
         }
     }
 
+    /**
+     * Adds a piece to the board by deploying an {@link AddPieceEffect}.  The
+     * piece should already have a valid piece id.
+     */
+    public void addPiece (Piece piece)
+    {
+        deployEffect(-1, new AddPieceEffect(piece));
+    }
+    
     /**
      * Prepares an effect and posts it to the game object, recording damage
      * done in the process.
@@ -1129,8 +1139,7 @@ public class BangManager extends GameManager
                     Point spot = spots.remove(0);
                     Piece piece = ppieces.remove(0);
                     piece.position(spot.x, spot.y);
-                    _bangobj.addToPieces(piece);
-                    _bangobj.board.shadowPiece(piece);
+                    addPiece(piece);
                 }
             }
 
@@ -2418,6 +2427,9 @@ public class BangManager extends GameManager
             }
         }
 
+        public void boardAffected (String effect) {
+        }
+        
         public void pieceMoved (Piece piece) {
             // let the scenario know that the unit moved
             _scenario.pieceMoved(_bangobj, piece);

@@ -101,8 +101,7 @@ public class PlagueEffect extends BonusEffect
             reportRemoval(obs, p);
 
             newPieces[ii].position(p.x, p.y);
-            bangobj.addPieceDirect(newPieces[ii]);
-            reportAddition(obs, newPieces[ii]);
+            addAndReport(bangobj, newPieces[ii], obs);
         }
 
         // the balance of power has shifted, recompute our metrics

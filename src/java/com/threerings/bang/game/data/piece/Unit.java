@@ -409,6 +409,13 @@ public class Unit extends Piece
     }
     
     @Override // documentation inherited
+    public void wasAdded (BangObject bangobj)
+    {
+        super.wasAdded(bangobj);
+        hindrance = bangobj.globalHindrance;
+    }
+    
+    @Override // documentation inherited
     public void wasKilled (short tick)
     {
         super.wasKilled(tick);

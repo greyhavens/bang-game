@@ -82,8 +82,7 @@ public class RespawnDelegate extends ScenarioDelegate
 
             // then position it and add it back at its new location
             unit.position(bspot.x, bspot.y);
-            bangobj.addToPieces(unit);
-            bangobj.board.shadowPiece(unit);
+            _bangmgr.addPiece(unit);
         }
     }
 

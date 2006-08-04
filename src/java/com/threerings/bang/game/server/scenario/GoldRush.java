@@ -84,7 +84,8 @@ public class GoldRush extends Scenario
 
         // start with nuggets at every lode spot
         for (int ii = 0; ii < _lodes.size(); ii++) {
-            ClaimJumping.dropNugget(bangobj, _lodes.getX(ii), _lodes.getY(ii));
+            dropBonus(bangobj, NuggetEffect.NUGGET_BONUS,
+                _lodes.getX(ii), _lodes.getY(ii));
         }
     }
 

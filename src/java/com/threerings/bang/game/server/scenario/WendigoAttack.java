@@ -267,7 +267,7 @@ public class WendigoAttack extends Scenario
                 }
                 wendigo.orientation = (short)orient;
                 wendigo.lastActed = tick;
-                bangobj.addToPieces(wendigo);
+                _bangmgr.addPiece(wendigo);
                 _wendigos.add(wendigo);
             }
         }

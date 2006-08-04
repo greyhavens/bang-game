@@ -114,8 +114,9 @@ public class ClaimJumping extends Scenario
 
         int placed = 0;
         for (BonusSorter sorter : sorters) {
-            Bonus nugget = dropNugget(bangobj, _bonusSpots.getX(sorter.index),
-                                      _bonusSpots.getY(sorter.index));
+            Bonus nugget = dropBonus(bangobj, NuggetEffect.NUGGET_BONUS,
+                _bonusSpots.getX(sorter.index),
+                _bonusSpots.getY(sorter.index));
             // we need to mark these nuggets as "occupying" the bonus spots
             // they are being dropped in, lest the server stick another bonus
             // in their place
@@ -139,14 +140,6 @@ public class ClaimJumping extends Scenario
         if (nuggets > 0) {
             user.stats.incrementStat(Stat.Type.NUGGETS_CLAIMED, nuggets);
         }
-    }
-
-    /**
-     * Drops a nugget at the specified location.
-     */
-    protected static Bonus dropNugget (BangObject bangobj, int x, int y)
-    {
-        return dropBonus(bangobj, NuggetEffect.NUGGET_BONUS, x, y);
     }
 
     /** Indicates the tick on which we will end the game. */

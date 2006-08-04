@@ -51,6 +51,11 @@ public abstract class Effect extends SimpleStreamableObject
         public void pieceAffected (Piece piece, String effect);
 
         /**
+         * Indicates that the board was affected with the named visual effect.
+         */
+        public void boardAffected (String effect);
+        
+        /**
          * Indicates that the specified piece was moved or reoriented.
          */
         public void pieceMoved (Piece piece);
@@ -318,14 +323,17 @@ public abstract class Effect extends SimpleStreamableObject
             super.toString();
     }
 
-    /** A helper function for reporting a piece addition. */
-    protected static void reportAddition (Observer obs, Piece piece)
+    /** A helper function for adding a piece and reporting it. */
+    protected static void addAndReport (
+        BangObject bangobj, Piece piece, Observer obs)
     {
+        bangobj.addPieceDirect(piece);
+        piece.wasAdded(bangobj);
         if (obs != null) {
             obs.pieceAdded(piece);
         }
     }
-
+    
     /** A helper function for reporting a piece affecting. */
     protected static void reportEffect (
         Observer obs, Piece piece, String effect)
@@ -335,6 +343,18 @@ public abstract class Effect extends SimpleStreamableObject
         }
     }
 
+    /** A helper function for affecting the board and reporting it. */
+    protected static void affectBoard (
+        BangObject bangobj, String effect, boolean persist, Observer obs)
+    {
+        if (persist) {
+            bangobj.boardEffect = effect;
+        }
+        if (obs != null) {
+            obs.boardAffected(effect);
+        }
+    }
+    
     /** A helper function for moving a piece and reporting it. */
     protected static void moveAndReport (
         BangObject bangobj, Piece piece, int nx, int ny, Observer obs)

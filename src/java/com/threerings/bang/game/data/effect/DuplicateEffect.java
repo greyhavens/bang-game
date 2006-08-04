@@ -111,8 +111,7 @@ public class DuplicateEffect extends BonusEffect
             // inform the observer of our duplication
             reportEffect(obs, piece, DUPLICATED);
             // and add the new piece, informing the observer again
-            bangobj.addPieceDirect(duplicate);
-            reportAddition(obs, duplicate);
+            addAndReport(bangobj, duplicate, obs);
         }
 
         return true;
