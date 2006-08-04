@@ -109,6 +109,14 @@ public abstract class Influence extends SimpleStreamableObject
     }
 
     /**
+     * Modifies the corporeal state of the piece.
+     */
+    public boolean adjustCorporeality (boolean corporeal)
+    {
+        return corporeal;
+    }
+
+    /**
      * Returns true if the last call to adjustAttack caused a change
      * in attack.  The default is false.
      */

@@ -443,6 +443,22 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public boolean isCorporeal ()
+    {
+        boolean corporeal = super.isCorporeal();
+        if (influence != null) {
+            corporeal = influence.adjustCorporeality(corporeal);
+        }
+        if (holdingInfluence != null) {
+            corporeal = influence.adjustCorporeality(corporeal);
+        }
+        if (hindrance != null) {
+            corporeal = influence.adjustCorporeality(corporeal);
+        }
+        return corporeal;
+    }
+
+    @Override // documentation inherited
     public boolean canBePushed ()
     {
         return true;

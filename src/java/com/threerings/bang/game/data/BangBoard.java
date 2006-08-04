@@ -1006,7 +1006,8 @@ public class BangBoard extends SimpleStreamableObject
         // props, but will otherwise not do funny things
         int idx = dy*_width+dx;
         byte tstate = _tstate[idx];
-        boolean flightstate = (remain ? piece.isAirborne() : piece.isFlyer());
+        boolean flightstate = (remain ? piece.isAirborne() : 
+                piece.isFlyer() || !piece.isCorporeal());
         if ((flightstate && (!remain || tstate <= O_FLAT) &&
                 (tstate > O_PROP || (tstate & TALL_FLAG) != 0 ||
                 (!remain && (tstate & TARGETABLE_FLAG) == 0 && 

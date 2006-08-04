@@ -367,6 +367,14 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
+     * Returns true if this piece cannot travel through other pieces.
+     */
+    public boolean isCorporeal ()
+    {
+        return true;
+    }
+
+    /**
      * Returns true if this piece can be pushed due to an attack.
      */
     public boolean canBePushed ()
