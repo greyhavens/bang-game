@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ControlTrainEffect;
 import com.threerings.bang.game.data.effect.Effect;
@@ -56,6 +57,12 @@ public class Engineer extends AreaCard
         }
         return (engine == null || track == null) ?
             false : (engine.findPath(bangobj, track) != null);
+    }
+
+    @Override // documentation inherited
+    public String getTownId ()
+    {
+        return BangCodes.FRONTIER_TOWN;
     }
 
     @Override // documentation inherited

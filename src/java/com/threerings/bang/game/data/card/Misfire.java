@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MisfireEffect;
@@ -25,6 +26,12 @@ public class Misfire extends Card
     {
         return (target instanceof Unit && target.isAlive() && 
                 ((Unit)target).getConfig().gunUser);
+    }
+
+    @Override // documentation inherited
+    public String getTownId ()
+    {
+        return BangCodes.FRONTIER_TOWN;
     }
 
     @Override // documentation inherited

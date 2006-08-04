@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.game.data.effect.HoldEffect;
@@ -27,6 +28,12 @@ public class DropNugget extends Card
     {
         return (target instanceof Unit && target.isAlive() &&
                 NuggetEffect.isNuggetBonus(((Unit)target).holding));
+    }
+
+    @Override // documentation inherited
+    public String getTownId ()
+    {
+        return BangCodes.FRONTIER_TOWN;
     }
 
     @Override // documentation inherited

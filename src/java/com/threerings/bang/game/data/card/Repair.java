@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.RepairEffect;
@@ -23,6 +24,12 @@ public class Repair extends Card
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
         return (target.isTargetable() && target.isAlive());
+    }
+
+    @Override // documentation inherited
+    public String getTownId ()
+    {
+        return BangCodes.FRONTIER_TOWN;
     }
 
     @Override // documentation inherited

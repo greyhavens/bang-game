@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.game.data.effect.IronPlateEffect;
@@ -25,6 +26,12 @@ public class IronPlate extends Card
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
         return (target instanceof Unit && target.isAlive());
+    }
+
+    @Override // documentation inherited
+    public String getTownId ()
+    {
+        return BangCodes.FRONTIER_TOWN;
     }
 
     @Override // documentation inherited

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
@@ -31,6 +32,12 @@ public class Spring extends AreaCard
     public boolean isValidLocation (BangObject bangobj, int tx, int ty)
     {
         return (bangobj.board.isOccupiable(tx, ty));
+    }
+
+    @Override // documentation inherited
+    public String getTownId ()
+    {
+        return BangCodes.FRONTIER_TOWN;
     }
 
     @Override // documentation inherited

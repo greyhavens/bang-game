@@ -86,7 +86,7 @@ public abstract class Card extends SimpleStreamableObject
     {
         return _cards.get(type);
     }
-    
+
     /** Returns a string type identifier for this card. */
     public abstract String getType ();
 
@@ -97,7 +97,7 @@ public abstract class Card extends SimpleStreamableObject
     {
         return true;
     }
-    
+
     /**
      * Returns the placement mode of this card.
      */
@@ -137,7 +137,7 @@ public abstract class Card extends SimpleStreamableObject
     {
         return false;
     }
-    
+
     /**
      * Activates the specified card at the supplied coordinates. The
      * returned effect will be prepared and effected immediately.
@@ -145,6 +145,11 @@ public abstract class Card extends SimpleStreamableObject
      * @return the effect of the card activation.
      */
     public abstract Effect activate (BangObject bangobj, Object target);
+
+    /**
+     * Returns the town in which this card was introduced.
+     */
+    public abstract String getTownId ();
 
     /**
      * Returns the weight of this card compared to the others which is used to
@@ -270,7 +275,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new SnakeBite());
         register(new BlownGasket());
         register(new BuggyLogic());
-        
+
         // collect the weights of each card into an array used to select
         // randomly based on said weights
         _weights = new int[_cards.size()];

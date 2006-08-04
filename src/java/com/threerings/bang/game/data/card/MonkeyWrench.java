@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
@@ -27,6 +28,12 @@ public class MonkeyWrench extends Card
     {
         return (target instanceof Unit && target.isAlive() && 
                 ((Unit)target).getConfig().make == UnitConfig.Make.STEAM);
+    }
+
+    @Override // documentation inherited
+    public String getTownId ()
+    {
+        return BangCodes.FRONTIER_TOWN;
     }
 
     @Override // documentation inherited
