@@ -49,7 +49,7 @@ public class BonusSprite extends MobileSprite
      */
     protected boolean isHidden ()
     {
-        return _name.endsWith("trap") || _name.endsWith("spring");
+        return BonusConfig.getConfig(_name).hidden;
     }
     
     @Override // documentation inherited

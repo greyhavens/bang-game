@@ -47,6 +47,9 @@ public class BonusConfig
 
     /** If true, the bonus can only be activated by ground units. */
     public boolean groundOnly;
+
+    /** If true, the bonus is hidden. */
+    public boolean hidden;
     
     /** If specified, the bonus will only be spawned in this scenario. */
     public String scenario;
@@ -188,6 +191,8 @@ public class BonusConfig
         
         config.groundOnly = BangUtil.getBooleanProperty(
             type, props, "ground_only", false);
+        config.hidden = BangUtil.getBooleanProperty(
+            type, props, "hidden", false);
             
         // map this config into the proper towns
         String towns = BangUtil.requireProperty(type, props, "towns");

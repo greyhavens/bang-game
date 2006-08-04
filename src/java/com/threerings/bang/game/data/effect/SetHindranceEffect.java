@@ -17,7 +17,7 @@ import static com.threerings.bang.Log.log;
 /**
  * An effect that sets a hindrance on the unit.
  */
-public abstract class SetHindranceEffect extends Effect
+public abstract class SetHindranceEffect extends BonusEffect
 {
     /** The piece we will affect. */
     public int pieceId;
@@ -49,6 +49,8 @@ public abstract class SetHindranceEffect extends Effect
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
+        super.apply(bangobj, obs);
+
         unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit == null) {
             log.warning("Missing target for set hindrance effect " +
