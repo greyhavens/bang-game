@@ -405,13 +405,12 @@
 
   <article name="female_madam" townId="frontier_town"
            slot="clothing" scrip="2000" coins="3">
-    <component cclass="female/clothing_back" name="madam_cash"/>
-    <component cclass="female/clothing_front" name="cash_madam"/>
+    <component cclass="female/clothing_back" name="madam_hips"/>
   </article>
 
   <article name="female_madam_cash" townId="frontier_town"
            slot="clothing" scrip="2200" coins="3">
-    <component cclass="female/clothing_back" name="a_madam"/>
+    <component cclass="female/clothing_back" name="madam_cash"/>
     <component cclass="female/clothing_front" name="cash_madam"/>
   </article>
 
