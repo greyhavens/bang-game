@@ -454,10 +454,10 @@ public class Unit extends Piece
             corporeal = influence.adjustCorporeality(corporeal);
         }
         if (holdingInfluence != null) {
-            corporeal = influence.adjustCorporeality(corporeal);
+            corporeal = holdingInfluence.adjustCorporeality(corporeal);
         }
         if (hindrance != null) {
-            corporeal = influence.adjustCorporeality(corporeal);
+            corporeal = hindrance.adjustCorporeality(corporeal);
         }
         return corporeal;
     }
