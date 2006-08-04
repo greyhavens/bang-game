@@ -18,8 +18,11 @@ public class NoncorporealEffect extends SetInfluenceEffect
             public String getName () {
                 return "spirit_walk";
             }
-            public boolean adjustCorporeality (boolean corporeal)
-            {
+            public int adjustTraversalCost (
+                    TerrainConfig terrain, int traversalCost) {
+                return BangBoard.BASE_TRAVERSAL;
+            }
+            public boolean adjustCorporeality (boolean corporeal) {
                 return false;
             }
         };
