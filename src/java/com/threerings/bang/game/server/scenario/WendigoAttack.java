@@ -159,7 +159,7 @@ public class WendigoAttack extends Scenario
         @Override // documentation inherited
         public void tick (BangObject bangobj, short tick)
         {
-            if (_wendigos != null) {
+            if (_wendigos != null && tick >= _nextWendigo) {
                 WendigoEffect effect = WendigoEffect.wendigosAttack(
                         bangobj, _wendigos);
                 effect.safePoints = _safePoints;
@@ -169,11 +169,12 @@ public class WendigoAttack extends Scenario
                 _wendigoRespawnTicks = null;
                 updatePoints(bangobj);
                 _wendigos = null;
+                _nextWendigo += (short)RandomUtil.getInt(
+                        MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS) - WENDIGO_WAIT;
             }
             if (tick >= _nextWendigo) {
                 createWendigos(bangobj, tick);
-                _nextWendigo += (short)RandomUtil.getInt(
-                        MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
+                _nextWendigo += WENDIGO_WAIT;
             }
         }
 
@@ -326,12 +327,18 @@ public class WendigoAttack extends Scenario
         /** The tick when the next wendigo will spawn. */
         protected short _nextWendigo;
 
+        /** The tick when the wendigos will attack. */
+        protected short _attackTick;
+
         /** Current wendigo attack number. */
         protected int _numAttacks;
 
-        /** Number of ticks before wendigo appears. **/
+        /** Number of ticks before wendigo appears. */
         protected static final short MIN_WENDIGO_TICKS = 9;
         protected static final short MAX_WENDIGO_TICKS = 15;
+
+        /** Number of ticks after wendigos appear before they attack. */
+        protected static final short WENDIGO_WAIT = 2;
 
         /** Number of points for having a talisman on a safe zone. */
         protected static final int TALISMAN_SAFE = 50;

@@ -1181,8 +1181,6 @@ public class BangManager extends GameManager
             }
         }
 
-        // tick the scenario which will do all the standard processing
-        _scenario.tick(_bangobj, tick);
 
         // note that all active players completed this tick
         int ridx = _bangobj.roundId-1;
@@ -1191,23 +1189,6 @@ public class BangManager extends GameManager
             if (_bangobj.isActivePlayer(ii)) {
                 _precords[ii].finishedTick[ridx] = tick;
             }
-        }
-
-        // determine whether we should end the game
-        if (tick >= _bangobj.lastTick) {
-            // let the scenario do any end of round business
-            _scenario.roundDidEnd(_bangobj);
-
-            // if this is the last round, end the game
-            if (_bangobj.roundId == _bconfig.getRounds()) {
-                endGame();
-            } else {
-                endRound();
-            }
-
-            // cancel the board tick
-            _ticker.cancel();
-            return;
         }
 
         // execute any advance orders
@@ -1239,6 +1220,26 @@ public class BangManager extends GameManager
                     _aiLogic[ii].tick(pieces, tick);
                 }
             }
+        }
+
+        // tick the scenario which will do all the standard processing
+        _scenario.tick(_bangobj, tick);
+
+        // determine whether we should end the game
+        if (tick >= _bangobj.lastTick) {
+            // let the scenario do any end of round business
+            _scenario.roundDidEnd(_bangobj);
+
+            // if this is the last round, end the game
+            if (_bangobj.roundId == _bconfig.getRounds()) {
+                endGame();
+            } else {
+                endRound();
+            }
+
+            // cancel the board tick
+            _ticker.cancel();
+            return;
         }
 
         try {
