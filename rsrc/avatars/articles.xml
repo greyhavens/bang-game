@@ -210,6 +210,13 @@
     <component cclass="male/hat_back" name="sombrero"/>
   </article>
 
+  <article name="male_coonskin" townId="frontier_town"
+           slot="hat" scrip="2500" coins="2" colors="clothes_p">
+    <component cclass="male/hat" name="coonskin"/>
+    <component cclass="male/hat_back" name="coonskin"/>
+  </article>
+
+
   <!-- male hats: indian trading post -->
   <article name="male_feather_one" townId="indian_post"
            slot="hat" scrip="2000" coins="2" colors="clothes_p">
