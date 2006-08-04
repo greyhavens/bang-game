@@ -78,10 +78,9 @@ public class GoodsCatalog
             if (card.getScripCost() <= 0) {
                 continue;
             }
-            // TODO: sort out town id bits
             Good good = new CardTripletGood(
                 card.getType(), card.getScripCost(), card.getCoinCost());
-            registerGood(BangCodes.FRONTIER_TOWN, good, pf);
+            registerGood(card.getTownId(), good, pf);
         }
 
         // load up our avatar article catalog and use the data therein to
