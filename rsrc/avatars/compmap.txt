@@ -1,4 +1,4 @@
-335
+358
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -59,34 +59,50 @@ female/eyes := sly := 92
 female/eyes := small := 93
 female/eyes := squinty := 142
 female/glasses := round := 94
+female/glasses := steamgoggles := 336
 female/hair_back := back_curly := 191
 female/hair_back := back_fancy := 192
 female/hair_back := bangstraight := 95
+female/hair_back := bob := 337
+female/hair_back := fairy := 338
 female/hair_back := fro := 96
 female/hair_back := ponytail := 97
 female/hair_back := ponytail_bangs := 98
 female/hair_back := ponytail_reverse := 193
+female/hair_back := shroom := 339
 female/hair_back := wavy := 99
+female/hair_back := wings := 340
 female/hair_front := back_curly := 194
 female/hair_front := back_fancy := 195
 female/hair_front := bangstraight := 100
 female/hair_front := beehive := 101
+female/hair_front := bob := 341
 female/hair_front := braids := 102
+female/hair_front := fairy := 342
 female/hair_front := fro := 103
+female/hair_front := mohawk := 343
 female/hair_front := ponytail := 104
 female/hair_front := ponytail_bangs := 105
 female/hair_front := ponytail_reverse := 196
+female/hair_front := shroom := 344
 female/hair_front := spikey := 106
+female/hair_front := straight := 345
 female/hair_front := wavy := 107
+female/hair_front := wings := 346
 female/hair_middle := beehive := 108
 female/hair_middle := braids := 109
+female/hair_middle := straight := 347
+female/hair_middle := wings := 348
 female/hat := bonnet := 197
 female/hat := bowler := 150
+female/hat := eagle_mask := 349
 female/hat := longbrim := 130
 female/hat := railbrim := 143
 female/hat := sombrero := 198
 female/hat := stetson := 110
+female/hat := war_bonnet := 350
 female/hat_back := bonnet := 199
+female/hat_back := eagle_mask := 351
 female/hat_back := feather_double := 144
 female/hat_back := feather_one := 312
 female/hat_back := feather_single := 145
@@ -94,6 +110,7 @@ female/hat_back := feather_two := 313
 female/hat_back := longbrim := 131
 female/hat_back := sombrero := 200
 female/hat_back := stetson := 111
+female/hat_back := war_bonnet := 352
 female/hat_band := border_band_sombrero := 201
 female/hat_band := border_sombrero := 202
 female/hat_band := disks_longbrim := 146
@@ -102,6 +119,7 @@ female/hat_band := thick_bowler := 173
 female/hat_band := thick_longbrim := 147
 female/hat_band := thick_railbrim := 148
 female/hat_band := thick_stetson := 149
+female/hat_band := tree_war_bonnet := 353
 female/head := chin := 204
 female/head := chubby := 151
 female/head := heart := 205
@@ -179,6 +197,7 @@ male/clothing_back := shotgun_fringe := 219
 male/clothing_back := suit := 220
 male/clothing_back := suit_bow := 5
 male/clothing_back := western_jacket := 22
+male/clothing_back := wolf_spear := 354
 male/clothing_front := cards_suit := 250
 male/clothing_front := cautious_longjohns := 221
 male/clothing_front := flask_fringe := 251
@@ -186,6 +205,7 @@ male/clothing_front := ironplate_poncho := 252
 male/clothing_front := lapels_suit := 222
 male/clothing_front := rifle_duster := 253
 male/clothing_front := smoking_fat_suspenders := 321
+male/clothing_front := wolf_hunter := 355
 male/clothing_props := cards_suit := 223
 male/clothing_props := cigarette_jacket := 23
 male/clothing_props := flask_fringe := 224
@@ -234,6 +254,7 @@ male/hair_front := sweptback := 231
 male/hair_middle := braids := 127
 male/hair_middle := fro := 128
 male/hair_middle := long_messy := 129
+male/hat := buffalo := 356
 male/hat := coonskin := 322
 male/hat := cowboy := 11
 male/hat := sombrero := 258
@@ -242,6 +263,7 @@ male/hat := ten_gallon := 259
 male/hat := war_bonnet := 297
 male/hat := widebrim := 44
 male/hat := wolf_mask := 298
+male/hat_back := buffalo := 357
 male/hat_back := coonskin := 323
 male/hat_back := cowboy := 12
 male/hat_back := feather_double := 45
@@ -262,6 +284,7 @@ male/hat_band := disks_widebrim := 48
 male/hat_band := fancy_sombrero := 264
 male/hat_band := king_cowboy := 49
 male/hat_band := king_stetson := 234
+male/hat_band := medallion_buffalo := 358
 male/hat_band := plain_cowboy := 50
 male/hat_band := plain_stetson := 235
 male/hat_band := ringlets_cowboy := 51
