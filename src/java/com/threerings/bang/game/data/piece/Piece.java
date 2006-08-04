@@ -33,6 +33,9 @@ import static com.threerings.bang.Log.log;
 public abstract class Piece extends SimpleStreamableObject
     implements Cloneable, DSet.Entry, PieceCodes
 {
+    /** Used by {@link #willShoot} */
+    public static final Effect[] NO_EFFECTS = new Effect[0];
+
     /** Uniquely identifies each piece in the game. */
     public int pieceId;
 
@@ -457,12 +460,13 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Creates any effect that must be applied prior to applying the {@link
+     * Creates any effects that must be applied prior to applying the {@link
      * ShotEffect} that results from this piece shooting another.
      */
-    public Effect willShoot (BangObject bangobj, Piece target, ShotEffect shot)
+    public Effect[] willShoot (
+            BangObject bangobj, Piece target, ShotEffect shot)
     {
-        return null;
+        return NO_EFFECTS;
     }
 
     /**

@@ -99,7 +99,7 @@ public class ShotEffect extends Effect
     public short[] deflectorIds;
     
     /** A secondary effect to apply before the shot. */
-    public Effect preShotEffect;
+    public Effect[] preShotEffects;
 
     /** Ammount of damage being applied. */
     public int baseDamage;
@@ -184,8 +184,8 @@ public class ShotEffect extends Effect
     public int[] getAffectedPieces ()
     {
         int[] pieces = new int[] { shooterId, targetId };
-        if (preShotEffect != null) {
-            pieces = concatenate(pieces, preShotEffect.getAffectedPieces());
+        for (Effect effect : preShotEffects) {
+            pieces = concatenate(pieces, effect.getAffectedPieces());
         }
         if (deflectorIds != null) {
             for (short deflectorId : deflectorIds) {
@@ -198,8 +198,11 @@ public class ShotEffect extends Effect
     @Override // documentation inherited
     public int[] getWaitPieces ()
     {
-        return (preShotEffect == null) ?
-            NO_PIECES : preShotEffect.getWaitPieces();
+        int[] waiters = NO_PIECES;
+        for (Effect effect : preShotEffects) {
+            waiters = concatenate(waiters, effect.getWaitPieces());
+        }
+        return waiters;
     }
 
     @Override // documentation inherited
@@ -232,18 +235,19 @@ public class ShotEffect extends Effect
             int bonus = (newDamage == 100) ? 20 : 0;
             dammap.increment(target.owner, newDamage - target.damage + bonus);
             if (newDamage == 100) {
-                preShotEffect = target.willDie(bangobj, shooterId);
+                preShotEffects = new Effect[] {
+                    target.willDie(bangobj, shooterId) };
             } else {
                 Piece shooter = bangobj.pieces.get(shooterId);
                 if (shooter != null) {
-                    preShotEffect = shooter.willShoot(bangobj, target, this);
+                    preShotEffects = shooter.willShoot(bangobj, target, this);
                 } else {
                     log.warning("Shot effect missing shooter [id=" +
                         shooterId + "].");
                 }
             }
-            if (preShotEffect != null) {
-                preShotEffect.prepare(bangobj, dammap);
+            for (Effect effect : preShotEffects) {
+                effect.prepare(bangobj, dammap);
             }
         } else {
             log.warning("Shot effect missing target [id=" + targetId + "].");
@@ -274,8 +278,8 @@ public class ShotEffect extends Effect
     public boolean apply (BangObject bangobj, Observer obs)
     {
         // apply any secondary pre-shot effect
-        if (preShotEffect != null) {
-            preShotEffect.apply(bangobj, obs);
+        for (Effect effect : preShotEffects) {
+            effect.apply(bangobj, obs);
         }
         
         // update the shooter's last acted if necessary

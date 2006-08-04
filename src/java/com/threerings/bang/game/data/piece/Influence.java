@@ -3,12 +3,17 @@
 
 package com.threerings.bang.game.data.piece;
 
-import com.threerings.io.SimpleStreamableObject;
-
 import com.threerings.bang.data.TerrainConfig;
 
 import com.threerings.bang.game.client.effect.InfluenceViz;
+
+import com.threerings.bang.game.data.BangObject;
+
+import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
+import com.threerings.bang.game.data.effect.ShotEffect;
+
+import com.threerings.io.SimpleStreamableObject;
 
 /**
  * Represents a temporary influence on a unit. Influences can adjust a
@@ -114,6 +119,15 @@ public abstract class Influence extends SimpleStreamableObject
     public boolean adjustCorporeality (boolean corporeal)
     {
         return corporeal;
+    }
+
+    /**
+     * Creates an effect that must be applied piror to applying the ShotEffect.
+     */
+    public Effect[] willShoot (
+            BangObject bangobj, Piece target, ShotEffect shot)
+    {
+        return Piece.NO_EFFECTS;
     }
 
     /**

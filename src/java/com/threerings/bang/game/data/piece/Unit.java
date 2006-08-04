@@ -254,9 +254,13 @@ public class Unit extends Piece
     }
     
     @Override // documentation inherited
-    public Effect willShoot (BangObject bangobj, Piece target, ShotEffect shot)
+    public Effect[] willShoot (
+            BangObject bangobj, Piece target, ShotEffect shot)
     {
-        return null;
+        if (influence != null) {
+            return influence.willShoot(bangobj, target, shot);
+        }
+        return NO_EFFECTS;
     }
 
     @Override // documentation inherited

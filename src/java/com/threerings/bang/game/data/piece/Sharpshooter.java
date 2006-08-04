@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.piece;
 
+import com.samskivert.util.ArrayUtil;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.HoldEffect;
@@ -17,18 +19,20 @@ import com.threerings.bang.game.data.piece.Piece;
 public class Sharpshooter extends Unit
 {
     @Override // documentation inherited
-    public Effect willShoot (BangObject bangobj, Piece target, ShotEffect shot)
+    public Effect[] willShoot (
+            BangObject bangobj, Piece target, ShotEffect shot)
     {
+        Effect[] preShots = super.willShoot(bangobj, target, shot);
         // sharpshooters always cause their target to drop any bonus they
         // are holding whether they die or not
         if (target instanceof Unit) {
             Unit unit = (Unit)target;
             if (unit.holding != null) {
-                return HoldEffect.dropBonus(bangobj, unit, pieceId,
-                    unit.holding);
+                ArrayUtil.append(preShots, HoldEffect.dropBonus(
+                            bangobj, unit, pieceId, unit.holding));
             }
         }
-        return null;
+        return preShots;
     }
 
     @Override // documentation inherited

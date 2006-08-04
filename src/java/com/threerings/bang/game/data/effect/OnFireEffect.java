@@ -1,0 +1,54 @@
+//
+// $Id$
+
+package com.threerings.bang.game.data.effect;
+
+import com.threerings.bang.game.data.piece.Hindrance;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
+
+/**
+ * Causes a unit to take damage every tick.
+ */
+public class OnFireEffect extends SetHindranceEffect
+{
+    public OnFireEffect (Piece piece)
+    {
+        init(piece);
+    }
+
+    /**
+     * For unserialization.
+     */
+    public OnFireEffect ()
+    {
+    }
+
+    @Override // documentation inherited
+    protected Hindrance createHindrance (final Unit target)
+    {
+        return new Hindrance() {
+            public String getName () {
+                return "on_fire";
+            }
+            public Effect tick () {
+                return new DamageEffect(target, DAMAGE_PER_TICK);
+            }
+            protected int duration () {
+                return FIRE_DURATION;
+            }
+        };
+    }
+
+    @Override // documentation inherited 
+    protected String getEffectName ()
+    {
+        return "on_fire";
+    }
+
+    /** The amount of damage to inflict per tick. */
+    protected static final int DAMAGE_PER_TICK = 5;
+
+    /** The number of ticks the fire lasts. */
+    protected static final int FIRE_DURATION = 4;
+}
