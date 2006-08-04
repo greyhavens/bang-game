@@ -20,7 +20,7 @@ import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.BScrollPane;
+import com.jmex.bui.BScrollingList;
 import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.BlankIcon;
@@ -43,20 +43,35 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
+// this seems strange but we need it so that we can use our own inner class to
+// parameterize the type of our parent class
+import com.threerings.bang.chat.client.ComicChatView.EntryBuilder;
+
+import static com.threerings.bang.Log.log;
+
 /**
  * Displays chat with avatar icons and speech balloons.
  */
-public abstract class ComicChatView extends BScrollPane
+public abstract class ComicChatView
+    extends BScrollingList<EntryBuilder, BComponent>
 {
+    /**
+     *  A factory of entries to send into {@link BScrollingList}.
+     */
+    public interface EntryBuilder<T extends BComponent>
+    {
+        /**
+         *  Construct and return whatever it is we were meant to construct.
+         */
+        public T build();
+    }
+
     public ComicChatView (BangContext ctx, boolean showNames)
     {
-        super(new BContainer(
-                  GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                       GroupLayout.STRETCH)));
+        super();
 
         _ctx = ctx;
         _showNames = showNames;
-        _content = (BContainer)getChild();
         _vport.setStyleClass("comic_chat_viewport");
         setPreferredSize(new Dimension(400, 400));
 
@@ -81,36 +96,124 @@ public abstract class ComicChatView extends BScrollPane
         appendSpoken((Handle)msg.speaker, msg.message);
     }
 
+    @Override // from BScrollingList
+        protected BComponent createComponent (EntryBuilder builder)
+    {
+        return builder.build();
+    }
+
+    /**
+     *  A concrete {@link EntryBuilder} that lazily constructs a fancy
+     *  {@link ChatEntry} instance on demand.
+     *
+     *  Additional complexity results from the need to temporarily cache a
+     *  version of the generated {@link ChatEntry} so that a second chat
+     *  message may be appended to it.
+     */
+    protected class ChatEntryBuilder implements EntryBuilder<ChatEntry>
+    {
+        /**
+         *  Construct a {@link ChatEntry} or read it from cache, then return it.
+         */
+        public ChatEntry build ()
+        {
+            // if we have a cached one, use it
+            if (_cachedEntry != null) {
+                return _cachedEntry;
+            }
+
+            // look up our speaker record for this speaker
+            Speaker sprec = _speakers.get(_speaker);
+            if (sprec == null) {
+                sprec = new Speaker(_speaker);
+                _speakers.put(_speaker, sprec);
+            }
+
+            // update the speaker's icon in case it has changed
+            int[] avatar = getSpeakerAvatar(_speaker);
+            sprec.setAvatar(_ctx, avatar, isLeftSide(_speaker) ^
+                            !_ctx.getAvatarLogic().isMale(avatar));
+
+            ChatEntry entry = new ChatEntry(sprec, isLeftSide(_speaker));
+            if (_message != null) {
+                entry.addMessage(_message);
+            }
+            if (_secondMessage != null) {
+                entry.addMessage(_secondMessage);
+            }
+            return entry;
+        }
+
+        /**
+         *  Construct a new builder, optionally constructing and
+         *  caching a {@link ChatEntry} immediately.
+         */
+        protected ChatEntryBuilder (Handle speaker, String message,
+                                    boolean cache)
+        {
+            _speaker = speaker;
+            _message = message;
+
+            if (cache) {
+                _cachedEntry = build();
+            } else {
+                _cachedEntry = null;
+            }
+        }
+
+        /**
+         *  Two messages in a row from the same user share the same
+         *  {@link ChatEntry}; this method stores the second message.
+         */
+        protected void setSecondMessage (String message)
+        {
+            _secondMessage = message;
+            if (_cachedEntry != null) {
+                _cachedEntry.addMessage(_secondMessage);
+            }
+        }
+
+        /** Just export this entry builder's speaker */
+        protected Handle getSpeaker ()
+        {
+            return _speaker;
+        }
+
+        /**
+         *  When we're done adding messages to this entry, we absolutely
+         *  must get rid of the cached entry, or the whole point is lost.
+         */
+        protected void clearCachedEntry ()
+        {
+            _cachedEntry = null;
+        }
+
+        protected ChatEntry _cachedEntry;
+        protected Handle _speaker;
+        protected String _message, _secondMessage;
+    }
+
     protected void appendSpoken (Handle speaker, String message)
     {
-        // look up our speaker record for this speaker
-        Speaker sprec = _speakers.get(speaker);
-        if (sprec == null) {
-            sprec = new Speaker(speaker);
-            _speakers.put(speaker, sprec);
-        }
-
-        // update the speaker's icon in case it has changed
-        int[] avatar = getSpeakerAvatar(speaker);
-        sprec.setAvatar(_ctx, avatar, isLeftSide(speaker) ^
-                        !_ctx.getAvatarLogic().isMale(avatar));
-
-        // create a new chat entry if necessary
-        ChatEntry entry = _last;
-        if (entry == null || !entry.speaker.equals(sprec)) {
-            _content.add(entry = new ChatEntry(sprec, isLeftSide(speaker)));
-        }
-
-        // and append our message to that chat entry
-        entry.addMessage(message);
-        _scrollToEnd = true;
-
-        // we only allow two messages to use the same avatar, then we add
-        // another avatar to avoid the amazing zillion chat bubbles with no
-        // head
-        if (_last != entry) {
-            _last = entry;
+        ChatEntryBuilder builder = _last;
+        if (builder == null || !builder.getSpeaker().equals(speaker)) {
+            builder = new ChatEntryBuilder(speaker, message, true);
+            addValue(builder, true);
         } else {
+            builder.setSecondMessage(message);
+            // clear out the cached height for our builder or the scrolling
+            // list won't properly figure things out
+            _values.get(_values.size()-1).height = -1;
+            // and inject a snap to bottom request
+            _vport.invalidateAndSnap();
+        }
+
+        if (_last != builder) {
+            _last = builder;
+        } else {
+            if (_last != null) {
+                _last.clearCachedEntry();
+            }
             _last = null;
         }
     }
@@ -120,9 +223,14 @@ public abstract class ComicChatView extends BScrollPane
      */
     public void appendSystem (ChatMessage msg)
     {
-        String style = SystemChatView.getAttentionLevel(msg) + "_chat_label";
-        _content.add(new BLabel(SystemChatView.format(_ctx, msg), style));
-        _scrollToEnd = true;
+        final String formattedMsg = SystemChatView.format(_ctx, msg);
+        final String style = SystemChatView.getAttentionLevel(msg) +
+            "_chat_label";
+        addValue(new EntryBuilder() {
+            public BComponent build() {
+                return new BLabel(formattedMsg, style);
+            }
+        }, true);
         _last = null;
     }
 
@@ -131,20 +239,8 @@ public abstract class ComicChatView extends BScrollPane
      */
     public void clear ()
     {
-        _content.removeAll();
+        removeValues();
         _last = null;
-    }
-
-    @Override // documentation inherited
-    public void validate ()
-    {
-        super.validate();
-
-        // if flagged, scroll to the end now that everything is laid out
-        if (_scrollToEnd) {
-            getVerticalScrollBar().getModel().setValue(Integer.MAX_VALUE);
-            _scrollToEnd = false;
-        }
     }
 
     /**
@@ -167,15 +263,15 @@ public abstract class ComicChatView extends BScrollPane
      */
     protected void createBubbleBackgrounds ()
     {
-        BufferedImage img = new BufferedImage(90, 45,
-            BufferedImage.TYPE_INT_ARGB);
+        BufferedImage img = new BufferedImage(
+            90, 45, BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = img.createGraphics();
-        Area bubble = new Area(new RoundRectangle2D.Float(8, 0, 81, 44, 30,
-            30));
-        bubble.add(new Area(new Arc2D.Float(-12, -8, 24, 24, -40f, 30f,
-            Arc2D.PIE)));
+        Area bubble = new Area(new RoundRectangle2D.Float(
+                                   8, 0, 81, 44, 30, 30));
+        bubble.add(new Area(new Arc2D.Float(
+                                -12, -8, 24, 24, -40f, 30f, Arc2D.PIE)));
         gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON);
+                             RenderingHints.VALUE_ANTIALIAS_ON);
         gfx.setColor(new Color(0xF1EFE3));
         gfx.fill(bubble);
         gfx.setColor(new Color(0x896A4B));
@@ -288,8 +384,8 @@ public abstract class ComicChatView extends BScrollPane
             this.speaker = speaker;
             _left = left;
 
-            GroupLayout layout = GroupLayout.makeHoriz(GroupLayout.STRETCH,
-                GroupLayout.CENTER, GroupLayout.NONE);
+            GroupLayout layout = GroupLayout.makeHoriz(
+                GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.NONE);
             final int hgap = layout.getGap();
             layout.setOffAxisJustification(GroupLayout.TOP);
             setLayoutManager(layout);
@@ -302,8 +398,8 @@ public abstract class ComicChatView extends BScrollPane
                 protected Dimension computePreferredSize (
                     int whint, int hhint) {
                     Dimension ldim = _slabel.getPreferredSize(-1, -1);
-                    return super.computePreferredSize(_content.getWidth() -
-                        _content.getInsets().getHorizontal() -
+                    return super.computePreferredSize(
+                        _vport.getWidth() - _vport.getInsets().getHorizontal() -
                         ChatEntry.this.getInsets().getHorizontal() -
                         getInsets().getHorizontal() - hgap - ldim.width,
                         hhint);
@@ -335,9 +431,7 @@ public abstract class ComicChatView extends BScrollPane
 
     protected BangContext _ctx;
     protected boolean _showNames;
-    protected BContainer _content;
-    protected ChatEntry _last;
-    protected boolean _scrollToEnd;
+    protected ChatEntryBuilder _last;
 
     /** Maps speakers to avatars and icons. */
     protected HashMap<Handle,Speaker> _speakers = new HashMap<Handle,Speaker>();
