@@ -408,7 +408,7 @@
   </article>
 
   <article name="female_madam_cash" townId="frontier_town"
-           slot="clothing" scrip="2200" coins="3" colors="clothes_p,clothes_t>
+           slot="clothing" scrip="2200" coins="3" colors="clothes_p,clothes_t">
     <component cclass="female/clothing_back" name="madam_cash"/>
     <component cclass="female/clothing_front" name="cash_madam"/>
   </article>
