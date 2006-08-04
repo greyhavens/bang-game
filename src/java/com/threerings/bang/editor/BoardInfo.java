@@ -3,6 +3,7 @@
 
 package com.threerings.bang.editor;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
@@ -77,7 +78,8 @@ public class BoardInfo extends JPanel
 
         // create the prop visibility panel
         JPanel ppanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
-        ppanel.add(new JLabel(_msgs.get("m.props")), HGroupLayout.FIXED);
+        ppanel.add(_plabel = new JLabel(_msgs.get("m.props")), 
+                HGroupLayout.FIXED);
         ppanel.add(_props);
         _props.addItemListener(this);
         add(ppanel);
@@ -166,6 +168,8 @@ public class BoardInfo extends JPanel
     public void itemStateChanged (ItemEvent ie)
     {
         ScenarioLabel sl = (ScenarioLabel)ie.getItem();
+        _plabel.setForeground(sl.getColor());
+        _props.setForeground(sl.getColor());
         ((EditorController)_panel.getController()).setViewingProps(sl.id);
     }
     
@@ -175,16 +179,18 @@ public class BoardInfo extends JPanel
         public ScenarioLabel (String scenarioId)
         {
             id = scenarioId;
-            if (id == null) {
-                _name = _msgs.get("m.all");
-            } else {
-                _name = _ctx.xlate("game", "m.scenario_" + id);
-            }
+            _name = (id == null ? _msgs.get("m.all") :
+                    _ctx.xlate("game", "m.scenario_" + id));
         }
 
         public String toString ()
         {
             return _name;
+        }
+
+        public Color getColor ()
+        {
+            return (id == null) ? Color.BLACK : Color.RED; 
         }
 
         String _name;
@@ -194,7 +200,7 @@ public class BoardInfo extends JPanel
     protected MessageBundle _msgs;
 
     protected JTextField _name;
-    protected JLabel _pcount;
+    protected JLabel _pcount, _plabel;
     protected JComboBox _props;
     protected int _players;
 
