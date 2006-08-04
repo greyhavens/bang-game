@@ -72,20 +72,12 @@ public class MoveEffect extends Effect
         piece.lastActed = newLastActed;
         if (piece.x != nx || piece.y != ny) {
             moveAndReport(bangobj, piece, nx, ny, obs);
-            piece.didMove(getDistance());
+            piece.didMove(piece.getDistance(ox, oy));
             
         } else {
             // we updated last acted, so we need to report something
             reportEffect(obs, piece, UPDATED);
         }
         return true;
-    }
-    
-    /**
-     * Returns the total Manhattan distance moved.
-     */
-    protected int getDistance ()
-    {
-        return Math.abs(nx - ox) + Math.abs(ny - oy);
     }
 }

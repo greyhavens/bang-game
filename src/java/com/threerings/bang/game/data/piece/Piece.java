@@ -269,7 +269,7 @@ public abstract class Piece extends SimpleStreamableObject
     }
 
     /**
-     * Returns the Manhatten distance between two points.
+     * Returns the Manhattan distance between two points.
      */
     public static int getDistance (int x, int y, int tx, int ty)
     {
