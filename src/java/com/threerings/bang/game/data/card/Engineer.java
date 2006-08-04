@@ -25,6 +25,10 @@ public class Engineer extends AreaCard
     @Override // documentation inherited
     public boolean isPlayable (BangObject bangobj)
     {
+        if (!super.isPlayable(bangobj)) {
+            return false;
+        }
+
         // make sure the board contains train tracks
         for (Piece piece : bangobj.pieces) {
             if (piece instanceof Track) {

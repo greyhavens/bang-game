@@ -19,6 +19,7 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.data.scenario.TutorialInfo;
+import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -100,7 +101,8 @@ public abstract class Card extends SimpleStreamableObject
      */
     public boolean isPlayable (BangObject bangobj)
     {
-        return true;
+        return BangUtil.getTownIndex(bangobj.townId) >=
+            BangUtil.getTownIndex(getTownId());
     }
 
     /**

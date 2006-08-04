@@ -25,7 +25,8 @@ public class FoolsGold extends AddPieceCard
     @Override // documentation inherited
     public boolean isPlayable (BangObject bangobj)
     {
-        return (bangobj.scenario instanceof NuggetScenarioInfo);
+        return super.isPlayable(bangobj) &&
+            (bangobj.scenario instanceof NuggetScenarioInfo);
     }
 
     @Override // documentation inherited
