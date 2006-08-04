@@ -6,6 +6,8 @@ package com.threerings.bang.game.data.piece;
 import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.ExpireHindranceEffect;
+import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 
 /**
@@ -15,6 +17,12 @@ import com.threerings.bang.game.data.effect.ShotEffect;
  */
 public abstract class Hindrance extends Influence
 {
+    @Override // documentation inherited
+    public ExpireInfluenceEffect createExpireEffect ()
+    {
+        return new ExpireHindranceEffect();
+    }
+    
     /**
      * Create a specialized ShotEffect that will override the standard
      * Piece.shoot value;
@@ -30,6 +38,15 @@ public abstract class Hindrance extends Influence
      * unit has moved of its own volition.
      */
     public Effect maybeGeneratePostMoveEffect (int steps)
+    {
+        return null;
+    }
+    
+    /**
+     * Gives the hindrance a chance to generate an effect after the affected
+     * unit has been ordered to move/shoot.
+     */
+    public Effect maybeGeneratePostOrderEffect ()
     {
         return null;
     }

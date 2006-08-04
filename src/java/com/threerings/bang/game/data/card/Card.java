@@ -269,6 +269,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new MonkeyWrench());
         register(new SnakeBite());
         register(new BlownGasket());
+        register(new BuggyLogic());
         
         // collect the weights of each card into an array used to select
         // randomly based on said weights

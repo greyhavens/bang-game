@@ -419,6 +419,12 @@ public class BangManager extends GameManager
                 }
             }
 
+            // possibly deploy a post-order effect
+            Effect peffect = unit.maybeGeneratePostOrderEffect();
+            if (peffect != null) {
+                deployEffect(-1, peffect);
+            }
+            
             // finally update our metrics
             _bangobj.updateData();
 

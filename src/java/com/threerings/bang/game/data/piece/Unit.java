@@ -312,13 +312,13 @@ public class Unit extends Piece
     {
         ArrayList<Effect> effects = new ArrayList<Effect>();
         if (influence != null && influence.isExpired(tick)) {
-            ExpireInfluenceEffect effect = new ExpireInfluenceEffect();
+            ExpireInfluenceEffect effect = influence.createExpireEffect();
             effect.init(this);
             effects.add(effect);
         }
         if (hindrance != null) {
             if (hindrance.isExpired(tick)) {
-                ExpireHindranceEffect effect = new ExpireHindranceEffect();
+                ExpireInfluenceEffect effect = hindrance.createExpireEffect();
                 effect.init(this);
                 effects.add(effect);
             } else {
@@ -507,6 +507,16 @@ public class Unit extends Piece
     {
         return (hindrance == null) ?
             null : hindrance.maybeGeneratePostMoveEffect(steps);
+    }
+    
+    /**
+     * Called on the server to give the unit a chance to generate an effect
+     * to deploy after it has been ordered to move/shoot.
+     */
+    public Effect maybeGeneratePostOrderEffect ()
+    {
+        return (hindrance == null) ?
+            null : hindrance.maybeGeneratePostOrderEffect();
     }
     
     @Override // documentation inherited

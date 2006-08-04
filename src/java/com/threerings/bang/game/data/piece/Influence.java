@@ -8,6 +8,7 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.bang.data.TerrainConfig;
 
 import com.threerings.bang.game.client.effect.InfluenceViz;
+import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
 
 /**
  * Represents a temporary influence on a unit. Influences can adjust a
@@ -33,6 +34,14 @@ public abstract class Influence extends SimpleStreamableObject
         return tick > _startTick + duration();
     }
 
+    /**
+     * Creates and returns the effect used to expire the influence.
+     */
+    public ExpireInfluenceEffect createExpireEffect ()
+    {
+        return new ExpireInfluenceEffect();
+    }
+    
     /**
      * Adjusts a piece's ticks per move. The default is no adjustment.
      */
