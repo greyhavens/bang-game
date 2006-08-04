@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.effect;
 
+import com.threerings.bang.data.TerrainConfig;
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Unit;
 
