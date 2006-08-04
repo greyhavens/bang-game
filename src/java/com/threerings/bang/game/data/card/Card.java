@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -12,6 +13,7 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
@@ -52,7 +54,9 @@ public abstract class Card extends SimpleStreamableObject
             return "missile";
         } else {
             // select the card based on a weighted random choice
-            return _wcards[RandomUtil.getWeightedIndex(_weights)].getType();
+            Card[] wcards = _wcards.get(townId);
+            int[] weights = _weights.get(townId);
+            return wcards[RandomUtil.getWeightedIndex(weights)].getType();
         }
     }
 
@@ -220,8 +224,8 @@ public abstract class Card extends SimpleStreamableObject
     }
 
     /**
-     * Registers a card prototype so that it may be looked up and
-     * instantiated by "type" (as defined by {@link #getType}).
+     * Registers a card prototype so that it may be looked up and instantiated
+     * by "type" (as defined by {@link #getType}).
      */
     protected static void register (Card card)
     {
@@ -237,12 +241,15 @@ public abstract class Card extends SimpleStreamableObject
     /** A mapping from card identifier to card prototype. */
     protected static HashMap<String,Card> _cards = new HashMap<String,Card>();
 
-    /** Contains a weight value for every registered card. */
-    protected static int[] _weights;
+    /** Maps town id to an array of the weights for all cards available in that
+     * town. Used in conjunction with {@link #_wcards}. */
+    protected static HashMap<String,int[]> _weights =
+        new HashMap<String,int[]>();
 
-    /** Contains the card associated with the weight value of the same index in
-     * {@link #_weights}. */
-    protected static Card[] _wcards;
+    /** Maps town id to an array of the cards available in that town. Used in
+     * conjunction with {@link #_weights}. */
+    protected static HashMap<String,Card[]> _wcards =
+        new HashMap<String,Card[]>();
 
     static {
         register(new Repair());
@@ -276,14 +283,31 @@ public abstract class Card extends SimpleStreamableObject
         register(new BlownGasket());
         register(new BuggyLogic());
 
-        // collect the weights of each card into an array used to select
-        // randomly based on said weights
-        _weights = new int[_cards.size()];
-        _wcards = new Card[_cards.size()];
-        int idx = 0;
+        // create arrays of all cards introduced in each town
+        HashMap<String,ArrayList<Card>> bytown =
+            new HashMap<String,ArrayList<Card>>();
         for (Card card : _cards.values()) {
-            _wcards[idx] = card;
-            _weights[idx++] = card.getWeight();
+            ArrayList<Card> clist = bytown.get(card.getTownId());
+            if (clist == null) {
+                bytown.put(card.getTownId(), clist = new ArrayList<Card>());
+            }
+            clist.add(card);
+        }
+
+        // now create weights and wcards arrays for each town
+        ArrayList<Card> clist = new ArrayList<Card>();
+        for (String townId : BangCodes.TOWN_IDS) {
+            // each town has all the cards from the previous, plus new ones
+            clist.addAll(bytown.get(townId));
+            int[] weights = new int[clist.size()];
+            Card[] cards = new Card[clist.size()];
+            int idx  = 0;
+            for (Card card : clist) {
+                cards[idx] = card;
+                weights[idx++] = card.getWeight();
+            }
+            _weights.put(townId, weights);
+            _wcards.put(townId, cards);
         }
     }
 }
