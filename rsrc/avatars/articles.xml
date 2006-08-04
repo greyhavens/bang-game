@@ -255,7 +255,7 @@
   </article>
 
   <article name="male_buffalo" townId="indian_post"
-           slot="hat" scrip="2500" coins="2">
+           slot="hat" scrip="2500" coins="2" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="buffalo"/>
     <component cclass="male/hat_back" name="buffalo"/>
   </article>
