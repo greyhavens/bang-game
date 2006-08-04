@@ -242,8 +242,6 @@ male/hat := ten_gallon := 259
 male/hat := war_bonnet := 297
 male/hat := widebrim := 44
 male/hat := wolf_mask := 298
-male/hat band := thunderbird_war_bonnet := 295
-male/hat band := tree_war_bonnet := 296
 male/hat_back := coonskin := 323
 male/hat_back := cowboy := 12
 male/hat_back := feather_double := 45
