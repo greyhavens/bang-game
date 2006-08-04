@@ -91,7 +91,7 @@
 
   <!-- male eye glasses: frontier town -->
   <article name="male_round_glasses" townId="frontier_town"
-           slot="glasses" scrip="1000" coins="2">
+           slot="glasses" scrip="1000" coins="2" colors="">
     <component cclass="male/glasses" name="round"/>
   </article>
 
@@ -211,7 +211,7 @@
   </article>
 
   <article name="male_coonskin" townId="frontier_town"
-           slot="hat" scrip="2500" coins="2" colors="clothes_p">
+           slot="hat" scrip="2500" coins="2" colors="">
     <component cclass="male/hat" name="coonskin"/>
     <component cclass="male/hat_back" name="coonskin"/>
   </article>
@@ -253,7 +253,6 @@
     <component cclass="male/hat" name="wolf_mask"/>
     <component cclass="male/hat_back" name="wolf_mask"/>
   </article>
-
 
   <article name="male_buffalo" townId="indian_post"
            slot="hat" scrip="2500" coins="2">
@@ -403,8 +402,8 @@
     <component cclass="female/clothing_front" name="pistol_peasant_dress"/>
   </article>
 
-  <article name="female_madam" townId="frontier_town"
-           slot="clothing" scrip="2000" coins="3">
+  <article name="female_madam_hips" townId="frontier_town"
+           slot="clothing" scrip="2000" coins="3" colors="clothes_p,clothes_t">
     <component cclass="female/clothing_back" name="madam_hips"/>
   </article>
 
@@ -455,7 +454,7 @@
 
   <!-- female eye glasses: frontier town -->
   <article name="female_round_glasses" townId="frontier_town"
-           slot="glasses" scrip="1000" coins="2">
+           slot="glasses" scrip="1000" coins="2" colors="">
     <component cclass="female/glasses" name="round"/>
   </article>
 
@@ -584,7 +583,7 @@
   </article>
 
   <article name="female_eagle_mask" townId="indian_post"
-           slot="hat" scrip="3500" coins="3">
+           slot="hat" scrip="3500" coins="3" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="eagle_mask"/>
     <component cclass="female/hat_back" name="eagle_mask"/>
   </article>
