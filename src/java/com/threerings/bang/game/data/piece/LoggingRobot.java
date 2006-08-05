@@ -49,7 +49,7 @@ public class LoggingRobot extends BallisticUnit
         ProximityShotEffect proxShot = null;
         for (Piece piece : pieces) {
             if (piece instanceof Unit && getDistance(piece) == 1 &&
-                piece.owner != -1 && !piece.isAirborne() &&
+                piece.owner != -1 && !piece.isAirborne() && piece.isAlive() &&
                 board.canCross(x, y, piece.x, piece.y)) {
                 if (proxShot == null) {
                     proxShot = new ProximityShotEffect(this, piece,
