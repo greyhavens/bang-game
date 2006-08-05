@@ -6,6 +6,7 @@ package com.threerings.bang.game.data.scenario;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
 
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.piece.Marker;
 
 /**
@@ -34,6 +35,12 @@ public class ForestGuardiansInfo extends ScenarioInfo
         return BangCodes.INDIAN_POST;
     }
 
+    @Override // from ScenarioInfo
+    public int getTeamSize (BangConfig config)
+    {
+        return Math.min(config.teamSize, 2);
+    }
+    
     @Override // from ScenarioInfo
     public Stat.Type getObjective ()
     {

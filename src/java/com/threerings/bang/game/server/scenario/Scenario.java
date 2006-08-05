@@ -123,9 +123,10 @@ public abstract class Scenario
     /**
      * Returns the maximum duration of this scenario in ticks.
      */
-    public short getDuration (BangConfig bconfig)
+    public short getDuration (BangConfig bconfig, BangObject bangobj)
     {
-        return (short)Math.ceil(getBaseDuration() / (bconfig.teamSize+1f));
+        return (short)Math.ceil(getBaseDuration() /
+            (_bangmgr.getTeamSize()+1f));
     }
 
     /**

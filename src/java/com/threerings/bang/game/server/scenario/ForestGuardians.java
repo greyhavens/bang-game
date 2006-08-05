@@ -141,12 +141,9 @@ public class ForestGuardians extends Scenario
             _rlogic = new LoggingRobotLogic();
             _rlogic.init(_bangmgr, -1);
             
-            // count trees and spawn initial bots
-            for (Piece piece : bangobj.pieces) {
-                if (piece instanceof TreeBed) {
-                    _rtarget += LOGGING_ROBOTS_PER_TREE;
-                }
-            }
+            // spawn initial bots
+            _rtarget = (int)((_bangmgr.getTeamSize() + 1) *
+                _bangmgr.getPlayerCount() * LOGGING_ROBOTS_PER_UNIT);
             for (int ii = 0; ii < _rtarget; ii++) {
                 spawnRobot(bangobj);
             }
@@ -161,7 +158,7 @@ public class ForestGuardians extends Scenario
             // count bots
             int rcount = 0;
             for (Piece piece : bangobj.pieces) {
-                if (piece instanceof LoggingRobot && piece.isAlive()) {
+                if (piece instanceof LoggingRobot && piece.isAlive()) {    
                     rcount++;
                 }
             }
@@ -275,9 +272,9 @@ public class ForestGuardians extends Scenario
     /** The spots from which robots emerge. */
     protected ArrayList<Marker> _robotSpots = new ArrayList<Marker>();
     
-    /** The approximate number of logging robots to keep alive per tree. */
-    protected static final int LOGGING_ROBOTS_PER_TREE = 1;
+    /** The approximate number of logging robots to keep alive per unit. */
+    protected static final float LOGGING_ROBOTS_PER_UNIT = 0.5f;
     
     /** The average number of ticks to allow before spawning a new robot. */
-    protected static final int AVG_ROBOT_SPAWN_DELAY = 4;
+    protected static final int AVG_ROBOT_SPAWN_DELAY = 2;
 }

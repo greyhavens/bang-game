@@ -19,7 +19,8 @@ public class BangConfig extends GameConfig
     /** The number of people playing the game. */
     public int seats = 2;
 
-    /** The size of each player's team (not including their Big Shot). */
+    /** The base size of each player's team (not including their Big Shot; may
+     * be modified by scenario). */
     public int teamSize = 4;
 
     /** The desired scenarios for each round (implies the number of rounds). */

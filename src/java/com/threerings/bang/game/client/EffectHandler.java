@@ -134,7 +134,7 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // if they were damaged, go ahead and clear any pending shot
-        if (wasDamaged) {
+        if (wasDamaged && sprite instanceof Targetable) {
             ((Targetable)sprite).setPendingShot(false);
         }
 

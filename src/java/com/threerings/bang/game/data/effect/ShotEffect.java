@@ -99,7 +99,7 @@ public class ShotEffect extends Effect
     public short[] deflectorIds;
     
     /** A secondary effect to apply before the shot. */
-    public Effect[] preShotEffects;
+    public Effect[] preShotEffects = Piece.NO_EFFECTS;
 
     /** Ammount of damage being applied. */
     public int baseDamage;
@@ -236,8 +236,9 @@ public class ShotEffect extends Effect
             dammap.increment(target.owner, newDamage - target.damage + bonus);
             if (newDamage == 100) {
                 Effect effect = target.willDie(bangobj, shooterId);
-                preShotEffects = (effect == null) ?
-                    new Effect[0] : new Effect[] { effect };
+                if (effect != null) {
+                    preShotEffects = new Effect[] { effect };
+                }
             } else {
                 Piece shooter = bangobj.pieces.get(shooterId);
                 if (shooter != null) {
@@ -245,7 +246,6 @@ public class ShotEffect extends Effect
                 } else {
                     log.warning("Shot effect missing shooter [id=" +
                         shooterId + "].");
-                    preShotEffects = new Effect[0];
                 }
             }
             for (Effect effect : preShotEffects) {

@@ -14,6 +14,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.client.StatsView;
 import com.threerings.bang.util.BangUtil;
@@ -145,6 +146,15 @@ public abstract class ScenarioInfo
         return true;
     }
 
+    /**
+     * Returns the number of units (aside from the big shot) that players will
+     * use, taking into account the desired size in the configuration.
+     */
+    public int getTeamSize (BangConfig config)
+    {
+        return config.teamSize;
+    }
+    
     /**
      * Returns the stat associated with the scenario's primary objective.
      */

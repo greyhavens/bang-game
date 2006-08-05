@@ -58,7 +58,7 @@ public class SelectionView extends SteelWindow
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         _bangobj = bangobj;
         _pidx = pidx;
-        _tconfigs = new UnitConfig[config.teamSize];
+        _tconfigs = new UnitConfig[bangobj.scenario.getTeamSize(config)];
 
         BContainer header = GroupLayout.makeHBox(GroupLayout.CENTER);
         String msg = MessageBundle.compose(
@@ -122,7 +122,8 @@ public class SelectionView extends SteelWindow
         _waiting = false;
 
         // add a label for each selectable unit
-        _team = new BLabel[config.teamSize];
+        int teamSize = _bangobj.scenario.getTeamSize(config);
+        _team = new BLabel[teamSize];
         for (int ii = 0; ii < _team.length; ii++) {
             _side.add(_team[ii] = new BLabel("", "pick_team_choice"));
         }
@@ -133,7 +134,7 @@ public class SelectionView extends SteelWindow
         _units = new UnitPalette(_ctx, _teamins, 4, 2);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
-        _units.setSelectable(config.teamSize);
+        _units.setSelectable(teamSize);
         _units.selectFirstIcon();
         _center.add(_units);
 

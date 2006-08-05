@@ -95,7 +95,7 @@ import static com.threerings.bang.Log.log;
  */
 public class BangManager extends GameManager
     implements GameCodes, BangProvider
-{
+{   
     // documentation inherited from interface BangProvider
     public void getBoard (
         ClientObject caller, BangService.BoardListener listener)
@@ -328,6 +328,14 @@ public class BangManager extends GameManager
         }
     }
 
+    /**
+     * Returns the team size for the current round.
+     */
+    public int getTeamSize ()
+    {
+        return _bangobj.scenario.getTeamSize(_bconfig);
+    }
+    
     /**
      * Attempts to move the specified unit to the specified coordinates and
      * optionally fire upon the specified target.
@@ -722,8 +730,8 @@ public class BangManager extends GameManager
             // make purchases for our AIs
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 if (isAI(ii)) {
-                    selectTeam(ii, _aiLogic[ii].getUnitTypes(_bconfig.teamSize),
-                               null);
+                    selectTeam(ii, _aiLogic[ii].getUnitTypes(
+                        getTeamSize()), null);
                 }
             }
             break;
@@ -984,11 +992,11 @@ public class BangManager extends GameManager
         }
 
         // make sure they didn't request too many pieces
-        if (types.length > _bconfig.teamSize) {
+        if (types.length > getTeamSize()) {
             log.warning("Rejecting bogus team request " +
                         "[who=" + _bangobj.players[pidx] +
                         ", types=" + StringUtil.toString(types) +
-                        ", teamSize=" + _bconfig.teamSize + "].");
+                        ", teamSize=" + getTeamSize() + "].");
             return;
         }
 
@@ -1097,7 +1105,8 @@ public class BangManager extends GameManager
                 _scenario.roundWillStart(_bangobj, _starts, _purchases);
 
                 // configure the duration of the round
-                _bangobj.setDuration(_scenario.getDuration(_bconfig));
+                _bangobj.setDuration(_scenario.getDuration(
+                    _bconfig, _bangobj));
                 _bangobj.setLastTick((short)(_bangobj.duration - 1));
 
                 // note this round's duration for later processing (roundId is
