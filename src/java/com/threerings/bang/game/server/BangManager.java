@@ -669,7 +669,7 @@ public class BangManager extends GameManager
                 prec.finishedTick = new int[_bconfig.getRounds()];
                 if (isAI(ii)) {
                     prec.playerId = -1;
-                    prec.ratings = new DSet();
+                    prec.ratings = new DSet<Rating>();
                     avatars[ii] = ((BangAI)_AIs[ii]).avatar;
                 } else if (isActivePlayer(ii)) {
                     prec.user = (PlayerObject)getPlayer(ii);
@@ -2327,7 +2327,7 @@ public class BangManager extends GameManager
         public Purse purse;
         public int[] finishedTick;
 
-        public DSet ratings;
+        public DSet<Rating> ratings;
         public HashMap<String,Rating> nratings = new HashMap<String,Rating>();
 
         public PlayerObject user;
@@ -2335,7 +2335,7 @@ public class BangManager extends GameManager
         public Rating getRating (String scenario) {
             Rating rating = nratings.get(scenario);
             if (rating == null) {
-                rating = (Rating)ratings.get(scenario);
+                rating = ratings.get(scenario);
                 if (rating == null) {
                     rating = new Rating();
                     rating.scenario = scenario;
