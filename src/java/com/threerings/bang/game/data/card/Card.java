@@ -307,6 +307,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new BuggyLogic());
         register(new HighNoon());
         register(new Snare());
+        register(new EagleEye());
 
         // create arrays of all cards introduced in each town
         HashMap<String,ArrayList<Card>> bytown =
