@@ -221,10 +221,10 @@ public abstract class ShopView extends BWindow
     {
         ArrayList<String> tips = new ArrayList<String>();
         // get our shop specific tips
-        _msgs.getAll("m.shop_tip", tips, false);
+        _msgs.getAll("m.shop_tip.", tips, false);
         // get our global tips
         _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS).getAll(
-            "m.shop_tip", tips, false);
+            "m.shop_tip.", tips, false);
         // return a random tip
         return RandomUtil.pickRandom(tips);
     }
