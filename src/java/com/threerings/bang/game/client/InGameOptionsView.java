@@ -16,6 +16,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.scenario.PracticeInfo;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -32,13 +33,21 @@ public class InGameOptionsView extends BDecoratedWindow
         _ctx = ctx;
         _bangobj = bangobj;
 
+        MessageBundle msgs = ctx.getMessageManager().getBundle("options");
         add(_title = new BLabel("", "window_title"), GroupLayout.FIXED);
 
-        MessageBundle msgs = ctx.getMessageManager().getBundle("options");
+        add(new BLabel(msgs.get("m.leave_game_and")), GroupLayout.FIXED);
         BContainer box = GroupLayout.makeHBox(GroupLayout.CENTER);
-        // box.add(new BButton(msgs.get("m.exit"), this, "exit"));
-        box.add(new BButton(msgs.get("m.to_saloon"), this, "to_saloon"));
+        if (bangobj.scenario.getIdent().equals(PracticeInfo.IDENT)) {
+            box.add(new BButton(msgs.get("m.to_ranch"), this, "to_ranch"));
+        } else {
+            box.add(new BButton(msgs.get("m.to_saloon"), this, "to_saloon"));
+        }
         box.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
+        add(box, GroupLayout.FIXED);
+
+        add(new BLabel(msgs.get("m.leave_game_or")), GroupLayout.FIXED);
+        box = GroupLayout.makeHBox(GroupLayout.CENTER);
         box.add(new BButton(msgs.get("m.resume"), this, "dismiss"));
         add(box, GroupLayout.FIXED);
     }
@@ -58,11 +67,13 @@ public class InGameOptionsView extends BDecoratedWindow
                 _ctx.getClient().getBootstrapData();
             _ctx.getLocationDirector().moveTo(bbd.saloonOid);
 
+        } else if ("to_ranch".equals(action)) {
+            BangBootstrapData bbd = (BangBootstrapData)
+                _ctx.getClient().getBootstrapData();
+            _ctx.getLocationDirector().moveTo(bbd.ranchOid);
+
         } else if ("dismiss".equals(action)) {
             _ctx.getBangClient().clearPopup(this, true);
-
-//         } else if ("exit".equals(action)) {
-//             _ctx.getApp().stop();
         }
     }
 
