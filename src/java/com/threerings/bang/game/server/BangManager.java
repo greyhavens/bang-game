@@ -551,6 +551,15 @@ public class BangManager extends GameManager
     }
 
     @Override // documentation inherited
+    public String where ()
+    {
+        return (_bangobj == null) ? super.where() :
+            "[" + super.where() + ", board=" +
+                _bangobj.boardName + ", pcount=" +
+                _bangobj.players.length + "]";
+    }
+    
+    @Override // documentation inherited
     protected Class<? extends PlaceObject> getPlaceObjectClass ()
     {
         return BangObject.class;
