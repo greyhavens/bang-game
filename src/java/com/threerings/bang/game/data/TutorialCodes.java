@@ -5,7 +5,11 @@ package com.threerings.bang.game.data;
 
 import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
 import com.threerings.bang.game.data.scenario.ClaimJumpingInfo;
+import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 import com.threerings.bang.game.data.scenario.GoldRushInfo;
+import com.threerings.bang.game.data.scenario.LandGrabInfo;
+import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
+import com.threerings.bang.game.data.scenario.WendigoAttackInfo;
 
 /**
  * Codes and constants related to the in-game tutorials
@@ -18,15 +22,27 @@ public interface TutorialCodes
 
     /** Enumerates the identifiers for our tutorials and the order in which
      * they should be displayed and completed. */
-    public static final String[] TUTORIALS = {
-        "controls",
-        "bonuses_cards",
-        "claim_jumping",
-        PRACTICE_PREFIX + ClaimJumpingInfo.IDENT,
-        "cattle_rustling",
-        PRACTICE_PREFIX + CattleRustlingInfo.IDENT,
-        "gold_rush",
-        PRACTICE_PREFIX + GoldRushInfo.IDENT,
+    public static final String[][] TUTORIALS = {
+        { // frontier town tutorials
+            "controls",
+            "bonuses_cards",
+            "claim_jumping",
+            PRACTICE_PREFIX + ClaimJumpingInfo.IDENT,
+            "cattle_rustling",
+            PRACTICE_PREFIX + CattleRustlingInfo.IDENT,
+            "gold_rush",
+            PRACTICE_PREFIX + GoldRushInfo.IDENT,
+            // "land_grab",
+            PRACTICE_PREFIX + LandGrabInfo.IDENT,
+        }, { // indian post tutorials
+            // "itp_units",
+            // "totem_building",
+            PRACTICE_PREFIX + TotemBuildingInfo.IDENT,
+            // "wending_attack",
+            PRACTICE_PREFIX + WendigoAttackInfo.IDENT,
+            // "forest_guardians",
+            PRACTICE_PREFIX + ForestGuardiansInfo.IDENT,
+        }
     };
 
     /** An event message sent to the server to let the tutorial scenario know

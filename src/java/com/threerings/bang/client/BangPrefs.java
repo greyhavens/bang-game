@@ -16,6 +16,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.TutorialCodes;
+import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.DeploymentConfig;
 
 import static com.threerings.bang.Log.log;
@@ -191,24 +192,29 @@ public class BangPrefs
 
     /**
      * Used to prevent the tutorials from automatically showing up once a user
-     * has dismissed them the first time or completed the first two.
+     * has dismissed them the first time or completed the first two. This is
+     * tracked per-town, so the a player will be shown the tutorial view again
+     * the first time they visit a new town.
      */
     public static boolean shouldShowTutorials (PlayerObject user)
     {
-        return !config.getValue(user.username + ".declined_tuts", false) &&
+        int townIdx = BangUtil.getTownIndex(user.townId);
+        return !config.getValue(
+            user.username + ".declined_tuts." + user.townId, false) &&
             !(user.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED,
-                                       TutorialCodes.TUTORIALS[0]) &&
+                                       TutorialCodes.TUTORIALS[townIdx][0]) &&
               user.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED,
-                                       TutorialCodes.TUTORIALS[1]));
+                                       TutorialCodes.TUTORIALS[townIdx][1]));
     }
 
     /**
      * Called when the user has dismissed the tutorial dialog instead of
-     * choosing a tutorial.
+     * choosing a tutorial. This marks the player as having declined the
+     * tutorials for the town they are currently in.
      */
     public static void setDeclinedTutorials (PlayerObject user)
     {
-        config.setValue(user.username + ".declined_tuts", true);
+        config.setValue(user.username + ".declined_tuts." + user.townId, true);
     }
 
     /**

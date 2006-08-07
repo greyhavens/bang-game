@@ -30,6 +30,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.client.util.ReportingListener;
 
@@ -72,8 +73,8 @@ public class PickTutorialView extends BDecoratedWindow
             hmsg = "m.tut_intro";
             break;
         case FIRST_TIME:
-            tmsg = "m.tut_first_title";
-            hmsg = "m.tut_first_intro";
+            tmsg = "m.tut_title_" + self.townId;
+            hmsg = "m.tut_intro_" + self.townId;
             break;
         case COMPLETED:
             tmsg = "m.tut_completed_title";
@@ -92,8 +93,9 @@ public class PickTutorialView extends BDecoratedWindow
         add(table);
 
         int unplayed = 0;
-        for (int ii = 0; ii < TutorialCodes.TUTORIALS.length; ii++) {
-            String tid = TutorialCodes.TUTORIALS[ii];
+        int townIdx = BangUtil.getTownIndex(self.townId);
+        for (int ii = 0; ii < TutorialCodes.TUTORIALS[townIdx].length; ii++) {
+            String tid = TutorialCodes.TUTORIALS[townIdx][ii];
             ImageIcon icon;
             String btext;
             if (self.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED, tid)) {
@@ -169,7 +171,7 @@ public class PickTutorialView extends BDecoratedWindow
     @Override // documentation inherited
     protected Dimension computePreferredSize (int whint, int hhint)
     {
-        return super.computePreferredSize(400, -1);
+        return super.computePreferredSize(450, -1);
     }
 
     protected BangContext _ctx;
