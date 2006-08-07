@@ -8,7 +8,6 @@ import com.jme.renderer.Renderer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.BEvent;
-import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.util.Dimension;
 
@@ -81,22 +80,9 @@ public class PlayerSlot extends AvatarView
     @Override // from BComponent
     public boolean dispatchEvent (BEvent event)
     {
-        if (event instanceof MouseEvent) {
-            MouseEvent mev = (MouseEvent)event;
-            if (mev.getType() == MouseEvent.MOUSE_PRESSED &&
-                mev.getButton() == MouseEvent.BUTTON2) {
-                BangOccupantInfo boi = (BangOccupantInfo)
-                    _ctx.getOccupantDirector().getOccupantInfo(_playerOid);
-                if (boi != null) {
-                    PlayerPopupMenu menu = new PlayerPopupMenu(
-                        _ctx, getWindow(), (Handle)boi.username);
-                    menu.popup(mev.getX(), mev.getY(), false);
-                    return true;
-                }
-            }
-        }
-
-        return super.dispatchEvent(event);
+        // pop up a player menu if they click the mouse
+        return PlayerPopupMenu.checkPopup(
+            _ctx, getWindow(), event, _playerOid) || super.dispatchEvent(event);
     }
 
     @Override // documentation inherited

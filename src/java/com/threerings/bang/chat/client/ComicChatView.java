@@ -22,6 +22,7 @@ import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollingList;
 import com.jmex.bui.background.ImageBackground;
+import com.jmex.bui.event.BEvent;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
@@ -39,6 +40,7 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
@@ -305,6 +307,27 @@ public abstract class ComicChatView
         }
     }
 
+    /** Displays a player's avatar icon and pops up a player menu when
+     * clicked. */
+    protected static class PlayerLabel extends BLabel
+    {
+        public PlayerLabel (BangContext ctx, Handle handle, BIcon icon) {
+            super(icon);
+            _ctx = ctx;
+            _handle = handle;
+        }
+
+        public boolean dispatchEvent (BEvent event) {
+            // pop up a player menu if they click the mouse
+            return PlayerPopupMenu.checkPopup(
+                _ctx, getWindow(), event, _handle) ||
+                super.dispatchEvent(event);
+        }
+
+        protected BangContext _ctx;
+        protected Handle _handle;
+    }
+
     /** Used to keep track of speaker's icons. */
     protected static class Speaker
         implements ResultListener<BImage>
@@ -325,18 +348,18 @@ public abstract class ComicChatView
             }
         }
 
-        public BLabel createLabel (boolean showName)
+        public BLabel createLabel (BangContext ctx, boolean showName)
         {
             BLabel label;
             int awid = AvatarLogic.WIDTH/8, ahei = AvatarLogic.HEIGHT/8;
             if (_avicon == null) {
-                label = new BLabel(new BlankIcon(awid, ahei));
+                label = new PlayerLabel(ctx, handle, new BlankIcon(awid, ahei));
                 if (_penders == null) {
                     _penders = new ArrayList<BLabel>();
                 }
                 _penders.add(label);
             } else {
-                label = new BLabel(_avicon);
+                label = new PlayerLabel(ctx, handle, _avicon);
             }
             label.setStyleClass("chat_speaker_label");
             label.setOrientation(BLabel.VERTICAL);
@@ -406,7 +429,7 @@ public abstract class ComicChatView
                 }
             });
 
-            add(_left ? 0 : 1, _slabel = speaker.createLabel(_showNames),
+            add(_left ? 0 : 1, _slabel = speaker.createLabel(_ctx, _showNames),
                 GroupLayout.FIXED);
         }
 

@@ -9,10 +9,13 @@ import com.jmex.bui.BPopupMenu;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.BEvent;
+import com.jmex.bui.event.MouseEvent;
 
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
@@ -24,6 +27,41 @@ import com.threerings.bang.util.BangContext;
 public class PlayerPopupMenu extends BPopupMenu
     implements ActionListener
 {
+    /**
+     * A convnience method that checks for a mouse click and popups up the
+     * specified player's context menu if appropriate.
+     */
+    public static boolean checkPopup (
+        BangContext ctx, BWindow parent, BEvent event, int playerOid)
+    {
+        // avoid needless occupant info lookups
+        if (!(event instanceof MouseEvent)) {
+            return false;
+        }
+        BangOccupantInfo boi = (BangOccupantInfo)
+            ctx.getOccupantDirector().getOccupantInfo(playerOid);
+        return (boi == null) ? false :
+            checkPopup(ctx, parent, event, (Handle)boi.username);
+    }
+
+    /**
+     * A convnience method that checks for a mouse click and popups up the
+     * specified player's context menu if appropriate.
+     */
+    public static boolean checkPopup (
+        BangContext ctx, BWindow parent, BEvent event, Handle handle)
+    {
+        if (event instanceof MouseEvent) {
+            MouseEvent mev = (MouseEvent)event;
+            if (mev.getType() == MouseEvent.MOUSE_PRESSED) {
+                PlayerPopupMenu menu = new PlayerPopupMenu(ctx, parent, handle);
+                menu.popup(mev.getX(), mev.getY(), false);
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Creates a popup menu for the specified player.
      */
