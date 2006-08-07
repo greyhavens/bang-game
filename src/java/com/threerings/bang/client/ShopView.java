@@ -221,28 +221,12 @@ public abstract class ShopView extends BWindow
     {
         ArrayList<String> tips = new ArrayList<String>();
         // get our shop specific tips
-        collectTips(_msgs, tips);
+        _msgs.getAll("m.shop_tip", tips, false);
         // get our global tips
-        collectTips(
-            _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS), tips);
+        _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS).getAll(
+            "m.shop_tip", tips, false);
         // return a random tip
         return RandomUtil.pickRandom(tips);
-    }
-
-    /**
-     * Helper function for {@link #getShopTip}.
-     */
-    protected void collectTips (MessageBundle msgs, ArrayList<String> tips)
-    {
-        // just plow through looking for 50 tips; we could stop when we get to
-        // the first undefined tip, but then when someone deletes a tip and
-        // forgets to renumber the rest, they all disappear; let's just DWTM
-        for (int ii = 0; ii < 50; ii++) {
-            String key = "m.shop_tip." + ii;
-            if (msgs.exists(key)) {
-                tips.add(msgs.get(key));
-            }
-        }
     }
 
     /**
