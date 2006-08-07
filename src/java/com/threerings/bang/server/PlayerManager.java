@@ -57,7 +57,9 @@ import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.TutorialUtil;
 
@@ -71,6 +73,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.persist.PardnerRepository;
 import com.threerings.bang.server.persist.Player;
+import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -355,6 +358,15 @@ public class PlayerManager
             throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
         }
 
+        // if this is a "practice versus the computer" tutorial, start up a two
+        // player game in lieu of a proper tutorial
+        if (tutid.startsWith(TutorialCodes.PRACTICE_PREFIX)) {
+            String scenId =
+                tutid.substring(TutorialCodes.PRACTICE_PREFIX.length());
+            playComputer(caller, 2, new String[] { scenId }, null, false, il);
+            return;
+        }
+
         // load up the tutorial configuration
         TutorialConfig tconfig =
             TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutid);
@@ -437,7 +449,17 @@ public class PlayerManager
         if (players < 2 || players > GameCodes.MAX_PLAYERS) {
             throw new InvocationException(INTERNAL_ERROR);
         }
-        // TODO: sanity check scenario type (make sure it corresponds to town)
+
+        // make sure the scenario types are valid for this town
+        int townIdx = BangUtil.getTownIndex(player.townId);
+        for (String scenId : scenarios) {
+            ScenarioInfo info = ScenarioInfo.getScenarioInfo(scenId);
+            if (info == null || info.getTownIndex() > townIdx) {
+                log.warning("Requested to play invalid scenario " +
+                            "[who=" + player.who() + ", scid=" + scenId + "].");
+                throw new InvocationException(INTERNAL_ERROR);
+            }
+        }
 
         // we'll use this when creating our AIs
         HashSet<String> names = new HashSet<String>();

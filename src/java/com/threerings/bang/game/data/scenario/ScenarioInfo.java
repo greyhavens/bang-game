@@ -44,7 +44,7 @@ public abstract class ScenarioInfo
         int ttidx = BangUtil.getTownIndex(townId);
         for (ScenarioInfo info : _scenarios.values()) {
             if (includePrior) {
-                if (BangUtil.getTownIndex(info.getTownId()) <= ttidx) {
+                if (info.getTownIndex() <= ttidx) {
                     scens.add(info);
                 }
             } else {
@@ -118,6 +118,17 @@ public abstract class ScenarioInfo
      * Returns the id of the town in which this scenario is available.
      */
     public abstract String getTownId ();
+
+    /**
+     * Returns the index of the town in which this scenario is introduced.
+     */
+    public int getTownIndex ()
+    {
+        if (_townIndex == -1) {
+            _townIndex = BangUtil.getTownIndex(getTownId());
+        }
+        return _townIndex;
+    }
 
     /**
      * Returns the name of the class that handles things on the server.
@@ -227,8 +238,7 @@ public abstract class ScenarioInfo
     // inherited from Comparable<ScenarioInfo>
     public int compareTo (ScenarioInfo oinfo)
     {
-        int tidx = BangUtil.getTownIndex(getTownId());
-        int otidx = BangUtil.getTownIndex(oinfo.getTownId());
+        int tidx = getTownIndex(), otidx = oinfo.getTownIndex();
         return (tidx != otidx) ? tidx - otidx :
             getIdent().compareTo(oinfo.getIdent());
     }
@@ -240,6 +250,10 @@ public abstract class ScenarioInfo
     {
         _scenarios.put(info.getIdent(), info);
     }
+
+    /** Used to cache our town index so we don't have to look it up all the
+     * damned time. Yay for premature optimization. */
+    protected transient int _townIndex = -1;
 
     /** Maps scenario ids to scenario info instances. */
     protected static HashMap<String,ScenarioInfo> _scenarios =

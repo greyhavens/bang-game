@@ -3,19 +3,30 @@
 
 package com.threerings.bang.game.data;
 
+import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
+import com.threerings.bang.game.data.scenario.ClaimJumpingInfo;
+import com.threerings.bang.game.data.scenario.GoldRushInfo;
+
 /**
  * Codes and constants related to the in-game tutorials
  */
 public interface TutorialCodes
 {
+    /** A prefix for tutorials that are not tutorials but rather two player
+     * practice games versus an AI. */
+    public static final String PRACTICE_PREFIX = "practice_";
+
     /** Enumerates the identifiers for our tutorials and the order in which
      * they should be displayed and completed. */
     public static final String[] TUTORIALS = {
         "controls",
         "bonuses_cards",
         "claim_jumping",
+        PRACTICE_PREFIX + ClaimJumpingInfo.IDENT,
         "cattle_rustling",
+        PRACTICE_PREFIX + CattleRustlingInfo.IDENT,
         "gold_rush",
+        PRACTICE_PREFIX + GoldRushInfo.IDENT,
     };
 
     /** An event message sent to the server to let the tutorial scenario know
