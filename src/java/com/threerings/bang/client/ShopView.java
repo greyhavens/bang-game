@@ -4,7 +4,6 @@
 package com.threerings.bang.client;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.logging.Level;
 
 import java.io.StringReader;
@@ -27,6 +26,7 @@ import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
+import com.samskivert.util.RandomUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.client.PlaceView;
@@ -223,11 +223,10 @@ public abstract class ShopView extends BWindow
         // get our shop specific tips
         collectTips(_msgs, tips);
         // get our global tips
-        collectTips(_ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS),
-                    tips);
-        // shuffle 'em up and return a random tip
-        Collections.shuffle(tips);
-        return tips.size() > 0 ? tips.get(0) : "";
+        collectTips(
+            _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS), tips);
+        // return a random tip
+        return RandomUtil.pickRandom(tips);
     }
 
     /**
