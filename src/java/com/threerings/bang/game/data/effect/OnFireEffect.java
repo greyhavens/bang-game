@@ -7,6 +7,9 @@ import com.threerings.bang.game.data.piece.Hindrance;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
+import com.threerings.bang.game.client.effect.ParticleInfluenceViz;
+import com.threerings.bang.game.client.effect.InfluenceViz;
+
 /**
  * Causes a unit to take damage every tick.
  */
@@ -30,6 +33,9 @@ public class OnFireEffect extends SetHindranceEffect
         return new Hindrance() {
             public String getName () {
                 return "on_fire";
+            }
+            public InfluenceViz createViz () {
+                return new ParticleInfluenceViz("frontier_town/fire");
             }
             public Effect tick () {
                 return new DamageEffect(target, DAMAGE_PER_TICK);
