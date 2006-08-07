@@ -189,7 +189,7 @@ public class TrainDelegate extends ScenarioDelegate
         if (nnext == null) {
             moveTrain(bangobj, train, Train.UNSET, Train.UNSET);
         } else {
-            moveTrain(bangobj, train, next.x, next.y);
+            moveTrain(bangobj, train, nnext.x, nnext.y);
         }
         return true;
     }
