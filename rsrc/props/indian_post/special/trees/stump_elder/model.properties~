@@ -1,0 +1,9 @@
+#
+# $Id$
+#
+# Defines the components that make up this model
+
+name = basket
+
+scale = 0.05
+
