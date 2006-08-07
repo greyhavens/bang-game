@@ -58,8 +58,9 @@ public class FailedShotEffect extends ShotEffect
         if (shooter != null) {
             dammap.increment(shooter.owner, newDamage - shooter.damage);
             if (newDamage == 100) {
-                preShotEffects = new Effect[] {
-                    shooter.willDie(bangobj, shooterId) };
+                Effect effect = shooter.willDie(bangobj, shooterId);
+                preShotEffects = (effect == null) ?
+                    Piece.NO_EFFECTS : new Effect[] { effect };
             }
             for (Effect effect : preShotEffects) {
                 effect.prepare(bangobj, dammap);

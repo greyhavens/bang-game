@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Rectangle;
+
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
@@ -29,6 +31,12 @@ public class AddPieceEffect extends Effect
     public int[] getAffectedPieces ()
     {
         return new int[] { piece.pieceId };
+    }
+
+    @Override // documentation inherited
+    public Rectangle getBounds ()
+    {
+        return new Rectangle(piece.x, piece.x, 1, 1);
     }
     
     // documentation inherited

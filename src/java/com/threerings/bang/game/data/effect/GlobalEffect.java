@@ -57,6 +57,7 @@ public abstract class GlobalEffect extends BonusEffect
     // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
+        super.apply(bangobj, obs);
         for (Effect effect : effects) {
             effect.apply(bangobj, obs);
         }
