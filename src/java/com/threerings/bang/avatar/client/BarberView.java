@@ -42,7 +42,7 @@ public class BarberView extends ShopView
             new Rectangle(203, 655, 610, 40));
         add(_status = new StatusLabel(ctx), new Rectangle(230, 10, 500, 50));
         _status.setStyleClass("shop_status");
-        _status.setText(_msgs.get("m.newlook_tip"));
+        _status.setText(getShopTip());
 
         // we need to handle displaying the avatar specially
         _avatar = new AvatarView(ctx, 2, true, false);
@@ -115,7 +115,7 @@ public class BarberView extends ShopView
             if (event.getAction().equals("newlook")) {
                 remove(_active);
                 add(_active = _newlook, CONTENT_RECT);
-                _status.setText(_msgs.get("m.newlook_tip"));
+                _status.setText(_msgs.get("m.shop_tip.0"));
             } else {
                 remove(_active);
                 add(_active = _wearclothes, CONTENT_RECT);

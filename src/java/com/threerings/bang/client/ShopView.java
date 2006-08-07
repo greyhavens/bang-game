@@ -3,8 +3,11 @@
 
 package com.threerings.bang.client;
 
-import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.logging.Level;
+
+import java.io.StringReader;
 import javax.swing.text.html.HTMLDocument;
 
 import com.jme.renderer.ColorRGBA;
@@ -208,6 +211,39 @@ public abstract class ShopView extends BWindow
     protected BButton createHelpButton ()
     {
         return new BButton(_msgs.get("m.help"), _ctrl, "help");
+    }
+
+    /**
+     * Gets a random tip to display upon entering this shop. The tip will be
+     * selected from a set of generic tips and a set of shop-specific tips.
+     */
+    protected String getShopTip ()
+    {
+        ArrayList<String> tips = new ArrayList<String>();
+        // get our shop specific tips
+        collectTips(_msgs, tips);
+        // get our global tips
+        collectTips(_ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS),
+                    tips);
+        // shuffle 'em up and return a random tip
+        Collections.shuffle(tips);
+        return tips.size() > 0 ? tips.get(0) : "";
+    }
+
+    /**
+     * Helper function for {@link #getShopTip}.
+     */
+    protected void collectTips (MessageBundle msgs, ArrayList<String> tips)
+    {
+        // just plow through looking for 50 tips; we could stop when we get to
+        // the first undefined tip, but then when someone deletes a tip and
+        // forgets to renumber the rest, they all disappear; let's just DWTM
+        for (int ii = 0; ii < 50; ii++) {
+            String key = "m.shop_tip." + ii;
+            if (msgs.exists(key)) {
+                tips.add(msgs.get(key));
+            }
+        }
     }
 
     /**

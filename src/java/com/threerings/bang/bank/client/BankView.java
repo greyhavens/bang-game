@@ -42,6 +42,7 @@ public class BankView extends ShopView
 
         _status = new BLabel("", "shop_status");
         add(_status, new Rectangle(265, 10, 500, 40));
+        _status.setText(getShopTip());
 
         add(new BuyCoinsView(ctx), new Rectangle(225, 540, 725, 86));
 

@@ -46,7 +46,7 @@ public class SaloonView extends ShopView
         add(_crview = new CriterionView(ctx, _ctrl), CRIT_RECT);
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
-        _status.setText(_msgs.get("m.intro_tip"));
+        _status.setText(getShopTip());
 
         // add a test game button for developer testing
         if (ctx.getUserObject().tokens.isAdmin()) {

@@ -98,6 +98,9 @@ public class RanchView extends ShopView
                 RanchView.this.selectTab(index);
             }
         }, new Rectangle(433, 585, 15+3*140, 66));
+
+        // start with a random shop tip
+        _status.setStatus(getShopTip(), false);
     }
 
     @Override // documentation inherited
