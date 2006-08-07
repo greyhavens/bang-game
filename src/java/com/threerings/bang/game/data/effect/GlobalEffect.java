@@ -53,6 +53,12 @@ public abstract class GlobalEffect extends BonusEffect
         }
         effects = effectList.toArray(effects);
     }
+
+    @Override // documentation inherited
+    public boolean isApplicable ()
+    {
+        return (effects != null && effects.length > 0);
+    }
     
     // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
