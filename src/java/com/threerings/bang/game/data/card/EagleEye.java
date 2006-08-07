@@ -6,7 +6,7 @@ package com.threerings.bang.game.data.card;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
-import com.threerings.bang.game.data.effect.IncreaseMaxFireEffect;
+import com.threerings.bang.game.data.effect.IncreaseFireDistanceEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
@@ -44,7 +44,7 @@ public class EagleEye extends Card
     @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
-        IncreaseMaxFireEffect effect = new IncreaseMaxFireEffect();
+        IncreaseFireDistanceEffect effect = new IncreaseFireDistanceEffect();
         effect.pieceId = (Integer)target;
         return effect;
     }

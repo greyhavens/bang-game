@@ -12,10 +12,10 @@ import com.threerings.bang.game.data.piece.Unit;
 /**
  * Increases the max fire distance of a unit.
  */
-public class IncreaseMaxFireEffect extends SetInfluenceEffect
+public class IncreaseFireDistanceEffect extends SetInfluenceEffect
 {
-    /** The amount to increase the max fire. */
-    public int maxFireIncrease = 1;
+    /** The amount to increase the max fire distance. */
+    public int fireDistanceIncrease = 1;
 
     @Override // documentation inherited
     public boolean isApplicable ()
@@ -40,7 +40,7 @@ public class IncreaseMaxFireEffect extends SetInfluenceEffect
 
             public int adjustMaxFireDistance (int fireDistance)
             {
-                return fireDistance + maxFireIncrease;
+                return fireDistance + fireDistanceIncrease;
             }
         };
     }
