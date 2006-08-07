@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -820,6 +821,8 @@ public class BangBoardView extends BoardView
         // move all of our loaded models into position
         long delay = 1L;
         Camera camera = _ctx.getRenderer().getCamera();
+        BoundingBox bbox = new BoundingBox(new Vector3f(),
+            TILE_SIZE/2, TILE_SIZE/2, TILE_SIZE/2);
         for (UnitSprite sprite : _readyUnits) {
             Piece unit = sprite.getPiece();
             Point corner = getStartCorner(unit);
@@ -833,11 +836,14 @@ public class BangBoardView extends BoardView
                 int startidx = path.size();
                 for (int ii = path.size()-1; ii >= 0; ii--) {
                     java.awt.Point point = path.get(ii);
-                    sprite.setLocation(_board, point.x, point.y);
-                    sprite.updateGeometricState(0, true);
+                    Vector3f center = bbox.getCenter();
+                    center.set((point.x + 0.5f) * TILE_SIZE,
+                        (point.y + 0.5f) * TILE_SIZE, TILE_SIZE/2);
+                    center.z += _board.getElevationScale(TILE_SIZE) *
+                        unit.computeElevation(_board, point.x, point.y);
                     startidx = ii;
                     int state = camera.getPlaneState();
-                    int rv = camera.contains(sprite.getWorldBound());
+                    int rv = camera.contains(bbox);
                     camera.setPlaneState(state);
                     if (rv == Camera.OUTSIDE_FRUSTUM) {
                         break;
