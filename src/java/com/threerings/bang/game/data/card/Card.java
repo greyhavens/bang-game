@@ -311,6 +311,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new TumbleweedWind());
         register(new Forgiven());
         register(new Firestarter());
+        register(new SpiritWalk());
 
         // create arrays of all cards introduced in each town
         HashMap<String,ArrayList<Card>> bytown =
