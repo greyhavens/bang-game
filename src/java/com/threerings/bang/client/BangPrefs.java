@@ -29,7 +29,7 @@ public class BangPrefs
     public enum DetailLevel {
         LOW, MEDIUM, HIGH
     };
-    
+
     /** Contains our client-side preferences. */
     public static Config config = new Config("bang");
 
@@ -112,7 +112,7 @@ public class BangPrefs
         return Enum.valueOf(DetailLevel.class,
             config.getValue("detail_level", "HIGH"));
     }
-    
+
     /**
      * Determines whether the level of detail is at least medium.
      */
@@ -120,7 +120,7 @@ public class BangPrefs
     {
         return getDetailLevel().compareTo(DetailLevel.MEDIUM) >= 0;
     }
-    
+
     /**
      * Determines whether the level of detail is high.
      */
@@ -128,7 +128,7 @@ public class BangPrefs
     {
         return getDetailLevel() == DetailLevel.HIGH;
     }
-    
+
     /**
      * Updates the desired level of graphical detail.
      */
@@ -136,7 +136,7 @@ public class BangPrefs
     {
         config.setValue("detail_level", level.name());
     }
-    
+
     /**
      * Checks whether the application should recommend changes to the graphical
      * detail level based on performance history.
@@ -145,7 +145,7 @@ public class BangPrefs
     {
         return config.getValue("suggest_detail", true);
     }
-    
+
     /**
      * Sets whether the application should recommend changes to the detail
      * level.
@@ -154,13 +154,13 @@ public class BangPrefs
     {
         config.setValue("suggest_detail", suggest);
     }
-    
+
     /**
      * Returns the volume of the music, a value from zero to one hundred.
      */
     public static int getMusicVolume ()
     {
-        return config.getValue("music_volume", 60);
+        return config.getValue("music_volume", 50);
     }
 
     /**
