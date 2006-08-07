@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.effect;
 
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
 /**
@@ -20,5 +21,11 @@ public class RepairAllEffect extends GlobalEffect
     public Effect getEffect (Piece piece)
     {
         return new RepairEffect(piece.pieceId);
+    }
+
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        return "m.effect_forgiven";
     }
 }
