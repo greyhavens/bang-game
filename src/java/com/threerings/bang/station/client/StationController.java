@@ -8,6 +8,8 @@ import java.io.IOException;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 
+import com.samskivert.util.Interval;
+import com.samskivert.util.Tuple;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.client.Client;
@@ -19,6 +21,7 @@ import com.threerings.crowd.util.CrowdContext;
 
 import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.BangPrefs;
+import com.threerings.bang.client.LogonView;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.BangCodes;
@@ -50,47 +53,73 @@ public class StationController extends PlaceController
         }
     }
 
-    // documentation inherited
+    @Override // from PlaceController
     protected PlaceView createPlaceView (CrowdContext ctx)
     {
         return (_view = new StationView((BangContext)ctx, this));
     }
 
+    @Override // from PlaceController
+    protected void didInit ()
+    {
+        super.didInit();
+        _ctx = (BangContext)super._ctx;
+    }
+
     protected void takeTrain (final String townId)
     {
+        _view.status.setStatus(
+            StationCodes.STATION_MSGS, "m.taking_train", false);
+        connectToTown(townId, _ctx.getUserObject().townId);
+    }
+
+    protected void connectToTown (final String townId, final String oldTownId)
+    {
         // add a temporary client observer to handle logon failure
-        final BangContext bctx = (BangContext)_ctx;
         ClientAdapter obs = new ClientAdapter() {
             public void clientDidLogon (Client client) {
                 BangPrefs.setLastTownId(
-                    bctx.getUserObject().username.toString(), townId);
+                    _ctx.getUserObject().username.toString(), townId);
                 _ctx.getClient().removeClientObserver(this);
             }
-            public void clientFailedToLogon (Client client,
-                                             Exception cause) {
+            public void clientFailedToLogon (Client client, Exception cause) {
                 _ctx.getClient().removeClientObserver(this);
-                // TODO: do the standard logon view message massaging
-                _view.status.setStatus(
-                    BangAuthCodes.AUTH_MSGS, cause.getMessage(), true);
-                // TODO: try to go back to our old town?
+                recoverFromFailure(townId, oldTownId, cause);
             }
         };
         _ctx.getClient().addClientObserver(obs);
+        _ctx.getBangClient().switchToTown(townId);
+    }
 
-        // logon to the new server
-        _view.status.setStatus(
-            StationCodes.STATION_MSGS, "m.taking_train", false);
-        bctx.getBangClient().switchToTown(townId);
+    protected void recoverFromFailure (
+        String townId, final String oldTownId, Exception cause)
+    {
+        Tuple<String,Boolean> msg = LogonView.decodeLogonException(_ctx, cause);
+
+        // if we failed to connect, try going back to our old town
+        if (msg.right && !townId.equals(oldTownId)) {
+            _view.status.setStatus(
+                StationCodes.STATION_MSGS, "m.failed_to_connect", true);
+            // give 'em two seconds to read the message, then go back
+            new Interval(_ctx.getApp()) {
+                public void expired () {
+                    connectToTown(oldTownId, oldTownId);
+                }
+            }.schedule(2000L);
+
+        } else {
+            _view.status.setStatus(
+                BangAuthCodes.AUTH_MSGS, msg.left, true);
+        }
     }
 
     protected void activateTown (final String townId)
     {
         // warn the user that we're going to download data, then do so
-        final BangContext bctx = (BangContext)_ctx;
         OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
                 try {
-                    if (!BangClient.activateTown(bctx, townId)) {
+                    if (!BangClient.activateTown(_ctx, townId)) {
                         // hrm, already activated? well OK...
                         takeTrain(townId);
                     }
@@ -111,8 +140,9 @@ public class StationController extends PlaceController
         String msg = MessageBundle.qualify(BangCodes.BANG_MSGS, "m." + townId);
         msg = MessageBundle.compose("m.need_town_bundles", msg);
         OptionDialog.showConfirmDialog(
-            bctx, StationCodes.STATION_MSGS, msg, new String[] { "m.ok" }, rr);
+            _ctx, StationCodes.STATION_MSGS, msg, new String[] { "m.ok" }, rr);
     }
 
+    protected BangContext _ctx;
     protected StationView _view;
 }

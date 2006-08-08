@@ -148,13 +148,24 @@ public class BangClient extends BasicClient
     public static boolean activateTown (BangContext ctx, String townId)
         throws IOException
     {
+        // create the activation file if we don't already have it
         File afile = new File(localDataDir(townId + ".dat"));
         if (afile.exists()) {
             return false;
         }
-
-        // create the activation file
         afile.createNewFile();
+
+        // note that we want to go straight to the train station next time we
+        // log on to make it a little easier to do the first time download
+        File mfile = new File(localDataDir("go_station.dat"));
+        if (!mfile.exists()) {
+            try {
+                mfile.createNewFile();
+            } catch (IOException ioe) {
+                log.log(Level.WARNING,
+                    "Failed to create marker file '" + mfile + "'.", ioe);
+            }
+        }
 
         // relaunch getdown (communicating failure with an exception because
         // returning false means we're already activated)
@@ -640,13 +651,27 @@ public class BangClient extends BasicClient
      */
     public void switchToTown (String townId)
     {
+        if (_pendingTownId != null) {
+            log.warning("Refusing to switch to town, we're already headed " +
+                "somewhere [townId=" + townId +
+                ", pTownId=" + _pendingTownId + "].");
+            return;
+        }
+
         // note that we're switching towns
         _pendingTownId = townId;
 
-        // logoff off from our current town; our logged off observer will then
-        // log us onto the pending town (we need to wait until we're fully
-        // logged off before doing so which is why this is structured thusly)
-        _ctx.getClient().logoff(true);
+        // if we are not logged on (maybe we failed to connect to a town and
+        // now we're trying to go back to the previous town) then try logging
+        // on to the new server immediately
+        if (!_ctx.getClient().isLoggedOn()) {
+            clientDidClear(_ctx.getClient());
+        } else {
+            // logoff off from our current town; our logged off observer will
+            // then log us onto the pending town (we need to wait until we're
+            // fully logged off before doing, hence this hoop jumping)
+            _ctx.getClient().logoff(true);
+        }
     }
 
     // documentation inherited from interface ClientObserver
@@ -696,8 +721,22 @@ public class BangClient extends BasicClient
             return;
         }
 
-        // check for a "go" parameter
-        String where = System.getProperty("go");
+        // check for a marker file indicating that we should go straight to the
+        // train station when we first start up which we do to smooth out the
+        // process of first downloading a new town's media
+        String where = null;
+        File mfile = new File(localDataDir("go_station.dat"));
+        if (mfile.exists()) {
+            mfile.delete();
+            where = "station";
+        }
+
+        // next check for a "go" parameter
+        if (where == null) {
+            where = System.getProperty("go");
+        }
+
+        // finally go somewhere if we were asked to do so
         BangBootstrapData bbd = (BangBootstrapData)
             _ctx.getClient().getBootstrapData();
         if ("ranch".equals(where)) {

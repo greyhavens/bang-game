@@ -7,6 +7,8 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Rectangle;
 
@@ -29,13 +31,20 @@ import com.threerings.bang.station.data.StationCodes;
  */
 public class MapView extends BContainer
 {
-    public MapView (BangContext ctx, StationController ctrl)
+    public MapView (BangContext ctx, final StationController ctrl)
     {
         super(new AbsoluteLayout());
         setStyleClass("station_map");
         _ctx = ctx;
         MessageBundle msgs = ctx.getMessageManager().getBundle(
             StationCodes.STATION_MSGS);
+
+        ActionListener disabler = new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                setPending(true);
+                ctrl.actionPerformed(event);
+            }
+        };
 
         // add buttons or labels for each town
         _tbuts = new BComponent[TBUT_RECTS.length];
@@ -44,7 +53,8 @@ public class MapView extends BContainer
             String townId = BangCodes.TOWN_IDS[ii];
             String gocmd = StationController.TAKE_TRAIN + townId;
 
-            _towns[ii] = new PairedButton(ctrl, gocmd, "map_" + townId, null);
+            _towns[ii] = new PairedButton(
+                disabler, gocmd, "map_" + townId, null);
             add(_towns[ii], TOWN_RECTS[ii]);
             _towns[ii].setEnabled(false);
 
@@ -52,7 +62,7 @@ public class MapView extends BContainer
                 _tbuts[ii] = new BLabel("", "map_here");
             } else {
                 _tbuts[ii] = new PairedButton(
-                    ctrl, gocmd, "map_take", _towns[ii]);
+                    disabler, gocmd, "map_take", _towns[ii]);
                 _towns[ii].setPair((PairedButton)_tbuts[ii]);
                 // frontier town is always enabled (if we're not in frontier
                 // town), the other towns all start disabled and we'll enable
@@ -64,6 +74,16 @@ public class MapView extends BContainer
             add(_tbuts[ii], TBUT_RECTS[ii]);
         }
 
+        enableTownButtons();
+    }
+
+    /**
+     * Notes that we are or are not in the process of moving between towns and
+     * enables or disables our train buttons accordingly.
+     */
+    public void setPending (boolean pendingMove)
+    {
+        _pendingMove = pendingMove;
         enableTownButtons();
     }
 
@@ -83,12 +103,12 @@ public class MapView extends BContainer
 
     protected void enableTownButtons ()
     {
-        for (int ii = 1; ii < _tbuts.length; ii++) {
+        for (int ii = 0; ii < _tbuts.length; ii++) {
             if (!(_tbuts[ii] instanceof BButton)) {
                 continue;
             }
-            boolean enabled = _ctx.getUserObject().holdsTicket(
-                BangCodes.TOWN_IDS[ii]);
+            boolean enabled = !_pendingMove && (ii == 0 ||
+                _ctx.getUserObject().holdsTicket(BangCodes.TOWN_IDS[ii]));
             _tbuts[ii].setEnabled(enabled);
             _towns[ii].setEnabled(enabled);
         }
@@ -96,9 +116,9 @@ public class MapView extends BContainer
 
     protected class PairedButton extends BButton
     {
-        public PairedButton (StationController ctrl, String command,
+        public PairedButton (ActionListener actlist, String command,
                              String styleClass, PairedButton pair) {
-            super("", ctrl, command);
+            super("", actlist, command);
             setStyleClass(styleClass);
             _pair = pair;
         }
@@ -130,6 +150,8 @@ public class MapView extends BContainer
     };
 
     protected BangContext _ctx;
+    protected boolean _pendingMove;
+
     protected PairedButton[] _towns;
     protected BComponent[] _tbuts;
 

@@ -30,6 +30,7 @@ import com.jmex.bui.util.Dimension;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
+import com.samskivert.util.Tuple;
 
 import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
@@ -56,6 +57,66 @@ import static com.threerings.bang.Log.log;
 public class LogonView extends BWindow
     implements ActionListener, BasicClient.InitObserver
 {
+    /**
+     * Converts an arbitrary exception into a translatable error string (which
+     * should be looked up in the @{link BangAuthCodes#AUTH_MSGS} bundle). If
+     * the exception indicates that the client is out of date, the process of
+     * updating the client <em>will be started</em>; the client will exit a few
+     * seconds later, so be sure to display the returned error message.
+     *
+     * <p> An additional boolean paramater will be returned indicating whether
+     * or not the returned error message is indicative of a connection failure,
+     * in which case the caller may wish to direct the user to the server
+     * status page so they can find out if we are in the middle of a sceduled
+     * downtime.
+     */
+    public static Tuple<String,Boolean> decodeLogonException (
+        BangContext ctx, Exception cause)
+    {
+        String msg = cause.getMessage();
+        boolean connectionFailure = false;
+
+        if (cause instanceof LogonException) {
+            // if the failure is due to a need for a client update, check for
+            // that and take the appropriate action
+            if (BangClient.checkForUpgrade(ctx, msg)) {
+                // mogrify the logon failed message to let the client know that
+                // we're going to automatically restart
+                msg = "m.version_mismatch_auto";
+            }
+
+            // change the new account button to server status for certain
+            // response codes
+            if (msg.equals(BangAuthCodes.UNDER_MAINTENANCE)) {
+                connectionFailure = true;
+            }
+
+        } else {
+            if (cause instanceof ConnectException) {
+                msg = "m.failed_to_connect";
+
+            } else if (cause instanceof IOException) {
+                String cmsg = cause.getMessage();
+                // foolery to detect a problem where Windows Connection Sharing
+                // will allow a connection to complete and then disconnect it
+                // after the first normal packet is sent
+                if (cmsg != null && cmsg.indexOf("forcibly closed") != -1) {
+                    msg = "m.failed_to_connect";
+                } else {
+                    msg = "m.network_error";
+                }
+
+            } else {
+                msg = "m.network_error";
+            }
+
+            // change the new account button to server status
+            connectionFailure = true;
+        }
+
+        return new Tuple<String,Boolean>(msg, connectionFailure);
+    }
+
     public LogonView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), GroupLayout.makeVert(GroupLayout.TOP));
@@ -233,46 +294,11 @@ public class LogonView extends BWindow
         }
 
         public void clientFailedToLogon (Client client, Exception cause) {
-            String msg = cause.getMessage();
-            if (cause instanceof LogonException) {
-                // if the failure is due to a need for a client update, check
-                // for that and take the appropriate action
-                if (BangClient.checkForUpgrade(_ctx, msg)) {
-                    // mogrify the logon failed message to let the client know
-                    // that we're going to automatically restart
-                    msg = "m.version_mismatch_auto";
-                }
-
-                // change the new account button to server status for certain
-                // response codes
-                if (msg.equals(BangAuthCodes.UNDER_MAINTENANCE)) {
-                    switchToServerStatus();
-                }
-
-            } else {
-                if (cause instanceof ConnectException) {
-                    msg = "m.failed_to_connect";
-
-                } else if (cause instanceof IOException) {
-                    String cmsg = cause.getMessage();
-                    // foolery to detect a problem where Windows Connection
-                    // Sharing will allow a connection to complete and then
-                    // disconnect it after the first normal packet is sent
-                    if (cmsg != null && cmsg.indexOf("forcibly closed") != -1) {
-                        msg = "m.failed_to_connect";
-                    } else {
-                        msg = "m.network_error";
-                    }
-
-                } else {
-                    msg = "m.network_error";
-                }
-
-                // change the new account button to server status
+            Tuple<String,Boolean> msg = decodeLogonException(_ctx, cause);
+            if (msg.right) {
                 switchToServerStatus();
             }
-
-            _status.setStatus(_msgs.xlate(msg), true);
+            _status.setStatus(_msgs.xlate(msg.left), true);
         }
     };
 
