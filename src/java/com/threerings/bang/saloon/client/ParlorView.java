@@ -29,6 +29,7 @@ import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.StatusLabel;
+import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.ParlorObject;
@@ -118,7 +119,9 @@ public class ParlorView extends ShopView
     public void actionPerformed (ActionEvent event)
     {
         if ("to_saloon".equals(event.getAction())) {
-            _ctx.getLocationDirector().moveBack();
+            BangBootstrapData bbd = (BangBootstrapData)
+                _ctx.getClient().getBootstrapData();
+            _ctx.getLocationDirector().moveTo(bbd.saloonOid);
         }
     }
 
