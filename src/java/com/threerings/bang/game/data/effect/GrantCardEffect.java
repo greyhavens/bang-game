@@ -52,6 +52,12 @@ public class GrantCardEffect extends BonusEffect
     }
     
     @Override // documentation inherited
+    public boolean isApplicable ()
+    {
+        return _type != null;
+    }
+    
+    @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(_pieceId);
