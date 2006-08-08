@@ -1213,7 +1213,8 @@ public class BangManager extends GameManager
 
             } catch (InvocationException ie) {
                 log.warning("Scenario initialization failed [game=" + where() +
-                            ", error=" + ie.getMessage() + "].");
+                    ", scen=" + _scenario +
+                    ", error=" + ie.getMessage() + "].");
                 SpeakProvider.sendAttention(
                     _bangobj, GAME_MSGS, ie.getMessage());
                 // TODO: cancel the round (or let the scenario cancel it
