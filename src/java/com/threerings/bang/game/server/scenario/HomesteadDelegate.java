@@ -21,7 +21,7 @@ import com.threerings.bang.game.util.PieceSet;
 import static com.threerings.bang.Log.log;
 
 /**
- * Does something extraordinary.
+ * Handles Homestead behavior in a scenario.
  */
 public class HomesteadDelegate extends ScenarioDelegate
 {
