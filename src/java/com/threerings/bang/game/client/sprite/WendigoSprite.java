@@ -11,6 +11,7 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 
+import com.jme.scene.Controller;
 import com.jme.scene.state.MaterialState;
 
 import com.threerings.bang.util.BasicContext;
@@ -26,6 +27,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.openal.SoundGroup;
 
 import static com.threerings.bang.client.BangMetrics.*;
+import com.jme.scene.Node;
 
 /**
  * Displays the wendigo.
@@ -41,15 +43,11 @@ public class WendigoSprite extends MobileSprite
             SoundGroup sounds, Piece piece, short tick)
     {
         super.init(ctx, view, board, sounds, piece, tick);
-        MaterialState mstate = _ctx.getRenderer().createMaterialState();
-        mstate.getAmbient().set(ColorRGBA.white);
-        mstate.getDiffuse().set(ColorRGBA.white);
-        mstate.getDiffuse().a = .5f;
-        setRenderState(mstate);
         setRenderState(RenderUtil.blendAlpha);
         setRenderState(RenderUtil.overlayZBuf);
         setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         updateRenderState();
+        fade(true);
     }
 
     @Override // documentation inherited
@@ -83,7 +81,39 @@ public class WendigoSprite extends MobileSprite
     {
         super.pathCompleted();
         _handler.pathCompleted(_penderId);
-        _view.removeSprite(this);
+        fade(false);
+    }
+
+    /**
+     * Fades in/out the wendigo.
+     */
+    protected void fade (final boolean in)
+    {
+        final MaterialState mstate = _ctx.getRenderer().createMaterialState();
+        mstate.getAmbient().set(ColorRGBA.white);
+        mstate.getDiffuse().set(ColorRGBA.white);
+        mstate.getDiffuse().a = (in ? 0f : 0.5f);
+        setRenderState(mstate);
+        final float duration = (in ? 2f : 0.5f);
+        _view.getNode().addController(new Controller() {
+            public void update (float time) {
+                _elapsed = Math.min(_elapsed + time, duration);
+                float alpha = _elapsed / duration;
+                if (!in) {
+                    alpha = 1f - alpha;
+                }
+                mstate.getDiffuse().a = 0.5f * alpha;
+                setRenderState(mstate);
+                updateRenderState();
+                if (_elapsed >= duration) {
+                    _view.getNode().removeController(this);
+                    if (!in) {
+                        _view.removeSprite(WendigoSprite.this);
+                    }
+                }
+            }
+            protected float _elapsed;
+        });
     }
 
     protected WendigoHandler _handler;

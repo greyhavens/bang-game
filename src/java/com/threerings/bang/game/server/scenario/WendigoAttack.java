@@ -22,6 +22,7 @@ import com.threerings.bang.game.server.ai.WendigoLogic;
 import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.game.data.effect.CountEffect;
+import com.threerings.bang.game.data.effect.FadeBoardEffect;
 import com.threerings.bang.game.data.effect.TalismanEffect;
 import com.threerings.bang.game.data.effect.WendigoEffect;
 
@@ -194,6 +195,7 @@ public class WendigoAttack extends Scenario
          */
         protected void createWendigos (BangObject bangobj, short tick)
         {
+            _bangmgr.deployEffect(-1, new FadeBoardEffect());
             Rectangle playarea = bangobj.board.getPlayableArea();
             int maxv = playarea.width / 3;
             int maxh = playarea.height / 3;

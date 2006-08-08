@@ -472,7 +472,7 @@ public class BangBoardView extends BoardView
         if (_highNoon == enable) {
             return;
         }
-        if (enable) {
+        if (enable && _originalAmbient == null) {
             _originalAmbient = new ColorRGBA(_lights[0].getAmbient());
         }
         _highNoon = enable;
@@ -492,7 +492,50 @@ public class BangBoardView extends BoardView
             protected float _elapsed;
         });
     }
-    
+
+    /**
+     * Fades in a scalar change to the primary diffuse light.
+     */
+    public void setWendigoAmbiance (final float duration, final boolean enable)
+    {
+        if (_originalDiffuse == null) {
+            _originalDiffuse = new ColorRGBA(_lights[0].getDiffuse());
+            _originalSecDiffuse = new ColorRGBA(_lights[1].getDiffuse());
+            _originalSecElev = _board.getLightElevation(1);
+        }
+        // Calculate the darkened diffuse color by converting to YUV,
+        // altering the luminance to 0.3, then converting back, this should
+        // preserve the color
+        ColorRGBA diffuseYUV = RGBtoYUV(_originalDiffuse);
+        diffuseYUV.r = 0.3f;
+        final ColorRGBA darkenedDiffuse = YUVtoRGB(diffuseYUV);
+        _node.addController(new Controller() {
+            public void update (float time) {
+                _elapsed = Math.min(_elapsed + time, duration);
+                float alpha = _elapsed / duration;
+                if (!enable) {
+                    alpha = 1f - alpha;
+                }
+                _lights[0].getDiffuse().interpolate(
+                    _originalDiffuse, darkenedDiffuse, alpha);
+                _lights[1].getDiffuse().interpolate(
+                    _originalSecDiffuse, COLOR_CYAN, alpha);
+                float elevation = (_originalSecElev + 
+                    (-(float)(Math.PI/2) - _originalSecElev) * alpha);
+                float cose = FastMath.cos(elevation);
+                _lights[1].setDirection(new Vector3f(
+                    -cose * FastMath.cos(_board.getLightAzimuth(1)),
+                    -cose * FastMath.sin(_board.getLightAzimuth(1)),
+                    -FastMath.sin(elevation)));
+
+                if (_elapsed >= duration) {
+                    _node.removeController(this);
+                }
+            }
+            protected float _elapsed;
+        });
+    }
+
     /**
      * Checks whether the board is in "high noon" mode.
      */
@@ -1568,6 +1611,28 @@ public class BangBoardView extends BoardView
         }
     }
 
+    /**
+     * Converts a RGB value to a YUV value.
+     */
+    protected ColorRGBA RGBtoYUV (ColorRGBA source)
+    {
+        float y = 0.299f*source.r + 0.587f*source.g + 0.114f*source.b;
+        return new ColorRGBA(
+                y, (source.b-y)*0.565f, (source.r-y)*0.713f, source.a);
+    }
+
+    /**
+     * Converts a YUV value to an RGB value.
+     */
+    protected ColorRGBA YUVtoRGB (ColorRGBA source)
+    {
+        return new ColorRGBA(
+                source.r + 1.403f*source.b,
+                source.r - 0.344f*source.g - 0.714f*source.b,
+                source.r + 1.770f*source.g,
+                source.a);
+    }
+    
     /** Used to visualize advance orders. */
     protected class AdvanceOrder
     {
@@ -1719,7 +1784,11 @@ public class BangBoardView extends BoardView
     
     /** The original, pre-noon ambient light color. */
     protected ColorRGBA _originalAmbient;
-    
+
+    /** The original, pre-wendigo ambiance light setup. */
+    protected ColorRGBA _originalDiffuse, _originalSecDiffuse;
+    protected float _originalSecElev;
+
     /** The color of BigShot movement highlights. */
     protected static final ColorRGBA BMOVE_HIGHLIGHT_COLOR =
         new ColorRGBA(0.5f, 1f, 0f, 0.5f);
@@ -1727,6 +1796,10 @@ public class BangBoardView extends BoardView
     /** The color of the queued movement highlights. */
     protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0.5f, 0.5f, 0.5f);
+
+    /** The color cyan. */
+    protected static final ColorRGBA COLOR_CYAN =
+        new ColorRGBA(0f, 1f, 1f, 1f);
 
     /** The duration of the board tour in seconds. */
     protected static final float BOARD_TOUR_DURATION = 10f;

@@ -51,6 +51,17 @@ public class WendigoHandler extends EffectHandler
         return !isCompleted();
     }
 
+    @Override // documentation inherited
+    public boolean isCompleted ()
+    {
+        boolean ret = super.isCompleted();
+        if (ret) {
+            _view.setWendigoAmbiance(
+                    FadeBoardHandler.WENDIGO_FADE_DURATION, false);
+        }
+        return ret;
+    }
+
     /**
      * Called to let the handler know the wendigo has finished moving.
      */
