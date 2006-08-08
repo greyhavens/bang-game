@@ -630,8 +630,8 @@ public class StatsView extends SteelWindow
         for (Iterator<Stat.Type> iter = statTypes.iterator(); 
                 iter.hasNext(); ) {
             Stat.Type type = iter.next();
-            BLabel header = new BLabel(_msgs.get("m.header_" + type.name()),
-                    "endgame_smallheader") {
+            String key = "m.header_" + type.name().toLowerCase();
+            BLabel header = new BLabel(_msgs.get(key), "endgame_smallheader") {
                 protected Dimension computePreferredSize (
                         int hhint, int vhint) {
                     Dimension d = super.computePreferredSize(hhint, vhint);
