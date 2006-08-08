@@ -340,7 +340,7 @@ public class WendigoAttack extends Scenario
         protected static final short MAX_WENDIGO_TICKS = 15;
 
         /** Number of ticks after wendigos appear before they attack. */
-        protected static final short WENDIGO_WAIT = 2;
+        protected static final short WENDIGO_WAIT = 4;
 
         /** Number of points for having a talisman on a safe zone. */
         protected static final int TALISMAN_SAFE = 50;
