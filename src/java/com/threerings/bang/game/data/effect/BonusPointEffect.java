@@ -21,14 +21,6 @@ public class BonusPointEffect extends BonusEffect
     public static final String BONUS_POINT =
         "bonuses/frontier_town/bonus_point/activate";
 
-    public int pieceId;
-
-    @Override // documentation inherited
-    public void init (Piece piece)
-    {
-        pieceId = piece.pieceId;
-    }
-
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {

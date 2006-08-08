@@ -28,6 +28,7 @@ public class SaintElmosEffect extends BonusEffect
     @Override // documentation inherited
     public void init (Piece piece)
     {
+        super.init(piece);
         owner = piece.owner;
     }
 

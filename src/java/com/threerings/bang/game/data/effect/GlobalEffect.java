@@ -25,7 +25,7 @@ public abstract class GlobalEffect extends BonusEffect
     {
         int[] pieces = new int[0];
         for (Effect effect : effects) {
-            concatenate(pieces, effect.getAffectedPieces());
+            pieces = concatenate(pieces, effect.getAffectedPieces());
         }
         return pieces;
     }
@@ -33,9 +33,9 @@ public abstract class GlobalEffect extends BonusEffect
     // documentation inherited
     public int[] getWaitPieces ()
     {
-        int[] pieces = new int[0];
+        int[] pieces = super.getWaitPieces();
         for (Effect effect : effects) {
-            concatenate(pieces, effect.getWaitPieces());
+            pieces = concatenate(pieces, effect.getWaitPieces());
         }
         return pieces;
     }

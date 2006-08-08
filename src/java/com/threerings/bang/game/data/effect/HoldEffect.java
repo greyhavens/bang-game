@@ -29,9 +29,6 @@ public class HoldEffect extends BonusEffect
     /** The identifier for the type of effect that we produce. */
     public static final String DROPPED_BONUS = "dropped";
 
-    /** The unit receiving or depositing the bonus. */
-    public int pieceId;
-
     /** If true, the piece in question is dropping a bonus; */ 
     public boolean dropping;
 
@@ -82,12 +79,6 @@ public class HoldEffect extends BonusEffect
                     "[class=" + bonus.getConfig().effectClass + "].", e);
             return null;
         }
-    }
-
-    @Override // documentation inherited
-    public void init (Piece piece)
-    {
-        pieceId = piece.pieceId;
     }
 
     @Override // documentation inherited

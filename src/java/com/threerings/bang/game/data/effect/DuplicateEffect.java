@@ -27,9 +27,6 @@ public class DuplicateEffect extends BonusEffect
     /** Reported when a duplicate could not be placed for lack of room. */
     public static final String WASTED_DUP = "wasted_dup";
 
-    /** The piece to duplicate. */
-    public int pieceId;
-
     /** The duplicate piece. */
     public Piece duplicate;
 
@@ -49,12 +46,6 @@ public class DuplicateEffect extends BonusEffect
     public DuplicateEffect (String type)
     {
         _type = type;
-    }
-
-    @Override // documentation inherited
-    public void init (Piece piece)
-    {
-        pieceId = piece.pieceId;
     }
 
     @Override // documentation inherited

@@ -19,15 +19,6 @@ import static com.threerings.bang.Log.log;
  */
 public abstract class SetInfluenceEffect extends BonusEffect
 {
-    /** The piece we will affect. */
-    public int pieceId;
-
-    @Override // documentation inherited
-    public void init (Piece piece)
-    {
-        pieceId = piece.pieceId;
-    }
-
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {

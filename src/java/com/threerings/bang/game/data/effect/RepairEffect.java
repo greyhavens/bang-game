@@ -20,10 +20,7 @@ public class RepairEffect extends BonusEffect
     /** The identifier for the type of effect that we produce. */
     public static final String REPAIRED =
         "bonuses/frontier_town/repair/activate";
-
-    /** The identifier of the piece to be repaired. */
-    public int pieceId;
-
+        
     /** The base amount by which to repair the piece. */
     public int baseRepair = 100;
 
@@ -44,12 +41,6 @@ public class RepairEffect extends BonusEffect
     public RepairEffect (int pieceId)
     {
         this.pieceId = pieceId;
-    }
-
-    @Override // documentation inherited
-    public void init (Piece piece)
-    {
-        pieceId = piece.pieceId;
     }
 
     @Override // documentation inherited

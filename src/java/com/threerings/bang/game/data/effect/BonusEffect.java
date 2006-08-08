@@ -20,6 +20,21 @@ public abstract class BonusEffect extends Effect
     /** The id of the bonus piece that triggered this effect. */
     public int bonusId = -1;
 
+    /** The id of the piece that activated the bonus. */
+    public int pieceId = -1;
+    
+    @Override // documentation inherited
+    public void init (Piece piece)
+    {
+        pieceId = piece.pieceId;
+    }
+    
+    @Override // documentation inherited
+    public int[] getWaitPieces ()
+    {
+        return new int[] { pieceId };
+    }
+    
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {

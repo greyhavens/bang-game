@@ -21,22 +21,13 @@ public class TrapEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
     public static final String ACTIVATED_TRAP = "activated";
-    
-    /** The victim of the trap. */
-    public int pieceId;
-    
+
     /** The victim's new damage. */
     public int newDamage;
     
     /** If the victim dies, its death effect. */
     public Effect deathEffect;
     
-    @Override // documentation inherited
-    public void init (Piece piece)
-    {
-        pieceId = piece.pieceId;
-    }
-
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {

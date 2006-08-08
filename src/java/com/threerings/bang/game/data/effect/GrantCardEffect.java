@@ -25,8 +25,8 @@ public class GrantCardEffect extends BonusEffect
     @Override // documentation inherited
     public void init (Piece piece)
     {
+        super.init(piece);
         player = piece.owner;
-        _pieceId = piece.pieceId;
     }
 
     @Override // documentation inherited
@@ -60,16 +60,13 @@ public class GrantCardEffect extends BonusEffect
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
-        Piece piece = bangobj.pieces.get(_pieceId);
+        Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null || piece.owner != pidx) {
             return null;
         }
         return MessageBundle.compose("m.effect_card", piece.getName(),
             MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + _type));
     }
-    
-    /** The id of the piece that activated the bonus. */
-    protected int _pieceId;
     
     /** The type of card generated. */
     protected String _type;

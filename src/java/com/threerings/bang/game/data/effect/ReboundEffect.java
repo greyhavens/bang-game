@@ -20,9 +20,6 @@ import static com.threerings.bang.Log.log;
  */
 public class ReboundEffect extends BonusEffect
 {
-    /** The victim of the trap. */
-    public int pieceId;
-    
     /** The x and y coordinates to which the target was sent. */
     public short x, y;
 
@@ -32,7 +29,7 @@ public class ReboundEffect extends BonusEffect
     @Override // documentation inherited
     public void init (Piece piece)
     {
-        pieceId = piece.pieceId;
+        super.init(piece);
         ox = piece.x;
         oy = piece.y;
     }

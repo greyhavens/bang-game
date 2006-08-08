@@ -819,7 +819,7 @@ public class BangBoardView extends BoardView
             final List<java.awt.Point> path = AStarPathUtil.getPath(
                 _tpred, unit.getStepper(), unit, _board.getWidth() / 2,
                 corner.x, corner.y, unit.x, unit.y, false);
-
+            
             // strip off all but the last location that is not visible given
             // the current camera position
             if (path != null) {
@@ -845,6 +845,7 @@ public class BangBoardView extends BoardView
                 for (int ii = 0; ii < startidx; ii++) {
                     path.remove(0);
                 }
+                System.out.println(path);
             }
 
             // if we have no path left, just blip to our starting spot
