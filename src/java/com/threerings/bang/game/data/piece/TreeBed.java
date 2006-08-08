@@ -102,7 +102,7 @@ public class TreeBed extends Prop
             }
         }
         int tdamage = dinc + ddec * (doubleGrowth ? 2 : 1);
-        if (growers.size() == 0 || (growth == FULLY_GROWN &&
+        if ((dinc == 0 && ddec == 0) || (growth == FULLY_GROWN &&
             damage == 0 && tdamage < 0)) {
             return null;
         }

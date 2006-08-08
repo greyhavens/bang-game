@@ -4,6 +4,7 @@
 package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +14,7 @@ import java.util.Iterator;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -69,13 +71,15 @@ public class ForestGuardians extends Scenario
     {
         super.filterPieces(bangobj, starts, pieces);
 
-        // extract and remove all robot markers
+        // extract and remove all robot markers; store tree beds
         _robotSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (Marker.isMarker(p, Marker.ROBOTS)) {
                 _robotSpots.add((Marker)p);
                 iter.remove();
+            } else if (p instanceof TreeBed) {
+                _trees.add((TreeBed)p);
             }
         }
     }
@@ -114,20 +118,18 @@ public class ForestGuardians extends Scenario
 
         // note trees grown
         int treePoints = 0, maxPoints = 0;
-        for (Piece piece : bangobj.pieces) {
-            if (piece instanceof TreeBed) {
-                TreeBed bed = (TreeBed)piece;
-                maxPoints += TreeBed.FULLY_GROWN;
-                if (bed.isAlive()) {
-                    treePoints += bed.growth;
-                    if (bed.growth == TreeBed.FULLY_GROWN) {
-                        for (StatSet stats : bangobj.stats) {
-                            stats.incrementStat(Stat.Type.TREES_GROWN, 1);
-                        }
+        for (TreeBed tree : _trees) {
+            maxPoints += TreeBed.FULLY_GROWN;
+            if (tree.isAlive()) {
+                treePoints += tree.growth;
+                if (tree.growth > 0) {
+                    for (StatSet stats : bangobj.stats) {
+                        stats.incrementStat(Stat.Type.TREES_GROWN, 1);
                     }
                 }
             }
         }
+        
         _payouts = new int[bangobj.players.length];
         Arrays.fill(_payouts, 60 + (95 - 60) * treePoints / maxPoints);
         
@@ -167,6 +169,83 @@ public class ForestGuardians extends Scenario
     }
     
     /**
+     * Finds and returns places to spawn logging robots based on the current
+     * aggression.
+     */
+    protected Point[] findRobotSpawnPoints (BangObject bangobj, int count)
+    {
+        // weight the spawn points
+        int[] weights = new int[_robotSpots.size()];
+        int wmax = 0;
+        float aggression = computeAggression(bangobj),
+            absAggr = Math.abs(aggression);
+        for (int ii = 0; ii < weights.length; ii++) {
+            weights[ii] = weightSpawnPoint(bangobj, _robotSpots.get(ii),
+                absAggr);
+            wmax = Math.max(weights[ii], wmax);
+        }
+        if (aggression > 0f) { // invert weights for positive aggression
+            for (int ii = 0; ii < weights.length; ii++) {
+                weights[ii] = (wmax + 1) - weights[ii];
+            }
+        }
+        
+        // pick a markers by weight
+        Point[] points = new Point[count];
+        for (int ii = 0; ii < count; ) {
+            int idx = RandomUtil.getWeightedIndex(weights);
+            if (idx == -1) {
+                return points;
+            }
+            Marker marker = _robotSpots.get(idx);
+            points[ii] = bangobj.board.getOccupiableSpot(
+                marker.x, marker.y, 3);
+            if (points[ii] == null) {
+                weights[idx] = -1;
+            } else {
+                ii++;
+            }
+        }
+        return points;
+    }
+    
+    /**
+     * Computes the current aggression (from -1 to +1), which depends on the
+     * number of living trees.
+     */
+    protected float computeAggression (BangObject bangobj)
+    {
+        int treePoints = 0, maxPoints = 0;
+        for (TreeBed tree : _trees) {
+            maxPoints += TreeBed.FULLY_GROWN;
+            if (tree.isAlive()) {
+                treePoints += tree.growth;
+            }
+        }
+        return 2f * treePoints / maxPoints - 1f;
+    }
+    
+    /**
+     * Weights a spawn point according to the absolute value of the current
+     * aggression and the point's distance from living trees.
+     */
+    protected int weightSpawnPoint (
+        BangObject bangobj, Marker marker, float absAggr)
+    {
+        int total = 1;
+        for (TreeBed tree : _trees) {
+            if (!tree.isAlive() || tree.growth == 0) {
+                continue;
+            }
+            int dist = tree.getDistance(marker),
+                sdist = (int)Math.ceil(dist * absAggr),
+                sgrowth = (int)Math.ceil(tree.growth * absAggr);
+            total += (sdist * sgrowth);
+        }
+        return total;
+    }
+    
+    /**
      * Returns the number of times the value appears in the array.
      */
     protected static int count (int[] values, int value)
@@ -192,9 +271,7 @@ public class ForestGuardians extends Scenario
             // spawn initial bots
             _rtarget = (int)((_bangmgr.getTeamSize() + 1) *
                 _bangmgr.getPlayerCount() * LOGGING_ROBOTS_PER_UNIT);
-            for (int ii = 0; ii < _rtarget; ii++) {
-                spawnRobot(bangobj);
-            }
+            spawnRobots(bangobj, _rtarget);
         }
         
         @Override // documentation inherited
@@ -214,31 +291,24 @@ public class ForestGuardians extends Scenario
             // consider spawning another bot
             if (rcount < _rtarget &&
                 RandomUtil.getInt(100) < 100 / AVG_ROBOT_SPAWN_DELAY) {
-                spawnRobot(bangobj);
+                spawnRobots(bangobj, 1);
             }
         }
         
-        protected void spawnRobot (BangObject bangobj)
+        protected void spawnRobots (BangObject bangobj, int count)
         {
-            Unit unit = Unit.getUnit("indian_post/logging_robot");
-            unit.assignPieceId(bangobj);
-            
-            Point bspot = null;
-            Collections.shuffle(_robotSpots);
-            for (Marker marker : _robotSpots) {
-                if ((bspot = bangobj.board.getOccupiableSpot(
-                        marker.x, marker.y, 3)) != null) {
-                    break;
+            Point[] bspots = findRobotSpawnPoints(bangobj, count);
+            for (Point bspot : bspots) {
+                if (bspot == null) {
+                    log.warning("Ran out of spawn spots for logging robots " +
+                        "[where=" + _bangmgr.where() + "]");
+                    return;
                 }
+                Unit unit = Unit.getUnit("indian_post/logging_robot");
+                unit.assignPieceId(bangobj);
+                unit.position(bspot.x, bspot.y);
+                _bangmgr.addPiece(unit);
             }
-            if (bspot == null) {
-                log.warning("Unable to locate spawn spot for logging robot " +
-                    "[spots=" + _robotSpots + "].");
-                return;
-            }
-            
-            unit.position(bspot.x, bspot.y);
-            _bangmgr.addPiece(unit);
         }
         
         /** The logic used to control the robots. */
@@ -319,6 +389,9 @@ public class ForestGuardians extends Scenario
     
     /** The spots from which robots emerge. */
     protected ArrayList<Marker> _robotSpots = new ArrayList<Marker>();
+    
+    /** The tree beds on the board. */
+    protected ArrayList<TreeBed> _trees = new ArrayList<TreeBed>();
     
     /** The payouts for each player, determined at the end of the round. */
     protected int[] _payouts;
