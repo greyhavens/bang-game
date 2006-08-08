@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client;
 
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Spatial;
 
 import com.samskivert.util.ArrayIntSet;
@@ -40,10 +41,12 @@ import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.effect.ResurrectEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
+import com.threerings.bang.game.data.effect.TreeBedEffect;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
@@ -139,7 +142,18 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // display the damage icon/amount
-        if (wasDamaged || effect.equals(ShotEffect.DUDED)) {
+        if (effect.equals(TreeBedEffect.GREW)) {
+            DamageIconViz.displayDamageIconViz(piece, "repaired",
+                new ColorRGBA(0f, 0.4f, 0.2f, 1f),
+                new ColorRGBA(0f, 0.2f, 0.1f, 1f), // forest green
+                -_effect.getBaseDamage(piece), _effect, _ctx, _view);
+        } else if (effect.equals(ShotEffect.DAMAGED) &&
+            piece instanceof TreeBed) {
+            DamageIconViz.displayDamageIconViz(piece,
+                new ColorRGBA(0.5f, 0f, 0f, 1f),
+                new ColorRGBA(0.25f, 0f, 0f, 1f), // blood red
+                _effect, _ctx, _view);
+        } else if (wasDamaged || effect.equals(ShotEffect.DUDED)) {
             DamageIconViz.displayDamageIconViz(piece, _effect, _ctx, _view);
         }
         

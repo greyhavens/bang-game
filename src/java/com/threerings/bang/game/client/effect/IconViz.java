@@ -51,16 +51,23 @@ public class IconViz extends EffectViz
         _iname = iname;   
     }
     
+    protected IconViz (String iname, ColorRGBA color)
+    {
+        _iname = iname;   
+        _color = color;
+    }
+    
     @Override // documentation inherited
     protected void didInit ()
     {
-        final Quad icon = createIconQuad(
-                "textures/effects/" + _iname + ".png", ICON_SIZE);
-        icon.setDefaultColor(new ColorRGBA(JPIECE_COLORS[
-                    _target.owner + 1]));
-        
         createBillboard();
-        _billboard.attachChild(icon);
+        if (_iname != null) {
+            Quad icon = createIconQuad(
+                "textures/effects/" + _iname + ".png", ICON_SIZE);
+            icon.setDefaultColor(new ColorRGBA(_color == null ?
+                JPIECE_COLORS[_target.owner + 1] : _color));
+            _billboard.attachChild(icon);
+        }
     }
     
     @Override // documentation inherited
@@ -152,6 +159,9 @@ public class IconViz extends EffectViz
 
     /** The name of the icon to display. */
     protected String _iname;
+    
+    /** The color in which to display the icon (or null for the default). */
+    protected ColorRGBA _color;
     
     /** The icon billboard. */
     protected BillboardNode _billboard;
