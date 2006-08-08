@@ -264,7 +264,7 @@
            slot="hat" scrip="3000" coins="2">
     <component cclass="male/hat" name="buffalo"/>
     <component cclass="male/hat_back" name="buffalo"/>
-    <component cclass="male/hat_band" name="medallion__buffalo"/>
+    <component cclass="male/hat_band" name="medallion_buffalo"/>
   </article> 
 
 
