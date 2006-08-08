@@ -16,7 +16,6 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.scenario.PracticeInfo;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -38,10 +37,9 @@ public class InGameOptionsView extends BDecoratedWindow
 
         add(new BLabel(msgs.get("m.leave_game_and")), GroupLayout.FIXED);
         BContainer box = GroupLayout.makeHBox(GroupLayout.CENTER);
-        if (bangobj.scenario.getIdent().equals(PracticeInfo.IDENT)) {
-            box.add(new BButton(msgs.get("m.to_ranch"), this, "to_ranch"));
-        } else {
-            box.add(new BButton(msgs.get("m.to_saloon"), this, "to_saloon"));
+        String from = bangobj.priorLocation.ident;
+        if (!"tutorial".equals(from)) {
+            box.add(new BButton(msgs.get("m.to_" + from), this, "to_prior"));
         }
         box.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
         add(box, GroupLayout.FIXED);
@@ -62,15 +60,8 @@ public class InGameOptionsView extends BDecoratedWindow
                 _ctx.getBangClient().showTownView();
             }
 
-        } else if ("to_saloon".equals(action)) {
-            BangBootstrapData bbd = (BangBootstrapData)
-                _ctx.getClient().getBootstrapData();
-            _ctx.getLocationDirector().moveTo(bbd.saloonOid);
-
-        } else if ("to_ranch".equals(action)) {
-            BangBootstrapData bbd = (BangBootstrapData)
-                _ctx.getClient().getBootstrapData();
-            _ctx.getLocationDirector().moveTo(bbd.ranchOid);
+        } else if ("to_prior".equals(action)) {
+            _ctx.getLocationDirector().moveTo(_bangobj.priorLocation.placeOid);
 
         } else if ("dismiss".equals(action)) {
             _ctx.getBangClient().clearPopup(this, true);

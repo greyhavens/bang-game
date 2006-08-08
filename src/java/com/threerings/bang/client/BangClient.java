@@ -409,6 +409,12 @@ public class BangClient extends BasicClient
      */
     public void displayPopup (BWindow popup, boolean animate, int twidth)
     {
+        if (popup == null) {
+            log.warning("Some naughty boy tried to display a null popup.");
+            Thread.dumpStack();
+            return;
+        }
+
         _ctx.getRootNode().addWindow(popup);
         _popups.add(popup);
 

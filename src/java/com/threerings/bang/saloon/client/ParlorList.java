@@ -192,12 +192,16 @@ public class ParlorList extends BContainer
                           new BlankIcon(16, 16));
             _enter.setProperty("info", info);
 
-            // if this game is pardners only, don't show it if the creator is
-            // not our pardner (and we're not the creator)
-            if (info.pardnersOnly &&
-                !_ctx.getUserObject().handle.equals(info.creator) &&
-                !_ctx.getUserObject().pardners.containsKey(info.creator)) {
+            // if we're the creator, or the creator is our pardner, always show
+            // this parlor (regardless of whether it is empty)
+            if (_ctx.getUserObject().handle.equals(info.creator) ||
+                _ctx.getUserObject().pardners.containsKey(info.creator)) {
+                add();
+
+            } else if (info.pardnersOnly || info.occupants == 0) {
+                // if it's pardners only or empty, don't show it
                 clear();
+
             } else {
                 add();
             }

@@ -714,21 +714,6 @@ public class BangController extends GameController
     }
 
     /**
-     * Called by the game over dialog when it has been dismissed.
-     */
-    protected void gameOverDismissed (boolean toTown)
-    {
-        if (toTown) {
-            _ctx.getLocationDirector().leavePlace();
-            _ctx.getBangClient().showTownView();
-        } else {
-            BangBootstrapData bbd = (BangBootstrapData)
-                _ctx.getClient().getBootstrapData();
-            _ctx.getLocationDirector().moveTo(bbd.saloonOid);
-        }
-    }
-
-    /**
      * Called whenever anything changes that might result in a change to the
      * relative ranking of the player.
      */

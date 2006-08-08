@@ -30,6 +30,7 @@ import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.game.server.BangManager;
 
 import com.threerings.bang.saloon.client.ParlorService;
 import com.threerings.bang.saloon.data.ParlorGameConfig;
@@ -231,7 +232,9 @@ public class ParlorManager extends PlaceManager
     @Override // documentation inherited
     protected long idleUnloadPeriod ()
     {
-        return 5 * 1000L;
+        // give the players ten minutes (well beyond the length of a game) to
+        // return before unloading
+        return 10 * 60 * 1000L;
     }
 
     @Override // documentation inherited
@@ -401,7 +404,9 @@ public class ParlorManager extends PlaceManager
         config.bdata = _bdata;
 
         try {
-            BangServer.plreg.createPlace(config, null);
+            BangServer.plreg.createPlace(
+                config, new BangManager.PriorLocationSetter(
+                    "parlor", _parobj.getOid()));
         } catch (Exception e) {
             log.log(Level.WARNING, "Choked creating game " + config + ".", e);
         }

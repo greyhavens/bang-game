@@ -348,7 +348,7 @@ public class PlayerManager
 
     // documentation inherited from interface PlayerProvider
     public void playTutorial (
-        ClientObject caller, String tutid, PlayerService.InvocationListener il)
+        ClientObject caller, String tutId, PlayerService.InvocationListener il)
         throws InvocationException
     {
         PlayerObject player = (PlayerObject)caller;
@@ -358,18 +358,28 @@ public class PlayerManager
             throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
         }
 
+        // make sure the tutorial is valid for this town
+        int townIdx = BangUtil.getTownIndex(player.townId);
+        int tutIdx = ListUtil.indexOf(TutorialCodes.TUTORIALS[townIdx], tutId);
+        if (tutIdx == -1) {
+            log.warning("Player req'd invalid tutorial [who=" + player.who() +
+                        ", town=" + player.townId + ", tutid=" + tutId + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
         // if this is a "practice versus the computer" tutorial, start up a two
         // player game in lieu of a proper tutorial
-        if (tutid.startsWith(TutorialCodes.PRACTICE_PREFIX)) {
+        if (tutId.startsWith(TutorialCodes.PRACTICE_PREFIX)) {
             String scenId =
-                tutid.substring(TutorialCodes.PRACTICE_PREFIX.length());
-            playComputer(caller, 2, new String[] { scenId }, null, false, il);
+                tutId.substring(TutorialCodes.PRACTICE_PREFIX.length());
+            playComputer(player, 2, new String[] { scenId }, null, false,
+                         new BangObject.PriorLocation("tutorial", 0));
             return;
         }
 
         // load up the tutorial configuration
         TutorialConfig tconfig =
-            TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutid);
+            TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutId);
 
         // create our AI opponent
         HashSet<String> names = new HashSet<String>();
@@ -387,7 +397,8 @@ public class PlayerManager
 
         // create the tutorial game manager and it will handle the rest
         try {
-            BangServer.plreg.createPlace(config, null);
+            BangServer.plreg.createPlace(
+                config, new BangManager.PriorLocationSetter("tutorial", 0));
         } catch (InstantiationException ie) {
             log.log(Level.WARNING, "Error instantiating tutorial " +
                 "[for=" + player.who() + ", config=" + config + "].", ie);
@@ -424,9 +435,11 @@ public class PlayerManager
 
         // create the practice game manager and it will handle the rest
         try {
-            BangServer.plreg.createPlace(config, null);
+            BangServer.plreg.createPlace(
+                config, new BangManager.PriorLocationSetter(
+                    "ranch", BangServer.ranchmgr.getPlaceObject().getOid()));
         } catch (InstantiationException ie) {
-            log.log(Level.WARNING, "Error instatntiating practice " +
+            log.log(Level.WARNING, "Error instantiating practice " +
                 "[for=" + player.who() + ", config=" + config + "].", ie);
             throw new InvocationException(INTERNAL_ERROR);
         }
@@ -438,7 +451,7 @@ public class PlayerManager
         boolean autoplay, PlayerService.InvocationListener listener)
         throws InvocationException
     {
-        final PlayerObject player = (PlayerObject)caller;
+        PlayerObject player = (PlayerObject)caller;
 
         // if we're not allowing new games, fail immediately
         if (!RuntimeConfig.server.allowNewGames) {
@@ -461,10 +474,6 @@ public class PlayerManager
             }
         }
 
-        // we'll use this when creating our AIs
-        HashSet<String> names = new HashSet<String>();
-        names.add(player.getVisibleName().toString());
-
         // make sure non-admins aren't creating autoplay games
         if (autoplay && !player.tokens.isAdmin()) {
             log.warning("Non-admin requested autoplay game " +
@@ -472,6 +481,25 @@ public class PlayerManager
                         ", scen=" + scenarios[0] + ", board=" + board + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
+
+        playComputer(player, players, scenarios, board, autoplay,
+                     new BangObject.PriorLocation("saloon",
+                         BangServer.saloonmgr.getPlaceObject().getOid()));
+    }
+
+    /**
+     * Helper function for playing games. Assumes all parameters have been
+     * checked for validity.
+     */
+    protected boolean playComputer (
+        final PlayerObject player, int players, String[] scenarios,
+        String board, final boolean autoplay,
+        final BangObject.PriorLocation priorLocation)
+        throws InvocationException
+    {
+        // we'll use this when creating our AIs
+        HashSet<String> names = new HashSet<String>();
+        names.add(player.getVisibleName().toString());
 
         // create a game configuration from that
         BangConfig config = new BangConfig();
@@ -491,14 +519,21 @@ public class PlayerManager
         config.board = board;
 
         // create the game manager and it will handle the rest
-        try {
-            BangServer.plreg.createPlace(config, (!autoplay) ? null :
+        PlaceRegistry.CreationObserver obs =
                 new PlaceRegistry.CreationObserver() {
-                    public void placeCreated (
-                        PlaceObject place, PlaceManager pmgr) {
-                        ParlorSender.gameIsReady(player, place.getOid());
-                    }
-                });
+            public void placeCreated (
+                PlaceObject place, PlaceManager pmgr) {
+                if (autoplay) {
+                    ParlorSender.gameIsReady(player, place.getOid());
+                }
+                if (priorLocation != null) {
+                    ((BangObject)place).setPriorLocation(priorLocation);
+                }
+            }
+        };
+        try {
+            BangServer.plreg.createPlace(config, obs);
+            return true;
         } catch (InstantiationException ie) {
             log.log(Level.WARNING, "Error instantiating game " +
                     "[for=" + player.who() + ", config=" + config + "].", ie);

@@ -38,6 +38,7 @@ import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.game.server.BangManager;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 
@@ -335,7 +336,9 @@ public class SaloonManager extends PlaceManager
                 // go like the wind!
                 BangConfig config = match.createConfig();
                 try {
-                    BangServer.plreg.createPlace(config, null);
+                    BangServer.plreg.createPlace(
+                        config, new BangManager.PriorLocationSetter(
+                            "saloon", _salobj.getOid()));
                 } catch (Exception e) {
                     log.log(Level.WARNING, "Choked creating game " +
                             "[config=" + config + "].", e);

@@ -38,6 +38,8 @@ import com.threerings.presents.server.PresentsServer;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
+import com.threerings.crowd.server.PlaceManager;
+import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.admin.data.StatusObject;
@@ -77,6 +79,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
@@ -164,6 +167,19 @@ public class BangManager extends GameManager
 
         /** A snapshot of the in-game stats at the end of this round. */
         public StatSet[] stats;
+    }
+
+    /** Used to configure players' prior location. */
+    public static class PriorLocationSetter
+        implements PlaceRegistry.CreationObserver
+    {
+        public PriorLocationSetter (String ident, int placeOid) {
+            _priorloc = new BangObject.PriorLocation(ident, placeOid);
+        }
+        public void placeCreated (PlaceObject place, PlaceManager pmgr) {
+            ((BangObject)place).setPriorLocation(_priorloc);
+        }
+        protected BangObject.PriorLocation _priorloc;
     }
 
     // documentation inherited from interface BangProvider
@@ -1185,8 +1201,7 @@ public class BangManager extends GameManager
                 _scenario.roundWillStart(_bangobj, _starts, _purchases);
 
                 // configure the duration of the round
-                _bangobj.setDuration(_scenario.getDuration(
-                    _bconfig, _bangobj));
+                _bangobj.setDuration(_scenario.getDuration(_bconfig, _bangobj));
                 _bangobj.setLastTick((short)(_bangobj.duration - 1));
 
                 // note this round's duration for later processing (roundId is
@@ -1401,6 +1416,18 @@ public class BangManager extends GameManager
         }
         if (updates.size() > 0 || removals.size() > 0) {
             notePlayedCards(updates, removals);
+        }
+
+        // if this was a tutorial practice session, and we played at least half
+        // of it, mark the practice tutorial as completed
+        if (_bangobj.priorLocation.ident.equals("tutorial") &&
+            _bangobj.tick > _bangobj.duration/2) {
+            PlayerObject user = (PlayerObject)getPlayer(0);
+            if (user != null) {
+                user.stats.addToSetStat(
+                    Stat.Type.TUTORIALS_COMPLETED,
+                    TutorialCodes.PRACTICE_PREFIX + _bconfig.scenarios[0]);
+            }
         }
 
         // note the duration of the game (in minutes and seconds)

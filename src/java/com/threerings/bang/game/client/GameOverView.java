@@ -23,6 +23,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.ItemIcon;
+import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
@@ -185,7 +186,8 @@ public class GameOverView extends SteelWindow
 
         // add some buttons at the bottom
         _buttons.add(new BButton(msgs.get("m.view_stats"), this, "stats"));
-        _buttons.add(new BButton(msgs.get("m.to_saloon"), this, "to_saloon"));
+        String from = _bobj.priorLocation.ident;
+        _buttons.add(new BButton(msgs.get("m.to_" + from), this, "to_" + from));
         _buttons.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
     }
 
@@ -193,9 +195,23 @@ public class GameOverView extends SteelWindow
     public void actionPerformed (ActionEvent event)
     {
         String action = event.getAction();
-        if (action.equals("to_town") || action.equals("to_saloon")) {
+        if (action.startsWith("to_")) {
             _bctx.getBangClient().clearPopup(this, true);
-            _ctrl.gameOverDismissed(action.equals("to_town"));
+            if (action.equals("to_town")) {
+                _bctx.getLocationDirector().leavePlace();
+                _bctx.getBangClient().showTownView();
+
+            } else if (action.equals("to_tutorial")) {
+                // display the pick tutorial view in "finished tutorial" mode
+                _bctx.getBangClient().displayPopup(
+                    new PickTutorialView(
+                        _bctx, PickTutorialView.Mode.COMPLETED), true);
+
+            } else {
+                _bctx.getLocationDirector().moveTo(
+                    _bobj.priorLocation.placeOid);
+            }
+
         } else if (action.equals("stats")) {
             _bctx.getBangClient().clearPopup(this, true);
             _bctx.getBangClient().displayPopup(_ctrl.getStatsView(), true);

@@ -10,8 +10,9 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.presents.dobj.DSet;
+import com.threerings.io.Streamable;
 import com.threerings.parlor.game.data.GameObject;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.util.StreamablePoint;
 
 import com.threerings.bang.data.Stat;
@@ -86,9 +87,32 @@ public class BangObject extends GameObject
         }
     }
 
+    /** Used to keep track of where players were before the game. */
+    public static class PriorLocation implements Streamable
+    {
+        /** Either "saloon", "ranch", "parlor" or "tutorial". */
+        public String ident;
+
+        /** If ident is "parlor" the room oid of the parlor otherwise zero. */
+        public int placeOid;
+
+        /** Default constructor used for unserialization. */
+        public PriorLocation () {
+        }
+
+        /** Creates a prior location representing an actual location. */
+        public PriorLocation (String ident, int placeOid) {
+            this.ident = ident;
+            this.placeOid = placeOid;
+        }
+    }
+
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>avatars</code> field. */
     public static final String AVATARS = "avatars";
+
+    /** The field name of the <code>priorLocation</code> field. */
+    public static final String PRIOR_LOCATION = "priorLocation";
 
     /** The field name of the <code>stats</code> field. */
     public static final String STATS = "stats";
@@ -187,6 +211,10 @@ public class BangObject extends GameObject
      * these here in case the player leaves early and so that we can provide
      * fake fingerprints for AIs. */
     public int[][] avatars;
+
+    /** Contains the prior location of the players in this game. Defaults to
+     * the saloon. */
+    public PriorLocation priorLocation;
 
     /** This value is set at the end of every round, to inform the players
      * of various interesting statistics. */
@@ -606,6 +634,22 @@ public class BangObject extends GameObject
         requestElementUpdate(
             AVATARS, index, value, ovalue);
         this.avatars[index] = value;
+    }
+
+    /**
+     * Requests that the <code>priorLocation</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setPriorLocation (BangObject.PriorLocation value)
+    {
+        BangObject.PriorLocation ovalue = this.priorLocation;
+        requestAttributeChange(
+            PRIOR_LOCATION, value, ovalue);
+        this.priorLocation = value;
     }
 
     /**
