@@ -703,28 +703,31 @@ public class MobileSprite extends PieceSprite
         if (path != null) {
             if (path.size() < 2) {
                 log.warning("Created short path? [piece=" + _piece.info() +
-                            ", path=" + StringUtil.toString(path) + "].");
-                return null;
-            }
-            // if we're dead, take our final path in slow motion (this only
-            // happens to flying units that are heading somewhere to explode)
-            float speed = Config.getMovementSpeed();
-            if (!_piece.isAlive()) {
-                speed /= 2;
-            }
-            return createPath(board, path, speed);
+                    ", to=(" + _px + ", " + _py + ")" +
+                    ", path=" + StringUtil.toString(path) + "].");
+                // fall through and create a line path
 
-        } else {
-            Vector3f start = toWorldCoords(
-                _px, _py, _piece.computeElevation(board, _px, _py),
-                new Vector3f());
-            Vector3f end = toWorldCoords(_piece.x, _piece.y,
-                _piece.computeElevation(board, _piece.x, _piece.y),
-                new Vector3f());
-            float duration = (float)MathUtil.distance(
-                _px, _py, _piece.x, _piece.y) * .003f;
-            return new LinePath(this, start, end, duration);
+            } else {
+                // if we're dead, take our final path in slow motion (this only
+                // happens to flying units that are heading somewhere to
+                // explode)
+                float speed = Config.getMovementSpeed();
+                if (!_piece.isAlive()) {
+                    speed /= 2;
+                }
+                return createPath(board, path, speed);
+            }
         }
+
+        Vector3f start = toWorldCoords(
+            _px, _py, _piece.computeElevation(board, _px, _py),
+            new Vector3f());
+        Vector3f end = toWorldCoords(_piece.x, _piece.y,
+            _piece.computeElevation(board, _piece.x, _piece.y),
+            new Vector3f());
+        float duration = (float)MathUtil.distance(
+            _px, _py, _piece.x, _piece.y) * .003f;
+        return new LinePath(this, start, end, duration);
     }
 
     /**
