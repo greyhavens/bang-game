@@ -15,7 +15,7 @@ public class HomesteadEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
     public static final String STEAD_CLAIMED =
-        "effects/frontier_town/stead_claimed/activate";
+        "effects/frontier_town/homestead/claimed";
 
     /** The piece id of the homestead being claimed. */
     public int steadId;

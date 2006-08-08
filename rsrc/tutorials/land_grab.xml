@@ -20,7 +20,7 @@
   <!-- add their bigshot to the board and set them to claimin' -->
   <add_piece what="bigshot" id="1001" location="17,19" owner="0"/>
   <text message="claim_homestead" step="1"/>
-  <wait event="effect:effects/frontier_town/stead_claimed/activate"/>
+  <wait event="effect:effects/frontier_town/homestead/claimed"/>
 
   <!-- add another unit near their homestead; explain spawning -->
 
