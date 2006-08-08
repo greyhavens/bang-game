@@ -249,6 +249,50 @@ public abstract class Scenario
     }
 
     /**
+     * Computes the per-round earnings for the given player.
+     */
+    public int computeEarnings (
+        BangObject bangobj, int pidx, int ridx,
+        BangManager.PlayerRecord[] precords, BangManager.RankRecord[] ranks,
+        BangManager.RoundRecord[] rounds)
+    {
+        // scale their earnings by the number of players they defeated in
+        // each round
+        int defeated = 0, aisDefeated = 0;
+        for (int ii = ranks.length-1; ii >= 0; ii--) {
+            // stop when we get to our record
+            if (ranks[ii].pidx == pidx) {
+                break;
+            }
+
+            // require that the opponent finished at least half the round
+            if (precords[ranks[ii].pidx].finishedTick[ridx] <
+                rounds[ridx].duration/2) {
+                continue;
+            }
+
+            if (_bangmgr.isAI(ranks[ii].pidx)) {
+                // only the first AI counts toward earnings
+                if (++aisDefeated <= 1) {
+                    defeated++;
+                }
+            } else {
+                defeated++;
+            }
+        }
+
+        log.fine("Noting earnings p:" + bangobj.players[pidx] +
+                    " r:" + ridx + " (" + precords[pidx].finishedTick[ridx] +
+                    " * " + BASE_EARNINGS[defeated] + " / " +
+                    rounds[ridx].lastTick + ").");
+
+        // scale the player's earnings based on the percentage of the round
+        // they completed
+        return (precords[pidx].finishedTick[ridx] * BASE_EARNINGS[defeated] /
+            rounds[ridx].lastTick);
+    }
+    
+    /**
      * Gives the scenario an opportunity to record statistics for the supplied
      * player at the end of the game.
      */
@@ -503,4 +547,7 @@ public abstract class Scenario
      * we warn the players. */
     protected static final long[] TIME_WARNINGS = {
         60*1000L, 30*1000L, 10*1000L };
+    
+    /** Defines the base earnings (per-round) for each rank. */
+    protected static final int[] BASE_EARNINGS = { 50, 70, 85, 105 };
 }

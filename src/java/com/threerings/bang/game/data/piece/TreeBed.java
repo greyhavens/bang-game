@@ -39,7 +39,13 @@ public class TreeBed extends Prop
     @Override // documentation inherited
     public boolean isAlive ()
     {
-        return true;
+        return damage < 100 || growth == 0;
+    }
+    
+    @Override // documentation inherited
+    public boolean expireWreckage (short tick)
+    {
+        return false;
     }
     
     /**
@@ -49,22 +55,29 @@ public class TreeBed extends Prop
      */
     public void damage (int dinc)
     {
-        int nprogress = growth * 100 + (100 - damage) - dinc;
-        if (nprogress < 0) {
-            growth = 0;
-            damage = 100;
-        } else if (nprogress >= (FULLY_GROWN + 1) * 100) {
-            growth = FULLY_GROWN;
-            damage = 0;
+        damage += dinc;
+        if (damage < 0 && growth < FULLY_GROWN) {
+            growth++;
+            damage += 100;
         } else {
-            growth = (byte)(nprogress / 100);
-            damage = 100 - (nprogress % 100);
+            damage = Math.max(Math.min(damage, 100), 0);
         }
     }
     
     @Override // documentation inherited
     public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
     {
+        // can't heal dead trees
+        ArrayList<Effect> effects = new ArrayList<Effect>();
+        if (!isAlive()) {
+            if (tick - lastActed > RESURRECTION_TICKS_PER_LEVEL * growth) {
+                effects.add(new TreeBedEffect(this, new Piece[0],
+                    TreeBedEffect.RESURRECT));
+                return effects;
+            }
+            return null;
+        }
+
         // normal units cause the tree to grow; logging robots cause it to
         // shrink
         int dinc = 0, ddec = 0;
@@ -79,7 +92,9 @@ public class TreeBed extends Prop
                 }
                 int pdamage = unit.getTreeProximityDamage();
                 if (pdamage > 0) {
-                    dinc += pdamage;
+                    if (growth > 0) { // no hurting sprouts
+                        dinc += pdamage;
+                    }
                 } else {
                     ddec += pdamage;
                 }
@@ -87,11 +102,10 @@ public class TreeBed extends Prop
             }
         }
         int tdamage = dinc + ddec * (doubleGrowth ? 2 : 1);
-        if (tdamage == 0 || (growth == 0 && damage == 100 && tdamage > 0) ||
-            (growth == FULLY_GROWN && damage == 0 && tdamage < 0)) {
+        if (growers.size() == 0 || (growth == FULLY_GROWN &&
+            damage == 0 && tdamage < 0)) {
             return null;
         }
-        ArrayList<Effect> effects = new ArrayList<Effect>();
         effects.add(new TreeBedEffect(this,
             growers.toArray(new Piece[growers.size()]), tdamage));
         return effects;
@@ -102,4 +116,8 @@ public class TreeBed extends Prop
     {
         return new TreeBedSprite();
     }
+
+    /** The number of ticks it takes per level grown for a stump to turn back
+     * into a living bed. */
+    protected static final int RESURRECTION_TICKS_PER_LEVEL = 2;
 }

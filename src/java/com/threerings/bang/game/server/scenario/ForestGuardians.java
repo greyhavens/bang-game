@@ -6,9 +6,12 @@ package com.threerings.bang.game.server.scenario;
 import java.awt.Point;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 
+import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
@@ -26,6 +29,7 @@ import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.ForestGuardiansLogic;
 import com.threerings.bang.game.util.PieceSet;
@@ -108,14 +112,35 @@ public class ForestGuardians extends Scenario
     {
         super.roundDidEnd(bangobj);
 
-        // note trees grown to full height
+        // note trees grown
+        int treePoints = 0, maxPoints = 0;
         for (Piece piece : bangobj.pieces) {
-            if (piece instanceof TreeBed &&
-                ((TreeBed)piece).growth == TreeBed.FULLY_GROWN) {
-                for (StatSet stats : bangobj.stats) {
-                    stats.incrementStat(Stat.Type.TREES_GROWN, 1);
+            if (piece instanceof TreeBed) {
+                TreeBed bed = (TreeBed)piece;
+                maxPoints += TreeBed.FULLY_GROWN;
+                if (bed.isAlive()) {
+                    treePoints += bed.growth;
+                    if (bed.growth == TreeBed.FULLY_GROWN) {
+                        for (StatSet stats : bangobj.stats) {
+                            stats.incrementStat(Stat.Type.TREES_GROWN, 1);
+                        }
+                    }
                 }
             }
+        }
+        _payouts = new int[bangobj.players.length];
+        Arrays.fill(_payouts, 60 + (95 - 60) * treePoints / maxPoints);
+        
+        int[] points = bangobj.perRoundPoints[bangobj.roundId-1],
+            spoints = new ArrayIntSet(points).toIntArray();
+        if (spoints.length < 2) {
+            return;
+        }
+        for (int ii = 0; ii < _payouts.length; ii++) {
+            int ppoints = points[ii];
+            _payouts[ii] += PAYOUT_ADJUSTMENTS[spoints.length-2][
+                IntListUtil.indexOf(spoints, ppoints)] /
+                    count(points, ppoints);
         }
     }
 
@@ -130,6 +155,29 @@ public class ForestGuardians extends Scenario
         if (grown > 0) {
             user.stats.incrementStat(Stat.Type.TREES_GROWN, grown);
         }
+    }
+    
+    @Override // documentation inherited
+    public int computeEarnings (
+        BangObject bangobj, int pidx, int ridx,
+        BangManager.PlayerRecord[] precords, BangManager.RankRecord[] ranks,
+        BangManager.RoundRecord[] rounds)
+    {
+        return (_payouts == null) ? 0 : _payouts[pidx];
+    }
+    
+    /**
+     * Returns the number of times the value appears in the array.
+     */
+    protected static int count (int[] values, int value)
+    {
+        int count = 0;
+        for (int ii = 0; ii < values.length; ii++) {
+            if (values[ii] == value) {
+                count++;
+            }
+        }
+        return count;
     }
     
     /** Controls the logging robots. */
@@ -272,9 +320,16 @@ public class ForestGuardians extends Scenario
     /** The spots from which robots emerge. */
     protected ArrayList<Marker> _robotSpots = new ArrayList<Marker>();
     
+    /** The payouts for each player, determined at the end of the round. */
+    protected int[] _payouts;
+    
     /** The approximate number of logging robots to keep alive per unit. */
     protected static final float LOGGING_ROBOTS_PER_UNIT = 0.5f;
     
     /** The average number of ticks to allow before spawning a new robot. */
     protected static final int AVG_ROBOT_SPAWN_DELAY = 2;
+    
+    /** Payout adjustments for rankings in 2/3/4 player games. */
+    protected static final int[][] PAYOUT_ADJUSTMENTS = {
+        { -10, +10 }, { -10, 0, +10 }, { -10, -5, +5, +10 } };
 }

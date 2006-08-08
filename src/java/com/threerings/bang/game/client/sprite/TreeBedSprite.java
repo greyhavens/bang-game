@@ -39,8 +39,8 @@ public class TreeBedSprite extends PropSprite
     {
         super.updated(piece, tick);
         
-        // position the tree according to the bed's growth phase
-        updateTreeHeight();
+        // change models based on the tree's growth phase
+        updateTreeModel();
     }
     
     @Override // from PieceSprite
@@ -48,20 +48,8 @@ public class TreeBedSprite extends PropSprite
     {
         super.createGeometry();
         
-        // load th e
-        _view.addResolving(this);
-        _ctx.loadModel("props", "indian_post/natural/tree_pine_green_tall",
-            new ResultAttacher<Model>(this) {
-            public void requestCompleted (Model model) {
-                super.requestCompleted(model);
-                _view.clearResolving(TreeBedSprite.this);
-                _tree = model;     
-                updateTreeHeight();          
-            }
-            public void requestFailed (Exception cause) {
-                _view.clearResolving(TreeBedSprite.this);
-            }
-        });
+        // load the tree model
+        updateTreeModel();
         
         _tlight = _view.getTerrainNode().createHighlight(
             _piece.x, _piece.y, false, false);
@@ -69,14 +57,38 @@ public class TreeBedSprite extends PropSprite
         updateStatus();
     }
     
-    protected void updateTreeHeight ()
+    protected void updateTreeModel ()
     {
-        float height = 3.95f * TILE_SIZE,
-            depth = height - ((TreeBed)_piece).growth * height /
-                TreeBed.FULLY_GROWN;
-        _tree.getLocalTranslation().set(0f, 0f, -depth);
+        String model = "indian_post/special/trees/" +
+            (_piece.isAlive() ? "" : "stump_") +
+            TREE_MODELS[((TreeBed)_piece).growth];
+        if (model.equals(_tmodel)) {
+            return;
+        }
+        _tmodel = model;
+        _view.addResolving(this);
+        _ctx.loadModel("props", model, new ResultAttacher<Model>(this) {
+            public void requestCompleted (Model model) {
+                super.requestCompleted(model);
+                _view.clearResolving(TreeBedSprite.this);
+                if (_tree != null) {
+                    detachChild(_tree);
+                }
+                _tree = model;
+            }
+            public void requestFailed (Exception cause) {
+                _view.clearResolving(TreeBedSprite.this);
+            }
+        });
     }
     
-    /** The tree that we raise up and down. */
+    /** The tree that we switch around. */
     protected Model _tree;
+    
+    /** The current tree model. */
+    protected String _tmodel;
+    
+    /** The tree models corresponding to each growth stage. */
+    protected static final String[] TREE_MODELS = {
+        "sprout", "sapling", "mature", "elder" };
 }

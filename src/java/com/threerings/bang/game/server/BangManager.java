@@ -95,7 +95,77 @@ import static com.threerings.bang.Log.log;
  */
 public class BangManager extends GameManager
     implements GameCodes, BangProvider
-{   
+{
+    /** Contains information on the players in the game which we need to ensure
+     * is around even if the player logs off in the middle of the game. */
+    public static class PlayerRecord
+    {
+        public int playerId;
+        public Purse purse;
+        public int[] finishedTick;
+
+        public DSet<Rating> ratings;
+        public HashMap<String,Rating> nratings = new HashMap<String,Rating>();
+
+        public PlayerObject user;
+
+        public Rating getRating (String scenario) {
+            Rating rating = nratings.get(scenario);
+            if (rating == null) {
+                rating = ratings.get(scenario);
+                if (rating == null) {
+                    rating = new Rating();
+                    rating.scenario = scenario;
+                } else if (rating.experience > 0) {
+                    rating = (Rating)rating.clone();
+                }
+            }
+            return rating;
+        }
+    }
+
+    /** Used to rank the players at the end of the game. */
+    public static class RankRecord implements Comparable<RankRecord>
+    {
+        public int pidx, points, kills;
+
+        public RankRecord (int pidx, int points, int kills) {
+            this.pidx = pidx;
+            this.points = points;
+            this.kills = kills;
+        }
+
+        public int compareTo (RankRecord other) {
+            int delta;
+            if ((delta = (other.points - points)) != 0) {
+                return delta;
+            }
+            if ((delta = (other.kills - kills)) != 0) {
+                return delta;
+            }
+            return 0;
+        }
+    }
+
+    /** Contains information about each round played. */
+    public static class RoundRecord
+    {
+        /** The scenario used for the round. */
+        public Scenario scenario;
+        
+        /** The last tick recorded for this round. */
+        public int lastTick;
+
+        /** The duration of this round in ticks. */
+        public int duration;
+
+        /** The board we played on this round. */
+        public BoardRecord board;
+
+        /** A snapshot of the in-game stats at the end of this round. */
+        public StatSet[] stats;
+    }
+
     // documentation inherited from interface BangProvider
     public void getBoard (
         ClientObject caller, BangService.BoardListener listener)
@@ -830,6 +900,7 @@ public class BangManager extends GameManager
             }
         }
         _scenario.init(this);
+        _rounds[_bangobj.roundId].scenario = _scenario;
 
         // create the logic for our ai players, if any
         int aicount = (_AIs == null) ? 0 : _AIs.length;
@@ -1773,41 +1844,8 @@ public class BangManager extends GameManager
             if (_rounds[rr].duration == 0 || _rounds[rr].lastTick == 0) {
                 continue;
             }
-
-            // scale their earnings by the number of players they defeated in
-            // each round
-            int defeated = 0, aisDefeated = 0;
-            for (int ii = _ranks.length-1; ii >= 0; ii--) {
-                // stop when we get to our record
-                if (_ranks[ii].pidx == pidx) {
-                    break;
-                }
-
-                // require that the opponent finished at least half the round
-                if (_precords[_ranks[ii].pidx].finishedTick[rr] <
-                    _rounds[rr].duration/2) {
-                    continue;
-                }
-
-                if (isAI(_ranks[ii].pidx)) {
-                    // only the first AI counts toward earnings
-                    if (++aisDefeated <= 1) {
-                        defeated++;
-                    }
-                } else {
-                    defeated++;
-                }
-            }
-
-            log.fine("Noting earnings p:" + _bangobj.players[pidx] +
-                     " r:" + rr + " (" + _precords[pidx].finishedTick[rr] +
-                     " * " + BASE_EARNINGS[defeated] + " / " +
-                     _rounds[rr].lastTick + ").");
-
-            // scale the player's earnings based on the percentage of the round
-            // they completed
-            earnings += (_precords[pidx].finishedTick[rr] *
-                         BASE_EARNINGS[defeated] / _rounds[rr].lastTick);
+            earnings += _rounds[rr].scenario.computeEarnings(
+                _bangobj, pidx, rr, _precords, _ranks, _rounds);
         }
 
         // and scale earnings based on their purse
@@ -2328,73 +2366,6 @@ public class BangManager extends GameManager
         }
     }
 
-    /** Contains information on the players in the game which we need to ensure
-     * is around even if the player logs off in the middle of the game. */
-    protected static class PlayerRecord
-    {
-        public int playerId;
-        public Purse purse;
-        public int[] finishedTick;
-
-        public DSet<Rating> ratings;
-        public HashMap<String,Rating> nratings = new HashMap<String,Rating>();
-
-        public PlayerObject user;
-
-        public Rating getRating (String scenario) {
-            Rating rating = nratings.get(scenario);
-            if (rating == null) {
-                rating = ratings.get(scenario);
-                if (rating == null) {
-                    rating = new Rating();
-                    rating.scenario = scenario;
-                } else if (rating.experience > 0) {
-                    rating = (Rating)rating.clone();
-                }
-            }
-            return rating;
-        }
-    }
-
-    /** Used to rank the players at the end of the game. */
-    protected static class RankRecord implements Comparable<RankRecord>
-    {
-        public int pidx, points, kills;
-
-        public RankRecord (int pidx, int points, int kills) {
-            this.pidx = pidx;
-            this.points = points;
-            this.kills = kills;
-        }
-
-        public int compareTo (RankRecord other) {
-            int delta;
-            if ((delta = (other.points - points)) != 0) {
-                return delta;
-            }
-            if ((delta = (other.kills - kills)) != 0) {
-                return delta;
-            }
-            return 0;
-        }
-    }
-
-    /** Contains information about each round played. */
-    protected static class RoundRecord
-    {
-        /** The last tick recorded for this round. */
-        public int lastTick;
-
-        /** The duration of this round in ticks. */
-        public int duration;
-
-        /** The board we played on this round. */
-        public BoardRecord board;
-
-        /** A snapshot of the in-game stats at the end of this round. */
-        public StatSet[] stats;
-    }
-
     /** Used to time out players that don't make a pre-game selection. */
     protected class PreGameTimer extends Interval
     {
@@ -2553,7 +2524,4 @@ public class BangManager extends GameManager
         Stat.Type.SHOTS_FIRED,
         Stat.Type.DISTANCE_MOVED,
     };
-
-    /** Defines the base earnings (per-round) for each rank. */
-    protected static final int[] BASE_EARNINGS = { 50, 70, 85, 105 };
 }

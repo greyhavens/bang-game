@@ -19,6 +19,12 @@ import static com.threerings.bang.Log.log;
  */
 public class TreeBedEffect extends Effect
 {
+    /** Indicates that the tree grew (negative damage). */
+    public static final String GREW = "grew";
+    
+    /** A special damage amount that signals the tree's resurrection. */
+    public static final int RESURRECT = Integer.MAX_VALUE;
+    
     /** The id of the affected tree bed. */
     public int bedId;
     
@@ -92,11 +98,20 @@ public class TreeBedEffect extends Effect
                 bedId + "].");
             return false;
         }
-        bed.damage(damage);
-        if (damage > 0) {
-            reportEffect(observer, bed, ShotEffect.DAMAGED);
-        } else {
+        if (damage == RESURRECT) {
+            bed.growth = 0;
+            bed.damage = 100;
             reportEffect(observer, bed, UPDATED);
+        } else {
+            bed.damage(damage);
+            if (damage >= 0) {
+                reportEffect(observer, bed, ShotEffect.DAMAGED);
+            } else {
+                reportEffect(observer, bed, GREW);
+            }
+            if (!bed.isAlive()) {
+                bed.wasKilled(bangobj.tick);
+            }
         }
         return true;
     }

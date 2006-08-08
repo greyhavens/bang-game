@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="cargo_tank" translation="-3.16545, -0.626492, 1.33251" rotation="0.0, 0.0, 0.0, 1.0" scale="41.7597, 41.7597, 41.7597" offsetTranslation="0.850963, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="cargo_tank.png" transparent="false">
+  <triMesh name="cargo_tank" translation="-3.16545, -0.626492, 1.33251" rotation="0.0, 0.0, -0.70710677, 0.70710677" scale="41.7597, 41.7597, 41.7597" offsetTranslation="0.850963, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="cargo_tank.png" transparent="false">
     <vertex location="-2.2888, -0.370173, 2.17289" normal="0.936223, 0.0, 0.351407" tcoords="0.007493, 0.903652"/>
     <vertex location="-2.2888, -0.552743, 2.17289" normal="0.936223, 0.0, 0.351407" tcoords="0.007493, 0.844179"/>
     <vertex location="-2.2361, -0.461458, 2.03248" normal="0.936223, 0.0, 0.351407" tcoords="0.062406, 0.87443"/>
