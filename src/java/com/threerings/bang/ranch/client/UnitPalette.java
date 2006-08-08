@@ -14,9 +14,11 @@ import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BangUtil;
 
 /**
  * Displays a grid of units, one of which can be selected at any given
@@ -47,18 +49,26 @@ public class UnitPalette extends IconPalette
 
     /**
      * Configures the palette to display the supplied user's Big Shots.
+     *
+     * @param filterTown if true, filter out Big Shots that are not available
+     * in the current town.
      */
-    public void setUser (PlayerObject user)
+    public void setUser (PlayerObject user, boolean filterTown)
     {
         // listen to the user object for inventory additions and deletions
         _user = user;
         _user.addListener(_invlistener);
 
         // add icons for all existing big shots
-        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
-            Object item = iter.next();
+        for (Item item : user.inventory) {
             if (item instanceof BigShotItem) {
-                addUnit((BigShotItem)item);
+                BigShotItem bsitem = (BigShotItem)item;
+                UnitConfig config = UnitConfig.getConfig(bsitem.getType());
+                if (filterTown && BangUtil.getTownIndex(user.townId) <
+                    BangUtil.getTownIndex(config.getTownId())) {
+                    continue;
+                }
+                addUnit(bsitem);
             }
         }
     }

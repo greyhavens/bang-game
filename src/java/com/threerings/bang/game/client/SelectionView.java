@@ -97,7 +97,7 @@ public class SelectionView extends SteelWindow
         _units = new UnitPalette(_ctx, _enabler, 4, 1);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
-        _units.setUser(_ctx.getUserObject());
+        _units.setUser(_ctx.getUserObject(), true);
         _units.selectFirstIcon();
         _center.add(_units);
 

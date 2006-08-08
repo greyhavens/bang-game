@@ -73,7 +73,7 @@ public class RanchView extends ShopView
 
         // ...recruited big shots...
         _recruits = new UnitPalette(ctx, _inspector, 4, 3);
-        _recruits.setUser(_ctx.getUserObject());
+        _recruits.setUser(_ctx.getUserObject(), false);
 
         // ...and normal + special units
         _units = new UnitPalette(ctx, _inspector, 4, 3);
