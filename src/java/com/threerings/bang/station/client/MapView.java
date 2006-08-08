@@ -162,6 +162,11 @@ public class MapView extends BContainer
 
     protected static final Rectangle[] TBUT_RECTS = {
         new Rectangle(75, 132, 88, 19),
-        new Rectangle(276, 354, 88, 19),
+        // this is a hack; the damned artists put a fucking gap in between the
+        // ITP town image and the take train image so we expand the take train
+        // label up and down by 23 pixels to cover the gap; we'd expand it only
+        // up and bottom align everything except that turns out not to be
+        // possible without giant fiasco thanks to the way we handle hovering
+        new Rectangle(276, 354-23, 88, 19+2*23),
     };
 }
