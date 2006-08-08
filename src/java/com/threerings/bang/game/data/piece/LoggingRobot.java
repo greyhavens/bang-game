@@ -44,6 +44,9 @@ public class LoggingRobot extends BallisticUnit
     @Override // documentation inherited
     public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
     {
+        if (!isAlive()) {
+            return null;
+        }
         ArrayList<Effect> effects = super.tick(tick, board, pieces);
         ArrayList<ShotEffect> proxShots = new ArrayList<ShotEffect>();
         ProximityShotEffect proxShot = null;

@@ -314,6 +314,9 @@ public class Unit extends Piece
     @Override // documentation inherited
     public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
     {
+        if (!isAlive()) {
+            return null;
+        }
         ArrayList<Effect> effects = new ArrayList<Effect>();
         if (influence != null && influence.isExpired(tick)) {
             ExpireInfluenceEffect effect = influence.createExpireEffect();

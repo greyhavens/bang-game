@@ -1267,7 +1267,6 @@ public class BangManager extends GameManager
                     _bangobj.removeFromPieces(p.getKey());
                     _bangobj.board.clearShadow(p);
                 }
-                continue;
             }
 
             int ox = p.x, oy = p.y;

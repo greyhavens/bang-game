@@ -273,7 +273,7 @@ public class ForestGuardians extends Scenario
             for (Piece piece : pieces) {
                 if (piece instanceof TreeBed) {
                     TreeBed tree = (TreeBed)piece;
-                    if ((tree.growth > 0 || tree.damage < 100) &&
+                    if (tree.growth > 0 && tree.isAlive() &&
                         (ctree == null || unit.getDistance(tree) <
                             unit.getDistance(ctree))) {
                         ctree = tree;
