@@ -3,10 +3,6 @@
 
 package com.threerings.bang.game.client;
 
-import java.util.Iterator;
-
-import com.jme.system.DisplaySystem;
-
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
@@ -29,6 +25,7 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.data.piece.Counter;
+import com.threerings.bang.game.data.piece.Homestead;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.util.TutorialUtil;
 
@@ -151,12 +148,11 @@ public class TutorialController
             if (what.equals("piece")) {
                 p = (Piece)_bangobj.pieces.get(id);
 
-            } else if (what.equals("claim")) {
-                // locate the specified claim
-                for (Iterator iter = _bangobj.pieces.iterator();
-                     iter.hasNext(); ) {
-                    Piece cp = (Piece)iter.next();
-                    if (cp instanceof Counter && cp.owner == id) {
+            } else if (what.equals("special")) {
+                // locate the specified counter or homestead
+                for (Piece cp : _bangobj.pieces) {
+                    if ((cp instanceof Counter || cp instanceof Homestead) &&
+                        cp.owner == id) {
                         p = cp;
                         break;
                     }

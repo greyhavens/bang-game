@@ -966,13 +966,16 @@ public class BangManager extends GameManager
             p.y = (short)RandomUtil.getInt(_bangobj.board.getHeight());
             _starts.add(p);
         }
-        Collections.shuffle(_starts);
+        // if this is not a tutorial, shuffle the starting positions
+        if (!_bconfig.tutorial) {
+            Collections.shuffle(_starts);
+        }
         // store them in the bang object for initial camera positions
         _bangobj.startPositions = new StreamablePoint[_starts.size()];
         for (int ii = 0, nn = _starts.size(); ii < nn; ii++) {
             Piece start = _starts.get(ii);
-            _bangobj.startPositions[ii] = new StreamablePoint(start.x,
-                start.y);
+            _bangobj.startPositions[ii] =
+                new StreamablePoint(start.x, start.y);
         }
         _bangobj.setStartPositions(_bangobj.startPositions);
 

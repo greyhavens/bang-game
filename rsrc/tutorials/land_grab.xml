@@ -1,0 +1,36 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="land_grab" board="Land Grab" players="2">
+  <show_view name="player_status"/>
+
+  <!-- start them off with a friendly welcome -->
+  <text message="welcome" step="1"/>
+  <wait event="text_clicked"/>
+
+  <!-- show them their homestead -->
+  <center_on what="special" id="0"/>
+  <text message="homestead_intro" step="1"/>
+  <wait event="text_clicked"/>
+
+  <!-- show them an unclaimed homestead -->
+  <center_on what="special" id="-1"/>
+  <text message="homestead_claiming" step="1"/>
+  <wait event="text_clicked"/>
+
+  <!-- add their bigshot to the board and set them to claimin' -->
+  <add_piece what="bigshot" id="1001" location="17,19" owner="0"/>
+  <text message="claim_homestead" step="1"/>
+  <wait event="effect:effects/frontier_town/stead_claimed/activate"/>
+
+  <!-- add another unit near their homestead; explain spawning -->
+
+  <!-- show them the enemy homestead; explain attacking homesteads -->
+  <center_on what="special" id="1"/>
+
+  <!-- have them destroy the enemy homestead; then claim it for themselves -->
+
+  <!-- wrap up and end the tutorial -->
+  <text message="done"/>
+  <wait event="text_clicked"/>
+
+</tutorial>

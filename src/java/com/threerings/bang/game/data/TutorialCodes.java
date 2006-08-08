@@ -32,7 +32,7 @@ public interface TutorialCodes
             PRACTICE_PREFIX + CattleRustlingInfo.IDENT,
             "gold_rush",
             PRACTICE_PREFIX + GoldRushInfo.IDENT,
-            // "land_grab",
+            "land_grab",
             PRACTICE_PREFIX + LandGrabInfo.IDENT,
         }, { // indian post tutorials
             // "itp_units",

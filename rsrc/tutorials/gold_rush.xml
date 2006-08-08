@@ -8,7 +8,7 @@
   <wait event="text_clicked"/>
 
   <!-- show them their claim -->
-  <center_on what="claim" id="0"/>
+  <center_on what="special" id="0"/>
   <text message="claim_intro" step="1"/>
   <wait event="text_clicked"/>
 

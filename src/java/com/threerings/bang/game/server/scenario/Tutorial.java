@@ -61,6 +61,8 @@ public class Tutorial extends Scenario
                 new NuggetDelegate(true, ClaimJumping.NUGGET_COUNT));
         } else if (_config.ident.equals("gold_rush")) {
             registerDelegate(new NuggetDelegate(false, 0));
+        } else if (_config.ident.equals("land_grab")) {
+            registerDelegate(new HomesteadDelegate());
         }
 
         // now that our delegates are registered we can call super.init

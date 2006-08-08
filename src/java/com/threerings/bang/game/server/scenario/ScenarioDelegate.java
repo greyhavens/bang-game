@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.server.scenario;
 
+import java.util.ArrayList;
+
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.game.data.piece.Piece;
@@ -26,6 +28,15 @@ public class ScenarioDelegate
     {
         _bangmgr = bangmgr;
         _parent = parent;
+    }
+
+    /**
+     * Allows a delegate to filter out custom marker pieces and props prior to
+     * the start of the round.
+     */
+    public void filterPieces (BangObject bangobj, ArrayList<Piece> starts,
+                              ArrayList<Piece> pieces)
+    {
     }
 
     /**

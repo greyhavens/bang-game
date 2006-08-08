@@ -44,9 +44,21 @@ import static com.threerings.bang.Log.log;
 public abstract class Scenario
 {   
     /**
+     * Called to initialize a scenario when it is created.
+     */
+    public void init (BangManager bangmgr)
+    {
+        _bangmgr = bangmgr;
+
+        // initialize our delegates
+        for (ScenarioDelegate delegate : _delegates) {
+            delegate.init(_bangmgr, this);
+        }
+    }
+
+    /**
      * Allows a scenario to filter out custom marker pieces and scenario
      * specific props prior to the start of the round.
-     * <em>Note:</em> this is called before {@link #init}.
      *
      * @param bangobj the game object.
      * @param starts a list of start markers for all the players.
@@ -67,18 +79,10 @@ public abstract class Scenario
                 iter.remove();
             }
         }
-    }
 
-    /**
-     * Called to initialize a scenario when it is created.
-     */
-    public void init (BangManager bangmgr)
-    {
-        _bangmgr = bangmgr;
-
-        // initialize our delegates
+        // give our delegates a crack as well
         for (ScenarioDelegate delegate : _delegates) {
-            delegate.init(_bangmgr, this);
+            delegate.filterPieces(bangobj, starts, pieces);
         }
     }
 
