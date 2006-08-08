@@ -46,7 +46,7 @@ public class ArticlePalette extends IconPalette
         PlayerObject player = _ctx.getUserObject();
         int articleId = -1;
         Look look = _view.getSelection();
-        if (look != null) {
+        if (look != null && look.articles.length > slidx) {
             articleId = look.articles[slidx];
         }
 
