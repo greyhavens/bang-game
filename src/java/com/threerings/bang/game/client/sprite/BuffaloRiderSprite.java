@@ -27,6 +27,18 @@ public class BuffaloRiderSprite extends UnitSprite
     }
 
     @Override // documentation inherited
+    protected Path createPath (BangBoard board)
+    {
+        Path path = super.createPath(board);
+        // something's booched so fire off the shot now
+        if (path == null && _effectHandler != null) {
+            ((MoveShootHandler)_effectHandler).fireShot();
+            _effectHandler = null;
+        }
+        return path;
+    }
+
+    @Override // documentation inherited
     protected Path createPath (BangBoard board, List<Point> path, float speed)
     {
         if (_effectHandler != null) {
