@@ -28,8 +28,9 @@ public class Sharpshooter extends Unit
         if (target instanceof Unit) {
             Unit unit = (Unit)target;
             if (unit.holding != null) {
-                ArrayUtil.append(preShots, HoldEffect.dropBonus(
-                            bangobj, unit, pieceId, unit.holding));
+                preShots = (Effect[])ArrayUtil.append(preShots,
+                    HoldEffect.dropBonus(bangobj, unit, pieceId,
+                        unit.holding));
             }
         }
         return preShots;
