@@ -639,9 +639,9 @@ public class BangController extends GameController
         }
         if (_config.tutorial || _config.practice || _config.allPlayersAIs()) {
             // we re-use the playerReady mechanism to communicate that we're
-            // ready for our tutorial/test game
+            // ready for our tutorial/practice/test game
             playerReady();
-        } else {
+        } else if (_bangobj.state == BangObject.SELECT_PHASE) {
             // display the selection dialog
             _view.setPhase(BangObject.SELECT_PHASE);
         }
@@ -697,12 +697,15 @@ public class BangController extends GameController
         // zoom the camera to the center level
         ((GameInputHandler)_ctx.getInputHandler()).rollCamera(FastMath.PI);
 
-        // let the game manager know that our units are in place and we're
-        // fully ready to go
-        playerReady();
+        // if we're one of the players
+        if (_pidx != -1) {
+            // let the game manager know that our units are in place and we're
+            // fully ready to go
+            playerReady();
 
-        // add and immediately fade out a "GO!" marquee
-        _view.view.fadeMarqueeInOut("m.round_start", 1f);
+            // add and immediately fade in and out a "GO!" marquee
+            _view.view.fadeMarqueeInOut("m.round_start", 1f);
+        }
     }
 
     /**

@@ -18,6 +18,7 @@ import com.samskivert.util.ListUtil;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.ElementUpdateListener;
 import com.threerings.presents.dobj.ElementUpdatedEvent;
@@ -784,9 +785,11 @@ public class PlayerManager
                 entry.setLastSession(new Date());
                 return;
             }
-            Object plobj = BangServer.omgr.getObject(_player.location);
+            entry.gameOid = 0;
+            DObject plobj = BangServer.omgr.getObject(_player.location);
             if (plobj instanceof BangObject) {
                 entry.status = PardnerEntry.IN_GAME;
+                entry.gameOid = plobj.getOid();
             } else if (plobj instanceof SaloonObject) {
                 entry.status = PardnerEntry.IN_SALOON;
             } else {

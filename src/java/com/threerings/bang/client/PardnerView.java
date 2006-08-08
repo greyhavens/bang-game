@@ -83,6 +83,8 @@ public class PardnerView extends IconPalette
             GroupLayout.CENTER));
         bcont.add(_chat = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_chat"),
             this, "chat"));
+        bcont.add(_watch = new BButton(_ctx.xlate(BANG_MSGS,
+            "m.pardner_watch"), this, "watch"));
         bcont.add(_remove = new BButton(_ctx.xlate(BANG_MSGS,
             "m.pardner_remove"), this, "remove"));
         ccont.add(bcont);
@@ -125,6 +127,12 @@ public class PardnerView extends IconPalette
                         }
                     }
                 });
+
+        } else if (src == _watch) {
+            PardnerIcon icon = (PardnerIcon)getSelectedIcon();
+            if (icon.entry.gameOid > 0) {
+                _ctx.getLocationDirector().moveTo(icon.entry.gameOid);
+            }
 
         } else { // src == _name || src == _submit
             if (_submit.isEnabled()) {
@@ -170,6 +178,7 @@ public class PardnerView extends IconPalette
 
         // these start out as disabled/empty
         _chat.setEnabled(false);
+        _watch.setEnabled(false);
         _remove.setEnabled(false);
         _submit.setEnabled(false);
         _name.setText("");
@@ -189,7 +198,9 @@ public class PardnerView extends IconPalette
     protected void iconSelected (SelectableIcon icon)
     {
         super.iconSelected(icon);
-        _chat.setEnabled(((PardnerIcon)icon).entry.isAvailable());
+        PardnerEntry entry = ((PardnerIcon)icon).entry;
+        _chat.setEnabled(entry.isAvailable());
+        _watch.setEnabled(entry.gameOid > 0);
         _remove.setEnabled(true);
     }
 
@@ -198,6 +209,7 @@ public class PardnerView extends IconPalette
     {
         super.iconDeselected(icon);
         _chat.setEnabled(false);
+        _watch.setEnabled(false);
         _remove.setEnabled(false);
     }
 
@@ -421,7 +433,7 @@ public class PardnerView extends IconPalette
 
     protected BangContext _ctx;
     protected PlayerService _psvc;
-    protected BButton _chat, _remove, _submit;
+    protected BButton _chat, _remove, _submit, _watch;
     protected BTextField _name;
     protected StatusLabel _status;
 

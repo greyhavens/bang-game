@@ -330,21 +330,26 @@ public class BangView extends BWindow
     {
         _bangobj.board = (BangBoard)board.clone();
         _bangobj.board.applyShadowPatch(_bangobj.scenario.getIdent());
-        ArrayList<Piece> plist = new ArrayList<Piece>();
-        _bangobj.maxPieceId = 0;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Marker || 
-                !pieces[ii].isValidScenario(_bangobj.scenario.getIdent())) {
-                continue;
-            }
-            Piece p = (Piece)pieces[ii].clone();
-            p.assignPieceId(_bangobj);
-            plist.add(p);
-        }
-        _bangobj.pieces = new PieceDSet(plist.iterator());
 
-        // tell the board view to start the game so that we can see the
-        // board while we're buying pieces
+        // if we arrived in the middle of the game, the pieces will already be
+        // configured; otherwise start with the ones provided by the board
+        if (_bangobj.pieces == null) {
+            _bangobj.maxPieceId = 0;
+            ArrayList<Piece> plist = new ArrayList<Piece>();
+            for (Piece piece : pieces) {
+                if (piece instanceof Marker || 
+                    !piece.isValidScenario(_bangobj.scenario.getIdent())) {
+                    continue;
+                }
+                piece = (Piece)piece.clone();
+                piece.assignPieceId(_bangobj);
+                plist.add(piece);
+            }
+            _bangobj.pieces = new PieceDSet(plist.iterator());
+        }
+
+        // tell the board view to start the game so that we can see the board
+        // while we're buying pieces
         view.prepareForRound(_bangobj, config, pidx);
 
         // let the camera and input handlers know that we're getting ready to

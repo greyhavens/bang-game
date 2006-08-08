@@ -168,71 +168,8 @@ public class BangBoardView extends BoardView
      */
     public void doPreSelectBoardTour ()
     {
-        // make sure all elements are resolved
-        if (_resolving > 0) {
-            addResolutionObserver(new ResolutionObserver() {
-                public void mediaResolved () {
-                    doPreSelectBoardTour();
-                }
-            });
-            return;
-        }
-
-        // do a full GC before we start the board tour to tidy up after all the
-        // prop model loading
-        System.gc();
-
-        // compute the desired starting location and orientation
-        GameCameraHandler camhand = (GameCameraHandler)_ctx.getCameraHandler();
-        java.awt.Point start = _bangobj.startPositions[
-            Math.max(0, _bangobj.getPlayerIndex(_ctx.getUserObject().handle))];
-        Vector3f gpoint = camhand.getGroundPoint();
-        float dx = (start.x + 0.5f) * TILE_SIZE - gpoint.x,
-            dy = (start.y + 0.5f) * TILE_SIZE - gpoint.y;
-        if (dx >= 0f && dy >= 0f) {
-            camhand.orbitCamera(FastMath.HALF_PI);
-        } else if (dx < 0f && dy >= 0f) {
-            camhand.orbitCamera(FastMath.PI);
-        } else if (dx < 0f && dy < 0f) {
-            camhand.orbitCamera(-FastMath.HALF_PI);
-        }
-        camhand.panCameraAbs(dx, dy);
-        Vector3f pan = camhand.getGroundPoint().subtractLocal(gpoint);
-        camhand.panCameraAbs(-pan.x, -pan.y);
-
-        // pan, orbit, and zoom over the board
-        camhand.setLimitsEnabled(false);
-        _tpath = new SwingPath(camhand, gpoint, camhand.getGroundNormal(),
-            FastMath.TWO_PI, FastMath.TWO_PI / BOARD_TOUR_DURATION,
-            camhand.getCamera().getLeft(), -FastMath.PI * 0.25f, pan, -75f) {
-            public boolean tick (float secondsSince) {
-                // fade the marquee out when there's a second or less remaining
-                boolean ret = super.tick(secondsSince);
-                float remaining = (_pangle - _protated) / _pangvel;
-                if (!_clearing && remaining <= 1f) {
-                    clearMarquee(remaining);
-                    _clearing = true;
-                }
-                return ret;
-            }
-            protected boolean _clearing;
-        };
-        camhand.moveCamera(_tpath);
-        camhand.addCameraObserver(new CameraPath.Observer() {
-            public boolean pathCompleted (CameraPath path) {
-                // clear the marquee, return the camera to normal, and let the
-                // controller start up the next phase (if we're not leaving)
-                GameCameraHandler camhand =
-                    (GameCameraHandler)_ctx.getCameraHandler();
-                camhand.setLimitsEnabled(true);
-                camhand.resetGroundPointHeight();
-                if (isAdded()) {
-                    _ctrl.preSelectBoardTourComplete();
-                }
-                _tpath = null;
-                return false;
-            }
-        });
+        _haveDoneTour = true;
+        doBoardTour(null);
     }
 
     /**
@@ -383,6 +320,7 @@ public class BangBoardView extends BoardView
             _ctx.getCameraHandler().skipPath();
         }
 
+        // keep track of our shift down state
         _shiftDown = (e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) != 0;
 
         switch (_downButton = e.getButton()) {
@@ -446,6 +384,17 @@ public class BangBoardView extends BoardView
      */
     public void startRound ()
     {
+        // if we haven't toured the board yet (we showed up in the middle of a
+        // game, we need to do it now to properly position the camera)
+        if (!_haveDoneTour) {
+            _haveDoneTour = true;
+            doBoardTour(new Runnable() {
+                public void run () {
+                    startRound();
+                }
+            });
+        }
+
         // drop rendering to 1 FPS while we load the models
         final long start = System.currentTimeMillis();
         // final int oldFPS = _ctx.getApp().setTargetFPS(1);
@@ -787,13 +736,11 @@ public class BangBoardView extends BoardView
         // to run them to the player's starting location once their animations
         // are resolved.  if the unit is respawning, queue up the respawn
         // action
-        if (!_bconfig.tutorial) {
-            if (_bangobj.tick < 0) {
-                Point corner = getStartCorner(piece);
-                sprite.setLocation(_board, corner.x, corner.y);
-            } else {
-                sprite.queueAction(MobileSprite.RESPAWNED);
-            }
+        if (!_bconfig.tutorial && _bangobj.tick < 0) {
+            Point corner = getStartCorner(piece);
+            sprite.setLocation(_board, corner.x, corner.y);
+        } else {
+            sprite.queueAction(MobileSprite.RESPAWNED);
         }
     }
 
@@ -1533,6 +1480,82 @@ public class BangBoardView extends BoardView
     }
 
     /**
+     * Does a camera tour of the board, properly positioning the camera when
+     * the tour is complete.
+     */
+    protected void doBoardTour (final Runnable onComplete)
+    {
+        // make sure all elements are resolved
+        if (_resolving > 0) {
+            addResolutionObserver(new ResolutionObserver() {
+                public void mediaResolved () {
+                    doBoardTour(onComplete);
+                }
+            });
+            return;
+        }
+
+        // do a full GC before we start the board tour to tidy up after all the
+        // prop model loading
+        System.gc();
+
+        // compute the desired starting location and orientation
+        GameCameraHandler camhand = (GameCameraHandler)_ctx.getCameraHandler();
+        java.awt.Point start = _bangobj.startPositions[
+            Math.max(0, _bangobj.getPlayerIndex(_ctx.getUserObject().handle))];
+        Vector3f gpoint = camhand.getGroundPoint();
+        float dx = (start.x + 0.5f) * TILE_SIZE - gpoint.x,
+            dy = (start.y + 0.5f) * TILE_SIZE - gpoint.y;
+        if (dx >= 0f && dy >= 0f) {
+            camhand.orbitCamera(FastMath.HALF_PI);
+        } else if (dx < 0f && dy >= 0f) {
+            camhand.orbitCamera(FastMath.PI);
+        } else if (dx < 0f && dy < 0f) {
+            camhand.orbitCamera(-FastMath.HALF_PI);
+        }
+        camhand.panCameraAbs(dx, dy);
+        Vector3f pan = camhand.getGroundPoint().subtractLocal(gpoint);
+        camhand.panCameraAbs(-pan.x, -pan.y);
+
+        // pan, orbit, and zoom over the board
+        camhand.setLimitsEnabled(false);
+        _tpath = new SwingPath(camhand, gpoint, camhand.getGroundNormal(),
+            FastMath.TWO_PI, FastMath.TWO_PI / BOARD_TOUR_DURATION,
+            camhand.getCamera().getLeft(), -FastMath.PI * 0.25f, pan, -75f) {
+            public boolean tick (float secondsSince) {
+                // fade the marquee out when there's a second or less remaining
+                boolean ret = super.tick(secondsSince);
+                float remaining = (_pangle - _protated) / _pangvel;
+                if (!_clearing && remaining <= 1f) {
+                    clearMarquee(remaining);
+                    _clearing = true;
+                }
+                return ret;
+            }
+            protected boolean _clearing;
+        };
+        camhand.moveCamera(_tpath);
+        camhand.addCameraObserver(new CameraPath.Observer() {
+            public boolean pathCompleted (CameraPath path) {
+                // clear the marquee, return the camera to normal, and let the
+                // controller start up the next phase (if we're not leaving)
+                GameCameraHandler camhand =
+                    (GameCameraHandler)_ctx.getCameraHandler();
+                camhand.setLimitsEnabled(true);
+                camhand.resetGroundPointHeight();
+                if (isAdded()) {
+                    _ctrl.preSelectBoardTourComplete();
+                }
+                _tpath = null;
+                if (onComplete != null) {
+                    onComplete.run();
+                }
+                return false;
+            }
+        });
+    }
+
+    /**
      * Called when an effect is applied to the board.
      */
     protected void applyEffect (Effect effect)
@@ -1659,6 +1682,10 @@ public class BangBoardView extends BoardView
 
     protected int _pidx;
     protected int _downButton = -1;
+
+    /** If we were around for the pre-select phase, we'll note that we did the
+     * board tour then, otherwise we need to do it before we start. */
+    protected boolean _haveDoneTour;
 
     protected int[] _action;
     protected Card _card;

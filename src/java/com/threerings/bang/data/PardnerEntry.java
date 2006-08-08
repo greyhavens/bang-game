@@ -38,6 +38,9 @@ public class PardnerEntry
     /** The pardner's status ({@link #OFFLINE}, {@link #IN_TOWN}, etc). */
     public byte status;
 
+    /** The place oid of the game your pardner is in. */
+    public int gameOid;
+
     /**
      * No-arg constructor for deserialization.
      */

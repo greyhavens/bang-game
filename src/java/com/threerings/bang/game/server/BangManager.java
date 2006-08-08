@@ -1255,8 +1255,8 @@ public class BangManager extends GameManager
         }
 
         // initialize our pieces
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            ((Piece)iter.next()).init();
+        for (Piece piece : _bangobj.pieces) {
+            piece.init();
         }
 
         // we reuse the playerIsReady() mechanism to wait for the players to
