@@ -219,7 +219,13 @@ public class TownView extends BWindow
             _bctx.getLocationDirector().moveTo(bbd.barberOid);
         } else if ("station".equals(command)) {
             _bctx.getLocationDirector().moveTo(bbd.stationOid);
+        } else {
+            log.warning("Got unknown town view command " + command + ".");
+            return;
         }
+
+        // become inactive now that we're going somewhere
+        _active = false;
     }
 
     /** A simple viewer for the town board. */
