@@ -24,27 +24,27 @@ public class TerrainConfig
     public enum Category {
         NORMAL, ROAD
     };
-    
+
     /** The terrain type. */
     public String type;
-    
+
     /** The code used when encoding terrain in the {@link BangBoard}. */
     public int code;
-    
+
     /** The general category of the terrain. */
     public Category category;
-    
+
     /** The normal traversal cost of the terrain. */
     public int traversalCost;
-    
+
     /** The terrain texture scale (the number of tile lengths the textures
      * cover). */
     public float scale;
-    
+
     /** The amount of stuff that units kick up when they move over this
      * terrain: 0 for none, 1 for lots. */
     public float dustiness;
-    
+
     /**
      * Returns the terrain configuration for the specified terrain type.
      */
@@ -53,11 +53,12 @@ public class TerrainConfig
         TerrainConfig config = _types.get(type);
         if (config == null) {
             log.warning("Requested unknown terrain config '" + type + "'!");
-            Thread.dumpStack();
+            // return some sort of default
+            config = _types.get("dirt");
         }
         return config;
     }
-    
+
     /**
      * Returns the terrain configuration for the specified terrain code.
      */
@@ -66,11 +67,12 @@ public class TerrainConfig
         TerrainConfig config = _codes.get(code);
         if (config == null) {
             log.warning("Requested unknown terrain config #" + code + "!");
-            Thread.dumpStack();
+            // return some sort of default
+            config = _types.get("dirt");
         }
         return config;
     }
-    
+
     /**
      * Returns a collection containing all registered terrain configurations.
      */
@@ -78,7 +80,7 @@ public class TerrainConfig
     {
         return _types.values();
     }
-    
+
     protected static void registerTerrain (String type, int code)
     {
         // load up the properties file for this terrain
@@ -96,20 +98,20 @@ public class TerrainConfig
         config.scale = BangUtil.getFloatProperty(type, props, "scale", 1f);
         config.dustiness = BangUtil.getFloatProperty(type, props,
             "dustiness", 0.2f);
-        
+
         // map the type and code to the config
         _types.put(type, config);
         _codes.put(code, config);
     }
-    
+
     /** A mapping from terrain type to configuration. */
     protected static HashMap<String, TerrainConfig> _types =
         new HashMap<String, TerrainConfig>();
-    
+
     /** A mapping from terrain code to configuration. */
     protected static HashIntMap<TerrainConfig> _codes =
         new HashIntMap<TerrainConfig>();
-        
+
     static {
         // register our terrain types
         Properties props = BangUtil.resourceToProperties(
