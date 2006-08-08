@@ -13,6 +13,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Revolutionary;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.effect.ResurrectEffect;
 
 import static com.threerings.bang.Log.log;
 
@@ -112,6 +113,16 @@ public class RespawnDelegate extends ScenarioDelegate
 
         _respawns.add(unit);
         log.fine("Queued for respawn " + unit + ".");
+    }
+
+    @Override // documentation inherited
+    public void pieceAffected (Piece piece, String effect)
+    {
+        // remove resurrected units from the respawn queue
+        if (ResurrectEffect.RESURRECTED.equals(effect) && 
+                piece instanceof Unit) {
+            _respawns.remove((Unit)piece);
+        }
     }
 
     /** A list of units waiting to be respawned. */

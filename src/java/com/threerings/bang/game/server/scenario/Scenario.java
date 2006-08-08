@@ -223,6 +223,17 @@ public abstract class Scenario
     }
 
     /**
+     * Called when a piece is affected.
+     */
+    public void pieceAffected (Piece piece, String effect)
+    {
+        // allow out delegates to participate
+        for (ScenarioDelegate delegate : _delegates) {
+            delegate.pieceAffected(piece, effect);
+        }
+    }
+
+    /**
      * Called when a round has ended, giving the scenario a chance to award any
      * final cash and increment associated statistics.
      */

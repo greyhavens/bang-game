@@ -2444,6 +2444,7 @@ public class BangManager extends GameManager
                 piece.ticksUntilMovable(_bangobj.tick) == 0) {
                 executeOrders(piece.pieceId);
             }
+            _scenario.pieceAffected(piece, effect);
         }
 
         public void boardAffected (String effect) {

@@ -69,6 +69,13 @@ public class ScenarioDelegate
     }
 
     /**
+     * Called when a piece is affected.
+     */
+    public void pieceAffected (Piece piece, String effect)
+    {
+    }
+
+    /**
      * Called after each round ends. See {@link Scenario#roundDidEnd}.
      */
     public void roundDidEnd (BangObject bangobj)
