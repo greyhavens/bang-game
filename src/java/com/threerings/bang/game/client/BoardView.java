@@ -1164,7 +1164,7 @@ public class BoardView extends BComponent
     {
         log.info("Piece removed from DSet " + piece + ".");
         // TODO: queue up a fade out action like we do when a piece dies?
-        removePieceSprite(piece.pieceId, "pieceRemoved(" + piece.info() + ")");
+        removePieceSprite(piece.pieceId, "pieceRemoved(" + piece + ")");
     }
 
     /**
@@ -1547,10 +1547,10 @@ public class BoardView extends BComponent
         public String toString () {
             String strval = super.toString();
             if (opiece != null) {
-                strval += ":" + opiece.info();
+                strval += ":" + opiece;
             }
             if (npiece != null) {
-                strval += "->" + npiece.info();
+                strval += "->" + npiece;
             }
             return strval;
         }
@@ -1576,7 +1576,7 @@ public class BoardView extends BComponent
         }
 
         public String toString () {
-            return super.toString() + ":" + piece.info();
+            return super.toString() + ":" + piece;
         }
     }
 

@@ -376,7 +376,7 @@ public class BangView extends BWindow
 
     protected void showPlayerStatus ()
     {
-        if (_pswins[0].isAdded()) {
+        if (_pswins[0].isAdded() || !isAdded()) {
             return;
         }
 

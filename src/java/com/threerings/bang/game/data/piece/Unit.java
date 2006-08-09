@@ -45,13 +45,13 @@ public class Unit extends Piece
      * but will be filled in at the appropriate time on the client and server
      * by effects. */
     public transient Hindrance hindrance;
-    
+
     /** Type of thing being held, or null for nothing. */
     public String holding;
 
     /** An additional influence caused by the thing being held. */
     public transient Influence holdingInfluence;
-    
+
     /**
      * Instantiates a unit of the specified type.
      */
@@ -184,13 +184,13 @@ public class Unit extends Piece
     {
         return computeDamage(target) - _config.damage;
     }
-    
+
     @Override // documentation inherited
     public String getName ()
     {
         return UnitConfig.getName(_config.type);
     }
-    
+
     @Override // documentation inherited
     public void init ()
     {
@@ -224,7 +224,7 @@ public class Unit extends Piece
                 Math.max(nsElevation, ewElevation));
         return elevation;
     }
-    
+
     /**
      * Computes the elevation of for a flying unit.
      */
@@ -243,7 +243,7 @@ public class Unit extends Piece
     {
         return true;
     }
-    
+
     @Override // documentation inherited
     public boolean checkLineOfSight (
         BangBoard board, int tx, int ty, Piece target)
@@ -252,7 +252,7 @@ public class Unit extends Piece
         return (_config.mode == UnitConfig.Mode.RANGE ||
             super.checkLineOfSight(board, tx, ty, target));
     }
-    
+
     @Override // documentation inherited
     public Effect[] willShoot (
             BangObject bangobj, Piece target, ShotEffect shot)
@@ -310,7 +310,7 @@ public class Unit extends Piece
         return holding != null ?
             HoldEffect.dropBonus(bangobj, this, shooterId, holding) : null;
     }
-    
+
     @Override // documentation inherited
     public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
     {
@@ -410,14 +410,14 @@ public class Unit extends Piece
     {
         return BASE_TREE_PROXIMITY_DAMAGE;
     }
-    
+
     @Override // documentation inherited
     public void wasAdded (BangObject bangobj)
     {
         super.wasAdded(bangobj);
         hindrance = bangobj.globalHindrance;
     }
-    
+
     @Override // documentation inherited
     public void wasKilled (short tick)
     {
@@ -538,7 +538,7 @@ public class Unit extends Piece
         return (hindrance == null) ?
             null : hindrance.maybeGeneratePostMoveEffect(steps);
     }
-    
+
     /**
      * Called on the server to give the unit a chance to generate an effect
      * to deploy after it has been ordered to move/shoot.
@@ -548,7 +548,7 @@ public class Unit extends Piece
         return (hindrance == null) ?
             null : hindrance.maybeGeneratePostOrderEffect();
     }
-    
+
     @Override // documentation inherited
     public void didMove (int steps)
     {
@@ -556,7 +556,7 @@ public class Unit extends Piece
             hindrance.didMove(steps, lastActed);
         }
     }
-    
+
     /**
      * Provides the unit with its configuration.
      */
@@ -591,7 +591,7 @@ public class Unit extends Piece
         return (hindrance == null) ?
             damage : hindrance.adjustAttack(target, damage);
     }
-    
+
     @Override // documentation inherited
     public int adjustDefend (Piece shooter, int damage)
     {
@@ -602,13 +602,6 @@ public class Unit extends Piece
         return (hindrance == null) ?
             damage : hindrance.adjustDefend(shooter, damage);
     }
-    
-    @Override // documentation inherited
-    protected void toString (StringBuilder buf)
-    {
-        buf.append((_config == null) ? "?" : _config.type).append(", ");
-        super.toString(buf);
-    }
 
     @Override // documentation inherited
     protected String infoType ()
@@ -618,13 +611,13 @@ public class Unit extends Piece
 
     protected transient UnitConfig _config;
     protected transient short _respawnTick = -1;
-    
+
     /** The height above ground at which flyers fly (in tile lengths). */
     protected static final float FLYER_GROUND_HEIGHT = 1f;
 
     /** The height above props at which flyers fly (in tile lengths). */
     protected static final float FLYER_PROP_HEIGHT = 0.25f;
-    
+
     /** The base amount by which units next to trees decrease their damage and
      * encourage them to grow. */
     protected static final int BASE_TREE_PROXIMITY_DAMAGE = -20;

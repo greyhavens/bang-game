@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
-import com.threerings.io.SimpleStreamableObject;
+import com.threerings.io.Streamable;
 import com.threerings.media.util.AStarPathUtil;
 import com.threerings.util.MessageBundle;
 
@@ -30,8 +32,8 @@ import static com.threerings.bang.Log.log;
 /**
  * Does something extraordinary.
  */
-public abstract class Piece extends SimpleStreamableObject
-    implements Cloneable, DSet.Entry, PieceCodes
+public abstract class Piece
+    implements Streamable, Cloneable, DSet.Entry, PieceCodes
 {
     /** Used by {@link #willShoot} */
     public static final Effect[] NO_EFFECTS = new Effect[0];
@@ -293,13 +295,6 @@ public abstract class Piece extends SimpleStreamableObject
     public int traversalCost (TerrainConfig terrain)
     {
         return terrain.traversalCost;
-    }
-
-    /** Returns a brief description of this piece. */
-    public String info ()
-    {
-        return infoType() + " id:" + pieceId + " o:" + owner +
-            " x:" + x + " y:" + y + " d:" + damage;
     }
 
     /** Returns a translatable name for this piece (or <code>null</code> if
@@ -666,6 +661,23 @@ public abstract class Piece extends SimpleStreamableObject
     {
         return (orientation >= 0) ? ORIENT_CODES[orientation] :
             ("" + orientation);
+    }
+
+    /**
+     * Generates a brief string description of this piece.
+     */
+    public String toString ()
+    {
+        return infoType() + " id:" + pieceId + " o:" + owner +
+            " x:" + x + " y:" + y + " d:" + damage;
+    }
+
+    /**
+     * Generates a brief string description of this piece.
+     */
+    public String toFullString ()
+    {
+        return StringUtil.fieldsToString(this);
     }
 
     /**

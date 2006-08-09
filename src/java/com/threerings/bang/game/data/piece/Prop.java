@@ -346,10 +346,9 @@ public class Prop extends BigPiece
     }
 
     @Override // documentation inherited
-    protected void toString (StringBuilder buf)
+    protected String infoType ()
     {
-        buf.append(_type).append(", ");
-        super.toString(buf);
+        return _type;
     }
 
     /** Converts a float scale value to a short scale value. */

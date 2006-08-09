@@ -94,7 +94,7 @@ public class HomesteadDelegate extends ScenarioDelegate
                 log.warning("Homestead is nearest to more than one " +
                             "player [board=" + bangobj.boardName +
                             ":" + bangobj.players.length +
-                            ", stead=" + nearest.info() + "]");
+                            ", stead=" + nearest + "]");
                 continue;
             }
 

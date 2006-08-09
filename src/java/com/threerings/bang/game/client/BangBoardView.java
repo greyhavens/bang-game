@@ -283,7 +283,7 @@ public class BangBoardView extends BoardView
     {
 //         Piece p = (Piece)_bangobj.pieces.get(pieceId);
 //         if (p != null && p.owner == _pidx) {
-//             log.info("Noting pending " + p.info());
+//             log.info("Noting pending " + p);
 //         }
         if (ACTION_DEBUG) {
             log.info("Note Pending Move [pieceId=" + pieceId + "].");
@@ -298,7 +298,7 @@ public class BangBoardView extends BoardView
     {
 //         Piece p = (Piece)_bangobj.pieces.get(pieceId);
 //         if (p != null && p.owner == _pidx) {
-//             log.info("Clearing pending " + p.info());
+//             log.info("Clearing pending " + p);
 //         }
         if (ACTION_DEBUG) {
             log.info("Clear Pending Move [pieceId=" + pieceId + "].");
@@ -1094,7 +1094,7 @@ public class BangBoardView extends BoardView
     protected boolean handleClickToAttack (Piece piece, int tx, int ty)
     {
         if (piece != null) {
-            log.info("Clicking to attack " + piece.info());
+            log.info("Clicking to attack " + piece);
         } else {
             log.info("Clicking to attack +" + tx + "+" + ty);
         }
@@ -1147,7 +1147,7 @@ public class BangBoardView extends BoardView
                 // when we make our move versus those that may be gone
                 if (target != null && _selection.validTarget(
                         _bangobj, target, false)) {
-                    log.info("Randomly targeting " + target.info());
+                    log.info("Randomly targeting " + target);
                     _action[3] = target.pieceId;
                     Targetable tsprite = getTargetableSprite(target);
                     if (tsprite != null) {
@@ -1275,7 +1275,7 @@ public class BangBoardView extends BoardView
         }
         _selection = piece;
 
-//         log.info("Selecting " + _selection.info());
+//         log.info("Selecting " + _selection);
 
         // select the sprite and center it in the view
         PieceSprite sprite = getPieceSprite(_selection);

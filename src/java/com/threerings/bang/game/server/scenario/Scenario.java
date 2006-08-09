@@ -452,7 +452,7 @@ public abstract class Scenario
         bonus.assignPieceId(bangobj);
         bonus.position(bspot.x, bspot.y);
         _bangmgr.addPiece(bonus);
-        log.fine("Placed bonus: " + bonus.info());
+        log.fine("Placed bonus: " + bonus);
         return true;
     }
 

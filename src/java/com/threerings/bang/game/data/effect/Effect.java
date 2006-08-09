@@ -148,13 +148,13 @@ public abstract class Effect extends SimpleStreamableObject
         // sanity check
         if (!target.isAlive()) {
             log.warning("Not damaging already dead target " +
-                        "[target=" + target.info() + ", shooter=" + shooter +
+                        "[target=" + target + ", shooter=" + shooter +
                         ", nd=" + newDamage + ", effect=" + effect + "].");
             return false;
         }
 
         // effect the actual damage
-//         log.info("Damaging " + target.info() + " -> " + newDamage + ".");
+//         log.info("Damaging " + target + " -> " + newDamage + ".");
         target.damage = newDamage;
 
         // report that the target was affected

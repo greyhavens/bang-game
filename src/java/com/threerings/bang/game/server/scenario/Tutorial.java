@@ -278,9 +278,8 @@ public class Tutorial extends Scenario
                     ty += 1;
                 } else {
                     log.warning("Unable to locate spot near target " +
-                                "[tut=" + _config.ident +
-                                ", unit=" + unit.info() +
-                                ", target=" + target.info() + "].");
+                        "[tut=" + _config.ident + ", unit=" + unit +
+                        ", target=" + target + "].");
                 }
             }
 

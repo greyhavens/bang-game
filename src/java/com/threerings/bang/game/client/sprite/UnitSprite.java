@@ -240,7 +240,7 @@ public class UnitSprite extends MobileSprite
         // if we were dead but are once again alive, switch back to our rest
         // pose
         if (_dead && piece.isAlive()) {
-            log.info("Resurrected " + piece.info());
+            log.info("Resurrected " + piece);
             loadModel(_type, _name);
             _dead = false;
         }

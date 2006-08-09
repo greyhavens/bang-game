@@ -279,9 +279,7 @@ public class BangManager extends GameManager
         if (piece == null || piece.owner != pidx) {
             // the unit probably died or was hijacked
             log.info("Rejecting order for invalid piece [who=" + user.who() +
-                " (" + pidx + "), piece=" +
-                ((piece == null) ? "null" : piece.info()) +
-                " (" + pieceId + ")].");
+                " (" + pidx + "), piece=" + piece + " (" + pieceId + ")].");
             throw new InvocationException(MOVER_NO_LONGER_VALID);
         }
         if (!(piece instanceof Unit)) {
@@ -477,8 +475,7 @@ public class BangManager extends GameManager
                 ShotEffect effect;
                 if (meffect == null || !(meffect instanceof MoveShootEffect)) {
                     // effect the initial shot
-                    log.fine("Shooting " + target.info() +
-                             " with " + unit.info());
+                    log.fine("Shooting " + target + " with " + unit);
                     effect = unit.shoot(_bangobj, target, 1f);
                     // the initial shot updates the shooter's last acted
                     effect.shooterLastActed = _bangobj.tick;
@@ -486,9 +483,9 @@ public class BangManager extends GameManager
                     // apply the shot effect
                     if (!deployEffect(unit.owner, effect)) {
                         log.warning("Failed to deploy shot effect " +
-                                    "[unit=" + unit.info() +
+                                    "[unit=" + unit +
                                     ", move=" + x + "/" + y +
-                                    ", target=" + target.info() +
+                                    ", target=" + target +
                                     ", dam1=" + dam1 + ", dam2=" + dam2+ "].");
                     } else if (unit.owner != -1) {
                         _bangobj.stats[unit.owner].incrementStat(
@@ -1634,9 +1631,8 @@ public class BangManager extends GameManager
                 _bangobj.board, target, _moves, false);
             if (spot == null) {
 //                 log.info("Unable to find place from which to shoot. " +
-//                          "[piece=" + unit.info() +
-//                          ", target=" + target.info() +
-//                          ", moves=" + _moves + "].");
+//                     "[piece=" + unit + ", target=" + target +
+//                     ", moves=" + _moves + "].");
                 throw new InvocationException(TARGET_UNREACHABLE);
             }
             x = spot.x;
@@ -1659,7 +1655,7 @@ public class BangManager extends GameManager
 
         // validate that the move is still legal
         if (!_moves.contains(x, y)) {
-//             log.info("Unit requested invalid move [unit=" + unit.info() +
+//             log.info("Unit requested invalid move [unit=" + unit +
 //                      ", x=" + x + ", y=" + y + ", moves=" + _moves + "].");
                 throw new InvocationException(MOVE_BLOCKED);
         }
@@ -1745,8 +1741,8 @@ public class BangManager extends GameManager
         // make sure the target is still valid
         if (!shooter.validTarget(_bangobj, target, false)) {
             // target already dead or something
-//             log.info("Target no longer valid [shooter=" + shooter.info() +
-//                      ", target=" + target.info() + "].");
+//             log.info("Target no longer valid [shooter=" + shooter +
+//                      ", target=" + target + "].");
             throw new InvocationException(TARGET_NO_LONGER_VALID);
         }
 
@@ -1755,8 +1751,8 @@ public class BangManager extends GameManager
             !shooter.checkLineOfSight(
                 _bangobj.board, x, y, target)) {
 //             log.info("Target no longer reachable " +
-//                      "[shooter=" + shooter.info() +
-//                      ", target=" + target.info() + "].");
+//                      "[shooter=" + shooter +
+//                      ", target=" + target + "].");
             throw new InvocationException(TARGET_UNREACHABLE);
         }
     }
@@ -2326,7 +2322,7 @@ public class BangManager extends GameManager
             Object obj = _bangobj.pieces.get(unit.pieceId);
             if (obj != null && !(obj instanceof Unit)) {
                 log.warning("Our unit became a non-unit!? [where=" + where() +
-                            ", unit=" + unit.info() + ", nunit=" + obj + "].");
+                            ", unit=" + unit + ", nunit=" + obj + "].");
                 return INTERNAL_ERROR;
             }
 
@@ -2335,7 +2331,7 @@ public class BangManager extends GameManager
             if (aunit == null || !aunit.isAlive()) {
                 log.info("Advance order no longer value [order=" + this +
                     ", unit=" + (aunit == null ? "null" :
-                        (aunit.info() + " (" + aunit.isAlive() + ")")) + "].");
+                        (aunit + " (" + aunit.isAlive() + ")")) + "].");
                 return MOVER_NO_LONGER_VALID;
             }
 
@@ -2386,7 +2382,7 @@ public class BangManager extends GameManager
         }
 
         public String toString() {
-            return unit.info() + " -> +" + x + "+" + y + " (" + targetId + ")";
+            return unit + " -> +" + x + "+" + y + " (" + targetId + ")";
         }
     }
 

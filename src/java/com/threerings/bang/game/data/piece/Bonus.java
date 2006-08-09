@@ -260,9 +260,9 @@ public class Bonus extends Piece
     }
 
     @Override // documentation inherited
-    public String info ()
+    public String toString ()
     {
-        return super.info() + " t:" + _config.type;
+        return super.toString() + " t:" + _config.type;
     }
 
     /** Configures the instance after unserialization. */

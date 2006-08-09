@@ -396,7 +396,7 @@ public class BangController extends GameController
                     }
 
                 } else {
-                    log.warning("Got unknown response to move(" + unit.info() +
+                    log.warning("Got unknown response to move(" + unit +
                                 ", " + tx + ", " + ty + ", " + targetId +
                                 ") [result=" + result + "].");
                 }
@@ -424,7 +424,7 @@ public class BangController extends GameController
             }
         };
 
-        log.info("Requesting move and fire [unit=" + unit.info() +
+        log.info("Requesting move and fire [unit=" + unit +
                  ", to=+" + tx + "+" + ty + ", tid=" + targetId + "].");
         _bangobj.service.order(
             _ctx.getClient(), pieceId, (short)tx, (short)ty, targetId, rl);

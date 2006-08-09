@@ -367,11 +367,11 @@ public class PieceSprite extends Sprite
         
         // move ourselves to our new location if we have one
         if (_piece.x != _px || _piece.y != _py) {
-//             log.info("Moving " + _piece.info() + " from +" +
+//             log.info("Moving " + _piece + " from +" +
 //                      _piece.x + "+" + _piece.y + " to +" + _px + "+" + _py);
             moveSprite(board);
             if (!isMoving()) {
-                log.warning("Moved but am not moving?! " + _piece.info());
+                log.warning("Moved but am not moving?! " + _piece);
             }
         }
 
