@@ -1205,7 +1205,7 @@ public class BangManager extends GameManager
                 _scenario.roundWillStart(_bangobj, _starts, _purchases);
 
                 // configure the duration of the round
-                int duration = _scenario.getDuration(_bconfig, _bangobj)/10;
+                int duration = _scenario.getDuration(_bconfig, _bangobj);
                 _bangobj.setDuration((short)duration);
 //                _bangobj.setDuration(_scenario.getDuration(_bconfig, _bangobj));
                 _bangobj.setLastTick((short)(_bangobj.duration - 1));

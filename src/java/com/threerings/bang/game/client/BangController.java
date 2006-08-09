@@ -171,7 +171,6 @@ public class BangController extends GameController
         _postRoundMultex = new Multex(new Runnable() {
             public void run () {
                 _ctx.getBangClient().displayPopup(_statsView, true);
-                _statsView = null;
             }
         }, 2);
 
@@ -701,7 +700,7 @@ public class BangController extends GameController
         ((GameInputHandler)_ctx.getInputHandler()).rollCamera(FastMath.PI);
 
         // if we're one of the players
-        if (_pidx != -1) {
+        if (_pidx != -1 || _config.allPlayersAIs()) {
             // let the game manager know that our units are in place and we're
             // fully ready to go
             playerReady();
@@ -716,6 +715,7 @@ public class BangController extends GameController
      */
     protected void statsDismissed ()
     {
+        _statsView = null;
         _view.view.doInterRoundBoardFade();
     }
 
