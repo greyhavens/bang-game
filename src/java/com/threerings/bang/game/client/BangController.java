@@ -637,11 +637,14 @@ public class BangController extends GameController
             // display the player status displays
             _view.showPlayerStatus();
         }
+
         if (_config.tutorial || _config.practice || _config.allPlayersAIs()) {
             // we re-use the playerReady mechanism to communicate that we're
             // ready for our tutorial/practice/test game
             playerReady();
-        } else if (_bangobj.state == BangObject.SELECT_PHASE) {
+
+        } else if (_bangobj != null &&
+                   _bangobj.state == BangObject.SELECT_PHASE) {
             // display the selection dialog
             _view.setPhase(BangObject.SELECT_PHASE);
         }
