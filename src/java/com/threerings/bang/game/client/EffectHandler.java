@@ -123,17 +123,18 @@ public class EffectHandler extends BoardView.BoardAction
 
         // create the appropriate visual effect
         boolean wasDamaged = false;
+        EffectViz effviz = null;
         if (effect.equals(ShotEffect.DAMAGED)) {
             wasDamaged = true;
             
         } else if (effect.equals(ShotEffect.EXPLODED)) {
             wasDamaged = true;
-            _effviz = new ExplosionViz();
+            effviz = new ExplosionViz();
             
         } else if (effect.equals(RepairEffect.REPAIRED) ||
                    effect.equals(NuggetEffect.NUGGET_ADDED) ||
                    effect.equals(ResurrectEffect.RESURRECTED)) {
-            _effviz = new RepairViz();
+            effviz = new RepairViz();
         }
 
         // if they were damaged, go ahead and clear any pending shot
@@ -160,13 +161,13 @@ public class EffectHandler extends BoardView.BoardAction
         // add wreck effect for steam-powered units
         if (wasDamaged && piece instanceof Unit &&
             ((Unit)piece).getConfig().make == UnitConfig.Make.STEAM &&
-            (_effviz instanceof ExplosionViz || !piece.isAlive())) {
-            _effviz = new WreckViz(_effviz);
+            (effviz instanceof ExplosionViz || !piece.isAlive())) {
+            effviz = new WreckViz(effviz);
         } 
 
         // queue the effect up on the piece sprite
-        if (_effviz != null) {
-            queueEffect(sprite, piece, _effviz);
+        if (effviz != null) {
+            queueEffect(sprite, piece, effviz);
 
         } else if (effect.equals(ShotEffect.ROTATED)) {
             // if we're rotating someone in preparation for a shot; just update
@@ -396,7 +397,6 @@ public class EffectHandler extends BoardView.BoardAction
     protected SoundGroup _sounds;
 
     protected Effect _effect;
-    protected EffectViz _effviz;
 
     protected ArrayIntSet _penders = new ArrayIntSet();
     protected int _nextPenderId;
