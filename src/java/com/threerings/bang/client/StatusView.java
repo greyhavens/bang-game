@@ -136,7 +136,6 @@ public class StatusView extends BWindow
             new Rectangle(40, 590, 195, 33));
         BButton btn = new BButton(_msgs.get("m.status_poster"), this, "poster");
         btn.setStyleClass("big_button");
-        btn.setEnabled(false); // TODO
         add(btn, new Point(40, 147));
 
         add(new PickLookView(ctx, false), new Point(10, 231));
@@ -176,6 +175,10 @@ public class StatusView extends BWindow
 
         } else if (cmd.equals("resume")) {
             _ctx.getBangClient().clearPopup(this, true);
+
+        } else if (cmd.equals("poster")) {
+            WantedPosterView.displayWantedPoster(
+                _ctx, _ctx.getUserObject().handle);
         }
     }
 

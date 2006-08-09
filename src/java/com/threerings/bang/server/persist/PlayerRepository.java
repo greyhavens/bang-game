@@ -59,6 +59,18 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
+     * Loads up the player record associated with the specified handle.
+     * Returns null if no matching record could be found.
+     */
+    public Player loadByHandle (Handle handle)
+        throws PersistenceException
+    {
+        return load(_ptable, "where HANDLE = " +
+                    JDBCUtil.escape(handle.toString()));
+    }
+
+
+    /**
      * Insert a new player record into the repository and assigns them a
      * unique player id in the process. The {@link Player#created} field
      * will be filled in by this method if it is not already.

@@ -3,10 +3,12 @@
 
 package com.threerings.bang.server;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.logging.Level;
 
@@ -46,6 +48,7 @@ import com.threerings.util.Name;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.server.persist.LookRepository;
 import com.threerings.bang.bank.data.BankObject;
 import com.threerings.bang.ranch.data.RanchCodes;
 import com.threerings.bang.ranch.data.RanchObject;
@@ -66,13 +69,20 @@ import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.PlayerDecoder;
 import com.threerings.bang.client.PlayerService;
+import com.threerings.bang.data.Badge;
+import com.threerings.bang.data.Badge.Type;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.data.UnitConfig;
+
 import com.threerings.bang.server.persist.PardnerRepository;
+import com.threerings.bang.server.persist.PosterRepository;
+import com.threerings.bang.server.persist.PosterRecord;
+import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.server.persist.Player;
 import com.threerings.bang.util.BangUtil;
 
@@ -91,6 +101,9 @@ public class PlayerManager
         throws PersistenceException
     {
         _pardrepo = new PardnerRepository(conprov);
+        _postrepo = new PosterRepository(conprov);
+        _playrepo = new PlayerRepository(conprov);
+        _lookrepo = new LookRepository(conprov);
 
         // register ourselves as the provider of the (bootstrap) PlayerService
         BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), true);
@@ -542,6 +555,114 @@ public class PlayerManager
         }
     }
 
+    // from interface PlayerProvider
+    public void getPosterInfo(ClientObject caller, final Handle handle,
+                              final PlayerService.ResultListener listener)
+        throws InvocationException
+    {
+        // check the cache for previously generated posters
+        SoftReference<PosterInfo> cacheHit = posterCache.get(handle);
+
+        final PosterInfo info;
+        if (cacheHit != null) {
+            info = cacheHit.get();
+        } else {
+            info = new PosterInfo();
+            info.handle = handle;
+        }
+
+        // if the player is online, populate the poster directly from there
+        PlayerObject posterPlayer = BangServer.lookupPlayer(handle);
+        if (posterPlayer != null) {
+            info.avatar = posterPlayer.getLook(Look.Pose.WANTED_POSTER).
+                getAvatar(posterPlayer);
+        }
+
+        // if the poster came from the cache, we're already done
+        if (cacheHit != null) {
+            listener.requestProcessed(info);
+            return;
+        }
+
+        // otherwise, we need to hit some repositories
+        BangServer.invoker.postUnit(new PersistingUnit(listener)
+        {
+            public void invokePersistent () throws PersistenceException
+            {
+                // first map handle to player id
+                Player player = _playrepo.loadByHandle(handle);
+                if (player == null) {
+                    throw new PersistenceException(
+                        "Unknown player [handle=" + handle + "]");
+                }
+
+                // then fetch the poster record
+                PosterRecord poster = _postrepo.loadPoster(player.playerId);
+                if (poster != null) {
+                    info.statement = poster.statement;
+                    info.badgeIds = new int[] {
+                        poster.badge1,
+                        poster.badge2,
+                        poster.badge3,
+                    };
+
+                } else {
+                    info.statement = "";
+                    info.badgeIds = new int[] { -1, -1, -1 };
+                }
+
+                // for offline players, get look snapshot from repository
+                if (info.avatar == null) {
+                    info.avatar = _lookrepo.loadSnapshot(player.playerId);
+                }
+            }
+            public void handleSuccess ()
+            {
+                // cache the result
+                posterCache.put(handle, new SoftReference<PosterInfo>(info));
+                // and return it
+                listener.requestProcessed(info);
+            }
+            public String getFailureMessage ()
+            {
+                return "Failed to build wanted poster data [handle="
+                    + handle + "]";
+            }
+        });
+    }
+
+    // from interface PlayerProvider
+    public void updatePosterInfo (ClientObject caller, int playerId,
+                                  String statement, int[] badgeIds,
+                                  final PlayerService.ConfirmListener cl)
+        throws InvocationException
+    {
+        // create a poster record and populate it
+        final PosterRecord poster = new PosterRecord(playerId);
+        poster.statement = statement;
+        poster.badge1 = badgeIds[0];
+        poster.badge2 = badgeIds[1];
+        poster.badge3 = badgeIds[2];
+
+        // then store it in the database
+        BangServer.invoker.postUnit(new PersistingUnit(cl)
+        {
+            public void invokePersistent () throws PersistenceException
+            {
+                _postrepo.storePoster(poster);
+            }
+            public void handleSuccess ()
+            {
+                cl.requestProcessed();
+            }
+            public String getFailureMessage () {
+                return "Failed to store wanted poster record [poster = "
+                    + poster + "]";
+            }
+        });
+    }
+
+
     /**
      * Creates (if the pardner is offline) or retrieves (if the pardner is
      * online) the up-to-date {@link PardnerEntry} for the named pardner.
@@ -804,6 +925,15 @@ public class PlayerManager
     /** Provides access to the pardner database. */
     protected PardnerRepository _pardrepo;
 
+    /** Provides access to the poster database. */
+    protected PosterRepository _postrepo;
+
+    /** Provides access to the look database. */
+    protected LookRepository _lookrepo;
+
+    /** Provides access to the player database. */
+    protected PlayerRepository _playrepo;
+
     /** Maps the names of users to updaters responsible for keeping their
      * {@link PardnerEntry}s up-to-date. */
     protected HashMap<Handle,PardnerEntryUpdater> _updaters =
@@ -812,4 +942,9 @@ public class PlayerManager
     /** The currently standing pardner invitations. */
     protected HashMap<InviteKey, Invite> _invites =
         new HashMap<InviteKey, Invite>();
+
+    /** A light-weight cache of soft {@link PosterInfo} references. */
+    protected Map<Handle, SoftReference<PosterInfo>> posterCache =
+        new HashMap<Handle, SoftReference<PosterInfo>>();
 }
+

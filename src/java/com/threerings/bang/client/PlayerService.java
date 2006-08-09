@@ -59,4 +59,17 @@ public interface PlayerService extends InvocationService
     public void playComputer (
         Client client, int players, String[] scenario, String board,
         boolean autoplay, InvocationListener listener);
+
+    /**
+     * Requests to view another player's wanted poster.
+     */
+    public void getPosterInfo(
+        Client client, Handle handle, ResultListener listener);
+
+    /**
+     * Requests to update the configurable attributes of our wanted posted
+     */
+    public void updatePosterInfo(
+        Client client, int playerId, String Statement,
+        int[] badgeIds, ConfirmListener listener);
 }

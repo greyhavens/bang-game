@@ -18,6 +18,12 @@ import com.threerings.util.Name;
 public interface PlayerProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link PlayerService#getPosterInfo} request.
+     */
+    public void getPosterInfo (ClientObject caller, Handle arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link PlayerService#invitePardner} request.
      */
     public void invitePardner (ClientObject caller, Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
@@ -57,5 +63,11 @@ public interface PlayerProvider extends InvocationProvider
      * Handles a {@link PlayerService#respondToPardnerInvite} request.
      */
     public void respondToPardnerInvite (ClientObject caller, Handle arg1, boolean arg2, InvocationService.ConfirmListener arg3)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link PlayerService#updatePosterInfo} request.
+     */
+    public void updatePosterInfo (ClientObject caller, int arg1, String arg2, int[] arg3, InvocationService.ConfirmListener arg4)
         throws InvocationException;
 }

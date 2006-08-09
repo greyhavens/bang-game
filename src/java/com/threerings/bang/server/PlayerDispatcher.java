@@ -40,6 +40,13 @@ public class PlayerDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case PlayerMarshaller.GET_POSTER_INFO:
+            ((PlayerProvider)provider).getPosterInfo(
+                source,
+                (Handle)args[0], (InvocationService.ResultListener)args[1]
+            );
+            return;
+
         case PlayerMarshaller.INVITE_PARDNER:
             ((PlayerProvider)provider).invitePardner(
                 source,
@@ -86,6 +93,13 @@ public class PlayerDispatcher extends InvocationDispatcher
             ((PlayerProvider)provider).respondToPardnerInvite(
                 source,
                 (Handle)args[0], ((Boolean)args[1]).booleanValue(), (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
+        case PlayerMarshaller.UPDATE_POSTER_INFO:
+            ((PlayerProvider)provider).updatePosterInfo(
+                source,
+                ((Integer)args[0]).intValue(), (String)args[1], (int[])args[2], (InvocationService.ConfirmListener)args[3]
             );
             return;
 

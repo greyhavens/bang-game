@@ -21,8 +21,21 @@ import com.threerings.util.Name;
 public class PlayerMarshaller extends InvocationMarshaller
     implements PlayerService
 {
+    /** The method id used to dispatch {@link #getPosterInfo} requests. */
+    public static final int GET_POSTER_INFO = 1;
+
+    // documentation inherited from interface
+    public void getPosterInfo (Client arg1, Handle arg2, InvocationService.ResultListener arg3)
+    {
+        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, GET_POSTER_INFO, new Object[] {
+            arg2, listener3
+        });
+    }
+
     /** The method id used to dispatch {@link #invitePardner} requests. */
-    public static final int INVITE_PARDNER = 1;
+    public static final int INVITE_PARDNER = 2;
 
     // documentation inherited from interface
     public void invitePardner (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
@@ -35,7 +48,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #pickFirstBigShot} requests. */
-    public static final int PICK_FIRST_BIG_SHOT = 2;
+    public static final int PICK_FIRST_BIG_SHOT = 3;
 
     // documentation inherited from interface
     public void pickFirstBigShot (Client arg1, String arg2, Name arg3, InvocationService.ConfirmListener arg4)
@@ -48,7 +61,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playComputer} requests. */
-    public static final int PLAY_COMPUTER = 3;
+    public static final int PLAY_COMPUTER = 4;
 
     // documentation inherited from interface
     public void playComputer (Client arg1, int arg2, String[] arg3, String arg4, boolean arg5, InvocationService.InvocationListener arg6)
@@ -61,7 +74,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playPractice} requests. */
-    public static final int PLAY_PRACTICE = 4;
+    public static final int PLAY_PRACTICE = 5;
 
     // documentation inherited from interface
     public void playPractice (Client arg1, String arg2, InvocationService.InvocationListener arg3)
@@ -74,7 +87,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playTutorial} requests. */
-    public static final int PLAY_TUTORIAL = 5;
+    public static final int PLAY_TUTORIAL = 6;
 
     // documentation inherited from interface
     public void playTutorial (Client arg1, String arg2, InvocationService.InvocationListener arg3)
@@ -87,7 +100,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #removePardner} requests. */
-    public static final int REMOVE_PARDNER = 6;
+    public static final int REMOVE_PARDNER = 7;
 
     // documentation inherited from interface
     public void removePardner (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
@@ -100,7 +113,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #respondToPardnerInvite} requests. */
-    public static final int RESPOND_TO_PARDNER_INVITE = 7;
+    public static final int RESPOND_TO_PARDNER_INVITE = 8;
 
     // documentation inherited from interface
     public void respondToPardnerInvite (Client arg1, Handle arg2, boolean arg3, InvocationService.ConfirmListener arg4)
@@ -109,6 +122,19 @@ public class PlayerMarshaller extends InvocationMarshaller
         listener4.listener = arg4;
         sendRequest(arg1, RESPOND_TO_PARDNER_INVITE, new Object[] {
             arg2, Boolean.valueOf(arg3), listener4
+        });
+    }
+
+    /** The method id used to dispatch {@link #updatePosterInfo} requests. */
+    public static final int UPDATE_POSTER_INFO = 9;
+
+    // documentation inherited from interface
+    public void updatePosterInfo (Client arg1, int arg2, String arg3, int[] arg4, InvocationService.ConfirmListener arg5)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener5 = new InvocationMarshaller.ConfirmMarshaller();
+        listener5.listener = arg5;
+        sendRequest(arg1, UPDATE_POSTER_INFO, new Object[] {
+            Integer.valueOf(arg2), arg3, arg4, listener5
         });
     }
 

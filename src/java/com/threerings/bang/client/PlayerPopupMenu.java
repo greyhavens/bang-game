@@ -86,7 +86,6 @@ public class PlayerPopupMenu extends BPopupMenu
         BMenuItem item;
         addMenuItem(
             item = new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
-        item.setEnabled(false);
 
         // stop here if this is us
         if (self.handle.equals(handle)) {
@@ -119,7 +118,7 @@ public class PlayerPopupMenu extends BPopupMenu
                 new InvitePardnerDialog(_ctx, _handle), true, 400);
 
         } else if ("view_poster".equals(event.getAction())) {
-            // TODO
+            WantedPosterView.displayWantedPoster(_ctx, _handle);
         }
     }
 
