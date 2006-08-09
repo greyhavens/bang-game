@@ -55,9 +55,9 @@ public class ThunderbirdSprite extends UnitSprite
             List<Point> patha = null, pathb = null;
             if (board != null) {
                 patha = board.computePath(_px, _py, target.x, target.y, _piece);
-                if (patha != null) {
+                if (patha != null && patha.size() > 1) {
                     pathb = board.computePath(target.x, target.y, _piece);
-                    if (pathb != null) {
+                    if (pathb != null && pathb.size() > 1) {
                         pathb.remove(0);
                         _attackIdx = patha.size() - 1;
                         patha.addAll(pathb);
