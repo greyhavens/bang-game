@@ -168,6 +168,13 @@ public class ForestGuardians extends Scenario
         return (_payouts == null) ? 0 : _payouts[pidx];
     }
     
+    @Override // documentation inherited
+    protected long getBaseTickTime ()
+    {
+        // we have fewer units, but we don't want crazy speed
+        return BASE_TICK_TIME + 1000L;
+    }
+    
     /**
      * Finds and returns places to spawn logging robots based on the current
      * aggression.

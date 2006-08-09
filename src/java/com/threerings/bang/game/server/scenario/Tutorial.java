@@ -168,6 +168,13 @@ public class Tutorial extends Scenario
     }
 
     @Override // documentation inherited
+    public long getTickTime (BangConfig config, BangObject bangobj)
+    {
+        // hard code ticks at four seconds for tutorials
+        return 4000L;
+    }
+    
+    @Override // documentation inherited
     protected short getBaseDuration ()
     {
         // tutorials don't normally expire after a set time, but we do end them

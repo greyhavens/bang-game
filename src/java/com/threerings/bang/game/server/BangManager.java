@@ -792,7 +792,7 @@ public class BangManager extends GameManager
 
         case BangObject.IN_PLAY:
             // queue up the first board tick
-            _ticker.schedule(getTickTime(), false);
+            _ticker.schedule(_scenario.getTickTime(_bconfig, _bangobj), false);
             // let the players know we're ready to go with the first tick
             _bangobj.setTick((short)0);
             break;
@@ -2200,38 +2200,6 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Returns the number of milliseconds until the next tick. This is scaled
-     * based on the number of pieces in play.
-     */
-    protected long getTickTime ()
-    {
-        if (_bconfig.tutorial) {
-            // hard code ticks at four seconds for tutorials
-            return 4000L;
-        
-        } else if (_bconfig.allPlayersAIs()) {
-            // fast ticks for auto-play test games
-            return 1000L * _bangobj.getAverageUnitCount();
-            
-        } else {
-            // start out with a base tick of two seconds and scale it down as
-            // the game progresses; cap it at ten minutes
-            long delta = System.currentTimeMillis() - _startStamp;
-            delta = Math.min(delta, TIME_SCALE_CAP);
-
-            // scale from 1/1 to 2/3 over the course of ten minutes
-            float factor = 1f + 0.5f * delta / TIME_SCALE_CAP;
-            long baseTime = (long)Math.round(BASE_TICK_TIME / factor);
-
-            // scale this base time by the average number of units in play
-            long tickTime = baseTime * _bangobj.getAverageUnitCount();
-
-            // make sure the tick is at least one second long
-            return Math.max(tickTime, 1000L);
-        }
-    }
-
-    /**
      * Counts the number of active humans in the game.
      */
     protected int getActiveHumanCount ()
@@ -2434,7 +2402,8 @@ public class BangManager extends GameManager
             _bangobj.setTick((short)nextTick);
 
             // queue up the next tick
-            long tickTime = getTickTime() + _extraTickTime;
+            long tickTime = _scenario.getTickTime(_bconfig, _bangobj) +
+                _extraTickTime;
             _ticker.schedule(tickTime);
             _nextTickTime = System.currentTimeMillis() + tickTime;
         }
@@ -2539,12 +2508,6 @@ public class BangManager extends GameManager
 
     /** Tracks advance orders. */
     protected ArrayList<AdvanceOrder> _orders = new ArrayList<AdvanceOrder>();
-
-    /** Our starting base tick time. */
-    protected static final long BASE_TICK_TIME = 2000L;
-
-    /** We stop reducing the tick time after ten minutes. */
-    protected static final long TIME_SCALE_CAP = 10 * 60 * 1000L;
 
     /** If a game is shorter than this (in seconds) we won't rate it. */
     protected static final int MIN_RATED_DURATION = 180;

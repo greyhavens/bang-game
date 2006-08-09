@@ -115,6 +115,7 @@ public abstract class Scenario
 
         case BangObject.BUYING_PHASE:
             _bangmgr.startPhase(BangObject.IN_PLAY);
+            _startStamp = System.currentTimeMillis();
             break;
 
         default:
@@ -133,6 +134,31 @@ public abstract class Scenario
             (_bangmgr.getTeamSize()+1f));
     }
 
+    /**
+     * Returns the number of milliseconds until the next tick.
+     */
+    public long getTickTime (BangConfig config, BangObject bangobj)
+    {
+        if (config.allPlayersAIs()) {
+            // fast ticks for auto-play test games
+            return 1000L * bangobj.getAverageUnitCount();
+        }
+        // start out with a base tick of two seconds and scale it down as
+        // the game progresses; cap it at ten minutes
+        long delta = System.currentTimeMillis() - _startStamp;
+        delta = Math.min(delta, TIME_SCALE_CAP);
+
+        // scale from 1/1 to 2/3 over the course of ten minutes
+        float factor = 1f + 0.5f * delta / TIME_SCALE_CAP;
+        long baseTime = (long)Math.round(getBaseTickTime() / factor);
+
+        // scale this base time by the average number of units in play
+        long tickTime = baseTime * bangobj.getAverageUnitCount();
+
+        // make sure the tick is at least one second long
+        return Math.max(tickTime, 1000L);
+    }
+    
     /**
      * Called when a round is about to start.
      *
@@ -470,6 +496,16 @@ public abstract class Scenario
     }
     
     /**
+     * Returns the base tick time, which by default is scaled from 1 to 2/3
+     * over the course of ten minutes of play, as well as multiplied by the
+     * average number of units per player, to get the final tick time.
+     */
+    protected long getBaseTickTime ()
+    {
+        return BASE_TICK_TIME;
+    }
+        
+    /**
      * Returns the base duration of the scenario in ticks assuming 1.75 seconds
      * per tick. This will be scaled by the expected average number of units
      * per player to obtain a real duration.
@@ -554,6 +590,15 @@ public abstract class Scenario
     /** Used when determining where to place a bonus. */
     protected PointSet _tpoints = new PointSet();
 
+    /** The time at which the round started. */
+    protected long _startStamp;
+    
+    /** The default base tick time. */
+    protected static final long BASE_TICK_TIME = 2000L;
+    
+    /** We stop reducing the tick time after ten minutes. */
+    protected static final long TIME_SCALE_CAP = 10 * 60 * 1000L;
+    
     /** The base number of ticks that we allow per round (scaled by the
      * anticipated average number of units per-player). */
     protected static final short BASE_SCENARIO_TICKS = 300;
