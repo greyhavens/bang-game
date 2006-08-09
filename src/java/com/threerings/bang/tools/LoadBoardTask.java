@@ -5,6 +5,7 @@ package com.threerings.bang.tools;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import org.apache.tools.ant.BuildException;
@@ -63,21 +64,22 @@ public class LoadBoardTask extends Task
 
         // reload the stock boards
         ArrayIntSet loaded = new ArrayIntSet();
-        int attempted = 0;
+        HashMap<BoardName, File> files = new HashMap<BoardName, File>();
+        boolean success = true;
         for (FileSet fs : _filesets) {
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
             File fromDir = fs.getDir(getProject());
             String[] srcFiles = ds.getIncludedFiles();
             for (int ii = 0; ii < srcFiles.length; ii++) {
-                attempted++;
-                loadBoard(new File(fromDir, srcFiles[ii]), loaded);
+                success &= loadBoard(new File(fromDir, srcFiles[ii]), loaded,
+                    files);
             }
         }
         System.out.println("Loaded " + loaded.size() + " boards.");
 
         // then wipe any stale boards (but only if there were no errors loading
         // the stock boards)
-        if (loaded.size() == attempted) {
+        if (success) {
             try {
                 int pruned = _brepo.clearStaleBoards(loaded);
                 if (pruned > 0) {
@@ -92,22 +94,64 @@ public class LoadBoardTask extends Task
     /**
      * Parses a single board file and loads its data into the board
      * repository.
+     *
+     * @return true if the board was loaded (or was a duplicate), false if an
+     * exception was thrown
      */
-    protected void loadBoard (File source, ArrayIntSet loaded)
+    protected boolean loadBoard (
+        File source, ArrayIntSet loaded, HashMap<BoardName, File> files)
     {
         try {
             BoardRecord brec = new BoardRecord();
             brec.load(source);
+            BoardName bname = new BoardName(brec.name, brec.players);
+            File ofile = files.get(bname);
+            if (ofile != null) {
+                System.err.println("Found board with duplicate name and " +
+                    "number of players [name=" + brec.name + ", players=" +
+                    brec.players + ", first=" + ofile + ", duplicate=" +
+                    source + "].");
+                return true;
+            }
             brec.dataHash = brec.getDataHash();
             _brepo.storeBoard(brec);
             loaded.add(brec.boardId);
-
+            files.put(bname, source);
+            return true;
+                
         } catch (Exception e) {
             System.err.println("Failed to load board [source=" + source + "].");
             e.printStackTrace(System.err);
+            return false;
         }
     }
 
+    /**
+     * Identifies a board using its name and number of players.
+     */
+    protected static class BoardName
+    {
+        public String name;
+        public int players;
+        
+        public BoardName (String name, int players)
+        {
+            this.name = name;
+            this.players = players;
+        }
+        
+        public int hashCode ()
+        {
+            return name.hashCode() + players;
+        }
+        
+        public boolean equals (Object obj)
+        {
+            BoardName oboard = (BoardName)obj;
+            return name.equals(oboard.name) && players == oboard.players;
+        }
+    }
+    
     /** Contains our configuration. */
     protected File _home;
 
