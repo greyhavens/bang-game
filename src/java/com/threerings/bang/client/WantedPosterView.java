@@ -46,10 +46,8 @@ public class WantedPosterView extends BContainer
         // then a button that knows how to clear the popup
         final BButton okButton = new BButton("OK");
         okButton.addListener(
-            new ActionListener()
-            {
-                public void actionPerformed (ActionEvent event)
-                {
+            new ActionListener() {
+                public void actionPerformed (ActionEvent event) {
                     if (event.getSource() == okButton) {
                         ctx.getBangClient().clearPopup(popup, false);
                     }
@@ -61,17 +59,14 @@ public class WantedPosterView extends BContainer
 
         // finally request the poster record
         InvocationService.ResultListener listener = 
-            new InvocationService.ResultListener()
-            {
-                public void requestProcessed(Object result)
-                {
+            new InvocationService.ResultListener() {
+                public void requestProcessed(Object result) {
                     // if all went well, create the view & display it
                     popup.add(new WantedPosterView(ctx, (PosterInfo) result));
                     popup.add(buttonBox);
                     bangClient.displayPopup(popup, true, 400);
                 }
-                public void requestFailed(String cause)
-                {
+                public void requestFailed(String cause) {
                     log.warning("Wanted poster request failed: " + cause);
                     ctx.getChatDirector().displayFeedback(
                         BangCodes.BANG_MSGS, "m.display_poster_failed");

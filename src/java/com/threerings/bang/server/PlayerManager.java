@@ -69,8 +69,6 @@ import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.PlayerDecoder;
 import com.threerings.bang.client.PlayerService;
-import com.threerings.bang.data.Badge;
-import com.threerings.bang.data.Badge.Type;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Handle;
@@ -562,13 +560,15 @@ public class PlayerManager
     {
         // check the cache for previously generated posters
         SoftReference<PosterInfo> cacheHit = posterCache.get(handle);
+        boolean cached = cacheHit != null && cacheHit.get() != null;
 
         final PosterInfo info;
-        if (cacheHit != null) {
+        if (cached) {
             info = cacheHit.get();
         } else {
             info = new PosterInfo();
             info.handle = handle;
+
         }
 
         // if the player is online, populate the poster directly from there
@@ -579,16 +579,14 @@ public class PlayerManager
         }
 
         // if the poster came from the cache, we're already done
-        if (cacheHit != null) {
+        if (cached) {
             listener.requestProcessed(info);
             return;
         }
 
         // otherwise, we need to hit some repositories
-        BangServer.invoker.postUnit(new PersistingUnit(listener)
-        {
-            public void invokePersistent () throws PersistenceException
-            {
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent () throws PersistenceException {
                 // first map handle to player id
                 Player player = _playrepo.loadByHandle(handle);
                 if (player == null) {
@@ -616,15 +614,13 @@ public class PlayerManager
                     info.avatar = _lookrepo.loadSnapshot(player.playerId);
                 }
             }
-            public void handleSuccess ()
-            {
+            public void handleSuccess () {
                 // cache the result
                 posterCache.put(handle, new SoftReference<PosterInfo>(info));
                 // and return it
                 listener.requestProcessed(info);
             }
-            public String getFailureMessage ()
-            {
+            public String getFailureMessage () {
                 return "Failed to build wanted poster data [handle="
                     + handle + "]";
             }
@@ -645,19 +641,16 @@ public class PlayerManager
         poster.badge3 = badgeIds[2];
 
         // then store it in the database
-        BangServer.invoker.postUnit(new PersistingUnit(cl)
-        {
-            public void invokePersistent () throws PersistenceException
-            {
+        BangServer.invoker.postUnit(new PersistingUnit(cl) {
+            public void invokePersistent() throws PersistenceException {
                 _postrepo.storePoster(poster);
             }
-            public void handleSuccess ()
-            {
+            public void handleSuccess() {
                 cl.requestProcessed();
             }
-            public String getFailureMessage () {
+            public String getFailureMessage() {
                 return "Failed to store wanted poster record [poster = "
-                    + poster + "]";
+                        + poster + "]";
             }
         });
     }
