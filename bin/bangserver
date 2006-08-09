@@ -6,16 +6,27 @@
 
 ROOT=`dirname $0`/..
 CLASS=com.threerings.bang.server.BangServer
-
-# determine our host and node names
 HOSTNAME=`hostname`
+
+# this may be overridden layer
 NODE="frontier_town"
-if [ ! -z "$1" ]; then
-    NODE=$1
-    shift
-fi
 
 SARGS="-server -Djava.awt.headless=true"
 SARGS="$SARGS -Dbang.home=$ROOT -Dhostname=$HOSTNAME -Dnode=$NODE"
 SARGS="$SARGS -Dresource_dir=$ROOT/rsrc -Dno_unpack_resources=true"
-$ROOT/bin/runjava -- $SARGS "$@" $CLASS
+
+# extract -D arguments so that we can put them before the classname
+while [ ! -z "$1" ]; do
+    case "$1" in
+        -D*)
+            SARGS="$SARGS $1"
+            ;;
+
+        *)
+            NODE="$1"
+            ;;
+    esac
+    shift
+done
+
+$ROOT/bin/runjava -- $SARGS $CLASS $ARGS
