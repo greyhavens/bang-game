@@ -11,6 +11,7 @@ import com.samskivert.util.ArrayIntSet;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.client.BangPrefs;
@@ -126,11 +127,11 @@ public class EffectHandler extends BoardView.BoardAction
         EffectViz effviz = null;
         if (effect.equals(ShotEffect.DAMAGED)) {
             wasDamaged = true;
-            
+
         } else if (effect.equals(ShotEffect.EXPLODED)) {
             wasDamaged = true;
             effviz = new ExplosionViz();
-            
+
         } else if (effect.equals(RepairEffect.REPAIRED) ||
                    effect.equals(NuggetEffect.NUGGET_ADDED) ||
                    effect.equals(ResurrectEffect.RESURRECTED)) {
@@ -157,13 +158,13 @@ public class EffectHandler extends BoardView.BoardAction
         } else if (wasDamaged || effect.equals(ShotEffect.DUDED)) {
             DamageIconViz.displayDamageIconViz(piece, _effect, _ctx, _view);
         }
-        
+
         // add wreck effect for steam-powered units
         if (wasDamaged && piece instanceof Unit &&
             ((Unit)piece).getConfig().make == UnitConfig.Make.STEAM &&
             (effviz instanceof ExplosionViz || !piece.isAlive())) {
             effviz = new WreckViz(effviz);
-        } 
+        }
 
         // queue the effect up on the piece sprite
         if (effviz != null) {
@@ -221,7 +222,7 @@ public class EffectHandler extends BoardView.BoardAction
                 sprite.displayParticles(name, true);
             }
         }
-        
+
         // also play a sound along with any visual effect
         String path = "rsrc/" + effect + ".wav";
         if (SoundUtil.haveSound(path)) {
@@ -243,7 +244,7 @@ public class EffectHandler extends BoardView.BoardAction
             _view.setHighNoon(false);
         }
     }
-    
+
     // documentation inherited from interface Effect.Observer
     public void pieceMoved (Piece piece)
     {
@@ -321,7 +322,7 @@ public class EffectHandler extends BoardView.BoardAction
             _ctx.getChatDirector().displayInfo(GameCodes.GAME_MSGS, desc);
         }
     }
-    
+
     protected void queueEffect (
         final PieceSprite sprite, final Piece piece, EffectViz viz)
     {
@@ -358,6 +359,28 @@ public class EffectHandler extends BoardView.BoardAction
             }
         });
         sprite.queueAction(action);
+    }
+
+    /**
+     * Loads up the appropriate sound for the specified unit firing the
+     * specified kind of shot.
+     */
+    protected Sound getShotSound (
+        SoundGroup sounds, String unitType, int shotType)
+    {
+        // no sound for collateral damage shot; the main shot will produce a
+        // sound
+        if (shotType != ShotEffect.COLLATERAL_DAMAGE) {
+            String path = "rsrc/units/" + unitType + "/" +
+                ShotEffect.SHOT_ACTIONS[shotType] + ".wav";
+            // TODO: fall back to a generic sound if we don't have a
+            // special sound for this unit for this shot type
+            if (SoundUtil.haveSound(path)) {
+                return sounds.getSound(path);
+            }
+            // TODO: go back to complaining if we don't have shot sounds
+        }
+        return null;
     }
 
     protected boolean isCompleted ()

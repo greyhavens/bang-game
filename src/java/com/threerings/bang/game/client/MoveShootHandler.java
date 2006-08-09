@@ -109,10 +109,8 @@ public class MoveShootHandler extends EffectHandler
     {
         // load up the sound that will go with our shootin'
         if (_shooter instanceof Unit) {
-            String type = ((Unit)_shooter).getType();
-            _bangSound = sounds.getSound(
-                    "rsrc/units/" + type + "/" +
-                    ShotEffect.SHOT_ACTIONS[_shot.type] + ".wav");
+            _bangSound = getShotSound(
+                sounds, ((Unit)_shooter).getType(), _shot.type);
         }
     }
 

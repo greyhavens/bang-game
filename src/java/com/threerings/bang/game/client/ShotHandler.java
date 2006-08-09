@@ -90,14 +90,8 @@ public abstract class ShotHandler extends EffectHandler
     {
         // load up the sound that will go with our shootin'
         if (_shooter instanceof Unit) {
-            String type = ((Unit)_shooter).getType();
-            // no sound for collateral damage shot; the main shot will
-            // produce a sound
-            if (_shot.type != ShotEffect.COLLATERAL_DAMAGE) {
-                _bangSound = sounds.getSound(
-                    "rsrc/units/" + type + "/" +
-                    ShotEffect.SHOT_ACTIONS[_shot.type] + ".wav");
-            }
+            _bangSound = getShotSound(
+                sounds, ((Unit)_shooter).getType(), _shot.type);
         }
     }
 
