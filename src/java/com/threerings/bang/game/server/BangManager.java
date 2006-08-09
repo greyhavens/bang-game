@@ -1206,8 +1206,12 @@ public class BangManager extends GameManager
 
                 // configure the duration of the round
                 int duration = _scenario.getDuration(_bconfig, _bangobj);
+                // when testing multiple rounds it is useful to end games very
+                // quickly, so let's facilitate that
+                if (System.getProperty("quicktest") != null) {
+                    duration /= 10;
+                }
                 _bangobj.setDuration((short)duration);
-//                _bangobj.setDuration(_scenario.getDuration(_bconfig, _bangobj));
                 _bangobj.setLastTick((short)(_bangobj.duration - 1));
 
                 // note this round's duration for later processing (roundId is
