@@ -437,6 +437,9 @@ public class BangBoardView extends BoardView
             order.clear();
         }
         _orders.clear();
+
+        // reset our have done touredness
+        _haveDoneTour = false;
     }
 
     @Override // documentation inherited

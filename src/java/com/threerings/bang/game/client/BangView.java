@@ -333,7 +333,7 @@ public class BangView extends BWindow
 
         // if we arrived in the middle of the game, the pieces will already be
         // configured; otherwise start with the ones provided by the board
-        if (_bangobj.pieces == null) {
+        if (_bangobj.state != BangObject.IN_PLAY) {
             _bangobj.maxPieceId = 0;
             ArrayList<Piece> plist = new ArrayList<Piece>();
             for (Piece piece : pieces) {
