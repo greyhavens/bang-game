@@ -84,7 +84,7 @@ public class TotemStatsView extends StatsView
     {
         iwidth--;
         BContainer icont = new BContainer(new AbsoluteLayout());
-        int[] totems = new int[_objectiveIcons.length];
+        int[] totems = new int[_objectiveIcons[pidx].length];
         for (int ii = 0; ii < totems.length; ii++) {
             totems[ii] = getIntStat(pidx, _statTypes[ii]);
         }
