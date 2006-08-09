@@ -278,6 +278,10 @@ public class BangManager extends GameManager
         Piece piece = (Piece)_bangobj.pieces.get(pieceId);
         if (piece == null || piece.owner != pidx) {
             // the unit probably died or was hijacked
+            log.info("Rejecting order for invalid piece [who=" + user.who() +
+                " (" + pidx + "), piece=" +
+                ((piece == null) ? "null" : piece.info()) +
+                " (" + pieceId + ")].");
             throw new InvocationException(MOVER_NO_LONGER_VALID);
         }
         if (!(piece instanceof Unit)) {
@@ -1204,7 +1208,9 @@ public class BangManager extends GameManager
                 _scenario.roundWillStart(_bangobj, _starts, _purchases);
 
                 // configure the duration of the round
-                _bangobj.setDuration(_scenario.getDuration(_bconfig, _bangobj));
+                int duration = _scenario.getDuration(_bconfig, _bangobj)/10;
+                _bangobj.setDuration((short)duration);
+//                _bangobj.setDuration(_scenario.getDuration(_bconfig, _bangobj));
                 _bangobj.setLastTick((short)(_bangobj.duration - 1));
 
                 // note this round's duration for later processing (roundId is
@@ -1645,10 +1651,9 @@ public class BangManager extends GameManager
         // make sure we are alive, and are ready to move
         int steps = unit.getDistance(x, y);
         if (!unit.isAlive() || unit.ticksUntilMovable(_bangobj.tick) > 0) {
-//             log.info("Unit no longer movable [unit=" + unit +
-//                      ", alive=" + unit.isAlive() +
-//                      ", mticks=" + unit.ticksUntilMovable(_bangobj.tick) +
-//                      "].");
+            log.info("Unit no longer movable [unit=" + unit +
+                ", alive=" + unit.isAlive() +
+                ", mticks=" + unit.ticksUntilMovable(_bangobj.tick) + "].");
             throw new InvocationException(MOVER_NO_LONGER_VALID);
         }
 
@@ -2328,6 +2333,9 @@ public class BangManager extends GameManager
             // make sure this unit is still in play
             Unit aunit = (Unit)obj;
             if (aunit == null || !aunit.isAlive()) {
+                log.info("Advance order no longer value [order=" + this +
+                    ", unit=" + (aunit == null ? "null" :
+                        (aunit.info() + " (" + aunit.isAlive() + ")")) + "].");
                 return MOVER_NO_LONGER_VALID;
             }
 
