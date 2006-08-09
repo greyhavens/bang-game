@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TreeBedSprite;
-import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.FetishEffect;
 import com.threerings.bang.game.data.effect.TreeBedEffect;
@@ -65,7 +65,8 @@ public class TreeBed extends Prop
     }
     
     @Override // documentation inherited
-    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (
+            short tick, BangObject bangobj, Piece[] pieces)
     {
         // can't heal dead trees
         ArrayList<Effect> effects = new ArrayList<Effect>();

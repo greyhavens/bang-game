@@ -36,19 +36,20 @@ public class DogSoldier extends Unit
     }
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (
+            short tick, BangObject bangobj, Piece[] pieces)
     {
         if (!isAlive()) {
             return null;
         }
-        ArrayList<Effect> effects = super.tick(tick, board, pieces);
+        ArrayList<Effect> effects = super.tick(tick, bangobj, pieces);
         ArrayList<ShotEffect> proxShots = new ArrayList<ShotEffect>();
         ProximityShotEffect proxShot = null;
         for (Piece piece : pieces) {
             if (piece.isTargetable() && piece.isAlive() && 
-                    piece.owner != owner && !piece.isAirborne() && 
+                    !piece.isSameTeam(bangobj, this) && !piece.isAirborne() && 
                     getDistance(piece) == 1 && 
-                    board.canCross(x, y, piece.x, piece.y)) {
+                    bangobj.board.canCross(x, y, piece.x, piece.y)) {
                 if (proxShot == null) {
                     proxShot = new ProximityShotEffect(this, piece,
                             UNIT_PROXIMITY_DAMAGE, null, null);

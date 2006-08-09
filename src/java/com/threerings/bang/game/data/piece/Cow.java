@@ -75,7 +75,8 @@ public class Cow extends Piece
     }
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (
+            short tick, BangObject bangobj, Piece[] pieces)
     {
         // if we're corralled, stop moving
         if (corralled) {
@@ -85,7 +86,7 @@ public class Cow extends Piece
         // if we're walled in on all three sides, we want to move
         int walls = 0, direction = -1;
         for (int dd = 0; dd < DIRECTIONS.length; dd++) {
-            if (board.isGroundOccupiable(x + DX[dd], y + DY[dd])) {
+            if (bangobj.board.isGroundOccupiable(x + DX[dd], y + DY[dd])) {
                 // in the case that we're walled in on three sides, this will
                 // only get assigned once, to the direction in which we are not
                 // walled in
@@ -99,7 +100,7 @@ public class Cow extends Piece
         }
 
         ArrayList<Effect> effects = new ArrayList<Effect>();
-        effects.add(move(board, direction, -1, -1));
+        effects.add(move(bangobj.board, direction, -1, -1));
         return effects;
     }
 

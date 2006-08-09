@@ -1296,7 +1296,7 @@ public class BangManager extends GameManager
             }
 
             int ox = p.x, oy = p.y;
-            ArrayList<Effect> teffects = p.tick(tick, _bangobj.board, pieces);
+            ArrayList<Effect> teffects = p.tick(tick, _bangobj, pieces);
             if (teffects != null) {
                 for (Effect e : teffects) {
                     deployEffect(p.owner, e);

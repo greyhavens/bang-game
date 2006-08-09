@@ -6,7 +6,7 @@ package com.threerings.bang.game.data.piece;
 import java.util.ArrayList;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ClearPieceEffect;
 
@@ -19,7 +19,8 @@ public class Barricade extends Piece
     public transient int tickCounter = 6;    
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (
+            short tick, BangObject bangobj, Piece[] pieces)
     {
         if (tickCounter-- > 0) {
             return null;

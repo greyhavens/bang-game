@@ -110,7 +110,8 @@ public abstract class Piece
      * @return a list of effects to apply to the unit as a result of having 
      * been ticked or null.
      */
-    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (
+            short tick, BangObject bangobj, Piece[] pieces)
     {
         return null;
     }

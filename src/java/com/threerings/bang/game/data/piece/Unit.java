@@ -312,7 +312,8 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (
+            short tick, BangObject bangobj, Piece[] pieces)
     {
         if (!isAlive()) {
             return null;

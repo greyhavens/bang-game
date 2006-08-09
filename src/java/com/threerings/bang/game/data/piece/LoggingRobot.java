@@ -42,18 +42,19 @@ public class LoggingRobot extends BallisticUnit
     }
     
     @Override // documentation inherited
-    public ArrayList<Effect> tick (short tick, BangBoard board, Piece[] pieces)
+    public ArrayList<Effect> tick (
+            short tick, BangObject bangobj, Piece[] pieces)
     {
         if (!isAlive()) {
             return null;
         }
-        ArrayList<Effect> effects = super.tick(tick, board, pieces);
+        ArrayList<Effect> effects = super.tick(tick, bangobj, pieces);
         ArrayList<ShotEffect> proxShots = new ArrayList<ShotEffect>();
         ProximityShotEffect proxShot = null;
         for (Piece piece : pieces) {
             if (piece instanceof Unit && getDistance(piece) == 1 &&
                 piece.owner != -1 && !piece.isAirborne() && piece.isAlive() &&
-                board.canCross(x, y, piece.x, piece.y)) {
+                bangobj.board.canCross(x, y, piece.x, piece.y)) {
                 if (proxShot == null) {
                     proxShot = new ProximityShotEffect(this, piece,
                             UNIT_PROXIMITY_DAMAGE, null, null);
