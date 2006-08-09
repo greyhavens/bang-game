@@ -559,16 +559,19 @@ public class PlayerManager
         throws InvocationException
     {
         // check the cache for previously generated posters
-        SoftReference<PosterInfo> cacheHit = posterCache.get(handle);
-        boolean cached = cacheHit != null && cacheHit.get() != null;
+        SoftReference<PosterInfo> infoRef = posterCache.get(handle);
+        PosterInfo tmpInfo = null;
+        if (infoRef != null) {
+            tmpInfo = infoRef.get();
+        }
+        boolean cached = (tmpInfo != null);
 
         final PosterInfo info;
         if (cached) {
-            info = cacheHit.get();
+            info = tmpInfo;
         } else {
             info = new PosterInfo();
             info.handle = handle;
-
         }
 
         // if the player is online, populate the poster directly from there
