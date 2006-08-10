@@ -848,11 +848,10 @@ public class BangBoardView extends BoardView
                 for (int ii = 0; ii < startidx; ii++) {
                     path.remove(0);
                 }
-                System.out.println(path);
             }
 
             // if we have no path left, just blip to our starting spot
-            if (path == null || path.size() == 0) {
+            if (path == null || path.size() < 2) {
                 sprite.setLocation(_board, unit.x, unit.y);
                 sprite.snapToTerrain(false);
                 continue;

@@ -1287,6 +1287,7 @@ public class BoardView extends BComponent
         for (PieceSprite sprite : _pieces.values()) {
             removeSprite(sprite);
         }
+        _pieces.clear();
     }
 
     /**
