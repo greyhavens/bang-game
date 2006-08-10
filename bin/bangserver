@@ -12,7 +12,7 @@ HOSTNAME=`hostname`
 NODE="frontier_town"
 
 SARGS="-server -Djava.awt.headless=true"
-SARGS="$SARGS -Dbang.home=$ROOT -Dhostname=$HOSTNAME -Dnode=$NODE"
+SARGS="$SARGS -Dbang.home=$ROOT -Dhostname=$HOSTNAME"
 SARGS="$SARGS -Dresource_dir=$ROOT/rsrc -Dno_unpack_resources=true"
 
 # extract -D arguments so that we can put them before the classname
@@ -28,5 +28,6 @@ while [ ! -z "$1" ]; do
     esac
     shift
 done
+SARGS="$SARGS -Dnode=$NODE"
 
 $ROOT/bin/runjava -- $SARGS $CLASS $ARGS
