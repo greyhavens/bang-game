@@ -343,6 +343,7 @@ public class BangView extends BWindow
                 }
                 piece = (Piece)piece.clone();
                 piece.assignPieceId(_bangobj);
+                piece.init();
                 plist.add(piece);
             }
             _bangobj.pieces = new PieceDSet(plist.iterator());

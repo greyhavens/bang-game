@@ -22,9 +22,6 @@ public class TreeBedEffect extends Effect
     /** Indicates that the tree grew (negative damage). */
     public static final String GREW = "grew";
     
-    /** A special damage amount that signals the tree's resurrection. */
-    public static final int RESURRECT = Integer.MAX_VALUE;
-    
     /** The id of the affected tree bed. */
     public int bedId;
     
@@ -34,6 +31,10 @@ public class TreeBedEffect extends Effect
     /** The amount of damage inflicted. */
     public int damage;
     
+    /** Indicates that the tree should be reset to its initial state before
+     * applying the damage (for resurrection or initial growth). */
+    public boolean reset;
+    
     /**
      * No-arg constructor for deserialization.
      */
@@ -42,7 +43,7 @@ public class TreeBedEffect extends Effect
     }
     
     /**
-     * Creates a new tree bed effect.
+     * Creates a new tree bed effect that will grow or damage the tree.
      *
      * @param bed the affected bed
      * @param pieces the pieces growing or shrinking the tree
@@ -56,6 +57,18 @@ public class TreeBedEffect extends Effect
             pieceIds[ii] = pieces[ii].pieceId;
         }
         this.damage = damage;
+    }
+    
+    /**
+     * Creates a tree bed effect that will reset the tree with the
+     * given amount of initial damage.
+     */
+    public TreeBedEffect (TreeBed bed, int damage)
+    {
+        bedId = bed.pieceId;
+        pieceIds = NO_PIECES;
+        this.damage = damage;
+        reset = true;
     }
     
     // documentation inherited
@@ -98,9 +111,10 @@ public class TreeBedEffect extends Effect
                 bedId + "].");
             return false;
         }
-        if (damage == RESURRECT) {
+        if (reset) {
             bed.growth = 0;
             bed.damage = 100;
+            bed.damage(damage);
             reportEffect(observer, bed, UPDATED);
         } else {
             bed.damage(damage);

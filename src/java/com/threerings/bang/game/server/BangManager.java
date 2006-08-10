@@ -992,6 +992,7 @@ public class BangManager extends GameManager
                 continue;
             }
             p.assignPieceId(_bangobj);
+            p.init();
         }
 
         // configure the game object and board with the pieces
@@ -1260,11 +1261,6 @@ public class BangManager extends GameManager
 
         } finally {
             _bangobj.commitTransaction();
-        }
-
-        // initialize our pieces
-        for (Piece piece : _bangobj.pieces) {
-            piece.init();
         }
 
         // we reuse the playerIsReady() mechanism to wait for the players to

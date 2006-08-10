@@ -25,6 +25,7 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.TreeBedEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.LoggingRobot;
 import com.threerings.bang.game.data.piece.Marker;
@@ -83,13 +84,13 @@ public class ForestGuardians extends Scenario
             }
         }
     }
-
+    
     @Override // documentation inherited    
     public int modifyDamageDone (int pidx, int tidx, int ddone)
     {
-        // no points are awarded for shooting the other players' units; only
-        // for shooting the robots
-        return (tidx == -1) ? ddone : 0;
+        // points are granted for shooting the robots; subtracted for shooting
+        // your teammates
+        return (tidx == -1) ? ddone : (-3 * ddone / 2);
     }
     
     @Override // documentation inherited    
@@ -98,6 +99,12 @@ public class ForestGuardians extends Scenario
         throws InvocationException
     {
         super.roundWillStart(bangobj, starts, purchases);
+        
+        // put the trees in random states
+        for (TreeBed tree : _trees) {
+            int damage = -RandomUtil.getInt((TreeBed.FULLY_GROWN + 1) * 100);
+            _bangmgr.deployEffect(-1, new TreeBedEffect(tree, damage));
+        }
         
         // place the four fetishes
         Piece[] pieces = bangobj.getPieceArray();

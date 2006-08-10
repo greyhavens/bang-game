@@ -703,7 +703,7 @@ public class MobileSprite extends PieceSprite
         if (path != null) {
             if (path.size() < 2) {
                 log.warning("Created short path? [piece=" + _piece +
-                    ", to=(" + _px + ", " + _py + ")" +
+                    ", from=(" + _px + ", " + _py + ")" +
                     ", path=" + StringUtil.toString(path) + "].");
                 // fall through and create a line path
 

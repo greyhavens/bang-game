@@ -56,12 +56,11 @@ public class TreeBed extends Prop
     public void damage (int dinc)
     {
         damage += dinc;
-        if (damage < 0 && growth < FULLY_GROWN) {
+        while (damage < 0 && growth < FULLY_GROWN) {
             growth++;
             damage += 100;
-        } else {
-            damage = Math.max(Math.min(damage, 100), 0);
         }
+        damage = Math.max(Math.min(damage, 100), 0);
     }
     
     @Override // documentation inherited
@@ -72,8 +71,7 @@ public class TreeBed extends Prop
         ArrayList<Effect> effects = new ArrayList<Effect>();
         if (!isAlive()) {
             if (tick - lastActed > RESURRECTION_TICKS_PER_LEVEL * growth) {
-                effects.add(new TreeBedEffect(this, new Piece[0],
-                    TreeBedEffect.RESURRECT));
+                effects.add(new TreeBedEffect(this, 0));
                 return effects;
             }
             return null;

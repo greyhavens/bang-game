@@ -115,7 +115,6 @@ public abstract class Scenario
 
         case BangObject.BUYING_PHASE:
             _bangmgr.startPhase(BangObject.IN_PLAY);
-            _startStamp = System.currentTimeMillis();
             break;
 
         default:
@@ -170,6 +169,9 @@ public abstract class Scenario
                                 PieceSet purchases)
         throws InvocationException
     {
+        // record the time at which the round started
+        _startStamp = System.currentTimeMillis();
+        
         // this will contain the starting spot for each player
         _startSpots = new Point[bangobj.players.length];
         for (int ii = 0; ii < _startSpots.length; ii++) {

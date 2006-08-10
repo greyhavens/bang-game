@@ -146,14 +146,14 @@ public class EffectHandler extends BoardView.BoardAction
         // display the damage icon/amount
         if (effect.equals(TreeBedEffect.GREW)) {
             DamageIconViz.displayDamageIconViz(piece, "repaired",
-                new ColorRGBA(0f, 0.4f, 0.2f, 1f),
-                new ColorRGBA(0f, 0.2f, 0.1f, 1f), // forest green
+                new ColorRGBA(1f, 1f, 1f, 1f),
+                new ColorRGBA(0.5f, 0.5f, 0.5f, 1f), // white
                 -_effect.getBaseDamage(piece), _effect, _ctx, _view);
         } else if (effect.equals(ShotEffect.DAMAGED) &&
             piece instanceof TreeBed) {
             DamageIconViz.displayDamageIconViz(piece,
-                new ColorRGBA(0.5f, 0f, 0f, 1f),
-                new ColorRGBA(0.25f, 0f, 0f, 1f), // blood red
+                new ColorRGBA(1f, 0f, 1f, 1f),
+                new ColorRGBA(0.5f, 0f, 0.5f, 1f), // magenta
                 _effect, _ctx, _view);
         } else if (wasDamaged || effect.equals(ShotEffect.DUDED)) {
             DamageIconViz.displayDamageIconViz(piece, _effect, _ctx, _view);
