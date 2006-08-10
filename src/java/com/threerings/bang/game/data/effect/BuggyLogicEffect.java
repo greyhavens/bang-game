@@ -46,16 +46,16 @@ public class BuggyLogicEffect extends SetHindranceEffect
     @Override // documentation inherited
     public boolean isApplicable ()
     {
-        return super.isApplicable() && unit.owner != player &&
-            unit.getConfig().make == UnitConfig.Make.STEAM;
+        return super.isApplicable() && _unit.owner != player &&
+            _unit.getConfig().make == UnitConfig.Make.STEAM;
     }
 
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
-        unit = (Unit)bangobj.pieces.get(pieceId);
-        if (unit != null) {
-            unit.owner = player;
+        _unit = (Unit)bangobj.pieces.get(pieceId);
+        if (_unit != null) {
+            _unit.owner = player;
         }
         return super.apply(bangobj, obs);
     }

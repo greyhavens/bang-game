@@ -18,7 +18,7 @@ public class BlownGasketEffect extends SetHindranceEffect
     public boolean isApplicable ()
     {
         return super.isApplicable() &&
-            unit.getConfig().make == UnitConfig.Make.STEAM;
+            _unit.getConfig().make == UnitConfig.Make.STEAM;
     }
 
     @Override // documentation inherited

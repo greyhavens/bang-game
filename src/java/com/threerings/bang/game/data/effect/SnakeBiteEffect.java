@@ -18,7 +18,7 @@ public class SnakeBiteEffect extends SetHindranceEffect
     public boolean isApplicable ()
     {
         return super.isApplicable() &&
-            unit.getConfig().make == UnitConfig.Make.HUMAN;
+            _unit.getConfig().make == UnitConfig.Make.HUMAN;
     }
 
     @Override // documentation inherited

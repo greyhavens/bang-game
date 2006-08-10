@@ -18,7 +18,7 @@ public class DudEffect extends SetHindranceEffect
     @Override // documentation inherited
     public boolean isApplicable ()
     {
-        return super.isApplicable() && unit.getConfig().gunUser;
+        return super.isApplicable() && _unit.getConfig().gunUser;
     }
 
     @Override // documentation inherited

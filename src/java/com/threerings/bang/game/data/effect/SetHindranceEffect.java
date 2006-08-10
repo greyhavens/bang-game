@@ -28,13 +28,16 @@ public abstract class SetHindranceEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        unit = (Unit)bangobj.pieces.get(pieceId);
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (piece instanceof Unit) {
+            _unit = (Unit)piece;
+        }
     }
 
     @Override // documentation inherited
     public boolean isApplicable ()
     {
-        return (unit != null && unit.hindrance == null);
+        return (_unit != null && _unit.hindrance == null);
     } 
 
     @Override // documentation inherited
@@ -42,27 +45,27 @@ public abstract class SetHindranceEffect extends BonusEffect
     {
         super.apply(bangobj, obs);
 
-        unit = (Unit)bangobj.pieces.get(pieceId);
-        if (unit == null) {
+        _unit = (Unit)bangobj.pieces.get(pieceId);
+        if (_unit == null) {
             log.warning("Missing target for set hindrance effect " +
                         "[id=" + pieceId + "].");
             return false;
         }
 
-        unit.setHindrance(createHindrance(unit), bangobj.tick);
-        reportEffect(obs, unit, getEffectName());
+        _unit.setHindrance(createHindrance(_unit), bangobj.tick);
+        reportEffect(obs, _unit, getEffectName());
         return true;
     }
 
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
-        if (unit == null || unit.owner != pidx) {
+        if (_unit == null || _unit.owner != pidx) {
             return null;
         }
-        String name = unit.hindrance.getName();
+        String name = _unit.hindrance.getName();
         return (name == null) ? null : MessageBundle.compose(
-            "m.effect_influence", unit.getName(), "m.hindrance_" + name);
+            "m.effect_influence", _unit.getName(), "m.hindrance_" + name);
     }
     
     /** Creates the hindrance that will be applied to the target unit. */
@@ -71,5 +74,5 @@ public abstract class SetHindranceEffect extends BonusEffect
     /** Returns the name of the effect that will be reported. */
     protected abstract String getEffectName();
 
-    protected transient Unit unit;
+    protected transient Unit _unit;
 }
