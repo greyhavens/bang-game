@@ -57,7 +57,7 @@
   <wait event="card_selected"/>
   <center_on what="piece" id="2000"/>
   <text message="activate_card"/>
-  <wait event="effect:howdy"/>
+  <wait event="effect:bang"/>
 
   <!-- wrap up and end the tutorial -->
   <text message="done"/>
