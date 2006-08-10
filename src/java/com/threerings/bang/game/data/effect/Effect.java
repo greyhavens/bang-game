@@ -155,7 +155,7 @@ public abstract class Effect extends SimpleStreamableObject
 
         // effect the actual damage
 //         log.info("Damaging " + target + " -> " + newDamage + ".");
-        target.damage = newDamage;
+        target.wasDamaged(newDamage);
 
         // report that the target was affected
         reportEffect(obs, target, effect);

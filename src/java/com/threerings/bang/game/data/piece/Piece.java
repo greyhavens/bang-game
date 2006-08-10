@@ -132,6 +132,14 @@ public abstract class Piece
     }
 
     /**
+     * Called on a piece when it has been damaged.
+     */
+    public void wasDamaged (int newDamage)
+    {
+        damage = newDamage;
+    }
+
+    /**
      * Returns whether or not this piece should be removed from the board
      * when maximally damaged.
      */

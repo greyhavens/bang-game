@@ -430,6 +430,15 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public void wasDamaged (int newDamage)
+    {
+        super.wasDamaged(newDamage);
+        if (hindrance != null) {
+            hindrance.wasDamaged(damage);
+        }
+    }
+
+    @Override // documentation inherited
     public boolean removeWhenDead ()
     {
         return _config.make == UnitConfig.Make.HUMAN ||
@@ -442,7 +451,8 @@ public class Unit extends Piece
     {
         // if we do no damage to this type of target, it is not valid
         return super.validTarget(bangobj, target, allowSelf) &&
-            (computeDamage(target) > 0);
+            (computeDamage(target) > 0) && (hindrance == null || 
+                hindrance.validTarget(this, target, allowSelf));
     }
 
     @Override // documentation inherited

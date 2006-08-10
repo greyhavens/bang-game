@@ -67,8 +67,27 @@ public abstract class Hindrance extends Influence
         return null;
     }
     
+    /**
+     * Perform an effect on the target after shooting.
+     */
     public Effect affectTarget (Piece target)
     {
         return null;
-    }    
+    }
+
+    /**
+     * Determines if this is a valid target.
+     */
+    public boolean validTarget (Unit shooter, Piece target, boolean allowSelf)
+    {
+        return true;
+    }
+
+    /**
+     * Called when a unit is damaged.
+     */
+    public void wasDamaged (int newDamage)
+    {
+        // nothing doing
+    }
 }
