@@ -55,7 +55,7 @@ public class AreaDamageHandler extends EffectHandler
         _dest = new Vector3f((effect.x + 0.5f) * TILE_SIZE,
             (effect.y + 0.5f) * TILE_SIZE, 0f);
         _dest.z = _view.getTerrainNode().getHeightfieldHeight(_dest.x,
-            _dest.y) + TILE_SIZE * 0.5f;
+            _dest.y);
             
         ShotSprite ssprite = new ShotSprite(
             _ctx, "bonuses/frontier_town/missile", null);
