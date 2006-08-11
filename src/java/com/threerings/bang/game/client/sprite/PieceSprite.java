@@ -454,7 +454,7 @@ public class PieceSprite extends Sprite
             // the dynamic shadow is a highlight with wider geometry
             float length = TILE_SIZE, // _view.getShadowLength(),
                 rotation = 0f, // _view.getShadowRotation(),
-                intensity = _view.getShadowIntensity();
+                intensity = _view.getDynamicShadowIntensity();
             _shadow = _view.getTerrainNode().createHighlight(
                 localTranslation.x, localTranslation.y, length, length);
             _shadow.setIsCollidable(false);

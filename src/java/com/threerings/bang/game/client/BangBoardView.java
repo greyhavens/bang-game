@@ -471,6 +471,14 @@ public class BangBoardView extends BoardView
     }
 
     /**
+     * Checks whether the board is in "high noon" mode.
+     */
+    public boolean isHighNoon ()
+    {
+        return _highNoon;
+    }
+    
+    /**
      * Fades into or out of "high noon" mode.
      */
     public void setHighNoon (final boolean enable)
@@ -487,26 +495,6 @@ public class BangBoardView extends BoardView
         });
     }
 
-    /**
-     * Continues switching into or out of "high noon" mode after the screen has
-     * faded to white.
-     */
-    protected void continueSettingHighNoon ()
-    {
-        // switch terrain shadows off for high noon
-        MaterialState mstate = (MaterialState)_tnode.getRenderState(
-            RenderState.RS_MATERIAL);
-        mstate.setColorMaterial(_highNoon ?
-            MaterialState.CM_NONE : MaterialState.CM_DIFFUSE);
-        
-        // switch to high noon lighting or restore the original
-        refreshLights();
-        
-        // fade back in
-        _ctx.getInterface().attachChild(new FadeInOutEffect(
-            ColorRGBA.white, 1f, 0f, NOON_FADE_DURATION, false));
-    }
-    
     /**
      * Fades in a scalar change to the primary diffuse light.
      */
@@ -532,6 +520,35 @@ public class BangBoardView extends BoardView
             protected float _elapsed;
         });
     }
+
+    @Override // documentation inherited
+    public float getShadowIntensity ()
+    {
+        return _highNoon ? 0f : super.getShadowIntensity();
+    }
+    
+    /**
+     * Continues switching into or out of "high noon" mode after the screen has
+     * faded to white.
+     */
+    protected void continueSettingHighNoon ()
+    {
+        // switch terrain shadows off for high noon
+        MaterialState mstate = (MaterialState)_tnode.getRenderState(
+            RenderState.RS_MATERIAL);
+        mstate.setColorMaterial(_highNoon ?
+            MaterialState.CM_NONE : MaterialState.CM_DIFFUSE);
+        
+        // switch to high noon lighting or restore the original
+        refreshLights();
+        for (PieceSprite sprite : _pieces.values()) {
+            sprite.updateShadowValue();
+        }
+        
+        // fade back in
+        _ctx.getInterface().attachChild(new FadeInOutEffect(
+            ColorRGBA.white, 1f, 0f, NOON_FADE_DURATION, false));
+    }
     
     @Override // documentation inherited
     protected void refreshLights ()
@@ -551,14 +568,6 @@ public class BangBoardView extends BoardView
             _lights[1].getDiffuse().set(COLOR_CYAN);
             _lights[1].getDirection().set(0f, 0f, 1f);
         }
-    }
-    
-    /**
-     * Checks whether the board is in "high noon" mode.
-     */
-    public boolean isHighNoon ()
-    {
-        return _highNoon;
     }
     
     @Override // documentation inherited

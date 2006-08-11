@@ -436,12 +436,20 @@ public class BoardView extends BComponent
     }
 
     /**
-     * Returns the intensity of shadows on the board, which depends on the
-     * total light and the board's configured shadow intensity.
+     * Returns the intensity of the shadows on the board.
+     */
+    public float getShadowIntensity ()
+    {
+        return _board.getShadowIntensity();
+    }
+    
+    /**
+     * Returns the intensity of the dynamic shadows on the board, which depends
+     * on the total light and the board's configured shadow intensity.
      *
      * @return 0.0 for no shadows, 1.0 for completely black shadows
      */
-    public float getShadowIntensity ()
+    public float getDynamicShadowIntensity ()
     {
         float total = 0f;
         float[] hsb = new float[3];
