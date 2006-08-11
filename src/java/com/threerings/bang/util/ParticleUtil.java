@@ -98,7 +98,7 @@ public class ParticleUtil
     public static void stopReleasing (Spatial spatial)
     {
         if (spatial instanceof ParticleGeometry) {
-            ((ParticleGeometry)spatial).setReleaseRate(0);
+            ((ParticleGeometry)spatial).setRepeatType(Controller.RT_CLAMP);
             
         } else if (spatial instanceof Node) {
             Node node = (Node)spatial;

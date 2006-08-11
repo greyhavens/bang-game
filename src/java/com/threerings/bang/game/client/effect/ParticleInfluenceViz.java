@@ -8,6 +8,7 @@ import com.jme.scene.Spatial;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.ParticleUtil;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -39,7 +40,7 @@ public class ParticleInfluenceViz extends InfluenceViz
     public void destroy ()
     {
         if (_particles != null) {
-            _target.detachChild(_particles);
+            ParticleUtil.stopAndRemove(_particles);
         }
     }
     
