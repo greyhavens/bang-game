@@ -317,7 +317,7 @@ public class PieceSprite extends Sprite
         } else {
             shadowed = 0f;
         }
-        float diffuse = 1f - _view.getBoard().getShadowIntensity() * shadowed;
+        float diffuse = 1f - _view.getShadowIntensity() * shadowed;
         _mstate.getDiffuse().set(diffuse, diffuse, diffuse,
             _mstate.getDiffuse().a);
     }
