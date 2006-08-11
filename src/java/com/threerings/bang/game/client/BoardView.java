@@ -1006,11 +1006,9 @@ public class BoardView extends BComponent
         }
         _lights[idx].setEnabled(true);
 
-        float cose = FastMath.cos(_board.getLightElevation(idx));
-        _lights[idx].setDirection(new Vector3f(
-            -cose * FastMath.cos(_board.getLightAzimuth(idx)),
-            -cose * FastMath.sin(_board.getLightAzimuth(idx)),
-            -FastMath.sin(_board.getLightElevation(idx))));
+        getDirectionVector(
+            _board.getLightAzimuth(idx), _board.getLightElevation(idx),
+            _lights[idx].getDirection());
 
         float[] drgb = new Color(dcolor).getRGBColorComponents(null),
             argb = new Color(acolor).getRGBColorComponents(null);
@@ -1503,7 +1501,39 @@ public class BoardView extends BComponent
             }
         }
     }
-
+    
+    /**
+     * Computes light azimuth and elevation values to a direction vector.
+     */
+    protected static Vector3f getDirectionVector (
+        float azimuth, float elevation, Vector3f result)
+    {
+        if (result == null) {
+            result = new Vector3f();
+        }
+        float cose = FastMath.cos(elevation);
+        result.set(-cose * FastMath.cos(azimuth),
+            -cose * FastMath.sin(azimuth),
+            -FastMath.sin(elevation));
+        return result;
+    }
+    
+    /**
+     * Returns the azimuth of the given direction vector.
+     */
+    protected static float getAzimuth (Vector3f direction)
+    {
+        return FastMath.atan2(-direction.y, -direction.x);
+    }
+    
+    /**
+     * Returns the elevation of the given direction vector.
+     */
+    protected static float getElevation (Vector3f direction)
+    {
+        return FastMath.asin(-direction.z);
+    }
+    
     /** Used to queue up piece createion so that the piece shows up on the
      * board in the right sequence with all other board actions. */
     protected class PieceCreatedAction extends BoardAction

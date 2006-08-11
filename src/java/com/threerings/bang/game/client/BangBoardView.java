@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.light.DirectionalLight;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -22,6 +23,8 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.RenderState;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -472,65 +475,56 @@ public class BangBoardView extends BoardView
      */
     public void setHighNoon (final boolean enable)
     {
-        if (_highNoon == enable) {
-            return;
-        }
-        if (enable && _originalAmbient == null) {
-            _originalAmbient = new ColorRGBA(_lights[0].getAmbient());
-        }
         _highNoon = enable;
-        _node.addController(new Controller() {
-            public void update (float time) {
-                _elapsed = Math.min(_elapsed + time, NOON_FADE_DURATION);
-                float alpha = _elapsed / NOON_FADE_DURATION;
-                if (!enable) {
-                    alpha = 1f - alpha;
-                }
-                _lights[0].getAmbient().interpolate(
-                    _originalAmbient, ColorRGBA.white, alpha);
-                if (_elapsed >= NOON_FADE_DURATION) {
-                    _node.removeController(this);
-                }
+        
+        // fade to white before changing lights
+        _ctx.getInterface().attachChild(new FadeInOutEffect(
+            ColorRGBA.white, 0f, 1f, NOON_FADE_DURATION, false) {
+            protected void fadeComplete () {
+                super.fadeComplete();
+                continueSettingHighNoon();
             }
-            protected float _elapsed;
         });
     }
 
+    /**
+     * Continues switching into or out of "high noon" mode after the screen has
+     * faded to white.
+     */
+    protected void continueSettingHighNoon ()
+    {
+        // switch terrain shadows off for high noon
+        MaterialState mstate = (MaterialState)_tnode.getRenderState(
+            RenderState.RS_MATERIAL);
+        mstate.setColorMaterial(_highNoon ?
+            MaterialState.CM_NONE : MaterialState.CM_DIFFUSE);
+        
+        // switch to high noon lighting or restore the original
+        refreshLights();
+        
+        // fade back in
+        _ctx.getInterface().attachChild(new FadeInOutEffect(
+            ColorRGBA.white, 1f, 0f, NOON_FADE_DURATION, false));
+    }
+    
     /**
      * Fades in a scalar change to the primary diffuse light.
      */
     public void setWendigoAmbiance (final float duration, final boolean enable)
     {
-        if (_originalDiffuse == null) {
-            _originalDiffuse = new ColorRGBA(_lights[0].getDiffuse());
-            _originalSecDiffuse = new ColorRGBA(_lights[1].getDiffuse());
-            _originalSecElev = _board.getLightElevation(1);
-        }
-        // Calculate the darkened diffuse color by converting to YUV,
-        // altering the luminance to 0.3, then converting back, this should
-        // preserve the color
-        ColorRGBA diffuseYUV = RGBtoYUV(_originalDiffuse);
-        diffuseYUV.r = 0.3f;
-        final ColorRGBA darkenedDiffuse = YUVtoRGB(diffuseYUV);
+        // store the values before updating
+        final DirectionalLight[] olights = copyLights();
+        
+        _wendigoAmbiance = enable;
+        refreshLights();
+        
+        // store the new values and transition to them
+        final DirectionalLight[] nlights = copyLights();
         _node.addController(new Controller() {
             public void update (float time) {
                 _elapsed = Math.min(_elapsed + time, duration);
                 float alpha = _elapsed / duration;
-                if (!enable) {
-                    alpha = 1f - alpha;
-                }
-                _lights[0].getDiffuse().interpolate(
-                    _originalDiffuse, darkenedDiffuse, alpha);
-                _lights[1].getDiffuse().interpolate(
-                    _originalSecDiffuse, COLOR_CYAN, alpha);
-                float elevation = (_originalSecElev + 
-                    (-(float)(Math.PI/2) - _originalSecElev) * alpha);
-                float cose = FastMath.cos(elevation);
-                _lights[1].setDirection(new Vector3f(
-                    -cose * FastMath.cos(_board.getLightAzimuth(1)),
-                    -cose * FastMath.sin(_board.getLightAzimuth(1)),
-                    -FastMath.sin(elevation)));
-
+                interpolateLights(olights, nlights, alpha);
                 if (_elapsed >= duration) {
                     _node.removeController(this);
                 }
@@ -538,7 +532,27 @@ public class BangBoardView extends BoardView
             protected float _elapsed;
         });
     }
-
+    
+    @Override // documentation inherited
+    protected void refreshLights ()
+    {
+        super.refreshLights();
+        if (_highNoon) {
+            _lights[0].getDirection().set(0f, 0f, -1f);
+            _lights[0].getDiffuse().set(1f, 1f, 1f, 1f);
+        }
+        if (_wendigoAmbiance) {
+            // Calculate the darkened diffuse color by converting to YUV,
+            // altering the luminance to 0.3, then converting back, this should
+            // preserve the color
+            ColorRGBA diffuseYUV = RGBtoYUV(_lights[0].getDiffuse());
+            diffuseYUV.r = 0.3f;
+            _lights[0].getDiffuse().set(YUVtoRGB(diffuseYUV));
+            _lights[1].getDiffuse().set(COLOR_CYAN);
+            _lights[1].getDirection().set(0f, 0f, 1f);
+        }
+    }
+    
     /**
      * Checks whether the board is in "high noon" mode.
      */
@@ -1615,6 +1629,45 @@ public class BangBoardView extends BoardView
     }
 
     /**
+     * Returns a (deep) copy of the lights to use in blending.
+     */
+    protected DirectionalLight[] copyLights ()
+    {
+        DirectionalLight[] nlights = new DirectionalLight[_lights.length];
+        for (int ii = 0; ii < _lights.length; ii++) {
+            nlights[ii] = new DirectionalLight();
+            nlights[ii].setAmbient(new ColorRGBA(_lights[ii].getAmbient()));
+            nlights[ii].setDiffuse(new ColorRGBA(_lights[ii].getDiffuse()));
+            nlights[ii].setSpecular(new ColorRGBA(_lights[ii].getSpecular()));
+            nlights[ii].setDirection(new Vector3f(_lights[ii].getDirection()));
+        }
+        return nlights;
+    }
+    
+    /**
+     * Interpolates between two sets of lights and stores the result in the
+     * board lights.
+     */
+    protected void interpolateLights (
+        DirectionalLight[] l1, DirectionalLight[] l2, float alpha)
+    {
+        for (int ii = 0; ii < _lights.length; ii++) {
+            _lights[ii].getAmbient().interpolate(
+                l1[ii].getAmbient(), l2[ii].getAmbient(), alpha);
+            _lights[ii].getDiffuse().interpolate(
+                l1[ii].getDiffuse(), l2[ii].getDiffuse(), alpha);
+            _lights[ii].getSpecular().interpolate(
+                l1[ii].getSpecular(), l2[ii].getSpecular(), alpha);
+            Vector3f dir1 = l1[ii].getDirection(),
+                dir2 = l2[ii].getDirection();
+            getDirectionVector(
+                FastMath.LERP(alpha, getAzimuth(dir1), getAzimuth(dir2)),
+                FastMath.LERP(alpha, getElevation(dir1), getElevation(dir2)),
+                _lights[ii].getDirection());
+        }
+    }
+    
+    /**
      * Converts a RGB value to a YUV value.
      */
     protected ColorRGBA RGBtoYUV (ColorRGBA source)
@@ -1785,13 +1838,9 @@ public class BangBoardView extends BoardView
     /** Whether or not "high noon" mode is active. */
     protected boolean _highNoon;
     
-    /** The original, pre-noon ambient light color. */
-    protected ColorRGBA _originalAmbient;
-
-    /** The original, pre-wendigo ambiance light setup. */
-    protected ColorRGBA _originalDiffuse, _originalSecDiffuse;
-    protected float _originalSecElev;
-
+    /** Whether or not wendigo ambiance mode is active. */
+    protected boolean _wendigoAmbiance;
+    
     /** The color of BigShot movement highlights. */
     protected static final ColorRGBA BMOVE_HIGHLIGHT_COLOR =
         new ColorRGBA(0.5f, 1f, 0f, 0.5f);

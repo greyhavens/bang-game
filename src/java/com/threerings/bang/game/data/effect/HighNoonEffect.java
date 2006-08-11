@@ -111,5 +111,5 @@ public class HighNoonEffect extends Effect
     }
 
     /** The duration of the effect in ticks. */    
-    protected static final int EFFECT_DURATION = 16;
+    protected static final int EFFECT_DURATION = 8;
 }
