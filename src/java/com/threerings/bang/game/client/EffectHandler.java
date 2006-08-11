@@ -289,9 +289,9 @@ public class EffectHandler extends BoardView.BoardAction
     public void pieceKilled (Piece piece)
     {
         _view.pieceWasKilled(piece.pieceId);
-        // Allow sprites to update themselves when they're killed
-        PieceSprite sprite = _view.getPieceSprite(piece);
-        if (sprite != null) {
+        // Allow non-MobileSprites to update themselves when they're killed
+        final PieceSprite sprite = _view.getPieceSprite(piece);
+        if (sprite != null && !(sprite instanceof MobileSprite)) {
             sprite.updated(piece, _tick);
         }
     }
