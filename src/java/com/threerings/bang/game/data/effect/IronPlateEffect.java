@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.effect;
 
+import com.threerings.bang.game.client.effect.InfluenceViz;
+import com.threerings.bang.game.client.effect.IronPlateViz;
 import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -19,6 +21,9 @@ public class IronPlateEffect extends SetInfluenceEffect
         return new Influence() {
             public String getName () {
                 return "iron_plate";
+            }
+            public InfluenceViz createViz () {
+                return new IronPlateViz();
             }
             public int adjustDefend (Piece shooter, int damage) {
                 return 0;
