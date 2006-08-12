@@ -3,11 +3,14 @@
 
 package com.threerings.bang.game.client;
 
+import com.jme.math.FastMath;
+import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Spatial;
 
 import com.samskivert.util.ArrayIntSet;
 
+import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
@@ -37,6 +40,7 @@ import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.HighNoonEffect;
+import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
@@ -46,11 +50,13 @@ import com.threerings.bang.game.data.effect.TreeBedEffect;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Handles the visual representation of a complex effect on the client.
@@ -103,6 +109,9 @@ public class EffectHandler extends BoardView.BoardAction
     public void pieceAdded (Piece piece)
     {
         _view.createPieceSprite(piece, _tick);
+        if (piece instanceof Bonus && _htrans != null) {
+            flyDroppedBonus(piece);
+        }
     }
 
     // documentation inherited from interface Effect.Observer
@@ -187,6 +196,12 @@ public class EffectHandler extends BoardView.BoardAction
             sprite.updated(piece, _tick);
         }
 
+        // when units drop bonuses, record the location of their holding nodes
+        if (effect.equals(HoldEffect.DROPPED_BONUS)) {
+            _htrans = new Vector3f(
+                ((UnitSprite)sprite).getHoldingNode().getWorldTranslation());
+        }
+        
         // queue reacting, dying, or generic effects for mobile sprites
         if (sprite instanceof MobileSprite) {
             MobileSprite msprite = (MobileSprite)sprite;
@@ -382,7 +397,55 @@ public class EffectHandler extends BoardView.BoardAction
         }
         return null;
     }
-
+    
+    /**
+     * Flies a dropped bonus from the unit that dropped it to its current
+     * location, then bounces it a few times.
+     */
+    protected void flyDroppedBonus (Piece bonus)
+    {
+        PieceSprite sprite = _view.getPieceSprite(bonus);
+        if (sprite == null || _htrans == null) {
+            return;
+        }
+        BallisticShotHandler.PathParams pparams =
+            BallisticShotHandler.computePathParams(
+                _htrans, sprite.getWorldTranslation());
+        sprite.move(new BallisticPath(sprite, _htrans, pparams.velocity,
+            BallisticShotHandler.GRAVITY_VECTOR, pparams.duration) {
+            public void update (float time) {
+                super.update(time*2f);
+                float alpha = Math.min(_accum / _duration, 1f);
+                _sprite.setLocalScale(FastMath.LERP(alpha, 0.5f, 1f));
+            }
+            public void wasRemoved () {
+                super.wasRemoved();
+                bounceSprite(_sprite, TILE_SIZE / 4);
+            }
+        });
+    }
+    
+    /**
+     * Bounces a sprite up to the specified height and schedules another
+     * bounce.
+     */
+    protected void bounceSprite (Sprite sprite, final float height)
+    {
+        Vector3f start = new Vector3f(sprite.getWorldTranslation());
+        float duration = FastMath.sqrt(
+            -height / BallisticShotHandler.GRAVITY),
+            vel = -2f * BallisticShotHandler.GRAVITY * duration;
+        sprite.move(new BallisticPath(sprite, start, new Vector3f(0f, 0f, vel),
+            DOUBLE_GRAVITY_VECTOR, duration*2) {
+            public void wasRemoved () {
+                super.wasRemoved();
+                if (height >= TILE_SIZE / 16) {
+                    bounceSprite(_sprite, height / 2);
+                }
+            }
+        }); 
+    }
+    
     protected boolean isCompleted ()
     {
         return (!_applying && _penders.size() == 0);
@@ -423,4 +486,12 @@ public class EffectHandler extends BoardView.BoardAction
 
     protected ArrayIntSet _penders = new ArrayIntSet();
     protected int _nextPenderId;
+    
+    /** Stores the world translation of the holding node of the last sprite to
+     * drop a bonus. */
+    protected Vector3f _htrans;
+    
+    /** A doubled gravity vector for faster bounces. */
+    protected static final Vector3f DOUBLE_GRAVITY_VECTOR =
+        BallisticShotHandler.GRAVITY_VECTOR.mult(2f);
 }

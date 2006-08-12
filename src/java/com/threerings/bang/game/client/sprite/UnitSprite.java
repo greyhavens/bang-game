@@ -109,6 +109,15 @@ public class UnitSprite extends MobileSprite
         return _ustatus;
     }
 
+    /**
+     * Returns a reference to the node containing anything held by the
+     * unit.
+     */
+    public Node getHoldingNode ()
+    {
+        return _holding;
+    }
+    
     @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {

@@ -34,10 +34,6 @@ public class NuggetEffect extends HoldEffect
         "effects/frontier_town/nugget/pickedup";
 
     /** The identifier for the type of effect that we produce. */
-    public static final String DROPPED_NUGGET =
-        "effects/frontier_town/nugget/dropped";
-
-    /** The identifier for the type of effect that we produce. */
     public static final String NUGGET_ADDED =
         "effects/frontier_town/nugget/added";
 
@@ -118,12 +114,6 @@ public class NuggetEffect extends HoldEffect
             claim.count--;
             reportEffect(obs, claim, NUGGET_REMOVED);
         }
-    }
-    
-    @Override // documentation inherited
-    protected String getDroppedEffect ()
-    {
-        return DROPPED_NUGGET;
     }
     
     @Override // documentation inherited

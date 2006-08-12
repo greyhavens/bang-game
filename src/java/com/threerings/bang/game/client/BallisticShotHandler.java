@@ -36,6 +36,60 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class BallisticShotHandler extends ShotHandler
     implements PathObserver
 {
+    /** The acceleration due to gravity. */
+    protected static final float GRAVITY = 10 * BallisticPath.G;
+    
+    /** The gravity vector used for path acceleration. */
+    public static final Vector3f GRAVITY_VECTOR = new Vector3f(0, 0, GRAVITY);
+    
+    /** Contains generated ballistic path parameters. */
+    public static class PathParams
+    {
+        /** The initial velocity. */
+        public Vector3f velocity;
+        
+        /** The flight duration. */
+        public float duration;
+        
+        public PathParams (Vector3f velocity, float duration)
+        {
+            this.velocity = velocity;
+            this.duration = duration;
+        }
+    }
+    
+    /**
+     * Computes and returns ballistic path parameters for a path that starts
+     * and ends at the specified points.
+     */
+    public static PathParams computePathParams (Vector3f start, Vector3f end)
+    {
+        Vector3f velvec = end.subtract(start);
+        float edelta = velvec.z;
+        velvec.z = 0f;
+        float distance = velvec.length();
+
+        float angle = 3*FastMath.PI/8;
+        float duration = FastMath.sqrt(
+            2 * (edelta - distance * FastMath.tan(angle)) / GRAVITY),
+            velocity = distance / (duration * FastMath.cos(angle));
+
+        // normalize the velocity vector and scale it to the velocity
+        velvec.normalizeLocal();
+        velvec.multLocal(velocity);
+
+        // rotate the velocity vector up by the computed angle (around
+        // the axis made by crossing the velocity vector with the up
+        // vector)
+        Vector3f axis = velvec.cross(UP);
+        axis.normalizeLocal();
+        Quaternion rot = new Quaternion();
+        rot.fromAngleAxis(angle, axis);
+        rot.multLocal(velvec);
+        
+        return new PathParams(velvec, duration);
+    }
+    
     @Override // documentation inherited
     protected void prepareSounds (SoundGroup sounds)
     {
@@ -67,37 +121,11 @@ public class BallisticShotHandler extends ShotHandler
         Vector3f end = new Vector3f(
             tx * TILE_SIZE + TILE_SIZE/2, ty * TILE_SIZE + TILE_SIZE/2,
             _bangobj.board.getElevation(tx, ty) * escale + TILE_SIZE/2);
+        PathParams pparams = computePathParams(start, end);
         _ssprite = new ShotSprite(
             _ctx, ((BallisticShotEffect)_shot).getShotType(),
             _view.getUnitSprite(_shooter).getColorizations());
-        Vector3f velvec = end.subtract(start);
-        float edelta = velvec.z;
-        velvec.z = 0f;
-        float distance = velvec.length();
-
-        float angle = 3*FastMath.PI/8;
-        float duration = FastMath.sqrt(
-            2 * (edelta - distance * FastMath.tan(angle)) / GRAVITY),
-            velocity = distance / (duration * FastMath.cos(angle));
-
-        // normalize the velocity vector and scale it to the velocity
-        velvec.normalizeLocal();
-        velvec.multLocal(velocity);
-
-        // rotate the velocity vector up by the computed angle (around
-        // the axis made by crossing the velocity vector with the up
-        // vector)
-        Vector3f axis = velvec.cross(UP);
-        axis.normalizeLocal();
-        Quaternion rot = new Quaternion();
-        rot.fromAngleAxis(angle, axis);
-        rot.multLocal(velvec);
-
-//             log.info("Distance " + distance + " angle " + angle +
-//                      " velocity " + velocity + " duration " + duration +
-//                      " axis " + axis +
-//                      " velvec " + velvec + " (" + velvec.length() + ")");
-
+        
         _penderId = notePender();
         _ssprite.setLocalTranslation(start);
         _ssprite.addObserver(this);
@@ -106,11 +134,11 @@ public class BallisticShotHandler extends ShotHandler
         // for sprites deflecting the shot to another coordinate, run the
         // blocking animation just before the end of the path
         final MobileSprite dsprite = getDeflectorSprite();
-        final float btime = duration - (dsprite == null ?
+        final float btime = pparams.duration - (dsprite == null ?
             0f : getActionDuration(dsprite, "blocking") * 0.5f);
-        _ssprite.move(new OrientingBallisticPath(
-                          _ssprite, new Vector3f(1, 0, 0), start, velvec,
-                          GRAVVEC, duration) {
+        _ssprite.move(new OrientingBallisticPath(_ssprite,
+            new Vector3f(1, 0, 0), start, pparams.velocity, GRAVITY_VECTOR,
+            pparams.duration) {
             public void update (float time) {
                 super.update(time);
                 if (dsprite != null && !_blocking && _accum >= btime) {
@@ -197,7 +225,4 @@ public class BallisticShotHandler extends ShotHandler
     protected int _penderId;
     protected ShotSprite _ssprite;
     protected Sound _launchSound, _deflectSound;
-
-    protected static final float GRAVITY = 10*BallisticPath.G;
-    protected static final Vector3f GRAVVEC = new Vector3f(0, 0, GRAVITY);
 }
