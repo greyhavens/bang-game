@@ -75,11 +75,12 @@ public class RanchView extends ShopView
         _recruits = new UnitPalette(ctx, _inspector, 4, 3);
         _recruits.setUser(_ctx.getUserObject(), false);
 
-        // ...and normal + special units
+        // ...and normal
         _units = new UnitPalette(ctx, _inspector, 4, 3);
-        EnumSet<UnitConfig.Rank> ranks = EnumSet.of(
-            UnitConfig.Rank.NORMAL, UnitConfig.Rank.SPECIAL);
-        units = UnitConfig.getTownUnits(townId, ranks);
+        //EnumSet<UnitConfig.Rank> ranks = EnumSet.of(
+        //    UnitConfig.Rank.NORMAL, UnitConfig.Rank.SPECIAL);
+        //units = UnitConfig.getTownUnits(townId, ranks);
+        units = UnitConfig.getTownUnits(townId, UnitConfig.Rank.NORMAL);
         Arrays.sort(units, new Comparator<UnitConfig>() {
             public int compare (UnitConfig uc1, UnitConfig uc2) {
                 int rv = uc2.getTownId().compareTo(uc1.getTownId());

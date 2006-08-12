@@ -21,6 +21,7 @@ import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.Interval;
+import com.samskivert.util.IntSet;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
@@ -80,13 +81,14 @@ import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.PieceDSet;
 import com.threerings.bang.game.data.TutorialCodes;
-import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
 import com.threerings.bang.game.data.scenario.PracticeInfo;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.data.scenario.TutorialInfo;
+import com.threerings.bang.game.server.ai.AILogic;
+import com.threerings.bang.game.server.ai.PieceLogic;
 import com.threerings.bang.game.server.scenario.Practice;
 import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.Tutorial;
@@ -494,6 +496,7 @@ public class BangManager extends GameManager
                 } else {
                     effect = ((MoveShootEffect)meffect).shotEffect;
                 }
+                _shooters.add(unit.pieceId);
 
                 // effect any collateral damage
                 Effect[] ceffects = unit.collateralDamage(
@@ -954,9 +957,10 @@ public class BangManager extends GameManager
         _starts.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
-            if (Marker.isMarker(p, Marker.START) && 
-                p.isValidScenario(_bangobj.scenario.getIdent())) {
-                _starts.add(p);
+            if (Marker.isMarker(p, Marker.START)) {
+                if (p.isValidScenario(_bangobj.scenario.getIdent())) {
+                    _starts.add(p);
+                }
                 iter.remove();
             }
         }
@@ -1147,6 +1151,14 @@ public class BangManager extends GameManager
     }
 
     /**
+     * Returns a set of pieceIds for pieces which shot this tick.
+     */
+    public IntSet getShooters ()
+    {
+        return _shooters;
+    }
+
+    /**
      * This is called when a player takes an action that might result in the
      * current phase ending an the next phase starting, or when a player is
      * removed from the game (in which case the next phase might need to be
@@ -1310,6 +1322,9 @@ public class BangManager extends GameManager
             }
         }
 
+        // Clear the set of shooters for this tick
+        _shooters.clear();
+
         // execute any advance orders
         int executed = 0;
         for (Iterator<AdvanceOrder> iter = _orders.iterator();
@@ -1338,6 +1353,9 @@ public class BangManager extends GameManager
                 if (_aiLogic[ii] != null) {
                     _aiLogic[ii].tick(pieces, tick);
                 }
+            }
+            for (PieceLogic pl : _pLogics.values()) {
+                pl.tick(pieces, tick);
             }
         }
 
@@ -2408,6 +2426,18 @@ public class BangManager extends GameManager
     /** Handles post-processing when effects are applied. */
     protected Effect.Observer _effector = new Effect.Observer() {
         public void pieceAdded (Piece piece) {
+            String pieceLogic = piece.getLogic();
+            if (pieceLogic != null) {
+                try {
+                    PieceLogic plogic = 
+                        (PieceLogic)Class.forName(pieceLogic).newInstance();
+                    plogic.init(BangManager.this, piece);
+                    _pLogics.put(piece.pieceId, plogic);
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "Failed to create piece logic " +
+                        "[piece=" + piece + ", class=" + pieceLogic + "].", e);
+                }
+            }
         }
 
         public void pieceAffected (Piece piece, String effect) {
@@ -2433,6 +2463,7 @@ public class BangManager extends GameManager
         }
 
         public void pieceRemoved (Piece piece) {
+            _pLogics.remove(piece.pieceId);
         }
 
         public void tickDelayed (long extraTime) {
@@ -2501,6 +2532,12 @@ public class BangManager extends GameManager
     /** The extra time to take for the current tick to allow extended effects
      * to complete. */
     protected long _extraTickTime;
+
+    /** A set of units which shot this tick. */
+    protected ArrayIntSet _shooters = new ArrayIntSet();
+
+    /** A mapping of pieceIds to specilized logic handlers. */
+    protected HashIntMap<PieceLogic> _pLogics = new HashIntMap<PieceLogic>();
 
     /** Tracks advance orders. */
     protected ArrayList<AdvanceOrder> _orders = new ArrayList<AdvanceOrder>();

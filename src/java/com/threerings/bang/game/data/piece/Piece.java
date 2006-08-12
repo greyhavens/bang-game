@@ -720,6 +720,14 @@ public abstract class Piece
     }
 
     /**
+     * Returns a specialized handler for non-scenario, non-team piece ai.
+     */
+    public String getLogic ()
+    {
+       return null;
+    }
+
+    /**
      * Returns true if this piece is on the same team as the target.
      */
     public boolean isSameTeam (BangObject bangobj, Piece target)

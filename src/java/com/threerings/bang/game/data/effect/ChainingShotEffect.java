@@ -5,8 +5,6 @@ package com.threerings.bang.game.data.effect;
 
 import java.awt.Rectangle;
 
-import java.util.Observer;
-
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.client.ChainingShotHandler;
