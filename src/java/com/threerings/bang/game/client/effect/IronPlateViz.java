@@ -40,7 +40,7 @@ public class IronPlateViz extends InfluenceViz
         _mstate.getAmbient().set(ColorRGBA.white);
         _overlay = new RenderState[] { _sphereMap, _mstate,
             RenderUtil.blendAlpha, RenderUtil.overlayZBuf };
-        addOverlay(_target);
+        addOverlay(_target.getModelNode());
         ((MobileSprite)_target).addActionHandler(_handler);
         flashOverlay(0.5f);
     }
@@ -49,7 +49,7 @@ public class IronPlateViz extends InfluenceViz
     public void destroy ()
     {
         ((MobileSprite)_target).removeActionHandler(_handler);
-        removeOverlay(_target);
+        removeOverlay(_target.getModelNode());
     }
     
     /**

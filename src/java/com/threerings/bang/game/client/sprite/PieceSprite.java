@@ -387,6 +387,14 @@ public class PieceSprite extends Sprite
     }
 
     /**
+     * Returns a reference to the model node.
+     */
+    public Model getModelNode ()
+    {
+        return _model;
+    }
+    
+    /**
      * Returns the model controllers attached to the model.
      */
     public ArrayList getModelControllers ()
