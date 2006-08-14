@@ -58,7 +58,7 @@ public class InitFailedDialog extends JFrame
         // can install new ones
         boolean canReport = true;
         String errmsg = (error.getMessage() == null) ? "" : error.getMessage();
-        if (errmsg.indexOf("valid pixel formata") != -1) {
+        if (errmsg.indexOf("valid pixel format") != -1) {
             canReport = false;
             content.add(createLabel(msgs.get("m.init_failed_drivers")));
             final String driverPage = msgs.get("url.init_failed_drivers");
