@@ -94,13 +94,20 @@ public class CattleRustling extends Scenario
         // now place the cattle near the cattle starting spots
         int placed = 0, cattle = CATTLE_PER_PLAYER * bangobj.players.length;
 
+        // freak out if the board is improperly configured
+        if (_cattleSpots.size() == 0) {
+            log.warning("Board has no cattle spots! " +
+                "[name=" + bangobj.boardName +
+                ", pcount=" + bangobj.players.length + "].");
+            return;
+        }
+
         log.fine("Placing " + cattle + " cattle in " +
                  _cattleSpots.size() + " spots.");
 
-
-        // We want to evenly distribute the cattle over the markers, so
-        // we'll loop through the list of spots, adding one cow to each,
-        // until we've reached the desired amount
+        // We want to evenly distribute the cattle over the markers, so we'll
+        // loop through the list of spots, adding one cow to each, until we've
+        // reached the desired amount
         Collections.shuffle(_cattleSpots);
       PLACER_LOOP:
         while (placed < cattle) {
