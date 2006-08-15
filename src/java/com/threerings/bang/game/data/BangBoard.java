@@ -712,6 +712,7 @@ public class BangBoard extends SimpleStreamableObject
             Rectangle pbounds = p.getBounds();
             int elevation = (int)Math.ceil(p.getPassHeight() *
                 _elevationUnitsPerTile) + p.felev;
+            elevation *= p.getScale().z;
             for (int yy = pbounds.y, ly = yy + pbounds.height; yy < ly; yy++) {
                 for (int xx = pbounds.x, lx = xx + pbounds.width;
                         xx < lx; xx++) {
@@ -951,6 +952,33 @@ public class BangBoard extends SimpleStreamableObject
         }
         byte btstate = _btstate[y*_width+x];
         return (btstate == O_FLAT) || (rough && btstate == O_ROUGH);
+    }
+
+    /**
+     * Returns the downslope direction of rough terrain or -1 if flat.
+     */
+    public int getTerrainSlope (int x, int y)
+    {
+        if (!_playarea.contains(x, y)) {
+            return -1;
+        }
+        
+        int x1 = x * HEIGHTFIELD_SUBDIVISIONS,
+            y1 = y * HEIGHTFIELD_SUBDIVISIONS,
+            x2 = x1 + HEIGHTFIELD_SUBDIVISIONS / 2,
+            y2 = y1 + HEIGHTFIELD_SUBDIVISIONS / 2,
+            x3 = x1 + HEIGHTFIELD_SUBDIVISIONS,
+            y3 = y1 + HEIGHTFIELD_SUBDIVISIONS;
+        int dx = getHeightfieldValue(x1, y2) - getHeightfieldValue(x3, y2),
+            dy = getHeightfieldValue(x2, y1) - getHeightfieldValue(x2, y3);
+        if (Math.abs(dy) > Math.abs(dx) && 
+                (float)Math.abs(dy) / _elevationUnitsPerTile > MIN_SLOPE) {
+            return (dy < 0 ? NORTH : SOUTH);
+        } else if (
+                (float)Math.abs(dx) / _elevationUnitsPerTile > MIN_SLOPE) {
+            return (dx > 0 ? EAST : WEST);
+        }
+        return -1;
     }
 
     // from interface AStarPathUtil.TraversalPred
@@ -1543,4 +1571,7 @@ public class BangBoard extends SimpleStreamableObject
 
     /** Flags the prop as being unable to exit in this direction. */
     protected static final byte EXIT_NORTH = 1 << 4;
+
+    /** Minimum delta for a tile to be considered sloping. */
+    protected static final float MIN_SLOPE = 0.5f;
 }

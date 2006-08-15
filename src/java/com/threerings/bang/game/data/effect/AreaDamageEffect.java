@@ -96,7 +96,7 @@ public class AreaDamageEffect extends AreaEffect
     @Override // documentation inherited
     public int getBaseDamage (Piece piece)
     {
-        return getDamage(piece);
+        return baseDamage / (piece.getDistance(x, y) + 1);
     }
     
     @Override // documentation inherited
@@ -112,7 +112,7 @@ public class AreaDamageEffect extends AreaEffect
      */
     protected int getDamage (Piece piece)
     {
-        int damage = baseDamage / (piece.getDistance(x, y) + 1);
+        int damage = getBaseDamage(piece);
         return Math.min(damage, 100-piece.damage);
     }
     
