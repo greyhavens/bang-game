@@ -41,17 +41,17 @@
     <transform name="Support2" translation="85.2529, -81.9081, 45.6983" rotation="0.735614, 0.0367292, -0.0117521, 0.676303" scale="1.0, 1.0, 1.0"/>
     <transform name="Support1" translation="-44.6088, -87.5299, 53.6841" rotation="0.760924, -0.047419, 0.0653773, 0.643795" scale="1.0, 1.0, 1.0"/>
     <transform name="Shed" translation="-9.16719, -10.0267, 21.6066" rotation="0.690855, -0.0315091, 0.0301634, 0.721676" scale="1.0, 1.0, 1.0"/>
-    <transform name="Homestead" translation="26.5105, -16.9848, 497.416" rotation="0.736107, -0.0468004, 0.0453713, 0.673719" scale="1.0, 1.0, 1.0"/>
+    <transform name="Homestead" translation="23.8412, -20.0841, 416.392" rotation="0.675794, 0.0458145, -0.133824, 0.723391" scale="1.0, 1.0, 1.0"/>
     <transform name="Gun1" translation="3.453, 62.9457, -12.3202" rotation="0.0993191, -0.113962, -0.771482, 0.618032" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot03" translation="-2.14047, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot04" translation="-1.78654, 55.642, 6.36088" rotation="-0.000478481, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
-    <transform name="Gun2" translation="12.6417, 54.7272, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985954, 1.01425"/>
-    <transform name="Emmit_GunShot01" translation="-0.611595, 64.2677, 7.64704" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot02" translation="-0.443014, 64.386, -11.9169" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot03" translation="-2.14049, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot04" translation="-1.78653, 55.642, 6.36088" rotation="-0.000478479, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Gun2" translation="12.6417, 54.7272, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985953, 1.01425"/>
+    <transform name="Emmit_GunShot01" translation="-0.611602, 64.2677, 7.64704" rotation="0.000293137, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot02" translation="-0.443001, 64.386, -11.9169" rotation="0.000293137, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96309, -3.16571e-005, 1.98103e-007" rotation="0.0286025, 0.185919, -0.281178, 0.94104" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 4.07657e-006, -2.0454e-006" rotation="0.0591846, -0.121769, -0.125468, 0.982816" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, 1.31554e-005, 1.41334e-006" rotation="0.0328876, 0.034682, -0.0230751, 0.998591" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96309, -2.2451e-005, -3.24349e-006" rotation="0.0286025, 0.185919, -0.281178, 0.94104" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 1.37153e-005, 1.4685e-006" rotation="0.0591846, -0.121769, -0.125468, 0.982816" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, 2.56588e-006, -1.05075e-006" rotation="0.0328876, 0.034682, -0.0230751, 0.998591" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="-8.80257, 27.5323, 208.078" rotation="0.657461, 0.0452894, 0.14854, 0.737312" scale="1.0, 1.0, 1.0"/>
     <transform name="Gear1" translation="21.4465, 199.252, -34.9127" rotation="0.448252, 0.783498, -0.397095, -0.165878" scale="1.0, 1.0, 1.0"/>
@@ -73,17 +73,17 @@
     <transform name="Support2" translation="85.2529, -81.9082, 58.5305" rotation="0.751137, 0.0582241, -0.0202962, 0.657261" scale="1.0, 1.0, 1.0"/>
     <transform name="Support1" translation="-44.6088, -87.5299, 63.475" rotation="0.776636, -0.0607572, 0.0887945, 0.620693" scale="1.0, 1.0, 1.0"/>
     <transform name="Shed" translation="-9.16719, -10.0267, 18.9019" rotation="0.673019, -0.0642579, 0.0588816, 0.734472" scale="1.0, 1.0, 1.0"/>
-    <transform name="Homestead" translation="29.1797, -13.8856, 594.167" rotation="0.759959, -0.0892564, 0.0946329, 0.63682" scale="1.0, 1.0, 1.0"/>
-    <transform name="Gun1" translation="3.45299, 62.9457, -12.3202" rotation="0.0993191, -0.113962, -0.771482, 0.618032" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot03" translation="-2.14048, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot04" translation="-1.78655, 55.6419, 6.36089" rotation="-0.00047848, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
-    <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985953, 1.01425"/>
-    <transform name="Emmit_GunShot01" translation="-0.611579, 64.2677, 7.64704" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot02" translation="-0.443018, 64.386, -11.9169" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Homestead" translation="23.8412, -20.0841, 387.118" rotation="0.678102, 0.0424057, -0.123732, 0.723236" scale="1.0, 1.0, 1.0"/>
+    <transform name="Gun1" translation="3.453, 62.9457, -12.3202" rotation="0.0993191, -0.113962, -0.771482, 0.618032" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot03" translation="-2.14049, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot04" translation="-1.78653, 55.642, 6.36089" rotation="-0.000478483, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985954, 1.01425"/>
+    <transform name="Emmit_GunShot01" translation="-0.611595, 64.2677, 7.64704" rotation="0.000293132, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot02" translation="-0.443006, 64.386, -11.9169" rotation="0.000293132, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96308, -5.77568e-005, 3.29997e-006" rotation="0.0426149, 0.149744, -0.387538, 0.908612" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 3.36177e-005, 7.48922e-006" rotation="0.0808436, -0.116793, -0.274079, 0.951159" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, 5.29011e-006, -1.09007e-006" rotation="0.0943078, 0.0399951, -0.0665962, 0.992508" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96309, 1.99801e-005, 6.41328e-007" rotation="0.0426149, 0.149744, -0.387538, 0.908612" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 2.18281e-005, 1.58903e-006" rotation="0.0808436, -0.116793, -0.274079, 0.951159" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, -1.86499e-006, 3.53043e-007" rotation="0.0943078, 0.0399951, -0.0665962, 0.992508" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="-8.80257, 32.0303, 217.214" rotation="0.640342, 0.0560227, 0.198267, 0.739942" scale="1.0, 1.0, 1.0"/>
     <transform name="Gear1" translation="42.893, 234.74, -69.8254" rotation="-0.568219, -0.281174, 0.471581, 0.612927" scale="1.0, 1.0, 1.0"/>
@@ -105,17 +105,17 @@
     <transform name="Support2" translation="85.2529, -81.9082, 62.8079" rotation="0.756045, 0.0652841, -0.0233888, 0.650835" scale="1.0, 1.0, 1.0"/>
     <transform name="Support1" translation="-50.1284, -90.8507, 38.3441" rotation="0.784593, -0.0693577, 0.0982579, 0.608234" scale="1.0, 1.0, 1.0"/>
     <transform name="Shed" translation="-9.82949, -9.94156, 5.73373" rotation="0.668933, -0.0717226, 0.0644984, 0.737037" scale="1.04613, 0.970996, 1.04613"/>
-    <transform name="Homestead" translation="27.7957, -15.4926, 445.62" rotation="0.748268, -0.0664126, 0.0699732, 0.656345" scale="1.0, 1.0, 1.0"/>
+    <transform name="Homestead" translation="23.8412, -20.0841, 313.934" rotation="0.683876, 0.0341541, -0.0983004, 0.722139" scale="1.0, 1.0, 1.0"/>
     <transform name="Gun1" translation="3.453, 62.9457, -12.3202" rotation="0.0993191, -0.113962, -0.771482, 0.618032" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot03" translation="-2.14046, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot04" translation="-1.78652, 55.642, 6.36089" rotation="-0.000478484, 0.691218, 0.721255, -0.0448193" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot03" translation="-2.14045, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot04" translation="-1.78653, 55.642, 6.36089" rotation="-0.000478481, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
     <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985954, 1.01425"/>
-    <transform name="Emmit_GunShot01" translation="-0.611582, 64.2677, 7.64704" rotation="0.00029314, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot02" translation="-0.443001, 64.386, -11.9169" rotation="0.00029314, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78356" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96309, 1.29921e-005, 0.0" rotation="0.0490477, 0.112941, -0.489209, 0.863431" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 2.53955e-005, 7.52457e-006" rotation="0.0419816, -0.135698, 0.0246251, 0.989554" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, 8.64359e-006, -4.8395e-006" rotation="0.127406, 0.0407042, -0.0902338, 0.986899" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot01" translation="-0.611597, 64.2677, 7.64704" rotation="0.000293135, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot02" translation="-0.442978, 64.386, -11.9169" rotation="0.000293135, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96309, -2.42324e-005, -7.48295e-007" rotation="0.0490477, 0.112941, -0.489209, 0.863431" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 1.5744e-005, 1.90961e-006" rotation="0.0419816, -0.135698, 0.0246251, 0.989554" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, -5.71012e-006, -1.01737e-006" rotation="0.127406, 0.0407042, -0.0902338, 0.986899" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="-10.1819, 32.6016, 198.511" rotation="0.636329, 0.0552504, 0.199054, 0.743244" scale="1.0, 1.0, 1.0"/>
     <transform name="Gear1" translation="64.3394, 270.227, -104.738" rotation="-0.247414, 0.120174, 0.111415, 0.954951" scale="1.0, 1.0, 1.0"/>
@@ -137,17 +137,17 @@
     <transform name="Support2" translation="99.1573, -99.1517, -23.7913" rotation="0.770544, 0.0814497, -0.033063, 0.631297" scale="1.0, 1.0, 1.0"/>
     <transform name="Support1" translation="-65.6602, -100.195, -34.1945" rotation="0.802597, -0.0900398, 0.121575, 0.577018" scale="1.0, 1.0, 1.0"/>
     <transform name="Shed" translation="-11.6398, -9.70894, -29.8986" rotation="0.66002, -0.0878182, 0.0758976, 0.742227" scale="1.17221, 0.89172, 1.17221"/>
-    <transform name="Homestead" translation="25.2253, -18.4771, 169.746" rotation="0.722547, -0.0209074, 0.0270443, 0.690476" scale="1.0, 1.0, 1.0"/>
+    <transform name="Homestead" translation="23.8412, -20.0841, 218.795" rotation="0.69136, 0.0240138, -0.0648615, 0.719193" scale="1.0, 1.0, 1.0"/>
     <transform name="Gun1" translation="3.453, 62.9457, -12.3202" rotation="0.0993191, -0.113962, -0.771482, 0.618032" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot03" translation="-2.14049, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot04" translation="-1.78654, 55.642, 6.36088" rotation="-0.00047848, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
-    <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985953, 1.01425"/>
-    <transform name="Emmit_GunShot01" translation="-0.611592, 64.2677, 7.64704" rotation="0.00029314, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot02" translation="-0.44299, 64.386, -11.9169" rotation="0.00029314, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot03" translation="-2.14046, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot04" translation="-1.78653, 55.6419, 6.36089" rotation="-0.000478483, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Gun2" translation="12.6417, 54.7272, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985954, 1.01425"/>
+    <transform name="Emmit_GunShot01" translation="-0.611588, 64.2677, 7.64704" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot02" translation="-0.442992, 64.386, -11.9169" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96309, -2.02435e-005, 1.55053e-006" rotation="0.116405, 0.0401404, 0.306083, 0.944008" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 1.52439e-005, 1.91128e-006" rotation="-0.0482869, 0.0271424, 0.0441815, 0.997487" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, -6.04922e-006, 4.09462e-007" rotation="0.0798374, -0.0381182, 0.0115834, 0.996011" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96309, 0.0, 1.66795e-007" rotation="0.116405, 0.0401404, 0.306083, 0.944008" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 2.83276e-005, 3.83948e-007" rotation="-0.0482869, 0.0271424, 0.0441815, 0.997487" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, -8.5266e-006, -2.1398e-007" rotation="0.0798374, -0.0381182, 0.0115834, 0.996011" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="-14.3197, 34.3154, 142.4" rotation="0.624187, 0.0528924, 0.201399, 0.753015" scale="1.0, 1.0, 1.0"/>
     <transform name="Gear1" translation="64.3394, 270.227, -104.738" rotation="-0.247414, 0.120174, 0.111415, 0.954951" scale="1.0, 1.0, 1.0"/>
@@ -169,17 +169,17 @@
     <transform name="Support2" translation="133.918, -142.261, -242.428" rotation="0.800834, 0.116329, -0.0587155, 0.584538" scale="1.0, 1.0, 1.0"/>
     <transform name="Support1" translation="-89.6639, -114.637, -149.86" rotation="0.82203, -0.115394, 0.15097, 0.536805" scale="1.0, 1.0, 1.0"/>
     <transform name="Shed" translation="-14.3331, -9.36285, -82.1869" rotation="0.651633, -0.102855, 0.0852469, 0.746678" scale="1.35981, 0.773771, 1.3598"/>
-    <transform name="Homestead" translation="23.8412, -20.0841, 21.1986" rotation="0.706618, 0.00511716, 0.0055845, 0.707554" scale="1.0, 1.0, 1.0"/>
+    <transform name="Homestead" translation="23.8412, -20.0841, 123.656" rotation="0.698773, 0.0145476, -0.0310786, 0.71452" scale="1.0, 1.0, 1.0"/>
     <transform name="Gun1" translation="3.453, 62.9457, -12.3202" rotation="0.0993191, -0.113962, -0.771482, 0.618032" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot03" translation="-2.14048, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot04" translation="-1.78653, 55.6419, 6.36089" rotation="-0.000478478, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
-    <transform name="Gun2" translation="12.6417, 54.7272, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985953, 1.01425"/>
-    <transform name="Emmit_GunShot01" translation="-0.611593, 64.2677, 7.64704" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot02" translation="-0.442989, 64.386, -11.9169" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot03" translation="-2.14047, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot04" translation="-1.78653, 55.642, 6.36089" rotation="-0.000478484, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985953, 1.01425"/>
+    <transform name="Emmit_GunShot01" translation="-0.611607, 64.2677, 7.64704" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot02" translation="-0.443003, 64.386, -11.9169" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="0.0850043, 0.0600319, 0.0277685, 0.994183" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 1.59361e-005, 6.29765e-007" rotation="-0.143491, 0.183375, 0.0903601, 0.968307" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, 3.3656e-006, -7.67288e-007" rotation="0.0346205, -0.202942, 0.176261, 0.962574" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96309, -2.3392e-005, 0.0" rotation="0.0850043, 0.0600319, 0.0277685, 0.994183" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 2.76816e-007, 2.24065e-006" rotation="-0.143491, 0.183375, 0.0903601, 0.968307" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, -2.59843e-006, 2.35971e-006" rotation="0.0346205, -0.202942, 0.176261, 0.962574" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="-21.2161, 37.1718, 48.8824" rotation="0.603617, 0.0488255, 0.20525, 0.768853" scale="1.0, 1.0, 1.0"/>
     <transform name="Gear1" translation="64.3394, 270.227, -104.738" rotation="-0.247414, 0.120174, 0.111415, 0.954951" scale="1.0, 1.0, 1.0"/>
@@ -201,17 +201,17 @@
     <transform name="Support2" translation="179.108, -198.302, -531.361" rotation="0.829651, 0.150368, -0.0926775, 0.529603" scale="1.0, 1.0, 1.0"/>
     <transform name="Support1" translation="-120.599, -133.249, -304.372" rotation="0.836874, -0.140235, 0.177028, 0.498635" scale="1.0, 1.0, 1.0"/>
     <transform name="Shed" translation="-17.6447, -8.93734, -145.323" rotation="0.649765, -0.10676, 0.0853842, 0.747742" scale="1.59045, 0.628753, 1.59045"/>
-    <transform name="Homestead" translation="23.8412, -20.0841, 21.1986" rotation="0.706618, 0.00511716, 0.0055845, 0.707554" scale="1.07285, 0.932099, 1.07285"/>
+    <transform name="Homestead" translation="23.8412, -20.0841, 50.4722" rotation="0.704395, 0.00773029, -0.00491417, 0.709749" scale="1.0, 1.0, 1.0"/>
     <transform name="Gun1" translation="3.453, 62.9457, -12.3202" rotation="0.0993191, -0.113962, -0.771482, 0.618032" scale="1.0, 1.0, 1.0"/>
     <transform name="Emmit_GunShot03" translation="-2.14048, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot04" translation="-1.78653, 55.642, 6.36088" rotation="-0.00047848, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
-    <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985954, 1.01425"/>
-    <transform name="Emmit_GunShot01" translation="-0.611596, 64.2677, 7.64704" rotation="0.000293136, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot02" translation="-0.442994, 64.386, -11.9169" rotation="0.000293136, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot04" translation="-1.78653, 55.6419, 6.36089" rotation="-0.00047848, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985953, 1.01425"/>
+    <transform name="Emmit_GunShot01" translation="-0.611597, 64.2677, 7.64704" rotation="0.000293136, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot02" translation="-0.442997, 64.386, -11.9169" rotation="0.000293136, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96309, -2.26316e-005, -3.39922e-007" rotation="0.0766079, 0.0963986, -0.249067, 0.960627" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 2.57778e-005, -8.64018e-007" rotation="-0.0909246, 0.0312916, -0.0885812, 0.991417" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, -6.48564e-006, 0.0" rotation="0.0363931, -0.294493, 0.245929, 0.92275" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96309, -2.65949e-005, -4.40109e-007" rotation="0.0766079, 0.0963986, -0.249067, 0.960627" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 8.25545e-007, 1.20671e-006" rotation="-0.0909246, 0.0312916, -0.0885812, 0.991417" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, -1.45015e-005, 0.0" rotation="0.0363931, -0.294493, 0.245929, 0.92275" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="-30.8711, 41.1708, -82.0426" rotation="0.574146, 0.0428467, 0.21051, 0.790067" scale="1.0, 1.0, 1.0"/>
     <transform name="Gear1" translation="64.3394, 270.227, -104.738" rotation="-0.247414, 0.120174, 0.111415, 0.954951" scale="1.0, 1.0, 1.0"/>
@@ -233,17 +233,17 @@
     <transform name="Support2" translation="118.958, -128.66, -393.14" rotation="0.805697, 0.115805, -0.0619964, 0.577579" scale="0.55871, 0.55871, 0.55871"/>
     <transform name="Support1" translation="-156.926, -155.105, -493.448" rotation="0.844658, -0.162384, 0.188319, 0.474046" scale="1.0, 1.0, 1.0"/>
     <transform name="Shed" translation="-11.3524, -6.02651, -135.223" rotation="0.675084, -0.0619494, 0.0524583, 0.733261" scale="0.963579, 0.393685, 0.963579"/>
-    <transform name="Homestead" translation="23.8412, -20.0841, 21.1986" rotation="0.706618, 0.00511716, 0.0055845, 0.707554" scale="1.04098, 0.961806, 1.04098"/>
+    <transform name="Homestead" translation="23.8412, -20.0841, 21.1986" rotation="0.706618, 0.00511716, 0.0055845, 0.707554" scale="1.0, 1.0, 1.0"/>
     <transform name="Gun1" translation="3.453, 62.9457, -12.3202" rotation="0.0993191, -0.113962, -0.771482, 0.618032" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot03" translation="-2.14049, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot04" translation="-1.78654, 55.642, 6.36088" rotation="-0.000478481, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
-    <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985953, 1.01425"/>
-    <transform name="Emmit_GunShot01" translation="-0.611596, 64.2677, 7.64704" rotation="0.00029314, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot02" translation="-0.44299, 64.386, -11.9169" rotation="0.00029314, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot03" translation="-2.14048, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot04" translation="-1.78653, 55.6419, 6.36089" rotation="-0.000478478, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Gun2" translation="12.6417, 54.7272, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985953, 1.01425"/>
+    <transform name="Emmit_GunShot01" translation="-0.611593, 64.2677, 7.64704" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot02" translation="-0.442989, 64.386, -11.9169" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96309, -2.14497e-005, -2.05148e-007" rotation="0.0739475, 0.100905, -0.244215, 0.961618" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 8.88969e-006, -1.00646e-006" rotation="-0.0875684, -0.131222, -0.250923, 0.955065" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, 1.29239e-005, 3.07683e-007" rotation="0.0861364, -0.116368, 0.0502366, 0.988188" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="0.0745491, 0.100686, -0.245555, 0.961253" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 2.48252e-005, 0.0" rotation="-0.0875684, -0.131222, -0.250923, 0.955065" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, 5.64958e-006, 2.77943e-006" rotation="0.0861364, -0.116368, 0.0502367, 0.988188" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="-43.2846, 46.3123, -250.375" rotation="0.535165, 0.0346763, 0.217023, 0.815657" scale="1.0, 1.0, 1.0"/>
     <transform name="Gear1" translation="64.3394, 270.227, -104.738" rotation="-0.247414, 0.120174, 0.111415, 0.954951" scale="1.0, 1.0, 1.0"/>
@@ -265,17 +265,17 @@
     <transform name="Support2" translation="58.8078, -59.0173, -254.919" rotation="0.776248, 0.0777853, -0.0357735, 0.624586" scale="0.332101, 0.332101, 0.332101"/>
     <transform name="Support1" translation="-76.3161, -76.0887, -303.716" rotation="0.809031, -0.114703, 0.106614, 0.566521" scale="0.418523, 0.418523, 0.418523"/>
     <transform name="Shed" translation="-5.06011, -3.11567, -125.124" rotation="0.697743, -0.0189097, 0.0169478, 0.715898" scale="0.336709, 0.158617, 0.336709"/>
-    <transform name="Homestead" translation="23.8412, -20.0841, 21.1986" rotation="0.706618, 0.00511716, 0.0055845, 0.707554" scale="1.01821, 0.983025, 1.01821"/>
+    <transform name="Homestead" translation="23.8412, -20.0841, 21.1986" rotation="0.706618, 0.00511716, 0.0055845, 0.707554" scale="1.07285, 0.932099, 1.07285"/>
     <transform name="Gun1" translation="3.453, 62.9457, -12.3202" rotation="0.0993191, -0.113962, -0.771482, 0.618032" scale="1.0, 1.0, 1.0"/>
     <transform name="Emmit_GunShot03" translation="-2.14048, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot04" translation="-1.78653, 55.642, 6.36088" rotation="-0.000478484, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot04" translation="-1.78653, 55.642, 6.36088" rotation="-0.00047848, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
     <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985954, 1.01425"/>
-    <transform name="Emmit_GunShot01" translation="-0.611601, 64.2677, 7.64704" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot02" translation="-0.442994, 64.386, -11.9169" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot01" translation="-0.611596, 64.2677, 7.64704" rotation="0.000293136, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot02" translation="-0.442994, 64.386, -11.9169" rotation="0.000293136, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96309, -1.6021e-005, 0.0" rotation="0.06662, 0.112854, -0.231063, 0.964072" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 2.46151e-005, -7.44527e-007" rotation="-0.0821043, -0.132663, -0.239358, 0.958315" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, 6.45924e-006, -1.61191e-006" rotation="0.215917, 0.0145777, -0.199182, 0.955769" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96309, -2.26316e-005, -3.39922e-007" rotation="0.0687841, 0.11214, -0.235783, 0.96286" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 2.18172e-005, -1.97044e-006" rotation="-0.0821043, -0.132663, -0.239358, 0.958315" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, -5.98786e-006, -1.12465e-006" rotation="0.215917, 0.0145777, -0.199182, 0.955769" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="-17.8779, 25.7503, -185.608" rotation="0.623665, 0.0292546, 0.10701, 0.77378" scale="0.650017, 0.650017, 0.650017"/>
     <transform name="Gear1" translation="64.3394, 270.227, -104.738" rotation="-0.247414, 0.120174, 0.111415, 0.954951" scale="1.0, 1.0, 1.0"/>
@@ -297,17 +297,17 @@
     <transform name="Support2" translation="-1.34213, 10.6252, -116.698" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.0339322, 0.0339322, 0.0339322"/>
     <transform name="Support1" translation="4.2935, 2.92764, -113.985" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.0263642, 0.0263642, 0.0263642"/>
     <transform name="Shed" translation="1.23216, -0.20484, -115.024" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.0517678, 0.0517678, 0.0517678"/>
-    <transform name="Homestead" translation="23.8412, -20.0841, 21.1986" rotation="0.706618, 0.00511716, 0.0055845, 0.707554" scale="1.00455, 0.995756, 1.00455"/>
+    <transform name="Homestead" translation="23.8412, -20.0841, 21.1986" rotation="0.706618, 0.00511716, 0.0055845, 0.707554" scale="1.01821, 0.983025, 1.01821"/>
     <transform name="Gun1" translation="3.453, 62.9457, -12.3202" rotation="0.0993191, -0.113962, -0.771482, 0.618032" scale="1.0, 1.0, 1.0"/>
     <transform name="Emmit_GunShot03" translation="-2.14048, 54.8354, -12.421" rotation="-0.0154592, 0.721156, 0.69185, -0.0322258" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot04" translation="-1.78653, 55.642, 6.36088" rotation="-0.000478479, 0.691218, 0.721255, -0.0448193" scale="1.0, 1.0, 1.0"/>
-    <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985953, 1.01425"/>
-    <transform name="Emmit_GunShot01" translation="-0.611601, 64.2677, 7.64704" rotation="0.000293135, 0.688466, 0.725267, 0.00154586" scale="1.0, 1.0, 1.0"/>
-    <transform name="Emmit_GunShot02" translation="-0.442996, 64.386, -11.9169" rotation="0.000293135, 0.688466, 0.725267, 0.00154586" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot04" translation="-1.78653, 55.642, 6.36088" rotation="-0.000478484, 0.691218, 0.721255, -0.0448194" scale="1.0, 1.0, 1.0"/>
+    <transform name="Gun2" translation="12.6417, 54.7273, 4.73645" rotation="0.726809, -0.680135, -0.0390026, 0.087428" scale="1.01425, 0.985954, 1.01425"/>
+    <transform name="Emmit_GunShot01" translation="-0.611601, 64.2677, 7.64704" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
+    <transform name="Emmit_GunShot02" translation="-0.442994, 64.386, -11.9169" rotation="0.000293138, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96309, -1.99673e-005, -7.97793e-007" rotation="0.0555106, 0.129815, -0.211654, 0.967093" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 2.56583e-005, 2.26436e-007" rotation="-0.0675944, -0.13593, -0.208679, 0.96613" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, 5.60713e-006, -1.05286e-006" rotation="0.204284, 0.0176338, -0.188449, 0.960439" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96309, -1.6021e-005, 0.0" rotation="0.059844, 0.128585, -0.220833, 0.964944" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 1.9231e-005, 1.37032e-006" rotation="-0.0675944, -0.13593, -0.208679, 0.96613" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, 6.21343e-006, 0.0" rotation="0.204284, 0.0176338, -0.188449, 0.960439" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="7.52875, 5.18842, -120.841" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.0667109, 0.0667109, 0.0667109"/>
     <transform name="Gear1" translation="-5.55505e-007, 163.765, 1.10142e-006" rotation="0.0, 1.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
@@ -337,9 +337,9 @@
     <transform name="Emmit_GunShot01" translation="-0.611593, 64.2677, 7.64704" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Emmit_GunShot02" translation="-0.442989, 64.386, -11.9169" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="0.0415951, 0.149372, -0.188106, 0.969832" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 1.92043e-005, -8.23749e-007" rotation="-0.0468771, -0.139223, -0.164902, 0.975309" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, -2.77825e-006, 7.52529e-007" rotation="0.173974, 0.0243271, -0.160475, 0.971282" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="0.0482869, 0.147823, -0.201831, 0.966996" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 2.78025e-005, -4.49535e-007" rotation="-0.0468771, -0.139223, -0.164902, 0.975309" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, 5.82794e-006, -8.39098e-007" rotation="0.173974, 0.0243271, -0.160475, 0.971282" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="7.52875, 5.18842, -120.841" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.0667109, 0.0667109, 0.0667109"/>
     <transform name="Gear1" translation="-5.55505e-007, 163.765, 1.10142e-006" rotation="0.0, 1.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
@@ -369,9 +369,9 @@
     <transform name="Emmit_GunShot01" translation="-0.611593, 64.2677, 7.64704" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Emmit_GunShot02" translation="-0.442989, 64.386, -11.9169" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="0.0261156, 0.169262, -0.162741, 0.971691" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 2.10806e-005, -6.54298e-007" rotation="-0.022952, -0.141076, -0.114274, 0.983114" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, 5.44302e-006, 5.52919e-007" rotation="0.131957, 0.030684, -0.121686, 0.983279" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="0.0348248, 0.167711, -0.180047, 0.96863" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 2.59269e-005, -1.85563e-007" rotation="-0.022952, -0.141076, -0.114274, 0.983114" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, 9.59021e-006, 4.79341e-007" rotation="0.131957, 0.030684, -0.121686, 0.983279" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="7.52875, 5.18842, -120.841" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.0667109, 0.0667109, 0.0667109"/>
     <transform name="Gear1" translation="-5.55505e-007, 163.765, 1.10142e-006" rotation="0.0, 1.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
@@ -401,9 +401,9 @@
     <transform name="Emmit_GunShot01" translation="-0.611593, 64.2677, 7.64704" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Emmit_GunShot02" translation="-0.442989, 64.386, -11.9169" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="0.0106438, 0.18747, -0.138118, 0.972453" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 1.5032e-005, 1.50952e-006" rotation="0.00101587, -0.14087, -0.0633423, 0.987999" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, 7.2858e-006, -7.15592e-007" rotation="0.085705, 0.0339078, -0.0789965, 0.992605" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="0.0203885, 0.186223, -0.156944, 0.969677" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 2.49839e-005, -1.23735e-006" rotation="0.00101587, -0.14087, -0.0633423, 0.987999" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, -7.89111e-006, -1.86678e-007" rotation="0.085705, 0.0339078, -0.0789965, 0.992605" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="7.52875, 5.18842, -120.841" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.0667109, 0.0667109, 0.0667109"/>
     <transform name="Gear1" translation="-5.55505e-007, 163.765, 1.10142e-006" rotation="0.0, 1.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
@@ -433,9 +433,9 @@
     <transform name="Emmit_GunShot01" translation="-0.611593, 64.2677, 7.64704" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Emmit_GunShot02" translation="-0.442989, 64.386, -11.9169" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="-0.00295446, 0.202274, -0.11699, 0.972312" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 2.04416e-005, -2.54556e-006" rotation="0.0218404, -0.139011, -0.0188045, 0.989871" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, -6.70384e-006, -6.22505e-007" rotation="0.0431051, 0.0334634, -0.0397065, 0.99772" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="0.00613638, 0.201502, -0.134166, 0.970237" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 2.36354e-005, -1.33955e-007" rotation="0.0218404, -0.139011, -0.0188045, 0.989871" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, -5.70396e-006, -2.19265e-007" rotation="0.0431051, 0.0334634, -0.0397065, 0.99772" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="7.52875, 5.18842, -120.841" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.0667109, 0.0667109, 0.0667109"/>
     <transform name="Gear1" translation="-5.55505e-007, 163.765, 1.10142e-006" rotation="0.0, 1.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
@@ -465,9 +465,9 @@
     <transform name="Emmit_GunShot01" translation="-0.611593, 64.2677, 7.64704" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Emmit_GunShot02" translation="-0.442989, 64.386, -11.9169" rotation="0.000293143, 0.688466, 0.725267, 0.00154587" scale="1.0, 1.0, 1.0"/>
     <transform name="Bone01 Flag" translation="36.6112, 206.003, -6.78355" rotation="0.0, 0.0, 0.0161178, 0.99987" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="-0.0126272, 0.212191, -0.10222, 0.971785" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone03 Flag" translation="22.8795, 2.66076e-005, -2.60061e-006" rotation="0.0364654, -0.136756, 0.0126904, 0.989852" scale="1.0, 1.0, 1.0"/>
-    <transform name="Bone04 Flag" translation="24.4167, 5.38684e-006, 3.79854e-007" rotation="0.0120154, 0.0310851, -0.0110617, 0.999383" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone02 Flag" translation="5.96308, -1.35957e-005, 5.12137e-007" rotation="-0.00658172, 0.211876, -0.113475, 0.970664" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone03 Flag" translation="22.8795, 3.18602e-005, 6.57293e-007" rotation="0.0364654, -0.136756, 0.0126904, 0.989852" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone04 Flag" translation="24.4167, 9.09234e-006, 5.02869e-007" rotation="0.0120154, 0.0310851, -0.0110618, 0.999383" scale="1.0, 1.0, 1.0"/>
     <transform name="Flag" translation="64.2562, -20.0841, 606.504" rotation="-0.5, -0.5, 0.5, -0.5" scale="1.0, 1.0, 1.0"/>
     <transform name="Pole" translation="7.52875, 5.18842, -120.841" rotation="0.707107, 0.0, 0.0, 0.707107" scale="0.0667109, 0.0667109, 0.0667109"/>
     <transform name="Gear1" translation="-5.55505e-007, 163.765, 1.10142e-006" rotation="0.0, 1.0, 0.0, 0.0" scale="1.0, 1.0, 1.0"/>
