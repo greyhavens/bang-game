@@ -23,7 +23,7 @@ public class Trap extends AddPieceCard
     @Override // documentation inherited
     public String getTownId ()
     {
-        return BangCodes.FRONTIER_TOWN;
+        return BangCodes.INDIAN_POST;
     }
 
     @Override // documentation inherited
@@ -43,11 +43,11 @@ public class Trap extends AddPieceCard
     {
         return 0;
     }
-    
+
     // documentation inherited
     protected Piece createPiece ()
     {
         return Bonus.createBonus(
-            BonusConfig.getConfig("frontier_town/trap"));
+            BonusConfig.getConfig("indian_post/trap"));
     }
 }
