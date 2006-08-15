@@ -3,6 +3,9 @@
 
 package com.threerings.bang.game.client;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import com.jmex.bui.BLabel;
@@ -40,15 +43,24 @@ public class CardPalette extends IconPalette
             _ctx.getUserObject().getVisibleName());
 
         PlayerObject user = ctx.getUserObject();
+        ArrayList<CardItem> carditems = new ArrayList<CardItem>();
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Object item = iter.next();
             if (item instanceof CardItem) {
                 CardItem citem = (CardItem)item;
                 Card card = Card.getCard(citem.getType());
                 if (card != null && card.isPlayable(bangobj)) {
-                    addIcon(new ItemIcon(ctx, citem));
+                    carditems.add(citem);
                 }
             }
+        }
+        Collections.sort(carditems, new Comparator<CardItem>() {
+            public int compare (CardItem c1, CardItem c2) {
+                return c1.getType().compareTo(c2.getType());
+            }
+        });
+        for (CardItem citem : carditems) {
+            addIcon(new ItemIcon(ctx, citem));
         }
 
         // reduce the number of selectable cards by the number we have waiting
