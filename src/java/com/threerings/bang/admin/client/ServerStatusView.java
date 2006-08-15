@@ -215,15 +215,14 @@ public class ServerStatusView extends BDecoratedWindow
     protected void updateConMgrStats ()
     {
         ConMgrStats cms = _statobj.connStats;
-        int slot = cms.mostRecent();
-        _constats[0].setText(String.valueOf(cms.authQueueSize[slot]));
-        _constats[1].setText(String.valueOf(cms.bytesIn[slot]));
-        _constats[2].setText(String.valueOf(cms.deathQueueSize[slot]));
-        _constats[3].setText(String.valueOf(cms.bytesOut[slot]));
-        _constats[4].setText(String.valueOf(cms.outQueueSize[slot]));
-        _constats[5].setText(String.valueOf(cms.msgsIn[slot]));
-        _constats[6].setText(String.valueOf(cms.overQueueSize[slot]));
-        _constats[7].setText(String.valueOf(cms.msgsOut[slot]));
+        _constats[0].setText(String.valueOf(cms.authQueueSize));
+        _constats[1].setText(String.valueOf(cms.bytesIn));
+        _constats[2].setText(String.valueOf(cms.deathQueueSize));
+        _constats[3].setText(String.valueOf(cms.bytesOut));
+        _constats[4].setText(String.valueOf(cms.outQueueSize));
+        _constats[5].setText(String.valueOf(cms.msgsIn));
+        _constats[6].setText(String.valueOf(cms.overQueueSize));
+        _constats[7].setText(String.valueOf(cms.msgsOut));
     }
 
     protected void updateReboot ()
