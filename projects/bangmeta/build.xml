@@ -1,0 +1,30 @@
+<!-- project build configuration -->
+<project name="Bang Metadata web application" default="help" basedir=".">
+
+  <!-- load up our configuration information -->
+  <property file="build.properties"/>
+  <property name="base.dir" value="../.."/>
+
+  <!-- the web application name and derived parameters -->
+  <property name="app.name"    value="bangmeta"/>
+  <property name="webapp_dir" value="${base.dir}/webapps"/>
+  <property name="install.dir"  value="${webapp_dir}/${app.name}"/>
+
+  <!-- cleans out the install directory -->
+  <target name="clean">
+    <delete dir="${install.dir}"/>
+  </target>
+
+  <!-- cleans out the install directory -->
+  <target name="install">
+    <mkdir dir="${install.dir}"/>
+    <copy todir="${install.dir}">
+      <fileset dir=".">
+       <include name="app/**"/>
+       <include name="components/**"/>
+       <include name="config/**"/>
+       <include name="public/**"/>
+     </fileset>
+    </copy>
+  </target>
+</project>
