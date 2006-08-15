@@ -32,7 +32,7 @@ public class JackRabbit extends Card
     @Override // documentation inherited
     public String getTownId ()
     {
-        return BangCodes.FRONTIER_TOWN;
+        return BangCodes.INDIAN_POST;
     }
 
     @Override // documentation inherited
