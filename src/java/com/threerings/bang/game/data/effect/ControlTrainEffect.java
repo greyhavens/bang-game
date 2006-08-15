@@ -19,27 +19,27 @@ public class ControlTrainEffect extends Effect
 {
     /** The index of the controlling player or -1 to clear the control. */
     public int player = -1;
-    
+
     /** The desired train destination. */
     public transient int tx, ty;
-    
+
     public ControlTrainEffect ()
     {
     }
-    
+
     public ControlTrainEffect (int player, int tx, int ty)
     {
         this.player = player;
         this.tx = tx;
         this.ty = ty;
     }
-    
+
     // documentation inherited
     public int[] getAffectedPieces ()
     {
         return NO_PIECES;
     }
-    
+
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
@@ -47,7 +47,7 @@ public class ControlTrainEffect extends Effect
         if (player == -1) {
             return;
         }
-        
+
         // find the train engine and destination track
         Train engine = null;
         Track dest = null;
@@ -64,7 +64,7 @@ public class ControlTrainEffect extends Effect
                 "[player=" + player + "].");
             return;
         }
-        
+
         // clear or compute the path
         if (player == -1) {
             engine.path = null;
@@ -80,7 +80,7 @@ public class ControlTrainEffect extends Effect
                 "[engine=" + engine + ", dest=" + dest + "].");
         }
     }
-    
+
     // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {

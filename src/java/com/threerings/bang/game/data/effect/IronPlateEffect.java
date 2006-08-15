@@ -40,6 +40,6 @@ public class IronPlateEffect extends SetInfluenceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "bonuses/frontier_town/iron_plate/activate";
+        return "frontier_town/iron_plate";
     }
 }

@@ -18,8 +18,7 @@ import static com.threerings.bang.Log.log;
 public class BonusPointEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String BONUS_POINT =
-        "bonuses/frontier_town/bonus_point/activate";
+    public static final String BONUS_POINT = "frontier_town/bonus_point";
 
     @Override // documentation inherited
     public int[] getAffectedPieces ()

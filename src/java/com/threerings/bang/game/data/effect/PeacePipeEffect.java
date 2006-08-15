@@ -40,6 +40,6 @@ public class PeacePipeEffect extends SetHindranceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "peace_pipe";
+        return "indian_post/peace_pipe";
     }
 }

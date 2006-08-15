@@ -31,15 +31,13 @@ public class NuggetEffect extends HoldEffect
 
     /** The identifier for the type of effect that we produce. */
     public static final String PICKED_UP_NUGGET =
-        "effects/frontier_town/nugget/pickedup";
+        "frontier_town/nugget/pickedup";
 
     /** The identifier for the type of effect that we produce. */
-    public static final String NUGGET_ADDED =
-        "effects/frontier_town/nugget/added";
+    public static final String NUGGET_ADDED = "frontier_town/nugget/added";
 
     /** The identifier for the type of effect that we produce. */
-    public static final String NUGGET_REMOVED =
-        "effects/frontier_town/nugget/removed";
+    public static final String NUGGET_REMOVED = "frontier_town/nugget/removed";
 
     /** The id of the claim involved in this nugget transfer or -1 if we're
      * picking the nugget up off of the board. */

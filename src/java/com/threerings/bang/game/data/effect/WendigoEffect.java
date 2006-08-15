@@ -51,7 +51,6 @@ public class WendigoEffect extends Effect
     /** Set of safe points where units are not affected. */
     public transient PointSet safePoints;
 
-
     public static class Movement extends SimpleStreamableObject
     {
         public int nx, ny;

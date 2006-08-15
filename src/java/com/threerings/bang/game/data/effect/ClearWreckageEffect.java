@@ -18,7 +18,7 @@ public class ClearWreckageEffect extends GlobalEffect
     {
         return !piece.isAlive();
     }
-    
+
     @Override // documentation inherited
     public Effect getEffect (Piece piece)
     {

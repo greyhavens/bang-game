@@ -31,15 +31,15 @@ public class ShotEffect extends Effect
 
     /** Indicates that the target was damaged by a ballistic shot. */
     public static final String EXPLODED = "exploded";
-    
+
     /** We also rotate the shooter, thereby affecting it. */
     public static final String ROTATED = "rotated";
-    
+
     /** Indicates that a shooter shot without moving. */
     public static final String SHOT_NOMOVE = "shot_nomove";
-    
+
     /** Indication that the shot was a dud. */
-    public static final String DUDED = "duded";
+    public static final String DUDDED = "dudded";
 
     /** Indication that the shot misfired. */
     public static final String MISFIRED = "misfired";
@@ -64,7 +64,7 @@ public class ShotEffect extends Effect
 
     /** Maps shot types to animation identifiers. */
     public static final String[] SHOT_ACTIONS = {
-        "shooting", "returning_fire", "collateral_damage", 
+        "shooting", "returning_fire", "collateral_damage",
         "dud", "misfire", "proximity"
     };
 
@@ -97,7 +97,7 @@ public class ShotEffect extends Effect
     /** When non-null, the piece ids of the units deflecting the shot at
      * each coordinate. */
     public short[] deflectorIds;
-    
+
     /** A secondary effect to apply before the shot. */
     public Effect[] preShotEffects = Piece.NO_EFFECTS;
 
@@ -164,7 +164,7 @@ public class ShotEffect extends Effect
     {
         return false;
     }
-    
+
     /**
      * Deflects this shot away from its original target, clearing out the
      * target information and appending the specified coordinates onto the
@@ -208,7 +208,7 @@ public class ShotEffect extends Effect
     @Override // documentation inherited
     public Rectangle getBounds ()
     {
-        Rectangle rect = (pushx > -1) ? 
+        Rectangle rect = (pushx > -1) ?
             new Rectangle(pushx, pushy, 0, 0) : null;
         for (int ii = 0; ii < xcoords.length; ii++) {
             if (rect == null) {
@@ -221,7 +221,7 @@ public class ShotEffect extends Effect
         rect.height++;
         return rect;
     }
-    
+
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
@@ -266,7 +266,7 @@ public class ShotEffect extends Effect
         // rotate the shooter to face the target
         Unit shooter = (Unit)bangobj.pieces.get(shooterId);
         reportEffect(obs, shooter, ROTATED);
-        
+
         // update the shooter's last acted if necessary
         if (shooter != null && shooterLastActed != -1 &&
             shooter.lastActed != shooterLastActed) {
@@ -283,7 +283,7 @@ public class ShotEffect extends Effect
         for (Effect effect : preShotEffects) {
             effect.apply(bangobj, obs);
         }
-        
+
         // update the shooter's last acted if necessary
         Unit shooter = (Unit)bangobj.pieces.get(shooterId);
         if (shooter == null) {
@@ -335,13 +335,13 @@ public class ShotEffect extends Effect
     {
         return new InstantShotHandler();
     }
-    
+
     @Override // documentation inherited
     public int getBaseDamage (Piece piece)
     {
         return baseDamage;
     }
-    
+
     /** The effect string. */
     protected String getEffect ()
     {

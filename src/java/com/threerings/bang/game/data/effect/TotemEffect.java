@@ -35,8 +35,7 @@ public class TotemEffect extends HoldEffect
     public static final String TOTEM_CROWN_BONUS = "indian_post/totem_crown";
 
     /** The identifier for the type of effect that we produce. */
-    public static final String TOTEM_ADDED =
-        "bonuses/indian_post/totem/added";
+    public static final String TOTEM_ADDED = "indian_post/totem_added";
 
     /** The normal totem pieces. */
     public static final String[] TOTEM_PIECES = {

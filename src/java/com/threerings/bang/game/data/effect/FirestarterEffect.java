@@ -33,6 +33,6 @@ public class FirestarterEffect extends SetInfluenceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "firestarter";
+        return "indian_post/firestarter";
     }
 }

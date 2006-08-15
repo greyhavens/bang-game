@@ -24,8 +24,7 @@ import static com.threerings.bang.Log.log;
 public class DefectEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String DEFECTED =
-        "bonuses/frontier_town/defect/activate";
+    public static final String DEFECTED = "frontier_town/defect";
 
     public int activator;
 

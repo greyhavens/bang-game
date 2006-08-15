@@ -21,14 +21,14 @@ public class ChainingShotEffect extends ShotEffect
 {
     /** An effect reported on the primary target. */
     public static final String PRIMARY_EFFECT =
-        "effects/indian_post/storm_caller/attack";
-    
+        "indian_post/storm_caller/attack";
+
     /** An effect reported on the chained targets. */
     public static final String SECONDARY_EFFECT =
-        "effects/indian_post/storm_caller/damage";
-        
+        "indian_post/storm_caller/damage";
+
     public ShotEffect[] chainShot;
-    
+
     /**
      * Constructor used when creating a new chaining shot effect.
      */
@@ -106,7 +106,7 @@ public class ChainingShotEffect extends ShotEffect
             }
             super.apply(bangobj, obs);
             return chainShot.length > 0;
-            
+
         } else {
             boolean remaining = false;
             int px = xcoords[0], py = ycoords[0];
@@ -119,7 +119,7 @@ public class ChainingShotEffect extends ShotEffect
                         reportEffect(obs, starget, SECONDARY_EFFECT);
                     }
                     chain.apply(bangobj, obs);
-                    
+
                 } else if (cdist > dist) {
                     remaining = true;
                 }
@@ -127,7 +127,7 @@ public class ChainingShotEffect extends ShotEffect
             return remaining;
         }
     }
-    
+
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {

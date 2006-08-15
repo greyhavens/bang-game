@@ -19,31 +19,31 @@ import static com.threerings.bang.Log.log;
 public class LassoBonusEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String LASSOED_BONUS = "effects/frontier_town/lasso";
-    
+    public static final String LASSOED_BONUS = "frontier_town/lasso";
+
     /** The lassoing player. */
     public int player;
-    
+
     /** The location of the bonus to lasso. */
     public transient int x, y;
-    
+
     public LassoBonusEffect ()
     {
     }
-    
+
     public LassoBonusEffect (int player, int x, int y)
     {
         this.player = player;
         this.x = x;
         this.y = y;
     }
-    
+
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
         return new int[0];
     }
-    
+
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
@@ -73,7 +73,7 @@ public class LassoBonusEffect extends BonusEffect
             return;
         }
         bonusId = bonus.pieceId;
-        
+
         // grant the corresponding card
         Card card = Card.newCard(ctype.equals("__random__") ?
             Card.selectRandomCard(bangobj.townId, bangobj.scenario) : ctype);
@@ -86,7 +86,7 @@ public class LassoBonusEffect extends BonusEffect
     {
         return bonusId > 0;
     }
-    
+
     @Override // documentation inherited
     protected String getActivatedEffect ()
     {

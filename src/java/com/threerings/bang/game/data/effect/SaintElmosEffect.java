@@ -19,7 +19,7 @@ import com.threerings.bang.game.data.piece.Unit;
 public class SaintElmosEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String ELMOED = "bonuses/boom_town/saint_elmo/activate";
+    public static final String ELMOED = "boom_town/saint_elmo";
 
     public int owner;
     public int[] pieceIds;

@@ -48,7 +48,7 @@ public class BlownGasketEffect extends SetHindranceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "blown_gasket";
+        return "frontier_town/blown_gasket";
     }
     
     /** The number of steps to which the hindrance limits the affected unit. */

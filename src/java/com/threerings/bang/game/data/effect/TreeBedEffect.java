@@ -20,28 +20,28 @@ import static com.threerings.bang.Log.log;
 public class TreeBedEffect extends Effect
 {
     /** Indicates that the tree grew (negative damage). */
-    public static final String GREW = "grew";
-    
+    public static final String GREW = "indian_post/tree_growth";
+
     /** The id of the affected tree bed. */
     public int bedId;
-    
+
     /** The ids of the pieces growing or shrinking the tree. */
     public int[] pieceIds;
-    
+
     /** The amount of damage inflicted. */
     public int damage;
-    
+
     /** Indicates that the tree should be reset to its initial state before
      * applying the damage (for resurrection or initial growth). */
     public boolean reset;
-    
+
     /**
      * No-arg constructor for deserialization.
      */
     public TreeBedEffect ()
     {
     }
-    
+
     /**
      * Creates a new tree bed effect that will grow or damage the tree.
      *
@@ -58,7 +58,7 @@ public class TreeBedEffect extends Effect
         }
         this.damage = damage;
     }
-    
+
     /**
      * Creates a tree bed effect that will reset the tree with the
      * given amount of initial damage.
@@ -70,19 +70,19 @@ public class TreeBedEffect extends Effect
         this.damage = damage;
         reset = true;
     }
-    
+
     // documentation inherited
     public int[] getAffectedPieces ()
     {
         return new int[] { bedId };
     }
-    
+
     @Override // documentation inherited
     public int[] getWaitPieces ()
     {
         return pieceIds;
     }
-    
+
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
@@ -101,7 +101,7 @@ public class TreeBedEffect extends Effect
                 ForestGuardiansInfo.POINTS_PER_TREE_GROWTH);
         }
     }
-    
+
     // documentation inherited
     public boolean apply (BangObject bangobj, Observer observer)
     {
@@ -129,7 +129,7 @@ public class TreeBedEffect extends Effect
         }
         return true;
     }
-    
+
     @Override // documentation inherited
     public int getBaseDamage (Piece piece)
     {

@@ -33,6 +33,6 @@ public class NoncorporealEffect extends SetInfluenceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "bonuses/indian_post/spirit_walk/activate";
+        return "indian_post/spirit_walk";
     }
 }

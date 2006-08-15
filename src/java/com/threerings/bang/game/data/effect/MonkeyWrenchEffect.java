@@ -37,9 +37,9 @@ public class MonkeyWrenchEffect extends SetHindranceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "monkey_wrench";
+        return "frontier_town/monkey_wrench";
     }
-    
+
     /** The amount of damage to inflict per step. */
     protected static final int DAMAGE_PER_STEP = 5;
 }

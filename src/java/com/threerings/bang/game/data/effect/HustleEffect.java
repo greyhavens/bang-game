@@ -28,6 +28,6 @@ public class HustleEffect extends SetInfluenceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "bonuses/frontier_town/hustle/activate";
+        return "frontier_town/hustle";
     }
 }

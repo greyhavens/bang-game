@@ -39,7 +39,7 @@ public abstract class GlobalEffect extends BonusEffect
         }
         return pieces;
     }
-    
+
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
@@ -59,7 +59,7 @@ public abstract class GlobalEffect extends BonusEffect
     {
         return (effects != null && effects.length > 0);
     }
-    
+
     // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {

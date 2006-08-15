@@ -48,6 +48,6 @@ public class DudEffect extends SetHindranceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "dud";
+        return "frontier_town/dud";
     }
 }

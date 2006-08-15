@@ -15,8 +15,9 @@ import com.threerings.bang.game.data.BangObject;
  */
 public class FadeBoardEffect extends Effect
 {
-    public static final String WENDIGO_AMBIANCE = "wendigo_ambiance";
-
+    /** The name of our board effect. */
+    public static final String WENDIGO_AMBIANCE =
+        "indian_post/wendigo_ambiance";
 
     @Override // documentation inherited
     public int[] getAffectedPieces ()

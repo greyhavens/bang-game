@@ -30,7 +30,7 @@ public class BallisticShotEffect extends ShotEffect
     {
         return true;
     }
-    
+
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
@@ -44,7 +44,7 @@ public class BallisticShotEffect extends ShotEffect
     {
         return "units/frontier_town/artillery/shell";
     }
-    
+
     @Override // documentation inherited
     protected String getEffect ()
     {

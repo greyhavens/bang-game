@@ -87,7 +87,7 @@ public class BuggyLogicEffect extends SetHindranceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "buggy_logic";
+        return "frontier_town/buggy_logic";
     }
     
     /** The number of ticks it will take for the unit to recover if no order

@@ -12,10 +12,10 @@ import com.threerings.bang.game.data.piece.Cow;
 public class SpookEffect extends MoveEffect
 {
     /** An effect reported when a cow is branded. */
-    public static final String BRANDED = "extras/frontier_town/cow/branded";
+    public static final String BRANDED = "frontier_town/cow/branded";
 
     /** An effect reported when a cow is merely spooked. */
-    public static final String SPOOKED = "extras/frontier_town/cow/spooked";
+    public static final String SPOOKED = "frontier_town/cow/spooked";
 
     /** The new owner of the cow. */
     public int owner = -1;

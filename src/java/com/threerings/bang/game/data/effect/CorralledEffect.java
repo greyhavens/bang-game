@@ -17,8 +17,7 @@ import static com.threerings.bang.Log.log;
 public class CorralledEffect extends Effect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String CORRALLED =
-        "bonuses/frontier_town/corralled/activate";
+    public static final String CORRALLED = "frontier_town/corralled";
 
     /** The piece we will affect. */
     public int pieceId;

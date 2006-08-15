@@ -20,14 +20,14 @@ import static com.threerings.bang.Log.log;
 public class TrapEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String ACTIVATED_TRAP = "activated";
+    public static final String ACTIVATED_TRAP = "frontier_town/trap";
 
     /** The victim's new damage. */
     public int newDamage;
-    
+
     /** If the victim dies, its death effect. */
     public Effect deathEffect;
-    
+
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
@@ -37,7 +37,7 @@ public class TrapEffect extends BonusEffect
         }
         return pieces;
     }
-    
+
     @Override // documentation inherited
     public int[] getWaitPieces ()
     {
@@ -76,7 +76,7 @@ public class TrapEffect extends BonusEffect
             _type = ((Bonus)bonus).getConfig().type;
             _type = _type.substring(_type.lastIndexOf('/') + 1);
         }
-        
+
         // remove the bonus
         super.apply(bangobj, obs);
 
@@ -92,16 +92,16 @@ public class TrapEffect extends BonusEffect
         }
         damage(bangobj, obs, causer, piece, newDamage, "trap".equals(_type) ?
             ShotEffect.DAMAGED : ShotEffect.EXPLODED);
-        
+
         return true;
     }
-    
+
     @Override // documentation inherited
     public int getBaseDamage (Piece piece)
     {
         return TRAP_DAMAGE;
     }
-    
+
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
@@ -111,13 +111,13 @@ public class TrapEffect extends BonusEffect
         }
         return MessageBundle.compose("m.effect_" + _type, piece.getName());
     }
-    
+
     @Override // documentation inherited
     protected String getActivatedEffect ()
     {
         return "trap".equals(_type) ? ACTIVATED_TRAP : null;
     }
-    
+
     /**
      * Returns the amount of damage to apply to the victim.
      */
@@ -125,7 +125,7 @@ public class TrapEffect extends BonusEffect
     {
         return Math.min(TRAP_DAMAGE, 100-piece.damage);
     }
-    
+
     /** The type of the trap. */
     protected transient String _type;
 

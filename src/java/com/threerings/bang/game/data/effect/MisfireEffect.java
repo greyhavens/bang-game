@@ -47,6 +47,6 @@ public class MisfireEffect extends SetHindranceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "misfire";
+        return "frontier_town/misfire";
     }
 }

@@ -48,7 +48,7 @@ public class IncreaseFireDistanceEffect extends SetInfluenceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "eagle_eye";
+        return "indian_post/eagle_eye";
     }
 
     /** Reference to the unit we'll be influencing. */

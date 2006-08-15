@@ -42,6 +42,6 @@ public class LadyLuckEffect extends SetInfluenceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "bonuses/frontier_town/lady_luck/activate";
+        return "frontier_town/lady_luck";
     }
 }

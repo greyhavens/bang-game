@@ -136,14 +136,11 @@ public class EffectHandler extends BoardView.BoardAction
         EffectViz effviz = null;
         if (effect.equals(ShotEffect.DAMAGED)) {
             wasDamaged = true;
-
         } else if (effect.equals(ShotEffect.EXPLODED)) {
             wasDamaged = true;
             effviz = new ExplosionViz();
-
         } else if (effect.equals(RepairEffect.REPAIRED) ||
-                   effect.equals(NuggetEffect.NUGGET_ADDED) ||
-                   effect.equals(ResurrectEffect.RESURRECTED)) {
+                   effect.equals(NuggetEffect.NUGGET_ADDED)) {
             effviz = new RepairViz();
         }
 
@@ -164,7 +161,7 @@ public class EffectHandler extends BoardView.BoardAction
                 new ColorRGBA(1f, 0f, 1f, 1f),
                 new ColorRGBA(0.5f, 0f, 0.5f, 1f), // magenta
                 _effect, _ctx, _view);
-        } else if (wasDamaged || effect.equals(ShotEffect.DUDED)) {
+        } else if (wasDamaged || effect.equals(ShotEffect.DUDDED)) {
             DamageIconViz.displayDamageIconViz(piece, _effect, _ctx, _view);
         }
 
@@ -201,7 +198,7 @@ public class EffectHandler extends BoardView.BoardAction
             _htrans = new Vector3f(
                 ((UnitSprite)sprite).getHoldingNode().getWorldTranslation());
         }
-        
+
         // queue reacting, dying, or generic effects for mobile sprites
         if (sprite instanceof MobileSprite) {
             MobileSprite msprite = (MobileSprite)sprite;
@@ -224,25 +221,21 @@ public class EffectHandler extends BoardView.BoardAction
 
         // perhaps show an icon animation indicating what happened
         IconViz iviz = IconViz.createIconViz(piece, effect);
-        // TODO: make this not an effect viz
         if (iviz != null) {
             iviz.init(_ctx, _view, piece, null);
             iviz.display(sprite);
         }
 
-        // perhaps load a generic particle effect
-        if (effect.startsWith("effects/") && BangPrefs.isMediumDetail()) {
-            String name = effect.substring(8);
-            if (_ctx.getEffectCache().haveEffect(name)) {
-                sprite.displayParticles(name, true);
-            }
+        // perhaps display a generic particle effect
+        if (BangPrefs.isMediumDetail() &&
+            _ctx.getEffectCache().haveEffect(effect)) {
+            sprite.displayParticles(effect, true);
         }
 
-        // also play a sound along with any visual effect
-        String path = "rsrc/" + effect + ".wav";
-        if (SoundUtil.haveSound(path)) {
-            // TODO: make this not an effect viz
-            new PlaySoundViz(_sounds, path).display(sprite);
+        // perhaps play a sound to go with our visual effect
+        String soundPath = getSoundPath(effect);
+        if (soundPath != null) {
+            new PlaySoundViz(_sounds, soundPath).display(sprite);
         }
 
         // report the effect to the view who will report it to the tutorial
@@ -356,6 +349,23 @@ public class EffectHandler extends BoardView.BoardAction
     }
 
     /**
+     * Checks for an activation sound for the specified effect in the various
+     * places it might exist.
+     */
+    protected String getSoundPath (String effect)
+    {
+        for (int pp = 0; pp < SOUND_PREFIXES.length; pp++) {
+            for (int ss = 0; ss < SOUND_SUFFIXES.length; ss++) {
+                String path = SOUND_PREFIXES[pp] + effect + SOUND_SUFFIXES[ss];
+                if (SoundUtil.haveSound(path)) {
+                    return path;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * Queues up an action on a sprite and sets up the necessary observation to
      * ensure that we wait until the action is completed to complete our
      * effect.
@@ -397,7 +407,7 @@ public class EffectHandler extends BoardView.BoardAction
         }
         return null;
     }
-    
+
     /**
      * Flies a dropped bonus from the unit that dropped it to its current
      * location, then bounces it a few times.
@@ -424,7 +434,7 @@ public class EffectHandler extends BoardView.BoardAction
             }
         });
     }
-    
+
     /**
      * Bounces a sprite up to the specified height and schedules another
      * bounce.
@@ -443,9 +453,9 @@ public class EffectHandler extends BoardView.BoardAction
                     bounceSprite(_sprite, height / 2);
                 }
             }
-        }); 
+        });
     }
-    
+
     protected boolean isCompleted ()
     {
         return (!_applying && _penders.size() == 0);
@@ -486,12 +496,22 @@ public class EffectHandler extends BoardView.BoardAction
 
     protected ArrayIntSet _penders = new ArrayIntSet();
     protected int _nextPenderId;
-    
+
     /** Stores the world translation of the holding node of the last sprite to
      * drop a bonus. */
     protected Vector3f _htrans;
-    
+
     /** A doubled gravity vector for faster bounces. */
     protected static final Vector3f DOUBLE_GRAVITY_VECTOR =
         BallisticShotHandler.GRAVITY_VECTOR.mult(2f);
+
+    /** Used by {@link #getSoundPath}. */
+    protected static final String[] SOUND_PREFIXES = {
+        "rsrc/cards/", "rsrc/bonuses/", "rsrc/extras/", "rsrc/effects/"
+    };
+
+    /** Used by {@link #getSoundPath}. */
+    protected static final String[] SOUND_SUFFIXES = {
+        ".wav", "activate.wav"
+    };
 }

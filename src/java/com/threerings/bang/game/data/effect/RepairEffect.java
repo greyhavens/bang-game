@@ -18,9 +18,8 @@ import static com.threerings.bang.Log.log;
 public class RepairEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String REPAIRED =
-        "bonuses/frontier_town/repair/activate";
-        
+    public static final String REPAIRED = "frontier_town/repair";
+
     /** The base amount by which to repair the piece. */
     public int baseRepair = 100;
 
@@ -75,7 +74,7 @@ public class RepairEffect extends BonusEffect
         reportEffect(obs, piece, REPAIRED);
         return true;
     }
-    
+
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
@@ -85,7 +84,7 @@ public class RepairEffect extends BonusEffect
         }
         return MessageBundle.compose("m.effect_repair", piece.getName());
     }
-    
+
     @Override // documentation inherited
     protected String getActivatedEffect ()
     {

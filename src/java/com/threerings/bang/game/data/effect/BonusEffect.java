@@ -14,8 +14,7 @@ import static com.threerings.bang.Log.log;
 public abstract class BonusEffect extends Effect
 {
     /** The generic bonus activation effect. */
-    public static final String ACTIVATED_BONUS =
-        "effects/frontier_town/get_bonus";
+    public static final String ACTIVATED_BONUS = "frontier_town/get_bonus";
     
     /** The id of the bonus piece that triggered this effect. */
     public int bonusId = -1;

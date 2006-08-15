@@ -49,7 +49,7 @@ public class OnFireEffect extends SetHindranceEffect
     @Override // documentation inherited 
     protected String getEffectName ()
     {
-        return "on_fire";
+        return "indian_post/on_fire";
     }
 
     /** The amount of damage to inflict per tick. */

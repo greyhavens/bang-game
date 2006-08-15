@@ -21,11 +21,10 @@ import static com.threerings.bang.Log.log;
 public class DuplicateEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String DUPLICATED =
-        "bonuses/frontier_town/duplicate/activate";
+    public static final String DUPLICATED = "frontier_town/duplicate";
 
     /** Reported when a duplicate could not be placed for lack of room. */
-    public static final String WASTED_DUP = "wasted_dup";
+    public static final String WASTED_DUP = "frontier_town/duplicated/wasted";
 
     /** The duplicate piece. */
     public Piece duplicate;

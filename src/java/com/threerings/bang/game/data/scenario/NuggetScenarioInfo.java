@@ -37,8 +37,8 @@ public abstract class NuggetScenarioInfo extends ScenarioInfo
 
     /** Sound clips that must be preloaded for nugget scenarios. */
     protected static final String[] PRELOAD_CLIPS = {
-        "rsrc/" + NuggetEffect.NUGGET_ADDED + ".wav",
-        "rsrc/" + NuggetEffect.NUGGET_REMOVED + ".wav",
-        "rsrc/" + NuggetEffect.PICKED_UP_NUGGET + ".wav",
+        "rsrc/effects/" + NuggetEffect.NUGGET_ADDED + ".wav",
+        "rsrc/effects/" + NuggetEffect.NUGGET_REMOVED + ".wav",
+        "rsrc/effects/" + NuggetEffect.PICKED_UP_NUGGET + ".wav",
     };
 }

@@ -22,8 +22,8 @@ public class HighNoonEffect extends Effect
 {
     /** The value of {@link BangObject#boardEffect} when the high noon effect
      * is active. */
-    public static final String HIGH_NOON = "high_noon";
-    
+    public static final String HIGH_NOON = "frontier_town/high_noon";
+
     /** Generated when the effect expires. */
     public static class ExpireEffect extends ExpireHindranceEffect
     {
@@ -38,10 +38,10 @@ public class HighNoonEffect extends Effect
             return super.apply(bangobj, obs);
         }
     }
-    
+
     /** The ids of the units affected. */
     public int[] pieceIds;
-    
+
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
@@ -54,7 +54,7 @@ public class HighNoonEffect extends Effect
         if (HIGH_NOON.equals(bangobj.boardEffect)) {
             return;
         }
-        ArrayList<Integer> pieceIds = new ArrayList<Integer>();        
+        ArrayList<Integer> pieceIds = new ArrayList<Integer>();
         for (Piece piece : bangobj.pieces) {
             if (piece instanceof Unit && piece.isAlive()) {
                 pieceIds.add(piece.pieceId);
@@ -98,18 +98,18 @@ public class HighNoonEffect extends Effect
             }
         }
         bangobj.globalHindrance = hindrance;
-        
+
         affectBoard(bangobj, HIGH_NOON, true, obs);
-        
+
         return true;
     }
-    
+
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
         return "m.effect_high_noon";
     }
 
-    /** The duration of the effect in ticks. */    
+    /** The duration of the effect in ticks. */
     protected static final int EFFECT_DURATION = 8;
 }

@@ -18,16 +18,16 @@ public class FoolsNuggetEffect extends NuggetEffect
     /** The bonus type for a nugget of fool's gold. */
     public static final String FOOLS_NUGGET_BONUS =
         "frontier_town/fools_nugget";
-    
+
     /** The identifier for the fool's gold nugget rejection effect. */
     public static final String FOOLS_NUGGET_REJECTED =
-        "bonuses/frontier_town/fools_nugget/rejected";
-        
+        "frontier_town/fools_nugget/rejected";
+
     public FoolsNuggetEffect ()
     {
         type = FOOLS_NUGGET_BONUS;
     }
-    
+
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
@@ -38,7 +38,7 @@ public class FoolsNuggetEffect extends NuggetEffect
         }
         return MessageBundle.compose("m.effect_fools_gold", piece.getName());
     }
-    
+
     @Override // documentation inherited
     protected void applyToClaim (BangObject bangobj, Observer obs)
     {

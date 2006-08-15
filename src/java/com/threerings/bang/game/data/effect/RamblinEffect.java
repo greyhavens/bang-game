@@ -13,6 +13,6 @@ public class RamblinEffect extends AdjustMoveInfluenceEffect
     {
         super(1, -1);
         icon = "ramblin";
-        name = "bonuses/frontier_town/ramblin/activate";
+        name = "frontier_town/ramblin";
     }
 }

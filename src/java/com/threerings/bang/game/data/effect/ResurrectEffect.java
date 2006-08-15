@@ -18,7 +18,7 @@ import static com.threerings.bang.Log.log;
 public class ResurrectEffect extends Effect
 {
     /** An effect reported on resurrected units. */
-    public static final String RESURRECTED = "resurrected";
+    public static final String RESURRECTED = "frontier_town/dust_devil";
 
     /** The identifier of the piece to be resurrected. */
     public int pieceId;
