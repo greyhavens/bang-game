@@ -55,7 +55,7 @@
     <td><label for="card_special_sound_path">Path</label><br/>
         <%= text_field 'card', 'special_sound_path' %></td></tr>
 
-<tr><td><%= @card.icon_link %></td>
+<tr><td><%= icon_link(@card) %></td>
     <td><label for="card_implemented">Implemented</label>:
         <%= check_box 'card', 'implemented' %></td></tr>
 
