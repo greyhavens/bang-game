@@ -103,11 +103,11 @@ public class PropConfig
         config.width = BangUtil.getIntProperty(type, props, "width", 1);
         config.length = BangUtil.getIntProperty(type, props, "length", 1);
         config.height = BangUtil.getFloatProperty(type, props, "height", 2f);
-        config.passElev = BangUtil.getFloatProperty(
-                type, props, "passElev", 0f);
         
         config.tall = Boolean.parseBoolean(props.getProperty("tall"));
         config.passable = Boolean.parseBoolean(props.getProperty("passable"));
+        config.passElev = BangUtil.getFloatProperty(type, props, "passElev", 
+                (config.passable ? 0f : config.height));
         config.penetrable = Boolean.parseBoolean(
             props.getProperty("penetrable",
                 (config.width == 1 && config.length == 1) ? "true" : "false"));

@@ -711,8 +711,7 @@ public class BangBoard extends SimpleStreamableObject
             Prop p = (Prop)piece;
             Rectangle pbounds = p.getBounds();
             int elevation = (int)Math.ceil(p.getPassHeight() *
-                _elevationUnitsPerTile) + p.felev;
-            elevation *= p.getScale().z;
+                _elevationUnitsPerTile * p.getScale().z) + p.felev;
             for (int yy = pbounds.y, ly = yy + pbounds.height; yy < ly; yy++) {
                 for (int xx = pbounds.x, lx = xx + pbounds.width;
                         xx < lx; xx++) {
@@ -742,7 +741,9 @@ public class BangBoard extends SimpleStreamableObject
             int elevation = (int)Math.ceil(bpiece.getHeight() *
                 _elevationUnitsPerTile);
             if (bpiece instanceof Prop) {
-                elevation += ((Prop)bpiece).felev;
+                Prop prop = (Prop)bpiece;
+                elevation *= prop.getScale().z;
+                elevation += prop.felev;
             }
             Rectangle pbounds = bpiece.getBounds();
             for (int yy = pbounds.y, ly = yy + pbounds.height;
