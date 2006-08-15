@@ -317,6 +317,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new Lightning());
         register(new WhiteStag());
         register(new Rockslide());
+        register(new UnderdogSoldier());
 
         // create arrays of all cards introduced in each town
         HashMap<String,ArrayList<Card>> bytown =

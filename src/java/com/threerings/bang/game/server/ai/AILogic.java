@@ -5,11 +5,7 @@ package com.threerings.bang.game.server.ai;
 
 import java.awt.Point;
 
-import java.util.List;
-
 import com.samskivert.util.RandomUtil;
-
-import com.threerings.media.util.AStarPathUtil;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -24,7 +20,7 @@ import com.threerings.bang.game.util.PointSet;
 /**
  * Handles the logic for a single AI player in a scenario.
  */
-public abstract class AILogic
+public abstract class AILogic extends PieceLogic
 {
     /**
      * Initializes the AI logic before the start of a round.
@@ -94,31 +90,6 @@ public abstract class AILogic
     }
     
     /**
-     * Orders a unit to move.
-     *
-     * @param unit the unit to move
-     * @param x the x coordinate to which to move or {@link Short#MAX_VALUE} if
-     * the unit should be moved to the closest valid firing position to the
-     * target.
-     * @param y the y coordinate to which to move, this is ignored if {@link
-     * Short#MAX_VALUE} is supplied for x.
-     * @param target the piece for the unit to shoot, or <code>null</code> for
-     * none
-     * @return true if the order was executed, false if there was some error in
-     * executing the order
-     */
-    protected boolean executeOrder (Unit unit, int x, int y, Piece target)
-    {
-        try {
-            int targetId = (target == null) ? -1 : target.pieceId;
-            _bangmgr.executeOrder(unit, x, y, targetId, true);
-            return true;
-        } catch (InvocationException e) {
-            return false;
-        }
-    }
-    
-    /**
      * Returns a number of unique unit types by evaluating the provided array
      * of configurations and making weighted random selections.
      */
@@ -160,38 +131,7 @@ public abstract class AILogic
             dest.y, evaluator));
         return true;
     }
-    
-    /**
-     * Gets the closest point to the provided destination that the unit can
-     * reach in one move (or <code>null</code> if the destination is
-     * unreachable).
-     */
-    protected Point getClosestPoint (Unit unit, PointSet moves, int dx, int dy)
-    {
-        List<Point> path = AStarPathUtil.getPath(
-                _bangobj.board, unit.getStepper(), unit, 
-                getMaxLookahead(), unit.x, unit.y, dx, dy, true);
-        if (path == null || path.size() < 2) {
-            return null;
-        }
-        for (int ii = path.size() - 1; ii >= 0; ii--) {
-            Point pt = path.get(ii);
-            if (moves.contains(pt.x, pt.y)) {
-                return pt;
-            }
-        }
-        return null;
-    }
-    
-    /**
-     * Returns the maximum lookahead for destinations beyond what units can
-     * reach in the current tick.
-     */
-    protected int getMaxLookahead ()
-    {
-        return _bangobj.board.getWidth() / 2;
-    }
-    
+
     /**
      * Finds and returns the best target that the unit can reach according to
      * the provided evaluator.
@@ -215,7 +155,7 @@ public abstract class AILogic
         }
         return best;
     }
-    
+
     /**
      * Finds and returns the best target that the unit can reach after moving
      * to the given destination, according to the provided evaluator.
@@ -313,17 +253,8 @@ public abstract class AILogic
                 int dist, PointSet preferredMoves);
     }
     
-    /** The game manager. */
-    protected BangManager _bangmgr;
-    
-    /** The game object. */
-    protected BangObject _bangobj;
-    
     /** The index of the AI player. */
     protected int _pidx;
     
-    /** Used to compute a unit's potential moves or attacks. */
-    protected PointSet _moves = new PointSet(), _attacks = new PointSet();
-
     protected static final PointSet EMPTY_POINT_SET = new PointSet();
 }

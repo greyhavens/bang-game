@@ -98,7 +98,8 @@ public class RockslideEffect extends Effect
         dx = (short)tx;
         dy = (short)ty;
         for (Piece p : bangobj.pieces) {
-            if (p.isTargetable() && slidePts.contains(p.x, p.y)) {
+            if (p.isTargetable() && slidePts.contains(p.x, p.y) &&
+                    !p.isAirborne()) {
                 affected.add(p);
             }
         }

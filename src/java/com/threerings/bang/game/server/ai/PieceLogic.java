@@ -3,6 +3,11 @@
 
 package com.threerings.bang.game.server.ai;
 
+import java.awt.Point;
+import java.util.List;
+
+import com.threerings.media.util.AStarPathUtil;
+
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.game.server.BangManager;
@@ -56,8 +61,10 @@ public abstract class PieceLogic
      * @param moves the places to which the unit can move
      * @param attacks the places the unit can attack
      */
-    protected abstract void moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, PointSet attacks);
+    protected void moveUnit (
+        Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    {
+    }
 
     /**
      * Orders a unit to move.
@@ -82,6 +89,37 @@ public abstract class PieceLogic
         } catch (InvocationException e) {
             return false;
         }
+    }
+
+    /**
+     * Gets the closest point to the provided destination that the unit can
+     * reach in one move (or <code>null</code> if the destination is
+     * unreachable).
+     */
+    protected Point getClosestPoint (Unit unit, PointSet moves, int dx, int dy)
+    {
+        List<Point> path = AStarPathUtil.getPath(
+                _bangobj.board, unit.getStepper(), unit,
+                getMaxLookahead(), unit.x, unit.y, dx, dy, true);
+        if (path == null || path.size() < 2) {
+            return null;
+        }
+        for (int ii = path.size() - 1; ii >= 0; ii--) {
+            Point pt = path.get(ii);
+            if (moves.contains(pt.x, pt.y)) {
+                return pt;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the maximum lookahead for destinations beyond what units can
+     * reach in the current tick.
+     */
+    protected int getMaxLookahead ()
+    {
+        return _bangobj.board.getWidth() / 2;
     }
 
     /** Reference to the Bang Manager. */
