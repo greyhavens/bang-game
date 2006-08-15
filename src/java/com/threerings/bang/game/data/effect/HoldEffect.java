@@ -11,6 +11,8 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.data.BonusConfig;
 
+import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.HoldHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
@@ -140,15 +142,15 @@ public class HoldEffect extends BonusEffect
     }
     
     @Override // documentation inherited
-    protected String getActivatedEffect ()
+    public EffectHandler createHandler (BangObject bangobj)
     {
-        return null;
+        return new HoldHandler();
     }
     
     /**
      * Returns the identifier for the dropped bonus effect.
      */
-    protected String getDroppedEffect ()
+    public String getDroppedEffect ()
     {
         return DROPPED_BONUS;
     }
@@ -156,8 +158,14 @@ public class HoldEffect extends BonusEffect
     /**
      * Returns the identifier for the picked up bonus effect.
      */
-    protected String getPickedUpEffect ()
+    public String getPickedUpEffect ()
     {
         return PICKED_UP_BONUS;
+    }
+    
+    @Override // documentation inherited
+    protected String getActivatedEffect ()
+    {
+        return null;
     }
 }

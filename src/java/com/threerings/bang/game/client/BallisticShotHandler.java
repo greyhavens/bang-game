@@ -69,10 +69,26 @@ public class BallisticShotHandler extends ShotHandler
         velvec.z = 0f;
         float distance = velvec.length();
 
-        float angle = 3*FastMath.PI/8;
-        float duration = FastMath.sqrt(
-            2 * (edelta - distance * FastMath.tan(angle)) / GRAVITY),
+        float minAngle = (distance < FastMath.FLT_EPSILON) ?
+            FastMath.HALF_PI : FastMath.atan(edelta / distance);
+        float angle = Math.max(3*FastMath.PI/8, FastMath.PI/4 + minAngle/2);
+        float duration, velocity;
+        if (distance < FastMath.FLT_EPSILON) {
+            if (edelta < 0f) { // just let it drop
+                duration = FastMath.sqrt(2f * edelta / GRAVITY);
+                velvec.set(0f, 0f, 0f);
+            } else { // velocity reaches zero at target height
+                duration = FastMath.sqrt(-2f * edelta / GRAVITY);
+                velocity = -GRAVITY * duration;
+                velvec.set(0f, 0f, velocity);
+            }
+            return new PathParams(velvec, duration);
+            
+        } else {
+            duration = FastMath.sqrt(
+                2 * (edelta - distance * FastMath.tan(angle)) / GRAVITY);
             velocity = distance / (duration * FastMath.cos(angle));
+        }
 
         // normalize the velocity vector and scale it to the velocity
         velvec.normalizeLocal();

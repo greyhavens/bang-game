@@ -7,6 +7,8 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Spatial;
+import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.RenderState;
 
 import com.samskivert.util.ArrayIntSet;
 
@@ -109,8 +111,8 @@ public class EffectHandler extends BoardView.BoardAction
     public void pieceAdded (Piece piece)
     {
         _view.createPieceSprite(piece, _tick);
-        if (piece instanceof Bonus && _htrans != null) {
-            flyDroppedBonus(piece);
+        if (piece instanceof Bonus && _dropper != null) {
+            flyDroppedBonus(_dropper, _view.getPieceSprite(piece), false);
         }
     }
 
@@ -193,10 +195,9 @@ public class EffectHandler extends BoardView.BoardAction
             sprite.updated(piece, _tick);
         }
 
-        // when units drop bonuses, record the location of their holding nodes
+        // remember the last unit to drop a bonus
         if (effect.equals(HoldEffect.DROPPED_BONUS)) {
-            _htrans = new Vector3f(
-                ((UnitSprite)sprite).getHoldingNode().getWorldTranslation());
+            _dropper = piece;
         }
 
         // queue reacting, dying, or generic effects for mobile sprites
@@ -410,31 +411,56 @@ public class EffectHandler extends BoardView.BoardAction
 
     /**
      * Flies a dropped bonus from the unit that dropped it to its current
-     * location, then bounces it a few times.
+     * location (optionally fading it in), then bounces it a few times.
      */
-    protected void flyDroppedBonus (Piece bonus)
+    protected void flyDroppedBonus (
+        Piece dropper, PieceSprite sprite, final boolean fadeIn)
     {
-        PieceSprite sprite = _view.getPieceSprite(bonus);
-        if (sprite == null || _htrans == null) {
+        if (sprite == null) {
             return;
         }
+        final MaterialState mstate =
+            (MaterialState)sprite.getRenderState(RenderState.RS_MATERIAL);
+        Vector3f htrans = getHoldingTranslation(dropper);
         BallisticShotHandler.PathParams pparams =
             BallisticShotHandler.computePathParams(
-                _htrans, sprite.getWorldTranslation());
-        sprite.move(new BallisticPath(sprite, _htrans, pparams.velocity,
+                htrans, sprite.getWorldTranslation());
+        final int penderId = notePender();
+        sprite.move(new BallisticPath(sprite, htrans, pparams.velocity,
             BallisticShotHandler.GRAVITY_VECTOR, pparams.duration) {
             public void update (float time) {
                 super.update(time*2f);
                 float alpha = Math.min(_accum / _duration, 1f);
                 _sprite.setLocalScale(FastMath.LERP(alpha, 0.5f, 1f));
+                if (fadeIn) {
+                    mstate.getDiffuse().a = alpha;
+                }
             }
             public void wasRemoved () {
                 super.wasRemoved();
                 bounceSprite(_sprite, TILE_SIZE / 4);
+                maybeComplete(penderId);
             }
         });
+        sprite.updateGeometricState(0f, true);
     }
 
+    /**
+     * Computes and returns the location where bonuses are held for the
+     * specified piece, which is one tile length above its base.
+     */
+    protected Vector3f getHoldingTranslation (Piece piece)
+    {
+        PieceSprite sprite = _view.getPieceSprite(piece);
+        if (sprite == null) {
+            return new Vector3f();
+        }
+        Vector3f trans = new Vector3f(0f, 0f, TILE_SIZE);
+        sprite.getLocalRotation().multLocal(trans);
+        trans.addLocal(sprite.getWorldTranslation());
+        return trans;
+    }
+    
     /**
      * Bounces a sprite up to the specified height and schedules another
      * bounce.
@@ -445,17 +471,28 @@ public class EffectHandler extends BoardView.BoardAction
         float duration = FastMath.sqrt(
             -height / BallisticShotHandler.GRAVITY),
             vel = -2f * BallisticShotHandler.GRAVITY * duration;
+        final int penderId = notePender();
         sprite.move(new BallisticPath(sprite, start, new Vector3f(0f, 0f, vel),
             DOUBLE_GRAVITY_VECTOR, duration*2) {
             public void wasRemoved () {
                 super.wasRemoved();
                 if (height >= TILE_SIZE / 16) {
                     bounceSprite(_sprite, height / 2);
+                } else {
+                    spriteStoppedBouncing(_sprite);
                 }
+                maybeComplete(penderId);
             }
         });
     }
 
+    /**
+     * Called when the sprite finishes its final bounce.
+     */
+    protected void spriteStoppedBouncing (Sprite sprite)
+    {
+    }
+    
     protected boolean isCompleted ()
     {
         return (!_applying && _penders.size() == 0);
@@ -497,9 +534,8 @@ public class EffectHandler extends BoardView.BoardAction
     protected ArrayIntSet _penders = new ArrayIntSet();
     protected int _nextPenderId;
 
-    /** Stores the world translation of the holding node of the last sprite to
-     * drop a bonus. */
-    protected Vector3f _htrans;
+    /** The last piece to drop a bonus. */
+    protected Piece _dropper;
 
     /** A doubled gravity vector for faster bounces. */
     protected static final Vector3f DOUBLE_GRAVITY_VECTOR =

@@ -89,6 +89,12 @@ public class NuggetEffect extends HoldEffect
         return MessageBundle.compose("m.effect_drop_nugget", piece.getName());
     }
     
+    @Override // documentation inherited
+    public String getPickedUpEffect ()
+    {
+        return PICKED_UP_NUGGET;
+    }
+        
     /**
      * Applies the effect on the claim.
      */
@@ -112,11 +118,5 @@ public class NuggetEffect extends HoldEffect
             claim.count--;
             reportEffect(obs, claim, NUGGET_REMOVED);
         }
-    }
-    
-    @Override // documentation inherited
-    protected String getPickedUpEffect ()
-    {
-        return PICKED_UP_NUGGET;
-    }
+    }   
 }
