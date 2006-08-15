@@ -18,13 +18,15 @@
   <!-- cleans out the install directory -->
   <target name="install">
     <mkdir dir="${install.dir}"/>
-    <copy todir="${install.dir}">
-      <fileset dir=".">
-       <include name="app/**"/>
-       <include name="components/**"/>
-       <include name="config/**"/>
-       <include name="public/**"/>
-     </fileset>
-    </copy>
+    <exec executable="rsync">
+      <arg line="-ar"/>
+      <arg line="--exclude"/>
+      <arg line=".svn"/>
+      <arg line="app"/>
+      <arg line="components"/>
+      <arg line="config"/>
+      <arg line="public"/>
+      <arg line="${install.dir}"/>
+    </exec>
   </target>
 </project>
