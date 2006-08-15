@@ -1,0 +1,920 @@
+barricade:
+  id: 1
+  town: frontier_town
+  name: Barricade
+  frequency: 60
+  scrip: 90
+  coins: 
+  effect: Blocks tile from passage
+  duration: 6
+  bonus_model: Iron tower
+  bonus_model_path: ''
+  activation_viz: Tower drops into place; dust on landing
+  activation_viz_path: ''
+  activation_sound: Thud on landing
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+blown_gasket:
+  id: 2
+  town: frontier_town
+  name: Blown Gasket
+  frequency: 40
+  scrip: 120
+  coins: 
+  effect: Steam unit can move 6 tiles; then cannot move
+  duration: 4
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Start ongoing viz immediately
+  activation_viz_path: ''
+  activation_sound: Burst and hiss
+  activation_sound_path: ''
+  ongoing_viz: Steam coming out of the unit
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+bonus_point:
+  id: 3
+  town: frontier_town
+  name: Bonus Point
+  frequency: 
+  scrip: 
+  coins: 
+  effect: Grants 50 points to activator
+  duration: 
+  bonus_model: Sheriff's star
+  bonus_model_path: ''
+  activation_viz: Burst of stars
+  activation_viz_path: ''
+  activation_sound: Tinkly bells
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+buggy_logic:
+  id: 4
+  town: frontier_town
+  name: Buggy Logic
+  frequency: 40
+  scrip: 90
+  coins: 
+  effect: Opponent's steam unit is controlled for one turn
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Start ongoing viz immediately
+  activation_viz_path: ''
+  activation_sound: Electrical sound (dangling power line)
+  activation_sound_path: ''
+  ongoing_viz: Sparks and spirals
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+card:
+  id: 5
+  town: frontier_town
+  name: Card
+  frequency: 
+  scrip: 
+  coins: 
+  effect: Grants a card to activator
+  duration: 
+  bonus_model: Playing card
+  bonus_model_path: ''
+  activation_viz: Card spiralling into sky; dropping into hand
+  activation_viz_path: ''
+  activation_sound: Fwip; the sound of a card being dealt
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+dud:
+  id: 6
+  town: frontier_town
+  name: Dud
+  frequency: 50
+  scrip: 60
+  coins: 
+  effect: Causes target to fire a dud on next shot
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: Reuse gun cocking
+  activation_sound_path: ''
+  ongoing_viz: Flag pops out of gun says Bang!
+  ongoing_viz_path: ''
+  special_sound: Gameshow wah wah; you lose
+  special_sound_path: ''
+  done: 0
+dust_devil:
+  id: 7
+  town: frontier_town
+  name: Dust Devil
+  frequency: 10
+  scrip: 0
+  coins: 
+  effect: Resurrects dead steam unit
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Swirl of dust and parts
+  activation_viz_path: ''
+  activation_sound: Wind and wrenches
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+engineer:
+  id: 8
+  town: frontier_town
+  name: Engineer
+  frequency: 60
+  scrip: 60
+  coins: 
+  effect: Allows the train to be directed
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Engine emits two puffs of steam in time with the choo choo
+  activation_viz_path: ''
+  activation_sound: Choo choo followed by kachunk sound of rails being switched
+  activation_sound_path: ''
+  ongoing_viz: Train recolored to controllers color
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+fool's_gold:
+  id: 9
+  town: frontier_town
+  name: Fool's Gold
+  frequency: 35
+  scrip: 90
+  coins: 
+  effect: Bounces out of claim when deposited
+  duration: 
+  bonus_model: Gold nugget
+  bonus_model_path: ''
+  activation_viz: Word balloon pops up Fool's Gold! and nugget bounces out of claim
+  activation_viz_path: ''
+  activation_sound: Wheezey old prospector laughing he he he
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+giddy_up:
+  id: 10
+  town: frontier_town
+  name: Giddy Up
+  frequency: 30
+  scrip: 120
+  coins: 
+  effect: Unit moves again immediately
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Giddy Up word bubble floats over head
+  activation_viz_path: ''
+  activation_sound: Horse whinny
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+half_giddy_up:
+  id: 11
+  town: frontier_town
+  name: Half Giddy Up
+  frequency: 60
+  scrip: 90
+  coins: 
+  effect: Allows unit to move two ticks sooner
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Same as Giddy Up
+  activation_viz_path: ''
+  activation_sound: Horse whinny
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+half_repair:
+  id: 12
+  town: frontier_town
+  name: Half Repair
+  frequency: 75
+  scrip: 50
+  coins: 
+  effect: Repairs 50 points of damage
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Glow effect with swirls
+  activation_viz_path: ''
+  activation_sound: Sparkle sound
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+high_noon:
+  id: 13
+  town: frontier_town
+  name: High Noon
+  frequency: 25
+  scrip: 0
+  coins: 
+  effect: Temporary movement penalty for all units
+  duration: 16
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: White scene out; fade back into high noon lighting
+  activation_viz_path: ''
+  activation_sound: Sizzling eggs
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+hollow_point:
+  id: 14
+  town: frontier_town
+  name: Hollow Point
+  frequency: 60
+  scrip: 80
+  coins: 
+  effect: 30% damage bonus
+  duration: -1
+  bonus_model: Bullet
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: Gun cocking
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+hustle:
+  id: 15
+  town: frontier_town
+  name: Hustle
+  frequency: 50
+  scrip: 120
+  coins: 
+  effect: Unit moves every 3 ticks
+  duration: -1
+  bonus_model: Pocket watch
+  bonus_model_path: ''
+  activation_viz: Animated stopwatch sprite
+  activation_viz_path: ''
+  activation_sound: Watch ticking
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+iron_plate:
+  id: 16
+  town: frontier_town
+  name: Iron Plate
+  frequency: 30
+  scrip: 0
+  coins: 
+  effect: Makes unit invincible
+  duration: 6
+  bonus_model: Iron plate
+  bonus_model_path: ''
+  activation_viz: Fade to emissive material when hit
+  activation_viz_path: ''
+  activation_sound: Sound of someone taking a step in full (metal) armor
+  activation_sound_path: ''
+  ongoing_viz: Quick fade to and from emissive when hit
+  ongoing_viz_path: ''
+  special_sound: Ricochet when hit?
+  special_sound_path: ''
+  done: 0
+joker:
+  id: 17
+  town: frontier_town
+  name: Joker
+  frequency: 35
+  scrip: 90
+  coins: 
+  effect: 50 points damage to activator
+  duration: 
+  bonus_model: Playing card
+  bonus_model_path: ''
+  activation_viz: Burst of confetti with explosion
+  activation_viz_path: ''
+  activation_sound: Cackling laughter (like Joker from Batman)
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+lasso:
+  id: 18
+  town: frontier_town
+  name: Lasso
+  frequency: 60
+  scrip: 60
+  coins: 
+  effect: Turns a bonus into a card
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Spinning lasso with star explosion
+  activation_viz_path: ''
+  activation_sound: Same as card sound
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+lucky_horseshoe:
+  id: 19
+  town: frontier_town
+  name: Lucky Horseshoe
+  frequency: 50
+  scrip: 120
+  coins: 
+  effect: 50% chance of 2x damage
+  duration: -1
+  bonus_model: Horseshoe
+  bonus_model_path: ''
+  activation_viz: Shower of clovers
+  activation_viz_path: ''
+  activation_sound: Reuse bonus point
+  activation_sound_path: ''
+  ongoing_viz: Fountain of clovers
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+misfire:
+  id: 20
+  town: frontier_town
+  name: Misfire
+  frequency: 40
+  scrip: 90
+  coins: 
+  effect: Causes target to misfire on next shot
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: Reuse gun cocking
+  activation_sound_path: ''
+  ongoing_viz: Explosion on unit on next fire
+  ongoing_viz_path: ''
+  special_sound: Special misfire shot sound?
+  special_sound_path: ''
+  done: 0
+missile:
+  id: 21
+  town: frontier_town
+  name: Missile
+  frequency: 30
+  scrip: 120
+  coins: 
+  effect: Damages up to 5 units
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Bombs drop from sky; big explosion
+  activation_viz_path: ''
+  activation_sound: Explosion
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+monkey_wrench:
+  id: 22
+  town: frontier_town
+  name: Monkey Wrench
+  frequency: 40
+  scrip: 120
+  coins: 
+  effect: Damages steam unit for every tile they move
+  duration: 8
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Wrench drops from sky into unit
+  activation_viz_path: ''
+  activation_sound: Clank of wrench landing on metal
+  activation_sound_path: ''
+  ongoing_viz: Nuts and bolds flying from unit
+  ongoing_viz_path: ''
+  special_sound: Gear grinding movement sound
+  special_sound_path: ''
+  done: 0
+ramblin':
+  id: 23
+  town: frontier_town
+  name: Ramblin'
+  frequency: 25
+  scrip: 0
+  coins: 
+  effect: Move distance +1
+  duration: -1
+  bonus_model: Cowboy boot
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: Crack of a whip
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+reinforcements:
+  id: 24
+  town: frontier_town
+  name: Reinforcements
+  frequency: 10
+  scrip: 0
+  coins: 
+  effect: Duplicates activating unit
+  duration: 
+  bonus_model: Bugle
+  bonus_model_path: ''
+  activation_viz: Appear in a puff of smoke
+  activation_viz_path: ''
+  activation_sound: Bugle playing
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+repair:
+  id: 25
+  town: frontier_town
+  name: Repair
+  frequency: 50
+  scrip: 90
+  coins: 
+  effect: Repairs 100 points of damage
+  duration: 
+  bonus_model: Heart
+  bonus_model_path: ''
+  activation_viz: Glow effect with swirls
+  activation_viz_path: ''
+  activation_sound: Sparkle sound
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+spring_trap:
+  id: 26
+  town: frontier_town
+  name: Spring Trap
+  frequency: 25
+  scrip: 0
+  coins: 
+  effect: Unit's move undone
+  duration: 
+  bonus_model: Tiny spring
+  bonus_model_path: ''
+  activation_viz: Default icon floaty thing
+  activation_viz_path: ''
+  activation_sound: Sound of a clock being wound up? Spring compressing?
+  activation_sound_path: ''
+  ongoing_viz: Unit rewinds back to old position
+  ongoing_viz_path: ''
+  special_sound: Sproing!
+  special_sound_path: ''
+  done: 0
+stare_down:
+  id: 27
+  town: frontier_town
+  name: Stare down
+  frequency: 60
+  scrip: 50
+  coins: 
+  effect: Resets unit's tick counter
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Puff of black smoke rises over unit
+  activation_viz_path: ''
+  activation_sound: Chop off front of existing sound
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+stick_up!:
+  id: 28
+  town: frontier_town
+  name: Stick Up!
+  frequency: 50
+  scrip: 90
+  coins: 
+  effect: Unit drops carried bonus
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Bonus bounces onto board
+  activation_viz_path: ''
+  activation_sound: Boing boing boing
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+:
+  id: 29
+  town: 
+  name: 
+  frequency: 
+  scrip: 
+  coins: 
+  effect: 
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: 
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+discard:
+  id: 30
+  town: indian_post
+  name: Discard
+  frequency: 50
+  scrip: 60
+  coins: 
+  effect: Causes target to discard one card
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Fly in arc off the screen
+  activation_viz_path: ''
+  activation_sound: Shuffling sound
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+eagle_eye:
+  id: 31
+  town: indian_post
+  name: Eagle Eye
+  frequency: 30
+  scrip: 0
+  coins: 
+  effect: Increases firing range by one
+  duration: -1
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: Eagle's call
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+fire_starter:
+  id: 32
+  town: indian_post
+  name: Fire starter
+  frequency: 30
+  scrip: 120
+  coins: 
+  effect: Subsequently attacked units catch “on fire”; take damage every tick
+  duration: 4
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: Whoosh of fire
+  activation_sound_path: ''
+  ongoing_viz: Targets get fire effect while they burn; orb of fire rotates around Firestarter unit
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+forgiven:
+  id: 33
+  town: indian_post
+  name: Forgiven
+  frequency: 10
+  scrip: 0
+  coins: 
+  effect: Heals all units on the board to 100%
+  duration: 
+  bonus_model: TBD
+  bonus_model_path: ''
+  activation_viz: Repair viz on all healed units
+  activation_viz_path: ''
+  activation_sound: Choir chord
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+snake_bite:
+  id: 34
+  town: indian_post
+  name: Snake Bite
+  frequency: 40
+  scrip: 90
+  coins: 
+  effect: Causes human unit to take damage every tick
+  duration: 8
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: Rattle snake rattle
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+snare:
+  id: 35
+  town: indian_post
+  name: Snare
+  frequency: 60
+  scrip: 60
+  coins: 
+  effect: Adds snare to board; when activated unit is trapped in place
+  duration: 8
+  bonus_model: Submerged stakes
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: 
+  activation_sound_path: ''
+  ongoing_viz: Stakes rising out of the ground with ropes between them
+  ongoing_viz_path: ''
+  special_sound: Sound of stakes rising out of the ground
+  special_sound_path: ''
+  done: 0
+spirit_walk:
+  id: 36
+  town: indian_post
+  name: Spirit Walk
+  frequency: 30
+  scrip: 120
+  coins: 
+  effect: Allows unit to pass through props
+  duration: -1
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Make unit partially transparent; possibly tint them blue
+  activation_viz_path: ''
+  activation_sound: Ethereal reed flute riff
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+bear_trap:
+  id: 37
+  town: indian_post
+  name: Bear Trap
+  frequency: 60
+  scrip: 60
+  coins: 
+  effect: 50 points damage to activator
+  duration: 
+  bonus_model: Tiny iron trap
+  bonus_model_path: ''
+  activation_viz: Trap springs
+  activation_viz_path: ''
+  activation_sound: Clamping shut
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+jack_rabbit:
+  id: 38
+  town: indian_post
+  name: Jack Rabbit
+  frequency: 50
+  scrip: 90
+  coins: 
+  effect: Movement +3 for one move
+  duration: 4
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Animated rabbit-related sprite
+  activation_viz_path: ''
+  activation_sound: Winding-up; charging sound
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+stampede:
+  id: 39
+  town: indian_post
+  name: Stampede
+  frequency: 30
+  scrip: 120
+  coins: 1
+  effect: Buffalo damage units they hit
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Buffalo stampede across board
+  activation_viz_path: ''
+  activation_sound: Stampeding
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+peace_pipe:
+  id: 40
+  town: indian_post
+  name: Peace Pipe
+  frequency: 50
+  scrip: 60
+  coins: 
+  effect: Prevents unit from attacking until they are attacked
+  duration: 8
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: Birds chirping
+  activation_sound_path: ''
+  ongoing_viz: Flowery particle system 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+rain:
+  id: 41
+  town: indian_post
+  name: Rain
+  frequency: 30
+  scrip: 120
+  coins: 
+  effect: Clears effects from all units
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Full-board rain particle effect
+  activation_viz_path: ''
+  activation_sound: Stormy downpour
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+rockslide:
+  id: 42
+  town: indian_post
+  name: Rockslide
+  frequency: 35
+  scrip: 120
+  coins: 
+  effect: Drops rocks down slope across three tiles; damaging units in its path
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: TBD
+  activation_viz_path: ''
+  activation_sound: 
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+lightning:
+  id: 43
+  town: indian_post
+  name: Lightning
+  frequency: 45
+  scrip: 90
+  coins: 
+  effect: Strikes target with lightning
+  duration:  chains through metal units
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: Reuse Storm Caller lightning effect
+  activation_sound_path: ''
+  ongoing_viz: Reuse Storm Caller sounds
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+white_stag:
+  id: 44
+  town: indian_post
+  name: White Stag
+  frequency: 15
+  scrip: 0
+  coins: 
+  effect: Spawns White Stag on board which attacks any unit that attacks any other unit (in its range; with 4 tick cooldown timer)
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: Adds White Stag unit to board
+  activation_viz_path: ''
+  activation_sound: (Spiritual) echoing hoofbeats
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+underdog_soldier:
+  id: 45
+  town: indian_post
+  name: Underdog Soldier
+  frequency: 15
+  scrip: 0
+  coins: 
+  effect: Spawns a computer controlled Dog Soldier who attacks everything; favoring the player in the lead
+  duration: 
+  bonus_model: 
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: 
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0
+wise_wind:
+  id: 46
+  town: indian_post
+  name: Wise Wind
+  frequency: 10
+  scrip: 0
+  coins: 
+  effect: See Wiki
+  duration: 
+  bonus_model: TBD
+  bonus_model_path: ''
+  activation_viz: 
+  activation_viz_path: ''
+  activation_sound: 
+  activation_sound_path: ''
+  ongoing_viz: 
+  ongoing_viz_path: ''
+  special_sound: 
+  special_sound_path: ''
+  done: 0

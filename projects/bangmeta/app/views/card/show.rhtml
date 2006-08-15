@@ -1,0 +1,8 @@
+<% for column in Card.content_columns %>
+<p>
+  <b><%= column.human_name %>:</b> <%=h @card.send(column.name) %>
+</p>
+<% end %>
+
+<%= link_to 'Edit', :action => 'edit', :id => @card %> |
+<%= link_to 'Back', :action => 'list' %>

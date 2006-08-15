@@ -1,0 +1,64 @@
+<%= error_messages_for 'card' %>
+
+<!--[form:card]-->
+<table>
+<tr><td><label for="card_name">Town:</label>
+        <%= select('card', 'town', controller.town_options) %></td>
+
+    <td><%= text_field 'card', 'ident' %></td></tr>
+
+<tr><td><label for="card_name">Name</label><br/>
+        <%= text_field 'card', 'name' %></td>
+
+    <td><label for="card_frequency">Frequency</label><br/>
+        <%= text_field 'card', 'frequency' %></td></tr>
+
+<tr><td><label for="card_scrip">Scrip</label><br/>
+        <%= text_field 'card', 'scrip' %></td>
+
+    <td><label for="card_coins">Coins</label><br/>
+        <%= text_field 'card', 'coins' %></td></tr>
+
+<tr><td><label for="card_effect">Effect</label><br/>
+        <%= text_field 'card', 'effect' %></td>
+
+    <td><label for="card_duration">Duration</label><br/>
+        <%= text_field 'card', 'duration' %></td></tr>
+
+<tr><td><label for="card_bonus_model">Bonus model</label><br/>
+        <%= text_field 'card', 'bonus_model' %></td>
+
+    <td><label for="card_bonus_model_path">Path</label><br/>
+        <%= text_field 'card', 'bonus_model_path' %></td></tr>
+
+<tr><td><label for="card_activation_viz">Activation viz</label><br/>
+        <%= text_field 'card', 'activation_viz' %></td>
+
+    <td><label for="card_activation_viz_path">Path</label><br/>
+        <%= text_field 'card', 'activation_viz_path' %></td></tr>
+
+<tr><td><label for="card_activation_sound">Activation sound</label><br/>
+        <%= text_field 'card', 'activation_sound' %></td>
+
+    <td><label for="card_activation_sound_path">Path</label><br/>
+        <%= text_field 'card', 'activation_sound_path' %></td></tr>
+
+<tr><td><label for="card_ongoing_viz">Ongoing viz</label><br/>
+        <%= text_field 'card', 'ongoing_viz' %></td>
+
+    <td><label for="card_ongoing_viz_path">Path</label><br/>
+        <%= text_field 'card', 'ongoing_viz_path' %></td></tr>
+
+<tr><td><label for="card_special_sound">Special sound</label><br/>
+        <%= text_field 'card', 'special_sound' %></td>
+
+    <td><label for="card_special_sound_path">Path</label><br/>
+        <%= text_field 'card', 'special_sound_path' %></td></tr>
+
+<tr><td><%= @card.icon_link %></td>
+    <td><label for="card_implemented">Implemented</label>:
+        <%= check_box 'card', 'implemented' %></td></tr>
+
+</table>
+<!--[eoform:card]-->
+

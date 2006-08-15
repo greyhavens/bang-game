@@ -1,0 +1,11 @@
+<h1>Editing <%= @card.name %></h1>
+
+<%= start_form_tag :action => 'update', :id => @card %>
+<table>
+<tr><td><%= render :partial => 'form' %></td></tr>
+<tr><td align="right"><%= submit_tag 'Update' %></td></tr>
+</table>
+<%= end_form_tag %>
+
+<%= link_to 'Show', :action => 'show', :id => @card %> |
+<%= link_to 'Back', :action => 'list' %>

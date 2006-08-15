@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>Cards and Bonuses</title>
+  </head>
+
+  <body>
+    <h2>Cards and Bonuses</h2>
+
+    <%= form_tag %>
+    <table width=500>
+    <tr><td><label for="town">Town:</label>
+    <%= select_tag :town, 
+        options_for_select(controller.town_options, controller.current_town),
+        { :onchange => "this.form.submit()" } %></td>
+
+    <td align="right"><label for="view">View:</label>
+    <%= radio_button_tag :view, "mech", controller.is_mech,
+        { :onchange => "this.form.submit()" } %> Mechanics
+    <%= radio_button_tag :view, "viz", controller.is_viz,
+        { :onchange => "this.form.submit()" } %> Visualizations
+    </td></tr>
+    </table>
+    <% end_form_tag %>
+
+    <table style="border-collapse: collapse" border=1 cellpadding=4>
+    <tr>
+      <th colspan="2">Card</th>
+      <% if (controller.is_mech) %>
+      <th>Freq</th>
+      <th>Cost</th>
+      <th>Effect</th>
+      <th>Dur.</th>
+      <th>Bonus model</th>
+      <th>AV</th>
+      <th>AS</th>
+      <th>OV</th>
+      <th>SS</th>
+      <% else %>
+      <th>Act. Viz</th>
+      <th>Act. Sound</th>
+      <th>Ongoing Viz</th>
+      <th>Special Sound</th>
+      <% end %>
+    </tr>
+    <% @cards.each do |@card| %>
+    <tr <% unless @card.done? %>bgcolor="EEEEEE"<% end %>>
+      <td><%= @card.icon_link %></td>
+      <td>
+        <%= link_to(@card.styled_name, :action => "edit", :id => @card.id) %>
+      </td>
+      <% if (controller.is_mech) %>
+      <td align="right"><%= @card.frequency %></td>
+      <td align="right"><%= @card.scrip %>
+          <% if (@card.coins > 0) %> (<%= @card.coins %>) <% end %></td>
+      <td><%= @card.styled_effect %></td>
+      <td align="right"><% if (@card.duration > 0) %> <%= @card.duration %>
+          <% elsif (@card.duration == -1) %> &infin;
+          <% end %>
+      </td>
+      <td><%= @card.bonus_model_link %></td>
+      <td><%= @card.activation_viz_icon %></td>
+      <td><%= @card.activation_sound_icon %></td>
+      <td><%= @card.ongoing_viz_icon %></td>
+      <td><%= @card.special_sound_icon %></td>
+      <% else %>
+      <td><%= @card.activation_viz_link %></td>
+      <td><%= @card.activation_sound_link %></td>
+      <td><%= @card.ongoing_viz_link %></td>
+      <td><%= @card.special_sound_link %></td>
+      <% end %>
+    </tr>
+    <% end %>
+    </table>
+
+    <p><a href="new">New card</a></p>
+  </body>
+</html>
