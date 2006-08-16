@@ -38,6 +38,8 @@ public class GrantCardEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         // make sure our player has room for another card
         if (bangobj.countPlayerCards(player) >= GameCodes.MAX_CARDS) {
             log.info("No soup four you! " + player + ".");
@@ -50,13 +52,13 @@ public class GrantCardEffect extends BonusEffect
         card.init(bangobj, player);
         bangobj.addToCards(card);
     }
-    
+
     @Override // documentation inherited
     public boolean isApplicable ()
     {
         return _type != null;
     }
-    
+
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
@@ -67,7 +69,7 @@ public class GrantCardEffect extends BonusEffect
         return MessageBundle.compose("m.effect_card", piece.getName(),
             MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + _type));
     }
-    
+
     /** The type of card generated. */
     protected String _type;
 }

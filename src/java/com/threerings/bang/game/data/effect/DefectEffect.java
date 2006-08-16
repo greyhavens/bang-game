@@ -45,6 +45,8 @@ public class DefectEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         // determine which of our opponents is the strongest and steal one
         // of their pieces
         int maxpower = Integer.MIN_VALUE, pidx = -1;
@@ -106,7 +108,7 @@ public class DefectEffect extends BonusEffect
 
         return true;
     }
-    
+
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {

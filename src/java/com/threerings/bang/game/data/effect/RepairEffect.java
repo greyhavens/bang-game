@@ -51,6 +51,8 @@ public class RepairEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         // compute the new total damage for the affected piece
         Piece target = bangobj.pieces.get(pieceId);
         if (target != null) {

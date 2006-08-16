@@ -47,6 +47,8 @@ public class LassoBonusEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         // make sure our player has room for another card
         if (bangobj.countPlayerCards(player) >= GameCodes.MAX_CARDS) {
             log.warning("No soup four you! " + player + ".");

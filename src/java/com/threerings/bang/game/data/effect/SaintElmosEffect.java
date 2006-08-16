@@ -41,6 +41,8 @@ public class SaintElmosEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         // roll through and note all dead pieces
         ArrayIntSet pieces = new ArrayIntSet();
         for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {

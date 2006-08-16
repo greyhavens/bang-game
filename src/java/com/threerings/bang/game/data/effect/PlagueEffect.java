@@ -43,6 +43,8 @@ public class PlagueEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         // everyone gets to keep the "average" count or at least two
         // pieces, whichever is higher
         int save = Math.max(2, bangobj.getAverageUnitCount());

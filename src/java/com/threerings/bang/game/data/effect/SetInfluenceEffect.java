@@ -26,12 +26,6 @@ public abstract class SetInfluenceEffect extends BonusEffect
     }
 
     @Override // documentation inherited
-    public void prepare (BangObject bangobj, IntIntMap dammap)
-    {
-        // nothing doing
-    }
-
-    @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
@@ -59,7 +53,7 @@ public abstract class SetInfluenceEffect extends BonusEffect
         return (name == null) ? null : MessageBundle.compose(
             "m.effect_influence", piece.getName(), "m.influence_" + name);
     }
-    
+
     /** Creates the influence that will be applied to the target unit. */
     protected abstract Influence createInfluence (Unit target);
 

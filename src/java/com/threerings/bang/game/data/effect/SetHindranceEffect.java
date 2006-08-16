@@ -19,28 +19,30 @@ import static com.threerings.bang.Log.log;
  */
 public abstract class SetHindranceEffect extends BonusEffect
 {
-    @Override // documentation inherited
+    @Override // from Effect
     public int[] getAffectedPieces ()
     {
         return new int[] { pieceId };
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece instanceof Unit) {
             _unit = (Unit)piece;
         }
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public boolean isApplicable ()
     {
         return (_unit != null && _unit.hindrance == null);
-    } 
+    }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
@@ -57,7 +59,7 @@ public abstract class SetHindranceEffect extends BonusEffect
         return true;
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public String getDescription (BangObject bangobj, int pidx)
     {
         if (_unit == null || _unit.owner != pidx) {
@@ -67,12 +69,18 @@ public abstract class SetHindranceEffect extends BonusEffect
         return (name == null) ? null : MessageBundle.compose(
             "m.effect_influence", _unit.getName(), "m.hindrance_" + name);
     }
-    
+
     /** Creates the hindrance that will be applied to the target unit. */
     protected abstract Hindrance createHindrance (Unit target);
 
     /** Returns the name of the effect that will be reported. */
     protected abstract String getEffectName();
+
+    @Override // from BonusEffect
+    protected int getBonusPoints ()
+    {
+        return 0; // maybe we should give negative points?
+    }
 
     protected transient Unit _unit;
 }

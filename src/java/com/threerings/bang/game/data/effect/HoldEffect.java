@@ -31,7 +31,7 @@ public class HoldEffect extends BonusEffect
     /** The identifier for the type of effect that we produce. */
     public static final String DROPPED_BONUS = "dropped";
 
-    /** If true, the piece in question is dropping a bonus; */ 
+    /** If true, the piece in question is dropping a bonus; */
     public boolean dropping;
 
     /** The unit that caused us to drop our bonus (if any). */
@@ -64,7 +64,7 @@ public class HoldEffect extends BonusEffect
                 "[unit=" + unit + ", type=" + type + "].");
             return null;
         }
-        
+
         try {
             HoldEffect effect = (HoldEffect)Class.forName(
                     bonus.getConfig().effectClass).newInstance();
@@ -104,6 +104,8 @@ public class HoldEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit == null) {
             log.warning("Missing unit for hold effect [id=" + pieceId + "].");
@@ -113,7 +115,7 @@ public class HoldEffect extends BonusEffect
         if (!dropping) {
             // mark the target piece as holding now as they may have landed
             // next to an object which will also try to give them a holdable
-            // bonus; we'll need to update their holding again in apply to 
+            // bonus; we'll need to update their holding again in apply to
             // ensure that it happens on the client
             unit.holding = type;
         }
@@ -140,13 +142,13 @@ public class HoldEffect extends BonusEffect
         }
         return true;
     }
-    
+
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
         return new HoldHandler();
     }
-    
+
     /**
      * Returns the identifier for the dropped bonus effect.
      */
@@ -154,7 +156,7 @@ public class HoldEffect extends BonusEffect
     {
         return DROPPED_BONUS;
     }
-    
+
     /**
      * Returns the identifier for the picked up bonus effect.
      */
@@ -162,10 +164,16 @@ public class HoldEffect extends BonusEffect
     {
         return PICKED_UP_BONUS;
     }
-    
+
     @Override // documentation inherited
     protected String getActivatedEffect ()
     {
         return null;
+    }
+
+    @Override // from BonusEffect
+    protected int getBonusPoints ()
+    {
+        return 5; // give 'em five points for picking something up
     }
 }

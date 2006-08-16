@@ -43,6 +43,8 @@ public abstract class GlobalEffect extends BonusEffect
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         ArrayList<Effect> effectList = new ArrayList<Effect>();
         for (Piece piece : bangobj.pieces) {
             if (validPiece(piece)) {

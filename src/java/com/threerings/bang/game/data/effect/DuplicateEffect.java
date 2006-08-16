@@ -56,6 +56,8 @@ public class DuplicateEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit == null) {
             return;
@@ -116,6 +118,6 @@ public class DuplicateEffect extends BonusEffect
         }
         return MessageBundle.compose("m.effect_duplicate", piece.getName());
     }
-    
+
     protected transient String _type;
 }

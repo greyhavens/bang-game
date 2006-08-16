@@ -27,17 +27,6 @@ public class BonusPointEffect extends BonusEffect
     }
 
     @Override // documentation inherited
-    public void prepare (BangObject bangobj, IntIntMap dammap)
-    {
-        Piece piece = (Piece)bangobj.pieces.get(pieceId);
-        if (piece == null || piece.owner == -1) {
-            return;
-        }
-        // grant points to the activating player
-        bangobj.grantBonusPoints(piece.owner, BONUS_POINTS);
-    }
-
-    @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
@@ -62,6 +51,12 @@ public class BonusPointEffect extends BonusEffect
         return MessageBundle.compose("m.effect_bonus_point",
             piece.getName(), MessageBundle.taint(BONUS_POINTS));
     }
-    
+
+    @Override // from BonusEffect
+    protected int getBonusPoints ()
+    {
+        return BONUS_POINTS;
+    }
+
     protected static final int BONUS_POINTS = 50;
 }

@@ -50,6 +50,8 @@ public class ReboundEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         Piece target = bangobj.pieces.get(pieceId);
         if (target == null) {
             log.warning("Missing target for rebound effect " +
@@ -94,5 +96,11 @@ public class ReboundEffect extends BonusEffect
     protected String getActivatedEffect ()
     {
         return null;
+    }
+
+    @Override // from BonusEffect
+    protected int getBonusPoints ()
+    {
+        return 0; // no points for springing
     }
 }

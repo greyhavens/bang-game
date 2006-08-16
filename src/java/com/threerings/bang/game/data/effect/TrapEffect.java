@@ -47,6 +47,8 @@ public class TrapEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        super.prepare(bangobj, dammap);
+
         // determine the damage for the piece
         Piece target = bangobj.pieces.get(pieceId);
         if (target == null) {
@@ -116,6 +118,12 @@ public class TrapEffect extends BonusEffect
     protected String getActivatedEffect ()
     {
         return "trap".equals(_type) ? ACTIVATED_TRAP : null;
+    }
+
+    @Override // from BonusEffect
+    protected int getBonusPoints ()
+    {
+        return 0; // maybe we should give negative points?
     }
 
     /**
