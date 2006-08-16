@@ -36,6 +36,12 @@ public class TargetablePropSprite extends PropSprite
     }
 
     // from interface Targetable
+    public void setPossibleShot (boolean possible)
+    {
+        _target.setPossibleShot(possible);
+    }
+
+    // from interface Targetable
     public void configureAttacker ( int pidx, int delta)
     {
         _target.configureAttacker(pidx, delta);

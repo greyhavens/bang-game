@@ -24,6 +24,11 @@ public interface Targetable
     public void setPendingShot (boolean pending);
 
     /**
+     * Indicates that this target is within shooting range.
+     */
+    public void setPossibleShot (boolean possible);
+
+    /**
      * Adds or removes an attacker from this sprite.
      */
     public void configureAttacker (int pidx, int delta);

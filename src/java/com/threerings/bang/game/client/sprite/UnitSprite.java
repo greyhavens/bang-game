@@ -155,6 +155,12 @@ public class UnitSprite extends MobileSprite
         _target.setPendingShot(pending);
     }
 
+    // from interface Targetable
+    public void setPossibleShot (boolean possible)
+    {
+        _target.setPossibleShot(possible);
+    }
+
     /**
      * Provides this unit with a reference to the tile highlight node on which
      * it should display its "pending action" icon.

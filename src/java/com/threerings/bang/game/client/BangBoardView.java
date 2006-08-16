@@ -719,6 +719,8 @@ public class BangBoardView extends BoardView
             }
         }
 
+        highlightPossibleAttacks();
+
         // display contextual help on units and other special sprites
         _tiptext = null;
         if (hover instanceof PieceSprite) {
@@ -1096,7 +1098,7 @@ public class BangBoardView extends BoardView
         // potentially display our potential attacks
         if (!_shiftDown && _attackEnabled && !willTeleport &&
                 _selection.getMinFireDistance() > 0) {
-            pruneAttackSet(moves, _attackSet);
+            pruneAttackSet(moves, _attackSet, true);
         }
 
         // if there are no valid attacks, assume they're just moving (but
@@ -1184,12 +1186,66 @@ public class BangBoardView extends BoardView
         return false;
     }
 
+    @Override // documentation inherited
+    protected void hoverHighlightChanged (TerrainNode.Highlight hover)
+    {
+        super.hoverHighlightChanged(hover);
+        highlightPossibleAttacks();
+    }
+
+    /**
+     * Scans all pieces in the attack set and highlights those who are in
+     * range from the current hover coordinate.
+     */
+    protected void highlightPossibleAttacks ()
+    {
+        if (_selection != null && _attackSet.size() > 0) {
+            boolean hoveringAttack = false;
+            // highlight the unit we're hovering over if applicable
+            if (_hover != null && _hover instanceof Targetable) {
+                Piece p = ((PieceSprite)_hover).getPiece();
+                if (_attackSet.contains(p.x, p.y)) {
+                    ((Targetable)_hover).setPossibleShot(true);
+                    hoveringAttack = true;
+                }
+            }
+            // go through all the pieces and change the color of the
+            // highlight where applicable
+            for (Piece p : _bangobj.pieces) {
+                if (!p.isTargetable() || !_attackSet.contains(p.x, p.y)) {
+                    continue;
+                }
+                Targetable target = getTargetableSprite(p);
+                if (target == null) {
+                    continue;
+                }
+                boolean possible = false;
+                if (_hover == null || hoveringAttack == false) {
+                    PointSet moves = new PointSet();
+                    if (_highlightHover != null) { 
+                        moves.add(_highlightHover.getTileX(),
+                                _highlightHover.getTileY());
+                    } else {
+                        moves.add(_selection.x, _selection.y);
+                    }
+                    possible = _selection.validTarget(_bangobj, p, false) &&
+                        _selection.computeShotLocation(
+                                _board, p, moves, true) != null;
+                } else if (_hover == target) {
+                    possible = true;
+                }
+                target.setPossibleShot(possible);
+            }
+        }
+    }
+
     /**
      * Scans all pieces to which we can compute a valid firing location, adds
      * their location to the supplied destination set, and marks their sprite
      * as being targeted.
      */
-    protected void pruneAttackSet (PointSet moves, PointSet dest)
+    protected void pruneAttackSet (
+            PointSet moves, PointSet dest, boolean possible)
     {
         for (Piece p : _bangobj.pieces) {
             if (!_selection.validTarget(_bangobj, p, false) ||
@@ -1204,6 +1260,7 @@ public class BangBoardView extends BoardView
                                    Targetable.TargetMode.MAYBE :
                                    Targetable.TargetMode.SURE_SHOT,
                                    (Unit)_selection);
+                target.setPossibleShot(possible);
                 dest.add(p.x, p.y);
             } else {
                 log.warning("No sprite for unit! [unit=" + p + "].");
@@ -1314,7 +1371,8 @@ public class BangBoardView extends BoardView
         piece.computeMoves(_bangobj.board, _moveSet, null);
         if (_attackEnabled) {
             _attackSet.clear();
-            pruneAttackSet(_moveSet, _attackSet);
+            pruneAttackSet(_moveSet, _attackSet, false);
+            highlightPossibleAttacks();
         }
         // clear out our current location as we don't want to highlight that as
         // a potential move (but we needed it earlier when computing attacks)

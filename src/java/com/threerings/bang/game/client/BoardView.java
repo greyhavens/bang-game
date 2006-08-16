@@ -247,11 +247,15 @@ public class BoardView extends BComponent
 
         // this is used to target tiles when deploying a card
         _tgtstate = RenderUtil.createTextureState(
-            ctx, "textures/ustatus/crosshairs.png");
+            ctx, "textures/ustatus/crosshairs_card.png");
 
         // this is used to indicate where you can move
         _movstate = RenderUtil.createTextureState(
             ctx, "textures/ustatus/movement.png");
+
+        // this is used to indicate you hovering over a valid move
+        _movhovstate = RenderUtil.createTextureState(
+            ctx, "textures/ustatus/movement_hover.png");
 
         // create a sound group that we'll use for all in-game sounds
         _sounds = ctx.getSoundManager().createGroup(
@@ -1370,7 +1374,9 @@ public class BoardView extends BComponent
                 }
             }
         }
-        hoverHighlightChanged(hover);
+        if (hover != _highlightHover) {
+            hoverHighlightChanged(hover);
+        }
         if (_high.x != -1 && _high.y != -1) {
             return;
         } else if (_htiles.contains(_mouse.x, _mouse.y)) {
@@ -1408,18 +1414,21 @@ public class BoardView extends BComponent
      */
     protected void hoverHighlightChanged (TerrainNode.Highlight hover)
     {
-        if (hover != _highlightHover) {
-            if (_highlightHover != null && _highlightHover.getRenderState(
-                        RenderState.RS_TEXTURE) == _movstate) {
-                _highlightHover.setDefaultColor(_oldHighlightColor);
-            }
-            _highlightHover = hover;
-            if (_highlightHover != null && _highlightHover.getRenderState(
-                        RenderState.RS_TEXTURE) == _movstate) {
-                _oldHighlightColor = 
-                    _highlightHover.getBatch(0).getDefaultColor();
-                _highlightHover.setDefaultColor(HOVER_HIGHLIGHT_COLOR);
-            }
+        if (_highlightHover != null && _highlightHover.getRenderState(
+                    RenderState.RS_TEXTURE) == _movhovstate) {
+            _highlightHover.setRenderState(_movstate);
+            _highlightHover.setDefaultColor(_oldHighlightColor);
+            _highlightHover.updateRenderState();
+        }
+        _highlightHover = hover;
+        if (_highlightHover != null && _highlightHover.getRenderState(
+                    RenderState.RS_TEXTURE) == _movstate) {
+            _oldHighlightColor =
+                _highlightHover.getBatch(0).getDefaultColor();
+            _highlightHover.setDefaultColor(_oldHighlightColor.add(
+                        HOVER_HIGHLIGHT_COLOR));
+            _highlightHover.setRenderState(_movhovstate);
+            _highlightHover.updateRenderState();
         }
     }
 
@@ -1681,7 +1690,7 @@ public class BoardView extends BComponent
     protected TextureState _tgtstate;
 
     /** Used to texture movement highlights. */
-    protected TextureState _movstate;
+    protected TextureState _movstate, _movhovstate;
 
     // TODO: rename _hastate
     protected AlphaState _hastate;
@@ -1744,7 +1753,7 @@ public class BoardView extends BComponent
 
     /** The color of the movement highglights when the mouse is hovering. */
     protected static final ColorRGBA HOVER_HIGHLIGHT_COLOR =
-        new ColorRGBA(1f, 0.5f, 1f, 0.5f);
+        new ColorRGBA(0f, 0f, 0f, 0.5f);
 
     /** The color of the target highlights when the target is invalid. */
     protected static final ColorRGBA INVALID_TARGET_HIGHLIGHT_COLOR =

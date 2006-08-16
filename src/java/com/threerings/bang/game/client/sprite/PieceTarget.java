@@ -45,7 +45,7 @@ public class PieceTarget extends Node
     {
         boolean addModifiers = false;
         if (_pendingTick == -1) {
-            _tgtquad.setDefaultColor(ColorRGBA.white);
+            _tgtquad.setDefaultColor(DEFAULT_COLOR);
             switch (mode) {
             case NONE:
                 _tgtquad.setCullMode(CULL_ALWAYS);
@@ -99,6 +99,18 @@ public class PieceTarget extends Node
             _pendingTick = -1;
         }
         _tgtquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
+    }
+
+    // documentation inherited from Targetable
+    public void setPossibleShot (boolean possible)
+    {
+        if (_pendingTick == -1) {
+            ColorRGBA color = (possible ? POSSIBLE_COLOR : DEFAULT_COLOR);
+            _tgtquad.setDefaultColor(color);
+            for (Quad quad : _modquad) {
+                quad.setDefaultColor(color);
+            }
+        }
     }
 
     // documentation inherited from Targetable
@@ -286,4 +298,8 @@ public class PieceTarget extends Node
         new Vector3f( MOD_OFFSET,  MOD_OFFSET, 0f),
         new Vector3f( MOD_OFFSET, -MOD_OFFSET, 0f),
     };
+
+    protected static final ColorRGBA DEFAULT_COLOR =
+        new ColorRGBA(230f/255f, 165f/255f, 20f/255f, 0.85f);
+    protected static final ColorRGBA POSSIBLE_COLOR = ColorRGBA.white;
 }
