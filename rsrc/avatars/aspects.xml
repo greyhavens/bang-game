@@ -92,7 +92,7 @@
     <aspect name="grizzly" townId="frontier_town" scrip="750" coins="1"/>
     <aspect name="sideburns" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="grant" townId="frontier_town" scrip="500" coins="1"/>
-    <aspect name="muttonchops" townId="frontier_town" scrip="600" coins="1"/
+    <aspect name="muttonchops" townId="frontier_town" scrip="600" coins="1"/>
   </class>
 
   <!-- female avatar aspects -->
