@@ -1,4 +1,4 @@
-358
+376
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -178,14 +178,20 @@ male/beard := colonel := 2
 male/beard := goatee := 21
 male/beard := grant := 267
 male/beard := grizzly := 3
+male/beard := muttonchops := 359
 male/beard := sideburns := 211
 male/beard_back := grant := 268
 male/beard_back := grizzly := 4
+male/beard_back := muttonchops := 360
+male/clothing_back := a_chubby_geronimo := 368
 male/clothing_back := a_duster := 212
 male/clothing_back := a_fat_suspenders := 319
+male/clothing_back := a_federal_jacket := 369
 male/clothing_back := a_fringe := 254
 male/clothing_back := a_longjohns := 213
+male/clothing_back := a_skinny_prospector := 361
 male/clothing_back := a_suit := 255
+male/clothing_back := a_warrior := 370
 male/clothing_back := duster := 214
 male/clothing_back := fat_suspenders := 320
 male/clothing_back := fringe := 215
@@ -200,11 +206,19 @@ male/clothing_back := western_jacket := 22
 male/clothing_back := wolf_spear := 354
 male/clothing_front := cards_suit := 250
 male/clothing_front := cautious_longjohns := 221
+male/clothing_front := chubby_geronimo_rifle := 371
+male/clothing_front := chubby_geronimo_tomahawk := 372
+male/clothing_front := federal_jacket_revolver := 373
+male/clothing_front := federal_jacket_shotgun := 374
 male/clothing_front := flask_fringe := 251
 male/clothing_front := ironplate_poncho := 252
 male/clothing_front := lapels_suit := 222
 male/clothing_front := rifle_duster := 253
+male/clothing_front := skinny_prospector_beans := 362
+male/clothing_front := skinny_prospector_pick := 363
 male/clothing_front := smoking_fat_suspenders := 321
+male/clothing_front := warrior_pistol := 375
+male/clothing_front := warrior_shield := 376
 male/clothing_front := wolf_hunter := 355
 male/clothing_props := cards_suit := 223
 male/clothing_props := cigarette_jacket := 23
@@ -243,6 +257,8 @@ male/hair_back := long_messy := 9
 male/hair_front := balding := 277
 male/hair_front := braids := 37
 male/hair_front := disheveled := 38
+male/hair_front := dredds_long := 364
+male/hair_front := dredds_short := 365
 male/hair_front := fro := 39
 male/hair_front := long_messy := 10
 male/hair_front := mohawk := 40
@@ -251,6 +267,8 @@ male/hair_front := slickedback := 41
 male/hair_front := spikeback := 42
 male/hair_front := spikey := 43
 male/hair_front := sweptback := 231
+male/hair_front := wirey_medium := 366
+male/hair_front := wirey_short := 367
 male/hair_middle := braids := 127
 male/hair_middle := fro := 128
 male/hair_middle := long_messy := 129

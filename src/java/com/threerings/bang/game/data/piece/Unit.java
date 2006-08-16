@@ -254,6 +254,15 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public boolean checkLineOfSight (
+        BangBoard board, int tx, int ty, int dx, int dy)
+    {
+        // range units are not restricted to line of sight
+        return (_config.mode == UnitConfig.Mode.RANGE ||
+            super.checkLineOfSight(board, tx, ty, dx, dy));
+    }
+
+    @Override // documentation inherited
     public Effect[] willShoot (
             BangObject bangobj, Piece target, ShotEffect shot)
     {

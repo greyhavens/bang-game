@@ -99,6 +99,9 @@ public class PieceTarget extends Node
             _pendingTick = -1;
         }
         _tgtquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
+        for (int ii = 0; ii < _modquad.length; ii++) {
+            _modquad[ii].setCullMode(CULL_ALWAYS);
+        }
     }
 
     // documentation inherited from Targetable

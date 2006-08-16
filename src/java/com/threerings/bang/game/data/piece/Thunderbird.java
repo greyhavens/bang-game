@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.ThunderbirdSprite;
@@ -67,38 +68,36 @@ public class Thunderbird extends Unit
         Point spot = null, prefer = null;
         int tdist = getDistance(target);
         int remain = getMoveDistance() - getDistance(target);
-        int totdist = 0, tmove = Integer.MAX_VALUE;
-        int ptotdist = 0, pmove = Integer.MAX_VALUE;
-        // find the closest location (with least likelyhood for a u-turn)
-        // where we can stop after attacking this target
+        int tmove = Integer.MAX_VALUE, pmove = Integer.MAX_VALUE;
+
+        // first check if we can fire while returning to the same spot
+        if (moveSet.contains(x, y)) {
+            if (tdist <= remain) {
+                spot = new Point(x, y);
+                if (preferredSet.isEmpty() || 
+                        preferredSet.contains(x, y) || any) {
+                    return spot;
+                }
+                tmove = 0;
+            }
+        }
+        
+        // next seach the move set for the closest location
         for (int ii = 0, ll = moveSet.size(); ii < ll; ii++) {
             int px = moveSet.getX(ii), py = moveSet.getY(ii);
-            int dist = getDistance(px, py);
             int move = target.getDistance(px, py);
             if (move <= remain) {
-                if (preferredSet.contains(px, py)) {
+                if (move < pmove && preferredSet.contains(px, py)) {
                     if (prefer == null) {
-                        prefer = new Point(px, py);
-                    } else if ((ptotdist < tdist) ?
-                            (dist >= tdist || move < pmove) :
-                            (dist <= ptotdist && move < pmove)) {
-                        prefer.setLocation(px, py);
-                    } else {
-                        continue;
+                        prefer = new Point();
                     }
-                    ptotdist = dist;
+                    prefer.setLocation(px, py);
                     pmove = move;
-                } else if (prefer == null) {
+                } else if (move < tmove && prefer == null) {
                     if (spot == null) {
-                        spot = new Point(px, py);
-                    } else if ((totdist < tdist) ? 
-                            (dist >= tdist || move < tmove) :
-                            (dist <= totdist && move < tmove)) {
-                        spot.setLocation(px, py);
-                    } else {
-                        continue;
+                        spot = new Point();
                     }
-                    totdist = dist;
+                    spot.setLocation(px, py);
                     tmove = move;
                 } else {
                     continue;
@@ -109,6 +108,25 @@ public class Thunderbird extends Unit
             }
         } 
         return (prefer != null) ? prefer : spot;
+    }
+
+    @Override // documentation inherited
+    public PointSet computeShotRange (BangBoard board, int dx, int dy)
+    {
+        PointSet ps = new PointSet();
+        int move = getMoveDistance();
+        int x1 = dx - move, x2 = dx + move, y1 = dy - move, y2 = dy + move;
+        Rectangle playarea = board.getPlayableArea();
+        for (int xx = x1; xx <= x2; xx++) {
+            for (int yy = y1; yy <= y2; yy++) {
+                if (!playarea.contains(xx, yy) || getDistance(xx, yy) + 
+                        getDistance(xx, yy, dx, dy) > move) {
+                    continue;
+                }
+                ps.add(xx, yy);
+            }
+        }
+        return ps;
     }
 
     @Override // documentation inherited

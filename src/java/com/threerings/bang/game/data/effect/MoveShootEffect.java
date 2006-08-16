@@ -12,6 +12,8 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.client.MoveShootHandler;
 import com.threerings.bang.game.client.EffectHandler;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * An effect used when a unit moves and shoots during the movement.
  */
@@ -51,7 +53,15 @@ public class MoveShootEffect extends MoveEffect
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
-        super.apply(bangobj, obs);
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null) {
+            log.warning("Missing target for move effect [id=" + pieceId + "].");
+            return false;
+        }
+
+        piece.lastActed = newLastActed;
+        moveAndReport(bangobj, piece, nx, ny, obs);
+        piece.didMove(piece.getDistance(ox, oy));
 
         // apply the shot effect immediately on the server
         if (bangobj.getManager().isManager(bangobj)) {

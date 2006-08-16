@@ -432,7 +432,8 @@ public abstract class Piece
             if (tdist >= minfdist && tdist <= maxfdist &&
                 checkLineOfSight(board, x, y, target)) {
                 spot = new Point(x, y);
-                if (preferredSet.isEmpty() || preferredSet.contains(x, y)) {
+                if (preferredSet.isEmpty() || 
+                        preferredSet.contains(x, y) || any) {
                     return spot;
                 }
                 moves = 0;
@@ -784,8 +785,11 @@ public abstract class Piece
     public boolean checkLineOfSight (
         BangBoard board, int tx, int ty, int dx, int dy)
     {
-        int e1 = computeElevation(board, tx, ty),
-            e2 = computeElevation(board, dx, dy);
+        int units = board.getElevationUnitsPerTile(),
+            e1 = computeElevation(board, tx, ty) +
+                (int)(getHeight()*0.5f*units),
+            e2 = computeElevation(board, dx, dy) +
+                (int)(getHeight()*0.5f*units);
         return board.checkLineOfSight(tx, ty, e1, dx, dy, e2);
     }
 

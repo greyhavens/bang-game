@@ -1657,7 +1657,7 @@ public class BangManager extends GameManager
             y = spot.y;
 
             // if we decided not to move, just pretend like we did the job
-            if (x == unit.x && y == unit.y) {
+            if (x == unit.x && y == unit.y && unit.getMaxFireDistance() > 0) {
                 return null;
             }
         }
@@ -1672,7 +1672,7 @@ public class BangManager extends GameManager
         }
 
         // validate that the move is still legal
-        if (!_moves.contains(x, y)) {
+        if (!_moves.contains(x, y) && x != unit.x && y != unit.y) {
 //             log.info("Unit requested invalid move [unit=" + unit +
 //                      ", x=" + x + ", y=" + y + ", moves=" + _moves + "].");
                 throw new InvocationException(MOVE_BLOCKED);
@@ -1688,7 +1688,9 @@ public class BangManager extends GameManager
         ArrayList<Piece> lappers = _bangobj.getOverlappers(munit);
         if (lappers != null) {
             for (Piece lapper : lappers) {
-                if (lapper.preventsOverlap(munit)) {
+                if (lapper.preventsOverlap(munit) && lapper != unit) {
+//                    log.info("Cannot overlap on move [unit=" + unit +
+//                            ", x=" + x + ", y=" + y + "].");
                     throw new InvocationException(MOVE_BLOCKED);
                 }
             }

@@ -1441,17 +1441,17 @@ public class BoardView extends BComponent
     /** Creates geometry to highlight the supplied set of tiles. */
     protected void highlightTiles (PointSet set, ColorRGBA highlightColor)
     {
-        highlightTiles(set, highlightColor, _movstate);
+        highlightTiles(set, highlightColor, _movstate, true);
     }
 
     /** Creates geometry to highlight the supplied set of tiles. */
-    protected void highlightTiles (
-            PointSet set, ColorRGBA highlightColor, TextureState tstate)
+    protected void highlightTiles (PointSet set, ColorRGBA highlightColor, 
+            TextureState tstate, boolean flatten)
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             int tx = set.getX(ii), ty = set.getY(ii);
             TerrainNode.Highlight highlight =
-                _tnode.createHighlight(tx, ty, true, true);
+                _tnode.createHighlight(tx, ty, flatten, flatten);
             highlight.setDefaultColor(highlightColor);
             highlight.setRenderState(tstate);
             _hnode.attachChild(highlight);

@@ -96,6 +96,7 @@ import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
+import com.jme.scene.state.TextureState;
 
 /**
  * Displays the main game board.
@@ -108,6 +109,11 @@ public class BangBoardView extends BoardView
         super(ctx, false);
         _ctx = ctx;
         _ctrl = ctrl;
+
+        // this is used to show a unit's attack range
+        _rngstate = RenderUtil.createTextureState(
+            ctx, "textures/ustatus/crosshairs_shotrange.png");
+
         addListener(this);
     }
 
@@ -1066,14 +1072,6 @@ public class BangBoardView extends BoardView
             return false;
         }
 
-        // see if this is a move selection after an attack selection
-        if (_action != null) {
-            _action[1] = tx;
-            _action[2] = ty;
-            executeAction();
-            return true;
-        }
-
         // store the coordinates toward which we wish to move
         _action = new int[] { _selection.pieceId, tx, ty, -1 };
 
@@ -1088,16 +1086,18 @@ public class BangBoardView extends BoardView
         // this is a bit hacky, but if the character is heading to a
         // teleporter, they don't get to attack
         boolean willTeleport = false;
-        for (Piece piece : _bangobj.pieces) {
-            if (piece.x == tx && piece.y == ty && piece instanceof Teleporter) {
-                willTeleport = true;
-                break;
+        if (_selection.getMinFireDistance() > 0) {
+            for (Piece piece : _bangobj.pieces) {
+                if (piece.x == tx && piece.y == ty && 
+                        piece instanceof Teleporter) {
+                    willTeleport = true;
+                    break;
+                }
             }
         }
 
         // potentially display our potential attacks
-        if (!_shiftDown && _attackEnabled && !willTeleport &&
-                _selection.getMinFireDistance() > 0) {
+        if (!_shiftDown && _attackEnabled && !willTeleport) {
             pruneAttackSet(moves, _attackSet, true);
         }
 
@@ -1111,7 +1111,7 @@ public class BangBoardView extends BoardView
             log.info("Waiting for attack selection (" + tx + ", " + ty + ")");
             PointSet attackRange = _selection.computeShotRange(
                     _bangobj.board, tx, ty);
-            highlightTiles(attackRange, ATTACK_RANGE_COLOR, _tgtstate);
+            highlightTiles(attackRange, ATTACK_RANGE_COLOR, _rngstate, false);
         }
         return true;
     }
@@ -1131,32 +1131,12 @@ public class BangBoardView extends BoardView
             piece.owner != _pidx) {
             // if we have not yet selected move coordinates, we'll let the
             // server figure it out for us when it processes our move
-            boolean wasnull = false;
             if (_action == null) {
                 _action = new int[] { _selection.pieceId,
                                       Short.MAX_VALUE, Short.MAX_VALUE, -1 };
-                wasnull = true;
             } 
             // note the piece we desire to fire upon
             _action[3] = piece.pieceId;
-
-            // if we have an min fire distance of 0 and initially selecting
-            // an attack target, show the remaining move locations
-            if (wasnull && _selection.getMinFireDistance() == 0) {
-                clearAttackSet();
-                _attackSet.add(tx, ty);
-                Targetable target = getTargetableSprite(piece);
-                if (target != null) {
-                    target.setTargeted(_selection.lastActed >= piece.lastActed ?
-                                       Targetable.TargetMode.MAYBE :
-                                       Targetable.TargetMode.SURE_SHOT,
-                                       (Unit)_selection);
-                    target.setPendingShot(true);
-                }
-                pruneMoveSet(_moveSet, tx, ty);
-                highlightTiles(_moveSet, getHighlightColor(_selection));
-                return true;
-            }
 
             getTargetableSprite(piece).setPendingShot(true);
             executeAction();
@@ -1888,6 +1868,9 @@ public class BangBoardView extends BoardView
 
     /** Set to true if shift was down during the mouse press. */
     protected boolean _shiftDown = false;
+
+    /** Texture used to show a unit's shot range. */
+    protected TextureState _rngstate;
 
     /** A traversal predicate for units running to their initial positions. */
     protected AStarPathUtil.TraversalPred _tpred =

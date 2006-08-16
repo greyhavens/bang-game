@@ -12,9 +12,7 @@ import com.jme.math.Vector3f;
 import com.threerings.bang.client.Config;
 
 import com.threerings.bang.game.client.MoveShootHandler;
-
 import com.threerings.bang.game.data.BangBoard;
-
 import com.threerings.bang.game.data.piece.Piece;
 
 import com.threerings.jme.sprite.LinePath;
@@ -29,6 +27,39 @@ public class ThunderbirdSprite extends UnitSprite
     public ThunderbirdSprite (String type)
     {
         super(type);
+    }
+
+    @Override // documentation inherited
+    public boolean updatePosition (BangBoard board)
+    {
+        if (_effectHandler == null) {
+            return super.updatePosition(board);
+        }
+
+        // we might move but end up in the same spot
+        moveSprite(board);
+        return isMoving();
+    }
+
+    @Override // documentation inherited
+    protected void moveSprite (BangBoard board)
+    {
+        if (_effectHandler == null) {
+            super.moveSprite(board);
+        }
+
+        // We want to be able to generate return paths
+        if (!isMoving()) {
+            Path path = createPath(board);
+            if (path != null) {
+                move(path);
+                _px = _piece.x;
+                _py = _piece.y;
+
+            } else {
+                setLocation(board, _piece.x, _piece.y);
+            }
+        }
     }
 
     @Override // documentation inherited
