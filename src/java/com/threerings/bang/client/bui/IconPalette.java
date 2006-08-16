@@ -68,7 +68,7 @@ public class IconPalette extends BContainer
             new Dimension(isize.width * columns, isize.height * rows));
 
         GroupLayout hlay = GroupLayout.makeHoriz(GroupLayout.RIGHT);
-        hlay.setGap(50);
+        hlay.setGap(35);
         _bcont = new BContainer(hlay);
         _bcont.setStyleClass("palette_buttons");
         _bcont.add(_back = new BButton("", _listener, "back"));

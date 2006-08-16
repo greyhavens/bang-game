@@ -5,10 +5,12 @@ package com.threerings.bang.ranch.client;
 
 import java.util.Iterator;
 
+import com.jmex.bui.layout.GroupLayout;
+
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.SetListener;
+import com.threerings.presents.dobj.SetAdapter;
 
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
@@ -32,6 +34,10 @@ public class UnitPalette extends IconPalette
         super(inspector, columns, rows, UnitIcon.ICON_SIZE, 1);
         setPaintBackground(true);
         _ctx = ctx;
+
+        // sneakily squeeze our back and more buttons closer together; my
+        // kingdom for artists that can make UIs with consistent dimensions
+        ((GroupLayout)_bcont.getLayoutManager()).setGap(15);
     }
 
     /**
@@ -41,8 +47,33 @@ public class UnitPalette extends IconPalette
     {
         for (int ii = 0; ii < units.length; ii++) {
             String name = _ctx.xlate(BangCodes.UNITS_MSGS, units[ii].getName());
-            UnitIcon icon = createIcon(_ctx, -1, units[ii], name);
+            UnitIcon icon = new UnitIcon(_ctx, units[ii]);
             icon.displayAvail(_ctx, disableUnavail);
+            addIcon(icon);
+        }
+    }
+
+    /**
+     * Configures the palette to display the specified Big Shot units,
+     * substituting the player's recruited Big Shots where available and
+     * marking other Big Shots as "locked".
+     */
+    public void setBigShots (UnitConfig[] units, PlayerObject user)
+    {
+        // listen to the user object for inventory additions
+        _user = user;
+        _user.addListener(_invlistener);
+
+        for (int ii = 0; ii < units.length; ii++) {
+            String name = _ctx.xlate(BangCodes.UNITS_MSGS, units[ii].getName());
+            UnitIcon icon = new UnitIcon(_ctx, units[ii]);
+            // if they have a big shot for this icon, switch it
+            BigShotItem bsitem = getBigShot(user, units[ii].type);
+            if (bsitem != null) {
+                icon.setItem(bsitem.getItemId(), bsitem.getGivenName());
+            } else {
+                icon.setLocked(_ctx, true);
+            }
             addIcon(icon);
         }
     }
@@ -55,7 +86,7 @@ public class UnitPalette extends IconPalette
      */
     public void setUser (PlayerObject user, boolean filterTown)
     {
-        // listen to the user object for inventory additions and deletions
+        // listen to the user object for inventory additions
         _user = user;
         _user.addListener(_invlistener);
 
@@ -68,7 +99,9 @@ public class UnitPalette extends IconPalette
                     BangUtil.getTownIndex(config.getTownId())) {
                     continue;
                 }
-                addUnit(bsitem);
+                UnitIcon icon = new UnitIcon(_ctx, config);
+                icon.setItem(bsitem.getItemId(), bsitem.getGivenName());
+                addIcon(icon);
             }
         }
     }
@@ -96,8 +129,8 @@ public class UnitPalette extends IconPalette
     }
 
     /**
-     * This must be called when the palette is going away to allow it to
-     * remove its listener registrations.
+     * This must be called when the palette is going away to allow it to remove
+     * its listener registrations.
      */
     public void shutdown ()
     {
@@ -108,46 +141,38 @@ public class UnitPalette extends IconPalette
         }
     }
 
-    protected void addUnit (BigShotItem unit)
+    protected BigShotItem getBigShot (PlayerObject user, String type)
     {
-        UnitConfig config = UnitConfig.getConfig(unit.getType());
-        addIcon(createIcon(_ctx, unit.getItemId(), config,
-                           unit.getGivenName().toString()));
+        for (Item item : user.inventory) {
+            if (item instanceof BigShotItem &&
+                ((BigShotItem)item).getType().equals(type)) {
+                return (BigShotItem)item;
+            }
+        }
+        return null;
     }
 
-    protected void removeUnit (int itemId)
+    protected void updateIcon (BigShotItem unit)
     {
         for (SelectableIcon sicon : _icons) {
             UnitIcon icon = (UnitIcon)sicon;
-            if (icon.getItemId() == itemId) {
-                removeIcon(icon);
-                return;
+            if (icon.getUnit().type.equals(unit.getType())) {
+                icon.setItem(unit.getItemId(), unit.getGivenName());
+                // trigger our inspector to refresh if needed
+                if (_inspector != null) {
+                    _inspector.iconUpdated(icon, icon.isSelected());
+                }
             }
         }
     }
 
-    protected UnitIcon createIcon (
-        BangContext ctx, int itemId, UnitConfig config, String name)
-    {
-        return new UnitIcon(ctx, itemId, config, name);
-    }
-
-    protected SetListener _invlistener = new SetListener() {
+    protected SetAdapter _invlistener = new SetAdapter() {
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(PlayerObject.INVENTORY)) {
                 Object item = event.getEntry();
                 if (item instanceof BigShotItem) {
-                    addUnit((BigShotItem)item);
+                    updateIcon((BigShotItem)item);
                 }
-            }
-        }
-        public void entryUpdated (EntryUpdatedEvent event) {
-            // nada
-        }
-        public void entryRemoved (EntryRemovedEvent event) {
-            if (event.getName().equals(PlayerObject.INVENTORY)) {
-                // removal of non-bigshots will just NOOP
-                removeUnit((Integer)event.getKey());
             }
         }
     };

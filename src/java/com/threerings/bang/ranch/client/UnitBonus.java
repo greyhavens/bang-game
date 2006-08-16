@@ -21,97 +21,114 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
-
 import com.threerings.bang.util.BasicContext;
+
+import com.threerings.bang.ranch.data.RanchCodes;
 
 /**
  * Displays bonus/penalty information for a unit.
  */
 public class UnitBonus extends BContainer
 {
-    public UnitBonus (BasicContext ctx)
+    /** Used by {@link #setUnitConfig}. */
+    public static enum Which { ATTACK, DEFEND, BOTH };
+
+    public UnitBonus (BasicContext ctx, int gap)
     {
         _ctx = ctx;
-        _msgs = ctx.getMessageManager().getBundle("ranch");
+        _gap = gap;
+        _msgs = ctx.getMessageManager().getBundle(RanchCodes.RANCH_MSGS);
         _umsgs = ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
     }
 
     /**
      * Called to update the displayed information.
      */
-    public void setUnitConfig (UnitConfig config, boolean addTip)
+    public void setUnitConfig (UnitConfig config, boolean addTip, Which which)
     {
         _addTip = addTip;
         removeAll();
         ArrayList<BContainer> bonusList = new ArrayList<BContainer>();
-        for (UnitConfig.Mode mode : UnitConfig.Mode.values()) {
-            int adj = config.damageAdjust[mode.ordinal()];
-            if (config.damage + adj <= 0) {
-                bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                            _modeIconMap.get(mode), BonusIcons.NA));
-            } else if (adj > 0) {
-                bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                            _modeIconMap.get(mode), BonusIcons.UP));
-            } else if (adj < 0) {
-                bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                            _modeIconMap.get(mode), BonusIcons.DOWN));
+
+        if (which != Which.DEFEND) {
+            for (UnitConfig.Mode mode : UnitConfig.Mode.values()) {
+                int adj = config.damageAdjust[mode.ordinal()];
+                if (config.damage + adj <= 0) {
+                    bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
+                                      _modeIconMap.get(mode), BonusIcons.NA));
+                } else if (adj > 0) {
+                    bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
+                                      _modeIconMap.get(mode), BonusIcons.UP));
+                } else if (adj < 0) {
+                    bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
+                                      _modeIconMap.get(mode), BonusIcons.DOWN));
+                }
             }
-        }
-        for (UnitConfig.Make make : UnitConfig.Make.values()) {
-            int adj = config.damageAdjust[
-                UnitConfig.MODE_COUNT + make.ordinal()];
-            if (config.damage + adj <= 0) {
-                bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                            _makeIconMap.get(make), BonusIcons.NA));
-            } else if (adj > 0) {
-                bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                            _makeIconMap.get(make), BonusIcons.UP));
-            } else if (adj < 0) {
-                bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                            _makeIconMap.get(make), BonusIcons.DOWN));
-            }
-        }
-        for (UnitConfig.Mode mode : UnitConfig.Mode.values()) {
-            int adj = config.defenseAdjust[mode.ordinal()];
-            if (adj > 0) {
-                bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
-                            _modeIconMap.get(mode), BonusIcons.UP));
-            } else if (adj < 0) {
-                bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
-                            _modeIconMap.get(mode), BonusIcons.DOWN));
-            }
-        }
-        for (UnitConfig.Make make : UnitConfig.Make.values()) {
-            int adj = config.defenseAdjust[
-                UnitConfig.MODE_COUNT + make.ordinal()];
-            if (adj > 0) {
-                bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
-                            _makeIconMap.get(make), BonusIcons.UP));
-            } else if (adj < 0) {
-                bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
-                            _makeIconMap.get(make), BonusIcons.DOWN));
+            for (UnitConfig.Make make : UnitConfig.Make.values()) {
+                int adj = config.damageAdjust[
+                    UnitConfig.MODE_COUNT + make.ordinal()];
+                if (config.damage + adj <= 0) {
+                    bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
+                                      _makeIconMap.get(make), BonusIcons.NA));
+                } else if (adj > 0) {
+                    bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
+                                      _makeIconMap.get(make), BonusIcons.UP));
+                } else if (adj < 0) {
+                    bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
+                                      _makeIconMap.get(make), BonusIcons.DOWN));
+                }
             }
         }
 
-        int size = bonusList.size();
-        if (size == 0) {
-            return;
+        if (which != Which.ATTACK) {
+            for (UnitConfig.Mode mode : UnitConfig.Mode.values()) {
+                int adj = config.defenseAdjust[mode.ordinal()];
+                if (adj > 0) {
+                    bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
+                                      _modeIconMap.get(mode), BonusIcons.UP));
+                } else if (adj < 0) {
+                    bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
+                                      _modeIconMap.get(mode), BonusIcons.DOWN));
+                }
+            }
+            for (UnitConfig.Make make : UnitConfig.Make.values()) {
+                int adj = config.defenseAdjust[
+                    UnitConfig.MODE_COUNT + make.ordinal()];
+                if (adj > 0) {
+                    bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
+                                      _makeIconMap.get(make), BonusIcons.UP));
+                } else if (adj < 0) {
+                    bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
+                                      _makeIconMap.get(make), BonusIcons.DOWN));
+                }
+            }
         }
-        if (size > _maxBonusPerRow) {
-            if (size - _maxBonusPerRow == 1) {
-                size = _maxBonusPerRow - 1;
+
+        int cols = bonusList.size();
+        if (cols > MAX_COLS) {
+            if (cols - MAX_COLS == 1) {
+                cols = MAX_COLS - 1;
             } else {
-                size = _maxBonusPerRow;
+                cols = MAX_COLS;
             }
         }
 
-        TableLayout layout = new TableLayout(size, 3, 24);
-        layout.setHorizontalAlignment(TableLayout.CENTER);
-        layout.setVerticalAlignment(TableLayout.CENTER);
-        setLayoutManager(layout);
-        for (Iterator<BContainer> iter = bonusList.iterator();
-                iter.hasNext(); ) {
-            add(iter.next());
+        if (cols == 0) {
+            setLayoutManager(GroupLayout.makeHoriz(GroupLayout.CENTER));
+            String none = "m.no_mods";
+            switch (which) {
+            case ATTACK: none = "m.no_attack_mods";
+            case DEFEND: none = "m.no_defend_mods";
+            }
+            add(bonusIconLabel(BonusIcons.NA, _msgs.get(none)));
+
+        } else {
+            TableLayout layout = new TableLayout(cols, 3, _gap);
+            layout.setVerticalAlignment(TableLayout.CENTER);
+            setLayoutManager(layout);
+            for (BContainer cont : bonusList) {
+                add(cont);
+            }
         }
     }
 
@@ -120,10 +137,10 @@ public class UnitBonus extends BContainer
      * a formated tool tip text.
      */
     protected BContainer makeBonusContainer (
-            BonusIcons method, BonusIcons type, BonusIcons effect)
+        BonusIcons method, BonusIcons type, BonusIcons effect)
     {
         GroupLayout layout = GroupLayout.makeHoriz(GroupLayout.CENTER);
-        layout.setGap(0);
+        layout.setGap(1);
         BContainer bonus = new BContainer(layout);
 
         String firstPart = null;
@@ -182,39 +199,39 @@ public class UnitBonus extends BContainer
             return _bonusIcons[idx];
         }
 
-        BImage icons = _ctx.getImageCache().getBImage(
-                "ui/ranch/unit_icons.png");
+        BImage icons =
+            _ctx.getImageCache().getBImage("ui/ranch/unit_icons.png");
         int size = icons.getHeight();
-        _bonusIcons[idx] = new SubimageIcon(icons, idx * size, 0, size, size);
+        _bonusIcons[idx] = new SubimageIcon(
+            icons, idx * ICON_WIDTH, 0, ICON_WIDTH, size);
         return _bonusIcons[idx];
     }
 
-    protected BasicContext _ctx;
-
-    protected MessageBundle _msgs;
-    protected MessageBundle _umsgs;
-
-    protected boolean _addTip;
-
-    protected enum BonusIcons {
+    protected static enum BonusIcons {
         ATTACK, DEFEND,
         GROUND, AIR, RANGE,
         STEAM, HUMAN, SPIRIT,
         UP, DOWN, NA
     };
-    protected BIcon[] _bonusIcons =
-        new BIcon[BonusIcons.values().length];
 
-    protected static final int _maxBonusPerRow = 3;
+    protected BasicContext _ctx;
+    protected int _gap;
+    protected MessageBundle _msgs, _umsgs;
+    protected boolean _addTip;
+    protected BIcon[] _bonusIcons = new BIcon[BonusIcons.values().length];
+
+    protected static final int ICON_WIDTH = 19;
+    protected static final int MAX_COLS = 3;
+
     protected static final HashMap<UnitConfig.Mode, BonusIcons> _modeIconMap =
         new HashMap<UnitConfig.Mode, BonusIcons>();
     protected static final HashMap<UnitConfig.Make, BonusIcons> _makeIconMap =
         new HashMap<UnitConfig.Make, BonusIcons>();
+
     static {
         _modeIconMap.put(UnitConfig.Mode.GROUND, BonusIcons.GROUND);
         _modeIconMap.put(UnitConfig.Mode.AIR, BonusIcons.AIR);
         _modeIconMap.put(UnitConfig.Mode.RANGE, BonusIcons.RANGE);
-
         _makeIconMap.put(UnitConfig.Make.HUMAN, BonusIcons.HUMAN);
         _makeIconMap.put(UnitConfig.Make.STEAM, BonusIcons.STEAM);
         _makeIconMap.put(UnitConfig.Make.SPIRIT, BonusIcons.SPIRIT);

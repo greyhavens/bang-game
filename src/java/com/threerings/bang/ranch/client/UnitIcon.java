@@ -15,6 +15,7 @@ import com.jmex.bui.BImage;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
+import com.threerings.util.Name;
 
 import com.threerings.bang.client.BangUI;
 
@@ -32,19 +33,11 @@ import com.threerings.bang.util.BasicContext;
  */
 public class UnitIcon extends PaletteIcon
 {
-    public UnitIcon (BasicContext ctx, int itemId, UnitConfig config)
+    public UnitIcon (BasicContext ctx, UnitConfig config)
     {
-        this(ctx, itemId, config,
-             ctx.xlate(BangCodes.UNITS_MSGS, config.getName()));
-    }
-
-    public UnitIcon (BasicContext ctx, int itemId, UnitConfig config,
-                     String name)
-    {
-        _itemId = itemId;
         _config = config;
         _ctx = ctx;
-        setText(name);
+        setText(ctx.xlate(BangCodes.UNITS_MSGS, config.getName()));
         setIcon(BangUI.getUnitIcon(config));
         String msg = MessageBundle.compose(
             "m.unit_icon", config.getName(), config.getTip());
@@ -53,18 +46,43 @@ public class UnitIcon extends PaletteIcon
 
     public void displayAvail (BangContext ctx, boolean disableUnavail)
     {
-        // determine whether we should display a locked or unlocked icon over
-        // our unit image
+        // determine if we should display a locked/unlocked icon over our unit
         if (_config.badgeCode != 0) {
-            String type = "unlocked";
-            if (!_config.hasAccess(ctx.getUserObject())) {
-                type = "locked";
-                setTooltipText(getTooltipText() + "\n\n" + 
-                               ctx.xlate(BangCodes.UNITS_MSGS,
-                                         _config.getName() + "_badge"));
+            boolean locked = !_config.hasAccess(ctx.getUserObject());
+            setLocked(ctx, locked);
+            if (locked) {
                 setEnabled(!disableUnavail);
+                setTooltipText(getTooltipText() + "\n\n" + 
+                    ctx.xlate(BangCodes.UNITS_MSGS,
+                        _config.getName() + "_badge"));
             }
-            _lock = ctx.loadImage("ui/ranch/unit_" + type + ".png");
+        }
+    }
+
+    public void setLocked (BangContext ctx, boolean locked)
+    {
+        String type = locked ? "locked" : "unlocked";
+        _lock = ctx.loadImage("ui/ranch/unit_" + type + ".png");
+        if (isAdded()) {
+            _lock.reference();
+        }
+    }
+
+    /**
+     * Converts a "recruitable" icon into a "recruited" icon. Clears out any
+     * lock icon being displayed.
+     */
+    public void setItem (int itemId, Name name)
+    {
+        _itemId = itemId;
+        setText(name.toString());
+
+        // clear out our lock
+        if (_lock != null) {
+            if (isAdded()) {
+                _lock.release();
+            }
+            _lock = null;
         }
     }
 
@@ -119,13 +137,13 @@ public class UnitIcon extends PaletteIcon
     {
         BContainer tooltip = GroupLayout.makeVBox(GroupLayout.CENTER);
         tooltip.add(super.createTooltipComponent(tiptext));
-        UnitBonus ubonus = new UnitBonus(_ctx);
-        ubonus.setUnitConfig(_config, false);
+        UnitBonus ubonus = new UnitBonus(_ctx, 25);
+        ubonus.setUnitConfig(_config, false, UnitBonus.Which.BOTH);
         tooltip.add(ubonus);
         return tooltip;
     }
 
-    protected int _itemId;
+    protected int _itemId = -1;
     protected UnitConfig _config;
     protected BImage _lock;
     protected BasicContext _ctx;

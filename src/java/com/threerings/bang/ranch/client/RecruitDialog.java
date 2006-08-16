@@ -46,7 +46,7 @@ public class RecruitDialog extends BDecoratedWindow
         _ranchobj = ranchobj;
         _config = config;
 
-        add(new UnitIcon(ctx, -1, config), BorderLayout.WEST);
+        add(new UnitIcon(ctx, config), BorderLayout.WEST);
         BContainer cont = new BContainer(GroupLayout.makeVStretch());
         cont.add(new BLabel(_msgs.get("m.rd_intro"), "ranch_recruit"),
                  GroupLayout.FIXED);
@@ -57,8 +57,6 @@ public class RecruitDialog extends BDecoratedWindow
         cont.add(row, GroupLayout.FIXED);
 
         cont.add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
-        _status.setStyleClass("shop_status");
-
         cont.add(new Spacer(1, 1));
 
         row = new BContainer(GroupLayout.makeHStretch());

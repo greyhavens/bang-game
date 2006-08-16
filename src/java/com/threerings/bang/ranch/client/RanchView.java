@@ -50,17 +50,17 @@ public class RanchView extends ShopView
         add(new BLabel(_msgs.get("m.name_" + townId), "shopkeep_name_label"),
             new Rectangle(12, 513, 155, 25));
 
-        add(new WalletLabel(_ctx, true), new Rectangle(40, 73, 150, 40));
+        add(new WalletLabel(_ctx, true), new Rectangle(25, 53, 150, 40));
         add(createHelpButton(), new Point(780, 25));
         add(new TownButton(ctx), new Point(870, 25));
         add(_status = new StatusLabel(ctx), new Rectangle(250, 10, 520, 50));
         _status.setStyleClass("shop_status");
 
         _inspector = new UnitInspector(_ctx);
-        add(_inspector, new Rectangle(178, 60, 258, 586));
+        add(_inspector, new Rectangle(480, 92, 521, 560));
 
-        // create our various tabs: recruitable big shots...
-        _bigshots = new UnitPalette(ctx, _inspector, 4, 3);
+        // create our bigshot and normal unit palettes
+        _bigshots = new UnitPalette(ctx, _inspector, COLS, ROWS);
         UnitConfig[] units =
             UnitConfig.getTownUnits(townId, UnitConfig.Rank.BIGSHOT);
         Arrays.sort(units, new Comparator<UnitConfig>() {
@@ -69,17 +69,9 @@ public class RanchView extends ShopView
                 return (rv != 0) ? rv : uc1.type.compareTo(uc2.type);
             };
         });
-        _bigshots.setUnits(units, false);
+        _bigshots.setBigShots(units, _ctx.getUserObject());
 
-        // ...recruited big shots...
-        _recruits = new UnitPalette(ctx, _inspector, 4, 3);
-        _recruits.setUser(_ctx.getUserObject(), false);
-
-        // ...and normal
-        _units = new UnitPalette(ctx, _inspector, 4, 3);
-        //EnumSet<UnitConfig.Rank> ranks = EnumSet.of(
-        //    UnitConfig.Rank.NORMAL, UnitConfig.Rank.SPECIAL);
-        //units = UnitConfig.getTownUnits(townId, ranks);
+        _units = new UnitPalette(ctx, _inspector, COLS, ROWS);
         units = UnitConfig.getTownUnits(townId, UnitConfig.Rank.NORMAL);
         Arrays.sort(units, new Comparator<UnitConfig>() {
             public int compare (UnitConfig uc1, UnitConfig uc2) {
@@ -98,7 +90,7 @@ public class RanchView extends ShopView
             protected void tabSelected (int index) {
                 RanchView.this.selectTab(index);
             }
-        }, new Rectangle(433, 585, 15+3*140, 66));
+        }, TABS_RECT);
 
         // start with a random shop tip
         _status.setStatus(getShopTip(), false);
@@ -119,7 +111,6 @@ public class RanchView extends ShopView
         // shut down our palettes
         _bigshots.shutdown();
         _units.shutdown();
-        _recruits.shutdown();
     }
 
     protected void selectTab (int tabidx)
@@ -128,15 +119,14 @@ public class RanchView extends ShopView
         switch (tabidx) {
         default:
         case 0: newtab = _bigshots; break;
-        case 1: newtab = _recruits; break;
-        case 2: newtab = _units; break;
+        case 1: newtab = _units; break;
         }
 
         if (newtab != _seltab) {
             if (_seltab != null) {
                 remove(_seltab);
             }
-            add(_seltab = newtab, TAB_LOC);
+            add(_seltab = newtab, TAB_RECT);
             newtab.selectFirstIcon();
             _status.setStatus(_msgs.get("m." + TABS[tabidx] + "_tip"), false);
         }
@@ -155,10 +145,14 @@ public class RanchView extends ShopView
     protected HackyTabs _tabs;
     protected UnitInspector _inspector;
     protected UnitPalette _seltab;
-    protected UnitPalette _bigshots, _units, _recruits;
+    protected UnitPalette _bigshots, _units;
     protected StatusLabel _status;
 
-    protected static final String[] TABS = { "bigshots", "recruits", "units" };
-    protected static final Rectangle TAB_LOC = new Rectangle(
-        453, 77, UnitIcon.ICON_SIZE.width*4, UnitIcon.ICON_SIZE.height*3+40);
+    protected static final int COLS = 2, ROWS = 3;
+
+    protected static final String[] TABS = { "bigshots", "units" };
+    protected static final Rectangle TABS_RECT = new Rectangle(
+        166, 585, 15+2*140, 66);
+    protected static final Rectangle TAB_RECT = new Rectangle(
+        188, 83, UnitIcon.ICON_SIZE.width*2, UnitIcon.ICON_SIZE.height*3+35);
 }

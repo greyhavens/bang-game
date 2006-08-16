@@ -62,6 +62,7 @@ tooltip_label {
 }
 
 component {
+//  border: 1 solid #FFFFFF;
 }
 
 component:disabled {
@@ -609,7 +610,7 @@ palette_background {
 }
 
 palette_buttons {
-  padding: 1 18 1 18;
+  padding: 1 23 1 18;
 }
 
 palette_icon {

@@ -10,8 +10,10 @@ import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
+import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Point;
 
@@ -27,6 +29,7 @@ import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.ranch.data.RanchCodes;
 import com.threerings.bang.ranch.data.RanchObject;
 
 /**
@@ -38,16 +41,29 @@ public class UnitInspector extends BContainer
 {
     public UnitInspector (BangContext ctx)
     {
-        setLayoutManager(GroupLayout.makeVStretch());
+        setLayoutManager(GroupLayout.makeHStretch());
+
+        add(_left = new BContainer(GroupLayout.makeVStretch()));
+        add(_right = new BContainer(GroupLayout.makeVStretch()));
 
         _ctx = ctx;
-        _msgs = ctx.getMessageManager().getBundle("ranch");
+        _msgs = ctx.getMessageManager().getBundle(RanchCodes.RANCH_MSGS);
         _umsgs = ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
 
-        add(_uname = new BLabel("", "ranch_unit_name"), GroupLayout.FIXED);
-        add(_uview = new UnitView(_ctx, false), GroupLayout.FIXED);
+        // first create the right column
+        _right.add(new Spacer(10, 30), GroupLayout.FIXED);
+        _right.add(_udescrip = new BLabel("", "ranch_unit_info"));
+        _right.add(new BLabel(new ImageIcon(
+                                  ctx.loadImage("ui/pregame/star.png"))),
+            GroupLayout.FIXED);
+        _right.add(new BContainer());
 
-        TableLayout tlay = new TableLayout(4, 0, 5);
+        // then the left column
+        _left.add(_uname = new BLabel("", "ranch_unit_name"),
+            GroupLayout.FIXED);
+        _left.add(_uview = new UnitView(_ctx, false), GroupLayout.FIXED);
+
+        TableLayout tlay = new TableLayout(4, 5, 5);
         tlay.setHorizontalAlignment(TableLayout.STRETCH);
         BContainer stats = new BContainer(tlay);
         stats.add(new BLabel(_msgs.get("m.make"), "table_label"));
@@ -59,32 +75,32 @@ public class UnitInspector extends BContainer
         stats.add(_umode = new BLabel("", "table_data"));
         stats.add(new BLabel(_msgs.get("m.shoot"), "table_label"));
         stats.add(_ufire = new BLabel("", "table_data"));
-        add(stats, GroupLayout.FIXED);
+        _left.add(stats, GroupLayout.FIXED);
 
-        add(_ubonus = new UnitBonus(_ctx), GroupLayout.FIXED);
-        _ubonus.setPreferredSize(new Dimension(258, 40));
-
-        add(_udescrip = new BLabel("", "ranch_unit_info"));
+        tlay = new TableLayout(2, 5, 5);
+        tlay.setVerticalAlignment(TableLayout.CENTER);
+        BContainer bonuses = new BContainer(tlay);
+        bonuses.add(new BLabel(_msgs.get("m.t_attack"), "table_label"));
+        bonuses.add(_abonus = new UnitBonus(_ctx, 10));
+        bonuses.add(new BLabel(_msgs.get("m.t_defend"), "table_label"));
+        bonuses.add(_dbonus = new UnitBonus(_ctx, 10));
+        _left.add(bonuses);
 
         // we'll use this group when recruiting
-        _recruit = new BContainer(new AbsoluteLayout());
-        BContainer row = new BContainer(
-                GroupLayout.makeHoriz(GroupLayout.LEFT));
-        row.add(new BLabel(_msgs.get("m.cost"), "price_label"));
-        row.add(_cost = new MoneyLabel(ctx));
-        _recruit.add(row, new Point(65, 53));
+        _recruit = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
+        _recruit.add(new BLabel(_msgs.get("m.cost"), "table_label"));
+        _recruit.add(_cost = new MoneyLabel(ctx));
         BButton btn = new BButton(_msgs.get("m.recruit"), this, "recruit");
         btn.setStyleClass("big_button");
-        _recruit.add(btn, new Point(105, 0));
+        _recruit.add(btn);
 
         // we'll use this group to start practice scenarios
-        _practice = new BContainer(new AbsoluteLayout());
-        _practice.add(new BLabel(
-                    _msgs.get("m.practice_desc"), "ranch_practice_info"),
-                new Point(65, 48));
+        _practice = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
+        _practice.add(new BLabel(_msgs.get("m.practice_desc"),
+                          "ranch_practice_info"));
         btn = new BButton(_msgs.get("m.practice"), this, "practice");
         btn.setStyleClass("big_button");
-        _practice.add(btn, new Point(82, 0));
+        _practice.add(btn);
     }
 
     /**
@@ -114,14 +130,15 @@ public class UnitInspector extends BContainer
         _uname.setText(uicon.getText());
         _udescrip.setText(_umsgs.xlate(config.getName() + "_descrip"));
         _umake.setText(_umsgs.get("m." + config.make.toString().toLowerCase()));
-        _umake.setIcon(_ubonus.getBonusIcon(config.make));
+        _umake.setIcon(_abonus.getBonusIcon(config.make));
         _umode.setText(_umsgs.get("m." + config.mode.toString().toLowerCase()));
-        _umode.setIcon(_ubonus.getBonusIcon(config.mode));
+        _umode.setIcon(_abonus.getBonusIcon(config.mode));
         _umove.setText("" + config.moveDistance);
         _ufire.setText(config.getDisplayFireDistance());
 
         // set up the bonus display
-        _ubonus.setUnitConfig(config, true);
+        _abonus.setUnitConfig(config, true, UnitBonus.Which.ATTACK);
+        _dbonus.setUnitConfig(config, true, UnitBonus.Which.DEFEND);
 
         // configure the fancy 3D unit display
         _uview.setUnit(config);
@@ -142,14 +159,14 @@ public class UnitInspector extends BContainer
             showPractice = true;
         }
         if (showRecruit && !_recruit.isAdded()) {
-            add(_recruit, GroupLayout.FIXED);
+            _left.add(_recruit, GroupLayout.FIXED);
         } else if (!showRecruit && _recruit.isAdded()) {
-            remove(_recruit);
+            _left.remove(_recruit);
         }
         if (showPractice && !_practice.isAdded()) {
-            add(_practice, GroupLayout.FIXED);
+            _left.add(_practice, GroupLayout.FIXED);
         } else if (!showPractice && _practice.isAdded()) {
-            remove(_practice);
+            _left.remove(_practice);
         }
         // TODO: handle customize
     }
@@ -186,8 +203,9 @@ public class UnitInspector extends BContainer
     protected int _itemId = -1;
     protected UnitConfig _config;
 
+    protected BContainer _left, _right;
     protected BContainer _recruit, _customize, _practice;
-    protected UnitBonus _ubonus;
+    protected UnitBonus _abonus, _dbonus;
     protected MoneyLabel _cost;
     protected UnitView _uview;
     protected BLabel _uname, _udescrip;
