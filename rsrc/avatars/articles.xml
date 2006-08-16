@@ -76,6 +76,18 @@
     <component cclass="male/clothing_back" name="shirt_collar"/>
   </article>
 
+ <article name="male_prospector_beans" townId="frontier_town"
+           slot="clothing" scrip="2500" coins="1">
+    <component cclass="male/clothing_back" name="a_skinny_prospector"/>
+    <component cclass="male/clothing_front" name="skinny_prospector_beans"/>
+  </article>
+
+ <article name="male_prospector_pick" townId="frontier_town"
+           slot="clothing" scrip="2500" coins="1">
+    <component cclass="male/clothing_back" name="a_skinny_prospector"/>
+    <component cclass="male/clothing_front" name="skinny_prospector_pick"/>
+  </article>
+
 
 
   <!-- male clothing: indian trading post -->
@@ -84,6 +96,42 @@
     <component cclass="male/clothing_back" name="wolf_spear"/>
     <component cclass="male/clothing_front" name="wolf_hunter"/>
   </article>
+
+<article name="male_fat_rifle" townId="indian_post"
+           slot="clothing" scrip="2500" coins="2">
+    <component cclass="male/clothing_back" name="a_chubby_geronimo"/>
+    <component cclass="male/clothing_front" name="chubby_geronimo_rifle"/>
+  </article>
+
+<article name="male_fat_tomahawk" townId="indian_post"
+           slot="clothing" scrip="2500" coins="2">
+    <component cclass="male/clothing_back" name="a_chubby_geronimo"/>
+    <component cclass="male/clothing_front" name="chubby_geronimo_tomahawk"/>
+  </article>
+
+<article name="male_fed_jacket_revolver" townId="indian_post"
+           slot="clothing" scrip="1500" coins="2">
+    <component cclass="male/clothing_back" name="a_federal_jacket"/>
+    <component cclass="male/clothing_front" name="federal_jacket_revolver"/>
+  </article>
+
+<article name="male_fed_jacket_shotgun" townId="indian_post"
+           slot="clothing" scrip="1500" coins="2">
+    <component cclass="male/clothing_back" name="a_federal_jacket"/>
+    <component cclass="male/clothing_front" name="federal_jacket_shotgun"/>
+  </article>
+
+<article name="male_warrior_pistol" townId="indian_post"
+           slot="clothing" scrip="1500" coins="2">
+    <component cclass="male/clothing_back" name="a_warrior"/>
+    <component cclass="male/clothing_front" name="warrior_pistol"/>
+  </article>
+
+<article name="male_warrior_sheild" townId="indian_post"
+           slot="clothing" scrip="3000" coins="2">
+    <component cclass="male/clothing_back" name="a_warrior"/>
+    <component cclass="male/clothing_front" name="warrior_shield"/>
+  </article
 
 
 

@@ -26,6 +26,10 @@
     <aspect name="sweptback" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="parted" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="balding" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="wirey_short" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="wirey_medium" townId="frontier_town" scrip="350" coins="0"/>
+    <aspect name="dredds_short" townId="frontier_town" scrip="1000" coins="0"/>
+    <aspect name="dredds_long" townId="frontier_town" scrip="2000" coins="0"/>
   </class>
 
   <class name="male/eyebrows">
@@ -88,6 +92,7 @@
     <aspect name="grizzly" townId="frontier_town" scrip="750" coins="1"/>
     <aspect name="sideburns" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="grant" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="muttonchops" townId="frontier_town" scrip="600" coins="1"/
   </class>
 
   <!-- female avatar aspects -->
