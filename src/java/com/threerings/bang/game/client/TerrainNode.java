@@ -448,6 +448,10 @@ public class TerrainNode extends Node
             }
         }
         
+        // attach the skirt surrounding the terrain
+        attachChild(_skirt = new Skirt());
+        _skirt.updateRenderState();
+        
         // compute the bounding box planes used for ray casting
         computeBoundingBoxPlanes();
     }
@@ -494,27 +498,28 @@ public class TerrainNode extends Node
             computeBoundingBoxPlanes();
         }
         
-        // if the region includes the edges, we have to update the whole
-        // shebang
-        Rectangle rect;
+        // if the region includes the edges, we have to update all blocks
+        // on the edges, plus the skirt
+        boolean updateEdges = false;
         if (x1 <= 0 || y1 <= 0 || x2 >= _board.getHeightfieldWidth() - 1 ||
             y2 >= _board.getHeightfieldHeight() - 1) {
             _board.updateMinEdgeHeight();
-            rect = new Rectangle(-1, -1, _board.getHeightfieldWidth() + 1,
-                _board.getHeightfieldHeight() + 1);
-
-        } else {
-            rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
+            _skirt.updateVertices();
+            updateEdges = true;
         }
 
         // grow the rectangle to make sure it includes the normals
+        Rectangle rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
         rect.grow(1, 1);
 
         for (int x = 0; x < _blocks.length; x++) {
             for (int y = 0; y < _blocks[x].length; y++) {
                 SplatBlock block = _blocks[x][y];
                 Rectangle isect = rect.intersection(block.ebounds);
-                if (!isect.isEmpty()) {
+                if (updateEdges && block.isOnEdge()) {
+                    block.refreshGeometry(block.ebounds);
+                    block.mesh.updateModelBound();
+                } else if (!isect.isEmpty()) {
                     block.refreshGeometry(isect);
                     block.mesh.updateModelBound();
                 }
@@ -538,9 +543,15 @@ public class TerrainNode extends Node
      */
     public void refreshTerrain (int x1, int y1, int x2, int y2)
     {
-        Rectangle rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
+        // if the region includes the edges, we have to update the skirt
+        if (x1 <= 0 || y1 <= 0 || x2 >= _board.getHeightfieldWidth() - 1 ||
+            y2 >= _board.getHeightfieldHeight() - 1) {
+            _board.updateEdgeTerrain();
+            _skirt.updateTexture();
+        }
         
         // grow the rectangle to make sure it includes surroundings
+        Rectangle rect = new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1);
         rect.grow(1, 1);
         
         for (int x = 0; x < _blocks.length; x++) {
@@ -810,24 +821,8 @@ public class TerrainNode extends Node
      */
     public void getHeightfieldVertex (int x, int y, Vector3f result)
     {
-        // expand the edges to hide the void
-        result.x = x * SUB_TILE_SIZE;
-        if (x < -1) {
-            result.x -= EDGE_SIZE;
-
-        } else if (x > _board.getHeightfieldWidth()) {
-            result.x += EDGE_SIZE;
-        }
-
-        result.y = y * SUB_TILE_SIZE;
-        if (y < -1) {
-            result.y -= EDGE_SIZE;
-
-        } else if (y > _board.getHeightfieldHeight()) {
-            result.y += EDGE_SIZE;
-        }
-
-        result.z = getHeightfieldValue(x, y);
+        result.set(x * SUB_TILE_SIZE, y * SUB_TILE_SIZE,
+            getHeightfieldValue(x, y));
     }
 
     /**
@@ -1259,23 +1254,8 @@ public class TerrainNode extends Node
                 step1 = 1.0f / (SPLAT_SIZE+1);
             for (int y = (be ? -2 : 0), ymax = y + vheight; y < ymax; y++) {
                 for (int x = (le ? -2 : 0), xmax = x + vwidth; x < xmax; x++) {
-                    float xoff = 0f;
-                    if (le && x == -2) {
-                        xoff = -EDGE_SIZE / TILE_SIZE;
-
-                    } else if (re && x == xmax - 1) {
-                        xoff = EDGE_SIZE / TILE_SIZE;
-                    }
-                    tbuf0.put(x * step0 + xoff);
-
-                    float yoff = 0f;
-                    if (be && y == -2) {
-                        yoff = -EDGE_SIZE / TILE_SIZE;
-
-                    } else if (te && y == ymax - 1) {
-                        yoff = EDGE_SIZE / TILE_SIZE;
-                    }
-                    tbuf0.put(y * step0 + yoff);
+                    tbuf0.put(x * step0);
+                    tbuf0.put(y * step0);
                     
                     tbuf1.put(0.5f*step1 + x * step1);
                     tbuf1.put(0.5f*step1 + y * step1);
@@ -1337,6 +1317,14 @@ public class TerrainNode extends Node
             // attach self and update render state
             attachChild(node);
             node.updateRenderState();
+        }
+        
+        /**
+         * Checks whether this block includes an edge.
+         */
+        public boolean isOnEdge ()
+        {
+            return !ebounds.equals(bounds);
         }
         
         /**
@@ -1640,7 +1628,7 @@ public class TerrainNode extends Node
                 alphaBuffers.put(code, abuf = ByteBuffer.allocateDirect(
                     TEXTURE_SIZE*TEXTURE_SIZE*4));
                 rect = bounds;
-             }
+            }
             
             // update the affected region of the buffer
             float step = (SPLAT_SIZE + 1.0f) / TEXTURE_SIZE, alpha;
@@ -1676,6 +1664,89 @@ public class TerrainNode extends Node
         }
     }
 
+    /** Surrounds the board with the most common edge terrain. */
+    protected class Skirt extends TriMesh
+    {
+        public Skirt ()
+        {
+            super("skirt");
+            FloatBuffer vbuf = BufferUtils.createVector3Buffer(8),
+                nbuf = BufferUtils.createVector3Buffer(8),
+                tbuf = BufferUtils.createVector2Buffer(8);
+            IntBuffer ibuf = BufferUtils.createIntBuffer(10);
+            
+            float bwidth = _board.getWidth() * TILE_SIZE,
+                bheight = _board.getHeight() * TILE_SIZE,
+                voffset = 2 * SUB_TILE_SIZE,
+                z = getHeightfieldValue(-1, -1),
+                twidth = _board.getWidth(),
+                theight = _board.getHeight(),
+                etiles = EDGE_SIZE / TILE_SIZE,
+                toffset = 2 * (1f / BangBoard.HEIGHTFIELD_SUBDIVISIONS);
+            vbuf.put(-EDGE_SIZE).put(EDGE_SIZE + bheight).put(z);
+            tbuf.put(-etiles).put(etiles + theight);
+            vbuf.put(EDGE_SIZE + bwidth).put(EDGE_SIZE + bheight).put(z);
+            tbuf.put(etiles + twidth).put(etiles + theight);
+            vbuf.put(-voffset).put(bheight + voffset).put(z);
+            tbuf.put(-toffset).put(theight + toffset);
+            vbuf.put(bwidth + voffset).put(bheight + voffset).put(z);
+            tbuf.put(twidth + toffset).put(theight + toffset);
+            vbuf.put(-voffset).put(-voffset).put(z);
+            tbuf.put(-toffset).put(-toffset);
+            vbuf.put(bwidth + voffset).put(-voffset).put(z);
+            tbuf.put(twidth + toffset).put(-toffset);
+            vbuf.put(-EDGE_SIZE).put(-EDGE_SIZE).put(z);
+            tbuf.put(-etiles).put(-etiles);
+            vbuf.put(EDGE_SIZE + bwidth).put(-EDGE_SIZE).put(z);
+            tbuf.put(etiles + twidth).put(-etiles);
+            
+            for (int ii = 0; ii < 8; ii++) {
+                nbuf.put(0f).put(0f).put(1f);
+            }
+            
+            ibuf.put(3).put(0).put(2).put(6).put(4);
+            ibuf.put(7).put(5).put(1).put(3).put(0);
+            
+            reconstruct(vbuf, nbuf, null, tbuf, ibuf);
+            ((TriangleBatch)getBatch(0)).setMode(
+                TriangleBatch.TRIANGLE_STRIP);
+                    
+            setModelBound(new BoundingBox());
+            updateModelBound();
+            updateTexture();
+        }
+        
+        /**
+         * Updates the height of the skirt's vertices to match the current
+         * edge height.
+         */
+        public void updateVertices ()
+        {
+            FloatBuffer vbuf = getVertexBuffer(0);
+            float z = getHeightfieldValue(-1, -1);
+            for (int ii = 0; ii < 8; ii++) {
+                vbuf.put(ii*3+2, z);
+            }
+            updateModelBound();
+        }
+        
+        /**
+         * Updates the skirt's texture to match the most common edge terrain.
+         */
+        public void updateTexture ()
+        {
+            byte code = _board.getTerrainValue(-1, -1);
+            if (code != _tcode) {
+                setRenderState(RenderUtil.getGroundTexture(
+                    _ctx, _tcode = code));
+                updateRenderState();
+            }
+        }
+        
+        /** The current terrain code. */
+        protected byte _tcode = -1;
+    }
+    
     /** The application context. */
     protected BasicContext _ctx;
 
@@ -1693,6 +1764,9 @@ public class TerrainNode extends Node
     
     /** The array of splat blocks containing the terrain geometry/textures. */
     protected SplatBlock[][] _blocks;
+    
+    /** The flat skirt that surrounds the board. */
+    protected Skirt _skirt;
     
     /** Reusable objects for efficiency. */
     protected ColorRGBA _c1 = new ColorRGBA(), _c2 = new ColorRGBA();

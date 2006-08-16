@@ -15,6 +15,7 @@ import java.util.Random;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.TermUtil;
 
@@ -228,12 +229,35 @@ public class BangBoard extends SimpleStreamableObject
     /** Returns the terrain value at the specified terrain coordinates. */
     public byte getTerrainValue (int x, int y)
     {
-        // clamp the coordinates to repeat the edge
-        x = Math.min(Math.max(x, 0), _hfwidth - 1);
-        y = Math.min(Math.max(y, 0), _hfheight - 1);
-        return _terrain[y*_hfwidth + x];
-    }
+        // return the predominant edge terrain for values beyond the edge
+        if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
+            return _edgeTerrain;
 
+        } else {
+            return _terrain[y*_hfwidth + x];
+        }
+    }
+    
+    /**
+     * Updates the board's predominant edge terrain, which is returned for
+     * values outside the board.
+     */
+    public void updateEdgeTerrain ()
+    {
+        IntIntMap counts = new IntIntMap();
+        int toff = (_hfheight - 1)*_hfwidth, roff = _hfwidth - 1;
+        for (int x = 0; x < _hfwidth; x++) {
+            counts.increment(_terrain[x], 1);
+            counts.increment(_terrain[toff + x], 1);
+        }
+        for (int y = 1; y < _hfheight - 1; y++) {
+            counts.increment(_terrain[y*_hfwidth], 1);
+            counts.increment(_terrain[y*_hfwidth + roff], 1);
+        }
+        int idx = IntListUtil.getMaxValueIndex(counts.getValues());
+        _edgeTerrain = (byte)counts.getKeys()[idx];
+    }
+    
     /** Sets a single terrain value. */
     public void setTerrainValue (int x, int y, byte value)
     {
@@ -1311,6 +1335,7 @@ public class BangBoard extends SimpleStreamableObject
                                   _height - 2*BORDER_SIZE);
 
         updateMinEdgeHeight();
+        updateEdgeTerrain();
         updatePredominantTerrain();
     }
     
@@ -1519,6 +1544,10 @@ public class BangBoard extends SimpleStreamableObject
      * edge. */
     protected transient byte _minEdgeHeight;
 
+    /** The most common terrain type along the edge of the board, used values
+     * beyond the edge. */
+    protected transient byte _edgeTerrain;
+    
     /** The predominant terrain codes for each tile. */
     protected transient byte[] _pterrain;
 
