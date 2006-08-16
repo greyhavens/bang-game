@@ -471,6 +471,32 @@ public abstract class Piece
     }
 
     /**
+     * Returns a PointSet with all the tiles that could be shot by this unit
+     * based on the supplied coordinate.
+     */
+    public PointSet computeShotRange (BangBoard board, int dx, int dy)
+    {
+        PointSet ps = new PointSet();
+        int minfdist = getMinFireDistance(), maxfdist = getMaxFireDistance();
+        int x1 = dx - maxfdist, x2 = dx + maxfdist,
+            y1 = dy - maxfdist, y2 = dy + maxfdist;
+        Rectangle playarea = board.getPlayableArea();
+        for (int xx = x1; xx <= x2; xx++) {
+            for (int yy = y1; yy <= y2; yy++) {
+                int dist = getDistance(dx, dy, xx, yy);
+                if (dist < minfdist || dist > maxfdist ||
+                        !playarea.contains(xx, yy)) {
+                    continue;
+                }
+                if (checkLineOfSight(board, dx, dy, xx, yy)) {
+                    ps.add(xx, yy);
+                }
+            }
+        }
+        return ps;
+    }
+
+    /**
      * Creates any effects that must be applied prior to applying the {@link
      * ShotEffect} that results from this piece shooting another.
      */
@@ -751,6 +777,18 @@ public abstract class Piece
         return board.checkLineOfSight(tx, ty, e1, target.x, target.y, e2);
     }
     
+    /**
+     * Determines whether this piece has the necessary line of sight to
+     * fire upon the specified tile from the given location.
+     */
+    public boolean checkLineOfSight (
+        BangBoard board, int tx, int ty, int dx, int dy)
+    {
+        int e1 = computeElevation(board, tx, ty),
+            e2 = computeElevation(board, dx, dy);
+        return board.checkLineOfSight(tx, ty, e1, dx, dy, e2);
+    }
+
     /**
      * Computes the actual damage done if this piece were to fire on the
      * specified target, accounting for this piece's current damage level and

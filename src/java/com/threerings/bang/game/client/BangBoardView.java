@@ -1109,6 +1109,9 @@ public class BangBoardView extends BoardView
             _attackSet.clear();
         } else {
             log.info("Waiting for attack selection (" + tx + ", " + ty + ")");
+            PointSet attackRange = _selection.computeShotRange(
+                    _bangobj.board, tx, ty);
+            highlightTiles(attackRange, ATTACK_RANGE_COLOR, _tgtstate);
         }
         return true;
     }
@@ -1199,7 +1202,7 @@ public class BangBoardView extends BoardView
      */
     protected void highlightPossibleAttacks ()
     {
-        if (_selection != null && _attackSet.size() > 0) {
+        if (_selection != null && _attackSet.size() > 0 && _action == null) {
             boolean hoveringAttack = false;
             // highlight the unit we're hovering over if applicable
             if (_hover != null && _hover instanceof Targetable) {
@@ -1915,6 +1918,10 @@ public class BangBoardView extends BoardView
     /** The color of the queued movement highlights. */
     protected static final ColorRGBA QMOVE_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0.5f, 0.5f, 0.5f);
+
+    /** The color of the attack range highlights. */
+    protected static final ColorRGBA ATTACK_RANGE_COLOR =
+        new ColorRGBA(1f, 0f, 0f, 0.5f);
 
     /** The color cyan. */
     protected static final ColorRGBA COLOR_CYAN =
