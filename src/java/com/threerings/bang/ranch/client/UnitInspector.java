@@ -45,18 +45,26 @@ public class UnitInspector extends BContainer
 
         add(_left = new BContainer(GroupLayout.makeVStretch()));
         add(_right = new BContainer(GroupLayout.makeVStretch()));
+        ((GroupLayout)_right.getLayoutManager()).setOffAxisJustification(
+            GroupLayout.CENTER);
 
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle(RanchCodes.RANCH_MSGS);
         _umsgs = ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
 
         // first create the right column
-        _right.add(new Spacer(10, 30), GroupLayout.FIXED);
-        _right.add(_udescrip = new BLabel("", "ranch_unit_info"));
-        _right.add(new BLabel(new ImageIcon(
-                                  ctx.loadImage("ui/pregame/star.png"))),
-            GroupLayout.FIXED);
-        _right.add(new BContainer());
+        _right.add(new Spacer(10, 35), GroupLayout.FIXED);
+        _right.add(_udetails = new BLabel("", "ranch_unit_details") {
+            protected Dimension computePreferredSize (int whint, int hhint) {
+                Dimension d = super.computePreferredSize(whint, hhint);
+                // fix our height to the height of the avatar view next door
+                d.height = 281;
+                return d;
+            }
+        }, GroupLayout.FIXED);
+        ImageIcon div = new ImageIcon(ctx.loadImage("ui/ranch/divider.png"));
+        _right.add(new BLabel(div, "center_label"), GroupLayout.FIXED);
+        _right.add(_customize = new BContainer());
 
         // then the left column
         _left.add(_uname = new BLabel("", "ranch_unit_name"),
@@ -128,7 +136,10 @@ public class UnitInspector extends BContainer
 
         // set up the myriad labels
         _uname.setText(uicon.getText());
-        _udescrip.setText(_umsgs.xlate(config.getName() + "_descrip"));
+        String details = _umsgs.xlate(config.getName() + "_details") + "\n\n" +
+            _msgs.get("m.special_power") + "\n" +
+            _umsgs.xlate(config.getName() + "_power");
+        _udetails.setText(details);
         _umake.setText(_umsgs.get("m." + config.make.toString().toLowerCase()));
         _umake.setIcon(_abonus.getBonusIcon(config.make));
         _umode.setText(_umsgs.get("m." + config.mode.toString().toLowerCase()));
@@ -208,6 +219,6 @@ public class UnitInspector extends BContainer
     protected UnitBonus _abonus, _dbonus;
     protected MoneyLabel _cost;
     protected UnitView _uview;
-    protected BLabel _uname, _udescrip;
+    protected BLabel _uname, _udetails;
     protected BLabel _umake, _umode, _umove, _ufire;
 }

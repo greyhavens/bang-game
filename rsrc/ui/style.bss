@@ -1208,10 +1208,9 @@ ranch_unit_name {
   vertical-align: center;
 }
 
-ranch_unit_info {
+ranch_unit_details {
   font: "Helvetica" plain 15;
   color: #4C2804;
-  text-align: center;
   vertical-align: top;
 }
 
