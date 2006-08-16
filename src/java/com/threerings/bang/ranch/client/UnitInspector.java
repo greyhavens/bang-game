@@ -200,6 +200,7 @@ public class UnitInspector extends BContainer
                 ReportingListener rl = new ReportingListener(
                     _ctx, "ranch", "m.start_prac_failed");
                 psvc.playPractice(_ctx.getClient(), _config.type, rl);
+                _practice.setEnabled(false); // prevent double clicky
             }
 
         } else if ("customize".equals(event.getAction())) {
