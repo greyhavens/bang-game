@@ -6,6 +6,7 @@ package com.threerings.bang.game.client;
 import java.awt.Point;
 
 import com.jme.math.FastMath;
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.state.MaterialState;
@@ -21,13 +22,16 @@ import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.ShotSprite;
 import com.threerings.bang.game.client.sprite.Spinner;
+import com.threerings.bang.game.client.sprite.TotemBaseSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.FoolsNuggetEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
+import com.threerings.bang.game.data.effect.TotemEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 
+import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
@@ -57,6 +61,8 @@ public class HoldHandler extends EffectHandler
             flyNugget(piece, false, false);
         } else if (effect.equals(FoolsNuggetEffect.FOOLS_NUGGET_REJECTED)) {
             flyNugget(piece, true, true);
+        } else if (effect.equals(TotemEffect.TOTEM_ADDED)) {
+            flyTotem(piece);
         }
     }
     
@@ -153,22 +159,6 @@ public class HoldHandler extends EffectHandler
         flyDroppedBonus(claim, sprite, true);
     }
     
-    @Override // documentation inherited
-    protected void spriteStoppedBouncing (Sprite sprite)
-    {
-        // fade dummy bonuses into the ground and remove them after they finish
-        // bouncing
-        BonusSprite bsprite = (BonusSprite)sprite;
-        if (bsprite.getPiece().pieceId == -1) {
-            queueAction(bsprite, MobileSprite.REMOVED);
-            bsprite.addObserver(new MobileSprite.ActionObserver() {
-                public void actionCompleted (Sprite sprite, String action) {
-                    _view.removeSprite(sprite);
-                }
-            });
-        }
-    }
-    
     /**
      * Flies a picked-up bonus into the hands of the unit picking it up.
      */
@@ -193,6 +183,46 @@ public class HoldHandler extends EffectHandler
                 }
                 maybeComplete(penderId);
             }    
+        });
+    }
+    
+    /**
+     * Flies a totem from a unit to the totem base.
+     */
+    protected void flyTotem (final Piece base)
+    {
+        TotemEffect teffect = (TotemEffect)_effect;
+        final Piece unit = _bangobj.pieces.get(teffect.pieceId);
+        if (unit == null) {
+            return;
+        }
+        TotemBaseSprite bsprite = (TotemBaseSprite)_view.getPieceSprite(base);
+        if (bsprite == null) {
+            return;
+        }
+        Sprite psprite = bsprite.getTopPiece();
+        if (psprite == null) {
+            log.warning("Totem base sprite missing top piece [base=" + base +
+                "].");
+            return;
+        }
+        Vector3f from = bsprite.worldToLocal(
+            getHoldingTranslation(unit), new Vector3f());
+        BallisticShotHandler.PathParams pparams =
+            BallisticShotHandler.computePathParams(from, Vector3f.ZERO);
+        final int penderId = notePender();
+        psprite.move(new BallisticPath(psprite, from, pparams.velocity,
+            BallisticShotHandler.GRAVITY_VECTOR, pparams.duration) {
+            public void update (float time) {
+                super.update(time*2f);
+                float alpha = Math.min(_accum / _duration, 1f);
+                _sprite.setLocalScale(FastMath.LERP(alpha, 0.5f, 1f));
+            }
+            public void wasRemoved () {
+                super.wasRemoved();
+                _sprite.getLocalTranslation().set(Vector3f.ZERO);
+                maybeComplete(penderId);
+            }
         });
     }
     

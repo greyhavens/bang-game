@@ -43,6 +43,13 @@ public class TotemBase extends Prop
     }
 
     @Override // documentation inherited
+    public void wasDamaged (int newDamage)
+    {
+        super.wasDamaged(newDamage);
+        _destroyed = null;
+    }
+    
+    @Override // documentation inherited
     public void wasKilled (short tick)
     {
         int idx = _pieces.size() - 1;

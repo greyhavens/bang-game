@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.Point;
+
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -34,6 +36,7 @@ import com.threerings.bang.game.client.effect.PlaySoundViz;
 import com.threerings.bang.game.client.effect.RepairViz;
 import com.threerings.bang.game.client.effect.WreckViz;
 
+import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.Targetable;
@@ -54,6 +57,8 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.TotemBase;
+import com.threerings.bang.game.data.piece.TotemBonus;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
 
@@ -167,6 +172,11 @@ public class EffectHandler extends BoardView.BoardAction
             DamageIconViz.displayDamageIconViz(piece, _effect, _ctx, _view);
         }
 
+        // possibly fly a totem piece off if one was destroyed
+        if (wasDamaged && piece instanceof TotemBase) {
+            maybeFlyTotemPiece((TotemBase)piece);
+        }
+        
         // add wreck effect for steam-powered units
         if (wasDamaged && piece instanceof Unit &&
             ((Unit)piece).getConfig().make == UnitConfig.Make.STEAM &&
@@ -410,6 +420,53 @@ public class EffectHandler extends BoardView.BoardAction
     }
 
     /**
+     * If a totem piece has been destroyed, flies it from the totem base onto
+     * the board, bouncing it a few times before allowing it to sink into the
+     * ground.
+     */
+    protected void maybeFlyTotemPiece (TotemBase base)
+    {
+        TotemBonus.Type type = base.getDestroyedType();
+        if (type == null) {
+            return;
+        }
+        PieceSprite bsprite = _view.getPieceSprite(base);
+        if (bsprite == null) {
+            return;
+        }
+        // create a dummy piece sprite at an occupiable spot
+        Point spot = _bangobj.board.getOccupiableSpot(base.x, base.y, 3);
+        if (spot == null) {
+            return;
+        }
+        Bonus dummy = Bonus.createBonus(type.bonus());
+        dummy.pieceId = -1;
+        dummy.owner = base.getDestroyedOwner();
+        dummy.position(spot.x, spot.y);
+        PieceSprite sprite = dummy.createSprite();
+        sprite.init(_ctx, _view, _bangobj.board, _sounds, dummy, _tick);
+        _view.addSprite(sprite);
+        
+        // fly the sprite from the totem to its position
+        final int penderId = notePender();
+        Vector3f btrans = new Vector3f(bsprite.getWorldTranslation());
+        BallisticShotHandler.PathParams pparams =
+            BallisticShotHandler.computePathParams(
+                btrans, sprite.getWorldTranslation());
+        sprite.move(new BallisticPath(sprite, btrans, pparams.velocity,
+            BallisticShotHandler.GRAVITY_VECTOR, pparams.duration) {
+            public void update (float time) {
+                super.update(time*2f);
+            }
+            public void wasRemoved () {
+                super.wasRemoved();
+                bounceSprite(_sprite, TILE_SIZE / 4);
+                maybeComplete(penderId);
+            }
+        });
+    }
+    
+    /**
      * Flies a dropped bonus from the unit that dropped it to its current
      * location (optionally fading it in), then bounces it a few times.
      */
@@ -483,14 +540,28 @@ public class EffectHandler extends BoardView.BoardAction
                 }
                 maybeComplete(penderId);
             }
-        });
+        }); 
     }
-
+    
     /**
      * Called when the sprite finishes its final bounce.
      */
     protected void spriteStoppedBouncing (Sprite sprite)
     {
+        // fade dummy bonuses into the ground and remove them after they finish
+        // bouncing
+        if (!(sprite instanceof BonusSprite)) {
+            return;
+        }
+        BonusSprite bsprite = (BonusSprite)sprite;
+        if (bsprite.getPiece().pieceId == -1) {
+            queueAction(bsprite, MobileSprite.REMOVED);
+            bsprite.addObserver(new MobileSprite.ActionObserver() {
+                public void actionCompleted (Sprite sprite, String action) {
+                    _view.removeSprite(sprite);
+                }
+            });
+        }
     }
     
     protected boolean isCompleted ()

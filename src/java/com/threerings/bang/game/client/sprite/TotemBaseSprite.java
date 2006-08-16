@@ -16,6 +16,8 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 
+import com.threerings.jme.sprite.Sprite;
+
 import com.threerings.bang.client.util.ResultAttacher;
 
 import com.threerings.bang.game.data.piece.Piece;
@@ -72,7 +74,7 @@ public class TotemBaseSprite extends TargetablePropSprite
             Colorization[] zations = new Colorization[] {
                 _ctx.getAvatarLogic().getColorPository().getColorization(
                         "unit", PIECE_COLOR_IDS[owner + 1]) };
-            final Node totemPiece = new Node(type);
+            final Sprite totemPiece = new Sprite();
             _totemPieces.add(totemPiece);
             _ctx.getModelCache().getModel("bonuses", type, zations,
                     new ResultAttacher<Model>(totemPiece) {
@@ -105,6 +107,15 @@ public class TotemBaseSprite extends TargetablePropSprite
     }
 
     /**
+     * Returns a reference to the piece at the top of the totem.
+     */
+    public Sprite getTopPiece ()
+    {
+        int size = _totemPieces.size();
+        return (size > 0) ? _totemPieces.get(size - 1) : null;
+    }
+    
+    /**
      * Adjusts the translations of all the totem pieces to compensate for the
      * rising node translation.
      */
@@ -127,7 +138,7 @@ public class TotemBaseSprite extends TargetablePropSprite
         _baseTrans = getLocalTranslation();
     }
 
-    protected ArrayList<Node> _totemPieces = new ArrayList<Node>();
+    protected ArrayList<Sprite> _totemPieces = new ArrayList<Sprite>();
     protected ArrayList<Float> _totemHeights = new ArrayList<Float>();
     protected float _totHeight;
     protected Vector3f _baseTrans;
