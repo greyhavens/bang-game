@@ -102,8 +102,9 @@ public class ForestGuardians extends Scenario
         
         // put the trees in random states
         for (TreeBed tree : _trees) {
-            int damage = -RandomUtil.getInt((TreeBed.FULLY_GROWN + 1) * 100);
-            _bangmgr.deployEffect(-1, new TreeBedEffect(tree, damage));
+            _bangmgr.deployEffect(-1, new TreeBedEffect(
+                tree, RandomUtil.getInt(100),
+                RandomUtil.getInt(TreeBed.FULLY_GROWN + 1)));
         }
         
         // place the four fetishes

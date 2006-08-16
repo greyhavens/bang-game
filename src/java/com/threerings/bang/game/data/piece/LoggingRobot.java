@@ -20,9 +20,9 @@ import com.threerings.bang.game.data.effect.ProximityShotEffect;
 public class LoggingRobot extends BallisticUnit
 {
     @Override // documentation inherited
-    public int getTreeProximityDamage ()
+    public int getTreeProximityDamage (TreeBed bed)
     {
-        return BASE_TREE_PROXIMITY_DAMAGE;
+        return TREE_PROXIMITY_DAMAGE[bed.growth];
     }
     
     @Override // documentation inherited
@@ -71,9 +71,9 @@ public class LoggingRobot extends BallisticUnit
         return effects;
     }
     
-    /** The base amount by which logging robots next to trees increase their
-     * damage and encourage them to shrink. */
-    public static final int BASE_TREE_PROXIMITY_DAMAGE = 20;
+    /** For each tree growth state, the amount by which logging robots next to
+     * trees increase their damage. */
+    public static final int[] TREE_PROXIMITY_DAMAGE = { 0, 20, 15, 10 };
     
     /** The base amount by which logging robots next to units damage them with
      * their rotating saw blades. */

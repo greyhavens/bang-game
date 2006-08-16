@@ -26,20 +26,14 @@ public class TreeBed extends Prop
     
     public TreeBed ()
     {
-        damage = 100;
+        damage = 50;
     }
     
     @Override // documentation inherited
     public void init ()
     {
-        damage = 100;
+        damage = 50;
         growth = 0;
-    }
-    
-    @Override // documentation inherited
-    public boolean isAlive ()
-    {
-        return damage < 100 || growth == 0;
     }
     
     @Override // documentation inherited
@@ -56,11 +50,12 @@ public class TreeBed extends Prop
     public void damage (int dinc)
     {
         damage += dinc;
-        while (damage < 0 && growth < FULLY_GROWN) {
+        if (damage < 0 && growth < FULLY_GROWN) {
             growth++;
-            damage += 100;
+            damage = 50;
+        } else {
+            damage = Math.max(Math.min(damage, 100), 0);
         }
-        damage = Math.max(Math.min(damage, 100), 0);
     }
     
     @Override // documentation inherited
@@ -71,7 +66,7 @@ public class TreeBed extends Prop
         ArrayList<Effect> effects = new ArrayList<Effect>();
         if (!isAlive()) {
             if (tick - lastActed > RESURRECTION_TICKS_PER_LEVEL * growth) {
-                effects.add(new TreeBedEffect(this, 0));
+                effects.add(new TreeBedEffect(this, 50, 0));
                 return effects;
             }
             return null;
@@ -89,7 +84,7 @@ public class TreeBed extends Prop
                 if (FetishEffect.FROG_FETISH.equals(unit.holding)) {
                     doubleGrowth = true;
                 }
-                int pdamage = unit.getTreeProximityDamage();
+                int pdamage = unit.getTreeProximityDamage(this);
                 if (pdamage > 0) {
                     if (growth > 0) { // no hurting sprouts
                         dinc += pdamage;

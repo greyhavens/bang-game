@@ -407,9 +407,9 @@ public class Unit extends Piece
      * Returns the amount of damage caused to trees by the unit when it is
      * next to them.
      */
-    public int getTreeProximityDamage ()
+    public int getTreeProximityDamage (TreeBed bed)
     {
-        return BASE_TREE_PROXIMITY_DAMAGE;
+        return TREE_PROXIMITY_DAMAGE;
     }
 
     @Override // documentation inherited
@@ -631,5 +631,5 @@ public class Unit extends Piece
 
     /** The base amount by which units next to trees decrease their damage and
      * encourage them to grow. */
-    protected static final int BASE_TREE_PROXIMITY_DAMAGE = -20;
+    protected static final int TREE_PROXIMITY_DAMAGE = -10;
 }
