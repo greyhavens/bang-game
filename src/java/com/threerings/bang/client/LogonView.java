@@ -145,6 +145,9 @@ public class LogonView extends BWindow
         row.add(col);
         col.add(_logon = new BButton(_msgs.get("m.logon"), this, "logon"));
         _logon.setStyleClass("big_button");
+        // use a special sound effect for logon which is the ricochet that we
+        // also use for window open
+        _logon.setProperty("feedback_sound", BangUI.FeedbackSound.WINDOW_OPEN);
         col.add(_action =
                 new BButton(_msgs.get("m.new_account"), this, "new_account"));
         _action.setStyleClass("logon_new");

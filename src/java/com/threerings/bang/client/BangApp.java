@@ -220,7 +220,13 @@ public class BangApp extends JmeApp
                 super.dispatchEvent(target, event);
                 if (event instanceof ActionEvent && target instanceof BButton &&
                     !(target instanceof SelectableIcon)) {
-                    BangUI.play(BangUI.FeedbackSound.BUTTON_PRESS);
+                    // allow buttons to have special feedback sounds
+                    BangUI.FeedbackSound sound = (BangUI.FeedbackSound)
+                        target.getProperty("feedback_sound");
+                    if (sound == null) {
+                        sound = BangUI.FeedbackSound.BUTTON_PRESS;
+                    }
+                    BangUI.play(sound);
                 } else if (event instanceof TextEvent) {
                     BangUI.play(BangUI.FeedbackSound.KEY_TYPED);
                 }
