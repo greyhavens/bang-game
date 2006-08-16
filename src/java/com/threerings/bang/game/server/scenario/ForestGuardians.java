@@ -25,6 +25,7 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.TreeBedEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.LoggingRobot;
@@ -322,7 +323,8 @@ public class ForestGuardians extends Scenario
                 Unit unit = Unit.getUnit("indian_post/logging_robot");
                 unit.assignPieceId(bangobj);
                 unit.position(bspot.x, bspot.y);
-                _bangmgr.addPiece(unit);
+                _bangmgr.addPiece(unit, (bangobj.tick >= 0) ?
+                    AddPieceEffect.DROPPED : null);
             }
         }
         

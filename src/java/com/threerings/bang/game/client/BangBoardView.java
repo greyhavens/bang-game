@@ -816,8 +816,6 @@ public class BangBoardView extends BoardView
         if (!_bconfig.tutorial && _bangobj.tick < 0) {
             Point corner = getStartCorner(piece);
             sprite.setLocation(_board, corner.x, corner.y);
-        } else {
-            sprite.queueAction(MobileSprite.RESPAWNED);
         }
     }
 

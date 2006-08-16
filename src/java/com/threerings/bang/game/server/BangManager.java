@@ -544,7 +544,19 @@ public class BangManager extends GameManager
      */
     public void addPiece (Piece piece)
     {
-        deployEffect(-1, new AddPieceEffect(piece));
+        addPiece(piece, null);
+    }
+    
+    /**
+     * Adds a piece to the board by deploying an {@link AddPieceEffect}.  The
+     * piece should already have a valid piece id.
+     *
+     * @param effect the effect to report on the piece after addition, or
+     * <code>null</code> for none
+     */
+    public void addPiece (Piece piece, String effect)
+    {
+        deployEffect(-1, new AddPieceEffect(piece, effect));
     }
     
     /**

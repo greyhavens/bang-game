@@ -24,6 +24,7 @@ import com.jme.scene.state.TextureState;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
 
+import com.samskivert.util.ListUtil;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
@@ -46,6 +47,8 @@ import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.effect.AddPieceEffect;
+import com.threerings.bang.game.data.effect.DuplicateEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -84,14 +87,16 @@ public class MobileSprite extends PieceSprite
      * should be removed when all other actions are completed. */
     public static final String REMOVED = "__removed__";
 
-    /** A fake action that is queued up when the sprite is respawned. */
-    public static final String RESPAWNED = "__respawned__";
-    
     /** Queued up when the sprite is teleported out of existence. */
     public static final String TELEPORTED_OUT = "__teleported_out__";
     
     /** Queued up when the sprite is teleported back into existence. */
     public static final String TELEPORTED_IN = "__teleported_in__";
+    
+    /** Built-in actions that do not correspond to animations. */
+    public static final String[] INBUILT_ACTIONS = {
+        DEAD, REMOVED, AddPieceEffect.RESPAWNED, DuplicateEffect.DUPLICATED,
+        TELEPORTED_OUT, TELEPORTED_IN };
     
     /** Normal movement. */
     public static final int MOVE_NORMAL = 0;
@@ -120,11 +125,13 @@ public class MobileSprite extends PieceSprite
      */
     public boolean hasAction (String action)
     {
-        return _model != null && _model.hasAnimation(action);
+        return ListUtil.contains(INBUILT_ACTIONS, action) ||
+            (_model != null && _model.hasAnimation(action));
     }
 
     /**
-     * Returns the underlying animation for the specified action.
+     * Returns the underlying animation for the specified action (if there is
+     * one).
      */
     public Model.Animation getAction (String action)
     {
@@ -590,13 +597,17 @@ public class MobileSprite extends PieceSprite
             // have the unit sink into the ground and fade away
             startRiseFade(-TILE_SIZE * 0.5f, false, REMOVAL_DURATION);
         
-        } else if (_action.equals(RESPAWNED)) {
+        } else if (_action.equals(AddPieceEffect.RESPAWNED)) {
             // fade the unit in and display the resurrection effect
             if (BangPrefs.isMediumDetail()) {
                 displayParticles("frontier_town/resurrection", false);
             }
             startRiseFade(-TILE_SIZE * 0.5f, true, RESPAWN_DURATION);
         
+        } else if (_action.equals(DuplicateEffect.DUPLICATED)) {
+            // fade the unit in (TODO: display dust cloud)
+            startRiseFade(-TILE_SIZE * 0.5f, true, RESPAWN_DURATION);
+            
         } else if (_action.equals(TELEPORTED_OUT)) {
             startRiseFade(TILE_SIZE * 0.5f, false, TELEPORT_DURATION);
             

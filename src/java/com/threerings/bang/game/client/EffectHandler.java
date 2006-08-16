@@ -42,6 +42,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.Targetable;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 
+import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.HighNoonEffect;
@@ -184,6 +185,11 @@ public class EffectHandler extends BoardView.BoardAction
             effviz = new WreckViz(effviz);
         }
 
+        // drop the piece from the sky
+        if (effect.equals(AddPieceEffect.DROPPED)) {
+            dropPiece(piece);
+        }
+        
         // queue the effect up on the piece sprite
         if (effviz != null) {
             queueEffect(sprite, piece, effviz);
@@ -519,6 +525,37 @@ public class EffectHandler extends BoardView.BoardAction
     }
     
     /**
+     * Drops a piece from the sky to its starting location.
+     */
+    protected void dropPiece (final Piece piece)
+    {
+        final PieceSprite sprite = _view.getPieceSprite(piece);
+        if (sprite == null) {
+            return;
+        }
+        Vector3f start = new Vector3f(sprite.getWorldTranslation());
+        System.out.println(start);
+        start.z += PIECE_DROP_HEIGHT;
+        float duration = FastMath.sqrt(
+            -PIECE_DROP_HEIGHT / BallisticShotHandler.GRAVITY);
+        final int penderId = notePender();
+        sprite.move(new BallisticPath(sprite, start, new Vector3f(),
+            DOUBLE_GRAVITY_VECTOR, duration) {
+            public void wasRemoved () {
+                super.wasRemoved();
+                sprite.setLocation(piece.x, piece.y, piece.computeElevation(
+                    _bangobj.board, piece.x, piece.y));
+                sprite.updateWorldVectors();
+                if (BangPrefs.isHighDetail()) {
+                    sprite.displayDustRing();
+                }
+                bounceSprite(_sprite, TILE_SIZE / 4);
+                maybeComplete(penderId);
+            }
+        });
+    }
+    
+    /**
      * Bounces a sprite up to the specified height and schedules another
      * bounce.
      */
@@ -612,6 +649,9 @@ public class EffectHandler extends BoardView.BoardAction
     protected static final Vector3f DOUBLE_GRAVITY_VECTOR =
         BallisticShotHandler.GRAVITY_VECTOR.mult(2f);
 
+    /** The height from which to drop pieces onto the board. */
+    protected static final float PIECE_DROP_HEIGHT = 150f;
+    
     /** Used by {@link #getSoundPath}. */
     protected static final String[] SOUND_PREFIXES = {
         "rsrc/cards/", "rsrc/bonuses/", "rsrc/extras/", "rsrc/effects/"

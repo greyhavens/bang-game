@@ -36,9 +36,8 @@ public class ExplosionViz extends ParticleEffectViz
     public void display (PieceSprite target)
     {
         // set up and add the dust ring
-        if (_dustring != null) {
-            prepareDustRing(target);
-            displayParticles(target, _dustring, false);
+        if (!_target.isAirborne() && BangPrefs.isHighDetail()) {
+            target.displayDustRing();
         }
         
         // add the explosion effect
@@ -66,11 +65,6 @@ public class ExplosionViz extends ParticleEffectViz
     @Override // documentation inherited
     protected void didInit ()
     {
-        // create the dust ring for explosions on the ground
-        if (!_target.isAirborne() && BangPrefs.isHighDetail()) {
-            _dustring = ParticlePool.getDustRing();
-        }
-        
         // create a few streamers from the explosion
         if (BangPrefs.isHighDetail()) {
             _streamers = new Streamer[NUM_STREAMERS_AVG +
@@ -79,23 +73,6 @@ public class ExplosionViz extends ParticleEffectViz
                 _streamers[i] = new Streamer();
             }
         }
-    }
-    
-    /**
-     * (Re)initializes the dust ring particle system for use on the specified
-     * kind of terrain.
-     */
-    protected void prepareDustRing (PieceSprite target)
-    {
-        TerrainConfig terrain = TerrainConfig.getConfig(
-            _view.getBoard().getPredominantTerrain(_target.x, _target.y));
-        ColorRGBA color = RenderUtil.getGroundColor(_ctx, terrain.code);
-        _dustring.getStartColor().set(color.r, color.g, color.b,
-            terrain.dustiness);
-        _dustring.getEndColor().set(color.r, color.g, color.b, 0f);
-        
-        _dustring.setLocalTranslation(target.getLocalTranslation());
-        _dustring.setLocalRotation(target.getLocalRotation());
     }
     
     /**
@@ -145,7 +122,6 @@ public class ExplosionViz extends ParticleEffectViz
         protected float _age;
     }
     
-    protected ParticleMesh _dustring;
     protected Streamer[] _streamers;
     protected PointLight _light;
     

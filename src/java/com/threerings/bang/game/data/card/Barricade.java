@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.data.BangCodes;
 
+import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 /**
@@ -47,5 +48,11 @@ public class Barricade extends AddPieceCard
     protected Piece createPiece ()
     {
         return new com.threerings.bang.game.data.piece.Barricade();
+    }
+    
+    @Override // documentation inherited
+    protected String getAddedEffect ()
+    {
+        return AddPieceEffect.DROPPED;
     }
 }

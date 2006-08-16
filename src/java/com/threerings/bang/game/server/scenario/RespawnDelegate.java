@@ -13,6 +13,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Revolutionary;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.ResurrectEffect;
 
 import static com.threerings.bang.Log.log;
@@ -83,7 +84,7 @@ public class RespawnDelegate extends ScenarioDelegate
 
             // then position it and add it back at its new location
             unit.position(bspot.x, bspot.y);
-            _bangmgr.addPiece(unit);
+            _bangmgr.addPiece(unit, AddPieceEffect.RESPAWNED);
         }
     }
 

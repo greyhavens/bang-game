@@ -16,6 +16,7 @@ import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
+import com.jmex.effects.particles.ParticleMesh;
 
 import com.samskivert.util.PropertiesUtil;
 import com.samskivert.util.ResultListener;
@@ -33,6 +34,7 @@ import com.threerings.openal.SoundGroup;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.util.EffectCache;
 import com.threerings.bang.client.util.ResultAttacher;
+import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -427,6 +429,28 @@ public class PieceSprite extends Sprite
         });
     }
     
+    /**
+     * Fires off a dust ring at this sprite's base.
+     */
+    public void displayDustRing ()
+    {
+        ParticleMesh ring = ParticlePool.getDustRing();
+        TerrainConfig terrain = TerrainConfig.getConfig(
+            _view.getBoard().getPredominantTerrain(_piece.x, _piece.y));
+        ColorRGBA color = RenderUtil.getGroundColor(_ctx, terrain.code);
+        ring.getStartColor().set(color.r, color.g, color.b,
+            terrain.dustiness);
+        ring.getEndColor().set(color.r, color.g, color.b, 0f);
+        
+        ring.setLocalTranslation(getLocalTranslation());
+        ring.setLocalRotation(getLocalRotation());
+        
+        _view.getPieceNode().attachChild(ring);
+        ring.updateRenderState();
+        ring.updateGeometricState(0f, false);
+        ring.forceRespawn();
+    }
+
     @Override // documentation inherited
     public void updateWorldData (float time)
     {

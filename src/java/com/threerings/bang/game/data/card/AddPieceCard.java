@@ -35,11 +35,19 @@ public abstract class AddPieceCard extends AreaCard
         Piece piece = createPiece();
         piece.assignPieceId(bangobj);
         piece.position(coords[0], coords[1]);
-        return new AddPieceEffect(piece);
+        return new AddPieceEffect(piece, getAddedEffect());
     }
     
     /**
      * Creates and returns the piece to place.
      */
     protected abstract Piece createPiece ();
+    
+    /**
+     * Returns the effect to fire on the piece after addition, if any.
+     */
+    protected String getAddedEffect ()
+    {
+        return null;
+    }
 }

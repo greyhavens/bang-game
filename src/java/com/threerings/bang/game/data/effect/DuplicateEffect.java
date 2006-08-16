@@ -100,10 +100,10 @@ public class DuplicateEffect extends BonusEffect
             // report wastage if we were unable to place the new piece
             reportEffect(obs, piece, WASTED_DUP);
         } else {
-            // inform the observer of our duplication
-            reportEffect(obs, piece, DUPLICATED);
-            // and add the new piece, informing the observer again
+            // add the new piece, informing the observer
             addAndReport(bangobj, duplicate, obs);
+            // inform the observer of our duplication
+            reportEffect(obs, duplicate, DUPLICATED);
         }
 
         return true;
