@@ -42,22 +42,16 @@ public class Ramblin extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (BangObject bangobj, Object target)
-    {
-        RamblinEffect effect = new RamblinEffect();
-        effect.pieceId = (Integer)target;
-        return effect;
-    }
-
-    @Override // documentation inherited
     public int getScripCost ()
     {
         return 0;
     }
 
     @Override // documentation inherited
-    public int getCoinCost ()
+    public Effect activate (BangObject bangobj, Object target)
     {
-        return 0;
+        RamblinEffect effect = new RamblinEffect();
+        effect.pieceId = (Integer)target;
+        return effect;
     }
 }

@@ -42,24 +42,18 @@ public class Rain extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 40;
+        return 30;
+    }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 120;
     }
 
     @Override // documenataion inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         return new ClearAllModificationsEffect();
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 150;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

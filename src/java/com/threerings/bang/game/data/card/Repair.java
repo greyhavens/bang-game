@@ -39,20 +39,14 @@ public class Repair extends Card
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 90;
+    }
+
+    @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         return new RepairEffect((Integer)target);
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 150;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

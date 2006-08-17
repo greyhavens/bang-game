@@ -35,7 +35,13 @@ public class Lightning extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 20;
+        return 45;
+    }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 90;
     }
 
     @Override // documentation inherited
@@ -44,17 +50,5 @@ public class Lightning extends Card
         LightningEffect effect = new LightningEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 120;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

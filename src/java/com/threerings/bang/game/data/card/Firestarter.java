@@ -34,6 +34,12 @@ public class Firestarter extends Card
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 120;
+    }
+
+    @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
         return (target instanceof Unit && target.isAlive());
@@ -45,17 +51,5 @@ public class Firestarter extends Card
         FirestarterEffect effect = new FirestarterEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 300;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

@@ -34,6 +34,12 @@ public class GiddyUp extends Card
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 120;
+    }
+
+    @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
         return (target instanceof Unit && target.isAlive());
@@ -43,17 +49,5 @@ public class GiddyUp extends Card
     public Effect activate (BangObject bangobj, Object target)
     {
         return new AdjustTickEffect((Integer)target, -4);
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 300;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

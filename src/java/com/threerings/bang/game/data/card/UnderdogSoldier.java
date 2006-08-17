@@ -54,12 +54,6 @@ public class UnderdogSoldier extends Card
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 120;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
         return 0;
     }
 }

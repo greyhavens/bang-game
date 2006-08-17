@@ -41,14 +41,7 @@ public class Rockslide extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 15;
-    }
-
-    @Override // documentation inherited
-    public Effect activate (BangObject bangobj, Object target)
-    {
-        int[] coords = (int[])target;
-        return new RockslideEffect(coords[0], coords[1], owner);
+        return 35;
     }
 
     @Override // documentation inherited
@@ -58,8 +51,9 @@ public class Rockslide extends Card
     }
 
     @Override // documentation inherited
-    public int getCoinCost ()
+    public Effect activate (BangObject bangobj, Object target)
     {
-        return 0;
+        int[] coords = (int[])target;
+        return new RockslideEffect(coords[0], coords[1], owner);
     }
 }

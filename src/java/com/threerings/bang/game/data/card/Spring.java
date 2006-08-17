@@ -38,12 +38,6 @@ public class Spring extends AddPieceCard
         return 0;
     }
 
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
-    }
-    
     // documentation inherited
     protected Piece createPiece ()
     {

@@ -40,23 +40,17 @@ public class Misfire extends Card
         return 40;
     }
 
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 90;
+    }
+
     @Override // documenataion inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         MisfireEffect effect = new MisfireEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 150;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

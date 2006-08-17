@@ -26,7 +26,7 @@ public class SnakeBite extends Card
     @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
-        return (target instanceof Unit && target.isAlive() && 
+        return (target instanceof Unit && target.isAlive() &&
                 ((Unit)target).getConfig().make == UnitConfig.Make.HUMAN);
     }
 
@@ -42,23 +42,17 @@ public class SnakeBite extends Card
         return 40;
     }
 
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 90;
+    }
+
     @Override // documenataion inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         SnakeBiteEffect effect = new SnakeBiteEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 150;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

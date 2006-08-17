@@ -35,7 +35,13 @@ public class CatBallou extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 35;
+        return 50;
+    }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 60;
     }
 
     @Override // documentation inherited
@@ -48,17 +54,5 @@ public class CatBallou extends Card
     public Effect activate (BangObject bangobj, Object target)
     {
         return new DropCardEffect(((Integer)target).intValue());
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 150;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

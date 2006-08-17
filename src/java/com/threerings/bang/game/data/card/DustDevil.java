@@ -37,7 +37,7 @@ public class DustDevil extends Card
     @Override // documentation inherited
     public String getTownId ()
     {
-        return BangCodes.FRONTIER_TOWN;
+        return BangCodes.BOOM_TOWN;
     }
 
     @Override // documentation inherited
@@ -47,20 +47,14 @@ public class DustDevil extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (BangObject bangobj, Object target)
-    {
-        return new ResurrectEffect((Integer)target, owner);
-    }
-
-    @Override // documentation inherited
     public int getScripCost ()
     {
         return 0;
     }
 
     @Override // documentation inherited
-    public int getCoinCost ()
+    public Effect activate (BangObject bangobj, Object target)
     {
-        return 0;
+        return new ResurrectEffect((Integer)target, owner);
     }
 }

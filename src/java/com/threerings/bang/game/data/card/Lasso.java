@@ -56,21 +56,15 @@ public class Lasso extends AreaCard
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 60;
+    }
+
+    @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         int[] coords = (int[])target;
         return new LassoBonusEffect(owner, coords[0], coords[1]);
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 75;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

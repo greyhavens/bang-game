@@ -57,10 +57,4 @@ public class Staredown extends Card
     {
         return 50;
     }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
-    }
 }

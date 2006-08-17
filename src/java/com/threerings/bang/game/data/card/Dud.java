@@ -43,22 +43,16 @@ public class Dud extends Card
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 60;
+    }
+
+    @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         DudEffect effect = new DudEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 75;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

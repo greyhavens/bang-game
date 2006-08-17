@@ -25,40 +25,34 @@ public class HighNoon extends Card
     {
         return BangCodes.FRONTIER_TOWN;
     }
-    
+
     @Override // documentation inherited
     public PlacementMode getPlacementMode ()
     {
         return PlacementMode.VS_NONE;
     }
-    
+
     @Override // documentation inherited
     public boolean isValid (BangObject bangobj)
     {
         return true;
     }
-    
+
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 40;
+        return 25;
+    }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 0;
     }
 
     @Override // documenataion inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         return new HighNoonEffect();
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 150;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

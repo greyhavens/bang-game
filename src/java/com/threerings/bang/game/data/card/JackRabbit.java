@@ -42,25 +42,19 @@ public class JackRabbit extends Card
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 90;
+    }
+
+    @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
-        AdjustMoveInfluenceEffect effect = 
+        AdjustMoveInfluenceEffect effect =
             new AdjustMoveInfluenceEffect(3, 4);
         effect.pieceId = (Integer)target;
         effect.icon = "jack_rabbit";
         effect.name = "cards/frontier_town/jack_rabbit/activate";
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 100;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

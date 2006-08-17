@@ -33,16 +33,16 @@ public class BuggyLogicEffect extends SetHindranceEffect
             return super.apply(bangobj, obs);
         }
     }
-    
+
     public BuggyLogicEffect ()
     {
     }
-    
+
     public BuggyLogicEffect (int player)
     {
         this.player = player;
     }
-    
+
     @Override // documentation inherited
     public boolean isApplicable ()
     {
@@ -59,7 +59,7 @@ public class BuggyLogicEffect extends SetHindranceEffect
         }
         return super.apply(bangobj, obs);
     }
-    
+
     @Override // documentation inherited
     protected Hindrance createHindrance (final Unit target)
     {
@@ -68,7 +68,7 @@ public class BuggyLogicEffect extends SetHindranceEffect
                 return "buggy_logic";
             }
             public InfluenceViz createViz () {
-                return new ParticleInfluenceViz("frontier_town/buggy_logic");
+                return new ParticleInfluenceViz("boom_town/buggy_logic");
             }
             public Effect maybeGeneratePostOrderEffect () {
                 ExpireInfluenceEffect effect = createExpireEffect();
@@ -87,10 +87,10 @@ public class BuggyLogicEffect extends SetHindranceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "frontier_town/buggy_logic";
+        return "boom_town/buggy_logic";
     }
-    
-    /** The number of ticks it will take for the unit to recover if no order
-     * is given. */
+
+    /** The number of ticks it will take for the unit to recover if no order is
+     * given. */
     protected static final int RECOVERY_TICKS = 4;
 }

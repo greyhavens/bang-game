@@ -21,7 +21,7 @@ public class Engineer extends AreaCard
     {
         return "engineer";
     }
-    
+
     @Override // documentation inherited
     public boolean isPlayable (BangObject bangobj)
     {
@@ -37,7 +37,7 @@ public class Engineer extends AreaCard
         }
         return false;
     }
-    
+
     @Override // documentation inherited
     public int getRadius ()
     {
@@ -76,21 +76,15 @@ public class Engineer extends AreaCard
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 60;
+    }
+
+    @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         int[] coords = (int[])target;
         return new ControlTrainEffect(owner, coords[0], coords[1]);
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 75;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

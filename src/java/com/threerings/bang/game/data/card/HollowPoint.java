@@ -12,7 +12,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**
- * A card that allows the player to give a unit 30% increase to attack damage. 
+ * A card that allows the player to give a unit 30% increase to attack damage.
  */
 public class HollowPoint extends Card
 {
@@ -41,22 +41,16 @@ public class HollowPoint extends Card
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 80;
+    }
+
+    @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         PowerUpEffect effect = new PowerUpEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 75;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

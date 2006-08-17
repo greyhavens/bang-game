@@ -35,13 +35,7 @@ public class Barricade extends AddPieceCard
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 100;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
+        return 90;
     }
     
     // documentation inherited

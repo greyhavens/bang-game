@@ -42,23 +42,17 @@ public class Reinforcements extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (BangObject bangobj, Object target)
-    {
-        DuplicateEffect effect =
-            new DuplicateEffect("frontier_town/gunslinger");
-        effect.pieceId = (Integer)target;
-        return effect;
-    }
-
-    @Override // documentation inherited
     public int getScripCost ()
     {
         return 0;
     }
 
     @Override // documentation inherited
-    public int getCoinCost ()
+    public Effect activate (BangObject bangobj, Object target)
     {
-        return 0;
+        DuplicateEffect effect =
+            new DuplicateEffect("frontier_town/gunslinger");
+        effect.pieceId = (Integer)target;
+        return effect;
     }
 }

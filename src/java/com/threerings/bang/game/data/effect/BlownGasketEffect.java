@@ -34,7 +34,7 @@ public class BlownGasketEffect extends SetHindranceEffect
             public void didMove (int steps, short tick) {
                 if ((_stepsRemaining -= steps) <= 0) {
                     _stepsRemaining = 0;
-                    _startTick = tick;       
+                    _startTick = tick;
                 }
             }
             protected int duration () {
@@ -48,12 +48,12 @@ public class BlownGasketEffect extends SetHindranceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "frontier_town/blown_gasket";
+        return "boom_town/blown_gasket";
     }
-    
+
     /** The number of steps to which the hindrance limits the affected unit. */
     protected static final int STEP_LIMIT = 6;
-    
+
     /** The number of ticks it takes for the unit to recover. */
     protected static final int RECOVERY_TICKS = 4;
 }

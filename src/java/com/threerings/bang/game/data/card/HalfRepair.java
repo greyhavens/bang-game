@@ -39,22 +39,16 @@ public class HalfRepair extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (BangObject bangobj, Object target)
-    {
-        RepairEffect effect = new RepairEffect((Integer)target);
-        effect.baseRepair = 50;
-        return effect;
-    }
-
-    @Override // documentation inherited
     public int getScripCost ()
     {
         return 50;
     }
 
     @Override // documentation inherited
-    public int getCoinCost ()
+    public Effect activate (BangObject bangobj, Object target)
     {
-        return 0;
+        RepairEffect effect = new RepairEffect((Integer)target);
+        effect.baseRepair = 50;
+        return effect;
     }
 }

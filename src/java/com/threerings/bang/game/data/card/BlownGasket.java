@@ -33,7 +33,7 @@ public class BlownGasket extends Card
     @Override // documentation inherited
     public String getTownId ()
     {
-        return BangCodes.FRONTIER_TOWN;
+        return BangCodes.BOOM_TOWN;
     }
 
     @Override // documentation inherited
@@ -42,23 +42,17 @@ public class BlownGasket extends Card
         return 40;
     }
 
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 120;
+    }
+
     @Override // documenataion inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         BlownGasketEffect effect = new BlownGasketEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 150;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

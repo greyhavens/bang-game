@@ -45,20 +45,14 @@ public class Forgiven extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (BangObject bangobj, Object target)
-    {
-        return new RepairAllEffect();
-    }
-
-    @Override // documentation inherited
     public int getScripCost ()
     {
         return 0;
     }
 
     @Override // documentation inherited
-    public int getCoinCost ()
+    public Effect activate (BangObject bangobj, Object target)
     {
-        return 0;
+        return new RepairAllEffect();
     }
 }

@@ -41,22 +41,16 @@ public class IronPlate extends Card
     }
 
     @Override // documentation inherited
-    public Effect activate (BangObject bangobj, Object target)
-    {
-        IronPlateEffect effect = new IronPlateEffect();
-        effect.pieceId = (Integer)target;
-        return effect;
-    }
-
-    @Override // documentation inherited
     public int getScripCost ()
     {
         return 0;
     }
 
     @Override // documentation inherited
-    public int getCoinCost ()
+    public Effect activate (BangObject bangobj, Object target)
     {
-        return 0;
+        IronPlateEffect effect = new IronPlateEffect();
+        effect.pieceId = (Integer)target;
+        return effect;
     }
 }

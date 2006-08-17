@@ -13,7 +13,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**
- * A card that allows the player to make a unit drop a nugget 
+ * A card that allows the player to make a unit drop a nugget
  */
 public class DropNugget extends Card
 {
@@ -39,7 +39,13 @@ public class DropNugget extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 30;
+        return 50;
+    }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 90;
     }
 
     @Override // documentation inherited
@@ -47,17 +53,5 @@ public class DropNugget extends Card
     {
         Unit unit = (Unit)bangobj.pieces.get((Integer)target);
         return HoldEffect.dropBonus(bangobj, unit, -1, unit.holding);
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 150;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

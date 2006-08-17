@@ -36,15 +36,9 @@ public class Joker extends AddPieceCard
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 150;
+        return 90;
     }
 
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
-    }
-    
     // documentation inherited
     protected Piece createPiece ()
     {

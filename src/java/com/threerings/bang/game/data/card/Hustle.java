@@ -12,7 +12,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**
- * A card that allows the player to set a units action wait to 3 ticks. 
+ * A card that allows the player to set a units action wait to 3 ticks.
  */
 public class Hustle extends Card
 {
@@ -41,22 +41,16 @@ public class Hustle extends Card
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 120;
+    }
+
+    @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         HustleEffect effect = new HustleEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 200;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

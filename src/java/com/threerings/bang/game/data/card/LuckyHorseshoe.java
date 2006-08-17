@@ -38,7 +38,13 @@ public class LuckyHorseshoe extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 75;
+        return 50;
+    }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 120;
     }
 
     @Override // documentation inherited
@@ -47,17 +53,5 @@ public class LuckyHorseshoe extends Card
         LadyLuckEffect effect = new LadyLuckEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 75;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

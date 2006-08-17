@@ -63,12 +63,6 @@ public class Stampede extends AreaCard
     @Override // documentation inherited
     public int getScripCost ()
     {
-        return 250;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 1;
+        return 120;
     }
 }

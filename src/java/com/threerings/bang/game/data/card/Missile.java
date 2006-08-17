@@ -61,22 +61,16 @@ public class Missile extends AreaCard
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 120;
+    }
+
+    @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
         int[] coords = (int[])target;
         return new AreaDamageEffect(
             owner, power, getRadius(), coords[0], coords[1]);
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 150;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }

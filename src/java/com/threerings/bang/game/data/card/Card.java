@@ -180,11 +180,6 @@ public abstract class Card extends SimpleStreamableObject
     public abstract int getScripCost ();
 
     /**
-     * Returns the coin cost for a pack of three of these cards.
-     */
-    public abstract int getCoinCost ();
-
-    /**
      * This is used to assign the owner and a new unique id to a card when
      * it is created (on the server). Derived classes can also override
      * this method and further configure their card based on the relative

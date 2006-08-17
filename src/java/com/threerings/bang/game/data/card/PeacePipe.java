@@ -39,7 +39,13 @@ public class PeacePipe extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 40;
+        return 50;
+    }
+
+    @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 60;
     }
 
     @Override // documenataion inherited
@@ -48,17 +54,5 @@ public class PeacePipe extends Card
         PeacePipeEffect effect = new PeacePipeEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 150;
-    }
-
-    @Override // documentation inherited
-    public int getCoinCost ()
-    {
-        return 0;
     }
 }
