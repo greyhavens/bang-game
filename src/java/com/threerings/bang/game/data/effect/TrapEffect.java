@@ -20,7 +20,7 @@ import static com.threerings.bang.Log.log;
 public class TrapEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String ACTIVATED_TRAP = "indian_post/trap/activate";
+    public static final String ACTIVATED_TRAP = "indian_post/trap";
 
     /** The victim's new damage. */
     public int newDamage;
