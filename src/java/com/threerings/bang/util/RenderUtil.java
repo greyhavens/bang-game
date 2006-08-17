@@ -66,7 +66,7 @@ import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
-  
+
 /**
  * Useful graphics related utility methods.
  */
@@ -85,11 +85,11 @@ public class RenderUtil
     public static ZBufferState overlayZBuf;
 
     public static CullState backCull;
-    
+
     public static CullState frontCull;
 
     public static LightState noLights;
-    
+
     /**
      * Initializes our commonly used render states and terrain textures.
      */
@@ -104,7 +104,7 @@ public class RenderUtil
     public static void initStates ()
     {
         Renderer renderer = DisplaySystem.getDisplaySystem().getRenderer();
-        
+
         addAlpha = renderer.createAlphaState();
         addAlpha.setBlendEnabled(true);
         addAlpha.setSrcFunction(AlphaState.SB_SRC_ALPHA);
@@ -119,7 +119,7 @@ public class RenderUtil
 
         opaqueAlpha = renderer.createAlphaState();
         opaqueAlpha.setBlendEnabled(false);
-        
+
         alwaysZBuf = renderer.createZBufferState();
         alwaysZBuf.setWritable(false);
         alwaysZBuf.setEnabled(true);
@@ -139,11 +139,11 @@ public class RenderUtil
 
         frontCull = renderer.createCullState();
         frontCull.setCullMode(CullState.CS_FRONT);
-        
+
         noLights = renderer.createLightState();
         noLights.setEnabled(false);
     }
-    
+
     /** Rounds the supplied value up to a power of two. */
     public static int nextPOT (int value)
     {
@@ -179,31 +179,34 @@ public class RenderUtil
     }
 
     /**
-     * Returns a randomly selected ground texture for the specified
-     * terrain type.
+     * Returns a randomly selected ground texture for the specified terrain
+     * type.
      */
     public static TextureState getGroundTexture (BasicContext ctx, int code)
     {
         ArrayList<TextureState> texs = _groundTexs.get(code);
-        if (texs != null) {
-            return RandomUtil.pickRandom(texs);
-        }
-        TerrainConfig terrain = TerrainConfig.getConfig(code);
-        if (terrain == null) {
-            return null;
-        }
-        _groundTexs.put(code, texs = new ArrayList<TextureState>());
-        String prefix = "terrain/" + terrain.type + "/texture";
-        for (int ii = 1; ; ii++) {
-            String path = prefix + ii + ".png";
-            if (!ctx.getResourceManager().getResourceFile(path).exists()) {
-                break;
+        if (texs == null) {
+            TerrainConfig terrain = TerrainConfig.getConfig(code);
+            if (terrain == null) {
+                return null;
             }
-            TextureState tstate = createTextureState(ctx, path,
-                BangPrefs.isMediumDetail() ? 1f : 0.5f);
-            tstate.getTexture().setScale(
-                new Vector3f(1/terrain.scale, 1/terrain.scale, 1f));
-            texs.add(tstate);
+            _groundTexs.put(code, texs = new ArrayList<TextureState>());
+            String prefix = "terrain/" + terrain.type + "/texture";
+            for (int ii = 1; ; ii++) {
+                String path = prefix + ii + ".png";
+                if (!ctx.getResourceManager().getResourceFile(path).exists()) {
+                    break;
+                }
+                TextureState tstate = createTextureState(ctx, path,
+                    BangPrefs.isMediumDetail() ? 1f : 0.5f);
+                tstate.getTexture().setScale(
+                    new Vector3f(1/terrain.scale, 1/terrain.scale, 1f));
+                texs.add(tstate);
+            }
+        }
+        if (texs.size() == 0) {
+            log.warning("Found no ground textures [code=" + code + "].");
+            return null;
         }
         return RandomUtil.pickRandom(texs);
     }
@@ -326,7 +329,7 @@ public class RenderUtil
             return null;
         }
     }
-    
+
     /**
      * Creates a texture using the supplied image.
      */
@@ -350,7 +353,7 @@ public class RenderUtil
     {
         return createTextureState(ctx, path, 1f);
     }
-    
+
     /**
      * Creates a texture state using the image with the supplied path and scale
      * factor. The texture is loaded via the texture cache.
@@ -443,7 +446,7 @@ public class RenderUtil
         if (_shadtex != null && _slength == length &&
             _srotation == rotation && _sintensity == intensity) {
             return _shadtex;
-            
+
         } else if (_shadtex != null) {
             _shadtex.deleteAll();
         }
@@ -498,12 +501,12 @@ public class RenderUtil
         if (false && (caps & Pbuffer.RENDER_TEXTURE_SUPPORTED) != 0) {
             return ctx.getDisplay().createTextureRenderer(width, height, true,
                 false, false, false, TextureRenderer.RENDER_TEXTURE_2D, 0);
-            
+
         } else {
             return new BackTextureRenderer(ctx, width, height);
         }
     }
-    
+
     /**
      * Deletes all the vertex buffer objects identified in the given info.
      */
@@ -518,7 +521,7 @@ public class RenderUtil
             r.deleteVBO(vboinfo.getVBOTextureID(ii));
         }
     }
-    
+
     /**
      * Creates a JME {@link ColorRGBA} object with alpha equal to one from a
      * packed RGB value.

@@ -1514,7 +1514,10 @@ public class TerrainNode extends Node
             // use the most common terrain for the base mesh (which both tests
             // and writes to the z buffer)
             SharedMesh base = new SharedMesh("base", mesh);
-            base.setRenderState(getGroundTexture(--ccode));
+            TextureState gtex = getGroundTexture(--ccode);
+            if (gtex != null) {
+                base.setRenderState(gtex);
+            }
             base.setRenderState(RenderUtil.lequalZBuf);
             node.attachChild(base);
 
