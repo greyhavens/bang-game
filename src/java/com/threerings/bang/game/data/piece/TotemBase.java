@@ -38,8 +38,9 @@ public class TotemBase extends Prop
         if (idx > -1) {
             _pieces.get(idx).damage = damage;
         }
-        _pieces.add(new PieceData(type, owner));
-        damage = 0;
+        PieceData data = new PieceData(type, owner);
+        _pieces.add(data);
+        damage = data.type.damage();
     }
 
     @Override // documentation inherited
