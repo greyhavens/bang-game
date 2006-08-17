@@ -76,6 +76,10 @@ class CardController < ApplicationController
 
   def town_options
     return [["Frontier Town", "frontier_town"],
-            ["Indian Post", "indian_post"]]
+            ["Indian Post", "indian_post"],
+            ["Boom Town", "boom_town"],
+            ["Ghost Town", "ghost_town"],
+            ["City of Gold", "city_of_gold"],
+           ]
   end
 end
