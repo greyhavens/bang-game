@@ -188,6 +188,8 @@ public class RenderUtil
         if (texs == null) {
             TerrainConfig terrain = TerrainConfig.getConfig(code);
             if (terrain == null) {
+                log.warning("Requested ground texture for unknown terrain " +
+                    "[code=" + code + "].");
                 return null;
             }
             _groundTexs.put(code, texs = new ArrayList<TextureState>());
@@ -203,12 +205,11 @@ public class RenderUtil
                     new Vector3f(1/terrain.scale, 1/terrain.scale, 1f));
                 texs.add(tstate);
             }
+            if (texs.size() == 0) {
+                log.warning("Found no ground textures [type=" + terrain + "].");
+            }
         }
-        if (texs.size() == 0) {
-            log.warning("Found no ground textures [code=" + code + "].");
-            return null;
-        }
-        return RandomUtil.pickRandom(texs);
+        return (texs.size() == 0) ? null : RandomUtil.pickRandom(texs);
     }
 
     /**
