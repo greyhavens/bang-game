@@ -13,7 +13,8 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**
- * A card that allows the player to make a unit drop a nugget
+ * A card that allows the player to make a unit drop any held bonus (it's
+ * called drop nugget for legacy reasons).
  */
 public class DropNugget extends Card
 {
@@ -27,7 +28,7 @@ public class DropNugget extends Card
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
         return (target instanceof Unit && target.isAlive() &&
-                NuggetEffect.isNuggetBonus(((Unit)target).holding));
+            ((Unit)target).holding != null;
     }
 
     @Override // documentation inherited
