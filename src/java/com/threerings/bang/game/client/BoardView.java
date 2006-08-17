@@ -228,6 +228,10 @@ public class BoardView extends BComponent
         _wind = new SimpleParticleInfluenceFactory.BasicWind(
             0f, new Vector3f(), true, false);
         
+        // the children of this node will have special tile textures
+        bnode.attachChild(_texnode = new Node("texturehighlights"));
+        _texnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
+
         // the children of this node will display highlighted tiles
         bnode.attachChild(_hnode = new Node("highlights"));
         _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -1459,6 +1463,15 @@ public class BoardView extends BComponent
         }
     }
 
+    /** Creates geometry to retexture a tile. */
+    protected void textureTile (int tx, int ty, TextureState tstate)
+    {
+        TerrainNode.Highlight highlight =
+            _tnode.createHighlight(tx, ty, false);
+        highlight.setRenderState(tstate);
+        _texnode.attachChild(highlight);
+    }
+
     /** 
      * Creates geometry to "target" the supplied set of tiles. 
      * 
@@ -1674,7 +1687,7 @@ public class BoardView extends BComponent
     protected Quad _marquee, _loading;
     protected int _toLoad, _loaded, _curpct = -1;
 
-    protected Node _node, _pnode, _hnode;
+    protected Node _node, _pnode, _hnode, _texnode;
     protected LightState _lstate;
     protected DirectionalLight[] _lights;
     protected SkyNode _snode;

@@ -337,6 +337,10 @@ public class BangView extends BWindow
             _bangobj.maxPieceId = 0;
             ArrayList<Piece> plist = new ArrayList<Piece>();
             for (Piece piece : pieces) {
+                if (Marker.isMarker(piece, Marker.SAFE) && 
+                        piece.isValidScenario(_bangobj.scenario.getIdent())) {
+                    view.addSafeTile(piece.x, piece.y);
+                }
                 if (piece instanceof Marker || 
                     !piece.isValidScenario(_bangobj.scenario.getIdent())) {
                     continue;

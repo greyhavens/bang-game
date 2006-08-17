@@ -114,6 +114,10 @@ public class BangBoardView extends BoardView
         _rngstate = RenderUtil.createTextureState(
             ctx, "textures/ustatus/crosshairs_shotrange.png");
 
+        // this is used to show a tile is safe
+        _safestate = RenderUtil.createTextureState(
+            ctx, "textures/tile/safe1.png");
+
         addListener(this);
     }
 
@@ -380,6 +384,12 @@ public class BangBoardView extends BoardView
             _sounds.preloadClip(clip);
         }
 
+        // paste on special textures
+        for (int ii = 0, ll = _safeTiles.size(); ii < ll; ii++) {
+            int tx = _safeTiles.getX(ii), ty = _safeTiles.getY(ii);
+            textureTile(tx, ty, _safestate);
+        }
+
         // start with the camera controls disabled; the controller will
         // reenable them when we are completely ready to play (starting units
         // moved into place and everything)
@@ -525,6 +535,14 @@ public class BangBoardView extends BoardView
             }
             protected float _elapsed;
         });
+    }
+
+    /**
+     * Addes a texture for a safe tile.
+     */
+    public void addSafeTile (int tx, int ty)
+    {
+        _safeTiles.add(tx, ty);
     }
 
     @Override // documentation inherited
@@ -1869,6 +1887,12 @@ public class BangBoardView extends BoardView
 
     /** Texture used to show a unit's shot range. */
     protected TextureState _rngstate;
+
+    /** Texture used for a safe tile. */
+    protected TextureState _safestate;
+
+    /** The tiles which are safe. */
+    protected PointSet _safeTiles = new PointSet();
 
     /** A traversal predicate for units running to their initial positions. */
     protected AStarPathUtil.TraversalPred _tpred =
