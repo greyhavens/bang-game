@@ -25,6 +25,7 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.data.UnitPass;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
@@ -53,11 +54,6 @@ public class GoodsCatalog
     {
         _alogic= alogic;
 
-        // create our goods mappings
-        for (int ii = 0; ii < _goods.length; ii++) {
-            _goods[ii] = new GoodsMap();
-        }
-
         // register our purses
         ProviderFactory pf = new PurseProviderFactory();
         registerGood(BangCodes.FRONTIER_TOWN, new PurseGood(1, 1000, 1), pf);
@@ -69,7 +65,7 @@ public class GoodsCatalog
         // register our packs of cards
         pf = new CardProviderFactory();
         for (int ii = 0; ii < PACK_PRICES.length; ii += 3) {
-            registerGood(BangCodes.FRONTIER_TOWN,
+            registerGood("", // register card packs for all towns
                          new CardPackGood(PACK_PRICES[ii], PACK_PRICES[ii+1],
                                           PACK_PRICES[ii+2]), pf);
         }
@@ -102,7 +98,7 @@ public class GoodsCatalog
             if (uc.badgeCode != 0 && uc.scripCost > 0) {
                 UnitPassGood good =
                     new UnitPassGood(uc.type, uc.scripCost, uc.coinCost);
-                registerGood(ServerConfig.townId, good, pf);
+                registerGood(uc.getTownId(), good, pf);
             }
         }
     }
@@ -113,12 +109,8 @@ public class GoodsCatalog
     public Good[] getGoods (String townId)
     {
         ArrayList<Good> goods = new ArrayList<Good>();
-        for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
-            goods.addAll(_goods[tt].keySet());
-            if (BangCodes.TOWN_IDS[tt].equals(townId)) {
-                break;
-            }
-        }
+        goods.addAll(_tgoods.get("")); // global goods
+        goods.addAll(_tgoods.get(townId)); // goods for sale in this town
         return goods.toArray(new Good[goods.size()]);
     }
 
@@ -130,14 +122,9 @@ public class GoodsCatalog
     public Provider getProvider (PlayerObject user, Good good, Object[] args)
         throws InvocationException
     {
-        for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
-            ProviderFactory factory = _goods[tt].get(good);
-            if (factory != null) {
-                return factory.createProvider(user, good, args);
-            }
-            if (BangCodes.TOWN_IDS[tt].equals(user.townId)) {
-                break;
-            }
+        ProviderFactory factory = _providers.get(good);
+        if (factory != null) {
+            return factory.createProvider(user, good, args);
         }
         return null;
     }
@@ -148,13 +135,12 @@ public class GoodsCatalog
     protected void registerGood (
         String townId, Good good, ProviderFactory factory)
     {
-        int tidx = ListUtil.indexOf(BangCodes.TOWN_IDS, townId);
-        if (tidx == -1) {
-            log.warning("Requested to register good for invalid town " +
-                        "[town=" + townId + ", good=" + good + "].");
-            return;
+        _providers.put(good, factory);
+        ArrayList<Good> goods = _tgoods.get(townId);
+        if (goods == null) {
+            _tgoods.put(townId, goods = new ArrayList<Good>());
         }
-        _goods[tidx].put(good, factory);
+        goods.add(good);
     }
 
     /** Used to create a {@link Provider} for a particular {@link Good}. */
@@ -239,16 +225,17 @@ public class GoodsCatalog
         }
     }
 
-    /** We can't create generic arrays, so we promote to a real class. */
-    protected static class GoodsMap extends HashMap<Good,ProviderFactory> {
-    }
-
     /** Handles all of our avatar related bits. */
     protected AvatarLogic _alogic;
 
-    /** Contains mappings from {@link Good} to {@link ProviderFactory} for
-     * the goods available in each town. */
-    protected GoodsMap[] _goods = new GoodsMap[BangCodes.TOWN_IDS.length];
+    /** A mapping from town id to a list of goods available in that town. */
+    protected HashMap<String,ArrayList<Good>> _tgoods =
+        new HashMap<String,ArrayList<Good>>();
+
+    /** Contains mappings from {@link Good} to {@link ProviderFactory} for all
+     * salable goods. */
+    protected HashMap<Good,ProviderFactory> _providers =
+        new HashMap<Good,ProviderFactory>();
 
     /** Quantity, scrip cost and coin cost for our packs of cards. */
     protected static final int[] PACK_PRICES = {

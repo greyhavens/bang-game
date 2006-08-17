@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.zip.CRC32;
 
 import com.samskivert.io.StreamUtil;
+import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.data.BangCodes;
@@ -267,12 +268,7 @@ public class BangUtil
      */
     public static int getTownIndex (String townId)
     {
-        for (int ii = 0; ii < BangCodes.TOWN_IDS.length; ii++) {
-            if (BangCodes.TOWN_IDS[ii].equals(townId)) {
-                return ii;
-            }
-        }
-        return -1;
+        return ListUtil.indexOf(BangCodes.TOWN_IDS, townId);
     }
 
     /**

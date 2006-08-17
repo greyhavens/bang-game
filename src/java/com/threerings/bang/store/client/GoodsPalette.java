@@ -5,7 +5,6 @@ package com.threerings.bang.store.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Iterator;
 
 import com.samskivert.util.ListUtil;
@@ -71,11 +70,7 @@ public class GoodsPalette extends IconPalette
 
         // now sort and display them
         Good[] goods = filtered.toArray(new Good[filtered.size()]);
-        Arrays.sort(goods, new Comparator<Good>() {
-            public int compare (Good g1, Good g2) {
-                return g1.getType().compareTo(g2.getType());
-            }
-        });
+        Arrays.sort(goods);
         for (int ii = 0; ii < goods.length; ii++) {
             addIcon(new GoodsIcon(_ctx, goods[ii]));
         }

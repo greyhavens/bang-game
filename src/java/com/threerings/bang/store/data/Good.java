@@ -16,7 +16,7 @@ import com.threerings.bang.data.PlayerObject;
  * store.
  */
 public abstract class Good extends SimpleStreamableObject
-    implements DSet.Entry
+    implements DSet.Entry, Comparable<Good>
 {
     /** A constructor only used during serialization. */
     public Good ()
@@ -80,10 +80,16 @@ public abstract class Good extends SimpleStreamableObject
      */
     public abstract boolean isAvailable (PlayerObject user);
 
-    // documentation inherited from interface DSet.Entry
+    // from interface DSet.Entry
     public Comparable getKey ()
     {
         return _type;
+    }
+
+    // from interface Comparable<Good>
+    public int compareTo (Good other)
+    {
+        return _type.compareTo(other._type);
     }
 
     @Override // documentation inherited
