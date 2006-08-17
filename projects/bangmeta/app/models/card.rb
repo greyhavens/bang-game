@@ -2,7 +2,7 @@ class Card < ActiveRecord::Base
   include ActionView::Helpers::AssetTagHelper
 
   def self.find_all_for_town (town)
-    find(:all, :conditions => [ "town = ?", town ])
+    find(:all, :conditions => [ "town = ?", town ], :order => "name ASC")
   end
 
   def done?
