@@ -28,7 +28,7 @@ public class DropNugget extends Card
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
         return (target instanceof Unit && target.isAlive() &&
-            ((Unit)target).holding != null;
+            ((Unit)target).holding != null);
     }
 
     @Override // documentation inherited
