@@ -303,6 +303,13 @@ public class UnitSprite extends MobileSprite
         }
     }
 
+    @Override // documentation inherited
+    public boolean removed ()
+    {
+        queueAction(REMOVED);
+        return true;
+    }
+    
     /**
      * Configure an effect handler that gets called during the "shot" part
      * of a path.

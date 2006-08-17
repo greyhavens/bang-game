@@ -382,13 +382,6 @@ public class PieceSprite extends Sprite
     }
 
     /**
-     * Called when our piece is removed from the board state.
-     */
-    public void removed ()
-    {
-    }
-
-    /**
      * Returns a reference to the model node.
      */
     public Model getModelNode ()

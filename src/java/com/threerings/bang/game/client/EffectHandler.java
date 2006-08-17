@@ -534,7 +534,6 @@ public class EffectHandler extends BoardView.BoardAction
             return;
         }
         Vector3f start = new Vector3f(sprite.getWorldTranslation());
-        System.out.println(start);
         start.z += PIECE_DROP_HEIGHT;
         float duration = FastMath.sqrt(
             -PIECE_DROP_HEIGHT / BallisticShotHandler.GRAVITY);

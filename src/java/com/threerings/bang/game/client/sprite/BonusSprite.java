@@ -15,6 +15,8 @@ import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.effect.GrantCardEffect;
+import com.threerings.bang.game.data.effect.TrapEffect;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -27,7 +29,7 @@ public class BonusSprite extends MobileSprite
     {
         super("bonuses", type);
         if (!isHidden()) {
-            addController(new Spinner(this, FastMath.PI/2));
+            addController(_spinner = new Spinner(this, FastMath.PI/2));
         }
     }
 
@@ -50,6 +52,27 @@ public class BonusSprite extends MobileSprite
     protected boolean isHidden ()
     {
         return BonusConfig.getConfig(_name).hidden;
+    }
+    
+    @Override // documentation inherited
+    protected void addProceduralActions ()
+    {
+        super.addProceduralActions();
+        _procActions.put(GrantCardEffect.ACTIVATED_CARD,
+            new ProceduralAction() {
+            public float activate () {
+                _spinner.setSpeed(FastMath.PI*5);
+                startRiseFade(TILE_SIZE * 5, false, CARD_FLIGHT_DURATION);
+                return CARD_FLIGHT_DURATION;
+            }
+        });
+        _procActions.put(TrapEffect.ACTIVATED_TRAP, new ProceduralAction() {
+            public float activate () {
+                float duration = setAction("activated");
+                queueAction(REMOVED);
+                return duration;
+            }
+        });
     }
     
     @Override // documentation inherited
@@ -92,4 +115,10 @@ public class BonusSprite extends MobileSprite
     {
         setLocation(board, _piece.x, _piece.y);
     }
+    
+    /** The spinner that rotates the bonus. */
+    protected Spinner _spinner;
+    
+    /** The time it takes for cards to fly up in the air. */
+    protected static final float CARD_FLIGHT_DURATION = 1f;
 }

@@ -26,6 +26,22 @@ public class Spinner extends Controller
         _speed = speed;
     }
 
+    /**
+     * Sets the spinner's speed.
+     */
+    public void setSpeed (float speed)
+    {
+        _speed = speed;
+    }
+    
+    /**
+     * Returns the spinner's speed.
+     */
+    public float getSpeed (float speed)
+    {
+        return _speed;
+    }
+    
     // documentation inherited
     public void update (float time)
     {

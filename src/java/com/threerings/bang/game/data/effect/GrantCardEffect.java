@@ -20,6 +20,10 @@ import static com.threerings.bang.Log.log;
  */
 public class GrantCardEffect extends BonusEffect
 {
+    /** The activation effect: flies the card up into the air and fades it
+     * out. */
+    public static final String ACTIVATED_CARD = "activated_card";
+    
     public int player;
 
     @Override // documentation inherited
@@ -70,6 +74,12 @@ public class GrantCardEffect extends BonusEffect
             MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + _type));
     }
 
+    @Override // documentation inherited
+    protected String getActivatedEffect ()
+    {
+        return ACTIVATED_CARD;
+    }
+    
     /** The type of card generated. */
     protected String _type;
 }

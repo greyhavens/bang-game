@@ -6,6 +6,7 @@ package com.threerings.bang.game.client.sprite;
 import java.awt.Point;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,7 +25,6 @@ import com.jme.scene.state.TextureState;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
 
-import com.samskivert.util.ListUtil;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
@@ -93,11 +93,6 @@ public class MobileSprite extends PieceSprite
     /** Queued up when the sprite is teleported back into existence. */
     public static final String TELEPORTED_IN = "__teleported_in__";
     
-    /** Built-in actions that do not correspond to animations. */
-    public static final String[] INBUILT_ACTIONS = {
-        DEAD, REMOVED, AddPieceEffect.RESPAWNED, DuplicateEffect.DUPLICATED,
-        TELEPORTED_OUT, TELEPORTED_IN };
-    
     /** Normal movement. */
     public static final int MOVE_NORMAL = 0;
 
@@ -117,6 +112,7 @@ public class MobileSprite extends PieceSprite
     {
         _type = type;
         _name = name;
+        addProceduralActions();
     }
 
     /**
@@ -125,7 +121,7 @@ public class MobileSprite extends PieceSprite
      */
     public boolean hasAction (String action)
     {
-        return ListUtil.contains(INBUILT_ACTIONS, action) ||
+        return _procActions.containsKey(action) ||
             (_model != null && _model.hasAnimation(action));
     }
 
@@ -194,13 +190,13 @@ public class MobileSprite extends PieceSprite
 
     /**
      * Returns true if this sprite is currently displaying an action
-     * animation or moving along a path.
+     * animation.
      */
     public boolean isAnimating ()
     {
         // this might be called between clearing _action and starting our
         // next action, so check both _action and _actions.size()
-        return isMoving() || (_action != null) || (_actions.size() > 0);
+        return (_action != null) || (_actions.size() > 0);
     }
 
     @Override // documentation inherited
@@ -421,6 +417,112 @@ public class MobileSprite extends PieceSprite
         return _actionHandlers.remove(handler);
     }
     
+    /**
+     * Called when our piece is removed from the board state.
+     *
+     * @return false if the sprite may be removed immediately; true if it
+     * should be removed after it has completed its current set of actions
+     */
+    public boolean removed ()
+    {
+        return isAnimating();
+    }
+    
+    /**
+     * Adds any procedural actions for this sprite.
+     */
+    protected void addProceduralActions ()
+    {
+        _procActions.put(DEAD, new ProceduralAction() {
+            public float activate () {
+                String oname = _name;
+                loadModel(_type, _name + "/dead");
+                _name = oname;
+                _dead = true;
+                return FastMath.FLT_EPSILON;
+            }
+        });
+        _procActions.put(REMOVED, new ProceduralAction() {
+            public float activate () {
+                // have the unit sink into the ground and fade away
+                startRiseFade(-TILE_SIZE * 0.5f, false, REMOVAL_DURATION);
+                return REMOVAL_DURATION;
+            }
+        });
+        _procActions.put(AddPieceEffect.RESPAWNED, new ProceduralAction() {
+            public float activate () {
+                // fade the unit in and display the resurrection effect
+                if (BangPrefs.isMediumDetail()) {
+                    displayParticles("frontier_town/resurrection", false);
+                }
+                startRiseFade(-TILE_SIZE * 0.5f, true, RESPAWN_DURATION);
+                return RESPAWN_DURATION;
+            }
+        });
+        _procActions.put(DuplicateEffect.DUPLICATED, new ProceduralAction() {
+            public float activate () {
+                // fade the unit in (TODO: display dust cloud)
+                startRiseFade(-TILE_SIZE * 0.5f, true, RESPAWN_DURATION);
+                return RESPAWN_DURATION;
+            }
+        });
+        _procActions.put(TELEPORTED_OUT, new ProceduralAction() {
+            public float activate () {
+                startRiseFade(TILE_SIZE * 0.5f, false, TELEPORT_DURATION);
+                return TELEPORT_DURATION;
+            }
+        });
+        _procActions.put(TELEPORTED_IN, new ProceduralAction() {
+            public float activate () {
+                startRiseFade(TILE_SIZE * 0.5f, true, TELEPORT_DURATION);
+                return TELEPORT_DURATION;
+            }
+        });
+    }
+    
+    /**
+     * Raises or lowers the sprite while fading it in or out.
+     */
+    protected void startRiseFade (
+        float height, final boolean in, final float duration)
+    {
+        setRenderState(RenderUtil.blendAlpha);
+        if (_mstate == null) {
+            _mstate = _ctx.getRenderer().createMaterialState();
+            _mstate.setAmbient(ColorRGBA.white);
+            _mstate.setDiffuse(ColorRGBA.white);
+            setRenderState(_mstate);
+        }
+        updateRenderState();
+
+        Vector3f tin = new Vector3f(localTranslation),
+            tout = localRotation.mult(Vector3f.UNIT_Z);
+        tout.multLocal(height).addLocal(localTranslation);
+        move(new LinePath(this, in ? tout : tin, in ? tin : tout,
+            duration) {
+            public void update (float time) {
+                super.update(time);
+                float a = Math.min(Math.max(in ? (_accum / _duration) :
+                    (1f - _accum / _duration), 0f), 1f);
+                _mstate.getDiffuse().a = a;
+                if (_shadow != null) {
+                    _shadow.getBatch(0).getDefaultColor().a = a;
+                }
+            }
+            public void wasRemoved () {
+                super.wasRemoved();
+                if (in) {
+                    clearRenderState(RenderState.RS_ALPHA);
+                    if (!isShadowable()) {
+                        clearRenderState(RenderState.RS_MATERIAL);
+                        _mstate = null;
+                    }
+                    updateRenderState();
+                }
+            }
+        });
+    }
+    
     @Override // documentation inherited
     protected void createGeometry ()
     {
@@ -557,6 +659,10 @@ public class MobileSprite extends PieceSprite
      */
     protected float setAction (String action)
     {
+        ProceduralAction paction = _procActions.get(action);
+        if (paction != null) {
+            return paction.activate();
+        }
         return (_model == null || _dead) ?
             -1f : _model.startAnimation(action);
     }
@@ -566,7 +672,9 @@ public class MobileSprite extends PieceSprite
      */
     protected void startNext ()
     {
-        if (_actions.size() > 0) {
+        if (_action != null) {
+            return; // already acting
+        } else if (_actions.size() > 0) {
             startNextAction();
         } else {
             startNextIdle(true);
@@ -586,84 +694,10 @@ public class MobileSprite extends PieceSprite
                 break;
             }
         }
-        if (_action.equals(DEAD)) {
-            String oname = _name;
-            loadModel(_type, _name + "/dead");
-            _name = oname;
-            _dead = true;
-            _action = null;
-            
-        } else if (_action.equals(REMOVED)) {
-            // have the unit sink into the ground and fade away
-            startRiseFade(-TILE_SIZE * 0.5f, false, REMOVAL_DURATION);
-        
-        } else if (_action.equals(AddPieceEffect.RESPAWNED)) {
-            // fade the unit in and display the resurrection effect
-            if (BangPrefs.isMediumDetail()) {
-                displayParticles("frontier_town/resurrection", false);
-            }
-            startRiseFade(-TILE_SIZE * 0.5f, true, RESPAWN_DURATION);
-        
-        } else if (_action.equals(DuplicateEffect.DUPLICATED)) {
-            // fade the unit in (TODO: display dust cloud)
-            startRiseFade(-TILE_SIZE * 0.5f, true, RESPAWN_DURATION);
-            
-        } else if (_action.equals(TELEPORTED_OUT)) {
-            startRiseFade(TILE_SIZE * 0.5f, false, TELEPORT_DURATION);
-            
-        } else if (_action.equals(TELEPORTED_IN)) {
-            startRiseFade(TILE_SIZE * 0.5f, true, TELEPORT_DURATION);
-            
-        } else {
-            // cope when we have units disabled for debugging purposes
-            if ((_nextAction = setAction(_action)) < 0f) {
-                _nextAction = 0.5f;
-            }
+        // cope when we have units disabled for debugging purposes
+        if ((_nextAction = setAction(_action)) < 0f) {
+            _nextAction = 0.5f;
         }
-    }
-
-    /**
-     * Raises or lowers the sprite while fading it in or out.
-     */
-    protected void startRiseFade (
-        float height, final boolean in, final float duration)
-    {
-        setRenderState(RenderUtil.blendAlpha);
-        if (_mstate == null) {
-            _mstate = _ctx.getRenderer().createMaterialState();
-            _mstate.setAmbient(ColorRGBA.white);
-            _mstate.setDiffuse(ColorRGBA.white);
-            setRenderState(_mstate);
-        }
-        updateRenderState();
-
-        Vector3f tin = new Vector3f(localTranslation),
-            tout = localRotation.mult(Vector3f.UNIT_Z);
-        tout.multLocal(height).addLocal(localTranslation);
-        move(new LinePath(this, in ? tout : tin, in ? tin : tout,
-            duration) {
-            public void update (float time) {
-                super.update(time);
-                float a = Math.min(Math.max(in ? (_accum / _duration) :
-                    (1f - _accum / _duration), 0f), 1f);
-                _mstate.getDiffuse().a = a;
-                if (_shadow != null) {
-                    _shadow.getBatch(0).getDefaultColor().a = a;
-                }
-            }
-            public void wasRemoved () {
-                super.wasRemoved();
-                if (in) {
-                    clearRenderState(RenderState.RS_ALPHA);
-                    if (!isShadowable()) {
-                        clearRenderState(RenderState.RS_MATERIAL);
-                        _mstate = null;
-                    }
-                    updateRenderState();
-                }
-            }
-        });
-        _nextAction = duration;
     }
     
     /**
@@ -838,7 +872,9 @@ public class MobileSprite extends PieceSprite
     protected ArrayList<String> _actions = new ArrayList<String>();
     protected ArrayList<ActionHandler> _actionHandlers = 
         new ArrayList<ActionHandler>();
-
+    protected HashMap<String, ProceduralAction> _procActions =
+        new HashMap<String, ProceduralAction>();
+    
     protected PieceSprite _tsprite;
 
     protected int _moveAction = MOVE_NORMAL;
@@ -853,6 +889,18 @@ public class MobileSprite extends PieceSprite
         
     protected static TextureState _dusttex;
 
+    /** Represents an action defined in code, as opposed to the ones that
+     * correspond to model animations. */
+    protected interface ProceduralAction
+    {
+        /**
+         * Starts this action.
+         *
+         * @return the duration of the action in seconds
+         */
+        public float activate ();
+    }
+    
     /** The number of dust particles. */
     protected static final int NUM_DUST_PARTICLES = 32;
 

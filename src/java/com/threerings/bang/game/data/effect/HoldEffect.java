@@ -26,10 +26,10 @@ import static com.threerings.bang.Log.log;
 public class HoldEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String PICKED_UP_BONUS = "pickedup";
+    public static final String PICKED_UP_BONUS = "picked_up_bonus";
 
     /** The identifier for the type of effect that we produce. */
-    public static final String DROPPED_BONUS = "dropped";
+    public static final String DROPPED_BONUS = "dropped_bonus";
 
     /** If true, the piece in question is dropping a bonus; */
     public boolean dropping;

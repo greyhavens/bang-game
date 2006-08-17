@@ -1566,25 +1566,23 @@ public class BangBoardView extends BoardView
     protected PieceSprite removePieceSprite (int pieceId, String why)
     {
         PieceSprite sprite = _pieces.get(pieceId);
+        if (sprite instanceof BonusSprite) {
+            // if this was a bonus, note that it was activated
+            _ctrl.postEvent(TutorialCodes.BONUS_ACTIVATED);
+        }
         if (sprite instanceof MobileSprite) {
             MobileSprite msprite = (MobileSprite)sprite;
             // if this mobile sprite is animating it will have to wait
             // until it's finished before being removed
-            if (msprite.isAnimating()) {
+            if (msprite.removed()) {
                 _pieces.remove(pieceId);
                 msprite.addObserver(_deadRemover);
-                msprite.queueAction(MobileSprite.REMOVED);
                 return sprite;
             } else {
                 log.info("Removing dead unit sprite immediately " +
                          msprite.getPiece() + ".");
             }
         }
-        if (sprite instanceof BonusSprite) {
-            // if this was a bonus, note that it was activated
-            _ctrl.postEvent(TutorialCodes.BONUS_ACTIVATED);
-        }
-
         return super.removePieceSprite(pieceId, why);
     }
 
@@ -1834,14 +1832,10 @@ public class BangBoardView extends BoardView
     protected MobileSprite.ActionObserver _deadRemover =
         new MobileSprite.ActionObserver() {
         public void actionCompleted (Sprite sprite, String action) {
-            if (action.equals(MobileSprite.REMOVED)) {
-                if (((MobileSprite)sprite).isMoving()) {
-                    log.warning("Removing dead sprite, but it's still moving " +
-                                ((MobileSprite)sprite).getPiece() + ".");
-                } else {
-                    log.info("Removing dead unit sprite post-fade " +
-                             ((MobileSprite)sprite).getPiece() + ".");
-                }
+            MobileSprite msprite = (MobileSprite)sprite;
+            if (!msprite.isAnimating()) {
+                log.info("Removing dead unit sprite post-fade " +
+                         msprite.getPiece() + ".");
                 removeSprite(sprite);
 
                 // let our unit status know if a unit just departed
