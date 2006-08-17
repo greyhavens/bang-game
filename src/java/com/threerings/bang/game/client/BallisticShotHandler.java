@@ -37,7 +37,7 @@ public class BallisticShotHandler extends ShotHandler
     implements PathObserver
 {
     /** The acceleration due to gravity. */
-    protected static final float GRAVITY = 10 * BallisticPath.G;
+    protected static final float GRAVITY = 20 * BallisticPath.G;
     
     /** The gravity vector used for path acceleration. */
     public static final Vector3f GRAVITY_VECTOR = new Vector3f(0, 0, GRAVITY);
