@@ -32,11 +32,21 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class ExplosionViz extends ParticleEffectViz
 {
+    public ExplosionViz ()
+    {
+    }
+    
+    public ExplosionViz (boolean showDustRing)
+    {
+        _showDustRing = showDustRing;
+    }
+    
     @Override // documentation inherited
     public void display (PieceSprite target)
     {
         // set up and add the dust ring
-        if (!_target.isAirborne() && BangPrefs.isHighDetail()) {
+        if ((!_target.isAirborne() || _showDustRing) &&
+            BangPrefs.isHighDetail()) {
             target.displayDustRing();
         }
         
@@ -121,6 +131,9 @@ public class ExplosionViz extends ParticleEffectViz
         /** The age of this streamer in seconds. */
         protected float _age;
     }
+    
+    /** If true, show the dust ring even for airborne units. */
+    protected boolean _showDustRing;
     
     protected Streamer[] _streamers;
     protected PointLight _light;

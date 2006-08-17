@@ -38,11 +38,14 @@ import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.ParticleUtil;
 import com.threerings.bang.util.RenderUtil;
 
+import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.effect.ExplosionViz;
 import com.threerings.bang.game.client.effect.InfluenceViz;
 import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.BangBoard;
@@ -268,8 +271,9 @@ public class UnitSprite extends MobileSprite
         _ustatus.setCullMode(CULL_ALWAYS);
         
         // load the fire effect for the death flights of airborne steam units
-        if (!_piece.isAlive() && _piece.isAirborne() &&
-            ((Unit)_piece).getConfig().make == UnitConfig.Make.STEAM) {
+        if (path instanceof MoveUnitPath && !_piece.isAlive() &&
+            _piece.isAirborne() && ((Unit)_piece).getConfig().make ==
+                UnitConfig.Make.STEAM) {
             _ctx.loadEffect(FIRE_EFFECT, new ResultAttacher<Spatial>(this) {
                 public void requestCompleted (Spatial result) {
                     if (isMoving()) {
@@ -296,10 +300,14 @@ public class UnitSprite extends MobileSprite
         updateTileHighlight();
         updateStatus();
         
-        // turn the fire off and remove it when all existing particles are gone
+        // turn the fire off and display an explosion when the unit reaches the
+        // end of its death flight
         if (_fire != null) {
             ParticleUtil.stopAndRemove(_fire);
             _fire = null;
+            ExplosionViz eviz = new ExplosionViz(true);
+            eviz.init((BangContext)_ctx, (BangBoardView)_view, _piece, null);
+            eviz.display(this);
         }
     }
 

@@ -59,7 +59,9 @@ public abstract class EffectViz
      */
     protected void effectDisplayed ()
     {
-        _observer.effectDisplayed();
+        if (_observer != null) {
+            _observer.effectDisplayed();
+        }
     }
 
     protected BangContext _ctx;

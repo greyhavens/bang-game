@@ -158,6 +158,15 @@ public abstract class Effect extends SimpleStreamableObject
         target.wasDamaged(newDamage);
         if (!target.isAlive()) {
             target.wasKilled(bangobj.tick);
+       
+            // airborn targets must land when they die
+            if (target.isAirborne() && !target.removeWhenDead()) {
+                Point pt = bangobj.board.getOccupiableSpot(
+                    target.x, target.y, 5, new Random(bangobj.tick));
+                if (pt != null) {
+                    moveAndReport(bangobj, target, pt.x, pt.y, obs);
+                }
+            }
         }
         
         // report that the target was affected
@@ -170,15 +179,6 @@ public abstract class Effect extends SimpleStreamableObject
 
         // report that the target was killed
         reportKill(obs, target);
-
-        // airborn targets must land when they die
-        if (target.isAirborne() && !target.removeWhenDead()) {
-            Point pt = bangobj.board.getOccupiableSpot(
-                target.x, target.y, 5, new Random(bangobj.tick));
-            if (pt != null) {
-                moveAndReport(bangobj, target, pt.x, pt.y, obs);
-            }
-        }
 
         // if we have a shooter and we're on the server, record the kill
         if (shooter != -1 && bangobj.getManager().isManager(bangobj) &&

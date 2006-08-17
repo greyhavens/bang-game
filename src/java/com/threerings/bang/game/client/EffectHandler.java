@@ -225,10 +225,9 @@ public class EffectHandler extends BoardView.BoardAction
                 } else if (msprite.hasAction("dying")) {
                     queueAction(msprite,  "dying");
                 } else {
-                    // units with no dying animation will react while the
-                    // explosion is going off and then switch to their dead
-                    // model
-                    queueAction(msprite, "reacting");
+                    // units with no dying animation just switch to their
+                    // dead model; the wreck viz or explosion should hide the
+                    // sudden transition
                     queueAction(msprite, MobileSprite.DEAD);
                 }
             } else if (msprite.hasAction(effect)) {
