@@ -523,7 +523,9 @@ public class PieceSprite extends Sprite
         }
         if (_tlight.getTileX() != _px || _tlight.getTileY() != _py) {
             _tlight.setPosition(_px, _py);
-            _status.updateTranslations(_tlight);
+            if (_status != null) {
+                _status.updateTranslations(_tlight);
+            }
         }
     }
 

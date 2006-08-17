@@ -164,10 +164,20 @@ public class TerrainNode extends Node
         /** The position of the center of the highlight. */
         public float x, y;
 
+        /** The layer of the highlight. */
+        public byte layer = 2;
+
         protected Highlight (int x, int y, boolean overPieces, boolean flatten)
         {
             this((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE, TILE_SIZE,
                 TILE_SIZE, true, overPieces, flatten);
+        }
+
+        protected Highlight (
+                int x, int y, boolean overPieces, boolean flatten, byte layer)
+        {
+            this((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE, TILE_SIZE,
+                TILE_SIZE, true, overPieces, flatten, layer);
         }
 
         protected Highlight (float x, float y, float width, float height)
@@ -178,9 +188,16 @@ public class TerrainNode extends Node
         protected Highlight (float x, float y, float width, float height,
             boolean onTile, boolean overPieces, boolean flatten)
         {
+            this(x, y, width, height, onTile, overPieces, flatten, (byte)2);
+        }
+        
+        protected Highlight (float x, float y, float width, float height,
+            boolean onTile, boolean overPieces, boolean flatten, byte layer)
+        {
             super("highlight");
             this.x = x;
             this.y = y;
+            this.layer = layer;
             _width = width;
             _height = height;
             _onTile = onTile;
@@ -318,6 +335,7 @@ public class TerrainNode extends Node
                             vertex.subtractLocal(offset);
                         }
                     }
+                    vertex.z += layer * LAYER_OFFSET;
                     BufferUtils.setInBuffer(vertex, vbuf, idx++);
                     
                     // update the index buffer according to the diagonalization
@@ -381,6 +399,9 @@ public class TerrainNode extends Node
 
         /** If true, the highlight will be flat. */
         protected boolean _flatten;
+
+        /** The zoffset for each layer. */
+        protected static final float LAYER_OFFSET = TILE_SIZE/1000;
     }
 
     /**
@@ -661,6 +682,22 @@ public class TerrainNode extends Node
     public Highlight createHighlight (int x, int y, boolean overPieces)
     {
         return createHighlight(x, y, overPieces, false);
+    }
+
+    /**
+     * Creates and returns a tile-aligned highlight over this terrain at the
+     * specified tile coordinates.  The highlight must be added to the scene
+     * graph before it becomes visible.
+     *
+     * @param overPieces if true, place the highlight above any pieces
+     * occupying the tile
+     * @param layer the rendering order for the highlight
+     */
+    public Highlight createHighlight (
+            int x, int y, boolean overPieces, byte layer)
+    {
+        return new Highlight(
+                x, y, overPieces && Config.floatHighlights, false, layer);
     }
 
     /**

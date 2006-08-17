@@ -330,6 +330,7 @@ public class BangView extends BWindow
     {
         _bangobj.board = (BangBoard)board.clone();
         _bangobj.board.applyShadowPatch(_bangobj.scenario.getIdent());
+        ArrayList<Piece> markers = new ArrayList<Piece>();
 
         // if we arrived in the middle of the game, the pieces will already be
         // configured; otherwise start with the ones provided by the board
@@ -337,11 +338,7 @@ public class BangView extends BWindow
             _bangobj.maxPieceId = 0;
             ArrayList<Piece> plist = new ArrayList<Piece>();
             for (Piece piece : pieces) {
-                if (Marker.isMarker(piece, Marker.SAFE) && 
-                        piece.isValidScenario(_bangobj.scenario.getIdent())) {
-                    view.addSafeTile(piece.x, piece.y);
-                }
-                if (piece instanceof Marker || 
+                if ((piece instanceof Marker && !((Marker)piece).addSprite()) ||
                     !piece.isValidScenario(_bangobj.scenario.getIdent())) {
                     continue;
                 }
@@ -349,6 +346,9 @@ public class BangView extends BWindow
                 piece.assignPieceId(_bangobj);
                 piece.init();
                 plist.add(piece);
+                if (piece instanceof Marker) {
+                    markers.add(piece);
+                }
             }
             _bangobj.pieces = new PieceDSet(plist.iterator());
         }
@@ -356,6 +356,12 @@ public class BangView extends BWindow
         // tell the board view to start the game so that we can see the board
         // while we're buying pieces
         view.prepareForRound(_bangobj, config, pidx);
+
+        // Once we've added all the MarkerSprites we don't want the marker
+        // pieces hanging around causing problems
+        for (Piece p : markers) {
+            _bangobj.removePieceDirect(p);
+        }
 
         // let the camera and input handlers know that we're getting ready to
         // start

@@ -70,6 +70,14 @@ public class Marker extends Piece
         return new MarkerSprite(_type);
     }
 
+    /**
+     * Returns true if we want to use the marker sprite in game.
+     */
+    public boolean addSprite ()
+    {
+        return _type == SAFE;
+    }
+
     @Override // documentation inherited
     protected int computeOrientation (int nx, int ny)
     {
