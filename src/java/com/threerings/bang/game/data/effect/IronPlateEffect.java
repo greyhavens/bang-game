@@ -38,6 +38,12 @@ public class IronPlateEffect extends SetInfluenceEffect
     }
 
     @Override // documentation inherited
+    protected String getActivatedEffect ()
+    {
+        return null; // handled by the influence viz
+    }
+    
+    @Override // documentation inherited
     protected String getEffectName ()
     {
         return "frontier_town/iron_plate";
