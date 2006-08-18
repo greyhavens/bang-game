@@ -13,8 +13,8 @@ cd $BANG_HOME
 
 # Update our list of props
 for TOWN in $TOWNS; do
-    find rsrc/props/$TOWN -name 'model.properties' | \
-        sed 's:rsrc/props/::g' | sed 's:/model.properties::' | sort > \
+    find rsrc/props/$TOWN -name 'prop.properties' | \
+        sed 's:rsrc/props/::g' | sed 's:/prop.properties::' | sort > \
         rsrc/props/$TOWN/props.txt
 done
 
