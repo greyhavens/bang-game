@@ -373,7 +373,8 @@ public class PlayerManager
         // make sure the tutorial is valid for this town
         int townIdx = BangUtil.getTownIndex(player.townId);
         int tutIdx = ListUtil.indexOf(TutorialCodes.TUTORIALS[townIdx], tutId);
-        if (tutIdx == -1) {
+        if (!player.tokens.isAdmin() && // allow admin to play test tutorials
+            tutIdx == -1) {
             log.warning("Player req'd invalid tutorial [who=" + player.who() +
                         ", town=" + player.townId + ", tutid=" + tutId + "].");
             throw new InvocationException(INTERNAL_ERROR);
