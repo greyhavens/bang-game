@@ -22,10 +22,11 @@ public class DreamCatcher extends BallisticUnit
     }
 
     @Override // documentation inherited
-    public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
+    protected ShotEffect unitShoot (
+            BangObject bangobj, Piece target, float scale)
     {
         // she does no damage
-        ShotEffect shot = super.shoot(bangobj, target, 0f);
+        ShotEffect shot = super.unitShoot(bangobj, target, 0f);
 
         // She will reset the target's tick counter and force them to move.
         // They will try to move away from her, where their movement distance

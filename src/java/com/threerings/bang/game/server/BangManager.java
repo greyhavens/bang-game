@@ -69,6 +69,7 @@ import com.threerings.bang.game.data.effect.AdjustTickEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.MoveShootEffect;
+import com.threerings.bang.game.data.effect.ProximityShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Marker;
@@ -507,7 +508,7 @@ public class BangManager extends GameManager
                 }
 
                 // allow the target to return fire on certain shots
-                if (effect.type != ShotEffect.PROXIMITY) {
+                if (!(effect instanceof ProximityShotEffect)) {
                     effect = target.returnFire(
                             _bangobj, unit, effect.newDamage);
                 }

@@ -12,9 +12,10 @@ import com.threerings.bang.game.data.effect.ShotEffect;
 public class Codger extends Unit
 {
     @Override // documentation inherited
-    public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
+    protected ShotEffect unitShoot (
+            BangObject bangobj, Piece target, float scale)
     {
-        ShotEffect shot = super.shoot(bangobj, target, scale);
+        ShotEffect shot = super.unitShoot(bangobj, target, scale);
         // the codger resets the tick counter of the unit he fires upon
         if (target.lastActed < bangobj.tick) {
             shot.targetLastActed = bangobj.tick;

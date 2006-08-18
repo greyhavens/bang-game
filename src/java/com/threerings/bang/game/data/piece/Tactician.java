@@ -19,17 +19,6 @@ import static com.threerings.bang.Log.log;
  */
 public class Tactician extends Unit
 {
-    /** Set to the tick on which the tactician last fired. */
-    public short lastFired = -4;
-
-    @Override // documentation inherited
-    public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
-    {
-        // note our last fired time
-        lastFired = bangobj.tick;
-        return super.shoot(bangobj, target, scale);
-    }
-
     @Override // documentation inherited
     public ShotEffect deflect (BangObject bangobj, Piece shooter,
                                ShotEffect effect, float scale)

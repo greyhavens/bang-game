@@ -280,9 +280,18 @@ public class Unit extends Piece
             shot = hindrance.shoot(bangobj, this, target, scale);
         }
         if (shot == null) {
-            shot = super.shoot(bangobj, target, scale);
+            shot = unitShoot(bangobj, target, scale);
         }
         return shot;
+    }
+
+    /**
+     * Used for overriding the shoot function.
+     */
+    protected ShotEffect unitShoot (
+            BangObject bangobj, Piece target, float scale)
+    {
+        return super.shoot(bangobj, target, scale);
     }
 
     @Override // documentation inherited

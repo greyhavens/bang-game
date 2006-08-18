@@ -22,7 +22,7 @@ import static com.threerings.bang.Log.log;
 public class StormCaller extends Unit
 {
     @Override // documentation inherited
-    public ShotEffect shoot (
+    protected ShotEffect unitShoot (
             BangObject bangobj, Piece target, float scale)
     {
         int damage = computeScaledDamage(bangobj, target, scale);

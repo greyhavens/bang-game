@@ -23,7 +23,8 @@ import static com.threerings.bang.Log.log;
 public class BuffaloRider extends Unit
 {
     @Override // documentation inherited
-    public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
+    protected ShotEffect unitShoot (
+            BangObject bangobj, Piece target, float scale)
     {
         return shoot(bangobj, target, scale, x, y);
     }
@@ -87,7 +88,7 @@ public class BuffaloRider extends Unit
                 scale += DISTANCE_DAMAGE_SCALE;
             }
         }
-        ShotEffect shot = super.shoot(bangobj, target, scale);
+        ShotEffect shot = super.unitShoot(bangobj, target, scale);
         if (pushed) {
             shot.pushx = pushx;
             shot.pushy = pushy;
