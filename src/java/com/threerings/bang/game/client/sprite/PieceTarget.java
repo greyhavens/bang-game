@@ -45,18 +45,21 @@ public class PieceTarget extends Node
     {
         boolean addModifiers = false;
         if (_pendingTick == -1) {
+            addModifiers = true;
             _tgtquad.setDefaultColor(DEFAULT_COLOR);
             switch (mode) {
             case NONE:
                 _tgtquad.setCullMode(CULL_ALWAYS);
+                addModifiers = false;
                 break;
             case SURE_SHOT:
                 displayTextureQuad(_tgtquad, _crosstst[0]);
-                addModifiers = true;
                 break;
             case MAYBE:
                 displayTextureQuad(_tgtquad, _crosstst[1]);
-                addModifiers = true;
+                break;
+            case KILL_SHOT:
+                displayTextureQuad(_tgtquad, _crosstst[5]);
                 break;
             }
         }
@@ -285,7 +288,8 @@ public class PieceTarget extends Node
     protected static TextureState[] _crosstst;
     protected static TextureState[] _modtst;
 
-    protected static final String[] CROSS_TEXS = { "", "_q", "_1", "_2", "_n" };
+    protected static final String[] CROSS_TEXS = { 
+        "", "_q", "_1", "_2", "_n", "_skull" };
 
     protected static final Vector2f[] PTARG_COORDS = {
         new Vector2f(0, 2),

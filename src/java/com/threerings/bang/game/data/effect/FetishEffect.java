@@ -84,6 +84,9 @@ public class FetishEffect extends HoldEffect
                 public int adjustAttack (Piece target, int damage) {
                     return damage*2;
                 }
+                public boolean showClientAdjust () {
+                    return true;
+                }
             };
         } else {
             log.warning("Fetish effect encountered unknown type [type=" +

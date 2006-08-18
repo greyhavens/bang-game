@@ -67,6 +67,17 @@ public class BuffaloRider extends Unit
         return effect;
     }
 
+    @Override // documentation inherited
+    public boolean killShot (BangObject bangobj, Piece target)
+    {
+        _killShot = true;
+        int dist = getDistance(x, y, target.x, target.y);
+        int damage = computeScaledDamage(
+                bangobj, target, DISTANCE_DAMAGE_SCALE * dist);
+        _killShot = false;
+        return damage + target.damage >= 100;
+    }
+
     /**
      * Generate a shot effect for the Buffalo Rider.
      */

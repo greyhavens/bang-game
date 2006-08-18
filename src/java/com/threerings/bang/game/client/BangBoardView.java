@@ -1237,10 +1237,13 @@ public class BangBoardView extends BoardView
 
             Targetable target = getTargetableSprite(p);
             if (target != null) {
+                Unit attacker = (Unit)_selection;
                 target.setTargeted(_selection.lastActed >= p.lastActed ?
                                    Targetable.TargetMode.MAYBE :
-                                   Targetable.TargetMode.SURE_SHOT,
-                                   (Unit)_selection);
+                                   (attacker.killShot(_bangobj, p) ?
+                                       Targetable.TargetMode.KILL_SHOT :
+                                       Targetable.TargetMode.SURE_SHOT),
+                                   attacker);
                 target.setPossibleShot(possible);
                 dest.add(p.x, p.y);
             } else {

@@ -26,6 +26,9 @@ public class PowerUpEffect extends SetInfluenceEffect
             public boolean didAdjustAttack () {
                 return true;
             }
+            public boolean showClientAdjust () {
+                return true;
+            }
         };
     }
 

@@ -10,7 +10,7 @@ import com.threerings.bang.game.data.piece.Unit;
  */
 public interface Targetable
 {
-    public static enum TargetMode { NONE, SURE_SHOT, MAYBE };
+    public static enum TargetMode { NONE, SURE_SHOT, MAYBE, KILL_SHOT };
 
     /**
      * Indicates that this sprite is targetted.

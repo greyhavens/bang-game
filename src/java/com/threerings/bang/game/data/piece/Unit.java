@@ -610,25 +610,42 @@ public class Unit extends Piece
         return damage;
     }
 
+    /**
+     * Returns true if shooting this target will kill it.
+     */
+    public boolean killShot (BangObject bangobj, Piece target)
+    {
+        _killShot = true;
+        int damage = computeScaledDamage(bangobj, target, 1f);
+        _killShot = false;
+        return damage + target.damage >= 100;
+    }
+
     @Override // documentation inherited
     public int adjustAttack (Piece target, int damage)
     {
-        damage = (influence == null) ?
+        damage = (influence == null || 
+                (_killShot && !influence.showClientAdjust())) ?
             damage : influence.adjustAttack(target, damage);
-        damage = (holdingInfluence == null) ?
+        damage = (holdingInfluence == null ||
+                (_killShot && !holdingInfluence.showClientAdjust())) ?
             damage : holdingInfluence.adjustAttack(target, damage);
-        return (hindrance == null) ?
+        return (hindrance == null ||
+                (_killShot && !hindrance.showClientAdjust())) ?
             damage : hindrance.adjustAttack(target, damage);
     }
 
     @Override // documentation inherited
     public int adjustDefend (Piece shooter, int damage)
     {
-        damage = (influence == null) ?
+        damage = (influence == null ||
+                (_killShot && !influence.showClientAdjust())) ?
             damage : influence.adjustDefend(shooter, damage);
-        damage = (holdingInfluence == null) ?
+        damage = (holdingInfluence == null ||
+                (_killShot && !influence.showClientAdjust())) ?
             damage : holdingInfluence.adjustDefend(shooter, damage);
-        return (hindrance == null) ?
+        return (hindrance == null ||
+                (_killShot && !influence.showClientAdjust())) ?
             damage : hindrance.adjustDefend(shooter, damage);
     }
 
@@ -640,6 +657,9 @@ public class Unit extends Piece
 
     protected transient UnitConfig _config;
     protected transient short _respawnTick = -1;
+
+    /** Set to true if we're calculating a kill shot. */
+    protected transient boolean _killShot = false;
 
     /** The height above ground at which flyers fly (in tile lengths). */
     protected static final float FLYER_GROUND_HEIGHT = 1f;

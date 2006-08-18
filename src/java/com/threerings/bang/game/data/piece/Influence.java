@@ -137,6 +137,15 @@ public abstract class Influence extends SimpleStreamableObject
     }
 
     /**
+     * Returns true if we should show the client this influence adjustment.
+     * The default is false;
+     */
+    public boolean showClientAdjust ()
+    {
+        return false;
+    }
+
+    /**
      * Returns true if the last call to adjustAttack caused a change
      * in attack.  The default is false.
      */

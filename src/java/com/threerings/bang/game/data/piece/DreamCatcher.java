@@ -22,6 +22,12 @@ public class DreamCatcher extends BallisticUnit
     }
 
     @Override // documentation inherited
+    public boolean killShot (BangObject bangobj, Piece target)
+    {
+        return false;
+    }
+
+    @Override // documentation inherited
     protected ShotEffect unitShoot (
             BangObject bangobj, Piece target, float scale)
     {

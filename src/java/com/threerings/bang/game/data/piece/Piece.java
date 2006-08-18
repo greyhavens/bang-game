@@ -844,7 +844,7 @@ public abstract class Piece
     {
         return null;
     }
-    
+
     /**
      * Returns the defend influence icon or null if no attack influence.  Used
      * after a call to {@link computeScaledDamage}.
@@ -858,7 +858,7 @@ public abstract class Piece
         }
         return null;
     }
-    
+
     /**
      * Called on both client and server to notify the piece that it moved of
      * its own volition.
@@ -866,7 +866,7 @@ public abstract class Piece
     public void didMove (int steps)
     {
     }
-    
+
     /** Returns the frequency with which this piece can move. */
     protected int getTicksPerMove ()
     {
