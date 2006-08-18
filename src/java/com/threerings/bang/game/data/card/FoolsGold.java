@@ -30,6 +30,12 @@ public class FoolsGold extends AddPieceCard
     }
 
     @Override // documentation inherited
+    public boolean shouldShowVisualization (int pidx)
+    {
+        return pidx == owner;
+    }
+    
+    @Override // documentation inherited
     public String getTownId ()
     {
         return BangCodes.FRONTIER_TOWN;

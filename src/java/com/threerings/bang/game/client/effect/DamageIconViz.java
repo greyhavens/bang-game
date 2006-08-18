@@ -110,7 +110,7 @@ public class DamageIconViz extends IconViz
     protected DamageIconViz (String iname, int damage, ColorRGBA color,
         ColorRGBA dcolor, String attackIcon, String defendIcon)
     {
-        super(iname, color);
+        super("textures/effects/" + iname + ".png", color);
         _damage = damage;
         _dcolor = dcolor;
         _attackIcon = attackIcon;
@@ -145,14 +145,16 @@ public class DamageIconViz extends IconViz
         float offset =  DAMAGE_SIZE * 0.58f + width / 2f;
         if (_attackIcon != null) {
             _readout[1] = createIconQuad(
-                    "influences/icons/" + _attackIcon + ".png", DAMAGE_SIZE);
+                "influences/icons/" + _attackIcon + ".png",
+                DAMAGE_SIZE, DAMAGE_SIZE);
             _readout[1].setDefaultColor(new ColorRGBA());
             _readout[1].getLocalTranslation().x = offset; 
         }
 
         if (_defendIcon != null) {
             _readout[2] = createIconQuad(
-                    "influences/icons/" + _defendIcon + ".png", DAMAGE_SIZE);
+                "influences/icons/" + _defendIcon + ".png",
+                DAMAGE_SIZE, DAMAGE_SIZE);
             _readout[2].setDefaultColor(new ColorRGBA());
             _readout[2].getLocalTranslation().x = -offset;
         }

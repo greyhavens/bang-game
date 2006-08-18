@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client.effect;
 
+import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -14,7 +15,10 @@ import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 
+import com.threerings.jme.sprite.PathUtil;
+
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
@@ -39,49 +43,88 @@ public class IconViz extends EffectViz
     public static IconViz createIconViz (Piece piece, String effect)
     {
         if (effect.equals(RepairEffect.REPAIRED)) {
-            return new IconViz("repaired");
+            return new IconViz("textures/effects/repaired.png");
             
         } else {
             return null;
         }
     }
     
-    protected IconViz (String iname)
+    /**
+     * Creates a visualization that drops a representation of the specified
+     * card down onto the piece or coordinates.
+     */
+    public static IconViz createCardViz (Card card)
     {
-        _iname = iname;   
+        return new IconViz(card.getIconPath("icon"), true);
     }
     
-    protected IconViz (String iname, ColorRGBA color)
+    protected IconViz (String ipath)
     {
-        _iname = iname;   
+        _ipath = ipath;
+    }
+    
+    protected IconViz (String ipath, ColorRGBA color)
+    {
+        _ipath = ipath;
         _color = color;
+    }
+    
+    protected IconViz (String ipath, boolean card)
+    {
+        _ipath = ipath;
+        _card = true;
     }
     
     @Override // documentation inherited
     protected void didInit ()
     {
         createBillboard();
-        if (_iname != null) {
-            Quad icon = createIconQuad(
-                "textures/effects/" + _iname + ".png", ICON_SIZE);
-            icon.setDefaultColor(new ColorRGBA(_color == null ?
-                JPIECE_COLORS[_target.owner + 1] : _color));
-            _billboard.attachChild(icon);
+        if (_ipath != null) {
+            if (_card) {
+                Quad bg = createIconQuad(
+                    "ui/pstatus/card_up.png", CARD_WIDTH, ICON_SIZE),
+                     icon = createIconQuad(_ipath, CARD_WIDTH, ICON_SIZE);
+                _billboard.attachChild(bg);
+                _billboard.attachChild(icon);
+                
+            } else {
+                Quad icon = createIconQuad(_ipath, ICON_SIZE, ICON_SIZE);
+                if (_color != null) {
+                    icon.setDefaultColor(new ColorRGBA(_color));
+                } else if (_target != null) {
+                    icon.setDefaultColor(new ColorRGBA(
+                        JPIECE_COLORS[_target.owner + 1]));
+                }
+                _billboard.attachChild(icon);
+            }
         }
     }
     
     @Override // documentation inherited
     public void display (PieceSprite target)
     {
-        target.attachChild(_billboard);
+        if (target != null) {
+            target.attachChild(_billboard);
+        } else {
+            float tx = (_coords.x + 0.5f) * TILE_SIZE,
+                ty = (_coords.y + 0.5f) * TILE_SIZE,
+                tz = _view.getTerrainNode().getHeightfieldHeight(tx, ty);
+            _billboard.getLocalTranslation().set(tx, ty, tz);
+            PathUtil.computeRotation(Vector3f.UNIT_Z, Vector3f.UNIT_Z,
+                _view.getTerrainNode().getHeightfieldNormal(tx, ty),
+                _billboard.getLocalRotation());
+            _view.getPieceNode().attachChild(_billboard);
+            _billboard.updateRenderState();
+        }
     }
 
     /**
      * Create an icon quad.
      */
-    protected Quad createIconQuad (String name, float size)
+    protected Quad createIconQuad (String name, float width, float height)
     {
-        Quad icon = RenderUtil.createIcon(size, size);
+        Quad icon = RenderUtil.createIcon(width, height);
         icon.setRenderState(RenderUtil.createTextureState(_ctx, name));
         icon.setRenderState(RenderUtil.blendAlpha);
         icon.setRenderState(RenderUtil.alwaysZBuf);
@@ -117,7 +160,8 @@ public class IconViz extends EffectViz
                     
                 } else {
                     alpha = _elapsed / RISE_DURATION;
-                    localTranslation.z = TILE_SIZE * (0.5f + alpha * 0.5f);
+                    localTranslation.z = TILE_SIZE *
+                        FastMath.LERP(alpha, _card ? 1.5f : 0.5f, 1f);
                     billboardRise(_elapsed);
                 }
                 Iterator iter = children.iterator();
@@ -156,18 +200,25 @@ public class IconViz extends EffectViz
     {
         // nothing to do here
     }
-
-    /** The name of the icon to display. */
-    protected String _iname;
+    
+    /** The path of the icon to display. */
+    protected String _ipath;
     
     /** The color in which to display the icon (or null for the default). */
     protected ColorRGBA _color;
+    
+    /** If true, this is a card, so slide it down rather than up and use the
+     * card icon background. */
+    protected boolean _card;
     
     /** The icon billboard. */
     protected BillboardNode _billboard;
     
     /** The size of the icon. */
     protected static final float ICON_SIZE = TILE_SIZE / 2;
+    
+    /** The width of cards, if {@link #ICON_SIZE} is the height. */
+    protected static final float CARD_WIDTH = ICON_SIZE * 30 / 39;
     
     /** The length of time it takes for the icon to rise up and fade in. */
     protected static final float RISE_DURATION = 0.5f;

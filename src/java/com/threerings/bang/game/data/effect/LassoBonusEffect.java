@@ -21,21 +21,18 @@ public class LassoBonusEffect extends BonusEffect
     /** The identifier for the type of effect that we produce. */
     public static final String LASSOED_BONUS = "frontier_town/lasso";
 
-    /** The lassoing player. */
-    public int player;
-
-    /** The location of the bonus to lasso. */
-    public transient int x, y;
-
+    /** The card that we're granting. */
+    public Card card;
+    
     public LassoBonusEffect ()
     {
     }
 
     public LassoBonusEffect (int player, int x, int y)
     {
-        this.player = player;
-        this.x = x;
-        this.y = y;
+        _player = player;
+        _x = x;
+        _y = y;
     }
 
     @Override // documentation inherited
@@ -50,48 +47,58 @@ public class LassoBonusEffect extends BonusEffect
         super.prepare(bangobj, dammap);
 
         // make sure our player has room for another card
-        if (bangobj.countPlayerCards(player) >= GameCodes.MAX_CARDS) {
-            log.warning("No soup four you! " + player + ".");
+        if (bangobj.countPlayerCards(_player) >= GameCodes.MAX_CARDS) {
+            log.warning("No soup four you! " + _player + ".");
             return;
         }
 
         // find the bonus
         Bonus bonus = null;
         for (Piece piece : bangobj.pieces) {
-            if (piece instanceof Bonus && piece.intersects(x, y)) {
+            if (piece instanceof Bonus && piece.intersects(_x, _y)) {
                 bonus = (Bonus)piece;
                 break;
             }
         }
         if (bonus == null) {
             log.warning("Couldn't find bonus for lasso effect [pidx=" +
-                player + ", x=" + x + ", y=" + y + "].");
+                _player + ", x=" + _x + ", y=" + _y + "].");
             return;
         }
         String ctype = bonus.getConfig().cardType;
         if (ctype == null) {
             log.warning("Tried to lasso bonus without corresponding card " +
-                "[pidx=" + player + ", bonus=" + bonus + "].");
+                "[pidx=" + _player + ", bonus=" + bonus + "].");
             return;
         }
         bonusId = bonus.pieceId;
 
         // grant the corresponding card
-        Card card = Card.newCard(ctype.equals("__random__") ?
+        card = Card.newCard(ctype.equals("__random__") ?
             Card.selectRandomCard(bangobj.townId, bangobj.scenario) : ctype);
-        card.init(bangobj, player);
-        bangobj.addToCards(card);
+        card.init(bangobj, _player);
     }
 
     @Override // documentation inherited
     public boolean isApplicable ()
     {
-        return bonusId > 0;
+        return card != null;
     }
 
+    @Override // documentation inherited
+    public boolean apply (BangObject bangobj, Observer obs)
+    {
+        super.apply(bangobj, obs);
+        addAndReport(bangobj, card, obs);
+        return true;
+    }
+    
     @Override // documentation inherited
     protected String getActivatedEffect ()
     {
         return LASSOED_BONUS;
     }
+    
+    /** The source and target of the lasso. */
+    protected transient int _player, _x, _y;
 }

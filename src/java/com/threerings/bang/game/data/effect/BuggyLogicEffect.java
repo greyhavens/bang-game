@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.effect;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.client.effect.InfluenceViz;
@@ -84,6 +86,17 @@ public class BuggyLogicEffect extends SetHindranceEffect
         };
     }
 
+    @Override // from Effect
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        if (_unit == null || _unit.originalOwner != pidx) {
+            return null;
+        }
+        String name = _unit.hindrance.getName();
+        return (name == null) ? null : MessageBundle.compose(
+            "m.effect_influence", _unit.getName(), "m.hindrance_" + name);
+    }
+    
     @Override // documentation inherited
     protected String getEffectName ()
     {

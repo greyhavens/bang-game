@@ -345,6 +345,36 @@ public class EffectHandler extends BoardView.BoardAction
     public void cardPlayed (Card card, Object target)
     {
         _bview.pstatus[card.owner].cardRemoved(card, false, true);
+        if (!card.shouldShowVisualization(_pidx)) {
+            return;
+        }
+        IconViz iviz;
+        switch (card.getPlacementMode()) {
+            case VS_PIECE:
+                Piece piece = _bangobj.pieces.get((Integer)target);
+                if (piece == null) {
+                    log.warning("Missing piece for card played effect " +
+                        "[effect=" + _effect + ", pieceId=" + target + "].");
+                    return;
+                }
+                PieceSprite sprite = _view.getPieceSprite(piece);
+                if (sprite == null) {
+                    log.warning("Missing sprite for card played effect " +
+                        "[effect=" + _effect + ", piece=" + piece + "].");
+                    return;
+                }
+                iviz = IconViz.createCardViz(card);
+                iviz.init(_ctx, _view, piece, null);
+                iviz.display(sprite);
+                return;
+                
+            case VS_AREA:
+                int[] coords = (int[])target;
+                iviz = IconViz.createCardViz(card);
+                iviz.init(_ctx, _view, coords[0], coords[1], null);
+                iviz.display(null);
+                return;
+        }
     }
     
     // documentation inherited from interface Effect.Observer

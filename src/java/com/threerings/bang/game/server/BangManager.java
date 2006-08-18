@@ -69,6 +69,7 @@ import com.threerings.bang.game.data.effect.AdjustTickEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.MoveShootEffect;
+import com.threerings.bang.game.data.effect.PlayCardEffect;
 import com.threerings.bang.game.data.effect.ProximityShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Bonus;
@@ -351,16 +352,24 @@ public class BangManager extends GameManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // remove it from their list
-        _bangobj.removeFromCards(cardId);
-        
-        log.info("Playing card: " + card);
+        // this is a little fiddly; we want to prepare the effect and make sure
+        // it's applicable before removing the card
         Effect effect = card.activate(_bangobj, target);
-        if (effect == null || !deployEffect(card.owner, effect)) {
-            _bangobj.addToCards(card); // put it back in the hand
+        if (effect == null) {
             throw new InvocationException(CARD_UNPLAYABLE);
         }
-
+        effect.prepare(_bangobj, _damage);
+        if (!effect.isApplicable()) {
+            _damage.clear();
+            throw new InvocationException(CARD_UNPLAYABLE);
+        }
+        
+        // play the played-card effect immediately before the card's actual
+        // effect
+        log.info("Playing card: " + card);
+        deployEffect(card.owner, new PlayCardEffect(card, target));
+        deployEffect(card.owner, effect, true);
+        
         // if this card was a starting card, note that it was consumed
         StartingCard scard = (StartingCard)_scards.get(cardId);
         if (scard != null) {
@@ -568,6 +577,20 @@ public class BangManager extends GameManager
      * not applicable or failed to apply.
      */
     public boolean deployEffect (int effector, Effect effect)
+    {
+        return deployEffect(effector, effect, false);
+    }
+    
+    /**
+     * Prepares an effect and posts it to the game object, recording damage
+     * done in the process.
+     *
+     * @param prepared if true, the effect has already been prepared and
+     * determined to be applicable
+     * @return true if the effect was deployed, false if the effect was either
+     * not applicable or failed to apply.
+     */
+    public boolean deployEffect (int effector, Effect effect, boolean prepared)
     {
         // prepare the effect
         effect.prepare(_bangobj, _damage);

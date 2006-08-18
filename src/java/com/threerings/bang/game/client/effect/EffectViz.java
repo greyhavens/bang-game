@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client.effect;
 
+import java.awt.Point;
+
 import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.piece.Piece;
@@ -19,7 +21,8 @@ public abstract class EffectViz
     }        
 
     /**
-     * Initializes this effect and prepares it for display.
+     * Initializes this effect and prepares it for display on the specified
+     * piece.
      */
     public void init (BangContext ctx, BangBoardView view, Piece target,
                       Observer obs)
@@ -32,13 +35,19 @@ public abstract class EffectViz
     }
 
     /**
-     * Returns the piece that was targeted by this effect.
+     * Initializes this effect and prepares it for display at the specified
+     * tile coordinates.
      */
-    public Piece getTarget ()
+    public void init (BangContext ctx, BangBoardView view, int x, int y,
+                      Observer obs)
     {
-        return _target;
+        _ctx = ctx;
+        _view = view;
+        _coords = new Point(x, y);
+        _observer = obs;
+        didInit();
     }
-
+    
     /**
      * Called to allow the effect to perform any initialization it might
      * need prior to display.
@@ -49,9 +58,11 @@ public abstract class EffectViz
 
     /**
      * Triggers the actual effect display.
+     *
+     * @param target the target sprite, if the visualization targets a piece
      */
     public abstract void display (PieceSprite target);
-
+    
     /**
      * When the effect display is completed (or nearly so), this method should
      * be called to inform our observer which will then update the associated
@@ -67,5 +78,6 @@ public abstract class EffectViz
     protected BangContext _ctx;
     protected BangBoardView _view;
     protected Piece _target;
+    protected Point _coords;
     protected Observer _observer;
 }

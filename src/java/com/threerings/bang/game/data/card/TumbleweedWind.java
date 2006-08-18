@@ -30,7 +30,7 @@ public class TumbleweedWind extends Card
     @Override // documentation inherited
     public PlacementMode getPlacementMode ()
     {
-        return PlacementMode.VS_NONE;
+        return PlacementMode.VS_BOARD;
     }
     
     @Override // documentation inherited

@@ -33,7 +33,7 @@ public abstract class Card extends SimpleStreamableObject
 {
     /** The different card placement targets. */
     public static enum PlacementMode {
-        VS_PIECE, VS_AREA, VS_CARD, VS_PLAYER, VS_NONE };
+        VS_PIECE, VS_AREA, VS_CARD, VS_PLAYER, VS_BOARD };
 
     /** Every card has a unique id which is how we reference them. */
     public int cardId;
@@ -147,11 +147,21 @@ public abstract class Card extends SimpleStreamableObject
 
     /**
      * Returns true if this card can be played at the moment (only called
-     * for VS_NONE cards).
+     * for VS_BOARD cards).
      */
     public boolean isValid (BangObject bangobj)
     {
         return false;
+    }
+    
+    /**
+     * Checks whether the specified player's client should show a standard
+     * visualization (card dropping on a piece, etc.) when the card is played.
+     * Some cards hide their targets from all but their owners.
+     */
+    public boolean shouldShowVisualization (int pidx)
+    {
+        return true;
     }
     
     /**

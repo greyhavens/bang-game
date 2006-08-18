@@ -16,6 +16,12 @@ import com.threerings.bang.game.data.piece.Piece;
 public class Joker extends AddPieceCard
 {
     @Override // documentation inherited
+    public boolean shouldShowVisualization (int pidx)
+    {
+        return pidx == owner;
+    }
+    
+    @Override // documentation inherited
     public String getType ()
     {
         return "joker";
