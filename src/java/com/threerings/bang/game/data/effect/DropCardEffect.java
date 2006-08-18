@@ -20,11 +20,8 @@ import static com.threerings.bang.Log.*;
  */
 public class DropCardEffect extends Effect
 {
-    /** The index of the player losing a card. */
-    public int player;
-    
-    /** The type of card taken from the player. */
-    public String type;
+    /** The id of the card taken. */
+    public int cardId = -1;
     
     public DropCardEffect ()
     {
@@ -32,7 +29,7 @@ public class DropCardEffect extends Effect
     
     public DropCardEffect (int pidx)
     {
-        player = pidx;
+        _player = pidx;
     }
     
     // documentation inherited
@@ -44,36 +41,52 @@ public class DropCardEffect extends Effect
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        int ccount = bangobj.countPlayerCards(player);
+        int ccount = bangobj.countPlayerCards(_player);
         if (ccount == 0) {
-            log.warning("Couldn't find card to drop [pidx=" + player + "].");
+            log.warning("Couldn't find card to drop [pidx=" + _player + "].");
             return;
         }
         int cidx = RandomUtil.getInt(ccount);
-        Card dcard = null;
         for (Card card : bangobj.cards) {
-            if (card.owner == player && cidx-- == 0) {
-                dcard = card;
+            if (card.owner == _player && cidx-- == 0) {
+                cardId = card.cardId;
                 break;
             }
         }
-        type = dcard.getType();
-        bangobj.removeFromCards(dcard.cardId);
+    }
+    
+    @Override // documentation inherited
+    public boolean isApplicable ()
+    {
+        return cardId > 0;
     }
     
     // documentation inherited
-    public boolean apply (BangObject bangobj, Observer observer)
+    public boolean apply (BangObject bangobj, Observer obs)
     {
-        return (type != null);
+        _card = bangobj.cards.get(cardId);
+        if (_card == null) {
+            log.warning("Missing card to drop [cardId=" + cardId + "].");
+            return false;
+        }
+        removeAndReport(bangobj, _card, obs);
+        return true;
     }
     
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
-        if (pidx != player) {
+        if (pidx != _card.owner) {
             return null;
         }
         return MessageBundle.compose("m.effect_drop_card",
-            MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + type));
+            MessageBundle.qualify(BangCodes.CARDS_MSGS,
+                "m." + _card.getType()));
     }
+    
+    /** The index of the player from whom to take the card. */
+    protected transient int _player;
+    
+    /** The removed card. */
+    protected transient Card _card;
 }

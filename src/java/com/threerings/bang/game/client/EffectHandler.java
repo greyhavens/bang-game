@@ -56,6 +56,7 @@ import com.threerings.bang.game.data.effect.TreeBedEffect;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TotemBase;
@@ -75,13 +76,14 @@ public class EffectHandler extends BoardView.BoardAction
     /** Initializes the handler. */
     public void init (
         BangContext ctx, BangObject bangobj, int pidx, BangBoardView view,
-        SoundGroup sounds, Effect effect)
+        BangView bview, SoundGroup sounds, Effect effect)
     {
         _ctx = ctx;
         _tick = bangobj.tick;
         _bangobj = bangobj;
         _pidx = pidx;
         _view = view;
+        _bview = bview;
         _sounds = sounds;
         _effect = effect;
         pieceIds = effect.getAffectedPieces();
@@ -327,6 +329,24 @@ public class EffectHandler extends BoardView.BoardAction
         _view.removePieceSprite(piece.pieceId, "deathByEffect");
     }
 
+    // documentation inherited from interface Effect.Observer
+    public void cardAdded (Card card)
+    {
+        _bview.pstatus[card.owner].cardAdded(card, true);
+    }
+    
+    // documentation inherited from interface Effect.Observer
+    public void cardRemoved (Card card)
+    {
+        _bview.pstatus[card.owner].cardRemoved(card, true, false);
+    }
+    
+    // documentation inherited from interface Effect.Observer
+    public void cardPlayed (Card card, Object target)
+    {
+        _bview.pstatus[card.owner].cardRemoved(card, false, true);
+    }
+    
     // documentation inherited from interface Effect.Observer
     public void tickDelayed (long extraTime)
     {
@@ -630,6 +650,7 @@ public class EffectHandler extends BoardView.BoardAction
     protected BangObject _bangobj;
     protected int _pidx;
     protected BangBoardView _view;
+    protected BangView _bview;
     protected short _tick;
     protected boolean _applying;
 

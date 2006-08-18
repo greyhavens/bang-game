@@ -80,7 +80,7 @@ import com.threerings.bang.game.client.BangService;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangMarshaller;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
@@ -1013,7 +1013,7 @@ public class BangManager extends GameManager
         }
 
         // configure the game object and board with the pieces
-        _bangobj.pieces = new PieceDSet(pieces.iterator());
+        _bangobj.pieces = new ModifiableDSet<Piece>(pieces.iterator());
         _bangobj.board.shadowPieces(pieces.iterator());
 
         // clear out the selected big shots array
@@ -2481,6 +2481,15 @@ public class BangManager extends GameManager
             _pLogics.remove(piece.pieceId);
         }
 
+        public void cardAdded (Card card) {
+        }
+
+        public void cardRemoved (Card card) {
+        }
+
+        public void cardPlayed (Card card, Object target) {
+        }
+        
         public void tickDelayed (long extraTime) {
             // if we are currently processing a tick, add to the extra tick
             // time; otherwise, postpone the next tick

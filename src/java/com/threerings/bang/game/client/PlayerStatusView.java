@@ -4,6 +4,7 @@
 package com.threerings.bang.game.client;
 
 import com.jme.renderer.Renderer;
+import com.jme.scene.Controller;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
@@ -165,29 +166,40 @@ public class PlayerStatusView extends BContainer
         String name = event.getName();
         if (name.equals(BangObject.CARDS)) {
             Card card = (Card)event.getEntry();
-            if (card.owner != _pidx) {
-                return;
+            if (card.owner == _pidx) {
+                cardAdded(card, false);
             }
-            int cidx = -1;
-            for (int ii = 0; ii < _cards.length; ii++) {
-                if (_cards[ii] == null) {
-                    cidx = ii;
-                    break;
-                }
-            }
-            if (cidx == -1) {
-                return;
-            }
-            _cards[cidx] = createButton(card);
-            Rectangle rect = new Rectangle(CARD_RECT);
-            rect.x += (rect.width * cidx);
-            add(_cards[cidx], rect);
-
         } else if (name.equals(BangObject.OCCUPANT_INFO)) {
             checkPlayerHere();
         }
     }
 
+    /**
+     * Notifies the view that a card has been added to the player's hand.
+     *
+     * @param drop if true, animate the card dropping into the hand
+     */
+    public void cardAdded (Card card, boolean drop)
+    {
+        int cidx = -1;
+        for (int ii = 0; ii < _cards.length; ii++) {
+            if (_cards[ii] == null) {
+                cidx = ii;
+                break;
+            }
+        }
+        if (cidx == -1) {
+            return;
+        }
+        _cards[cidx] = createButton(card);
+        Rectangle rect = new Rectangle(CARD_RECT);
+        rect.x += (rect.width * cidx);
+        add(_cards[cidx], rect);
+        if (drop) {
+            flyCard(_cards[cidx], DROP_PLAY_HEIGHT, true, DROP_PLAY_DURATION);
+        }
+    }
+    
     // documentation inherited from interface SetListener
     public void entryUpdated (EntryUpdatedEvent event)
     {
@@ -199,26 +211,42 @@ public class PlayerStatusView extends BContainer
         String name = event.getName();
         if (name.equals(BangObject.CARDS)) {
             Card card = (Card)event.getOldEntry();
-            if (card.owner != _pidx) {
-                return;
+            if (card.owner == _pidx) {
+                cardRemoved(card, false, false);
             }
-            String cid = "" + card.cardId;
-            for (int ii = 0; ii < _cards.length; ii++) {
-                if (_cards[ii] == null) {
-                    continue;
-                }
-                if (cid.equals(_cards[ii].getAction())) {
-                    remove(_cards[ii]);
-                    _cards[ii] = null;
-                    return;
-                }
-            }
-
         } else if (name.equals(BangObject.OCCUPANT_INFO)) {
             checkPlayerHere();
         }
     }
 
+    /**
+     * Notifies the view that a card has been removed from the player's hand.
+     *
+     * @param fall if true, animate the card falling out of the hand
+     * @param play if true, animate the card flying onto the board
+     */
+    public void cardRemoved (Card card, boolean fall, boolean play)
+    {
+        String cid = "" + card.cardId;
+        for (int ii = 0; ii < _cards.length; ii++) {
+            if (_cards[ii] == null) {
+                continue;
+            }
+            if (cid.equals(_cards[ii].getAction())) {
+                if (fall) {
+                    flyCard(_cards[ii], FALL_DEPTH, false, FALL_DURATION);
+                } else if (play) {
+                    flyCard(_cards[ii], DROP_PLAY_HEIGHT, false,
+                        DROP_PLAY_DURATION);
+                } else {
+                    remove(_cards[ii]);
+                }
+                _cards[ii] = null;
+                return;
+            }
+        }
+    }
+    
     /**
      * Performs the card action for the card at this index.
      */
@@ -239,6 +267,32 @@ public class PlayerStatusView extends BContainer
         }
     }
 
+    /**
+     * Flies a card up or down, fading it in or fading it out and
+     * removing it.
+     */
+    protected void flyCard (
+        final BButton card, final int height, final boolean in,
+        final float duration)
+    {
+        _ctx.getRootNode().addController(new Controller() {
+            public void update (float time) {
+                float alpha = Math.min((_elapsed += time) / duration, 1f),
+                    ralpha = 1f - alpha;
+                card.setAlpha(in ? alpha : ralpha);
+                card.setLocation(card.getX(), CARD_RECT.y +
+                    (int)(height * (in ? ralpha : alpha)));
+                if (_elapsed >= duration) {
+                    _ctx.getRootNode().removeController(this);
+                    if (!in) {
+                        remove(card);
+                    }
+                }
+            }
+            protected float _elapsed;
+        });
+    }
+    
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -379,4 +433,17 @@ public class PlayerStatusView extends BContainer
     protected static final Rectangle RANK_RECT = new Rectangle(8, 35, 21, 23);
     protected static final Rectangle NAME_RECT = new Rectangle(11, 0, 100, 16);
     protected static final Rectangle CARD_RECT = new Rectangle(146, 16, 30, 39);
+
+    /** The height from which to drop added cards into the hand (also the
+     * height to which to fly played cards). */
+    protected static final int DROP_PLAY_HEIGHT = 100;
+    
+    /** The duration of the drop into the hand or the flight onto the board. */
+    protected static final float DROP_PLAY_DURATION = 0.25f;
+    
+    /** The depth to which cards fall when removed from the hand. */
+    protected static final int FALL_DEPTH = -50;
+    
+    /** The duration of the fall of cards from the hand. */
+    protected static final float FALL_DURATION = 0.125f;
 }

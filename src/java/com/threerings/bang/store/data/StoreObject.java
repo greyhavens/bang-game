@@ -86,7 +86,9 @@ public class StoreObject extends PlaceObject
     public void setGoods (DSet<com.threerings.bang.store.data.Good> value)
     {
         requestAttributeChange(GOODS, value, this.goods);
-        this.goods = (value == null) ? null : value.typedClone();
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.store.data.Good> clone =
+            (value == null) ? null : value.typedClone();
+        this.goods = clone;
     }
     // AUTO-GENERATED: METHODS END
 }

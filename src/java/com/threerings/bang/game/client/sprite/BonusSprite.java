@@ -62,7 +62,7 @@ public class BonusSprite extends MobileSprite
             new ProceduralAction() {
             public float activate () {
                 _spinner.setSpeed(FastMath.PI*5);
-                startRiseFade(TILE_SIZE * 5, false, CARD_FLIGHT_DURATION);
+                startRiseFade(TILE_SIZE * 2, false, CARD_FLIGHT_DURATION);
                 return CARD_FLIGHT_DURATION;
             }
         });
@@ -120,5 +120,5 @@ public class BonusSprite extends MobileSprite
     protected Spinner _spinner;
     
     /** The time it takes for cards to fly up in the air. */
-    protected static final float CARD_FLIGHT_DURATION = 1f;
+    protected static final float CARD_FLIGHT_DURATION = 0.25f;
 }

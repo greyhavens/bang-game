@@ -92,7 +92,9 @@ public class SaloonObject extends PlaceObject
     public void setParlors (DSet<com.threerings.bang.saloon.data.ParlorInfo> value)
     {
         requestAttributeChange(PARLORS, value, this.parlors);
-        this.parlors = (value == null) ? null : value.typedClone();
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.saloon.data.ParlorInfo> clone =
+            (value == null) ? null : value.typedClone();
+        this.parlors = clone;
     }
 
     /**
@@ -138,7 +140,9 @@ public class SaloonObject extends PlaceObject
     public void setTopRanked (DSet<com.threerings.bang.saloon.data.TopRankedList> value)
     {
         requestAttributeChange(TOP_RANKED, value, this.topRanked);
-        this.topRanked = (value == null) ? null : value.typedClone();
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.saloon.data.TopRankedList> clone =
+            (value == null) ? null : value.typedClone();
+        this.topRanked = clone;
     }
     // AUTO-GENERATED: METHODS END
 }

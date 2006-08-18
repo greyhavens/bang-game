@@ -43,7 +43,7 @@ import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
@@ -631,7 +631,7 @@ public class EditorController extends GameController
                 pieces[ii].pieceId = (ii+1);
             }
             _bangobj.maxPieceId = pieces.length;
-            _bangobj.setPieces(new PieceDSet(pieces));
+            _bangobj.setPieces(new ModifiableDSet<Piece>(pieces));
 
             if (refresh) {
                 _panel.view.refreshBoard();
@@ -692,7 +692,7 @@ public class EditorController extends GameController
         } else {
             _bangobj.board = new BangBoard(
                 BangBoard.DEFAULT_SIZE, BangBoard.DEFAULT_SIZE);
-            _bangobj.setPieces(new PieceDSet());
+            _bangobj.setPieces(new ModifiableDSet<Piece>());
         }
 
         // our panel needs to do some game starting business

@@ -54,7 +54,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
-import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -776,7 +776,7 @@ public class EditorBoardView extends BoardView
     public void createNewBoard (int width, int height)
     {
         _bangobj.board = new BangBoard(width, height);
-        _bangobj.setPieces(new PieceDSet());
+        _bangobj.setPieces(new ModifiableDSet<Piece>());
         refreshBoard();
         _panel.info.clear();
         _panel.info.updatePlayers(0);

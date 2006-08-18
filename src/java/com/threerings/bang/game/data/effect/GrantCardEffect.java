@@ -24,13 +24,13 @@ public class GrantCardEffect extends BonusEffect
      * out. */
     public static final String ACTIVATED_CARD = "activated_card";
     
-    public int player;
+    public Card card;
 
     @Override // documentation inherited
     public void init (Piece piece)
     {
         super.init(piece);
-        player = piece.owner;
+        _player = piece.owner;
     }
 
     @Override // documentation inherited
@@ -45,24 +45,30 @@ public class GrantCardEffect extends BonusEffect
         super.prepare(bangobj, dammap);
 
         // make sure our player has room for another card
-        if (bangobj.countPlayerCards(player) >= GameCodes.MAX_CARDS) {
-            log.info("No soup four you! " + player + ".");
+        if (bangobj.countPlayerCards(_player) >= GameCodes.MAX_CARDS) {
+            log.info("No soup four you! " + _player + ".");
             return;
         }
 
-        Card card = Card.newCard(
+        card = Card.newCard(
             Card.selectRandomCard(bangobj.townId, bangobj.scenario));
-        _type = card.getType();
-        card.init(bangobj, player);
-        bangobj.addToCards(card);
+        card.init(bangobj, _player);
     }
 
     @Override // documentation inherited
     public boolean isApplicable ()
     {
-        return _type != null;
+        return card != null;
     }
 
+    @Override // documentation inherited
+    public boolean apply (BangObject bangobj, Observer obs)
+    {
+        super.apply(bangobj, obs);
+        addAndReport(bangobj, card, obs);
+        return true;
+    }
+    
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
@@ -71,7 +77,8 @@ public class GrantCardEffect extends BonusEffect
             return null;
         }
         return MessageBundle.compose("m.effect_card", piece.getName(),
-            MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + _type));
+            MessageBundle.qualify(BangCodes.CARDS_MSGS,
+                "m." + card.getType()));
     }
 
     @Override // documentation inherited
@@ -80,6 +87,6 @@ public class GrantCardEffect extends BonusEffect
         return ACTIVATED_CARD;
     }
     
-    /** The type of card generated. */
-    protected String _type;
+    /** The player receiving the card. */
+    protected transient int _player;
 }

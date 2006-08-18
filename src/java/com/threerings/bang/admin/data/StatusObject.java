@@ -167,7 +167,9 @@ public class StatusObject extends DObject
     public void setGames (DSet<com.threerings.bang.admin.data.StatusObject.GameInfo> value)
     {
         requestAttributeChange(GAMES, value, this.games);
-        this.games = (value == null) ? null : value.typedClone();
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.admin.data.StatusObject.GameInfo> clone =
+            (value == null) ? null : value.typedClone();
+        this.games = clone;
     }
 
     /**

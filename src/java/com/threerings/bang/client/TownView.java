@@ -60,7 +60,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Viewpoint;
@@ -275,7 +275,7 @@ public class TownView extends BWindow
             // name
             bangobj.boardName = _presented.contains(townId) ? null : brec.name;
             bangobj.board = brec.getBoard();
-            bangobj.pieces = new PieceDSet(brec.getPieces());
+            bangobj.pieces = new ModifiableDSet<Piece>(brec.getPieces());
             prepareForRound(bangobj, null, 0);
         }
 

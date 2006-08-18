@@ -33,7 +33,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.PieceDSet;
+import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
@@ -350,7 +350,7 @@ public class BangView extends BWindow
                     markers.add(piece);
                 }
             }
-            _bangobj.pieces = new PieceDSet(plist.iterator());
+            _bangobj.pieces = new ModifiableDSet<Piece>(plist.iterator());
         }
 
         // tell the board view to start the game so that we can see the board

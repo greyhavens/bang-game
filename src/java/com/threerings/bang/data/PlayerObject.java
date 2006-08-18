@@ -352,7 +352,9 @@ public class PlayerObject extends BodyObject
     public void setInventory (DSet<com.threerings.bang.data.Item> value)
     {
         requestAttributeChange(INVENTORY, value, this.inventory);
-        this.inventory = (value == null) ? null : value.typedClone();
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.Item> clone =
+            (value == null) ? null : value.typedClone();
+        this.inventory = clone;
     }
 
     /**
@@ -446,7 +448,9 @@ public class PlayerObject extends BodyObject
     public void setStats (StatSet value)
     {
         requestAttributeChange(STATS, value, this.stats);
-        this.stats = (value == null) ? null : (StatSet)value.clone();
+        @SuppressWarnings("unchecked") StatSet clone =
+            (value == null) ? null : (StatSet)value.clone();
+        this.stats = clone;
     }
 
     /**
@@ -492,7 +496,9 @@ public class PlayerObject extends BodyObject
     public void setRatings (DSet<com.threerings.bang.data.Rating> value)
     {
         requestAttributeChange(RATINGS, value, this.ratings);
-        this.ratings = (value == null) ? null : value.typedClone();
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.Rating> clone =
+            (value == null) ? null : value.typedClone();
+        this.ratings = clone;
     }
 
     /**
@@ -571,7 +577,9 @@ public class PlayerObject extends BodyObject
     public void setLooks (DSet<com.threerings.bang.avatar.data.Look> value)
     {
         requestAttributeChange(LOOKS, value, this.looks);
-        this.looks = (value == null) ? null : value.typedClone();
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.avatar.data.Look> clone =
+            (value == null) ? null : value.typedClone();
+        this.looks = clone;
     }
 
     /**
@@ -617,7 +625,9 @@ public class PlayerObject extends BodyObject
     public void setPardners (DSet<com.threerings.bang.data.PardnerEntry> value)
     {
         requestAttributeChange(PARDNERS, value, this.pardners);
-        this.pardners = (value == null) ? null : value.typedClone();
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.PardnerEntry> clone =
+            (value == null) ? null : value.typedClone();
+        this.pardners = clone;
     }
     // AUTO-GENERATED: METHODS END
 }

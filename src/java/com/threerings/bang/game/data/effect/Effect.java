@@ -18,6 +18,7 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
@@ -72,6 +73,21 @@ public abstract class Effect extends SimpleStreamableObject
          */
         public void pieceRemoved (Piece piece);
 
+        /**
+         * Indicates that the card has been added to a player's hand.
+         */
+        public void cardAdded (Card card);
+        
+        /**
+         * Indicates that a card has been removed from a player's hand.
+         */
+        public void cardRemoved (Card card);
+        
+        /**
+         * Indicates that a user played a card.
+         */
+        public void cardPlayed (Card card, Object target);
+        
         /**
          * Indicates that the tick was delayed for the specified amount of time
          * in order to let an effect run its course.
@@ -385,6 +401,36 @@ public abstract class Effect extends SimpleStreamableObject
         }
     }
 
+    /** Adds a card and reports it to the observer. */
+    protected static void addAndReport (
+        BangObject bangobj, Card card, Observer obs)
+    {
+        bangobj.cards.addDirect(card);
+        if (obs != null) {
+            obs.cardAdded(card);
+        }
+    }
+    
+    /** Removes a card and reports it to the observer. */
+    protected static void removeAndReport (
+        BangObject bangobj, Card card, Observer obs)
+    {
+        bangobj.cards.removeDirect(card);
+        if (obs != null) {
+            obs.cardRemoved(card);
+        }
+    }
+    
+    /** Removes a card and reports its being played to the observer. */
+    protected static void playAndReport (
+        BangObject bangobj, Card card, Object target, Observer obs)
+    {
+        bangobj.cards.removeDirect(card);
+        if (obs != null) {
+            obs.cardPlayed(card, target);
+        }
+    }
+    
     /** A helper function for reporting a tick delay. */
     protected static void reportDelay (Observer obs, long extraTime)
     {

@@ -256,10 +256,10 @@ public class BangObject extends GameObject
     public short duration;
 
     /** Contains information on all pieces on the board. */
-    public PieceDSet pieces;
+    public ModifiableDSet<Piece> pieces;
 
     /** Contains information on all available cards. */
-    public DSet<Card> cards = new DSet<Card>();
+    public ModifiableDSet<Card> cards = new ModifiableDSet<Card>();
 
     /** A field we use to broadcast applied effects. */
     public Effect effect;
@@ -936,10 +936,12 @@ public class BangObject extends GameObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setPieces (PieceDSet value)
+    public void setPieces (ModifiableDSet<com.threerings.bang.game.data.piece.Piece> value)
     {
         requestAttributeChange(PIECES, value, this.pieces);
-        this.pieces = (value == null) ? null : (PieceDSet)value.clone();
+        @SuppressWarnings("unchecked") ModifiableDSet<com.threerings.bang.game.data.piece.Piece> clone =
+            (value == null) ? null : (ModifiableDSet<com.threerings.bang.game.data.piece.Piece>)value.clone();
+        this.pieces = clone;
     }
 
     /**
@@ -982,10 +984,12 @@ public class BangObject extends GameObject
      * change. Proxied copies of this object (on clients) will apply the
      * value change when they received the attribute changed notification.
      */
-    public void setCards (DSet<com.threerings.bang.game.data.card.Card> value)
+    public void setCards (ModifiableDSet<com.threerings.bang.game.data.card.Card> value)
     {
         requestAttributeChange(CARDS, value, this.cards);
-        this.cards = (value == null) ? null : value.typedClone();
+        @SuppressWarnings("unchecked") ModifiableDSet<com.threerings.bang.game.data.card.Card> clone =
+            (value == null) ? null : (ModifiableDSet<com.threerings.bang.game.data.card.Card>)value.clone();
+        this.cards = clone;
     }
 
     /**
