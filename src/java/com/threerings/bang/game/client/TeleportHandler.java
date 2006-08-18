@@ -22,11 +22,11 @@ public class TeleportHandler extends EffectHandler
     public boolean execute ()
     {
         // find the piece sprite
-        TeleportEffect effect = (TeleportEffect)_effect;
-        Piece piece = _bangobj.pieces.get(effect.pieceId);
+        _teffect = (TeleportEffect)_effect;
+        Piece piece = _bangobj.pieces.get(_teffect.pieceId);
         if (piece == null) {
             log.warning("Couldn't find target for teleporter effect " +
-                "[pieceId=" + effect.pieceId + "].");
+                "[pieceId=" + _teffect.pieceId + "].");
             return false;
         }
         _sprite = (MobileSprite)_view.getPieceSprite(piece);
@@ -37,20 +37,25 @@ public class TeleportHandler extends EffectHandler
         }
         
         // determine the activation effect type
-        Teleporter tporter = (Teleporter)_bangobj.pieces.get(effect.sourceId);
+        Teleporter tporter = (Teleporter)_bangobj.pieces.get(_teffect.sourceId);
         if (tporter != null) {
             _activateEffect = tporter.getActivateEffect();
         } else {
             log.warning("Couldn't find source for teleporter effect " +
-                "[pieceId=" + effect.sourceId + "].");
+                "[pieceId=" + _teffect.sourceId + "].");
             _activateEffect = "indian_post/teleporter_1/activate";
         }
         
         // first, fire off the activation effect at the original position and
         // fade the unit out
         _sprite.displayParticles(_activateEffect, false);
-        _sprite.queueAction(MobileSprite.TELEPORTED_OUT);
-        _sprite.addObserver(this);
+        if (_teffect.damageEffect == null) {
+            _sprite.queueAction(MobileSprite.TELEPORTED_OUT);
+            _sprite.addObserver(this);
+        } else {
+            // apply the effect to kill the unit
+            apply(_teffect);
+        }
         
         return true;
     }
@@ -60,11 +65,10 @@ public class TeleportHandler extends EffectHandler
     {
         if (action.equals(MobileSprite.TELEPORTED_OUT)) {
             // apply the effect to move the unit
-            apply(_effect);
+            apply(_teffect);
         
             // reposition the unit
-            TeleportEffect effect = (TeleportEffect)_effect;
-            Piece piece = _bangobj.pieces.get(effect.pieceId);
+            Piece piece = _bangobj.pieces.get(_teffect.pieceId);
             _sprite.setLocation(piece.x, piece.y,
                 piece.computeElevation(_bangobj.board, piece.x, piece.y));
             _sprite.setOrientation(piece.orientation);
@@ -79,10 +83,19 @@ public class TeleportHandler extends EffectHandler
             _view.actionCompleted(this);
         }
     }
+
+    @Override // documentation inherited
+    public void pieceMoved (Piece piece)
+    {
+        // nothing doing
+    }
     
     /** The sprite being teleported. */
     protected MobileSprite _sprite;
     
     /** The activation effect type. */
     protected String _activateEffect;
+
+    /** Reference to our TeleportEffect. */
+    protected TeleportEffect _teffect;
 }

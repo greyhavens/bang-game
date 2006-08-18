@@ -65,6 +65,9 @@ public abstract class Piece
 
     /** The piece's last occupied location. */
     public transient short lastX, lastY;
+
+    /** The pieces teleporter moves. */
+    public transient PointSet teleMoves;
     
     /**
      * Combines the supplied x and y coordintes into a single integer.

@@ -1760,24 +1760,6 @@ public class BangManager extends GameManager
             deployEffect(-1, peffect);
         }
         
-        // interact with any pieces occupying our target space
-        if (lappers != null) {
-            for (Piece lapper : lappers) {
-                Effect effect = munit.maybeInteract(lapper);
-                if (effect != null) {
-                    deployEffect(unit.owner, effect);
-
-                    // small hackery: note that this player collected a bonus
-                    if (lapper instanceof Bonus &&
-                        !((Bonus)lapper).isScenarioBonus() &&
-                        munit.owner != -1) {
-                        _bangobj.stats[munit.owner].incrementStat(
-                            Stat.Type.BONUSES_COLLECTED, 1);
-                    }
-                }
-            }
-        }
-
         return meffect;
     }
 
@@ -2494,6 +2476,27 @@ public class BangManager extends GameManager
         public void pieceMoved (Piece piece) {
             // let the scenario know that the unit moved
             _scenario.pieceMoved(_bangobj, piece);
+
+            // interact with any pieces occupying our target space
+            ArrayList<Piece> lappers = _bangobj.getOverlappers(piece);
+            if (lappers != null) {
+                for (Piece lapper : lappers) {
+                    Effect effect = piece.maybeInteract(lapper);
+                    if (effect != null) {
+                        deployEffect(piece.owner, effect);
+
+                        // small hackery: note that this player collected 
+                        // a bonus
+                        if (lapper instanceof Bonus &&
+                            !((Bonus)lapper).isScenarioBonus() &&
+                            piece.owner != -1) {
+                            _bangobj.stats[piece.owner].incrementStat(
+                                Stat.Type.BONUSES_COLLECTED, 1);
+                        }
+                    }
+                }
+            }
+
         }
 
         public void pieceKilled (Piece piece) {

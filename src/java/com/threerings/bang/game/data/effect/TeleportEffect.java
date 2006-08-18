@@ -9,11 +9,14 @@ import java.util.Collections;
 
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.TeleportHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Teleporter;
+import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 
@@ -31,6 +34,9 @@ public class TeleportEffect extends Effect
     /** The id of the source teleporter. */
     public int sourceId;
 
+    /** The damage effect if we're looping. */
+    public DamageEffect damageEffect;
+
     public TeleportEffect ()
     {
     }
@@ -44,7 +50,10 @@ public class TeleportEffect extends Effect
     // documentation inherited
     public int[] getAffectedPieces ()
     {
-        return new int[] { pieceId };
+        if (damageEffect == null) {
+            return new int[] { pieceId };
+        }
+        return damageEffect.getAffectedPieces();
     }
 
     @Override // documentation inherited
@@ -68,14 +77,53 @@ public class TeleportEffect extends Effect
         }
         Collections.shuffle(dests);
         Point spot = null;
+
+        // avoid teleporting onto another teleporter if we can
+        PointSet teleporters = new PointSet();
+        Piece piece = null;
+        for (Piece p : bangobj.pieces) {
+            if (p instanceof Teleporter) {
+                teleporters.add(p.x, p.y);
+            } else if (p.pieceId == pieceId) {
+                piece = p;
+            }
+        }
         for (Teleporter dest : dests) {
-            spot = bangobj.board.getOccupiableSpot(dest.x, dest.y, 2);
-            if (spot != null) {
+            ArrayList<Point> spots = bangobj.board.getOccupiableSpots(
+                    8, dest.x, dest.y, 2, null);
+            if (spots.size() == 0) {
                 break;
+            } 
+            spot = spots.get(0);
+            if (spots.size() > 1) {
+                for (int ii = 1, ll = spots.size(); ii < ll; ii++) {
+                    if (teleporters.contains(spot.x, spot.y)) {
+                        spot = spots.get(1);
+                    } else {
+                        break;
+                    }
+                }
             }
         }
         if (spot != null) {
+            if (teleporters.contains(spot.x, spot.y)) {
+                if (piece.teleMoves == null) {
+                    piece.teleMoves = new PointSet();
+                }
+                // if we're looping, the piece dies
+                if (piece.teleMoves.contains(spot.x, spot.y)) {
+                    damageEffect = new DamageEffect(piece, 100);
+                    damageEffect.prepare(bangobj, dammap);
+                    piece.teleMoves = null;
+                } else {
+                    piece.teleMoves.add(spot.x, spot.y);
+                }
+            } else {
+                piece.teleMoves = null;
+            }
             dest = new short[] { (short)spot.x, (short)spot.y };
+        } else {
+            piece.teleMoves = null;
         }
     }
 
@@ -88,17 +136,22 @@ public class TeleportEffect extends Effect
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
-        Piece piece = bangobj.pieces.get(pieceId);
-        if (piece == null) {
+        _piece = bangobj.pieces.get(pieceId);
+        if (_piece == null) {
             log.warning("Missing teleported piece for teleport effect " +
                         "[id=" + pieceId + "].");
             return false;
         }
 
-        // move the piece and report the effect
-        bangobj.board.clearShadow(piece);
-        piece.position(dest[0], dest[1]);
-        bangobj.board.shadowPiece(piece);
+        if (damageEffect != null) {
+            damageEffect.apply(bangobj, obs);
+        } else {
+            // move the piece and report the effect
+            bangobj.board.clearShadow(_piece);
+            _piece.position(dest[0], dest[1]);
+            bangobj.board.shadowPiece(_piece);
+            obs.pieceMoved(_piece);
+        }
         return true;
     }
     
@@ -107,4 +160,22 @@ public class TeleportEffect extends Effect
     {
         return new TeleportHandler();
     }
+
+    @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        return 100;
+    }
+
+    @Override // documentation inherited
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        if (damageEffect == null || _piece == null || _piece.owner != pidx) {
+            return null;
+        }
+        return MessageBundle.compose(
+               "m.effect_teleport_death", _piece.getName()); 
+    }
+
+    protected transient Piece _piece;
 }
