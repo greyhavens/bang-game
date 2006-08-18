@@ -701,6 +701,6 @@ public class EffectHandler extends BoardView.BoardAction
 
     /** Used by {@link #getSoundPath}. */
     protected static final String[] SOUND_SUFFIXES = {
-        ".wav", "activate.wav"
+        ".wav", "/activate.wav"
     };
 }
