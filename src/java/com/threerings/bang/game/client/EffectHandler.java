@@ -480,9 +480,6 @@ public class EffectHandler extends BoardView.BoardAction
                 btrans, sprite.getWorldTranslation());
         sprite.move(new BallisticPath(sprite, btrans, pparams.velocity,
             BallisticShotHandler.GRAVITY_VECTOR, pparams.duration) {
-            public void update (float time) {
-                super.update(time*2f);
-            }
             public void wasRemoved () {
                 super.wasRemoved();
                 bounceSprite(_sprite, TILE_SIZE / 4);
@@ -511,7 +508,7 @@ public class EffectHandler extends BoardView.BoardAction
         sprite.move(new BallisticPath(sprite, htrans, pparams.velocity,
             BallisticShotHandler.GRAVITY_VECTOR, pparams.duration) {
             public void update (float time) {
-                super.update(time*2f);
+                super.update(time);
                 float alpha = Math.min(_accum / _duration, 1f);
                 _sprite.setLocalScale(FastMath.LERP(alpha, 0.5f, 1f));
                 if (fadeIn) {
@@ -555,10 +552,10 @@ public class EffectHandler extends BoardView.BoardAction
         Vector3f start = new Vector3f(sprite.getWorldTranslation());
         start.z += PIECE_DROP_HEIGHT;
         float duration = FastMath.sqrt(
-            -PIECE_DROP_HEIGHT / BallisticShotHandler.GRAVITY);
+            -2f * PIECE_DROP_HEIGHT / BallisticShotHandler.GRAVITY);
         final int penderId = notePender();
         sprite.move(new BallisticPath(sprite, start, new Vector3f(),
-            DOUBLE_GRAVITY_VECTOR, duration) {
+            BallisticShotHandler.GRAVITY_VECTOR, duration) {
             public void wasRemoved () {
                 super.wasRemoved();
                 sprite.setLocation(piece.x, piece.y, piece.computeElevation(
@@ -581,11 +578,11 @@ public class EffectHandler extends BoardView.BoardAction
     {
         Vector3f start = new Vector3f(sprite.getWorldTranslation());
         float duration = FastMath.sqrt(
-            -height / BallisticShotHandler.GRAVITY),
-            vel = -2f * BallisticShotHandler.GRAVITY * duration;
+            -2f * height / BallisticShotHandler.GRAVITY),
+            vel = -BallisticShotHandler.GRAVITY * duration;
         final int penderId = notePender();
         sprite.move(new BallisticPath(sprite, start, new Vector3f(0f, 0f, vel),
-            DOUBLE_GRAVITY_VECTOR, duration*2) {
+            BallisticShotHandler.GRAVITY_VECTOR, duration*2) {
             public void wasRemoved () {
                 super.wasRemoved();
                 if (height >= TILE_SIZE / 16) {
@@ -663,10 +660,6 @@ public class EffectHandler extends BoardView.BoardAction
 
     /** The last piece to drop a bonus. */
     protected Piece _dropper;
-
-    /** A doubled gravity vector for faster bounces. */
-    protected static final Vector3f DOUBLE_GRAVITY_VECTOR =
-        BallisticShotHandler.GRAVITY_VECTOR.mult(2f);
 
     /** The height from which to drop pieces onto the board. */
     protected static final float PIECE_DROP_HEIGHT = 150f;

@@ -112,7 +112,7 @@ public class HoldHandler extends EffectHandler
         sprite.move(new BallisticPath(sprite, from, pparams.velocity,
             BallisticShotHandler.GRAVITY_VECTOR, pparams.duration) {
             public void update (float time) {
-                super.update(time*2f);
+                super.update(time);
                 float alpha = Math.min(_accum / _duration, 1f);
                 if (added) {
                     alpha = 1f - alpha;
@@ -214,7 +214,7 @@ public class HoldHandler extends EffectHandler
         psprite.move(new BallisticPath(psprite, from, pparams.velocity,
             BallisticShotHandler.GRAVITY_VECTOR, pparams.duration) {
             public void update (float time) {
-                super.update(time*2f);
+                super.update(time);
                 float alpha = Math.min(_accum / _duration, 1f);
                 _sprite.setLocalScale(FastMath.LERP(alpha, 0.5f, 1f));
             }
