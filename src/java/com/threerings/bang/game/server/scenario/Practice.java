@@ -71,6 +71,12 @@ public class Practice extends Scenario
         UnitConfig[] ucs = UnitConfig.getTownUnits(bangobj.townId);
         int[] weights = new int[ucs.length];
         Arrays.fill(weights, 1);
+        // don't let the AI bring in special units
+        for (int ii = 0; ii < weights.length; ii++) {
+            if (ucs[ii].rank == UnitConfig.Rank.SPECIAL) {
+                weights[ii] = 0;
+            }
+        }
         units = new Unit[NUM_UNITS];
         for (int ii = 0; ii < units.length; ii++) {
             int idx = RandomUtil.getWeightedIndex(weights);
