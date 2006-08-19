@@ -649,16 +649,16 @@ public class BoardView extends BComponent
      * Returns the sprite associated with this spatial or null if the
      * spatial is not part of a sprite.
      */
-    public Sprite getSprite (Spatial spatial)
+    public Sprite getPieceSprite (Spatial spatial)
     {
-        if (spatial instanceof Sprite) {
+        if (spatial instanceof PieceSprite) {
             return (Sprite)spatial;
 
         } else if (_plights.containsKey(spatial)) {
             return _plights.get(spatial);
 
         } else if (spatial.getParent() != null) {
-            return getSprite(spatial.getParent());
+            return getPieceSprite(spatial.getParent());
         } else {
             return null;
         }
@@ -1322,7 +1322,7 @@ public class BoardView extends BComponent
             if (notReallyAHit(pdata)) {
                 continue;
             }
-            Sprite s = getSprite(pdata.getTargetMesh().getParentGeom());
+            Sprite s = getPieceSprite(pdata.getTargetMesh().getParentGeom());
             if (!isHoverable(s)) {
                 continue;
             }
@@ -1354,8 +1354,8 @@ public class BoardView extends BComponent
         TerrainNode.Highlight hover = null;
         Piece piece = null;
         // If it's a bonus piece, we'll highlight the tile beneath it
-        if (_hover != null && _hover instanceof BonusSprite) {
-            piece = ((BonusSprite)_hover).getPiece();
+        if (_hover != null && _hover instanceof PieceSprite) {
+            piece = ((PieceSprite)_hover).getPiece();
         }
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
             PickData pdata = _pick.getPickData(ii);
