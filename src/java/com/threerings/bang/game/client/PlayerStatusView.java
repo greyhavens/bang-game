@@ -196,7 +196,8 @@ public class PlayerStatusView extends BContainer
         rect.x += (rect.width * cidx);
         add(_cards[cidx], rect);
         if (drop) {
-            flyCard(_cards[cidx], DROP_PLAY_HEIGHT, true, DROP_PLAY_DURATION);
+            flyCard(_cards[cidx], DROP_PLAY_HEIGHT, true, 0f,
+                DROP_PLAY_DURATION);
         }
     }
     
@@ -234,9 +235,10 @@ public class PlayerStatusView extends BContainer
             }
             if (cid.equals(_cards[ii].getAction())) {
                 if (fall) {
-                    flyCard(_cards[ii], FALL_DEPTH, false, FALL_DURATION);
+                    flyCard(_cards[ii], FALL_DEPTH, false, FALL_DELAY,
+                        FALL_DURATION);
                 } else if (play) {
-                    flyCard(_cards[ii], DROP_PLAY_HEIGHT, false,
+                    flyCard(_cards[ii], DROP_PLAY_HEIGHT, false, 0f,
                         DROP_PLAY_DURATION);
                 } else {
                     remove(_cards[ii]);
@@ -273,20 +275,24 @@ public class PlayerStatusView extends BContainer
      */
     protected void flyCard (
         final BButton card, final int height, final boolean in,
-        final float duration)
+        final float delay, final float duration)
     {
         _ctx.getRootNode().addController(new Controller() {
             public void update (float time) {
-                float alpha = Math.min((_elapsed += time) / duration, 1f),
-                    ralpha = 1f - alpha;
-                card.setAlpha(in ? alpha : ralpha);
-                card.setLocation(card.getX(), CARD_RECT.y +
-                    (int)(height * (in ? ralpha : alpha)));
-                if (_elapsed >= duration) {
+                if ((_elapsed += time) >= duration + delay) {
                     _ctx.getRootNode().removeController(this);
-                    if (!in) {
+                    if (in) {
+                        card.setAlpha(1f);
+                        card.setLocation(card.getX(), CARD_RECT.y);
+                    } else {
                         remove(card);
                     }
+                } else if (_elapsed > delay) {
+                    float alpha = (_elapsed - delay) / duration,
+                        ralpha = 1f - alpha;
+                    card.setAlpha(in ? alpha : ralpha);
+                    card.setLocation(card.getX(), CARD_RECT.y +
+                        (int)(height * (in ? ralpha : alpha)));
                 }
             }
             protected float _elapsed;
@@ -440,6 +446,9 @@ public class PlayerStatusView extends BContainer
     
     /** The duration of the drop into the hand or the flight onto the board. */
     protected static final float DROP_PLAY_DURATION = 0.25f;
+    
+    /** The delay before dropped cards fall out of the hand. */
+    protected static final float FALL_DELAY = BangView.CARD_FALL_DURATION;
     
     /** The depth to which cards fall when removed from the hand. */
     protected static final int FALL_DEPTH = -50;

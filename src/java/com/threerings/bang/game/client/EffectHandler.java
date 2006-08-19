@@ -374,6 +374,14 @@ public class EffectHandler extends BoardView.BoardAction
                 iviz.init(_ctx, _view, coords[0], coords[1], null);
                 iviz.display(null);
                 return;
+        
+            case VS_PLAYER:
+                _bview.showCardPlayed(card, (Integer)target);
+                return;
+        
+            case VS_BOARD:
+                _bview.showCardPlayed(card, -1);
+                return;
         }
     }
     

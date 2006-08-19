@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
 
+import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
@@ -34,12 +35,10 @@ public class Barricade extends Piece
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new PieceSprite() {
-            public Shadow getShadowType () {
-                return Shadow.DYNAMIC;
-            }
-            protected void createGeometry () {
-                loadModel("extras", "frontier_town/barricade");
+        return new MobileSprite("extras", "frontier_town/barricade") {
+            public boolean removed () {
+                queueAction(REMOVED);
+                return true;
             }
         };
     }

@@ -11,9 +11,12 @@ import org.lwjgl.opengl.GL11;
 
 import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
+import com.jme.scene.Controller;
 
+import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.KeyEvent;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
@@ -34,6 +37,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.ModifiableDSet;
+import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
@@ -177,6 +181,56 @@ public class BangView extends BWindow
         }
     }
 
+    /**
+     * Animates a card played either on a player or on the entire board.
+     *
+     * @param pidx the index of the card's target, or -1 for the entire
+     * board
+     */
+    public void showCardPlayed (Card card, int pidx)
+    {
+        final BWindow window = new BWindow(_ctx.getStyleSheet(),
+            new BorderLayout());
+        BLabel label = new BLabel(new ImageIcon(_ctx.loadImage(
+            card.getIconPath(pidx == -1 ? "card" : "icon"))));
+        if (pidx != -1) {
+            label.setStyleClass("card_button");
+        }
+        window.add(label, BorderLayout.CENTER);
+        window.setLayer(2);
+        _ctx.getRootNode().addWindow(window);
+        window.pack();
+        if (pidx == -1) {
+            window.center();
+        } else {
+            window.setLocation(pstatus[pidx].getAbsoluteX() + 103,
+                pstatus[pidx].getAbsoluteY() + 15);
+        }
+        final int ox = window.getX(), oy = window.getY(),
+            height = (pidx == -1) ? 200 : 100;
+        _ctx.getRootNode().addController(new Controller() {
+            public void update (float time) {
+                if ((_elapsed += time) >= CARD_FALL_DURATION +
+                    CARD_LINGER_DURATION + CARD_FADE_DURATION) {
+                    _ctx.getRootNode().removeWindow(window);
+                    _ctx.getRootNode().removeController(this);
+                } else if (_elapsed >= CARD_FALL_DURATION +
+                    CARD_LINGER_DURATION) {
+                    window.setAlpha(1f - (_elapsed - CARD_FALL_DURATION -
+                        CARD_LINGER_DURATION) / CARD_FADE_DURATION);
+                } else if (_elapsed >= CARD_FALL_DURATION) {
+                    window.setAlpha(1f);
+                    window.setLocation(ox, oy);
+                } else {
+                    float alpha = _elapsed / CARD_FALL_DURATION;
+                    window.setAlpha(alpha);
+                    window.setLocation(ox, oy + (int)(height * (1f - alpha)));
+                }
+            }
+            float _elapsed;
+        });
+    }
+    
     // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
@@ -527,4 +581,13 @@ public class BangView extends BWindow
     /** Takes periodic samples of our frames per second and reports them to the
      * server at the end of the round. */
     protected PerformanceTracker _perftrack;
+
+    /** The time it takes for a played card to fall into position. */
+    protected static final float CARD_FALL_DURATION = 0.5f;
+    
+    /** The time a played card lingers in view. */
+    protected static final float CARD_LINGER_DURATION = 1.25f;
+    
+    /** The time it takes for a played card to fade out. */
+    protected static final float CARD_FADE_DURATION = 0.25f;
 }

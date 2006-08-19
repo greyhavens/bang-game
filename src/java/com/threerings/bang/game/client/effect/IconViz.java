@@ -107,14 +107,23 @@ public class IconViz extends EffectViz
         if (target != null) {
             target.attachChild(_billboard);
         } else {
+            // wrap the billboard in a container node for ease of
+            // transformation
             float tx = (_coords.x + 0.5f) * TILE_SIZE,
                 ty = (_coords.y + 0.5f) * TILE_SIZE,
                 tz = _view.getTerrainNode().getHeightfieldHeight(tx, ty);
-            _billboard.getLocalTranslation().set(tx, ty, tz);
+            Node xform = new Node("icon") {
+                public int detachChild (Spatial child) {
+                    parent.detachChild(this);
+                    return super.detachChild(child);
+                }
+            };
+            xform.getLocalTranslation().set(tx, ty, tz);
             PathUtil.computeRotation(Vector3f.UNIT_Z, Vector3f.UNIT_Z,
                 _view.getTerrainNode().getHeightfieldNormal(tx, ty),
-                _billboard.getLocalRotation());
-            _view.getPieceNode().attachChild(_billboard);
+                xform.getLocalRotation());
+            xform.attachChild(_billboard);
+            _view.getPieceNode().attachChild(xform);
             _billboard.updateRenderState();
         }
     }
