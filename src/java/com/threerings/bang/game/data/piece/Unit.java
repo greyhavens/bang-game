@@ -134,6 +134,7 @@ public class Unit extends Piece
         return (_respawnTick > 0 && tick >= _respawnTick) ||
             super.expireWreckage(tick);
     }
+
     /**
      * Returns the tick on which this unit should respawn or -1 if it
      * should not be respawned.
