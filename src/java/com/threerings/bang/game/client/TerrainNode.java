@@ -944,7 +944,7 @@ public class TerrainNode extends Node
         for (int i = 0, size = results.getNumber(); i < size; i++) {
             ArrayList tris = results.getPickData(i).getTargetTris();
             if (tris != null && tris.size() > 0) {
-                Object sprite = _view.getSprite(
+                Object sprite = _view.getPieceSprite(
                     results.getPickData(i).getTargetMesh().getParentGeom());
                 if (sprite == null || (sprite instanceof PieceSprite &&
                                        ((PieceSprite)sprite).getShadowType() ==
