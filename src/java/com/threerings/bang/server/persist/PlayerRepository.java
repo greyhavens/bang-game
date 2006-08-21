@@ -310,7 +310,7 @@ public class PlayerRepository extends JORARepository
         JDBCUtil.createTableIfMissing(conn, "FOLKS", new String[] {
             "PLAYER_ID INTEGER NOT NULL",
             "TARGET_ID INTEGER NOT NULL",
-            "OPINION TINYINY NOT NULL",
+            "OPINION TINYINT NOT NULL",
             "KEY (PLAYER_ID)",
             "UNIQUE (PLAYER_ID, TARGET_ID)",
         }, "");
