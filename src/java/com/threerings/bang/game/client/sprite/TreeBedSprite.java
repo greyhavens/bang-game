@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import com.jme.math.FastMath;
+
 import com.threerings.jme.model.Model;
 
 import com.threerings.bang.client.util.ResultAttacher;
@@ -15,32 +17,51 @@ import static com.threerings.bang.client.BangMetrics.*;
 /**
  * Displays trees for the forest guardians scenario.
  */
-public class TreeBedSprite extends PropSprite
+public class TreeBedSprite extends MobileSprite
 {
     public TreeBedSprite ()
     {
-        super("indian_post/special/tree_bed");
+        super("props", "indian_post/special/tree_bed");
     }
     
-    @Override // from PieceSprite
-    public boolean isHoverable ()
+    @Override // documentation inherited
+    public Shadow getShadowType ()
     {
-        return true;
+        return Shadow.NONE;
     }
     
     @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {
-        return _config.type;
+        return "indian_post/special/tree_bed";
     }
     
     @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
+        TreeBed tree = (TreeBed)piece;
         
-        // change models based on the tree's growth phase
-        updateTreeModel();
+        // grow to the next stage
+        while (_growth < tree.growth) {
+            queueAction("grow_stage" + (++_growth));
+        }
+        if (_growth != tree.growth) {
+            _growth = tree.growth;
+            _nextIdle = FastMath.FLT_EPSILON;
+        }
+    }
+    
+    @Override // documentation inherited
+    protected void addProceduralActions ()
+    {
+        super.addProceduralActions();
+        _procActions.put("reacting", new ProceduralAction() {
+            public float activate () {
+                // TODO: either an animation or a particle effect
+                return FastMath.FLT_EPSILON;
+            }
+        });
     }
     
     @Override // from PieceSprite
@@ -48,47 +69,24 @@ public class TreeBedSprite extends PropSprite
     {
         super.createGeometry();
         
-        // load the tree model
-        updateTreeModel();
-        
         _tlight = _view.getTerrainNode().createHighlight(
             _piece.x, _piece.y, false, false);
         attachHighlight(_status = new PieceStatus(_ctx, _tlight));
         updateStatus();
     }
-    
-    protected void updateTreeModel ()
+   
+    @Override // documentation inherited
+    protected String[] getIdleAnimations ()
     {
-        String model = "indian_post/special/trees/" +
-            (_piece.isAlive() ? "" : "stump_") +
-            TREE_MODELS[((TreeBed)_piece).growth];
-        if (model.equals(_tmodel)) {
-            return;
-        }
-        _tmodel = model;
-        _view.addResolving(this);
-        _ctx.loadModel("props", model, new ResultAttacher<Model>(this) {
-            public void requestCompleted (Model model) {
-                super.requestCompleted(model);
-                _view.clearResolving(TreeBedSprite.this);
-                if (_tree != null) {
-                    detachChild(_tree);
-                }
-                _tree = model;
-            }
-            public void requestFailed (Exception cause) {
-                _view.clearResolving(TreeBedSprite.this);
-            }
-        });
+        return _dead ? null : new String[] { "idle_stage" + _growth };
     }
     
-    /** The tree that we switch around. */
-    protected Model _tree;
+    @Override // documentation inherited
+    protected String getDeadModel ()
+    {
+        return _name + "/stump" + _growth;
+    }
     
-    /** The current tree model. */
-    protected String _tmodel;
-    
-    /** The tree models corresponding to each growth stage. */
-    protected static final String[] TREE_MODELS = {
-        "sprout", "sapling", "mature", "elder" };
+    /** The currently depicted growth stage. */
+    protected byte _growth;
 }

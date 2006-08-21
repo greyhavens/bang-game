@@ -35,13 +35,21 @@ public class TreeBed extends Prop
         damage = 50;
         growth = 0;
     }
+        
+    @Override // documentation inherited
+    public float getHeight ()
+    {
+        // sprite is positioned according to board height, so make sure
+        // the piece itself doesn't contribute
+        return 0f;
+    }
     
     @Override // documentation inherited
     public boolean expireWreckage (short tick)
     {
         return false;
     }
-    
+
     /**
      * "Damages" this tree bed by the specified amount, causing it to grow
      * higher if the increment is negative and lower if the increment is

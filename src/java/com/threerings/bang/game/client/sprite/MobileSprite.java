@@ -343,6 +343,20 @@ public class MobileSprite extends PieceSprite
     }
 
     @Override // documentation inherited
+    public void updated (Piece piece, short tick)
+    {
+        super.updated(piece, tick);
+        
+        // if we were dead but are once again alive, switch back to our rest
+        // pose
+        if (_dead && piece.isAlive()) {
+            log.info("Resurrected " + piece);
+            loadModel(_type, _name);
+            _dead = false;
+        }
+    }
+    
+    @Override // documentation inherited
     public void updateWorldData (float time)
     {
         // wait until we're done moving to do any actions or idle animations
@@ -436,7 +450,7 @@ public class MobileSprite extends PieceSprite
         _procActions.put(DEAD, new ProceduralAction() {
             public float activate () {
                 String oname = _name;
-                loadModel(_type, _name + "/dead");
+                loadModel(_type, getDeadModel());
                 _name = oname;
                 _dead = true;
                 return FastMath.FLT_EPSILON;
@@ -478,6 +492,15 @@ public class MobileSprite extends PieceSprite
                 return TELEPORT_DURATION;
             }
         });
+    }
+    
+    /**
+     * Returns the name of the sprite's dead model (not including the type,
+     * which is assumed to be the same as the current type).
+     */
+    protected String getDeadModel ()
+    {
+        return _name + "/dead";
     }
     
     /**
@@ -712,19 +735,20 @@ public class MobileSprite extends PieceSprite
         // if there's one idle animation, assume that it loops; if there
         // are many, cycle randomly between them
         float duration = -1f;
-        if (_ianims == null || _ianims.length == 0) {
+        String[] ianims = getIdleAnimations();
+        if (ianims == null || ianims.length == 0) {
             if (_model != null) {
                 _model.stopAnimation();
             }
             _idle = null;
             _nextIdle = Float.MAX_VALUE;
             
-        } else if (_ianims.length == 1) {
-            duration = setAction(_idle = _ianims[0]);
+        } else if (ianims.length == 1) {
+            duration = setAction(_idle = ianims[0]);
             _nextIdle = Float.MAX_VALUE;
             
-        } else if (_ianims.length > 1) {
-            _idle = (String)RandomUtil.pickRandom(_ianims, _idle);
+        } else if (ianims.length > 1) {
+            _idle = (String)RandomUtil.pickRandom(ianims, _idle);
             duration = _nextIdle = setAction(_idle);
         }
         if (duration > 0f && offset) {
@@ -732,6 +756,15 @@ public class MobileSprite extends PieceSprite
             _nextIdle -= time;
             _model.fastForwardAnimation(time);
         }
+    }
+    
+    /**
+     * Returns the array of idle animations (which by default are those
+     * specified by the <code>idle</code> model property).
+     */
+    protected String[] getIdleAnimations ()
+    {
+        return _ianims;
     }
     
     /**

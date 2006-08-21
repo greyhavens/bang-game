@@ -254,14 +254,6 @@ public class UnitSprite extends MobileSprite
         if (_observers != null) {
             _observers.apply(_updater);
         }
-
-        // if we were dead but are once again alive, switch back to our rest
-        // pose
-        if (_dead && piece.isAlive()) {
-            log.info("Resurrected " + piece);
-            loadModel(_type, _name);
-            _dead = false;
-        }
     }
 
     @Override // documentation inherited
