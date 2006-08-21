@@ -14,7 +14,7 @@ import com.threerings.bang.data.Handle;
  * A record containing persistent information maintained about a Bang!
  * player.
  */
-public class Player
+public class PlayerRecord
 {
     /** A flag indicating the player's gender. */
     public static final int IS_MALE_FLAG = 1 << 0;
@@ -60,12 +60,12 @@ public class Player
     public int flags;
 
     /** A blank constructor used when loading records from the database. */
-    public Player ()
+    public PlayerRecord ()
     {
     }
 
     /** Constructs a blank player record for the supplied account. */
-    public Player (String accountName)
+    public PlayerRecord (String accountName)
     {
         this.accountName = accountName;
         this.look = "";

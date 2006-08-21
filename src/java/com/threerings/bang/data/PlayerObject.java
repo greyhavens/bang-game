@@ -96,7 +96,13 @@ public class PlayerObject extends BodyObject
 
     /** {@link PardnerEntry}s for each of the player's pardners. */
     public DSet<PardnerEntry> pardners;
-    
+
+    /** {@link FolkEntry}s for this player's friends. */
+    public DSet<FolkEntry> friends;
+
+    /** {@link FolkEntry}s for this player's foes. */
+    public DSet<FolkEntry> foes;
+
     /**
      * Returns the player's rating for the specified scenario. This method will
      * never return null.
@@ -243,7 +249,7 @@ public class PlayerObject extends BodyObject
         }
         return count;
     }
-    
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>playerId</code> field be set to the

@@ -81,7 +81,7 @@ import com.threerings.bang.server.persist.PardnerRepository;
 import com.threerings.bang.server.persist.PosterRepository;
 import com.threerings.bang.server.persist.PosterRecord;
 import com.threerings.bang.server.persist.PlayerRepository;
-import com.threerings.bang.server.persist.Player;
+import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
@@ -592,7 +592,7 @@ public class PlayerManager
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
                 // first map handle to player id
-                Player player = _playrepo.loadByHandle(handle);
+                PlayerRecord player = _playrepo.loadByHandle(handle);
                 if (player == null) {
                     throw new PersistenceException(
                         "Unknown player [handle=" + handle + "]");

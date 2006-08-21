@@ -19,7 +19,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
-import com.threerings.bang.server.persist.Player;
+import com.threerings.bang.server.persist.PlayerRecord;
 
 /**
  * Customizes the client resolver to use our {@link PlayerObject}.
@@ -31,7 +31,7 @@ public class BangClientResolver extends CrowdClientResolver
      * load an account's player record, so we stash it here to avoid loading it
      * again when the time comes to resolve their data.
      */
-    public static void stashPlayer (Player player)
+    public static void stashPlayer (PlayerRecord player)
     {
         synchronized (_pstash) {
             _pstash.put(player.accountName.toLowerCase(), player);
@@ -51,7 +51,7 @@ public class BangClientResolver extends CrowdClientResolver
         super.resolveClientData(clobj);
         PlayerObject buser = (PlayerObject)clobj;
         String username = buser.username.toString();
-        Player player;
+        PlayerRecord player;
 
         // check for a stashed player record
         synchronized (_pstash) {
@@ -66,7 +66,7 @@ public class BangClientResolver extends CrowdClientResolver
         // if they're not in the db, it's their first time, how nice
         if (player == null) {
             // it's their first time, how nice
-            player = new Player(username);
+            player = new PlayerRecord(username);
             BangServer.playrepo.insertPlayer(player);
             BangServer.generalLog("first_timer " + username);
         }
@@ -75,7 +75,7 @@ public class BangClientResolver extends CrowdClientResolver
         if (player.handle != null) {
             buser.handle = new Handle(player.handle);
         }
-        buser.isMale = player.isSet(Player.IS_MALE_FLAG);
+        buser.isMale = player.isSet(PlayerRecord.IS_MALE_FLAG);
         buser.scrip = player.scrip;
         buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
             player.accountName);
@@ -108,6 +108,6 @@ public class BangClientResolver extends CrowdClientResolver
         BangServer.playmgr.loadPardners(buser);
     }
 
-    protected static HashMap<String,Player> _pstash =
-        new HashMap<String,Player>();
+    protected static HashMap<String,PlayerRecord> _pstash =
+        new HashMap<String,PlayerRecord>();
 }

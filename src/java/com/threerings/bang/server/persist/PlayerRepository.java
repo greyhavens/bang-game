@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import com.samskivert.io.PersistenceException;
 
@@ -51,18 +52,18 @@ public class PlayerRepository extends JORARepository
      * Loads up the player record associated with the specified account.
      * Returns null if no matching record could be found.
      */
-    public Player loadPlayer (String accountName)
+    public PlayerRecord loadPlayer (String accountName)
         throws PersistenceException
     {
-        return (Player)loadByExample(
-            _ptable, new Player(accountName), _byNameMask);
+        return loadByExample(
+            _ptable, new PlayerRecord(accountName), _byNameMask);
     }
 
     /**
      * Loads up the player record associated with the specified handle.
      * Returns null if no matching record could be found.
      */
-    public Player loadByHandle (Handle handle)
+    public PlayerRecord loadByHandle (Handle handle)
         throws PersistenceException
     {
         return load(_ptable, "where HANDLE = " +
@@ -71,11 +72,11 @@ public class PlayerRepository extends JORARepository
 
 
     /**
-     * Insert a new player record into the repository and assigns them a
-     * unique player id in the process. The {@link Player#created} field
-     * will be filled in by this method if it is not already.
+     * Insert a new player record into the repository and assigns them a unique
+     * player id in the process. The {@link PlayerRecord#created} field will be
+     * filled in by this method if it is not already.
      */
-    public void insertPlayer (final Player player)
+    public void insertPlayer (final PlayerRecord player)
         throws PersistenceException
     {
         if (player.created == null) {
@@ -94,8 +95,8 @@ public class PlayerRepository extends JORARepository
     public boolean configurePlayer (int playerId, Handle handle, boolean isMale)
         throws PersistenceException
     {
-        String gensql = isMale ?
-            "| " + Player.IS_MALE_FLAG : "& " + ~Player.IS_MALE_FLAG;
+        String gensql = isMale ? ("| " + PlayerRecord.IS_MALE_FLAG) :
+            ("& " + ~PlayerRecord.IS_MALE_FLAG);
         final String query = "update PLAYERS set FLAGS = FLAGS " + gensql +
             ", HANDLE = " + JDBCUtil.escape(handle.toString()) +
             " where PLAYER_ID = " + playerId;
@@ -130,7 +131,7 @@ public class PlayerRepository extends JORARepository
     /**
      * Deletes the specified player from the repository.
      */
-    public void deletePlayer (final Player player)
+    public void deletePlayer (PlayerRecord player)
         throws PersistenceException
     {
         delete(_ptable, player);
@@ -233,6 +234,32 @@ public class PlayerRepository extends JORARepository
         checkedUpdate(update.toString(), 1);
     }
 
+    /**
+     * Loads up all folks records for the specified player.
+     */
+    public ArrayList<FolkRecord> loadOpinions (int playerId)
+        throws PersistenceException
+    {
+        return loadAll(_ftable, "where PLAYER_ID = " + playerId);
+    }
+
+    /**
+     * Registers an opinion of one player about another (friend or foe).
+     *
+     * @param opinion one of {@link FolkRecord#FRIEND} or {@link
+     * FolkRecord#FOE}.
+     */
+    public void registerOpinion (int playerId, int targetId, byte opinion)
+        throws PersistenceException
+    {
+        FolkRecord frec = new FolkRecord();
+        frec.playerId = playerId;
+        frec.targetId = targetId;
+        frec.opinion = opinion;
+        // this will update or insert
+        store(_ftable, frec);
+    }
+
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
     protected void updateScrip (String where, int amount, String type)
         throws PersistenceException
@@ -280,17 +307,26 @@ public class PlayerRepository extends JORARepository
             "UNIQUE (ACCOUNT_NAME)",
         }, "");
 
-        JDBCUtil.addColumn(
-            conn, "PLAYERS", "TOWN_ID", "VARCHAR(64)", "WANTED_LOOK");
+        JDBCUtil.createTableIfMissing(conn, "FOLKS", new String[] {
+            "PLAYER_ID INTEGER NOT NULL",
+            "TARGET_ID INTEGER NOT NULL",
+            "OPINION TINYINY NOT NULL",
+            "KEY (PLAYER_ID)",
+            "UNIQUE (PLAYER_ID, TARGET_ID)",
+        }, "");
     }
 
     @Override // documentation inherited
     protected void createTables ()
     {
-	_ptable = new Table<Player>(
-            Player.class, "PLAYERS", "PLAYER_ID", true);
+	_ptable = new Table<PlayerRecord>(
+            PlayerRecord.class, "PLAYERS", "PLAYER_ID", true);
+	_ftable = new Table<FolkRecord>(
+            FolkRecord.class, "FOLKS", new String[] {
+                "PLAYER_ID", "TARGET_ID" }, true);
     }
 
-    protected Table<Player> _ptable;
+    protected Table<PlayerRecord> _ptable;
+    protected Table<FolkRecord> _ftable;
     protected FieldMask _byNameMask;
 }

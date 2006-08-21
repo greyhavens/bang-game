@@ -33,7 +33,7 @@ import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.server.BangClientResolver;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
-import com.threerings.bang.server.persist.Player;
+import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.DeploymentConfig;
 
@@ -160,7 +160,7 @@ public class OOOAuthenticator extends Authenticator
         // the gauntlet, we'll stash this away in a place that the client
         // resolver can get its hands on it so that we can avoid loading
         // the record twice during authentication
-        Player prec = BangServer.playrepo.loadPlayer(username);
+        PlayerRecord prec = BangServer.playrepo.loadPlayer(username);
 
         // make sure this player has access to this server's town
         int serverTownIdx = BangUtil.getTownIndex(ServerConfig.townId);
