@@ -11,6 +11,7 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.crowd.chat.data.SystemMessage;
@@ -81,7 +82,11 @@ public class MatchView extends BContainer
         }, "leave"));
         add(row, GroupLayout.FIXED);
 
-        add(new Spacer(10, 66), GroupLayout.FIXED);
+        // add a label that will overlay the "Back Parlors" text (it also has
+        // custom spacing that positions everything properly)
+        ImageIcon icon = new ImageIcon(
+            _ctx.loadImage("ui/saloon/matched_game_chat.png"));
+        add(new BLabel(icon, "match_chat_header"), GroupLayout.FIXED);
 
         // this will eventually be the chat view
         _chat = new ChatView(_ctx, _ctx.getChatDirector()) {
@@ -92,8 +97,10 @@ public class MatchView extends BContainer
                 return "match_chat".equals(localType);
             }
         };
-        ((BorderLayout)_chat.getLayoutManager()).setGaps(2, 6);
+        ((BorderLayout)_chat.getLayoutManager()).setGaps(2, 3);
         _chat.setEnabled(false);
+        icon = new ImageIcon(_ctx.loadImage("ui/chat/bubble_icon.png"));
+        _chat.setChatButton(new BButton(icon, ""));
         add(_chat);
     }
 

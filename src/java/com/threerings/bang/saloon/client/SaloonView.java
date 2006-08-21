@@ -48,14 +48,14 @@ public class SaloonView extends ShopView
         _status.setStyleClass("shop_status");
         _status.setText(getShopTip());
 
-        // add a test game button for developer testing
-        if (ctx.getUserObject().tokens.isAdmin()) {
-            BButton btn;
-            add(btn = new BButton(
-                    new ImageIcon(ctx.loadImage("ui/icons/dice.png")),
-                    _ctrl, SaloonController.TEST_GAME), new Point(895, 274));
-            btn.setStyleClass("arrow_button");
-        }
+//         // add a test game button for developer testing
+//         if (ctx.getUserObject().tokens.isAdmin()) {
+//             BButton btn;
+//             add(btn = new BButton(
+//                     new ImageIcon(ctx.loadImage("ui/icons/dice.png")),
+//                     _ctrl, SaloonController.TEST_GAME), new Point(895, 274));
+//             btn.setStyleClass("arrow_button");
+//         }
     }
 
     /**
@@ -142,7 +142,7 @@ public class SaloonView extends ShopView
     protected static final Rectangle CRIT_RECT =
         new Rectangle(594, 328, 395, 233);
     protected static final Rectangle MATCH_RECT =
-        new Rectangle(594, 80, 395, 491);
+        new Rectangle(594, 77, 395, 493);
     protected static final Rectangle PARLIST_RECT =
         new Rectangle(610, 85, 365, 170);
 }
