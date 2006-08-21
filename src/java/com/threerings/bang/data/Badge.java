@@ -73,11 +73,6 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 5000;
             }
         },
-        UNITS_KILLED_4 {
-            public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 20000;
-            }
-        },
 
         // units lost badges
         UNITS_LOST_1 {
@@ -301,11 +296,6 @@ public class Badge extends Item
         LOOKS_BOUGHT_2 {
             public boolean qualifies (PlayerObject user) {
                 return user.looks.size() > 15;
-            }
-        },
-        LOOKS_BOUGHT_3 {
-            public boolean qualifies (PlayerObject user) {
-                return user.looks.size() > 30;
             }
         },
         DUDS_BOUGHT_1 {
