@@ -412,17 +412,17 @@ public abstract class Scenario
                 // if only one player can reach it, give it a probability
                 // inversely proportional to that player's power
                 int pidx = reachers[ii].get(0);
-                double ifactor = 1.0 - bangobj.pdata[pidx].powerFactor;
+                float ifactor = 1.0 - bangobj.pdata[pidx].powerFactor;
                 weights[ii] = (int)Math.round(10 * Math.max(0, ifactor)) + 1;
 
             } else {
                 // if multiple players can reach it, give it a nudge if
                 // they are of about equal power
-                double avgpow = bangobj.getAveragePower(reachers[ii]);
+                float avgpow = bangobj.getAveragePower(reachers[ii]);
                 boolean outlier = false;
                 for (int pp = 0; pp < reachers[ii].size(); pp++) {
                     int pidx = reachers[ii].get(pp);
-                    double power = bangobj.pdata[pidx].power;
+                    float power = bangobj.pdata[pidx].power;
                     if (power < 0.9 * avgpow || power > 1.1 * avgpow) {
                         outlier = true;
                     }

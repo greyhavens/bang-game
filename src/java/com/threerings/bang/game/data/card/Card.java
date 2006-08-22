@@ -45,19 +45,48 @@ public abstract class Card extends SimpleStreamableObject
      * Selects a random card from the set of all available cards for the
      * specified town.
      *
+     * @param scoreFactor if this card is being created during a game, the
+     * {@link BangObject.PlayerData#pointFactor} of the player receiving the
+     * card should be provided, otherwise 1 should be provided.
      * @param scenario if this card is being created during a game, this will
      * indicate the scenario in which it is being created. Otherwise this will
      * be null (generally meaning the card is being created for a pack).
      */
-    public static String selectRandomCard (String townId, ScenarioInfo scenario)
+    public static String selectRandomCard (
+        String townId, double pointFactor, ScenarioInfo scenario)
     {
         if (scenario instanceof TutorialInfo) {
             // we always return missile cards in the tutorial
             return "missile";
+
         } else {
             // select the card based on a weighted random choice
             Card[] wcards = _wcards.get(townId);
             int[] weights = _weights.get(townId);
+
+            // clone the weights and adjust them based on the point factor
+            if (pointFactor < 1f || pointFactor > 1.25f) {
+                weights = (int[])weights.clone();
+                if (pointFactor < 1) {
+                    // for players at a disadvantage, add a constant value to
+                    // all weights which will reduce the rarity variance
+                    int adjust = (int)Math.round(200 * (1 - pointFactor));
+                    for (int ii = 0; ii < weights.length; ii++) {
+                        weights[ii] += adjust;
+                    }
+
+                } else { // (pointFactor > 1.25)
+                    // for players above the average points, filter out all
+                    // cards below a cutoff frequency
+                    int cutoff = (pointFactor > 1.5) ? 50 : 25;
+                    for (int ii = 0; ii < weights.length; ii++) {
+                        if (weights[ii] >= cutoff) {
+                            weights[ii] = 0;
+                        }
+                    }
+                }
+            }
+
             return wcards[RandomUtil.getWeightedIndex(weights)].getType();
         }
     }

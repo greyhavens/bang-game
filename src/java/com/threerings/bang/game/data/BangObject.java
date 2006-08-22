@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
+import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.io.Streamable;
@@ -45,7 +46,7 @@ public class BangObject extends GameObject
         public int totalPower;
 
         /** The average power of the live players. */
-        public double averagePower;
+        public float averagePower;
 
         /** The number of unclaimed bonuses on the board. */
         public int bonuses;
@@ -73,7 +74,10 @@ public class BangObject extends GameObject
         public int power;
 
         /** This player's power divided by the average power. */
-        public double powerFactor;
+        public float powerFactor;
+
+        /** This player's points divided by the average points. */
+        public float pointFactor;
 
         /** Clears our accumulator stats in preparation for a recompute. */
         public void clear () {
@@ -442,9 +446,9 @@ public class BangObject extends GameObject
      * Returns the average power of the specified set of players
      * (referenced by index).
      */
-    public double getAveragePower (ArrayIntSet players)
+    public float getAveragePower (ArrayIntSet players)
     {
-        double tpower = 0;
+        float tpower = 0;
         for (int ii = 0; ii < players.size(); ii++) {
             tpower += pdata[players.get(ii)].power;
         }
@@ -507,10 +511,10 @@ public class BangObject extends GameObject
             }
         }
 
-        gdata.averagePower = (double)gdata.totalPower / gdata.livePlayers;
+        gdata.averagePower = (float)gdata.totalPower / gdata.livePlayers;
         for (int ii = 0; ii < pdata.length; ii++) {
             pdata[ii].powerFactor =
-                (double)pdata[ii].power / gdata.averagePower;
+                (float)pdata[ii].power / gdata.averagePower;
         }
 
 //         log.info("Updated stats " + gdata + ": " +
@@ -537,6 +541,8 @@ public class BangObject extends GameObject
         setPointsAt(points[pidx] + amount, pidx);
         perRoundPoints[roundId-1][pidx] += amount;
         stats[pidx].incrementStat(Stat.Type.POINTS_EARNED, amount);
+        float tscore = IntListUtil.sum(points);
+        pdata[pidx].pointFactor = (tscore == 0) ? 1f : (points[pidx] / tscore);
     }
 
     /**

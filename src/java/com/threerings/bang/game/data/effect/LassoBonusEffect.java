@@ -74,8 +74,11 @@ public class LassoBonusEffect extends BonusEffect
         bonusId = bonus.pieceId;
 
         // grant the corresponding card
-        card = Card.newCard(ctype.equals("__random__") ?
-            Card.selectRandomCard(bangobj.townId, bangobj.scenario) : ctype);
+        if (ctype.equals("__random__")) {
+            ctype = Card.selectRandomCard(bangobj.townId,
+                bangobj.pdata[_player].pointFactor, bangobj.scenario);
+        }
+        card = Card.newCard(ctype);
         card.init(bangobj, _player);
     }
 
