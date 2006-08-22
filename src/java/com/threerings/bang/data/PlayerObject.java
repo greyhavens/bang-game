@@ -3,6 +3,8 @@
 
 package com.threerings.bang.data;
 
+import java.util.Arrays;
+
 import com.threerings.util.Name;
 
 import com.threerings.presents.dobj.DSet;
@@ -56,6 +58,12 @@ public class PlayerObject extends BodyObject
 
     /** The field name of the <code>pardners</code> field. */
     public static final String PARDNERS = "pardners";
+
+    /** The field name of the <code>friends</code> field. */
+    public static final String FRIENDS = "friends";
+
+    /** The field name of the <code>foes</code> field. */
+    public static final String FOES = "foes";
     // AUTO-GENERATED: FIELDS END
 
     /** This user's persistent unique id. */
@@ -97,11 +105,11 @@ public class PlayerObject extends BodyObject
     /** {@link PardnerEntry}s for each of the player's pardners. */
     public DSet<PardnerEntry> pardners;
 
-    /** {@link FolkEntry}s for this player's friends. */
-    public DSet<FolkEntry> friends;
+    /** The player ids of this player's friendly folks, sorted. */
+    public int[] friends;
 
-    /** {@link FolkEntry}s for this player's foes. */
-    public DSet<FolkEntry> foes;
+    /** The player ids of this player's not so friendly folks, sorted. */
+    public int[] foes;
 
     /**
      * Returns the player's rating for the specified scenario. This method will
@@ -194,6 +202,22 @@ public class PlayerObject extends BodyObject
             }
         }
         return false;
+    }
+
+    /**
+     * Whether the specified player's id is in this player's friend list.
+     */
+    public boolean isFriend (int playerId)
+    {
+        return Arrays.binarySearch(friends, playerId) >= 0;
+    }
+
+    /**
+     * Whether the specified player's id is in this player's foe list.
+     */
+    public boolean isFoe (int playerId)
+    {
+        return Arrays.binarySearch(foes, playerId) >= 0;
     }
 
     @Override // documentation inherited
@@ -634,6 +658,72 @@ public class PlayerObject extends BodyObject
         @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.PardnerEntry> clone =
             (value == null) ? null : value.typedClone();
         this.pardners = clone;
+    }
+
+    /**
+     * Requests that the <code>friends</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setFriends (int[] value)
+    {
+        int[] ovalue = this.friends;
+        requestAttributeChange(
+            FRIENDS, value, ovalue);
+        this.friends = (value == null) ? null : (int[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>friends</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setFriendsAt (int value, int index)
+    {
+        int ovalue = this.friends[index];
+        requestElementUpdate(
+            FRIENDS, index, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.friends[index] = value;
+    }
+
+    /**
+     * Requests that the <code>foes</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setFoes (int[] value)
+    {
+        int[] ovalue = this.foes;
+        requestAttributeChange(
+            FOES, value, ovalue);
+        this.foes = (value == null) ? null : (int[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>foes</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setFoesAt (int value, int index)
+    {
+        int ovalue = this.foes[index];
+        requestElementUpdate(
+            FOES, index, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.foes[index] = value;
     }
     // AUTO-GENERATED: METHODS END
 }
