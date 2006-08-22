@@ -1,0 +1,195 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="body" translation="-1.44236, -0.927111, 56.9645" rotation="0.0, 0.0, 1.0, 0.0" scale="1.07595, 1.07595, 1.29052"/>
+    <transform name="Bone_root" translation="0.0430848, -0.0326007, 41.5664" rotation="0.506896, -0.492911, 0.493259, 0.506744" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_head" translation="59.3077, 0.584446, 58.3908" rotation="0.838341, -0.0146303, 0.544838, -0.0110464" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_stack_L" translation="73.5027, -10.6026, -52.2488" rotation="0.00245931, 0.393378, -0.00574626, 0.919355" scale="1.0, 1.0, 1.0"/>
+    <transform name="smoke_L" translation="4.10991, -0.579678, 1.56516" rotation="0.548137, 0.548137, 0.446705, 0.446705" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_stack_R" translation="73.0367, 10.7633, -51.5156" rotation="0.0191907, 0.504435, 0.0359329, 0.862488" scale="1.0, 1.0, 1.0"/>
+    <transform name="smoke_R" translation="20.4944, 0.58538, -1.58929" rotation="0.558863, 0.537198, 0.43779, 0.455446" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_vents_BL" translation="65.6967, -34.6646, -42.3437" rotation="-0.235209, 0.686309, -0.260859, 0.636874" scale="1.25563, 1.09675, 1.04065"/>
+    <transform name="Bone_vents_BR" translation="66.5418, 32.9303, -38.1964" rotation="0.206054, 0.722763, 0.233176, 0.617077" scale="1.17088, 1.09675, 1.12218"/>
+    <transform name="Bone_vents_FL" translation="65.5671, -45.032, 26.0859" rotation="0.572844, -0.384574, 0.638937, -0.340167" scale="1.16024, 1.09675, 1.08564"/>
+    <transform name="Bone_vents_FR" translation="66.6766, 43.7123, 25.6714" rotation="0.586094, 0.351456, 0.656719, 0.318891" scale="1.14438, 1.09675, 0.992637"/>
+    <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
+    <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="leg FR" translation="-4.73447, -19.0201, 41.4985" rotation="-0.0563841, 0.208966, 0.254332, 0.942586" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot FR" translation="-62.5488, 0.140137, -11.1777" rotation="0.0102414, -0.258616, 0.0382212, 0.965169" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg FL" translation="5.98776, -17.8298, 41.4985" rotation="0.0, 0.0, 0.949742, 0.313035" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot FL" translation="-62.9701, 1.27442, -10.7905" rotation="0.0, 0.0, -0.0588633, 0.998266" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg BL" translation="10.3008, 21.5934, 41.4985" rotation="-0.205076, -0.0692096, 0.925038, -0.312184" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot BL" translation="-60.8139, 0.0466463, -11.1777" rotation="0.0114974, -0.258564, 0.0429088, 0.964972" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg BR" translation="-10.8018, 20.9614, 41.4985" rotation="0.0, 0.0, -0.317894, 0.948126" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot BR" translation="-58.654, 0.683698, -6.53105" rotation="0.0, 0.0, 0.0507987, 0.998709" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="body" translation="-1.44236, -0.927111, 56.9645" rotation="0.0, 0.0, 1.0, 0.0" scale="1.07595, 1.07595, 1.29052"/>
+    <transform name="Bone_root" translation="-4.99303, -0.0326007, 41.5664" rotation="0.495367, -0.504656, 0.504838, 0.495049" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_head" translation="59.3077, 0.584446, 58.3908" rotation="0.847012, -0.0151454, 0.531228, -0.0117532" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_stack_L" translation="73.5028, -10.6026, -52.2488" rotation="0.00228452, 0.365411, -0.00581792, 0.930826" scale="1.0, 1.0, 1.0"/>
+    <transform name="smoke_L" translation="4.10992, -0.579678, 1.56516" rotation="0.548137, 0.548137, 0.446705, 0.446705" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_stack_R" translation="73.0367, 10.7633, -51.5156" rotation="-0.0741579, 0.565783, -0.102609, 0.814777" scale="1.0, 1.0, 1.0"/>
+    <transform name="smoke_R" translation="20.4944, 0.585381, -1.58929" rotation="0.558863, 0.537198, 0.43779, 0.455446" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_vents_BL" translation="65.6967, -34.6646, -42.3437" rotation="-0.242493, 0.67224, -0.257611, 0.650328" scale="1.18985, 1.08163, 1.00148"/>
+    <transform name="Bone_vents_BR" translation="66.5418, 32.9303, -38.1964" rotation="0.213131, 0.708827, 0.230963, 0.631502" scale="1.10954, 1.08163, 1.07995"/>
+    <transform name="Bone_vents_FL" translation="65.5671, -45.032, 26.0859" rotation="0.58563, -0.378188, 0.626182, -0.349151" scale="1.09946, 1.08163, 1.04478"/>
+    <transform name="Bone_vents_FR" translation="66.6766, 43.7123, 25.6714" rotation="0.599203, 0.345749, 0.643611, 0.32738" scale="1.08443, 1.08163, 0.955277"/>
+    <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
+    <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="leg FR" translation="-14.2308, -28.3345, 41.4985" rotation="0.0, 0.0, 0.352479, 0.93582" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot FR" translation="-62.5488, 0.140134, -11.1777" rotation="0.0, 0.0, -0.0788354, 0.996888" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg FL" translation="-2.73625, -8.49312, 41.4985" rotation="0.0, 0.0, 0.98595, 0.16704" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot FL" translation="-62.9702, 1.27442, -10.7905" rotation="0.0, 0.0, -0.180239, 0.983623" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg BL" translation="-7.54511, 21.2683, 41.4985" rotation="0.0, 0.0, 0.999239, -0.0389929" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot BL" translation="-60.8139, 0.0466455, -11.1777" rotation="0.0, 0.0, 0.186595, 0.982437" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg BR" translation="-27.7891, 21.6107, 41.4985" rotation="0.0, 0.0, -0.562001, 0.827136" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot BR" translation="-58.654, 0.683698, -6.53105" rotation="0.0, 0.0, 0.317618, 0.948219" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="body" translation="-1.44236, -0.927111, 56.9645" rotation="0.0, 0.0, 1.0, 0.0" scale="1.07595, 1.07595, 1.29052"/>
+    <transform name="Bone_root" translation="-3.69785, -0.0326007, 41.5664" rotation="0.483568, -0.516126, 0.516143, 0.483086" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_head" translation="59.3077, 0.584445, 58.3908" rotation="0.862569, -0.0154487, 0.505546, -0.0126063" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_stack_L" translation="73.5027, -10.6026, -52.2488" rotation="0.00210764, 0.337109, -0.00588428, 0.941445" scale="1.0, 1.0, 1.0"/>
+    <transform name="smoke_L" translation="4.10992, -0.579678, 1.56516" rotation="0.548137, 0.548137, 0.446705, 0.446705" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_stack_R" translation="73.0367, 10.7633, -51.5156" rotation="-0.0122229, 0.55279, -0.0146149, 0.833103" scale="1.0, 1.0, 1.0"/>
+    <transform name="smoke_R" translation="20.4944, 0.58538, -1.58929" rotation="0.558863, 0.537198, 0.43779, 0.455446" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_vents_BL" translation="65.6967, -34.6646, -42.3437" rotation="-0.255786, 0.640674, -0.247772, 0.680234" scale="1.04514, 1.04838, 0.915314"/>
+    <transform name="Bone_vents_BR" translation="66.5418, 32.9303, -38.1964" rotation="0.225494, 0.677803, 0.222871, 0.663373" scale="0.974601, 1.04837, 0.98703"/>
+    <transform name="Bone_vents_FL" translation="65.5671, -45.032, 26.0859" rotation="0.613745, -0.362268, 0.59781, -0.367018" scale="0.965746, 1.04837, 0.954889"/>
+    <transform name="Bone_vents_FR" translation="66.6766, 43.7123, 25.6714" rotation="0.628088, 0.331073, 0.614502, 0.343923" scale="0.95254, 1.04838, 0.873085"/>
+    <transform name="fire" translation="82.3258, 0.309895, -0.250915" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
+    <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="leg FR" translation="-15.9258, -13.1521, 41.4985" rotation="0.0, 0.0, 0.323023, 0.946391" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot FR" translation="-62.5488, 0.140135, -11.1777" rotation="0.0, 0.0, -0.0620463, 0.998073" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg FL" translation="9.6778, -16.4021, 41.4985" rotation="-0.16918, 0.0391398, 0.959466, 0.221973" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot FL" translation="-62.9701, 1.27442, -10.7905" rotation="-0.0198364, -0.215529, -0.0894762, 0.972187" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg BL" translation="-2.82794, 21.3945, 41.4985" rotation="0.0, 0.0, 0.97833, -0.207054" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot BL" translation="-60.8139, 0.0466474, -11.1777" rotation="0.0, 0.0, 0.125754, 0.992061" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg BR" translation="-23.8368, 20.7296, 41.4985" rotation="0.0, 0.0, -0.522911, 0.852387" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot BR" translation="-58.654, 0.683698, -6.53105" rotation="0.0, 0.0, 0.24485, 0.969561" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="body" translation="-1.44236, -0.927111, 56.9645" rotation="0.0, 0.0, 1.0, 0.0" scale="1.07595, 1.07595, 1.29052"/>
+    <transform name="Bone_root" translation="-1.29254, -0.0326007, 41.5664" rotation="0.494743, -0.505276, 0.505449, 0.494416" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_head" translation="59.3077, 0.584446, 58.3908" rotation="0.870725, -0.0139122, 0.491429, -0.0119383" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_stack_L" translation="73.5028, -10.6026, -52.2488" rotation="0.0029615, 0.473735, -0.00550438, 0.880645" scale="1.0, 1.0, 1.0"/>
+    <transform name="smoke_L" translation="4.10992, -0.579678, 1.56516" rotation="0.548137, 0.548137, 0.446705, 0.446705" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_stack_R" translation="73.0367, 10.7633, -51.5156" rotation="0.0447751, 0.568863, 0.0685734, 0.818345" scale="1.0, 1.0, 1.0"/>
+    <transform name="smoke_R" translation="20.4944, 0.58538, -1.58929" rotation="0.558863, 0.537198, 0.43779, 0.455446" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_vents_BL" translation="65.6967, -34.6646, -42.3437" rotation="-0.265247, 0.608644, -0.234164, 0.710185" scale="0.900429, 1.01512, 0.829147"/>
+    <transform name="Bone_vents_BR" translation="66.5418, 32.9303, -38.1964" rotation="0.233458, 0.646784, 0.210357, 0.694923" scale="0.839658, 1.01512, 0.894111"/>
+    <transform name="Bone_vents_FL" translation="65.5671, -45.032, 26.0859" rotation="0.641446, -0.344114, 0.568978, -0.382618" scale="0.832029, 1.01512, 0.864996"/>
+    <transform name="Bone_vents_FR" translation="66.6766, 43.7123, 25.6714" rotation="0.656604, 0.313851, 0.585044, 0.3579" scale="0.820651, 1.01512, 0.790893"/>
+    <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
+    <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="leg FR" translation="-16.59, -8.98892, 41.4985" rotation="0.0, 0.0, 0.27073, 0.962655" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot FR" translation="-62.5488, 0.140137, -11.1777" rotation="0.0, 0.0, -0.032626, 0.999468" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg FL" translation="22.0919, -24.3111, 41.4985" rotation="0.0, 0.0, 0.959133, 0.282956" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot FL" translation="-62.9702, 1.27442, -10.7905" rotation="0.0, 0.0, -0.00232491, 0.999997" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg BL" translation="5.4271, 19.8034, 41.4985" rotation="-0.122908, -0.0439409, 0.933576, -0.333765" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot BL" translation="-60.8139, 0.0466472, -11.1777" rotation="0.00923538, -0.173402, 0.0523764, 0.983414" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg BR" translation="-16.4969, 19.0934, 41.4985" rotation="0.0, 0.0, -0.447378, 0.894345" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot BR" translation="-58.654, 0.683698, -6.53105" rotation="0.0, 0.0, 0.106296, 0.994335" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="body" translation="-1.44236, -0.927111, 56.9645" rotation="0.0, 0.0, 1.0, 0.0" scale="1.07595, 1.07595, 1.29052"/>
+    <transform name="Bone_root" translation="0.00263596, -0.0326007, 41.5664" rotation="-0.507937, 0.518175, -0.492188, -0.48088" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_head" translation="59.3077, 0.584446, 58.3908" rotation="0.684543, -0.0168394, 0.728742, -0.00724611" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_stack_L" translation="73.5028, -10.6026, -52.2488" rotation="0.00164492, 0.263071, -0.00602991, 0.964756" scale="1.0, 1.0, 1.0"/>
+    <transform name="smoke_L" translation="4.10991, -0.579677, 1.56516" rotation="0.548137, 0.548137, 0.446705, 0.446705" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_stack_R" translation="73.0367, 10.7633, -51.5156" rotation="0.0402425, 0.168649, -0.025307, 0.984529" scale="1.0, 1.0, 1.0"/>
+    <transform name="smoke_R" translation="20.4944, 0.58538, -1.58929" rotation="0.558863, 0.537198, 0.43779, 0.455446" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bone_vents_BL" translation="65.6967, -34.6646, -42.3437" rotation="-0.268268, 0.59406, -0.226722, 0.723687" scale="0.834652, 1.0, 0.78998"/>
+    <transform name="Bone_vents_BR" translation="66.5418, 32.9303, -38.1964" rotation="0.235643, 0.632852, 0.203228, 0.708992" scale="0.77832, 1.0, 0.851875"/>
+    <transform name="Bone_vents_FL" translation="65.5671, -45.032, 26.0859" rotation="0.653847, -0.335136, 0.555764, -0.388965" scale="0.771248, 1.0, 0.824135"/>
+    <transform name="Bone_vents_FR" translation="66.6766, 43.7123, 25.6714" rotation="0.669377, 0.305194, 0.571595, 0.363414" scale="0.760702, 1.0, 0.753533"/>
+    <transform name="fire" translation="82.3258, 0.309895, -0.250915" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
+    <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 02" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 03" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 05" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 06" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 07" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 08" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 09" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
+    <transform name="buzzsaws 15" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
+    <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot FR" translation="-62.5488, 0.140137, -11.1777" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot FL" translation="-62.9701, 1.27442, -10.7905" rotation="0.0, 0.0, -0.0116871, 0.999932" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg BL" translation="10.6497, 18.2124, 41.4985" rotation="0.0, 0.0, 0.914952, -0.403562" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot BL" translation="-60.8139, 0.0466463, -11.1777" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
+    <transform name="foot BR" translation="-58.654, 0.683696, -6.53105" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>
