@@ -872,7 +872,8 @@ public class EditorBoardView extends BoardView
             dirty.add(fx, fy);
             for (int ii = 0; ii < DIRECTIONS.length; ii++) {
                 int ax = fx + DX[ii], ay = fy + DY[ii];
-                if (_board.getTerrainValue(ax, ay) == ocode) {
+                if (_board.heightfieldContains(ax, ay) &&
+                    _board.getTerrainValue(ax, ay) == ocode) {
                     fringe.add(ax, ay);
                 }
             }

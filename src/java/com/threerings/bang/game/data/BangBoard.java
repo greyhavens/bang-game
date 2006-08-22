@@ -155,7 +155,7 @@ public class BangBoard extends SimpleStreamableObject
     public byte getHeightfieldValue (int x, int y)
     {
         // return the minimum edge height for values beyond the edge
-        if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
+        if (!heightfieldContains(x, y)) {
             return _minEdgeHeight;
 
         } else {
@@ -163,6 +163,15 @@ public class BangBoard extends SimpleStreamableObject
         }
     }
 
+    /**
+     * Determines whether the heightfield contains the specified heightfield
+     * coordinates.
+     */
+    public boolean heightfieldContains (int x, int y)
+    {
+        return x >= 0 && y >= 0 && x < _hfwidth && y < _hfheight;
+    }
+    
     /**
      * Updates the board's minimum edge height, which is returned for values
      * outside the board.
@@ -230,7 +239,7 @@ public class BangBoard extends SimpleStreamableObject
     public byte getTerrainValue (int x, int y)
     {
         // return the predominant edge terrain for values beyond the edge
-        if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
+        if (!heightfieldContains(x, y)) {
             return _edgeTerrain;
 
         } else {
@@ -280,7 +289,7 @@ public class BangBoard extends SimpleStreamableObject
      * sub-tile coordinates. */
     public int getShadowValue (int x, int y)
     {
-        if (x < 0 || y < 0 || x >= _hfwidth || y >= _hfheight) {
+        if (!heightfieldContains(x, y)) {
             return 0;
 
         } else {
