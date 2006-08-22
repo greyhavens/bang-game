@@ -40,6 +40,7 @@ import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.Targetable;
+import com.threerings.bang.game.client.sprite.TreeBedSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 
 import com.threerings.bang.game.data.effect.AddPieceEffect;
@@ -162,8 +163,8 @@ public class EffectHandler extends BoardView.BoardAction
         // display the damage icon/amount
         if (effect.equals(TreeBedEffect.GREW)) {
             DamageIconViz.displayDamageIconViz(piece, "repaired",
-                new ColorRGBA(1f, 1f, 1f, 1f),
-                new ColorRGBA(0.5f, 0.5f, 0.5f, 1f), // white
+                TreeBedSprite.STATUS_COLOR,
+                TreeBedSprite.DARKER_STATUS_COLOR, // cyan
                 -_effect.getBaseDamage(piece), _effect, _ctx, _view);
         } else if (effect.equals(ShotEffect.DAMAGED) &&
             piece instanceof TreeBed) {

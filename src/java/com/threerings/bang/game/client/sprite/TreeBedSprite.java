@@ -4,6 +4,7 @@
 package com.threerings.bang.game.client.sprite;
 
 import com.jme.math.FastMath;
+import com.jme.renderer.ColorRGBA;
 
 import com.threerings.jme.model.Model;
 
@@ -19,6 +20,14 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class TreeBedSprite extends MobileSprite
 {
+    /** The color of the tree's status display. */
+    public static final ColorRGBA STATUS_COLOR =
+        new ColorRGBA(0.388f, 1f, 0.824f, 1f);
+    
+    /** The border color of the status display. */
+    public static final ColorRGBA DARKER_STATUS_COLOR =
+        new ColorRGBA(0.194f, 0.5f, 0.412f, 1f);
+        
     public TreeBedSprite ()
     {
         super("props", "indian_post/special/tree_bed");
@@ -71,7 +80,8 @@ public class TreeBedSprite extends MobileSprite
         
         _tlight = _view.getTerrainNode().createHighlight(
             _piece.x, _piece.y, false, false);
-        attachHighlight(_status = new PieceStatus(_ctx, _tlight));
+        attachHighlight(_status = new PieceStatus(_ctx, _tlight, STATUS_COLOR,
+            DARKER_STATUS_COLOR));
         updateStatus();
     }
    

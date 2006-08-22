@@ -50,9 +50,29 @@ public class PieceStatus extends Node
      */
     public PieceStatus (BasicContext ctx, TerrainNode.Highlight highlight)
     {
+        this(ctx, highlight, null, null);
+    }
+    
+    /**
+     * Creates a piece status helper with the supplied piece sprite highlight
+     * node. The status will be textured onto the highlight node (using a
+     * {@link SharedMesh}) and will be textured onto a set of quads which will
+     * be used to display our iconic unit status (which we make available as a
+     * {@link BBackground}.
+     *
+     * @param color the primary indicator color, or <code>null</code> to use
+     * the one corresponding to the piece owner
+     * @param dcolor the darker indicator color, or <code>null</code>
+     */
+    public PieceStatus (
+        BasicContext ctx, TerrainNode.Highlight highlight, ColorRGBA color,
+        ColorRGBA dcolor)
+    {
         super("piece_status");
         _ctx = ctx;
-
+        _color = color;
+        _dcolor = dcolor;
+        
         loadTextures();
         
         _info = new SharedMesh[numLayers()];
@@ -134,12 +154,13 @@ public class PieceStatus extends Node
     {
         if (_owner != piece.owner) {
             // set up our starting outline color the first time we're updated
-            _info[0].setDefaultColor(DARKER_COLORS[piece.owner + 1]);
-            _icon[0].setDefaultColor(DARKER_COLORS[piece.owner + 1]);
             _owner = piece.owner;
+            ColorRGBA color = getColor(), dcolor = getDarkerColor();
+            _info[0].setDefaultColor(dcolor);
+            _icon[0].setDefaultColor(dcolor);
             for (int ii = 1; ii < _info.length; ii++) {
-                _info[ii].setDefaultColor(JPIECE_COLORS[_owner + 1]);
-                _icon[ii].setDefaultColor(JPIECE_COLORS[_owner + 1]);
+                _info[ii].setDefaultColor(color);
+                _icon[ii].setDefaultColor(color);
             }
             getTextureState(_info[0]).setTexture(_damout.createSimpleClone());
             getTextureState(_icon[0]).setTexture(_damout.createSimpleClone());
@@ -155,13 +176,28 @@ public class PieceStatus extends Node
 
         if (_selected != selected) {
             _selected = selected;
-            ColorRGBA color = _selected ?
-                ColorRGBA.white : DARKER_COLORS[_owner + 1];
+            ColorRGBA color = _selected ? ColorRGBA.white : getDarkerColor();
             _info[0].setDefaultColor(color);
             _icon[0].setDefaultColor(color);
         }
     }
 
+    /**
+     * Returns the primary color of the status view.
+     */
+    protected ColorRGBA getColor ()
+    {
+        return (_color == null) ? JPIECE_COLORS[_owner + 1] : _color;
+    }
+    
+    /**
+     * Returns the darker color of the status view.
+     */
+    protected ColorRGBA getDarkerColor ()
+    {
+        return (_dcolor == null) ? DARKER_COLORS[_owner + 1] : _dcolor;
+    }
+    
     /**
      * Loads up the textures used by the status display.
      */
@@ -246,6 +282,7 @@ public class PieceStatus extends Node
     }
 
     protected BasicContext _ctx;
+    protected ColorRGBA _color, _dcolor;
     protected int _owner = -2, _dlevel = -1;
     protected boolean _selected;
 
