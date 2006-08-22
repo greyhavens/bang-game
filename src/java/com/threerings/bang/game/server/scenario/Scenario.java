@@ -42,7 +42,7 @@ import static com.threerings.bang.Log.log;
  * Implements a particular gameplay scenario.
  */
 public abstract class Scenario
-{   
+{
     /**
      * Called to initialize a scenario when it is created.
      */
@@ -157,7 +157,7 @@ public abstract class Scenario
         // make sure the tick is at least one second long
         return Math.max(tickTime, 1000L);
     }
-    
+
     /**
      * Called when a round is about to start.
      *
@@ -171,7 +171,7 @@ public abstract class Scenario
     {
         // record the time at which the round started
         _startStamp = System.currentTimeMillis();
-        
+
         // this will contain the starting spot for each player
         _startSpots = new Point[bangobj.players.length];
         for (int ii = 0; ii < _startSpots.length; ii++) {
@@ -215,15 +215,75 @@ public abstract class Scenario
     public boolean addBonus (BangObject bangobj, Piece[] pieces)
     {
         // have a 1 in 4 chance of adding a bonus for each live player for
-        // which there is not already a bonus on the board
-        int bprob = (bangobj.gdata.livePlayers - bangobj.gdata.bonuses);
+        // which there is not already a bonus on the board excepting one
+        int bprob = (bangobj.gdata.livePlayers - bangobj.gdata.bonuses+1);
         int rando = RandomUtil.getInt(40);
-        if (bprob == 0 || rando > bprob*10) {
+        if (bprob < 0 || rando > bprob*10) {
             log.fine("No bonus, probability " + bprob + " in 10 (" +
                      rando + ").");
             return false;
         }
-        return placeBonus(bangobj, pieces, null, _bonusSpots);
+
+        // enumerate the set of live pieces
+        ArrayList<Unit> live = new ArrayList<Unit>();
+        for (Piece piece : pieces) {
+            if (piece.owner >= 0 && piece.isAlive() && piece instanceof Unit) {
+                live.add((Unit)piece);
+            }
+        }
+
+        // if there are no live units, abandon ship
+        if (live.size() == 0) {
+            return false;
+        }
+
+        // weight each of these pieces by the difference between the owning
+        // player's score and the highest player's score
+        int max = IntListUtil.getMaxValue(bangobj.points), candidates = 0;
+        int[] weights = new int[live.size()];
+        for (int ii = 0; ii < weights.length; ii++) {
+            weights[ii] = max - bangobj.points[live.get(ii).owner];
+            if (weights[ii] > 0) {
+                candidates++;
+            }
+        }
+
+        // now select a unit at (weighted) random
+        Unit benefactor = (candidates > 0) ?
+            live.get(RandomUtil.getWeightedIndex(weights)) :
+            RandomUtil.pickRandom(live);
+//         log.info("Placing bonus near " + benefactor);
+
+        // compute this piece's valid moves
+        PointSet moves = new PointSet();
+        bangobj.board.computeMoves(benefactor, moves, null);
+
+        // filter out spots that are not occupiable or contain a bonus
+        for (int ii = 0; ii < moves.size(); ii++) {
+            int x = moves.getX(ii), y = moves.getY(ii);
+            if (!bangobj.board.isOccupiable(x, y)) {
+                moves.remove(x, y);
+                ii -= 1;
+            }
+        }
+        if (moves.size() == 0) {
+            return false;
+        }
+
+        // select a spot randomly from this piece's set of valid moves onto
+        // which to place the bonus and call the standard algorithm
+        int spidx = RandomUtil.getInt(moves.size());
+        int x = moves.getX(spidx), y = moves.getY(spidx);
+        PointSet spots = new PointSet();
+        spots.add(x, y);
+
+        // determine who can reach the selected spot and use that information
+        // to select and place a bonus there
+        ArrayIntSet[] reachers = computeReachers(bangobj, pieces, spots);
+//         log.info("Placing bonus at +" + x + "+" + y +
+//             " [reachers=" + reachers[0] + "].");
+        placeBonus(bangobj, Bonus.selectBonus(bangobj, reachers[0]), x, y);
+        return true;
     }
 
     /**
@@ -281,7 +341,7 @@ public abstract class Scenario
     {
         return ddone;
     }
-    
+
     /**
      * Returns true if this scenario type should pay out earnings to the
      * specified player. False if not.
@@ -334,7 +394,7 @@ public abstract class Scenario
         return (precords[pidx].finishedTick[ridx] * BASE_EARNINGS[defeated] /
             rounds[ridx].lastTick);
     }
-    
+
     /**
      * Gives the scenario an opportunity to record statistics for the supplied
      * player at the end of the game.
@@ -364,8 +424,8 @@ public abstract class Scenario
     }
 
     /**
-     * Locates a place for the specified bonus, based on the current ranking of
-     * the various players.
+     * Locates a place for the specified bonus, based on the current unit
+     * location, ranking and other metadata of the various players.
      *
      * @return true if the bonus was placed, false if a spot could not be
      * located.
@@ -374,33 +434,10 @@ public abstract class Scenario
                                   Bonus bonus, PointSet spots)
     {
         // determine (roughly) who can get to bonus spots on this tick
-        int[] weights = new int[spots.size()];
-        ArrayIntSet[] reachers = new ArrayIntSet[weights.length];
-        for (int ii = 0; ii < pieces.length; ii++) {
-            Piece p = pieces[ii];
-            if (!(p instanceof Unit) || p.owner < 0 || !p.isAlive() ||
-                p.ticksUntilMovable(bangobj.tick) > 0) {
-                continue;
-            }
-            for (int bb = 0; bb < reachers.length; bb++) {
-                int x = spots.getX(bb), y = spots.getY(bb);
-                if (p.getDistance(x, y) > p.getMoveDistance()) {
-                    continue;
-                }
-                _tpoints.clear();
-                bangobj.board.computeMoves(p, _tpoints, null);
-                if (!_tpoints.contains(x, y)) {
-                    continue;
-                }
-//                 log.info(p.info() + " can reach " + x + "/" + y);
-                if (reachers[bb] == null) {
-                    reachers[bb] = new ArrayIntSet();
-                    reachers[bb].add(p.owner);
-                }
-            }
-        }
+        ArrayIntSet[] reachers = computeReachers(bangobj, pieces, spots);
 
         // now convert reachability into weightings for each of the spots
+        int[] weights = new int[spots.size()];
         for (int ii = 0; ii < weights.length; ii++) {
             if (reachers[ii] == null) {
 //                 log.info("Spot " + ii + " is a wash.");
@@ -412,7 +449,7 @@ public abstract class Scenario
                 // if only one player can reach it, give it a probability
                 // inversely proportional to that player's power
                 int pidx = reachers[ii].get(0);
-                float ifactor = 1.0 - bangobj.pdata[pidx].powerFactor;
+                float ifactor = 1f - bangobj.pdata[pidx].powerFactor;
                 weights[ii] = (int)Math.round(10 * Math.max(0, ifactor)) + 1;
 
             } else {
@@ -432,7 +469,7 @@ public abstract class Scenario
             }
         }
 
-        // if we're placing this at oen of the standard bonus spots, zero out
+        // if we're placing this at one of the standard bonus spots, zero out
         // weightings for any spots that already have a bonus
         if (spots == _bonusSpots) {
             for (int ii = 0; ii < pieces.length; ii++) {
@@ -467,21 +504,23 @@ public abstract class Scenario
         // if no specific bonus was requested, pick one randomly based on who
         // can reach it
         if (bonus == null) {
-            bonus = Bonus.selectBonus(bangobj, bspot, reachers[spidx]);
+            bonus = Bonus.selectBonus(bangobj, reachers[spidx]);
         }
 
-        // if we're placing this at one of the standard bonus spots, note that
-        // that spot is "occupied" until this bonus is colleted
-        if (spots == _bonusSpots) {
-            bonus.spot = (short)spidx;
-        }
+        placeBonus(bangobj, bonus, bspot.x, bspot.y);
+        return true;
+    }
 
+    /**
+     * Places a bonus at the specified spot on the board.
+     */
+    protected void placeBonus (BangObject bangobj, Bonus bonus, int x, int y)
+    {
         // configure our bonus and add it to the game
         bonus.assignPieceId(bangobj);
-        bonus.position(bspot.x, bspot.y);
+        bonus.position(x, y);
         _bangmgr.addPiece(bonus);
         log.fine("Placed bonus: " + bonus);
-        return true;
     }
 
     /**
@@ -496,7 +535,43 @@ public abstract class Scenario
         _bangmgr.addPiece(drop);
         return drop;
     }
-    
+
+    /**
+     * Computes the set of all pieces that are ready to be moved and can reach
+     * the specified set of positions on the board. If no pieces can reach a
+     * spot, no set will be created, the array element will be null.
+     */
+    protected ArrayIntSet[] computeReachers (
+        BangObject bangobj, Piece[] pieces, PointSet spots)
+    {
+        ArrayIntSet[] reachers = new ArrayIntSet[spots.size()];
+        for (int ii = 0; ii < pieces.length; ii++) {
+            Piece p = pieces[ii];
+            if (!(p instanceof Unit) || p.owner < 0 || !p.isAlive() ||
+                p.ticksUntilMovable(bangobj.tick) > 0) {
+                continue;
+            }
+
+            // compute this piece's move set
+            _tpoints.clear();
+            bangobj.board.computeMoves(p, _tpoints, null);
+
+            // determine which of the spots this piece can reach
+            for (int bb = 0; bb < reachers.length; bb++) {
+                int x = spots.getX(bb), y = spots.getY(bb);
+                if (!_tpoints.contains(x, y)) {
+                    continue;
+                }
+//                 log.info(p + " can reach " + x + "/" + y);
+                if (reachers[bb] == null) {
+                    reachers[bb] = new ArrayIntSet();
+                    reachers[bb].add(p.owner);
+                }
+            }
+        }
+        return reachers;
+    }
+
     /**
      * Returns the base tick time, which by default is scaled from 1 to 2/3
      * over the course of ten minutes of play, as well as multiplied by the
@@ -506,7 +581,7 @@ public abstract class Scenario
     {
         return BASE_TICK_TIME;
     }
-        
+
     /**
      * Returns the base duration of the scenario in ticks assuming 1.75 seconds
      * per tick. This will be scaled by the expected average number of units
@@ -594,13 +669,13 @@ public abstract class Scenario
 
     /** The time at which the round started. */
     protected long _startStamp;
-    
+
     /** The default base tick time. */
     protected static final long BASE_TICK_TIME = 2000L;
-    
+
     /** We stop reducing the tick time after ten minutes. */
     protected static final long TIME_SCALE_CAP = 10 * 60 * 1000L;
-    
+
     /** The base number of ticks that we allow per round (scaled by the
      * anticipated average number of units per-player). */
     protected static final short BASE_SCENARIO_TICKS = 300;
@@ -609,7 +684,7 @@ public abstract class Scenario
      * we warn the players. */
     protected static final long[] TIME_WARNINGS = {
         60*1000L, 30*1000L, 10*1000L };
-    
+
     /** Defines the base earnings (per-round) for each rank. */
     protected static final int[] BASE_EARNINGS = { 50, 70, 85, 105 };
 }

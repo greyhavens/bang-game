@@ -2335,7 +2335,7 @@ public class BangManager extends GameManager
             // make sure this unit is still in play
             Unit aunit = (Unit)obj;
             if (aunit == null || !aunit.isAlive()) {
-                log.info("Advance order no longer value [order=" + this +
+                log.info("Advance order no longer valid [order=" + this +
                     ", unit=" + (aunit == null ? "null" :
                         (aunit + " (" + aunit.isAlive() + ")")) + "].");
                 return MOVER_NO_LONGER_VALID;

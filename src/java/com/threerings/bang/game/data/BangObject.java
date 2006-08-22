@@ -193,7 +193,7 @@ public class BangObject extends GameObject
 
     /** Contains the representation of the game board. */
     public transient BangBoard board;
-    
+
     /** Contains statistics on the game, updated every time any change is
      * made to pertinent game state. */
     public transient GameData gdata = new GameData();
@@ -207,10 +207,10 @@ public class BangObject extends GameObject
 
     /** Identifies an effect applied to the entire board. */
     public transient String boardEffect;
-    
+
     /** A hindrance affecting all units (and applied to new units). */
     public transient Hindrance globalHindrance;
-    
+
     /** The avatar fingerprints for each of the players in the game. We keep
      * these here in case the player leaves early and so that we can provide
      * fake fingerprints for AIs. */
@@ -240,10 +240,10 @@ public class BangObject extends GameObject
     /** The MD5 hash of the game board, to be compared against any cached
      * version of the board stored on the client. */
     public byte[] boardHash;
-    
+
     /** The starting positions for each player. */
     public StreamablePoint[] startPositions;
-    
+
     /** The big shots selected for use by each player. */
     public Unit[] bigShots;
 
@@ -311,7 +311,7 @@ public class BangObject extends GameObject
         pieces.removeDirect(piece);
         board.clearShadow(piece);
     }
-    
+
     /**
      * Returns a list of pieces that overlap the specified piece given its
      * (hypothetical) current coordinates. If no pieces overlap, null will
@@ -530,7 +530,7 @@ public class BangObject extends GameObject
         stats[pidx].incrementStat(Stat.Type.BONUS_POINTS, amount);
         grantPoints(pidx, amount);
     }
-    
+
     /**
      * Grants the specified number of points to the specified player, updating
      * their {@link #points} and updating the appropriate earned points
@@ -581,7 +581,7 @@ public class BangObject extends GameObject
         }
         return _tracks;
     }
-    
+
     @Override // documentation inherited
     public boolean isInPlay ()
     {
@@ -1134,7 +1134,7 @@ public class BangObject extends GameObject
         this.awards[index] = value;
     }
     // AUTO-GENERATED: METHODS END
-    
+
     /** Maps encoded tile coordinates to pieces of track on the board. */
     protected transient HashIntMap<Track> _tracks;
 }

@@ -34,82 +34,19 @@ public class Bonus extends Piece
     /** The index of the spot at which this bonus was spawned. */
     public short spot = (short)-1;
 
-// //         MISSILE(50, // base weight
-// //                 0.0, // damage affinity
-// //                 0.5, // many pieces affinity
-// //                 1.0, // few pieces affinity
-// //                 1.0, // low power affinity
-// //                 0.5, // early-game affinity
-// //                 1.0) // late-game affinity
-// //         {
-// //             public Effect affect (Piece piece) {
-// //                 return new GrantCardEffect(piece.owner, new Missile());
-// //             }
-// //         },
-
-// //         AREA_REPAIR(50, // base weight
-// //                     1.0, // damage affinity
-// //                     0.5, // many pieces affinity
-// //                     0.0, // few pieces affinity
-// //                     1.0, // low power affinity
-// //                     0.0, // early-game affinity
-// //                     0.5) // late-game affinity
-// //         {
-// //             public Effect affect (Piece piece) {
-// //                 return new GrantCardEffect(piece.owner, new AreaRepair());
-// //             }
-// //         },
-
-// //         DUST_DEVIL(50, // base weight
-// //                    0.5, // damage affinity
-// //                    0.0, // many pieces affinity
-// //                    0.5, // few pieces affinity
-// //                    0.0, // low power affinity
-// //                    -0.25, // early-game affinity
-// //                    0.4) // late-game affinity
-// //         {
-// //             public boolean isValid (BangObject bangobj) {
-// //                 // make sure there are some dead pieces on the board
-// //                 return bangobj.countDeadPieces() > 1;
-// //             }
-
-// //             public Effect affect (Piece piece) {
-// //                 return new GrantCardEffect(piece.owner, new DustDevil());
-// //             }
-// //         },
-
-//         SAINT_ELMO(10, // base weight
-//                    0.5, // damage affinity
-//                    -0.5, // many pieces affinity
-//                    0.6, // few pieces affinity
-//                    0.0, // low power affinity
-//                    0.0, // early-game affinity
-//                    0.5) // late-game affinity
-//         {
-//             public boolean isValid (BangObject bangobj) {
-//                 // make sure there are some dead pieces on the board
-//                 return bangobj.countDeadPieces() > 2;
-//             }
-
-//             public Effect affect (Piece piece) {
-//                 return new SaintElmosEffect(piece.owner);
-//             }
-//         },
-
     /**
      * Takes the various circumstances into effect and selects a bonus to
      * be placed on the board at the specified position which can be
      * reached on this same turn by the specfied set of players.
      */
-    public static Bonus selectBonus (
-        BangObject bangobj, Point bspot, ArrayIntSet reachers)
+    public static Bonus selectBonus (BangObject bangobj, ArrayIntSet reachers)
     {
         BonusConfig[] configs = BonusConfig.getTownBonuses(bangobj.townId);
         int[] weights = _weights.get(bangobj.townId);
         if (weights == null) {
             // create a scratch array of the appropriate size
             _weights.put(bangobj.townId, weights = new int[configs.length]);
-        }            
+        }
 
         // if no one can reach the spot, base our calculations on all the
         // players instead
@@ -160,7 +97,7 @@ public class Bonus extends Piece
         BonusConfig config = BonusConfig.getConfig(type);
         return (config == null) ? null : createBonus(config);
     }
-    
+
     /**
      * Creates a bonus with the specified configuration.
      */
