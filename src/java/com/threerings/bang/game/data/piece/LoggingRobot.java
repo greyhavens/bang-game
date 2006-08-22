@@ -5,6 +5,8 @@ package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
 
+import com.threerings.bang.data.BonusConfig;
+
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
@@ -28,7 +30,9 @@ public class LoggingRobot extends BallisticUnit
     @Override // documentation inherited
     public boolean canActivateBonus (Bonus bonus)
     {
-        return false;
+        BonusConfig bconfig = bonus.getConfig();
+        return super.canActivateBonus(bonus) &&
+            !(bconfig.holdable || bconfig.playersOnly);
     }
     
     @Override // documentation inherited

@@ -48,6 +48,10 @@ public class BonusConfig
     /** If true, the bonus can only be activated by ground units. */
     public boolean groundOnly;
 
+    /** If true, the bonus can only be activated by players (not by unaligned
+     * units). */
+    public boolean playersOnly;
+    
     /** If true, the bonus is hidden. */
     public boolean hidden;
     
@@ -191,6 +195,8 @@ public class BonusConfig
         
         config.groundOnly = BangUtil.getBooleanProperty(
             type, props, "ground_only", false);
+        config.playersOnly = BangUtil.getBooleanProperty(
+            type, props, "players_only", false);
         config.hidden = BangUtil.getBooleanProperty(
             type, props, "hidden", false);
             
