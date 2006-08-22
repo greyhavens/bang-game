@@ -58,7 +58,7 @@ public class TreeBed extends Prop
     public void damage (int dinc)
     {
         damage += dinc;
-        if (damage < 0 && growth < FULLY_GROWN) {
+        if (damage <= 0 && growth < FULLY_GROWN) {
             growth++;
             damage = 50;
         } else {

@@ -5,7 +5,7 @@ package com.threerings.bang.game.data.piece;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 
-import com.threerings.bang.game.client.sprite.TargetablePropSprite;
+import com.threerings.bang.game.client.sprite.HomesteadSprite;
 
 /**
  * Represents a Homestead piece in the Land Grab scenario.
@@ -18,7 +18,7 @@ public class Homestead extends Prop
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new TargetablePropSprite("frontier_town/special/homestead");
+        return new HomesteadSprite();
     }
 
     @Override // documentation inherited
@@ -39,6 +39,14 @@ public class Homestead extends Prop
         return Integer.MAX_VALUE;
     }
 
+    @Override // documentation inherited
+    public float getHeight ()
+    {
+        // sprite is positioned according to board height, so make sure
+        // the piece itself doesn't contribute
+        return 0f;
+    }
+    
     @Override // documentation inherited
     public void wasKilled (short tick)
     {

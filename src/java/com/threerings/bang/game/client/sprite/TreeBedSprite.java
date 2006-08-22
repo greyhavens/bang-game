@@ -67,8 +67,7 @@ public class TreeBedSprite extends MobileSprite
         super.addProceduralActions();
         _procActions.put("reacting", new ProceduralAction() {
             public float activate () {
-                // TODO: either an animation or a particle effect
-                return FastMath.FLT_EPSILON;
+                return setAction("react_stage" + _growth);
             }
         });
     }
