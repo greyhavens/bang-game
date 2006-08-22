@@ -541,8 +541,13 @@ public class BangObject extends GameObject
         setPointsAt(points[pidx] + amount, pidx);
         perRoundPoints[roundId-1][pidx] += amount;
         stats[pidx].incrementStat(Stat.Type.POINTS_EARNED, amount);
-        float tscore = IntListUtil.sum(points);
-        pdata[pidx].pointFactor = (tscore == 0) ? 1f : (points[pidx] / tscore);
+
+        // keep our point factors up to date (on the server)
+        if (pdata != null) {
+            float tscore = IntListUtil.sum(points);
+            pdata[pidx].pointFactor =
+                (tscore == 0) ? 1f : (points[pidx] / tscore);
+        }
     }
 
     /**
