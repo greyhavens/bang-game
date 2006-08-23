@@ -3,9 +3,8 @@
 
 package com.threerings.bang.game.data.piece;
 
-import com.threerings.bang.game.client.sprite.PieceSprite;
-
 import com.threerings.bang.game.client.sprite.HomesteadSprite;
+import com.threerings.bang.game.client.sprite.PieceSprite;
 
 /**
  * Represents a Homestead piece in the Land Grab scenario.
@@ -45,6 +44,12 @@ public class Homestead extends Prop
         // sprite is positioned according to board height, so make sure
         // the piece itself doesn't contribute
         return 0f;
+    }
+    
+    @Override // documentation inherited
+    public boolean isOwnerConfigurable ()
+    {
+        return true;
     }
     
     @Override // documentation inherited

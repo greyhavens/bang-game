@@ -24,6 +24,7 @@ import com.samskivert.util.ListUtil;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PropConfig;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
@@ -57,7 +58,15 @@ public class PieceChooser extends JPanel
         addPiece(root, "markers/robots", new Marker(Marker.ROBOTS));
         
         for (PropConfig config : PropConfig.getConfigs()) {
+            Prop prop = Prop.getProp(config.type);
             addPiece(root, config.type, Prop.getProp(config.type));
+            if (prop.isOwnerConfigurable()) {
+                for (int ii = 0; ii < GameCodes.MAX_PLAYERS; ii++) {
+                    prop = (Prop)prop.clone();
+                    prop.owner = ii;
+                    addPiece(root, config.type + ii, prop);
+                }
+            }
         }
         root.sortChildren();
         

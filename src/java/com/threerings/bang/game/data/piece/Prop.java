@@ -119,6 +119,9 @@ public class Prop extends BigPiece
         oout.writeShort(scalex);
         oout.writeShort(scaley);
         oout.writeShort(scalez);
+        if (isOwnerConfigurable()) {
+            oout.writeInt(owner);
+        }
     }
     
     @Override // documentation inherited
@@ -136,6 +139,9 @@ public class Prop extends BigPiece
         scaley = oin.readShort();
         scalez = oin.readShort();
         recomputeScale();
+        if (isOwnerConfigurable()) {
+            owner = oin.readInt();
+        }
     }
     
     @Override // documentation inherited
@@ -209,6 +215,15 @@ public class Prop extends BigPiece
         return _config.blockDir.indexOf(EXIT_DIR[dir]) == -1;
     }
 
+    /**
+     * Determines whether the editor should allow users to place versions of
+     * this prop owned by the various players.
+     */
+    public boolean isOwnerConfigurable ()
+    {
+        return false;
+    }
+    
     @Override // documentation inherited
     public boolean isValidScenario (String scenarioId)
     {

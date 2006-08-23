@@ -5,6 +5,10 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Comparator;
+
+import com.samskivert.util.IntListUtil;
+import com.samskivert.util.QuickSort;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -71,41 +75,67 @@ public class HomesteadDelegate extends ScenarioDelegate
     {
         super.roundWillStart(bangobj);
 
-        // assign the homestead nearest each starting spot to the that player
+        // create mappings from homestead "colors" (stored owners) to
+        // player indices.  the closest colored homestead to a player
+        // determines his color; if there are no colored homesteads,
+        // the closest unclaimed homestead is colored.
+        int[] owners = new int[] { -1, -1, -1, -1 };
         for (int ii = 0; ii < bangobj.players.length; ii++) {
             Point start = _parent._startSpots[ii];
-            Homestead nearest = null;
-            int dist = Integer.MAX_VALUE;
+            Homestead unclaimed = null, colored = null;
+            int udist = Integer.MAX_VALUE, cdist = Integer.MAX_VALUE;
             for (Homestead stead : getHomesteads()) {
                 int sdist = stead.getDistance(start.x, start.y);
-                if (sdist < dist) {
-                    dist = sdist;
-                    nearest = stead;
+                if (stead.owner == -1 && sdist < udist) {
+                    unclaimed = stead;
+                    udist = sdist;
+                } else if (stead.owner >= 0 && owners[stead.owner] == -1 &&
+                    sdist < cdist) {
+                    colored = stead;
+                    cdist = sdist;
                 }
             }
-            if (nearest == null) {
+            if (colored != null) {
+                owners[colored.owner] = ii;
+                  
+            } else if (unclaimed != null) {
+                unclaimed.owner = IntListUtil.indexOf(owners, -1);
+                owners[unclaimed.owner] = ii;
+                
+            } else {
                 log.warning("Unable to find starting homestead for player " +
                             "[board=" + bangobj.boardName +
                             ":" + bangobj.players.length +
                             ", start=" + start + "].");
-                continue;
+                break;
             }
-            if (nearest.owner != -1) {
-                log.warning("Homestead is nearest to more than one " +
-                            "player [board=" + bangobj.boardName +
-                            ":" + bangobj.players.length +
-                            ", stead=" + nearest + "]");
-                continue;
-            }
-
-            // assign this homestead to its new owner
-            nearest.owner = ii;
-            bangobj.updatePieces(nearest);
-            bangobj.grantPoints(ii, LandGrabInfo.POINTS_PER_STEAD);
-            _claims.add(nearest);
         }
+        
+        // now assign the homesteads according to the mappings we created
+        for (Homestead stead : getHomesteads()) {
+            if (stead.owner == -1) {
+                continue;
+            }
+            stead.owner = owners[stead.owner];
+            bangobj.updatePieces(stead);
+            if (stead.owner != -1) {
+                bangobj.grantPoints(stead.owner,
+                    LandGrabInfo.POINTS_PER_STEAD);
+                _claims.add(stead);
+            }
+        }
+        
+        // finally, sort the claims by decreasing distance from the player
+        // starts
+        QuickSort.rsort(_claims, new Comparator<Homestead>() {
+            public int compare (Homestead h1, Homestead h2) {
+                Point p1 = _parent._startSpots[h1.owner],
+                    p2 = _parent._startSpots[h2.owner];
+                return h1.getDistance(p1.x, p1.y) - h2.getDistance(p2.x, p2.y);
+            }
+        });
     }
-
+    
     @Override // from Scenario
     public void pieceMoved (BangObject bangobj, Piece piece)
     {
