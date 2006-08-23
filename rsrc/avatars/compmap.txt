@@ -1,4 +1,4 @@
-376
+385
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -15,8 +15,13 @@ female/clothing_back := pancho_closed := 178
 female/clothing_back := peasant_dress := 179
 female/clothing_back := poncho := 248
 female/clothing_back := poncho_closed := 249
+female/clothing_back := shoulder_cape := 377
 female/clothing_back := squaw := 81
 female/clothing_back := striped_vest := 180
+female/clothing_back := trickster_raven := 378
+female/clothing_back := wolf_handler := 379
+female/clothing_back := wrap := 380
+female/clothing_back := youth_dress := 381
 female/clothing_front := arms_down_bodice := 181
 female/clothing_front := book_frontier_dress := 182
 female/clothing_front := cash_madam := 328
@@ -29,6 +34,8 @@ female/clothing_front := pistol_boots := 330
 female/clothing_front := pistol_peasant_dress := 185
 female/clothing_front := rifle_kneel := 331
 female/clothing_front := smoking_duster := 332
+female/clothing_front := trickster_raven := 382
+female/clothing_front := wolf_handler := 383
 female/clothing_props := rifle_squaw := 82
 female/eyebrows := arched := 186
 female/eyebrows := concerned := 284
@@ -96,6 +103,7 @@ female/hair_middle := wings := 348
 female/hat := bonnet := 197
 female/hat := bowler := 150
 female/hat := eagle_mask := 349
+female/hat := lioness := 384
 female/hat := longbrim := 130
 female/hat := railbrim := 143
 female/hat := sombrero := 198
@@ -113,6 +121,7 @@ female/hat_back := stetson := 111
 female/hat_back := war_bonnet := 352
 female/hat_band := border_band_sombrero := 201
 female/hat_band := border_sombrero := 202
+female/hat_band := cougar_mask := 385
 female/hat_band := disks_longbrim := 146
 female/hat_band := dual_stetson := 203
 female/hat_band := thick_bowler := 173
