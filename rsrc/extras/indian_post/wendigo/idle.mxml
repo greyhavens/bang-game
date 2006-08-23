@@ -1,0 +1,1220 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="15">
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 338.743" rotation="0.524375, 0.524375, -0.474374, 0.474375" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="-5.69613, 6.5069e-007, -0.571771" rotation="0.524375, 0.524375, -0.474374, -0.474375" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="1.15591e-005, 0.0, -4.9019e-006" rotation="0.414127, 0.573148, 0.573148, -0.414128" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="41.3399, 13.598, 3.84724e-005" rotation="-2.15261e-006, -7.77546e-007, 0.129814, 0.991538" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2549, -0.0694619, -1.9269e-007" rotation="0.0, 2.035e-007, -0.0733703, 0.997305" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1765, -0.069237, -1.92074e-007" rotation="0.0, 2.37847e-007, -0.0857539, 0.996316" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2652, -0.0702715, -1.9493e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226273, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, -2.9454e-006, 0.0" rotation="0.0, -1.27215e-007, 0.0458656, 0.998948" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, -1.64407e-005, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7889, -92.6798, -0.623535" rotation="0.428981, -0.562115, 0.428981, 0.562118" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.17999e-006, 73.5111, -1.20068" rotation="0.0850802, 0.0, 0.0, 0.996374" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.22389e-006, 72.2101, 24.4114" rotation="0.144443, 0.0, 0.0, 0.989513" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="1.74299e-005, 0.0225591, 20.4125" rotation="0.707107, -0.000282518, 0.707107, 0.000280557" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, -7.90781e-006, 2.09884e-005" rotation="-0.292809, 0.632109, -0.0742534, 0.713574" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, 3.00033e-006, -4.30793e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, 1.37333e-005, 1.31586e-006" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="2.40863e-005, 0.0226692, -20.4125" rotation="-0.707107, 0.000280557, 0.707107, 0.000282518" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, 9.74475e-006, 1.08977e-005" rotation="0.292809, -0.632109, -0.0742534, 0.713574" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, -1.11729e-005, 1.0693e-005" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, -1.34534e-005, -4.63726e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-43.4471, -2.49768, 77.6946" rotation="0.0204824, 0.99979, 1.38998e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -1.25722e-006, 0.0" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, 7.55975e-006, 1.64642e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, -1.11427e-005" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67691, 1.87352e-006, 6.10586e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-43.4471, -2.49727, -77.6946" rotation="0.0204824, 0.99979, 1.38998e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -2.11374e-005, 0.0" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, -5.1601e-007, 1.64677e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 8.52096e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67686, -4.50426e-006, -5.94861e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="0.118273, 0.992505, 0.0297524, -0.00774629" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.9351, 2.003e-005, 0.0" rotation="-0.000746797, -0.0886386, 0.153947, 0.984095" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 1.73293e-005, 2.44431e-006" rotation="0.0116001, -0.000195214, 0.0987843, 0.995041" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000183106" rotation="0.120852, 0.992671, -7.6581e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 8.65868e-006, -3.61213e-006" rotation="0.0, 0.0, 0.139434, 0.990231" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -1.92314e-005, 0.0" rotation="0.0, 0.0, 0.256121, 0.966645" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="-0.0574799, -0.663231, 0.734757, 0.130204" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 9.76138e-006, -1.28886e-005" rotation="-0.00275745, 0.155196, -0.0829767, 0.984389" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000730514, -4.76561e-006" rotation="-0.0122435, 0.0905461, 0.0164603, 0.995681" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.423, -0.000221252" rotation="0.0420073, 0.999117, -7.60508e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, -1.43692e-006, -2.85687e-006" rotation="0.0, 0.0, 0.190552, 0.981677" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, 1.89293e-006, 0.0" rotation="0.0, 0.0, 0.169421, 0.985544" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04138, 55.5604" rotation="0.0828155, -0.15055, 0.969001, 0.177517" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, -3.75232e-006, 5.22649e-006" rotation="-0.000611625, -0.00390279, -0.154822, 0.987934" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, 5.79889e-006, -5.57867e-006" rotation="-0.0766772, -0.00409046, -0.0344935, 0.996451" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="-0.152772, -0.307157, 0.91939, 0.19245" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -3.87629e-005, -1.15286e-005" rotation="-0.0868238, 0.144703, -0.0957203, 0.981" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 4.9862e-006, 7.93822e-006" rotation="0.0247767, 0.116077, -0.0207712, 0.992714" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0282, -60.5039" rotation="0.207386, 0.893404, -0.387221, -0.0942393" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, 1.76133e-005, -1.71807e-005" rotation="0.0261634, 0.0391471, 0.150286, 0.987521" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -6.16012e-005, -1.16177e-005" rotation="-0.117175, 0.0753228, 0.0492254, 0.989026" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="0.182516, 0.894692, -0.333195, -0.234937" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, -1.7097e-006, 7.14589e-007" rotation="-0.010884, 0.0451273, 0.215969, 0.975296" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, -4.78397e-006, 5.86013e-006" rotation="0.00470516, -0.00376925, 0.0293139, 0.999552" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="0.171646, 0.985159, -9.52937e-007, -1.65256e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 5.86652e-005, -1.70521e-006" rotation="0.00264331, -0.0144975, 0.149418, 0.988664" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -1.06283e-005, 4.13764e-006" rotation="0.0, 0.0, -0.378059, 0.925781" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.166145, 0.687581, -0.685642, -0.17182" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, 0.0, 8.05484e-006" rotation="-0.00918802, -0.259847, -0.0156228, 0.96548" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -4.94271e-006, -8.19718e-006" rotation="-0.00123403, 0.377617, 0.00302596, 0.925956" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="0.15418, 0.988043, -1.13986e-006, -1.46593e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, -1.06579e-005, 8.58864e-006" rotation="0.00190723, 0.00887292, -0.210141, 0.977629" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -3.65257e-005, 5.7894e-006" rotation="0.0, 0.0, 0.331378, 0.943498" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65895, 25.167, -102.548" rotation="-0.041994, -0.705858, 0.705859, 0.0419939" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -5.52366e-006, -1.40809e-005" rotation="-0.0202489, 0.237575, 0.0351383, 0.970522" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -5.95319e-006, 0.0" rotation="-0.000825486, -0.269644, -0.00294798, 0.962955" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 317.583" rotation="0.536326, 0.536327, -0.460818, 0.460819" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="-26.5777, 6.2419e-006, -4.04838" rotation="0.536326, 0.536327, -0.460818, -0.460819" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="7.34049e-006, 0.0, -8.95766e-006" rotation="0.433399, 0.551148, 0.557421, -0.444616" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="42.3684, 9.89923, 0.731704" rotation="-0.00201169, -0.00886317, 0.0630356, 0.99797" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2561, -0.0696578, -1.93171e-007" rotation="0.0, 1.79747e-007, -0.0648064, 0.997898" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1779, -0.0694823, -1.92769e-007" rotation="0.0, 2.0954e-007, -0.0755482, 0.997142" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2723, -0.0699341, -1.93941e-007" rotation="0.0, -1.40809e-007, 0.0507677, 0.99871" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226053, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 8.0693e-006, 0.0" rotation="0.0, -2.08965e-007, 0.0753399, 0.997158" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, -1.68694e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6764, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6764, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7889, -92.6798, -0.623535" rotation="0.373275, -0.600553, 0.373275, 0.600556" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.2311e-006, 73.5111, -1.20071" rotation="0.0867077, 0.0, 0.0, 0.996234" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.21397e-006, 72.2101, 24.4114" rotation="0.137936, 0.0, 0.0, 0.990441" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="3.20753e-006, 0.0225566, 20.4125" rotation="0.707107, -0.000282519, 0.707107, 0.000280557" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, 4.54342e-006, 1.40529e-005" rotation="-0.324984, 0.618251, -0.14707, 0.700372" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, 4.41771e-006, 3.66922e-007" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, 1.73309e-005, 5.17992e-007" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="1.20498e-005, 0.0226612, -20.4125" rotation="-0.707107, 0.000280557, 0.707107, 0.000282519" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, -2.31738e-005, 3.99424e-006" rotation="0.324984, -0.618251, -0.14707, 0.700372" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, -2.6865e-006, 1.29546e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, -4.86198e-006, -3.96395e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-41.9289, -4.88633, 77.6818" rotation="-0.00245859, 0.999997, 1.39127e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -3.17441e-005, 1.54707e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, 2.23869e-005, 6.06244e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, 7.97102e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67686, 8.75976e-006, 1.67857e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-44.6382, -4.08901, -77.6818" rotation="-0.00245859, 0.999997, 1.39127e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -3.81542e-005, -2.16228e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, 2.2742e-005, 2.35309e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 0.0" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.6769, 1.36051e-005, 5.20264e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="0.108487, 0.993623, 0.0297113, -0.00776609" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.935, 3.86285e-005, -1.26914e-006" rotation="-0.00195438, -0.0876301, 0.142073, 0.985968" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 2.02642e-005, 0.0" rotation="0.0104404, 0.000734179, 0.0986402, 0.995068" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000183077" rotation="0.11336, 0.993554, -7.65691e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 1.52685e-005, -3.67852e-006" rotation="0.0, 0.0, 0.106839, 0.994276" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -2.82519e-005, -4.25377e-007" rotation="0.0, 0.0, 0.237343, 0.971426" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="-0.0515963, -0.66406, 0.735481, 0.124219" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 1.68891e-005, -1.72557e-006" rotation="-0.00176187, 0.15454, -0.081789, 0.984594" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000751121, 8.76176e-006" rotation="-0.0121473, 0.092353, 0.0172856, 0.995502" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221453" rotation="0.0420073, 0.999117, -7.60494e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, -5.89095e-006, -2.93885e-006" rotation="0.0, 0.0, 0.190552, 0.981677" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, 4.53143e-006, 0.0" rotation="0.0, 0.0, 0.169421, 0.985544" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04139, 55.5604" rotation="0.0723777, -0.153553, 0.974072, 0.149555" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, -2.07794e-005, 2.09686e-006" rotation="-0.000298646, -0.00184264, -0.159986, 0.987118" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, -4.9647e-006, 4.57925e-006" rotation="-0.055823, 0.0646724, -0.0722781, 0.993719" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="-0.143405, -0.310474, 0.922035, 0.181364" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -2.59564e-005, 7.24116e-006" rotation="-0.056029, 0.136372, -0.067864, 0.986741" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 6.26594e-006, 8.1635e-006" rotation="0.0231807, 0.114503, -0.029596, 0.992711" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0282, -60.5039" rotation="0.207386, 0.893404, -0.387221, -0.0942393" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, 2.8494e-006, -1.77859e-005" rotation="0.0261634, 0.0391471, 0.150286, 0.987521" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -5.53935e-005, 4.30768e-006" rotation="-0.117175, 0.0753228, 0.0492254, 0.989026" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="0.164312, 0.899297, -0.336312, -0.226187" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, -2.15268e-006, -7.63122e-006" rotation="-0.0101734, 0.0427366, 0.21338, 0.975981" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 1.88166e-006, -6.1161e-006" rotation="0.00358199, -0.00795583, 0.0437569, 0.999004" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="0.185443, 0.982655, -9.48633e-007, -1.7979e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 3.62786e-005, -1.16095e-006" rotation="0.000832799, -0.00372883, 0.188249, 0.982114" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -4.02884e-005, -8.85566e-007" rotation="-0.278676, 0.100797, -0.327422, 0.897204" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="-0.182773, -0.683076, 0.683077, 0.182773" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -3.29016e-006, 1.72773e-005" rotation="-0.00250888, -0.29732, -0.0040632, 0.954766" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -4.78194e-006, 9.97843e-007" rotation="0.213995, 0.335398, -0.0757706, 0.914316" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="0.136875, 0.990588, -1.14122e-006, -1.26181e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, 4.19492e-006, 6.11406e-006" rotation="0.00272106, 0.0146159, -0.183006, 0.982999" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -5.65838e-005, 7.0629e-006" rotation="0.261067, 0.0838294, 0.294011, 0.915628" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65895, 25.167, -102.548" rotation="-0.0572138, -0.704788, 0.704789, 0.0572137" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -6.85121e-006, 1.93343e-005" rotation="-0.0107817, 0.282129, 0.0176577, 0.959153" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -1.41919e-005, -1.72524e-005" rotation="-0.285833, -0.229111, -0.0704922, 0.927814" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 295.377" rotation="0.549404, 0.549405, -0.445145, 0.445146" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="-51.4565, 1.27877e-005, -10.9082" rotation="0.549404, 0.549405, -0.445145, -0.445146" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-1.19119e-006, 0.0, 5.35943e-006" rotation="0.451759, 0.527199, 0.54039, -0.475345" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="43.063, 6.03614, 1.56515" rotation="-0.00375713, -0.0187366, -0.00732432, 0.999791" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2572, -0.0697631, -1.93517e-007" rotation="0.0, 1.57277e-007, -0.056705, 0.998391" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1793, -0.0696674, -1.9321e-007" rotation="0.0, 1.81559e-007, -0.0654595, 0.997855" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2798, -0.0687513, -1.90711e-007" rotation="0.0, -2.90755e-007, 0.10483, 0.99449" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0225795, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, -1.14533e-005, 0.0" rotation="0.0, -2.97669e-007, 0.107322, 0.994224" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, -8.73843e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7889, -92.6798, -0.623535" rotation="0.314149, -0.633489, 0.31415, 0.633492" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.21153e-006, 73.5111, -1.20068" rotation="0.0883351, 0.0, 0.0, 0.996091" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.23736e-006, 72.2101, 24.4114" rotation="0.131423, 0.0, 0.0, 0.991326" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="4.41083e-006, 0.0225395, 20.4125" rotation="0.707107, -0.000282521, 0.707107, 0.00028056" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, 9.42805e-006, 8.60171e-006" rotation="-0.356013, 0.595698, -0.224749, 0.684023" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, 2.81836e-006, 6.12293e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, -1.08193e-005, -2.64232e-007" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.108, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="1.21856e-005, 0.0226416, -20.4125" rotation="-0.707107, 0.00028056, 0.707107, 0.000282521" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, -1.42197e-005, 4.02782e-006" rotation="0.356013, -0.595698, -0.224749, 0.684023" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, -4.47566e-006, 1.6042e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, -2.15928e-006, 3.17218e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-40.0842, -7.22299, 77.6379" rotation="-0.0276356, 0.999618, 1.39183e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -4.0814e-006, -1.3815e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, 4.23314e-006, -1.43124e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, -9.05499e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67689, -7.31108e-006, -3.69581e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-45.9143, -6.09847, -77.6379" rotation="-0.0276356, 0.999618, 1.39183e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -2.0433e-005, -1.98604e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, 4.19524e-006, -2.03582e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 6.21157e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67687, 7.01285e-006, 2.81679e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="0.0822117, 0.996144, 0.0296137, -0.00781916" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.9351, 8.06112e-006, -1.37228e-005" rotation="-0.00469165, -0.0854865, 0.113565, 0.989835" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 1.02465e-005, 5.8695e-006" rotation="0.00759508, 0.00285792, 0.0980643, 0.995147" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.00018284" rotation="0.093776, 0.995593, -7.65432e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 3.09876e-005, -3.39832e-006" rotation="0.0, 0.0, 0.0619895, 0.998077" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -2.57364e-005, 0.0" rotation="0.0, 0.0, 0.192754, 0.981247" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="-0.0354931, -0.666054, 0.737208, 0.107875" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 2.34376e-005, 1.35085e-005" rotation="0.000714323, 0.15099, -0.0791437, 0.985362" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000735638, 0.0" rotation="-0.0117391, 0.0968736, 0.0193265, 0.99504" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221431" rotation="0.0368094, 0.999322, -7.60692e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, -4.38695e-006, -2.57627e-006" rotation="0.0, 0.0, 0.149792, 0.988718" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, -1.21106e-005, -1.91608e-007" rotation="0.0, 0.0, 0.1683, 0.985736" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04139, 55.5604" rotation="0.0600631, -0.159971, 0.979612, 0.10565" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, 5.25578e-006, 0.0" rotation="-0.00193183, -0.0151139, -0.126773, 0.991815" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, -1.32078e-005, 8.6813e-007" rotation="-0.0362378, 0.10203, -0.0789898, 0.990978" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="-0.11818, -0.318258, 0.928299, 0.151679" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -3.18488e-005, 1.64548e-006" rotation="-0.0090894, 0.11939, -0.0120092, 0.992733" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, -1.07623e-005, 3.0342e-006" rotation="0.0191208, 0.109863, -0.0489854, 0.992555" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0282, -60.5039" rotation="0.197711, 0.894856, -0.390609, -0.0869887" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, 4.33694e-006, -7.21882e-006" rotation="0.0333443, 0.0231532, 0.0994634, 0.994213" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -5.995e-005, -6.08543e-006" rotation="-0.114908, 0.0876639, 0.0460434, 0.988429" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="0.115332, 0.909711, -0.34351, -0.202791" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, 0.0, -7.20793e-006" rotation="-0.00834556, 0.0363606, 0.206481, 0.977739" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 6.30768e-006, -1.06003e-005" rotation="0.00161211, -0.0181996, 0.0754468, 0.996982" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="0.17164, 0.985123, 0.00145476, -0.0083552" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 4.15094e-005, -8.886e-006" rotation="0.000406216, -0.00175908, 0.195387, 0.980725" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -3.0343e-005, -9.64284e-007" rotation="0.857525, -0.217934, 0.117979, -0.450817" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.166145, 0.687581, -0.685642, -0.17182" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -7.55078e-006, -3.80913e-006" rotation="-0.00119637, -0.304177, -0.00192076, 0.952613" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -4.34226e-006, -2.2284e-006" rotation="0.715996, 0.17274, -0.18579, 0.650379" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="0.0926959, 0.995694, -1.14551e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, -1.3382e-005, 1.35666e-006" rotation="0.00336416, 0.0291497, -0.114599, 0.992978" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -3.46686e-005, 5.66514e-006" rotation="0.818709, 0.200423, 0.12795, 0.522662" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65896, 25.167, -102.548" rotation="-0.0600208, -0.704554, 0.704555, 0.0600208" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -6.83909e-006, -8.96032e-006" rotation="0.0, 0.325825, 0.0, 0.94543" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -7.19455e-006, -1.59323e-005" rotation="0.869313, 0.083094, 0.137646, -0.467381" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 275.264" rotation="0.559171, 0.559172, -0.432813, 0.432813" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="-75.9369, 2.41194e-005, -19.6647" rotation="0.559171, 0.559172, -0.432813, -0.432813" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="1.5533e-006, 0.0, -1.35234e-005" rotation="-0.469263, -0.503835, -0.522603, 0.502821" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="43.39, 2.31101, 2.25868" rotation="-0.00497124, -0.02673, -0.0643709, 0.997556" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2587, -0.0698962, -1.93847e-007" rotation="0.0, 1.28313e-007, -0.0462622, 0.998929" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1808, -0.0698332, -1.93758e-007" rotation="0.0, 1.51823e-007, -0.0547387, 0.998501" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2849, -0.0674857, -1.87207e-007" rotation="0.0, -3.92635e-007, 0.141561, 0.989929" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226005, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 2.83017e-005, 0.0" rotation="0.0, -3.50498e-007, 0.126369, 0.991983" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, 9.73419e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7888, -92.6798, -0.623535" rotation="0.331663, -0.624498, 0.331663, 0.624501" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.22872e-006, 73.5111, -1.2007" rotation="-0.0436696, 0.0, 0.0, 0.999046" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.20919e-006, 72.2101, 24.4114" rotation="0.183631, 0.0, 0.0, 0.982995" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="4.11317e-006, 0.0225625, 20.4125" rotation="0.707107, -0.000282521, 0.707107, 0.00028056" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, 2.36962e-005, 0.0" rotation="-0.383051, 0.565809, -0.300089, 0.665641" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, -2.27355e-006, 3.877e-007" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, 9.50348e-006, -1.1116e-005" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="1.043e-005, 0.0226612, -20.4125" rotation="-0.707107, 0.00028056, 0.707107, 0.000282522" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, -2.14739e-005, 1.62505e-006" rotation="0.383051, -0.565809, -0.300089, 0.665641" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, 4.70473e-006, 3.92012e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, 6.73721e-006, -3.18075e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-38.6011, -8.36421, 77.5797" rotation="-0.0416173, 0.999134, 1.39177e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, 3.64196e-006, -5.81958e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, -1.15845e-005, 7.22476e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, -3.29402e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67687, 2.29418e-006, 2.89915e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-46.9871, -7.35797, -77.5798" rotation="-0.0416173, 0.999134, 1.39177e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -9.88446e-007, -1.93744e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, -1.90877e-005, 3.47754e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 7.65705e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67688, -1.22283e-005, -4.7026e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="0.0440742, 0.998561, 0.0295038, -0.00789759" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.935, 5.64476e-006, -4.47328e-006" rotation="-0.00772238, -0.0835734, 0.0791682, 0.993322" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 2.66391e-005, -9.59189e-007" rotation="0.00401702, 0.00518271, 0.0968371, 0.995279" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000182848" rotation="0.0664466, 0.99779, -7.63597e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 1.62398e-005, -3.72195e-006" rotation="0.0, 0.0, 0.0129864, 0.999916" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -2.09886e-005, 0.0" rotation="0.0, 0.0, 0.140259, 0.990115" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="-0.0114761, -0.66829, 0.7391, 0.0835936" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 1.89185e-005, 4.86779e-007" rotation="0.00393957, 0.142156, -0.0763707, 0.986886" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000744689, -7.46725e-006" rotation="-0.0108396, 0.102759, 0.0219259, 0.994406" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221418" rotation="0.0231017, 0.999733, -7.60126e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, 0.0, -3.22828e-006" rotation="0.0, 0.0, 0.0955294, 0.995427" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, -8.48505e-006, 6.86766e-007" rotation="0.0, 0.0, 0.162515, 0.986706" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04139, 55.5604" rotation="0.0480801, -0.169236, 0.982941, 0.0536131" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, 9.28814e-006, -1.60345e-006" rotation="-0.00265826, -0.0378827, -0.0699481, 0.996827" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, 3.24259e-006, -2.98727e-006" rotation="-0.0430211, 0.0837878, -0.0702018, 0.993076" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="-0.0814032, -0.326739, 0.935302, 0.108742" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -2.01878e-005, 4.55322e-007" rotation="-0.00445561, 0.0910545, 0.0342792, 0.995246" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 2.05807e-007, -1.48894e-005" rotation="0.0136776, 0.102166, -0.0683301, 0.992324" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0282, -60.5039" rotation="0.171801, 0.898169, -0.399068, -0.0672464" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, 3.45573e-007, -1.4048e-007" rotation="0.0444282, -0.0123543, 0.00354524, 0.99893" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.226, -6.71713e-005, -8.29064e-007" rotation="-0.109114, 0.116006, 0.0384962, 0.986486" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="0.0440001, 0.919895, -0.351068, -0.169144" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, -8.77997e-006, 1.11797e-006" rotation="-0.0058864, 0.0271867, 0.196564, 0.980096" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 1.29276e-005, 3.60223e-006" rotation="0.000548116, -0.0308658, 0.106966, 0.993783" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="0.135424, 0.990315, 0.00414627, -0.0303275" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 5.58047e-005, -9.33738e-006" rotation="0.00264331, -0.0144975, 0.149418, 0.988664" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -2.15255e-005, -1.77396e-006" rotation="0.81489, -0.0951888, -0.0592331, 0.568669" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.122273, 0.697421, -0.691504, -0.143096" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -6.72521e-006, 1.82956e-005" rotation="-0.00918802, -0.259847, -0.0156228, 0.96548" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -4.17911e-006, 1.22569e-006" rotation="0.986963, -0.00961666, -0.12418, -0.101932" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="0.0333538, 0.999444, -1.14788e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, -2.55554e-005, 2.77973e-006" rotation="0.00120324, 0.0481374, -0.0249591, 0.998528" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -6.92327e-005, 3.05101e-006" rotation="0.895164, 0.127738, -0.060327, -0.42276" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65894, 25.167, -102.548" rotation="-0.041994, -0.705858, 0.705859, 0.0419939" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -1.11366e-005, -1.18435e-005" rotation="-0.00613166, 0.301728, 0.00979815, 0.953324" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -8.68176e-006, 1.83456e-005" rotation="0.828, -0.0109004, 0.0514604, 0.558256" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 260.387" rotation="0.561629, 0.56163, -0.429618, 0.429619" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="-91.457, 2.82863e-005, -24.7998" rotation="0.561629, 0.56163, -0.429618, -0.429619" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="2.84642e-006, 0.0, -9.43242e-006" rotation="-0.486246, -0.483898, -0.504942, 0.523872" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="43.4254, -0.973503, 2.56027" rotation="-0.00589748, -0.0299083, -0.0912862, 0.995358" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.261, -0.0700917, -1.94379e-007" rotation="0.0, 0.0, -0.0296748, 0.99956" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1827, -0.0700356, -1.94251e-007" rotation="0.0, 0.0, -0.0418027, 0.999126" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2849, -0.0674891, -1.8718e-007" rotation="0.0, -3.92508e-007, 0.141516, 0.989936" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226093, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 1.89624e-005, 0.0" rotation="0.0, -3.24922e-007, 0.117147, 0.993115" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, -9.13927e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7888, -92.6798, -0.623535" rotation="0.371259, -0.601802, 0.371259, 0.601804" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.16867e-006, 73.5111, -1.2007" rotation="-0.174913, 0.0, 0.0, 0.984584" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.20594e-006, 72.2101, 24.4114" rotation="0.235325, 0.0, 0.0, 0.971917" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="1.23114e-006, 0.022567, 20.4125" rotation="0.707107, -0.000282523, 0.707107, 0.000280562" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, 5.82082e-006, 7.21302e-006" rotation="-0.405676, 0.531308, -0.368263, 0.646159" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, -1.61273e-006, -7.8987e-007" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, 8.54264e-006, 5.55778e-006" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="5.8459e-006, 0.0226653, -20.4125" rotation="-0.707107, 0.000280562, 0.707107, 0.000282523" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, 5.85433e-006, 1.58762e-006" rotation="0.405676, -0.531308, -0.368263, 0.646159" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, 7.35958e-006, 3.13243e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, -6.23442e-007, -2.41035e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-38.2463, -7.42131, 77.5502" rotation="-0.0308074, 0.999525, 1.39184e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -2.61477e-005, -1.96013e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, 2.89798e-005, -1.04205e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, 2.34142e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67691, -4.87447e-006, 7.63675e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-47.6651, -6.44567, -77.5502" rotation="-0.0308074, 0.999525, 1.39184e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -2.29245e-005, 1.42151e-007" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, 2.63002e-005, 1.06023e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, -1.21813e-005" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.6769, 3.50773e-006, -4.96863e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="-0.00122061, 0.999534, 0.0294213, -0.00799672" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.9351, 1.23029e-005, -6.51371e-006" rotation="-0.00953773, -0.0820619, 0.0403537, 0.995764" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 1.70778e-005, 4.79102e-007" rotation="0.000658033, 0.00671727, 0.0947222, 0.995481" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000183229" rotation="0.0357572, 0.999361, -7.62242e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 4.46126e-007, -3.09516e-006" rotation="0.0, 0.0, -0.0405945, 0.999176" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -2.77905e-006, -5.28603e-007" rotation="0.0, 0.0, 0.0822989, 0.996608" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="0.018109, -0.669844, 0.740327, 0.0538289" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 9.9719e-006, -5.98775e-006" rotation="0.00719001, 0.125604, -0.0747374, 0.989235" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.00072807, -2.62081e-006" rotation="-0.0092508, 0.108664, 0.024427, 0.993735" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221121" rotation="0.00371484, 0.999993, -7.59224e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, -2.48277e-006, -2.83683e-006" rotation="0.0, 0.0, 0.0679905, 0.997686" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, -7.47857e-006, 1.33185e-006" rotation="0.0, 0.0, 0.14841, 0.988926" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04139, 55.5604" rotation="0.0381815, -0.179898, 0.982942, 0.0017821" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, 1.82658e-006, 0.0" rotation="5.81381e-006, -0.0658942, 8.80319e-005, 0.997827" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, 9.74411e-007, -1.20225e-006" rotation="-0.0590817, 0.0355591, -0.0477976, 0.996474" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="-0.0377892, -0.332612, 0.940511, 0.058146" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -1.19575e-005, 7.76041e-006" rotation="-0.0146231, 0.0448973, 0.0824914, 0.995473" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 1.21505e-005, 1.89345e-006" rotation="0.00818508, 0.0910568, -0.0769812, 0.992832" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0281, -60.5039" rotation="0.13439, 0.901479, -0.409679, -0.0379312" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, 6.59793e-006, 1.1784e-006" rotation="0.0528144, -0.0452807, -0.0509983, 0.996273" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -6.28227e-005, -1.6417e-006" rotation="-0.101651, 0.147364, 0.0297346, 0.983396" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="-0.0405164, 0.92457, -0.355844, -0.130012" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, 1.9964e-006, -1.38073e-006" rotation="-0.00325208, 0.0164152, 0.184937, 0.982608" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 3.95057e-006, -5.1977e-006" rotation="0.000997329, -0.0420779, 0.121173, 0.991739" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="0.0846849, 0.994514, 0.00520826, -0.0611756" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 7.43295e-005, -2.75673e-006" rotation="0.00370145, -0.0365424, 0.0705362, 0.996833" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -2.19818e-005, 5.23314e-006" rotation="-0.25963, -0.0199472, 0.0388433, 0.964721" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.0603038, 0.706443, -0.697657, -0.102842" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -1.91431e-006, 1.3933e-005" rotation="-0.020338, -0.182868, -0.0385112, 0.982172" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -1.15236e-005, 0.0" rotation="-0.501996, -0.0212731, -0.00857598, 0.864565" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="-0.0291036, 0.999576, -1.14446e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, 7.43821e-006, 3.3539e-006" rotation="-0.00434299, 0.0668037, 0.0647288, 0.995655" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -3.30838e-005, 1.44774e-005" rotation="0.00175779, 5.54251e-005, 0.0315142, 0.999502" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65894, 25.167, -102.548" rotation="-0.0112683, -0.707017, 0.707017, 0.0112682" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -7.50777e-006, -4.2781e-006" rotation="-0.0202489, 0.237575, 0.0351383, 0.970522" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -9.63216e-006, -5.34872e-006" rotation="-0.240023, 0.0672178, 0.0500219, 0.967145" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 252.075" rotation="0.551833, 0.551834, -0.44213, 0.442131" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="-91.5776, 2.46798e-005, -20.464" rotation="0.551833, 0.551834, -0.44213, -0.442131" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-2.97506e-006, 0.0, 7.11319e-006" rotation="-0.506151, -0.4669, -0.485792, 0.53835" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="43.2702, -4.04462, 2.24752" rotation="-0.00554853, -0.0258079, -0.0888718, 0.995693" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2647, -0.0701799, -1.94677e-007" rotation="0.0, 0.0, -0.00322381, 0.999995" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1852, -0.0702129, -1.94759e-007" rotation="0.0, 0.0, -0.0237147, 0.999719" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2799, -0.0687347, -1.90632e-007" rotation="0.0, -2.91893e-007, 0.10524, 0.994447" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226143, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 1.52731e-005, 0.0" rotation="0.0, -2.1601e-007, 0.0778799, 0.996963" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, -5.07768e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7888, -92.6798, -0.623535" rotation="0.414054, -0.5732, 0.414054, 0.573202" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.21782e-006, 73.5111, -1.20068" rotation="-0.167713, 0.0, 0.0, 0.985836" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.21403e-006, 72.2101, 24.4114" rotation="0.206051, 0.0, 0.0, 0.978541" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="6.46209e-006, 0.0225471, 20.4125" rotation="0.707107, -0.000282517, 0.707107, 0.000280555" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, 5.92512e-006, 2.18901e-006" rotation="-0.430321, 0.491831, -0.430305, 0.622707" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, 1.07813e-005, -4.19762e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, -6.89547e-006, 5.02548e-006" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.108, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="1.07315e-005, 0.0226476, -20.4125" rotation="-0.707107, 0.000280555, 0.707107, 0.000282517" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, -2.41368e-006, -1.50972e-006" rotation="0.430321, -0.491831, -0.430305, 0.622707" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, 4.66991e-006, 1.50732e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, -1.46041e-005, 2.21253e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-39.2919, -4.17727, 77.5863" rotation="0.00691661, 0.999976, 1.39083e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -6.48879e-006, 1.69276e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, 1.69052e-005, 2.38509e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, -1.24167e-005" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67691, 7.16002e-006, -1.3726e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-47.4309, -3.1733, -77.5863" rotation="0.00691661, 0.999976, 1.39083e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -9.42604e-006, -2.14773e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, 2.09701e-005, -1.4554e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 2.72713e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67691, -3.87826e-007, 8.03866e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="-0.0488749, 0.998339, 0.0293894, -0.00811327" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.9351, 1.70448e-005, 3.40081e-006" rotation="-0.00959733, -0.0804253, -0.00581019, 0.996697" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 2.36933e-005, 1.09505e-006" rotation="-0.00178801, 0.00677274, 0.0875708, 0.996134" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000182658" rotation="0.00613821, 0.999981, -7.59519e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 2.68318e-005, -3.90956e-006" rotation="0.0, 0.0, -0.0941996, 0.995553" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -2.68092e-005, -9.85972e-007" rotation="0.0, 0.0, 0.0132637, 0.999912" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="0.050838, -0.670031, 0.74029, 0.0210759" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 1.32455e-005, 0.0" rotation="0.00981995, 0.0977401, -0.075078, 0.992327" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000726271, -4.21821e-006" rotation="-0.0067469, 0.113245, 0.0261829, 0.993199" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221792" rotation="-0.0185103, 0.999829, -7.58488e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, 1.43495e-006, -2.36494e-006" rotation="0.0, 0.0, 0.0394855, 0.99922" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, -6.76325e-006, 0.0" rotation="0.0, 0.0, 0.121688, 0.992568" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8395, -6.04137, 55.5604" rotation="0.0313605, -0.189682, 0.980479, -0.0412067" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, 1.11278e-005, 6.43778e-006" rotation="0.00689961, -0.0945468, 0.0724543, 0.992856" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, -1.12863e-006, -9.34683e-007" rotation="-0.0773083, -0.0327623, -0.0181699, 0.996303" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="0.00742997, -0.334075, 0.942499, 0.00581253" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -1.6113e-005, 2.04919e-006" rotation="-0.0255469, -0.0139188, 0.132358, 0.990775" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 5.58252e-006, 4.0858e-006" rotation="0.0015228, 0.0751567, -0.0591236, 0.995416" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0282, -60.5039" rotation="0.0903027, 0.903164, -0.419685, -0.00221021" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, -4.03523e-006, -8.99487e-007" rotation="0.0632697, -0.070673, -0.0552374, 0.993957" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -6.83936e-005, -4.20623e-007" rotation="-0.0953937, 0.169019, 0.0233446, 0.980708" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="-0.128099, 0.921114, -0.356323, -0.090409" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, -2.63723e-006, 1.9245e-006" rotation="-0.000810067, 0.00527257, 0.172926, 0.98492" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 1.03313e-005, 4.87365e-006" rotation="0.00490404, -0.0523952, 0.093395, 0.994237" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="0.0277004, 0.995012, 0.00266593, -0.0957958" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 2.98406e-005, -5.09778e-006" rotation="0.000214014, -0.0637329, -0.0267846, 0.997607" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -1.10336e-005, -3.33917e-006" rotation="0.973453, 0.19087, -0.0119855, -0.125757" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="-0.00981826, 0.710006, -0.701773, -0.0575243" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, 3.35095e-007, 1.57506e-006" rotation="-0.0295213, -0.0863276, -0.0653472, 0.993683" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, 5.57555e-006, -1.93165e-005" rotation="0.367652, -0.151198, 0.0641067, 0.915348" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="-0.0824863, 0.996592, -1.14143e-006, 1.28648e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, -1.86355e-005, 7.70309e-006" rotation="-0.0108795, 0.080654, 0.133237, 0.987737" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -7.00029e-005, 1.42722e-006" rotation="0.885278, -0.0662909, -0.0343728, 0.459029" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65896, 25.167, -102.548" rotation="0.0265171, -0.706609, 0.70661, -0.0265172" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -1.28895e-005, 1.13128e-005" rotation="-0.0350483, 0.145792, 0.0693253, 0.986261" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -2.53445e-006, -5.22724e-006" rotation="0.968717, 0.0128532, -0.201848, -0.143805" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 249.299" rotation="0.532344, 0.532345, -0.465413, 0.465413" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="-66.1433, 1.00929e-005, -8.91419" rotation="0.532344, 0.532345, -0.465413, -0.465413" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="5.49172e-006, 0.0, -1.9383e-006" rotation="-0.527167, -0.453291, -0.466429, 0.546869" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="42.9709, -6.76017, 1.44712" rotation="-0.00333825, -0.0164082, -0.073826, 0.997131" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2686, -0.0701331, -1.94505e-007" rotation="0.0, 0.0, 0.0239571, 0.999713" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1877, -0.0702841, -1.9495e-007" rotation="0.0, 0.0, -0.00607136, 0.999982" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2728, -0.0698755, -1.93807e-007" rotation="0.0, -1.50351e-007, 0.0542079, 0.99853" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226075, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 2.4754e-005, 0.0" rotation="0.0, 0.0, 0.0281967, 0.999602" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, -4.21461e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7888, -92.6798, -0.623535" rotation="0.466186, -0.531666, 0.466187, 0.531668" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.21795e-006, 73.5111, -1.20068" rotation="-0.14971, 0.0, 0.0, 0.98873" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.22615e-006, 72.2101, 24.4115" rotation="0.145226, 0.0, 0.0, 0.989398" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="4.13682e-006, 0.0225606, 20.4125" rotation="0.707107, -0.000282517, 0.707107, 0.000280556" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, 3.06344e-006, 3.42783e-006" rotation="-0.450781, 0.455616, -0.47739, 0.60109" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, 9.04066e-006, -3.91729e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, 4.51352e-007, 2.72807e-007" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="7.9781e-006, 0.0226663, -20.4125" rotation="-0.707107, 0.000280556, 0.707107, 0.000282517" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, -7.80623e-006, -1.0641e-006" rotation="0.450781, -0.455616, -0.47739, 0.60109" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, 6.95675e-006, 1.13457e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, 6.99913e-006, -1.62828e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-40.9414, 0.0322909, 77.651" rotation="0.0533169, 0.998578, 1.38687e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -1.45454e-005, 2.13192e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, 2.32867e-005, 2.26007e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, -1.25462e-005" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.6769, -8.86139e-006, 8.15499e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-46.1024, 0.690119, -77.651" rotation="0.0533169, 0.998578, 1.38687e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -1.07549e-005, 2.21518e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, 3.20497e-005, 2.34334e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 1.17868e-005" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67688, -1.79155e-005, -7.04699e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="-0.0940654, 0.995097, 0.0294099, -0.00824066" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.9351, 2.06875e-005, -1.9647e-006" rotation="-0.00835243, -0.0790371, -0.0549695, 0.99532" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 1.22278e-005, -4.19574e-007" rotation="-0.0041837, 0.0066432, 0.0552482, 0.998442" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000182932" rotation="-0.0179669, 0.999839, -7.57508e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, -1.07047e-005, -3.23617e-006" rotation="0.0, 0.0, -0.143311, 0.989678" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -3.08608e-007, 0.0" rotation="0.0, 0.0, -0.0602358, 0.998184" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="0.0842199, -0.668572, 0.738763, -0.0121573" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 1.53215e-005, -1.45062e-005" rotation="0.0122828, 0.0528585, -0.0754929, 0.995669" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000737924, 1.0463e-005" rotation="-0.00308089, 0.115151, 0.0265677, 0.992988" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221326" rotation="-0.0407263, 0.99917, -7.57142e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, -6.12418e-007, -3.17708e-006" rotation="0.0, 0.0, 0.0116575, 0.999932" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, -1.12386e-005, 6.4784e-007" rotation="0.0, 0.0, 0.0787623, 0.996893" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04137, 55.5604" rotation="0.0279046, -0.195862, 0.977959, -0.0667475" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, -1.67268e-006, 1.07752e-006" rotation="0.0165507, -0.119378, 0.136326, 0.983306" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, 3.84543e-006, 8.63227e-006" rotation="-0.091705, -0.110256, 0.0123168, 0.989587" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="0.0488051, -0.331328, 0.941308, -0.0421756" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -2.2554e-005, 8.70856e-006" rotation="-0.0332852, -0.0785122, 0.178257, 0.980282" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, -6.72949e-006, -7.87691e-007" rotation="-0.00648749, 0.0545153, -0.0128681, 0.998409" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0281, -60.5039" rotation="0.044376, 0.902376, -0.427121, 0.0362793" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, -6.49255e-006, 1.77956e-006" rotation="0.0755852, -0.0989263, -0.0572056, 0.99057" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -6.87198e-005, -5.76581e-007" rotation="-0.0931918, 0.169097, 0.0224108, 0.980928" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="-0.20822, 0.910507, -0.352963, -0.0551205" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, 1.02485e-005, -6.16641e-006" rotation="0.00118767, -0.00498669, 0.161883, 0.986797" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 4.94012e-006, 3.6447e-006" rotation="0.0110548, -0.0643088, 0.0258454, 0.997534" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="-0.0270001, 0.991287, -0.00351119, -0.128876" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 1.73248e-005, 1.40264e-006" rotation="-0.00896168, -0.0912549, -0.127027, 0.987652" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -4.19523e-005, 6.13275e-007" rotation="0.64164, 0.196434, 0.238203, 0.702119" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="-0.0774665, 0.706854, -0.702969, -0.013806" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -7.96502e-006, 2.46176e-006" rotation="-0.0334313, 0.0149191, -0.0908854, 0.995188" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -1.29691e-005, -3.70647e-006" rotation="0.865185, -0.117909, 0.250677, 0.417987" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="-0.11481, 0.993388, -1.1368e-006, 1.62862e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, -1.07611e-005, 1.00287e-006" rotation="-0.0140358, 0.0860181, 0.16043, 0.983192" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -5.77204e-005, 6.68317e-006" rotation="0.905582, -0.14726, 0.0638474, -0.392631" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65895, 25.167, -102.548" rotation="0.0656291, -0.704054, 0.704055, -0.0656293" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -1.15679e-005, -1.33786e-005" rotation="-0.0443841, 0.0407834, 0.10508, 0.992635" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -8.50842e-006, 1.96744e-005" rotation="0.654497, 0.246614, -0.166704, 0.695" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 251.663" rotation="0.511188, 0.511189, -0.488555, 0.488556" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="-19.9149, 5.85964e-007, -0.902159" rotation="0.511188, 0.511189, -0.488555, -0.488556" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-6.3726e-006, 0.0, -5.73974e-006" rotation="-0.542338, -0.44785, -0.452655, 0.54809" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="42.7276, -8.29816, 0.461382" rotation="-0.000679218, -0.00525639, -0.0563988, 0.998394" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.271, -0.0699661, -1.94043e-007" rotation="0.0, 0.0, 0.0411745, 0.999152" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1891, -0.0702965, -1.94988e-007" rotation="0.0, 0.0, 0.00437719, 0.99999" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2668, -0.0702671, -1.94855e-007" rotation="0.0, 0.0, 0.0112579, 0.999937" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226137, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 1.19848e-005, 0.0" rotation="0.0, 0.0, -0.0104471, 0.999945" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, -6.88892e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7888, -92.6798, -0.623535" rotation="0.513182, -0.48646, 0.513182, 0.486463" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.20289e-006, 73.5111, -1.2007" rotation="-0.126305, 0.0, 0.0, 0.991992" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.21215e-006, 72.2101, 24.4114" rotation="0.0943979, 0.0, 0.0, 0.995535" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="1.20508e-005, 0.0225423, 20.4125" rotation="0.707107, -0.000282525, 0.707107, 0.000280564" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, 9.03315e-007, 1.19048e-005" rotation="-0.460143, 0.435014, -0.501505, 0.589512" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, 1.01493e-005, -1.55702e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, 1.48485e-006, 2.15369e-006" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="1.48905e-005, 0.0226536, -20.4125" rotation="-0.707107, 0.000280564, 0.707107, 0.000282525" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, 1.65286e-006, 1.03855e-005" rotation="0.460143, -0.435014, -0.501505, 0.589512" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, 8.22907e-006, -9.92765e-007" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, 0.0, -2.41499e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-42.5714, 3.37434, 77.6903" rotation="0.0885603, 0.996071, 1.38185e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, 2.24252e-005, 1.34123e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, -1.68736e-005, 2.35563e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, -2.44873e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67688, 8.88712e-007, -9.5745e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-44.2141, 3.49277, -77.6902" rotation="0.0885603, 0.996071, 1.38185e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, 1.42095e-005, -1.1031e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, -2.1363e-005, 0.0" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 1.03344e-005" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67691, -2.79349e-007, -2.90778e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="-0.132036, 0.990772, 0.0294645, -0.00836421" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.935, 2.00589e-005, 1.35057e-006" rotation="-0.00631453, -0.0781329, -0.102725, 0.991616" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 1.61298e-005, -3.84506e-006" rotation="-0.00660757, 0.00675654, 0.00255971, 0.999952" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000183073" rotation="-0.0321316, 0.999484, -7.55399e-007, 1.26604e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 1.85352e-005, -3.66411e-006" rotation="0.0, 0.0, -0.183551, 0.98301" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -1.61448e-005, 0.0" rotation="0.0, 0.0, -0.131445, 0.991323" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="0.115742, -0.665657, 0.735949, -0.0433923" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 2.32365e-005, 4.05993e-006" rotation="0.0146128, -0.00380776, -0.075079, 0.997063" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000749974, -4.18962e-006" rotation="0.00307819, 0.0938239, 0.0260683, 0.995243" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221217" rotation="-0.0600903, 0.998193, -7.54362e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, -2.50229e-006, -2.86017e-006" rotation="0.0, 0.0, -0.0138468, 0.999904" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, 3.30414e-006, 0.0" rotation="0.0, 0.0, 0.0248701, 0.999691" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04139, 55.5604" rotation="0.0280316, -0.195918, 0.977929, -0.0669741" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, 1.55869e-005, 1.95573e-006" rotation="0.0254734, -0.136588, 0.181559, 0.973515" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, -1.08775e-005, -4.56593e-006" rotation="-0.099283, -0.185073, 0.0384174, 0.976942" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="0.0810915, -0.326431, 0.938347, -0.0798232" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -3.04822e-005, -2.34219e-007" rotation="-0.0361831, -0.141277, 0.215865, 0.965471" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 4.86411e-006, 4.48263e-006" rotation="-0.0129895, 0.0309572, 0.0514556, 0.998111" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0281, -60.5039" rotation="0.00130876, 0.899263, -0.431188, 0.0734883" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, 6.074e-006, -3.51528e-006" rotation="0.0885217, -0.127794, -0.0570306, 0.986195" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -6.62575e-005, 5.29663e-006" rotation="-0.0927376, 0.145864, 0.0243351, 0.984648" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="-0.270737, 0.89715, -0.347885, -0.0282706" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, 1.1753e-006, -3.46015e-006" rotation="0.00259761, -0.0130887, 0.153171, 0.98811" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 5.18927e-006, 1.10779e-006" rotation="0.0154199, -0.0761453, -0.057791, 0.995301" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="-0.0710929, 0.985236, -0.0112101, -0.155341" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 4.64971e-005, 1.46191e-006" rotation="-0.0218155, -0.114521, -0.21485, 0.969664" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -1.89204e-005, 5.60176e-006" rotation="0.163362, 0.048714, 0.372645, 0.912182" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.132109, -0.699533, 0.701948, -0.0216692" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -5.89019e-006, -8.25895e-006" rotation="-0.0318732, 0.105156, -0.111029, 0.987724" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -1.87465e-005, -1.85295e-006" rotation="0.939695, -0.00272449, 0.341681, 0.0148239" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="-0.11575, 0.993278, -1.13613e-006, 1.64491e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, -1.61528e-005, 5.59001e-006" rotation="-0.0116949, 0.0821019, 0.140535, 0.986596" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -4.34579e-005, 5.32464e-006" rotation="-0.583867, 0.125683, -0.168785, 0.784101" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65896, 25.167, -102.548" rotation="0.100359, -0.699948, 0.699949, -0.100359" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -9.97491e-006, 1.07145e-006" rotation="-0.0456834, -0.0611102, 0.135874, 0.987784" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -9.07007e-006, 1.49587e-005" rotation="0.175188, 0.352088, -0.0169305, 0.919269" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 258.474" rotation="0.495754, 0.495754, -0.50421, 0.504211" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="28.057, 3.81564e-007, -0.474564" rotation="-0.495754, -0.495754, 0.50421, 0.504211" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-7.77355e-006, 0.0, -2.09788e-006" rotation="-0.546055, -0.455539, -0.449464, 0.540639" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="42.7956, -7.9451, -0.495404" rotation="-5.66186e-005, 0.00575478, -0.0433071, 0.999045" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2708, -0.0699915, -1.94126e-007" rotation="0.0, 0.0, 0.0404248, 0.999183" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1889, -0.0703089, -1.94993e-007" rotation="0.0, 0.0, 0.00261729, 0.999997" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2644, -0.0702684, -1.94907e-007" rotation="0.0, 0.0, -0.00559151, 0.999984" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226125, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 9.2862e-006, 0.0" rotation="0.0, 0.0, -0.0214122, 0.999771" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, 8.72341e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7888, -92.6798, -0.623535" rotation="0.524443, -0.474298, 0.524443, 0.4743" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.24147e-006, 73.5111, -1.20071" rotation="-0.101478, 0.0, 0.0, 0.994838" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.21598e-006, 72.2101, 24.4114" rotation="0.0867918, 0.0, 0.0, 0.996226" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="1.03384e-005, 0.0225452, 20.4125" rotation="0.707107, -0.000282525, 0.707107, 0.000280564" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, 7.89554e-006, 6.52781e-006" rotation="-0.453996, 0.440198, -0.49696, 0.594259" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, 1.45217e-005, -4.56053e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, -4.01073e-006, 2.02598e-006" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="1.35644e-005, 0.0226592, -20.4125" rotation="-0.707107, 0.000280564, 0.707107, 0.000282525" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, 1.58389e-006, 7.22337e-006" rotation="0.453996, -0.440198, -0.49696, 0.594259" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, 9.1165e-006, -4.50899e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, 7.07101e-006, 4.88234e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-44.2185, 4.16443, 77.6895" rotation="0.0974962, 0.995236, 1.3803e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, 9.51232e-006, 1.34545e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, 6.9623e-006, -4.33931e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, -3.40076e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67689, 1.04494e-006, -1.3026e-005" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-42.4323, 4.25929, -77.6895" rotation="0.0974962, 0.995236, 1.3803e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, 7.68394e-006, 4.01529e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, -2.69238e-006, -9.29886e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, -5.94914e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67689, -7.99756e-006, 6.79055e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="-0.158155, 0.986937, 0.0295214, -0.00845971" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.935, 0.0, -6.91708e-006" rotation="-0.00402431, -0.0777553, -0.144729, 0.986403" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 3.21894e-005, 1.65941e-006" rotation="-0.00890087, 0.00717615, -0.0612079, 0.99806" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000182958" rotation="-0.0321316, 0.999484, -7.55559e-007, 1.26165e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 6.42104e-006, -3.6355e-006" rotation="0.0, 0.0, -0.210714, 0.977548" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -3.47127e-006, 0.0" rotation="0.0, 0.0, -0.193777, 0.981046" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="0.142926, -0.661933, 0.732451, -0.0702237" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 5.21613e-006, 3.2055e-006" rotation="0.0166651, -0.0653388, -0.0735563, 0.995009" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000741663, 5.61913e-006" rotation="0.0120984, 0.0377972, 0.0261005, 0.998871" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221299" rotation="-0.0737734, 0.997275, -7.53088e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, 2.15818e-006, -3.0562e-006" rotation="0.0, 0.0, -0.0353876, 0.999374" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, -8.74291e-006, 1.4375e-007" rotation="0.0, 0.0, -0.0335525, 0.999437" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04138, 55.5604" rotation="0.0323061, -0.190114, 0.980291, -0.0429266" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, 7.2278e-006, -9.31059e-007" rotation="0.0293245, -0.143014, 0.198715, 0.969123" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, 1.68617e-005, 2.64588e-006" rotation="-0.10076, -0.245443, 0.0569147, 0.962479" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="0.0994533, -0.322538, 0.935845, -0.101355" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -2.40027e-005, 1.65785e-006" rotation="-0.0349756, -0.194577, 0.242865, 0.949701" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 2.26694e-007, -1.95562e-006" rotation="-0.016203, 0.00689034, 0.123161, 0.99223" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0282, -60.5039" rotation="-0.0344786, 0.894904, -0.432314, 0.10518" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, 8.75234e-006, -2.42353e-006" rotation="0.10092, -0.155049, -0.0551386, 0.98119" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -7.30072e-005, -1.28118e-006" rotation="-0.0926015, 0.106133, 0.0279133, 0.989637" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="-0.306291, 0.887493, -0.344043, -0.0132891" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, -3.61719e-006, -3.17409e-006" rotation="0.00334253, -0.0177517, 0.148161, 0.988798" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 4.35307e-007, 6.91026e-006" rotation="0.0158164, -0.0845451, -0.133733, 0.987278" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="-0.0967549, 0.980429, -0.0168397, -0.170629" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 5.26199e-005, -1.3057e-005" rotation="-0.0336601, -0.130124, -0.276469, 0.951577" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -4.32217e-005, 4.66696e-006" rotation="0.163362, 0.048714, 0.372645, 0.912182" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.163915, -0.693256, 0.700518, -0.0424416" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -4.64716e-006, 3.53168e-006" rotation="-0.0277527, 0.169349, -0.123637, 0.977376" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, 3.00703e-006, -8.95431e-006" rotation="0.939695, -0.00272448, 0.341681, 0.0148239" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="-0.0895615, 0.995981, -1.14204e-006, 1.33819e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, -5.81852e-006, 4.8402e-006" rotation="-0.0063641, 0.071615, 0.0882875, 0.993497" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -5.27135e-005, 3.50238e-006" rotation="-0.583867, 0.125683, -0.168785, 0.784101" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65895, 25.167, -102.548" rotation="0.125153, -0.695943, 0.695944, -0.125153" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -1.04183e-005, 1.5859e-006" rotation="-0.0409697, -0.143429, 0.157553, 0.97618" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -2.64346e-006, 8.79994e-007" rotation="0.175188, 0.352088, -0.0169305, 0.919269" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 267.542" rotation="0.480337, 0.480338, -0.518918, 0.518918" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="60.8652, 1.14836e-005, -4.70696" rotation="-0.480337, -0.480338, 0.518918, 0.518918" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="0.0, 0.0, 6.90999e-006" rotation="-0.541189, -0.476448, -0.453834, 0.52359" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="43.091, -5.91386, -1.73084" rotation="-0.00158939, 0.0201993, -0.0216751, 0.99956" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2696, -0.0700829, -1.94382e-007" rotation="0.0, 0.0, 0.031508, 0.999503" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1879, -0.0703106, -1.95031e-007" rotation="0.0, 0.0, -0.00481514, 0.999988" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2634, -0.070249, -1.94827e-007" rotation="0.0, 0.0, -0.0123239, 0.999924" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0225911, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 2.89073e-006, 0.0" rotation="0.0, 0.0, -0.0209845, 0.99978" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, 4.90115e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7889, -92.6798, -0.623535" rotation="0.52651, -0.472002, 0.52651, 0.472005" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.24815e-006, 73.5111, -1.20067" rotation="-0.0709239, 0.0, 0.0, 0.997482" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.25897e-006, 72.2101, 24.4115" rotation="0.0921362, 0.0, 0.0, 0.995746" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="4.56908e-006, 0.0225352, 20.4125" rotation="0.707107, -0.000282522, 0.707107, 0.000280561" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, -1.44852e-005, 5.28832e-006" rotation="-0.441435, 0.462941, -0.47029, 0.607987" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, 1.94004e-005, 0.0" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, -5.361e-006, -5.36178e-006" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="1.02359e-005, 0.0226555, -20.4125" rotation="-0.707107, 0.000280561, 0.707107, 0.000282522" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, 2.13653e-005, 1.70704e-006" rotation="0.441435, -0.462941, -0.47029, 0.607987" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, 8.61077e-006, 6.57664e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, -1.11993e-005, -8.10686e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-46.4739, 3.72205, 77.6308" rotation="0.0954861, 0.995431, 1.38065e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -1.21799e-005, 4.78082e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, -1.14681e-005, -4.22836e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, 1.003e-005" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67693, -1.26489e-005, 5.2635e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-40.2096, 4.35164, -77.6308" rotation="0.0954861, 0.995431, 1.38065e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, 1.65349e-006, -1.3081e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, -1.84729e-005, -2.68783e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 4.44455e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67691, -1.14789e-005, 1.87156e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="-0.167873, 0.985329, 0.0295466, -0.00849767" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.935, 4.78983e-006, 9.37534e-007" rotation="-0.0020128, -0.0777609, -0.176762, 0.981175" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 2.37314e-005, 4.36993e-006" rotation="-0.0109021, 0.0078274, -0.12658, 0.991866" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000182591" rotation="-0.0179669, 0.999839, -7.57048e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, -8.9493e-006, -3.89883e-006" rotation="0.0, 0.0, -0.22069, 0.975344" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -2.21046e-005, 2.09575e-007" rotation="0.0, 0.0, -0.241037, 0.970516" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="0.16336, -0.658386, 0.729164, -0.0903351" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 8.36506e-006, 1.68266e-005" rotation="0.0183004, -0.124735, -0.0710693, 0.989472" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000742042, 1.42773e-005" rotation="0.022662, -0.0404212, 0.0273098, 0.998552" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221868" rotation="-0.0789601, 0.996878, -7.52282e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, 4.61068e-007, -2.12532e-006" rotation="0.0, 0.0, -0.0513391, 0.998681" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, -1.45346e-005, 8.71961e-007" rotation="0.0, 0.0, -0.0899631, 0.995945" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04137, 55.5604" rotation="0.0402474, -0.180892, 0.982677, -0.00210673" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, 1.98322e-005, 1.71832e-006" rotation="0.0255909, -0.136792, 0.1821, 0.973382" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, -8.31124e-007, -5.71088e-006" rotation="-0.0996413, -0.280516, 0.0665332, 0.952342" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="0.0977198, -0.322941, 0.936107, -0.0993178" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -3.61747e-005, -5.28157e-006" rotation="-0.0321769, -0.231333, 0.25883, 0.93726" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, -3.87124e-007, -8.97098e-007" rotation="-0.0159197, -0.0148994, 0.191526, 0.981245" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0282, -60.5039" rotation="-0.0588683, 0.890994, -0.431851, 0.127156" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, -2.81931e-007, 3.76328e-007" rotation="0.111704, -0.178531, -0.0522512, 0.976175" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -6.91259e-005, -6.58381e-006" rotation="-0.0919345, 0.0570755, 0.0324669, 0.993598" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="-0.302935, 0.88847, -0.344435, -0.0146942" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.351, -2.3029e-006, 5.77163e-006" rotation="0.00327394, -0.0173094, 0.148636, 0.988735" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 9.68449e-006, 2.42735e-006" rotation="0.0129549, -0.0836757, -0.182588, 0.979537" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="-0.0958382, 0.980642, -0.0166095, -0.169943" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 4.42839e-005, -7.63255e-006" rotation="-0.0387564, -0.135805, -0.299682, 0.943528" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -3.34785e-005, 1.54593e-006" rotation="0.64164, 0.196434, 0.238203, 0.702119" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.162776, -0.693508, 0.70058, -0.0416959" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -7.38854e-006, -1.27665e-005" rotation="-0.0255047, 0.193727, -0.12801, 0.972334" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -1.38298e-005, 8.06458e-006" rotation="0.865185, -0.117909, 0.250677, 0.417987" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="-0.0448739, 0.998993, -1.14803e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, -9.41557e-006, 9.24673e-006" rotation="-0.000849128, 0.0565122, 0.0149999, 0.998289" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -5.40967e-005, 6.73544e-006" rotation="0.905582, -0.14726, 0.0638474, -0.392631" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65896, 25.167, -102.548" rotation="0.134613, -0.694175, 0.694176, -0.134613" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -7.01179e-006, 3.00812e-006" rotation="-0.0357544, -0.191205, 0.168661, 0.96629" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -2.24613e-006, -1.25136e-005" rotation="0.654497, 0.246614, -0.166704, 0.695" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 278.136" rotation="0.466079, 0.466079, -0.531761, 0.531762" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="91.6973, 2.52125e-005, -12.1245" rotation="-0.466079, -0.466079, 0.531761, 0.531762" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-1.2862e-005, 0.0, 2.13333e-006" rotation="-0.529989, -0.503206, -0.463436, 0.501121" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="43.3308, -2.88931, -2.96812" rotation="-0.00414881, 0.0345008, 0.00561913, 0.99938" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2677, -0.0701803, -1.9465e-007" rotation="0.0, 0.0, 0.0179157, 0.99984" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1863, -0.0702006, -1.94761e-007" rotation="0.0, 0.0, -0.0155606, 0.999879" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2632, -0.0702614, -1.94972e-007" rotation="0.0, 0.0, -0.0142637, 0.999898" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226306, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 2.60977e-005, 0.0" rotation="0.0, 0.0, -0.0147122, 0.999892" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, 6.22173e-007, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7888, -92.6798, -0.623535" rotation="0.526949, -0.471512, 0.526949, 0.471515" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.22489e-006, 73.5111, -1.20066" rotation="-0.0363823, 0.0, 0.0, 0.999338" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.22743e-006, 72.2101, 24.4115" rotation="0.101222, 0.0, 0.0, 0.994864" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="2.20025e-005, 0.0225772, 20.4125" rotation="0.707107, -0.000282523, 0.707107, 0.000280561" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, -1.45962e-005, 5.59006e-006" rotation="-0.424425, 0.49587, -0.425645, 0.62674" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, -1.14466e-005, -4.19882e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, 8.52667e-006, -1.19666e-005" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="2.744e-005, 0.0227007, -20.4125" rotation="-0.707107, 0.000280561, 0.707107, 0.000282523" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, 1.34598e-005, -4.04142e-006" rotation="0.424425, -0.49587, -0.425645, 0.62674" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, -4.91529e-006, -1.01258e-005" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, 2.57867e-005, 3.04417e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-48.7595, 2.75058, 77.507" rotation="0.0877692, 0.996141, 1.38198e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -2.14232e-005, -2.76417e-006" rotation="0.0, 0.0, -0.0998335, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, -8.70892e-006, -5.21039e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.523, 225.263, 1.29532e-005" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67692, 6.83283e-006, 6.09842e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-38.0366, 3.9787, -77.507" rotation="0.0877692, 0.996141, 1.38198e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, 5.8951e-006, -2.92271e-006" rotation="0.0, 0.0, -0.0998335, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, -6.9092e-006, -5.36892e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 2.67547e-007" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67693, -1.37641e-005, -7.8309e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="-0.146862, 0.988681, 0.0294949, -0.00841727" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.935, 7.05262e-006, -8.20076e-006" rotation="-0.000779113, -0.0778886, -0.194728, 0.97776" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 2.57887e-005, 3.43066e-006" rotation="-0.0124784, 0.00850378, -0.184187, 0.982775" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000184158" rotation="0.00613821, 0.999981, -7.59059e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 1.33829e-005, -2.36564e-006" rotation="0.0, 0.0, -0.19443, 0.980916" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -1.87733e-005, -1.39618e-006" rotation="0.0, 0.0, -0.267413, 0.963582" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.627, 37.6688, -159.999" rotation="0.174697, -0.656138, 0.727095, -0.101473" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 1.31888e-005, 1.79859e-005" rotation="0.0194382, -0.175148, -0.0681867, 0.981986" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000730858, 4.92339e-006" rotation="0.0333014, -0.127766, 0.0298891, 0.990794" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.423, -0.000219954" rotation="-0.0700175, 0.997546, -7.53343e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, -1.77797e-006, -1.5663e-006" rotation="0.0, 0.0, -0.060087, 0.998193" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, 1.97576e-006, -3.25839e-007" rotation="0.0, 0.0, -0.1379, 0.990446" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04138, 55.5604" rotation="0.0510838, -0.170759, 0.982828, 0.0477577" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, 3.42698e-006, 6.24472e-006" rotation="0.0168643, -0.120053, 0.138082, 0.982973" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, -5.42156e-006, -4.56157e-006" rotation="-0.0981388, -0.280058, 0.0684348, 0.952498" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="0.0676368, -0.32877, 0.939801, -0.0641055" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -2.87616e-005, -1.43027e-007" rotation="-0.0307548, -0.245022, 0.264159, 0.93233" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 1.0042e-005, 1.39014e-005" rotation="-0.0134781, -0.0316876, 0.246337, 0.968572" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0282, -60.5039" rotation="-0.0678942, 0.889351, -0.431418, 0.135364" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, 7.19571e-006, 4.33553e-006" rotation="0.119868, -0.196165, -0.0493167, 0.971967" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -6.03765e-005, -8.69608e-006" rotation="-0.0903425, 0.00606102, 0.0372353, 0.995196" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="-0.244685, 0.903269, -0.350261, -0.0393831" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, -9.9503e-006, 3.12356e-006" rotation="0.00202563, -0.009699, 0.156815, 0.987578" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 1.17212e-005, 7.79938e-007" rotation="0.0133754, -0.067534, -0.212113, 0.974817" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="-0.0641469, 0.986547, -0.00975738, -0.150049" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 5.12559e-005, -4.72923e-006" rotation="-0.0318718, -0.128003, -0.267918, 0.954369" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -2.0628e-005, -5.66225e-006" rotation="0.973453, 0.19087, -0.0119855, -0.125757" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.123485, -0.700977, 0.702229, -0.0160548" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -5.62942e-006, -8.67378e-006" rotation="-0.0284825, 0.160397, -0.121971, 0.979073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -1.31055e-005, -1.20163e-005" rotation="0.367652, -0.151198, 0.0641067, 0.915348" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="0.0101613, 0.999948, -1.14948e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, 7.11969e-006, 3.31116e-006" rotation="0.00264752, 0.0391769, -0.0673728, 0.996955" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -2.35983e-005, 6.29671e-006" rotation="0.885277, -0.0662909, -0.0343728, 0.45903" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65895, 25.167, -102.548" rotation="0.121686, -0.696557, 0.696558, -0.121686" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -9.9825e-006, 4.79038e-006" rotation="-0.0361834, -0.187841, 0.167917, 0.967063" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -1.11902e-005, 3.27041e-006" rotation="0.968717, 0.0128531, -0.201848, -0.143805" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 289.821" rotation="0.456296, 0.456297, -0.540179, 0.54018" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="118.466, 3.48816e-005, -20.0873" rotation="-0.456296, -0.456297, 0.540179, 0.54018" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-1.31993e-005, 0.0, 6.02619e-006" rotation="0.514409, 0.528247, 0.476945, -0.478396" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="43.3582, 0.439369, -3.79982" rotation="-0.0065064, 0.0438419, 0.0322018, 0.998498" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2653, -0.0702502, -1.94873e-007" rotation="0.0, 0.0, 0.000981454, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1845, -0.0701497, -1.94605e-007" rotation="0.0, 0.0, -0.0286702, 0.999589" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2634, -0.0702342, -1.94761e-007" rotation="0.0, 0.0, -0.0127803, 0.999918" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226121, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 6.97649e-006, 0.0" rotation="0.0, 0.0, -0.004264, 0.999991" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, 1.47264e-005, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7889, -92.6798, -0.623535" rotation="0.51758, -0.481778, 0.51758, 0.48178" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.196e-006, 73.5111, -1.20068" rotation="-0.00102356, 0.0, 0.0, 0.999999" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.17639e-006, 72.2101, 24.4114" rotation="0.112378, 0.0, 0.0, 0.993666" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="1.67044e-005, 0.0225354, 20.4125" rotation="0.707107, -0.000282521, 0.707107, 0.00028056" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, -7.28292e-006, 6.5514e-007" rotation="-0.403011, 0.53282, -0.366071, 0.647825" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, -1.04426e-005, -3.8267e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, 2.01513e-006, -4.38896e-007" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="1.81475e-005, 0.0226601, -20.4125" rotation="-0.707107, 0.00028056, 0.707107, 0.000282521" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, 1.84174e-005, 7.0248e-006" rotation="0.403011, -0.53282, -0.366071, 0.647825" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, -1.27735e-005, -1.07857e-005" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, 5.68757e-006, 1.04728e-005" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-50.2989, 1.54588, 77.3894" rotation="0.0759665, 0.99711, 1.38384e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -2.0296e-005, 2.87623e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, -9.38228e-006, 7.96452e-007" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, 9.31836e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67693, -8.40412e-006, 1.31745e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-36.6289, 3.12594, -77.3893" rotation="0.0759665, 0.99711, 1.38384e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -3.98148e-006, 6.31849e-007" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, -3.36936e-006, -1.44789e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, -8.3681e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67692, 1.24851e-005, 2.33539e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="-0.0940654, 0.995097, 0.0294099, -0.00824065" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.935, -1.19989e-006, -3.78796e-006" rotation="-0.000713277, -0.0780973, -0.185266, 0.97958" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 1.37334e-005, 1.05564e-006" rotation="-0.0135395, 0.00890679, -0.225058, 0.974211" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000183312" rotation="0.0357572, 0.999361, -7.62373e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 1.79117e-005, -2.50291e-006" rotation="0.0, 0.0, -0.128209, 0.991747" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -2.82187e-005, 1.34221e-006" rotation="0.0, 0.0, -0.253332, 0.967379" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="0.168265, -0.657438, 0.728291, -0.0951553" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 6.80199e-006, 1.81433e-005" rotation="0.0200814, -0.210031, -0.0657793, 0.975273" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.00074271, 7.16649e-006" rotation="0.0425959, -0.211022, 0.0334128, 0.975981" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000220654" rotation="-0.0476379, 0.998865, -7.55817e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, 2.755e-006, -1.63457e-006" rotation="0.0, 0.0, -0.0525933, 0.998616" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, -2.30819e-006, -8.29101e-007" rotation="0.0, 0.0, -0.171117, 0.985251" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.0414, 55.5604" rotation="0.0634577, -0.161753, 0.979808, 0.0989226" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, -9.92328e-006, -8.33528e-006" rotation="0.00727771, -0.0957258, 0.0754577, 0.992517" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, 4.03055e-006, 1.9355e-006" rotation="-0.0901048, -0.242884, 0.0711404, 0.963238" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="0.0175162, -0.333766, 0.942475, -0.00586858" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -2.70844e-005, -1.23498e-005" rotation="-0.0513172, -0.208119, 0.229733, 0.949355" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 1.32076e-006, 4.50368e-006" rotation="-0.011178, -0.0411033, 0.278129, 0.959599" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0282, -60.5039" rotation="-0.0403959, 0.894026, -0.432295, 0.110484" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, 6.26286e-006, 6.30107e-006" rotation="0.124434, -0.205941, -0.0473823, 0.969463" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -6.50921e-005, -5.43034e-007" rotation="-0.088069, -0.0394468, 0.0414518, 0.99447" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="-0.147631, 0.91919, -0.355833, -0.0817197" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, 5.37875e-006, -4.2207e-006" rotation="-0.00030284, 0.00278051, 0.170243, 0.985398" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 2.94488e-006, 5.93342e-007" rotation="0.0152913, -0.0470432, -0.226393, 0.972779" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="-0.0113674, 0.993105, -0.00133632, -0.116664" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 5.60182e-005, -1.1002e-005" rotation="-0.0172042, -0.107199, -0.186782, 0.976384" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -3.91674e-005, 2.60904e-006" rotation="-0.259629, -0.0199472, 0.0388433, 0.964721" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="-0.0581061, 0.708418, -0.702904, -0.0263316" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -2.94697e-006, -6.29136e-006" rotation="-0.0329036, 0.0761577, -0.104848, 0.991022" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -2.775e-006, 4.86156e-006" rotation="-0.501997, -0.0212731, -0.00857595, 0.864565" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="0.0672128, 0.997739, -1.14911e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, -1.75583e-005, 2.0143e-006" rotation="0.00331385, 0.0223787, -0.146446, 0.98896" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -3.44545e-005, 4.01813e-006" rotation="0.00175731, 5.54072e-005, 0.0315142, 0.999502" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65895, 25.167, -102.548" rotation="0.0891935, -0.701458, 0.701459, -0.0891937" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -6.27248e-006, -1.61964e-005" rotation="-0.0429319, -0.118862, 0.151407, 0.980359" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -2.14662e-005, -9.7681e-006" rotation="-0.240022, 0.0672178, 0.0500219, 0.967145" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 302.161" rotation="0.454418, 0.454419, -0.54176, 0.54176" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="136.19, 4.12309e-005, -24.0663" rotation="-0.454418, -0.454419, 0.54176, 0.54176" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="7.94042e-006, 0.0, 5.07971e-006" rotation="0.495994, 0.545508, 0.494472, -0.460335" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="43.2146, 3.53512, -3.79357" rotation="-0.00718023, 0.0434347, 0.0535424, 0.997595" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2627, -0.0701381, -1.94598e-007" rotation="0.0, 0.0, -0.0179559, 0.999839" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1825, -0.0700287, -1.94252e-007" rotation="0.0, 1.19802e-007, -0.0431936, 0.999067" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2639, -0.0702974, -1.94989e-007" rotation="0.0, 0.0, -0.00924306, 0.999957" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0225923, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, -5.84522e-006, 0.0" rotation="0.0, 0.0, 0.00868984, 0.999962" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, -9.04456e-006, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6764, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6764, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7888, -92.6798, -0.623535" rotation="0.494438, -0.5055, 0.494438, 0.505502" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.20051e-006, 73.5111, -1.20069" rotation="0.0319616, 0.0, 0.0, 0.999489" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.22501e-006, 72.2101, 24.4114" rotation="0.123934, 0.0, 0.0, 0.99229" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="2.76013e-005, 0.0225284, 20.4125" rotation="0.707107, -0.000282511, 0.707107, 0.000280549" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, -8.07246e-006, 7.86204e-006" rotation="-0.377694, 0.568201, -0.295536, 0.668696" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, 4.87568e-007, 2.09818e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, 2.34199e-005, -5.29942e-006" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.108, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="3.03347e-005, 0.0226552, -20.4125" rotation="-0.707107, 0.000280549, 0.707107, 0.000282511" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, 1.14531e-005, -1.08035e-005" rotation="0.377694, -0.568201, -0.295536, 0.668696" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, -6.70928e-006, 1.50601e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, -5.81978e-006, -7.38197e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-50.3038, 0.340713, 77.3934" rotation="0.0617023, 0.998095, 1.38583e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -1.59954e-005, -1.91756e-006" rotation="0.0, 0.0, -0.0998335, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, 0.0, -1.23213e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, 3.98821e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67694, 8.81603e-006, -1.87502e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-36.718, 1.84382, -77.3934" rotation="0.0617023, 0.998095, 1.38583e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -1.4656e-005, -5.58999e-006" rotation="0.0, 0.0, -0.0998335, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, -9.31888e-007, 2.72478e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 3.73987e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.6769, -6.58618e-006, -1.24767e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="-0.0250547, 0.999221, 0.0293984, -0.00805309" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.9351, 4.42823e-007, -1.16135e-005" rotation="-0.0013089, -0.0796482, -0.106628, 0.991103" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 1.78703e-005, 4.93196e-006" rotation="-0.014013, 0.00871208, -0.240593, 0.970486" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000182255" rotation="0.0664466, 0.99779, -7.63211e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, -1.2483e-005, -3.95169e-006" rotation="0.0, 0.0, -0.0413042, 0.999147" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, 2.87324e-006, 1.20081e-007" rotation="0.0, 0.0, -0.135701, 0.99075" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="0.115742, -0.665657, 0.735949, -0.0433923" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 1.22275e-005, 6.56408e-006" rotation="0.0202858, -0.223066, -0.0647941, 0.972436" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000737146, -4.30834e-006" rotation="0.0494258, -0.27765, 0.0368964, 0.9587" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000222337" rotation="-0.0185103, 0.999829, -7.57801e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, -4.09562e-006, -2.67295e-006" rotation="0.0, 0.0, 0.00430287, 0.999991" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, -6.36895e-006, -5.59943e-007" rotation="0.0, 0.0, -0.183538, 0.983013" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.0414, 55.5604" rotation="0.0753571, -0.155096, 0.974451, 0.143916" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, 7.80934e-006, 4.52954e-006" rotation="0.000248033, -0.0673238, 0.00367591, 0.997724" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, 2.76947e-006, -1.40407e-006" rotation="-0.0781848, -0.182417, 0.0701272, 0.977596" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="-0.0412703, -0.332306, 0.940215, 0.0621769" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -2.54487e-005, -1.55985e-006" rotation="-0.0871651, -0.11439, 0.142961, 0.979224" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 5.16354e-006, -7.14688e-006" rotation="-0.011403, -0.0332909, 0.266613, 0.963161" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0281, -60.5039" rotation="0.0265512, 0.901368, -0.429154, 0.0515524" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, -4.77439e-007, -7.0608e-006" rotation="0.122818, -0.192822, -0.0379358, 0.972778" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -6.73419e-005, -6.9865e-006" rotation="-0.0859288, -0.0720615, 0.0444238, 0.992698" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="-0.0337728, 0.924487, -0.355622, -0.133103" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, -1.32903e-005, 1.11993e-005" rotation="-0.00345189, 0.0172727, 0.185862, 0.982418" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 1.05577e-005, -9.1547e-006" rotation="0.0149739, -0.0324054, -0.214493, 0.976073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="0.0508618, 0.995722, 0.00393427, -0.07704" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 4.72709e-005, -7.73652e-006" rotation="-0.00381017, -0.0780469, -0.078574, 0.993841" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -1.49507e-005, 2.45975e-006" rotation="0.81489, -0.0951888, -0.0592331, 0.568669" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.0187136, 0.709397, -0.700455, -0.0759492" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -1.06261e-005, -1.59524e-005" rotation="-0.0322685, -0.0342498, -0.0788432, 0.995776" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -3.23347e-006, 1.04142e-005" rotation="0.986963, -0.00961666, -0.12418, -0.101932" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="0.117936, 0.993021, -1.14311e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, 1.66185e-005, 9.38069e-006" rotation="0.00190723, 0.00887292, -0.210141, 0.977629" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -5.43624e-005, 1.67523e-006" rotation="0.895164, 0.127738, -0.060327, -0.42276" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65895, 25.167, -102.548" rotation="0.0466763, -0.705564, 0.705565, -0.0466765" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -5.80441e-006, -1.78374e-005" rotation="-0.0459892, -0.00934434, 0.120743, 0.991574" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, 5.41534e-007, -4.4525e-006" rotation="0.828, -0.0109004, 0.0514604, 0.558256" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 314.718" rotation="0.469446, 0.469447, -0.528791, 0.528791" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="141.166, 1.86887e-005, -16.8439" rotation="-0.469446, -0.469447, 0.528791, 0.528791" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="-1.12689e-005, 0.0, 6.46894e-007" rotation="0.471364, 0.556987, 0.519212, -0.444972" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="42.8879, 6.84638, -2.82143" rotation="-0.00580036, 0.0320639, 0.0765683, 0.996532" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2599, -0.0700014, -1.94134e-007" rotation="0.0, 0.0, -0.0375541, 0.999295" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1804, -0.0698027, -1.93691e-007" rotation="0.0, 1.6137e-007, -0.0581806, 0.998306" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.2645, -0.0702876, -1.94973e-007" rotation="0.0, 0.0, -0.00502093, 0.999987" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226181, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, 9.71205e-006, 0.0" rotation="0.0, 0.0, 0.0224771, 0.999747" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, 2.22783e-005, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7889, -92.6798, -0.623535" rotation="0.4654, -0.532355, 0.4654, 0.532357" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.25618e-006, 73.5111, -1.20067" rotation="0.0593967, 0.0, 0.0, 0.998234" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.17454e-006, 72.2101, 24.4114" rotation="0.13423, 0.0, 0.0, 0.99095" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="1.6683e-005, 0.022561, 20.4125" rotation="0.707107, -0.000282516, 0.707107, 0.000280555" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, 2.2509e-005, -1.26562e-005" rotation="-0.349626, 0.597765, -0.219191, 0.687309" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, -4.03753e-006, -4.21833e-007" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, 1.97212e-005, -1.29893e-005" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="1.62327e-005, 0.0226818, -20.4125" rotation="-0.707107, 0.000280555, 0.707107, 0.000282516" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, -5.02162e-006, 9.02795e-006" rotation="0.349626, -0.597765, -0.219191, 0.687309" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, -8.88655e-006, -5.41168e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, -4.97504e-006, 7.63824e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-48.5561, -0.740112, 77.5296" rotation="0.0466077, 0.998913, 1.38763e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -4.37382e-005, -5.04633e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, 2.51307e-005, 5.05239e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, 6.52433e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67689, 1.50856e-005, -3.78718e-006" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-38.4877, 0.293057, -77.5296" rotation="0.0466077, 0.998913, 1.38763e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -4.03016e-005, -4.81859e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, 4.554e-005, 5.28013e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 7.13669e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67686, -8.90555e-007, 1.20965e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="0.0440742, 0.998561, 0.0295038, -0.00789759" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.9351, 9.88272e-006, 3.33025e-006" rotation="-0.00163325, -0.0828933, 0.00750233, 0.996529" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 3.09034e-005, -4.98564e-006" rotation="-0.00805402, 0.00443872, -0.15377, 0.988064" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000182483" rotation="0.093776, 0.995593, -7.64955e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, 8.17452e-006, -2.78582e-006" rotation="0.0, 0.0, 0.0459149, 0.998945" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -9.04143e-006, 3.66257e-007" rotation="0.0, 0.0, 0.0365563, 0.999332" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="0.0397317, -0.670147, 0.740465, 0.0321706" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 4.32567e-006, 5.44804e-006" rotation="0.013861, -0.126039, -0.0744475, 0.989131" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000732333, -1.82364e-005" rotation="0.053055, -0.316213, 0.0390485, 0.946398" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221938" rotation="0.0106329, 0.999943, -7.58667e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, 2.90155e-006, -3.14341e-006" rotation="0.0, 0.0, 0.0861061, 0.996286" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, -4.74383e-006, 1.99847e-007" rotation="0.0, 0.0, -0.0924604, 0.995716" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.04138, 55.5604" rotation="0.0843394, -0.151156, 0.969096, 0.175758" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, 1.85489e-005, 1.15289e-006" rotation="-0.002627, -0.0390064, -0.0671445, 0.996977" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, -4.24728e-006, -5.02987e-006" rotation="-0.0673551, -0.114012, 0.060644, 0.989337" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="-0.0966274, -0.32363, 0.932701, 0.126476" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -3.22354e-005, 1.40705e-006" rotation="-0.104252, 0.00381727, 0.0341675, 0.993957" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, -1.19383e-005, 1.68223e-005" rotation="-0.00839745, 0.0220839, 0.166485, 0.985761" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0281, -60.5039" rotation="0.108428, 0.902761, -0.415904, -0.0170455" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, -9.75929e-006, -5.97267e-006" rotation="0.10056, -0.105774, 0.0231565, 0.989021" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -5.3469e-005, -6.01227e-006" rotation="-0.084999, -0.084535, 0.045545, 0.991743" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="0.0735193, 0.916384, -0.348347, -0.183003" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, -4.6426e-006, -2.8342e-006" rotation="-0.00687638, 0.0309703, 0.200653, 0.979149" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 1.06025e-005, -1.16308e-005" rotation="0.012334, -0.0183078, -0.128145, 0.99151" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="0.110208, 0.993128, 0.00434382, -0.0391525" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 4.94919e-005, -1.11902e-005" rotation="0.00293031, -0.0475458, 0.0312394, 0.998376" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -3.31648e-005, -2.78306e-006" rotation="0.857525, -0.217934, 0.117979, -0.450817" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.0915034, 0.702601, -0.694861, -0.123072" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, -3.04679e-006, 9.43494e-006" rotation="-0.0246646, -0.144094, -0.0495566, 0.988015" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -2.69978e-006, -2.63661e-006" rotation="0.715996, 0.17274, -0.18579, 0.650379" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="0.15418, 0.988043, -1.14102e-006, -1.50553e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, -1.11105e-005, 7.0925e-006" rotation="0.000274823, 0.00107734, -0.247178, 0.968969" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -5.48268e-005, 1.29241e-006" rotation="0.818709, 0.200423, 0.12795, 0.522662" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65895, 25.167, -102.548" rotation="0.00398891, -0.707095, 0.707096, -0.00398903" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -1.55579e-005, 1.15099e-005" rotation="-0.0393179, 0.10819, 0.0825638, 0.989915" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -1.36459e-005, -1.2035e-006" rotation="0.869312, 0.0830941, 0.137646, -0.467381" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+  <frame>
+    <transform name="wendigo_body_outside" translation="0.0, 0.0, 238.4" rotation="0.0, -0.0139772, 0.0, 0.999902" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_body_inside" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_skull" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_B" translation="0.0, 0.0, 239.445" rotation="0.0, 0.0174524, 0.0, 0.999848" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_C" translation="0.0, 0.0, 238.4" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_A" translation="4.06985, 0.0, 218.201" rotation="0.0, 0.385039, 0.0, 0.9229" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_feather_D" translation="-24.7965, 0.0, 238.4" rotation="0.0, -0.389431, 0.0, 0.921055" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01" translation="0.0, 230.205, 327.058" rotation="0.497655, 0.497655, -0.502334, 0.502334" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Footsteps" translation="114.396, 1.13986e-005, -1.07055" rotation="-0.497655, -0.497655, 0.502334, 0.502334" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Pelvis" translation="1.05213e-005, 0.0, 6.80852e-006" rotation="0.44284, 0.565368, 0.547081, -0.430064" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine" translation="42.2675, 10.2768, -1.37061" rotation="-0.00303084, 0.0154807, 0.10221, 0.994638" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine1" translation="88.2573, -0.0697629, -1.93498e-007" rotation="0.0, 1.56628e-007, -0.0564711, 0.998404" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine2" translation="88.1783, -0.0695424, -1.92906e-007" rotation="0.0, 2.01592e-007, -0.0726823, 0.997355" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Spine3" translation="88.265, -0.0702763, -1.94889e-007" rotation="0.0, 0.0, -0.00148346, 0.999999" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Neck" translation="88.2652, -0.0226123, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 Head" translation="28.3845, -1.42438e-005, 0.0" rotation="0.0, 0.0, 0.0354256, 0.999372" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 HeadNub" translation="148.453, -1.18966e-005, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_top_right" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_teeth_top_left" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="wendigo_spine_01" translation="-77.7888, -92.6798, -0.623535" rotation="0.439946, -0.553576, 0.439947, 0.553578" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_02" translation="3.23426e-006, 73.5111, -1.20069" rotation="0.0781406, 0.0, 0.0, 0.996942" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_spine_03" translation="3.20964e-006, 72.2101, 24.4114" rotation="0.141616, 0.0, 0.0, 0.989922" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Clavicle" translation="1.0363e-005, 0.0225412, 20.4125" rotation="0.707107, -0.000282517, 0.707107, 0.000280556" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L UpperArm" translation="49.1999, 1.6309e-005, 1.99279e-006" rotation="-0.320591, 0.61916, -0.143195, 0.702394" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Forearm" translation="126.321, -4.29992e-006, -4.69651e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Hand" translation="125.621, -7.98165e-006, -4.20361e-006" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth_bottom_left" translation="-162.108, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 R Clavicle" translation="1.50608e-005, 0.0226598, -20.4125" rotation="-0.707107, 0.000280556, 0.707107, 0.000282517" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R UpperArm" translation="49.1999, 5.74373e-006, 5.87146e-006" rotation="0.320591, -0.61916, -0.143195, 0.702394" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Forearm" translation="126.321, -2.6184e-007, -5.55069e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Hand" translation="125.621, 5.40104e-006, 2.0414e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+    <transform name="wendigo_teeth-bottom_right" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676"/>
+    <transform name="Bip01 L Thigh" translation="-45.9366, -1.69024, 77.6559" rotation="0.0323207, 0.999478, 1.38903e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Calf" translation="247.782, -2.30564e-005, -8.8464e-007" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Foot" translation="247.782, 8.20728e-006, -1.94768e-006" rotation="0.275722, 0.319618, -0.592152, 0.686424" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0" translation="43.5229, 225.263, -8.65978e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 L Toe0Nub" translation="5.67695, 8.39699e-007, 5.50645e-007" rotation="0.0, 0.0, 1.0, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Thigh" translation="-41.0549, -1.24536, -77.656" rotation="0.0323207, 0.999478, 1.38903e-006, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Calf" translation="247.782, -1.7109e-005, -1.35511e-006" rotation="0.0, 0.0, -0.0998334, 0.995004" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Foot" translation="247.782, -5.68002e-006, -2.41811e-006" rotation="-0.198043, -0.229572, -0.622451, 0.721547" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0" translation="43.5229, 206.063, 7.93792e-006" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="Bip01 R Toe0Nub" translation="5.67693, -1.11708e-005, 3.69721e-006" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_1" translation="49.1642, 35.0347, 157.414" rotation="0.0971223, 0.9948, 0.0296669, -0.00778903" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_2" translation="86.9351, 2.89935e-005, 2.74678e-006" rotation="-0.00119695, -0.0867319, 0.109866, 0.990154" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_left_3" translation="96.0592, 1.5838e-005, 3.52181e-006" rotation="0.00446425, 0.000235648, 0.0102619, 0.999937" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_1" translation="43.3621, -111.525, 0.000183162" rotation="0.11336, 0.993554, -7.65158e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_2" translation="113.901, -1.29667e-005, -3.84769e-006" rotation="0.0, 0.0, 0.112804, 0.993617" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_top_3" translation="138.516, -1.83818e-005, 3.87728e-007" rotation="0.0, 0.0, 0.190517, 0.981684" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_1" translation="50.6269, 37.6688, -159.999" rotation="-0.0282522, -0.666821, 0.737864, 0.100543" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_2" translation="105.926, 1.72746e-005, -1.26221e-005" rotation="0.00247628, 0.0569951, -0.0833018, 0.99489" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_right_3" translation="101.34, -0.000755059, 1.25214e-006" rotation="0.0368471, -0.217544, 0.0291248, 0.97492" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_1" translation="50.2434, 170.422, -0.000221326" rotation="0.0330461, 0.999454, -7.60153e-007, 0.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_2" translation="89.8767, 2.08549e-006, -2.77709e-006" rotation="0.0, 0.0, 0.159114, 0.98726" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_outside_bottom_3" translation="122.244, 1.39683e-006, 0.0" rotation="0.0, 0.0, 0.07817, 0.99694" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_1" translation="-50.8396, -6.0414, 55.5604" rotation="0.0878679, -0.149838, 0.966718, 0.187842" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_2" translation="109.37, -1.74954e-005, -7.95306e-006" rotation="-0.00193184, -0.0151139, -0.126773, 0.991815" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_left_3" translation="109.012, 1.5103e-005, 1.37545e-006" rotation="-0.0644357, -0.053739, 0.0419274, 0.995591" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_1" translation="-64.9129, -10.6229, -53.8863" rotation="-0.137136, -0.312563, 0.923707, 0.173965" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_2" translation="88.464, -2.4586e-005, -6.73298e-006" rotation="-0.0963452, 0.103655, -0.0577467, 0.98825" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_top_right_3" translation="87.4233, 5.60041e-006, -2.4847e-005" rotation="0.010137, 0.086588, 0.0410185, 0.995348" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_1" translation="-62.9717, 92.0282, -60.5039" rotation="0.178056, 0.897446, -0.397108, -0.0720552" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_2" translation="129.559, 6.89719e-006, -3.42992e-006" rotation="0.055019, -0.00600912, 0.106775, 0.992742" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_right_3" translation="99.2259, -7.92725e-005, 3.88918e-006" rotation="-0.101936, -0.00462167, 0.0465363, 0.993691" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_1" translation="-45.5774, 89.8297, 43.5121" rotation="0.152134, 0.902153, -0.338261, -0.22035" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_2" translation="83.3509, -1.15653e-005, -2.83601e-007" rotation="-0.00970766, 0.0411441, 0.211656, 0.976429" scale="1.0, 1.0, 1.0"/>
+    <transform name="strand_inside_bottom_left_3" translation="76.0146, 4.75114e-007, -1.27469e-005" rotation="0.00752813, -0.00768495, -0.0223158, 0.999693" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_1" translation="-16.3969, -31.9674, 72.067" rotation="0.154376, 0.98795, 0.00171606, -0.0109884" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_2" translation="207.479, 5.99371e-005, -4.14344e-006" rotation="0.00352173, -0.0238813, 0.115776, 0.992982" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_B_3" translation="199.423, -1.25396e-005, 3.11176e-006" rotation="-0.278676, 0.100797, -0.327422, 0.897204" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_1" translation="-44.312, 58.0275, 89.7658" rotation="0.145251, 0.692633, -0.688595, -0.158111" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_2" translation="179.835, 9.30245e-007, 1.82885e-006" rotation="-0.0143419, -0.227157, -0.0254907, 0.973419" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_A_3" translation="184.973, -2.17634e-006, 4.15528e-006" rotation="0.213995, 0.335398, -0.0757706, 0.914316" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_1" translation="16.4107, -35.6269, -60.0388" rotation="0.168016, 0.985784, -1.13857e-006, -1.63221e-007" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_2" translation="188.479, 5.38352e-006, 1.80461e-006" rotation="0.000568075, 0.00228336, -0.241429, 0.970416" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_C_3" translation="187.006, -4.2691e-005, 6.7808e-006" rotation="0.261067, 0.0838294, 0.294011, 0.915628" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_1" translation="8.65896, 25.167, -102.548" rotation="-0.0288657, -0.706517, 0.706518, 0.0288656" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_2" translation="171.761, -7.75956e-006, -7.15656e-006" rotation="-0.0269777, 0.200518, 0.0492481, 0.978079" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_feather_D_3" translation="169.559, -1.0082e-005, 1.23274e-005" rotation="-0.285833, -0.229111, -0.0704922, 0.927814" scale="1.0, 1.0, 1.0"/>
+  </frame>
+
+</animation>
