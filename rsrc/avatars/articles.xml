@@ -497,29 +497,29 @@
 
   <!-- female clothing: indian trading post -->
   <article name="trickster_raven" townId="indian_post"
-           slot="clothing" scrip="3750" coins="4" colors="clothes_p,clothes_s,clothes_t">
+           slot="clothing" scrip="3750" coins="4">
     <component cclass="female/clothing_back" name="trickster_raven"/>
     <component cclass="female/clothing_front" name="trickster_raven"/>
   </article>
 
   <article name="wolf_handler" townId="indian_post"
-           slot="clothing" scrip="3000" coins="3" colors="clothes_p,clothes_s,clothes_t">
+           slot="clothing" scrip="3000" coins="3">
     <component cclass="female/clothing_back" name="wolf_handler"/>
     <component cclass="female/clothing_front" name="wolf_handler"/>
   </article>
 
   <article name="wrap" townId="indian_post"
-           slot="clothing" scrip="1500" coins="1" colors="clothes_p,clothes_s,clothes_t">
+           slot="clothing" scrip="1500" coins="1">
     <component cclass="female/clothing_back" name="wrap"/>
   </article>
 
   <article name="youth_dress" townId="indian_post"
-           slot="clothing" scrip="1200" coins="1" colors="clothes_p,clothes_s,clothes_t">
+           slot="clothing" scrip="1200" coins="1">
     <component cclass="female/clothing_back" name="youth_dress"/>
   </article>
 
   <article name="shoulder_cape" townId="indian_post"
-           slot="clothing" scrip="2100" coins="1" colors="clothes_p,clothes_s,clothes_t">
+           slot="clothing" scrip="2100" coins="1">
     <component cclass="female/clothing_back" name="shoulder_cape"/>
   </article>
 
