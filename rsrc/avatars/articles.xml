@@ -495,6 +495,33 @@
     <component cclass="female/clothing_front" name="pistol_boots"/>
   </article>
 
+  <!-- female clothing: indian trading post -->
+  <article name="trickster_raven" townId="indian_post"
+           slot="clothing" scrip="3750" coins="4" colors="clothes_p,clothes_s,clothes_t">
+    <component cclass="female/clothing_back" name="trickster_raven"/>
+    <component cclass="female/clothing_front" name="trickster_raven"/>
+  </article>
+
+  <article name="wolf_handler" townId="indian_post"
+           slot="clothing" scrip="3000" coins="3" colors="clothes_p,clothes_s,clothes_t">
+    <component cclass="female/clothing_back" name="wolf_handler"/>
+    <component cclass="female/clothing_front" name="wolf_handler"/>
+  </article>
+
+  <article name="wrap" townId="indian_post"
+           slot="clothing" scrip="1500" coins="1" colors="clothes_p,clothes_s,clothes_t">
+    <component cclass="female/clothing_back" name="wrap"/>
+  </article>
+
+  <article name="youth_dress" townId="indian_post"
+           slot="clothing" scrip="1200" coins="1" colors="clothes_p,clothes_s,clothes_t">
+    <component cclass="female/clothing_back" name="youth_dress"/>
+  </article>
+
+  <article name="shoulder_cape" townId="indian_post"
+           slot="clothing" scrip="2100" coins="1" colors="clothes_p,clothes_s,clothes_t">
+    <component cclass="female/clothing_back" name="shoulder_cape"/>
+  </article>
 
   <!-- female familiars: frontier town -->
 
@@ -634,6 +661,17 @@
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="eagle_mask"/>
     <component cclass="female/hat_back" name="eagle_mask"/>
+  </article>
+
+  <article name="female_lioness" townId="indian_post"
+           slot="hat" scrip="2700" coins="2" colors="clothes_p,clothes_s">
+    <component cclass="female/hat" name="lioness"/>
+  </article>
+
+  <article name="female_cougar_mask" townId="indian_post"
+           slot="hat" scrip="2700" coins="2">
+    <component cclass="female/hat" name="lioness"/>
+    <component cclass="female/hat_band" name="cougar_mask"/>
   </article>
 
 
