@@ -83,7 +83,7 @@ public class IconViz extends EffectViz
         if (_ipath != null) {
             if (_card) {
                 Quad bg = createIconQuad(
-                    "ui/pstatus/card_up.png", CARD_WIDTH, ICON_SIZE),
+                    "textures/effects/cardback.png", ICON_SIZE, ICON_SIZE),
                      icon = createIconQuad(_ipath, CARD_WIDTH, ICON_SIZE);
                 _billboard.attachChild(bg);
                 _billboard.attachChild(icon);
@@ -228,6 +228,8 @@ public class IconViz extends EffectViz
     
     /** The width of cards, if {@link #ICON_SIZE} is the height. */
     protected static final float CARD_WIDTH = ICON_SIZE * 30 / 39;
+    
+    protected static final float CARD_BACKGROUND_SIZE = ICON_SIZE * 50 / 39;
     
     /** The length of time it takes for the icon to rise up and fade in. */
     protected static final float RISE_DURATION = 0.5f;
