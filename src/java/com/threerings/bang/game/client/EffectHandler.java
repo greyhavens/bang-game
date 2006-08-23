@@ -163,7 +163,7 @@ public class EffectHandler extends BoardView.BoardAction
         // display the damage icon/amount
         if (effect.equals(TreeBedEffect.GREW)) {
             DamageIconViz.displayDamageIconViz(piece,
-                (piece.damage) < 50 ? "grew" : "repaired",
+                (piece.damage <= 50) ? "grew" : "repaired",
                 TreeBedSprite.STATUS_COLOR,
                 TreeBedSprite.DARKER_STATUS_COLOR, // cyan
                 -_effect.getBaseDamage(piece), _effect, _ctx, _view);
