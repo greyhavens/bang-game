@@ -71,9 +71,9 @@ public class RanchManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected Class<? extends PlaceObject> getPlaceObjectClass ()
+    protected PlaceObject createPlaceObject ()
     {
-        return RanchObject.class;
+        return new RanchObject();
     }
 
     @Override // documentation inherited

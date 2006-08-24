@@ -224,9 +224,9 @@ public class ParlorManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected Class<? extends PlaceObject> getPlaceObjectClass ()
+    protected PlaceObject createPlaceObject ()
     {
-        return ParlorObject.class;
+        return new ParlorObject();
     }
 
     @Override // documentation inherited
@@ -404,9 +404,8 @@ public class ParlorManager extends PlaceManager
         config.bdata = _bdata;
 
         try {
-            BangServer.plreg.createPlace(
-                config, new BangManager.PriorLocationSetter(
-                    "parlor", _parobj.getOid()));
+            BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
+            mgr.setPriorLocation("parlor", _parobj.getOid());
         } catch (Exception e) {
             log.log(Level.WARNING, "Choked creating game " + config + ".", e);
         }

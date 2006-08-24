@@ -60,9 +60,9 @@ public class LobbyManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected Class<? extends PlaceObject> getPlaceObjectClass ()
+    protected PlaceObject createPlaceObject ()
     {
-        return LobbyObject.class;
+        return new LobbyObject();
     }
 
     /** Listens for tables shutting down and reports us as empty if there

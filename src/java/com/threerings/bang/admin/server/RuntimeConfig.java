@@ -9,8 +9,8 @@ import java.util.logging.Level;
 import com.threerings.presents.dobj.AccessController;
 import com.threerings.presents.dobj.DEvent;
 import com.threerings.presents.dobj.DObject;
-import com.threerings.presents.dobj.DObjectManager;
 import com.threerings.presents.dobj.ObjectAccessException;
+import com.threerings.presents.dobj.RootDObjectManager;
 import com.threerings.presents.dobj.Subscriber;
 
 import com.threerings.bang.admin.data.ServerConfigObject;
@@ -26,12 +26,12 @@ import static com.threerings.bang.Log.log;
 public class RuntimeConfig
 {
     /** Contains general server configuration data. */
-    public static ServerConfigObject server;
+    public static ServerConfigObject server = new ServerConfigObject();
 
     /**
      * Creates and registers the runtime configuration objects.
      */
-    public static void init (DObjectManager omgr)
+    public static void init (RootDObjectManager omgr)
     {
         Field[] fields = RuntimeConfig.class.getDeclaredFields();
         for (int ii = 0; ii < fields.length; ii++) {
@@ -41,26 +41,23 @@ public class RuntimeConfig
                 continue;
             }
 
-            @SuppressWarnings("unchecked") Class<DObject> doclass =
-                (Class<DObject>)oclass;
-            omgr.createObject(doclass, new Subscriber<DObject>() {
-                public void objectAvailable (DObject object) {
-                    // set the tight-ass access controller
-                    object.setAccessController(ADMIN_CONTROLLER);
-                    // register the object with the config object registry
-                    String key = field.getName();
-                    BangServer.confreg.registerObject(key, key, object);
-                    try {
-                        // and set our static field
-                        field.set(null, object);
-                    } catch (IllegalAccessException iae) {
-                        log.warning("Failed to set " + key + ": " + iae);
-                    }
-                }
-                public void requestFailed (int oid, ObjectAccessException oae) {
-                    log.warning("Unable to create " + oclass + ": " + oae);
-                }
-            });
+            String key = field.getName();
+            try {
+                // create and register the object
+                DObject object = omgr.registerObject((DObject)field.get(null));
+
+                // set the tight-ass access controller
+                object.setAccessController(ADMIN_CONTROLLER);
+
+                // register the object with the config object registry
+                BangServer.confreg.registerObject(key, key, object);
+
+                // and set our static field
+                field.set(null, object);
+
+            } catch (Exception e) {
+                log.warning("Failed to set " + key + ": " + e);
+            }
         }
     }
 

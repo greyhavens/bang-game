@@ -36,16 +36,18 @@ public class BangAdminManager
         _server = server;
         _rebmgr = new BangRebootManager(server);
 
-        BangServer.omgr.createObject(
-            StatusObject.class, new Subscriber<StatusObject>() {
-            public void objectAvailable (StatusObject object) {
-                statobj = object;
-                finishInit();
-            }
-            public void requestFailed (int oid, ObjectAccessException cause) {
-                log.warning("Unable to create status object: " + cause + ".");
-            }
-        });
+        // create and configure our status object
+        statobj = BangServer.omgr.registerObject(new StatusObject());
+        statobj.serverStartTime = System.currentTimeMillis();
+        statobj.setService(
+            (BangAdminMarshaller)BangServer.invmgr.registerDispatcher(
+                new BangAdminDispatcher(this), false));
+
+        // start up our connection manager stat monitor
+        _conmgrStatsUpdater.schedule(5000L, true);
+
+        // initialize our reboot manager
+        _rebmgr.init();
     }
 
     // from interface BangAdminProvider
@@ -68,21 +70,6 @@ public class BangAdminManager
         // shave 5 seconds off to avoid rounding up to the next time
         long when = System.currentTimeMillis() + minutes * 60 * 1000L - 5000L;
         _rebmgr.scheduleReboot(when, user.who());
-    }
-
-    protected void finishInit ()
-    {
-        // configure our status object
-        statobj.serverStartTime = System.currentTimeMillis();
-        statobj.setService(
-            (BangAdminMarshaller)BangServer.invmgr.registerDispatcher(
-                new BangAdminDispatcher(this), false));
-
-        // start up our connection manager stat monitor
-        _conmgrStatsUpdater.schedule(5000L, true);
-
-        // initialize our reboot manager
-        _rebmgr.init();
     }
 
     /** Used to manage automatic reboots. */

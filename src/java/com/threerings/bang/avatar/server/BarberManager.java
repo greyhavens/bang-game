@@ -329,9 +329,9 @@ public class BarberManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected Class<? extends PlaceObject> getPlaceObjectClass ()
+    protected PlaceObject createPlaceObject ()
     {
-        return BarberObject.class;
+        return new BarberObject();
     }
 
     @Override // documentation inherited

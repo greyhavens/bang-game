@@ -39,9 +39,9 @@ public class BangClientResolver extends CrowdClientResolver
     }
 
     // documentation inherited
-    public Class<? extends ClientObject> getClientObjectClass ()
+    public ClientObject createClientObject ()
     {
-        return PlayerObject.class;
+        return new PlayerObject();
     }
 
     // documentation inherited

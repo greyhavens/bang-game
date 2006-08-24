@@ -36,7 +36,6 @@ import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
-import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.crowd.chat.server.SpeakProvider;
 
 import com.threerings.parlor.server.ParlorSender;
@@ -410,8 +409,8 @@ public class PlayerManager
 
         // create the tutorial game manager and it will handle the rest
         try {
-            BangServer.plreg.createPlace(
-                config, new BangManager.PriorLocationSetter("tutorial", 0));
+            BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
+            mgr.setPriorLocation("tutorial", 0);
         } catch (InstantiationException ie) {
             log.log(Level.WARNING, "Error instantiating tutorial " +
                 "[for=" + player.who() + ", config=" + config + "].", ie);
@@ -448,9 +447,9 @@ public class PlayerManager
 
         // create the practice game manager and it will handle the rest
         try {
-            BangServer.plreg.createPlace(
-                config, new BangManager.PriorLocationSetter(
-                    "ranch", BangServer.ranchmgr.getPlaceObject().getOid()));
+            BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
+            mgr.setPriorLocation(
+                "ranch", BangServer.ranchmgr.getPlaceObject().getOid());
         } catch (InstantiationException ie) {
             log.log(Level.WARNING, "Error instantiating practice " +
                 "[for=" + player.who() + ", config=" + config + "].", ie);
@@ -531,22 +530,22 @@ public class PlayerManager
         config.scenarios = scenarios;
         config.board = board;
 
-        // create the game manager and it will handle the rest
-        PlaceRegistry.CreationObserver obs =
-                new PlaceRegistry.CreationObserver() {
-            public void placeCreated (
-                PlaceObject place, PlaceManager pmgr) {
-                if (autoplay) {
-                    ParlorSender.gameIsReady(player, place.getOid());
-                }
-                if (priorLocation != null) {
-                    ((BangObject)place).setPriorLocation(priorLocation);
-                }
-            }
-        };
         try {
-            BangServer.plreg.createPlace(config, obs);
+            BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
+            BangObject bangobj = (BangObject)mgr.getPlaceObject();
+
+            // configure a prior location if one was provided
+            if (priorLocation != null) {
+                bangobj.setPriorLocation(priorLocation);
+            }
+
+            // if this is an autoplay game, fake a game ready notification
+            if (autoplay) {
+                ParlorSender.gameIsReady(player, bangobj.getOid());
+            }
+
             return true;
+
         } catch (InstantiationException ie) {
             log.log(Level.WARNING, "Error instantiating game " +
                     "[for=" + player.who() + ", config=" + config + "].", ie);

@@ -28,7 +28,6 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
-import com.threerings.crowd.server.PlaceRegistry;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
@@ -100,25 +99,16 @@ public class SaloonManager extends PlaceManager
         }
 
         // otherwise we need to create a new match
-        final Match match = new Match(user, criterion);
-        BangServer.omgr.createObject(MatchObject.class,
-                                     new Subscriber<MatchObject>() {
-            public void objectAvailable (MatchObject object) {
-                match.setObject(object);
-                object.setSpeakService(
-                    (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
-                        new SpeakDispatcher(new SpeakProvider(object, null)),
-                        false));
-                _matches.put(object.getOid(), match);
-                BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
-                listener.requestProcessed(object.getOid());
-                checkReadiness(match);
-            }
-            public void requestFailed (int oid, ObjectAccessException cause) {
-                log.warning("Failed to create match object " + cause + ".");
-                listener.requestFailed(INTERNAL_ERROR);
-            }
-        });
+        Match match = new Match(user, criterion);
+        match.setObject(BangServer.omgr.registerObject(new MatchObject()));
+        match.matchobj.setSpeakService((SpeakMarshaller)
+            BangServer.invmgr.registerDispatcher(
+                new SpeakDispatcher(new SpeakProvider(match.matchobj, null)),
+                false));
+        _matches.put(match.matchobj.getOid(), match);
+        BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
+        listener.requestProcessed(match.matchobj.getOid());
+        checkReadiness(match);
     }
 
     // documentation inherited from interface SaloonProvider
@@ -159,18 +149,13 @@ public class SaloonManager extends PlaceManager
         info.passwordProtected = !StringUtil.isBlank(password);
 
         try {
-            BangServer.plreg.createPlace(new ParlorConfig(),
-                                         new PlaceRegistry.CreationObserver() {
-                public void placeCreated (PlaceObject place,
-                                          PlaceManager plmgr) {
-                    ParlorManager parmgr = (ParlorManager)plmgr;
-                    ParlorObject parobj = (ParlorObject)plmgr.getPlaceObject();
-                    parmgr.init(SaloonManager.this, info, password);
-                    _parlors.put(info.creator, parmgr);
-                    _salobj.addToParlors(info);
-                    rl.requestProcessed(parobj.getOid());
-                }
-            });
+            ParlorManager parmgr = (ParlorManager)
+                BangServer.plreg.createPlace(new ParlorConfig());
+            ParlorObject parobj = (ParlorObject)parmgr.getPlaceObject();
+            parmgr.init(SaloonManager.this, info, password);
+            _parlors.put(info.creator, parmgr);
+            _salobj.addToParlors(info);
+            rl.requestProcessed(parobj.getOid());
 
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to create parlor " + info + ".", e);
@@ -199,9 +184,9 @@ public class SaloonManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected Class<? extends PlaceObject> getPlaceObjectClass ()
+    protected PlaceObject createPlaceObject ()
     {
-        return SaloonObject.class;
+        return new SaloonObject();
     }
 
     @Override // documentation inherited
@@ -336,9 +321,9 @@ public class SaloonManager extends PlaceManager
                 // go like the wind!
                 BangConfig config = match.createConfig();
                 try {
-                    BangServer.plreg.createPlace(
-                        config, new BangManager.PriorLocationSetter(
-                            "saloon", _salobj.getOid()));
+                    BangManager mgr = (BangManager)
+                        BangServer.plreg.createPlace(config);
+                    mgr.setPriorLocation("saloon", _salobj.getOid());
                 } catch (Exception e) {
                     log.log(Level.WARNING, "Choked creating game " +
                             "[config=" + config + "].", e);

@@ -40,7 +40,6 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
-import com.threerings.crowd.server.PlaceRegistry;
 import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.admin.data.StatusObject;
@@ -173,17 +172,21 @@ public class BangManager extends GameManager
         public StatSet[] stats;
     }
 
-    /** Used to configure players' prior location. */
-    public static class PriorLocationSetter
-        implements PlaceRegistry.CreationObserver
+    /**
+     * Configures the prior location of the players in this game.
+     */
+    public void setPriorLocation (String ident, int placeOid)
     {
-        public PriorLocationSetter (String ident, int placeOid) {
-            _priorloc = new BangObject.PriorLocation(ident, placeOid);
-        }
-        public void placeCreated (PlaceObject place, PlaceManager pmgr) {
-            ((BangObject)place).setPriorLocation(_priorloc);
-        }
-        protected BangObject.PriorLocation _priorloc;
+        _bangobj.setPriorLocation(
+            new BangObject.PriorLocation(ident, placeOid));
+    }
+
+    /**
+     * Returns the team size for the current round.
+     */
+    public int getTeamSize ()
+    {
+        return _bangobj.scenario.getTeamSize(_bconfig);
     }
 
     // documentation inherited from interface BangProvider
@@ -426,14 +429,6 @@ public class BangManager extends GameManager
                 _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
             }
         }
-    }
-
-    /**
-     * Returns the team size for the current round.
-     */
-    public int getTeamSize ()
-    {
-        return _bangobj.scenario.getTeamSize(_bconfig);
     }
     
     /**
@@ -686,9 +681,9 @@ public class BangManager extends GameManager
     }
     
     @Override // documentation inherited
-    protected Class<? extends PlaceObject> getPlaceObjectClass ()
+    protected PlaceObject createPlaceObject ()
     {
-        return BangObject.class;
+        return new BangObject();
     }
 
     @Override // documentation inherited

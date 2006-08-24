@@ -64,9 +64,9 @@ public class StationManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected Class<? extends PlaceObject> getPlaceObjectClass ()
+    protected PlaceObject createPlaceObject ()
     {
-        return StationObject.class;
+        return new StationObject();
     }
 
     @Override // documentation inherited

@@ -62,9 +62,9 @@ public class StoreManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected Class<? extends PlaceObject> getPlaceObjectClass ()
+    protected PlaceObject createPlaceObject ()
     {
-        return StoreObject.class;
+        return new StoreObject();
     }
 
     @Override // documentation inherited

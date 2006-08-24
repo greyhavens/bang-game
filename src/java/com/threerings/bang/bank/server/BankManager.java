@@ -87,9 +87,9 @@ public class BankManager extends PlaceManager
     }
 
     @Override // documentation inherited
-    protected Class<? extends PlaceObject> getPlaceObjectClass ()
+    protected PlaceObject createPlaceObject ()
     {
-        return BankObject.class;
+        return new BankObject();
     }
 
     @Override // documentation inherited
@@ -106,8 +106,9 @@ public class BankManager extends PlaceManager
 
         // register our invocation service
         _bankobj = (BankObject)_plobj;
-        _bankobj.setService((BankMarshaller)BangServer.invmgr.registerDispatcher(
-                                new BankDispatcher(this), false));
+        _bankobj.setService((BankMarshaller)
+            BangServer.invmgr.registerDispatcher(
+                new BankDispatcher(this), false));
 
         // register with the coin exchange manager
         BangServer.coinexmgr.registerPublisher(this);

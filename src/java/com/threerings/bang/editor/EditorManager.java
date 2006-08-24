@@ -14,8 +14,8 @@ import com.threerings.bang.game.data.BangObject;
 public class EditorManager extends GameManager
 {
     // documentation inherited
-    protected Class<? extends PlaceObject> getPlaceObjectClass ()
+    protected PlaceObject createPlaceObject ()
     {
-        return BangObject.class;
+        return new BangObject();
     }
 }
