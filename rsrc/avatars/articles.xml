@@ -529,7 +529,12 @@
     <component cclass="female/clothing_back" name="shoulder_cape"/>
   </article>
 
+
   <!-- female familiars: frontier town -->
+  <article name="female_mini_blimp" townId="frontier_town"
+           slot="familiar" scrip="300" coins="1" colors="clothes_t">
+    <component cclass="female/familiar" name="mini_blimp"/>
+  </article>
 
 
   <!-- female eye glasses: frontier town -->
