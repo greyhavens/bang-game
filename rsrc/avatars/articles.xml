@@ -496,6 +496,12 @@
   </article>
 
   <!-- female clothing: indian trading post -->
+  <article name="female_storm_caller" townId="indian_post"
+           slot="clothing" scrip="3750" coins="4">
+    <component cclass="female/clothing_back" name="storm_caller"/>
+    <component cclass="female/clothing_front" name="storm_caller"/>
+  </article>
+
   <article name="female_trickster_raven" townId="indian_post"
            slot="clothing" scrip="3750" coins="4">
     <component cclass="female/clothing_back" name="trickster_raven"/>
