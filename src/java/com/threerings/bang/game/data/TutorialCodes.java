@@ -48,7 +48,7 @@ public interface TutorialCodes
     /** An event message sent to the server to let the tutorial scenario know
      * that we've processed a particular action. The index of the action will
      * be passed along with the event. */
-    public static final String ACTION_PROCESSED = "ActionProcessed";
+    public static final String ACTION_PROCESSED = "actionProcessed";
 
     /** A user interface action monitored by the tutorial system. */
     public static final String TEXT_CLICKED = "text_clicked";

@@ -213,8 +213,8 @@ public class TutorialController
 
     protected void processedAction (TutorialConfig.Action action)
     {
-        _bangobj.postMessage(TutorialCodes.ACTION_PROCESSED,
-                             new Object[] { action.index });
+        // send a message to the server indicating we've processed this action
+        _bangobj.manager.invoke(TutorialCodes.ACTION_PROCESSED, action.index);
     }
 
     protected MouseAdapter _clicklist = new MouseAdapter() {

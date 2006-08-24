@@ -42,8 +42,18 @@ import static com.threerings.bang.Log.log;
  * Handles the server side operation of tutorial scenarios.
  */
 public class Tutorial extends Scenario
-    implements PlaceManager.MessageHandler
 {
+    /**
+     * Called by the client when it has processed a particular tutorial action.
+     */
+    public void actionProcessed (PlayerObject caller, int actionId)
+    {
+        _nextActionId = actionId+1;
+        if (_nextActionId < _config.getActionCount()) {
+            _bangobj.setActionId(_nextActionId);
+        }
+    }
+
     @Override // documentation inherited
     public void init (BangManager bangmgr)
     {
@@ -104,9 +114,6 @@ public class Tutorial extends Scenario
     {
         super.roundWillStart(bangobj, starts, purchases);
 
-        // register to receive various tutorial specific messages
-        _bangmgr.registerMessageHandler(TutorialCodes.ACTION_PROCESSED, this);
-
         // set up our game object listeners; we only ever have one round in a
         // scenario, so this is OK to do in roundWillStart()
         _bangobj = bangobj;
@@ -153,18 +160,6 @@ public class Tutorial extends Scenario
     {
         return _firstTime && user.stats.containsValue(
             Stat.Type.TUTORIALS_COMPLETED, _config.ident);
-    }
-
-    // documentation inherited from PlaceManager.MessageHandler
-    public void handleEvent (MessageEvent event, PlaceManager pmgr)
-    {
-        String name = event.getName();
-        if (name.equals(TutorialCodes.ACTION_PROCESSED)) {
-            _nextActionId = (Integer)(event.getArgs()[0])+1;
-            if (_nextActionId < _config.getActionCount()) {
-                _bangobj.setActionId(_nextActionId);
-            }
-        }
     }
 
     @Override // documentation inherited

@@ -31,12 +31,14 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.StreamablePoint;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsServer;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
@@ -187,6 +189,17 @@ public class BangManager extends GameManager
     public int getTeamSize ()
     {
         return _bangobj.scenario.getTeamSize(_bconfig);
+    }
+
+    /**
+     * Called by the client when it has processed a particular tutorial action.
+     * This is passed through to the {@link Tutorial} scenario.
+     */
+    public void actionProcessed (PlayerObject caller, int actionId)
+    {
+        if (_scenario instanceof Tutorial) {
+            ((Tutorial)_scenario).actionProcessed(caller, actionId);
+        }
     }
 
     // documentation inherited from interface BangProvider
@@ -397,21 +410,8 @@ public class BangManager extends GameManager
             " h:" + StringUtil.toString(perfhisto));
     }
 
-    // documentation inherited
-    public void attributeChanged (AttributeChangedEvent event)
-    {
-        String name = event.getName();
-        if (name.equals(BangObject.TICK)) {
-            if (_bangobj.tick >= 0) {
-                tick(_bangobj.tick);
-            }
-        } else {
-            super.attributeChanged(event);
-        }
-    }
-
     @Override // documentation inherited
-    public void playerReady (ClientObject caller)
+    public void playerReady (BodyObject caller)
     {
         // if all players are AIs, the human observer determines when to
         // proceed
@@ -697,6 +697,7 @@ public class BangManager extends GameManager
         _bangobj.setService(
             (BangMarshaller)PresentsServer.invmgr.registerDispatcher(
                 new BangDispatcher(this), false));
+        _bangobj.addListener(_ticklst);
         _bconfig = (BangConfig)_gameconfig;
 
         // note this game in the status object
@@ -2520,6 +2521,17 @@ public class BangManager extends GameManager
             } else {
                 _nextTickTime += extraTime;
                 _ticker.schedule(_nextTickTime - now);
+            }
+        }
+    };
+
+    /** Dispatches calls to {@link #tick} when the tick changes. */
+    protected AttributeChangeListener _ticklst = new AttributeChangeListener() {
+        public void attributeChanged (AttributeChangedEvent event) {
+            if (event.getName().equals(BangObject.TICK)) {
+                if (_bangobj.tick >= 0) {
+                    tick(_bangobj.tick);
+                }
             }
         }
     };
