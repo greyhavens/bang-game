@@ -1,0 +1,1777 @@
+<?xml version="1.0" standalone="yes"?>
+
+<model>
+
+  <skinMesh name="nail_RR" translation="3.05176e-005, 118.387, 118.234" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, 1.38323, 5.43097" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
+    <vertex location="19.3254, -21.8494, -8.56246" normal="0.494528, -0.737196, 0.460417" tcoords="0.179577, 0.498284">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="16.8513, -25.4665, -11.6966" normal="0.48425, -0.802409, 0.348772" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+    </vertex>
+    <vertex location="20.1308, -22.7845, -10.9247" normal="0.500049, -0.74061, 0.448829" tcoords="0.30434, 0.474696">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="20.1308, -22.7845, -10.9247" normal="0.500049, -0.74061, 0.448829" tcoords="0.30434, 0.474696">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="16.8513, -25.4665, -11.6966" normal="0.48425, -0.802409, 0.348772" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+    </vertex>
+    <vertex location="17.8598, -25.2503, -12.6518" normal="0.492003, -0.802387, 0.337799" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="19.3254, -21.8494, -8.56246" normal="-0.843159, 0.123251, 0.523346" tcoords="0.179577, 0.498284">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="17.9867, -21.4054, -10.8238" normal="-0.849323, 0.127353, 0.512281" tcoords="0.304341, 0.474696">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="16.8513, -25.4665, -11.6966" normal="-0.905652, 0.0916222, 0.414005" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+    </vertex>
+    <vertex location="16.8513, -25.4665, -11.6966" normal="-0.905652, 0.0916222, 0.414005" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+    </vertex>
+    <vertex location="17.9867, -21.4054, -10.8238" normal="-0.849323, 0.127353, 0.512281" tcoords="0.304341, 0.474696">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="16.5685, -24.4196, -12.5912" normal="-0.90957, 0.0991559, 0.403548" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="17.9867, -21.4054, -10.8238" normal="0.223778, 0.412494, -0.883047" tcoords="0.993661, 0.877586">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="20.1308, -22.7845, -10.9247" normal="0.223793, 0.412471, -0.883054" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="16.5685, -24.4196, -12.5912" normal="0.223814, 0.412436, -0.883065" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="16.5685, -24.4196, -12.5912" normal="0.223814, 0.412436, -0.883065" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="20.1308, -22.7845, -10.9247" normal="0.223793, 0.412471, -0.883054" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="17.8598, -25.2503, -12.6518" normal="0.223835, 0.412401, -0.883076" tcoords="0.916114, 0.722345">
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="17.9867, -21.4054, -10.8238" normal="0.52987, 0.834746, -0.149788" tcoords="0.993661, 0.877586">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="19.3254, -21.8494, -8.56246" normal="0.52987, 0.834746, -0.149788" tcoords="0.945308, 0.957371">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="20.1308, -22.7845, -10.9247" normal="0.52987, 0.834746, -0.149788" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_RR_3" weight="1.0"/>
+    </vertex>
+    <vertex location="17.8598, -25.2503, -12.6518" normal="0.270836, 0.481839, -0.833354" tcoords="0.916114, 0.722345">
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="15.9495, -26.6928, -14.1068" normal="0.270836, 0.481839, -0.833354" tcoords="0.945308, 0.617985">
+      <boneWeight bone="bone_finger_RR_4" weight="1.0"/>
+    </vertex>
+    <vertex location="16.5685, -24.4196, -12.5912" normal="0.270836, 0.481839, -0.833354" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="16.5685, -24.4196, -12.5912" normal="-0.90957, 0.0991559, 0.403548" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="15.9495, -26.6928, -14.1068" normal="-0.941409, 0.0325714, 0.335692" tcoords="0.513576, 0.223448">
+      <boneWeight bone="bone_finger_RR_4" weight="1.0"/>
+    </vertex>
+    <vertex location="16.8513, -25.4665, -11.6966" normal="-0.905652, 0.0916222, 0.414005" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+    </vertex>
+    <vertex location="16.8513, -25.4665, -11.6966" normal="0.48425, -0.802409, 0.348772" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+    </vertex>
+    <vertex location="15.9495, -26.6928, -14.1068" normal="0.440148, -0.856088, 0.270892" tcoords="0.513576, 0.223448">
+      <boneWeight bone="bone_finger_RR_4" weight="1.0"/>
+    </vertex>
+    <vertex location="17.8598, -25.2503, -12.6518" normal="0.492003, -0.802387, 0.337799" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_RR_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+  </skinMesh>
+
+  <skinMesh name="wendigo_forearm" translation="0.0, 376.733, 118.415" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, -14.1539, 5.42016" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_rags.png" transparent="true">
+    <vertex location="27.0444, -4.28278, -6.21018" normal="1.16496e-006, 0.9737, -0.227832" tcoords="-0.310247, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="28.9147, 2.76982, -2.95951" normal="-0.982868, 0.1777, 0.0489221" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -10.3685, -10.1701" normal="-2.18919e-007, 0.278769, -0.960358" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 3.3747, -4.54661" normal="0.0298724, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -10.3685, -10.1701" normal="-2.18919e-007, 0.278769, -0.960358" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="28.9147, 2.76982, -2.95951" normal="-0.982868, 0.1777, 0.0489221" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.8565, 2.76982, -2.95951" normal="0.998063, -0.0432321, -0.0447294" tcoords="-0.524727, 0.259789">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.1553, -10.9144, -8.73768" normal="0.990248, 8.28397e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 3.3747, -4.54661" normal="0.0298724, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.1553, -10.9144, -8.73768" normal="0.990248, 8.28397e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -10.3685, -10.1701" normal="-2.18919e-007, 0.278769, -0.960358" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 3.3747, -4.54661" normal="0.0298724, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -11.4603, -7.30529" normal="-3.98839e-007, -0.0422016, 0.999109" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.1553, -10.9144, -8.73768" normal="0.990248, 8.28397e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 2.16493, -1.37242" normal="0.0184528, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.8565, 2.76982, -2.95951" normal="0.998063, -0.0432321, -0.0447294" tcoords="-0.524727, 0.259789">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 2.16493, -1.37242" normal="0.0184528, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.1553, -10.9144, -8.73768" normal="0.990248, 8.28397e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -11.4603, -7.30529" normal="-3.98839e-007, -0.0422016, 0.999109" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 2.16493, -1.37242" normal="0.0184528, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -4.28278, -6.21018" normal="1.16496e-006, 0.9737, -0.227832" tcoords="-0.310247, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 2.16493, -1.37242" normal="0.0184528, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="28.9147, 2.76982, -2.95951" normal="-0.982868, 0.1777, 0.0489221" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -4.28278, -6.21018" normal="1.16496e-006, 0.9737, -0.227832" tcoords="-0.310247, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 14.54, 2.92911" normal="0.0249902, 0.638671, -0.769074" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.8137, 14.2876, 3.59124" normal="-0.987151, 0.15479, 0.0396551" tcoords="-0.887244, 0.291626">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 17.3634, 6.06889" normal="-1.90025e-006, 0.782628, 0.622489" tcoords="-0.991233, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.9844, 14.2876, 3.59125" normal="0.996424, 0.0842022, 0.0069421" tcoords="-0.887244, 0.255885">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 14.54, 2.92911" normal="0.0249902, 0.638671, -0.769074" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 17.3634, 6.06889" normal="-1.90025e-006, 0.782628, 0.622489" tcoords="-0.991233, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 14.0353, 4.25337" normal="0.0169456, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.9844, 14.2876, 3.59125" normal="0.996424, 0.0842022, 0.0069421" tcoords="-0.887244, 0.255885">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 17.3634, 6.06889" normal="-1.90025e-006, 0.782628, 0.622489" tcoords="-0.991233, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.8137, 14.2876, 3.59124" normal="-0.987151, 0.15479, 0.0396551" tcoords="-0.887244, 0.291626">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 14.0353, 4.25337" normal="0.0169456, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 17.3634, 6.06889" normal="-1.90025e-006, 0.782628, 0.622489" tcoords="-0.991233, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -12.5412, -10.7922" normal="-4.73048e-007, -0.190519, -0.981684" tcoords="-0.063454, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3982, -12.6804, -8.82897" normal="0.940131, -0.339146, -0.0336658" tcoords="-0.063454, 0.304313">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -14.5514, -8.96161" normal="-2.93089e-007, -0.997496, -0.0707166" tcoords="-0.011531, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3982, -12.6804, -8.82897" normal="0.940131, -0.339146, -0.0336658" tcoords="-0.063454, 0.304313">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -12.8196, -6.8657" normal="-5.68355e-007, -0.282883, 0.959155" tcoords="-0.063454, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -14.5514, -8.96161" normal="-2.93089e-007, -0.997496, -0.0707166" tcoords="-0.011531, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="28.9147, 2.76982, -2.95951" normal="-0.982868, 0.1777, 0.0489221" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.8137, 14.2876, 3.59124" normal="-0.987151, 0.15479, 0.0396551" tcoords="-0.887244, 0.291626">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 3.3747, -4.54661" normal="0.0298724, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 3.3747, -4.54661" normal="0.0298724, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.8137, 14.2876, 3.59124" normal="-0.987151, 0.15479, 0.0396551" tcoords="-0.887244, 0.291626">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 14.54, 2.92911" normal="0.0249902, 0.638671, -0.769074" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.8565, 2.76982, -2.95951" normal="0.998063, -0.0432321, -0.0447294" tcoords="-0.524727, 0.259789">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 3.3747, -4.54661" normal="0.0298724, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.9844, 14.2876, 3.59125" normal="0.996424, 0.0842022, 0.0069421" tcoords="-0.887244, 0.255885">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.9844, 14.2876, 3.59125" normal="0.996424, 0.0842022, 0.0069421" tcoords="-0.887244, 0.255885">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 3.3747, -4.54661" normal="0.0298724, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 14.54, 2.92911" normal="0.0249902, 0.638671, -0.769074" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 2.16493, -1.37242" normal="0.0184528, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.8565, 2.76982, -2.95951" normal="0.998063, -0.0432321, -0.0447294" tcoords="-0.524727, 0.259789">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 14.0353, 4.25337" normal="0.0169456, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 14.0353, 4.25337" normal="0.0169456, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.8565, 2.76982, -2.95951" normal="0.998063, -0.0432321, -0.0447294" tcoords="-0.524727, 0.259789">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.9844, 14.2876, 3.59125" normal="0.996424, 0.0842022, 0.0069421" tcoords="-0.887244, 0.255885">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3856, 2.16493, -1.37242" normal="0.0184528, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 14.0353, 4.25337" normal="0.0169456, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="28.9147, 2.76982, -2.95951" normal="-0.982868, 0.1777, 0.0489221" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="28.9147, 2.76982, -2.95951" normal="-0.982868, 0.1777, 0.0489221" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="31.399, 14.0353, 4.25337" normal="0.0169456, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.8137, 14.2876, 3.59124" normal="-0.987151, 0.15479, 0.0396551" tcoords="-0.887244, 0.291626">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -12.5412, -10.7922" normal="-4.73048e-007, -0.190519, -0.981684" tcoords="-0.063454, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -10.3685, -10.1701" normal="-2.18919e-007, 0.278769, -0.960358" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3982, -12.6804, -8.82897" normal="0.940131, -0.339146, -0.0336658" tcoords="-0.063454, 0.304313">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="30.1553, -10.9144, -8.73768" normal="0.990248, 8.28397e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3982, -12.6804, -8.82897" normal="0.940131, -0.339146, -0.0336658" tcoords="-0.063454, 0.304313">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -10.3685, -10.1701" normal="-2.18919e-007, 0.278769, -0.960358" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="30.3982, -12.6804, -8.82897" normal="0.940131, -0.339146, -0.0336658" tcoords="-0.063454, 0.304313">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="30.1553, -10.9144, -8.73768" normal="0.990248, 8.28397e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -12.8196, -6.8657" normal="-5.68355e-007, -0.282883, 0.959155" tcoords="-0.063454, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -11.4603, -7.30529" normal="-3.98839e-007, -0.0422016, 0.999109" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -12.8196, -6.8657" normal="-5.68355e-007, -0.282883, 0.959155" tcoords="-0.063454, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="30.1553, -10.9144, -8.73768" normal="0.990248, 8.28397e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -4.28278, -6.21018" normal="1.16496e-006, 0.9737, -0.227832" tcoords="-0.310247, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -10.3685, -10.1701" normal="-2.18919e-007, 0.278769, -0.960358" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="25.1741, 2.76982, -2.95951" normal="0.982868, 0.177699, 0.0489229" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 3.3747, -4.54661" normal="-0.0298705, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="25.1741, 2.76982, -2.95951" normal="0.982868, 0.177699, 0.0489229" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -10.3685, -10.1701" normal="-2.18919e-007, 0.278769, -0.960358" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.2323, 2.76982, -2.95951" normal="-0.998063, -0.0432321, -0.04473" tcoords="-0.524727, 0.259789">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 3.3747, -4.54661" normal="-0.0298705, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.9335, -10.9144, -8.73768" normal="-0.990248, 8.45404e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.9335, -10.9144, -8.73768" normal="-0.990248, 8.45404e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 3.3747, -4.54661" normal="-0.0298705, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -10.3685, -10.1701" normal="-2.18919e-007, 0.278769, -0.960358" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.2323, 2.76982, -2.95951" normal="-0.998063, -0.0432321, -0.04473" tcoords="-0.524727, 0.259789">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.9335, -10.9144, -8.73768" normal="-0.990248, 8.45404e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 2.16493, -1.37242" normal="-0.0184521, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -11.4603, -7.30529" normal="-3.98839e-007, -0.0422016, 0.999109" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 2.16493, -1.37242" normal="-0.0184521, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.9335, -10.9144, -8.73768" normal="-0.990248, 8.45404e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -11.4603, -7.30529" normal="-3.98839e-007, -0.0422016, 0.999109" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -4.28278, -6.21018" normal="1.16496e-006, 0.9737, -0.227832" tcoords="-0.310247, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 2.16493, -1.37242" normal="-0.0184521, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 2.16493, -1.37242" normal="-0.0184521, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -4.28278, -6.21018" normal="1.16496e-006, 0.9737, -0.227832" tcoords="-0.310247, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="25.1741, 2.76982, -2.95951" normal="0.982868, 0.177699, 0.0489229" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 14.54, 2.92911" normal="-0.024993, 0.638671, -0.769074" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 17.3634, 6.06888" normal="8.26523e-007, 0.782629, 0.622489" tcoords="-0.991233, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.2751, 14.2876, 3.59124" normal="0.987151, 0.154791, 0.0396546" tcoords="-0.887244, 0.291626">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.1044, 14.2876, 3.59125" normal="-0.996425, 0.0842012, 0.00694265" tcoords="-0.887244, 0.255885">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 17.3634, 6.06888" normal="8.26523e-007, 0.782629, 0.622489" tcoords="-0.991233, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 14.54, 2.92911" normal="-0.024993, 0.638671, -0.769074" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 14.0353, 4.25337" normal="-0.0169463, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 17.3634, 6.06888" normal="8.26523e-007, 0.782629, 0.622489" tcoords="-0.991233, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.1044, 14.2876, 3.59125" normal="-0.996425, 0.0842012, 0.00694265" tcoords="-0.887244, 0.255885">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.2751, 14.2876, 3.59124" normal="0.987151, 0.154791, 0.0396546" tcoords="-0.887244, 0.291626">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 17.3634, 6.06888" normal="8.26523e-007, 0.782629, 0.622489" tcoords="-0.991233, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 14.0353, 4.25337" normal="-0.0169463, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -12.5412, -10.7922" normal="-4.73048e-007, -0.190519, -0.981684" tcoords="-0.063454, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -14.5514, -8.96161" normal="-2.93089e-007, -0.997496, -0.0707166" tcoords="-0.011531, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="23.6907, -12.6804, -8.82897" normal="-0.940132, -0.339145, -0.0336655" tcoords="-0.063454, 0.304313">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="23.6907, -12.6804, -8.82897" normal="-0.940132, -0.339145, -0.0336655" tcoords="-0.063454, 0.304313">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -14.5514, -8.96161" normal="-2.93089e-007, -0.997496, -0.0707166" tcoords="-0.011531, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -12.8196, -6.8657" normal="-5.68355e-007, -0.282883, 0.959155" tcoords="-0.063454, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="25.1741, 2.76982, -2.95951" normal="0.982868, 0.177699, 0.0489229" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 3.3747, -4.54661" normal="-0.0298705, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.2751, 14.2876, 3.59124" normal="0.987151, 0.154791, 0.0396546" tcoords="-0.887244, 0.291626">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 3.3747, -4.54661" normal="-0.0298705, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 14.54, 2.92911" normal="-0.024993, 0.638671, -0.769074" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.2751, 14.2876, 3.59124" normal="0.987151, 0.154791, 0.0396546" tcoords="-0.887244, 0.291626">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 14.54, 2.92911" normal="-0.024993, 0.638671, -0.769074" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 3.3747, -4.54661" normal="-0.0298705, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.1044, 14.2876, 3.59125" normal="-0.996425, 0.0842012, 0.00694265" tcoords="-0.887244, 0.255885">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 3.3747, -4.54661" normal="-0.0298705, 0.48704, -0.872869" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.2323, 2.76982, -2.95951" normal="-0.998063, -0.0432321, -0.04473" tcoords="-0.524727, 0.259789">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.1044, 14.2876, 3.59125" normal="-0.996425, 0.0842012, 0.00694265" tcoords="-0.887244, 0.255885">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.1044, 14.2876, 3.59125" normal="-0.996425, 0.0842012, 0.00694265" tcoords="-0.887244, 0.255885">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.2323, 2.76982, -2.95951" normal="-0.998063, -0.0432321, -0.04473" tcoords="-0.524727, 0.259789">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 14.0353, 4.25337" normal="-0.0169463, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.2323, 2.76982, -2.95951" normal="-0.998063, -0.0432321, -0.04473" tcoords="-0.524727, 0.259789">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 2.16493, -1.37242" normal="-0.0184521, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 14.0353, 4.25337" normal="-0.0169463, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.7032, 2.16493, -1.37242" normal="-0.0184521, -0.391958, 0.919798" tcoords="-0.524727, 0.304696">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="25.1741, 2.76982, -2.95951" normal="0.982868, 0.177699, 0.0489229" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 14.0353, 4.25337" normal="-0.0169463, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="25.1741, 2.76982, -2.95951" normal="0.982868, 0.177699, 0.0489229" tcoords="-0.524727, 0.349603">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.2751, 14.2876, 3.59124" normal="0.987151, 0.154791, 0.0396546" tcoords="-0.887244, 0.291626">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="22.6898, 14.0353, 4.25337" normal="-0.0169463, -0.453864, 0.89091" tcoords="-0.887244, 0.273755">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -12.5412, -10.7922" normal="-4.73048e-007, -0.190519, -0.981684" tcoords="-0.063454, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="23.6907, -12.6804, -8.82897" normal="-0.940132, -0.339145, -0.0336655" tcoords="-0.063454, 0.304313">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -10.3685, -10.1701" normal="-2.18919e-007, 0.278769, -0.960358" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.9335, -10.9144, -8.73768" normal="-0.990248, 8.45404e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -10.3685, -10.1701" normal="-2.18919e-007, 0.278769, -0.960358" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.6907, -12.6804, -8.82897" normal="-0.940132, -0.339145, -0.0336655" tcoords="-0.063454, 0.304313">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="23.6907, -12.6804, -8.82897" normal="-0.940132, -0.339145, -0.0336655" tcoords="-0.063454, 0.304313">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -12.8196, -6.8657" normal="-5.68355e-007, -0.282883, 0.959155" tcoords="-0.063454, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+    <vertex location="23.9335, -10.9144, -8.73768" normal="-0.990248, 8.45404e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -11.4603, -7.30529" normal="-3.98839e-007, -0.0422016, 0.999109" tcoords="-0.113787, 0.406702">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="23.9335, -10.9144, -8.73768" normal="-0.990248, 8.45404e-005, -0.139316" tcoords="-0.113787, 0.311727">
+      <boneWeight bone="bone_forearm" weight="1.0"/>
+    </vertex>
+    <vertex location="27.0444, -12.8196, -6.8657" normal="-5.68355e-007, -0.282883, 0.959155" tcoords="-0.063454, 0.406702">
+      <boneWeight bone="bone_wrist" weight="1.0"/>
+    </vertex>
+  </skinMesh>
+
+  <skinMesh name="finger_LL" translation="3.05176e-005, 118.387, 118.234" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, 1.38323, 5.43097" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
+    <vertex location="31.6091, -18.9749, -11.203" normal="-0.836968, -0.530281, -0.135229" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="27.9273, -12.4293, -8.7875" normal="-0.874581, -0.482825, -0.0445879" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="32.1551, -17.7049, -12.1031" normal="-0.105706, 0.232193, -0.966909" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+    </vertex>
+    <vertex location="27.9273, -12.4293, -8.7875" normal="-0.874581, -0.482825, -0.0445879" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="28.3041, -11.8975, -9.39015" normal="-0.166392, 0.32463, -0.93109" tcoords="0.89366, 0.646216">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="32.1551, -17.7049, -12.1031" normal="-0.105706, 0.232193, -0.966909" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+    </vertex>
+    <vertex location="33.4772, -17.7753, -11.1193" normal="0.836788, 0.544211, -0.0601647" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="32.1551, -17.7049, -12.1031" normal="-0.105706, 0.232193, -0.966909" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+    </vertex>
+    <vertex location="28.9047, -11.8018, -8.74338" normal="0.803469, 0.594532, 0.0311477" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="28.3041, -11.8975, -9.39015" normal="-0.166392, 0.32463, -0.93109" tcoords="0.89366, 0.646216">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="28.9047, -11.8018, -8.74338" normal="0.803469, 0.594532, 0.0311477" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="32.1551, -17.7049, -12.1031" normal="-0.105706, 0.232193, -0.966909" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+    </vertex>
+    <vertex location="32.7114, -18.7147, -10.0487" normal="-0.0131847, -0.0489398, 0.998715" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="33.4772, -17.7753, -11.1193" normal="0.836788, 0.544211, -0.0601647" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="28.5278, -12.3337, -8.14073" normal="0.094267, -0.215149, 0.972021" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="33.4772, -17.7753, -11.1193" normal="0.836788, 0.544211, -0.0601647" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="28.9047, -11.8018, -8.74338" normal="0.803469, 0.594532, 0.0311477" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="28.5278, -12.3337, -8.14073" normal="0.094267, -0.215149, 0.972021" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="32.7114, -18.7147, -10.0487" normal="-0.0131847, -0.0489398, 0.998715" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="28.5278, -12.3337, -8.14073" normal="0.094267, -0.215149, 0.972021" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="31.6091, -18.9749, -11.203" normal="-0.836968, -0.530281, -0.135229" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="27.9273, -12.4293, -8.7875" normal="-0.874581, -0.482825, -0.0445879" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="31.6091, -18.9749, -11.203" normal="-0.836968, -0.530281, -0.135229" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="28.5278, -12.3337, -8.14073" normal="0.094267, -0.215149, 0.972021" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_LL_1" weight="1.0"/>
+    </vertex>
+    <vertex location="31.6091, -18.9749, -11.203" normal="-0.836968, -0.530281, -0.135229" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="32.1551, -17.7049, -12.1031" normal="-0.105706, 0.232193, -0.966909" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+    </vertex>
+    <vertex location="33.026, -19.0534, -12.218" normal="0.0997731, -0.0859825, -0.991288" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="32.1551, -17.7049, -12.1031" normal="-0.105706, 0.232193, -0.966909" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+    </vertex>
+    <vertex location="33.4772, -17.7753, -11.1193" normal="0.836788, 0.544211, -0.0601647" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="33.026, -19.0534, -12.218" normal="0.0997731, -0.0859825, -0.991288" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="33.026, -19.0534, -12.218" normal="0.0997731, -0.0859825, -0.991288" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="33.4772, -17.7753, -11.1193" normal="0.836788, 0.544211, -0.0601647" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="35.9535, -23.7122, -10.8417" normal="0.159017, -0.180425, -0.970649" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+    </vertex>
+    <vertex location="33.4772, -17.7753, -11.1193" normal="0.836788, 0.544211, -0.0601647" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="36.0797, -22.8132, -10.3156" normal="0.887234, 0.432904, -0.159402" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="35.9535, -23.7122, -10.8417" normal="0.159017, -0.180425, -0.970649" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+    </vertex>
+    <vertex location="36.0797, -22.8132, -10.3156" normal="0.887234, 0.432904, -0.159402" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="33.4772, -17.7753, -11.1193" normal="0.836788, 0.544211, -0.0601647" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="35.4709, -23.0609, -9.39939" normal="-0.050082, 0.00814747, 0.998712" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="35.4709, -23.0609, -9.39939" normal="-0.050082, 0.00814747, 0.998712" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="33.4772, -17.7753, -11.1193" normal="0.836788, 0.544211, -0.0601647" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="32.7114, -18.7147, -10.0487" normal="-0.0131847, -0.0489398, 0.998715" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="32.7114, -18.7147, -10.0487" normal="-0.0131847, -0.0489398, 0.998715" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="31.6091, -18.9749, -11.203" normal="-0.836968, -0.530281, -0.135229" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="35.4709, -23.0609, -9.39939" normal="-0.050082, 0.00814747, 0.998712" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="31.6091, -18.9749, -11.203" normal="-0.836968, -0.530281, -0.135229" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="35.0517, -23.4734, -10.3614" normal="-0.750819, -0.618118, -0.232814" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="35.4709, -23.0609, -9.39939" normal="-0.050082, 0.00814747, 0.998712" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="33.026, -19.0534, -12.218" normal="0.0997731, -0.0859825, -0.991288" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="35.9535, -23.7122, -10.8417" normal="0.159017, -0.180425, -0.970649" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+    </vertex>
+    <vertex location="31.6091, -18.9749, -11.203" normal="-0.836968, -0.530281, -0.135229" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="31.6091, -18.9749, -11.203" normal="-0.836968, -0.530281, -0.135229" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_1" weight="0.5"/>
+    </vertex>
+    <vertex location="35.9535, -23.7122, -10.8417" normal="0.159017, -0.180425, -0.970649" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+    </vertex>
+    <vertex location="35.0517, -23.4734, -10.3614" normal="-0.750819, -0.618118, -0.232814" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_LL_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+  </skinMesh>
+
+  <skinMesh name="finger_LM" translation="3.05176e-005, 118.387, 118.234" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, 1.38323, 5.43097" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
+    <vertex location="28.2978, -19.7978, -10.3685" normal="-0.966795, -0.222754, -0.125254" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="27.1013, -12.1533, -8.80064" normal="-0.987379, -0.150858, -0.0482192" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="29.2659, -18.8951, -11.3531" normal="-0.00332801, 0.149803, -0.98871" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="27.1013, -12.1533, -8.80064" normal="-0.987379, -0.150858, -0.0482192" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="27.65, -11.8499, -9.42903" normal="-0.0256728, 0.257891, -0.965833" tcoords="0.89366, 0.646216">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="29.2659, -18.8951, -11.3531" normal="-0.00332801, 0.149803, -0.98871" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="30.466, -19.3177, -10.3036" normal="0.975785, 0.208072, -0.0674515" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="29.2659, -18.8951, -11.3531" normal="-0.00332801, 0.149803, -0.98871" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="28.2357, -11.903, -8.76402" normal="0.960234, 0.278816, 0.014587" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="27.65, -11.8499, -9.42903" normal="-0.0256728, 0.257891, -0.965833" tcoords="0.89366, 0.646216">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="28.2357, -11.903, -8.76402" normal="0.960234, 0.278816, 0.014587" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="29.2659, -18.8951, -11.3531" normal="-0.00332801, 0.149803, -0.98871" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="29.4054, -19.8185, -9.19034" normal="-0.0437223, 0.0608318, 0.99719" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="30.466, -19.3177, -10.3036" normal="0.975785, 0.208072, -0.0674515" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="27.687, -12.2064, -8.13563" normal="-0.00395981, -0.126904, 0.991907" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="30.466, -19.3177, -10.3036" normal="0.975785, 0.208072, -0.0674515" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="28.2357, -11.903, -8.76402" normal="0.960234, 0.278816, 0.014587" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="27.687, -12.2064, -8.13563" normal="-0.00395981, -0.126904, 0.991907" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="29.4054, -19.8185, -9.19034" normal="-0.0437223, 0.0608318, 0.99719" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="27.687, -12.2064, -8.13563" normal="-0.00395981, -0.126904, 0.991907" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="28.2978, -19.7978, -10.3685" normal="-0.966795, -0.222754, -0.125254" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="27.1013, -12.1533, -8.80064" normal="-0.987379, -0.150858, -0.0482192" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="28.2978, -19.7978, -10.3685" normal="-0.966795, -0.222754, -0.125254" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="27.687, -12.2064, -8.13563" normal="-0.00395981, -0.126904, 0.991907" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_LM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="28.2978, -19.7978, -10.3685" normal="-0.966795, -0.222754, -0.125254" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="29.2659, -18.8951, -11.3531" normal="-0.00332801, 0.149803, -0.98871" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="29.611, -20.4662, -11.3016" normal="0.0786572, -0.228297, -0.970409" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="29.2659, -18.8951, -11.3531" normal="-0.00332801, 0.149803, -0.98871" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="30.466, -19.3177, -10.3036" normal="0.975785, 0.208072, -0.0674515" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="29.611, -20.4662, -11.3016" normal="0.0786572, -0.228297, -0.970409" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="29.611, -20.4662, -11.3016" normal="0.0786572, -0.228297, -0.970409" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="30.466, -19.3177, -10.3036" normal="0.975785, 0.208072, -0.0674515" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="30.7373, -25.8075, -9.18597" normal="0.0976621, -0.314649, -0.944171" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="30.466, -19.3177, -10.3036" normal="0.975785, 0.208072, -0.0674515" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="31.1587, -24.9198, -8.88383" normal="0.960974, 0.0498689, -0.272108" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="30.7373, -25.8075, -9.18597" normal="0.0976621, -0.314649, -0.944171" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="31.1587, -24.9198, -8.88383" normal="0.960974, 0.0498689, -0.272108" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="30.466, -19.3177, -10.3036" normal="0.975785, 0.208072, -0.0674515" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="30.4601, -24.702, -8.05906" normal="-0.0579919, 0.133862, 0.989302" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="30.4601, -24.702, -8.05906" normal="-0.0579919, 0.133862, 0.989302" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="30.466, -19.3177, -10.3036" normal="0.975785, 0.208072, -0.0674515" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="29.4054, -19.8185, -9.19034" normal="-0.0437223, 0.0608318, 0.99719" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="29.4054, -19.8185, -9.19034" normal="-0.0437223, 0.0608318, 0.99719" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="28.2978, -19.7978, -10.3685" normal="-0.966795, -0.222754, -0.125254" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="30.4601, -24.702, -8.05906" normal="-0.0579919, 0.133862, 0.989302" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="28.2978, -19.7978, -10.3685" normal="-0.966795, -0.222754, -0.125254" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="29.9655, -25.1841, -8.91908" normal="-0.875486, -0.358311, -0.32425" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="30.4601, -24.702, -8.05906" normal="-0.0579919, 0.133862, 0.989302" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="29.611, -20.4662, -11.3016" normal="0.0786572, -0.228297, -0.970409" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="30.7373, -25.8075, -9.18597" normal="0.0976621, -0.314649, -0.944171" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="28.2978, -19.7978, -10.3685" normal="-0.966795, -0.222754, -0.125254" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="28.2978, -19.7978, -10.3685" normal="-0.966795, -0.222754, -0.125254" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_LM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="30.7373, -25.8075, -9.18597" normal="0.0976621, -0.314649, -0.944171" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="29.9655, -25.1841, -8.91908" normal="-0.875486, -0.358311, -0.32425" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_LM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+  </skinMesh>
+
+  <skinMesh name="finger_RM" translation="3.05176e-005, 118.387, 118.234" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, 1.38323, 5.43097" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
+    <vertex location="26.1016, -19.6877, -10.9577" normal="0.977572, -0.175833, -0.115911" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="25.1253, -18.7437, -11.8948" normal="0.0217159, 0.227107, -0.973628" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="26.9783, -12.1502, -8.77463" normal="0.993168, -0.110832, -0.03652" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.0"/>
+    </vertex>
+    <vertex location="26.9783, -12.1502, -8.77463" normal="0.993168, -0.110832, -0.03652" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.0"/>
+    </vertex>
+    <vertex location="25.1253, -18.7437, -11.8948" normal="0.0217159, 0.227107, -0.973628" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="26.4321, -11.8174, -9.39019" normal="0.0362373, 0.333786, -0.941952" tcoords="0.89366, 0.646216">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="23.9164, -19.2895, -10.9149" normal="-0.979961, 0.183119, -0.0783879" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="25.8347, -11.9444, -8.7459" normal="-0.970161, 0.24213, 0.0126368" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="25.1253, -18.7437, -11.8948" normal="0.0217159, 0.227107, -0.973628" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="26.4321, -11.8174, -9.39019" normal="0.0362373, 0.333786, -0.941952" tcoords="0.89366, 0.646216">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="25.1253, -18.7437, -11.8948" normal="0.0217159, 0.227107, -0.973628" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="25.8347, -11.9444, -8.7459" normal="-0.970161, 0.24213, 0.0126368" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="24.9667, -19.8399, -9.81567" normal="0.0193386, -0.00854394, 0.999776" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="26.381, -12.2773, -8.13033" normal="-0.0123001, -0.204341, 0.978822" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="23.9164, -19.2895, -10.9149" normal="-0.979961, 0.183119, -0.0783879" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="23.9164, -19.2895, -10.9149" normal="-0.979961, 0.183119, -0.0783879" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="26.381, -12.2773, -8.13033" normal="-0.0123001, -0.204341, 0.978822" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="25.8347, -11.9444, -8.7459" normal="-0.970161, 0.24213, 0.0126368" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="24.9667, -19.8399, -9.81567" normal="0.0193386, -0.00854394, 0.999776" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="26.1016, -19.6877, -10.9577" normal="0.977572, -0.175833, -0.115911" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="26.381, -12.2773, -8.13033" normal="-0.0123001, -0.204341, 0.978822" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="26.9783, -12.1502, -8.77463" normal="0.993168, -0.110832, -0.03652" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.0"/>
+    </vertex>
+    <vertex location="26.381, -12.2773, -8.13033" normal="-0.0123001, -0.204341, 0.978822" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_RM_1" weight="1.0"/>
+    </vertex>
+    <vertex location="26.1016, -19.6877, -10.9577" normal="0.977572, -0.175833, -0.115911" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="26.1016, -19.6877, -10.9577" normal="0.977572, -0.175833, -0.115911" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="24.8385, -20.3253, -11.9761" normal="-0.0435489, -0.146844, -0.988201" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="25.1253, -18.7437, -11.8948" normal="0.0217159, 0.227107, -0.973628" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="25.1253, -18.7437, -11.8948" normal="0.0217159, 0.227107, -0.973628" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="24.8385, -20.3253, -11.9761" normal="-0.0435489, -0.146844, -0.988201" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="23.9164, -19.2895, -10.9149" normal="-0.979961, 0.183119, -0.0783879" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="24.8385, -20.3253, -11.9761" normal="-0.0435489, -0.146844, -0.988201" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="23.8606, -25.7483, -10.4188" normal="-0.0627981, -0.255738, -0.964704" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="23.9164, -19.2895, -10.9149" normal="-0.979961, 0.183119, -0.0783879" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="23.9164, -19.2895, -10.9149" normal="-0.979961, 0.183119, -0.0783879" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="23.8606, -25.7483, -10.4188" normal="-0.0627981, -0.255738, -0.964704" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="23.3944, -24.9404, -9.94279" normal="-0.979494, 0.0572387, -0.193173" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="23.3944, -24.9404, -9.94279" normal="-0.979494, 0.0572387, -0.193173" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="24.04, -24.8884, -9.02292" normal="0.025792, 0.0585822, 0.997949" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="23.9164, -19.2895, -10.9149" normal="-0.979961, 0.183119, -0.0783879" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="24.04, -24.8884, -9.02292" normal="0.025792, 0.0585822, 0.997949" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="24.9667, -19.8399, -9.81567" normal="0.0193386, -0.00854394, 0.999776" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="23.9164, -19.2895, -10.9149" normal="-0.979961, 0.183119, -0.0783879" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="24.9667, -19.8399, -9.81567" normal="0.0193386, -0.00854394, 0.999776" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="24.04, -24.8884, -9.02292" normal="0.025792, 0.0585822, 0.997949" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="26.1016, -19.6877, -10.9577" normal="0.977572, -0.175833, -0.115911" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="26.1016, -19.6877, -10.9577" normal="0.977572, -0.175833, -0.115911" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="24.04, -24.8884, -9.02292" normal="0.025792, 0.0585822, 0.997949" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="24.5969, -25.1608, -9.96198" normal="0.929463, -0.295669, -0.220631" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="24.8385, -20.3253, -11.9761" normal="-0.0435489, -0.146844, -0.988201" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+    </vertex>
+    <vertex location="26.1016, -19.6877, -10.9577" normal="0.977572, -0.175833, -0.115911" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="23.8606, -25.7483, -10.4188" normal="-0.0627981, -0.255738, -0.964704" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="26.1016, -19.6877, -10.9577" normal="0.977572, -0.175833, -0.115911" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RM_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+    <vertex location="24.5969, -25.1608, -9.96198" normal="0.929463, -0.295669, -0.220631" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="23.8606, -25.7483, -10.4188" normal="-0.0627981, -0.255738, -0.964704" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_2" weight="0.5"/>
+    </vertex>
+  </skinMesh>
+
+  <skinMesh name="finger_RR" translation="3.05176e-005, 118.387, 118.234" rotation="-0.00945306, 0.0, 0.0, 0.999955" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, 1.38323, 5.43097" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
+    <vertex location="22.533, -18.7617, -12.0517" normal="0.837305, -0.529229, -0.137249" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="22.034, -17.4273, -12.8817" normal="0.149257, 0.298491, -0.942669" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+    </vertex>
+    <vertex location="26.1474, -12.403, -9.00016" normal="0.873662, -0.484902, -0.0398177" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="26.1474, -12.403, -9.00016" normal="0.873662, -0.484902, -0.0398177" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="22.034, -17.4273, -12.8817" normal="0.149257, 0.298491, -0.942669" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+    </vertex>
+    <vertex location="25.7987, -11.8282, -9.57983" normal="0.208439, 0.389024, -0.897337" tcoords="0.89366, 0.646216">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="20.6707, -17.5536, -11.9602" normal="-0.831551, 0.552488, -0.0572696" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="25.1714, -11.7736, -8.95413" normal="-0.802143, 0.595853, 0.0390556" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="22.034, -17.4273, -12.8817" normal="0.149257, 0.298491, -0.942669" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+    </vertex>
+    <vertex location="25.7987, -11.8282, -9.57983" normal="0.208439, 0.389024, -0.897337" tcoords="0.89366, 0.646216">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="22.034, -17.4273, -12.8817" normal="0.149257, 0.298491, -0.942669" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+    </vertex>
+    <vertex location="25.1714, -11.7736, -8.95413" normal="-0.802143, 0.595853, 0.0390556" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="21.3844, -18.5723, -10.928" normal="-0.0313863, -0.124628, 0.991707" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="25.52, -12.3485, -8.37446" normal="-0.138011, -0.283581, 0.948965" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="20.6707, -17.5536, -11.9602" normal="-0.831551, 0.552488, -0.0572696" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="20.6707, -17.5536, -11.9602" normal="-0.831551, 0.552488, -0.0572696" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="25.52, -12.3485, -8.37446" normal="-0.138011, -0.283581, 0.948965" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="25.1714, -11.7736, -8.95413" normal="-0.802143, 0.595853, 0.0390556" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="21.3844, -18.5723, -10.928" normal="-0.0313863, -0.124628, 0.991707" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="22.533, -18.7617, -12.0517" normal="0.837305, -0.529229, -0.137249" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="25.52, -12.3485, -8.37446" normal="-0.138011, -0.283581, 0.948965" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="26.1474, -12.403, -9.00016" normal="0.873662, -0.484902, -0.0398177" tcoords="0.869157, 0.661552">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="25.52, -12.3485, -8.37446" normal="-0.138011, -0.283581, 0.948965" tcoords="0.844653, 0.676887">
+      <boneWeight bone="bone_finger_RR_1" weight="1.0"/>
+    </vertex>
+    <vertex location="22.533, -18.7617, -12.0517" normal="0.837305, -0.529229, -0.137249" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="22.533, -18.7617, -12.0517" normal="0.837305, -0.529229, -0.137249" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="21.1594, -18.7559, -13.1269" normal="-0.0610703, -0.0204571, -0.997924" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="22.034, -17.4273, -12.8817" normal="0.149257, 0.298491, -0.942669" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+    </vertex>
+    <vertex location="22.034, -17.4273, -12.8817" normal="0.149257, 0.298491, -0.942669" tcoords="0.687248, 0.347587">
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+    </vertex>
+    <vertex location="21.1594, -18.7559, -13.1269" normal="-0.0610703, -0.0204571, -0.997924" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="20.6707, -17.5536, -11.9602" normal="-0.831551, 0.552488, -0.0572696" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="21.1594, -18.7559, -13.1269" normal="-0.0610703, -0.0204571, -0.997924" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="18.0828, -23.5516, -12.1312" normal="-0.115094, -0.101236, -0.988182" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+    </vertex>
+    <vertex location="20.6707, -17.5536, -11.9602" normal="-0.831551, 0.552488, -0.0572696" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="20.6707, -17.5536, -11.9602" normal="-0.831551, 0.552488, -0.0572696" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="18.0828, -23.5516, -12.1312" normal="-0.115094, -0.101236, -0.988182" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+    </vertex>
+    <vertex location="17.9652, -22.6479, -11.636" normal="-0.862982, 0.442852, -0.243195" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="17.9652, -22.6479, -11.636" normal="-0.862982, 0.442852, -0.243195" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="18.5916, -22.8745, -10.7436" normal="0.00773916, -0.0629192, 0.997989" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="20.6707, -17.5536, -11.9602" normal="-0.831551, 0.552488, -0.0572696" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="18.5916, -22.8745, -10.7436" normal="0.00773916, -0.0629192, 0.997989" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="21.3844, -18.5723, -10.928" normal="-0.0313863, -0.124628, 0.991707" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="20.6707, -17.5536, -11.9602" normal="-0.831551, 0.552488, -0.0572696" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="21.3844, -18.5723, -10.928" normal="-0.0313863, -0.124628, 0.991707" tcoords="0.610185, 0.420164">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="18.5916, -22.8745, -10.7436" normal="0.00773916, -0.0629192, 0.997989" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="22.533, -18.7617, -12.0517" normal="0.837305, -0.529229, -0.137249" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="22.533, -18.7617, -12.0517" normal="0.837305, -0.529229, -0.137249" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="18.5916, -22.8745, -10.7436" normal="0.00773916, -0.0629192, 0.997989" tcoords="0.401292, 0.451467">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="18.9893, -23.3138, -11.6868" normal="0.734476, -0.597546, -0.321689" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="21.1594, -18.7559, -13.1269" normal="-0.0610703, -0.0204571, -0.997924" tcoords="0.613563, 0.316634">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="22.533, -18.7617, -12.0517" normal="0.837305, -0.529229, -0.137249" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="18.0828, -23.5516, -12.1312" normal="-0.115094, -0.101236, -0.988182" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+    </vertex>
+    <vertex location="22.533, -18.7617, -12.0517" normal="0.837305, -0.529229, -0.137249" tcoords="0.640413, 0.3769">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_1" weight="0.5"/>
+    </vertex>
+    <vertex location="18.9893, -23.3138, -11.6868" normal="0.734476, -0.597546, -0.321689" tcoords="0.396296, 0.408821">
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+    </vertex>
+    <vertex location="18.0828, -23.5516, -12.1312" normal="-0.115094, -0.101236, -0.988182" tcoords="0.365006, 0.382534">
+      <boneWeight bone="bone_finger_RR_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RR_2" weight="0.5"/>
+    </vertex>
+  </skinMesh>
+
+  <skinMesh name="nail_LL" translation="3.05176e-005, 118.387, 118.234" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, 1.38323, 5.43097" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
+    <vertex location="34.9756, -22.2785, -7.29249" normal="-0.452786, -0.795723, 0.402255" tcoords="0.179577, 0.498284">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="33.9737, -22.9147, -9.67878" normal="-0.459943, -0.797779, 0.389873" tcoords="0.30434, 0.474696">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="37.2022, -25.4798, -11.1189" normal="-0.444004, -0.86336, 0.239731" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+    </vertex>
+    <vertex location="33.9737, -22.9147, -9.67878" normal="-0.459943, -0.797779, 0.389873" tcoords="0.30434, 0.474696">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="36.0704, -25.0866, -11.885" normal="-0.45367, -0.861503, 0.228025" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="37.2022, -25.4798, -11.1189" normal="-0.444004, -0.86336, 0.239731" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+    </vertex>
+    <vertex location="34.9756, -22.2785, -7.29249" normal="0.884633, 0.0630732, 0.462002" tcoords="0.179577, 0.498284">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="37.2022, -25.4798, -11.1189" normal="0.952609, 0.0334565, 0.302353" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+    </vertex>
+    <vertex location="36.1189, -21.5372, -9.58293" normal="0.890231, 0.0692003, 0.450223" tcoords="0.304341, 0.474696">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="37.2022, -25.4798, -11.1189" normal="0.952609, 0.0334565, 0.302353" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+    </vertex>
+    <vertex location="37.3624, -24.257, -11.8271" normal="0.955658, 0.0434609, 0.291253" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="36.1189, -21.5372, -9.58293" normal="0.890231, 0.0692003, 0.450223" tcoords="0.304341, 0.474696">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="36.1189, -21.5372, -9.58293" normal="-0.299529, 0.522014, -0.798614" tcoords="0.993661, 0.877586">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="37.3624, -24.257, -11.8271" normal="-0.299486, 0.52208, -0.798587" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="33.9737, -22.9147, -9.67878" normal="-0.299511, 0.522041, -0.798603" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="37.3624, -24.257, -11.8271" normal="-0.299486, 0.52208, -0.798587" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="36.0704, -25.0866, -11.885" normal="-0.29946, 0.522119, -0.798571" tcoords="0.916114, 0.722345">
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="33.9737, -22.9147, -9.67878" normal="-0.299511, 0.522041, -0.798603" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="36.1189, -21.5372, -9.58293" normal="-0.540417, 0.841393, 0.00257748" tcoords="0.993661, 0.877586">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="33.9737, -22.9147, -9.67878" normal="-0.540417, 0.841393, 0.00257748" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="34.9756, -22.2785, -7.29249" normal="-0.540417, 0.841393, 0.00257748" tcoords="0.945308, 0.957371">
+      <boneWeight bone="bone_finger_LL_3" weight="1.0"/>
+    </vertex>
+    <vertex location="36.0704, -25.0866, -11.885" normal="-0.409536, 0.680238, -0.607912" tcoords="0.916114, 0.722345">
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="37.3624, -24.257, -11.8271" normal="-0.409536, 0.680238, -0.607912" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="37.6574, -25.9897, -13.9647" normal="-0.409536, 0.680238, -0.607912" tcoords="0.945308, 0.617985">
+      <boneWeight bone="bone_finger_LL_4" weight="1.0"/>
+    </vertex>
+    <vertex location="37.3624, -24.257, -11.8271" normal="0.955658, 0.0434609, 0.291253" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="37.2022, -25.4798, -11.1189" normal="0.952609, 0.0334565, 0.302353" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+    </vertex>
+    <vertex location="37.6574, -25.9897, -13.9647" normal="0.985888, -0.0342857, 0.163857" tcoords="0.513576, 0.223448">
+      <boneWeight bone="bone_finger_LL_4" weight="1.0"/>
+    </vertex>
+    <vertex location="37.2022, -25.4798, -11.1189" normal="-0.444004, -0.86336, 0.239731" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+    </vertex>
+    <vertex location="36.0704, -25.0866, -11.885" normal="-0.45367, -0.861503, 0.228025" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_LL_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LL_3" weight="0.5"/>
+    </vertex>
+    <vertex location="37.6574, -25.9897, -13.9647" normal="-0.387473, -0.916203, 0.102164" tcoords="0.513576, 0.223448">
+      <boneWeight bone="bone_finger_LL_4" weight="1.0"/>
+    </vertex>
+  </skinMesh>
+
+  <skinMesh name="nail_LM" translation="3.05176e-005, 118.387, 118.234" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, 1.38323, 5.43097" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
+    <vertex location="30.1036, -22.8939, -6.66648" normal="-0.750526, -0.364199, 0.551426" tcoords="0.179577, 0.498284">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="29.1427, -24.1562, -8.80803" normal="-0.75688, -0.369115, 0.539339" tcoords="0.30434, 0.474696">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="31.2631, -27.905, -8.39807" normal="-0.758745, -0.470844, 0.450125" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="29.1427, -24.1562, -8.80803" normal="-0.75688, -0.369115, 0.539339" tcoords="0.30434, 0.474696">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="30.4509, -27.6236, -9.51772" normal="-0.765634, -0.472403, 0.436624" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="31.2631, -27.905, -8.39807" normal="-0.758745, -0.470844, 0.450125" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="30.1036, -22.8939, -6.66648" normal="0.799442, -0.0224681, 0.600323" tcoords="0.179577, 0.498284">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="31.2631, -27.905, -8.39807" normal="0.856475, -0.113515, 0.503552" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="31.6328, -23.6066, -8.72961" normal="0.807699, -0.0240437, 0.589104" tcoords="0.304341, 0.474696">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="31.2631, -27.905, -8.39807" normal="0.856475, -0.113515, 0.503552" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="31.9505, -27.2923, -9.4681" normal="0.863946, -0.111833, 0.49101" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="31.6328, -23.6066, -8.72961" normal="0.807699, -0.0240437, 0.589104" tcoords="0.304341, 0.474696">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="31.6328, -23.6066, -8.72961" normal="-0.0122515, 0.195432, -0.980641" tcoords="0.993661, 0.877586">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="31.9505, -27.2923, -9.4681" normal="-0.0114528, 0.19612, -0.980513" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="29.1427, -24.1562, -8.80803" normal="-0.0119276, 0.195711, -0.980589" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="31.9505, -27.2923, -9.4681" normal="-0.0114528, 0.19612, -0.980513" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="30.4509, -27.6236, -9.51772" normal="-0.0109789, 0.196529, -0.980437" tcoords="0.916114, 0.722345">
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="29.1427, -24.1562, -8.80803" normal="-0.0119276, 0.195711, -0.980589" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="31.6328, -23.6066, -8.72961" normal="-0.180575, 0.880628, -0.438048" tcoords="0.993661, 0.877586">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="29.1427, -24.1562, -8.80803" normal="-0.180575, 0.880628, -0.438048" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="30.1036, -22.8939, -6.66648" normal="-0.180575, 0.880628, -0.438048" tcoords="0.945308, 0.957371">
+      <boneWeight bone="bone_finger_LM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="30.4509, -27.6236, -9.51772" normal="-0.0440467, 0.340063, -0.939371" tcoords="0.916114, 0.722345">
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="31.9505, -27.2923, -9.4681" normal="-0.0440467, 0.340063, -0.939371" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="31.7795, -29.9285, -10.4144" normal="-0.0440467, 0.340063, -0.939371" tcoords="0.945308, 0.617985">
+      <boneWeight bone="bone_finger_LM_4" weight="1.0"/>
+    </vertex>
+    <vertex location="31.9505, -27.2923, -9.4681" normal="0.863946, -0.111833, 0.49101" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="31.2631, -27.905, -8.39807" normal="0.856475, -0.113515, 0.503552" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="31.7795, -29.9285, -10.4144" normal="0.872976, -0.213967, 0.438328" tcoords="0.513576, 0.223448">
+      <boneWeight bone="bone_finger_LM_4" weight="1.0"/>
+    </vertex>
+    <vertex location="31.2631, -27.905, -8.39807" normal="-0.758745, -0.470844, 0.450125" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="30.4509, -27.6236, -9.51772" normal="-0.765634, -0.472403, 0.436624" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_LM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_LM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="31.7795, -29.9285, -10.4144" normal="-0.727132, -0.568727, 0.384484" tcoords="0.513576, 0.223448">
+      <boneWeight bone="bone_finger_LM_4" weight="1.0"/>
+    </vertex>
+  </skinMesh>
+
+  <skinMesh name="nail_RM" translation="3.05176e-005, 118.387, 118.234" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, 1.38323, 5.43097" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
+    <vertex location="24.1918, -23.7784, -7.02455" normal="0.718775, -0.529409, 0.450653" tcoords="0.179577, 0.498284">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="23.3876, -27.8654, -10.5431" normal="0.739942, -0.600381, 0.303362" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="25.3737, -24.1784, -9.37955" normal="0.726663, -0.529554, 0.437646" tcoords="0.30434, 0.474696">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="25.3737, -24.1784, -9.37955" normal="0.726663, -0.529554, 0.437646" tcoords="0.30434, 0.474696">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="23.3876, -27.8654, -10.5431" normal="0.739942, -0.600381, 0.303362" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="24.2778, -27.1614, -11.392" normal="0.748304, -0.596672, 0.289867" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="24.1918, -23.7784, -7.02455" normal="-0.842949, -0.246033, 0.478441" tcoords="0.179577, 0.498284">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="22.8641, -23.7218, -9.33471" normal="-0.8503, -0.243503, 0.46658" tcoords="0.304341, 0.474696">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="23.3876, -27.8654, -10.5431" normal="-0.890603, -0.304176, 0.338087" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="23.3876, -27.8654, -10.5431" normal="-0.890603, -0.304176, 0.338087" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="22.8641, -23.7218, -9.33471" normal="-0.8503, -0.243503, 0.46658" tcoords="0.304341, 0.474696">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="22.7661, -26.8878, -11.3602" normal="-0.897198, -0.298023, 0.32591" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="22.8641, -23.7218, -9.33471" normal="0.082369, 0.535259, -0.840663" tcoords="0.993661, 0.877586">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="25.3737, -24.1784, -9.37955" normal="0.0816543, 0.535763, -0.840411" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="22.7661, -26.8878, -11.3602" normal="0.0806145, 0.536495, -0.840044" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="22.7661, -26.8878, -11.3602" normal="0.0806145, 0.536495, -0.840044" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="25.3737, -24.1784, -9.37955" normal="0.0816543, 0.535763, -0.840411" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="24.2778, -27.1614, -11.392" normal="0.0795693, 0.53723, -0.839674" tcoords="0.916114, 0.722345">
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="22.8641, -23.7218, -9.33471" normal="0.17712, 0.981114, -0.077737" tcoords="0.993661, 0.877586">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="24.1918, -23.7784, -7.02455" normal="0.17712, 0.981114, -0.077737" tcoords="0.945308, 0.957371">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="25.3737, -24.1784, -9.37955" normal="0.17712, 0.981114, -0.077737" tcoords="0.896956, 0.877586">
+      <boneWeight bone="bone_finger_RM_3" weight="1.0"/>
+    </vertex>
+    <vertex location="24.2778, -27.1614, -11.392" normal="0.111738, 0.69942, -0.705922" tcoords="0.916114, 0.722345">
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="23.1397, -28.8845, -13.2793" normal="0.111738, 0.69942, -0.705922" tcoords="0.945308, 0.617985">
+      <boneWeight bone="bone_finger_RM_4" weight="1.0"/>
+    </vertex>
+    <vertex location="22.7661, -26.8878, -11.3602" normal="0.111738, 0.69942, -0.705922" tcoords="0.974504, 0.722345">
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="22.7661, -26.8878, -11.3602" normal="-0.897198, -0.298023, 0.32591" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+    <vertex location="23.1397, -28.8845, -13.2793" normal="-0.89631, -0.382821, 0.223778" tcoords="0.513576, 0.223448">
+      <boneWeight bone="bone_finger_RM_4" weight="1.0"/>
+    </vertex>
+    <vertex location="23.3876, -27.8654, -10.5431" normal="-0.890603, -0.304176, 0.338087" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="23.3876, -27.8654, -10.5431" normal="0.739942, -0.600381, 0.303362" tcoords="0.349872, 0.247314">
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+    </vertex>
+    <vertex location="23.1397, -28.8845, -13.2793" normal="0.71292, -0.675817, 0.187126" tcoords="0.513576, 0.223448">
+      <boneWeight bone="bone_finger_RM_4" weight="1.0"/>
+    </vertex>
+    <vertex location="24.2778, -27.1614, -11.392" normal="0.748304, -0.596672, 0.289867" tcoords="0.392576, 0.297109">
+      <boneWeight bone="bone_finger_RM_4" weight="0.5"/>
+      <boneWeight bone="bone_finger_RM_3" weight="0.5"/>
+    </vertex>
+  </skinMesh>
+
+  <node name="CONTROLLER" translation="0.0, -22.705, 113.347" rotation="-0.613659, 0.351316, 0.613659, -0.351316" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_forearm" parent="CONTROLLER" translation="-444.724, -59.8254, 3.05176e-005" rotation="0.0, 0.0, 0.0240543, 0.999711" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_wrist" parent="bone_forearm" translation="487.95, 2.13236e-005, -5.77579e-005" rotation="0.0, 0.0, 0.139979, 0.990154" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_LL_1" parent="bone_wrist" translation="20.9651, 0.725679, -23.7894" rotation="-0.719723, 0.249265, 0.146831, 0.631115" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_LL_2" parent="bone_finger_LL_1" translation="129.336, -8.66323e-006, 6.66834e-006" rotation="0.672242, -0.229612, 0.222774, 0.667638" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_LL_3" parent="bone_finger_LL_2" translation="103.865, 0.000333428, -5.04792e-006" rotation="0.0, 1.2303e-007, -0.478109, 0.878301" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_LL_4" parent="bone_finger_LL_3" translation="43.39, 3.05769e-006, -4.01044e-006" rotation="-0.00527142, 0.00194971, -0.172212, 0.985044" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_LM_1" parent="bone_wrist" translation="23.5852, 1.07174, -10.9181" rotation="-0.711925, 0.0968247, 0.0679738, 0.692219" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_LM_2" parent="bone_finger_LM_1" translation="129.336, -3.3018e-006, 4.42791e-006" rotation="0.672242, -0.229612, 0.222774, 0.667638" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_LM_3" parent="bone_finger_LM_2" translation="103.865, 0.000333023, 1.36071e-006" rotation="0.0, 0.0, -0.316591, 0.948562" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_LM_4" parent="bone_finger_LM_3" translation="43.39, 4.66633e-006, -2.84369e-006" rotation="0.0, 0.0, -0.156886, 0.987617" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_RM_1" parent="bone_wrist" translation="24.4794, 1.18984, 8.60444" rotation="-0.696463, -0.0231471, -0.110527, 0.708652" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_RM_2" parent="bone_finger_RM_1" translation="129.336, -1.09567e-006, 6.75785e-006" rotation="0.672242, -0.229612, 0.222774, 0.667638" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_RM_3" parent="bone_finger_RM_2" translation="103.865, 0.000336923, 3.74833e-007" rotation="0.0, 0.0, -0.451817, 0.892111" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_RM_4" parent="bone_finger_RM_3" translation="43.39, -9.39396e-006, 3.31844e-006" rotation="0.0, 0.0, -0.186917, 0.982376" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_RR_1" parent="bone_wrist" translation="20.1782, 0.621783, 25.0524" rotation="-0.628542, -0.11036, -0.271264, 0.720535" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_RR_2" parent="bone_finger_RR_1" translation="129.336, -6.08251e-006, 2.79374e-006" rotation="0.672242, -0.229612, 0.222774, 0.667638" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_RR_3" parent="bone_finger_RR_2" translation="103.865, 0.000340277, -4.97387e-006" rotation="0.0, 0.0, -0.371926, 0.928262" scale="1.0, 1.0, 1.0"/>
+
+  <node name="bone_finger_RR_4" parent="bone_finger_RR_3" translation="43.39, 2.19967e-006, -1.90907e-007" rotation="0.0, 0.0, -0.0897985, 0.99596" scale="1.0, 1.0, 1.0"/>
+
+</model>
