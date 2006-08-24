@@ -8,6 +8,7 @@ import com.samskivert.util.IntIntMap;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.piece.LoggingRobot;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
@@ -105,6 +106,7 @@ public class TreeBedEffect extends Effect
     // documentation inherited
     public boolean apply (BangObject bangobj, Observer observer)
     {
+        // enact the tree's growth or damage
         TreeBed bed = (TreeBed)bangobj.pieces.get(bedId);
         if (bed == null) {
             log.warning("Missing piece for tree bed effect [pieceId=" +
@@ -124,6 +126,15 @@ public class TreeBedEffect extends Effect
             }
             if (!bed.isAlive()) {
                 bed.wasKilled(bangobj.tick);
+            }
+        }
+        
+        // activate the logging robots' proximity attacks
+        for (int pieceId : pieceIds) {
+            Piece piece = bangobj.pieces.get(pieceId);
+            if (piece instanceof LoggingRobot) {
+                reportEffect(observer, piece,
+                    ShotEffect.SHOT_ACTIONS[ShotEffect.PROXIMITY]);
             }
         }
         return true;

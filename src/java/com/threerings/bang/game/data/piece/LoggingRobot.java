@@ -11,10 +11,11 @@ import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.BuzzsawShotEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.FetishEffect;
-import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.ProximityShotEffect;
+import com.threerings.bang.game.data.effect.ShotEffect;
 
 /**
  * The logging robot for the forest guardians scenario.
@@ -43,6 +44,14 @@ public class LoggingRobot extends BallisticUnit
         return super.validTarget(bangobj, target, allowSelf) &&
             (!(target instanceof Unit) ||
                 !FetishEffect.FOX_FETISH.equals(((Unit)target).holding));
+    }
+    
+    @Override // documentation inherited
+    protected ShotEffect generateShotEffect (
+            BangObject bangobj, Piece target, int damage)
+    {
+        return new BuzzsawShotEffect(this, target, damage,
+                attackInfluenceIcon(), defendInfluenceIcon(target));
     }
     
     @Override // documentation inherited
