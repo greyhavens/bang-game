@@ -1,4 +1,4 @@
-385
+388
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -17,6 +17,7 @@ female/clothing_back := poncho := 248
 female/clothing_back := poncho_closed := 249
 female/clothing_back := shoulder_cape := 377
 female/clothing_back := squaw := 81
+female/clothing_back := storm_caller := 387
 female/clothing_back := striped_vest := 180
 female/clothing_back := trickster_raven := 378
 female/clothing_back := wolf_handler := 379
@@ -34,6 +35,7 @@ female/clothing_front := pistol_boots := 330
 female/clothing_front := pistol_peasant_dress := 185
 female/clothing_front := rifle_kneel := 331
 female/clothing_front := smoking_duster := 332
+female/clothing_front := storm_caller := 388
 female/clothing_front := trickster_raven := 382
 female/clothing_front := wolf_handler := 383
 female/clothing_props := rifle_squaw := 82
@@ -65,6 +67,7 @@ female/eyes := shifty := 141
 female/eyes := sly := 92
 female/eyes := small := 93
 female/eyes := squinty := 142
+female/familiar := mini_blimp := 386
 female/glasses := round := 94
 female/glasses := steamgoggles := 336
 female/hair_back := back_curly := 191
