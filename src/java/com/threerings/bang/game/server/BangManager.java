@@ -888,8 +888,16 @@ public class BangManager extends GameManager
         _rounds[_bangobj.roundId].stats = stats;
         _bangobj.stats = stats;
 
-        // find out if the desired board has been loaded, loading it if not
+        // make sure we have a board at all
         final BoardRecord brec = _rounds[_bangobj.roundId].board;
+        if (brec == null) {
+            log.warning("Missing board, cannot start round " +
+                        "[where=" + where() + "].");
+            // TODO: cancel game?
+            return;
+        }
+
+        // find out if the desired board has been loaded, loading it if not
         if (brec.data != null) {
             continueStartingRound(brec);
             return;
