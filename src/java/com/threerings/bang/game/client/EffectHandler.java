@@ -36,6 +36,7 @@ import com.threerings.bang.game.client.effect.PlaySoundViz;
 import com.threerings.bang.game.client.effect.RepairViz;
 import com.threerings.bang.game.client.effect.WreckViz;
 
+import com.threerings.bang.game.client.sprite.ActiveSprite;
 import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -220,22 +221,22 @@ public class EffectHandler extends BoardView.BoardAction
             _dropper = piece;
         }
 
-        // queue reacting, dying, or generic effects for mobile sprites
-        if (sprite instanceof MobileSprite) {
-            MobileSprite msprite = (MobileSprite)sprite;
+        // queue reacting, dying, or generic effects for active sprites
+        if (sprite instanceof ActiveSprite) {
+            ActiveSprite asprite = (ActiveSprite)sprite;
             if (wasDamaged) {
                 if (piece.isAlive()) {
-                    queueAction(msprite, "reacting");
-                } else if (msprite.hasAction("dying")) {
-                    queueAction(msprite,  "dying");
+                    queueAction(asprite, "reacting");
+                } else if (asprite.hasAction("dying")) {
+                    queueAction(asprite,  "dying");
                 } else {
                     // units with no dying animation just switch to their
                     // dead model; the wreck viz or explosion should hide the
                     // sudden transition
-                    queueAction(msprite, MobileSprite.DEAD);
+                    queueAction(asprite, ActiveSprite.DEAD);
                 }
-            } else if (msprite.hasAction(effect)) {
-                queueAction(msprite, effect);
+            } else if (asprite.hasAction(effect)) {
+                queueAction(asprite, effect);
             }
         }
 
@@ -317,9 +318,9 @@ public class EffectHandler extends BoardView.BoardAction
     public void pieceKilled (Piece piece)
     {
         _view.pieceWasKilled(piece.pieceId);
-        // Allow non-MobileSprites to update themselves when they're killed
+        // Allow non-ActiveSprites to update themselves when they're killed
         final PieceSprite sprite = _view.getPieceSprite(piece);
-        if (sprite != null && !(sprite instanceof MobileSprite)) {
+        if (sprite != null && !(sprite instanceof ActiveSprite)) {
             sprite.updated(piece, _tick);
         }
     }
@@ -446,14 +447,14 @@ public class EffectHandler extends BoardView.BoardAction
      * ensure that we wait until the action is completed to complete our
      * effect.
      */
-    protected void queueAction (MobileSprite sprite, String action)
+    protected void queueAction (ActiveSprite sprite, String action)
     {
         final int penderId = notePender();
         if (BoardView.ACTION_DEBUG) {
             log.info("Queueing effect " + this +
                      " [action=" + action + ", pid=" + penderId + "].");
         }
-        sprite.addObserver(new MobileSprite.ActionObserver() {
+        sprite.addObserver(new ActiveSprite.ActionObserver() {
             public void actionCompleted (Sprite sprite, String action) {
                 sprite.removeObserver(this);
                 maybeComplete(penderId);
@@ -647,8 +648,8 @@ public class EffectHandler extends BoardView.BoardAction
         }
         BonusSprite bsprite = (BonusSprite)sprite;
         if (bsprite.getPiece().pieceId == -1) {
-            queueAction(bsprite, MobileSprite.REMOVED);
-            bsprite.addObserver(new MobileSprite.ActionObserver() {
+            queueAction(bsprite, ActiveSprite.REMOVED);
+            bsprite.addObserver(new ActiveSprite.ActionObserver() {
                 public void actionCompleted (Sprite sprite, String action) {
                     _view.removeSprite(sprite);
                 }

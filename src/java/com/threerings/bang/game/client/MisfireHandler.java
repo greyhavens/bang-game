@@ -3,8 +3,9 @@
 
 package com.threerings.bang.game.client;
 
-import com.threerings.bang.game.client.sprite.MisfireEmission;
+import com.threerings.bang.game.client.sprite.ActiveSprite;
 import com.threerings.bang.game.client.sprite.GunshotEmission;
+import com.threerings.bang.game.client.sprite.MisfireEmission;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 
 import com.threerings.bang.game.data.effect.ShotEffect;
@@ -24,8 +25,8 @@ public class MisfireHandler extends InstantShotHandler
     @Override // documentation inherited
     protected void animateShooter (MobileSprite sprite)
     {
-        sprite.addActionHandler(new MobileSprite.ActionHandler() {
-            public String handleAction (MobileSprite sprite, String action) {
+        sprite.addActionHandler(new ActiveSprite.ActionHandler() {
+            public String handleAction (ActiveSprite sprite, String action) {
                 if (!ShotEffect.SHOT_ACTIONS[_shot.type].equals(action)) {
                     return action;
                 }

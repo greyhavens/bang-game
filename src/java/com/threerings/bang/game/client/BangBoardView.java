@@ -75,9 +75,9 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
 
+import com.threerings.bang.game.client.sprite.ActiveSprite;
 import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.Bouncer;
-import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.Spinner;
@@ -1555,17 +1555,17 @@ public class BangBoardView extends BoardView
             // if this was a bonus, note that it was activated
             _ctrl.postEvent(TutorialCodes.BONUS_ACTIVATED);
         }
-        if (sprite instanceof MobileSprite) {
-            MobileSprite msprite = (MobileSprite)sprite;
-            // if this mobile sprite is animating it will have to wait
+        if (sprite instanceof ActiveSprite) {
+            ActiveSprite asprite = (ActiveSprite)sprite;
+            // if this active sprite is animating it will have to wait
             // until it's finished before being removed
-            if (msprite.removed()) {
+            if (asprite.removed()) {
                 _pieces.remove(pieceId);
-                msprite.addObserver(_deadRemover);
+                asprite.addObserver(_deadRemover);
                 return sprite;
             } else {
-                log.info("Removing dead unit sprite immediately " +
-                         msprite.getPiece() + ".");
+                log.info("Removing dead sprite immediately " +
+                         asprite.getPiece() + ".");
             }
         }
         return super.removePieceSprite(pieceId, why);
@@ -1815,13 +1815,13 @@ public class BangBoardView extends BoardView
 
     /** Used to remove unit sprites that have completed their death
      * paths. */
-    protected MobileSprite.ActionObserver _deadRemover =
-        new MobileSprite.ActionObserver() {
+    protected ActiveSprite.ActionObserver _deadRemover =
+        new ActiveSprite.ActionObserver() {
         public void actionCompleted (Sprite sprite, String action) {
-            MobileSprite msprite = (MobileSprite)sprite;
-            if (!msprite.isAnimating()) {
-                log.info("Removing dead unit sprite post-fade " +
-                         msprite.getPiece() + ".");
+            ActiveSprite asprite = (ActiveSprite)sprite;
+            if (!asprite.isAnimating()) {
+                log.info("Removing dead sprite post-fade " +
+                         asprite.getPiece() + ".");
                 removeSprite(sprite);
 
                 // let our unit status know if a unit just departed

@@ -12,18 +12,12 @@ import com.threerings.bang.game.data.piece.Unit;
 /**
  * Displays homesteads for the land grab scenario.
  */
-public class HomesteadSprite extends MobileSprite
+public class HomesteadSprite extends ActiveSprite
     implements Targetable
 {
     public HomesteadSprite ()
     {
         super("props", "frontier_town/special/homestead");
-    }
-    
-    @Override // documentation inherited
-    public Shadow getShadowType ()
-    {
-        return Shadow.NONE;
     }
     
     @Override // documentation inherited

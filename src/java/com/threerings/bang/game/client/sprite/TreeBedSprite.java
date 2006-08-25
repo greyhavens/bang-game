@@ -18,7 +18,7 @@ import static com.threerings.bang.client.BangMetrics.*;
 /**
  * Displays trees for the forest guardians scenario.
  */
-public class TreeBedSprite extends MobileSprite
+public class TreeBedSprite extends ActiveSprite
 {
     /** The color of the tree's status display. */
     public static final ColorRGBA STATUS_COLOR =
@@ -31,12 +31,6 @@ public class TreeBedSprite extends MobileSprite
     public TreeBedSprite ()
     {
         super("props", "indian_post/special/tree_bed");
-    }
-    
-    @Override // documentation inherited
-    public Shadow getShadowType ()
-    {
-        return Shadow.NONE;
     }
     
     @Override // documentation inherited

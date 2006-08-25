@@ -23,7 +23,7 @@ import static com.threerings.bang.client.BangMetrics.*;
 /**
  * Displays a bonus piece of some sort.
  */
-public class BonusSprite extends MobileSprite
+public class BonusSprite extends ActiveSprite
 {
     public BonusSprite (String type)
     {
@@ -95,12 +95,6 @@ public class BonusSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    protected void createDustManager ()
-    {
-        // no-op
-    }
-    
-    @Override // documentation inherited
     protected void createSounds (SoundGroup sounds)
     {
         // preload any sound associated with activating this bonus
@@ -108,12 +102,6 @@ public class BonusSprite extends MobileSprite
         if (SoundUtil.haveSound(spath)) {
             sounds.preloadClip(spath);
         }
-    }
-    
-    @Override // documentation inherited
-    protected void moveSprite (BangBoard board)
-    {
-        setLocation(board, _piece.x, _piece.y);
     }
     
     /** The spinner that rotates the bonus. */

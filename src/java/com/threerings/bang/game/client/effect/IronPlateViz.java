@@ -14,6 +14,7 @@ import com.jme.scene.state.TextureState;
 
 import com.threerings.jme.model.ModelMesh;
 
+import com.threerings.bang.game.client.sprite.ActiveSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.util.BasicContext;
@@ -111,9 +112,9 @@ public class IronPlateViz extends InfluenceViz
     }
     
     /** Flashes the overlay when the reacting animation plays. */
-    protected MobileSprite.ActionHandler _handler =
-        new MobileSprite.ActionHandler() {
-        public String handleAction (MobileSprite sprite, String action) {
+    protected ActiveSprite.ActionHandler _handler =
+        new ActiveSprite.ActionHandler() {
+        public String handleAction (ActiveSprite sprite, String action) {
             if ("reacting".equals(action)) {
                 flashOverlay(sprite.getAction(action).getDuration());
                 return action;

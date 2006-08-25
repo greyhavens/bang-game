@@ -5,6 +5,7 @@ package com.threerings.bang.game.client;
 
 import com.threerings.jme.sprite.Sprite;
 
+import com.threerings.bang.game.client.sprite.ActiveSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.data.effect.TeleportEffect;
 import com.threerings.bang.game.data.piece.Piece;
@@ -16,7 +17,7 @@ import static com.threerings.bang.Log.*;
  * Handles the {@link TeleportEffect} on the client.
  */
 public class TeleportHandler extends EffectHandler
-    implements MobileSprite.ActionObserver
+    implements ActiveSprite.ActionObserver
 {
     @Override // documentation inherited
     public boolean execute ()

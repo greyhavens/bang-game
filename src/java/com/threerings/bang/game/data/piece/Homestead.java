@@ -39,14 +39,6 @@ public class Homestead extends Prop
     }
 
     @Override // documentation inherited
-    public float getHeight ()
-    {
-        // sprite is positioned according to board height, so make sure
-        // the piece itself doesn't contribute
-        return 0f;
-    }
-    
-    @Override // documentation inherited
     public boolean isOwnerConfigurable ()
     {
         return true;
