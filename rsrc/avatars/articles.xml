@@ -495,7 +495,13 @@
     <component cclass="female/clothing_front" name="pistol_boots"/>
   </article>
 
+
   <!-- female clothing: indian trading post -->
+  <article name="female_revolutionary" townId="indian_post"
+           slot="clothing" scrip="3750" coins="4" colors="clothes_p,clothes_s">
+    <component cclass="female/clothing_back" name="revolutionary"/>
+  </article>
+
   <article name="female_storm_caller" townId="indian_post"
            slot="clothing" scrip="3750" coins="4">
     <component cclass="female/clothing_back" name="storm_caller"/>
