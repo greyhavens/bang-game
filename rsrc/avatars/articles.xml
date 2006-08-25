@@ -509,6 +509,24 @@
 
 
   <!-- female clothing: indian trading post -->
+
+  <article name="female_shoulder_wrap" townId="indian_post"
+           slot="clothing" scrip="1000" coins="1">
+    <component cclass="female/clothing_back" name="shoulder_wrap"/>
+  </article>
+
+  <article name="female_hunter" townId="indian_post"
+           slot="clothing" scrip="2500" coins="2">
+    <component cclass="female/clothing_back" name="hunter"/>
+    <component cclass="female/clothing_front" name="earing_hunter"/>
+  </article>
+
+  <article name="female_gatherer" townId="indian_post"
+           slot="clothing" scrip="2000" coins="2">
+    <component cclass="female/clothing_back" name="gatherer"/>
+    <component cclass="female/clothing_front" name="basket_gatherer"/>
+  </article>
+
   <article name="female_revolutionary" townId="indian_post"
            slot="clothing" scrip="3750" coins="4" colors="clothes_p,clothes_s">
     <component cclass="female/clothing_back" name="revolutionary"/>
@@ -601,6 +619,13 @@
     <component cclass="female/hat_band" name="thick_bowler"/>
   </article>
 
+  <article name="female_bowler_feather" townId="frontier_town"
+           slot="hat" scrip="1250" coins="1">
+    <component cclass="female/hat" name="bowler"/>
+    <component cclass="female/hat_back" name="bowler"/>
+    <component cclass="female/hat_band" name="feather_bowler"/>
+  </article>
+
   <article name="female_railbrim" townId="frontier_town"
            slot="hat" scrip="750" coins="0" colors="clothes_p">
     <component cclass="female/hat" name="railbrim"/>
@@ -612,6 +637,13 @@
     <component cclass="female/hat" name="railbrim"/>
     <component cclass="female/hat_back" name="railbrim"/>
     <component cclass="female/hat_band" name="thick_railbrim"/>
+  </article>
+
+  <article name="female_railbrim_disks" townId="frontier_town"
+           slot="hat" scrip="1000" coins="1" colors="clothes_p,clothes_s">
+    <component cclass="female/hat" name="railbrim"/>
+    <component cclass="female/hat_back" name="railbrim"/>
+    <component cclass="female/hat_band" name="disks_railbrim"/>
   </article>
 
   <article name="female_stetson" townId="frontier_town"
@@ -632,6 +664,13 @@
     <component cclass="female/hat" name="stetson"/>
     <component cclass="female/hat_back" name="stetson"/>
     <component cclass="female/hat_band" name="dual_stetson"/>
+  </article>
+
+  <article name="female_stetson_king" townId="frontier_town"
+           slot="hat" scrip="2500" coins="2">
+    <component cclass="female/hat" name="stetson"/>
+    <component cclass="female/hat_back" name="stetson"/>
+    <component cclass="female/hat_band" name="king_stetson"/>
   </article>
 
   <article name="female_bonnet" townId="frontier_town"
@@ -658,6 +697,11 @@
     <component cclass="female/hat" name="sombrero"/>
     <component cclass="female/hat_back" name="sombrero"/>
     <component cclass="female/hat_band" name="border_band_sombrero"/>
+  </article>
+
+  <article name="female_saloon_feather" townId="frontier_town"
+           slot="hat" scrip="1500" coins="1">
+    <component cclass="female/hat" name="saloon_feather"/>
   </article>
 
 
