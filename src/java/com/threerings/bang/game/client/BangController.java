@@ -621,6 +621,20 @@ public class BangController extends GameController
         }
     }
 
+    @Override // documentation inherited
+    protected void gameWasCancelled ()
+    {
+        super.gameWasCancelled();
+
+        // if the game was cancelled there were errors on the server and we are
+        // probably in a weird state, so just go back to town
+        if (_ctx.getLocationDirector().leavePlace()) {
+            _ctx.getBangClient().showTownView();
+            _ctx.getChatDirector().displayFeedback(
+                GameCodes.GAME_MSGS, "m.game_cancelled");
+        }
+    }
+
     /**
      * Called by the board view after it has swung around the board before the
      * selection phase.

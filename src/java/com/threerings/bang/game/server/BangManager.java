@@ -893,7 +893,7 @@ public class BangManager extends GameManager
         if (brec == null) {
             log.warning("Missing board, cannot start round " +
                         "[where=" + where() + "].");
-            // TODO: cancel game?
+            cancelGame();
             return;
         }
 

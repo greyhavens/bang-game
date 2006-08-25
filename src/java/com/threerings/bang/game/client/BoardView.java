@@ -897,7 +897,13 @@ public class BoardView extends BComponent
             _sounds.dispose();
             _sounds = null;
         }
-        
+
+        // if we have a lingering fade-in, clear it
+        if (_fadein != null) {
+            _ctx.getInterface().detachChild(_fadein);
+            _fadein = null;
+        }
+
         // clear the render queue of any lingering references
         _ctx.getRenderer().clearQueue();
     }
