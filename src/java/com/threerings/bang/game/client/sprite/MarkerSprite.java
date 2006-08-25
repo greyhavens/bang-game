@@ -8,6 +8,7 @@ import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.math.Quaternion;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
@@ -68,7 +69,9 @@ public class MarkerSprite extends PieceSprite
             }
             _tlight = view.getTerrainNode().createHighlight(
                     piece.x, piece.y, false, (byte)1);
+            _tlight.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
             _tlight.setRenderState(_safestate[piece.orientation]);
+            _tlight.setRenderState(RenderUtil.blendAlpha);
             attachHighlight(_tlight);
         }
     }

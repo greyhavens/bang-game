@@ -37,7 +37,7 @@ public class WendigoEffect extends Effect
     implements PieceCodes
 {
     /** The speed of the wendigo in tiles per second. */
-    public static final float WENDIGO_SPEED = 4f;
+    public static final float WENDIGO_SPEED = 6f;
 
     /** The identifier for the type of effect that we produce. */
     public static final String EATEN = "bang";
@@ -55,7 +55,6 @@ public class WendigoEffect extends Effect
     {
         public int nx, ny;
         public int pieceId;
-        public PointList path;
     }
 
     public static WendigoEffect wendigosAttack (
@@ -71,19 +70,19 @@ public class WendigoEffect extends Effect
             switch (w.orientation) {
               case NORTH:
                 effect.moves[ii].nx = w.x;
-                effect.moves[ii].ny = playarea.y - 2;
+                effect.moves[ii].ny = playarea.y - 4;
                 break;
               case SOUTH:
                 effect.moves[ii].nx = w.x;
-                effect.moves[ii].ny = playarea.y + playarea.height;
+                effect.moves[ii].ny = playarea.y + playarea.height + 2;
                 break;
               case EAST:
                 effect.moves[ii].ny = w.y;
-                effect.moves[ii].nx = playarea.x + playarea.width;
+                effect.moves[ii].nx = playarea.x + playarea.width + 2;
                 break;
               case WEST:
                 effect.moves[ii].ny = w.y;
-                effect.moves[ii].nx = playarea.x - 2;
+                effect.moves[ii].nx = playarea.x - 4;
                 break;
             }
         }
@@ -136,8 +135,6 @@ public class WendigoEffect extends Effect
                 continue;
             }
 
-            createPath(bangobj, w, m);
-
             createCollisions(bangobj, dammap, w);
         }
         collisions = _colMap.values().toArray(new Collision[0]);
@@ -155,7 +152,6 @@ public class WendigoEffect extends Effect
                 return false;
             }
             bangobj.board.clearShadow(piece);
-            piece.position(m.nx, m.ny);
             bangobj.removePieceDirect(piece);
 
             // delay the tick by the amount of time it takes for the wendigo
@@ -193,25 +189,6 @@ public class WendigoEffect extends Effect
         return 100;
     }
     
-    /**
-     * Create the path the wendigo takes.
-     */
-    protected void createPath (BangObject bangobj, Piece w, Movement m)
-    {
-        m.path = new PointList();
-        if (w.x != m.nx) {
-            int step = (m.nx > w.x) ? 1 : -1;
-            for (int xx = w.x; xx != m.nx + step; xx += step) {
-                m.path.add(new Point(xx, m.ny));
-            }
-        } else {
-            int step = (m.ny > w.y) ? 1 : -1;
-            for (int yy = w.y; yy != m.ny + step; yy += step) {
-                m.path.add(new Point(m.nx, yy));
-            }
-        }
-    }
-
     /**
      * Create the list of units that the wendigo eats.
      */

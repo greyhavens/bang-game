@@ -161,6 +161,9 @@ public class WendigoAttack extends Scenario
         public void tick (BangObject bangobj, short tick)
         {
             if (_wendigos != null && tick >= _nextWendigo) {
+                for (Wendigo wendigo : _wendigos) {
+                    _bangmgr.addPiece(wendigo);
+                }
                 WendigoEffect effect = WendigoEffect.wendigosAttack(
                         bangobj, _wendigos);
                 effect.safePoints = _safePoints;
@@ -197,16 +200,11 @@ public class WendigoAttack extends Scenario
         {
             _bangmgr.deployEffect(-1, new FadeBoardEffect());
             Rectangle playarea = bangobj.board.getPlayableArea();
-            int maxv = playarea.width / 3;
-            int maxh = playarea.height / 3;
-            int maxtot = maxv + maxh;
-            int curnum = Math.min(maxtot, 
-                    Math.max(1, maxtot * ++_numAttacks / 5));
-            int numv = RandomUtil.getInt(maxv+1, Math.max(0, curnum - maxh)-1);
-            int numh = curnum - numv;
-            _wendigos = new ArrayList<Wendigo>(numv+numh);
-            createWendigo(bangobj, tick, true, numh);
-            createWendigo(bangobj, tick, false, numv);
+            boolean alongH = (RandomUtil.getInt(2) == 0);
+            int max = (alongH ? playarea.height : playarea.width) / 3;
+            int num = Math.min(max, Math.max(1, max * ++_numAttacks/5));
+            _wendigos = new ArrayList<Wendigo>(num);
+            createWendigo(bangobj, tick, alongH, num);
         }
 
         protected void createWendigo (BangObject bangobj, short tick, 
@@ -259,17 +257,16 @@ public class WendigoAttack extends Scenario
                 int orient = NORTH;
                 if (horiz) {
                     orient = (RandomUtil.getInt(2) == 0) ? EAST : WEST;
-                    wendigo.position(
-                        playarea.x + (orient == EAST ? -2 : playarea.width),
+                    wendigo.position(playarea.x + 
+                            (orient == EAST ? -4 : playarea.width + 2),
                         idx);
                 } else {
                     orient = (RandomUtil.getInt(2) == 0) ? NORTH : SOUTH;
-                    wendigo.position(idx,
-                        playarea.y + (orient == SOUTH ? -2 : playarea.height));
+                    wendigo.position(idx, playarea.y + 
+                            (orient == SOUTH ? -4 : playarea.height + 2));
                 }
                 wendigo.orientation = (short)orient;
                 wendigo.lastActed = tick;
-                _bangmgr.addPiece(wendigo);
                 _wendigos.add(wendigo);
             }
         }

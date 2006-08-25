@@ -6,14 +6,13 @@ package com.threerings.bang.game.client;
 import com.samskivert.util.Interval;
 
 import com.threerings.bang.game.client.effect.DamageIconViz;
-
 import com.threerings.bang.game.client.sprite.WendigoSprite;
 
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.StampedeEffect.Collision;
 import com.threerings.bang.game.data.effect.WendigoEffect;
-
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -28,17 +27,26 @@ public class WendigoHandler extends EffectHandler
     {
         WendigoEffect effect = (WendigoEffect)_effect;
 
+        long delay = 0;
         for (WendigoEffect.Movement m : effect.moves) {
             Piece piece = _bangobj.pieces.get(m.pieceId);
             if (piece != null) {
                 _bangobj.board.clearShadow(piece);
+                final int ox = piece.x, oy = piece.y;
+                final int nx = m.nx, ny = m.ny;
                 piece.position(m.nx, m.ny);
-                WendigoSprite sprite = 
+                final WendigoSprite sprite = 
                     (WendigoSprite)_view.getPieceSprite(piece);
                 if (sprite != null) {
-                    sprite.move(_bangobj.board, m.path, 
-                            WendigoEffect.WENDIGO_SPEED, 
-                            WendigoHandler.this, notePender());
+                    final int penderId = notePender();
+                    new Interval(_ctx.getClient().getRunQueue()) {
+                        public void expired () {
+                            sprite.move(_bangobj.board, ox, oy, nx, ny, 
+                                    WendigoEffect.WENDIGO_SPEED, 
+                                    WendigoHandler.this, penderId);
+                        }
+                    }.schedule(delay);
+                    delay += WENDIGO_SPACING;
                 }
                 _bangobj.removePieceDirect(piece);
             }
@@ -70,6 +78,14 @@ public class WendigoHandler extends EffectHandler
         maybeComplete(penderId);
     }
 
+    /**
+     * Returns a reference to the bang object.
+     */
+    public BangObject getBangObject ()
+    {
+        return _bangobj;
+    }
+
     /** An interval to activate collisions on their listed timesteps. */
     protected class CollisionInterval extends Interval
     {
@@ -99,4 +115,6 @@ public class WendigoHandler extends EffectHandler
 
         protected Collision _collision;
     }
+
+    protected static final long WENDIGO_SPACING=100;
 }
