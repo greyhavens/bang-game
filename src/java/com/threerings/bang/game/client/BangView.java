@@ -405,6 +405,9 @@ public class BangView extends BWindow
                 }
             }
             _bangobj.pieces = new ModifiableDSet<Piece>(plist.iterator());
+            for (Piece update : _bangobj.boardUpdates) {
+                _bangobj.pieces.updateDirect(update);
+            }
         }
 
         // tell the board view to start the game so that we can see the board

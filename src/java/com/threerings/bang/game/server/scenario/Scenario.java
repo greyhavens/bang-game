@@ -58,14 +58,18 @@ public abstract class Scenario
 
     /**
      * Allows a scenario to filter out custom marker pieces and scenario
-     * specific props prior to the start of the round.
+     * specific props and adjust prop states prior to the start of the
+     * round.
      *
      * @param bangobj the game object.
      * @param starts a list of start markers for all the players.
      * @param pieces the remaining pieces on the board.
+     * @param updates a list to populate with any pieces that were updated
+     * during the filter process
      */
-    public void filterPieces (BangObject bangobj, ArrayList<Piece> starts,
-                              ArrayList<Piece> pieces)
+    public void filterPieces (
+        BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces,
+        ArrayList<Piece> updates)
     {
         // extract the bonus spawn markers from the pieces array
         _bonusSpots.clear();
@@ -82,7 +86,7 @@ public abstract class Scenario
 
         // give our delegates a crack as well
         for (ScenarioDelegate delegate : _delegates) {
-            delegate.filterPieces(bangobj, starts, pieces);
+            delegate.filterPieces(bangobj, starts, pieces, updates);
         }
     }
 

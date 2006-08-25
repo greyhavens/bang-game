@@ -68,12 +68,14 @@ public class ForestGuardians extends Scenario
     }
     
     @Override // documentation inherited
-    public void filterPieces (BangObject bangobj, ArrayList<Piece> starts,
-                              ArrayList<Piece> pieces)
+    public void filterPieces (
+        BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces,
+        ArrayList<Piece> updates)
     {
-        super.filterPieces(bangobj, starts, pieces);
+        super.filterPieces(bangobj, starts, pieces, updates);
 
-        // extract and remove all robot markers; store tree beds
+        // extract and remove all robot markers; store the tree beds and put
+        // them in random growth states
         _robotSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
@@ -81,7 +83,10 @@ public class ForestGuardians extends Scenario
                 _robotSpots.add((Marker)p);
                 iter.remove();
             } else if (p instanceof TreeBed) {
-                _trees.add((TreeBed)p);
+                TreeBed tree = (TreeBed)p;
+                _trees.add(tree); 
+                tree.growth = (byte)RandomUtil.getInt(TreeBed.FULLY_GROWN + 1);
+                updates.add(tree);
             }
         }
     }
@@ -100,13 +105,6 @@ public class ForestGuardians extends Scenario
         throws InvocationException
     {
         super.roundWillStart(bangobj, starts, purchases);
-        
-        // put the trees in random states
-        for (TreeBed tree : _trees) {
-            _bangmgr.deployEffect(-1, new TreeBedEffect(
-                tree, RandomUtil.getInt(100),
-                RandomUtil.getInt(TreeBed.FULLY_GROWN + 1)));
-        }
         
         // place the four fetishes
         Piece[] pieces = bangobj.getPieceArray();

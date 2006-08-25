@@ -33,9 +33,8 @@ public class TreeBed extends Prop
     public void init ()
     {
         damage = 50;
-        growth = 0;
     }
-        
+    
     @Override // documentation inherited
     public float getHeight ()
     {

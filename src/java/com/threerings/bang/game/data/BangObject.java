@@ -136,6 +136,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>boardHash</code> field. */
     public static final String BOARD_HASH = "boardHash";
 
+    /** The field name of the <code>boardUpdates</code> field. */
+    public static final String BOARD_UPDATES = "boardUpdates";
+
     /** The field name of the <code>startPositions</code> field. */
     public static final String START_POSITIONS = "startPositions";
 
@@ -241,6 +244,10 @@ public class BangObject extends GameObject
      * version of the board stored on the client. */
     public byte[] boardHash;
 
+    /** A list of round-specific updates to be applied to the board after
+     * downloading it or loading it from the cache. */
+    public Piece[] boardUpdates;
+    
     /** The starting positions for each player. */
     public StreamablePoint[] startPositions;
 
@@ -791,6 +798,39 @@ public class BangObject extends GameObject
         requestElementUpdate(
             BOARD_HASH, index, Byte.valueOf(value), Byte.valueOf(ovalue));
         this.boardHash[index] = value;
+    }
+
+    /**
+     * Requests that the <code>boardUpdates</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setBoardUpdates (Piece[] value)
+    {
+        Piece[] ovalue = this.boardUpdates;
+        requestAttributeChange(
+            BOARD_UPDATES, value, ovalue);
+        this.boardUpdates = (value == null) ? null : (Piece[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>boardUpdates</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setBoardUpdatesAt (Piece value, int index)
+    {
+        Piece ovalue = this.boardUpdates[index];
+        requestElementUpdate(
+            BOARD_UPDATES, index, value, ovalue);
+        this.boardUpdates[index] = value;
     }
 
     /**

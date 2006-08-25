@@ -31,11 +31,15 @@ public class ScenarioDelegate
     }
 
     /**
-     * Allows a delegate to filter out custom marker pieces and props prior to
-     * the start of the round.
+     * Allows a delegate to filter out custom marker pieces and props and
+     * adjust prop states prior to the start of the round.
+     *
+     * @param updates a list to populate with any pieces that were updated
+     * during the filter process
      */
-    public void filterPieces (BangObject bangobj, ArrayList<Piece> starts,
-                              ArrayList<Piece> pieces)
+    public void filterPieces (
+        BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces,
+        ArrayList<Piece> updates)
     {
     }
 

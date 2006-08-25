@@ -77,6 +77,8 @@ public class TreeBedSprite extends MobileSprite
     {
         super.createGeometry();
         
+        _growth = ((TreeBed)_piece).growth;
+        
         _tlight = _view.getTerrainNode().createHighlight(
             _piece.x, _piece.y, false, false);
         attachHighlight(_status = new PieceStatus(_ctx, _tlight, STATUS_COLOR,

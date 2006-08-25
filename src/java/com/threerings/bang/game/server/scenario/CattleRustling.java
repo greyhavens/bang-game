@@ -68,10 +68,11 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    public void filterPieces (BangObject bangobj, ArrayList<Piece> starts,
-                              ArrayList<Piece> pieces)
+    public void filterPieces (
+        BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces,
+        ArrayList<Piece> updates)
     {
-        super.filterPieces(bangobj, starts, pieces);
+        super.filterPieces(bangobj, starts, pieces, updates);
 
         // extract and remove all cattle markers
         _cattleSpots.clear();

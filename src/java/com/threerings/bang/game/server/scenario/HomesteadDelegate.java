@@ -54,11 +54,12 @@ public class HomesteadDelegate extends ScenarioDelegate
         return null;
     }
 
-    @Override // from ScenarioDelegate
+    @Override // documentation inherited
     public void filterPieces (
-        BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces)
+        BangObject bangobj, final ArrayList<Piece> starts,
+        ArrayList<Piece> pieces, ArrayList<Piece> updates)
     {
-        super.filterPieces(bangobj, starts, pieces);
+        super.filterPieces(bangobj, starts, pieces, updates);
 
         // note the location of all homestead pieces
         _steads.clear();
@@ -67,25 +68,18 @@ public class HomesteadDelegate extends ScenarioDelegate
                 _steads.add((Homestead)p);
             }
         }
-    }
-
-    @Override // from Scenario
-    public void roundWillStart (BangObject bangobj)
-        throws InvocationException
-    {
-        super.roundWillStart(bangobj);
-
+        
         // create mappings from homestead "colors" (stored owners) to
         // player indices.  the closest colored homestead to a player
         // determines his color; if there are no colored homesteads,
         // the closest unclaimed homestead is colored.
         int[] owners = new int[] { -1, -1, -1, -1 };
         for (int ii = 0; ii < bangobj.players.length; ii++) {
-            Point start = _parent._startSpots[ii];
+            Piece start = starts.get(ii);
             Homestead unclaimed = null, colored = null;
             int udist = Integer.MAX_VALUE, cdist = Integer.MAX_VALUE;
             for (Homestead stead : getHomesteads()) {
-                int sdist = stead.getDistance(start.x, start.y);
+                int sdist = stead.getDistance(start);
                 if (stead.owner == -1 && sdist < udist) {
                     unclaimed = stead;
                     udist = sdist;
@@ -117,10 +111,8 @@ public class HomesteadDelegate extends ScenarioDelegate
                 continue;
             }
             stead.owner = owners[stead.owner];
-            bangobj.updatePieces(stead);
+            updates.add(stead);
             if (stead.owner != -1) {
-                bangobj.grantPoints(stead.owner,
-                    LandGrabInfo.POINTS_PER_STEAD);
                 _claims.add(stead);
             }
         }
@@ -129,11 +121,26 @@ public class HomesteadDelegate extends ScenarioDelegate
         // starts
         QuickSort.rsort(_claims, new Comparator<Homestead>() {
             public int compare (Homestead h1, Homestead h2) {
-                Point p1 = _parent._startSpots[h1.owner],
-                    p2 = _parent._startSpots[h2.owner];
-                return h1.getDistance(p1.x, p1.y) - h2.getDistance(p2.x, p2.y);
+                Piece p1 = starts.get(h1.owner),
+                    p2 = starts.get(h2.owner);
+                return h1.getDistance(p1) - h2.getDistance(p2);
             }
         });
+    }
+
+    @Override // from Scenario
+    public void roundWillStart (BangObject bangobj)
+        throws InvocationException
+    {
+        super.roundWillStart(bangobj);
+
+        // grant points for initial homesteads
+        for (Homestead stead : getHomesteads()) {
+            if (stead.owner != -1) {
+                bangobj.grantPoints(stead.owner,
+                    LandGrabInfo.POINTS_PER_STEAD);
+            }
+        }
     }
     
     @Override // from Scenario
