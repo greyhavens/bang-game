@@ -18,10 +18,19 @@ import com.threerings.bang.game.data.effect.WendigoEffect;
 public class Wendigo extends Piece
     implements PieceCodes
 {
+    public Wendigo ()
+    {
+    }
+
+    public Wendigo (boolean claw)
+    {
+        _claw = claw;
+    }
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return new WendigoSprite();
+        return new WendigoSprite(_claw);
     }
 
     @Override // documentation inherited
@@ -42,4 +51,6 @@ public class Wendigo extends Piece
         }
         return (z + board.getHeightfieldElevation(tx, ty)) / 2;
     }
+
+    protected boolean _claw = false;
 }

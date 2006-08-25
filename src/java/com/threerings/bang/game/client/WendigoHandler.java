@@ -46,7 +46,9 @@ public class WendigoHandler extends EffectHandler
                                     WendigoHandler.this, penderId);
                         }
                     }.schedule(delay);
-                    delay += WENDIGO_SPACING;
+                    if (!sprite.claw) {
+                        delay += WENDIGO_SPACING;
+                    }
                 }
                 _bangobj.removePieceDirect(piece);
             }
@@ -116,5 +118,5 @@ public class WendigoHandler extends EffectHandler
         protected Collision _collision;
     }
 
-    protected static final long WENDIGO_SPACING=100;
+    protected static final long WENDIGO_SPACING = 150;
 }

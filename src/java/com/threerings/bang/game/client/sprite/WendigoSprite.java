@@ -40,9 +40,12 @@ import static com.threerings.bang.Log.log;
  */
 public class WendigoSprite extends MobileSprite
 {
-    public WendigoSprite ()
+    public boolean claw;
+
+    public WendigoSprite (boolean claw)
     {
-        super("extras", "indian_post/wendigo");
+        super("extras", "indian_post/wendigo" + (claw ? "_claw" : ""));
+        this.claw = claw;
     }
 
     public void init (BasicContext ctx, BoardView view, BangBoard board,

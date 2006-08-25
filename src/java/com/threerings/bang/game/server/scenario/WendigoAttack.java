@@ -174,7 +174,10 @@ public class WendigoAttack extends Scenario
                 updatePoints(bangobj);
                 _wendigos = null;
                 _nextWendigo += (short)RandomUtil.getInt(
-                        MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS) - WENDIGO_WAIT;
+                        MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
+                if (_nextWendigo < bangobj.duration) {
+                    _nextWendigo -= WENDIGO_WAIT;
+                }
             }
             if (tick >= _nextWendigo) {
                 createWendigos(bangobj, tick);
@@ -196,22 +199,15 @@ public class WendigoAttack extends Scenario
         /**
          * Create several wendigos that will spawn just outside the playfield.
          */
-        protected void createWendigos (BangObject bangobj, short tick)
+        protected void createWendigos (BangObject bangobj, short tick) 
         {
             _bangmgr.deployEffect(-1, new FadeBoardEffect());
             Rectangle playarea = bangobj.board.getPlayableArea();
-            boolean alongH = (RandomUtil.getInt(2) == 0);
-            int max = (alongH ? playarea.height : playarea.width) / 3;
-            int num = Math.min(max, Math.max(1, max * ++_numAttacks/5));
-            _wendigos = new ArrayList<Wendigo>(num);
-            createWendigo(bangobj, tick, alongH, num);
-        }
-
-        protected void createWendigo (BangObject bangobj, short tick, 
-                boolean horiz, int num)
-        {
             // First decide horizontal or vertical attack
-            Rectangle playarea = bangobj.board.getPlayableArea();
+            boolean horiz = (RandomUtil.getInt(2) == 0);
+            int max = (horiz ? playarea.height : playarea.width) / 2;
+            int num = Math.min(max, Math.max(1, max * ++_numAttacks/6));
+            _wendigos = new ArrayList<Wendigo>(num);
             int off = 0;
             int length = 0;
             if (horiz) {
@@ -244,31 +240,66 @@ public class WendigoAttack extends Scenario
                 int idx = (IntListUtil.sum(weights) == 0 ?
                     RandomUtil.getInt(length) :
                     RandomUtil.getWeightedIndex(weights));
+                int size = RandomUtil.getInt(2);
                 weights[idx] = 0;
+                boolean side = RandomUtil.getInt(2) == 0;
+                createWendigo(bangobj, idx + off, horiz, side, 
+                        playarea, false, tick);
                 if (idx + 1 < weights.length) {
+                    if (size > 0 && idx + 2 < weights.length && 
+                            weights[idx + 2] > 0) {
+                        createWendigo(bangobj, idx + 2 + off, horiz, side, 
+                                playarea, true, tick);
+                        num--;
+                        weights[idx + 2] = 0;
+                        if (idx + 3 < weights.length) {
+                            weights[idx + 3] = 0;
+                        }
+                    }
                     weights[idx + 1] = 0;
                 }
                 if (idx - 1 >= 0) {
+                    if (size > 0 && idx - 2 >= 0 && weights[idx - 2] > 0) {
+                        createWendigo(bangobj, idx - 2 + off, horiz, side, 
+                                playarea, true, tick);
+                        num--;
+                        weights[idx - 2] = 0;
+                        if (idx - 3 >= 0) {
+                            weights[idx - 3] = 0;
+                        }
+                    }
                     weights[idx - 1] = 0;
                 }
-                idx += off;
-                Wendigo wendigo = new Wendigo();
-                wendigo.assignPieceId(bangobj);
-                int orient = NORTH;
-                if (horiz) {
-                    orient = (RandomUtil.getInt(2) == 0) ? EAST : WEST;
-                    wendigo.position(playarea.x + 
-                            (orient == EAST ? -4 : playarea.width + 2),
-                        idx);
-                } else {
-                    orient = (RandomUtil.getInt(2) == 0) ? NORTH : SOUTH;
-                    wendigo.position(idx, playarea.y + 
-                            (orient == SOUTH ? -4 : playarea.height + 2));
+                int sum = 0;
+                for (int weight : weights) {
+                    sum += weight;
                 }
-                wendigo.orientation = (short)orient;
-                wendigo.lastActed = tick;
-                _wendigos.add(wendigo);
+                if (sum == 0) {
+                    break;
+                }
             }
+        }
+
+        protected void createWendigo (
+                BangObject bangobj, int idx, boolean horiz, boolean side, 
+                Rectangle playarea, boolean claw, short tick)
+        {
+            Wendigo wendigo = new Wendigo(claw);
+            wendigo.assignPieceId(bangobj);
+            int orient = NORTH;
+            if (horiz) {
+                orient = (side) ? EAST : WEST;
+                wendigo.position(playarea.x + 
+                        (orient == EAST ? -4 : playarea.width + 2),
+                    idx);
+            } else {
+                orient = (side) ? NORTH : SOUTH;
+                wendigo.position(idx, playarea.y + 
+                        (orient == SOUTH ? -4 : playarea.height + 2));
+            }
+            wendigo.orientation = (short)orient;
+            wendigo.lastActed = tick;
+            _wendigos.add(wendigo);
         }
 
         /**
