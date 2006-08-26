@@ -609,6 +609,10 @@ palette_background {
   background: image "ui/palette/background.png" tilexy;
 }
 
+small_palette_background {
+  background: image "ui/palette/small_background.png" tilexy;
+}
+
 palette_buttons {
   padding: 1 23 1 18;
 }
@@ -628,6 +632,20 @@ palette_icon:selected {
   text-effect: shadow;
   effect-color: #6A482E;
   background: image "ui/palette/selected.png" framexy;
+}
+
+card_palette_icon {
+  font: "Dom Casual" plain 10;
+  color: #400F01;
+  background: blank;
+  text-align: center;
+  vertical-align: top;
+  padding: 12 2 2 2;
+  background: image "ui/palette/card_background.png" framexy;
+}
+
+card_palette_icon:selected {
+  background: image "ui/palette/card_selected.png" framexy;
 }
 
 //
