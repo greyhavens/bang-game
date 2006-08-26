@@ -42,7 +42,6 @@ public class InventoryPalette extends IconPalette
     /**
      * Creates an {@link InventoryPalette}.
      */
-
     public InventoryPalette (BangContext ctx, Predicate itemp,
                              Inspector inspector, int columns, int rows)
     {
