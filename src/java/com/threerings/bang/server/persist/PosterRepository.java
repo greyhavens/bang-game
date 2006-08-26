@@ -70,8 +70,10 @@ public class PosterRepository extends JORARepository
             "BADGE1 INTEGER NOT NULL",
             "BADGE2 INTEGER NOT NULL",
             "BADGE3 INTEGER NOT NULL",
+            "BADGE4 INTEGER NOT NULL",
             "PRIMARY KEY (PLAYER_ID)",
         }, "");
+        JDBCUtil.addColumn(conn, "POSTERS", "BADGE4", "INTEGER NOT NULL", null);
     }
 
     @Override // from JORARepository

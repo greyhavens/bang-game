@@ -23,6 +23,9 @@ public class PosterRecord
     /** A favourite badge of the poster's player */
     public int badge3;
 
+    /** A favourite badge of the poster's player */
+    public int badge4;
+
     /** Constructs a completely blank object, for when loading from database */
     public PosterRecord ()
     {

@@ -177,7 +177,7 @@ public class StatusView extends BWindow
             _ctx.getBangClient().clearPopup(this, true);
 
         } else if (cmd.equals("poster")) {
-            WantedPosterView.displayWantedPoster(
+            EditPosterView.editWantedPoster(
                 _ctx, _ctx.getUserObject().handle);
         }
     }

@@ -4,6 +4,7 @@
 package com.threerings.bang.data;
 
 import com.threerings.io.SimpleStreamableObject;
+import com.threerings.util.StreamableHashMap;
 import com.threerings.presents.dobj.DSet;
 
 /**
@@ -12,6 +13,8 @@ import com.threerings.presents.dobj.DSet;
 public class PosterInfo extends SimpleStreamableObject
     implements DSet.Entry, Cloneable
 {
+    public static final int BADGES = 4;
+
     /** The handle of this poster's player */
     public Handle handle;
 
@@ -23,6 +26,9 @@ public class PosterInfo extends SimpleStreamableObject
 
     /** The three favourite badges of this poster's player */
     public int[] badgeIds;
+
+    /** The player's ranking in each scenario */
+    public StreamableHashMap<String,Integer> rankings;
 
     @Override // documentation inherited
     public Object clone ()

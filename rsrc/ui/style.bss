@@ -767,6 +767,47 @@ pardner_chat_view {
 }
 
 //
+// Pardner View styles
+
+poster_view { 
+  background: image "ui/wanted/background.png" centerxy;
+}
+
+poster_avatar {
+}
+
+poster_handle_box {
+  color: #4a2805;
+  text-align: center;
+}
+
+poster_handle {
+  font: "Old Town" plain 64;
+}
+
+poster_gang {
+  font: "Dom Casual" plain 20;
+}
+
+poster_statement_box {
+  color: #4a2805;
+  text-align: center;
+}
+
+poster_statement {
+  font: "Dom Casual" plain 20;
+}
+
+poster_edit_view { 
+}
+
+poster_edit_popup {
+  background: image "ui/window/background.png" framexy;
+  padding: 8;
+}
+
+
+//
 // Town View styles
 
 town_menubar {
