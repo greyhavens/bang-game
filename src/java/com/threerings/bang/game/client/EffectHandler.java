@@ -60,6 +60,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.piece.LoggingRobot;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TotemBase;
 import com.threerings.bang.game.data.piece.TotemBonus;
@@ -609,6 +610,11 @@ public class EffectHandler extends BoardView.BoardAction
                 maybeComplete(penderId);
             }
         });
+        if (piece instanceof LoggingRobot && sprite.getModelNode() != null) {
+            // pause on the first frame of the unfolding animation
+            sprite.getModelNode().startAnimation("unfolding");
+            sprite.getModelNode().pauseAnimation(true);
+        }
     }
     
     /**
@@ -643,20 +649,22 @@ public class EffectHandler extends BoardView.BoardAction
     {
         // fade dummy bonuses into the ground and remove them after they finish
         // bouncing
-        if (!(sprite instanceof BonusSprite)) {
-            return;
-        }
-        BonusSprite bsprite = (BonusSprite)sprite;
-        if (bsprite.getPiece().pieceId == -1) {
-            queueAction(bsprite, ActiveSprite.REMOVED);
-            bsprite.addObserver(new ActiveSprite.ActionObserver() {
-                public void actionCompleted (Sprite sprite, String action) {
-                    _view.removeSprite(sprite);
-                }
-            });
+        if (sprite instanceof BonusSprite) {
+            BonusSprite bsprite = (BonusSprite)sprite;
+            if (bsprite.getPiece().pieceId == -1) {
+                queueAction(bsprite, ActiveSprite.REMOVED);
+                bsprite.addObserver(new ActiveSprite.ActionObserver() {
+                    public void actionCompleted (Sprite sprite, String action) {
+                        _view.removeSprite(sprite);
+                    }
+                });
+            }
+        } else if (sprite instanceof UnitSprite &&
+            ((UnitSprite)sprite).getPiece() instanceof LoggingRobot) {
+            ((UnitSprite)sprite).queueAction("unfolding");   
         }
     }
-    
+     
     protected boolean isCompleted ()
     {
         return (!_applying && _penders.size() == 0);
