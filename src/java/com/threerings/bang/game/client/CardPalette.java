@@ -163,8 +163,7 @@ public class CardPalette extends IconPalette
             }
             addIcon(iicon);
             for (SelectableIcon icon : selected) {
-                if (citem.getType().equals(
-                            ((CardItem)((ItemIcon)icon).getItem()).getType())) {
+                if (citem == ((ItemIcon)icon).getItem()) {
                     iicon.setSelected(true);
                     iconUpdated(iicon, true);
                 }
