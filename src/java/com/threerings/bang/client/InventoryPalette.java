@@ -21,9 +21,32 @@ public class InventoryPalette extends IconPalette
         public boolean includeItem (Item item);
     }
 
+    /**
+     * Creates an {@link InventoryPalette} with 5 columns, 3 rows,
+     * and no {@link Inspector}.
+     */
     public InventoryPalette (BangContext ctx, Predicate itemp)
     {
-        super(null, 5, 3, ItemIcon.ICON_SIZE, 0);
+        this(ctx, itemp, 5, 3);
+    }
+
+    /**
+     * Creates an {@link InventoryPalette} without {@link Inspector}.
+     */
+    public InventoryPalette (BangContext ctx, Predicate itemp,
+                             int columns, int rows)
+    {
+        this(ctx, itemp, null, columns, rows);
+    }
+
+    /**
+     * Creates an {@link InventoryPalette}.
+     */
+
+    public InventoryPalette (BangContext ctx, Predicate itemp,
+                             Inspector inspector, int columns, int rows)
+    {
+        super(inspector, columns, rows, ItemIcon.ICON_SIZE, 0);
         setPaintBackground(true);
         _ctx = ctx;
         _itemp = itemp;
