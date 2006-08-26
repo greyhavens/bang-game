@@ -54,8 +54,6 @@ public class IconPalette extends BContainer
     {
         super(new BorderLayout(0, 0));
 
-        _rows = rows;
-        _cols = columns;
         _inspector = inspector;
         _selectable = selectable;
 
@@ -63,9 +61,7 @@ public class IconPalette extends BContainer
         // paint a border if need be
         _iicont = GroupLayout.makeVBox(GroupLayout.CENTER);
         add(_iicont, BorderLayout.NORTH);
-        _iicont.add(_icont = new BContainer(new TableLayout(columns, 0, 0)));
-        _icont.setPreferredSize(
-            new Dimension(isize.width * columns, isize.height * rows));
+        init(columns, rows, isize);
 
         GroupLayout hlay = GroupLayout.makeHoriz(GroupLayout.RIGHT);
         hlay.setGap(35);
@@ -76,6 +72,18 @@ public class IconPalette extends BContainer
         _bcont.add(_forward = new BButton("", _listener, "forward"));
         _forward.setStyleClass("fwd_button");
         add(_bcont, BorderLayout.SOUTH);
+    }
+
+    public void init (int columns, int rows, Dimension isize)
+    {
+        _rows = rows;
+        _cols = columns;
+        if (_icont == null) {
+            _iicont.add(_icont = new BContainer());
+        }
+        _icont.setLayoutManager(new TableLayout(columns, 0, 0));
+        _icont.setPreferredSize(
+                new Dimension(isize.width * columns, isize.height * rows));
     }
 
     /**

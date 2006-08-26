@@ -191,6 +191,22 @@ public class BangPrefs
     }
 
     /**
+     * Returns the card palette size preference, true for small.
+     */
+    public static boolean getCardPaletteSize ()
+    {
+        return config.getValue("card_palette_size", false);
+    }
+
+    /**
+     * updates the card palette size preference.
+     */
+    public static void updateCardPaletteSize (boolean small)
+    {
+        config.setValue("card_palette_size", small);
+    }
+
+    /**
      * Used to prevent the tutorials from automatically showing up once a user
      * has dismissed them the first time or completed the first two. This is
      * tracked per-town, so the a player will be shown the tutorial view again

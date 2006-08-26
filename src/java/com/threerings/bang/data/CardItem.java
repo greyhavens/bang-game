@@ -98,6 +98,15 @@ public class CardItem extends Item
     }
 
     @Override // documentation inherited
+    public String getName (boolean small)
+    {
+        if (small) {
+            return MessageBundle.taint("" + _quantity);
+        }
+        return getName();
+    }
+
+    @Override // documentation inherited
     public String getTooltip ()
     {
         return getTooltipText(_type);
@@ -107,6 +116,15 @@ public class CardItem extends Item
     public String getIconPath ()
     {
         return Card.newCard(_type).getIconPath("card");
+    }
+
+    @Override // documentation inherited
+    public String getIconPath (boolean small)
+    {
+        if (small) {
+            return Card.newCard(_type).getIconPath("icon");
+        }
+        return getIconPath();
     }
 
     protected String _type;

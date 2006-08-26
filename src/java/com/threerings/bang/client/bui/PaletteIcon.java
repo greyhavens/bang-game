@@ -14,6 +14,7 @@ import com.jmex.bui.util.Insets;
 public class PaletteIcon extends SelectableIcon
 {
     public static final Dimension ICON_SIZE = new Dimension(136, 156);
+    public static final Dimension SMALL_ICON_SIZE = new Dimension(34, 52);
 
     public PaletteIcon ()
     {
@@ -33,7 +34,7 @@ public class PaletteIcon extends SelectableIcon
 
     public Dimension getPreferredSize (int whint, int hhint)
     {
-        return ICON_SIZE;
+        return (_small ? SMALL_ICON_SIZE : ICON_SIZE);
     }
 
     @Override // documentation inherited
@@ -79,8 +80,9 @@ public class PaletteIcon extends SelectableIcon
      */
     protected Insets getTextInsets ()
     {
-        return new Insets(5, 10, 5, 0);
+        return (_small ? new Insets(2, 0, 2, 0) : new Insets(5, 10, 5, 0));
     }
 
     protected Label _text;
+    protected boolean _small = false;
 }

@@ -15,9 +15,15 @@ public class ItemIcon extends PaletteIcon
 {
     public ItemIcon (BasicContext ctx, Item item)
     {
+        this(ctx, item, false);
+    }
+
+    public ItemIcon (BasicContext ctx, Item item, boolean small)
+    {
         _item = item;
-        setIcon(_item.createIcon(ctx, _item.getIconPath()));
-        setText(ctx.xlate(BangCodes.BANG_MSGS, _item.getName()));
+        _small = small;
+        setIcon(_item.createIcon(ctx, _item.getIconPath(small)));
+        setText(ctx.xlate(BangCodes.BANG_MSGS, _item.getName(small)));
         setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, _item.getTooltip()));
     }
 

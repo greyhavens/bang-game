@@ -67,6 +67,14 @@ public abstract class Item
     public abstract String getName ();
 
     /**
+     * Returns a qualified translatable string describing this item.
+     */
+    public String getName (boolean small)
+    {
+        return getName();
+    }
+
+    /**
      * Returns a qualified translatable string to display in a tooltip when the
      * player is hovering over this item's icon.
      */
@@ -76,6 +84,16 @@ public abstract class Item
      * Returns the path to the icon to use for this item.
      */
     public abstract String getIconPath ();
+
+    /**
+     * Returns the path to the icon to use for this item.
+     *
+     * @param small if true return a small version of the icon.
+     */
+    public String getIconPath (boolean small)
+    {
+        return getIconPath();
+    }
 
     /**
      * If an item needs to colorize its icon image or otherwise do something

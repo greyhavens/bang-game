@@ -8,9 +8,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import com.jmex.bui.BCheckBox;
+import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.Spacer;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.layout.GroupLayout;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.IconPalette;
@@ -33,7 +41,6 @@ public class CardPalette extends IconPalette
                         BangObject bangobj, BLabel[] selcards)
     {
         super(null, 4, 1, ItemIcon.ICON_SIZE, GameCodes.MAX_CARDS);
-        setPaintBackground(true);
         setPaintBorder(true);
 
         _ctx = ctx;
@@ -41,34 +48,28 @@ public class CardPalette extends IconPalette
         _selcards = selcards;
         _selfIdx = bangobj.getPlayerIndex(
             _ctx.getUserObject().getVisibleName());
+        _small = BangPrefs.getCardPaletteSize();
 
-        PlayerObject user = ctx.getUserObject();
-        ArrayList<CardItem> carditems = new ArrayList<CardItem>();
-        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
-            Object item = iter.next();
-            if (item instanceof CardItem) {
-                CardItem citem = (CardItem)item;
-                Card card = Card.getCard(citem.getType());
-                if (card != null && card.isPlayable(bangobj)) {
-                    carditems.add(citem);
-                }
-            }
+        BContainer selectable = new BContainer(GroupLayout.makeHStretch());
+        selectable.add(_smallView = new BCheckBox(_ctx.xlate(
+                GameCodes.GAME_MSGS, "m.small_card_view")), GroupLayout.FIXED);
+        _smallView.addListener(_smallListener);
+        _smallView.setSelected(_small);
+        selectable.add(new Spacer(1, 1));
+        remove(_bcont);
+        selectable.add(_bcont, GroupLayout.FIXED);
+        add(selectable, BorderLayout.SOUTH);
+        changeView();
+    }
+
+    @Override // documentation inherited
+    public void setPaintBackground (boolean paintbg)
+    {
+        if (_small) {
+            _icont.setStyleClass(paintbg ? "small_palette_background" : null);
+        } else {
+            super.setPaintBackground(paintbg);
         }
-        Collections.sort(carditems, new Comparator<CardItem>() {
-            public int compare (CardItem c1, CardItem c2) {
-                return c1.getType().compareTo(c2.getType());
-            }
-        });
-        for (CardItem citem : carditems) {
-            addIcon(new ItemIcon(ctx, citem));
-        }
-
-        // reduce the number of selectable cards by the number we have waiting
-        // to be played
-        _selectable -= bangobj.countPlayerCards(
-            bangobj.getPlayerIndex(user.getVisibleName()));
-
-        updateSelections();
     }
 
     public CardItem getSelectedCard (int index)
@@ -120,8 +121,76 @@ public class CardPalette extends IconPalette
         return new ImageIcon(_ctx.loadImage(card.getIconPath("icon")));
     }
 
+    /**
+     * Updated the size of the palette based on the checkbox value.
+     */
+    protected void changeView ()
+    {
+        _small = _smallView.isSelected();
+        BangPrefs.updateCardPaletteSize(_small);
+        ArrayList<SelectableIcon> selected = 
+            new ArrayList<SelectableIcon>(_selections);
+        clear();
+        _iicont.remove(_icont);
+        if (_small) {
+            init(16, 3, ItemIcon.SMALL_ICON_SIZE);
+        } else {
+            init(4, 1, ItemIcon.ICON_SIZE);
+        }
+        setPaintBackground(true);
+        _iicont.add(_icont);
+        PlayerObject user = _ctx.getUserObject();
+        ArrayList<CardItem> carditems = new ArrayList<CardItem>();
+        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
+            Object item = iter.next();
+            if (item instanceof CardItem) {
+                CardItem citem = (CardItem)item;
+                Card card = Card.getCard(citem.getType());
+                if (card != null && card.isPlayable(_bangobj)) {
+                    carditems.add(citem);
+                }
+            }
+        }
+        Collections.sort(carditems, new Comparator<CardItem>() {
+            public int compare (CardItem c1, CardItem c2) {
+                return c1.getType().compareTo(c2.getType());
+            }
+        });
+        for (CardItem citem : carditems) {
+            ItemIcon iicon = new ItemIcon(_ctx, citem, _small);
+            if (_small) {
+                iicon.setStyleClass("card_palette_icon");
+            }
+            addIcon(iicon);
+            for (SelectableIcon icon : selected) {
+                if (citem.getType().equals(
+                            ((CardItem)((ItemIcon)icon).getItem()).getType())) {
+                    iicon.setSelected(true);
+                    iconUpdated(iicon, true);
+                }
+            }
+        }
+
+        // reduce the number of selectable cards by the number we have waiting
+        // to be played
+        _selectable -= _bangobj.countPlayerCards(
+            _bangobj.getPlayerIndex(user.getVisibleName()));
+
+        updateSelections();
+    }
+
+    protected ActionListener _smallListener = new ActionListener() {
+        public void actionPerformed (ActionEvent event) {
+            if (_small != _smallView.isSelected()) {
+                changeView();
+            }
+        }
+    };
+
     protected BangContext _ctx;
     protected BangObject _bangobj;
     protected int _selfIdx;
     protected BLabel[] _selcards;
+    protected BCheckBox _smallView;
+    protected boolean _small;
 }
