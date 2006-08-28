@@ -601,13 +601,18 @@ public abstract class Scenario
      * player whose start marker is closest to the specified piece and is
      * therefore the <em>owner</em> of that piece.
      *
+     * @param exclude a set of player indices whose start markers should be
+     * excluded from the search
      * @return -1 if no start markers exist at all or the player index of the
      * closest marker.
      */
-    protected int getOwner (Piece target)
+    protected int getOwner (Piece target, ArrayIntSet exclude)
     {
         int mindist2 = Integer.MAX_VALUE, idx = -1;
         for (int ii = 0; ii < _startSpots.length; ii++) {
+            if (exclude.contains(ii)) {
+                continue;
+            }
             int dist2 = MathUtil.distanceSq(
                 target.x, target.y, _startSpots[ii].x, _startSpots[ii].y);
             if (dist2 < mindist2) {

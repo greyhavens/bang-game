@@ -32,8 +32,8 @@ public abstract class CounterDelegate extends ScenarioDelegate
 
             // determine which start marker to which it is nearest
             Counter counter = (Counter)pieces[ii];
-            int midx = _parent.getOwner(counter);
-            if (midx == -1 || assigned.contains(midx)) {
+            int midx = _parent.getOwner(counter, assigned);
+            if (midx == -1) {
                 throw new InvocationException("m.no_start_marker_for_counter");
             }
 
