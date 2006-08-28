@@ -17,6 +17,6 @@ public class BallisticUnit extends Unit
             BangObject bangobj, Piece target, int damage)
     {
         return new BallisticShotEffect(this, target, damage,
-                attackInfluenceIcon(), defendInfluenceIcon(target));
+                attackInfluenceIcons(), defendInfluenceIcons(target));
     }
 }

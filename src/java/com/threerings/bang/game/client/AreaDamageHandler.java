@@ -15,7 +15,6 @@ import com.threerings.jme.sprite.Sprite;
 import com.threerings.bang.client.util.ResultAttacher;
 
 import com.threerings.bang.game.client.sprite.ShotSprite;
-import com.threerings.bang.game.client.effect.DamageIconViz;
 import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;

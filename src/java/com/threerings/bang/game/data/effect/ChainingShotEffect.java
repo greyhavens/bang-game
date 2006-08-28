@@ -33,9 +33,9 @@ public class ChainingShotEffect extends ShotEffect
      * Constructor used when creating a new chaining shot effect.
      */
     public ChainingShotEffect (Piece shooter, Piece target, int damage,
-                       String attackIcon, String defendIcon)
+                       String[] attackIcons, String[] defendIcons)
     {
-        super(shooter, target, damage, attackIcon, defendIcon);
+        super(shooter, target, damage, attackIcons, defendIcons);
     }
 
     /** Constructor used when unserializing. */

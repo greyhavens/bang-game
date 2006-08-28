@@ -26,7 +26,7 @@ public class DudEffect extends SetHindranceEffect
     {
         return new Hindrance() {
             public String getName () {
-                return null;
+                return "dud";
             }
 
             public ShotEffect shoot (BangObject bangobj, Unit shooter, 
@@ -39,6 +39,11 @@ public class DudEffect extends SetHindranceEffect
             public boolean isExpired (short tick)
             {
                 return _expired;
+            }
+
+            public boolean didAdjustAttack ()
+            {
+                return true;
             }
 
             boolean _expired = false;

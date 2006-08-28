@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.piece;
 
+import com.samskivert.util.ArrayUtil;
+
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -41,6 +43,12 @@ public class Revolutionary extends Unit
         }
         ShotEffect shot = super.unitShoot(bangobj, target, scale);
         if (shot != null && proximity) {
+            if (shot.attackIcons == null) {
+                shot.attackIcons = new String[] { "revolutionary" };
+            } else {
+                shot.attackIcons = (String[])ArrayUtil.append(
+                        shot.attackIcons, "revolutionary");
+            }
             shot.type = ShotEffect.PROXIMITY;
         }
         return shot;

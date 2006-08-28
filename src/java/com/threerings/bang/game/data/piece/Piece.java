@@ -843,7 +843,7 @@ public abstract class Piece
      * Returns the attack influence icon or null if no attack influence.  Used
      * after a call to {@link computeScaledDamage}.
      */
-    public String attackInfluenceIcon ()
+    public String[] attackInfluenceIcons ()
     {
         return null;
     }
@@ -852,12 +852,25 @@ public abstract class Piece
      * Returns the defend influence icon or null if no attack influence.  Used
      * after a call to {@link computeScaledDamage}.
      */
-    public String defendInfluenceIcon (Piece target)
+    public String[] defendInfluenceIcons (Piece target)
     {
-        Influence influence = (target instanceof Unit ? 
-                ((Unit)target).influence : null);
-        if (influence != null && influence.didAdjustDefend()) {
-            return influence.getName();
+        if (!(target instanceof Unit)) {
+            return null;
+        }
+        Unit unit = (Unit)target;
+        ArrayList<String> icons = new ArrayList<String>();
+        if (unit.influence != null && unit.influence.didAdjustDefend()) {
+            icons.add(unit.influence.getName());
+        }
+        if (unit.holdingInfluence != null && 
+                unit.holdingInfluence.didAdjustDefend()) {
+            icons.add(unit.holdingInfluence.getName());
+        }
+        if (unit.hindrance != null && unit.hindrance.didAdjustDefend()) {
+            icons.add(unit.hindrance.getName());
+        }
+        if (icons.size() > 0) {
+            return icons.toArray(new String[icons.size()]);
         }
         return null;
     }
@@ -969,7 +982,7 @@ public abstract class Piece
             BangObject bangobj, Piece target, int damage)
     {
         return new ShotEffect(this, target, damage,
-                attackInfluenceIcon(), defendInfluenceIcon(target));
+                attackInfluenceIcons(), defendInfluenceIcons(target));
     }
 
     protected transient Integer _key;

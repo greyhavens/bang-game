@@ -27,7 +27,7 @@ public class StormCaller extends Unit
     {
         int damage = computeScaledDamage(bangobj, target, scale);
         ChainingShotEffect effect = new ChainingShotEffect(this, target, 
-                damage, attackInfluenceIcon(), defendInfluenceIcon(target));
+                damage, attackInfluenceIcons(), defendInfluenceIcons(target));
         
         // Get a list of all targetable pieces within a certain distance
         // so we don't need to search through the entire piece list each time

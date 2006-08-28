@@ -51,7 +51,7 @@ public class LoggingRobot extends BallisticUnit
             BangObject bangobj, Piece target, int damage)
     {
         return new BuzzsawShotEffect(this, target, damage,
-                attackInfluenceIcon(), defendInfluenceIcon(target));
+                attackInfluenceIcons(), defendInfluenceIcons(target));
     }
     
     @Override // documentation inherited

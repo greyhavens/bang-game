@@ -11,9 +11,9 @@ import com.threerings.bang.game.data.piece.Piece;
 public class BuzzsawShotEffect extends BallisticShotEffect
 {
     public BuzzsawShotEffect (Piece shooter, Piece target, int damage,
-                              String attackIcon, String defendIcon)
+                              String[] attackIcons, String[] defendIcons)
     {
-        super(shooter, target, damage, attackIcon, defendIcon);
+        super(shooter, target, damage, attackIcons, defendIcons);
     }
 
     /** Constructor used when unserializing. */

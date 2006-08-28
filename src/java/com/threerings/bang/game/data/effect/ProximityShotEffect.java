@@ -26,9 +26,9 @@ public class ProximityShotEffect extends ShotEffect
      * Constructor used when creating a new proximity shot effect.
      */
     public ProximityShotEffect (Piece shooter, Piece target, int damage,
-                       String attackIcon, String defendIcon)
+                       String[] attackIcons, String[] defendIcons)
     {
-        super(shooter, target, damage, attackIcon, defendIcon);
+        super(shooter, target, damage, attackIcons, defendIcons);
         type = PROXIMITY;
     }
 

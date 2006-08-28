@@ -105,10 +105,10 @@ public class ShotEffect extends Effect
     public int baseDamage;
 
     /** Attack influence icon name. */
-    public String attackIcon;
+    public String[] attackIcons;
 
     /** Defend influence icon name. */
-    public String defendIcon;
+    public String[] defendIcons;
 
     /** Direction location the target is pushed. */
     public short pushx = -1, pushy = -1;
@@ -123,10 +123,10 @@ public class ShotEffect extends Effect
      * This will be capped and converted to an absolute value.
      */
     public ShotEffect (Piece shooter, Piece target, int damage,
-                       String attackIcon, String defendIcon)
+                       String[] attackIcons, String[] defendIcons)
     {
         shooterId = shooter.pieceId;
-        setTarget(target, damage, attackIcon, defendIcon);
+        setTarget(target, damage, attackIcons, defendIcons);
     }
 
     /** Constructor used when unserializing. */
@@ -143,15 +143,15 @@ public class ShotEffect extends Effect
      * This will be capped and converted to an absolute value.
      */
     public void setTarget (Piece target, int damage,
-                           String attackIcon, String defendIcon)
+                           String[] attackIcons, String[] defendIcons)
     {
         if (targetId > 0) {
             deflectorIds = append(deflectorIds, (short)targetId);
         }
         targetId = target.pieceId;
         baseDamage = damage;
-        this.attackIcon = attackIcon;
-        this.defendIcon = defendIcon;
+        this.attackIcons = attackIcons;
+        this.defendIcons = defendIcons;
         newDamage = Math.min(100, target.damage + damage);
         xcoords = append(xcoords, target.x);
         ycoords = append(ycoords, target.y);

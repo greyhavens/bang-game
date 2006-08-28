@@ -61,8 +61,8 @@ public class Tactician extends Unit
         } else {
             int damage = shooter.computeScaledDamage(bangobj, ntarget, scale);
             effect.setTarget(ntarget, damage,
-                    shooter.attackInfluenceIcon(),
-                    shooter.defendInfluenceIcon(ntarget));
+                    shooter.attackInfluenceIcons(),
+                    shooter.defendInfluenceIcons(ntarget));
         }
 
         return effect;

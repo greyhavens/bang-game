@@ -28,6 +28,7 @@ import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.MoveShootEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -87,10 +88,13 @@ public class DamageIconViz extends IconViz
             return;
         }
         DamageIconViz diviz = null;
+        if (effect instanceof MoveShootEffect) {
+            effect = ((MoveShootEffect)effect).shotEffect;
+        }
         if (effect instanceof ShotEffect) {
             ShotEffect shot = (ShotEffect)effect;
             diviz = new DamageIconViz(iname, damage, color, dcolor,
-                shot.attackIcon, shot.defendIcon);
+                shot.attackIcons, shot.defendIcons);
         } else {
             diviz = new DamageIconViz(iname, damage, color, dcolor);
         }
@@ -108,13 +112,13 @@ public class DamageIconViz extends IconViz
     }
 
     protected DamageIconViz (String iname, int damage, ColorRGBA color,
-        ColorRGBA dcolor, String attackIcon, String defendIcon)
+        ColorRGBA dcolor, String[] attackIcons, String[] defendIcons)
     {
         super("textures/effects/" + iname + ".png", color);
         _damage = damage;
         _dcolor = dcolor;
-        _attackIcon = attackIcon;
-        _defendIcon = defendIcon;
+        _attackIcons = attackIcons;
+        _defendIcons = defendIcons;
     }
 
     @Override // documentation inherited
@@ -123,7 +127,11 @@ public class DamageIconViz extends IconViz
         super.didInit();
 
         // create the damage readout
+        int readoutsize = 1 + 
+            (_attackIcons == null ? 0 : _attackIcons.length) +
+            (_defendIcons == null ? 0 : _defendIcons.length);
         _dmgTState = _ctx.getRenderer().createTextureState();
+        _readout = new Quad[readoutsize];
         _dmgTState.setEnabled(true);
         Vector2f[] tcoords = new Vector2f[4];
         Texture tex = RenderUtil.createTextTexture(
@@ -143,20 +151,28 @@ public class DamageIconViz extends IconViz
 
         // Add the attack and defend icons if available
         float offset =  DAMAGE_SIZE * 0.58f + width / 2f;
-        if (_attackIcon != null) {
-            _readout[1] = createIconQuad(
-                "influences/icons/" + _attackIcon + ".png",
-                DAMAGE_SIZE, DAMAGE_SIZE);
-            _readout[1].setDefaultColor(new ColorRGBA());
-            _readout[1].getLocalTranslation().x = offset; 
+        int readoutidx = 1;
+        if (_attackIcons != null) {
+            for (int ii = 0; ii < _attackIcons.length; ii++) {
+                _readout[readoutidx] = createIconQuad(
+                    "influences/icons/" + _attackIcons[ii] + ".png",
+                    DAMAGE_SIZE, DAMAGE_SIZE);
+                _readout[readoutidx].setDefaultColor(new ColorRGBA());
+                _readout[readoutidx].getLocalTranslation().x = 
+                    offset + ii * DAMAGE_SIZE;
+                readoutidx++;
+            }
         }
 
-        if (_defendIcon != null) {
-            _readout[2] = createIconQuad(
-                "influences/icons/" + _defendIcon + ".png",
-                DAMAGE_SIZE, DAMAGE_SIZE);
-            _readout[2].setDefaultColor(new ColorRGBA());
-            _readout[2].getLocalTranslation().x = -offset;
+        if (_defendIcons != null) {
+            for (int ii = 0; ii < _defendIcons.length; ii++) {
+                _readout[readoutidx] = createIconQuad(
+                    "influences/icons/" + _defendIcons[ii] + ".png",
+                    DAMAGE_SIZE, DAMAGE_SIZE);
+                _readout[readoutidx].setDefaultColor(new ColorRGBA());
+                _readout[readoutidx].getLocalTranslation().x = 
+                    -(offset + ii * DAMAGE_SIZE);
+            }
         }
             
         for (int ii = 0; ii < _readout.length; ii++) {
@@ -234,14 +250,14 @@ public class DamageIconViz extends IconViz
     protected ColorRGBA _dcolor;
     
     /** The name of the icons to display. */
-    protected String _attackIcon;
-    protected String _defendIcon;
+    protected String[] _attackIcons;
+    protected String[] _defendIcons;
 
     /** The amount of damage to display. */
     protected int _damage;
 
     /** The readout quad. */
-    protected Quad[] _readout = new Quad[3];
+    protected Quad[] _readout;
 
     /** The damage indicator texture state. */
     protected TextureState _dmgTState;

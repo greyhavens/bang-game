@@ -5,7 +5,6 @@ package com.threerings.bang.game.client;
 
 import com.samskivert.util.Interval;
 
-import com.threerings.bang.game.client.effect.DamageIconViz;
 import com.threerings.bang.game.client.sprite.WendigoSprite;
 
 import com.threerings.bang.game.data.BangObject;

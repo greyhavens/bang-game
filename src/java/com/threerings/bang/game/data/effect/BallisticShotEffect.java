@@ -15,9 +15,9 @@ import com.threerings.bang.game.data.piece.Piece;
 public class BallisticShotEffect extends ShotEffect
 {
     public BallisticShotEffect (Piece shooter, Piece target, int damage,
-                                String attackIcon, String defendIcon)
+                                String[] attackIcons, String[] defendIcons)
     {
-        super(shooter, target, damage, attackIcon, defendIcon);
+        super(shooter, target, damage, attackIcons, defendIcons);
     }
 
     /** Constructor used when unserializing. */

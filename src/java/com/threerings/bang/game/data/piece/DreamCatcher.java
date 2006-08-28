@@ -77,6 +77,6 @@ public class DreamCatcher extends BallisticUnit
             BangObject bangobj, Piece target, int damage)
     {
         return new NightmareShotEffect(this, target, damage,
-                attackInfluenceIcon(), defendInfluenceIcon(target));
+                attackInfluenceIcons(), defendInfluenceIcons(target));
     }
 }

@@ -3,7 +3,6 @@
 
 package com.threerings.bang.game.client;
 
-import com.threerings.bang.game.client.effect.DamageIconViz;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.effect.TrainEffect;

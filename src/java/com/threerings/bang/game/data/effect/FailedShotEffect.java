@@ -42,7 +42,7 @@ public class FailedShotEffect extends ShotEffect
      * damage value will be applied to the shooter since the shot failed.
      */
     public void setTarget (Piece target, int damage, 
-                      String attackIcon, String defendIcon)
+                      String[] attackIcons, String[] defendIcons)
     {
         targetId = target.pieceId;
         xcoords = append(null, target.x);
