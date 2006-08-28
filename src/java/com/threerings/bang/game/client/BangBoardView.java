@@ -511,6 +511,13 @@ public class BangBoardView extends BoardView
         
         _wendigoAmbiance = enable;
         refreshLights();
+
+        // fade in/out the music
+        if (enable) {
+            _ctx.getBangClient().fadeOutMusic(duration);
+        } else {
+            _ctrl.startScenarioMusic(duration);
+        }
         
         // store the new values and transition to them
         final DirectionalLight[] nlights = copyLights();

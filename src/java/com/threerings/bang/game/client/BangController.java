@@ -519,6 +519,12 @@ public class BangController extends GameController
         return _statsView;
     }
 
+    public void startScenarioMusic (float duration)
+    {
+       _ctx.getBangClient().queueMusic(
+            "scenario_" + _bangobj.scenario.getIdent(), true, duration);
+    }
+
     @Override // documentation inherited
     public void attributeChanged (AttributeChangedEvent event)
     {
@@ -580,8 +586,7 @@ public class BangController extends GameController
         _view.setPhase(BangView.PRE_SELECT_PHASE);
 
         // start up the music for this scenario
-        _ctx.getBangClient().queueMusic(
-            "scenario_" + _bangobj.scenario.getIdent(), true, 3f);
+        startScenarioMusic(3f);
     }
 
     @Override // documentation inherited
