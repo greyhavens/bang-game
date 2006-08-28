@@ -152,10 +152,15 @@ public class BallisticShotHandler extends ShotHandler
         final MobileSprite dsprite = getDeflectorSprite();
         final float btime = pparams.duration - (dsprite == null ?
             0f : getActionDuration(dsprite, "blocking") * 0.5f);
+        final float delay = (_sidx == 0) ?
+            _view.getUnitSprite(_shooter).getBallisticShotDelay() : 0f;
         _ssprite.move(new OrientingBallisticPath(_ssprite,
             new Vector3f(1, 0, 0), start, pparams.velocity, GRAVITY_VECTOR,
             pparams.duration) {
             public void update (float time) {
+                if ((_daccum += time) < delay) {
+                    return;
+                }
                 super.update(time);
                 if (dsprite != null && !_blocking && _accum >= btime) {
                     _deflectSound.play(false);
@@ -163,6 +168,7 @@ public class BallisticShotHandler extends ShotHandler
                     _blocking = true;
                 }
             }
+            float _daccum;
             boolean _blocking;
         });
 

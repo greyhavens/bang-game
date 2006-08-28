@@ -121,6 +121,16 @@ public class UnitSprite extends MobileSprite
         return _holding;
     }
     
+    /**
+     * Returns the delay to use before releasing the shot sprite from the
+     * unit sprite (in order to match the shooting animation) if this is
+     * a ballistic unit.
+     */
+    public float getBallisticShotDelay ()
+    {
+        return _ballisticShotDelay;
+    }
+    
     @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {
@@ -388,6 +398,18 @@ public class UnitSprite extends MobileSprite
         configureOwnerColors();
     }
 
+    @Override // documentation inherited
+    protected void modelLoaded (Model model)
+    {
+        super.modelLoaded(model);
+        String bframe = _model.getProperties().getProperty(
+            "ballistic_shot_frame");
+        if (bframe != null) {
+            _ballisticShotDelay = (float)Integer.parseInt(bframe) /
+                _model.getAnimation("shooting").frameRate;
+        }
+    }
+    
     /**
      * Updates the visibility and location of the status display.
      */
@@ -453,6 +475,8 @@ public class UnitSprite extends MobileSprite
         }
     };
 
+    protected float _ballisticShotDelay;
+    
     protected TerrainNode.Highlight _pendnode;
     protected TextureState _pendtst;
     protected Texture[] _pendtexs;
