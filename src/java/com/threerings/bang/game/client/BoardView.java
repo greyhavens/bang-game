@@ -943,7 +943,7 @@ public class BoardView extends BComponent
             return true;
         }
         return BangPrefs.isMediumDetail() ?
-            (RandomUtil.getInt(100) < 50) : false;
+            ((piece.pieceId & 0x01) == 0) : false;
     }
     
     /**
