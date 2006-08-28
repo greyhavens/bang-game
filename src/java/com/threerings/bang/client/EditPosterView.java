@@ -14,6 +14,8 @@ import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.samskivert.util.Predicate;
+
 import static com.threerings.bang.Log.log;
 
 import com.threerings.bang.data.Handle;
@@ -21,7 +23,6 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PosterInfo;
-import com.threerings.bang.client.InventoryPalette.Predicate;
 import com.threerings.bang.client.BangUI.FeedbackSound;
 import com.threerings.bang.client.bui.IconPalette.Inspector;
 import com.threerings.bang.client.bui.IconPalette;
@@ -72,11 +73,7 @@ public class EditPosterView extends BContainer
         _right = new BContainer(new BorderLayout());
 
         // we need an InventoryPalette that only shows Badges
-        Predicate predicate = new InventoryPalette.Predicate() {
-            public boolean includeItem (Item item) {
-                return (item instanceof Badge);
-            }
-        };
+        Predicate<Item> predicate = new Predicate.InstanceOf<Item>(Badge.class);
         _palette = new PosterPalette(ctx, predicate, 2, 3);
         _palette.setPaintBorder(true);
         _palette.setSelectable(PosterInfo.BADGES);
@@ -160,7 +157,7 @@ public class EditPosterView extends BContainer
      */
     protected class PosterPalette extends InventoryPalette
     {
-        public PosterPalette (BangContext ctx, Predicate itemp,
+        public PosterPalette (BangContext ctx, Predicate<Item> itemp,
                               int columns, int rows)
         {
             super(ctx, itemp, columns, rows);

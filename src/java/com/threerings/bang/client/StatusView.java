@@ -17,6 +17,8 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
+import com.samskivert.util.Predicate;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.client.PickLookView;
@@ -270,27 +272,18 @@ public class StatusView extends BWindow
         new Rectangle(287, 70, PaletteIcon.ICON_SIZE.width * 5,
                       PaletteIcon.ICON_SIZE.height * 3 + 37);
 
-    protected static final InventoryPalette.Predicate INV_PRED =
-        new InventoryPalette.Predicate() {
-        public boolean includeItem (Item item) {
+    protected static final Predicate<Item> INV_PRED = new Predicate<Item>() {
+        public boolean isMatch (Item item) {
             return !(item instanceof Badge) && !(item instanceof Article) &&
                 !(item instanceof BigShotItem);
         }
     };
 
-    protected static final InventoryPalette.Predicate BADGE_PRED =
-        new InventoryPalette.Predicate() {
-        public boolean includeItem (Item item) {
-            return (item instanceof Badge);
-        }
-    };
+    protected static final Predicate<Item> BADGE_PRED =
+        new Predicate.InstanceOf<Item>(Badge.class);
 
-    protected static final InventoryPalette.Predicate DUDS_PRED =
-        new InventoryPalette.Predicate() {
-        public boolean includeItem (Item item) {
-            return (item instanceof Article);
-        }
-    };
+    protected static final Predicate<Item> DUDS_PRED =
+        new Predicate.InstanceOf<Item>(Article.class);
 
     // TODO: sort out how we'll localize these
     protected static final int[] STATUS_KEYMAP = {

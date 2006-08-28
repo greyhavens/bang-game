@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.samskivert.util.Predicate;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.media.image.ColorPository.ClassRecord;
@@ -24,13 +25,6 @@ import static com.threerings.bang.Log.log;
  */
 public class ColorConstraints
 {
-    public interface Predicate
-    {
-        /** Returns true if the color in question is available to the specified
-         * player. */
-        public boolean isAvailable (PlayerObject user);
-    }
-
     /**
      * Selects a random color from the records available to the supplied player
      * in the specified class. Returns null if no colors are available to the
@@ -60,17 +54,17 @@ public class ColorConstraints
             return colors;
         }
 
-        HashMap<String,Predicate> preds = _preds.get(colorClass);
+        HashMap<String,Predicate<PlayerObject>> preds = _preds.get(colorClass);
         Iterator iter = clrec.colors.values().iterator();
         while (iter.hasNext()) {
             ColorRecord crec = (ColorRecord)iter.next();
-            Predicate pred = preds.get(crec.name);
+            Predicate<PlayerObject> pred = preds.get(crec.name);
             if (pred == null) {
                 log.warning("Missing predicate for color [class=" + colorClass +
                             ", color=" + crec.name + "].");
                 continue;
             }
-            if (pred.isAvailable(user)) {
+            if (pred.isMatch(user)) {
                 colors.add(crec);
             }
         }
@@ -85,7 +79,7 @@ public class ColorConstraints
         PlayerObject user)
     {
         ClassRecord clrec = pository.getClassRecord(colorClass);
-        HashMap<String,Predicate> preds = _preds.get(colorClass);
+        HashMap<String,Predicate<PlayerObject>> preds = _preds.get(colorClass);
         if (clrec == null || preds == null) {
             return false;
         }
@@ -93,28 +87,28 @@ public class ColorConstraints
         if (crec == null) {
             return false;
         }
-        Predicate pred = preds.get(crec.name);
-        return (pred == null) ? false : pred.isAvailable(user);
+        Predicate<PlayerObject> pred = preds.get(crec.name);
+        return (pred == null) ? false : pred.isMatch(user);
     }
 
     /** We use this to disable colors until we know what we want to do. */
-    protected static class Disabled implements Predicate {
-        public boolean isAvailable (PlayerObject user) {
+    protected static class Disabled extends Predicate<PlayerObject> {
+        public boolean isMatch (PlayerObject user) {
             return false;
         }
     }
 
     /** Starter colors are available to every player any time. */
-    protected static class Starter implements Predicate {
-        public boolean isAvailable (PlayerObject user) {
+    protected static class Starter extends Predicate<PlayerObject> {
+        public boolean isMatch (PlayerObject user) {
             return true;
         }
     }
 
     /** Normal colors are available to every player after having created their
      * first avatar look. */
-    protected static class Normal implements Predicate {
-        public boolean isAvailable (PlayerObject user) {
+    protected static class Normal extends Predicate<PlayerObject> {
+        public boolean isMatch (PlayerObject user) {
             // available to anyone that has created their initial avatar
             return (user.handle != null);
         }
@@ -122,24 +116,25 @@ public class ColorConstraints
 
     /** Some colors are only available to players that hold a particular
      * badge. */
-    protected static class HoldsBadge implements Predicate {
+    protected static class HoldsBadge extends Predicate<PlayerObject> {
         public HoldsBadge (Badge.Type badge) {
             _badge = badge;
         }
-        public boolean isAvailable (PlayerObject user) {
+        public boolean isMatch (PlayerObject user) {
             // available to anyone that has created their initial avatar
             return user.holdsBadge(_badge);
         }
         protected Badge.Type _badge;
     }
 
-    protected static HashMap<String,HashMap<String,Predicate>> _preds =
-        new HashMap<String,HashMap<String,Predicate>>();
+    protected static HashMap<String,HashMap<String,Predicate<PlayerObject>>>
+        _preds = new HashMap<String,HashMap<String,Predicate<PlayerObject>>>();
 
     static {
-        HashMap<String,Predicate> preds;
+        HashMap<String,Predicate<PlayerObject>> preds;
 
-        _preds.put("hair", preds = new HashMap<String,Predicate>());
+        _preds.put("hair", preds =
+            new HashMap<String,Predicate<PlayerObject>>());
         preds.put("black", new Starter());
         preds.put("blonde", new Starter());
         preds.put("brown", new Starter());
@@ -162,7 +157,8 @@ public class ColorConstraints
         preds.put("purple", new HoldsBadge(Badge.Type.CONSEC_WINS_2));
         preds.put("violet", new HoldsBadge(Badge.Type.GAMES_PLAYED_2));
 
-        _preds.put("skin", preds = new HashMap<String,Predicate>());
+        _preds.put("skin", preds =
+            new HashMap<String,Predicate<PlayerObject>>());
         preds.put("darkest", new Starter());
         preds.put("warm_dark", new Starter());
         preds.put("dark", new Starter());
@@ -174,7 +170,8 @@ public class ColorConstraints
         preds.put("white", new Starter());
         preds.put("pasty", new Starter());
 
-        _preds.put("iris_t", preds = new HashMap<String,Predicate>());
+        _preds.put("iris_t",
+            preds = new HashMap<String,Predicate<PlayerObject>>());
         preds.put("beige", new Starter());
         preds.put("blue", new Starter());
         preds.put("brown", new Starter());
@@ -190,7 +187,8 @@ public class ColorConstraints
         preds.put("purple", new HoldsBadge(Badge.Type.BONUSES_COLLECTED_2));
         preds.put("red", new HoldsBadge(Badge.Type.UNITS_KILLED_3));
 
-        _preds.put("makeup_p", preds = new HashMap<String,Predicate>());
+        _preds.put("makeup_p",
+            preds = new HashMap<String,Predicate<PlayerObject>>());
         _preds.put("makeup_s", preds);
         preds.put("aqua", new Normal());
         preds.put("black", new Normal());
@@ -211,7 +209,8 @@ public class ColorConstraints
         preds.put("white", new Normal());
         preds.put("yellow", new Normal());
 
-        _preds.put("clothes_p", preds = new HashMap<String,Predicate>());
+        _preds.put("clothes_p",
+            preds = new HashMap<String,Predicate<PlayerObject>>());
         _preds.put("clothes_s", preds);
         _preds.put("clothes_t", preds);
 
@@ -244,7 +243,8 @@ public class ColorConstraints
         preds.put("pink", new HoldsBadge(Badge.Type.LOOKS_BOUGHT_1));
         preds.put("violet", new HoldsBadge(Badge.Type.DUDS_BOUGHT_2));
 
-        _preds.put("familiar_p", preds = new HashMap<String,Predicate>());
+        _preds.put("familiar_p",
+            preds = new HashMap<String,Predicate<PlayerObject>>());
         _preds.put("familiar_s", preds);
         _preds.put("familiar_t", preds);
     }

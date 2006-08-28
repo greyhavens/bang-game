@@ -5,6 +5,8 @@ package com.threerings.bang.client;
 
 import java.util.Iterator;
 
+import com.samskivert.util.Predicate;
+
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
@@ -16,16 +18,11 @@ import com.threerings.bang.util.BangContext;
  */
 public class InventoryPalette extends IconPalette
 {
-    public static interface Predicate
-    {
-        public boolean includeItem (Item item);
-    }
-
     /**
      * Creates an {@link InventoryPalette} with 5 columns, 3 rows,
      * and no {@link Inspector}.
      */
-    public InventoryPalette (BangContext ctx, Predicate itemp)
+    public InventoryPalette (BangContext ctx, Predicate<Item> itemp)
     {
         this(ctx, itemp, 5, 3);
     }
@@ -33,7 +30,7 @@ public class InventoryPalette extends IconPalette
     /**
      * Creates an {@link InventoryPalette} without {@link Inspector}.
      */
-    public InventoryPalette (BangContext ctx, Predicate itemp,
+    public InventoryPalette (BangContext ctx, Predicate<Item> itemp,
                              int columns, int rows)
     {
         this(ctx, itemp, null, columns, rows);
@@ -42,7 +39,7 @@ public class InventoryPalette extends IconPalette
     /**
      * Creates an {@link InventoryPalette}.
      */
-    public InventoryPalette (BangContext ctx, Predicate itemp,
+    public InventoryPalette (BangContext ctx, Predicate<Item> itemp,
                              Inspector inspector, int columns, int rows)
     {
         super(inspector, columns, rows, ItemIcon.ICON_SIZE, 0);
@@ -62,7 +59,7 @@ public class InventoryPalette extends IconPalette
         PlayerObject user = _ctx.getUserObject();
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Item item = (Item)iter.next();
-            if (!_itemp.includeItem(item)) {
+            if (!_itemp.isMatch(item)) {
                 continue;
             }
             addIcon(new ItemIcon(_ctx, item));
@@ -80,5 +77,5 @@ public class InventoryPalette extends IconPalette
     }
 
     protected BangContext _ctx;
-    protected Predicate _itemp;
+    protected Predicate<Item> _itemp;
 }
