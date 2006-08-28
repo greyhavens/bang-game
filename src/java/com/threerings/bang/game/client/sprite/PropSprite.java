@@ -55,10 +55,11 @@ public class PropSprite extends PieceSprite
     public void init (BasicContext ctx, BoardView view, BangBoard board,
                       SoundGroup sounds, Piece piece, short tick)
     {
-        super.init(ctx, view, board, sounds, piece, tick);
-
+        // set the scale before locking the model's transforms
         Prop p = (Prop)piece;
-        setLocalScale(p.getScale());    
+        setLocalScale(p.getScale());
+        
+        super.init(ctx, view, board, sounds, piece, tick); 
     }
 
     @Override // documentation inherited
