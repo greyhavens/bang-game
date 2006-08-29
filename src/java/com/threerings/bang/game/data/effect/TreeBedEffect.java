@@ -12,6 +12,7 @@ import com.threerings.bang.game.data.piece.LoggingRobot;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
+import com.threerings.bang.game.util.PieceUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -106,13 +107,27 @@ public class TreeBedEffect extends Effect
     // documentation inherited
     public boolean apply (BangObject bangobj, Observer observer)
     {
-        // enact the tree's growth or damage
+        // find the tree
         TreeBed bed = (TreeBed)bangobj.pieces.get(bedId);
         if (bed == null) {
             log.warning("Missing piece for tree bed effect [pieceId=" +
                 bedId + "].");
             return false;
         }
+        
+        // set the robot direction flags and activate the logging robots'
+        // proximity attacks
+        bed.botDirs = 0;
+        for (int pieceId : pieceIds) {
+            Piece piece = bangobj.pieces.get(pieceId);
+            if (piece instanceof LoggingRobot) {
+                bed.botDirs |= (1 << PieceUtil.getDirection(bed, piece));
+                reportEffect(observer, piece,
+                    ShotEffect.SHOT_ACTIONS[ShotEffect.PROXIMITY]);
+            }
+        }
+        
+        // enact the tree's growth or damage
         if (growth >= 0) {
             bed.growth = growth;
             bed.damage = damage;
@@ -126,15 +141,6 @@ public class TreeBedEffect extends Effect
             }
             if (!bed.isAlive()) {
                 bed.wasKilled(bangobj.tick);
-            }
-        }
-        
-        // activate the logging robots' proximity attacks
-        for (int pieceId : pieceIds) {
-            Piece piece = bangobj.pieces.get(pieceId);
-            if (piece instanceof LoggingRobot) {
-                reportEffect(observer, piece,
-                    ShotEffect.SHOT_ACTIONS[ShotEffect.PROXIMITY]);
             }
         }
         return true;

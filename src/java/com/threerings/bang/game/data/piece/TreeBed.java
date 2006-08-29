@@ -24,6 +24,11 @@ public class TreeBed extends Prop
     /** The current growth phase of the tree, from 0 to FULLY_GROWN. */
     public byte growth;
     
+    /** The lower four bits flag, for each direction, whether or not a
+     * logging robot in that direction contributed to the last
+     * {@link TreeBedEffect}. */
+    public transient int botDirs;
+    
     public TreeBed ()
     {
         damage = 50;
