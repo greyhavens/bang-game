@@ -293,7 +293,7 @@ public class EditorController extends GameController
             return;
         }
         String id = _viewScenId;
-        setViewingProps(id);
+        setViewingProps(null);
         pruneOrphanPieces();
 
         try {
@@ -489,6 +489,7 @@ public class EditorController extends GameController
     {
         byte[] shadows = _bangobj.board.getShadows();
         ArrayList<String> scenids = _panel.info.getSelectedScenarios();
+        _bangobj.board.clearShadowPatches();
         for (int ii = -1, size = scenids.size(); ii < size; ii++) {
             String scenid = (ii > -1 ? scenids.get(ii) : null);
             String name;

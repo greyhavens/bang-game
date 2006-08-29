@@ -322,6 +322,12 @@ public class BangBoard extends SimpleStreamableObject
         _patchMap.put(id, patch);
     }
 
+    /** Clears all the shadow patches. */
+    public void clearShadowPatches ()
+    {
+        _patchMap.clear();
+    }
+
     /** Applies the specified diff to the shadows. */
     public void applyShadowPatch (String id)
     {
