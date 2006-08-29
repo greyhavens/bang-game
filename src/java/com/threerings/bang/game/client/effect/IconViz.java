@@ -124,8 +124,9 @@ public class IconViz extends EffectViz
                 xform.getLocalRotation());
             xform.attachChild(_billboard);
             _view.getPieceNode().attachChild(xform);
-            _billboard.updateRenderState();
         }
+        _billboard.updateRenderState();
+        _billboard.updateGeometricState(0f, true);
     }
 
     /**
