@@ -12,6 +12,7 @@ import com.samskivert.util.QuickSort;
 
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.HomesteadEffect;
@@ -143,6 +144,24 @@ public class HomesteadDelegate extends ScenarioDelegate
         }
     }
     
+    @Override // from ScenarioDelegate
+    public void tick (BangObject bangobj, short tick)
+    {
+        super.tick(bangobj, tick);
+        
+        int[] points = new int[bangobj.players.length];
+        for (Homestead stead : _steads) {
+            if (stead.owner != -1) {
+                points[stead.owner] += LandGrabInfo.POINTS_PER_STEAD_TICK;
+            }
+        }
+        for (int ii = 0; ii < points.length; ii++) {
+            bangobj.stats[ii].incrementStat(
+                Stat.Type.STEAD_POINTS, points[ii]);
+            bangobj.grantPoints(ii, points[ii]);
+        }
+    }
+    
     @Override // from Scenario
     public void pieceMoved (BangObject bangobj, Piece piece)
     {
@@ -178,7 +197,6 @@ public class HomesteadDelegate extends ScenarioDelegate
                 HomesteadEffect effect = new HomesteadEffect();
                 effect.init(claimer);
                 effect.steadId = stead.pieceId;
-                effect.owner = claimer.owner;
                 _bangmgr.deployEffect(claimer.owner, effect);
 
                 // grant this player points for the claimed homestead

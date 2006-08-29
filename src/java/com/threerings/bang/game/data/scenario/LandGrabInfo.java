@@ -17,6 +17,9 @@ public class LandGrabInfo extends ScenarioInfo
     /** The points earned per claimed homestead at the end of the game. */
     public static final int POINTS_PER_STEAD = 50;
 
+    /** Points earned at each tick per owned homestead. */
+    public static final int POINTS_PER_STEAD_TICK = 1;
+    
     @Override // from ScenarioInfo
     public String getIdent ()
     {
