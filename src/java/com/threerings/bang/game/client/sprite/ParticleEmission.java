@@ -19,6 +19,7 @@ import com.jme.scene.Spatial;
 import com.jmex.effects.particles.ParticleGeometry;
 
 import com.threerings.jme.model.Model;
+import com.threerings.jme.util.SpatialVisitor;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.EffectCache;
@@ -69,7 +70,7 @@ public class ParticleEmission extends SpriteEmission
                         _view.addWindInfluence(_particles);
                     }
                     if (!isActive()) {
-                        setReleaseRates(_particles);
+                        setReleaseRates();
                     }
                 }
             });
@@ -81,7 +82,7 @@ public class ParticleEmission extends SpriteEmission
     {
         super.setActive(active);
         if (_particles != null) {
-            setReleaseRates(_particles);
+            setReleaseRates();
         }
     }
     
@@ -134,39 +135,22 @@ public class ParticleEmission extends SpriteEmission
      * Recursively sets or clears particle release rates based on whether or
      * not the emission is active.
      */
-    protected void setReleaseRates (Spatial spatial)
+    protected void setReleaseRates ()
     {
+        // store the release rates the first time they're set
         if (_releaseRates == null) {
             _releaseRates = new HashMap<ParticleGeometry, Integer>();
-            storeReleaseRates(spatial);
+            new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
+                protected void visit (ParticleGeometry geom) {
+                    _releaseRates.put(geom, geom.getReleaseRate());
+                }
+            }.traverse(_particles);
         }
-        if (spatial instanceof ParticleGeometry) {
-            ParticleGeometry geom = (ParticleGeometry)spatial;
-            geom.setReleaseRate(isActive() ? _releaseRates.get(geom) : 0);
-            
-        } else if (spatial instanceof Node) {
-            Node node = (Node)spatial;
-            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                setReleaseRates(node.getChild(ii));
+        new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
+            protected void visit (ParticleGeometry geom) {
+                geom.setReleaseRate(isActive() ? _releaseRates.get(geom) : 0);
             }
-        }
-    }
-    
-    /**
-     * Recursively stores the original particle release rates.
-     */
-    protected void storeReleaseRates (Spatial spatial)
-    {
-        if (spatial instanceof ParticleGeometry) {
-            ParticleGeometry geom = (ParticleGeometry)spatial;
-            _releaseRates.put(geom, geom.getReleaseRate());
-            
-        } else if (spatial instanceof Node) {
-            Node node = (Node)spatial;
-            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                storeReleaseRates(node.getChild(ii));
-            }
-        }
+        }.traverse(_particles);
     }
     
     /** The type of effect to create. */

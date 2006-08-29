@@ -9,10 +9,12 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Controller;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
-
+import com.jme.scene.state.TextureState;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.jme.model.Model;
+import com.threerings.jme.model.ModelMesh;
+import com.threerings.jme.util.SpatialVisitor;
 
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.util.RenderUtil;
@@ -61,6 +63,22 @@ public class TreeBedSprite extends ActiveSprite
             _growth = tree.growth;
             _nextIdle = FastMath.FLT_EPSILON;
         }
+        
+        // perhaps create, update, or remove the damaged texture overlay
+        if (tree.damage > 50) {
+            if (!_oadded) {
+                addDamageOverlay();
+            }
+            _omstate.getDiffuse().a = (tree.damage - 50) / 50f;
+            
+        } else if (_oadded) {
+            new SpatialVisitor<ModelMesh>(ModelMesh.class) {
+                protected void visit (ModelMesh mesh) {
+                    mesh.removeOverlay(_overlay);
+                }
+            }.traverse(_model);
+            _oadded = false;
+        }
     }
     
     @Override // documentation inherited
@@ -106,6 +124,13 @@ public class TreeBedSprite extends ActiveSprite
     protected String getDeadModel ()
     {
         return _name + "/stump" + _growth;
+    }
+     
+    @Override // documentation inherited
+    protected void modelLoaded (Model model)
+    {
+        super.modelLoaded(model);
+        _oadded = false;
     }
     
     /**
@@ -157,7 +182,7 @@ public class TreeBedSprite extends ActiveSprite
                     return;
                 }
                 float alpha = _elapsed / TRUNK_FALL_DURATION;
-                mstate.getDiffuse().a = 1f - alpha;
+                mstate.getDiffuse().a = Math.min(2f - alpha*2, 1f);
                 model.getLocalRotation().fromAngleNormalAxis(
                     alpha * FastMath.HALF_PI, axis);
             }
@@ -165,8 +190,44 @@ public class TreeBedSprite extends ActiveSprite
         });
     }
     
+    /**
+     * Adds the damaged texture overlay to the current model.
+     */
+    protected void addDamageOverlay ()
+    {
+        if (_overlay == null) {
+            _overlay = new RenderState[3];
+            _overlay[0] = RenderUtil.blendAlpha;
+            _overlay[1] = _omstate = _ctx.getRenderer().createMaterialState();
+            _overlay[2] = RenderUtil.createTextureState(_ctx,
+                "props/indian_post/special/tree_bed/alpha_dead.png");
+            _omstate.getAmbient().set(ColorRGBA.white);
+            _omstate.getDiffuse().set(ColorRGBA.white);
+        }
+        new SpatialVisitor<ModelMesh>(ModelMesh.class) {
+            protected void visit (ModelMesh mesh) {
+                TextureState tstate = (TextureState)mesh.getRenderState(
+                    RenderState.RS_TEXTURE);
+                if (tstate.getTexture().getImageLocation().indexOf(
+                        "alpha") != -1) {
+                    mesh.addOverlay(_overlay);
+                }
+            }
+        }.traverse(_model);
+        _oadded = true;
+    }
+    
     /** The currently depicted growth stage. */
     protected byte _growth;
+    
+    /** The damaged texture overlay. */
+    protected RenderState[] _overlay;
+    
+    /** The overlay's material state. */
+    protected MaterialState _omstate;
+    
+    /** Whether or not the overlay has been added. */
+    protected boolean _oadded;
     
     /** The duration of the falling trunk animation. */
     protected static final float TRUNK_FALL_DURATION = 1f;

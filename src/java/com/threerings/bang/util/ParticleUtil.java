@@ -11,6 +11,8 @@ import com.jme.scene.Spatial;
 import com.jmex.effects.particles.ParticleController;
 import com.jmex.effects.particles.ParticleGeometry;
 
+import com.threerings.jme.util.SpatialVisitor;
+
 /**
  * Methods and classes for manipulating JME particle systems.
  */
@@ -25,9 +27,14 @@ public class ParticleUtil
         public ParticleRemover (Spatial target)
         {
             _target = target;
-            ArrayList<ParticleController> pctrls =
+            final ArrayList<ParticleController> pctrls =
                 new ArrayList<ParticleController>();
-            addParticleControllers(target, pctrls);
+            new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
+                protected void visit (ParticleGeometry geom) {
+                    pctrls.add(geom.getParticleController());
+                }
+            }.traverse(_target);
+            
             _pctrls = pctrls.toArray(new ParticleController[pctrls.size()]);
         }
         
@@ -42,21 +49,6 @@ public class ParticleUtil
             _target.getParent().detachChild(_target);
         }
         
-        public void addParticleControllers (
-            Spatial spatial, ArrayList<ParticleController> pctrls)
-        {
-            if (spatial instanceof ParticleGeometry) {
-                ParticleGeometry pgeom = (ParticleGeometry)spatial;
-                pctrls.add(pgeom.getParticleController());
-                
-            } else if (spatial instanceof Node) {
-                Node node = (Node)spatial;
-                for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                    addParticleControllers(node.getChild(ii), pctrls);
-                }
-            }
-        } 
-        
         /** The target effect. */
         protected Spatial _target;
         
@@ -69,15 +61,7 @@ public class ParticleUtil
      */
     public static void forceRespawn (Spatial spatial)
     {
-        if (spatial instanceof ParticleGeometry) {
-            ((ParticleGeometry)spatial).forceRespawn();
-            
-        } else if (spatial instanceof Node) {
-            Node node = (Node)spatial;
-            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                forceRespawn(node.getChild(ii));
-            }
-        }
+        _respawner.traverse(spatial);
     }
     
     /**
@@ -97,14 +81,22 @@ public class ParticleUtil
      */
     public static void stopReleasing (Spatial spatial)
     {
-        if (spatial instanceof ParticleGeometry) {
-            ((ParticleGeometry)spatial).setRepeatType(Controller.RT_CLAMP);
-            
-        } else if (spatial instanceof Node) {
-            Node node = (Node)spatial;
-            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                stopReleasing(node.getChild(ii));
-            }
-        }
+        _stopper.traverse(spatial);
     }
+    
+    /** Forces a respawn on all traversed particle systems. */
+    protected static SpatialVisitor<ParticleGeometry> _respawner =
+        new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
+        protected void visit (ParticleGeometry geom) {
+            geom.forceRespawn();
+        }
+    };
+    
+    /** Stops all traversed particle systems. */
+    protected static SpatialVisitor<ParticleGeometry> _stopper =
+        new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
+        protected void visit (ParticleGeometry geom) {
+            geom.setRepeatType(Controller.RT_CLAMP);
+        }
+    };
 }

@@ -88,6 +88,7 @@ public class TextureCache
             img = _ctx.getImageCache().getImage(path, scale);
         }
         texture = RenderUtil.createTexture(img);
+        texture.setImageLocation(path);
         _textures.put(tkey, new WeakReference<Texture>(texture));
         return texture;
     }
@@ -128,6 +129,7 @@ public class TextureCache
             _ctx.getImageCache().createImage(subimg, true) :
             _ctx.getImageCache().createImage(subimg, zations, true);
         texture = RenderUtil.createTexture(img);
+        texture.setImageLocation(path);
         _textures.put(tkey, new WeakReference<Texture>(texture));
         return texture;
     }

@@ -13,6 +13,7 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 
 import com.threerings.jme.model.ModelMesh;
+import com.threerings.jme.util.SpatialVisitor;
 
 import com.threerings.bang.game.client.sprite.ActiveSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
@@ -41,7 +42,13 @@ public class IronPlateViz extends InfluenceViz
         _mstate.getAmbient().set(ColorRGBA.white);
         _overlay = new RenderState[] { _sphereMap, _mstate,
             RenderUtil.blendAlpha, RenderUtil.overlayZBuf };
-        addOverlay(_target.getModelNode());
+            
+        new SpatialVisitor<ModelMesh>(ModelMesh.class) {
+            protected void visit (ModelMesh mesh) {
+                mesh.addOverlay(_overlay);
+            }
+        }.traverse(_target.getModelNode());
+        
         ((MobileSprite)_target).addActionHandler(_handler);
         flashOverlay(0.5f);
     }
@@ -50,40 +57,12 @@ public class IronPlateViz extends InfluenceViz
     public void destroy ()
     {
         ((MobileSprite)_target).removeActionHandler(_handler);
-        removeOverlay(_target.getModelNode());
-    }
-    
-    /**
-     * Recursively applies the sphere map overlay to all nodes under the given
-     * spatial.
-     */
-    protected void addOverlay (Spatial spatial)
-    {
-        if (spatial instanceof ModelMesh) {
-            ((ModelMesh)spatial).addOverlay(_overlay);
-            
-        } else if (spatial instanceof Node) {
-            Node node = (Node)spatial;
-            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                addOverlay(node.getChild(ii));
+        
+        new SpatialVisitor<ModelMesh>(ModelMesh.class) {
+            protected void visit (ModelMesh mesh) {
+                mesh.removeOverlay(_overlay);
             }
-        }
-    }
-    
-    /**
-     * Removes the sphere map overlay.
-     */
-    protected void removeOverlay (Spatial spatial)
-    {
-        if (spatial instanceof ModelMesh) {
-            ((ModelMesh)spatial).removeOverlay(_overlay);
-            
-        } else if (spatial instanceof Node) {
-            Node node = (Node)spatial;
-            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                removeOverlay(node.getChild(ii));
-            }
-        }
+        }.traverse(_target.getModelNode());
     }
     
     /**

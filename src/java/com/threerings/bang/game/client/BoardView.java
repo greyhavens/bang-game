@@ -75,6 +75,7 @@ import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.util.LinearTimeFunction;
+import com.threerings.jme.util.SpatialVisitor;
 import com.threerings.jme.util.TimeFunction;
 import com.threerings.openal.SoundGroup;
 
@@ -533,15 +534,11 @@ public class BoardView extends BComponent
      */
     public void addWindInfluence (Spatial spatial)
     {
-        if (spatial instanceof ParticleGeometry) {
-            ((ParticleGeometry)spatial).addInfluence(_wind);
-            
-        } else if (spatial instanceof Node) {
-            Node node = (Node)spatial;
-            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
-                addWindInfluence(node.getChild(ii));
+        new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
+            protected void visit (ParticleGeometry geom) {
+                geom.addInfluence(_wind);
             }
-        }
+        }.traverse(spatial);
     }
     
     /**
