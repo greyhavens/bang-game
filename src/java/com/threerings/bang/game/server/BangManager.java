@@ -1034,6 +1034,10 @@ public class BangManager extends GameManager
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (p instanceof Marker) {
+                // We need to keep in sync with the pieceIds on the client
+                if (((Marker)p).addSprite()) {
+                    p.assignPieceId(_bangobj);
+                }
                 iter.remove();
                 continue;
             }

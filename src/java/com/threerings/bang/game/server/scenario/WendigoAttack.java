@@ -95,7 +95,8 @@ public class WendigoAttack extends Scenario
             Piece p = iter.next();
             if (Marker.isMarker(p, Marker.SAFE)) { 
                 _safePoints.add(p.x, p.y);
-                iter.remove();
+                // we don't remove the markers here since we want to assign it
+                // a pieceId
             } else if (p instanceof Prop &&
                      SACRED_LOCATION.equals(((Prop)p).getType())) {
                 _safePoints.add(p.x, p.y);
