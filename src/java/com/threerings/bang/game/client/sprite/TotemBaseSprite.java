@@ -49,6 +49,12 @@ public class TotemBaseSprite extends TargetablePropSprite
     }
 
     @Override // documentation inherited
+    public Coloring getColoringType ()
+    {
+        return Coloring.DYNAMIC;
+    }
+
+    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);

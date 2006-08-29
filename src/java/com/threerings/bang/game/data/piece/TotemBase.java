@@ -41,6 +41,7 @@ public class TotemBase extends Prop
         PieceData data = new PieceData(type, owner);
         _pieces.add(data);
         damage = data.type.damage();
+        this.owner = owner;
     }
 
     @Override // documentation inherited
@@ -57,8 +58,10 @@ public class TotemBase extends Prop
         _destroyed = _pieces.remove(idx--);
         if (idx > -1) {
             damage = _pieces.get(idx).damage;
+            owner = _pieces.get(idx).owner;
         } else {
             damage = 0;
+            owner = -1;
         }
     }
 
@@ -147,12 +150,6 @@ public class TotemBase extends Prop
     public boolean willBeTargetable ()
     {
         return true;
-    }
-
-    @Override // documentation inherited
-    public boolean isSameTeam (BangObject bangobj, Piece target)
-    {
-        return getTopOwner() == target.owner;
     }
 
     @Override // documentation inherited
