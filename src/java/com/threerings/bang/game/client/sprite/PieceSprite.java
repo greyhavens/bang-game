@@ -466,6 +466,17 @@ public class PieceSprite extends Sprite
     }
 
     /**
+     * Called when the terrain has been updated so that the highlight can
+     * update its vertices.
+     */
+    public void updateTileHighlightVertices ()
+    {
+        if (_tlight != null) {
+            _tlight.updateVertices();
+        }
+    }
+
+    /**
      * Sprites should create and attach their scene geometry by overriding
      * this method.
      */
@@ -647,7 +658,7 @@ public class PieceSprite extends Sprite
         }
         updateTileHighlight();
     }
-    
+
     protected BasicContext _ctx;
     protected BoardView _view;
 

@@ -350,6 +350,12 @@ public class BoardView extends BComponent
         // fade the board in when the sprites are all resolved
         addResolutionObserver(new ResolutionObserver() {
             public void mediaResolved () {
+                // now that our terrain has finished loading, make sure all
+                // the highlights are updated vertices
+                for (PieceSprite ps : _pieces.values()) {
+                    ps.updateTileHighlightVertices();
+                }
+
                 clearLoadingMarquee();
 
                 // now that we're ready to fade in, go ahead and add our
