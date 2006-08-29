@@ -49,12 +49,6 @@ public class TotemBaseSprite extends TargetablePropSprite
     }
 
     @Override // documentation inherited
-    public Coloring getColoringType ()
-    {
-        return Coloring.DYNAMIC;
-    }
-
-    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
@@ -62,6 +56,11 @@ public class TotemBaseSprite extends TargetablePropSprite
         TotemBase base = (TotemBase)piece;
         final int size = _totemPieces.size();
         int baseHeight = base.numPieces();
+
+        if (_powner != piece.owner) {
+            updateColorizations();
+            _powner = piece.owner;
+        }
 
         // This assumes updated is called after any piece has been added
         // or removed from the TotemBase

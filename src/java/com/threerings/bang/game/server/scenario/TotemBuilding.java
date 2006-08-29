@@ -191,13 +191,17 @@ public class TotemBuilding extends Scenario
         }
 
         @Override // documentation inherited
-        public void pieceWasKilled (BangObject bangobj, Piece piece)
+        public void pieceAffected (Piece piece, String effect)
         {
             if (piece instanceof TotemBase) {
                 TotemBase base = (TotemBase)piece;
-                adjustCounter(bangobj, base.getDestroyedOwner(), -1, 
-                        base.getDestroyedType().stat());
-                recalculatePoints(bangobj);
+                int owner = base.getDestroyedOwner();
+                if (owner > -1) {
+                    BangObject bangobj = (BangObject)_bangmgr.getPlaceObject();
+                    adjustCounter(bangobj, owner, -1, 
+                            base.getDestroyedType().stat());
+                    recalculatePoints(bangobj);
+                }
             }
         }
 
@@ -303,6 +307,7 @@ public class TotemBuilding extends Scenario
                 }
 
                 for (int ii = 0; ii < points.length; ii++) {
+                    int diff = points[ii] + totemPoints[ii] - _points[ii];
                     bangobj.grantPoints(ii, 
                             points[ii] + totemPoints[ii] - _points[ii]);
                     _points[ii] = points[ii] + totemPoints[ii];

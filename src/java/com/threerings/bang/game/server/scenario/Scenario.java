@@ -78,9 +78,14 @@ public abstract class Scenario
             if (!p.isValidScenario(bangobj.scenario.getIdent())) {
                 iter.remove();
 
-            } else if (Marker.isMarker(p, Marker.BONUS)) {
-                _bonusSpots.add(p.x, p.y);
-                iter.remove();
+            } else if (p instanceof Marker) {
+                Marker m = (Marker)p;
+                if (!bangobj.scenario.isValidMarker(m)) {
+                    iter.remove();
+                } else if (Marker.isMarker(m, Marker.BONUS)) {
+                    _bonusSpots.add(m.x, m.y);
+                    iter.remove();
+                }
             }
         }
 

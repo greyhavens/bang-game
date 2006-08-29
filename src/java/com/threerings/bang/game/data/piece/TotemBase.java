@@ -48,14 +48,16 @@ public class TotemBase extends Prop
     public void wasDamaged (int newDamage)
     {
         super.wasDamaged(newDamage);
-        _destroyed = null;
+        _destroyedOwner = -1;
     }
     
     @Override // documentation inherited
     public void wasKilled (short tick)
     {
         int idx = _pieces.size() - 1;
-        _destroyed = _pieces.remove(idx--);
+        PieceData pd = _pieces.remove(idx--);
+        _destroyedOwner = pd.owner;
+        _destroyedType = pd.type;
         if (idx > -1) {
             damage = _pieces.get(idx).damage;
             owner = _pieces.get(idx).owner;
@@ -110,11 +112,14 @@ public class TotemBase extends Prop
     }
     
     /**
-     * Returns the owner of the last piece destroyed.
+     * Returns the owner of the last piece destroyed.  The destroyed owner
+     * will be reset to -1 after calling this function.
      */
     public int getDestroyedOwner ()
     {
-        return (_destroyed == null) ? -1 : _destroyed.owner;
+        int owner = _destroyedOwner;
+        _destroyedOwner = -1;
+        return owner;
     }
 
     /**
@@ -133,11 +138,14 @@ public class TotemBase extends Prop
     }
 
     /**
-     * Returns the type of the last piece destroyed.
+     * Returns the type of the last piece destroyed.  The destroyed type
+     * will be set to null after calling this function.
      */
     public TotemBonus.Type getDestroyedType ()
     {
-        return (_destroyed == null) ? null : _destroyed.type;
+        TotemBonus.Type type = _destroyedType;
+        _destroyedType = null;
+        return type;
     }
 
     @Override // documentation inherited
@@ -193,5 +201,6 @@ public class TotemBase extends Prop
     
     protected transient StreamableArrayList<PieceData> _pieces = 
         new StreamableArrayList<PieceData>();
-    protected transient PieceData _destroyed;
+    protected transient int _destroyedOwner = -1;
+    protected transient TotemBonus.Type _destroyedType;
 }
