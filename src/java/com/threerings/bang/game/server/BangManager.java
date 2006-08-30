@@ -938,7 +938,7 @@ public class BangManager extends GameManager
             resetPlayerOids();
 
         } else if (_bconfig.practice) {
-            _bangobj.setScenario(new PracticeInfo());
+            _bangobj.setScenario(new PracticeInfo(ServerConfig.townId));
             _scenario = new Practice();
             // we reuse the playerIsReady() mechanism to wait for the player to
             // be ready to start the practice; normally they'd select their
@@ -1188,12 +1188,20 @@ public class BangManager extends GameManager
     public void initAndPrepareUnits (Unit[] units, int pidx)
     {
         for (int ii = 0; ii < units.length; ii++) {
-            units[ii].assignPieceId(_bangobj);
-            units[ii].init();
-            units[ii].owner = pidx;
-            units[ii].originalOwner = pidx;
+            initAndPrepareUnit(units[ii], pidx);
             _purchases.add(units[ii]);
         }
+    }
+
+    /**
+     * Utility method to initialize and prepare a unit for a player.
+     */
+    public void initAndPrepareUnit (Unit unit, int pidx)
+    {
+            unit.assignPieceId(_bangobj);
+            unit.init();
+            unit.owner = pidx;
+            unit.originalOwner = pidx;
     }
 
     /**

@@ -64,6 +64,7 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.game.data.scenario.PracticeInfo;
 import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.TutorialUtil;
 
@@ -445,7 +446,7 @@ public class PlayerManager
         config.players = new Name[] { player.getVisibleName(), ai.handle };
         config.ais = new BangAI[] { null, ai };
         config.scenarios = new String[] { unit };
-        config.board = "Practice";
+        config.board = PracticeInfo.getBoardName(ServerConfig.townId);
         config.practice = true;
         config.teamSize = 2;
 

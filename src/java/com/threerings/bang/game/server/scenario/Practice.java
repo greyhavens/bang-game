@@ -5,6 +5,7 @@ package com.threerings.bang.game.server.scenario;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 
 import com.samskivert.util.RandomUtil;
 
@@ -26,6 +27,14 @@ import com.threerings.presents.server.InvocationException;
  */
 public class Practice extends Scenario
 {
+    /**
+     * Creates a practice scenario and registers its delegates.
+     */
+    public Practice ()
+    {
+        registerDelegate(new RespawnDelegate(1));
+    }
+
     @Override // documentation inherited
     public void startNextPhase (BangObject bangobj)
     {
@@ -68,15 +77,9 @@ public class Practice extends Scenario
         }
 
         // The AI gets 3 random units
-        UnitConfig[] ucs = UnitConfig.getTownUnits(bangobj.townId);
+        UnitConfig[] ucs = UnitConfig.getTownUnits(bangobj.townId, VALID_RANKS);
         int[] weights = new int[ucs.length];
         Arrays.fill(weights, 1);
-        // don't let the AI bring in special units
-        for (int ii = 0; ii < weights.length; ii++) {
-            if (ucs[ii].rank == UnitConfig.Rank.SPECIAL) {
-                weights[ii] = 0;
-            }
-        }
         units = new Unit[NUM_UNITS];
         for (int ii = 0; ii < units.length; ii++) {
             int idx = RandomUtil.getWeightedIndex(weights);
@@ -88,6 +91,21 @@ public class Practice extends Scenario
                 _bangmgr.initAndPrepareUnits(units, ii);
             }
         }
+    }
+
+    @Override // documentation inherited
+    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    {
+        // give the AI a new unit to replace the fallen
+        if (_bangmgr.isAI(piece.owner)) {
+            int owner = piece.owner;
+            UnitConfig[] ucs = UnitConfig.getTownUnits(
+                    bangobj.townId, VALID_RANKS);
+            piece = Unit.getUnit(ucs[RandomUtil.getInt(ucs.length)].type);
+            _bangmgr.initAndPrepareUnit((Unit)piece, owner);
+            piece.lastActed = bangobj.tick;
+        }
+        super.pieceWasKilled(bangobj, piece);
     }
 
     @Override // documentation inherited
@@ -119,9 +137,12 @@ public class Practice extends Scenario
     @Override // documentation inherited
     public short getBaseDuration ()
     {
-        // practice scenarios end after 100 ticks or one side is dead
-        return 100;
+        // practice scenarios don't have a definite ending time
+        return 4000;
     }
 
     protected static final int NUM_UNITS = 3;
+
+    protected static final EnumSet<UnitConfig.Rank> VALID_RANKS =
+        EnumSet.of(UnitConfig.Rank.NORMAL, UnitConfig.Rank.BIGSHOT);
 }

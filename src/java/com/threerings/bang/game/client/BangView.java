@@ -132,7 +132,10 @@ public class BangView extends BWindow
             break;
 
         case BangObject.IN_PLAY:
-            if (!config.tutorial) {
+            if (config.practice) {
+                showPractice();
+                showUnitStatus();
+            } else if (!config.tutorial) {
                 showRoundTimer();
                 showUnitStatus();
             }
@@ -291,6 +294,10 @@ public class BangView extends BWindow
             _ctx.getRootNode().removeWindow(_timer);
         }
 
+        if (_practiceView != null) {
+            _ctx.getRootNode().removeWindow(_practiceView);
+            _practiceView = null;
+        }
         if (_oview != null) {
             _ctx.getRootNode().removeWindow(_oview);
             _oview = null;
@@ -487,6 +494,20 @@ public class BangView extends BWindow
         }
     }
 
+    protected void showPractice ()
+    {
+        if (_practiceView == null) {
+            _practiceView = new PracticeView(_ctx, _bangobj);
+            _ctx.getRootNode().addWindow(_practiceView);
+            _practiceView.pack();
+            log.info("practice view [height=" + _practiceView.getHeight() +
+                    ", width=" + _practiceView.getWidth() + "].");
+            _practiceView.setLocation(
+                (_ctx.getDisplay().getWidth() - _practiceView.getWidth())/2,
+                10);
+        }
+    }
+
     protected void setOverlay (BWindow overlay)
     {
         clearOverlay();
@@ -568,6 +589,9 @@ public class BangView extends BWindow
 
     /** Displays the end of round timer. */
     protected RoundTimerView _timer;
+
+    /** Displays a giant end practice button. */
+    protected PracticeView _practiceView;
 
     /** Contain per-player displays. */
     protected BWindow[] _pswins;
