@@ -595,15 +595,6 @@ public abstract class Piece
     }
 
     /**
-     * Returns true if this piece can traverse the board at the specified
-     * coordinates.
-     */
-    public boolean canTraverse (BangBoard board, int tx, int ty)
-    {
-        return board.isGroundOccupiable(tx, ty);
-    }
-
-    /**
      * Writes the persistent state of this piece to the specified stream.
      *
      * @param scenIds: A sorted array of scenario Ids

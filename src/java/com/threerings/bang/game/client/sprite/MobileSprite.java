@@ -221,11 +221,11 @@ public class MobileSprite extends ActiveSprite
 
         // if we're walking on a prop, possibly adjust our height
         Vector3f pos = getLocalTranslation();
-        int x = (int)(pos.x / TILE_SIZE);
-        int y = (int)(pos.y / TILE_SIZE);
+        int tx = (int)(pos.x / TILE_SIZE);
+        int ty = (int)(pos.y / TILE_SIZE);
         BangBoard board = _view.getBoard();
-        int elev = board.getPieceElevation(x, y);
-        if (elev > 0) {
+        int elev = board.getPieceElevation(tx, ty);
+        if (elev > 0 && !board.isBridge(tx, ty)) {
             pos.z += elev * board.getElevationScale(TILE_SIZE);
             setLocalTranslation(pos);
         }

@@ -306,15 +306,15 @@ public class TerrainNode extends Node
             Vector3f offset = null;
             getLocalTranslation().set(0f, 0f, 0f);
             float height = 0f;
-            boolean flatten = _flatten && !_board.isTraversable(tx, ty);
+            boolean flatten = _flatten && (_board.isBridge(tx, ty) || 
+                    !_board.isTraversable(tx, ty));
+            int belev = _board.getElevation(tx, ty);
             if (flatten) {
-                int belev = _board.getElevation(tx, ty);
                 int maxelev = _board.getMaxHeightfieldElevation(tx, ty);
                 height = (float)(Math.max(belev, maxelev) * _elevationScale);
 
             } else if (_onTile && _overPieces) {
-                int belev = _board.getElevation(tx, ty),
-                    helev = _board.getHeightfieldElevation(tx, ty);
+                int helev = _board.getHeightfieldElevation(tx, ty);
                 if (belev > helev) {
                     offset = new Vector3f(x, y, helev * _elevationScale);
                     getLocalTranslation().set(x, y, belev * _elevationScale);

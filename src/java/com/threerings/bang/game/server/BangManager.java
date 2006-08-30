@@ -74,6 +74,7 @@ import com.threerings.bang.game.data.effect.PlayCardEffect;
 import com.threerings.bang.game.data.effect.ProximityShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Bonus;
+import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -1739,9 +1740,13 @@ public class BangManager extends GameManager
 
         // ensure that we don't land on any piece that prevents us from
         // overlapping
+        boolean bridge = _bangobj.board.isBridge(x, y);
         ArrayList<Piece> lappers = _bangobj.getOverlappers(munit);
         if (lappers != null) {
             for (Piece lapper : lappers) {
+                if (bridge && lapper instanceof BigPiece) {
+                    continue;
+                }
                 if (lapper.preventsOverlap(munit) && lapper != unit) {
 //                    log.info("Cannot overlap on move [unit=" + unit +
 //                            ", x=" + x + ", y=" + y + "].");

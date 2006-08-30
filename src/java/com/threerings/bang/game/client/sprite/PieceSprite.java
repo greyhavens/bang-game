@@ -232,14 +232,25 @@ public class PieceSprite extends Sprite
 
         // adjust position to terrain height
         Vector3f pos = getLocalTranslation();
-        TerrainNode tnode = _view.getTerrainNode();
-        pos.z = tnode.getHeightfieldHeight(pos.x, pos.y);
+        Quaternion rot = getLocalRotation();
+        Vector3f normal = null;
+        int tx = (int)(pos.x / TILE_SIZE);
+        int ty = (int)(pos.y / TILE_SIZE);
+        BangBoard board = _view.getBoard();
+        boolean bridge = board.isBridge(tx, ty);
+        if (bridge) {
+            pos.z = board.getElevation(tx, ty) * 
+                board.getElevationScale(TILE_SIZE);
+            normal = UP;
+        } else {
+            TerrainNode tnode = _view.getTerrainNode();
+            pos.z = tnode.getHeightfieldHeight(pos.x, pos.y);
+            normal = tnode.getHeightfieldNormal(pos.x, pos.y);
+        }
         setLocalTranslation(pos);
 
         // adjust rotation to terrain slope
-        Quaternion rot = getLocalRotation();
-        Vector3f normal = tnode.getHeightfieldNormal(pos.x, pos.y),
-            up = rot.mult(Vector3f.UNIT_Z),
+        Vector3f up = rot.mult(Vector3f.UNIT_Z),
             cross = up.cross(normal);
         float angle = FastMath.asin(cross.length());
         if (angle == 0f) {

@@ -749,7 +749,8 @@ public class BangBoard extends SimpleStreamableObject
         if (piece instanceof Prop && ((Prop)piece).isPassable()) {
             Prop p = (Prop)piece;
             Rectangle pbounds = p.getBounds();
-            int elevation = (int)Math.ceil(p.getPassHeight() *
+            float pelev = p.getPassHeight();
+            int elevation = (int)Math.ceil(pelev *
                 _elevationUnitsPerTile * p.getScale().z) + p.felev;
             for (int yy = pbounds.y, ly = yy + pbounds.height; yy < ly; yy++) {
                 for (int xx = pbounds.x, lx = xx + pbounds.width;
@@ -766,8 +767,13 @@ public class BangBoard extends SimpleStreamableObject
                             }
                         }
                         _dstate[idx] = dstate;
+                        int oldelev = unsignedToInt(_estate[idx]);
+                        if (elevation > oldelev) {
+                            _tstate[idx] = _btstate[idx] = 
+                                (byte)Math.max(O_BRIDGE, _btstate[idx]);
+                        }
                         _estate[idx] = (byte)Math.max(
-                            unsignedToInt(_estate[idx]), elevation);
+                            oldelev, elevation);
                     }
                 }
             }
@@ -791,8 +797,11 @@ public class BangBoard extends SimpleStreamableObject
                      xx < lx; xx++) {
                     if (_playarea.contains(xx, yy)) {
                         int idx = _width*yy + xx;
-                        _tstate[idx] = _btstate[idx] =
-                            combinePropTypes(_btstate[idx], ptype);
+                        int oldelev = unsignedToInt(_estate[idx]);
+                        if (_btstate[idx] < O_BONUS || oldelev < elevation) {
+                            _tstate[idx] = _btstate[idx] =
+                                combinePropTypes(_btstate[idx], ptype);
+                        }
                         _estate[idx] = (byte)Math.max(
                             unsignedToInt(_estate[idx]), elevation);
                     }
@@ -991,7 +1000,8 @@ public class BangBoard extends SimpleStreamableObject
             return false;
         }
         byte btstate = _btstate[y*_width+x];
-        return (btstate == O_FLAT) || (rough && btstate == O_ROUGH);
+        return (btstate == O_FLAT) || (btstate == O_BRIDGE) || 
+            (rough && btstate == O_ROUGH);
     }
 
     /**
@@ -1076,15 +1086,16 @@ public class BangBoard extends SimpleStreamableObject
         byte tstate = _tstate[idx];
         boolean flightstate = (remain ? piece.isAirborne() : 
                 piece.isFlyer() || !piece.isCorporeal());
-        if ((flightstate && (!remain || tstate <= O_FLAT) &&
+        if ((flightstate && (!remain || tstate <= O_BRIDGE) &&
                 (!piece.isCorporeal() || tstate > O_PROP || 
                  (tstate & TALL_FLAG) != 0 || piece instanceof Train ||
                  (!remain && (tstate & TARGETABLE_FLAG) == 0 && 
                   piece.getMinFireDistance() == 0)))) {
             return true;
-        } else if ((tstate == O_FLAT) ||
+        } else if ((tstate == O_FLAT || tstate == O_BRIDGE) ||
                (piece instanceof Unit && tstate == O_BONUS) ||
-               (tstate == piece.owner && _btstate[idx] == O_FLAT && !remain)) {
+               (tstate == piece.owner && (_btstate[idx] == O_FLAT || 
+                    _btstate[idx] == O_BRIDGE) && !remain)) {
             return canCross(sx, sy, dx, dy);
         }
         return false;
@@ -1101,6 +1112,12 @@ public class BangBoard extends SimpleStreamableObject
         if (!_playarea.contains(sx, sy) || !_playarea.contains(dx, dy)) {
             return false;
         }
+        if ((isBridge(sx, sy) || isBridge(dx, dy)) && 
+                Math.abs(getElevation(sx, sy) - getElevation(dx, dy)) >
+                MAX_OCCUPIABLE_HEIGHT_DELTA) {
+            return false;
+        }
+                
         int dir = (sx == dx) ? (dy > sy ? NORTH : SOUTH) :
                                (dx < sx ? EAST : WEST);
         // the source direction is the opposite of the destination
@@ -1119,7 +1136,8 @@ public class BangBoard extends SimpleStreamableObject
         if (!_playarea.contains(x, y)) {
             return false;
         }
-        return (_tstate[y*_width+x] == O_FLAT);
+        byte tstate = _tstate[y*_width+x];
+        return (tstate == O_FLAT || tstate == O_BRIDGE);
     }
 
     /**
@@ -1130,7 +1148,19 @@ public class BangBoard extends SimpleStreamableObject
         if (!_playarea.contains(x, y)) {
             return false;
         }
-        return (_btstate[y*_width+x] == O_FLAT);
+        byte btstate = _btstate[y*_width+x];
+        return (btstate == O_FLAT || btstate == O_BRIDGE);
+    }
+
+    /**
+     * Returns true if the specified coordinate is a bridge.
+     */
+    public boolean isBridge (int x, int y)
+    {
+        if (!_playarea.contains(x, y)) {
+            return false;
+        }
+        return (_btstate[y*_width+x] == O_BRIDGE);
     }
 
     /**
@@ -1587,20 +1617,23 @@ public class BangBoard extends SimpleStreamableObject
     /** Indicates that this tile is flat and traversable. */
     protected static final byte O_FLAT = -1;
 
+    /** Indicates that this tile has a bridge and is traversable. */
+    protected static final byte O_BRIDGE = -2;
+
     /** Indicates that this tile is flat and traversable but occupied by a
      * bonus. */
-    protected static final byte O_BONUS = -2;
+    protected static final byte O_BONUS = -3;
 
     /** Indicates that this tile is rough and only traversable by some units. */
-    protected static final byte O_ROUGH = -3;
+    protected static final byte O_ROUGH = -4;
 
     /** Indicates that this tile is impassable by non-air units. */
-    protected static final byte O_IMPASS = -4;
+    protected static final byte O_IMPASS = -5;
 
     /** Indicates that this tile is occupied by a prop.  Anything less is also
      * a prop, with the flags below indicating various attributes when
      * cleared. */
-    protected static final byte O_PROP = -5;
+    protected static final byte O_PROP = -6;
     
     /** Flags the prop as tall (can't be passed, even by air units). */
     protected static final byte TALL_FLAG = 1 << 3;
