@@ -33,6 +33,7 @@ import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.server.ai.ForestGuardiansLogic;
@@ -130,8 +131,12 @@ public class ForestGuardians extends Scenario
             if (tree.isAlive()) {
                 treePoints += tree.growth;
                 if (tree.growth > 0) {
-                    for (StatSet stats : bangobj.stats) {
-                        stats.incrementStat(Stat.Type.TREES_GROWN, 1);
+                    for (int ii = 0; ii < bangobj.stats.length; ii++) {
+                        bangobj.stats[ii].incrementStat(
+                            ForestGuardiansInfo.GROWTH_STATS[tree.growth-1],
+                            1);
+                        bangobj.grantPoints(ii,
+                            ForestGuardiansInfo.GROWTH_POINTS[tree.growth-1]);
                     }
                 }
             }
@@ -160,9 +165,12 @@ public class ForestGuardians extends Scenario
         super.recordStats(bangobj, gameTime, pidx, user);
 
         // record the number of trees they grew
-        int grown = bangobj.stats[pidx].getIntStat(Stat.Type.TREES_GROWN);
-        if (grown > 0) {
-            user.stats.incrementStat(Stat.Type.TREES_GROWN, grown);
+        for (int ii = 0; ii < ForestGuardiansInfo.GROWTH_STATS.length; ii++) {
+            Stat.Type stat = ForestGuardiansInfo.GROWTH_STATS[ii];
+            int grown = bangobj.stats[pidx].getIntStat(stat);
+            if (grown > 0) {
+                user.stats.incrementStat(stat, grown);
+            }
         }
     }
     

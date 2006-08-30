@@ -15,15 +15,15 @@ public abstract class NuggetScenarioInfo extends ScenarioInfo
     public static final int POINTS_PER_NUGGET = 50;
 
     @Override // from ScenarioInfo
-    public Stat.Type getObjective ()
+    public Stat.Type[] getObjectives ()
     {
-        return Stat.Type.NUGGETS_CLAIMED;
+        return new Stat.Type[] { Stat.Type.NUGGETS_CLAIMED };
     }
 
     @Override // from ScenarioInfo
-    public int getPointsPerObjective ()
+    public int[] getPointsPerObjectives ()
     {
-        return POINTS_PER_NUGGET;
+        return new int[] { POINTS_PER_NUGGET };
     }
 
     /**

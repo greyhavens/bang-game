@@ -37,15 +37,15 @@ public class WendigoAttackInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type getObjective ()
+    public Stat.Type[] getObjectives ()
     {
-        return Stat.Type.WENDIGO_SURVIVALS;
+        return new Stat.Type[] { Stat.Type.WENDIGO_SURVIVALS };
     }
 
     @Override // from ScenarioInfo
-    public int getPointsPerObjective ()
+    public int[] getPointsPerObjectives ()
     {
-        return POINTS_PER_SURVIVAL;
+        return new int[] { POINTS_PER_SURVIVAL };
     }
 
     @Override // from ScenarioInfo

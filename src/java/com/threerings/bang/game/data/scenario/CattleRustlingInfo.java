@@ -34,15 +34,15 @@ public class CattleRustlingInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type getObjective ()
+    public Stat.Type[] getObjectives ()
     {
-        return Stat.Type.CATTLE_RUSTLED;
+        return new Stat.Type[] { Stat.Type.CATTLE_RUSTLED };
     }
 
     @Override // from ScenarioInfo
-    public int getPointsPerObjective ()
+    public int[] getPointsPerObjectives ()
     {
-        return POINTS_PER_COW;
+        return new int[] { POINTS_PER_COW };
     }
 
     @Override // from ScenarioInfo

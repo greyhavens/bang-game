@@ -68,7 +68,9 @@ public abstract class Stat
         TOTEM_POINTS(new IntStat()),
         WENDIGO_SURVIVALS(new IntStat()),
         TALISMAN_POINTS(new IntStat()),
-        TREES_GROWN(new IntStat()),
+        TREES_SAPLING(new IntStat()),
+        TREES_MATURE(new IntStat()),
+        TREES_ELDER(new IntStat()),
         TREE_POINTS(new IntStat()),
 
         // stats derived from in-game statistics

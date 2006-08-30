@@ -33,15 +33,15 @@ public class LandGrabInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type getObjective ()
+    public Stat.Type[] getObjectives ()
     {
-        return Stat.Type.STEADS_CLAIMED;
+        return new Stat.Type[] { Stat.Type.STEADS_CLAIMED };
     }
 
     @Override // from ScenarioInfo
-    public int getPointsPerObjective ()
+    public int[] getPointsPerObjectives ()
     {
-        return POINTS_PER_STEAD;
+        return new int[] { POINTS_PER_STEAD };
     }
 
     @Override // from ScenarioInfo

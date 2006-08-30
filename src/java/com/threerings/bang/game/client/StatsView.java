@@ -31,17 +31,22 @@ import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
 import com.samskivert.util.RandomUtil;
 
+import com.threerings.media.image.Colorization;
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
-import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
-import com.threerings.util.MessageBundle;
+
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
+
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Displays game stats.
@@ -49,10 +54,17 @@ import com.threerings.util.MessageBundle;
 public class StatsView extends SteelWindow
     implements ActionListener
 {
-    public StatsView (BasicContext ctx)
+    /**
+     * Creates a new stats view.
+     *
+     * @param recolor if true, recolor the primary object icons to match the
+     * player colors
+     */
+    public StatsView (BasicContext ctx, boolean recolor)
     {
         super(ctx, ctx.xlate(GameCodes.GAME_MSGS, "m.stats_title"));
         _ctx = ctx;
+        _recolor = recolor;
     }
 
     /**
@@ -152,12 +164,31 @@ public class StatsView extends SteelWindow
      */
     protected void loadGameData ()
     {
-        Stat.Type statType = _bobj.scenario.getObjective();
-        String obj = statType.toString().toLowerCase();
-        _objectiveIcon = new ImageIcon(
-            _ctx.loadImage("ui/postgame/icons/" + obj + ".png"));
-        _objectiveTitle = "m.title_" + obj;
-        _objectivePoints = "m." + obj + "_points";
+        _statTypes = _bobj.scenario.getObjectives();
+        
+        // create (possibly colorized) objective icons
+        _objectiveIcons = 
+            new ImageIcon[_bobj.players.length][_statTypes.length];
+        Colorization[] zations = null;
+        for (int ii = 0; ii < _objectiveIcons.length; ii++) {
+            if (_recolor) {
+                zations = new Colorization[] {
+                    _ctx.getAvatarLogic().getColorPository().getColorization(
+                        "unit", PIECE_COLOR_IDS[ii + 1] ) };
+            }
+            for (int jj = 0; jj < _objectiveIcons[ii].length; jj++) {
+                String path = "ui/postgame/icons/" +
+                    _statTypes[jj].toString().toLowerCase() + ".png";
+                _objectiveIcons[ii][jj] = new ImageIcon(_recolor ?
+                    _ctx.getImageCache().createColorizedBImage(
+                        path, zations, true) :
+                    _ctx.loadImage(path));
+            }
+        }
+        String ocode = _bobj.scenario.getObjectiveCode();
+        _objectiveTitle = "m.title_" + ocode;
+        _objectivePoints = "m." + ocode + "_points";
+        _showMultiplier = (_statTypes.length == 1);
 
         if (_bobj.scenario.getSecondaryObjective() != null) {
             _secStatType = _bobj.scenario.getSecondaryObjective();
@@ -169,12 +200,18 @@ public class StatsView extends SteelWindow
         // calculate the total scenario points for each player
         _scenPoints = new int[_bobj.players.length];
         _objectives = new int[_bobj.players.length];
+        int[] ppo = _bobj.scenario.getPointsPerObjectives();
+        int objSum;
         for (int ii = 0; ii < _scenPoints.length; ii++) {
-            _objectives[ii] = getIntStat(ii, statType);
-            int secondary = (_secStatType == null ? 0 :
-                    getIntStat(ii, _secStatType));
-            _scenPoints[ii] = _bobj.scenario.getPointsPerObjective() *
-                _objectives[ii] + secondary;
+            _scenPoints[ii] = (_secStatType == null) ? 0 :
+                getIntStat(ii, _secStatType);
+            objSum = 0;
+            for (int jj = 0; jj < _statTypes.length; jj++) {
+                int objs = getIntStat(ii, _statTypes[jj]);
+                objSum += objs;
+                _scenPoints[ii] += ppo[jj] * objs;
+            }
+            _objectives[ii] = objSum;
         }
     }
 
@@ -226,7 +263,7 @@ public class StatsView extends SteelWindow
         _objcont.setPreferredSize(TABLE_DIMS);
         _objcont.setLayoutManager(new TableLayout(3, 2, 3));
 
-        int iwidth = _objectiveIcon.getWidth() + 1;
+        int iwidth = _objectiveIcons[0][0].getWidth() + 1;
         int size = _bobj.players.length;
         _labels = new BLabel[size][];
         int maxobjectives = 0;
@@ -259,7 +296,7 @@ public class StatsView extends SteelWindow
             _labels[ii] = new BLabel[_objectives[ii] + secLabels + 
                 (_showMultiplier ? 2 : 1)];
             Dimension apref = aview.getPreferredSize(-1, -1);
-            int y = (apref.height - _objectiveIcon.getHeight()) / 2;
+            int y = (apref.height - _objectiveIcons[0][0].getHeight()) / 2;
 
             // add secondary labels if available
             if (_secStatType != null) {
@@ -331,11 +368,22 @@ public class StatsView extends SteelWindow
     protected BContainer objectiveIconContainer (int pidx, int secLabels, 
             int maxobjectives, int maxIcons, int iwidth, int y)
     {
+        iwidth--;
         BContainer icont = new BContainer(new AbsoluteLayout());
+        int[] objs = new int[_objectiveIcons[pidx].length];
+        for (int ii = 0; ii < objs.length; ii++) {
+            objs[ii] = getIntStat(pidx, _statTypes[ii]);
+        }
         // Add the objective icons
+        int idx = 0;
         for (int jj = 0; jj < _objectives[pidx]; jj++) {
             int x = 0;
-            _labels[pidx][jj + secLabels] = new BLabel(_objectiveIcon);
+            while (objs[idx] == 0) {
+                idx++;
+            }
+            objs[idx]--;
+            _labels[pidx][jj + secLabels] = new BLabel(
+                    _objectiveIcons[pidx][idx]);
             if (maxobjectives > maxIcons) {
                 x += jj * (maxIcons - 1) * iwidth /
                     (maxobjectives - 1);
@@ -447,7 +495,8 @@ public class StatsView extends SteelWindow
                 _ptscont.add(makeAvatarView(ii));
                 _ptscont.add(labels[0] = new BLabel(
                         String.valueOf(_scenPoints[ii]), "endgame_smalltotal"));
-                labels[0].setIcon(_objectiveIcon);
+                labels[0].setIcon(_statTypes.length == 1 ?
+                    _objectiveIcons[0][0] : _secIcon);
                 _ptscont.add(labels[1] = new BLabel("+", "endgame_smalltotal"));
                 _ptscont.add(labels[2] = new BLabel(
                         String.valueOf(damagePoints), "endgame_smalltotal"));
@@ -694,6 +743,9 @@ public class StatsView extends SteelWindow
     protected BangObject _bobj;
     protected MessageBundle _msgs;
 
+    /** Whether or not to recolor primary objective icons. */
+    protected boolean _recolor;
+    
     /** Content layouts that can be toggled through. */
     protected BButton _back, _forward, _closeBtn;
     protected BContainer _objcont, _ptscont, _currcont;
@@ -704,8 +756,10 @@ public class StatsView extends SteelWindow
     protected BLabel[][] _labels;
 
     /** Information on the game scenario. */
+    protected Stat.Type[] _statTypes;
     protected Stat.Type _secStatType;
-    protected BIcon _objectiveIcon, _secIcon;
+    protected ImageIcon[][] _objectiveIcons;
+    protected BIcon _secIcon;
     protected String _objectiveTitle;
     protected String _objectivePoints;
     protected int[] _scenPoints;
@@ -750,6 +804,7 @@ public class StatsView extends SteelWindow
         // Wendigo Attack
         Stat.Type.WENDIGO_SURVIVALS, Stat.Type.TALISMAN_POINTS,
         // Forest Guardians
-        Stat.Type.TREES_GROWN, Stat.Type.TREE_POINTS,
+        Stat.Type.TREES_SAPLING, Stat.Type.TREES_MATURE,
+        Stat.Type.TREES_ELDER, Stat.Type.TREE_POINTS,
     };
 }

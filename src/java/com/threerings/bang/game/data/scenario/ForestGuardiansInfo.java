@@ -23,6 +23,14 @@ public class ForestGuardiansInfo extends ScenarioInfo
     /** Points earned at each tick for contributing to trees' growth. */
     public static final int POINTS_PER_TREE_GROWTH = 1;
     
+    /** Stat types for each level of growth (minus one). */
+    public static final Stat.Type[] GROWTH_STATS = {
+        Stat.Type.TREES_SAPLING, Stat.Type.TREES_MATURE,
+        Stat.Type.TREES_ELDER };
+    
+    /** Points awarded for living trees at the end of the game. */
+    public static final int[] GROWTH_POINTS = { 15, 25, 35 };
+    
     @Override // from ScenarioInfo
     public String getIdent ()
     {
@@ -42,15 +50,21 @@ public class ForestGuardiansInfo extends ScenarioInfo
     }
     
     @Override // from ScenarioInfo
-    public Stat.Type getObjective ()
+    public Stat.Type[] getObjectives ()
     {
-        return Stat.Type.TREES_GROWN;
+        return GROWTH_STATS;
     }
 
     @Override // from ScenarioInfo
-    public int getPointsPerObjective ()
+    public int[] getPointsPerObjectives ()
     {
-        return POINTS_PER_TREE;
+        return GROWTH_POINTS;
+    }
+    
+    @Override // from ScenarioInfo
+    public String getObjectiveCode ()
+    {
+        return "trees_grown";
     }
     
     @Override // from ScenarioInfo

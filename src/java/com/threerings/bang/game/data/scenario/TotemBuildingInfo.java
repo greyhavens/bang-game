@@ -36,14 +36,6 @@ public class TotemBuildingInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type getObjective ()
-    {
-        return Stat.Type.TOTEMS_CROWN;
-    }
-
-    /**
-     * Returns an array of objective stat types.
-     */
     public Stat.Type[] getObjectives ()
     {
         return new Stat.Type[] {
@@ -53,14 +45,6 @@ public class TotemBuildingInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public int getPointsPerObjective ()
-    {
-        return TotemBonus.Type.TOTEM_CROWN.value();
-    }
-
-    /**
-     * Returns an array of point values mapped to each objective.
-     */
     public int[] getPointsPerObjectives ()
     {
         return new int[] {
@@ -71,6 +55,12 @@ public class TotemBuildingInfo extends ScenarioInfo
         };
     }
 
+    @Override // from ScenarioInfo
+    public String getObjectiveCode ()
+    {
+        return "totems_stacked";
+    }
+    
     @Override // from ScenarioInfo
     public Stat.Type getSecondaryObjective ()
     {
@@ -86,6 +76,6 @@ public class TotemBuildingInfo extends ScenarioInfo
     @Override // from ScenarioInfo
     public StatsView getStatsView (BasicContext ctx)
     {
-        return new TotemStatsView(ctx);
+        return new StatsView(ctx, true);
     }
 }

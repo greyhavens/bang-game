@@ -27,14 +27,14 @@ public class TutorialInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public Stat.Type getObjective ()
+    public Stat.Type[] getObjectives ()
     {
         return null;
     }
 
     @Override // from ScenarioInfo
-    public int getPointsPerObjective ()
+    public int[] getPointsPerObjectives ()
     {
-        return 0;
+        return null;
     }
 }

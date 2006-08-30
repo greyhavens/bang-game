@@ -167,16 +167,25 @@ public abstract class ScenarioInfo
     }
     
     /**
-     * Returns the stat associated with the scenario's primary objective.
+     * Returns the stats associated with the scenario's primary objective.
      */
-    public abstract Stat.Type getObjective ();
+    public abstract Stat.Type[] getObjectives ();
 
     /**
-     * Returns the number of points earned for each time the objective is
-     * reached.
+     * Returns for each objective the number of points earned for each time
+     * the objective is reached.
      */
-    public abstract int getPointsPerObjective ();
+    public abstract int[] getPointsPerObjectives ();
 
+    /**
+     * Returns a code used in translation keys to describe the primary
+     * objective.
+     */
+    public String getObjectiveCode ()
+    {
+        return getObjectives()[0].toString().toLowerCase();
+    }
+    
     /**
      * Returns the stat associated with our secondary objective or null if this
      * scenario has no secondary objective.
@@ -224,7 +233,7 @@ public abstract class ScenarioInfo
      */
     public StatsView getStatsView (BasicContext ctx)
     {
-        return new StatsView(ctx);
+        return new StatsView(ctx, false);
     }
 
     /**
