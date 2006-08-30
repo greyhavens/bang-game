@@ -196,7 +196,12 @@ public class PieceTarget extends Node
         loadTextures(_ctx);
 
         // we'll use this to keep a few things rotated toward the camera
+        // (we disable culling on the nodes because BillboardNode doesn't
+        // have the correct bounds until it's rendered, and won't be
+        // rendered until it has the correct bounds)
         BillboardNode bbn = new BillboardNode("billboard");
+        setCullMode(CULL_NEVER);
+        bbn.setCullMode(CULL_NEVER);
         bbn.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE/3));
         attachChild(bbn);
 
