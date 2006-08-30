@@ -752,11 +752,12 @@ public class BangBoard extends SimpleStreamableObject
             float pelev = p.getPassHeight();
             int elevation = (int)Math.ceil(pelev *
                 _elevationUnitsPerTile * p.getScale().z) + p.felev;
+            int telev = piece.computeElevation(this, p.x, p.y) - p.felev;
             for (int yy = pbounds.y, ly = yy + pbounds.height; yy < ly; yy++) {
                 for (int xx = pbounds.x, lx = xx + pbounds.width;
                         xx < lx; xx++) {
                     if (_playarea.contains(xx, yy)) {
-                        int idx = _width*p.y + p.x;
+                        int idx = _width * yy + xx;
                         byte dstate = _dstate[idx];
                         for (int dir : DIRECTIONS) {
                             if (!p.canEnter(dir)) {
@@ -767,13 +768,14 @@ public class BangBoard extends SimpleStreamableObject
                             }
                         }
                         _dstate[idx] = dstate;
+                        int tileelev = elevation + telev - 
+                            getHeightfieldElevation(xx, yy);
                         int oldelev = unsignedToInt(_estate[idx]);
-                        if (elevation > oldelev) {
+                        if (tileelev > oldelev) {
                             _tstate[idx] = _btstate[idx] = 
                                 (byte)Math.max(O_BRIDGE, _btstate[idx]);
+                            _estate[idx] = (byte)tileelev;
                         }
-                        _estate[idx] = (byte)Math.max(
-                            oldelev, elevation);
                     }
                 }
             }
