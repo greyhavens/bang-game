@@ -522,7 +522,8 @@ public class BangController extends GameController
     public void startScenarioMusic (float duration)
     {
        _ctx.getBangClient().queueMusic(
-            "scenario_" + _bangobj.scenario.getIdent(), true, duration);
+            _bangobj.scenario.getTownId() + "/scenario_" +
+                _bangobj.scenario.getIdent(), true, duration);
     }
 
     @Override // documentation inherited

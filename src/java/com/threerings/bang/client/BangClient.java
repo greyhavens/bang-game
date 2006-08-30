@@ -502,7 +502,7 @@ public class BangClient extends BasicClient
     /**
      * Queues up the music track with the specified path.
      *
-     * @param key the track key (e.g., "frontier_town")
+     * @param key the track key (e.g., "frontier_town/post_game0")
      * @param crossfade if non-zero, the interval over which to fade out the
      * music previously playing and fade in the new music
      */
@@ -961,7 +961,7 @@ public class BangClient extends BasicClient
         if (!(view instanceof BangView)) {
             // if this is not the game view, play the town theme
             String townId = _ctx.getUserObject().townId;
-            queueMusic(townId, true, 3f);
+            queueMusic(townId + "/town", true, 3f);
 
             // also re-wire up our options view whenever the main view changes
             // as the BangView overrides the escape mapping during the game

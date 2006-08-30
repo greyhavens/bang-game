@@ -225,7 +225,8 @@ public class GameOverView extends SteelWindow
 
         // cue up our end of game riff
         if (_ctx instanceof BangContext) {
-            _bctx.getBangClient().queueMusic("post_game" + _cueidx, false, 2f);
+            _bctx.getBangClient().queueMusic(
+                "frontier_town/post_game" + _cueidx, false, 2f);
         }
     }
 
