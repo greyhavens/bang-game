@@ -3,7 +3,12 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.intersection.PickData;
+import com.jme.intersection.PickResults;
+import com.jme.math.Plane;
+import com.jme.math.Ray;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -36,8 +41,9 @@ public class PieceTarget extends Node
     public PieceTarget (Piece piece, BasicContext ctx)
     {
         super("piece_target");
+        _ctx = ctx;
         _piece = piece;
-        createGeometry(ctx);
+        createGeometry();
     }
 
     // documentation inherited from Targetable
@@ -50,6 +56,7 @@ public class PieceTarget extends Node
             switch (mode) {
             case NONE:
                 _tgtquad.setCullMode(CULL_ALWAYS);
+                _tgtquad.setIsCollidable(false);
                 addModifiers = false;
                 break;
             case SURE_SHOT:
@@ -102,6 +109,7 @@ public class PieceTarget extends Node
             _pendingTick = -1;
         }
         _tgtquad.setCullMode(pending ? CULL_DYNAMIC : CULL_ALWAYS);
+        _tgtquad.setIsCollidable(pending);
         for (int ii = 0; ii < _modquad.length; ii++) {
             _modquad[ii].setCullMode(CULL_ALWAYS);
         }
@@ -156,12 +164,36 @@ public class PieceTarget extends Node
         }
     }
 
+    @Override // documentation inherited from Node
+    public void findPick (Ray ray, PickResults results)
+    {
+        // after picking, remove any results more that exceed the radius
+        // of the reticle (about 3/8ths the size of the texture)
+        int onum = results.getNumber();   
+        super.findPick(ray, results);
+        int nnum = results.getNumber();
+        if (nnum > onum) {
+            // find the billboard plane using the translation and the camera
+            // direction
+            Vector3f cdir = _ctx.getCameraHandler().getCamera().getDirection(),
+                trans = _tgtquad.getWorldTranslation(), isect = new Vector3f();
+            Plane cplane = new Plane(cdir, cdir.dot(trans));
+            if (!ray.intersectsWherePlane(cplane, isect) ||
+                isect.distance(trans) < 3*TILE_SIZE/8) {
+                return;
+            }
+            for (int ii = onum; ii < nnum; ii++) {
+                results.getPickData(ii).getTargetTris().clear();
+            }
+        }
+    }
+    
     /**
      * Create the geometry.
      */
-    protected void createGeometry (BasicContext ctx)
+    protected void createGeometry ()
     {
-        loadTextures(ctx);
+        loadTextures(_ctx);
 
         // we'll use this to keep a few things rotated toward the camera
         BillboardNode bbn = new BillboardNode("billboard");
@@ -174,9 +206,12 @@ public class PieceTarget extends Node
         _tgtquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         _tgtquad.setRenderState(RenderUtil.alwaysZBuf);
         _tgtquad.updateRenderState();
+        _tgtquad.getBatch(0).setModelBound(new BoundingBox());
+        _tgtquad.getBatch(0).updateModelBound();
         bbn.attachChild(_tgtquad);
         _tgtquad.setCullMode(CULL_ALWAYS);
-
+        _tgtquad.setIsCollidable(false);
+        
         // these icons are displayed when there are modifiers for a
         // potential target
         _modquad = new Quad[MOD_COORDS.length];
@@ -220,6 +255,7 @@ public class PieceTarget extends Node
     {
         quad.setRenderState(tst);
         quad.setCullMode(CULL_DYNAMIC);
+        quad.setIsCollidable(true);
         if (color != null) {
             quad.setDefaultColor(color);
         }
@@ -274,6 +310,8 @@ public class PieceTarget extends Node
         protected final String _png;
     }
 
+    protected BasicContext _ctx;
+    
     /** Reference to the piece we are attached to. */
     protected Piece _piece;
 
