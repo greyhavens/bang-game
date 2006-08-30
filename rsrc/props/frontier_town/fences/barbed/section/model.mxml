@@ -527,4 +527,58 @@
     <vertex location="5.48448, -5.34058e-005, 12.9562" normal="0.0, -1.0, 0.0" tcoords="0.5, 0.676829"/>
   </triMesh>
 
+  <triMesh name="pPlane4" translation="-5.48448, 100.0, 100.982" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="barbed_wire.png" transparent="true">
+    <vertex location="-105.484, 12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, -0.061412"/>
+    <vertex location="5.48448, 12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, -0.061412"/>
+    <vertex location="5.48448, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="-105.484, 12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, -0.061412"/>
+    <vertex location="5.48448, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="-105.484, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, 0.115418"/>
+    <vertex location="5.48448, 12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, -0.061412"/>
+    <vertex location="105.484, 12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, -0.061412"/>
+    <vertex location="105.484, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, 0.115418"/>
+    <vertex location="5.48448, 12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, -0.061412"/>
+    <vertex location="105.484, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, 0.115418"/>
+    <vertex location="5.48448, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="-105.484, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, 0.115418"/>
+    <vertex location="5.48448, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="5.48448, -12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.292247"/>
+    <vertex location="-105.484, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, 0.115418"/>
+    <vertex location="5.48448, -12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.292247"/>
+    <vertex location="-105.484, -12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, 0.292247"/>
+    <vertex location="5.48448, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="105.484, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, 0.115418"/>
+    <vertex location="105.484, -12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, 0.292247"/>
+    <vertex location="5.48448, 7.62939e-006, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="105.484, -12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, 0.292247"/>
+    <vertex location="5.48448, -12.9562, -4.57764e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.292247"/>
+  </triMesh>
+
+  <triMesh name="pPlane5" translation="-5.48448, 100.0, 49.3469" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="barbed_wire.png" transparent="true">
+    <vertex location="-105.484, 12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, -0.061412"/>
+    <vertex location="5.48448, 12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, -0.061412"/>
+    <vertex location="5.48448, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="-105.484, 12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, -0.061412"/>
+    <vertex location="5.48448, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="-105.484, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, 0.115418"/>
+    <vertex location="5.48448, 12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, -0.061412"/>
+    <vertex location="105.484, 12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, -0.061412"/>
+    <vertex location="105.484, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, 0.115418"/>
+    <vertex location="5.48448, 12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, -0.061412"/>
+    <vertex location="105.484, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, 0.115418"/>
+    <vertex location="5.48448, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="-105.484, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, 0.115418"/>
+    <vertex location="5.48448, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="5.48448, -12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.292247"/>
+    <vertex location="-105.484, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, 0.115418"/>
+    <vertex location="5.48448, -12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.292247"/>
+    <vertex location="-105.484, -12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="-1.57831, 0.292247"/>
+    <vertex location="5.48448, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="105.484, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, 0.115418"/>
+    <vertex location="105.484, -12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, 0.292247"/>
+    <vertex location="5.48448, 7.62939e-006, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.115418"/>
+    <vertex location="105.484, -12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="2.57831, 0.292247"/>
+    <vertex location="5.48448, -12.9562, -4.95911e-005" normal="0.0, 0.0, -1.0" tcoords="0.5, 0.292247"/>
+  </triMesh>
+
 </model>
