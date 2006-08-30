@@ -134,14 +134,8 @@ public class IconViz extends EffectViz
      */
     protected Quad createIconQuad (String name, float width, float height)
     {
-        Quad icon = RenderUtil.createIcon(width, height);
-        icon.setRenderState(RenderUtil.createTextureState(_ctx, name));
-        icon.setRenderState(RenderUtil.blendAlpha);
-        icon.setRenderState(RenderUtil.alwaysZBuf);
-        icon.updateRenderState();
-        icon.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        icon.setLightCombineMode(LightState.OFF);
-        return icon;
+        return RenderUtil.createIcon(
+            RenderUtil.createTextureState(_ctx, name), width, height);
     }
 
     /**

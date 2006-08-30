@@ -167,7 +167,7 @@ public class PieceTarget extends Node
     @Override // documentation inherited from Node
     public void findPick (Ray ray, PickResults results)
     {
-        // after picking, remove any results more that exceed the radius
+        // after picking, remove the result if it exceeds the radius
         // of the reticle (about 3/8ths the size of the texture)
         int onum = results.getNumber();   
         super.findPick(ray, results);
@@ -202,10 +202,6 @@ public class PieceTarget extends Node
 
         // this icon is displayed when we're highlighted as a potential target
         _tgtquad = RenderUtil.createIcon(_crosstst[0]);
-        _tgtquad.setLocalTranslation(new Vector3f(0, 0, 0));
-        _tgtquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        _tgtquad.setRenderState(RenderUtil.alwaysZBuf);
-        _tgtquad.updateRenderState();
         _tgtquad.getBatch(0).setModelBound(new BoundingBox());
         _tgtquad.getBatch(0).updateModelBound();
         bbn.attachChild(_tgtquad);
@@ -219,9 +215,6 @@ public class PieceTarget extends Node
             _modquad[ii] = RenderUtil.createIcon(
                     _modtst[0], TILE_SIZE/4f, TILE_SIZE/4f);
             _modquad[ii].setLocalTranslation(MOD_COORDS[ii]);
-            _modquad[ii].setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-            _modquad[ii].setRenderState(RenderUtil.alwaysZBuf);
-            _modquad[ii].updateRenderState();
             bbn.attachChild(_modquad[ii]);
             _modquad[ii].setCullMode(CULL_ALWAYS);
         }
@@ -229,9 +222,6 @@ public class PieceTarget extends Node
         // this icon is displayed when we have pending shots aimed at us
         _ptquad = RenderUtil.createIcon(_crosstst[2]);
         _ptquad.setLocalTranslation(new Vector3f(0, TILE_SIZE/2, 0));
-        _ptquad.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        _ptquad.setRenderState(RenderUtil.alwaysZBuf);
-        _ptquad.updateRenderState();
         _ptquad.setTextureBuffer(
                 0, BufferUtils.createFloatBuffer(PTARG_COORDS));
         bbn.attachChild(_ptquad);

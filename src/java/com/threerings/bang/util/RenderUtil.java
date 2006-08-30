@@ -404,7 +404,6 @@ public class RenderUtil
             TextureState tstate, float width, float height)
     {
         Quad icon = createIcon(width, height);
-        icon.setLocalTranslation(new Vector3f(0, 0, 0.1f));
         icon.setRenderState(tstate);
         icon.updateRenderState();
         return icon;
@@ -417,9 +416,18 @@ public class RenderUtil
      */
     public static Quad createIcon (float width, float height)
     {
-        Quad icon = new Quad("icon", width, height);
+        // set the queue distance to zero before sorting; this will
+        // make sure that the icon always sorts in front of transparent
+        // geometry
+        Quad icon = new Quad("icon", width, height) {
+            public void updateWorldData (float time) {
+                super.updateWorldData(time);
+                getBatch(0).queueDistance = 0f;
+            }
+        };
         icon.setRenderState(blendAlpha);
-        icon.setRenderState(overlayZBuf);
+        icon.setRenderState(alwaysZBuf);
+        icon.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         icon.setLightCombineMode(LightState.OFF);
         return icon;
     }

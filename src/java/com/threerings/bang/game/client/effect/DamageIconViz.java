@@ -139,14 +139,8 @@ public class DamageIconViz extends IconViz
                 String.valueOf(_damage), tcoords, null);
         _dmgTState.setTexture(tex);
         float width = ICON_SIZE * tcoords[2].x / tcoords[2].y;
-        _readout[0] = new Quad("damage", width, ICON_SIZE);
+        _readout[0] = RenderUtil.createIcon(_dmgTState, width, ICON_SIZE);
         _readout[0].setTextureBuffer(0, BufferUtils.createFloatBuffer(tcoords));
-        _readout[0].setRenderState(_dmgTState);
-        _readout[0].setRenderState(RenderUtil.blendAlpha);
-        _readout[0].setRenderState(RenderUtil.alwaysZBuf);
-        _readout[0].updateRenderState();
-        _readout[0].setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        _readout[0].setLightCombineMode(LightState.OFF);
         _readout[0].setDefaultColor(new ColorRGBA());
 
         // Add the attack and defend icons if available
