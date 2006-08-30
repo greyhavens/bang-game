@@ -30,6 +30,7 @@ import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
 import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
+import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 
 import com.threerings.bang.tests.TestApp;
 
@@ -117,8 +118,16 @@ public class StatsViewTest extends TestApp
                     RandomUtil.getInt(3));
             bangobj.stats[ii].setStat(Stat.Type.TOTEM_POINTS,
                     RandomUtil.getInt(200));
+            bangobj.stats[ii].setStat(Stat.Type.TREES_SAPLING,
+                    RandomUtil.getInt(4));
+            bangobj.stats[ii].setStat(Stat.Type.TREES_MATURE,
+                    RandomUtil.getInt(4));
+            bangobj.stats[ii].setStat(Stat.Type.TREES_ELDER,
+                    RandomUtil.getInt(4));
+            bangobj.stats[ii].setStat(Stat.Type.TREE_POINTS,
+                    RandomUtil.getInt(200));
         }
-        bangobj.scenario = new TotemBuildingInfo();
+        bangobj.scenario = new ForestGuardiansInfo();
 
         StatsView window = bangobj.scenario.getStatsView(_ctx);
         window.init(null, bangobj, true);

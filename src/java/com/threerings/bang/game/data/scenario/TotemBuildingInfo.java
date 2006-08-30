@@ -8,7 +8,6 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.game.client.StatsView;
-import com.threerings.bang.game.client.TotemStatsView;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.TotemBonus;
 
