@@ -1,0 +1,37 @@
+The Great Land Rush
+
+Hee hee hee!  With <span class="highlight">Sheriff Mike</span> off in the
+Nevada desert, no one can spoil my nefarious plot to release more beta
+chaos on the unsuspecting citizens of
+<span class="highlight">Frontier Town</span>!
+
+<ul>
+<li>There's a new scenario, <span class="highlight">Land Grab</span>, based on
+the capture and defense of towering homesteads.  Play the Land Grab
+<span class="highlight">Tutorial</span> to find out more.</li>
+
+<li>Speaking of tutorials, you can now <span class="highlight">Practice</span>
+any of the scenarios from the tutorials menu.</li>
+
+<li>We've made a bunch of improvements to the user interface, especially with
+regard to targeting units in-game.  You can see who you can shoot from each
+location, whether they'll die if you shoot'em, and more!  We've also renovated
+the <span class="highlight">Ranch</span>.</li>
+
+<li>There are a bunch of purty new effects for bonuses, cards, and
+nuggets.</li>
+
+<li>A few <span class="highlight">Cards</span> have been recalled for use in
+later towns.  If you had <span class="highlight">Trap</span>,
+<span class="highlight">Stampede</span>,
+<span class="highlight">Jack Rabbit</span>, or
+<span class="highlight">Dust Devil</span> cards, well, you don't have 'em no
+more.  On the bright side, players who owned any of those cards will get 1000
+scrip to buy some new ones.  Cards are much cheaper now, too.</li>
+</ul>
+
+<p>Of course, most of our efforts are going towards <span class="highlight">Indian
+Trading Post</span>, which is shapin' up real nice.  Tickets will be available
+soon!</p>
+
+<p align="right">- <a href="mailto:andrzej@threerings.net">Dastardly Drzej</a>
