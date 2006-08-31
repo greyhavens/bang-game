@@ -88,6 +88,7 @@ public class MarkerSprite extends PieceSprite
         // load our specialized model if we have one
         if (_type != null) {
             loadModel(_type, _name);
+            setLightCombineMode(LightState.OFF);
         }
     }
 
