@@ -76,7 +76,9 @@ public class ForestGuardiansInfo extends ScenarioInfo
     @Override // from ScenarioInfo
     public boolean isValidMarker (Marker marker)
     {
-        return super.isValidMarker(marker) || marker.getType() == Marker.ROBOTS;
+        return super.isValidMarker(marker) || 
+            marker.getType() == Marker.ROBOTS ||
+            marker.getType() == Marker.FETISH;
     }
     
     @Override // from ScenarioInfo

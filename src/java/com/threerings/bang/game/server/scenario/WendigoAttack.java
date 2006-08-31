@@ -91,12 +91,18 @@ public class WendigoAttack extends Scenario
 
         // extract and remove all the safe spots
         _safePoints.clear();
+        _talismanSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (Marker.isMarker(p, Marker.SAFE)) { 
                 _safePoints.add(p.x, p.y);
                 // we don't remove the markers here since we want to assign it
                 // a pieceId
+
+            } else if (Marker.isMarker(p, Marker.TALISMAN)) {
+                _talismanSpots.add(p.x, p.y);
+                iter.remove();
+
             } else if (p instanceof Prop &&
                      SACRED_LOCATION.equals(((Prop)p).getType())) {
                 _safePoints.add(p.x, p.y);
@@ -111,21 +117,15 @@ public class WendigoAttack extends Scenario
     {
         super.roundWillStart(bangobj, starts, purchases);
 
-        ArrayList<BonusSorter> sorters = sortBonusList();
-
+        int[] weights = new int[_talismanSpots.size()];
+        Arrays.fill(weights, 1);
         int placed = 1;
-        for (BonusSorter sorter : sorters) {
+        for (int ii = 0; (ii < bangobj.players.length - 1) && 
+                (ii < weights.length); ii++) {
+            int idx = RandomUtil.getWeightedIndex(weights);
             Bonus talisman = dropBonus(bangobj, TalismanEffect.TALISMAN_BONUS,
-                _bonusSpots.getX(sorter.index), _bonusSpots.getY(sorter.index));
-            // we need to mark these talismen as "occupying" the bonus spots
-            // they are being dropped in, lest the server stick another bonus
-            // in their place
-            talisman.spot = sorter.index;
-
-            // stop when we've placed one fewer talismen than players
-            if (++placed >= bangobj.players.length) {
-                break;
-            }
+                _talismanSpots.getX(idx), _talismanSpots.getY(idx));
+            weights[idx] = 0;
         }
     }
 
@@ -381,6 +381,9 @@ public class WendigoAttack extends Scenario
 
     /** Respawn ticks for units. */
     protected int[] _wendigoRespawnTicks;
+
+    /** Used to track the locations of all talisman spots. */
+    protected PointSet _talismanSpots = new PointSet();
 
     /** The sacred locations. */
     protected static final String SACRED_LOCATION =

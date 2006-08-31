@@ -33,7 +33,9 @@ public class WendigoAttackInfo extends ScenarioInfo
     @Override // from ScenarioInfo
     public boolean isValidMarker (Marker marker)
     {
-        return super.isValidMarker(marker) || marker.getType() == Marker.SAFE;
+        return super.isValidMarker(marker) || 
+            marker.getType() == Marker.SAFE ||
+            marker.getType() == Marker.TALISMAN;
     }
 
     @Override // from ScenarioInfo

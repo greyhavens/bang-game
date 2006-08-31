@@ -50,12 +50,14 @@ public class PieceChooser extends JPanel
         
         addPiece(root, "viewpoint", new Viewpoint());
         addPiece(root, "markers/start", new Marker(Marker.START));
-        addPiece(root, "markers/bonus", new Marker(Marker.BONUS));
+        //addPiece(root, "markers/bonus", new Marker(Marker.BONUS));
         addPiece(root, "markers/cattle", new Marker(Marker.CATTLE));
         addPiece(root, "markers/lode", new Marker(Marker.LODE));
         addPiece(root, "markers/totem", new Marker(Marker.TOTEM));
         addPiece(root, "markers/safe", new Marker(Marker.SAFE));
         addPiece(root, "markers/robots", new Marker(Marker.ROBOTS));
+        addPiece(root, "markers/talisman", new Marker(Marker.TALISMAN));
+        addPiece(root, "markers/fetish", new Marker(Marker.FETISH));
         
         for (PropConfig config : PropConfig.getConfigs()) {
             Prop prop = Prop.getProp(config.type);

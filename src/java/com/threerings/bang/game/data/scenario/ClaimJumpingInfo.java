@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.scenario;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.game.data.piece.Marker;
 
 /**
  * Contains metadata on the Claim Jumping scenario.
@@ -24,5 +25,11 @@ public class ClaimJumpingInfo extends NuggetScenarioInfo
     public String getTownId ()
     {
         return BangCodes.FRONTIER_TOWN;
+    }
+
+    @Override // from ScenarioInfo
+    public boolean isValidMarker (Marker marker)
+    {
+        return super.isValidMarker(marker) || marker.getType() == Marker.LODE;
     }
 }

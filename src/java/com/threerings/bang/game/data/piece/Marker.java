@@ -31,7 +31,13 @@ public class Marker extends Piece
 
     /** A particular marker type. */
     public static final int ROBOTS = 6;
-    
+
+    /** A particular marker type. */
+    public static final int TALISMAN = 7;
+
+    /** A particular marker type. */
+    public static final int FETISH = 8;
+
     /**
      * Handy function for checking if this piece is a marker and of the
      * specified type.
@@ -62,6 +68,11 @@ public class Marker extends Piece
     public int getType ()
     {
         return _type;
+    }
+
+    public void setType (int type)
+    {
+        _type = type;
     }
 
     @Override // documentation inherited

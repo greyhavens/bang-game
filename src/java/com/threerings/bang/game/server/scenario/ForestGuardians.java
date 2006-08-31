@@ -78,10 +78,14 @@ public class ForestGuardians extends Scenario
         // extract and remove all robot markers; store the tree beds and put
         // them in random growth states
         _robotSpots.clear();
+        _fetishSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (Marker.isMarker(p, Marker.ROBOTS)) {
                 _robotSpots.add((Marker)p);
+                iter.remove();
+            } else if (Marker.isMarker(p, Marker.FETISH)) {
+                _fetishSpots.add(p.x, p.y);
                 iter.remove();
             } else if (p instanceof TreeBed) {
                 TreeBed tree = (TreeBed)p;
@@ -110,13 +114,13 @@ public class ForestGuardians extends Scenario
         // place the four fetishes
         Piece[] pieces = bangobj.getPieceArray();
         placeBonus(bangobj, pieces,
-            Bonus.createBonus("indian_post/fetish_bear"), _bonusSpots);
+            Bonus.createBonus("indian_post/fetish_bear"), _fetishSpots);
         placeBonus(bangobj, pieces,
-            Bonus.createBonus("indian_post/fetish_fox"), _bonusSpots);
+            Bonus.createBonus("indian_post/fetish_fox"), _fetishSpots);
         placeBonus(bangobj, pieces,
-            Bonus.createBonus("indian_post/fetish_frog"), _bonusSpots);
+            Bonus.createBonus("indian_post/fetish_frog"), _fetishSpots);
         placeBonus(bangobj, pieces,
-            Bonus.createBonus("indian_post/fetish_turtle"), _bonusSpots);
+            Bonus.createBonus("indian_post/fetish_turtle"), _fetishSpots);
     }
     
     @Override // documentation inherited
@@ -418,6 +422,9 @@ public class ForestGuardians extends Scenario
     
     /** The payouts for each player, determined at the end of the round. */
     protected int[] _payouts;
+
+    /** Used to track the spawn locations for the fetishes. */
+    protected PointSet _fetishSpots = new PointSet();
     
     /** The approximate number of logging robots to keep alive per unit. */
     protected static final float LOGGING_ROBOTS_PER_UNIT = 0.5f;

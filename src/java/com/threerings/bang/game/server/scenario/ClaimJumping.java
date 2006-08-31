@@ -5,7 +5,11 @@ package com.threerings.bang.game.server.scenario;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
+
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.media.util.MathUtil;
 import com.threerings.util.MessageBundle;
@@ -23,6 +27,7 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Counter;
+import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.ai.AILogic;
@@ -98,6 +103,23 @@ public class ClaimJumping extends Scenario
     }
 
     @Override // documentation inherited
+    public void filterPieces (
+            BangObject bangobj, ArrayList<Piece> starts, 
+            ArrayList<Piece> pieces, ArrayList<Piece> updates)
+    {
+        super.filterPieces(bangobj, starts, pieces, updates);
+
+        _lodeSpots.clear();
+        for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
+            Piece p = iter.next();
+            if (Marker.isMarker(p, Marker.LODE)) {
+                _lodeSpots.add(p.x, p.y);
+                iter.remove();
+            }
+        }
+    }
+
+    @Override // documentation inherited
     public AILogic createAILogic (GameAI ai)
     {
         return new GoldLogic(true);
@@ -110,22 +132,16 @@ public class ClaimJumping extends Scenario
     {
         super.roundWillStart(bangobj, starts, purchases);
 
-        ArrayList<BonusSorter> sorters = sortBonusList();
+        int[] weights = new int[_lodeSpots.size()];
+        Arrays.fill(weights, 1);
 
         int placed = 0;
-        for (BonusSorter sorter : sorters) {
+        for (int ii = 0; (ii < bangobj.players.length) && 
+                    (ii < weights.length); ii++) {
+            int idx = RandomUtil.getWeightedIndex(weights);
             Bonus nugget = dropBonus(bangobj, NuggetEffect.NUGGET_BONUS,
-                _bonusSpots.getX(sorter.index),
-                _bonusSpots.getY(sorter.index));
-            // we need to mark these nuggets as "occupying" the bonus spots
-            // they are being dropped in, lest the server stick another bonus
-            // in their place
-            nugget.spot = sorter.index;
-
-            // stop when we've placed one nugget for each player
-            if (++placed >= bangobj.players.length) {
-                break;
-            }
+                _lodeSpots.getX(idx), _lodeSpots.getY(idx));
+            weights[idx] = 0;
         }
     }
 
@@ -144,6 +160,9 @@ public class ClaimJumping extends Scenario
 
     /** Indicates the tick on which we will end the game. */
     protected short _gameOverTick = -1;
+
+    /** Used to track the locations of the starting nuggets. */
+    protected PointSet _lodeSpots = new PointSet();
 
     /** The number of ticks after which we end the game if at least one claim
      * remains empty for that duration. */
