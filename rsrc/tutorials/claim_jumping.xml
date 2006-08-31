@@ -27,18 +27,18 @@
 
   <!-- tell them to drop the nugget in their claim -->
   <text message="got_nugget" step="2"/>
-  <wait event="effect:effects/frontier_town/nugget/added"/>
+  <wait event="effect:frontier_town/nugget/added"/>
   <text message="deposited_nugget" step="2"/>
   <wait event="text_clicked"/>
 
   <!-- tell them about stealin' nuggets -->
   <text message="stealin_nuggets" step="3"/>
   <center_on what="special" id="1"/>
-  <wait event="effect:effects/frontier_town/nugget/removed"/>
+  <wait event="effect:frontier_town/nugget/removed"/>
 
   <!-- have them deposit their stolen nugget -->
   <text message="stole_nugget" step="3"/>
-  <wait event="effect:effects/frontier_town/nugget/added"/>
+  <wait event="effect:frontier_town/nugget/added"/>
 
   <!-- wrap up and end the tutorial -->
   <text message="done"/>

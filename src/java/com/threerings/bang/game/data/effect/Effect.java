@@ -172,7 +172,8 @@ public abstract class Effect extends SimpleStreamableObject
         // effect the actual damage
 //         log.info("Damaging " + target + " -> " + newDamage + ".");
         target.wasDamaged(newDamage);
-        if (!target.isAlive()) {
+        boolean alive = target.isAlive();
+        if (!alive) {
             target.wasKilled(bangobj.tick);
        
             // airborn targets must land when they die
@@ -189,7 +190,7 @@ public abstract class Effect extends SimpleStreamableObject
         reportEffect(obs, target, effect);
 
         // if the target is not dead, we can stop here
-        if (target.isAlive()) {
+        if (alive) {
             return true;
         }
 

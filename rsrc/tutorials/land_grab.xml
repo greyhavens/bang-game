@@ -20,7 +20,7 @@
   <!-- add their bigshot to the board and set them to claimin' -->
   <add_piece what="bigshot" id="1001" location="17,19" owner="0"/>
   <text message="claim_homestead" step="1"/>
-  <wait event="effect:effects/frontier_town/homestead/claimed"/>
+  <wait event="effect:frontier_town/homestead/claimed"/>
   <text message="claimed" step="1"/>
   <wait event="text_clicked"/>
 
@@ -44,7 +44,7 @@
 
   <!-- then claim it for themselves -->
   <text message="reclaim_homestead" step="3"/>
-  <wait event="effect:effects/frontier_town/homestead/claimed"/>
+  <wait event="effect:frontier_town/homestead/claimed"/>
 
   <!-- wrap up and end the tutorial -->
   <text message="done"/>

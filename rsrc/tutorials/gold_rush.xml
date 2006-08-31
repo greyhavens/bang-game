@@ -23,7 +23,7 @@
 
   <!-- tell them to drop the nugget in their claim -->
   <text message="got_nugget" step="2"/>
-  <wait event="effect:effects/frontier_town/nugget/added"/>
+  <wait event="effect:frontier_town/nugget/added"/>
   <text message="deposited_nugget" step="2"/>
   <wait event="text_clicked"/>
 
