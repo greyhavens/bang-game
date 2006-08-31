@@ -110,7 +110,7 @@
     </vertex>
   </skinMesh>
 
-  <skinMesh name="wendigo_forearm" translation="0.0, 376.733, 118.415" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, -14.1539, 5.42016" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_rags.png" transparent="true">
+  <skinMesh name="wendigo_forearm" translation="0.0, 376.733, 118.415" rotation="0.0, 0.0, 0.0, 1.0" scale="16.7676, 16.7676, 16.7676" offsetTranslation="-27.0444, -14.1539, 5.42016" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="wendigo_rags.png" transparent="true">
     <vertex location="27.0444, -4.28278, -6.21018" normal="1.16496e-006, 0.9737, -0.227832" tcoords="-0.310247, 0.406702">
       <boneWeight bone="bone_forearm" weight="1.0"/>
     </vertex>
@@ -1773,5 +1773,11 @@
   <node name="bone_finger_RR_3" parent="bone_finger_RR_2" translation="103.865, 0.000340277, -4.97387e-006" rotation="0.0, 0.0, -0.371926, 0.928262" scale="1.0, 1.0, 1.0"/>
 
   <node name="bone_finger_RR_4" parent="bone_finger_RR_3" translation="43.39, 2.19967e-006, -1.90907e-007" rotation="0.0, 0.0, -0.0897985, 0.99596" scale="1.0, 1.0, 1.0"/>
+
+  <triMesh name="emitter_arm" parent="CONTROLLER" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908902, -0.707048, 0.0090889" scale="1.24272, 1.24272, 1.24272" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true">
+    <vertex location="-27.1563, 27.1563, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 1.0"/>
+    <vertex location="-0.666592, -27.1563, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
+    <vertex location="27.1563, 27.1563, 0.0" normal="0.0, 0.0, 1.0" tcoords="1.0, 1.0"/>
+  </triMesh>
 
 </model>

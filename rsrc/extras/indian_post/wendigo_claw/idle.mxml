@@ -31,6 +31,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -6.08251e-006, 2.79374e-006" rotation="0.672242, -0.229612, 0.222774, 0.667638" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000340277, -4.97387e-006" rotation="0.0, 0.0, -0.371926, 0.928262" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, 2.19967e-006, -1.90907e-007" rotation="0.0, 0.0, -0.0897985, 0.99596" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908902, -0.707048, 0.0090889" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -62,6 +63,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, 4.31244e-006, 9.4995e-006" rotation="0.666617, -0.245118, 0.23854, 0.662297" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.00033818, 2.79292e-007" rotation="0.0, 0.0, -0.395431, 0.918496" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, -1.09574e-005, 6.82948e-006" rotation="0.0, 0.0, -0.106165, 0.994349" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8418, -1.36458" rotation="0.707048, 0.00908902, -0.707048, 0.0090889" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -93,6 +95,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -4.25327e-006, 5.63929e-006" rotation="0.65022, -0.28493, 0.279046, 0.646655" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.00033965, -1.86792e-006" rotation="0.0, 0.0, -0.455528, 0.890222" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, 3.76815e-006, 8.04453e-006" rotation="0.0, 0.0, -0.148732, 0.988878" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908903, -0.707048, 0.00908891" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -124,6 +127,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -8.19328e-006, 8.84928e-006" rotation="0.623352, -0.338562, 0.333681, 0.620859" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000341866, -1.92652e-006" rotation="0.0, 0.0, -0.53581, 0.844338" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, -3.17702e-006, 7.81822e-007" rotation="0.0, 0.0, -0.207533, 0.978228" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908901, -0.707048, 0.00908889" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -155,6 +159,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -4.43447e-006, 7.2284e-006" rotation="0.587878, -0.395739, 0.392023, 0.586608" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000336275, 1.8646e-006" rotation="0.0, 0.0, -0.620315, 0.784352" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, 3.01882e-006, -1.11321e-006" rotation="0.0, 0.0, -0.272547, 0.962142" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86646, -23.8417, -1.36458" rotation="0.707048, 0.009089, -0.707048, 0.00908888" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -186,6 +191,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, 1.50699e-007, 4.09825e-006" rotation="0.548607, -0.447455, 0.444896, 0.548527" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000337387, 4.42349e-006" rotation="0.0, 0.0, -0.695487, 0.718539" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, 2.69291e-006, 1.26313e-006" rotation="0.0, 0.0, -0.334071, 0.942548" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86644, -23.8417, -1.36458" rotation="0.707048, 0.00908903, -0.707048, 0.00908891" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -217,6 +223,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -5.38051e-006, 0.0" rotation="0.513212, -0.48676, 0.485158, 0.514101" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000339024, -1.64622e-006" rotation="0.0, 0.0, -0.751561, 0.659664" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, -1.20024e-006, -1.38125e-006" rotation="0.0, 0.0, -0.383115, 0.923701" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908902, -0.707048, 0.0090889" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -248,6 +255,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, 0.0, 7.0857e-006" rotation="-0.491052, 0.508604, -0.507568, -0.492508" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000338942, -8.01856e-007" rotation="0.0, 0.0, -0.782224, 0.622997" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, -3.93017e-006, -2.28644e-006" rotation="0.0, 0.0, -0.411458, 0.911429" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86646, -23.8417, -1.36458" rotation="0.707048, 0.00908903, -0.707048, 0.00908891" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -279,6 +287,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -4.74649e-006, 1.25417e-006" rotation="-0.496846, 0.503076, -0.501895, -0.498156" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000341091, -8.54183e-007" rotation="0.0, 0.0, -0.776026, 0.630701" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, 1.44403e-006, -2.44054e-006" rotation="0.0, 0.0, -0.411458, 0.911429" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908903, -0.707048, 0.00908891" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -310,6 +319,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -3.2559e-006, 3.8836e-006" rotation="0.551774, -0.443634, 0.440985, 0.551603" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000334683, 4.2e-006" rotation="0.0, 0.0, -0.702603, 0.711582" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, -1.60648e-007, 3.05961e-006" rotation="0.0, 0.0, -0.383115, 0.923701" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908902, -0.707048, 0.0090889" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -341,6 +351,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -8.39877e-006, 5.16358e-006" rotation="0.617952, -0.348101, 0.343407, 0.615656" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000330651, 2.03905e-006" rotation="0.0, 0.0, -0.580852, 0.814009" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, 6.23308e-006, -4.29824e-006" rotation="0.0, 0.0, -0.334071, 0.942548" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86646, -23.8417, -1.36458" rotation="0.707048, 0.00908902, -0.707048, 0.0090889" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -372,6 +383,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -1.05827e-006, 9.85501e-006" rotation="0.663147, -0.25415, 0.247726, 0.658996" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000338082, -2.60283e-006" rotation="0.0, 0.0, -0.45503, 0.890476" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, -8.99393e-007, -4.39847e-006" rotation="0.0, 0.0, -0.272547, 0.962142" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908901, -0.707048, 0.00908889" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -403,6 +415,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -1.25505e-006, 1.19695e-005" rotation="0.678288, -0.211521, 0.204387, 0.673357" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000344727, 1.38726e-006" rotation="0.0, 0.0, -0.38834, 0.921516" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, 1.21067e-005, 1.46396e-006" rotation="0.0, 0.0, -0.207533, 0.978228" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908903, -0.707048, 0.00908891" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -434,6 +447,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -2.13268e-006, 7.79619e-006" rotation="0.676768, -0.216227, 0.209169, 0.671922" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000337027, 3.16541e-006" rotation="0.0, 0.0, -0.3775, 0.92601" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, -6.92328e-006, -4.85432e-007" rotation="0.0, 0.0, -0.148732, 0.988878" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908902, -0.707048, 0.0090889" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
   <frame>
@@ -465,6 +479,7 @@
     <transform name="bone_finger_RR_2" translation="129.336, -7.87095e-006, 7.58547e-006" rotation="0.673858, -0.224937, 0.218022, 0.669168" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_3" translation="103.865, 0.000342465, -5.06443e-006" rotation="0.0, 0.0, -0.372886, 0.927877" scale="1.0, 1.0, 1.0"/>
     <transform name="bone_finger_RR_4" translation="43.39, -7.23378e-006, 0.0" rotation="0.0, 0.0, -0.106165, 0.994349" scale="1.0, 1.0, 1.0"/>
+    <transform name="emitter_arm" translation="8.86645, -23.8417, -1.36458" rotation="0.707048, 0.00908903, -0.707048, 0.00908891" scale="1.24272, 1.24272, 1.24272"/>
   </frame>
 
 </animation>
