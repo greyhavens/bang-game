@@ -314,9 +314,10 @@ public class BoardView extends BComponent
             createMarquee(_bangobj.boardName);
         }
 
-        // refresh the lights and fog and wind
+        // refresh the lights and fog and wind and such
         refreshLights();
         refreshFog();
+        refreshBackgroundColor();
         refreshWindInfluence();
         
         // create the board geometry
@@ -887,6 +888,9 @@ public class BoardView extends BComponent
         // clear any marquee we have up
         clearMarquee(0f);
 
+        // restore the black background color
+        _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
+        
         // let the child nodes know that they need to clean up any textures
         // they've created
         if (_snode != null) {
@@ -1062,6 +1066,17 @@ public class BoardView extends BComponent
         }
         fstate.setColor(RenderUtil.createColorRGBA(_board.getFogColor()));
         fstate.setDensity(density);
+    }
+    
+    /**
+     * Refreshes the background color based on the horizon color and fog
+     * parameters.
+     */
+    protected void refreshBackgroundColor ()
+    {
+        int bg = (_board.getFogDensity() > 0f) ?
+            _board.getFogColor() : _board.getSkyHorizonColor();
+        _ctx.getRenderer().setBackgroundColor(RenderUtil.createColorRGBA(bg));
     }
     
     /**

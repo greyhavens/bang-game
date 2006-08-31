@@ -619,6 +619,7 @@ public class EditorBoardView extends BoardView
             _wnode.refreshSphereMap();
         }
         _snode.refreshGradient();
+        refreshBackgroundColor();
     }
 
     /**
@@ -757,6 +758,7 @@ public class EditorBoardView extends BoardView
         }
         _board.setFogParams(color, density);
         refreshFog();
+        refreshBackgroundColor();
     }
 
     /**
