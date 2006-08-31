@@ -95,8 +95,9 @@ public class EffectHandler extends BoardView.BoardAction
 
         // if this is a move effect, note the pending move
         if (_effect instanceof MoveEffect) {
-            for (int ii = 0; ii < pieceIds.length; ii++) {
-                _view.notePendingMove(pieceIds[ii]);
+            // currently only the first piece is actually moving
+            if (pieceIds.length > 0) {
+                _view.notePendingMove(pieceIds[0]);
             }
         }
     }
