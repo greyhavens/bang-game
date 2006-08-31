@@ -88,11 +88,8 @@ public class OOOAuthenticator extends Authenticator
             // ignore it and fail below
         }
         if (svers != cvers) {
-            if (cvers > svers) {
-                rdata.code = NEWER_VERSION;
-                rsp.getData().code = MessageBundle.tcompose(
-                    VERSION_MISMATCH, "" + svers);
-            }
+            rdata.code = (cvers > svers) ? NEWER_VERSION :
+                MessageBundle.tcompose(VERSION_MISMATCH, "" + svers);
             log.info("Refusing wrong version " +
                      "[creds=" + req.getCredentials() +
                      ", cvers=" + cvers + ", svers=" + svers + "].");
