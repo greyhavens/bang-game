@@ -39,7 +39,7 @@ public class CardTripletGood extends Good
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return Card.newCard(_cardType).getIconPath("card");
+        return Card.newCard(_cardType).getIconPath("card_pack");
     }
 
     @Override // documentation inherited
