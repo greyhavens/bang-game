@@ -1,11 +1,13 @@
-388
+402
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
 female/clothing_back := duster_smoking := 326
 female/clothing_back := frontier_dress := 175
 female/clothing_back := frontier_dress_holding := 176
+female/clothing_back := gatherer := 393
 female/clothing_back := gunslinger := 80
+female/clothing_back := hunter := 394
 female/clothing_back := kneel := 334
 female/clothing_back := kneel_rifle := 327
 female/clothing_back := madam_cash := 316
@@ -15,7 +17,9 @@ female/clothing_back := pancho_closed := 178
 female/clothing_back := peasant_dress := 179
 female/clothing_back := poncho := 248
 female/clothing_back := poncho_closed := 249
+female/clothing_back := revolutionary := 389
 female/clothing_back := shoulder_cape := 377
+female/clothing_back := shoulder_wrap := 395
 female/clothing_back := squaw := 81
 female/clothing_back := storm_caller := 387
 female/clothing_back := striped_vest := 180
@@ -24,8 +28,10 @@ female/clothing_back := wolf_handler := 379
 female/clothing_back := wrap := 380
 female/clothing_back := youth_dress := 381
 female/clothing_front := arms_down_bodice := 181
+female/clothing_front := basket_gatherer := 396
 female/clothing_front := book_frontier_dress := 182
 female/clothing_front := cash_madam := 328
+female/clothing_front := earing_hunter := 397
 female/clothing_front := fan_bodice := 183
 female/clothing_front := flirt_peasant_dress := 184
 female/clothing_front := madam_cash := 318
@@ -100,6 +106,7 @@ female/hair_front := straight := 345
 female/hair_front := wavy := 107
 female/hair_front := wings := 346
 female/hair_middle := beehive := 108
+female/hair_middle := bob := 402
 female/hair_middle := braids := 109
 female/hair_middle := straight := 347
 female/hair_middle := wings := 348
@@ -109,6 +116,7 @@ female/hat := eagle_mask := 349
 female/hat := lioness := 384
 female/hat := longbrim := 130
 female/hat := railbrim := 143
+female/hat := saloon_feather := 398
 female/hat := sombrero := 198
 female/hat := stetson := 110
 female/hat := war_bonnet := 350
@@ -126,7 +134,10 @@ female/hat_band := border_band_sombrero := 201
 female/hat_band := border_sombrero := 202
 female/hat_band := cougar_mask := 385
 female/hat_band := disks_longbrim := 146
+female/hat_band := disks_railbrim := 399
 female/hat_band := dual_stetson := 203
+female/hat_band := feather_bowler := 400
+female/hat_band := king_stetson := 401
 female/hat_band := thick_bowler := 173
 female/hat_band := thick_longbrim := 147
 female/hat_band := thick_railbrim := 148
@@ -203,6 +214,7 @@ male/clothing_back := a_fringe := 254
 male/clothing_back := a_longjohns := 213
 male/clothing_back := a_skinny_prospector := 361
 male/clothing_back := a_suit := 255
+male/clothing_back := a_tlingit := 390
 male/clothing_back := a_warrior := 370
 male/clothing_back := duster := 214
 male/clothing_back := fat_suspenders := 320
@@ -229,6 +241,8 @@ male/clothing_front := rifle_duster := 253
 male/clothing_front := skinny_prospector_beans := 362
 male/clothing_front := skinny_prospector_pick := 363
 male/clothing_front := smoking_fat_suspenders := 321
+male/clothing_front := tlingit_chillkat_blanket := 391
+male/clothing_front := tlingit_dagger := 392
 male/clothing_front := warrior_pistol := 375
 male/clothing_front := warrior_shield := 376
 male/clothing_front := wolf_hunter := 355
