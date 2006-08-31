@@ -68,5 +68,6 @@ public class PracticeInfo extends ScenarioInfo
         new HashMap<String, String>();
     static {
         PRACTICE_BOARDS.put(BangCodes.FRONTIER_TOWN, DEFAULT_BOARD);
+        PRACTICE_BOARDS.put(BangCodes.INDIAN_POST, "Warrior's Trial");
     }
 }
