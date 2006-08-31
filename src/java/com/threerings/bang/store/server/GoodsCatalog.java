@@ -239,8 +239,8 @@ public class GoodsCatalog
 
     /** Quantity, scrip cost and coin cost for our packs of cards. */
     protected static final int[] PACK_PRICES = {
-        5, 300, 1,
-        13, 750, 2,
-        52, 2500, 6,
+        5, 125, 0,
+        13, 200, 1,
+        52, 700, 3,
     };
 }
