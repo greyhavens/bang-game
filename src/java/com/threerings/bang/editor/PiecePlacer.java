@@ -128,7 +128,8 @@ public class PiecePlacer extends EditorTool
     @Override // documentation inherited
     public void mouseDragged (MouseEvent e)
     {
-        if (_dragPiece == null || _dragType == NORMAL_DRAG) {
+        if (_dragPiece == null || _dragType == NORMAL_DRAG || 
+                !(_dragPiece instanceof Prop)) {
             return;
         }
         _ctrl.maybeStartPieceEdit(_dragPiece);
