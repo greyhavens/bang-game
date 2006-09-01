@@ -449,9 +449,9 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public void wasKilled (short tick)
+    public void wasKilled (BangObject bangobj, int shooterId)
     {
-        super.wasKilled(tick);
+        super.wasKilled(bangobj, shooterId);
 
         // influences and hindrances do not survive through death
         influence = null;

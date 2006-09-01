@@ -52,7 +52,7 @@ public class TotemBase extends Prop
     }
     
     @Override // documentation inherited
-    public void wasKilled (short tick)
+    public void wasKilled (BangObject bangobj, int shooterId)
     {
         int idx = _pieces.size() - 1;
         PieceData pd = _pieces.remove(idx--);

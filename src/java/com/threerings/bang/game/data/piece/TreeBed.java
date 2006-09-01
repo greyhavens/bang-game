@@ -11,6 +11,9 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.FetishEffect;
 import com.threerings.bang.game.data.effect.TreeBedEffect;
+import com.threerings.bang.game.util.PieceUtil;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * A tree bed that grows a tree in distinct phases, with the damage keeping
@@ -27,7 +30,7 @@ public class TreeBed extends Prop
     /** The lower four bits flag, for each direction, whether or not a
      * logging robot in that direction contributed to the last
      * {@link TreeBedEffect}. */
-    public transient int botDirs;
+    public transient int botDir;
     
     public TreeBed ()
     {
@@ -61,6 +64,19 @@ public class TreeBed extends Prop
             damage = Math.max(Math.min(damage, 100), 0);
         }
     }
+
+    @Override // documentation inherited
+    public void wasKilled (BangObject bangobj, int shooterId)
+    {
+        super.wasKilled(bangobj, shooterId);
+        Piece shooter = bangobj.pieces.get(shooterId);
+        if (shooter != null) {
+            botDir = PieceUtil.getDirection(this, shooter);
+            log.info("Tree killed by shooter [botDir=" + botDir + "].");
+        } else {
+            log.warning("Tree killed by unknown shooter");
+        }
+    }
     
     @Override // documentation inherited
     public ArrayList<Effect> tick (
@@ -90,9 +106,7 @@ public class TreeBed extends Prop
                 }
                 int pdamage = unit.getTreeProximityDamage(this);
                 if (pdamage > 0) {
-                    if (growth > 0) { // no hurting sprouts
-                        dinc += pdamage;
-                    }
+                    continue;
                 } else {
                     ddec += pdamage;
                 }
