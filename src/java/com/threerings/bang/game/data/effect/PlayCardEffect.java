@@ -41,7 +41,7 @@ public class PlayCardEffect extends Effect
     }
     
     @Override // documentation inherited
-    public Rectangle getBounds ()
+    public Rectangle getBounds (BangObject bangobj)
     {
         if (card.getPlacementMode() == Card.PlacementMode.VS_AREA) {
             int[] coords = (int[])target;

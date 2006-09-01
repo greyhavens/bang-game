@@ -64,11 +64,11 @@ public class ChainingShotEffect extends ShotEffect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds ()
+    public Rectangle getBounds (BangObject bangobj)
     {
-        Rectangle rect = super.getBounds();
+        Rectangle rect = super.getBounds(bangobj);
         for (ShotEffect chain : chainShot) {
-            rect.add(chain.getBounds());
+            rect.add(chain.getBounds(bangobj));
         }
         rect.grow(1, 1);
         return rect;

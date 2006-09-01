@@ -539,6 +539,14 @@ public class BangBoardView extends BoardView
     {
         return _highNoon ? 0f : super.getShadowIntensity();
     }
+
+    /**
+     * Returns a set of pieceIds for pieces with pending move actions.
+     */
+    public ArrayList<EffectHandler> getPendingMovers ()
+    {
+        return _pmoves;
+    }
     
     /**
      * Continues switching into or out of "high noon" mode after the screen has
@@ -1745,7 +1753,22 @@ public class BangBoardView extends BoardView
                 source.r + 1.770f*source.g,
                 source.a);
     }
-    
+
+    @Override // documentation inherited
+    protected void processActions ()
+    {
+        _pmoves.clear();
+        super.processActions();
+    }
+
+    @Override // documentation inherited
+    protected void notePending (BoardAction action)
+    {
+        if (action.moveIds.length > 0 && action instanceof EffectHandler) {
+            _pmoves.add((EffectHandler)action);
+        }
+    }
+
     /** Used to visualize advance orders. */
     protected class AdvanceOrder
     {
@@ -1886,6 +1909,9 @@ public class BangBoardView extends BoardView
     /** Tracks pieces that will be moving as soon as the board finishes
      * animating previous actions. */
     protected IntIntMap _pendmap = new IntIntMap();
+
+    /** Tracks pieces in order for pending moves. */
+    protected ArrayList<EffectHandler> _pmoves = new ArrayList<EffectHandler>();
 
     /** Tracks all pending advance orders. */
     protected HashMap<Integer,AdvanceOrder> _orders =

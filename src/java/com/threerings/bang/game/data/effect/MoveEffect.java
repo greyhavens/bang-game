@@ -30,15 +30,10 @@ public class MoveEffect extends Effect
     /** The new y location of the piece. */
     public short ny;
 
-    /** The old location of the piece. */
-    public short ox, oy;
-
     @Override // documentation inherited
     public void init (Piece piece)
     {
         pieceId = piece.pieceId;
-        ox = piece.x;
-        oy = piece.y;
     }
 
     @Override // documentation inherited
@@ -48,10 +43,15 @@ public class MoveEffect extends Effect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds ()
+    public int[] getMovePieces ()
     {
-        return new Rectangle(Math.min(ox, nx), Math.min(oy, ny),
-                Math.abs(ox - nx) + 1, Math.abs(oy - ny) + 1);
+        return new int[] { pieceId };
+    }
+
+    @Override // documentation inherited
+    public Rectangle getBounds (BangObject bangobj)
+    {
+        return new Rectangle(nx, ny, 1, 1);
     }
 
     @Override // documentation inherited
@@ -71,6 +71,7 @@ public class MoveEffect extends Effect
 
         piece.lastActed = newLastActed;
         if (piece.x != nx || piece.y != ny) {
+            int ox = piece.x, oy = piece.y;
             moveAndReport(bangobj, piece, nx, ny, obs);
             piece.didMove(piece.getDistance(ox, oy));
             

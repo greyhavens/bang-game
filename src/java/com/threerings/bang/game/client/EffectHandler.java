@@ -3,7 +3,9 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.Rectangle;
 import java.awt.Point;
+import java.util.HashSet;
 
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
@@ -69,6 +71,7 @@ import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
+import java.util.ArrayList;
 
 /**
  * Handles the visual representation of a complex effect on the client.
@@ -91,15 +94,50 @@ public class EffectHandler extends BoardView.BoardAction
         _effect = effect;
         pieceIds = effect.getAffectedPieces();
         waiterIds = effect.getWaitPieces();
-        bounds = effect.getBounds();
+        moveIds = effect.getMovePieces();
+        bounds = effect.getBounds(_bangobj);
 
         // if this is a move effect, note the pending move
-        if (_effect instanceof MoveEffect) {
-            // currently only the first piece is actually moving
-            if (pieceIds.length > 0) {
-                _view.notePendingMove(pieceIds[0]);
-            }
+        for (int id : moveIds) {
+            _view.notePendingMove(id);
         }
+    }
+
+    @Override // documentation inherited
+    public boolean canExecute (
+            ArrayIntSet penders, HashSet<Rectangle> boundset)
+    {
+        if (!super.canExecute(penders, boundset)) {
+            return false;
+        }
+        boolean can = true;
+        if (_effect instanceof MoveEffect) {
+            ArrayList<EffectHandler> movers = _view.getPendingMovers();
+            MoveEffect meffect = (MoveEffect)_effect;
+            Piece piece = _bangobj.pieces.get(meffect.pieceId);
+            if (piece == null) {
+                return true;
+            }
+            byte state = _bangobj.board.shadowPieceTemp(
+                    piece, meffect.nx, meffect.ny);
+            for (EffectHandler handler : movers) {
+                if (!(handler._effect instanceof MoveEffect)) {
+                    continue;
+                }
+                MoveEffect move = (MoveEffect)handler._effect;
+                Piece pender = _bangobj.pieces.get(move.pieceId);
+                if (piece == null) {
+                    continue;
+                }
+                if (_bangobj.board.computePath(
+                        piece.x, piece.y, move.nx, move.ny, piece) == null) {
+                    can = false;
+                    break;
+                }
+            }
+            _bangobj.board.clearShadowTemp(state, meffect.nx, meffect.ny);
+        }
+        return can;
     }
 
     @Override // documentation inherited
@@ -132,9 +170,9 @@ public class EffectHandler extends BoardView.BoardAction
     public void pieceAffected (Piece piece, String effect)
     {
         // clear the pending moves we set earlier
-        if (_effect instanceof MoveEffect && Effect.UPDATED.equals(effect)) {
-            for (int ii = 0; ii < pieceIds.length; ii++) {
-                _view.clearPendingMove(pieceIds[ii]);
+        if (Effect.UPDATED.equals(effect)) {
+            for (int id : moveIds) {
+                _view.clearPendingMove(id);
             }
         }
 
@@ -280,10 +318,8 @@ public class EffectHandler extends BoardView.BoardAction
     public void pieceMoved (Piece piece)
     {
         // clear the pending moves we set earlier
-        if (_effect instanceof MoveEffect) {
-            for (int ii = 0; ii < pieceIds.length; ii++) {
-                _view.clearPendingMove(pieceIds[ii]);
-            }
+        for (int id : moveIds) {
+            _view.clearPendingMove(id);
         }
 
         PieceSprite sprite = _view.getPieceSprite(piece);

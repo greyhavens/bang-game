@@ -23,17 +23,6 @@ public class ReboundEffect extends BonusEffect
     /** The x and y coordinates to which the target was sent. */
     public short x, y;
 
-    /** The x and y coordinates from which the target started. */
-    public short ox, oy;
-    
-    @Override // documentation inherited
-    public void init (Piece piece)
-    {
-        super.init(piece);
-        ox = piece.x;
-        oy = piece.y;
-    }
-
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
@@ -41,10 +30,11 @@ public class ReboundEffect extends BonusEffect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds ()
+    public Rectangle getBounds (BangObject bangobj)
     {
-        return new Rectangle(Math.min(ox, x), Math.min(oy, y),
-                Math.abs(ox - x) + 1, Math.abs(oy - y) + 1);
+        Piece piece = bangobj.pieces.get(pieceId);
+        return new Rectangle(Math.min(piece.x, x), Math.min(piece.y, y),
+                Math.abs(piece.x - x) + 1, Math.abs(piece.y - y) + 1);
     }
 
     @Override // documentation inherited

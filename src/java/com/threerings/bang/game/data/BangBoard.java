@@ -558,7 +558,7 @@ public class BangBoard extends SimpleStreamableObject
 //                  " maxdist:" + piece.getMoveDistance() + ".");
         return AStarPathUtil.getPath(
             this, piece.getStepper(), piece, piece.getMoveDistance(),
-            ox, oy, dx, dy, true);
+            ox, oy, dx, dy, false);
     }
 
     /**
@@ -834,6 +834,37 @@ public class BangBoard extends SimpleStreamableObject
             _tstate[_width*piece.y+piece.x] = (byte)piece.owner;
         }
     }
+
+    /**
+     * Used to set a temporary shadow value.
+     */
+    public byte shadowPieceTemp (Piece piece, int x, int y)
+    {
+        if (!_playarea.contains(x, y)) {
+            return 0;
+        } 
+        int idx = _width * y + x;
+        byte old = _tstate[idx];
+        if (piece instanceof Cow || piece instanceof Train || 
+                piece.owner < 0) {
+            _tstate[idx] = O_OCCUPIED;
+        } else {
+            _tstate[idx] = (byte)piece.owner;
+        }
+        return old;
+    }
+
+    /**
+     * Used to reset a temporary shadow value.
+     */
+    public void clearShadowTemp (byte state, int x, int y)
+    {
+        if (!_playarea.contains(x, y)) {
+            return;
+        } 
+        _tstate[_width * y + x] = state;
+    }
+            
 
     /**
      * Returns the combined elevation (heightfield elevation plus piece

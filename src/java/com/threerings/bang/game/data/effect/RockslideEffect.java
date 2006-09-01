@@ -131,7 +131,7 @@ public class RockslideEffect extends Effect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds ()
+    public Rectangle getBounds (BangObject bangobj)
     {
         return new Rectangle(Math.min(dx, x), Math.min(dy, y), 
                 Math.max(1, Math.abs(dx - x)), 

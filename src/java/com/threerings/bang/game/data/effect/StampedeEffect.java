@@ -133,7 +133,7 @@ public class StampedeEffect extends Effect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds ()
+    public Rectangle getBounds (BangObject bangobj)
     {
         Rectangle rect = null;
         for (Point p : path) {

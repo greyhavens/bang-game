@@ -131,6 +131,10 @@ public class BoardView extends BComponent
          * this action. */
         public int[] waiterIds;
 
+        /** The board action must fill in this array with the ids of any pieces
+         * that need special move handling. */
+        public int[] moveIds;
+
         /** The board action must specify the boundaries affected by the
          * action.  This will be used to ensure that a piece does not enter
          * the affected area if not participating in the action. */
@@ -702,7 +706,7 @@ public class BoardView extends BComponent
         }
 
         // we always have to add this action's pieces to the pending set
-        notePending(action.pieceIds, action.bounds);
+        notePending(action);
 
         // scan the running actions and issue a warning for long runners
         long now = System.currentTimeMillis(), since;
@@ -733,7 +737,7 @@ public class BoardView extends BComponent
         if (ACTION_DEBUG) {
             log.info("Completed: " + action);
         }
-        noteExecuting(action.pieceIds, action.bounds, -1);
+        noteExecuting(action, -1);
         processActions();
     }
 
@@ -1120,7 +1124,7 @@ public class BoardView extends BComponent
                 // result in a recursive call to processActions()
                 processAction(action);
             }
-            notePending(action.pieceIds, action.bounds);
+            notePending(action);
         }
     }
 
@@ -1134,7 +1138,7 @@ public class BoardView extends BComponent
         }
 
         // mark the pieces involved in this action as executing
-        noteExecuting(action.pieceIds, action.bounds, 1);
+        noteExecuting(action, 1);
 
         // throw a runnable on the queue that will execute this action
         _ractions.add(action);
@@ -1532,32 +1536,32 @@ public class BoardView extends BComponent
         return (tris == null || tris.size() == 0 || !(mesh instanceof TriMesh));
     }
 
-    protected void notePending (int[] pieceIds, Rectangle bounds)
+    protected void notePending (BoardAction action)
     {
-        for (int ii = 0; ii < pieceIds.length; ii++) {
-            if (pieceIds[ii] > 0) {
-                _punits.add(pieceIds[ii]);
+        for (int ii = 0; ii < action.pieceIds.length; ii++) {
+            if (action.pieceIds[ii] > 0) {
+                _punits.add(action.pieceIds[ii]);
             }
         }
-        if (bounds != null) {
-            _pbounds.add(bounds);
+        if (action.bounds != null) {
+            _pbounds.add(action.bounds);
         }
     }
 
     /** Used to increment and decrement executing status for pieces. */
-    protected void noteExecuting (int[] pieceIds, Rectangle bounds, int delta)
+    protected void noteExecuting (BoardAction action, int delta)
     {
-        for (int ii = 0; ii < pieceIds.length; ii++) {
-            if (pieceIds[ii] > 0) {
-                _eunits.increment(pieceIds[ii], delta);
+        for (int ii = 0; ii < action.pieceIds.length; ii++) {
+            if (action.pieceIds[ii] > 0) {
+                _eunits.increment(action.pieceIds[ii], delta);
             }
         }
-        if (bounds != null) {
+        if (action.bounds != null) {
             for (int ii = 0; ii < Math.abs(delta); ii++) {
                 if (delta > 0) {
-                    _ebounds.add(bounds);
+                    _ebounds.add(action.bounds);
                 } else {
-                    _ebounds.remove(bounds);
+                    _ebounds.remove(action.bounds);
                 }
             }
         }
@@ -1607,7 +1611,8 @@ public class BoardView extends BComponent
             this.tick = tick;
             this.pieceIds = new int[] { piece.pieceId };
             this.waiterIds = new int[0];
-            bounds = new Rectangle(piece.x, piece.y, 1, 1);
+            this.moveIds = new int[0];
+            this.bounds = new Rectangle(piece.x, piece.y, 1, 1);
         }
 
         public boolean execute () {
@@ -1629,6 +1634,7 @@ public class BoardView extends BComponent
             this.tick = tick;
             this.pieceIds = new int[] { opiece.pieceId };
             this.waiterIds = new int[0];
+            this.moveIds = new int[0];
         }
 
         public boolean execute () {
@@ -1660,6 +1666,8 @@ public class BoardView extends BComponent
             this.tick = tick;
             this.pieceIds = new int[] { piece.pieceId };
             this.waiterIds = new int[0];
+            this.moveIds = new int[0];
+            this.bounds = new Rectangle(piece.x, piece.y, 1, 1);
         }
 
         public boolean execute () {

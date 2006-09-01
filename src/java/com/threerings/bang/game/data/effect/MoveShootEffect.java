@@ -36,10 +36,10 @@ public class MoveShootEffect extends MoveEffect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds ()
+    public Rectangle getBounds (BangObject bangobj)
     {
-        Rectangle rect = super.getBounds();
-        rect.add(shotEffect.getBounds());
+        Rectangle rect = super.getBounds(bangobj);
+        rect.add(shotEffect.getBounds(bangobj));
         return rect;
     }
 
@@ -60,6 +60,7 @@ public class MoveShootEffect extends MoveEffect
         }
 
         piece.lastActed = newLastActed;
+        int ox = piece.x, oy = piece.y;
         moveAndReport(bangobj, piece, nx, ny, obs);
         piece.didMove(piece.getDistance(ox, oy));
 

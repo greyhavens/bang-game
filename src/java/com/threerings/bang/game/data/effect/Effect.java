@@ -249,10 +249,21 @@ public abstract class Effect extends SimpleStreamableObject
     }
 
     /**
+     * Returns an array of pieces that will be moved by this effect.  The
+     * default implementation returns nothing, however, some effects will 
+     * cause pieces to move and should be specified here if they may block
+     * the path of another piece.
+     */
+    public int[] getMovePieces ()
+    {
+        return NO_PIECES;
+    }
+
+    /**
      * Returns the bounds we must have exclusive access to before activating
      * this effect.  Can return null for no area exclusion.
      */
-    public Rectangle getBounds ()
+    public Rectangle getBounds (BangObject bangobj)
     {
         return null;
     }
