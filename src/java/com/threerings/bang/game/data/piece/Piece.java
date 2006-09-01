@@ -129,9 +129,9 @@ public abstract class Piece
     /**
      * Called on a piece when it has been maximally damaged.
      */
-    public void wasKilled (BangObject bangobj, int shooterId)
+    public void wasKilled (short tick)
     {
-        lastActed = bangobj.tick;
+        lastActed = tick;
     }
 
     /**

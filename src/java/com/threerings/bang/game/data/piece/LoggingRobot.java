@@ -16,7 +16,6 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.FetishEffect;
 import com.threerings.bang.game.data.effect.ProximityShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
-import com.threerings.bang.game.data.effect.TreeBedEffect;
 
 /**
  * The logging robot for the forest guardians scenario.
@@ -66,21 +65,17 @@ public class LoggingRobot extends BallisticUnit
         ArrayList<ShotEffect> proxShots = new ArrayList<ShotEffect>();
         ProximityShotEffect proxShot = null;
         for (Piece piece : pieces) {
-            if (getDistance(piece) > 1 || !piece.isAlive() ||
-                !bangobj.board.canCross(x, y, piece.x, piece.y)) {
-                continue;
+            if (piece instanceof Unit && getDistance(piece) == 1 &&
+                piece.owner != -1 && !piece.isAirborne() && piece.isAlive() &&
+                bangobj.board.canCross(x, y, piece.x, piece.y)) {
+                if (proxShot == null) {
+                    proxShot = new ProximityShotEffect(this, piece,
+                            UNIT_PROXIMITY_DAMAGE, null, null);
+                } else {
+                    proxShots.add(new ShotEffect(this, piece, 
+                                UNIT_PROXIMITY_DAMAGE, null, null));
+                }
             }
-            if (piece instanceof Unit && piece.owner != -1 && 
-                    !piece.isAirborne()) {
-                proxShot = addProxShot(
-                        proxShot, proxShots, piece, UNIT_PROXIMITY_DAMAGE);
-            } else if (piece instanceof TreeBed && 
-                    ((TreeBed)piece).growth > 0) {
-                TreeBed tb = (TreeBed)piece;
-                proxShot = addProxShot(
-                        proxShot, proxShots, tb, getTreeProximityDamage(tb));
-            }
-                    
         }
         if (proxShot != null) {
             proxShot.proxShot = proxShots.toArray(new ShotEffect[0]);
@@ -88,19 +83,7 @@ public class LoggingRobot extends BallisticUnit
         }
         return effects;
     }
-
-    protected ProximityShotEffect addProxShot (ProximityShotEffect proxShot, 
-            ArrayList<ShotEffect> proxShots, Piece piece, int damage)
-    {
-        if (proxShot == null) {
-            proxShot = new ProximityShotEffect(
-                    this, piece, damage, null, null);
-        } else {
-            proxShots.add(new ShotEffect(this, piece, damage, null, null));
-        }
-        return proxShot;
-    }
-
+    
     /** For each tree growth state, the amount by which logging robots next to
      * trees increase their damage. */
     public static final int[] TREE_PROXIMITY_DAMAGE = { 0, 20, 15, 10 };

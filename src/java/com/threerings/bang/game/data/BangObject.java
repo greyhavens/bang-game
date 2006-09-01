@@ -450,20 +450,6 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the total count of living units.
-     */
-    public int getTotalUnitCount ()
-    {
-        int count = 0;
-        for (Piece p : pieces) {
-            if (p instanceof Unit && p.isAlive()) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    /**
      * Returns the average power of the specified set of players
      * (referenced by index).
      */

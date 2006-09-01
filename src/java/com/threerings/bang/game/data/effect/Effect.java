@@ -174,7 +174,7 @@ public abstract class Effect extends SimpleStreamableObject
         target.wasDamaged(newDamage);
         boolean alive = target.isAlive();
         if (!alive) {
-            target.wasKilled(bangobj, shooter);
+            target.wasKilled(bangobj.tick);
        
             // airborn targets must land when they die
             if (target.isAirborne() && !target.removeWhenDead()) {

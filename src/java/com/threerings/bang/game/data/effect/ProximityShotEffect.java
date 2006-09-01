@@ -61,8 +61,7 @@ public class ProximityShotEffect extends ShotEffect
     public Rectangle getBounds (BangObject bangobj)
     {
         Piece piece = bangobj.pieces.get(shooterId);
-        return (piece == null ? null : 
-                new Rectangle(piece.x - 1, piece.y - 1, 3, 3));
+        return new Rectangle(piece.x - 1, piece.y - 1, 3, 3);
     }
 
     @Override // documentation inherited

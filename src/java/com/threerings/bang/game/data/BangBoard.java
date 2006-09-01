@@ -772,10 +772,8 @@ public class BangBoard extends SimpleStreamableObject
                             getHeightfieldElevation(xx, yy);
                         int oldelev = unsignedToInt(_estate[idx]);
                         if (tileelev > oldelev) {
-                            if (pelev > 0) {
-                                _tstate[idx] = _btstate[idx] = 
-                                    (byte)Math.max(O_BRIDGE, _btstate[idx]);
-                            }
+                            _tstate[idx] = _btstate[idx] = 
+                                (byte)Math.max(O_BRIDGE, _btstate[idx]);
                             _estate[idx] = (byte)tileelev;
                         }
                     }

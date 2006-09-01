@@ -5,7 +5,6 @@ package com.threerings.bang.game.data.piece;
 
 import com.threerings.bang.game.client.sprite.HomesteadSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
-import com.threerings.bang.game.data.BangObject;
 
 /**
  * Represents a Homestead piece in the Land Grab scenario.
@@ -46,7 +45,7 @@ public class Homestead extends Prop
     }
     
     @Override // documentation inherited
-    public void wasKilled (BangObject bangobj, int shooterId)
+    public void wasKilled (short tick)
     {
         // clear out our ownership
         previousOwner = owner;
