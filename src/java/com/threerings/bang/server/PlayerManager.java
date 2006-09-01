@@ -683,6 +683,27 @@ public class PlayerManager
         });
     }
 
+    // from interface PlayerProvider
+    public void noteFolk(ClientObject caller,
+                         final int playerId, final int opinion,
+                         final PlayerService.ConfirmListener cl)
+    {
+        final PlayerObject user = (PlayerObject) caller;
+
+        BangServer.invoker.postUnit(new PersistingUnit(cl) {
+            public void invokePersistent() throws PersistenceException {
+                _playrepo.registerOpinion(user.playerId, playerId,
+                                          (byte) opinion);
+            }
+            public void handleSuccess() {
+                cl.requestProcessed();
+            }
+            public String getFailureMessage() {
+                return "Failed to register opinion [who=" + user.who() + ", whom=" + playerId + "]";
+            }
+        });
+    }
+
     /**
      * Creates (if the pardner is offline) or retrieves (if the pardner is
      * online) the up-to-date {@link PardnerEntry} for the named pardner.

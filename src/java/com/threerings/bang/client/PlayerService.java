@@ -15,6 +15,15 @@ import com.threerings.bang.data.Handle;
  */
 public interface PlayerService extends InvocationService
 {
+    /** Used to note a player as friendly */
+    public static final int FOLK_FRIENDLY = 1;
+
+    /** Used to note a player as neither friendly nor unfriendly */
+    public static final int FOLK_NEUTRAL = 2;
+
+    /** Used to note a player as unfriendly */
+    public static final int FOLK_UNFRIENDLY = 3;
+
     /**
      * Issues a request to create this player's (free) first Big Shot.
      */
@@ -72,4 +81,10 @@ public interface PlayerService extends InvocationService
     public void updatePosterInfo(
         Client client, int playerId, String Statement,
         int[] badgeIds, ConfirmListener listener);
+
+    /**
+     * Registers another player as friendly, neutral or unfriendly.
+     */
+    public void noteFolk(Client client, int playerId, int opinion,
+                         ConfirmListener listener);
 }

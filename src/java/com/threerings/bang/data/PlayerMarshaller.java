@@ -47,8 +47,21 @@ public class PlayerMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #noteFolk} requests. */
+    public static final int NOTE_FOLK = 3;
+
+    // documentation inherited from interface
+    public void noteFolk (Client arg1, int arg2, int arg3, InvocationService.ConfirmListener arg4)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(arg1, NOTE_FOLK, new Object[] {
+            Integer.valueOf(arg2), Integer.valueOf(arg3), listener4
+        });
+    }
+
     /** The method id used to dispatch {@link #pickFirstBigShot} requests. */
-    public static final int PICK_FIRST_BIG_SHOT = 3;
+    public static final int PICK_FIRST_BIG_SHOT = 4;
 
     // documentation inherited from interface
     public void pickFirstBigShot (Client arg1, String arg2, Name arg3, InvocationService.ConfirmListener arg4)
@@ -61,7 +74,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playComputer} requests. */
-    public static final int PLAY_COMPUTER = 4;
+    public static final int PLAY_COMPUTER = 5;
 
     // documentation inherited from interface
     public void playComputer (Client arg1, int arg2, String[] arg3, String arg4, boolean arg5, InvocationService.InvocationListener arg6)
@@ -74,7 +87,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playPractice} requests. */
-    public static final int PLAY_PRACTICE = 5;
+    public static final int PLAY_PRACTICE = 6;
 
     // documentation inherited from interface
     public void playPractice (Client arg1, String arg2, InvocationService.InvocationListener arg3)
@@ -87,7 +100,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #playTutorial} requests. */
-    public static final int PLAY_TUTORIAL = 6;
+    public static final int PLAY_TUTORIAL = 7;
 
     // documentation inherited from interface
     public void playTutorial (Client arg1, String arg2, InvocationService.InvocationListener arg3)
@@ -100,7 +113,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #removePardner} requests. */
-    public static final int REMOVE_PARDNER = 7;
+    public static final int REMOVE_PARDNER = 8;
 
     // documentation inherited from interface
     public void removePardner (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
@@ -113,7 +126,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #respondToPardnerInvite} requests. */
-    public static final int RESPOND_TO_PARDNER_INVITE = 8;
+    public static final int RESPOND_TO_PARDNER_INVITE = 9;
 
     // documentation inherited from interface
     public void respondToPardnerInvite (Client arg1, Handle arg2, boolean arg3, InvocationService.ConfirmListener arg4)
@@ -126,7 +139,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #updatePosterInfo} requests. */
-    public static final int UPDATE_POSTER_INFO = 9;
+    public static final int UPDATE_POSTER_INFO = 10;
 
     // documentation inherited from interface
     public void updatePosterInfo (Client arg1, int arg2, String arg3, int[] arg4, InvocationService.ConfirmListener arg5)

@@ -30,6 +30,12 @@ public interface PlayerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link PlayerService#noteFolk} request.
+     */
+    public void noteFolk (ClientObject caller, int arg1, int arg2, InvocationService.ConfirmListener arg3)
+        throws InvocationException;
+
+    /**
      * Handles a {@link PlayerService#pickFirstBigShot} request.
      */
     public void pickFirstBigShot (ClientObject caller, String arg1, Name arg2, InvocationService.ConfirmListener arg3)

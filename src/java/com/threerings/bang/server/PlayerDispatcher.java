@@ -54,6 +54,13 @@ public class PlayerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case PlayerMarshaller.NOTE_FOLK:
+            ((PlayerProvider)provider).noteFolk(
+                source,
+                ((Integer)args[0]).intValue(), ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
         case PlayerMarshaller.PICK_FIRST_BIG_SHOT:
             ((PlayerProvider)provider).pickFirstBigShot(
                 source,
