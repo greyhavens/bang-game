@@ -687,6 +687,7 @@ public class PlayerManager
     public void noteFolk(ClientObject caller,
                          final int playerId, final int opinion,
                          final PlayerService.ConfirmListener cl)
+        throws InvocationException
     {
         final PlayerObject user = (PlayerObject) caller;
 
