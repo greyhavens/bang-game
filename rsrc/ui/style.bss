@@ -767,7 +767,7 @@ pardner_chat_view {
 }
 
 //
-// Pardner View styles
+// Wanted Poster View styles
 
 poster_view { 
   background: image "ui/wanted/background.png" centerxy;
