@@ -1777,9 +1777,12 @@ public class TerrainNode extends Node
         {
             byte code = _board.getTerrainValue(-1, -1);
             if (code != _tcode) {
-                setRenderState(RenderUtil.getGroundTexture(
-                    _ctx, _tcode = code));
-                updateRenderState();
+                TextureState tstate = RenderUtil.getGroundTexture(
+                    _ctx, _tcode = code);
+                if (tstate != null) {
+                    setRenderState(tstate);
+                    updateRenderState();
+                }
             }
         }
         

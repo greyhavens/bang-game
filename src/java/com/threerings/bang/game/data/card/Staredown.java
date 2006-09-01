@@ -49,7 +49,7 @@ public class Staredown extends Card
     @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
-        return new AdjustTickEffect((Integer)target, 0);
+        return new AdjustTickEffect((Integer)target, +4);
     }
 
     @Override // documentation inherited
