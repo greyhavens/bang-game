@@ -65,6 +65,9 @@ public class Train extends Piece
      */
     public List<Point> findPath (final BangObject bangobj, Track dest)
     {
+        if (nextX == UNSET) {
+            return null; // we're about to disappear
+        }
         AStarPathUtil.TraversalPred tpred = new AStarPathUtil.TraversalPred() {
             public boolean canTraverse (Object traverser, int x, int y) {
                 return !intersects(x, y); // don't go back to previous position

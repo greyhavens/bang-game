@@ -219,9 +219,11 @@ public class BangManager extends GameManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // note that roundId is currently one less than the actual round id (we
-        // haven't yet called startGame()) and is thus properly zero indexed
-        BoardRecord brec = _rounds[_bangobj.roundId].board;
+        // note that roundId may currently be one less than the actual round id
+        // (if we haven't yet called startGame())
+        int ridx = _bangobj.roundId - (_bangobj.state == BangObject.IN_PLAY ||
+            _bangobj.state == BangObject.POST_ROUND ? 1 : 0);
+        BoardRecord brec = _rounds[ridx].board;
         try {
             listener.requestProcessed(brec.getBoard(), brec.getPieces());
         } catch (IOException ioe) {

@@ -53,6 +53,7 @@ public class DropNugget extends Card
     public Effect activate (BangObject bangobj, Object target)
     {
         Unit unit = (Unit)bangobj.pieces.get((Integer)target);
-        return HoldEffect.dropBonus(bangobj, unit, -1, unit.holding);
+        return (unit == null) ?
+            null : HoldEffect.dropBonus(bangobj, unit, -1, unit.holding);
     }
 }
