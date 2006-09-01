@@ -70,21 +70,27 @@ public class FetishEffect extends HoldEffect
         } else if (type.equals("indian_post/fetish_turtle")) {
             return new Influence() {
                 public String getName() {
-                    return null;
+                    return "turtle_fetish";
                 }
                 public int adjustDefend (Piece shooter, int damage) {
                     return damage/2;
+                }
+                public boolean didAdjustDefend () {
+                    return true;
                 }
             };
         } else if (type.equals("indian_post/fetish_bear")) {
             return new Influence() {
                 public String getName() {
-                    return null;
+                    return "bear_fetish";
                 }
                 public int adjustAttack (Piece target, int damage) {
                     return damage*2;
                 }
                 public boolean showClientAdjust () {
+                    return true;
+                }
+                public boolean didAdjustAttack () {
                     return true;
                 }
             };
