@@ -774,6 +774,7 @@ poster_view {
 }
 
 poster_avatar {
+  background: image "ui/wanted/sepia_avatar.png" scalexy;
 }
 
 poster_rankings_box {

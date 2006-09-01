@@ -11,6 +11,7 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.Spacer;
+import com.jmex.bui.background.BBackground;
 import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -21,7 +22,8 @@ import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Point;
-import com.jme.renderer.ColorRGBA;
+import com.jmex.bui.util.Rectangle;
+import com.jme.renderer.Renderer;
 
 import static com.threerings.bang.Log.log;
 
@@ -163,7 +165,7 @@ public class WantedPosterView extends BContainer
 
         add(buildWantedLabel(), new Point(310, 560));
         add(buildRankingsView(), new Point(340, 250));
-        add(buildAvatarView(), new Point(40, 264));
+        add(buildAvatarView(), new Rectangle(56, 264, 244, 300));
         add(buildStatementView(), new Point(50, 220));
         add(buildBadgeView(), new Point(57, 33));
     }
@@ -254,8 +256,16 @@ public class WantedPosterView extends BContainer
 
     protected BComponent buildAvatarView()
     {
-        // TODO: add the sepia_avatar.png background
-        AvatarView avatar = new AvatarView(_ctx, 2, false, false);
+        // paint the background at a custom alpha level
+        AvatarView avatar = new AvatarView(_ctx, 2, false, false) {
+            @Override // from BComponent
+            protected void renderBackground(Renderer renderer) {
+                BBackground background = getBackground();
+                if (background != null) {
+                    background.render(renderer, 0, 0, _width, _height, 0.25f);
+                }
+            }
+        };
         avatar.setStyleClass("poster_avatar");
         if (_poster.avatar != null) {
             // TODO: should not happen, snapshots currently broken?
