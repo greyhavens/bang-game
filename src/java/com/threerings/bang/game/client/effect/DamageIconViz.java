@@ -182,7 +182,6 @@ public class DamageIconViz extends IconViz
         // Calculate the y offset based on the number of damage readouts
         // already on this sprite
         _pieceSprite = target;
-        Iterator iter = target.getChildren().iterator();
         int gap = target.damageAttach();
         attached = true;
         _yOffset = gap * DAMAGE_SIZE * 1.1f;
