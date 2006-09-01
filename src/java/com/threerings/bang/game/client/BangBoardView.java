@@ -807,7 +807,7 @@ public class BangBoardView extends BoardView
         _bangobj.board.shadowPiece(piece);
 
         // if this piece influenced our selection, refresh it
-        checkForSelectionInfluence(piece);
+        checkForSelectionInfluence();
 
         // if this is a unit, we need to tell the unit status view and,
         // if it's before the first tick, reposition the unit so it can
@@ -950,6 +950,8 @@ public class BangBoardView extends BoardView
     /** Called by the {@link EffectHandler} when a piece was affected. */
     protected void pieceWasAffected (Piece piece, String effect)
     {
+        checkForSelectionInfluence();
+
         // just report the effect to the controller in case the tutorial cares
         _ctrl.postEvent(TutorialCodes.EFFECT_PREFIX + effect);
     }
@@ -968,7 +970,7 @@ public class BangBoardView extends BoardView
             // otherwise, if this piece was inside our attack set or within
             // range to be inside our move set, recompute the selection as it
             // may have changed
-            checkForSelectionInfluence(piece);
+            checkForSelectionInfluence();
         }
 
         // let the controller know that a unit moved
@@ -992,6 +994,8 @@ public class BangBoardView extends BoardView
         // if this piece was selected, clear it
         if (_selection != null && _selection.pieceId == pieceId) {
             clearSelection();
+        } else {
+            checkForSelectionInfluence();
         }
 
         // report that a piece was killed
@@ -1069,14 +1073,14 @@ public class BangBoardView extends BoardView
                 }
             }
 
-            if (handleClickToMove(_high.x, _high.y)) {
+            if (handleClickToMove(_high.x, _high.y, true)) {
                 return;
             }
         }
     }
 
     /** Handles a click that should select a potential move location. */
-    protected boolean handleClickToMove (int tx, int ty)
+    protected boolean handleClickToMove (int tx, int ty, boolean mouse)
     {
         // or if we're clicking in our move set or on our selected piece
         if (!_moveSet.contains(tx, ty) &&
@@ -1118,8 +1122,14 @@ public class BangBoardView extends BoardView
         // do nothing if they're not even moving)
         if (_attackSet.size() == 0 &&
             (_action[1] != _selection.x || _action[2] != _selection.y)) {
-            executeAction();
-            _attackSet.clear();
+            // only execute the action if it was a mouse click that caused it,
+            // not because all targets moved out of range
+            if (mouse) {
+                executeAction();
+                _attackSet.clear();
+            } else {
+                clearSelection();
+            }
         } else {
             log.info("Waiting for attack selection (" + tx + ", " + ty + ")");
             PointSet attackRange = _selection.computeShotRange(
@@ -1382,7 +1392,7 @@ public class BangBoardView extends BoardView
         _ctrl.postEvent(TutorialCodes.UNIT_SELECTED);
     }
 
-    protected boolean checkForSelectionInfluence (Piece piece)
+    protected boolean checkForSelectionInfluence ()
     {
         if (_selection == null) {
             return false;
@@ -1401,18 +1411,7 @@ public class BangBoardView extends BoardView
             if (oaction[3] == -1) {
                 log.info("Reissuing click to move +" + oaction[1] +
                     "+" + oaction[2]);
-                handleClickToMove(oaction[1], oaction[2]);
-
-            // if we had already selected a target, reconfigure that (it
-            // might no longer be valid but handleClickToAttack will ignore
-            // us in that case
-            } else {
-                for (Piece p : _bangobj.pieces) {
-                    if (p.pieceId == oaction[3]) {
-                        handleClickToAttack(p, p.x, p.y);
-                        break;
-                    }
-                }
+                handleClickToMove(oaction[1], oaction[2], false);
             }
         }
 
@@ -1764,6 +1763,7 @@ public class BangBoardView extends BoardView
     @Override // documentation inherited
     protected void notePending (BoardAction action)
     {
+        super.notePending(action);
         if (action.moveIds.length > 0 && action instanceof EffectHandler) {
             _pmoves.add((EffectHandler)action);
         }
