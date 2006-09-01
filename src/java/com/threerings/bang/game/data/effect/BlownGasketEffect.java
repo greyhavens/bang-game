@@ -37,6 +37,9 @@ public class BlownGasketEffect extends SetHindranceEffect
                     _startTick = tick;
                 }
             }
+            public boolean isVisible () {
+                return true;
+            }
             protected int duration () {
                 return (_stepsRemaining > 0) ?
                     Short.MAX_VALUE : RECOVERY_TICKS;

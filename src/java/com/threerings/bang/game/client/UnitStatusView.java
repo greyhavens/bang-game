@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BImage;
@@ -137,7 +138,8 @@ public class UnitStatusView extends BWindow
             // set up our icon image
             Unit unit = (Unit)sprite.getPiece();
             String ipath = "units/" + unit.getType() + "/icon_head.png";
-            setIcon(new ImageIcon(_ctx.loadImage(ipath)));
+            _unit = _ctx.loadImage(ipath);
+            setIcon(new ImageIcon(_unit));
             setAlpha(1f);
         }
 
@@ -158,6 +160,7 @@ public class UnitStatusView extends BWindow
                     // clear out our background when our unit dies
                     _bground = null;
                     // and draw our icon at 50% alpha
+                    _unit.setDefaultColor(ColorRGBA.white);
                     setAlpha(0.5f);
                 }
             } else {
@@ -169,6 +172,12 @@ public class UnitStatusView extends BWindow
                     String path =
                         "influences/" + unit.influence.getName() + ".png";
                     setInfluence(_ctx.getImageCache().getBImage(path));
+                }
+                // tint the unit icon red if it has a visible hindrance
+                if (unit.hindrance == null || !unit.hindrance.isVisible()) {
+                    _unit.setDefaultColor(ColorRGBA.white);
+                } else {
+                    _unit.setDefaultColor(new ColorRGBA(1f, 0.5f, 0.5f, 0.8f));
                 }
             }
             resort();
@@ -267,6 +276,7 @@ public class UnitStatusView extends BWindow
         protected UnitSprite _sprite;
         protected BBackground _bground;
         protected BImage _influence;
+        protected BImage _unit;
     }
 
     protected BangContext _ctx;

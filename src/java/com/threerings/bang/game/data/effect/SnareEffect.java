@@ -25,6 +25,9 @@ public class SnareEffect extends SetHindranceEffect
             public int adjustMoveDistance (int moveDistance) {
                 return 0;
             }
+            public boolean isVisible () {
+                return true;
+            }
             protected int duration ()
             {
                 return 8;

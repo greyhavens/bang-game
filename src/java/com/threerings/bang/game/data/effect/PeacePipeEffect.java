@@ -30,6 +30,9 @@ public class PeacePipeEffect extends SetHindranceEffect
             public boolean isExpired (short tick) {
                 return _expired || super.isExpired(tick);
             }
+            public boolean isVisible () {
+                return true;
+            }
             protected int duration () {
                 return 12;
             }

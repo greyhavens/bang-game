@@ -31,6 +31,9 @@ public class SnakeBiteEffect extends SetHindranceEffect
             public Effect tick () {
                 return new DamageEffect(target, DAMAGE_PER_TICK);
             }
+            public boolean isVisible () {
+                return true;
+            }
         };
     }
 

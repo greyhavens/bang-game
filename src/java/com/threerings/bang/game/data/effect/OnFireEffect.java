@@ -40,6 +40,9 @@ public class OnFireEffect extends SetHindranceEffect
             public Effect tick () {
                 return new DamageEffect(target, DAMAGE_PER_TICK);
             }
+            public boolean isVisible () {
+                return true;
+            }
             protected int duration () {
                 return FIRE_DURATION;
             }

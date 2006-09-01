@@ -31,6 +31,9 @@ public class MonkeyWrenchEffect extends SetHindranceEffect
             public Effect maybeGeneratePostMoveEffect (int steps) {
                 return new DamageEffect(target, steps * DAMAGE_PER_STEP);
             }
+            public boolean isVisible () {
+                return true;
+            }
         };
     }
 

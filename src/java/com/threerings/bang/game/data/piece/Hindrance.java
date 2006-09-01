@@ -90,4 +90,12 @@ public abstract class Hindrance extends Influence
     {
         // nothing doing
     }
+
+    /**
+     * Determines if this hindrance will visibly affect the unit.
+     */
+    public boolean isVisible ()
+    {
+        return false;
+    }
 }
