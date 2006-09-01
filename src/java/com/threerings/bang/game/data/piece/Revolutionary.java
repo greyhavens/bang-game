@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.piece;
 
+import java.util.ArrayList;
+
 import com.samskivert.util.ArrayUtil;
 
 import com.threerings.bang.data.UnitConfig;
@@ -18,14 +20,16 @@ import com.threerings.bang.game.data.effect.ShotEffect;
 public class Revolutionary extends Unit
 {
     @Override // documentation inherited
-    public int adjustPieceAttack (Piece attacker, int damage)
+    public int adjustPieceAttack (
+            Piece attacker, int damage, ArrayList<String> attackIcons)
     {
-        damage = super.adjustPieceAttack(attacker, damage);
+        damage = super.adjustPieceAttack(attacker, damage, attackIcons);
         // give other allied ground units a %10 attack bonus
         if (attacker.owner == owner && attacker.pieceId != pieceId &&
                 attacker instanceof Unit && ((Unit)attacker).getConfig().mode 
                 == UnitConfig.Mode.GROUND) {
             damage = (int)(damage * 1.1f);
+            attackIcons.add("revolutionary_bonus");
         }
         return damage;
     }
@@ -43,13 +47,7 @@ public class Revolutionary extends Unit
         }
         ShotEffect shot = super.unitShoot(bangobj, target, scale);
         if (shot != null && proximity) {
-            if (shot.attackIcons == null) {
-                shot.attackIcons = new String[] { "revolutionary" };
-            } else {
-                shot.attackIcons = (String[])ArrayUtil.append(
-                        shot.attackIcons, "revolutionary");
-            }
-            shot.type = ShotEffect.PROXIMITY;
+            shot.appendIcon("revolutionary", true);
         }
         return shot;
     }

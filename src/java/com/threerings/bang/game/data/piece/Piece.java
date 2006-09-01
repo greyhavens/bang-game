@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.io.ObjectInputStream;
@@ -808,8 +809,9 @@ public abstract class Piece
 
         // account for any other pieces which have attack adjustments
         if (bangobj != null) {
+            _attackIcons = new ArrayList<String>();
             for (Piece p : bangobj.pieces) {
-                ddamage = p.adjustPieceAttack(this, ddamage);
+                ddamage = p.adjustPieceAttack(this, ddamage, _attackIcons);
             }
         }
 
@@ -824,7 +826,8 @@ public abstract class Piece
     /**
      * Adjusts the attack of other pieces.
      */
-    public int adjustPieceAttack (Piece attacker, int damage)
+    public int adjustPieceAttack (
+            Piece attacker, int damage, ArrayList<String> attackIcons)
     {
         // by default do nothing
         return damage;
@@ -977,6 +980,8 @@ public abstract class Piece
     }
 
     protected transient Integer _key;
+
+    protected transient ArrayList<String> _attackIcons;
 
     /** The default path-finding stepper. Allows movement in one of the
      * four directions. */

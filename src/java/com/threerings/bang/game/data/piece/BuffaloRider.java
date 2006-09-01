@@ -88,21 +88,28 @@ public class BuffaloRider extends Unit
         scale *= DISTANCE_DAMAGE_SCALE * dist;
         short pushx = (short)(2*target.x - nx);
         short pushy = (short)(2*target.y - ny);
+        String attackIcon = null;
         // If we've moved at least 3 squares then try to push the target
         // If the target can't be pushed then add an extra .25 to the scale
         boolean pushed = false;
-        if (dist >= DISTANCE_TO_PUSH && target.canBePushed()) {
-            if (bangobj.board.canTravel(
-                    target, target.x, target.y, pushx, pushy, true)) {
-                pushed = true;
-            } else {
+        if (dist >= DISTANCE_TO_PUSH) {
+            pushed = bangobj.board.canTravel(
+                    target, target.x, target.y, pushx, pushy, true);
+            if (!pushed || !target.canBePushed()) {
                 scale += DISTANCE_DAMAGE_SCALE;
+                attackIcon = "smashed";
             }
         }
         ShotEffect shot = super.unitShoot(bangobj, target, scale);
         if (pushed) {
-            shot.pushx = pushx;
-            shot.pushy = pushy;
+            if (!target.canBePushed()) {
+                shot.appendIcon("unmovable", false);
+            } else {
+                shot.pushx = pushx;
+                shot.pushy = pushy;
+            }
+        } else {
+            shot.appendIcon(attackIcon, true);
         }
         return shot;
     }

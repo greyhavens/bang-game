@@ -361,20 +361,24 @@ public class Unit extends Piece
     @Override // documentation inherited
     public String[] attackInfluenceIcons ()
     {
-        ArrayList<String> icons = new ArrayList<String>();
+        if (_attackIcons == null) {
+            _attackIcons = new ArrayList<String>();
+        }
         if (influence != null && influence.didAdjustAttack()) {
-            icons.add(influence.getName());
+            _attackIcons.add(influence.getName());
         }
         if (holdingInfluence != null && holdingInfluence.didAdjustAttack()) {
-            icons.add(holdingInfluence.getName());
+            _attackIcons.add(holdingInfluence.getName());
         }
         if (hindrance != null && hindrance.didAdjustAttack()) {
-            icons.add(hindrance.getName());
+            _attackIcons.add(hindrance.getName());
         }
-        if (icons.size() > 0) {
-            return icons.toArray(new String[icons.size()]);
+        String[] icons = null;
+        if (_attackIcons.size() > 0) {
+            icons = _attackIcons.toArray(new String[_attackIcons.size()]);
         }
-        return null;
+        _attackIcons = null;
+        return icons;
     }
 
     @Override // documentation inherited

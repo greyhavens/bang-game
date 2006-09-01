@@ -37,13 +37,13 @@ public class DreamCatcher extends BallisticUnit
         // She will reset the target's tick counter and force them to move.
         // They will try to move away from her, where their movement distance
         // is inversely proportional to the amount their tick was reset
+        int tickDelta = Math.max(0, Math.min(
+                    bangobj.tick - target.lastActed,
+                    target.getTicksPerMove()));
+        double tickRatio = 1.0 - (double)tickDelta / 
+            (double)target.getTicksPerMove();
+        int move = (int)Math.ceil(tickRatio * target.getMoveDistance());
         if (target.canBePushed()) {
-            int tickDelta = Math.max(0, Math.min(
-                        bangobj.tick - target.lastActed,
-                        target.getTicksPerMove()));
-            double tickRatio = 1.0 - (double)tickDelta / 
-                (double)target.getTicksPerMove();
-            int move = (int)Math.ceil(tickRatio * target.getMoveDistance());
             PointSet moves = new PointSet();
             bangobj.board.computeMoves(target, moves, null, move);
             int dist = 0;
@@ -64,6 +64,8 @@ public class DreamCatcher extends BallisticUnit
                 shot.pushy = (short)ny;
                 shot.pushAnim = false;
             }
+        } else if (move > 0) {
+            shot.appendIcon("unmovable", false);
         }
 
         if (target.lastActed < bangobj.tick) {

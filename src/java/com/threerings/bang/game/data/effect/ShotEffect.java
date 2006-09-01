@@ -298,6 +298,27 @@ public class ShotEffect extends Effect
     }
 
     /**
+     * Appends an attack/defend icon onto the list.
+     */
+    public void appendIcon (String icon, boolean attack)
+    {
+        if (icon == null) {
+            return;
+        }
+        String[] icons = (attack ? attackIcons : defendIcons);
+        if (icons == null) {
+            icons = new String[] { icon };
+        } else {
+            icons = (String[])ArrayUtil.append(icons, icon);
+        }
+        if (attack) {
+            attackIcons = icons;
+        } else {
+            defendIcons = icons;
+        }
+    }
+
+    /**
      * Apply the shot to the target.
      */
     protected boolean applyTarget (
