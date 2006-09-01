@@ -776,6 +776,34 @@ poster_view {
 poster_avatar {
 }
 
+poster_rankings_box {
+  text-align: center;
+}
+
+poster_rank_scenario {
+  font: "Dom Casual" plain 20;
+  color: #4a2805;
+  text-align: left;
+}
+
+poster_rank_standing_low {
+  font: "Dom Casual" plain 20;
+  color: #996633;
+  text-align: left;
+}
+
+poster_rank_standing_mid {
+  font: "Dom Casual" plain 20;
+  color: #4a2805;
+  text-align: left;
+}
+
+poster_rank_standing_high {
+  font: "Dom Casual" plain 20;
+  color: #4a2805;
+  text-align: left;
+}
+
 poster_handle_box {
   color: #4a2805;
   text-align: center;

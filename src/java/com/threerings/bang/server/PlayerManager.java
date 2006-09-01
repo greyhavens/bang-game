@@ -644,7 +644,11 @@ public class PlayerManager
             new StreamableHashMap<String,Integer>();
         while (ratings.hasNext()) {
             Rating rating = ratings.next();
-            map.put(rating.scenario, Integer.valueOf(rating.rating));
+            // TODO: until we are actually computing rankings
+            int percentile = 
+                (100 * (rating.rating - Rating.MINIMUM_RATING - 1)) /
+                (Rating.MAXIMUM_RATING - Rating.MINIMUM_RATING);
+            map.put(rating.scenario, Integer.valueOf(percentile));
         }
         return map;
     }

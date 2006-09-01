@@ -3,6 +3,8 @@
 
 package com.threerings.bang.client;
 
+import java.util.Map;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -13,6 +15,7 @@ import com.jmex.bui.border.LineBorder;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
+import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.layout.BLayoutManager;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
@@ -30,6 +33,8 @@ import com.threerings.bang.data.Badge.Type;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PosterInfo;
+import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.presents.client.InvocationService;
@@ -157,6 +162,7 @@ public class WantedPosterView extends BContainer
         removeAll();
 
         add(buildWantedLabel(), new Point(310, 560));
+        add(buildRankingsView(), new Point(340, 250));
         add(buildAvatarView(), new Point(40, 264));
         add(buildStatementView(), new Point(50, 220));
         add(buildBadgeView(), new Point(57, 33));
@@ -179,6 +185,71 @@ public class WantedPosterView extends BContainer
             box.add(gangLabel);
         }
         return box;
+    }
+
+    protected BComponent buildRankingsView()
+    {
+        BContainer box = new BContainer(new TableLayout(2, 2, 10));
+        box.setPreferredSize(new Dimension(280, 260));
+        box.setStyleClass("poster_rankings_box");
+
+        Integer oaRank = _poster.rankings.get(ScenarioInfo.OVERALL_IDENT);
+        if (oaRank != null) {
+            addRankRow(box, "Overall", oaRank.intValue());
+            // add a spacer row
+            box.add(new Spacer(1, 12));
+            box.add(new Spacer(1, 12));
+        }
+        for (Map.Entry<String, Integer> row : _poster.rankings.entrySet()) {
+            String scenarioId = row.getKey();
+
+            if (ScenarioInfo.OVERALL_IDENT.equals(scenarioId)) {
+                continue;
+            }
+            ScenarioInfo info = ScenarioInfo.getScenarioInfo(scenarioId);
+            if (info == null) {
+                log.warning("Unknown scenario id [id=" + scenarioId + "]");
+                continue;
+            }
+            addRankRow(box, _ctx.xlate(GameCodes.GAME_MSGS, info.getName()),
+                       row.getValue().intValue());
+        }
+        return box;
+    }
+
+    protected void addRankRow(BContainer box, String name, int percentile)
+    {
+        BLabel scenario = new BLabel(name + ":", "poster_rank_scenario");
+        scenario.setPreferredSize(new Dimension(160, 20));
+        box.add(scenario);
+
+        String rankStyle, rankName;
+        if (percentile <= 65) {
+            rankStyle = "low";
+        } else if (percentile <= 90) {
+            rankStyle = "mid";
+        } else {
+            rankStyle = "high";
+        }
+        // TODO: dynamic or hard-coded? if latter, localize this.
+        if (percentile <= 50) {
+            rankName = "tenderfoot";
+        } else if (percentile <= 65) {
+            rankName = "cowpoke";
+        } else if (percentile <= 75) {
+            rankName = "Scofflaw";
+        } else if (percentile <= 85) {
+            rankName = "Rebel";
+        } else if (percentile <= 90) {
+            rankName = "Law Breaker";
+        } else if (percentile <= 95) {
+            rankName = "BANDIT";
+        } else if (percentile <= 98) {
+            rankName = "OUTLAW";
+        } else {
+            rankName = "RENEGADE";
+        }
+        box.add(new BLabel(rankName, "poster_rank_standing_" + rankStyle));
     }
 
     protected BComponent buildAvatarView()
