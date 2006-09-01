@@ -156,6 +156,7 @@ public class IconViz extends EffectViz
                 } else if (_elapsed >= RISE_DURATION + LINGER_DURATION) {
                     alpha = 1f - (_elapsed - RISE_DURATION - LINGER_DURATION) /
                         FADE_DURATION;
+                    billboardFade();
                     
                 } else if (_elapsed >= RISE_DURATION) {
                     alpha = 1f;
@@ -201,6 +202,14 @@ public class IconViz extends EffectViz
      * Called when the billboard detaches itself.
      */
     protected void billboardDetached ()
+    {
+        // nothing to do here
+    }
+
+    /**
+     * Called when the billboard begins to fade out.
+     */
+    protected void billboardFade ()
     {
         // nothing to do here
     }

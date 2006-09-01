@@ -181,14 +181,10 @@ public class DamageIconViz extends IconViz
     {
         // Calculate the y offset based on the number of damage readouts
         // already on this sprite
+        _pieceSprite = target;
         Iterator iter = target.getChildren().iterator();
-        int gap = 0;
-        while (iter.hasNext()) {
-            Spatial child = (Spatial)iter.next();
-            if (DAMAGE_NAME.equals(child.getName())) {
-                gap++;
-            }
-        }
+        int gap = target.damageAttach();
+        attached = true;
         _yOffset = gap * DAMAGE_SIZE * 1.1f;
         
         super.display(target);
@@ -218,6 +214,19 @@ public class DamageIconViz extends IconViz
     protected void billboardDetached ()
     {
         _dmgTState.deleteAll();
+        if (attached) {
+            _pieceSprite.damageDetach();
+            attached = false;
+        }
+    }
+
+    @Override // documentation inherited
+    protected void billboardFade ()
+    {
+        if (attached) {
+            _pieceSprite.damageDetach();
+            attached = false;
+        }
     }
 
     /**
@@ -250,11 +259,17 @@ public class DamageIconViz extends IconViz
     /** The amount of damage to display. */
     protected int _damage;
 
+    /** Set to true when we're attached. */
+    protected boolean attached;
+
     /** The readout quad. */
     protected Quad[] _readout;
 
     /** The damage indicator texture state. */
     protected TextureState _dmgTState;
+
+    /** Reference to our target PieceSprite. */
+    protected PieceSprite _pieceSprite;
 
     /** The yoffset used when multiple damage icons are applied. */
     protected float _yOffset = 0;

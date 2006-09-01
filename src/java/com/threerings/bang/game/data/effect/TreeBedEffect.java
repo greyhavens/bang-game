@@ -17,7 +17,7 @@ import com.threerings.bang.game.util.PieceUtil;
 import static com.threerings.bang.Log.log;
 
 /**
- * Communicates that a tree grew or shrunk.
+ * Communicates that a tree grew.
  */
 public class TreeBedEffect extends Effect
 {
@@ -115,18 +115,6 @@ public class TreeBedEffect extends Effect
             return false;
         }
         
-        // set the robot direction flags and activate the logging robots'
-        // proximity attacks
-        bed.botDirs = 0;
-        for (int pieceId : pieceIds) {
-            Piece piece = bangobj.pieces.get(pieceId);
-            if (piece instanceof LoggingRobot) {
-                bed.botDirs |= (1 << PieceUtil.getDirection(bed, piece));
-                reportEffect(observer, piece,
-                    ShotEffect.SHOT_ACTIONS[ShotEffect.PROXIMITY]);
-            }
-        }
-        
         // enact the tree's growth or damage
         if (growth >= 0) {
             bed.growth = growth;
@@ -134,14 +122,7 @@ public class TreeBedEffect extends Effect
             reportEffect(observer, bed, UPDATED);
         } else {
             bed.damage(damage);
-            if (damage >= 0) {
-                reportEffect(observer, bed, ShotEffect.DAMAGED);
-            } else {
-                reportEffect(observer, bed, GREW);
-            }
-            if (!bed.isAlive()) {
-                bed.wasKilled(bangobj.tick);
-            }
+            reportEffect(observer, bed, GREW);
         }
         return true;
     }

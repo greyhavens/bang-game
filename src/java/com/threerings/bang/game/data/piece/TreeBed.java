@@ -11,6 +11,9 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.FetishEffect;
 import com.threerings.bang.game.data.effect.TreeBedEffect;
+import com.threerings.bang.game.util.PieceUtil;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * A tree bed that grows a tree in distinct phases, with the damage keeping
@@ -27,7 +30,6 @@ public class TreeBed extends Prop
     /** The lower four bits flag, for each direction, whether or not a
      * logging robot in that direction contributed to the last
      * {@link TreeBedEffect}. */
-    public transient int botDirs;
     
     public TreeBed ()
     {
@@ -61,7 +63,7 @@ public class TreeBed extends Prop
             damage = Math.max(Math.min(damage, 100), 0);
         }
     }
-    
+
     @Override // documentation inherited
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
@@ -90,9 +92,7 @@ public class TreeBed extends Prop
                 }
                 int pdamage = unit.getTreeProximityDamage(this);
                 if (pdamage > 0) {
-                    if (growth > 0) { // no hurting sprouts
-                        dinc += pdamage;
-                    }
+                    continue;
                 } else {
                     ddec += pdamage;
                 }

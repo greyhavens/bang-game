@@ -191,13 +191,12 @@ public class TotemBuilding extends Scenario
         }
 
         @Override // documentation inherited
-        public void pieceAffected (Piece piece, String effect)
+        public void pieceWasKilled (BangObject bangobj, Piece piece)
         {
             if (piece instanceof TotemBase) {
                 TotemBase base = (TotemBase)piece;
                 int owner = base.getDestroyedOwner();
                 if (owner > -1) {
-                    BangObject bangobj = (BangObject)_bangmgr.getPlaceObject();
                     adjustCounter(bangobj, owner, -1, 
                             base.getDestroyedType().stat());
                     recalculatePoints(bangobj);

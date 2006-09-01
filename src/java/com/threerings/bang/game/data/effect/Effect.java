@@ -190,7 +190,12 @@ public abstract class Effect extends SimpleStreamableObject
         reportEffect(obs, target, effect);
 
         // if the target is not dead, we can stop here
-        if (alive) {
+        if (target.isAlive()) {
+            // if the piece was killed but remained alive for some reason
+            // still report the kill
+            if (!alive) {
+                reportKill(obs, target);
+            }
             return true;
         }
 

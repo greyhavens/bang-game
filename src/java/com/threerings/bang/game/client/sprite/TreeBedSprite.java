@@ -153,18 +153,8 @@ public class TreeBedSprite extends ActiveSprite
      */
     protected void continueDroppingTrunk (final Model model)
     {
-        // choose the drop direction from among the directions in which logging
-        // robots abut the tree
-        int bdirs = ((TreeBed)_piece).botDirs;
-        int[] weights = new int[PieceCodes.DIRECTIONS.length];
-        for (int dir : PieceCodes.DIRECTIONS) {
-            if ((bdirs & (1 << dir)) != 0) {
-                weights[dir] = 1;
-            }
-        }
-        int dir = (RandomUtil.getWeightedIndex(weights) + 1 +
-            PieceCodes.DIRECTIONS.length - _piece.orientation) %
-            PieceCodes.DIRECTIONS.length;
+        int dir = PieceCodes.DIRECTIONS[
+            RandomUtil.getInt(PieceCodes.DIRECTIONS.length)];
         final Vector3f axis = new Vector3f(PieceCodes.DX[dir],
             PieceCodes.DY[dir], 0f);
         

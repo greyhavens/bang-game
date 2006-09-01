@@ -149,7 +149,7 @@ public abstract class Scenario
     {
         if (config.allPlayersAIs()) {
             // fast ticks for auto-play test games
-            return 1000L * bangobj.getAverageUnitCount();
+            return 1000L * bangobj.getTotalUnitCount() / 4;
         }
         // start out with a base tick of two seconds and scale it down as
         // the game progresses; cap it at ten minutes

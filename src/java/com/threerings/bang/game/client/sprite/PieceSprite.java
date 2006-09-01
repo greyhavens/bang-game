@@ -393,6 +393,26 @@ public class PieceSprite extends Sprite
     }
 
     /**
+     * Called when a damage indicator is added.  Returns the offset for
+     * the indicator.
+     */
+    public int damageAttach ()
+    {
+        return _damOn++;
+    }
+
+    /**
+     * Called when a damage indicator is removed.
+     */
+    public void damageDetach ()
+    {
+        _damOff++;
+        if (_damOn == _damOff) {
+            _damOn = _damOff = 0;
+        }
+    }
+
+    /**
      * Returns a reference to the model node.
      */
     public Model getModelNode ()
@@ -685,6 +705,9 @@ public class PieceSprite extends Sprite
 
     /** The type and name of the loaded model. */
     protected String _type, _name;
+
+    /** The number of damage indicators being shown. */
+    protected int _damOn, _damOff;
     
     /** Colorizations to apply to the model. */
     protected Colorization[] _zations;
