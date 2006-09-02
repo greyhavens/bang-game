@@ -145,6 +145,24 @@
     <component cclass="male/clothing_front" name="tlingit_dagger"/>
   </article>
 
+  <article name="male_revolutionary" townId="indian_post"
+           slot="clothing" scrip="3500" coins="3">
+    <component cclass="male/clothing_back" name="revolutionary"/>
+  </article>
+
+  <article name="male_trickster_raven" townId="indian_post"
+           slot="clothing" scrip="3500" coins="3">
+    <component cclass="male/clothing_back" name="trickster_raven"/>
+    <component cclass="male/clothing_front" name="trickster_raven"/>
+  </article>
+
+  <article name="male_storm_caller" townId="indian_post"
+           slot="clothing" scrip="3500" coins="3">
+    <component cclass="male/clothing_back" name="storm_caller"/>
+    <component cclass="male/clothing_front" name="storm_caller"/>
+  </article>
+
+
 
   <!-- male familiars: frontier town -->
 
@@ -325,6 +343,17 @@
     <component cclass="male/hat_back" name="buffalo"/>
     <component cclass="male/hat_band" name="medallion_buffalo"/>
   </article> 
+
+  <article name="male_revolutionary_hat" townId="indian_post"
+           slot="hat" scrip="2500" coins="3">
+    <component cclass="male/hat" name="revolutionary"/>
+    <component cclass="male/hat_back" name="revolutionary"/>
+  </article>
+
+  <article name="male_trickster_raven_hat" townId="indian_post"
+           slot="hat" scrip="2500" coins="3">
+    <component cclass="male/hat" name="trickster_raven"/>
+  </article>
 
 
   <!-- male jewelry: frontier town -->
@@ -745,6 +774,17 @@
            slot="hat" scrip="2700" coins="2">
     <component cclass="female/hat" name="lioness"/>
     <component cclass="female/hat_band" name="cougar_mask"/>
+  </article>
+
+  <article name="female_revolutionary_hat" townId="indian_post"
+           slot="hat" scrip="2500" coins="3" colors="clothes_p,clothes_s">
+    <component cclass="female/hat" name="revolutionary"/>
+    <component cclass="female/hat_back" name="revolutionary"/>
+  </article>
+
+  <article name="female_trickster_raven_hat" townId="indian_post"
+           slot="hat" scrip="2500" coins="3">
+    <component cclass="female/hat" name="trickster_raven"/>
   </article>
 
 
