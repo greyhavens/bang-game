@@ -16,13 +16,13 @@ import com.threerings.bang.data.Handle;
 public interface PlayerService extends InvocationService
 {
     /** Used to note a player as friendly */
-    public static final int FOLK_FRIENDLY = 1;
+    public static final int FOLK_IS_FRIEND = 1;
 
     /** Used to note a player as neither friendly nor unfriendly */
     public static final int FOLK_NEUTRAL = 2;
 
     /** Used to note a player as unfriendly */
-    public static final int FOLK_UNFRIENDLY = 3;
+    public static final int FOLK_IS_FOE = 3;
 
     /**
      * Issues a request to create this player's (free) first Big Shot.

@@ -260,6 +260,19 @@ public class PlayerRepository extends JORARepository
         store(_ftable, frec);
     }
 
+    /**
+     * Deregisters an opinion of one player about another.
+     */
+    public void deregisterOpinion (int playerId, int targetId)
+        throws PersistenceException
+    {
+        FolkRecord frec = new FolkRecord();
+        frec.playerId = playerId;
+        frec.targetId = targetId;
+        // this will update or insert
+        delete(_ftable, frec);
+    }
+
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
     protected void updateScrip (String where, int amount, String type)
         throws PersistenceException

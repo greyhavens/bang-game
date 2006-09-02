@@ -5,6 +5,7 @@ package com.threerings.bang.server;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import java.util.logging.Level;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.ListUtil;
 import com.threerings.util.StreamableHashMap;
 
@@ -79,6 +81,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.data.UnitConfig;
 
+import com.threerings.bang.server.persist.FolkRecord;
 import com.threerings.bang.server.persist.PardnerRepository;
 import com.threerings.bang.server.persist.PosterRepository;
 import com.threerings.bang.server.persist.PosterRecord;
@@ -685,18 +688,62 @@ public class PlayerManager
 
     // from interface PlayerProvider
     public void noteFolk(ClientObject caller,
-                         final int playerId, final int opinion,
+                         final int playerId, final int note,
                          final PlayerService.ConfirmListener cl)
         throws InvocationException
     {
         final PlayerObject user = (PlayerObject) caller;
+        final int ixFoe = Arrays.binarySearch(user.foes, playerId);
+        final int ixFriend = Arrays.binarySearch(user.friends, playerId);
+
+        if (note == PlayerService.FOLK_NEUTRAL) {
+            // for extra sanity, check both arrays
+            if (ixFoe < 0 && ixFriend < 0) {
+                cl.requestProcessed();
+                return;
+            }
+            BangServer.invoker.postUnit(new PersistingUnit(cl) {
+                public void invokePersistent() throws PersistenceException {
+                    // TODO: implement
+                    _playrepo.deregisterOpinion(user.playerId, playerId);
+                }
+                public void handleSuccess() {
+                    if (ixFoe >= 0) {
+                        user.foes = ArrayUtil.splice(user.foes, ixFoe, 1);
+                    }
+                    if (ixFriend >= 0) {
+                        user.friends = ArrayUtil.splice(user.friends,
+                                                        ixFriend, 1);
+                    }
+                    cl.requestProcessed();
+                }
+                public String getFailureMessage() {
+                    return "Failed to deregister opinion [who=" + user.who() +
+                        ", whom=" + playerId + "]";
+                }
+            });
+            return;
+        }
+        final byte opinion;
+        if (note == PlayerService.FOLK_IS_FRIEND && ixFriend < 0) {
+            opinion = FolkRecord.FRIEND;
+        } else if (note == PlayerService.FOLK_IS_FOE && ixFoe < 0) {
+            opinion = FolkRecord.FOE;
+        } else {
+            cl.requestProcessed();
+            return;
+        }
 
         BangServer.invoker.postUnit(new PersistingUnit(cl) {
             public void invokePersistent() throws PersistenceException {
-                _playrepo.registerOpinion(user.playerId, playerId,
-                                          (byte) opinion);
+                _playrepo.registerOpinion(user.playerId, playerId, opinion);
             }
             public void handleSuccess() {
+                if (opinion == FolkRecord.FRIEND) {
+                    user.friends = ArrayUtil.append(user.friends, playerId);
+                } else {
+                    user.foes = ArrayUtil.append(user.foes, playerId);
+                }
                 cl.requestProcessed();
             }
             public String getFailureMessage() {
