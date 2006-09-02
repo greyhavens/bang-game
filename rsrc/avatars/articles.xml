@@ -329,7 +329,7 @@
            slot="hat" scrip="3500" coins="3" colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="wolf_mask"/>
     <component cclass="male/hat_back" name="wolf_mask"/>
-  </article>
+`  </article>
 
   <article name="male_buffalo" townId="indian_post"
            slot="hat" scrip="2500" coins="2" colors="clothes_p,clothes_s">
@@ -345,13 +345,13 @@
   </article> 
 
   <article name="male_revolutionary_hat" townId="indian_post"
-           slot="hat" scrip="2500" coins="3">
+           slot="hat" scrip="2500" coins="3" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="revolutionary"/>
     <component cclass="male/hat_back" name="revolutionary"/>
   </article>
 
   <article name="male_trickster_raven_hat" townId="indian_post"
-           slot="hat" scrip="2500" coins="3">
+           slot="hat" scrip="2500" coins="3" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="trickster_raven"/>
   </article>
 
@@ -783,7 +783,7 @@
   </article>
 
   <article name="female_trickster_raven_hat" townId="indian_post"
-           slot="hat" scrip="2500" coins="3">
+           slot="hat" scrip="2500" coins="3" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="trickster_raven"/>
   </article>
 
