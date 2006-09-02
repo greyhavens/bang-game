@@ -833,7 +833,8 @@ public class BangBoard extends SimpleStreamableObject
             _tstate[_width*piece.y+piece.x] = O_OCCUPIED;
             
         } else {
-            _tstate[_width*piece.y+piece.x] = (byte)piece.owner;
+            _tstate[_width*piece.y+piece.x] = (piece.isAirborne() ?
+                    O_AIRBORNE : (byte)piece.owner);
         }
     }
 
@@ -1129,8 +1130,9 @@ public class BangBoard extends SimpleStreamableObject
             return true;
         } else if ((tstate == O_FLAT || tstate == O_BRIDGE) ||
                (piece instanceof Unit && tstate == O_BONUS) ||
-               (tstate == piece.owner && (_btstate[idx] == O_FLAT || 
-                    _btstate[idx] == O_BRIDGE) && !remain)) {
+               ((tstate == piece.owner || tstate == O_AIRBORNE) 
+                && (_btstate[idx] == O_FLAT || _btstate[idx] == O_BRIDGE) 
+                && !remain)) {
             return canCross(sx, sy, dx, dy);
         }
         return false;
@@ -1645,6 +1647,9 @@ public class BangBoard extends SimpleStreamableObject
 
     /** If the heightfield has changed since generating max heights. */
     protected transient boolean _heightfieldChanged = true;
+
+    /** Indicates that this tile is occupied by an airborne unit. */
+    protected static final byte O_AIRBORNE = 11;
 
     /** Indicates that this tile is occupied by a mobile non-unit. */
     protected static final byte O_OCCUPIED = 10;

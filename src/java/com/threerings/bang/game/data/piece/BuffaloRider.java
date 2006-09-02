@@ -95,19 +95,17 @@ public class BuffaloRider extends Unit
         if (dist >= DISTANCE_TO_PUSH) {
             pushed = bangobj.board.canTravel(
                     target, target.x, target.y, pushx, pushy, true);
-            if (!pushed || !target.canBePushed()) {
+            if (!pushed && target.canBePushed()) {
                 scale += DISTANCE_DAMAGE_SCALE;
                 attackIcon = "smashed";
             }
         }
         ShotEffect shot = super.unitShoot(bangobj, target, scale);
-        if (pushed) {
-            if (!target.canBePushed()) {
-                shot.appendIcon("unmovable", false);
-            } else {
-                shot.pushx = pushx;
-                shot.pushy = pushy;
-            }
+        if (!pushed || !target.canBePushed()) {
+            shot.appendIcon("unmovable", false);
+        } else if (pushed) {
+            shot.pushx = pushx;
+            shot.pushy = pushy;
         } else {
             shot.appendIcon(attackIcon, true);
         }
