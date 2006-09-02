@@ -697,17 +697,16 @@ public class PlayerManager
         final int ixFriend = Arrays.binarySearch(user.friends, playerId);
 
         if (note == PlayerService.FOLK_NEUTRAL) {
-            // for extra sanity, check both arrays
             if (ixFoe < 0 && ixFriend < 0) {
                 cl.requestProcessed();
                 return;
             }
             BangServer.invoker.postUnit(new PersistingUnit(cl) {
                 public void invokePersistent() throws PersistenceException {
-                    // TODO: implement
                     _playrepo.deregisterOpinion(user.playerId, playerId);
                 }
                 public void handleSuccess() {
+                    // for extra sanity, check both arrays
                     if (ixFoe >= 0) {
                         user.foes = ArrayUtil.splice(user.foes, ixFoe, 1);
                     }
