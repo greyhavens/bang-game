@@ -17,13 +17,15 @@ import com.jme.scene.state.LightState;
 
 import com.threerings.jme.sprite.PathUtil;
 
+import com.threerings.bang.util.IconConfig;
+import com.threerings.bang.util.RenderUtil;
+
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.AreaDamageEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -42,12 +44,7 @@ public class IconViz extends EffectViz
      */
     public static IconViz createIconViz (Piece piece, String effect)
     {
-        if (effect.equals(RepairEffect.REPAIRED)) {
-            return new IconViz("textures/effects/repaired.png");
-            
-        } else {
-            return null;
-        }
+        return IconConfig.haveIcon(effect) ? new IconViz(effect) : null;
     }
     
     /**
@@ -82,21 +79,20 @@ public class IconViz extends EffectViz
         createBillboard();
         if (_ipath != null) {
             if (_card) {
-                Quad bg = createIconQuad(
-                    "textures/effects/cardback.png", ICON_SIZE, ICON_SIZE),
-                     icon = createIconQuad(_ipath, CARD_WIDTH, ICON_SIZE);
-                _billboard.attachChild(bg);
-                _billboard.attachChild(icon);
+                _billboard.attachChild(IconConfig.createIcon(_ctx,
+                    "textures/effects/cardback.png", ICON_SIZE, ICON_SIZE));
+                _billboard.attachChild(IconConfig.createIcon(_ctx,
+                    _ipath, CARD_WIDTH, ICON_SIZE));
                 
             } else {
-                Quad icon = createIconQuad(_ipath, ICON_SIZE, ICON_SIZE);
+                ColorRGBA color = ColorRGBA.white;
                 if (_color != null) {
-                    icon.setDefaultColor(new ColorRGBA(_color));
+                    color = _color;
                 } else if (_target != null) {
-                    icon.setDefaultColor(new ColorRGBA(
-                        JPIECE_COLORS[_target.owner + 1]));
+                    color = JPIECE_COLORS[_target.owner + 1];
                 }
-                _billboard.attachChild(icon);
+                _billboard.attachChild(IconConfig.createIcon(_ctx,
+                    _ipath, ICON_SIZE, ICON_SIZE, color));
             }
         }
     }
@@ -127,15 +123,6 @@ public class IconViz extends EffectViz
         }
         _billboard.updateRenderState();
         _billboard.updateGeometricState(0f, true);
-    }
-
-    /**
-     * Create an icon quad.
-     */
-    protected Quad createIconQuad (String name, float width, float height)
-    {
-        return RenderUtil.createIcon(
-            RenderUtil.createTextureState(_ctx, name), width, height);
     }
 
     /**

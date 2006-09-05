@@ -21,6 +21,7 @@ import com.jme.util.geom.BufferUtils;
 
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.IconConfig;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.data.effect.NuggetEffect;
@@ -30,7 +31,6 @@ import com.threerings.bang.game.data.piece.Unit;
 import static com.threerings.bang.client.BangMetrics.*;
 
 import static com.threerings.bang.Log.log;
-
 
 /**
  * A target display for Pieces that are Targetable.
@@ -206,7 +206,7 @@ public class PieceTarget extends Node
         attachChild(bbn);
 
         // this icon is displayed when we're highlighted as a potential target
-        _tgtquad = RenderUtil.createIcon(_crosstst[0]);
+        _tgtquad = IconConfig.createIcon(_crosstst[0]);
         _tgtquad.getBatch(0).setModelBound(new BoundingBox());
         _tgtquad.getBatch(0).updateModelBound();
         bbn.attachChild(_tgtquad);
@@ -217,7 +217,7 @@ public class PieceTarget extends Node
         // potential target
         _modquad = new Quad[MOD_COORDS.length];
         for (int ii = 0; ii < _modquad.length; ii++) {
-            _modquad[ii] = RenderUtil.createIcon(
+            _modquad[ii] = IconConfig.createIcon(
                     _modtst[0], TILE_SIZE/4f, TILE_SIZE/4f);
             _modquad[ii].setLocalTranslation(MOD_COORDS[ii]);
             bbn.attachChild(_modquad[ii]);
@@ -225,7 +225,7 @@ public class PieceTarget extends Node
         }
 
         // this icon is displayed when we have pending shots aimed at us
-        _ptquad = RenderUtil.createIcon(_crosstst[2]);
+        _ptquad = IconConfig.createIcon(_crosstst[2]);
         _ptquad.setLocalTranslation(new Vector3f(0, TILE_SIZE/2, 0));
         _ptquad.setTextureBuffer(
                 0, BufferUtils.createFloatBuffer(PTARG_COORDS));

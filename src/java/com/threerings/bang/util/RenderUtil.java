@@ -379,60 +379,6 @@ public class RenderUtil
     }
 
     /**
-     * Creates a single tile "icon" image which is a textured quad that
-     * covers a tile worth of space.
-     */
-    public static Quad createIcon (BasicContext ctx, String path)
-    {
-        return createIcon(createTextureState(ctx, path));
-    }
-
-    /**
-     * Creates a single tile "icon" image which is a textured quad that
-     * covers a tile worth of space.
-     */
-    public static Quad createIcon (TextureState tstate)
-    {
-        return createIcon(tstate, TILE_SIZE, TILE_SIZE);
-    }
-
-    /**
-     * Creates a single "icon" image which is a textured quad of the
-     * specified size.
-     */
-    public static Quad createIcon (
-            TextureState tstate, float width, float height)
-    {
-        Quad icon = createIcon(width, height);
-        icon.setRenderState(tstate);
-        icon.updateRenderState();
-        return icon;
-    }
-
-    /**
-     * Creates an icon with proper alpha state and no lighting of the
-     * specified width and height. No translation is done, this is for
-     * creating non-tile-sized icons.
-     */
-    public static Quad createIcon (float width, float height)
-    {
-        // set the queue distance to zero before sorting; this will
-        // make sure that the icon always sorts in front of transparent
-        // geometry
-        Quad icon = new Quad("icon", width, height) {
-            public void updateWorldData (float time) {
-                super.updateWorldData(time);
-                getBatch(0).queueDistance = 0f;
-            }
-        };
-        icon.setRenderState(blendAlpha);
-        icon.setRenderState(alwaysZBuf);
-        icon.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-        icon.setLightCombineMode(LightState.OFF);
-        return icon;
-    }
-
-    /**
      * Configures the specified texture's scale and translation so as to select
      * the <code>tile</code>th tile from a <code>size</code> x
      * <code>size</code> grid.

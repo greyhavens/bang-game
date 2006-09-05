@@ -39,6 +39,13 @@ for TOWN in $TOWNS; do
         rsrc/effects/$TOWN/effects.txt
 done
 
+# Update our list of icons
+for TOWN in $TOWNS; do
+    find rsrc/icons/$TOWN -name 'icon.properties' | \
+        sed 's:rsrc/icons/::g' | sed 's:/icon.properties::' | sort > \
+        rsrc/icons/$TOWN/icons.txt
+done
+
 # Update our list of terrain codes
 find rsrc/terrain -name 'terrain.properties' | \
   sed 's:rsrc/terrain/::g' | sed 's:/terrain.properties::' | \

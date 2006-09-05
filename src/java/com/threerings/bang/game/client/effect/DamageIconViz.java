@@ -22,6 +22,7 @@ import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.IconConfig;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.client.BangBoardView;
@@ -139,7 +140,7 @@ public class DamageIconViz extends IconViz
                 String.valueOf(_damage), tcoords, null);
         _dmgTState.setTexture(tex);
         float width = ICON_SIZE * tcoords[2].x / tcoords[2].y;
-        _readout[0] = RenderUtil.createIcon(_dmgTState, width, ICON_SIZE);
+        _readout[0] = IconConfig.createIcon(_dmgTState, width, ICON_SIZE);
         _readout[0].setTextureBuffer(0, BufferUtils.createFloatBuffer(tcoords));
         _readout[0].setDefaultColor(new ColorRGBA());
 
@@ -148,7 +149,7 @@ public class DamageIconViz extends IconViz
         int readoutidx = 1;
         if (_attackIcons != null) {
             for (int ii = 0; ii < _attackIcons.length; ii++) {
-                _readout[readoutidx] = createIconQuad(
+                _readout[readoutidx] = IconConfig.createIcon(_ctx,
                     "influences/icons/" + _attackIcons[ii] + ".png",
                     DAMAGE_SIZE, DAMAGE_SIZE);
                 _readout[readoutidx].setDefaultColor(new ColorRGBA());
@@ -160,7 +161,7 @@ public class DamageIconViz extends IconViz
 
         if (_defendIcons != null) {
             for (int ii = 0; ii < _defendIcons.length; ii++) {
-                _readout[readoutidx] = createIconQuad(
+                _readout[readoutidx] = IconConfig.createIcon(_ctx,
                     "influences/icons/" + _defendIcons[ii] + ".png",
                     DAMAGE_SIZE, DAMAGE_SIZE);
                 _readout[readoutidx].setDefaultColor(new ColorRGBA());
