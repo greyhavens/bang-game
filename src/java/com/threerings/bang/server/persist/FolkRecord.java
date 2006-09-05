@@ -8,6 +8,10 @@ package com.threerings.bang.server.persist;
  */
 public class FolkRecord
 {
+    /** Not used in the database but used in other code to indicate that this
+     * player has no opinion about the player in question. */
+    public static final byte NO_OPINION = -1;
+
     /** Indicates that a player thinks another is friendly. */
     public static final byte FRIEND = 0;
 

@@ -244,10 +244,12 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Registers an opinion of one player about another (friend or foe).
+     * Registers an opinion of one player about another (friend or foe) or
+     * clears out any registered opinion.
      *
      * @param opinion one of {@link FolkRecord#FRIEND} or {@link
-     * FolkRecord#FOE}.
+     * FolkRecord#FOE} or {@link FolkRecord#NO_OPINION} if the opinion record
+     * is to be cleared.
      */
     public void registerOpinion (int playerId, int targetId, byte opinion)
         throws PersistenceException
@@ -256,21 +258,11 @@ public class PlayerRepository extends JORARepository
         frec.playerId = playerId;
         frec.targetId = targetId;
         frec.opinion = opinion;
-        // this will update or insert
-        store(_ftable, frec);
-    }
-
-    /**
-     * Deregisters an opinion of one player about another.
-     */
-    public void deregisterOpinion (int playerId, int targetId)
-        throws PersistenceException
-    {
-        FolkRecord frec = new FolkRecord();
-        frec.playerId = playerId;
-        frec.targetId = targetId;
-        // this will update or insert
-        delete(_ftable, frec);
+        if (frec.opinion == FolkRecord.NO_OPINION) {
+            delete(_ftable, frec);
+        } else {
+            store(_ftable, frec); // this will update or insert
+        }
     }
 
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */

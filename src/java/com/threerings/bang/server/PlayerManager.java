@@ -648,7 +648,7 @@ public class PlayerManager
         while (ratings.hasNext()) {
             Rating rating = ratings.next();
             // TODO: until we are actually computing rankings
-            int percentile = 
+            int percentile =
                 (100 * (rating.rating - Rating.MINIMUM_RATING - 1)) /
                 (Rating.MAXIMUM_RATING - Rating.MINIMUM_RATING);
             map.put(rating.scenario, Integer.valueOf(percentile));
@@ -687,66 +687,51 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void noteFolk(ClientObject caller,
-                         final int playerId, final int note,
-                         final PlayerService.ConfirmListener cl)
+    public void noteFolk (ClientObject caller, final int folkId, int note,
+                          PlayerService.ConfirmListener cl)
         throws InvocationException
     {
         final PlayerObject user = (PlayerObject) caller;
-        final int ixFoe = Arrays.binarySearch(user.foes, playerId);
-        final int ixFriend = Arrays.binarySearch(user.friends, playerId);
+        int ixFoe = Arrays.binarySearch(user.foes, folkId);
+        int ixFriend = Arrays.binarySearch(user.friends, folkId);
 
-        if (note == PlayerService.FOLK_NEUTRAL) {
-            if (ixFoe < 0 && ixFriend < 0) {
-                cl.requestProcessed();
-                return;
-            }
-            BangServer.invoker.postUnit(new PersistingUnit(cl) {
-                public void invokePersistent() throws PersistenceException {
-                    _playrepo.deregisterOpinion(user.playerId, playerId);
-                }
-                public void handleSuccess() {
-                    // for extra sanity, check both arrays
-                    if (ixFoe >= 0) {
-                        user.foes = ArrayUtil.splice(user.foes, ixFoe, 1);
-                    }
-                    if (ixFriend >= 0) {
-                        user.friends = ArrayUtil.splice(user.friends,
-                                                        ixFriend, 1);
-                    }
-                    cl.requestProcessed();
-                }
-                public String getFailureMessage() {
-                    return "Failed to deregister opinion [who=" + user.who() +
-                        ", whom=" + playerId + "]";
-                }
-            });
-            return;
-        }
         final byte opinion;
+        final int[] nfriends, nfoes;
         if (note == PlayerService.FOLK_IS_FRIEND && ixFriend < 0) {
             opinion = FolkRecord.FRIEND;
+            nfriends = ArrayUtil.insert(user.friends, folkId, 1+ixFriend);
+            nfoes = user.foes;
+
         } else if (note == PlayerService.FOLK_IS_FOE && ixFoe < 0) {
             opinion = FolkRecord.FOE;
+            nfriends = user.friends;
+            nfoes = ArrayUtil.insert(user.foes, folkId, 1+ixFoe);
+
+        } else if (note == PlayerService.FOLK_NEUTRAL &&
+            (ixFoe > 0 || ixFriend > 0)) {
+            opinion = FolkRecord.NO_OPINION;
+            nfriends = (ixFriend >= 0) ?
+                ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
+            nfoes = (ixFoe >= 0) ?
+                ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
+
         } else {
-            cl.requestProcessed();
+            cl.requestProcessed(); // NOOP!
             return;
         }
 
         BangServer.invoker.postUnit(new PersistingUnit(cl) {
             public void invokePersistent() throws PersistenceException {
-                _playrepo.registerOpinion(user.playerId, playerId, opinion);
+                _playrepo.registerOpinion(user.playerId, folkId, opinion);
             }
             public void handleSuccess() {
-                if (opinion == FolkRecord.FRIEND) {
-                    user.friends = ArrayUtil.append(user.friends, playerId);
-                } else {
-                    user.foes = ArrayUtil.append(user.foes, playerId);
-                }
-                cl.requestProcessed();
+                user.setFriends(nfriends);
+                user.setFoes(nfoes);
+                ((PlayerService.ConfirmListener)_listener).requestProcessed();
             }
             public String getFailureMessage() {
-                return "Failed to register opinion [who=" + user.who() + ", whom=" + playerId + "]";
+                return "Failed to register opinion [who=" + user.who() +
+                    ", folk=" + folkId + "]";
             }
         });
     }
