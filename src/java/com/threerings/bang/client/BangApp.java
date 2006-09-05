@@ -190,7 +190,7 @@ public class BangApp extends JmeApp
     protected DisplaySystem createDisplay ()
     {
         PropertiesIO props = new PropertiesIO(getConfigPath("jme.cfg"));
-        BangPrefs.configureDisplayMode(props);
+        BangPrefs.configureDisplayMode(props, Boolean.getBoolean("safemode"));
         _api = props.getRenderer();
         DisplaySystem display = DisplaySystem.getDisplaySystem(_api);
         display.setVSyncEnabled(!_profiling);

@@ -38,17 +38,19 @@ public class BangPrefs
      * Returns the display mode in the supplied list that matches the one
      * configured as our preference, or null if there are no matches.
      */
-    public static void configureDisplayMode (PropertiesIO props)
+    public static void configureDisplayMode (
+            PropertiesIO props, boolean safeMode)
     {
         // first look up our "preferred" mode
-        int width = config.getValue("display_width", 1024);
-        int height = config.getValue("display_height", 768);
-        int bpp = config.getValue("display_bpp", 16);
-        int freq = config.getValue("display_freq", 60);
+        int width = safeMode ? 1024 : config.getValue("display_width", 1024);
+        int height = safeMode ? 768 : config.getValue("display_height", 768);
+        int bpp = safeMode ? 16 : config.getValue("display_bpp", 16);
+        int freq = safeMode ? 60 : config.getValue("display_freq", 60);
+        boolean fullscreen = safeMode ? true : isFullscreen();
 
         // if that is a full screen mode, we need to find the closest matching
         // available screen mode
-        if (isFullscreen()) {
+        if (fullscreen) {
             DisplayMode mode = getClosest(width, height, bpp, freq);
             if (mode == null) {
                 mode = Display.getDisplayMode();
@@ -69,10 +71,11 @@ public class BangPrefs
         props.set("HEIGHT", String.valueOf(height));
         props.set("DEPTH", String.valueOf(bpp));
         props.set("FREQ", String.valueOf(freq));
-        props.set("FULLSCREEN", String.valueOf(isFullscreen()));
+        props.set("FULLSCREEN", String.valueOf(fullscreen));
         props.set("RENDERER", "LWJGL");
 
-        log.info("Display mode: " + props.getWidth() + "x" + props.getHeight() +
+        log.info("Display " + (safeMode ? "in safe mode: " : "mode: ") + 
+                 props.getWidth() + "x" + props.getHeight() +
                  "x" + props.getDepth() + " " + props.getFreq() + "Hz " +
                  "(current: " + Display.getDisplayMode() + ").");
     }
