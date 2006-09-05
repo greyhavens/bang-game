@@ -1094,6 +1094,22 @@ public class BoardView extends BComponent
             -FastMath.cos(wdir), -FastMath.sin(wdir), 0f);
         _wind.setStrength(_board.getWindSpeed() * 0.0005f);
     }
+
+    /**
+     * Returns true if there are no pending or executing actions.
+     */
+    protected boolean noActions ()
+    {
+        if (!_pactions.isEmpty()) {
+            return false;
+        }
+        for (int ex : _eunits.getValues()) {
+            if (ex > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
     
     /**
      * Processes all ready actions in the action queue.

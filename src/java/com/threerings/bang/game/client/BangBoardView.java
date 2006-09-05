@@ -188,6 +188,15 @@ public class BangBoardView extends BoardView
      */
     public void doInterRoundMarqueeFade ()
     {
+        if (noActions()) {
+            showInterRoundMarquee();
+        } else {
+            _pendingMarquee = MarqueeMode.ROUND;
+        }
+    }
+
+    protected void showInterRoundMarquee ()
+    {
         // create a marquee, but detach it
         createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.round_over"));
         _ctx.getInterface().detachChild(_marquee);
@@ -236,6 +245,15 @@ public class BangBoardView extends BoardView
      * to drop in the post-game stats display.
      */
     public void doPostGameMarqueeFade ()
+    {
+        if (noActions()) {
+            showPostGameMarquee();
+        } else {
+            _pendingMarquee = MarqueeMode.GAME;
+        }
+    }
+
+    protected void showPostGameMarquee ()
     {
         // create a marquee, but detach it
         createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, "m.game_over"));
@@ -1758,6 +1776,18 @@ public class BangBoardView extends BoardView
     {
         _pmoves.clear();
         super.processActions();
+        if (_pendingMarquee != MarqueeMode.NONE) {
+            if (noActions()) {
+                switch (_pendingMarquee) {
+                  case GAME:
+                    showPostGameMarquee();
+                    break;
+                  case ROUND:
+                    showInterRoundMarquee();
+                    break;
+                }
+            }
+        }
     }
 
     @Override // documentation inherited
@@ -1922,6 +1952,10 @@ public class BangBoardView extends BoardView
     
     /** Whether or not wendigo ambiance mode is active. */
     protected boolean _wendigoAmbiance;
+
+    /** The marquee to display. */
+    protected static enum MarqueeMode { NONE, GAME, ROUND };
+    protected MarqueeMode _pendingMarquee = MarqueeMode.NONE;
     
     /** The color of BigShot movement highlights. */
     protected static final ColorRGBA BMOVE_HIGHLIGHT_COLOR =

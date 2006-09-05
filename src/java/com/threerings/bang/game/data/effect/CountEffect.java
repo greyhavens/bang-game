@@ -22,20 +22,36 @@ public class CountEffect extends Effect
     /** The new count for the counter. */
     public int newCount;
 
+    /** Add a secondary affected piece if we want this effect to wait on the
+     * completion of another effect. */
+    public int queuePiece = -1;
+
     /**
      * Creates a counter effect configured to update the count on a counter.
      */
     public static CountEffect changeCount (int id, int count)
     {
+        return changeCount (id, count, -1);
+    }
+
+    /**
+     * Creates a counter effect configured to update the count on a counter.
+     */
+    public static CountEffect changeCount (int id, int count, int queuePiece)
+    {
         CountEffect effect = new CountEffect();
         effect.counterId = id;
         effect.newCount = count;
+        effect.queuePiece = queuePiece;
         return effect;
     }
 
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
+        if (queuePiece != -1) {
+            return new int[] { counterId, queuePiece };
+        }
         return new int[] { counterId };
     }
 

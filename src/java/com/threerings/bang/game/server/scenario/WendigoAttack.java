@@ -175,10 +175,12 @@ public class WendigoAttack extends Scenario
                 _wendigoRespawnTicks = null;
                 updatePoints(bangobj);
                 _wendigos = null;
-                _nextWendigo += (short)RandomUtil.getInt(
-                        MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
-                if (_nextWendigo < bangobj.duration) {
-                    _nextWendigo -= WENDIGO_WAIT;
+                if (_nextWendigo + MAX_WENDIGO_TICKS + MIN_WENDIGO_TICKS + 
+                        WENDIGO_WAIT * 2 < bangobj.duration) {
+                    _nextWendigo += (short)RandomUtil.getInt(
+                            MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
+                } else {
+                    _nextWendigo = (short)(bangobj.duration - WENDIGO_WAIT - 1);
                 }
             }
             if (tick >= _nextWendigo) {
@@ -344,11 +346,13 @@ public class WendigoAttack extends Scenario
                 return;
             }
 
+            int queuePiece = _wendigos.get(0).pieceId;
             for (Counter counter : _counters) {
                 if (points[counter.owner] > 0) {
                     _bangmgr.deployEffect(
                             -1, CountEffect.changeCount(counter.pieceId,
-                                counter.count + points[counter.owner]));
+                                counter.count + points[counter.owner],
+                                queuePiece));
                 }
             }
         }
