@@ -16,7 +16,7 @@ public class WendigoAttackInfo extends ScenarioInfo
     public static final String IDENT = "wa";
 
     /** Points per unit surviving a wendigo attack. */
-    public static final int POINTS_PER_SURVIVAL = 25;
+    public static final int POINTS_PER_SURVIVAL = 15;
 
     @Override // from ScenarioInfo
     public String getIdent ()

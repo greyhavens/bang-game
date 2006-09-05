@@ -373,7 +373,7 @@ public class WendigoAttack extends Scenario
         protected static final short WENDIGO_WAIT = 4;
 
         /** Number of points for having a talisman on a safe zone. */
-        protected static final int TALISMAN_SAFE = 50;
+        protected static final int TALISMAN_SAFE = 40;
     }
 
     /** Set of the sacred location markers. */
