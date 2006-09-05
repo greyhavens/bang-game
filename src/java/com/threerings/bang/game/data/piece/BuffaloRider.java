@@ -101,11 +101,11 @@ public class BuffaloRider extends Unit
             }
         }
         ShotEffect shot = super.unitShoot(bangobj, target, scale);
-        if (!pushed || !target.canBePushed()) {
-            shot.appendIcon("unmovable", false);
-        } else if (pushed) {
+        if (pushed) {
             shot.pushx = pushx;
             shot.pushy = pushy;
+        } else if (dist >= DISTANCE_TO_PUSH &&  !target.canBePushed()) {
+            shot.appendIcon("unmovable", false);
         } else {
             shot.appendIcon(attackIcon, true);
         }
