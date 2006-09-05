@@ -35,7 +35,6 @@ import com.threerings.bang.util.BangContext;
  */
 public class EditPosterView extends BContainer
 {
-
     /**
      * Creates a new wanted poster edit popup for the given handle.
      */
@@ -48,8 +47,7 @@ public class EditPosterView extends BContainer
             return;
         }
 
-        BWindow popup = new BWindow(ctx.getStyleSheet(),
-                                          new BorderLayout());
+        BWindow popup = new BWindow(ctx.getStyleSheet(), new BorderLayout());
         popup.setStyleClass("poster_edit_popup");
         popup.add(new EditPosterView(ctx, handle, popup), BorderLayout.CENTER);
         bangClient.displayPopup(popup, true);

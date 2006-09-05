@@ -50,11 +50,12 @@ public class WantedPosterView extends BContainer
     /**
      * Creates a new wanted poster display popup for the given handle.
      */
-    public static void displayWantedPoster(final BangContext ctx,
-                                           final Handle handle)
+    public static void displayWantedPoster (
+        final BangContext ctx, final Handle handle)
     {
-        final BangClient bangClient = ctx.getBangClient();
-        if (!bangClient.canDisplayPopup(MainView.Type.POSTER_DISPLAY)) {
+        // make sure we can display the popup currently
+        if (!ctx.getBangClient().canDisplayPopup(
+                MainView.Type.POSTER_DISPLAY)) {
             BangUI.play(BangUI.FeedbackSound.INVALID_ACTION);
             return;
         }
@@ -63,7 +64,7 @@ public class WantedPosterView extends BContainer
         BLayoutManager layout = GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.BOTTOM, GroupLayout.EQUALIZE);
         final BWindow popup = new BWindow(ctx.getStyleSheet(), layout);
-        popup.setStyleClass("dialog_window");
+        popup.setStyleClass("poster_popup");
 
         // add the actual poster view
         WantedPosterView view = new WantedPosterView(ctx);
@@ -91,19 +92,18 @@ public class WantedPosterView extends BContainer
 
         // then a button that knows how to clear the popup
         final BButton backButton = new BButton(
-            ctx.xlate(BangCodes.BANG_MSGS, "m.poster_goback"));
-        backButton.addListener(
-            new ActionListener() {
-                public void actionPerformed (ActionEvent event) {
-                    if (event.getSource() == backButton) {
-                        ctx.getBangClient().clearPopup(popup, false);
-                    }
+            ctx.xlate(BangCodes.BANG_MSGS, "m.poster_dismiss"));
+        backButton.addListener(new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                if (event.getSource() == backButton) {
+                    ctx.getBangClient().clearPopup(popup, true);
                 }
-            });
+            }
+        });
         buttonBox.add(backButton);
         popup.add(buttonBox, GroupLayout.FIXED);
 
-        bangClient.displayPopup(popup, true);
+        ctx.getBangClient().displayPopup(popup, true);
     }
 
     public WantedPosterView (BangContext ctx)
@@ -128,7 +128,7 @@ public class WantedPosterView extends BContainer
         _handle = handle;
 
         // request the poster record
-        InvocationService.ResultListener listener = 
+        InvocationService.ResultListener listener =
             new InvocationService.ResultListener() {
                 public void requestProcessed(Object result) {
                     setPoster((PosterInfo) result);
@@ -143,7 +143,7 @@ public class WantedPosterView extends BContainer
         PlayerService psvc = (PlayerService)
             _ctx.getClient().requireService(PlayerService.class);
         psvc.getPosterInfo(
-            _ctx.getClient(), handle, listener);        
+            _ctx.getClient(), handle, listener);
     }
 
     /**
@@ -173,19 +173,15 @@ public class WantedPosterView extends BContainer
     protected BComponent buildWantedLabel()
     {
         BContainer box = GroupLayout.makeVBox(GroupLayout.CENTER);
-        box.setPreferredSize(new Dimension(320, 120));
+        box.setPreferredSize(new Dimension(320, 125));
         box.setStyleClass("poster_handle_box");
 
-        BLabel handleLabel = new BLabel(_poster.handle.toString(),
-                                        "poster_handle");
-        box.add(handleLabel);
+        box.add(new BLabel(_poster.handle.toString(), "poster_handle"));
 
-        if (true) {
-            // TODO: disable until there's actually gangs
-            BLabel gangLabel = new BLabel("Member of the \"DALTON GANG\"",
-                                          "poster_gang");
-            box.add(gangLabel);
-        }
+        // TODO: disabled until there are actually gangs
+        String gang = " "; // = "Member of the \"DALTON GANG\"";
+        box.add(new BLabel(gang, "poster_gang"));
+
         return box;
     }
 
