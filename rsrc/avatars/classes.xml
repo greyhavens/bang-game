@@ -4,7 +4,7 @@
 <!-- Avatar component class definitions -->
 <classes>
   <!-- male component classes -->
-  <class name="male/hat_back" colors="clothes_p,clothes_s"
+  <class name="male/hat_back" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="10"/>
   <class name="male/hair_back" colors="hair,clothes_s"
          renderPriority="20"/>
@@ -40,7 +40,7 @@
          renderPriority="170"/>
   <class name="male/jewelry" colors="clothes_p,clothes_s"
          renderPriority="180"/>
-  <class name="male/hat" colors="clothes_p,clothes_s"
+  <class name="male/hat" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="190"/>
   <class name="male/hat_band" colors="clothes_s,clothes_t"
          renderPriority="200"/>
@@ -50,7 +50,7 @@
          renderPriority="220"/>
 
   <!-- female component classes -->
-  <class name="female/hat_back" colors="clothes_p,clothes_s"
+  <class name="female/hat_back" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="10"/>
   <class name="female/hair_back" colors="hair,clothes_s"
          renderPriority="20"/>
@@ -80,7 +80,7 @@
          renderPriority="140"/>
   <class name="female/jewelry" colors="clothes_p,clothes_s"
          renderPriority="150"/>
-  <class name="female/hat" colors="clothes_p,clothes_s"
+  <class name="female/hat" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="160"/>
   <class name="female/hat_band" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="170"/>
