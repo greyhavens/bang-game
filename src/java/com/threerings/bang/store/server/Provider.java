@@ -35,7 +35,9 @@ public abstract class Provider extends FinancialAction
     protected Provider (PlayerObject user, Good good, Object[] args)
         throws InvocationException
     {
-        super(user, good.getScripCost(), good.getCoinCost());
+        // admins get things for free
+        super(user, user.tokens.isAdmin() ? 0 : good.getScripCost(),
+            user.tokens.isAdmin() ? 0 : good.getCoinCost());
         _good = good;
         _args = args;
     }

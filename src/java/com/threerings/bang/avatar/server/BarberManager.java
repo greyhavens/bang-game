@@ -116,6 +116,12 @@ public class BarberManager extends PlaceManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
+        // if they're an admin, zero out the cost as admins get everything for
+        // free (they're cheeky like that)
+        if (user.tokens.isAdmin()) {
+            cost[0] = cost[1] = 0;
+        }
+
         // copy the articles from their "active" look
         Look current = user.getLook(Look.Pose.DEFAULT);
         if (current != null) {
