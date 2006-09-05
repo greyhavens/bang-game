@@ -59,6 +59,15 @@ public class EditorApp extends JmeCanvasApp
             // two-pass transparency is expensive
             _ctx.getRenderer().getQueue().setTwoPassTransparency(false);
         
+            // queue an update to make sure that the context is current
+            // before the client's event handlers start firing.  somehow
+            // calling repaint() doesn't have the same effect.
+            postRunnable(new Runnable() {
+                public void run () {
+                    _canvas.update(_canvas.getGraphics());
+                }
+            });
+            
             // create and initialize our client instance
             _client = new EditorClient(this, _frame);
 
