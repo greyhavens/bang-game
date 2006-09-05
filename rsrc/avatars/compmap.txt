@@ -1,4 +1,4 @@
-402
+413
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -116,9 +116,11 @@ female/hat := eagle_mask := 349
 female/hat := lioness := 384
 female/hat := longbrim := 130
 female/hat := railbrim := 143
+female/hat := revolutionary := 403
 female/hat := saloon_feather := 398
 female/hat := sombrero := 198
 female/hat := stetson := 110
+female/hat := trickster_raven := 404
 female/hat := war_bonnet := 350
 female/hat_back := bonnet := 199
 female/hat_back := eagle_mask := 351
@@ -127,6 +129,7 @@ female/hat_back := feather_one := 312
 female/hat_back := feather_single := 145
 female/hat_back := feather_two := 313
 female/hat_back := longbrim := 131
+female/hat_back := revolutionary := 405
 female/hat_back := sombrero := 200
 female/hat_back := stetson := 111
 female/hat_back := war_bonnet := 352
@@ -222,10 +225,13 @@ male/clothing_back := fringe := 215
 male/clothing_back := ironplate_poncho := 256
 male/clothing_back := plate_poncho := 216
 male/clothing_back := poncho := 217
+male/clothing_back := revolutionary := 406
 male/clothing_back := shirt_collar := 218
 male/clothing_back := shotgun_fringe := 219
+male/clothing_back := storm_caller := 407
 male/clothing_back := suit := 220
 male/clothing_back := suit_bow := 5
+male/clothing_back := trickster_raven := 408
 male/clothing_back := western_jacket := 22
 male/clothing_back := wolf_spear := 354
 male/clothing_front := cards_suit := 250
@@ -241,8 +247,10 @@ male/clothing_front := rifle_duster := 253
 male/clothing_front := skinny_prospector_beans := 362
 male/clothing_front := skinny_prospector_pick := 363
 male/clothing_front := smoking_fat_suspenders := 321
+male/clothing_front := storm_caller := 409
 male/clothing_front := tlingit_chillkat_blanket := 391
 male/clothing_front := tlingit_dagger := 392
+male/clothing_front := trickster_raven := 410
 male/clothing_front := warrior_pistol := 375
 male/clothing_front := warrior_shield := 376
 male/clothing_front := wolf_hunter := 355
@@ -301,9 +309,11 @@ male/hair_middle := long_messy := 129
 male/hat := buffalo := 356
 male/hat := coonskin := 322
 male/hat := cowboy := 11
+male/hat := revolutionary := 411
 male/hat := sombrero := 258
 male/hat := stetson := 232
 male/hat := ten_gallon := 259
+male/hat := trickster_raven := 412
 male/hat := war_bonnet := 297
 male/hat := widebrim := 44
 male/hat := wolf_mask := 298
@@ -314,6 +324,7 @@ male/hat_back := feather_double := 45
 male/hat_back := feather_one := 294
 male/hat_back := feather_single := 46
 male/hat_back := feather_two := 299
+male/hat_back := revolutionary := 413
 male/hat_back := sombrero := 260
 male/hat_back := stetson := 233
 male/hat_back := ten_gallon := 261
