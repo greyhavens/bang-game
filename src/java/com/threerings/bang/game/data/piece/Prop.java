@@ -198,6 +198,14 @@ public class Prop extends BigPiece
     }
 
     /**
+     * Determines if this piece should be treated as a bonus occupying a tile.
+     */
+    public boolean shadowBonus ()
+    {
+        return false;
+    }
+
+    /**
      * Returns true if it's possible to enter this piece from the direction.
      */
     public boolean canEnter (int dir)

@@ -2506,9 +2506,13 @@ public class BangManager extends GameManager
             ArrayList<Piece> lappers = _bangobj.getOverlappers(piece);
             if (lappers != null) {
                 for (Piece lapper : lappers) {
-                    Effect effect = piece.maybeInteract(lapper);
-                    if (effect != null) {
-                        deployEffect(piece.owner, effect);
+                    Effect[] effects = piece.maybeInteract(_bangobj, lapper);
+                    if (effects != null && effects.length > 0) {
+                        for (Effect effect : effects) {
+                            if (effect != null) {
+                                deployEffect(piece.owner, effect);
+                            }
+                        }
 
                         // small hackery: note that this player collected 
                         // a bonus

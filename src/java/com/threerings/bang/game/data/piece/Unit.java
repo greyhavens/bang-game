@@ -22,6 +22,7 @@ import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
+import com.threerings.bang.game.data.effect.PuntEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.util.PointSet;
 
@@ -157,8 +158,7 @@ public class Unit extends Piece
      */
     public boolean canActivateBonus (Bonus bonus)
     {
-        return isAlive() &&
-            (bonus.getConfig().holdable ?  holding == null : true);
+        return isAlive();
     }
 
     /** Configures the instance after unserialization. */
@@ -296,14 +296,24 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public Effect maybeInteract (Piece other)
+    public Effect[] maybeInteract (BangObject bangobj, Piece other)
     {
-        if (other instanceof Bonus && canActivateBonus((Bonus)other)) {
-            return ((Bonus)other).affect(this);
+        ArrayList<Effect> effects = new ArrayList<Effect>();
+        if (other instanceof Bonus) {
+            Bonus bonus = (Bonus)other;
+            if (canActivateBonus(bonus)) {
+                if (bonus.getConfig().holdable && holding != null) {
+                    effects.add(HoldEffect.dropBonus(
+                            bangobj, this, -1, holding)); 
+                }
+                effects.add(bonus.affect(this));
+            } else if (!bonus.getConfig().hidden) {
+                effects.add(PuntEffect.puntBonus(bangobj, bonus, pieceId));
+            }
         } else if (other instanceof Teleporter) {
-            return ((Teleporter)other).affect(this);
+            effects.add(((Teleporter)other).affect(this));
         }
-        return super.maybeInteract(other);
+        return effects.toArray(new Effect[effects.size()]);
     }
 
     @Override // documentation inherited

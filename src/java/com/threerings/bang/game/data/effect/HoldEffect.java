@@ -64,7 +64,6 @@ public class HoldEffect extends BonusEffect
                 "[unit=" + unit + ", type=" + type + "].");
             return null;
         }
-
         try {
             HoldEffect effect = (HoldEffect)Class.forName(
                     bonus.getConfig().effectClass).newInstance();
@@ -106,13 +105,14 @@ public class HoldEffect extends BonusEffect
     {
         super.prepare(bangobj, dammap);
 
-        Unit unit = (Unit)bangobj.pieces.get(pieceId);
-        if (unit == null) {
-            log.warning("Missing unit for hold effect [id=" + pieceId + "].");
-            return;
-        }
-
         if (!dropping) {
+            Unit unit = (Unit)bangobj.pieces.get(pieceId);
+            if (unit == null) {
+                log.warning(
+                        "Missing unit for hold effect [id=" + pieceId + "].");
+                return;
+            }
+
             // mark the target piece as holding now as they may have landed
             // next to an object which will also try to give them a holdable
             // bonus; we'll need to update their holding again in apply to

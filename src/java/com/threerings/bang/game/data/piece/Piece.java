@@ -25,6 +25,8 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.HoldEffect;
+import com.threerings.bang.game.data.effect.PuntEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.util.PointSet;
 
@@ -590,9 +592,16 @@ public abstract class Piece
      * method. An effect should be returned communicating the nature of the
      * interaction.
      */
-    public Effect maybeInteract (Piece other)
+    public Effect[] maybeInteract (BangObject bangobj, Piece other)
     {
-        return null;
+        if (other instanceof Bonus) {
+            Bonus bonus = (Bonus)other;
+            if (!bonus.getConfig().hidden) {
+                return new Effect[] { 
+                    PuntEffect.puntBonus(bangobj, bonus, pieceId) };
+            }
+        }
+        return NO_EFFECTS;
     }
 
     /**

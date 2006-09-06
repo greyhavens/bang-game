@@ -19,6 +19,12 @@ public class Teleporter extends Prop
     {
         return true; // teleporters are always passable
     }
+
+    @Override // documentation inherited
+    public boolean shadowBonus ()
+    {
+        return true;
+    }
     
     /**
      * Called when a piece has landed on this teleporter and is teleporting

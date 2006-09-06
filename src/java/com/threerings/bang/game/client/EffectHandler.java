@@ -574,12 +574,21 @@ public class EffectHandler extends BoardView.BoardAction
     protected void flyDroppedBonus (
         Piece dropper, PieceSprite sprite, final boolean fadeIn)
     {
+        flyDroppedBonus(getHoldingTranslation(dropper), sprite, fadeIn);
+    }
+
+    /**
+     * Flies a dropped bonus from the unit that dropped it to its current
+     * location (optionally fading it in), then bounces it a few times.
+     */
+    protected void flyDroppedBonus (
+        Vector3f htrans, PieceSprite sprite, final boolean fadeIn)
+    {
         if (sprite == null) {
             return;
         }
         final MaterialState mstate =
             (MaterialState)sprite.getRenderState(RenderState.RS_MATERIAL);
-        Vector3f htrans = getHoldingTranslation(dropper);
         BallisticShotHandler.PathParams pparams =
             BallisticShotHandler.computePathParams(
                 htrans, sprite.getWorldTranslation());

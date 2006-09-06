@@ -776,6 +776,9 @@ public class BangBoard extends SimpleStreamableObject
                                 _tstate[idx] = _btstate[idx] = 
                                     (byte)Math.max(O_BRIDGE, _btstate[idx]);
                             }
+                            if (p.shadowBonus()) {
+                                _tstate[idx] = O_BONUS;
+                            }
                             _estate[idx] = (byte)tileelev;
                         }
                     }

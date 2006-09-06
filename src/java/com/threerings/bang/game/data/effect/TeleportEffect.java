@@ -70,8 +70,7 @@ public class TeleportEffect extends Effect
         Teleporter[] group = source.getGroup(bangobj);
         ArrayList<Teleporter> dests = new ArrayList<Teleporter>();
         for (Teleporter tport : group) {
-            if (!tport.equals(source) &&
-                bangobj.board.isOccupiable(tport.x, tport.y)) {
+            if (!tport.equals(source)) {
                 dests.add(tport);
             }
         }
@@ -151,6 +150,12 @@ public class TeleportEffect extends Effect
             _piece.position(dest[0], dest[1]);
             bangobj.board.shadowPiece(_piece);
             obs.pieceMoved(_piece);
+        }
+
+        // Make sure the teleporter maintains the proper board state
+        Teleporter source = (Teleporter)bangobj.pieces.get(sourceId);
+        if (source != null) {
+            bangobj.board.shadowPiece(source);
         }
         return true;
     }

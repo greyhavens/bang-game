@@ -26,6 +26,7 @@ import com.threerings.bang.game.client.sprite.TotemBaseSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.FoolsNuggetEffect;
+import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.TotemEffect;
 import com.threerings.bang.game.data.piece.Bonus;
@@ -40,6 +41,18 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class HoldHandler extends EffectHandler
 {
+    @Override // documentation inherited
+    public boolean execute ()
+    {
+        if (_effect instanceof MoveEffect) {
+            Piece piece = _bangobj.pieces.get(((MoveEffect)_effect).pieceId);
+            if (piece != null) {
+                _dropTrans = getHoldingTranslation(piece);
+            }
+        }
+        return super.execute();
+    }
+
     @Override // documentation inherited
     public void pieceAffected (Piece piece, String effect)
     {
@@ -65,7 +78,16 @@ public class HoldHandler extends EffectHandler
             flyTotem(piece);
         }
     }
-    
+
+    @Override // documentation inherited
+    public void pieceMoved (Piece piece)
+    {
+        super.pieceMoved(piece);
+        if (piece instanceof Bonus && _dropTrans != null) {
+            flyDroppedBonus(_dropTrans, _view.getPieceSprite(piece), false); 
+        }
+    }
+
     @Override // documentation inherited
     public void pieceRemoved (Piece piece)
     {
@@ -228,6 +250,9 @@ public class HoldHandler extends EffectHandler
     
     /** The sprite for the last bonus picked up. */
     protected PieceSprite _pickedUp;
+
+    /** The initial translation for a moved bonus. */
+    protected Vector3f _dropTrans;
     
     /** The duration of the pick-up flight. */
     protected static final float PICK_UP_DURATION = 0.1f;
