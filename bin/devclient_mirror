@@ -27,6 +27,6 @@ $MIRROR $* $ROOT/../threerings/etc/proguard/bang/0.map
 $MIRROR $ROOT/pages/pseditor/*
 
 # mirror some random other pages
-$MIRROR $ROOT/pages/units.html
+$MIRROR $ROOT/pages/units.html $ROOT/pages/boards.html
 
 echo "*** Finished mirror at" `date`
