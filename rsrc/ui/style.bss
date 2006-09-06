@@ -808,7 +808,7 @@ poster_rank_standing_high {
 
 poster_handle_box {
   color: #4a2805;
-  text-align: top;
+  text-align: center;
 }
 
 poster_handle {
