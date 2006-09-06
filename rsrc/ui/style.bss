@@ -840,19 +840,21 @@ poster_edit_view {
 // Friendly Folk styles
 
 folk_view {
-  padding: 20;
+  padding: 0 5;
 }
 
 folk_list_box {
   background: image "ui/saloon/friendlyfolks_box.png";
+  padding: 5 15 5 15;
 }
 
 folk_list_title {
-  font: "Dom Casual" plain 20;
+  font: "Old Town Wide" plain 24;
+  text-align: center;
 }
 
 folk_entry {
-  font: "Dom Casual" plain 14;
+  font: "Dom Casual" plain 18;
 }
 
 //

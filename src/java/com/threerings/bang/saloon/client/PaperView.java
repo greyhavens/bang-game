@@ -79,9 +79,11 @@ public class PaperView extends BContainer
         masthead.add(new BLabel(number, "news_mastlabel"));
 
         masthead.add(createMastheadButton("news"));
+        masthead.add(createMastheadButton("folks"));
         masthead.add(createMastheadButton("top_scores"));
-        masthead.add(createMastheadButton("events"));
-        masthead.add(createMastheadButton("highlights"));
+        // turning these off until they do something
+        // masthead.add(createMastheadButton("events"));
+        // masthead.add(createMastheadButton("highlights"));
 
         masthead.add(new BLabel(_dfmt.format(new Date()), "news_mastlabel"));
         row.add(masthead);
@@ -132,6 +134,16 @@ public class PaperView extends BContainer
             break;
 
         case 1:
+            if (_folks == null) {
+                _folks = new FolkView(_ctx, _salobj);
+            }
+            if (_folks.getParent() == null) {
+                _contcont.removeAll();
+                _contcont.add(_folks, BorderLayout.CENTER);
+            }
+            break;
+            
+        case 2:
             if (_topscore == null) {
                 _topscore = new TopScoreView(_ctx, _salobj);
             }
@@ -143,7 +155,7 @@ public class PaperView extends BContainer
         }
 
         _back.setEnabled(_pageNo > 0);
-        _forward.setEnabled(_pageNo < 1);
+        _forward.setEnabled(_pageNo < 2);
     }
 
     protected void setContents (String contents)
@@ -245,8 +257,10 @@ public class PaperView extends BContainer
                 displayPage(_pageNo-1);
             } else if (action.equals("news")) {
                 displayPage(0);
-            } else if (action.equals("top_scores")) {
+            } else if (action.equals("folks")) {
                 displayPage(1);
+            } else if (action.equals("top_scores")) {
+                displayPage(2);
             }
         }
     };
@@ -257,6 +271,7 @@ public class PaperView extends BContainer
     protected BButton _forward, _back;
     protected BContainer _contcont;
     protected TopScoreView _topscore;
+    protected FolkView _folks;
     protected HTMLView _contents;
 
     protected int _pageNo;
