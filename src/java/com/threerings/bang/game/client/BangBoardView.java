@@ -594,8 +594,13 @@ public class BangBoardView extends BoardView
     {
         super.refreshLights();
         if (_highNoon) {
-            _lights[0].getDirection().set(0f, 0f, -1f);
-            _lights[0].getDiffuse().set(1f, 1f, 1f, 1f);
+            _lights[0].getDirection().set(-0.501f, 0.213f, -0.839f);
+            _lights[0].getDiffuse().set(1f, 1f, 0.8f, 1f);
+            _lights[0].getAmbient().set(0.16f, 0.16f, 0.05f, 1f);
+            
+            _lights[1].getDirection().set(0.9994f, 0f, 0.035f);
+            _lights[1].getDiffuse().set(1f, 0.8f, 0.2f, 1f);
+            _lights[1].getAmbient().set(0.06f, 0.15f, 0.18f, 1f);
         }
         if (_wendigoAmbiance) {
             // Calculate the darkened diffuse color by converting to YUV,
