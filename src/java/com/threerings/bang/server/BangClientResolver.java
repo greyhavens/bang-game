@@ -4,8 +4,11 @@
 package com.threerings.bang.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
+import com.samskivert.util.ArrayUtil;
+import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.crowd.server.CrowdClientResolver;
@@ -19,6 +22,7 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
+import com.threerings.bang.server.persist.FolkRecord;
 import com.threerings.bang.server.persist.PlayerRecord;
 
 /**
@@ -106,6 +110,33 @@ public class BangClientResolver extends CrowdClientResolver
         
         // load up this player's pardners
         BangServer.playmgr.loadPardners(buser);
+        
+        // load this player's friends and foes
+        ArrayList<FolkRecord> folks =
+            BangServer.playrepo.loadOpinions(buser.playerId);
+        int[] friends = new int[folks.size()];
+        int friendIx = 0;
+        int[] foes = new int[folks.size()];
+        int foeIx = 0;
+        for (FolkRecord folk : folks) {
+            if (folk.opinion == FolkRecord.FRIEND) {
+                friends[friendIx ++] = folk.targetId;
+            } else {
+                foes[foeIx ++] = folk.targetId;
+            }
+        }
+        if (friendIx > 0) {
+            buser.friends = ArrayUtil.splice(friends, friendIx);
+            Arrays.sort(buser.friends);
+        } else {
+            buser.friends = new int[0];
+        }
+        if (foeIx > 0) {
+            buser.foes = ArrayUtil.splice(foes, foeIx);
+            Arrays.sort(buser.foes);
+        } else {
+            buser.foes = new int[0];
+        }
     }
 
     protected static HashMap<String,PlayerRecord> _pstash =
