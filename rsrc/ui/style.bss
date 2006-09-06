@@ -778,10 +778,6 @@ poster_view {
   background: image "ui/wanted/background.png" centerxy;
 }
 
-poster_avatar {
-  background: image "ui/wanted/sepia_avatar.png" scalexy;
-}
-
 poster_rankings_box {
   text-align: center;
 }
@@ -838,6 +834,25 @@ poster_edit_popup {
 }
 
 poster_edit_view { 
+}
+
+//
+// Friendly Folk styles
+
+folk_view {
+  padding: 20;
+}
+
+folk_list_box {
+  background: image "ui/saloon/friendlyfolks_box.png";
+}
+
+folk_list_title {
+  font: "Dom Casual" plain 20;
+}
+
+folk_entry {
+  font: "Dom Casual" plain 14;
 }
 
 //

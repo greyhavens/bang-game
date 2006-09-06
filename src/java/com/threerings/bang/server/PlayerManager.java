@@ -567,7 +567,7 @@ public class PlayerManager
         throws InvocationException
     {
         // check the cache for previously generated posters
-        SoftReference<PosterInfo> infoRef = posterCache.get(handle);
+        SoftReference<PosterInfo> infoRef = _posterCache.get(handle);
         PosterInfo tmpInfo = null;
         if (infoRef != null) {
             tmpInfo = infoRef.get();
@@ -629,7 +629,7 @@ public class PlayerManager
             }
             public void handleSuccess() {
                 // cache the result
-                posterCache.put(handle, new SoftReference<PosterInfo>(info));
+                _posterCache.put(handle, new SoftReference<PosterInfo>(info));
                 // and return it
                 listener.requestProcessed(info);
             }
@@ -640,7 +640,7 @@ public class PlayerManager
         });
     }
 
-    protected StreamableHashMap<String, Integer> buildRankings(
+    protected StreamableHashMap<String, Integer> buildRankings (
         Iterator<Rating> ratings)
     {
         StreamableHashMap<String, Integer> map =
@@ -651,7 +651,11 @@ public class PlayerManager
             int percentile =
                 (100 * (rating.rating - Rating.MINIMUM_RATING - 1)) /
                 (Rating.MAXIMUM_RATING - Rating.MINIMUM_RATING);
-            map.put(rating.scenario, Integer.valueOf(percentile));
+            int rank = _rankLevels.length;
+            while (rank > 0 && percentile <= _rankLevels[rank-1]) {
+                rank --;
+            }
+            map.put(rating.scenario, Integer.valueOf(rank));
         }
         return map;
     }
@@ -674,7 +678,7 @@ public class PlayerManager
         BangServer.invoker.postUnit(new PersistingUnit(cl) {
             public void invokePersistent() throws PersistenceException {
                 _postrepo.storePoster(poster);
-                posterCache.remove(((PlayerObject) caller).handle);
+                _posterCache.remove(((PlayerObject) caller).handle);
             }
             public void handleSuccess() {
                 cl.requestProcessed();
@@ -1020,7 +1024,10 @@ public class PlayerManager
         new HashMap<InviteKey, Invite>();
 
     /** A light-weight cache of soft {@link PosterInfo} references. */
-    protected Map<Handle, SoftReference<PosterInfo>> posterCache =
+    protected Map<Handle, SoftReference<PosterInfo>> _posterCache =
         new HashMap<Handle, SoftReference<PosterInfo>>();
+    
+    /** The levels to map ratings to ranks, implicitly bounded by 0 and 100 */
+    protected int[] _rankLevels = new int[] { 50, 65, 75, 85, 90, 95, 98 };
 }
 
