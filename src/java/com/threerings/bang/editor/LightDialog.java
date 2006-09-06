@@ -46,11 +46,9 @@ public class LightDialog extends JDialog
             center.add(_lpanels[i] = new LightPanel(i));
         }
         
-        JPanel spanel = new JPanel();
-        spanel.add(new JLabel(_ctx.xlate("editor", "m.shadow_intensity")));
-        spanel.add(_shadow = new JSlider(0, 100, 100));
+        center.add(_shadow = new ValuePanel(_ctx.xlate("editor",
+            "m.shadow_intensity"), 0, 100, 100));
         _shadow.addChangeListener(this);
-        center.add(spanel);
         
         getContentPane().add(center, BorderLayout.CENTER);
         
@@ -64,7 +62,7 @@ public class LightDialog extends JDialog
         buttons.add(dismiss);
         getContentPane().add(buttons, BorderLayout.SOUTH);
         
-        setSize(350, 450);
+        setSize(425, 450);
         setResizable(false);
     }
     
@@ -159,5 +157,5 @@ public class LightDialog extends JDialog
     protected LightPanel[] _lpanels;
     
     /** The shadow intensity slider. */
-    protected JSlider _shadow;
+    protected ValuePanel _shadow;
 }

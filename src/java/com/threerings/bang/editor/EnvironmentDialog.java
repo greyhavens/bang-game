@@ -51,11 +51,9 @@ public class EnvironmentDialog extends JDialog
         center.add(_fogColor = new ColorPanel(ctx, "m.fog_color"));
         _fogColor.addChangeListener(this);
         
-        dpanel = new JPanel();
-        dpanel.add(new JLabel(_ctx.xlate("editor", "m.fog_density")));
-        dpanel.add(_fogDensity = new JSlider(0, 100, 0));
+        center.add(_fogDensity = new ValuePanel(_ctx.xlate("editor",
+            "m.fog_density"), 0, 100, 0));
         _fogDensity.addChangeListener(this);
-        center.add(dpanel);
         
         getContentPane().add(center, BorderLayout.CENTER);
         
@@ -69,7 +67,7 @@ public class EnvironmentDialog extends JDialog
         buttons.add(dismiss);
         getContentPane().add(buttons, BorderLayout.SOUTH);
         
-        setSize(350, 200);
+        setSize(400, 200);
         setResizable(false);
     }
     
@@ -119,5 +117,5 @@ public class EnvironmentDialog extends JDialog
     public ColorPanel _fogColor;
     
     /** The fog density slider. */
-    protected JSlider _fogDensity;
+    protected ValuePanel _fogDensity;
 }
