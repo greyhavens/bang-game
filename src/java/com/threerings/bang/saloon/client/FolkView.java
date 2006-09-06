@@ -58,15 +58,29 @@ public class FolkView extends BContainer
         folkListBox.add(new BScrollPane(_folkList), BorderLayout.CENTER);
 
         // TODO: add chat view here
+	}
+    
+    @Override // from BContainer
+    protected void wasAdded ()
+    {
+        super.wasAdded();
         
         // register as a listener for friends and pardners updates
         _user.addListener(this);
         // register as a listener for saloon occupant updates
         _salobj.addListener(this);
-
         // fill the list with initial data
         recomputeList();
-	}
+    }
+    
+    @Override // from BContainer
+    protected void wasRemoved()
+    {
+        super.wasRemoved();
+        
+        _user.removeListener(this);
+        _salobj.removeListener(this);
+    }
 
     // from interface SetListener
     public void entryAdded (EntryAddedEvent eae)
