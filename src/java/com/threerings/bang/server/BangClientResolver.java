@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.RandomUtil;
@@ -114,29 +115,14 @@ public class BangClientResolver extends CrowdClientResolver
         // load this player's friends and foes
         ArrayList<FolkRecord> folks =
             BangServer.playrepo.loadOpinions(buser.playerId);
-        int[] friends = new int[folks.size()];
-        int friendIx = 0;
-        int[] foes = new int[folks.size()];
-        int foeIx = 0;
+        ArrayIntSet friends = new ArrayIntSet(), foes = new ArrayIntSet();
         for (FolkRecord folk : folks) {
-            if (folk.opinion == FolkRecord.FRIEND) {
-                friends[friendIx ++] = folk.targetId;
-            } else {
-                foes[foeIx ++] = folk.targetId;
-            }
+            (folk.opinion == FolkRecord.FRIEND ? friends : foes).add(
+                folk.targetId);
         }
-        if (friendIx > 0) {
-            buser.friends = ArrayUtil.splice(friends, friendIx);
-            Arrays.sort(buser.friends);
-        } else {
-            buser.friends = new int[0];
-        }
-        if (foeIx > 0) {
-            buser.foes = ArrayUtil.splice(foes, foeIx);
-            Arrays.sort(buser.foes);
-        } else {
-            buser.foes = new int[0];
-        }
+        // toIntArray() returns a sorted array
+        buser.friends = friends.toIntArray();
+        buser.foes = foes.toIntArray(); 
     }
 
     protected static HashMap<String,PlayerRecord> _pstash =
