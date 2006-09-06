@@ -27,6 +27,7 @@ public class PuntEffect extends MoveEffect
         if (spot == null) {
             log.warning("Unable to find spot to punt bonus " +
                     "[bonus=" + bonus + "].");
+            return null;
         }
         PuntEffect effect = new PuntEffect();
         effect.init(bonus);

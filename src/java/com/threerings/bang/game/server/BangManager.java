@@ -68,6 +68,7 @@ import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.AdjustTickEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.MoveShootEffect;
 import com.threerings.bang.game.data.effect.PlayCardEffect;
@@ -2509,19 +2510,22 @@ public class BangManager extends GameManager
                     Effect[] effects = piece.maybeInteract(_bangobj, lapper);
                     if (effects != null && effects.length > 0) {
                         for (Effect effect : effects) {
-                            if (effect != null) {
-                                deployEffect(piece.owner, effect);
+                            if (effect == null) {
+                                continue;
+                            }
+                            deployEffect(piece.owner, effect);
+                            // small hackery: note that this player collected 
+                            // a bonus
+                            if (effect instanceof HoldEffect &&
+                                ((HoldEffect)effect).dropping == false &&
+                                lapper instanceof Bonus &&
+                                !((Bonus)lapper).isScenarioBonus() &&
+                                piece.owner != -1) {
+                                _bangobj.stats[piece.owner].incrementStat(
+                                    Stat.Type.BONUSES_COLLECTED, 1);
                             }
                         }
 
-                        // small hackery: note that this player collected 
-                        // a bonus
-                        if (lapper instanceof Bonus &&
-                            !((Bonus)lapper).isScenarioBonus() &&
-                            piece.owner != -1) {
-                            _bangobj.stats[piece.owner].incrementStat(
-                                Stat.Type.BONUSES_COLLECTED, 1);
-                        }
                     }
                 }
             }
