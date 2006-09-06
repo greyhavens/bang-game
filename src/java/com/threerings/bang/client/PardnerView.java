@@ -147,20 +147,26 @@ public class PardnerView extends IconPalette
     // documentation inherited from interface SetListener
     public void entryAdded (EntryAddedEvent eae)
     {
-        new PardnerIcon((PardnerEntry)eae.getEntry()).insert();
+        if (PlayerObject.PARDNERS.equals(eae.getName())) {
+            new PardnerIcon((PardnerEntry)eae.getEntry()).insert();
+        }
     }
 
     // documentation inherited from interface SetListener
     public void entryRemoved (EntryRemovedEvent ere)
     {
-        _picons.get(ere.getKey()).remove();
+        if (PlayerObject.PARDNERS.equals(ere.getName())) {
+            _picons.get(ere.getKey()).remove();
+        }
     }
 
     // documentation inherited from interface SetListener
     public void entryUpdated (EntryUpdatedEvent eue)
     {
-        PardnerEntry entry = (PardnerEntry)eue.getEntry();
-        _picons.get(entry.getKey()).update(entry);
+        if (PlayerObject.PARDNERS.equals(eue.getName())) {
+            PardnerEntry entry = (PardnerEntry)eue.getEntry();
+            _picons.get(entry.getKey()).update(entry);
+        }
     }
 
     @Override // documentation inherited
