@@ -136,7 +136,7 @@ public class PieceSprite extends Sprite
         }
 
         // don't create collision trees when not necessary
-        if (!view.isHoverable(this)) {
+        if (!view.isHoverable(this) && !view.hasTooltip(this)) {
             setIsCollidable(false);
         }
         
@@ -280,15 +280,25 @@ public class PieceSprite extends Sprite
     }
 
     /**
-     * Returns true if this sprite can be hovered over with the mouse, which
-     * will display contextual help. We provide this method instead of calling
-     * <code>getHelpIdent() != null</code> because the latter may create a
-     * string object and we don't want to create a bunch of garbage when hit
-     * testing numerous sprites every time the mouse is moved.
+     * Returns true if this sprite can be hovered over with the mouse, usually
+     * in preparation for a selection of some kind.
      */
     public boolean isHoverable ()
     {
         return false;
+    }
+    
+    /**
+     * Returns true if this sprite has a tooltip for display.  We provide this
+     * method instead of calling <code>getHelpIdent() != null</code> because
+     * the latter may create a string object and we don't want to create a
+     * bunch of garbage when hit testing numerous sprites every time the mouse
+     * is moved.
+     */
+    public boolean hasTooltip ()
+    {
+        // as a general rule, everything hoverable has a tooltip
+        return isHoverable();
     }
     
     /**

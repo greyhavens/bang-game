@@ -88,6 +88,12 @@ public class UnitSprite extends MobileSprite
     }
     
     @Override // documentation inherited
+    public boolean isHoverable ()
+    {
+        return true;
+    }
+    
+    @Override // documentation inherited
     public void setHovered (boolean hovered)
     {
         if (_hovered != hovered) {

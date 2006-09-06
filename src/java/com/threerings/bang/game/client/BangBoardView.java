@@ -494,6 +494,13 @@ public class BangBoardView extends BoardView
         return false;
     }
 
+    @Override // documentation inherited
+    public boolean hasTooltip (Sprite sprite)
+    {
+        return (sprite instanceof PieceSprite &&
+            ((PieceSprite)sprite).hasTooltip());
+    }
+    
     /**
      * Checks whether the board is in "high noon" mode.
      */
@@ -744,14 +751,14 @@ public class BangBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    protected void hoverSpriteChanged (Sprite hover)
+    protected void hoverSpritesChanged (Sprite hover, Sprite thover)
     {
         // if we were hovering over a unit, clear its hover state
         if (_hover instanceof UnitSprite) {
             ((UnitSprite)_hover).setHovered(false);
         }
 
-        super.hoverSpriteChanged(hover);
+        super.hoverSpritesChanged(hover, thover);
 
         // if we're hovering over a unit we can click, mark it as such
         if (hover instanceof UnitSprite) {
@@ -765,10 +772,24 @@ public class BangBoardView extends BoardView
 
         highlightPossibleAttacks();
 
+        // update tile highlights for card placement
+        if (_card != null && 
+            _card.getPlacementMode() == Card.PlacementMode.VS_PIECE) {
+            if (hover instanceof PieceSprite) {
+                Piece piece = ((PieceSprite)hover).getPiece();
+                clearHighlights();
+                _attackSet.clear();
+                _attackSet.add(piece.x, piece.y);
+                targetTiles(_attackSet, _card.isValidPiece(_bangobj, piece));
+            } else {
+                updatePlacingCard(_mouse.x, _mouse.y);
+            }
+        }
+        
         // display contextual help on units and other special sprites
         _tiptext = null;
-        if (hover instanceof PieceSprite) {
-            String item = ((PieceSprite)hover).getHelpIdent(_pidx);
+        if (thover instanceof PieceSprite) {
+            String item = ((PieceSprite)thover).getHelpIdent(_pidx);
             if (item != null) {
                 if (item.startsWith("unit_")) {
                     String type = item.substring(5);
@@ -779,29 +800,14 @@ public class BangBoardView extends BoardView
                 } else {
                     item = "m.help_" + item;
                     String title =
-                        ((PieceSprite)hover).getHelpTitleIdent(_pidx);
+                        ((PieceSprite)thover).getHelpTitleIdent(_pidx);
                     String msg = MessageBundle.compose(
                         "m.help_tip", "m.help_" + title, item);
                     _tiptext = _ctx.xlate(GameCodes.GAME_MSGS, msg);
                 }
             }
-            Piece piece;
-            if (_card != null && 
-                    _card.getPlacementMode() == Card.PlacementMode.VS_PIECE) {
-                piece = ((PieceSprite)hover).getPiece();
-                clearHighlights();
-                _attackSet.clear();
-                _attackSet.add(piece.x, piece.y);
-                targetTiles(_attackSet, _card.isValidPiece(_bangobj, piece));
-            }
-
-        // If we just stopped hovering over a sprite, possibly update the tile
-        // location for a card placement
-        } else if (_card != null &&
-                _card.getPlacementMode() == Card.PlacementMode.VS_PIECE) {
-            updatePlacingCard(_mouse.x, _mouse.y);
         }
-
+        
         // force an update to the tooltip window as we're one big window with
         // lots of different tips
         _ctx.getRootNode().tipTextChanged(this);

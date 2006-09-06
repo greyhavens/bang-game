@@ -808,8 +808,8 @@ public class BoardView extends BComponent
             return;
         }
 
-        // update the sprite over which the mouse is hovering
-        updateHoverSprite();
+        // update the sprites over which the mouse is hovering
+        updateHoverSprites();
 
         // if we have highlight tiles, determine which of those the mouse
         // is over
@@ -826,6 +826,14 @@ public class BoardView extends BComponent
         return (sprite != null);
     }
 
+    /**
+     * Determines whether the given sprite has a tooltip to display.
+     */
+    public boolean hasTooltip (Sprite sprite)
+    {
+        return false;
+    }
+    
     /**
      * Given a mouse event, returns the point at which a ray cast from the
      * eye through the mouse pointer intersects the ground.
@@ -1349,35 +1357,41 @@ public class BoardView extends BComponent
     }
 
     /**
-     * Updates the sprite that the mouse is "hovering" over (the one nearest to
-     * the camera that is hit by the ray projecting from the camera to the
-     * ground plane at the current mouse coordinates, if present, or any
-     * hoverable sprite occupying the hover tile).
+     * Updates the sprites that the mouse is "hovering" over (the ones nearest
+     * to the camera that are hit by the ray projecting from the camera to the
+     * ground plane at the current mouse coordinates).  Instead of or in
+     * addition to the primary hover sprite, there may be a sprite that has a
+     * tooltip but is not specifically marked as hoverable.
      */
-    protected void updateHoverSprite ()
+    protected void updateHoverSprites ()
     {
         Vector3f camloc = _ctx.getCameraHandler().getCamera().getLocation();
         _pick.clear();
         _pnode.findPick(new Ray(camloc, _worldMouse), _pick);
-        float dist = Float.MAX_VALUE;
-        Sprite hit = null;
+        float dist = Float.MAX_VALUE, tdist = Float.MAX_VALUE;
+        Sprite hit = null, thit = null;
         for (int ii = 0; ii < _pick.getNumber(); ii++) {
             PickData pdata = _pick.getPickData(ii);
             if (notReallyAHit(pdata)) {
                 continue;
             }
             Sprite s = getPieceSprite(pdata.getTargetMesh().getParentGeom());
-            if (!isHoverable(s)) {
+            boolean hoverable = isHoverable(s), tooltip = hasTooltip(s);
+            if (!hoverable && !tooltip) {
                 continue;
             }
             float sdist = camloc.distanceSquared(s.getWorldTranslation());
-            if (sdist < dist) {
+            if (sdist < dist && hoverable) {
                 hit = s;
                 dist = sdist;
             }
+            if (sdist < tdist && tooltip) {
+                thit = s;
+                tdist = sdist;
+            }
         }
-        if (hit != _hover) {
-            hoverSpriteChanged(hit);
+        if (hit != _hover || thit != _thover) {
+            hoverSpritesChanged(hit, thit);
         }
     }
 
@@ -1445,15 +1459,20 @@ public class BoardView extends BComponent
     }
 
     /**
-     * This is called when the mouse is moved to hover over a different
-     * sprite (or none at all).
+     * This is called when the mouse is moved to hover over different
+     * sprites (or none at all).
+     *
+     * @param hover the sprite over which the mouse is hovering
+     * @param thover the tooltip-enabled sprite over which the mouse
+     * is hovering
      */
-    protected void hoverSpriteChanged (Sprite hover)
+    protected void hoverSpritesChanged (Sprite hover, Sprite thover)
     {
         if (hover != null) {
             hoverHighlightChanged(null);
         }
         _hover = hover;
+        _thover = thover;
     }
 
     /**
@@ -1745,7 +1764,7 @@ public class BoardView extends BComponent
     protected Vector3f _worldMouse;
     protected Ray _pray = new Ray();
     protected TrianglePickResults _pick = new TrianglePickResults();
-    protected Sprite _hover;
+    protected Sprite _hover, _thover;
 
     protected ArrayList<BoardAction> _ractions = new ArrayList<BoardAction>();
     protected ArrayList<BoardAction> _pactions = new ArrayList<BoardAction>();

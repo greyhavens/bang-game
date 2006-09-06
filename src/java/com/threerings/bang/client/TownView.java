@@ -242,7 +242,7 @@ public class TownView extends BWindow
                         enterBuilding(((Prop)_hsprite.getPiece()).getType());
                         // clear out the hover sprite so that we don't booch it
                         // if we double click
-                        hoverSpriteChanged(null);
+                        hoverSpritesChanged(null, null);
                     } else if (_ctx.getCameraHandler().cameraIsMoving()) {
                         _ctx.getCameraHandler().skipPath();
                     }
@@ -402,7 +402,7 @@ public class TownView extends BWindow
                 !((Viewpoint)_vpsprite.getPiece()).name.equals("main")) {
                 // clear out any hover sprite that was established in the
                 // moment before we start our cinematic entrance
-                hoverSpriteChanged(null);
+                hoverSpritesChanged(null, null);
                 // sweep the camera from the aerial viewpoint to the main
                 moveToViewpoint("main", 4f);
 
@@ -412,14 +412,14 @@ public class TownView extends BWindow
                     new CameraPath.Observer() {
                         public boolean pathCompleted (CameraPath path) {
                             finishedIntroPan();
-                            hoverSpriteChanged(_hover);
+                            hoverSpritesChanged(_hover, _thover);
                             return false; // removes our observer
                         }
                     });
 
             } else {
                 finishedIntroPan();
-                hoverSpriteChanged(_hover);
+                hoverSpritesChanged(_hover, _thover);
             }
         }
 
@@ -430,9 +430,9 @@ public class TownView extends BWindow
         }
 
         @Override // documentation inherited
-        protected void hoverSpriteChanged (Sprite hover)
+        protected void hoverSpritesChanged (Sprite hover, Sprite thover)
         {
-            super.hoverSpriteChanged(hover);
+            super.hoverSpritesChanged(hover, thover);
 
             // clear our previous highlight
             if (_hsprite != null) {

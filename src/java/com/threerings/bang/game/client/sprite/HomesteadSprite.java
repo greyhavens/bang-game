@@ -26,6 +26,12 @@ public class HomesteadSprite extends ActiveSprite
     }
     
     @Override // documentation inherited
+    public boolean isHoverable ()
+    {
+        return true;
+    }
+    
+    @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {
         String prefix = (pidx == _powner) ?

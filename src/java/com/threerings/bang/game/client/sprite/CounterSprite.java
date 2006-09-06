@@ -33,15 +33,15 @@ public class CounterSprite extends PropSprite
     }
 
     @Override // documentation inherited
+    public boolean hasTooltip ()
+    {
+        return true;
+    }
+    
+    @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {
         return (pidx == _piece.owner ? "own_" : "other_") + _config.type;
-    }
-
-    @Override // documentation inherited
-    public boolean isHoverable ()
-    {
-        return true;
     }
 
     @Override // documentation inherited

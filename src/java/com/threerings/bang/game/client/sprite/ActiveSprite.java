@@ -113,7 +113,7 @@ public class ActiveSprite extends PieceSprite
     }
 
     @Override // documentation inherited
-    public boolean isHoverable ()
+    public boolean hasTooltip ()
     {
         return true;
     }

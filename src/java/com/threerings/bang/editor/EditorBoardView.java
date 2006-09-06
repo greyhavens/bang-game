@@ -1036,9 +1036,9 @@ public class EditorBoardView extends BoardView
     }
 
     @Override // documentation inherited
-    protected void hoverSpriteChanged (Sprite hover)
+    protected void hoverSpritesChanged (Sprite hover, Sprite thover)
     {
-        super.hoverSpriteChanged(hover);
+        super.hoverSpritesChanged(hover, thover);
         _panel.tools.getActiveTool().hoverSpriteChanged(hover);
     }
 
