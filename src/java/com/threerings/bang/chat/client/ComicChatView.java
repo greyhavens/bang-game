@@ -31,18 +31,15 @@ import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.ResultListener;
-import com.threerings.util.Name;
 
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.avatar.client.AvatarView;
-import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.PlayerPopupMenu;
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 // this seems strange but we need it so that we can use our own inner class to
@@ -376,8 +373,8 @@ public abstract class ComicChatView
 
         public void requestCompleted (BImage image)
         {
+            _avicon = new ImageIcon(image);
             if (_penders != null) {
-                _avicon = new ImageIcon(image);
                 for (BLabel label : _penders) {
                     label.setIcon(_avicon);
                 }
