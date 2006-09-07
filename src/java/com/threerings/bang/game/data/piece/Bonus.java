@@ -20,6 +20,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.BonusEffect;
 
 import static com.threerings.bang.Log.log;
@@ -182,6 +183,13 @@ public class Bonus extends Piece
                     "[class=" + _config.effectClass + "].", e);
             return null;
         }
+    }
+
+    @Override // documentation inherited
+    public int computeElevation (
+            BangBoard board, int tx, int ty, boolean moving)
+    {
+        return board.getElevation(tx, ty);
     }
 
     @Override // documentation inherited
