@@ -1,0 +1,842 @@
+<?xml version="1.0" standalone="yes"?>
+
+<animation frameRate="30">
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 42.0289" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.686784, -0.304752, 0.526988, -0.397161" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509647" rotation="0.700992, 0.0918019, -0.0927903, 0.701122" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707106, 0.000699989, 0.000700326, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.336886, 0.460618, -0.194501, 0.797814" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748424" rotation="0.702894, 0.0967682, -0.0878198, 0.699188" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.702183, 0.0833026, -0.101274, 0.699817" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.34234, 0.459276, 0.19765, 0.79549" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899111" rotation="0.697286, 0.083341, -0.101234, 0.704697" scale="0.830386, 0.999999, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.70065, 0.0953428, -0.0892472, 0.701452" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.687726, 0.303499, 0.527711, 0.395527" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515695" rotation="0.700902, 0.0911235, -0.0934681, 0.701211" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687034, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000254219, 0.0775683, -0.00327961, 0.996982" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864837" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.503861, 0.49958, -0.496123, 0.500405" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.588822, -0.391521, -0.530579, -0.467425" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.562622, -0.373581, -0.553687, -0.48716" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.502365, 0.499844, -0.49763, 0.500151" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="-0.48487, -0.555409, -0.376604, 0.560885" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="-0.465028, -0.532681, -0.394172, 0.587051" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.76689, -0.00611088, 0.641708, -0.00730304" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 41.9841" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.687037, -0.304564, 0.526649, -0.397317" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509647" rotation="0.700967, 0.0919954, -0.0929837, 0.701097" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707106, 0.000866085, 0.000534221, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.336952, 0.460366, -0.194399, 0.797957" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748434" rotation="0.702883, 0.0968505, -0.0879028, 0.699177" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.702159, 0.083469, -0.101441, 0.699797" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.342406, 0.459026, 0.197546, 0.795631" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899092" rotation="0.697276, 0.0834232, -0.101317, 0.704686" scale="0.830386, 1.0, 0.999999"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.700631, 0.0954784, -0.089383, 0.701435" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.687952, 0.303331, 0.52741, 0.395665" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515696" rotation="0.700873, 0.0913509, -0.0936952, 0.70118" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687033, -0.00687032, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000279431, 0.0700816, -0.0032853, 0.997536" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1334, 0.151455, -0.864837" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.506264, 0.498874, -0.493695, 0.501085" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="-0.536737, 0.444837, 0.486747, 0.526413" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="-0.508618, 0.429411, 0.511604, 0.543301" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.504171, 0.499509, -0.495811, 0.500473" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="-0.42357, -0.59174, -0.31647, 0.608505" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="-0.401117, -0.570965, -0.336332, 0.632443" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.767088, -0.00611357, 0.641471, -0.00730984" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 41.8577" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.68775, -0.304032, 0.525695, -0.397756" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509646" rotation="0.700895, 0.09254, -0.0935279, 0.701024" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707105, 0.00133348, 6.68239e-005, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.337138, 0.459655, -0.19411, 0.798358" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748411" rotation="0.70285, 0.0970821, -0.0881365, 0.699148" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.702091, 0.0839375, -0.10191, 0.699741" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.342594, 0.458323, 0.197254, 0.796028" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899144" rotation="0.697247, 0.0836547, -0.101551, 0.704653" scale="0.830386, 0.999999, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.700579, 0.0958599, -0.0897649, 0.701386" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.688588, 0.302859, 0.526561, 0.396052" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515693" rotation="0.700789, 0.0919906, -0.0943341, 0.701094" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687033, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000304627, 0.0625908, -0.00329081, 0.998034" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.86484" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.508971, 0.497615, -0.490942, 0.502298" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="-0.478772, 0.493279, 0.437583, 0.579634" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="-0.449041, 0.480536, 0.463915, 0.59349" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.506194, 0.4989, -0.493766, 0.50106" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="-0.357601, -0.621595, -0.252842, 0.649471" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="-0.332811, -0.602993, -0.274808, 0.670907" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.767647, -0.00612035, 0.640802, -0.00732836" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 41.6625" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.68885, -0.303206, 0.524219, -0.398429" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509646" rotation="0.700784, 0.0933814, -0.0943689, 0.700912" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707104, 0.00205582, -0.000655523, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.337424, 0.458557, -0.193661, 0.798979" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748465" rotation="0.7028, 0.09744, -0.0884975, 0.699103" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701985, 0.0846614, -0.102636, 0.699654" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.342881, 0.457234, 0.196801, 0.796642" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899095" rotation="0.697203, 0.0840124, -0.101913, 0.704602" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.700498, 0.0964495, -0.0903552, 0.70131" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.68957, 0.302126, 0.525248, 0.396646" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515694" rotation="0.700659, 0.0929792, -0.0953213, 0.700961" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687034, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000316075, 0.0591848, -0.00329325, 0.998242" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864839" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.511719, 0.495726, -0.488124, 0.504117" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="-0.415561, 0.536316, 0.383624, 0.626504" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="-0.384544, 0.526396, 0.411144, 0.637176" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.508332, 0.497961, -0.491594, 0.501965" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="-0.287688, -0.644637, -0.18642, 0.68332" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="-0.260859, -0.628415, -0.210272, 0.70202" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.768508, -0.00612888, 0.639768, -0.00735497" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 41.4109" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.690268, -0.302135, 0.522315, -0.399289" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509646" rotation="0.700638, 0.0944656, -0.0954524, 0.700765" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.7071, 0.00298675, -0.00158645, 0.707105" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.337787, 0.457139, -0.193079, 0.799778" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748467" rotation="0.702735, 0.0979011, -0.0889628, 0.699045" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701847, 0.0855942, -0.103571, 0.69954" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.343246, 0.455831, 0.196213, 0.797434" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899118" rotation="0.697145, 0.0844732, -0.102379, 0.704537" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.700393, 0.0972092, -0.0911157, 0.701212" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.690834, 0.301176, 0.523555, 0.397405" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515695" rotation="0.700489, 0.0942529, -0.0965933, 0.700786" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687033, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000313183, 0.0600454, -0.00329264, 0.99819" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864837" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.514257, 0.493239, -0.485492, 0.50651" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="-0.347797, 0.573478, 0.325462, 0.66651" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="-0.315835, 0.566488, 0.353869, 0.673882" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.510482, 0.496663, -0.489396, 0.503215" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="-0.214601, -0.660606, -0.117938, 0.709674" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="-0.186049, -0.646952, -0.143433, 0.725442" scale="0.973926, 0.973926, 0.810866"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.769617, -0.00613629, 0.638434, -0.0073857" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 41.1154" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.691931, -0.300868, 0.520077, -0.400288" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509646" rotation="0.700466, 0.0957384, -0.0967246, 0.70059" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707095, 0.00407991, -0.00267961, 0.707102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.338207, 0.455472, -0.192391, 0.800717" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.074842" rotation="0.702659, 0.0984426, -0.0895092, 0.698976" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701684, 0.0866892, -0.104669, 0.699406" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.343669, 0.45418, 0.195518, 0.798364" scale="1.20426, 1.0, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899148" rotation="0.697077, 0.0850143, -0.102927, 0.704459" scale="0.830386, 0.999999, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.700269, 0.0981011, -0.0920087, 0.701095" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.692318, 0.300054, 0.521565, 0.398288" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515693" rotation="0.700287, 0.0957482, -0.0980865, 0.700578" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000305009, 0.0624773, -0.00329089, 0.998041" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1334, 0.151455, -0.864838" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.516382, 0.490305, -0.483253, 0.50933" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="-0.276223, 0.604356, 0.263734, 0.699213" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="-0.243665, 0.600374, 0.292716, 0.703204" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.51254, 0.495014, -0.487277, 0.504803" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="-0.139151, -0.669321, -0.0481539, 0.728236" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="-0.109201, -0.658401, -0.0750225, 0.740915" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.770916, -0.00613982, 0.636864, -0.00741671" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 40.7887" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.693769, -0.299455, 0.517597, -0.401379" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509645" rotation="0.700272, 0.0971459, -0.0981312, 0.700394" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707087, 0.00528894, -0.00388865, 0.707096" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.338663, 0.453626, -0.191624, 0.801755" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748424" rotation="0.702573, 0.0990414, -0.0901134, 0.6989" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701502, 0.0879, -0.105884, 0.699255" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.344129, 0.452352, 0.194743, 0.799392" scale="1.20426, 1.0, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899133" rotation="0.697001, 0.0856127, -0.103533, 0.704373" scale="0.830386, 0.999999, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.70013, 0.0990876, -0.0929964, 0.700965" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.693958, 0.298803, 0.51936, 0.399254" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515695" rotation="0.700059, 0.0974016, -0.0997376, 0.700345" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687033, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000292305, 0.0662554, -0.00328814, 0.997797" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864837" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.517975, 0.487174, -0.481534, 0.512336" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="-0.201622, 0.628613, 0.199117, 0.724256" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="-0.168825, 0.627682, 0.228356, 0.724822" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.514414, 0.493055, -0.485328, 0.506687" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="-0.0621729, -0.670685, 0.022159, 0.7388" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="-0.031156, -0.662636, -0.00578996, 0.748271" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.772349, -0.00613739, 0.635125, -0.00744448" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 40.4431" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.69571, -0.297948, 0.51497, -0.402517" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509648" rotation="0.700064, 0.0986338, -0.0996182, 0.700184" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707076, 0.00656748, -0.00516721, 0.707088" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.339137, 0.45167, -0.190805, 0.802854" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748421" rotation="0.702483, 0.0996745, -0.0907522, 0.698818" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701307, 0.08918, -0.107167, 0.699093" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.344606, 0.450417, 0.193916, 0.80048" scale="1.20426, 1.0, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899088" rotation="0.69692, 0.0862456, -0.104173, 0.704281" scale="0.830386, 1.0, 0.999999"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699981, 0.10013, -0.0940404, 0.700825" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.695691, 0.29747, 0.517025, 0.400263" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515693" rotation="0.699814, 0.0991494, -0.101483, 0.700094" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.00027582, 0.0711543, -0.0032845, 0.99746" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864838" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.519023, 0.484164, -0.480362, 0.515221" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="-0.124812, 0.645983, 0.132318, 0.741363" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="-0.0921356, 0.648114, 0.161495, 0.738498" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.516032, 0.490863, -0.483625, 0.508794" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.0154807, -0.664684, 0.0922217, 0.74125" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.0472303, -0.659611, 0.0635061, 0.747428" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.773861, -0.00612742, 0.633281, -0.00746648" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 40.0913" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.697685, -0.296399, 0.512291, -0.403659" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509645" rotation="0.699849, 0.100148, -0.101132, 0.699967" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707063, 0.00786917, -0.00646892, 0.707077" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.339609, 0.449676, -0.189963, 0.803972" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.074846" rotation="0.70239, 0.100319, -0.0914026, 0.698735" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701106, 0.0904827, -0.108474, 0.698925" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.345083, 0.448443, 0.193067, 0.801587" scale="1.20426, 1.0, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.089913" rotation="0.696838, 0.0868897, -0.104825, 0.704187" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699829, 0.101192, -0.0951034, 0.700682" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.697454, 0.296101, 0.514645, 0.401277" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515696" rotation="0.69956, 0.100928, -0.103259, 0.699833" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000256307, 0.0769484, -0.00328008, 0.99703" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864838" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.519606, 0.481621, -0.47967, 0.517656" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="-0.0466345, 0.656275, 0.0640698, 0.750349" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="-0.0144368, 0.661444, 0.0928635, 0.744083" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.51735, 0.488542, -0.482215, 0.511023" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.0929491, -0.651387, 0.161258, 0.735562" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.125099, -0.64936, 0.132106, 0.738397" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.775397, -0.00610953, 0.6314, -0.00748109" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 39.7457" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.699623, -0.294864, 0.509656, -0.404764" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509645" rotation="0.699635, 0.101635, -0.102618, 0.69975" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707048, 0.00914766, -0.00774745, 0.707064" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.340063, 0.447715, -0.189129, 0.805071" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.074846" rotation="0.702298, 0.100952, -0.0920413, 0.698652" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.700906, 0.0917618, -0.109758, 0.698758" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.345542, 0.446501, 0.192226, 0.802675" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899125" rotation="0.696756, 0.0875225, -0.105464, 0.704094" scale="0.830386, 0.999999, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699677, 0.102234, -0.096147, 0.70054" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.699184, 0.294745, 0.512304, 0.402259" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515693" rotation="0.699306, 0.102675, -0.105003, 0.699573" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687035, -0.00687034, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000234518, 0.0834123, -0.00327503, 0.99651" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1334, 0.151455, -0.864838" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.519864, 0.479879, -0.479336, 0.519321" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.0320537, 0.659377, -0.00488053, 0.751113" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.0634201, 0.667527, 0.0232151, 0.741516" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.518355, 0.486217, -0.481116, 0.513253" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.169375, -0.630948, 0.228505, 0.721805" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.201597, -0.631994, 0.199259, 0.721275" scale="0.973926, 0.973926, 0.810866"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.776901, -0.00608431, 0.629549, -0.0074878" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 39.419" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.701453, -0.2934, 0.50716, -0.405794" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509649" rotation="0.69943, 0.103041, -0.104023, 0.699543" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707031, 0.0103566, -0.00895641, 0.70705" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.340484, 0.445858, -0.188332, 0.806109" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748466" rotation="0.70221, 0.101551, -0.0926452, 0.698574" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.700715, 0.092971, -0.110971, 0.698598" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.345967, 0.444663, 0.191423, 0.803703" scale="1.20426, 1.0, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899103" rotation="0.696678, 0.0881206, -0.10607, 0.704005" scale="0.830386, 1.0, 0.999999"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699533, 0.10322, -0.0971339, 0.700403" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.700818, 0.293453, 0.510087, 0.403177" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515692" rotation="0.699062, 0.104326, -0.106652, 0.699323" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687034, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000211207, 0.0903207, -0.00326947, 0.995907" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.86484" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.519932, 0.47924, -0.479239, 0.519932" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.110391, 0.655255, -0.0737775, 0.743647" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.140582, 0.666297, -0.0466877, 0.730825" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.519062, 0.484024, -0.480317, 0.515355" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.243913, -0.603599, 0.29322, 0.700141" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.275887, -0.607703, 0.264229, 0.696252" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.778319, -0.00605354, 0.627795, -0.00748715" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 39.1235" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.703106, -0.292065, 0.504901, -0.406713" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509649" rotation="0.699241, 0.104312, -0.105293, 0.699353" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707014, 0.0114496, -0.0100495, 0.707035" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.340857, 0.444177, -0.187607, 0.807049" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748426" rotation="0.702131, 0.102092, -0.0931911, 0.698502" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.700541, 0.0940639, -0.112068, 0.698452" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.346344, 0.442999, 0.190691, 0.804633" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899112" rotation="0.696607, 0.0886614, -0.106617, 0.703925" scale="0.830386, 1.0, 0.999999"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.6994, 0.104111, -0.0980258, 0.700279" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.702294, 0.292277, 0.50808, 0.403996" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515694" rotation="0.698838, 0.105818, -0.108142, 0.699094" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687033, -0.00687032, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000187129, 0.0974486, -0.00326357, 0.995235" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864838" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.519895, 0.479609, -0.479293, 0.519579" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.187518, 0.643954, -0.141866, 0.728035" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.216204, 0.657767, -0.116079, 0.712126" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.519516, 0.482101, -0.479781, 0.517196" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.315743, -0.569652, 0.354691, 0.670818" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.347153, -0.576755, 0.326304, 0.663599" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.779599, -0.00601982, 0.626206, -0.00748078" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 38.8719" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.704512, -0.290921, 0.502975, -0.407486" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509649" rotation="0.699079, 0.105394, -0.106374, 0.699189" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.706998, 0.0123804, -0.0109803, 0.707022" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.341169, 0.442743, -0.186984, 0.807848" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748446" rotation="0.702063, 0.102552, -0.093656, 0.698441" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.700391, 0.0949944, -0.113002, 0.698326" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.34666, 0.44158, 0.190064, 0.805425" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.089914" rotation="0.696547, 0.089122, -0.107083, 0.703856" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699287, 0.104869, -0.0987853, 0.700172" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.70355, 0.291269, 0.506369, 0.404686" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515693" rotation="0.698645, 0.107088, -0.109411, 0.698896" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687032, -0.00687032, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000163041, 0.104572, -0.0032575, 0.994512" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864838" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.519764, 0.480646, -0.47947, 0.518588" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.262592, 0.625597, -0.208401, 0.704445" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.289457, 0.64203, -0.184198, 0.685626" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.519773, 0.480582, -0.479458, 0.518649" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.384075, -0.529494, 0.412245, 0.634174" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.414617, -0.539487, 0.384804, 0.623677" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.780686, -0.00598679, 0.624851, -0.00747096" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 38.6767" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.705602, -0.290028, 0.501479, -0.408079" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509648" rotation="0.698952, 0.106233, -0.107213, 0.699061" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.706985, 0.0131027, -0.0117026, 0.70701" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.341408, 0.44163, -0.186498, 0.808469" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748417" rotation="0.70201, 0.10291, -0.0940167, 0.698393" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.700274, 0.0957163, -0.113726, 0.698227" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.346902, 0.440478, 0.189575, 0.806039" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899131" rotation="0.696499, 0.0894793, -0.107444, 0.703802" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699199, 0.105458, -0.0993745, 0.700089" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.704524, 0.290482, 0.505041, 0.405217" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74796, -0.515694" rotation="0.698494, 0.108074, -0.110395, 0.698741" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687034, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000139702, 0.111466, -0.00325146, 0.993763" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864839" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.51949, 0.482228, -0.479812, 0.517074" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.334788, 0.600386, -0.272652, 0.673138" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.359539, 0.619259, -0.2503, 0.651613" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.519897, 0.479592, -0.479291, 0.519596" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.448164, -0.483577, 0.465255, 0.590626" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.477537, -0.496309, 0.439087, 0.576921" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.781528, -0.00595842, 0.623798, -0.00746056" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 38.5503" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.706307, -0.289448, 0.50051, -0.408461" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509647" rotation="0.69887, 0.106776, -0.107755, 0.698977" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.706976, 0.01357, -0.0121699, 0.707002" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.341561, 0.440909, -0.186183, 0.80887" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748422" rotation="0.701975, 0.103141, -0.0942501, 0.698362" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.700198, 0.0961833, -0.114195, 0.698163" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.347057, 0.439764, 0.189257, 0.806437" scale="1.20426, 1.0, 0.999999"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899146" rotation="0.696469, 0.0897106, -0.107678, 0.703768" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699141, 0.105839, -0.0997557, 0.700035" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.705153, 0.289972, 0.50418, 0.405558" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515694" rotation="0.698395, 0.108712, -0.111032, 0.69864" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687035, -0.00687035, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000117871, 0.117908, -0.00324568, 0.993019" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1334, 0.151455, -0.864836" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.519007, 0.484222, -0.48038, 0.515166" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.403316, 0.568597, -0.333915, 0.634456" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.425682, 0.589703, -0.313659, 0.610462" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.519932, 0.47924, -0.479239, 0.519932" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.507314, -0.432422, 0.513147, 0.54067" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.535226, -0.447693, 0.48856, 0.523844" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.782072, -0.00593876, 0.623115, -0.00745255" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 38.5055" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.706557, -0.289241, 0.500166, -0.408596" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509644" rotation="0.69884, 0.106969, -0.107948, 0.698947" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.706973, 0.013736, -0.012336, 0.706999" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.341615, 0.440653, -0.18607, 0.809013" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748418" rotation="0.701963, 0.103223, -0.094333, 0.698351" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.70017, 0.0963492, -0.114362, 0.69814" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.347112, 0.439511, 0.189144, 0.806578" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.089915" rotation="0.696458, 0.0897928, -0.107761, 0.703755" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699121, 0.105974, -0.0998913, 0.700015" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.705377, 0.28979, 0.503875, 0.405679" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515696" rotation="0.69836, 0.108938, -0.111258, 0.698604" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687035, -0.00687035, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-9.8307e-005, 0.123675, -0.00324038, 0.992317" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864836" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.518255, 0.48648, -0.481226, 0.513001" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.467425, 0.530579, -0.391521, 0.588822" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.48716, 0.553687, -0.373581, 0.562622" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.519866, 0.479862, -0.479333, 0.519337" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.560885, -0.376604, 0.555409, 0.48487" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.587051, -0.394172, 0.532681, 0.465028" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.782265, -0.00593156, 0.622873, -0.00744944" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 38.5503" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.706307, -0.289448, 0.50051, -0.408461" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509647" rotation="0.69887, 0.106776, -0.107755, 0.698977" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.706976, 0.01357, -0.0121699, 0.707002" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.341561, 0.440909, -0.186183, 0.80887" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748422" rotation="0.701975, 0.103141, -0.0942501, 0.698362" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.700198, 0.0961833, -0.114195, 0.698163" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.347057, 0.439764, 0.189257, 0.806437" scale="1.20426, 1.0, 0.999999"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899146" rotation="0.696469, 0.0897106, -0.107678, 0.703768" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699141, 0.105839, -0.0997557, 0.700035" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.705153, 0.289972, 0.50418, 0.405558" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515694" rotation="0.698395, 0.108712, -0.111032, 0.69864" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687035, -0.00687035, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-8.17697e-005, 0.128546, -0.00323581, 0.991698" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864838" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.517193, 0.488854, -0.482385, 0.510723" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.526359, 0.486792, -0.444788, 0.53679" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.54325, 0.511647, -0.429359, 0.508672" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.519617, 0.481563, -0.479657, 0.517711" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.608309, -0.316745, 0.591593, 0.423853" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.632403, -0.33639, 0.570931, 0.401181" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.782072, -0.00593876, 0.623115, -0.00745255" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 38.6767" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.705602, -0.290028, 0.501479, -0.408079" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509648" rotation="0.698952, 0.106233, -0.107213, 0.699061" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.706985, 0.0131027, -0.0117026, 0.70701" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.341408, 0.44163, -0.186498, 0.808469" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748417" rotation="0.70201, 0.10291, -0.0940167, 0.698393" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.700274, 0.0957163, -0.113726, 0.698227" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.346902, 0.440478, 0.189575, 0.806039" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899131" rotation="0.696499, 0.0894793, -0.107444, 0.703802" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699199, 0.105458, -0.0993745, 0.700089" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.704524, 0.290482, 0.505041, 0.405217" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74796, -0.515694" rotation="0.698494, 0.108074, -0.110395, 0.698741" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687034, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-6.90181e-005, 0.1323, -0.00323224, 0.991204" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864838" rotation="-0.499783, 0.496505, -0.500193, 0.503495" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.515809, 0.4912, -0.483861, 0.50847" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.579448, 0.437774, -0.493109, 0.478997" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.593316, 0.464102, -0.480355, 0.449271" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.519053, 0.484057, -0.480327, 0.515323" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.64909, -0.253504, 0.621325, 0.358292" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.670778, -0.275042, 0.602887, 0.333072" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.781528, -0.00595842, 0.623798, -0.00746056" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 38.8719" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.704512, -0.290921, 0.502975, -0.407486" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509649" rotation="0.699079, 0.105394, -0.106374, 0.699189" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.706998, 0.0123804, -0.0109803, 0.707022" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.341169, 0.442743, -0.186984, 0.807848" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748446" rotation="0.702063, 0.102552, -0.093656, 0.698441" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.700391, 0.0949944, -0.113002, 0.698326" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.34666, 0.44158, 0.190064, 0.805425" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.089914" rotation="0.696547, 0.089122, -0.107083, 0.703856" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699287, 0.104869, -0.0987853, 0.700172" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.70355, 0.291269, 0.506369, 0.404686" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515693" rotation="0.698645, 0.107088, -0.109411, 0.698896" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687032, -0.00687032, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-6.08111e-005, 0.134715, -0.00322991, 0.990879" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1334, 0.151455, -0.864838" rotation="-0.499783, 0.496505, -0.500193, 0.503495" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.514128, 0.493388, -0.485627, 0.506366" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.626153, 0.384076, -0.535993, 0.416089" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.636852, 0.411588, -0.526049, 0.385081" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.518038, 0.487023, -0.481465, 0.512481" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.682807, -0.187566, 0.644304, 0.288903" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.7018, -0.210802, 0.628238, 0.261451" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.780686, -0.00598679, 0.624851, -0.00747096" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 39.1235" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.703106, -0.292065, 0.504901, -0.406713" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509649" rotation="0.699241, 0.104312, -0.105293, 0.699353" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707014, 0.0114496, -0.0100495, 0.707035" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.340857, 0.444177, -0.187607, 0.807049" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748426" rotation="0.702131, 0.102092, -0.0931911, 0.698502" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.700541, 0.0940639, -0.112068, 0.698452" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.346344, 0.442999, 0.190691, 0.804633" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899112" rotation="0.696607, 0.0886614, -0.106617, 0.703925" scale="0.830386, 1.0, 0.999999"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.6994, 0.104111, -0.0980258, 0.700279" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.702294, 0.292277, 0.50808, 0.403996" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515694" rotation="0.698838, 0.105818, -0.108142, 0.699094" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687033, -0.00687032, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-5.79071e-005, 0.135569, -0.00322909, 0.990763" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864834" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.512203, 0.495315, -0.487624, 0.504513" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.666007, 0.326289, -0.573008, 0.348758" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.673426, 0.354685, -0.565977, 0.316806" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.516487, 0.49013, -0.483141, 0.509499" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.709116, -0.119646, 0.660298, 0.216436" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.725172, -0.144366, 0.646745, 0.187096" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.779599, -0.00601982, 0.626206, -0.00748078" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 39.419" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.701453, -0.2934, 0.50716, -0.405794" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509649" rotation="0.69943, 0.103041, -0.104023, 0.699543" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707031, 0.0103566, -0.00895641, 0.70705" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.340484, 0.445858, -0.188332, 0.806109" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748466" rotation="0.70221, 0.101551, -0.0926452, 0.698574" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.700715, 0.092971, -0.110971, 0.698598" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.345967, 0.444663, 0.191423, 0.803703" scale="1.20426, 1.0, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899103" rotation="0.696678, 0.0881206, -0.10607, 0.704005" scale="0.830386, 1.0, 0.999999"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699533, 0.10322, -0.0971339, 0.700403" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.700818, 0.293453, 0.510087, 0.403177" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515692" rotation="0.699062, 0.104326, -0.106652, 0.699323" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687034, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-6.10076e-005, 0.134657, -0.00322997, 0.990887" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864837" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.510121, 0.496908, -0.489766, 0.502979" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.698613, 0.265043, -0.603783, 0.277737" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.702674, 0.294016, -0.599738, 0.245188" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.514404, 0.493066, -0.485339, 0.506676" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.727749, -0.0504744, 0.66915, 0.141676" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.740676, -0.0764493, 0.658237, 0.110806" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.778319, -0.00605354, 0.627795, -0.00748715" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 39.7457" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.699623, -0.294864, 0.509656, -0.404764" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509645" rotation="0.699635, 0.101635, -0.102618, 0.69975" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707048, 0.00914766, -0.00774745, 0.707064" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.340063, 0.447715, -0.189129, 0.805071" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.074846" rotation="0.702298, 0.100952, -0.0920413, 0.698652" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.700906, 0.0917618, -0.109758, 0.698758" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.345542, 0.446501, 0.192226, 0.802675" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899125" rotation="0.696756, 0.0875225, -0.105464, 0.704094" scale="0.830386, 0.999999, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699677, 0.102234, -0.096147, 0.70054" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.699184, 0.294745, 0.512304, 0.402259" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515693" rotation="0.699306, 0.102675, -0.105003, 0.699573" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687035, -0.00687034, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-6.97187e-005, 0.132094, -0.00323243, 0.991232" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1334, 0.151455, -0.864839" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.507985, 0.498136, -0.491948, 0.501797" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.723648, 0.201, -0.628014, 0.203791" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.724313, 0.230236, -0.626996, 0.170996" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.511891, 0.495583, -0.487947, 0.504255" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.738519, 0.0192077, 0.670776, 0.0654231" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.748174, -0.00777513, 0.662616, 0.0333976" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.776901, -0.00608431, 0.629549, -0.0074878" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 40.0913" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.697685, -0.296399, 0.512291, -0.403659" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509645" rotation="0.699849, 0.100148, -0.101132, 0.699967" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707063, 0.00786917, -0.00646892, 0.707077" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.339609, 0.449676, -0.189963, 0.803972" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748413" rotation="0.70239, 0.100319, -0.0914026, 0.698735" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701106, 0.0904827, -0.108474, 0.698925" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.345083, 0.448443, 0.193067, 0.801587" scale="1.20426, 1.0, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.089913" rotation="0.696838, 0.0868897, -0.104825, 0.704187" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699829, 0.101192, -0.0951034, 0.700682" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.697454, 0.296101, 0.514645, 0.401277" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515696" rotation="0.69956, 0.100928, -0.103259, 0.699833" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-8.31534e-005, 0.128139, -0.00323619, 0.991751" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864841" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.505906, 0.499002, -0.494058, 0.500962" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.74087, 0.134842, -0.645461, 0.127708" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.738132, 0.164026, -0.647478, 0.0950209" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.509135, 0.497521, -0.490774, 0.502389" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.741322, 0.0886549, 0.665169, -0.0115043" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.747607, 0.060928, 0.659855, -0.0443091" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.775397, -0.00610953, 0.6314, -0.00748109" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 40.4431" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.69571, -0.297948, 0.51497, -0.402517" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509648" rotation="0.700064, 0.0986338, -0.0996182, 0.700184" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707076, 0.00656748, -0.00516721, 0.707088" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.339137, 0.45167, -0.190805, 0.802854" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748421" rotation="0.702483, 0.0996745, -0.0907522, 0.698818" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701307, 0.08918, -0.107167, 0.699093" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.344606, 0.450417, 0.193916, 0.80048" scale="1.20426, 1.0, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899088" rotation="0.69692, 0.0862456, -0.104173, 0.704281" scale="0.830386, 1.0, 0.999999"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.699981, 0.10013, -0.0940404, 0.700825" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.695691, 0.29747, 0.517025, 0.400263" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515693" rotation="0.699814, 0.0991494, -0.101483, 0.700094" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000100424, 0.123051, -0.00324095, 0.992395" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864836" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.503998, 0.499549, -0.495986, 0.500434" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.750112, 0.0672731, -0.655955, 0.0502972" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.744004, 0.0960917, -0.660983, 0.0180694" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.506375, 0.498833, -0.493583, 0.501125" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.736136, 0.157126, 0.652396, -0.0882848" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.738999, 0.128935, 0.649997, -0.121493" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.773861, -0.00612742, 0.633281, -0.00746648" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 40.7887" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.693769, -0.299455, 0.517597, -0.401379" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509645" rotation="0.700272, 0.0971459, -0.0981312, 0.700394" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707087, 0.00528894, -0.00388865, 0.707096" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.338663, 0.453626, -0.191624, 0.801755" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748424" rotation="0.702573, 0.0990414, -0.0901134, 0.6989" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701502, 0.0879, -0.105884, 0.699255" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.344129, 0.452352, 0.194743, 0.799392" scale="1.20426, 1.0, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899133" rotation="0.697001, 0.0856127, -0.103533, 0.704373" scale="0.830386, 0.999999, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.70013, 0.0990876, -0.0929964, 0.700965" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.693958, 0.298803, 0.51936, 0.399254" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515695" rotation="0.700059, 0.0974016, -0.0997376, 0.700345" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687033, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000120645, 0.11709, -0.00324642, 0.993116" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864838" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.502365, 0.499844, -0.49763, 0.500151" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.751289, -0.000991404, -0.659395, -0.027623" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.741877, 0.0271519, -0.667379, -0.0590454" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.503861, 0.49958, -0.496123, 0.500405" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.723023, 0.223891, 0.632599, -0.164099" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.722452, 0.195528, 0.633158, -0.19734" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.772349, -0.00613739, 0.635125, -0.00744448" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 41.1154" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.691931, -0.300868, 0.520077, -0.400288" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509646" rotation="0.700466, 0.0957384, -0.0967246, 0.70059" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707095, 0.00407991, -0.00267961, 0.707102" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.338207, 0.455472, -0.192391, 0.800717" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.074842" rotation="0.702659, 0.0984426, -0.0895092, 0.698976" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701684, 0.0866892, -0.104669, 0.699406" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.343669, 0.45418, 0.195518, 0.798364" scale="1.20426, 1.0, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899148" rotation="0.697077, 0.0850143, -0.102927, 0.704459" scale="0.830386, 0.999999, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.700269, 0.0981011, -0.0920087, 0.701095" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.692318, 0.300054, 0.521565, 0.398288" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515693" rotation="0.700287, 0.0957482, -0.0980865, 0.700578" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000142926, 0.110514, -0.00325231, 0.993869" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.86484" rotation="-0.499783, 0.496505, -0.500193, 0.503495" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.5011, 0.499966, -0.498898, 0.500032" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.744395, -0.0692317, -0.655751, -0.105231" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.731782, -0.0420659, -0.666605, -0.135511" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.50183, 0.499907, -0.498167, 0.50009" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.702126, 0.288239, 0.605993, -0.238139" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.698148, 0.260008, 0.609521, -0.271052" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.770916, -0.00613982, 0.636864, -0.00741671" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 41.4109" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.690268, -0.302135, 0.522315, -0.399289" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509646" rotation="0.700638, 0.0944656, -0.0954524, 0.700765" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.7071, 0.00298675, -0.00158645, 0.707105" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.337787, 0.457139, -0.193079, 0.799778" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748467" rotation="0.702735, 0.0979011, -0.0889628, 0.699045" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701847, 0.0855942, -0.103571, 0.69954" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.343246, 0.455831, 0.196213, 0.797434" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899118" rotation="0.697145, 0.0844732, -0.102379, 0.704537" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.700393, 0.0972092, -0.0911157, 0.701212" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.690834, 0.301176, 0.523555, 0.397405" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515695" rotation="0.700489, 0.0942529, -0.0965933, 0.700786" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687033, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000166381, 0.103584, -0.00325835, 0.994615" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864839" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.500287, 0.499998, -0.499713, 0.500002" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.729506, -0.136728, -0.645064, -0.181709" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.713827, -0.110832, -0.658671, -0.21052" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.500485, 0.499993, -0.499515, 0.500006" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.673669, 0.349483, 0.572862, -0.309615" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.666346, 0.321696, 0.579338, -0.341853" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.769617, -0.00613629, 0.638434, -0.0073857" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 41.6625" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.68885, -0.303206, 0.524219, -0.398429" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509646" rotation="0.700784, 0.0933814, -0.0943689, 0.700912" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707104, 0.00205582, -0.000655523, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.337424, 0.458557, -0.193661, 0.798979" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748465" rotation="0.7028, 0.09744, -0.0884975, 0.699103" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.701985, 0.0846614, -0.102636, 0.699654" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.342881, 0.457234, 0.196801, 0.796642" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899095" rotation="0.697203, 0.0840124, -0.101913, 0.704602" scale="0.830386, 1.0, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.700498, 0.0964495, -0.0903552, 0.70131" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.68957, 0.302126, 0.525248, 0.396646" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515694" rotation="0.700659, 0.0929792, -0.0953213, 0.700961" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687034, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000190122, 0.0965629, -0.00326431, 0.995322" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1334, 0.151455, -0.864841" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.706777, -0.202769, -0.627445, -0.25625" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.6882, -0.178421, -0.64366, -0.283283" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.5, 0.5, -0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.637954, 0.40697, 0.533558, -0.377763" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.627378, 0.379939, 0.542924, -0.408995" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.768508, -0.00612888, 0.639768, -0.00735497" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 41.8577" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.68775, -0.304032, 0.525695, -0.397756" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509646" rotation="0.700895, 0.09254, -0.0935279, 0.701024" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707105, 0.00133348, 6.68241e-005, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.337138, 0.459655, -0.19411, 0.798358" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748411" rotation="0.70285, 0.0970821, -0.0881365, 0.699148" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.702091, 0.0839375, -0.10191, 0.699741" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.342594, 0.458323, 0.197254, 0.796028" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899144" rotation="0.697247, 0.0836547, -0.101551, 0.704653" scale="0.830386, 0.999999, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.700579, 0.0958599, -0.0897649, 0.701386" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.688588, 0.302859, 0.526561, 0.396052" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515693" rotation="0.700789, 0.0919906, -0.0943341, 0.701094" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687033, -0.00687033, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000213265, 0.0897111, -0.00326997, 0.995962" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864836" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.500336, 0.499997, -0.499664, 0.500003" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.67644, -0.266657, -0.603072, -0.328065" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.655163, -0.244118, -0.621722, -0.35303" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.500336, 0.499997, -0.499664, 0.500003" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="0.59536, 0.460084, 0.488499, -0.441856" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="0.581649, 0.434122, 0.500658, -0.471767" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.767647, -0.00612035, 0.640802, -0.00732836" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 41.9841" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.687037, -0.304564, 0.526649, -0.397317" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509647" rotation="0.700967, 0.0919954, -0.0929837, 0.701097" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707106, 0.000866085, 0.000534221, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.336952, 0.460366, -0.194399, 0.797957" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748434" rotation="0.702883, 0.0968505, -0.0879028, 0.699177" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84627" rotation="-0.702159, 0.083469, -0.101441, 0.699797" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.342406, 0.459026, 0.197546, 0.795631" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899092" rotation="0.697276, 0.0834232, -0.101317, 0.704686" scale="0.830386, 1.0, 0.999999"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.700631, 0.0954784, -0.089383, 0.701435" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.687952, 0.303331, 0.52741, 0.395665" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515696" rotation="0.700873, 0.0913509, -0.0936952, 0.70118" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687033, -0.00687032, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000234925, 0.0832918, -0.00327513, 0.99652" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864834" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.501311, 0.499952, -0.498688, 0.500046" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.638804, -0.327713, -0.572195, -0.396393" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.615054, -0.307228, -0.593079, -0.419018" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.501311, 0.499952, -0.498688, 0.500046" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="-0.546337, -0.508255, -0.438162, 0.501206" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="-0.529633, -0.483663, -0.452979, 0.529498" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.767088, -0.00611357, 0.641471, -0.00730984" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+  <frame>
+    <transform name="bone_body" translation="0.0332222, -16.0352, 42.0289" rotation="0.5, -0.5, 0.5, 0.5" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FL" translation="-0.303656, -13.2085, 8.04724" rotation="0.686784, -0.304752, 0.526988, -0.397161" scale="1.0, 1.0, 1.0"/>
+    <transform name="leg_FL" translation="50.7397, 4.40461, -0.509647" rotation="0.700992, 0.0918019, -0.0927903, 0.701122" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_foot_FL" translation="18.9537, -39.7858, 4.89561" rotation="-0.707106, 0.000699989, 0.000700326, 0.707107" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BL" translation="-0.564949, -15.0027, -8.68313" rotation="-0.336886, 0.460618, -0.194501, 0.797814" scale="1.13139, 1.0, 1.0"/>
+    <transform name="leg_BL" translation="44.7873, 5.14651, -0.0748424" rotation="0.702894, 0.0967682, -0.0878198, 0.699188" scale="0.883872, 1.0, 1.0"/>
+    <transform name="bone_foot_BL" translation="31.3133, -62.3855, 3.84626" rotation="-0.702183, 0.0833026, -0.101274, 0.699817" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_BR" translation="-0.813224, 14.9624, -8.66646" rotation="0.34234, 0.459276, 0.19765, 0.79549" scale="1.20426, 0.999999, 1.0"/>
+    <transform name="leg_BR" translation="42.5111, 3.809, -0.0899111" rotation="0.697286, 0.083341, -0.101234, 0.704697" scale="0.830386, 0.999999, 1.0"/>
+    <transform name="bone_foot_BR" translation="30.4835, -62.1632, 4.09815" rotation="-0.70065, 0.0953428, -0.0892472, 0.701452" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_leg_FR" translation="-0.303653, 13.1851, 7.98158" rotation="0.687726, 0.303499, 0.527711, 0.395527" scale="0.954693, 1.0, 1.0"/>
+    <transform name="leg_FR" translation="53.1713, 4.74797, -0.515695" rotation="0.700902, 0.0911235, -0.0934681, 0.701211" scale="1.04746, 1.0, 1.0"/>
+    <transform name="bone_foot_FR" translation="18.9356, -39.7858, 4.07356" rotation="-0.707073, -0.00687034, -0.00687034, 0.707073" scale="1.0, 1.0, 1.0"/>
+    <transform name="bone_stack" translation="72.6277, 0.111559, 24.7808" rotation="-0.000254219, 0.0775683, -0.00327961, 0.996982" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_f" translation="23.1335, 0.151455, -0.864837" rotation="-0.499783, 0.496505, -0.500193, 0.503494" scale="1.0, 1.0, 1.0"/>
+    <transform name="wing R" translation="38.8561, 38.4832, 23.2606" rotation="0.502866, 0.49977, -0.497126, 0.500222" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_FR" translation="81.3066, 38.8537, 12.2913" rotation="0.594252, -0.385285, -0.535124, -0.460502" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="saw_BR" translation="136.412, 47.072, 18.957" rotation="0.568284, -0.367076, -0.55802, -0.480543" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="wing L" translation="38.8561, -37.2203, 23.2606" rotation="0.502866, 0.49977, -0.497126, 0.500222" scale="1.0, 1.0, 1.0"/>
+    <transform name="saw_BL" translation="135.4, 46.801, -18.0167" rotation="-0.4914, -0.550964, -0.383078, 0.555172" scale="0.803006, 0.803006, 0.668563"/>
+    <transform name="saw_FL" translation="80.295, 38.5826, -11.6287" rotation="-0.471866, -0.528031, -0.400379, 0.581569" scale="0.973926, 0.973926, 0.810867"/>
+    <transform name="bone_head" translation="38.9638, 0.437965, 55.4816" rotation="0.76689, -0.00611088, 0.641708, -0.00730304" scale="1.0, 1.0, 1.0"/>
+    <transform name="stack_b" translation="77.0051, 0.110818, -3.26468" rotation="-0.535573, 0.535573, -0.461694, 0.461694" scale="1.0, 1.0, 1.0"/>
+    <transform name="body" translation="0.00325775, 69.7013, 81.8888" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.21285, 1.21285, 1.21285"/>
+  </frame>
+
+</animation>
