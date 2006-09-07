@@ -29,6 +29,9 @@ public abstract class ScenarioInfo
     /** The code for the "overall" scenario (only used for ratings).  */
     public static final String OVERALL_IDENT = "oa";
 
+    /** The different team configurations. */
+    public enum Teams { INDIVIDUAL, COOP, TEAM2V2, TEAM3V1 };
+
     /**
      * Returns the set of scenarios available in the specified town. Feel free
      * to bend, fold or mutilate the returned list.
@@ -118,6 +121,14 @@ public abstract class ScenarioInfo
      * Returns the id of the town in which this scenario is available.
      */
     public abstract String getTownId ();
+
+    /**
+     * Returns the name of the background music for this scenario.
+     */
+    public String getMusic ()
+    {
+        return getTownId() + "/scenario_" + getIdent();
+    }
 
     /**
      * Returns the index of the town in which this scenario is introduced.
@@ -234,6 +245,14 @@ public abstract class ScenarioInfo
     public StatsView getStatsView (BasicContext ctx)
     {
         return new StatsView(ctx, false);
+    }
+
+    /**
+     * Returns the type of teaming in this scenario.
+     */
+    public Teams getTeams ()
+    {
+        return Teams.INDIVIDUAL;
     }
 
     /**

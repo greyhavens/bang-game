@@ -38,6 +38,12 @@ public class PracticeInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
+    public String getMusic ()
+    {
+        return BangCodes.FRONTIER_TOWN + "/scenario_" + TutorialInfo.IDENT;
+    }
+
+    @Override // from ScenarioInfo
     public Stat.Type[] getObjectives ()
     {
         return null;

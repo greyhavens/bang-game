@@ -86,4 +86,10 @@ public class ForestGuardiansInfo extends ScenarioInfo
     {
         return (pidx1 < 0) == (pidx2 < 0);
     }
+
+    @Override // from ScenarioInfo
+    public Teams getTeams ()
+    {
+        return Teams.COOP;
+    }
 }

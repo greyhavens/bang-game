@@ -33,6 +33,12 @@ public class LandGrabInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
+    public String getMusic ()
+    {
+        return getTownId() + "/scenario_" + GoldRushInfo.IDENT;
+    }
+
+    @Override // from ScenarioInfo
     public Stat.Type[] getObjectives ()
     {
         return new Stat.Type[] { Stat.Type.STEADS_CLAIMED };
