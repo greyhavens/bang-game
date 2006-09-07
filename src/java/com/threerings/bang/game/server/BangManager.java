@@ -2039,6 +2039,7 @@ public class BangManager extends GameManager
             // if the game wasn't sufficiently long, certain stats don't count
             if (gameMins >= MIN_STATS_DURATION) {
                 user.stats.incrementStat(Stat.Type.GAMES_PLAYED, 1);
+                user.stats.incrementStat(Stat.Type.SESSION_GAMES_PLAYED, 1);
                 user.stats.incrementStat(Stat.Type.GAME_TIME, gameMins);
                 // increment consecutive wins for 1st place only
                 if (award.rank == 0) {

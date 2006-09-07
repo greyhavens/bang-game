@@ -495,7 +495,12 @@ public class Badge extends Item
         },
 
         // wacky badges
-        IRON_HORSE,
+        IRON_HORSE {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(
+                    Stat.Type.SESSION_GAMES_PLAYED) >= 25;
+            }
+        },
         SAINT_NICK,
         NIGHT_OWL {
             public boolean qualifies (PlayerObject user) {
