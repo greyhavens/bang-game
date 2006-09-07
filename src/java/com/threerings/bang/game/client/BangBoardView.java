@@ -22,6 +22,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
+import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
@@ -72,6 +73,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.ParticleUtil;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
 
@@ -501,6 +503,40 @@ public class BangBoardView extends BoardView
             ((PieceSprite)sprite).hasTooltip());
     }
     
+    /**
+     * Fires off a particle effect on top of the camera (for bursts of rain and
+     * such).
+     *
+     * @param duration the duration of the effect in seconds
+     */
+    public void displayCameraParticles (String effect, final float duration)
+    {
+        // create a node that tracks the position of the camera and removes
+        // itself after the duration is up and the particle system has
+        // exhausted itself
+        Node cnode = new Node("camera") {
+            public void updateWorldData (float time) {
+                getLocalTranslation().set(
+                    _ctx.getCameraHandler().getCamera().getLocation());
+                super.updateWorldData(time);
+                if ((_accum += time) >= duration &&
+                    getControllers().isEmpty()) {
+                    ParticleUtil.stopAndRemove(this);
+                }
+            }
+            protected float _accum;
+        };
+        _node.attachChild(cnode);
+        
+        // attach an instance of the effect to the node
+        _ctx.loadEffect(effect, new ResultAttacher<Spatial>(cnode) {
+            public void requestCompleted (Spatial result) {
+                super.requestCompleted(result);
+                addWindInfluence(result);
+            }
+        });
+    }
+   
     /**
      * Checks whether the board is in "high noon" mode.
      */

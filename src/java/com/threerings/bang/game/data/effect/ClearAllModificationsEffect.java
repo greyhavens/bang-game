@@ -12,6 +12,16 @@ import com.threerings.bang.game.data.piece.Unit;
  */
 public class ClearAllModificationsEffect extends GlobalEffect
 {
+    /** The rain effect applied to the board. */
+    public static final String RAIN = "indian_post/rain";
+    
+    @Override // documentation inherited
+    public boolean apply (BangObject bangobj, Observer obs)
+    {
+        affectBoard(bangobj, RAIN, false, obs);
+        return super.apply(bangobj, obs);
+    }
+    
     @Override // documentation inherited
     protected boolean validPiece (Piece piece)
     {

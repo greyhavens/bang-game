@@ -307,7 +307,9 @@ public class EffectHandler extends BoardView.BoardAction
     // documentation inherited from interface Effect.Observer
     public void boardAffected (String effect)
     {
-        if (HighNoonEffect.HIGH_NOON.equals(effect)) {
+        if (_ctx.getEffectCache().haveEffect(effect)) {
+            _view.displayCameraParticles(effect, CAMERA_EFFECT_DURATION);
+        } else if (HighNoonEffect.HIGH_NOON.equals(effect)) {
             _view.setHighNoon(true);
         } else if (effect == null && _view.isHighNoon()) {
             _view.setHighNoon(false);
@@ -756,6 +758,9 @@ public class EffectHandler extends BoardView.BoardAction
     /** The last piece to drop a bonus. */
     protected Piece _dropper;
 
+    /** The duration of particle effects activated on top of the camera. */
+    protected static final float CAMERA_EFFECT_DURATION = 2f;
+    
     /** The height from which to drop pieces onto the board. */
     protected static final float PIECE_DROP_HEIGHT = 150f;
     
