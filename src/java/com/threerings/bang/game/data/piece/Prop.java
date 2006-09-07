@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.piece;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -208,19 +209,25 @@ public class Prop extends BigPiece
     /**
      * Returns true if it's possible to enter this piece from the direction.
      */
-    public boolean canEnter (int dir)
+    public boolean canEnter (int dir, int x, int y)
     {
-        dir = (4 + dir - orientation) % 4;
-        return _config.blockDir.indexOf(ENTER_DIR[dir]) == -1;
+        int pdir = (4 + dir - orientation) % 4;
+        if (getBounds().contains(new Point(x + DX[dir], y + DY[dir]))) {
+            return true;
+        }
+        return _config.blockDir.indexOf(ENTER_DIR[pdir]) == -1;
     }
 
     /**
      * Returns true if it's possible to exit this piece from the direction.
      */
-    public boolean canExit (int dir)
+    public boolean canExit (int dir, int x, int y)
     {
-        dir = (4 + dir - orientation) % 4;
-        return _config.blockDir.indexOf(EXIT_DIR[dir]) == -1;
+        int pdir = (4 + dir - orientation) % 4;
+        if (getBounds().contains(new Point(x + DX[dir], y + DY[dir]))) {
+            return true;
+        }
+        return _config.blockDir.indexOf(EXIT_DIR[pdir]) == -1;
     }
 
     /**

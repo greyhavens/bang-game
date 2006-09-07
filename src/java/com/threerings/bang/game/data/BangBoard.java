@@ -760,10 +760,10 @@ public class BangBoard extends SimpleStreamableObject
                         int idx = _width * yy + xx;
                         byte dstate = _dstate[idx];
                         for (int dir : DIRECTIONS) {
-                            if (!p.canEnter(dir)) {
+                            if (!p.canEnter(dir, xx, yy)) {
                                 dstate = (byte)(dstate | (ENTER_NORTH << dir));
                             }
-                            if (!p.canExit(dir)) {
+                            if (!p.canExit(dir, xx, yy)) {
                                 dstate = (byte)(dstate | (EXIT_NORTH << dir));
                             }
                         }
