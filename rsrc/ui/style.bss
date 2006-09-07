@@ -860,8 +860,49 @@ folk_entry {
 //
 // Town View styles
 
+tutorials_button {
+  background: image "ui/buttons/tutorials_normal.png" framexy;
+}
+tutorials_button:hover {
+  background: image "ui/buttons/tutorials_hover.png" framexy;
+}
+tutorials_button:down {
+  background: image "ui/buttons/tutorials_down.png" framexy;
+}
+
+saddlebag_button {
+  background: image "ui/buttons/saddlebag_normal.png" framexy;
+}
+saddlebag_button:hover {
+  background: image "ui/buttons/saddlebag_hover.png" framexy;
+}
+saddlebag_button:down {
+  background: image "ui/buttons/saddlebag_down.png" framexy;
+}
+
+pardners_button {
+  background: image "ui/buttons/pardners_normal.png" framexy;
+}
+pardners_button:hover {
+  background: image "ui/buttons/pardners_hover.png" framexy;
+}
+pardners_button:down {
+  background: image "ui/buttons/pardners_down.png" framexy;
+}
+
+exit_button {
+  background: image "ui/buttons/exit_normal.png" framexy;
+}
+exit_button:hover {
+  background: image "ui/buttons/exit_hover.png" framexy;
+}
+exit_button:down {
+  background: image "ui/buttons/exit_down.png" framexy;
+}
+
 town_menubar {
-  padding: 10;
+  background: image "ui/town/menubg.png" framexy 82 200 0 530;
+  padding: 0 16 5 40;
 }
 
 //
