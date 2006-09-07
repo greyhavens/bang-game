@@ -651,8 +651,8 @@ public class PlayerManager
             int percentile =
                 (100 * (rating.rating - Rating.MINIMUM_RATING - 1)) /
                 (Rating.MAXIMUM_RATING - Rating.MINIMUM_RATING);
-            int rank = _rankLevels.length;
-            while (rank > 0 && percentile <= _rankLevels[rank-1]) {
+            int rank = RANK_LEVELS.length;
+            while (rank > 0 && percentile <= RANK_LEVELS[rank-1]) {
                 rank --;
             }
             map.put(rating.scenario, Integer.valueOf(rank));
@@ -1028,6 +1028,7 @@ public class PlayerManager
         new HashMap<Handle, SoftReference<PosterInfo>>();
     
     /** The levels to map ratings to ranks, implicitly bounded by 0 and 100 */
-    protected int[] _rankLevels = new int[] { 50, 65, 75, 85, 90, 95, 98 };
+    protected static final int[] RANK_LEVELS =
+        new int[] { 50, 65, 75, 85, 90, 95, 98 };
 }
 
