@@ -219,11 +219,25 @@ public class RenderUtil
      */
     public static Quad createTextQuad (BasicContext ctx, Font font, String text)
     {
+        return createTextQuad(ctx, font, ColorRGBA.white, null, text);
+    }
+
+    /**
+     * Creates a {@link Quad} with a texture configured to display the supplied
+     * text. The text will be white, but its color may be set with {@link
+     * Quad#setDefaultColor}.
+     *
+     * @param color Color of the text
+     * @param ocolor Outline color of the text
+     */
+    public static Quad createTextQuad (BasicContext ctx, Font font, 
+            ColorRGBA color, ColorRGBA ocolor, String text)
+    {
         Vector2f[] tcoords = new Vector2f[4];
         Dimension size = new Dimension();
         TextureState tstate = ctx.getRenderer().createTextureState();
         Texture tex = createTextTexture(
-            ctx, font, ColorRGBA.white, null, text, tcoords, size);
+            ctx, font, color, ocolor, text, tcoords, size);
         tstate.setTexture(tex);
 
         Quad quad = new Quad("text", size.width, size.height);

@@ -1241,7 +1241,8 @@ public class BoardView extends BComponent
         clearMarquee(0);
 
         // create the marquee, center it and display it
-        _marquee = RenderUtil.createTextQuad(_ctx, BangUI.MARQUEE_FONT, text);
+        _marquee = RenderUtil.createTextQuad(_ctx, BangUI.MARQUEE_FONT, 
+                ColorRGBA.white, ColorRGBA.black, text);
         _marquee.setLocalTranslation(
             new Vector3f(_ctx.getRenderer().getWidth()/2f,
                          _ctx.getRenderer().getHeight()/2f, 0));
