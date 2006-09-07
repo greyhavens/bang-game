@@ -68,7 +68,7 @@ public class BangClient extends CrowdClient
         PlayerObject user = (PlayerObject)_clobj;
 
         // generate an audit log entry
-        BangCredentials creds = (BangCredentials)_creds;
+        BangCredentials creds = (BangCredentials)getCredentials();
         BangServer.generalLog("session_start " + user.username +
                               " ip:" + getInetAddress() + " id:" + creds.ident);
 
