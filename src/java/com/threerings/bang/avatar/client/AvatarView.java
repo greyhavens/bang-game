@@ -230,7 +230,8 @@ public class AvatarView extends BLabel
      */
     public void setAvatar (int[] avatar)
     {
-        if (_avatar != null && Arrays.equals(avatar, _avatar)) {
+        if ((_avatar != null && Arrays.equals(avatar, _avatar)) ||
+            avatar == null) {
             return;
         }
         _avatar = (int[])avatar.clone();
