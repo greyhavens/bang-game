@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1259,6 +1260,35 @@ public class BangManager extends GameManager
         for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
             if (_bangobj.isActivePlayer(ii) && _bangobj.bigShots[ii] != null) {
                 _purchases.add(_bangobj.bigShots[ii]);
+            }
+        }
+
+        // check and set some time-related statistics
+        Calendar now = Calendar.getInstance();
+
+        // check for high noon (server time) (TODO: can we do this using each
+        // player's local time without a giant PITA?)
+        if (now.get(Calendar.HOUR_OF_DAY) == 12 &&
+            now.get(Calendar.MINUTE) == 0 &&
+            now.get(Calendar.SECOND) == 0) {
+            for (int ii = 0; ii < getPlayerCount(); ii++) {
+                PlayerObject user = (PlayerObject)getPlayer(ii);
+                if (user != null) {
+                    user.stats.incrementStat(Stat.Type.MYSTERY_ONE, 1);
+                }
+            }
+        }
+
+        // check for christmas morning (server time) (TODO: can we do this
+        // using each players' local time without a giant PITA?)
+        if (now.get(Calendar.MONTH) == Calendar.DECEMBER &&
+            now.get(Calendar.DATE) == 25 &&
+            now.get(Calendar.HOUR_OF_DAY) < 8) {
+            for (int ii = 0; ii < getPlayerCount(); ii++) {
+                PlayerObject user = (PlayerObject)getPlayer(ii);
+                if (user != null) {
+                    user.stats.incrementStat(Stat.Type.MYSTERY_TWO, 1);
+                }
             }
         }
 

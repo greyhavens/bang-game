@@ -501,13 +501,21 @@ public class Badge extends Item
                     Stat.Type.SESSION_GAMES_PLAYED) >= 25;
             }
         },
-        SAINT_NICK,
+        SAINT_NICK {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.MYSTERY_TWO) >= 1;
+            }
+        },
         NIGHT_OWL {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.LATE_NIGHTS) >= 5000;
             }
         },
-        HIGH_NOON,
+        HIGH_NOON {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.MYSTERY_ONE) >= 1;
+            }
+        },
         NEW_SHERRIF_IN_TOWN,
 
         UNUSED;

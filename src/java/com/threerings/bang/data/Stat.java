@@ -84,6 +84,10 @@ public abstract class Stat
         CHAT_RECEIVED(new IntStat()),
         GAMES_HOSTED(new IntStat()),
 
+        // stats that are meant to by mysterious
+        MYSTERY_ONE(new IntStat(), false, true), // high noon game
+        MYSTERY_TWO(new IntStat(), false, true), // christmas morning game
+
         UNUSED(new IntStat());
 
         /** Returns a new blank stat instance of the specified type. */
