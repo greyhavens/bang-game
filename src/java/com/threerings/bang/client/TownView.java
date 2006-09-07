@@ -35,9 +35,12 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.icon.BlankIcon;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.BLayoutManager;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.Invoker;
@@ -110,10 +113,14 @@ public class TownView extends BWindow
         }
 
         // create our overlay menu buttons
-        add(_menu = new BContainer(GroupLayout.makeHStretch()) {
-            protected void renderComponent (Renderer renderer) {
+        GroupLayout gl = GroupLayout.makeHoriz(
+                GroupLayout.STRETCH, GroupLayout.LEFT, GroupLayout.NONE);
+        gl.setGap(0);
+        gl.setOffAxisJustification(GroupLayout.BOTTOM);
+        add(_menu = new BContainer(gl) {
+            public void render (Renderer renderer) {
                 if (_active) {
-                    super.renderComponent(renderer);
+                    super.render(renderer);
                 }
             }
             public BComponent getHitComponent (int mx, int my) {
@@ -121,13 +128,22 @@ public class TownView extends BWindow
             }
         });
         _menu.setStyleClass("town_menubar");
-        BContainer left = GroupLayout.makeHBox(GroupLayout.LEFT);
+        gl = GroupLayout.makeHoriz(GroupLayout.LEFT);
+        gl.setGap(0);
+        BContainer left = new BContainer(gl);
         _menu.add(left);
-        left.add(new BButton(_msgs.get("m.tutorials"), this, "tutorials"));
-        left.add(new BButton(_msgs.get("m.saddlebag"), this, "saddlebag"));
-        left.add(new BButton(_msgs.get("m.pardners"), this, "pardners"));
-        _menu.add(new BButton(_msgs.get("m.exit"), this, "exit"),
-                  GroupLayout.FIXED);
+        BButton button = new BButton(new BlankIcon(142, 33), this, "tutorials");
+        button.setStyleClass("tutorials_button");
+        left.add(button);
+        button = new BButton(new BlankIcon(142, 33), this, "saddlebag");
+        button.setStyleClass("saddlebag_button");
+        left.add(button);
+        button = new BButton(new BlankIcon(142, 33), this, "pardners");
+        button.setStyleClass("pardners_button");
+        left.add(button);
+        button = new BButton(new BlankIcon(128, 30), this, "exit");
+        button.setStyleClass("exit_button");
+        _menu.add(button, GroupLayout.FIXED);
 
         // create the town display
         add(_bview = new TownBoardView(ctx));
