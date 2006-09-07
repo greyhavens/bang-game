@@ -4,6 +4,7 @@
 package com.threerings.bang.data;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -95,6 +96,23 @@ public class Badge extends Item
         HIGHEST_POINTS_2 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.HIGHEST_POINTS) >= 1000;
+            }
+        },
+
+        // consecutive kills badges
+        CONSEC_KILLS_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CONSEC_KILLS) >= 5;
+            }
+        },
+        CONSEC_KILLS_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CONSEC_KILLS) >= 10;
+            }
+        },
+        CONSEC_KILLS_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CONSEC_KILLS) >= 15;
             }
         },
 
@@ -255,6 +273,163 @@ public class Badge extends Item
             }
         },
 
+        // homesteads claimed badges
+        STEADS_CLAIMED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.STEADS_CLAIMED) >= 10;
+            }
+        },
+        STEADS_CLAIMED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.STEADS_CLAIMED) >= 100;
+            }
+        },
+        STEADS_CLAIMED_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.STEADS_CLAIMED) >= 500;
+            }
+        },
+        // TODO: two land grab specials
+
+        // totems stacked badges
+        TOTEMS_STACKED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.TOTEMS_STACKED) >= 10;
+            }
+        },
+        TOTEMS_STACKED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.TOTEMS_STACKED) >= 100;
+            }
+        },
+        TOTEMS_STACKED_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.TOTEMS_STACKED) >= 1000;
+            }
+        },
+        TOTEMS_STACKED_4 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.TOTEMS_LARGE) >= 100;
+            }
+        },
+        TOTEMS_STACKED_5 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.TOTEMS_CROWN) >= 100;
+            }
+        },
+
+        // trees saved badges
+        TREES_SAVED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.TREES_SAPLING) >= 50;
+            }
+        },
+        TREES_SAVED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.TREES_MATURE) >= 50;
+            }
+        },
+        TREES_SAVED_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.TREES_ELDER) >= 50;
+            }
+        },
+        TREES_SAVED_4 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.TREES_MATURE) >= 500;
+            }
+        },
+        TREES_SAVED_5 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.TREES_ELDER) >= 250;
+            }
+        },
+
+        // trees saved badges
+        WENDIGO_SURVIVALS_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(
+                    Stat.Type.WENDIGO_SURVIVALS) >= 100;
+            }
+        },
+        WENDIGO_SURVIVALS_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(
+                    Stat.Type.WENDIGO_SURVIVALS) >= 1000;
+            }
+        },
+        WENDIGO_SURVIVALS_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(
+                    Stat.Type.WENDIGO_SURVIVALS) >= 10000;
+            }
+        },
+        // TODO: two wendigo attack specials
+
+        // frontier town unit usage badges
+        CAVALRY_USER {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getMapValue(
+                    Stat.Type.UNITS_USED, "frontier_town/cavalry") >= 100;
+            }
+        },
+        TACTICIAN_USER {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getMapValue(
+                    Stat.Type.UNITS_USED, "frontier_town/tactician") >= 100;
+            }
+        },
+        CODGER_USER {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getMapValue(
+                    Stat.Type.UNITS_USED, "frontier_town/codger") >= 100;
+            }
+        },
+        FT_BIGSHOT_USER {
+            public boolean qualifies (PlayerObject user) {
+                return checkUnitUsage(user.stats,
+                    BangCodes.FRONTIER_TOWN, BIGSHOT_UNITS, 5);
+            }
+        },
+        FT_ALLUNIT_USER {
+            public boolean qualifies (PlayerObject user) {
+                return checkUnitUsage(user.stats,
+                    BangCodes.FRONTIER_TOWN, ALL_UNITS, 10);
+            }
+        },
+
+        // indian trading post unit usage badges
+        STORM_CALLER_USER {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getMapValue(
+                    Stat.Type.UNITS_USED, "indian_post/stormcaller") >= 100;
+            }
+        },
+        TRICKSTER_RAVEN_USER {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getMapValue(
+                    Stat.Type.UNITS_USED, "indian_post/tricksterraven") >= 100;
+            }
+        },
+        REVOLUTIONARY_USER {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getMapValue(
+                    Stat.Type.UNITS_USED, "indian_post/revolutionary") >= 100;
+            }
+        },
+        ITP_BIGSHOT_USER {
+            public boolean qualifies (PlayerObject user) {
+                return checkUnitUsage(user.stats,
+                    BangCodes.INDIAN_POST, BIGSHOT_UNITS, 5);
+            }
+        },
+        ITP_ALLUNIT_USER {
+            public boolean qualifies (PlayerObject user) {
+                return checkUnitUsage(user.stats,
+                    BangCodes.INDIAN_POST, ALL_UNITS, 10);
+            }
+        },
+
         // social badges
         GAMES_HOSTED_1 {
             public boolean qualifies (PlayerObject user) {
@@ -274,6 +449,11 @@ public class Badge extends Item
         CHAT_SENT_2 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CHAT_SENT) >= 5000;
+            }
+        },
+        CHAT_SENT_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.CHAT_SENT) >= 15000;
             }
         },
         CHAT_RECEIVED_1 {
@@ -313,20 +493,6 @@ public class Badge extends Item
                 return user.getDudsCount() >= 50;
             }
         },
-
-        // badges for using (owning) bigshots
-        FRONTIER_BIGSHOTS_USED, // all Frontier Town bigshots owned (used)
-        INDIAN_BIGSHOTS_USED, // all Indian Village bigshots owned (used)
-        BOOM_BIGSHOTS_USED, // all Boom Town bigshots owned (used)
-        GHOST_BIGSHOTS_USED, // all Ghost Town bigshots owned (used)
-        GOLD_BIGSHOTS_USED, // all City of Gold bigshots owned (used)
-
-        // badges for using special units
-        FRONTIER_SPECIALS_USED, // all Frontier Town special units used
-        INDIAN_SPECIALS_USED, // all Indian Village special units used
-        BOOM_SPECIALS_USED, // all Boom Town special units used
-        GHOST_SPECIALS_USED, // all Ghost Town special units used
-        GOLD_SPECIALS_USED, // all City of Gold special units used
 
         // wacky badges
         IRON_HORSE,
@@ -523,6 +689,19 @@ public class Badge extends Item
         }
     }
 
+    /** Used by unit usage badges. */
+    protected static boolean checkUnitUsage (
+        StatSet stats, String townId, EnumSet<UnitConfig.Rank> which,
+        int usages)
+    {
+        for (UnitConfig cfg : UnitConfig.getTownUnits(townId, which)) {
+            if (stats.getMapValue(Stat.Type.UNITS_USED, cfg.type) < usages) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Registers all badge awards. We have to do this on demand rather than in
      * a static initializer because of a twisty maze of already interdependent
@@ -588,4 +767,12 @@ public class Badge extends Item
 
     /** Used to report rewards associated with badges. */
     protected static HashMap<Type,String> _rewards = new HashMap<Type,String>();
+
+    /** Used by unit usage badges. */
+    protected static final EnumSet<UnitConfig.Rank> BIGSHOT_UNITS =
+        EnumSet.of(UnitConfig.Rank.BIGSHOT);
+
+    /** Used by unit usage badges. */
+    protected static final EnumSet<UnitConfig.Rank> ALL_UNITS =
+        EnumSet.of(UnitConfig.Rank.BIGSHOT, UnitConfig.Rank.NORMAL);
 }

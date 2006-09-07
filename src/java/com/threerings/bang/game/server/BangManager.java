@@ -872,7 +872,8 @@ public class BangManager extends GameManager
             break;
 
         case BangObject.POST_ROUND:
-            roundDidEnd();
+            // do post-round processing and start the next one
+            roundDidEnd(true);
             break;
         }
     }
@@ -975,9 +976,6 @@ public class BangManager extends GameManager
                 _aiLogic[ii].init(this, ii);
             }
         }
-
-        // clear out the various per-player data structures
-        _purchases.clear();
 
         // set up the board and pieces so it's visible while purchasing
         _bangobj.board =(BangBoard)board.clone();
@@ -1458,15 +1456,39 @@ public class BangManager extends GameManager
     }
 
     /**
-     * We use this to make sure the stats are final before broadcasting them.
+     * Called when a round (or the whole game) ends, possibly starts up the
+     * next one.
      */
-    protected void roundDidEnd ()
+    protected void roundDidEnd (boolean startNext)
     {
         // broadcast our updated statistics
         _bangobj.setStats(_bangobj.stats);
 
-        // start the next round
-        startRound();
+        // record for all players still in the game that they "used" their
+        // units during this round
+        for (Piece piece : _purchases.values()) {
+            if (!(piece instanceof Unit) || piece.owner < 0) {
+                continue;
+            }
+            int ploid = _playerOids[piece.owner];
+            if (ploid <= 0 || !_bangobj.isActivePlayer(piece.owner)) {
+                continue;
+            }
+            PlayerObject user = (PlayerObject)BangServer.omgr.getObject(ploid);
+            if (user == null) {
+                continue;
+            }
+            user.stats.incrementMapStat(
+                Stat.Type.UNITS_USED, ((Unit)piece).getType(), 1);
+        }
+
+        // clear out the various per-player data structures
+        _purchases.clear();
+
+        // maybe start the next round
+        if (startNext) {
+            startRound();
+        }
     }
 
     @Override // documentation inherited
@@ -1482,6 +1504,9 @@ public class BangManager extends GameManager
     protected void gameDidEnd ()
     {
         super.gameDidEnd();
+
+        // do the normal round ending stuff as well
+        roundDidEnd(false);
 
         // process any played cards
         ArrayList<StartingCard> updates = new ArrayList<StartingCard>();
@@ -1594,9 +1619,6 @@ public class BangManager extends GameManager
         // sort by rank and then stuff the award data into the game object
         Arrays.sort(awards);
         _bangobj.setAwards(awards);
-
-        // broadcast our updated statistics
-        _bangobj.setStats(_bangobj.stats);
 
         // and persist the awards as well
         postGamePersist(awards);

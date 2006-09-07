@@ -35,6 +35,7 @@ public abstract class Stat
         GAME_TIME(new IntStat()), // ranked games only
         CONSEC_WINS(new IntStat()), // ranked games only
         CONSEC_LOSSES(new IntStat()), // ranked games only
+        CONSEC_KILLS(new IntStat()), // ranked games only
         LATE_NIGHTS(new IntStat(), true, true),
         TUTORIALS_COMPLETED(new ByteStringSetStat(), true, true),
 
@@ -54,6 +55,7 @@ public abstract class Stat
         CASH_EARNED(new IntStat()),
         DISTANCE_MOVED(new IntStat()),
         SHOTS_FIRED(new IntStat()),
+        UNITS_USED(new ByteByteStringMapStat(), true, true),
 
         CATTLE_RUSTLED(new IntStat()),
         BRAND_POINTS(new IntStat()),

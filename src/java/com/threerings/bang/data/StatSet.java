@@ -102,6 +102,24 @@ public final class StatSet extends DSet<Stat>
     }
 
     /**
+     * Increments a string value in a {@link StringMapStat}.
+     *
+     * @exception ClassCastException thrown if the registered type of the
+     * specified stat is not an {@link StringMapStat}.
+     */
+    public void incrementMapStat (Stat.Type type, String value, int amount)
+    {
+        StringMapStat stat = (StringMapStat)get(type.name());
+        if (stat == null) {
+            stat = (StringMapStat)type.newStat();
+            stat.increment(value, amount);
+            addStat(stat);
+        } else if (stat.increment(value, amount)) {
+            updateStat(stat);
+        }
+    }
+
+    /**
      * Returns the current value of the specified integer statistic.
      */
     public int getIntStat (Stat.Type type)
@@ -118,6 +136,16 @@ public final class StatSet extends DSet<Stat>
     {
         StringSetStat stat = (StringSetStat)get(type.name());
         return (stat == null) ? false : stat.contains(value);
+    }
+
+    /**
+     * Returns the value to which the specified string is mapped in a {@link
+     * StringMapStat} or zero if the value has not been mapped.
+     */
+    public int getMapValue (Stat.Type type, String value)
+    {
+        StringMapStat stat = (StringMapStat)get(type.name());
+        return (stat == null) ? 0 : stat.get(value);
     }
 
     protected void addStat (Stat stat)
