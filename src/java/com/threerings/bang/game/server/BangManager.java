@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
@@ -36,6 +37,7 @@ import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.server.PresentsServer;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
@@ -1264,31 +1266,11 @@ public class BangManager extends GameManager
         }
 
         // check and set some time-related statistics
-        Calendar now = Calendar.getInstance();
-
-        // check for high noon (server time) (TODO: can we do this using each
-        // player's local time without a giant PITA?)
-        if (now.get(Calendar.HOUR_OF_DAY) == 12 &&
-            now.get(Calendar.MINUTE) == 0 &&
-            now.get(Calendar.SECOND) == 0) {
-            for (int ii = 0; ii < getPlayerCount(); ii++) {
-                PlayerObject user = (PlayerObject)getPlayer(ii);
-                if (user != null) {
-                    user.stats.incrementStat(Stat.Type.MYSTERY_ONE, 1);
-                }
-            }
-        }
-
-        // check for christmas morning (server time) (TODO: can we do this
-        // using each players' local time without a giant PITA?)
-        if (now.get(Calendar.MONTH) == Calendar.DECEMBER &&
-            now.get(Calendar.DATE) == 25 &&
-            now.get(Calendar.HOUR_OF_DAY) < 8) {
-            for (int ii = 0; ii < getPlayerCount(); ii++) {
-                PlayerObject user = (PlayerObject)getPlayer(ii);
-                if (user != null) {
-                    user.stats.incrementStat(Stat.Type.MYSTERY_TWO, 1);
-                }
+        long now = System.currentTimeMillis();
+        for (int ii = 0; ii < getPlayerCount(); ii++) {
+            PlayerObject user = (PlayerObject)getPlayer(ii);
+            if (user != null) {
+                checkTimeStats(now, user);
             }
         }
 
@@ -1365,6 +1347,36 @@ public class BangManager extends GameManager
         // all report that they're fully ready to go (they need to resolve
         // their unit models)
         resetPlayerOids();
+    }
+
+    /**
+     * Checks whether the player in question should have any of their
+     * time-related stats adjusted.
+     */
+    protected void checkTimeStats (long gameStart, PlayerObject user)
+    {
+        // get a calendar configured in the player's timezone
+        PresentsClient client = BangServer.clmgr.getClient(user.username);
+        if (client == null) {
+            return;
+        }
+        Calendar cal = Calendar.getInstance(
+            client.getTimeZone(), Locale.getDefault());
+        cal.setTimeInMillis(gameStart);
+
+        // check for high noon
+        if (cal.get(Calendar.HOUR_OF_DAY) == 12 &&
+            cal.get(Calendar.MINUTE) == 0 &&
+            cal.get(Calendar.SECOND) == 0) {
+            user.stats.incrementStat(Stat.Type.MYSTERY_ONE, 1);
+        }
+
+        // check for christmas morning
+        if (cal.get(Calendar.MONTH) == Calendar.DECEMBER &&
+            cal.get(Calendar.DATE) == 25 &&
+            cal.get(Calendar.HOUR_OF_DAY) < 8) {
+            user.stats.incrementStat(Stat.Type.MYSTERY_TWO, 1);
+        }
     }
 
     /**
