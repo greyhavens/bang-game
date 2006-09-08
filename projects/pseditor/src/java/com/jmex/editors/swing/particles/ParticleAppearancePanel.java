@@ -46,6 +46,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
@@ -71,8 +72,8 @@ import com.jme.scene.state.AlphaState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
-import com.jme.util.RenderThreadActionQueue;
-import com.jme.util.RenderThreadExecutable;
+import com.jme.util.GameTaskQueue;
+import com.jme.util.GameTaskQueueManager;
 import com.jme.util.TextureManager;
 import com.jmex.editors.swing.widget.ValuePanel;
 import com.jmex.editors.swing.widget.ValueSpinner;
@@ -93,6 +94,8 @@ public abstract class ParticleAppearancePanel extends ParticleEditPanel {
     private ValueSpinner endAlphaSpinner = new ValueSpinner(0, 255, 1);
     private JLabel endColorHex = new JLabel();
     private JPanel endColorPanel = new JPanel();
+    private ValuePanel alphaFalloffPanel = new ValuePanel("Alpha Falloff: ",
+        "", 0f, 1f, 0.0001f);
     private ValuePanel endSizePanel = new ValuePanel("End Size: ", "", 0f,
             Float.MAX_VALUE, 1f);
     private JComboBox geomTypeBox;
@@ -205,6 +208,12 @@ public abstract class ParticleAppearancePanel extends ParticleEditPanel {
             }
         });
 
+        alphaFalloffPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                getEdittedParticles().setAlphaFalloff(alphaFalloffPanel.getFloatValue());
+            }
+        });
+        
         additiveBlendingBox = new JCheckBox(new AbstractAction(
                 "Additive Blending") {
             private static final long serialVersionUID = 1L;
@@ -250,10 +259,13 @@ public abstract class ParticleAppearancePanel extends ParticleEditPanel {
         colorPanel.add(endAlphaSpinner, new GridBagConstraints(4, 3, 1, 1,
                 0.25, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE,
                 new Insets(0, 0, 0, 0), 20, 0));
-        colorPanel.add(additiveBlendingBox, new GridBagConstraints(0, 4, 5, 1,
+        colorPanel.add(alphaFalloffPanel, new GridBagConstraints(0, 4, 5, 1,
                 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
                 new Insets(0, 0, 0, 0), 0, 0));
-
+        colorPanel.add(additiveBlendingBox, new GridBagConstraints(0, 5, 5, 1,
+                0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                new Insets(0, 0, 0, 0), 0, 0));
+                
         startSizePanel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 getEdittedParticles().setStartSize(startSizePanel.getFloatValue());
@@ -359,6 +371,7 @@ public abstract class ParticleAppearancePanel extends ParticleEditPanel {
         newGeom.setVelocityAligned(oldGeom.isVelocityAligned());
         newGeom.setStartColor(oldGeom.getStartColor());
         newGeom.setEndColor(oldGeom.getEndColor());
+        newGeom.setAlphaFalloff(oldGeom.getAlphaFalloff());
         newGeom.setStartSize(oldGeom.getStartSize());
         newGeom.setEndSize(oldGeom.getEndSize());
         
@@ -370,6 +383,7 @@ public abstract class ParticleAppearancePanel extends ParticleEditPanel {
         newGeom.setGeometry(oldGeom.getLine());
         newGeom.setGeometry(oldGeom.getRectangle());
         newGeom.setGeometry(oldGeom.getRing());
+        newGeom.setGeometry(oldGeom.getFrustum());
         newGeom.setEmitType(oldGeom.getEmitType());
         
         // copy emission parameters
@@ -426,9 +440,10 @@ public abstract class ParticleAppearancePanel extends ParticleEditPanel {
 
             newTexture = textFile;
             
-            RenderThreadActionQueue.addToQueue(new RenderThreadExecutable() {
-                public void doAction() {
+            GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).enqueue(new Callable<Object>() {
+                public Object call() throws Exception{
                     loadApplyTexture();
+                    return null;
                 }
             });
 
@@ -623,6 +638,7 @@ public abstract class ParticleAppearancePanel extends ParticleEditPanel {
         updateColorLabels();
         AlphaState as = (AlphaState)particleGeom.getRenderState(
             RenderState.RS_ALPHA);
+        alphaFalloffPanel.setValue(particleGeom.getAlphaFalloff());
         additiveBlendingBox.setSelected(as == null ||
             as.getDstFunction() == AlphaState.DB_ONE);
         startSizePanel.setValue(particleGeom.getStartSize());
