@@ -1835,7 +1835,7 @@ public class BangBoardView extends BoardView
                     showInterRoundMarquee();
                     break;
                 }
-                _pendingMarquee == MarqueeMode.NONE;
+                _pendingMarquee = MarqueeMode.NONE;
             }
         }
     }
