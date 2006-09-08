@@ -47,6 +47,7 @@ public class Revolutionary extends Unit
         }
         ShotEffect shot = super.unitShoot(bangobj, target, scale);
         if (shot != null && proximity) {
+            shot.type = ShotEffect.PROXIMITY;
             shot.appendIcon("revolutionary", true);
         }
         return shot;
