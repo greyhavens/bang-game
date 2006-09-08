@@ -115,7 +115,8 @@ public class CardItem extends Item
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return Card.newCard(_type).getIconPath("card");
+        Card card = Card.newCard(_type);
+        return (card == null) ? "unknown" : card.getIconPath("card");
     }
 
     @Override // documentation inherited
