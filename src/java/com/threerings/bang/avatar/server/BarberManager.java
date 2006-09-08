@@ -116,6 +116,11 @@ public class BarberManager extends PlaceManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
+        // make sure a look with the specified name does not already exist
+        if (user.looks.contains(look)) {
+            throw new InvocationException("m.name_already_used");
+        }
+
         // if they're an admin, zero out the cost as admins get everything for
         // free (they're cheeky like that)
         if (user.tokens.isAdmin()) {
@@ -377,6 +382,13 @@ public class BarberManager extends PlaceManager
             _look = look;
             _listener = listener;
         }
+        public void start () throws InvocationException {
+            super.start();
+            // add the look immediately to prevent rapid fire purchase requests
+            // from overwriting one another; we will remove the look later if
+            // we fail
+            _user.addToLooks(_look);
+        }
 
         protected int getCoinType () {
             return CoinTransaction.LOOK_PURCHASE;
@@ -393,11 +405,11 @@ public class BarberManager extends PlaceManager
         }
 
         protected void actionCompleted () {
-            _user.addToLooks(_look);
             _user.setPosesAt(_look.name, Look.Pose.DEFAULT.ordinal());
             _listener.requestProcessed();
         }
         protected void actionFailed () {
+            _user.removeFromLooks(_look.getKey());
             _listener.requestFailed(INTERNAL_ERROR);
         }
 
