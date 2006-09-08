@@ -67,6 +67,11 @@ public class TeleportEffect extends Effect
             return;
         }
         Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null) {
+            log.warning("Missing piece for teleporter effect [id=" +
+                    pieceId + "].");
+            return;
+        }
 
         // select a random destination teleporter
         Teleporter[] group = source.getGroup(bangobj);

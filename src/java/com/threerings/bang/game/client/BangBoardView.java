@@ -1168,6 +1168,7 @@ public class BangBoardView extends BoardView
         // this is a bit hacky, but if the character is heading to a
         // teleporter, they don't get to attack
         boolean willTeleport = false;
+        /* Removed to test post shot teleportation
         if (_selection.getMinFireDistance() > 0) {
             for (Piece piece : _bangobj.pieces) {
                 if (piece.x == tx && piece.y == ty && 
@@ -1177,6 +1178,7 @@ public class BangBoardView extends BoardView
                 }
             }
         }
+        */
 
         // potentially display our potential attacks
         if (!_shiftDown && _attackEnabled && !willTeleport) {

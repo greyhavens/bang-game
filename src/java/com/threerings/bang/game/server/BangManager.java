@@ -77,6 +77,7 @@ import com.threerings.bang.game.data.effect.MoveShootEffect;
 import com.threerings.bang.game.data.effect.PlayCardEffect;
 import com.threerings.bang.game.data.effect.ProximityShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
+import com.threerings.bang.game.data.effect.TeleportEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Marker;
@@ -530,11 +531,19 @@ public class BangManager extends GameManager
                 }
             }
 
-            // possibly deploy a post-order effect
-            Effect peffect = unit.maybeGeneratePostOrderEffect();
-            if (peffect != null) {
-                deployEffect(-1, peffect);
+            if (unit.isAlive()) {
+                // possibly deploy some post-shot effects
+                for (Effect effect : _postShotEffects) {
+                    deployEffect(unit.owner, effect);
+                }
+
+                // possibly deploy a post-order effect
+                Effect peffect = unit.maybeGeneratePostOrderEffect();
+                if (peffect != null) {
+                    deployEffect(-1, peffect);
+                }
             }
+            _postShotEffects.clear();
             
             // finally update our metrics
             _bangobj.updateData();
@@ -1838,11 +1847,13 @@ public class BangManager extends GameManager
 
         // dispatch a move effect to actually move the unit
         MoveEffect meffect = unit.generateMoveEffect(_bangobj, x, y, target);
+        _onTheMove = unit;
         if (deployEffect(unit.owner, meffect) &&
                 meffect instanceof MoveShootEffect && unit.owner != -1) {
             _bangobj.stats[unit.owner].incrementStat(
                 Stat.Type.SHOTS_FIRED, 1);
         }
+        _onTheMove = null;
 
         // possibly generate a post-move effect
         Effect peffect = unit.maybeGeneratePostMoveEffect(steps);
@@ -2577,8 +2588,13 @@ public class BangManager extends GameManager
                         for (Effect effect : effects) {
                             if (effect == null) {
                                 continue;
+                            } else if (_onTheMove == piece && 
+                                    effect instanceof TeleportEffect) {
+                                _postShotEffects.add(effect);
+                                continue;
+                            } else {
+                                deployEffect(piece.owner, effect);
                             }
-                            deployEffect(piece.owner, effect);
                             // small hackery: note that this player collected 
                             // a bonus
                             if (effect instanceof HoldEffect &&
@@ -2691,6 +2707,12 @@ public class BangManager extends GameManager
     /** The extra time to take for the current tick to allow extended effects
      * to complete. */
     protected long _extraTickTime;
+
+    /** Marks a piece currently in a move from moveUnit. */
+    protected Piece _onTheMove;
+
+    /** A list of effects to do after the shooting has stopped. */
+    protected ArrayList<Effect> _postShotEffects = new ArrayList<Effect>();
 
     /** A set of units which shot this tick. */
     protected ArrayIntSet _shooters = new ArrayIntSet();
