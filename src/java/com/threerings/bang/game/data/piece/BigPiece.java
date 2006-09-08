@@ -51,13 +51,13 @@ public abstract class BigPiece extends Piece
     public int computeElevation (BangBoard board, int tx, int ty)
     {
         if (_bounds.width == 1 && _bounds.height == 1) {
-            return board.getHeightfieldElevation(tx, ty);
+            return board.getWaterElevation(tx, ty);
         }
         int elevation = Integer.MIN_VALUE;
         for (int y = ty, ymax = ty + _bounds.height; y < ymax; y++) {
             for (int x = tx, xmax = tx + _bounds.width; x < xmax; x++) {
                 elevation = Math.max(elevation,
-                    board.getHeightfieldElevation(x, y));
+                    board.getWaterElevation(x, y));
             }
         }
         return elevation;   

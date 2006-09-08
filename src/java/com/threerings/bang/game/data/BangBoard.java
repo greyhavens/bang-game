@@ -769,7 +769,7 @@ public class BangBoard extends SimpleStreamableObject
                         }
                         _dstate[idx] = dstate;
                         int tileelev = elevation + telev - 
-                            getHeightfieldElevation(xx, yy);
+                            getWaterElevation(xx, yy);
                         int oldelev = unsignedToInt(_estate[idx]);
                         if (tileelev > oldelev) {
                             if (pelev > 0) {
@@ -880,7 +880,15 @@ public class BangBoard extends SimpleStreamableObject
     public int getElevation (int x, int y)
     {
         return Math.max(_waterLevel,
-            getHeightfieldElevation(x, y) + getPieceElevation(x, y));
+            getWaterElevation(x, y) + getPieceElevation(x, y));
+    }
+
+    /**
+     * Returns the max of the water level and heightfield elevation.
+     */
+    public int getWaterElevation (int x, int y)
+    {
+        return Math.max(_waterLevel, getHeightfieldElevation(x, y));
     }
 
     /**
