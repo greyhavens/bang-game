@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.util.MessageBundle;
 
@@ -65,6 +66,7 @@ public class TeleportEffect extends Effect
                 sourceId + "].");
             return;
         }
+        Piece piece = bangobj.pieces.get(pieceId);
 
         // select a random destination teleporter
         Teleporter[] group = source.getGroup(bangobj);
@@ -77,35 +79,32 @@ public class TeleportEffect extends Effect
         Collections.shuffle(dests);
         Point spot = null;
 
-        // avoid teleporting onto another teleporter if we can
-        PointSet teleporters = new PointSet();
-        Piece piece = null;
-        for (Piece p : bangobj.pieces) {
-            if (p instanceof Teleporter) {
-                teleporters.add(p.x, p.y);
-            } else if (p.pieceId == pieceId) {
-                piece = p;
+        // find a destination
+        for (Teleporter dest : dests) {
+            spot = bangobj.board.getOccupiableSpot(dest.x, dest.y, 2);
+            if (spot != null) {
+                piece.teleMoves = null;
+                break;
             }
         }
-        for (Teleporter dest : dests) {
-            ArrayList<Point> spots = bangobj.board.getOccupiableSpots(
-                    8, dest.x, dest.y, 2, null);
-            if (spots.size() == 0) {
-                break;
-            } 
-            spot = spots.get(0);
-            if (spots.size() > 1) {
-                for (int ii = 1, ll = spots.size(); ii < ll; ii++) {
-                    if (teleporters.contains(spot.x, spot.y)) {
-                        spot = spots.get(1);
-                    } else {
-                        break;
+        // if no destination found, see if we can land on another teleporter
+        if (spot == null) {
+            PointSet teleporters = new PointSet();
+            for (Piece p : bangobj.pieces) {
+                if (p instanceof Teleporter && 
+                        bangobj.board.isGroundOccupiable(p.x, p.y)) {
+                    for (Teleporter dest : dests) {
+                        int dist = dest.getDistance(p);
+                        if (dist > 0 && dist <= 2) {
+                            teleporters.add(p.x, p.y);
+                            break;
+                        }
                     }
                 }
             }
-        }
-        if (spot != null) {
-            if (teleporters.contains(spot.x, spot.y)) {
+            if (teleporters.size() > 0) {
+                int idx = RandomUtil.getInt(teleporters.size());
+                spot = new Point(teleporters.getX(idx), teleporters.getY(idx));
                 if (piece.teleMoves == null) {
                     piece.teleMoves = new PointSet();
                 }
@@ -117,9 +116,10 @@ public class TeleportEffect extends Effect
                 } else {
                     piece.teleMoves.add(spot.x, spot.y);
                 }
-            } else {
-                piece.teleMoves = null;
             }
+        }
+
+        if (spot != null) {
             dest = new short[] { (short)spot.x, (short)spot.y };
         } else {
             piece.teleMoves = null;
