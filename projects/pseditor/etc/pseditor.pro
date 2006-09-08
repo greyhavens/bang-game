@@ -6,6 +6,7 @@
 -injars ../lib/jme.jar(!META-INF/*)
 -injars ../lib/jme-effects.jar(!META-INF/*)
 -injars ../lib/jme-awt.jar(!META-INF/*)
+-injars ../lib/jme-gamestates.jar(!META-INF/*)
 -injars ../dist/pseditor.jar(!META-INF/*)
 
 -libraryjars ../lib/lwjgl.jar
