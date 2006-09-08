@@ -123,7 +123,7 @@ public class BackTextureRenderer
     }
     
     // documentation inherited from interface TextureRenderer
-    public void render (ArrayList spats, Texture[] texs)
+    public void render (ArrayList spats, Texture... texs)
     {
         // render to back buffer
         Renderer parentRenderer = _ctx.getRenderer();
@@ -133,14 +133,14 @@ public class BackTextureRenderer
         }
         postDraw(parentRenderer);
         
-        // copy back buffer to texture
-        for (int ii = 0; ii < texs.length; ii++) {
-            copyToTexture(texs[ii], _width, _height);
+        // copy back buffer to texture(s)
+        for (Texture tex : texs) {
+            copyToTexture(tex, _width, _height);
         }
     }
     
     // documentation inherited from interface TextureRenderer
-    public void render (Spatial spat, Texture tex)
+    public void render (Spatial spat, Texture... texs)
     {
         // render to back buffer
         Renderer parentRenderer = _ctx.getRenderer();
@@ -148,22 +148,9 @@ public class BackTextureRenderer
         spat.onDraw(parentRenderer);
         postDraw(parentRenderer);
         
-        // copy back buffer to texture
-        copyToTexture(tex, _width, _height);
-    }
-    
-    // documentation inherited from interface TextureRenderer
-    public void render (Spatial spat, Texture[] texs)
-    {
-        // render to back buffer
-        Renderer parentRenderer = _ctx.getRenderer();
-        preDraw(parentRenderer);
-        spat.onDraw(parentRenderer);
-        postDraw(parentRenderer);
-        
-        // copy back buffer to texture
-        for (int ii = 0; ii < texs.length; ii++) {
-            copyToTexture(texs[ii], _width, _height);
+        // copy back buffer to texture(s)
+        for (Texture tex : texs) {
+            copyToTexture(tex, _width, _height);
         }
     }
     
