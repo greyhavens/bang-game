@@ -1,4 +1,4 @@
-413
+434
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -267,20 +267,26 @@ male/eyebrows := concerned := 26
 male/eyebrows := content := 27
 male/eyebrows := cool := 28
 male/eyebrows := evil := 271
+male/eyebrows := jaunty := 414
+male/eyebrows := kindly := 415
 male/eyebrows := rock := 272
 male/eyebrows := surprised := 273
 male/eyebrows := thick := 6
 male/eyes := big := 29
 male/eyes := bigger := 30
+male/eyes := closed := 416
 male/eyes := cool := 31
 male/eyes := far := 274
 male/eyes := glare := 32
 male/eyes := intent := 33
+male/eyes := patch := 417
 male/eyes := plain := 227
 male/eyes := rugged := 228
+male/eyes := scar := 418
 male/eyes := shifty := 275
 male/eyes := sly := 276
 male/eyes := squinty := 7
+male/eyes := stare := 419
 male/eyes := weary := 229
 male/eyes := wide := 230
 male/glasses := round := 8
@@ -288,6 +294,7 @@ male/glasses := steamgoggles := 34
 male/hair_back := braids := 35
 male/hair_back := fro := 36
 male/hair_back := long_messy := 9
+male/hair_front := bald := 420
 male/hair_front := balding := 277
 male/hair_front := braids := 37
 male/hair_front := disheveled := 38
@@ -295,10 +302,12 @@ male/hair_front := dredds_long := 364
 male/hair_front := dredds_short := 365
 male/hair_front := fro := 39
 male/hair_front := long_messy := 10
+male/hair_front := long_straight := 421
 male/hair_front := mohawk := 40
 male/hair_front := parted := 278
 male/hair_front := slickedback := 41
 male/hair_front := spikeback := 42
+male/hair_front := spikeup := 422
 male/hair_front := spikey := 43
 male/hair_front := sweptback := 231
 male/hair_front := wirey_medium := 366
@@ -306,6 +315,7 @@ male/hair_front := wirey_short := 367
 male/hair_middle := braids := 127
 male/hair_middle := fro := 128
 male/hair_middle := long_messy := 129
+male/hair_middle := long_straight := 423
 male/hat := buffalo := 356
 male/hat := coonskin := 322
 male/hat := cowboy := 11
@@ -352,10 +362,13 @@ male/hat_band := thick_widebrim := 53
 male/hat_band := thin_widebrim := 54
 male/hat_band := thunderbird_war_bonnet := 310
 male/hat_band := tree_war_bonnet := 311
+male/head := angular := 424
 male/head := chin := 237
 male/head := cleft := 55
 male/head := fat := 56
+male/head := hoss := 425
 male/head := jaw := 57
+male/head := jutting := 426
 male/head := long := 238
 male/head := moon := 239
 male/head := normal := 14
@@ -391,6 +404,7 @@ male/mouth := annoyed := 16
 male/mouth := bulldog := 70
 male/mouth := chew := 243
 male/mouth := frown := 71
+male/mouth := grit := 427
 male/mouth := happy := 279
 male/mouth := sad := 280
 male/mouth := shy := 281
@@ -398,12 +412,19 @@ male/mouth := smile := 72
 male/mouth := smirk := 73
 male/mouth := stern := 74
 male/mouth := worried := 282
+male/mustache := chop := 428
+male/mustache := curly := 429
 male/mustache := gringo := 75
 male/mustache := handlebar := 17
+male/mustache := latin := 430
 male/mustache := magnum := 244
 male/mustache := messy := 283
+male/mustache := neat := 431
 male/mustache := piano := 76
+male/mustache := u := 432
+male/mustache := villain := 433
 male/mustache := wyatt := 77
+male/nose := flat := 434
 male/nose := hook := 245
 male/nose := long := 246
 male/nose := mel := 78
