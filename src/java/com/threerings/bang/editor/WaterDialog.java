@@ -85,6 +85,7 @@ public class WaterDialog extends JDialog
         if (!_level.getValueIsAdjusting() &&
             !_amplitude.getValueIsAdjusting()) {
             _panel.view.commitWaterEdit();
+            _panel.view.refreshBoard();
         }
     }
     
