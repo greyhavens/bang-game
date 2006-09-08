@@ -157,6 +157,7 @@ public class EffectCache extends PrototypeCache<Spatial>
         instance.setEndColor(prototype.getEndColor());
         instance.setStartSize(prototype.getStartSize());
         instance.setEndSize(prototype.getEndSize());
+        instance.setAlphaFalloff(prototype.getAlphaFalloff());
         
         // copy origin parameters
         instance.getLocalTranslation().set(prototype.getLocalTranslation());
@@ -166,6 +167,7 @@ public class EffectCache extends PrototypeCache<Spatial>
         instance.setGeometry(prototype.getLine());
         instance.setGeometry(prototype.getRectangle());
         instance.setGeometry(prototype.getRing());
+        instance.setGeometry(prototype.getFrustum());
         instance.setEmitType(prototype.getEmitType());
         
         // copy emission parameters
