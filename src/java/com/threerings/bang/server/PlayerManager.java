@@ -704,20 +704,22 @@ public class PlayerManager
         if (note == PlayerService.FOLK_IS_FRIEND && ixFriend < 0) {
             opinion = FolkRecord.FRIEND;
             nfriends = ArrayUtil.insert(user.friends, folkId, 1+ixFriend);
-            nfoes = user.foes;
+            nfoes = (ixFoe >= 0) ?
+                ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
 
         } else if (note == PlayerService.FOLK_IS_FOE && ixFoe < 0) {
             opinion = FolkRecord.FOE;
-            nfriends = user.friends;
+            nfriends = (ixFriend >= 0) ?
+                ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
             nfoes = ArrayUtil.insert(user.foes, folkId, 1+ixFoe);
-
+            
         } else if (note == PlayerService.FOLK_NEUTRAL &&
-            (ixFoe > 0 || ixFriend > 0)) {
+            (ixFoe >= 0 || ixFriend >= 0)) {
             opinion = FolkRecord.NO_OPINION;
             nfriends = (ixFriend >= 0) ?
                 ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
             nfoes = (ixFoe >= 0) ?
-                ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
+                    ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
 
         } else {
             cl.requestProcessed(); // NOOP!
