@@ -91,6 +91,17 @@ public class BangObject extends GameObject
         }
     }
 
+    /** Used to keep track of player occupant information even if they're not
+     * in the room. */
+    public static class PlayerInfo
+    {
+        /** The player's unique identifier. */
+        public int playerId = -1;
+
+        /** The player's avatar data. */
+        public int[] avatar;
+    }
+
     /** Used to keep track of where players were before the game. */
     public static class PriorLocation implements Streamable
     {
@@ -112,8 +123,8 @@ public class BangObject extends GameObject
     }
 
     // AUTO-GENERATED: FIELDS START
-    /** The field name of the <code>avatars</code> field. */
-    public static final String AVATARS = "avatars";
+    /** The field name of the <code>playerInfo</code> field. */
+    public static final String PLAYER_INFO = "playerInfo";
 
     /** The field name of the <code>priorLocation</code> field. */
     public static final String PRIOR_LOCATION = "priorLocation";
@@ -214,10 +225,10 @@ public class BangObject extends GameObject
     /** A hindrance affecting all units (and applied to new units). */
     public transient Hindrance globalHindrance;
 
-    /** The avatar fingerprints for each of the players in the game. We keep
-     * these here in case the player leaves early and so that we can provide
-     * fake fingerprints for AIs. */
-    public int[][] avatars;
+    /** Avatar fingerprints and other data for each of the players in the game.
+     * We need these in case the player leaves early and so that we can provide
+     * fake info for AIs. */
+    public PlayerInfo[] playerInfo;
 
     /** Contains the prior location of the players in this game. Defaults to
      * the saloon. */
@@ -636,36 +647,36 @@ public class BangObject extends GameObject
 
     // AUTO-GENERATED: METHODS START
     /**
-     * Requests that the <code>avatars</code> field be set to the
+     * Requests that the <code>playerInfo</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setAvatars (int[][] value)
+    public void setPlayerInfo (BangObject.PlayerInfo[] value)
     {
-        int[][] ovalue = this.avatars;
+        BangObject.PlayerInfo[] ovalue = this.playerInfo;
         requestAttributeChange(
-            AVATARS, value, ovalue);
-        this.avatars = (value == null) ? null : (int[][])value.clone();
+            PLAYER_INFO, value, ovalue);
+        this.playerInfo = (value == null) ? null : (BangObject.PlayerInfo[])value.clone();
     }
 
     /**
      * Requests that the <code>index</code>th element of
-     * <code>avatars</code> field be set to the specified value.
+     * <code>playerInfo</code> field be set to the specified value.
      * The local value will be updated immediately and an event will be
      * propagated through the system to notify all listeners that the
      * attribute did change. Proxied copies of this object (on clients)
      * will apply the value change when they received the attribute
      * changed notification.
      */
-    public void setAvatarsAt (int[] value, int index)
+    public void setPlayerInfoAt (BangObject.PlayerInfo value, int index)
     {
-        int[] ovalue = this.avatars[index];
+        BangObject.PlayerInfo ovalue = this.playerInfo[index];
         requestElementUpdate(
-            AVATARS, index, value, ovalue);
-        this.avatars[index] = value;
+            PLAYER_INFO, index, value, ovalue);
+        this.playerInfo[index] = value;
     }
 
     /**

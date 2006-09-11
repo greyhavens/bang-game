@@ -139,7 +139,7 @@ public class PlayerStatusView extends BContainer
             updatePoints();
             updateStatus();
 
-        } else if (event.getName().equals(BangObject.AVATARS)) {
+        } else if (event.getName().equals(BangObject.PLAYER_INFO)) {
             updateAvatar();
         }
     }
@@ -147,7 +147,7 @@ public class PlayerStatusView extends BContainer
     // documentation inherited from interface ElementUpdateListener
     public void elementUpdated (ElementUpdatedEvent event)
     {
-        if (event.getName().equals(BangObject.AVATARS)) {
+        if (event.getName().equals(BangObject.PLAYER_INFO)) {
             if (event.getIndex() == _pidx) {
                 updateAvatar();
             }
@@ -339,9 +339,11 @@ public class PlayerStatusView extends BContainer
     protected void updateAvatar ()
     {
         // load up this player's avatar image
-        if (_bangobj.avatars != null && _bangobj.avatars[_pidx] != null) {
-            AvatarView.getFramableImage(_ctx, _bangobj.avatars[_pidx], 10,
-                                        new ResultListener<BImage>() {
+        if (_bangobj.playerInfo != null &&
+            _bangobj.playerInfo[_pidx].avatar != null) {
+            AvatarView.getFramableImage(
+                _ctx, _bangobj.playerInfo[_pidx].avatar, 10,
+                new ResultListener<BImage>() {
                 public void requestCompleted (BImage image) {
                     setAvatar(new ImageIcon(image));
                 }

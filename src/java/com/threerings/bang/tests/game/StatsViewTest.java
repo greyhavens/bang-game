@@ -67,7 +67,7 @@ public class StatsViewTest extends TestApp
             user.handle,
             new Name("Elvis"),
         };
-        bangobj.avatars = new int[bangobj.players.length][];
+        bangobj.playerInfo = new BangObject.PlayerInfo[bangobj.players.length];
         bangobj.awards = new Award[bangobj.players.length];
         bangobj.stats = new StatSet[bangobj.players.length];
         bangobj.roundId = 1;
@@ -81,7 +81,8 @@ public class StatsViewTest extends TestApp
             }
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 100;
-            bangobj.avatars[ii] = BangAI.getAvatarPrint(
+            bangobj.playerInfo[ii] = new BangObject.PlayerInfo();
+            bangobj.playerInfo[ii].avatar = BangAI.getAvatarPrint(
                 RandomUtil.getInt(100) > 50);
             bangobj.stats[ii] = new StatSet();
             bangobj.stats[ii].setStat(Stat.Type.CATTLE_RUSTLED,

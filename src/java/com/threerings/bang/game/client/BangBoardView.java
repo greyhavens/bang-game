@@ -754,9 +754,9 @@ public class BangBoardView extends BoardView
             GroupLayout.makeVert(GroupLayout.CENTER));
         ((GroupLayout)marquee.getLayoutManager()).setGap(-1);
         marquee.setStyleClass("player_marquee_cont");
-        if (_bangobj.avatars[pidx] != null) {
+        if (_bangobj.playerInfo[pidx].avatar != null) {
             AvatarView aview = new AvatarView(_ctx, 2, false, false);
-            aview.setAvatar(_bangobj.avatars[pidx]);
+            aview.setAvatar(_bangobj.playerInfo[pidx].avatar);
             marquee.add(aview);
         }
         marquee.add(new BLabel(_bangobj.players[pidx].toString(),

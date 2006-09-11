@@ -57,7 +57,7 @@ public class GameOverViewTest extends TestApp
             user.handle,
             new Name("Elvis"),
         };
-        bangobj.avatars = new int[bangobj.players.length][];
+        bangobj.playerInfo = new BangObject.PlayerInfo[bangobj.players.length];
         bangobj.awards = new Award[bangobj.players.length];
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
@@ -68,7 +68,8 @@ public class GameOverViewTest extends TestApp
             }
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 100;
-            bangobj.avatars[ii] = BangAI.getAvatarPrint(
+            bangobj.playerInfo[ii] = new BangObject.PlayerInfo();
+            bangobj.playerInfo[ii].avatar = BangAI.getAvatarPrint(
                 RandomUtil.getInt(100) > 50);
         }
 

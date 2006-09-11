@@ -84,7 +84,7 @@ public class GameOverView extends SteelWindow
                 _cueidx = award.rank;
             }
             who.add(new FinalistView(ctx, apidx, bangobj.players[apidx],
-                                     bangobj.avatars[apidx],
+                                     bangobj.playerInfo[apidx].avatar,
                                      bangobj.awards[ii].rank));
         }
         _contents.add(who);

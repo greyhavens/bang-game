@@ -810,26 +810,29 @@ public class BangManager extends GameManager
             // create our player records now that we know everyone's in the
             // room and ready to go
             _precords = new PlayerRecord[getPlayerSlots()];
-            int[][] avatars = new int[getPlayerSlots()][];
+            BangObject.PlayerInfo[] pinfo =
+                new BangObject.PlayerInfo[getPlayerSlots()];
             for (int ii = 0; ii < _precords.length; ii++) {
                 PlayerRecord prec = (_precords[ii] = new PlayerRecord());
                 prec.finishedTick = new int[_bconfig.getRounds()];
+                pinfo[ii] = new BangObject.PlayerInfo();
                 if (isAI(ii)) {
                     prec.playerId = -1;
                     prec.ratings = new DSet<Rating>();
-                    avatars[ii] = ((BangAI)_AIs[ii]).avatar;
+                    pinfo[ii].avatar = ((BangAI)_AIs[ii]).avatar;
                 } else if (isActivePlayer(ii)) {
                     prec.user = (PlayerObject)getPlayer(ii);
                     prec.playerId = prec.user.playerId;
                     prec.purse = prec.user.getPurse();
                     prec.ratings = prec.user.ratings;
+                    pinfo[ii].playerId = prec.user.playerId;
                     Look look = prec.user.getLook(Look.Pose.DEFAULT);
                     if (look != null) {
-                        avatars[ii] = look.getAvatar(prec.user);
+                        pinfo[ii].avatar = look.getAvatar(prec.user);
                     }
                 }
             }
-            _bangobj.setAvatars(avatars);
+            _bangobj.setPlayerInfo(pinfo);
             // when the players all arrive, go into the buying phase
             startRound();
             break;
@@ -1386,6 +1389,8 @@ public class BangManager extends GameManager
             cal.get(Calendar.HOUR_OF_DAY) < 8) {
             user.stats.incrementStat(Stat.Type.MYSTERY_TWO, 1);
         }
+
+        // TODO: night owl
     }
 
     /**

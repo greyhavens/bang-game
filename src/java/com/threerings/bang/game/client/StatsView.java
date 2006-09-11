@@ -99,11 +99,11 @@ public class StatsView extends SteelWindow
             _bctx = (BangContext)_ctx;
             ((BangContext)_ctx).getBangClient().fadeOutMusic(2f);
         }
-        
+
         if (bangobj.state == BangObject.GAME_OVER) {
             _closeBtn = new BButton(_msgs.get("m.results"), this, "results");
         } else {
-            _closeBtn = new BButton(_msgs.get("m.next_round"), 
+            _closeBtn = new BButton(_msgs.get("m.next_round"),
                          this, "next_round");
         }
         _closeBtn.setEnabled(false);
@@ -111,7 +111,7 @@ public class StatsView extends SteelWindow
 
         _contents.setLayoutManager(new BorderLayout());
         _contents.setPreferredSize(CONTENT_DIMS);
-        
+
         // add forward and back buttons
         GroupLayout hlay = GroupLayout.makeHoriz(GroupLayout.RIGHT);
         hlay.setGap(40);
@@ -166,7 +166,7 @@ public class StatsView extends SteelWindow
             // show the rounds in reverse order
             showStats(_bobj.roundId + 2 - page);
         }
-        
+
         if (_bobj.state == BangObject.GAME_OVER && _bobj.roundId > 1) {
             _forward.setEnabled(page < _bobj.roundId + 1);
         } else {
@@ -181,9 +181,9 @@ public class StatsView extends SteelWindow
     protected void loadGameData ()
     {
         _statTypes = _bobj.scenario.getObjectives();
-        
+
         // create (possibly colorized) objective icons
-        _objectiveIcons = 
+        _objectiveIcons =
             new ImageIcon[_bobj.players.length][_statTypes.length];
         Colorization[] zations = null;
         for (int ii = 0; ii < _objectiveIcons.length; ii++) {
@@ -250,7 +250,7 @@ public class StatsView extends SteelWindow
      */
     protected int getIntStat (int pidx, Stat.Type type)
     {
-        return getIntStat(pidx, _bobj.stats, type); 
+        return getIntStat(pidx, _bobj.stats, type);
     }
 
     /**
@@ -265,13 +265,13 @@ public class StatsView extends SteelWindow
     }
 
     /**
-     * Show, and possibly animated, the total game objectives met by 
+     * Show, and possibly animated, the total game objectives met by
      * the players.
      */
     protected void showObjective ()
     {
         _contents.add(_header = new BLabel(_msgs.get(
-                        "m.game_title", _msgs.xlate(_objectiveTitle)), 
+                        "m.game_title", _msgs.xlate(_objectiveTitle)),
                 "endgame_title"), BorderLayout.NORTH);
         _header.setPreferredSize(new Dimension(300, HEADER_HEIGHT));
 
@@ -309,7 +309,7 @@ public class StatsView extends SteelWindow
             BContainer cont = new BContainer(hlay);
             cont.setPreferredSize(new Dimension(400, 50));
             int secondary = 0;
-            _labels[ii] = new BLabel[_objectives[ii] + secLabels + 
+            _labels[ii] = new BLabel[_objectives[ii] + secLabels +
                 (_showMultiplier ? 2 : 1)];
             Dimension apref = aview.getPreferredSize(-1, -1);
             int y = (apref.height - _objectiveIcons[0][0].getHeight()) / 2;
@@ -337,7 +337,6 @@ public class StatsView extends SteelWindow
                 }
             }
 
-           
             cont.add(objectiveIconContainer(
                         ii, secLabels, maxobjectives, maxIcons, iwidth, y),
                      GroupLayout.FIXED);
@@ -381,7 +380,7 @@ public class StatsView extends SteelWindow
      * Returns a container with all the primary and secondary objective
      * icons and scoring values.
      */
-    protected BContainer objectiveIconContainer (int pidx, int secLabels, 
+    protected BContainer objectiveIconContainer (int pidx, int secLabels,
             int maxobjectives, int maxIcons, int iwidth, int y)
     {
         iwidth--;
@@ -483,7 +482,7 @@ public class StatsView extends SteelWindow
             } else {
                 _ptscont.add(new Spacer(0, height));
             }
-            _ptscont.add(new BLabel(_msgs.get(_objectivePoints), 
+            _ptscont.add(new BLabel(_msgs.get(_objectivePoints),
                         "endgame_smallheader"));
             _ptscont.add(new Spacer(0, height));
             _ptscont.add(new BLabel(_msgs.get("m.damage_points"),
@@ -505,7 +504,7 @@ public class StatsView extends SteelWindow
             // add the data
             for (int ii = 0; ii < size; ii++) {
                 BLabel[] labels = new BLabel[7];
-                int points = getIntStat(ii, Stat.Type.POINTS_EARNED); 
+                int points = getIntStat(ii, Stat.Type.POINTS_EARNED);
                 int starPoints = getIntStat(ii, Stat.Type.BONUS_POINTS);
                 int damagePoints = points - _scenPoints[ii] - starPoints;
                 _ptscont.add(makeAvatarView(ii));
@@ -529,7 +528,7 @@ public class StatsView extends SteelWindow
         } else {
             setContents(_ptscont);
         }
-        
+
         // Add an interval to have the icons appear in sequence after
         // a short delay
         if (animate) {
@@ -626,13 +625,12 @@ public class StatsView extends SteelWindow
         // add the avatars
         int size = _bobj.players.length;
         for (int ii = 0; ii < size; ii++) {
-            
             avcont.add(makeAvatarView(ii));
         }
 
         statcont.add(new Spacer(1, 1));
 
-        // Get the statSet, or generate a cummulative statSet for an 
+        // Get the statSet, or generate a cummulative statSet for an
         // overall display
         StatSet[] statSet;
         if (round == _bobj.roundId) {
@@ -693,7 +691,7 @@ public class StatsView extends SteelWindow
         HashMap<Stat.Type, Integer> map = new HashMap<Stat.Type, Integer>();
 
         // Add the headers
-        for (Iterator<Stat.Type> iter = statTypes.iterator(); 
+        for (Iterator<Stat.Type> iter = statTypes.iterator();
                 iter.hasNext(); ) {
             Stat.Type type = iter.next();
             String key = "m.header_" + type.name().toLowerCase();
@@ -744,13 +742,13 @@ public class StatsView extends SteelWindow
     protected AvatarView makeAvatarView (int idx)
     {
         AvatarView aview = new AvatarView(_ctx, 8, false, true);
-        aview.setAvatar(_bobj.avatars[idx]);
+        aview.setAvatar(_bobj.playerInfo[idx].avatar);
         aview.setText(_bobj.players[idx].toString());
         aview.setStyleClass("endgame_player" + idx);
         Dimension d = aview.getPreferredSize(-1, -1);
         d.height = Math.max(GRID_HEIGHT, d.height);
         aview.setPreferredSize(d);
-        
+
         BangConfig config = (BangConfig) _ctrl.getPlaceConfig();
         final Handle playerHandle = (Handle) _bobj.players[idx];
         if (config.ais[idx] == null &&
@@ -786,14 +784,13 @@ public class StatsView extends SteelWindow
             addListener(this);
 
             PlayerObject player = _bctx.getUserObject();
-            
             OccupantInfo info = _bobj.getOccupantInfo(handle);
             _playerId = ((BangOccupantInfo) info).playerId;
 
             String help = _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_help");
             add(new BLabel(help, "endgame_folks_help"), GroupLayout.FIXED);
 
-            if (!player.isFriend(_playerId)) { 
+            if (!player.isFriend(_playerId)) {
                 add(new BMenuItem(
                     _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_thumbs_up"),
                     "thumbs_up"));
@@ -804,8 +801,7 @@ public class StatsView extends SteelWindow
                     "thumbs_down"));
             }
         }
-    
-        
+
         // from interface ActionListener
         public void actionPerformed (ActionEvent event)
         {
@@ -833,12 +829,12 @@ public class StatsView extends SteelWindow
                 _bctx.getClient().requireService(PlayerService.class);
             psvc.noteFolk(_bctx.getClient(), _playerId, opinion, listener);
         }
-    
+
         protected int _playerId;
     }
 
     protected static final Dimension POPUP_DIMENSION = new Dimension(350, 200);
-    
+
     /** Reference to our various game objects. */
     protected BasicContext _ctx;
     protected BangContext _bctx;
@@ -848,7 +844,7 @@ public class StatsView extends SteelWindow
 
     /** Whether or not to recolor primary objective icons. */
     protected boolean _recolor;
-    
+
     /** Content layouts that can be toggled through. */
     protected BButton _back, _forward, _closeBtn;
     protected BContainer _objcont, _ptscont, _currcont;
@@ -895,14 +891,14 @@ public class StatsView extends SteelWindow
         Stat.Type.DISTANCE_MOVED, Stat.Type.SHOTS_FIRED,
         Stat.Type.UNITS_LOST,
         // Cattle Rustling
-        Stat.Type.CATTLE_RUSTLED, Stat.Type.BRAND_POINTS, 
+        Stat.Type.CATTLE_RUSTLED, Stat.Type.BRAND_POINTS,
         // Claim Jumping & Gold Rush
         Stat.Type.NUGGETS_CLAIMED,
         // Land Grab
         Stat.Type.STEADS_CLAIMED, Stat.Type.STEAD_POINTS,
         // Totem Building
         Stat.Type.TOTEMS_SMALL, Stat.Type.TOTEMS_MEDIUM,
-        Stat.Type.TOTEMS_LARGE, Stat.Type.TOTEMS_CROWN, 
+        Stat.Type.TOTEMS_LARGE, Stat.Type.TOTEMS_CROWN,
         Stat.Type.TOTEM_POINTS,
         // Wendigo Attack
         Stat.Type.WENDIGO_SURVIVALS, Stat.Type.TALISMAN_POINTS,
