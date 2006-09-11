@@ -118,7 +118,6 @@ public class PickTutorialView extends BDecoratedWindow
 
             if (unplayed > 1) {
                 tlabel.setEnabled(false);
-                play.setEnabled(false);
             }
         }
 
