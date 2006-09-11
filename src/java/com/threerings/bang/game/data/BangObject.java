@@ -13,7 +13,6 @@ import com.samskivert.util.StringUtil;
 
 import com.threerings.io.Streamable;
 import com.threerings.parlor.game.data.GameObject;
-import com.threerings.presents.dobj.DSet;
 import com.threerings.util.StreamablePoint;
 
 import com.threerings.bang.data.Stat;
@@ -21,7 +20,6 @@ import com.threerings.bang.data.StatSet;
 
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
-import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Hindrance;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Track;
@@ -89,7 +87,7 @@ public class BangObject extends GameObject
 
     /** Used to keep track of player occupant information even if they're not
      * in the room. */
-    public static class PlayerInfo
+    public static class PlayerInfo implements Streamable
     {
         /** The player's unique identifier. */
         public int playerId = -1;
