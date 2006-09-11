@@ -66,7 +66,7 @@ public class LoggingRobot extends BallisticUnit
         ArrayList<ShotEffect> proxShots = new ArrayList<ShotEffect>();
         ProximityShotEffect proxShot = null;
         for (Piece piece : pieces) {
-            if (getDistance(piece) > 1 || !piece.isAlive() ||
+            if (getDistance(piece) != 1 || !piece.isAlive() ||
                 !bangobj.board.canCross(x, y, piece.x, piece.y)) {
                 continue;
             }
