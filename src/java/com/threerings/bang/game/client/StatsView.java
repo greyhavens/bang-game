@@ -468,10 +468,7 @@ public class StatsView extends SteelWindow
     {
         _contents.remove(_header);
 
-        // TODO DEBUG DEBUG DEBUG
-        // TODO DEBUG DEBUG DEBUG
-        // TODO DEBUG DEBUG DEBUG        
-        if (true || _ptscont == null) {
+        if (_ptscont == null) {
             int height = HEADER_HEIGHT - 2;
             int size = _bobj.players.length;
 
