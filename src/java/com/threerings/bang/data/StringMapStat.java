@@ -17,7 +17,8 @@ public abstract class StringMapStat extends Stat
      */
     public boolean containsKey (String key)
     {
-        return ArrayUtil.binarySearch(_keys, 0, _keys.length, key) >= 0;
+        return (key == null) ? false :
+            ArrayUtil.binarySearch(_keys, 0, _keys.length, key) >= 0;
     }
 
     /**
@@ -26,6 +27,9 @@ public abstract class StringMapStat extends Stat
      */
     public int get (String key)
     {
+        if (key == null) {
+            return 0;
+        }
         int iidx = ArrayUtil.binarySearch(_keys, 0, _keys.length, key);
         return (iidx < 0) ? 0 : _values[iidx];
     }
@@ -38,6 +42,9 @@ public abstract class StringMapStat extends Stat
      */
     public boolean put (String key, int value)
     {
+        if (key == null) {
+            return false;
+        }
         int iidx = getOrCreateEntry(key);
         int ovalue = _values[iidx];
         _values[iidx] = Math.min(value, getMaxValue());
@@ -56,6 +63,9 @@ public abstract class StringMapStat extends Stat
      */
     public boolean increment (String key, int amount)
     {
+        if (key == null) {
+            return false;
+        }
         int iidx = getOrCreateEntry(key);
         int ovalue = _values[iidx];
         _values[iidx] = Math.min(_values[iidx] + amount, getMaxValue());
