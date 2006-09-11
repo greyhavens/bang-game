@@ -8,16 +8,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.jmex.bui.BButton;
-import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BMenuItem;
 import com.jmex.bui.BPopupMenu;
-import com.jmex.bui.BPopupWindow;
-import com.jmex.bui.BScrollBar;
 import com.jmex.bui.BScrollPane;
-import com.jmex.bui.BWindow;
+import com.jmex.bui.BTextArea;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.event.ActionEvent;
@@ -35,7 +32,6 @@ import com.jmex.bui.util.Point;
 
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
-import com.samskivert.util.RandomUtil;
 
 import com.threerings.media.image.Colorization;
 import com.threerings.presents.client.InvocationService;
@@ -45,12 +41,7 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.SteelWindow;
-import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.BangOccupantInfo;
-import com.threerings.bang.data.FolkEntry;
-import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.util.BangContext;
@@ -59,7 +50,7 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
-import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.bang.game.data.BangObject.PlayerInfo;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -750,13 +741,12 @@ public class StatsView extends SteelWindow
         aview.setPreferredSize(d);
 
         BangConfig config = (BangConfig) _ctrl.getPlaceConfig();
-        final Handle playerHandle = (Handle) _bobj.players[idx];
+        final PlayerInfo playerInfo = _bobj.playerInfo[idx];
         if (config.ais[idx] == null &&
-                !playerHandle.equals(_bctx.getUserObject().handle)) {
+                playerInfo.playerId != _bctx.getUserObject().playerId) {
             aview.addListener(new MouseAdapter() {
-                @Override //from MouseAdapter
                 public void mousePressed (MouseEvent event) {
-                    new PlayerPopup(playerHandle).popup(
+                    new PlayerPopup(playerInfo).popup(
                         event.getX(), event.getY(), true);
                 }
             });
@@ -775,20 +765,20 @@ public class StatsView extends SteelWindow
         /**
          * Creates a popup menu for the specified player.
          */
-        public PlayerPopup (Handle handle)
+        public PlayerPopup (PlayerInfo info)
         {
             super(StatsView.this);
             setStyleClass("popupmenu");
-            setPreferredSize(POPUP_DIMENSION);
-            setLayer(1);
             addListener(this);
 
             PlayerObject player = _bctx.getUserObject();
-            OccupantInfo info = _bobj.getOccupantInfo(handle);
-            _playerId = ((BangOccupantInfo) info).playerId;
+            _playerId = info.playerId;
 
             String help = _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_help");
-            add(new BLabel(help, "endgame_folks_help"), GroupLayout.FIXED);
+            BTextArea field = new BTextArea(help);
+            field.setStyleClass("endgame_folks_help");
+            field.setPreferredWidth(380);
+            add(field, GroupLayout.FIXED);
 
             if (!player.isFriend(_playerId)) {
                 add(new BMenuItem(
@@ -819,7 +809,7 @@ public class StatsView extends SteelWindow
                     // TODO: confirmation?
                 }
                 public void requestFailed(String cause) {
-                    log.warning("Wanted poster request failed: " + cause);
+                    log.warning("Folk note request failed: " + cause);
                     _bctx.getChatDirector().displayFeedback(
                         GameCodes.GAME_MSGS,
                         MessageBundle.tcompose("m.folk_note_failed", cause));
@@ -832,8 +822,6 @@ public class StatsView extends SteelWindow
 
         protected int _playerId;
     }
-
-    protected static final Dimension POPUP_DIMENSION = new Dimension(350, 200);
 
     /** Reference to our various game objects. */
     protected BasicContext _ctx;
