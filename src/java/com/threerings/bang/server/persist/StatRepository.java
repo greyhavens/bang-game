@@ -69,25 +69,7 @@ public class StatRepository extends SimpleRepository
         super(conprov, STAT_DB_IDENT);
 
         // load up our string set mappings
-        execute(new Operation<Object>() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
-                throws SQLException, PersistenceException
-            {
-                String query = "select STAT_CODE, VALUE, CODE " +
-                    "from STRING_CODES";
-                Statement stmt = conn.createStatement();
-                try {
-                    ResultSet rs = stmt.executeQuery(query);
-                    while (rs.next()) {
-                        mapStringCode(Stat.getType(rs.getInt(1)),
-                                      rs.getString(2), rs.getInt(3));
-                    }
-                } finally {
-                    JDBCUtil.close(stmt);
-                }
-                return null;
-            }
-        });
+        loadStringCodes(null);
     }
 
     /**
@@ -170,14 +152,22 @@ public class StatRepository extends SimpleRepository
     public String getCodeString (Stat.Type type, int code)
     {
         HashIntMap<String> map = _codeToString.get(type);
-        if (map == null) {
-            log.warning("Missing reverse mapping [type=" + type + "].");
-            _codeToString.put(type, map = new HashIntMap<String>());
-        }
-        String value = map.get(code);
+        String value = (map == null) ? null : map.get(code);
         if (value == null) {
-            log.warning("Missing reverse maping [type=" + type +
-                        ", code=" + code + "].");
+            // our value may have been mapped on a different server, so refresh
+            // this mapping table from the database; then try again
+            try {
+                loadStringCodes(type);
+            } catch (PersistenceException pe) {
+                log.log(Level.WARNING, "Failed to reload string codes " +
+                    "[type=" + type + ", code=" + code + "].", pe);
+            }
+            map = _codeToString.get(type);
+            value = (map == null) ? null : map.get(code);
+            if (value == null) {
+                log.warning("Missing reverse maping [type=" + type +
+                    ", code=" + code + "].");
+            }
         }
         return value;
     }
@@ -420,6 +410,32 @@ public class StatRepository extends SimpleRepository
         } finally {
             JDBCUtil.close(stmt);
         }
+    }
+
+    /** Helper function used at repository startup. */
+    protected void loadStringCodes (Stat.Type type)
+        throws PersistenceException
+    {
+        final String query = "select STAT_CODE, VALUE, CODE " +
+            "from STRING_CODES " +
+            ((type == null) ? "" : (" where STAT_CODE = " + type.code()));
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        mapStringCode(Stat.getType(rs.getInt(1)),
+                                      rs.getString(2), rs.getInt(3));
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
     }
 
     /** Helper function used at repository startup. */
