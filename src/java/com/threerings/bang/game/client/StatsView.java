@@ -12,12 +12,18 @@ import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BMenuItem;
+import com.jmex.bui.BPopupMenu;
+import com.jmex.bui.BPopupWindow;
 import com.jmex.bui.BScrollBar;
 import com.jmex.bui.BScrollPane;
+import com.jmex.bui.BWindow;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.MouseAdapter;
+import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
@@ -32,20 +38,30 @@ import com.samskivert.util.Interval;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.media.image.Colorization;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.SteelWindow;
+import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangOccupantInfo;
+import com.threerings.bang.data.FolkEntry;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.crowd.data.OccupantInfo;
 
+import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
@@ -452,7 +468,10 @@ public class StatsView extends SteelWindow
     {
         _contents.remove(_header);
 
-        if (_ptscont == null) {
+        // TODO DEBUG DEBUG DEBUG
+        // TODO DEBUG DEBUG DEBUG
+        // TODO DEBUG DEBUG DEBUG        
+        if (true || _ptscont == null) {
             int height = HEADER_HEIGHT - 2;
             int size = _bobj.players.length;
 
@@ -610,6 +629,7 @@ public class StatsView extends SteelWindow
         // add the avatars
         int size = _bobj.players.length;
         for (int ii = 0; ii < size; ii++) {
+            
             avcont.add(makeAvatarView(ii));
         }
 
@@ -733,9 +753,95 @@ public class StatsView extends SteelWindow
         Dimension d = aview.getPreferredSize(-1, -1);
         d.height = Math.max(GRID_HEIGHT, d.height);
         aview.setPreferredSize(d);
+        
+        BangConfig config = (BangConfig) _ctrl.getPlaceConfig();
+        final Handle playerHandle = (Handle) _bobj.players[idx];
+        if (config.ais[idx] == null &&
+                !playerHandle.equals(_bctx.getUserObject().handle)) {
+            aview.addListener(new MouseAdapter() {
+                @Override //from MouseAdapter
+                public void mousePressed (MouseEvent event) {
+                    new PlayerPopup(playerHandle).popup(
+                        event.getX(), event.getY(), true);
+                }
+            });
+        }
+
         return aview;
     }
 
+    /**
+     * A popup menu that is displayed a player clicks on another player's
+     * avatar after a game.
+     */
+    protected class PlayerPopup extends BPopupMenu
+        implements ActionListener
+    {
+        /**
+         * Creates a popup menu for the specified player.
+         */
+        public PlayerPopup (Handle handle)
+        {
+            super(StatsView.this);
+            setStyleClass("popupmenu");
+            setPreferredSize(POPUP_DIMENSION);
+            setLayer(1);
+            addListener(this);
+
+            PlayerObject player = _bctx.getUserObject();
+            
+            OccupantInfo info = _bobj.getOccupantInfo(handle);
+            _playerId = ((BangOccupantInfo) info).playerId;
+
+            String help = _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_help");
+            add(new BLabel(help, "endgame_folks_help"), GroupLayout.FIXED);
+
+            if (!player.isFriend(_playerId)) { 
+                add(new BMenuItem(
+                    _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_thumbs_up"),
+                    "thumbs_up"));
+            }
+            if (!player.isFoe(_playerId)) {
+                add(new BMenuItem(
+                    _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_thumbs_down"),
+                    "thumbs_down"));
+            }
+        }
+    
+        
+        // from interface ActionListener
+        public void actionPerformed (ActionEvent event)
+        {
+            byte opinion;
+            if ("thumbs_up".equals(event.getAction())) {
+                opinion = PlayerService.FOLK_IS_FRIEND;
+            } else if ("thumbs_down".equals(event.getAction())) {
+                opinion = PlayerService.FOLK_IS_FOE;
+            } else {
+                return;
+            }
+            InvocationService.ConfirmListener listener =
+                new InvocationService.ConfirmListener() {
+                public void requestProcessed () {
+                    // TODO: confirmation?
+                }
+                public void requestFailed(String cause) {
+                    log.warning("Wanted poster request failed: " + cause);
+                    _bctx.getChatDirector().displayFeedback(
+                        GameCodes.GAME_MSGS,
+                        MessageBundle.tcompose("m.folk_note_failed", cause));
+                }
+            };
+            PlayerService psvc = (PlayerService)
+                _bctx.getClient().requireService(PlayerService.class);
+            psvc.noteFolk(_bctx.getClient(), _playerId, opinion, listener);
+        }
+    
+        protected int _playerId;
+    }
+
+    protected static final Dimension POPUP_DIMENSION = new Dimension(350, 200);
+    
     /** Reference to our various game objects. */
     protected BasicContext _ctx;
     protected BangContext _bctx;

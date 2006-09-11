@@ -1536,3 +1536,10 @@ endgame_player3 {
   parent: "avatar_view_unframed_8";
   color: #888800;
 }
+
+endgame_folks_help {
+  parent: "menuitem";
+  font: "Dom Casual" plain 18;
+  color: #766300;
+}
+  
