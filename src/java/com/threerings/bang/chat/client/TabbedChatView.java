@@ -70,13 +70,6 @@ public abstract class TabbedChatView extends BContainer
         _alert = new ImageIcon(_ctx.loadImage("ui/chat/alert_icon.png"));
     }
 
-    @Override // documentation inherited
-    public void wasRemoved ()
-    {
-        super.wasRemoved();
-        clear();
-    }
-
     // from interface ChatDisplay
     public void clear ()
     {
