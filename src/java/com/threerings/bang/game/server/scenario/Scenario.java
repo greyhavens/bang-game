@@ -223,9 +223,17 @@ public abstract class Scenario
      */
     public boolean addBonus (BangObject bangobj, Piece[] pieces)
     {
+        // count up the unclaimed (non-scenario) bonuses on the board
+        int bonuses = 0;
+        for (Piece piece : pieces) {
+            if (piece instanceof Bonus && !((Bonus)piece).isScenarioBonus()) {
+                bonuses++;
+            }
+        }
+
         // have a 1 in 4 chance of adding a bonus for each live player for
         // which there is not already a bonus on the board excepting one
-        int bprob = (bangobj.gdata.livePlayers - bangobj.gdata.bonuses+1);
+        int bprob = bangobj.gdata.livePlayers - bonuses - 1;
         int rando = RandomUtil.getInt(40);
         if (bprob < 0 || rando > bprob*10) {
             log.fine("No bonus, probability " + bprob + " in 10 (" +

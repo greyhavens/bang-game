@@ -48,14 +48,10 @@ public class BangObject extends GameObject
         /** The average power of the live players. */
         public float averagePower;
 
-        /** The number of unclaimed bonuses on the board. */
-        public int bonuses;
-
         /** Clears our accumulator stats in preparation for a recompute. */
         public void clear () {
             livePlayers = 0;
             totalPower = 0;
-            bonuses = 0;
         }
 
         /** Generates a string representation of this instance. */
@@ -524,9 +520,7 @@ public class BangObject extends GameObject
         int pcount = players.length;
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
-            if (p instanceof Bonus) {
-                gdata.bonuses++;
-            } else if (p.isAlive() && p.owner >= 0) {
+            if (p.isAlive() && p.owner >= 0) {
                 pdata[p.owner].liveUnits++;
                 int pp = (100 - p.damage);
                 pdata[p.owner].power += pp;
