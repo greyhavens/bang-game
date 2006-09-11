@@ -72,19 +72,19 @@ public interface PlayerService extends InvocationService
     /**
      * Requests to view another player's wanted poster.
      */
-    public void getPosterInfo(
+    public void getPosterInfo (
         Client client, Handle handle, ResultListener listener);
 
     /**
      * Requests to update the configurable attributes of our wanted posted
      */
-    public void updatePosterInfo(
+    public void updatePosterInfo (
         Client client, int playerId, String Statement,
         int[] badgeIds, ConfirmListener listener);
 
     /**
      * Registers another player as friendly, neutral or unfriendly.
      */
-    public void noteFolk(Client client, int playerId, int opinion,
-                         ConfirmListener listener);
+    public void noteFolk (Client client, int playerId, int opinion,
+        ConfirmListener listener);
 }
