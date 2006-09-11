@@ -65,14 +65,15 @@ public abstract class ComicChatView
         public T build();
     }
 
-    public ComicChatView (BangContext ctx, boolean showNames)
+    public ComicChatView (BangContext ctx, Dimension size, boolean showNames)
     {
         super();
 
         _ctx = ctx;
         _showNames = showNames;
         _vport.setStyleClass("comic_chat_viewport");
-        setPreferredSize(new Dimension(400, 400));
+        // this class does not function well without an absolute size
+        setPreferredSize(size);
 
         // render the chat bubble backgrounds
         createBubbleBackgrounds();

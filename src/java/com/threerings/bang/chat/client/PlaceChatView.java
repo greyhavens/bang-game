@@ -12,6 +12,7 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.ChatDisplay;
@@ -42,7 +43,7 @@ public class PlaceChatView extends ComicChatView
     
     public PlaceChatView (BangContext ctx)
     {
-        super(ctx, true);
+        super(ctx, new Dimension(400, 400), true);
         _vport.setStyleClass("place_chat_viewport");
 
         BContainer tcont = new BContainer(

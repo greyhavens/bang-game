@@ -113,6 +113,8 @@ public class PaperView extends BContainer
     public void init (SaloonObject salobj)
     {
         _salobj = salobj;
+        // create the folkview as soon as we're ready
+        _folks = new FolkView(_ctx, _salobj);
     }
 
     protected BButton createMastheadButton (String id)
@@ -134,9 +136,6 @@ public class PaperView extends BContainer
             break;
 
         case 1:
-            if (_folks == null) {
-                _folks = new FolkView(_ctx, _salobj);
-            }
             if (_folks.getParent() == null) {
                 _contcont.removeAll();
                 _contcont.add(_folks, BorderLayout.CENTER);
