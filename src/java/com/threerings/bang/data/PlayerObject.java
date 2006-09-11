@@ -126,17 +126,22 @@ public class PlayerObject extends BodyObject
     }
 
     /**
-     * Returns the purse owned by this player or the default purse if the
+     * Returns the best purse owned by this player or the default purse if the
      * player does not yet have one.
      */
     public Purse getPurse ()
     {
+        // use the player's best (highest town indexed) purse
+        Purse purse = Purse.DEFAULT_PURSE;
         for (Item item : inventory) {
             if (item instanceof Purse) {
-                return (Purse)item;
+                Purse cpurse = (Purse)item;
+                if (cpurse.getTownIndex() > purse.getTownIndex()) {
+                    purse = cpurse;
+                }
             }
         }
-        return Purse.DEFAULT_PURSE;
+        return purse;
     }
 
     /**
