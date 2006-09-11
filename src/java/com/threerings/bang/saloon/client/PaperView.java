@@ -114,7 +114,13 @@ public class PaperView extends BContainer
     {
         _salobj = salobj;
         // create the folkview as soon as we're ready
-        _folks = new FolkView(_ctx, _salobj);
+        _folks = new FolkView(_ctx, this, _salobj);
+    }
+
+    /** Called when the FolkView chat interface demands focus */
+    public void folkChatAlert ()
+    {
+        displayPage(1);
     }
 
     protected BButton createMastheadButton (String id)

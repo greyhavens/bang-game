@@ -55,12 +55,13 @@ import com.threerings.util.MessageBundle;
 public class FolkView extends BContainer
     implements SetListener, AttributeChangeListener, ElementUpdateListener
 {
-    public FolkView (BangContext ctx, SaloonObject salobj)
+    public FolkView (BangContext ctx, PaperView paper, SaloonObject salobj)
     {
         super(GroupLayout.makeVert(
             GroupLayout.STRETCH, GroupLayout.TOP, GroupLayout.STRETCH));
         setStyleClass("folk_view");
         _ctx = ctx;
+        _paper = paper;
         _salobj = salobj;
         _user = ctx.getUserObject();
 
@@ -332,7 +333,7 @@ public class FolkView extends BContainer
             public void actionPerformed (ActionEvent event)
             {
                 if ("chat".equals(event.getAction())) {
-                    _folkTabs.openUserTab(_handle, getAvatar(), false);
+                    _folkTabs.openUserTab(_handle, getAvatar(), true);
 
                 } else if ("remove".equals(event.getAction())) {
                     OccupantInfo info = _salobj.getOccupantInfo(_handle);
@@ -427,6 +428,7 @@ public class FolkView extends BContainer
                 return true;
             }
             showTabs();
+            _paper.folkChatAlert();
             if (grabFocus) {
                 _text.requestFocus();
             }
@@ -459,6 +461,9 @@ public class FolkView extends BContainer
     
     /** A reference to our context */
     protected BangContext _ctx;
+
+    /** A reference to the paper view in which we are but one page */
+    protected PaperView _paper;
     
     /** A reference to the saloon we're in */
     protected SaloonObject _salobj;
