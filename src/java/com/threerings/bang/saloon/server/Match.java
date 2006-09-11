@@ -82,6 +82,15 @@ public class Match
             return false;
         }
         
+        // make sure we're not a foe of theirs and none of them one of ours
+        for (int i = 0; i < players.length; i ++) {
+            if (players[i] != null &&
+                    (players[i].isFoe(player.playerId) ||
+                     player.isFoe(players[i].playerId))) {
+                return false;
+            }
+        }
+        
         // now make sure the joining player satisfies our rating range
         // requirements: the joiner must fall within our desired range of
         // the average rating and the min and max rating must fall within
