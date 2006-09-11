@@ -152,33 +152,6 @@ public class RenderUtil
     }
 
     /**
-     * Returns the average color of the terrain with the given code.
-     */
-    public static ColorRGBA getGroundColor (BasicContext ctx, int code)
-    {
-        ColorRGBA color = _groundColors.get(code);
-        if (color != null) {
-            return color;
-        }
-        // if we haven't computed it already, determine the overall color
-        // average for the texture
-        Image img = getGroundTexture(ctx, code).getTexture().getImage();
-        ByteBuffer imgdata = img.getData();
-        int r = 0, g = 0, b = 0, bytes = imgdata.limit();
-        float divisor = 255f * (bytes / 3);
-        for (int ii = 0; ii < bytes; ii += 3) {
-            // the bytes are stored unsigned in the image but java is going
-            // to interpret them as signed, so we need to do some fiddling
-            r += btoi(imgdata.get(ii));
-            g += btoi(imgdata.get(ii+1));
-            b += btoi(imgdata.get(ii+2));
-        }
-        color = new ColorRGBA(r / divisor, g / divisor, b / divisor, 1f);
-        _groundColors.put(code, color);
-        return color;
-    }
-
-    /**
      * Returns a randomly selected ground texture for the specified terrain
      * type.
      */
@@ -192,7 +165,7 @@ public class RenderUtil
                     "[code=" + code + "].");
                 return null;
             }
-            _groundTexs.put(code, texs = new ArrayList<TextureState>());
+            texs = new ArrayList<TextureState>();
             String prefix = "terrain/" + terrain.type + "/texture";
             for (int ii = 1; ; ii++) {
                 String path = prefix + ii + ".png";
@@ -208,6 +181,7 @@ public class RenderUtil
             if (texs.size() == 0) {
                 log.warning("Found no ground textures [type=" + terrain + "].");
             }
+            _groundTexs.put(code, texs);
         }
         return (texs.size() == 0) ? null : RandomUtil.pickRandom(texs);
     }

@@ -8,7 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.jme.renderer.ColorRGBA;
+
 import com.samskivert.util.HashIntMap;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.util.BangUtil;
@@ -41,9 +44,9 @@ public class TerrainConfig
      * cover). */
     public float scale;
 
-    /** The amount of stuff that units kick up when they move over this
-     * terrain: 0 for none, 1 for lots. */
-    public float dustiness;
+    /** The color of the stuff that units kick up when they move over this
+     * terrain.  The alpha value controls the "dustiness." */
+    public ColorRGBA dustColor;
 
     /**
      * Returns the terrain configuration for the specified terrain type.
@@ -96,8 +99,12 @@ public class TerrainConfig
         config.traversalCost = BangUtil.getIntProperty(type, props,
             "traversal", BangBoard.BASE_TRAVERSAL);
         config.scale = BangUtil.getFloatProperty(type, props, "scale", 1f);
-        config.dustiness = BangUtil.getFloatProperty(type, props,
-            "dustiness", 0.2f);
+        
+        // the default dust color is that of dirt
+        float[] dcolor = StringUtil.parseFloatArray(
+            props.getProperty("dust_color", "0.54, 0.45, 0.26, 0.8"));
+        config.dustColor = new ColorRGBA(
+            dcolor[0], dcolor[1], dcolor[2], dcolor[3]);
 
         // map the type and code to the config
         _types.put(type, config);

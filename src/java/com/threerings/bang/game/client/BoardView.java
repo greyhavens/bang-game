@@ -528,9 +528,9 @@ public class BoardView extends BComponent
             ty = (int)(location.y / TILE_SIZE);
         TerrainConfig terrain = TerrainConfig.getConfig(
             _board.getPredominantTerrain(tx, ty));
-        ColorRGBA gcolor = RenderUtil.getGroundColor(_ctx, terrain.code);
-        result.set(result.r * gcolor.r, result.g * gcolor.g,
-            result.b * gcolor.b, terrain.dustiness);
+        ColorRGBA dcolor = terrain.dustColor;
+        result.set(result.r * dcolor.r, result.g * dcolor.g,
+            result.b * dcolor.b, dcolor.a);
     }
     
     /**

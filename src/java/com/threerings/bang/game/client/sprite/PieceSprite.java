@@ -471,9 +471,8 @@ public class PieceSprite extends Sprite
         ParticleMesh ring = ParticlePool.getDustRing();
         TerrainConfig terrain = TerrainConfig.getConfig(
             _view.getBoard().getPredominantTerrain(_piece.x, _piece.y));
-        ColorRGBA color = RenderUtil.getGroundColor(_ctx, terrain.code);
-        ring.getStartColor().set(color.r, color.g, color.b,
-            terrain.dustiness);
+        ColorRGBA color = terrain.dustColor;
+        ring.getStartColor().set(color);
         ring.getEndColor().set(color.r, color.g, color.b, 0f);
         
         ring.setLocalTranslation(getLocalTranslation());
