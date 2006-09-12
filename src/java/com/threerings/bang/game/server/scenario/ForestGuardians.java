@@ -330,7 +330,8 @@ public class ForestGuardians extends Scenario
                         "[where=" + _bangmgr.where() + "]");
                     return;
                 }
-                Unit unit = Unit.getUnit("indian_post/logging_robot");
+                Unit unit = Unit.getUnit(
+                    RandomUtil.pickRandom(LoggingRobot.UNIT_TYPES));
                 unit.assignPieceId(bangobj);
                 unit.position(bspot.x, bspot.y);
                 _bangmgr.addPiece(unit, (bangobj.tick >= 0) ?
