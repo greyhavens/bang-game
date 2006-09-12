@@ -8,10 +8,14 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Properties;
 
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.util.NameCreator;
+import com.threerings.bang.util.NameFactory;
 
 import static com.threerings.bang.Log.log;
 
@@ -112,6 +116,10 @@ public class UnitConfig
     /** If this unit uses a gun. */
     public boolean gunUser;
 
+    /** Whether or not this unit is male for purposes of random Big Shot name
+     * generation. */
+    public boolean male;
+    
     /** Returns a translatable name for the specified unit type. */
     public static String getName (String type)
     {
@@ -241,6 +249,17 @@ public class UnitConfig
         return true;
     }
 
+    /**
+     * Generates a random name for this Big Shot unit by combining one of the
+     * Big Shot prefixes with a gender-appropriate root.
+     */
+    public String pickRandomName ()
+    {
+        NameCreator ncreator = NameFactory.getCreator();
+        return RandomUtil.pickRandom(ncreator.getBigShotPrefixes(male)) +
+            " " + RandomUtil.pickRandom(ncreator.getHandleRoots(male));
+    }
+    
     /** Returns a string representation of this instance. */
     public String toString ()
     {
@@ -295,6 +314,7 @@ public class UnitConfig
         config.damage = BangUtil.getIntProperty(type, props, "damage", 25);
         config.gunUser = BangUtil.getBooleanProperty(
                 type, props, "gun_user", true);
+        config.male = BangUtil.getBooleanProperty(type, props, "male", true);
 
         config.initiative =
             BangUtil.getIntProperty(type, props, "initiative", 0);

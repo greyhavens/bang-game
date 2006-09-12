@@ -11,6 +11,7 @@ import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
@@ -53,7 +54,11 @@ public class RecruitDialog extends BDecoratedWindow
 
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         row.add(new BLabel(_msgs.get("m.rd_name")), GroupLayout.FIXED);
-        row.add(_name = new BTextField());
+        row.add(_name = new BTextField(config.pickRandomName()));
+        BButton random = new BButton(new ImageIcon(
+            ctx.loadImage("ui/icons/dice.png")), this, "random");
+        random.setStyleClass("arrow_button");
+        row.add(random, GroupLayout.FIXED);
         cont.add(row, GroupLayout.FIXED);
 
         cont.add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
@@ -90,7 +95,10 @@ public class RecruitDialog extends BDecoratedWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        if ("cancel".equals(event.getAction())) {
+        if ("random".equals(event.getAction())) {
+            _name.setText(_config.pickRandomName());
+            
+        } else if ("cancel".equals(event.getAction())) {
             _ctx.getBangClient().clearPopup(this, true);
 
         } else if ("recruit".equals(event.getAction())) {

@@ -19,6 +19,12 @@ public class EnglishNameCreator extends NameCreator
     }
 
     @Override // documentation inherited
+    public HashSet<String> getBigShotPrefixes (boolean isMale)
+    {
+        return BSHOT_PREF_TABLE;
+    }
+    
+    @Override // documentation inherited
     public HashSet<String> getHandlePrefixes (boolean isMale)
     {
         return isMale ? MALE_PREF_TABLE : FEMALE_PREF_TABLE;
@@ -45,7 +51,8 @@ public class EnglishNameCreator extends NameCreator
     protected static HashSet<String> FEMALE_SUFF_TABLE = new HashSet<String>();
 
     protected static HashSet<String> AI_PREF_TABLE = new HashSet<String>();
-
+    protected static HashSet<String> BSHOT_PREF_TABLE = new HashSet<String>();
+    
     protected static final String[] SHARED_PREFIXES = {
         "Anasazi",
         "Apache",
@@ -101,6 +108,18 @@ public class EnglishNameCreator extends NameCreator
         "Tin Can",
     };
 
+    protected static final String[] BIG_SHOT_PREFIXES = {
+        "Big",
+        "Old",
+        "Solid",
+        "Trusty",
+        "Handy",
+        "Loyal",
+        "Faithful",
+        "Useful",
+        "Timely",
+    };
+    
     protected static final String[] SHARED_ROOTS = {
         "Charlie",
         "Charley",
@@ -252,5 +271,6 @@ public class EnglishNameCreator extends NameCreator
         CollectionUtil.addAll(FEMALE_SUFF_TABLE, FEMALE_SUFFIXES);
 
         CollectionUtil.addAll(AI_PREF_TABLE, AI_PREFIXES);
+        CollectionUtil.addAll(BSHOT_PREF_TABLE, BIG_SHOT_PREFIXES);
     }
 }

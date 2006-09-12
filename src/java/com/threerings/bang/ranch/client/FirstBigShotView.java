@@ -13,6 +13,7 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.TextEvent;
 import com.jmex.bui.event.TextListener;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.StringUtil;
@@ -81,6 +82,10 @@ public class FirstBigShotView extends BDecoratedWindow
                 _done.setEnabled(isReady());
             }
         });
+        BButton random = new BButton(new ImageIcon(
+            ctx.loadImage("ui/icons/dice.png")), this, "random");
+        random.setStyleClass("arrow_button");
+        ncont.add(random);
         ncont.add(new Spacer(25, 0));
 
         add(_status);
@@ -93,7 +98,10 @@ public class FirstBigShotView extends BDecoratedWindow
     public void actionPerformed (ActionEvent event)
     {
         String cmd = event.getAction();
-        if (cmd.equals("done")) {
+        if (cmd.equals("random")) {
+            _name.setText(_config.pickRandomName());
+            
+        } else if (cmd.equals("done")) {
             pickBigShot();
         }
     }
@@ -103,6 +111,7 @@ public class FirstBigShotView extends BDecoratedWindow
     {
         if (selected) {
             _config = ((UnitIcon)icon).getUnit();
+            _name.setText(_config.pickRandomName());
             _status.setText(_umsgs.xlate(_config.getTip()));
         } else {
             _status.setText(_msgs.get("m.firstbs_tip"));

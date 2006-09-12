@@ -15,6 +15,10 @@ public abstract class NameCreator
     public abstract HashSet<String> getAIPrefixes (boolean isMale);
 
     /** Returns a set of prefixes that can be prepended to a root to make a
+     * Big Shot name. For example: "Handy" Jack, "Faithful" Alfred, etc. */
+    public abstract HashSet<String> getBigShotPrefixes (boolean isMale);
+    
+    /** Returns a set of prefixes that can be prepended to a root to make a
      * cowboy name. For example: "Wild" Pete, "Mean" Bart, "Oklahoma" Bob,
      * etc. */
     public abstract HashSet<String> getHandlePrefixes (boolean isMale);
