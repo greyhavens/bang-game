@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="objVarx2" translation="0.0, 0.0, 200.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
+  <triMesh name="objVarx2" translation="-9.67096, 7.69337, 300.0" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
     <vertex location="-90.6481, -144.522, -1000.0" normal="0.0789083, -0.974249, 0.211218" tcoords="-0.18662, -3.0"/>
     <vertex location="2.13586, -95.9014, -810.4" normal="0.146144, -0.975895, 0.162086" tcoords="-0.052604, -2.58105"/>
     <vertex location="-54.8489, -95.9249, -739.725" normal="0.148314, -0.981723, 0.119258" tcoords="-0.180152, -2.42489"/>

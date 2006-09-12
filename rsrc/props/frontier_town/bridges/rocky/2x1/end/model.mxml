@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="objCapx2" translation="0.0, 0.0, 200.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
+  <triMesh name="objCapx2" translation="-9.67096, 7.69337, 300.0" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
     <vertex location="-100.0, 200.0, -100.0" normal="0.0, 1.0, 0.0" tcoords="0.780515, -0.501204"/>
     <vertex location="-100.0, 200.0, -66.6667" normal="0.0, 1.0, 0.0" tcoords="0.853042, -0.501204"/>
     <vertex location="-73.4647, 200.0, -66.6667" normal="0.0, 1.0, 0.0" tcoords="0.853042, -0.565787"/>
@@ -753,12 +753,6 @@
     <vertex location="76.2817, -169.318, -54.9506" normal="0.867874, -0.483087, 0.115856" tcoords="-0.821476, 0.260876"/>
     <vertex location="84.4465, -141.339, -47.351" normal="0.929447, -0.302841, 0.210748" tcoords="-0.704216, 0.309801"/>
     <vertex location="76.2817, -142.374, -12.8297" normal="0.625582, -0.162884, 0.762965" tcoords="-0.821476, 0.483357"/>
-    <vertex location="-100.0, 40.2164, 0.0" normal="-1.0, 0.0, 0.0" tcoords="0.601982, 0.5"/>
-    <vertex location="-100.0, 0.0, -66.6667" normal="-1.0, 0.0, 0.0" tcoords="-0.191115, 0.260876"/>
-    <vertex location="-100.0, 0.0, 3.92168" normal="-1.0, 0.0, 0.0" tcoords="0.500323, 0.5"/>
-    <vertex location="-100.0, 0.0, -66.6667" normal="-0.984099, 0.177622, 0.0" tcoords="-0.191115, 0.260876"/>
-    <vertex location="-92.2111, 43.1539, -85.6154" normal="-0.984099, 0.177622, 0.0" tcoords="-0.327128, 0.201153"/>
-    <vertex location="-100.0, 0.0, -148.363" normal="-0.984099, 0.177622, 0.0" tcoords="0.221375, -0.501204"/>
   </triMesh>
 
 </model>
