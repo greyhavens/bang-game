@@ -3,18 +3,27 @@
 
 package com.threerings.bang.store.client;
 
-import com.jmex.bui.BLabel;
+import java.util.HashMap;
+
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
-
-import com.threerings.crowd.data.PlaceObject;
+import com.jmex.bui.BLabel;
 
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
+
+import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.Item;
+import com.threerings.bang.data.PlayerObject;
+
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.store.data.CardTripletGood;
+import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.StoreObject;
+
+import com.threerings.crowd.data.PlaceObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -40,7 +49,7 @@ public class StoreView extends ShopView
             new Rectangle(181, 140, 817, 495));
 
         add(new GoodsTabs(ctx, _goods), new Rectangle(48, 167, 133, 360));
-        add(createHelpButton(), new Point(780, 25));
+        add(createHelpButton(), new Point(805, 25));
         add(new TownButton(ctx), new Point(870, 25));
     }
 
@@ -48,8 +57,24 @@ public class StoreView extends ShopView
     public void willEnterPlace (PlaceObject plobj)
     {
         // configure our goods palette and inspector
-        _goods.init((StoreObject)plobj);
-        _inspector.init((StoreObject)plobj);
+        StoreObject stobj = (StoreObject)plobj;
+        HashMap<String, Integer> cardquants = new HashMap<String, Integer>();
+        PlayerObject pobj = _ctx.getUserObject();
+        for (Item item : pobj.inventory) {
+            if (item instanceof CardItem) {
+                CardItem ci = (CardItem)item;
+                cardquants.put(ci.getType(), ci.getQuantity());
+            }
+        }
+        for (Good good : stobj.goods) {
+            if (good instanceof CardTripletGood) {
+                CardTripletGood ctg = (CardTripletGood)good;
+                Integer quant = cardquants.get(ctg.getCardType());
+                ctg.setQuantity((quant == null ? 0 : quant.intValue()));
+            }
+        }
+        _goods.init(stobj);
+        _inspector.init(stobj);
     }
 
     @Override // documentation inherited

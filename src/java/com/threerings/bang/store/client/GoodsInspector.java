@@ -28,6 +28,9 @@ import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.Item;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.ColorSelector;
@@ -37,6 +40,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.StoreObject;
+import com.threerings.bang.store.data.CardTripletGood;
 
 /**
  * Displays detailed information on a particular good.
@@ -54,9 +58,9 @@ public class GoodsInspector extends BContainer
         add(_icon = new BLabel(""), new Rectangle(0, 0, 136, 156));
 
         add(_title = new BLabel("", "medium_title"),
-            new Rectangle(190, 105, 320, 40));
+            new Rectangle(190, 115, 320, 40));
         add(_descrip = new BLabel("", "goods_descrip"),
-            new Rectangle(190, 45, 400, 60));
+            new Rectangle(190, 55, 400, 60));
 
         BContainer ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
         ccont.add(new BLabel(_ctx.xlate("store", "m.price"), "table_data"));
@@ -150,6 +154,18 @@ public class GoodsInspector extends BContainer
 
         StoreService.ConfirmListener cl = new StoreService.ConfirmListener() {
             public void requestProcessed () {
+                if (_good instanceof CardTripletGood) {
+                    CardTripletGood ctg = (CardTripletGood)_good;
+                    PlayerObject pobj = _ctx.getUserObject();
+                    for (Item item : pobj.inventory) {
+                        if (item instanceof CardItem) {
+                            CardItem ci = (CardItem)item;
+                            if (ci.getType().equals(ctg.getCardType())) {
+                                ctg.setQuantity(ci.getQuantity());
+                            }
+                        }
+                    }
+                }
                 _parent.goodPurchased();
                 _descrip.setText(_ctx.xlate("store", "m.purchased"));
                 BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);

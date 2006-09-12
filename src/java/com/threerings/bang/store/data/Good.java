@@ -58,6 +58,15 @@ public abstract class Good extends SimpleStreamableObject
     public abstract String getTip ();
 
     /**
+     * Returns a fully qualified translatable string used to convey
+     * additional information about the good in question for a tooltip window.
+     */
+    public String getToolTip ()
+    {
+        return getTip();
+    }
+
+    /**
      * Returns the cost of this good in scrip. This is in addition to the
      * coin cost ({@link #getCoinCost}).
      */

@@ -78,7 +78,7 @@ public class GoodsIcon extends PaletteIcon
         setIcon(new ImageIcon(image));
         setText(_ctx.xlate(BangCodes.GOODS_MSGS, good.getName()));
         String msg = MessageBundle.compose(
-            "m.goods_icon", good.getName(), good.getTip());
+            "m.goods_icon", good.getName(), good.getToolTip());
         setTooltipText(_ctx.xlate(BangCodes.GOODS_MSGS, msg));
     }
 

@@ -36,6 +36,15 @@ public class CardTripletGood extends Good
         return _cardType;
     }
 
+    /**
+     * Sets the quantity of this good.  This is used on a client side for
+     * displaying how many of this good is owned by the player.
+     */
+    public void setQuantity (int quantity)
+    {
+        _quantity = quantity;
+    }
+
     @Override // documentation inherited
     public String getIconPath ()
     {
@@ -67,5 +76,17 @@ public class CardTripletGood extends Good
         return MessageBundle.qualify(BangCodes.CARDS_MSGS, msg);
     }
 
+    @Override // documentation inherited
+    public String getToolTip ()
+    {
+        String msg = getTip();
+        msg = MessageBundle.compose(
+                "m.card_tool_tip", msg, MessageBundle.taint("" + _quantity));
+        return MessageBundle.qualify(BangCodes.CARDS_MSGS, msg);
+        
+    }
+
     protected String _cardType;
+
+    protected transient int _quantity;
 }
