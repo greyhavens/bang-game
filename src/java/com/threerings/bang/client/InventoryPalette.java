@@ -3,6 +3,8 @@
 
 package com.threerings.bang.client;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import com.samskivert.util.Predicate;
@@ -57,8 +59,10 @@ public class InventoryPalette extends IconPalette
         // hidden, the player's inventory updated, then reshown again
         int added = 0;
         PlayerObject user = _ctx.getUserObject();
-        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
-            Item item = (Item)iter.next();
+        Item[] items = user.inventory.toArray(new Item[user.inventory.size()]);
+        Arrays.sort(items, new ItemComparator());
+        // sort the items in some vaguely sensible order
+        for (Item item : items) {
             if (!_itemp.isMatch(item)) {
                 continue;
             }
@@ -75,6 +79,20 @@ public class InventoryPalette extends IconPalette
         // clear out our item display
         clear();
     }
+
+    /** Used to sort the inventory display. */
+    protected class ItemComparator implements Comparator<Item> {
+        public int compare (Item one, Item two) {
+            if (one.getClass().equals(two.getClass())) {
+                String t1 = _ctx.xlate(BangCodes.BANG_MSGS, one.getName(false));
+                return t1.compareTo(
+                    _ctx.xlate(BangCodes.BANG_MSGS, two.getName(false)));
+            } else {
+                return one.getClass().getName().compareTo(
+                    two.getClass().getName());
+            }
+        }
+    };
 
     protected BangContext _ctx;
     protected Predicate<Item> _itemp;
