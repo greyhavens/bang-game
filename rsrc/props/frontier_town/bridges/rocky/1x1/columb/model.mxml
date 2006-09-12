@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="objVar" translation="-9.67096, 7.69337, 300.0" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
+  <triMesh name="objVar" translation="0, 0, 300.0" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
     <vertex location="-90.6481, -144.522, -1000.0" normal="0.0769225, -0.974204, 0.212153" tcoords="-0.25862, -3.00336"/>
     <vertex location="-19.0821, -95.9014, -802.684" normal="0.149959, -0.975816, 0.159048" tcoords="-0.153997, -2.56861"/>
     <vertex location="-76.0668, -95.9249, -732.009" normal="0.13992, -0.983752, 0.112489" tcoords="-0.286689, -2.41289"/>

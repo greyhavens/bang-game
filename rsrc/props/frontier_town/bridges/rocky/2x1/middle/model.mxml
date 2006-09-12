@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="objMidx2" translation="-9.67096, 7.69337, 300.0" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
+  <triMesh name="objMidx2" translation="0, 0, 300.0" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
     <vertex location="-100.0, -0.006018, 3.92168" normal="0.0, -1.44596e-005, 1.0" tcoords="0.5, 0.5"/>
     <vertex location="-65.7423, -0.006018, 3.92168" normal="-0.0131292, -0.0167077, 0.999774" tcoords="0.5, 0.408899"/>
     <vertex location="-72.7707, 40.2164, 0.0" normal="-0.0438949, 0.0494878, 0.99781" tcoords="0.609503, 0.42622"/>

@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="objCapx2" translation="-9.67096, 7.69337, 300.0" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
+  <triMesh name="objCapx2" translation="0, 0, 300.0" rotation="0.0, 0.0, 0.707107, 0.707107" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="rocky.png" transparent="false">
     <vertex location="-100.0, 200.0, -100.0" normal="0.0, 1.0, 0.0" tcoords="0.780515, -0.501204"/>
     <vertex location="-100.0, 200.0, -66.6667" normal="0.0, 1.0, 0.0" tcoords="0.853042, -0.501204"/>
     <vertex location="-73.4647, 200.0, -66.6667" normal="0.0, 1.0, 0.0" tcoords="0.853042, -0.565787"/>
