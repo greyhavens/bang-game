@@ -803,8 +803,6 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void playersAllHere ()
     {
-        log.info("Players all here!");
-
         switch (_bangobj.state) {
         case BangObject.PRE_GAME:
             // create our player records now that we know everyone's in the
