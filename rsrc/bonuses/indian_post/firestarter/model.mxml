@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="Box01" translation="0.0, 0.0, 88.5568" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="inner.png" transparent="false">
+  <triMesh name="Box01" translation="0.0660304, 0.142042, 94.2249" rotation="0.0, 0.0, 0.0, 1.0" scale="0.596214, 0.596214, 0.596214" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="inner.png" transparent="false">
     <vertex location="40.6711, -15.5834, -25.2288" normal="0.809017, -0.309017, -0.5" tcoords="0.863636, 0.833333"/>
     <vertex location="40.6711, 15.4865, -25.2288" normal="0.809017, 0.309017, -0.5" tcoords="0.772727, 0.833333"/>
     <vertex location="50.2722, -0.048458, -0.0926966" normal="1.0, 0.0, 0.0" tcoords="0.818182, 0.708334"/>
@@ -245,7 +245,7 @@
     <vertex location="-26.9118, -0.0484577, -43.637" normal="-0.525731, 0.0, -0.850651" tcoords="0.363636, 0.666667"/>
   </triMesh>
 
-  <triMesh name="Box02" translation="0.0, 0.0, 88.5455" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="red.png" transparent="false">
+  <triMesh name="Box02" translation="0.0660304, 0.142042, 94.2181" rotation="0.0, 0.0, 0.0, 1.0" scale="0.596214, 0.596214, 0.596214" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="red.png" transparent="false">
     <vertex location="62.7951, -0.81346, -3.38537" normal="-0.999907, 0.00613463, 0.0122059" tcoords="0.81927, 0.715075"/>
     <vertex location="53.1221, 21.4021, -34.2947" normal="-0.812314, -0.305283, 0.496939" tcoords="0.772727, 0.833333"/>
     <vertex location="53.1221, -19.2301, -34.2947" normal="-0.817401, 0.290635, 0.49738" tcoords="0.863636, 0.833333"/>
@@ -656,7 +656,7 @@
     <vertex location="-27.7851, -7.21297, 80.2807" normal="0.344383, 0.0737249, -0.93593" tcoords="0.181818, 0.0"/>
   </triMesh>
 
-  <triMesh name="Box03" translation="0.0, 0.0, 88.9334" rotation="-0.119482, 0.19898, 0.0244496, 0.972385" scale="1.0, 1.0, 2.12697" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="ring.png" transparent="true">
+  <triMesh name="Box03" translation="0.0660304, 0.142042, 94.4494" rotation="-0.119482, 0.19898, 0.0244497, 0.972385" scale="0.596214, 0.596214, 1.26813" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="ring.png" transparent="true">
     <vertex location="45.882, 50.2899, -16.6811" normal="0.691743, 0.722104, -0.00759042" tcoords="0.0, 0.0"/>
     <vertex location="-2.58099, 69.1942, -8.48214" normal="-0.00353037, 0.997697, 0.0677417" tcoords="0.125, 0.0"/>
     <vertex location="-0.270372, 67.2786, 19.8515" normal="-0.00353004, 0.997697, 0.0677416" tcoords="0.125, 1.0"/>
