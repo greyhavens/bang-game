@@ -1644,7 +1644,9 @@ public class BangManager extends GameManager
 
             // compute this player's "take home" cash
             if (prec.playerId > 0 && _scenario.shouldPayEarnings(prec.user)) {
-                award.cashEarned = computeEarnings(ii);
+                // scale the earnings based on the scenario duration
+                award.cashEarned = (int)Math.ceil(computeEarnings(ii) *
+                    _bconfig.duration.getAdjustment());
             }
 
             // if this was a rated (matched) game, persist various stats and

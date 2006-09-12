@@ -138,8 +138,8 @@ public abstract class Scenario
      */
     public short getDuration (BangConfig bconfig, BangObject bangobj)
     {
-        return (short)Math.ceil(getBaseDuration() /
-            (_bangmgr.getTeamSize()+1f));
+        float duration = getBaseDuration() / (_bangmgr.getTeamSize()+1f);
+        return (short)Math.ceil(duration * bconfig.duration.getAdjustment());
     }
 
     /**

@@ -387,43 +387,32 @@ public class PlayerManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // if this is a "practice versus the computer" tutorial, start up a two
-        // player game in lieu of a proper tutorial
+        BangConfig config = new BangConfig();
+        config.rated = false;
+        config.players = new Name[2];
+        config.ais = new BangAI[2];
+
+        // if this is a "practice versus the computer" tutorial, start up a
+        // special two player game in lieu of a proper tutorial
         if (tutId.startsWith(TutorialCodes.PRACTICE_PREFIX)) {
             String scenId =
                 tutId.substring(TutorialCodes.PRACTICE_PREFIX.length());
-            playComputer(player, 2, new String[] { scenId }, null, false,
-                         new BangObject.PriorLocation("tutorial", 0));
-            return;
+            config.scenarios = new String[] { scenId };
+            config.teamSize = 2;
+            config.duration = BangConfig.Duration.PRACTICE;
+
+        } else {
+            // otherwise load up the tutorial configuration and use that to
+            // configure the tutorial game
+            TutorialConfig tconfig =
+                TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutId);
+            config.scenarios = new String[] { tconfig.ident };
+            config.tutorial = true;
+            config.board = tconfig.board;
         }
 
-        // load up the tutorial configuration
-        TutorialConfig tconfig =
-            TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutId);
-
-        // create our AI opponent
-        HashSet<String> names = new HashSet<String>();
-        names.add(player.getVisibleName().toString());
-        BangAI ai = BangAI.createAI(1, 50, names);
-
-        // create a game configuration from that
-        BangConfig config = new BangConfig();
-        config.rated = false;
-        config.players = new Name[] { player.getVisibleName(), ai.handle };
-        config.ais = new BangAI[] { null, ai };
-        config.scenarios = new String[] { tconfig.ident };
-        config.tutorial = true;
-        config.board = tconfig.board;
-
-        // create the tutorial game manager and it will handle the rest
-        try {
-            BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
-            mgr.setPriorLocation("tutorial", 0);
-        } catch (InstantiationException ie) {
-            log.log(Level.WARNING, "Error instantiating tutorial " +
-                "[for=" + player.who() + ", config=" + config + "].", ie);
-            throw new InvocationException(INTERNAL_ERROR);
-        }
+        playComputer(player, config, false,
+            new BangObject.PriorLocation("tutorial", 0));
     }
 
     // documentation inherited from interface PlayerProvider
@@ -438,31 +427,18 @@ public class PlayerManager
             throw new InvocationException(SaloonCodes.NEW_GAMES_DISABLED);
         }
 
-        // create our AI opponent
-        HashSet<String> names = new HashSet<String>();
-        names.add(player.getVisibleName().toString());
-        BangAI ai = BangAI.createAI(1, 50, names);
-
         // create a game configuration
         BangConfig config = new BangConfig();
         config.rated = false;
-        config.players = new Name[] { player.getVisibleName(), ai.handle };
-        config.ais = new BangAI[] { null, ai };
+        config.players = new Name[2];
+        config.ais = new BangAI[2];
         config.scenarios = new String[] { unit };
         config.board = PracticeInfo.getBoardName(ServerConfig.townId);
         config.practice = true;
         config.teamSize = 2;
-
-        // create the practice game manager and it will handle the rest
-        try {
-            BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
-            mgr.setPriorLocation(
-                "ranch", BangServer.ranchmgr.getPlaceObject().getOid());
-        } catch (InstantiationException ie) {
-            log.log(Level.WARNING, "Error instantiating practice " +
-                "[for=" + player.who() + ", config=" + config + "].", ie);
-            throw new InvocationException(INTERNAL_ERROR);
-        }
+        playComputer(player, config, false,
+            new BangObject.PriorLocation("ranch",
+                BangServer.ranchmgr.getPlaceObject().getOid()));
     }
 
     // documentation inherited from interface PlayerProvider
@@ -511,32 +487,43 @@ public class PlayerManager
      * Helper function for playing games. Assumes all parameters have been
      * checked for validity.
      */
-    protected boolean playComputer (
-        final PlayerObject player, int players, String[] scenarios,
-        String board, final boolean autoplay,
-        final BangObject.PriorLocation priorLocation)
+    protected void playComputer (
+        PlayerObject player, int players, String[] scenarios, String board,
+        boolean autoplay, BangObject.PriorLocation priorLocation)
         throws InvocationException
     {
-        // we'll use this when creating our AIs
-        HashSet<String> names = new HashSet<String>();
-        names.add(player.getVisibleName().toString());
-
         // create a game configuration from that
         BangConfig config = new BangConfig();
         config.rated = false;
         config.players = new Name[players];
         config.ais = new BangAI[players];
+        config.teamSize = Match.TEAM_SIZES[players-2];
+        config.scenarios = scenarios;
+        config.board = board;
+        playComputer(player, config, autoplay, priorLocation);
+    }
+
+    /**
+     * Helper function for playing games. Assumes all parameters have been
+     * checked for validity.
+     */
+    protected void playComputer (
+        PlayerObject player, BangConfig config, boolean autoplay,
+        BangObject.PriorLocation priorLocation)
+        throws InvocationException
+    {
+        HashSet<String> names = new HashSet<String>();
+        names.add(player.getVisibleName().toString());
+
+        // configure our AIs and the player names array
         if (!autoplay) {
             config.players[0] = player.getVisibleName();
         }
-        config.teamSize = Match.TEAM_SIZES[players-2];
-        for (int ii = autoplay ? 0 : 1; ii < players; ii++) {
+        for (int ii = autoplay ? 0 : 1; ii < config.players.length; ii++) {
             BangAI ai = BangAI.createAI(1, 50, names);
             config.players[ii] = ai.handle;
             config.ais[ii] = ai;
         }
-        config.scenarios = scenarios;
-        config.board = board;
 
         try {
             BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
@@ -551,8 +538,6 @@ public class PlayerManager
             if (autoplay) {
                 ParlorSender.gameIsReady(player, bangobj.getOid());
             }
-
-            return true;
 
         } catch (InstantiationException ie) {
             log.log(Level.WARNING, "Error instantiating game " +

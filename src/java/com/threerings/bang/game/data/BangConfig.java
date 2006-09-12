@@ -16,12 +16,40 @@ import com.threerings.bang.game.client.BangController;
  */
 public class BangConfig extends GameConfig
 {
+    /** Used to adjust the duration of the rounds. */
+    public static enum Duration {
+        /** Used for practice tutorials. Super ultra short. */
+        PRACTICE(0.5f),
+
+        /** 70% of the duration of a normal game. */
+        QUICK(0.7f),
+
+        /** The standard duration. */
+        NORMAL(1f),
+
+        /** 130% of the duration of a normal game. */
+        LONG(1.3f);
+
+        public float getAdjustment () {
+            return _adjustment;
+        }
+
+        Duration (float adjustment) {
+            _adjustment = adjustment;
+        }
+
+        protected float _adjustment;
+    };
+
     /** The number of people playing the game. */
     public int seats = 2;
 
     /** The base size of each player's team (not including their Big Shot; may
      * be modified by scenario). */
     public int teamSize = 4;
+
+    /** Whether or not to play a quick, normal or long game. */
+    public Duration duration = Duration.NORMAL;
 
     /** The desired scenarios for each round (implies the number of rounds). */
     public String[] scenarios;
