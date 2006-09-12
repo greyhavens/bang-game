@@ -3,8 +3,6 @@
 
 package com.threerings.bang.server.persist;
 
-import static com.threerings.bang.Log.log;
-
 import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,11 +30,25 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.saloon.data.TopRankedList;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Responsible for the persistent storage of per-player ratings.
  */
 public class RatingRepository extends SimpleRepository
 {
+    /** Keeps track of the rating levels for each rank for a given scenario */
+    public static class RankLevels
+    {
+        public String scenario;
+        public int[] levels = new int[RANK_PERCENTAGES.length];
+
+        protected RankLevels (String scenario)
+        {
+            this.scenario = scenario;
+        }
+    }
+
     /**
      * The database identifier used when establishing a database
      * connection. This value being <code>ratingdb</code>.
@@ -186,7 +198,7 @@ public class RatingRepository extends SimpleRepository
         });
         return lists;
     }
-    
+
     /**
      * Loads and returns rank levels for each scenario.
      */
@@ -201,7 +213,7 @@ public class RatingRepository extends SimpleRepository
                 ResultSet rs = conn.prepareStatement(
                     "   select SCENARIO, RANK, LEVEL " +
                     "     from RANKS " +
-                    " order by SCENARIO, RANK ").executeQuery(); 
+                    " order by SCENARIO, RANK ").executeQuery();
                 RankLevels currentLevels = null;
                 while (rs.next()) {
                     String scenario = rs.getString(1);
@@ -219,17 +231,17 @@ public class RatingRepository extends SimpleRepository
         });
         return levelList;
     }
-    
+
     /**
      * Performs a full table scan of RATINGS and calculates for each scenario
      * which rating is required to reach which rank. Each ranks corresponds
      * to a certain percentile relative the entire player population.
-     * 
+     *
      * When calculations complete, the results are dumped to the RANKS table,
      * which is first cleared. The return value maps {@link ScenarioInfo} ID's
      * to {@Link Metrics} instances, which hold the calculated rank levels
      * along with some additional metrics.
-     * 
+     *
      * This class was originally derived from Yohoho's GenerateStandings and
      * some core logic from there still remains.
      */
@@ -260,11 +272,11 @@ public class RatingRepository extends SimpleRepository
                         }
                         histo.addValue(rating);
                     }
-        
+
                 } finally {
                     JDBCUtil.close(stmt);
                 }
-        
+
                 return null;
             }
         });
@@ -274,16 +286,16 @@ public class RatingRepository extends SimpleRepository
         for (Entry<String, SparseHistogram> entry : hists.entrySet()) {
             String scenario = entry.getKey();
             SparseHistogram histo = entry.getValue();
-        
+
             int userCount = histo.count;
             IntTuple[] buckets = histo.getFilledBuckets();
             int bucketCount = buckets.length;
             int sidx = 0, sum = 0;
-        
+
             Metrics met = new Metrics(scenario);
             metrics.put(scenario, met);
             met.totalUsers = userCount;
-        
+
             for (int bidx = 0; bidx < bucketCount &&
                     sidx < RANK_PERCENTAGES.length; bidx++) {
                 sum += buckets[bidx].right;
@@ -332,23 +344,31 @@ public class RatingRepository extends SimpleRepository
         return new ArrayList<Metrics>(metrics.values());
     }
 
-    /** Keeps track of the rating levels for each rank for a given scenario */
-    public static class RankLevels
+    @Override // documentation inherited
+    protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
+        throws SQLException, PersistenceException
     {
-        public String scenario;
-        public int[] levels = new int[RANK_PERCENTAGES.length];
-
-        protected RankLevels (String scenario)
-        {
-            this.scenario = scenario;
-        }
+            JDBCUtil.createTableIfMissing(conn, "RATINGS", new String[] {
+                "PLAYER_ID INTEGER NOT NULL",
+                "SCENARIO VARCHAR(2) NOT NULL",
+                "RATING SMALLINT NOT NULL",
+                "EXPERIENCE INTEGER NOT NULL",
+                "PRIMARY KEY (PLAYER_ID, SCENARIO)",
+            }, "");
+            JDBCUtil.createTableIfMissing(conn, "RANKS", new String[] {
+                "SCENARIO VARCHAR(2) NOT NULL",
+                "RANK SMALLINT NOT NULL",
+                "LEVEL SMALLINT NOT NULL",
+                "PRIMARY KEY (SCENARIO, RANK)",
+            }, "");
     }
-    
+
     /** Extends {@link RankLevels} with data collected using calculations */
-    public static class Metrics extends RankLevels
+    protected static class Metrics extends RankLevels
     {
         public int[] accumUsers = new int[RANK_PERCENTAGES.length];
         public int totalUsers;
+
         public int getPercent (int sidx)
         {
             return (int)((accumUsers[sidx] / (float)totalUsers) * 100);
@@ -386,14 +406,14 @@ public class RatingRepository extends SimpleRepository
     /**
      * A sparse histogram with buckets of size 1 backed by an {@link IntIntMap}.
      */
-    protected class SparseHistogram
+    protected static class SparseHistogram
     {
         /** The minimum value tracked by this histogram. */
         public int minValue = Integer.MAX_VALUE;
-    
+
         /** The maximum value tracked by this histogram. */
         public int maxValue = Integer.MIN_VALUE;
-    
+
         /** The total number of values. */
         public int count;
 
@@ -404,7 +424,7 @@ public class RatingRepository extends SimpleRepository
         {
             _buckets.increment(value, 1);
             count++;
-            
+
             if (value < minValue) {
                 minValue = value;
             }
@@ -412,7 +432,7 @@ public class RatingRepository extends SimpleRepository
                 maxValue = value;
             }
         }
-    
+
         /**
          * Returns an array containing the bucket counts for all buckets between
          * minValue and maxValue (inclusive).
@@ -425,7 +445,7 @@ public class RatingRepository extends SimpleRepository
             }
             return buckets;
         }
-        
+
         /**
          * Returns an array of tuples containing the values (left) and counts
          * (right) for all buckets with a count of at least one.  The array will
@@ -441,7 +461,7 @@ public class RatingRepository extends SimpleRepository
             QuickSort.sort(buckets);
             return buckets;
         }
-        
+
         /**
          * Returns a string representation of this histogram.
          */
@@ -450,7 +470,7 @@ public class RatingRepository extends SimpleRepository
             return "[min=" + minValue + ", max=" + maxValue +
                 ", count=" + count + ", buckets=" + _buckets + "]";
         }
-    
+
         /** The histogram buckets. */
         protected IntIntMap _buckets = new IntIntMap();
     }
@@ -461,23 +481,4 @@ public class RatingRepository extends SimpleRepository
      */
     protected static final int[] RANK_PERCENTAGES =
         { 50, 65, 75, 85, 90, 95, 99 };
-
-    @Override // documentation inherited
-    protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
-        throws SQLException, PersistenceException
-    {
-            JDBCUtil.createTableIfMissing(conn, "RATINGS", new String[] {
-                "PLAYER_ID INTEGER NOT NULL",
-                "SCENARIO VARCHAR(2) NOT NULL",
-                "RATING SMALLINT NOT NULL",
-                "EXPERIENCE INTEGER NOT NULL",
-                "PRIMARY KEY (PLAYER_ID, SCENARIO)",
-            }, "");
-            JDBCUtil.createTableIfMissing(conn, "RANKS", new String[] {
-                "SCENARIO VARCHAR(2) NOT NULL",
-                "RANK SMALLINT NOT NULL",
-                "LEVEL SMALLINT NOT NULL",
-                "PRIMARY KEY (SCENARIO, RANK)",
-            }, "");
-    }
 }
