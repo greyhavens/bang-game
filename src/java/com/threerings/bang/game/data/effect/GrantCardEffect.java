@@ -51,8 +51,7 @@ public class GrantCardEffect extends BonusEffect
         }
 
         card = Card.newCard(
-            Card.selectRandomCard(bangobj.townId,
-                bangobj.pdata[_player].pointFactor, bangobj.scenario));
+            Card.selectRandomCard(bangobj.townId, bangobj, _player));
         card.init(bangobj, _player);
     }
 

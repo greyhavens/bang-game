@@ -221,6 +221,14 @@ public abstract class ScenarioInfo
     }
 
     /**
+     * Returns true if the scenario requires units to hold certain bonuses.
+     */
+    public boolean hasHoldableBonuses ()
+    {
+        return true;
+    }
+    
+    /**
      * Determines whether the two identified players are allied in
      * terms of the scenario.
      */

@@ -56,4 +56,10 @@ public class CattleRustlingInfo extends ScenarioInfo
     {
         return super.isValidMarker(marker) || marker.getType() == Marker.CATTLE;
     }
+    
+    @Override // from ScenarioInfo
+    public boolean hasHoldableBonuses ()
+    {
+        return false;
+    }
 }

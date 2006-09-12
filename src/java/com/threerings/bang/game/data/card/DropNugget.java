@@ -25,6 +25,13 @@ public class DropNugget extends Card
     }
 
     @Override // documentation inherited
+    public boolean isPlayable (BangObject bangobj)
+    {
+        return super.isPlayable(bangobj) &&
+            bangobj.scenario.hasHoldableBonuses();
+    }
+    
+    @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
         return (target instanceof Unit && target.isAlive() &&

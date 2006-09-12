@@ -11,6 +11,7 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.SnakeBiteEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 
 /**
  * A card that makes a unit take damage at every tick.
@@ -23,6 +24,14 @@ public class SnakeBite extends Card
         return "snake_bite";
     }
 
+    @Override // documentation inherited
+    public boolean isPlayable (BangObject bangobj)
+    {
+        // there are no human enemies in Forest Guardians
+        return super.isPlayable(bangobj) &&
+            !(bangobj.scenario instanceof ForestGuardiansInfo);
+    }
+    
     @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {

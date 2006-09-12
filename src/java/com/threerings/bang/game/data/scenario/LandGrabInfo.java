@@ -55,4 +55,10 @@ public class LandGrabInfo extends ScenarioInfo
     {
         return Stat.Type.STEAD_POINTS;
     }
+    
+    @Override // from ScenarioInfo
+    public boolean hasHoldableBonuses ()
+    {
+        return false;
+    }
 }

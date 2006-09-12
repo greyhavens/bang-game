@@ -17,7 +17,6 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.data.scenario.TutorialInfo;
 import com.threerings.bang.util.BangUtil;
 
@@ -45,21 +44,24 @@ public abstract class Card extends SimpleStreamableObject
      * Selects a random card from the set of all available cards for the
      * specified town.
      *
-     * @param scoreFactor if this card is being created during a game, the
-     * {@link BangObject.PlayerData#pointFactor} of the player receiving the
-     * card should be provided, otherwise 1 should be provided.
-     * @param scenario if this card is being created during a game, this will
-     * indicate the scenario in which it is being created. Otherwise this will
-     * be null (generally meaning the card is being created for a pack).
+     * @param bangobj if this card is being created during a game, this will
+     * indicate the game object. Otherwise this will be null (generally meaning
+     * the card is being created for a pack).
+     * @param pidx the index of the player for whom the card is being
+     * generated, if the card is being created for a game
      */
     public static String selectRandomCard (
-        String townId, double pointFactor, ScenarioInfo scenario)
+        String townId, BangObject bangobj, int pidx)
     {
-        if (scenario instanceof TutorialInfo) {
+        if (bangobj != null && bangobj.scenario instanceof TutorialInfo) {
             // we always return missile cards in the tutorial
             return "missile";
 
         } else {
+            // if in a game, retrieve the player's point factor
+            double pointFactor = (bangobj == null) ?
+                1f : bangobj.pdata[pidx].pointFactor;
+            
             // select the card based on a weighted random choice
             Card[] wcards = _wcards.get(townId);
             int[] weights = _weights.get(townId);
@@ -84,9 +86,18 @@ public abstract class Card extends SimpleStreamableObject
                             weights[ii] = 0;
                         }
                     }
-                }
+                }                
             }
 
+            // zero out any cards that can't be used in this round
+            if (bangobj != null) {
+                for (int ii = 0; ii < wcards.length; ii++) {
+                    if (!wcards[ii].isPlayable(bangobj)) {
+                        weights[ii] = 0;
+                    }
+                }
+            }
+                    
             return wcards[RandomUtil.getWeightedIndex(weights)].getType();
         }
     }
