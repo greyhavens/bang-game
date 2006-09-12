@@ -28,6 +28,7 @@ import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
@@ -61,18 +62,6 @@ public class GoodsInspector extends BContainer
             new Rectangle(190, 115, 320, 40));
         add(_descrip = new BLabel("", "goods_descrip"),
             new Rectangle(190, 55, 400, 60));
-
-        BContainer ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
-        ccont.add(new BLabel(_ctx.xlate("store", "m.price"), "table_data"));
-        ccont.add(_cost = new MoneyLabel(ctx));
-        _cost.setMoney(0, 0, false);
-        add(ccont, new Rectangle(200, 15, 200, 25));
-
-        BButton buy;
-        add(buy = new BButton(_ctx.xlate("store", "m.buy")),
-            new Point(400, 10));
-        buy.setStyleClass("big_button");
-        buy.addListener(this);
     }
 
     /**
@@ -91,13 +80,11 @@ public class GoodsInspector extends BContainer
             return;
         }
 
+        // make sure we're showing the buy interface
+        showBuy();
+
         // remove our color selectors
-        for (int ii = 0; ii < _colorsel.length; ii++) {
-            if (_colorsel[ii] != null) {
-                remove(_colorsel[ii]);
-                _colorsel[ii] = null;
-            }
-        }
+        removeColors();
 
         // configure our main interface with the good info
         _good = ((GoodsIcon)icon).getGood();
@@ -152,29 +139,105 @@ public class GoodsInspector extends BContainer
             return;
         }
 
-        StoreService.ConfirmListener cl = new StoreService.ConfirmListener() {
-            public void requestProcessed () {
-                if (_good instanceof CardTripletGood) {
-                    CardTripletGood ctg = (CardTripletGood)_good;
-                    PlayerObject pobj = _ctx.getUserObject();
-                    for (Item item : pobj.inventory) {
-                        if (item instanceof CardItem) {
-                            CardItem ci = (CardItem)item;
-                            if (ci.getType().equals(ctg.getCardType())) {
-                                ctg.setQuantity(ci.getQuantity());
+        String action = event.getAction();
+
+        if ("buy".equals(action)) {
+            StoreService.ConfirmListener cl = 
+                    new StoreService.ConfirmListener() {
+                public void requestProcessed () {
+                    if (_good instanceof CardTripletGood) {
+                        CardTripletGood ctg = (CardTripletGood)_good;
+                        PlayerObject pobj = _ctx.getUserObject();
+                        for (Item item : pobj.inventory) {
+                            if (item instanceof CardItem) {
+                                CardItem ci = (CardItem)item;
+                                if (ci.getType().equals(ctg.getCardType())) {
+                                    ctg.setQuantity(ci.getQuantity());
+                                }
                             }
                         }
                     }
+                    String msg = "m.purchased";
+                    if (_good instanceof ArticleGood) {
+                        showTry();
+                        msg += "_article";
+                    } else {
+                        _parent.goodPurchased();
+                    }
+                    _descrip.setText(_ctx.xlate("store", msg));
+                    BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
                 }
-                _parent.goodPurchased();
-                _descrip.setText(_ctx.xlate("store", "m.purchased"));
-                BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
+                public void requestFailed (String cause) {
+                    _descrip.setText(_ctx.xlate("store", cause));
+                }
+            };
+            _stobj.service.buyGood(
+                    _ctx.getClient(), _good.getType(), _args, cl);
+
+        } else if ("try".equals(action)) {
+            _try.setEnabled(false);
+            BangBootstrapData bbd = (BangBootstrapData)
+                _ctx.getClient().getBootstrapData();
+            _ctx.getLocationDirector().moveTo(bbd.barberOid);
+        }
+    }
+
+    protected void showBuy ()
+    {
+        if (_display == Mode.BUY) {
+            return;
+        }
+        _display = Mode.BUY;
+        if (_try != null) {
+            remove(_try);
+        }
+
+        if (_ccont == null) {
+            _ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
+            _ccont.add(new BLabel(
+                        _ctx.xlate("store", "m.price"), "table_data"));
+            _ccont.add(_cost = new MoneyLabel(_ctx));
+            _cost.setMoney(0, 0, false);
+        }
+        add(_ccont, new Rectangle(200, 15, 200, 25));
+
+        if (_buy == null) {
+            _buy = new BButton(_ctx.xlate("store", "m.buy"), this, "buy");
+            _buy.setStyleClass("big_button");
+        }
+        add(_buy, new Point(400, 10));
+    }
+
+    protected void showTry ()
+    {
+        if (_display == Mode.TRY) {
+            return;
+        }
+        _display = Mode.TRY;
+        if (_ccont != null) {
+            remove(_ccont);
+        }
+        if (_buy != null) {
+            remove(_buy);
+        }
+        removeColors();
+
+        if (_try == null) {
+            _try = new BButton(_ctx.xlate("store", "m.try"), this, "try");
+            _try.setStyleClass("big_button");
+        }
+        add(_try, new Point(300, 10));
+    }
+
+    protected void removeColors ()
+    {
+        // remove our color selectors
+        for (int ii = 0; ii < _colorsel.length; ii++) {
+            if (_colorsel[ii] != null) {
+                remove(_colorsel[ii]);
+                _colorsel[ii] = null;
             }
-            public void requestFailed (String cause) {
-                _descrip.setText(_ctx.xlate("store", cause));
-            }
-        };
-        _stobj.service.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
+        }
     }
 
     protected void updateImage ()
@@ -203,6 +266,8 @@ public class GoodsInspector extends BContainer
     protected Good _good;
 
     protected BLabel _icon, _title, _descrip;
+    protected BButton _buy, _try;
+    protected BContainer _ccont;
     protected MoneyLabel _cost;
 
     protected BufferedImage _srcimg;
@@ -211,6 +276,9 @@ public class GoodsInspector extends BContainer
 
     protected Object[] _args = new Object[3];
     protected Colorization[] _zations;
+
+    protected static enum Mode { NEW, BUY, TRY };
+    protected Mode _display = Mode.NEW;
 
     protected static final Point[] CS_SPOTS = {
         new Point(150, 105),
