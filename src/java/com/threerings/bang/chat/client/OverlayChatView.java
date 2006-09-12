@@ -7,12 +7,11 @@ import com.jmex.bui.BComponent;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.BWindow;
-import com.jmex.bui.background.BBackground;
-import com.jmex.bui.background.BlankBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 
 import com.samskivert.util.Interval;
 import com.threerings.util.Name;
@@ -45,7 +44,7 @@ public class OverlayChatView extends BWindow
         setLayer(2);
 
         _ctx = ctx;
-        _chatdtr = _ctx.getChatDirector();
+        _chatdtr = (BangChatDirector)_ctx.getChatDirector();
 
         _stamps = new long[CHAT_LINES];
         _history = new MessageLabel[CHAT_LINES];
@@ -53,15 +52,25 @@ public class OverlayChatView extends BWindow
             add(_history[ii] = new MessageLabel());
         }
         add(_input = new BTextField() {
-            protected void gainedFocus () {
-                super.gainedFocus();
-                setBackground(BComponent.DEFAULT, _inputbg);
+            public void render (Renderer renderer) {
+                if (hasFocus()) {
+                    super.render(renderer);
+                }
             }
-            protected void lostFocus () {
-                super.lostFocus();
-                setBackground(BComponent.DEFAULT, _blankbg);
-                setText("");
+            protected void layout () {
+                super.layout();
+                // restore the halted message from the parlor or match view
+                // on first layout
+                if (!_initialized) {
+                    setText(_chatdtr.clearHaltedMessage());
+                    setCursorPos(getText().length());
+                    if (_cursp > 0) {
+                        requestFocus();
+                    }
+                    _initialized = true;
+                }
             }
+            protected boolean _initialized;
         });
 
         _input.addListener(new ActionListener() {
@@ -100,6 +109,14 @@ public class OverlayChatView extends BWindow
     }
 
     /**
+     * Determines whether the chat input field has focus.
+     */
+    public boolean hasFocus ()
+    {
+        return _input.hasFocus();
+    }
+    
+    /**
      * Instructs our chat input field to request focus.
      */
     public void requestFocus ()
@@ -136,19 +153,11 @@ public class OverlayChatView extends BWindow
         }
     }
 
-    @Override // we never want the chat window to accept clicks
-    public BComponent getHitComponent (int mx, int my) {
-        return null;
-    }
-
     @Override // documentation inherited
-    public void wasAdded ()
-    {
-        super.wasAdded();
-
-        _inputbg = _input.getBackground();
-        _blankbg = new BlankBackground();
-        _input.setBackground(BComponent.DEFAULT, _blankbg);
+    public BComponent getHitComponent (int mx, int my) {
+        // accept clicks on the input component when it already has focus
+        BComponent hit = super.getHitComponent(mx, my);
+        return (hit == _input && _input.hasFocus()) ? hit : null;
     }
 
     protected void displayError (String message)
@@ -229,11 +238,10 @@ public class OverlayChatView extends BWindow
     }
 
     protected BangContext _ctx;
-    protected ChatDirector _chatdtr;
+    protected BangChatDirector _chatdtr;
     protected BangObject _bangobj;
 
     protected BTextField _input;
-    protected BBackground _inputbg, _blankbg;
 
     protected Interval _timer;
     protected MessageLabel[] _history;

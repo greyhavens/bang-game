@@ -127,7 +127,11 @@ public class BangView extends BWindow
 
         case BangObject.BUYING_PHASE:
             if (pidx != -1) {
+                boolean hadFocus = chat.hasFocus();
                 ((SelectionView)_oview).setPickTeamMode(config);
+                if (hadFocus) {
+                    chat.requestFocus(); // preserve chat focus
+                }
             }
             break;
 
@@ -510,12 +514,16 @@ public class BangView extends BWindow
 
     protected void setOverlay (BWindow overlay)
     {
+        boolean hadFocus = chat.hasFocus();
         clearOverlay();
         _oview = overlay;
         _ctx.getRootNode().addWindow(_oview);
         _oview.pack();
         _oview.center();
         _oview.setLocation(_oview.getX(), _oview.getY() + getCenterOffset());
+        if (hadFocus) {
+            chat.requestFocus(); // preserve chat focus
+        }
     }
 
     protected void clearOverlay ()

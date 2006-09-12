@@ -153,6 +153,16 @@ public class PlaceChatView extends ComicChatView
     }
 
     @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        
+        // save halted message for the game
+        ((BangChatDirector)_ctx.getChatDirector()).setHaltedMessage(
+            _text.getText());
+    }
+    
+    @Override // documentation inherited
     protected int[] getSpeakerAvatar (Handle speaker)
     {
         BangOccupantInfo boi = (BangOccupantInfo)

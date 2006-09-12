@@ -29,6 +29,8 @@ import com.threerings.presents.util.SafeSubscriber;
 
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.chat.client.BangChatDirector;
+
 import com.threerings.bang.saloon.data.MatchObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
@@ -95,6 +97,12 @@ public class MatchView extends BContainer
             }
             protected boolean handlesType (String localType) {
                 return "match_chat".equals(localType);
+            }
+            protected void wasRemoved () {
+                super.wasRemoved();
+                // save halted message for the game
+                ((BangChatDirector)_ctx.getChatDirector()).setHaltedMessage(
+                    _input.getText());
             }
         };
         ((BorderLayout)_chat.getLayoutManager()).setGaps(2, 3);

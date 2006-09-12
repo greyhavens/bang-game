@@ -62,6 +62,24 @@ public class BangChatDirector extends ChatDirector
         });
     }
 
+    /**
+     * Stores any message being composed when a chat entry field disappears.
+     */
+    public void setHaltedMessage (String msg)
+    {
+        _haltedMessage = msg;
+    }
+    
+    /**
+     * Clears and returns the stored halted message.
+     */
+    public String clearHaltedMessage ()
+    {
+        String msg = _haltedMessage;
+        _haltedMessage = "";
+        return msg;
+    }
+    
     @Override // documentation inherited
     public String requestChat (
         SpeakService speakSvc, String text, boolean record)
@@ -95,4 +113,8 @@ public class BangChatDirector extends ChatDirector
     }
 
     protected BangContext _ctx;
+    
+    /** The text of any message being composed on the client when the last chat
+     * entry field disappeared. */
+    protected String _haltedMessage = "";
 }
