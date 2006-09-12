@@ -14,9 +14,10 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.game.client.StatsView;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.piece.Marker;
-import com.threerings.bang.game.client.StatsView;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 
@@ -232,7 +233,7 @@ public abstract class ScenarioInfo
      * Returns true if the scenario has enemies that are of human make. Meaning
      * either it is not coop or it is coop but versus human units.
      */
-    public boolean hasHumanEnemies ()
+    public boolean hasEnemies (UnitConfig.Make make)
     {
         return true;
     }

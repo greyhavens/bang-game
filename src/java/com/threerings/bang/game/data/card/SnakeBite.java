@@ -26,9 +26,10 @@ public class SnakeBite extends Card
     @Override // documentation inherited
     public boolean isPlayable (BangObject bangobj)
     {
-        return super.isPlayable(bangobj) && bangobj.scenario.hasHumanEnemies();
+        return super.isPlayable(bangobj) &&
+            bangobj.scenario.hasEnemies(UnitConfig.Make.HUMAN);
     }
-    
+
     @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
