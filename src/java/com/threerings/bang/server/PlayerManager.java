@@ -33,31 +33,23 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.ObjectDeathListener;
 import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.SetAdapter;
-import com.threerings.presents.dobj.SetListener;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
-import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.server.PlaceManager;
 import com.threerings.crowd.chat.server.SpeakProvider;
 
 import com.threerings.parlor.server.ParlorSender;
-import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
-import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.server.persist.LookRepository;
-import com.threerings.bang.bank.data.BankObject;
 import com.threerings.bang.ranch.data.RanchCodes;
-import com.threerings.bang.ranch.data.RanchObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.saloon.server.Match;
-import com.threerings.bang.store.data.StoreObject;
 
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
@@ -88,6 +80,7 @@ import com.threerings.bang.server.persist.PosterRecord;
 import com.threerings.bang.server.persist.PlayerRepository;
 import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.server.persist.PlayerRecord;
+import com.threerings.bang.server.persist.RatingRepository.RankLevels;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
@@ -112,6 +105,9 @@ public class PlayerManager
 
         // register ourselves as the provider of the (bootstrap) PlayerService
         BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), true);
+
+        // do an initial read of rank data
+        maybeScheduleRankReload();
     }
 
     // documentation inherited from interface PlayerProvider
@@ -547,10 +543,13 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void getPosterInfo(ClientObject caller, final Handle handle,
+    public void getPosterInfo(final ClientObject caller, final Handle handle,
                               final PlayerService.ResultListener listener)
         throws InvocationException
     {
+        // first, see if we need to refresh ranks from repository
+        maybeScheduleRankReload();
+
         // check the cache for previously generated posters
         SoftReference<PosterInfo> infoRef = _posterCache.get(handle);
         PosterInfo tmpInfo = null;
@@ -625,6 +624,36 @@ public class PlayerManager
         });
     }
 
+    /**
+     * If it's been more than a certain amount of time since the last time
+     * we refresh the rank levels from the database, go out and fetch them
+     * as soon as possible. As this is an asynchronous operation, we can't
+     * easily sneak one in before the poster request.
+     */
+    protected void maybeScheduleRankReload ()
+    {
+        if (System.currentTimeMillis() - _rankReloadStamp >
+            RANK_RELOAD_TIMEOUT) {
+            BangServer.invoker.postUnit(new Invoker.Unit() {
+                public boolean invoke()  {
+                    Map<String, RankLevels> newMap =
+                        new HashMap<String, RankLevels>();
+                    try {
+                        for (RankLevels levels : _raterepo.loadRanks()) {
+                            newMap.put(levels.scenario, levels);
+                        }
+                        _rankLevels = newMap;
+                        _rankReloadStamp = System.currentTimeMillis();
+                    } catch (PersistenceException pe) {
+                        log.log(Level.WARNING,
+                            "Failure while reloading rank data", pe);
+                    }
+                    return false;
+                }
+            });
+        }
+    }
+
     protected StreamableHashMap<String, Integer> buildRankings (
         Iterator<Rating> ratings)
     {
@@ -632,13 +661,15 @@ public class PlayerManager
             new StreamableHashMap<String,Integer>();
         while (ratings.hasNext()) {
             Rating rating = ratings.next();
-            // TODO: until we are actually computing rankings
-            int percentile =
-                (100 * (rating.rating - Rating.MINIMUM_RATING - 1)) /
-                (Rating.MAXIMUM_RATING - Rating.MINIMUM_RATING);
-            int rank = RANK_LEVELS.length;
-            while (rank > 0 && percentile <= RANK_LEVELS[rank-1]) {
-                rank --;
+            RankLevels levels = _rankLevels.get(rating.scenario);
+            int rank;
+            if (levels == null) {
+                // shouldn't happen for real scenarios
+                rank = 0;
+            } else {
+                for (rank = levels.levels.length;
+                     rank > 0 && rating.rating < levels.levels[rank-1];
+                     rank --);
             }
             map.put(rating.scenario, Integer.valueOf(rank));
         }
@@ -986,6 +1017,9 @@ public class PlayerManager
         protected PardnerEntry _entry;
     }
 
+    /** The number of milliseconds after which we reload rank levels from DB */ 
+    protected static final long RANK_RELOAD_TIMEOUT = (3600 * 1000);
+    
     /** Provides access to the pardner database. */
     protected PardnerRepository _pardrepo;
 
@@ -1013,9 +1047,13 @@ public class PlayerManager
     /** A light-weight cache of soft {@link PosterInfo} references. */
     protected Map<Handle, SoftReference<PosterInfo>> _posterCache =
         new HashMap<Handle, SoftReference<PosterInfo>>();
+
+    /** A map of scenario ID's to rank levels, reloaded every so often */
+    protected Map<String, RankLevels> _rankLevels =
+        new HashMap<String, RankLevels>();
     
-    /** The levels to map ratings to ranks, implicitly bounded by 0 and 100 */
-    protected static final int[] RANK_LEVELS =
-        new int[] { 50, 65, 75, 85, 90, 95, 98 };
+    /** The time stamp when we last reloaded rank levels */
+    protected long _rankReloadStamp;
+
 }
 
