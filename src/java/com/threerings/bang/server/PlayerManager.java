@@ -719,26 +719,28 @@ public class PlayerManager
      */
     protected void maybeScheduleRankReload ()
     {
-        if (System.currentTimeMillis() - _rankReloadStamp >
-            RANK_RELOAD_TIMEOUT) {
-            BangServer.invoker.postUnit(new Invoker.Unit() {
-                public boolean invoke()  {
-                    Map<String, RankLevels> newMap =
-                        new HashMap<String, RankLevels>();
-                    try {
-                        for (RankLevels levels : _raterepo.loadRanks()) {
-                            newMap.put(levels.scenario, levels);
-                        }
-                        _rankLevels = newMap;
-                        _rankReloadStamp = System.currentTimeMillis();
-                    } catch (PersistenceException pe) {
-                        log.log(Level.WARNING,
-                            "Failure while reloading rank data", pe);
-                    }
-                    return false;
-                }
-            });
+        long now = System.currentTimeMillis();
+        if (now < _nextRankReload) {
+            return;
         }
+        _nextRankReload = now + RANK_RELOAD_TIMEOUT;
+
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke()  {
+                Map<String, RankLevels> newMap =
+                    new HashMap<String, RankLevels>();
+                try {
+                    for (RankLevels levels : _raterepo.loadRanks()) {
+                        newMap.put(levels.scenario, levels);
+                    }
+                    _rankLevels = newMap;
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING,
+                        "Failure while reloading rank data", pe);
+                }
+                return false;
+            }
+        });
     }
 
     protected StreamableHashMap<String, Integer> buildRankings (
@@ -1057,8 +1059,8 @@ public class PlayerManager
     protected Map<String, RankLevels> _rankLevels =
         new HashMap<String, RankLevels>();
 
-    /** The time stamp when we last reloaded rank levels */
-    protected long _rankReloadStamp;
+    /** When we should next reload our rank levels */
+    protected long _nextRankReload;
 
 }
 

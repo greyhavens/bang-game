@@ -397,6 +397,7 @@ public class RatingRepository extends SimpleRepository
                 stream.println(line);
             }
         }
+
         protected Metrics (String scenario)
         {
             super(scenario);
