@@ -14,40 +14,42 @@
          renderPriority="40"/>
   <class name="male/beard_back" colors="hair"
          renderPriority="50"/>
-  <class name="male/head" colors="skin" shadow="male/shadow"
+  <class name="male/jewelry_back" colors="clothes_p,clothes_s"
          renderPriority="60"/>
-  <class name="male/makeup" colors="skin,makeup_p,makeup_s"
+  <class name="male/head" colors="skin" shadow="male/shadow"
          renderPriority="70"/>
-  <class name="male/shadow" shadowAlpha="0.26"
+  <class name="male/makeup" colors="skin,makeup_p,makeup_s"
          renderPriority="80"/>
-  <class name="male/mouth" colors="skin,makeup_p,makeup_s" shadow="male/shadow"
+  <class name="male/shadow" shadowAlpha="0.26"
          renderPriority="90"/>
-  <class name="male/eyebrows" colors="skin,hair" shadow="male/shadow"
+  <class name="male/mouth" colors="skin,makeup_p,makeup_s" shadow="male/shadow"
          renderPriority="100"/>
+  <class name="male/eyebrows" colors="skin,hair" shadow="male/shadow"
+         renderPriority="110"/>
   <class name="male/eyes" colors="skin,iris_t"
-         renderPriority="110" shadow="male/shadow"/>
+         renderPriority="120" shadow="male/shadow"/>
   <class name="male/beard" colors="hair"
-         renderPriority="120"/>
-  <class name="male/mustache" colors="hair"
          renderPriority="130"/>
-  <class name="male/nose" colors="skin" shadow="male/shadow"
+  <class name="male/jewelry" colors="clothes_p,clothes_s"
          renderPriority="140"/>
   <class name="male/hair_front" colors="hair,clothes_s" mask="male/hat"
          renderPriority="150"/>
-  <class name="male/clothing_middle" colors="skin,clothes_p,clothes_s,clothes_t"
+  <class name="male/mustache" colors="hair"
          renderPriority="160"/>
-  <class name="male/glasses" colors="clothes_p,clothes_s"
+  <class name="male/nose" colors="skin" shadow="male/shadow"
          renderPriority="170"/>
-  <class name="male/jewelry" colors="clothes_p,clothes_s"
+  <class name="male/clothing_middle" colors="skin,clothes_p,clothes_s,clothes_t"
          renderPriority="180"/>
-  <class name="male/hat" colors="clothes_p,clothes_s,clothes_t"
+  <class name="male/glasses" colors="clothes_p,clothes_s"
          renderPriority="190"/>
-  <class name="male/hat_band" colors="clothes_s,clothes_t"
+  <class name="male/hat" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="200"/>
-  <class name="male/familiar" colors="familiar_p,familiar_s,familiar_t"
+  <class name="male/hat_band" colors="clothes_s,clothes_t"
          renderPriority="210"/>
-  <class name="male/clothing_front" colors="skin,clothes_p,clothes_s,clothes_t"
+  <class name="male/familiar" colors="familiar_p,familiar_s,familiar_t"
          renderPriority="220"/>
+  <class name="male/clothing_front" colors="skin,clothes_p,clothes_s,clothes_t"
+         renderPriority="230"/>
 
   <!-- female component classes -->
   <class name="female/hat_back" colors="clothes_p,clothes_s,clothes_t"
@@ -58,34 +60,37 @@
          renderPriority="30"/>
   <class name="female/hair_middle" colors="hair,clothes_s"
          renderPriority="40"/>
-  <class name="female/head" colors="skin" shadow="female/shadow"
+  <class name="female/jewelry_back" colors="clothes_p,clothes_s"
          renderPriority="50"/>
-  <class name="female/makeup" colors="skin,makeup_p,makeup_s"
+  <class name="female/head" colors="skin" shadow="female/shadow"
          renderPriority="60"/>
-  <class name="female/shadow" shadowAlpha="0.26"
+  <class name="female/makeup" colors="skin,makeup_p,makeup_s"
          renderPriority="70"/>
+  <class name="female/shadow" shadowAlpha="0.26"
+         renderPriority="80"/>
   <class name="female/mouth" colors="skin,makeup_p,makeup_s"
-         renderPriority="80" shadow="female/shadow"/>
+         renderPriority="90" shadow="female/shadow"/>
   <class name="female/eyebrows" colors="skin,hair" shadow="female/shadow"
-         renderPriority="90"/>
+         renderPriority="100"/>
   <class name="female/eyes" colors="skin,iris_t"
-         renderPriority="100" shadow="female/shadow"/>
+         renderPriority="110" shadow="female/shadow"/>
   <class name="female/nose" colors="skin" shadow="female/shadow"
-         renderPriority="110"/>
-  <class name="female/hair_front" colors="hair,clothes_s" mask="female/hat"
          renderPriority="120"/>
+  <class name="female/hair_front" colors="hair,clothes_s" mask="female/hat"
+         renderPriority="130"/>
   <class name="female/clothing_middle"
-         colors="skin,clothes_p,clothes_s,clothes_t" renderPriority="130"/>
-  <class name="female/glasses" colors="clothes_p,clothes_s"
+         colors="skin,clothes_p,clothes_s,clothes_t"
          renderPriority="140"/>
-  <class name="female/jewelry" colors="clothes_p,clothes_s"
+  <class name="female/glasses" colors="clothes_p,clothes_s"
          renderPriority="150"/>
-  <class name="female/hat" colors="clothes_p,clothes_s,clothes_t"
+  <class name="female/jewelry" colors="clothes_p,clothes_s"
          renderPriority="160"/>
-  <class name="female/hat_band" colors="clothes_p,clothes_s,clothes_t"
+  <class name="female/hat" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="170"/>
-  <class name="female/familiar" colors="familiar_p,familiar_s,familiar_t"
+  <class name="female/hat_band" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="180"/>
+  <class name="female/familiar" colors="familiar_p,familiar_s,familiar_t"
+         renderPriority="190"/>
   <class name="female/clothing_front"
          colors="skin,clothes_p,clothes_s,clothes_t" renderPriority="190"/>
 </classes>
