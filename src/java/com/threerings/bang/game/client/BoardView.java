@@ -185,6 +185,7 @@ public class BoardView extends BComponent
     public BoardView (BasicContext ctx, boolean editorMode)
     {
         setStyleClass("board_view");
+        setTooltipRelativeToMouse(true);
         _ctx = ctx;
 
         // create our top-level node
