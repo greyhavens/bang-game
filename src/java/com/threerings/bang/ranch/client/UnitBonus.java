@@ -10,6 +10,7 @@ import java.util.Iterator;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.Spacer;
 
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.SubimageIcon;
@@ -49,19 +50,20 @@ public class UnitBonus extends BContainer
         _addTip = addTip;
         removeAll();
         ArrayList<BContainer> bonusList = new ArrayList<BContainer>();
+        boolean text = (which == Which.BOTH);
 
         if (which != Which.DEFEND) {
             for (UnitConfig.Mode mode : UnitConfig.Mode.values()) {
                 int adj = config.damageAdjust[mode.ordinal()];
                 if (config.damage + adj <= 0) {
                     bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                                      _modeIconMap.get(mode), BonusIcons.NA));
+                              _modeIconMap.get(mode), BonusIcons.NA, text));
                 } else if (adj > 0) {
                     bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                                      _modeIconMap.get(mode), BonusIcons.UP));
+                              _modeIconMap.get(mode), BonusIcons.UP, text));
                 } else if (adj < 0) {
                     bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                                      _modeIconMap.get(mode), BonusIcons.DOWN));
+                              _modeIconMap.get(mode), BonusIcons.DOWN, text));
                 }
             }
             for (UnitConfig.Make make : UnitConfig.Make.values()) {
@@ -69,13 +71,13 @@ public class UnitBonus extends BContainer
                     UnitConfig.MODE_COUNT + make.ordinal()];
                 if (config.damage + adj <= 0) {
                     bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                                      _makeIconMap.get(make), BonusIcons.NA));
+                              _makeIconMap.get(make), BonusIcons.NA, text));
                 } else if (adj > 0) {
                     bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                                      _makeIconMap.get(make), BonusIcons.UP));
+                              _makeIconMap.get(make), BonusIcons.UP, text));
                 } else if (adj < 0) {
                     bonusList.add(makeBonusContainer(BonusIcons.ATTACK,
-                                      _makeIconMap.get(make), BonusIcons.DOWN));
+                              _makeIconMap.get(make), BonusIcons.DOWN, text));
                 }
             }
         }
@@ -85,10 +87,10 @@ public class UnitBonus extends BContainer
                 int adj = config.defenseAdjust[mode.ordinal()];
                 if (adj > 0) {
                     bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
-                                      _modeIconMap.get(mode), BonusIcons.UP));
+                              _modeIconMap.get(mode), BonusIcons.UP, text));
                 } else if (adj < 0) {
                     bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
-                                      _modeIconMap.get(mode), BonusIcons.DOWN));
+                              _modeIconMap.get(mode), BonusIcons.DOWN, text));
                 }
             }
             for (UnitConfig.Make make : UnitConfig.Make.values()) {
@@ -96,10 +98,10 @@ public class UnitBonus extends BContainer
                     UnitConfig.MODE_COUNT + make.ordinal()];
                 if (adj > 0) {
                     bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
-                                      _makeIconMap.get(make), BonusIcons.UP));
+                              _makeIconMap.get(make), BonusIcons.UP, text));
                 } else if (adj < 0) {
                     bonusList.add(makeBonusContainer(BonusIcons.DEFEND,
-                                      _makeIconMap.get(make), BonusIcons.DOWN));
+                              _makeIconMap.get(make), BonusIcons.DOWN, text));
                 }
             }
         }
@@ -123,9 +125,15 @@ public class UnitBonus extends BContainer
             add(bonusIconLabel(BonusIcons.NA, _msgs.get(none)));
 
         } else {
-            TableLayout layout = new TableLayout(cols, 3, _gap);
-            layout.setVerticalAlignment(TableLayout.CENTER);
-            setLayoutManager(layout);
+            if (text) {
+                GroupLayout layout = GroupLayout.makeVert(GroupLayout.CENTER);
+                layout.setOffAxisJustification(GroupLayout.LEFT);
+                setLayoutManager(layout);
+            } else {
+                TableLayout layout = new TableLayout(cols, 3, _gap);
+                layout.setVerticalAlignment(TableLayout.CENTER);
+                setLayoutManager(layout);
+            }
             for (BContainer cont : bonusList) {
                 add(cont);
             }
@@ -137,7 +145,7 @@ public class UnitBonus extends BContainer
      * a formated tool tip text.
      */
     protected BContainer makeBonusContainer (
-        BonusIcons method, BonusIcons type, BonusIcons effect)
+        BonusIcons method, BonusIcons type, BonusIcons effect, boolean text)
     {
         GroupLayout layout = GroupLayout.makeHoriz(GroupLayout.CENTER);
         layout.setGap(1);
@@ -156,6 +164,10 @@ public class UnitBonus extends BContainer
         bonus.add(bonusIconLabel(method, tip));
         bonus.add(bonusIconLabel(type, tip));
         bonus.add(bonusIconLabel(effect, tip));
+        if (text) {
+            bonus.add(new Spacer(4, 0));
+            bonus.add(new BLabel(tip, "tooltip_label"));
+        }
 
         return bonus;
     }
