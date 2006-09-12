@@ -176,7 +176,7 @@ public abstract class ScenarioInfo
     {
         return config.teamSize;
     }
-    
+
     /**
      * Returns the stats associated with the scenario's primary objective.
      */
@@ -196,7 +196,7 @@ public abstract class ScenarioInfo
     {
         return getObjectives()[0].toString().toLowerCase();
     }
-    
+
     /**
      * Returns the stat associated with our secondary objective or null if this
      * scenario has no secondary objective.
@@ -227,7 +227,16 @@ public abstract class ScenarioInfo
     {
         return true;
     }
-    
+
+    /**
+     * Returns true if the scenario has enemies that are of human make. Meaning
+     * either it is not coop or it is coop but versus human units.
+     */
+    public boolean hasHumanEnemies ()
+    {
+        return true;
+    }
+
     /**
      * Determines whether the two identified players are allied in
      * terms of the scenario.
@@ -236,7 +245,7 @@ public abstract class ScenarioInfo
     {
         return false;
     }
-    
+
     /**
      * Returns the path to sound clips that should be preloaded when playing
      * this scenario.

@@ -88,6 +88,12 @@ public class ForestGuardiansInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
+    public boolean hasHumanEnemies ()
+    {
+        return false;
+    }
+
+    @Override // from ScenarioInfo
     public Teams getTeams ()
     {
         return Teams.COOP;
