@@ -543,8 +543,9 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void getPosterInfo(final ClientObject caller, final Handle handle,
-                              final PlayerService.ResultListener listener)
+    public void getPosterInfo (
+        ClientObject caller, final Handle handle,
+        final PlayerService.ResultListener listener)
         throws InvocationException
     {
         // first, see if we need to refresh ranks from repository
@@ -611,15 +612,101 @@ public class PlayerManager
                         _raterepo.loadRatings(player.playerId).iterator());
                 }
             }
+
             public void handleSuccess() {
                 // cache the result
                 _posterCache.put(handle, new SoftReference<PosterInfo>(info));
                 // and return it
                 listener.requestProcessed(info);
             }
+
             public String getFailureMessage() {
                 return "Failed to build wanted poster data [handle=" + handle
                     + "]";
+            }
+        });
+    }
+
+    // from interface PlayerProvider
+    public void updatePosterInfo (
+        ClientObject caller, int playerId, String statement, int[] badgeIds,
+        final PlayerService.ConfirmListener cl)
+        throws InvocationException
+    {
+        final PlayerObject user = (PlayerObject)caller;
+
+        // create a poster record and populate it
+        final PosterRecord poster = new PosterRecord(playerId);
+        poster.statement = statement;
+        poster.badge1 = badgeIds[0];
+        poster.badge2 = badgeIds[1];
+        poster.badge3 = badgeIds[2];
+        poster.badge4 = badgeIds[3];
+
+        // then store it in the database
+        BangServer.invoker.postUnit(new PersistingUnit(cl) {
+            public void invokePersistent() throws PersistenceException {
+                _postrepo.storePoster(poster);
+                _posterCache.remove(user.handle);
+            }
+            public void handleSuccess() {
+                cl.requestProcessed();
+            }
+            public String getFailureMessage() {
+                return "Failed to store wanted poster record [poster = "
+                    + poster + "]";
+            }
+        });
+    }
+
+    // from interface PlayerProvider
+    public void noteFolk (ClientObject caller, final int folkId, int note,
+                          PlayerService.ConfirmListener cl)
+        throws InvocationException
+    {
+        final PlayerObject user = (PlayerObject) caller;
+        int ixFoe = Arrays.binarySearch(user.foes, folkId);
+        int ixFriend = Arrays.binarySearch(user.friends, folkId);
+
+        final byte opinion;
+        final int[] nfriends, nfoes;
+        if (note == PlayerService.FOLK_IS_FRIEND && ixFriend < 0) {
+            opinion = FolkRecord.FRIEND;
+            nfriends = ArrayUtil.insert(user.friends, folkId, 1+ixFriend);
+            nfoes = (ixFoe >= 0) ?
+                ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
+
+        } else if (note == PlayerService.FOLK_IS_FOE && ixFoe < 0) {
+            opinion = FolkRecord.FOE;
+            nfriends = (ixFriend >= 0) ?
+                ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
+            nfoes = ArrayUtil.insert(user.foes, folkId, 1+ixFoe);
+
+        } else if (note == PlayerService.FOLK_NEUTRAL &&
+            (ixFoe >= 0 || ixFriend >= 0)) {
+            opinion = FolkRecord.NO_OPINION;
+            nfriends = (ixFriend >= 0) ?
+                ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
+            nfoes = (ixFoe >= 0) ?
+                    ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
+
+        } else {
+            cl.requestProcessed(); // NOOP!
+            return;
+        }
+
+        BangServer.invoker.postUnit(new PersistingUnit(cl) {
+            public void invokePersistent() throws PersistenceException {
+                _playrepo.registerOpinion(user.playerId, folkId, opinion);
+            }
+            public void handleSuccess() {
+                user.setFriends(nfriends);
+                user.setFoes(nfoes);
+                ((PlayerService.ConfirmListener)_listener).requestProcessed();
+            }
+            public String getFailureMessage() {
+                return "Failed to register opinion [who=" + user.who() +
+                    ", folk=" + folkId + "]";
             }
         });
     }
@@ -674,88 +761,6 @@ public class PlayerManager
             map.put(rating.scenario, Integer.valueOf(rank));
         }
         return map;
-    }
-
-    // from interface PlayerProvider
-    public void updatePosterInfo(final ClientObject caller, int playerId,
-                                 String statement, int[] badgeIds,
-                                 final PlayerService.ConfirmListener cl)
-        throws InvocationException
-    {
-        // create a poster record and populate it
-        final PosterRecord poster = new PosterRecord(playerId);
-        poster.statement = statement;
-        poster.badge1 = badgeIds[0];
-        poster.badge2 = badgeIds[1];
-        poster.badge3 = badgeIds[2];
-        poster.badge4 = badgeIds[3];
-
-        // then store it in the database
-        BangServer.invoker.postUnit(new PersistingUnit(cl) {
-            public void invokePersistent() throws PersistenceException {
-                _postrepo.storePoster(poster);
-                _posterCache.remove(((PlayerObject) caller).handle);
-            }
-            public void handleSuccess() {
-                cl.requestProcessed();
-            }
-            public String getFailureMessage() {
-                return "Failed to store wanted poster record [poster = "
-                    + poster + "]";
-            }
-        });
-    }
-
-    // from interface PlayerProvider
-    public void noteFolk (ClientObject caller, final int folkId, int note,
-                          PlayerService.ConfirmListener cl)
-        throws InvocationException
-    {
-        final PlayerObject user = (PlayerObject) caller;
-        int ixFoe = Arrays.binarySearch(user.foes, folkId);
-        int ixFriend = Arrays.binarySearch(user.friends, folkId);
-
-        final byte opinion;
-        final int[] nfriends, nfoes;
-        if (note == PlayerService.FOLK_IS_FRIEND && ixFriend < 0) {
-            opinion = FolkRecord.FRIEND;
-            nfriends = ArrayUtil.insert(user.friends, folkId, 1+ixFriend);
-            nfoes = (ixFoe >= 0) ?
-                ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
-
-        } else if (note == PlayerService.FOLK_IS_FOE && ixFoe < 0) {
-            opinion = FolkRecord.FOE;
-            nfriends = (ixFriend >= 0) ?
-                ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
-            nfoes = ArrayUtil.insert(user.foes, folkId, 1+ixFoe);
-            
-        } else if (note == PlayerService.FOLK_NEUTRAL &&
-            (ixFoe >= 0 || ixFriend >= 0)) {
-            opinion = FolkRecord.NO_OPINION;
-            nfriends = (ixFriend >= 0) ?
-                ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
-            nfoes = (ixFoe >= 0) ?
-                    ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
-
-        } else {
-            cl.requestProcessed(); // NOOP!
-            return;
-        }
-
-        BangServer.invoker.postUnit(new PersistingUnit(cl) {
-            public void invokePersistent() throws PersistenceException {
-                _playrepo.registerOpinion(user.playerId, folkId, opinion);
-            }
-            public void handleSuccess() {
-                user.setFriends(nfriends);
-                user.setFoes(nfoes);
-                ((PlayerService.ConfirmListener)_listener).requestProcessed();
-            }
-            public String getFailureMessage() {
-                return "Failed to register opinion [who=" + user.who() +
-                    ", folk=" + folkId + "]";
-            }
-        });
     }
 
     /**
@@ -1017,9 +1022,9 @@ public class PlayerManager
         protected PardnerEntry _entry;
     }
 
-    /** The number of milliseconds after which we reload rank levels from DB */ 
+    /** The number of milliseconds after which we reload rank levels from DB */
     protected static final long RANK_RELOAD_TIMEOUT = (3600 * 1000);
-    
+
     /** Provides access to the pardner database. */
     protected PardnerRepository _pardrepo;
 
@@ -1051,7 +1056,7 @@ public class PlayerManager
     /** A map of scenario ID's to rank levels, reloaded every so often */
     protected Map<String, RankLevels> _rankLevels =
         new HashMap<String, RankLevels>();
-    
+
     /** The time stamp when we last reloaded rank levels */
     protected long _rankReloadStamp;
 
