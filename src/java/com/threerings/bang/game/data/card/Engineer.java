@@ -31,9 +31,8 @@ public class Engineer extends AreaCard
 
         // make sure the board contains train tracks with at least one
         // junction
-        for (Piece piece : bangobj.pieces) {
-            if (piece instanceof Track &&
-                ((Track)piece).getAdjacent(bangobj).length > 2) {
+        for (Track track : bangobj.getTracks().values()) {
+            if (track.getAdjacent(bangobj).length > 2) {
                 return true;
             }
         }

@@ -92,12 +92,12 @@ public abstract class Card extends SimpleStreamableObject
             // zero out any cards that can't be used in this round
             if (bangobj != null) {
                 for (int ii = 0; ii < wcards.length; ii++) {
-                    if (!wcards[ii].isPlayable(bangobj)) {
+                    if (weights[ii] > 0 && !wcards[ii].isPlayable(bangobj)) {
                         weights[ii] = 0;
                     }
                 }
             }
-                    
+            
             return wcards[RandomUtil.getWeightedIndex(weights)].getType();
         }
     }
