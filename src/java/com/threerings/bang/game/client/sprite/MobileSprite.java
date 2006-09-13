@@ -527,5 +527,5 @@ public class MobileSprite extends ActiveSprite
     protected static final float RESPAWN_DURATION = 1f;
 
     /** The number of seconds it takes pieces to teleport in or out. */
-    protected static final float TELEPORT_DURATION = 1f;
+    protected static final float TELEPORT_DURATION = 0.5f;
 }
