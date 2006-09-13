@@ -13,6 +13,8 @@ import java.util.logging.Level;
 
 import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
+import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BLabel;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
@@ -177,6 +179,7 @@ public class BangController extends GameController
         mapCommand(KeyInput.KEY_SPACE, "StartChat");
         mapCommand(KeyInput.KEY_RETURN, "StartChat");
         mapCommand(KeyInput.KEY_ESCAPE, "ShowOptions");
+        mapCommand(KeyInput.KEY_F1, "ShowOptions");
         mapCommand(KeyInput.KEY_TAB, "SelectNextUnit");
         mapCommand(KeyInput.KEY_C, "AdjustZoom");
         mapCommand(KeyInput.KEY_Q, "SwingCameraLeft");

@@ -27,6 +27,8 @@ public class InGameOptionsView extends BDecoratedWindow
     public InGameOptionsView (BangContext ctx, BangObject bangobj)
     {
         super(ctx.getStyleSheet(), null);
+        setLayer(2);
+        ((GroupLayout)getLayoutManager()).setGap(15);
 
         _modal = true;
         _ctx = ctx;
@@ -35,17 +37,14 @@ public class InGameOptionsView extends BDecoratedWindow
         MessageBundle msgs = ctx.getMessageManager().getBundle("options");
         add(_title = new BLabel("", "window_title"), GroupLayout.FIXED);
 
-        add(new BLabel(msgs.get("m.leave_game_and")), GroupLayout.FIXED);
+        add(new BLabel(msgs.get("m.game_key_help")), GroupLayout.FIXED);
+
         BContainer box = GroupLayout.makeHBox(GroupLayout.CENTER);
         String from = bangobj.priorLocation.ident;
         if (!"tutorial".equals(from)) {
             box.add(new BButton(msgs.get("m.to_" + from), this, "to_prior"));
         }
         box.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
-        add(box, GroupLayout.FIXED);
-
-        add(new BLabel(msgs.get("m.leave_game_or")), GroupLayout.FIXED);
-        box = GroupLayout.makeHBox(GroupLayout.CENTER);
         box.add(new BButton(msgs.get("m.resume"), this, "dismiss"));
         add(box, GroupLayout.FIXED);
     }
