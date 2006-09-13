@@ -11,10 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
@@ -25,10 +22,12 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntTuple;
 import com.samskivert.util.QuickSort;
 import com.samskivert.util.StringUtil;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.saloon.data.TopRankedList;
+import com.threerings.bang.server.ServerConfig;
 
 import static com.threerings.bang.Log.log;
 
@@ -242,24 +241,39 @@ public class RatingRepository extends SimpleRepository
     }
 
     /**
-     * Performs a full table scan of RATINGS and calculates for each scenario
-     * which rating is required to reach which rank. Each ranks corresponds
-     * to a certain percentile relative the entire player population.
+     * Calculate the ranks for each scenario handled by this server;
+     * let the Frontier Town server handle the Overall pseudoscenario. 
+     */
+    public void calculateRanks ()
+        throws PersistenceException
+    {
+        for (ScenarioInfo info :
+                ScenarioInfo.getScenarios(ServerConfig.townId, false)) {
+            calculateRanks(info.getIdent());
+        }
+        if (BangCodes.FRONTIER_TOWN.equals(ServerConfig.townId)) {
+            calculateRanks(ScenarioInfo.OVERALL_IDENT);
+        }
+    }
+    
+    /**
+     * Scans RATINGS for the given scenario and calculates which rating is
+     * is required to reach which rank. Each ranks corresponds to a certain
+     * percentile relative the entire player population.
      *
      * When calculations complete, the results are dumped to the RANKS table,
-     * which is first cleared. The return value maps {@link ScenarioInfo} ID's
-     * to {@Link Metrics} instances, which hold the calculated rank levels
-     * along with some additional metrics.
+     * which is first cleared of the current scenario. The {@link Metrics}
+     * return value holds the calculated rank levels along with a few extra
+     * values collected during the computation.
      *
      * This class was originally derived from Yohoho's GenerateStandings and
      * some core logic from there still remains.
      */
-    public List<Metrics> calculateRanks ()
+    public Metrics calculateRanks (final String scenario)
         throws PersistenceException
     {
-        // sort each row from RATINGS into the right histogram
-        final Map<String, SparseHistogram> hists =
-            new HashMap<String, SparseHistogram>();
+        // sort each row for this scenario from RATINGS into a histogram
+        final SparseHistogram histo = new SparseHistogram();
         execute(new Operation<Void>() {
             public Void invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -267,19 +281,12 @@ public class RatingRepository extends SimpleRepository
                 PreparedStatement stmt = null;
                 try {
                     String query =
-                        "select SCENARIO, RATING from RATINGS";
+                        "select RATING from RATINGS where SCENARIO = ?";
                     stmt = conn.prepareStatement(query);
+                    stmt.setString(1, scenario);
                     ResultSet rs = stmt.executeQuery();
                     while (rs.next()) {
-                        String scenario = rs.getString(1);
-                        int rating = rs.getInt(2);
-                        // retrieve or create a histogram for this scenario
-                        SparseHistogram histo = hists.get(scenario);
-                        if (histo == null) {
-                            histo = new SparseHistogram();
-                            hists.put(scenario, histo);
-                        }
-                        histo.addValue(rating);
+                        histo.addValue(rs.getInt(1));
                     }
 
                 } finally {
@@ -291,37 +298,28 @@ public class RatingRepository extends SimpleRepository
         });
 
         // now calculate rank levels from the sorted ratings
-        final Map<String, Metrics> metrics = new HashMap<String, Metrics>();
-        for (Entry<String, SparseHistogram> entry : hists.entrySet()) {
-            String scenario = entry.getKey();
-            SparseHistogram histo = entry.getValue();
+        int userCount = histo.count;
+        IntTuple[] buckets = histo.getFilledBuckets();
+        int bucketCount = buckets.length;
+        int sidx = 0, sum = 0;
 
-            int userCount = histo.count;
-            IntTuple[] buckets = histo.getFilledBuckets();
-            int bucketCount = buckets.length;
-            int sidx = 0, sum = 0;
+        final Metrics met = new Metrics(scenario);
+        met.totalUsers = userCount;
 
-            Metrics met = new Metrics(scenario);
-            metrics.put(scenario, met);
-            met.totalUsers = userCount;
-
-            for (int bidx = 0; bidx < bucketCount &&
-                    sidx < RANK_PERCENTAGES.length; bidx++) {
-                sum += buckets[bidx].right;
-                int pctusers = (int)((sum / (float)userCount) * 100);
-                while (sidx < RANK_PERCENTAGES.length &&
-                        RANK_PERCENTAGES[sidx] <= pctusers) {
-                    met.accumUsers[sidx] = sum;
-                    met.levels[sidx++] = buckets[bidx].left + 1;
-                }
+        for (int bidx = 0; bidx < bucketCount &&
+             sidx < RANK_PERCENTAGES.length; bidx++) {
+            sum += buckets[bidx].right;
+            int pctusers = (int)((sum / (float)userCount) * 100);
+            while (sidx < RANK_PERCENTAGES.length &&
+                    RANK_PERCENTAGES[sidx] <= pctusers) {
+                met.accumUsers[sidx] = sum;
+                met.levels[sidx++] = buckets[bidx].left + 1;
             }
         }
 
         // don't write reports to STDOUT, but show that we can
         if (false) {
-            for (Metrics met : metrics.values()) {
-                met.generateReport(System.out);
-            }
+            met.generateReport(System.out);
         }
 
         // finally, clear RANKS and dump our data back into it
@@ -329,28 +327,39 @@ public class RatingRepository extends SimpleRepository
             public Void invoke (Connection conn, DatabaseLiaison liaison)
             throws SQLException, PersistenceException
             {
-                // clear the table
-                conn.prepareStatement("delete from RANKS").execute();
-                // then fill it
-                PreparedStatement insert = conn.prepareStatement(
-                    "insert into RANKS " +
-                    "        set SCENARIO = ?, " +
-                    "            RANK = ?, " +
-                "            LEVEL = ? ");
-                for (Entry<String, Metrics> entry : metrics.entrySet()) {
-                    String scenario = entry.getKey();
-                    int[] levels = entry.getValue().levels;
+                PreparedStatement clear = null, insert = null;
+
+                try {
+                    // clear the table
+                    clear = conn.prepareStatement(
+                            "delete from RANKS" +
+                            "      where SCENARIO = ? ");
+                    clear.setString(1, scenario);
+                    clear.execute();
+                    JDBCUtil.close(clear);
+                    
+                    // then fill it
+                    insert = conn.prepareStatement(
+                        "insert into RANKS " +
+                        "        set SCENARIO = ?, " +
+                        "            RANK = ?, " +
+                        "            LEVEL = ? ");
+                    int[] levels = met.levels;
                     for (int rank = 0; rank < levels.length; rank ++) {
                         insert.setString(1, scenario);
                         insert.setInt(2, rank);
                         insert.setInt(3, levels[rank]);
                         insert.execute();
                     }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(clear);
+                    JDBCUtil.close(insert);
                 }
-                return null;
             }
         });
-        return new ArrayList<Metrics>(metrics.values());
+        return met;
     }
 
     @Override // documentation inherited
