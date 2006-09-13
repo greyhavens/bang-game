@@ -309,7 +309,7 @@ public class ShotEffect extends Effect
         if (icons == null) {
             icons = new String[] { icon };
         } else {
-            icons = (String[])ArrayUtil.append(icons, icon);
+            icons = ArrayUtil.append(icons, icon);
         }
         if (attack) {
             attackIcons = icons;

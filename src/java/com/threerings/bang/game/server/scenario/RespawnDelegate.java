@@ -83,13 +83,7 @@ public class RespawnDelegate extends ScenarioDelegate
                 bangobj.removeFromPieces(unit.getKey());
             }
 
-            boolean freeIronPlate = true;
-            for (Piece p : bangobj.pieces) {
-                if (p.owner == unit.owner && p.isAlive() && p instanceof Unit) {
-                    freeIronPlate = false;
-                    break;
-                }
-            }
+            boolean freeIronPlate = !bangobj.hasLiveUnits(unit.owner);
 
             // then position it and add it back at its new location
             unit.position(bspot.x, bspot.y);

@@ -340,7 +340,14 @@ public class BangObject extends GameObject
      */
     public boolean hasLiveUnits (int pidx)
     {
-        return countLiveUnits(pidx) > 0;
+        if (pieces != null) {
+            for (Piece p : pieces) {
+                if (p.owner == pidx && p instanceof Unit && p.isAlive()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -351,8 +358,7 @@ public class BangObject extends GameObject
     {
         int pcount = 0;
         if (pieces != null) {
-            for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
-                Piece p = (Piece)iter.next();
+            for (Piece p : pieces) {
                 if (p.owner == pidx && p instanceof Unit && p.isAlive()) {
                     pcount++;
                 }
@@ -367,8 +373,7 @@ public class BangObject extends GameObject
     public int countDeadUnits ()
     {
         int pcount = 0;
-        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
+        for (Piece p : pieces) {
             if (p.owner >= 0 && p instanceof Unit && !p.isAlive()) {
                 pcount++;
             }
@@ -382,8 +387,7 @@ public class BangObject extends GameObject
     public int countPlayerCards (int pidx)
     {
         int ccount = 0;
-        for (Iterator iter = cards.iterator(); iter.hasNext(); ) {
-            Card card = (Card)iter.next();
+        for (Card card : cards) {
             if (card.owner == pidx) {
                 ccount++;
             }
@@ -397,8 +401,7 @@ public class BangObject extends GameObject
      */
     public Piece getPlayerPiece (int tx, int ty)
     {
-        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
+        for (Piece p : pieces) {
             if (p.owner >= 0 && p.x == tx && p.y == ty) {
                 return p;
             }
@@ -413,9 +416,9 @@ public class BangObject extends GameObject
     {
         int[] pcount = getUnitCount();
         float tunits = 0, tcount = 0;
-        for (int ii = 0; ii < pcount.length; ii++) {
-            if (pcount[ii] > 0) {
-                tunits += pcount[ii];
+        for (int ucount : pcount) {
+            if (ucount > 0) {
+                tunits += ucount;
                 tcount++;
             }
         }
@@ -445,8 +448,7 @@ public class BangObject extends GameObject
     public int[] getUnitCount ()
     {
         int[] pcount = new int[players.length];
-        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
+        for (Piece p : pieces) {
             if (p instanceof Unit && p.isAlive() && p.owner >= 0) {
                 pcount[p.owner]++;
             }
@@ -488,8 +490,7 @@ public class BangObject extends GameObject
     public int getAverageUnitDamage (ArrayIntSet players)
     {
         int pcount = 0, tdamage = 0;
-        for (Iterator iter = pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
+        for (Piece p : pieces) {
             if (p instanceof Unit && p.isAlive() && players.contains(p.owner)) {
                 pcount++;
                 tdamage += p.damage;
