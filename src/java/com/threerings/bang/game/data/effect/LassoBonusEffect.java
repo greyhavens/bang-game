@@ -46,12 +46,6 @@ public class LassoBonusEffect extends BonusEffect
     {
         super.prepare(bangobj, dammap);
 
-        // make sure our player has room for another card
-        if (bangobj.countPlayerCards(_player) >= GameCodes.MAX_CARDS) {
-            log.warning("No soup four you! " + _player + ".");
-            return;
-        }
-
         // find the bonus
         Bonus bonus = null;
         for (Piece piece : bangobj.pieces) {
