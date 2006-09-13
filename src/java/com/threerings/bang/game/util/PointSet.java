@@ -23,6 +23,12 @@ public class PointSet extends ArrayIntSet
         remove(((tx << 16) | (ty & 0xFFFF)));
     }
 
+    public boolean containsAdjacent (int tx, int ty)
+    {
+        return contains(tx + 1, ty) || contains(tx - 1, ty) ||
+            contains(tx, ty + 1) || contains(tx, ty - 1);
+    }
+    
     public boolean contains (int tx, int ty)
     {
         return contains(((tx << 16) | (ty & 0xFFFF)));
