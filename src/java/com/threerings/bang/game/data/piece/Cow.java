@@ -16,6 +16,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.SpookEffect;
 import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
+import com.threerings.bang.game.util.PieceUtil;
 import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
@@ -53,16 +54,8 @@ public class Cow extends Piece
         }
 
         // run in the opposite direction of our spooker
-        for (int dd = 0; dd < DIRECTIONS.length; dd++) {
-            if (spooker.x + DX[dd] == x && spooker.y + DY[dd] == y) {
-                // run in the direction that the spooker would have to move to
-                // occupy our location (ie. if we're east of the spooker, try
-                // spooking further east)
-                return move(bangobj, dd, owner, spooker.pieceId);
-            }
-        }
-
-        return null;
+        return move(bangobj, (PieceUtil.getDirection(this, spooker) + 2) % 4,
+            owner, spooker.pieceId);
     }
 
     @Override // documentation inherited
