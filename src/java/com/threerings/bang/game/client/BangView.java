@@ -201,7 +201,7 @@ public class BangView extends BWindow
         BLabel label = new BLabel(new ImageIcon(_ctx.loadImage(
             card.getIconPath(pidx == -1 ? "card" : "icon"))));
         if (pidx != -1) {
-            label.setStyleClass("card_button");
+            label.setStyleClass(card.getStyle());
         }
         window.add(label, BorderLayout.CENTER);
         window.setLayer(2);

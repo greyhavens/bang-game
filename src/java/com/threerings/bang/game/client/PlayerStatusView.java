@@ -407,7 +407,7 @@ public class PlayerStatusView extends BContainer
     {
         BIcon icon = new ImageIcon(_ctx.loadImage(card.getIconPath("icon")));
         BButton btn = new BButton(icon, "" + card.cardId);
-        btn.setStyleClass("card_button");
+        btn.setStyleClass(card.getStyle());
         btn.setTooltipText(_ctx.xlate(BangCodes.CARDS_MSGS,
                                       CardItem.getTooltipText(card.getType())));
         btn.addListener(this);

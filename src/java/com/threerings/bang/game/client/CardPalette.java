@@ -49,6 +49,9 @@ public class CardPalette extends IconPalette
         _selfIdx = bangobj.getPlayerIndex(
             _ctx.getUserObject().getVisibleName());
         _small = BangPrefs.getCardPaletteSize();
+        if (_cardBG == null) {
+            _cardBG = new ImageIcon(_ctx.loadImage("ui/pregame/card_bg.png"));
+        }
 
         BContainer selectable = new BContainer(GroupLayout.makeHStretch());
         selectable.add(_smallView = new BCheckBox(_ctx.xlate(
@@ -112,7 +115,7 @@ public class CardPalette extends IconPalette
 
         // finally clear out the remaining icons
         for (int ii = iconidx; ii < _selcards.length; ii++) {
-            _selcards[ii].setIcon(null);
+            _selcards[ii].setIcon(_cardBG);
         }
     }
 
@@ -192,4 +195,5 @@ public class CardPalette extends IconPalette
     protected BLabel[] _selcards;
     protected BCheckBox _smallView;
     protected boolean _small;
+    protected static ImageIcon _cardBG;
 }

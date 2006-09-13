@@ -40,6 +40,9 @@ public abstract class Card extends SimpleStreamableObject
     /** The player index of the player that is holding this card. */
     public int owner;
 
+    /** If this card was aquired during the course of a round. */
+    public boolean found = true;
+
     /**
      * Selects a random card from the set of all available cards for the
      * specified town.
@@ -131,6 +134,14 @@ public abstract class Card extends SimpleStreamableObject
     public static Card getCard (String type)
     {
         return _cards.get(type);
+    }
+
+    /**
+     * Returns the style class for this card.
+     */
+    public String getStyle ()
+    {
+        return (found ? "card_found_button" : "card_button");
     }
 
     /** Returns a string type identifier for this card. */

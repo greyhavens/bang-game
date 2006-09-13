@@ -275,6 +275,7 @@ public class BangManager extends GameManager
                 }
                 cards[ii] = card;
                 cards[ii].init(_bangobj, pidx);
+                cards[ii].found = false;
                 _scards.put(cards[ii].cardId, new StartingCard(pidx, item));
             }
         }
@@ -1095,6 +1096,7 @@ public class BangManager extends GameManager
             for (int ii = 0; ii < cards.length; ii++) {
                 cards[ii] = Card.newCard(cardTypes[ii]);
                 cards[ii].init(_bangobj, pidx);
+                cards[ii].found = false;
             }
         }
         selectStarters(pidx, new BigShotItem(-1, bigShotType), cards);
