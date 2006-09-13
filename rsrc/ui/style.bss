@@ -1027,7 +1027,7 @@ pick_team_choice {
 }
 
 card_icon {
-  background: image "ui/pregame/card_bg.png" centerxy;
+  background: image "ui/pstatus/card_up.png" centerxy;
 }
 
 //
@@ -1054,6 +1054,16 @@ card_button {
 
 card_button:down {
   background: image "ui/pstatus/card_down.png" framexy;
+  padding: 2 0 0 1;
+}
+
+card_found_button {
+  background: image "ui/pstatus/card_found_up.png" framexy;
+  padding: 1 1 0 0;
+}
+
+card_found_button:down {
+  background: image "ui/pstatus/card_found_down.png" framexy;
   padding: 2 0 0 1;
 }
 
