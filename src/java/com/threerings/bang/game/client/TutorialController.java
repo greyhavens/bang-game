@@ -3,12 +3,18 @@
 
 package com.threerings.bang.game.client;
 
+import java.util.ArrayList;
+
+import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 
 import com.threerings.util.MessageBundle;
@@ -36,6 +42,7 @@ import static com.threerings.bang.Log.log;
  * side.
  */
 public class TutorialController
+    implements ActionListener
 {
     /** Called from {@link BangController#init}. */
     public void init (BangContext ctx, BangConfig config, BangView view)
@@ -49,20 +56,35 @@ public class TutorialController
         _msgs = _ctx.getMessageManager().getBundle(
             "tutorials." + _config.ident);
         _gmsgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
-
+        
         // create and add the window in which we'll display info text
         _view.tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null) {
             public BComponent getHitComponent (int mx, int my) {
-                return (_pending == null ||
-                        TutorialCodes.TEXT_CLICKED.equals(_pending.event)) ?
-                    super.getHitComponent(mx, my) : null;
+                BComponent comp = super.getHitComponent(mx, my);
+                return (comp == _back || comp == _forward ||
+                    _pending == null || TutorialCodes.TEXT_CLICKED.equals(
+                        _pending.event)) ? comp : null;
             }
         };
         _view.tutwin.setStyleClass("tutorial_window");
         _view.tutwin.setLayer(1);
         _view.tutwin.setLayoutManager(new BorderLayout(5, 15));
-        _view.tutwin.add(_title = new BLabel("", "tutorial_title"),
-                         BorderLayout.NORTH);
+        
+        BContainer north = new BContainer(new BorderLayout());
+        _view.tutwin.add(north, BorderLayout.NORTH);
+        _back = new BButton(new ImageIcon(
+            ctx.loadImage("ui/icons/left_arrow.png")), this, "back");
+        _back.setStyleClass("arrow_button");
+        _back.setEnabled(false);
+        north.add(_back, BorderLayout.WEST);
+        north.add(_title = new BLabel("", "tutorial_title"),
+            BorderLayout.CENTER);
+        _forward = new BButton(new ImageIcon(
+            ctx.loadImage("ui/icons/right_arrow.png")), this, "forward");
+        _forward.setStyleClass("arrow_button");
+        _forward.setEnabled(false);
+        north.add(_forward, BorderLayout.EAST);
+        
         _view.tutwin.add(_info = new BLabel("", "tutorial_text"),
                          BorderLayout.CENTER);
 
@@ -95,6 +117,24 @@ public class TutorialController
         }
     }
 
+    // documentation inherited from interface ActionListener
+    public void actionPerformed (ActionEvent event)
+    {
+        String action = event.getAction();
+        if ("back".equals(action)) {
+            _hidx--;
+        } else if ("forward".equals(action)) {
+            _hidx++;
+        } else {
+            return;
+        }
+        TutorialConfig.Text text = _history.get(_hidx);
+        displayMessage(text.message, text.step);
+        _back.setEnabled(_hidx > 0);
+        _forward.setEnabled(_hidx < _history.size() - 1);
+        _click.setEnabled(!_forward.isEnabled());
+    }
+    
     /** Called from {@link BangController#gameDidEnd}. */
     public void gameDidEnd ()
     {
@@ -125,7 +165,12 @@ public class TutorialController
         if (action instanceof TutorialConfig.Text) {
             TutorialConfig.Text text = (TutorialConfig.Text)action;
             displayMessage(text.message, text.step);
-
+            _hidx = _history.size();
+            _history.add(text);
+            _back.setEnabled(_hidx > 0);
+            _forward.setEnabled(false);
+            _click.setEnabled(true);
+            
         } else if (action instanceof TutorialConfig.Wait) {
             // wait for the specified event
             _pending = (TutorialConfig.Wait)action;
@@ -219,8 +264,10 @@ public class TutorialController
 
     protected MouseAdapter _clicklist = new MouseAdapter() {
         public void mousePressed (MouseEvent event) {
-            _click.setText("");
-            handleEvent(TutorialCodes.TEXT_CLICKED);
+            if (_click.isEnabled()) {
+                _click.setText("");
+                handleEvent(TutorialCodes.TEXT_CLICKED);
+            }
         }
     };
 
@@ -238,7 +285,12 @@ public class TutorialController
     protected MessageBundle _msgs, _gmsgs;
 
     protected BLabel _title, _info, _click, _steps;
-
+    protected BButton _back, _forward;
+    
     protected TutorialConfig _config;
     protected TutorialConfig.Wait _pending;
+    
+    protected ArrayList<TutorialConfig.Text> _history =
+        new ArrayList<TutorialConfig.Text>();
+    protected int _hidx = -1;
 }

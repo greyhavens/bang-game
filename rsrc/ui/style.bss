@@ -1112,6 +1112,10 @@ tutorial_steps {
   text-align: right;
 }
 
+tutorial_steps:disabled {
+  color: #00000000;
+}
+
 context_help_title {
   font: "Dom Casual" bold 20;
   color: #000000;
