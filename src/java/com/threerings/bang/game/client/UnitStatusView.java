@@ -22,6 +22,7 @@ import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Unit;
 
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -49,7 +50,7 @@ public class UnitStatusView extends BWindow
             pack();
             int width = _ctx.getDisplay().getWidth();
             int height = _ctx.getDisplay().getHeight();
-            setLocation(width - getWidth() - 5, height - getHeight() - 5);
+            setLocation(13, height - getHeight() - 5);
         }
     }
 
@@ -180,25 +181,18 @@ public class UnitStatusView extends BWindow
                     _unit.setDefaultColor(new ColorRGBA(1f, 0.5f, 0.5f, 0.8f));
                 }
             }
-            resort();
         }
 
         // documentation inherited from interface Comparable
         public int compareTo (UnitLabel other) {
             Unit u1 = getUnit();
             Unit u2 = other.getUnit();
-            if (u1.isAlive() != u2.isAlive()) {
-                return u1.isAlive() ? -1 : 1;
+            UnitConfig uc1 = u1.getConfig(), uc2 = u2.getConfig();
+            if (uc1.rank != uc2.rank) {
+                return (uc1.rank == UnitConfig.Rank.BIGSHOT ? -1 : 
+                        (uc2.rank == UnitConfig.Rank.BIGSHOT ? 1 : -1));
             }
-            if (u1.lastActed != u2.lastActed) {
-                return u1.lastActed - u2.lastActed;
-            }
-            String t1 = u1.getType(), t2 = u2.getType();
-            int cv = t1.compareTo(t2);
-            if (cv != 0) {
-                return cv;
-            }
-            return u1.pieceId - u2.pieceId;
+            return -1;
         }
 
         @Override // documentation inherited

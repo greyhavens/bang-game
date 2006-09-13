@@ -482,9 +482,11 @@ public class BangView extends BWindow
     {
         if (!_timer.isAdded()) {
             int height = _ctx.getDisplay().getHeight();
+            int width = _ctx.getDisplay().getWidth();
             _ctx.getRootNode().addWindow(_timer);
             _timer.pack();
-            _timer.setLocation(0, height - _timer.getHeight());
+            _timer.setLocation(
+                    width - _timer.getWidth(), height - _timer.getHeight());
         }
     }
 
