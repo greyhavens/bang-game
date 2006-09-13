@@ -43,6 +43,15 @@ public class RatingRepository extends SimpleRepository
         public String scenario;
         public int[] levels = new int[RANK_PERCENTAGES.length];
 
+        public int getRank (int rating)
+        {
+            int rank = levels.length;
+            while (rank > 0 && rating < levels[rank-1]) {
+                rank -= 1;
+            }
+            return rank;
+        }
+
         protected RankLevels (String scenario)
         {
             this.scenario = scenario;

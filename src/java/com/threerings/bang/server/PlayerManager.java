@@ -572,7 +572,7 @@ public class PlayerManager
         if (posterPlayer != null) {
             info.avatar = posterPlayer.getLook(Look.Pose.WANTED_POSTER).
                 getAvatar(posterPlayer);
-            info.rankings = buildRankings(posterPlayer.ratings.iterator());
+            info.rankings = buildRankings(posterPlayer.ratings);
         }
 
         // if the poster came from the cache, we're already done
@@ -609,7 +609,7 @@ public class PlayerManager
                 if (posterPlayer == null) {
                     info.avatar = _lookrepo.loadSnapshot(player.playerId);
                     info.rankings = buildRankings(
-                        _raterepo.loadRatings(player.playerId).iterator());
+                        _raterepo.loadRatings(player.playerId));
                 }
             }
 
@@ -743,24 +743,19 @@ public class PlayerManager
         });
     }
 
+    /**
+     * Converts a players {@link Rating}s records into ranking levels for
+     * inclusion in their poster info.
+     */
     protected StreamableHashMap<String, Integer> buildRankings (
-        Iterator<Rating> ratings)
+        Iterable<Rating> ratings)
     {
         StreamableHashMap<String, Integer> map =
             new StreamableHashMap<String,Integer>();
-        while (ratings.hasNext()) {
-            Rating rating = ratings.next();
+        for (Rating rating : ratings) {
             RankLevels levels = _rankLevels.get(rating.scenario);
-            int rank;
-            if (levels == null) {
-                // shouldn't happen for real scenarios
-                rank = 0;
-            } else {
-                for (rank = levels.levels.length;
-                     rank > 0 && rating.rating < levels.levels[rank-1];
-                     rank --);
-            }
-            map.put(rating.scenario, Integer.valueOf(rank));
+            map.put(rating.scenario,
+                (levels == null) ? 0 : levels.getRank(rating.rating));
         }
         return map;
     }
