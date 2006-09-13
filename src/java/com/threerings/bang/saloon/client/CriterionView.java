@@ -17,6 +17,7 @@ import com.jmex.bui.layout.TableLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.util.StateSaver;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
 
@@ -49,6 +50,7 @@ public class CriterionView extends BContainer
         for (int ii = 0; ii < _rounds.length; ii++) {
             row.add(_rounds[ii] = new BCheckBox("" + (ii+1)));
             _rounds[ii].setSelected(ii == 0);
+            new StateSaver("saloon.rounds." + ii, _rounds[ii]);
         }
         table.add(row);
 
@@ -57,22 +59,26 @@ public class CriterionView extends BContainer
         for (int ii = 0; ii < _players.length; ii++) {
             row.add(_players[ii] = new BCheckBox("" + (ii+2)));
             _players[ii].setSelected(true);
+            new StateSaver("saloon.players." + ii, _players[ii]);
         }
         table.add(row);
 
         table.add(BangUI.createLabel(msgs, "m.rankedness", "match_label"));
         table.add(_ranked = new BComboBox(xlate(msgs, RANKED)));
         _ranked.selectItem(0);
+        new StateSaver("saloon.ranked", _ranked);
 
         table.add(BangUI.createLabel(msgs, "m.range", "match_label"));
         table.add(_range = new BComboBox(xlate(msgs, RANGE)));
         _range.selectItem(0);
+        new StateSaver("saloon.range", _range);
 
         table.add(BangUI.createLabel(msgs, "m.opponents", "match_label"));
         row = new BContainer(GroupLayout.makeHStretch());
         for (int ii = 0; ii < _aiopps.length; ii++) {
             row.add(_aiopps[ii] = new BCheckBox("" + ii));
             _aiopps[ii].setSelected(ii < 2);
+            new StateSaver("saloon.tincans." + ii, _aiopps[ii]);
         }
         table.add(row);
 
@@ -81,7 +87,7 @@ public class CriterionView extends BContainer
         _go.setStyleClass("big_button");
         add(row, BorderLayout.SOUTH);
 
-        // TODO: preserve our settings in persistent preferences
+        // preserve our settings in persistent preferences
     }
 
     public void reenable ()

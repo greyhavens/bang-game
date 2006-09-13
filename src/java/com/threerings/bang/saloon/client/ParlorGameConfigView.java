@@ -32,6 +32,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.util.ReportingListener;
+import com.threerings.bang.client.util.StateSaver;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.GameCodes;
@@ -68,6 +69,7 @@ public class ParlorGameConfigView extends BContainer
             combos.add(_boxes[ii] = new BComboBox(makeBoxItems(ii)));
             _boxes[ii].selectItem(BOX_CFGS[3*ii+2]);
             _boxes[ii].addListener(this);
+            new StateSaver("parlor." + BOX_PREFS[ii], _boxes[ii]);
         }
         main.add(combos);
 
@@ -88,6 +90,7 @@ public class ParlorGameConfigView extends BContainer
             _scens[ii].setSelected(true);
             _scens[ii].addListener(this);
             checkboxen.add(_scens[ii]);
+            new StateSaver("parlor.scenario." + _scenIds[ii], _scens[ii]);
         }
         BScrollPane pane = new BScrollPane(checkboxen);
         pane.setViewportStyleClass("parlor_scenarios");
@@ -247,6 +250,9 @@ public class ParlorGameConfigView extends BContainer
 
     protected static final String[] BOX_LABELS = {
         "m.rounds", "m.par_players", "m.par_opponents", "m.units" };
+
+    protected static final String[] BOX_PREFS = {
+        "rounds", "players", "opponents", "units" };
 
     protected static final int[] BOX_CFGS = {
         1, GameCodes.MAX_ROUNDS, 0, // rounds
