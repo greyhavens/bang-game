@@ -34,6 +34,13 @@ public class UnitBonus extends BContainer
     /** Used by {@link #setUnitConfig}. */
     public static enum Which { ATTACK, DEFEND, BOTH };
 
+    public static enum BonusIcons {
+        ATTACK, DEFEND,
+        GROUND, AIR, RANGE,
+        STEAM, HUMAN, SPIRIT,
+        UP, DOWN, NA
+    };
+
     public UnitBonus (BasicContext ctx, int gap)
     {
         _ctx = ctx;
@@ -161,7 +168,9 @@ public class UnitBonus extends BContainer
         }
         String tip = _msgs.xlate(MessageBundle.tcompose("m.units", firstPart,
                         _umsgs.get("m." + type.toString().toLowerCase())));
-        bonus.add(bonusIconLabel(method, tip));
+        if (text) {
+            bonus.add(bonusIconLabel(method, tip));
+        }
         bonus.add(bonusIconLabel(type, tip));
         bonus.add(bonusIconLabel(effect, tip));
         if (text) {
@@ -178,7 +187,7 @@ public class UnitBonus extends BContainer
     protected BLabel bonusIconLabel (BonusIcons icon, String tip)
     {
         BLabel label = new BLabel("", "table_data");
-        label.setIcon(getBonusIcon(icon));
+        label.setIcon(getBonusIcon(icon, _ctx));
         if (_addTip) {
             label.setTooltipText(tip);
         }
@@ -190,7 +199,7 @@ public class UnitBonus extends BContainer
      */
     public BIcon getBonusIcon (UnitConfig.Mode mode)
     {
-        return getBonusIcon(_modeIconMap.get(mode));
+        return getBonusIcon(_modeIconMap.get(mode), _ctx);
     }
 
     /**
@@ -198,13 +207,13 @@ public class UnitBonus extends BContainer
      */
     public BIcon getBonusIcon (UnitConfig.Make make)
     {
-        return getBonusIcon(_makeIconMap.get(make));
+        return getBonusIcon(_makeIconMap.get(make), _ctx);
     }
 
     /**
      * Returns a BIcon of the bonus icon for the specific index.
      */
-    protected BIcon getBonusIcon (BonusIcons bi)
+    public static BIcon getBonusIcon (BonusIcons bi, BasicContext ctx)
     {
         int idx = bi.ordinal();
         if (_bonusIcons[idx] != null) {
@@ -212,25 +221,19 @@ public class UnitBonus extends BContainer
         }
 
         BImage icons =
-            _ctx.getImageCache().getBImage("ui/ranch/unit_icons.png");
+            ctx.getImageCache().getBImage("ui/ranch/unit_icons.png");
         int size = icons.getHeight();
         _bonusIcons[idx] = new SubimageIcon(
             icons, idx * ICON_WIDTH, 0, ICON_WIDTH, size);
         return _bonusIcons[idx];
     }
 
-    protected static enum BonusIcons {
-        ATTACK, DEFEND,
-        GROUND, AIR, RANGE,
-        STEAM, HUMAN, SPIRIT,
-        UP, DOWN, NA
-    };
-
     protected BasicContext _ctx;
     protected int _gap;
     protected MessageBundle _msgs, _umsgs;
     protected boolean _addTip;
-    protected BIcon[] _bonusIcons = new BIcon[BonusIcons.values().length];
+    protected static BIcon[] _bonusIcons = 
+        new BIcon[BonusIcons.values().length];
 
     protected static final int ICON_WIDTH = 19;
     protected static final int MAX_COLS = 3;

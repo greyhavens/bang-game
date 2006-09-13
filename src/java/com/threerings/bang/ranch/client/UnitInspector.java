@@ -88,9 +88,19 @@ public class UnitInspector extends BContainer
         tlay = new TableLayout(2, 5, 5);
         tlay.setVerticalAlignment(TableLayout.CENTER);
         BContainer bonuses = new BContainer(tlay);
-        bonuses.add(new BLabel(_msgs.get("m.t_attack"), "table_label"));
+        GroupLayout glay = GroupLayout.makeHStretch();
+        glay.setJustification(GroupLayout.RIGHT);
+        BContainer labels = new BContainer(glay);
+        labels.add(new BLabel(UnitBonus.getBonusIcon(
+                        UnitBonus.BonusIcons.ATTACK, _ctx)), GroupLayout.FIXED);
+        labels.add(new BLabel(_msgs.get("m.t_attack"), "table_label"));
+        bonuses.add(labels);
         bonuses.add(_abonus = new UnitBonus(_ctx, 10));
-        bonuses.add(new BLabel(_msgs.get("m.t_defend"), "table_label"));
+        labels = new BContainer(glay);
+        labels.add(new BLabel(UnitBonus.getBonusIcon(
+                        UnitBonus.BonusIcons.DEFEND, _ctx)), GroupLayout.FIXED);
+        labels.add(new BLabel(_msgs.get("m.t_defend"), "table_label"));
+        bonuses.add(labels);
         bonuses.add(_dbonus = new UnitBonus(_ctx, 10));
         _left.add(bonuses);
 
