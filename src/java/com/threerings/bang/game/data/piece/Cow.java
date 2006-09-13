@@ -30,14 +30,17 @@ public class Cow extends Piece
     public boolean corralled;
 
     /**
-     * Called when a unit moves next to this cow; causes the cow to spook
-     * in the opposite direction.
+     * Called when a unit moves next to this cow or the cow was part of
+     * a mass spooking; causes the cow to move away from the spooker.
+     *
+     * @param herd if true, the cow was spooked as part of a herd, and was
+     * not branded
      */
-    public SpookEffect spook (BangObject bangobj, Piece spooker)
+    public SpookEffect spook (BangObject bangobj, Piece spooker, boolean herd)
     {
         // if we were spooked by a big shot, become owned by that player
         int owner = -1;
-        if (spooker instanceof Unit) {
+        if (spooker instanceof Unit && !herd) {
             Unit unit = (Unit)spooker;
             if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
                 if (this.owner != -1) {
@@ -55,7 +58,7 @@ public class Cow extends Piece
                 // run in the direction that the spooker would have to move to
                 // occupy our location (ie. if we're east of the spooker, try
                 // spooking further east)
-                return move(bangobj.board, dd, owner, spooker.pieceId);
+                return move(bangobj, dd, owner, spooker.pieceId);
             }
         }
 
@@ -100,22 +103,35 @@ public class Cow extends Piece
         }
 
         ArrayList<Effect> effects = new ArrayList<Effect>();
-        effects.add(move(bangobj.board, direction, -1, -1));
+        effects.add(move(bangobj, direction, -1, -1));
         return effects;
     }
 
-    protected SpookEffect move (BangBoard board, int direction,
+    protected SpookEffect move (BangObject bangobj, int direction,
                                 int owner, int spookerId)
     {
         // otherwise look around for somewhere nicer to stand
         _moves.clear();
-        board.computeMoves(this, _moves, null);
+        bangobj.board.computeMoves(this, _moves, null);
         int[] coords = _moves.toIntArray();
         ArrayUtil.shuffle(coords);
 
+        // move any coords containing train tracks to the end
+        int tidx = coords.length;
+        for (int ii = 0; ii < tidx; ) {
+            if (bangobj.getTracks().containsKey(coords[ii])) {
+                int tmp = coords[--tidx];
+                coords[tidx] = coords[ii];
+                coords[ii] = tmp;
+            } else {
+                ii++;
+            }
+        }
+        
         // first look for a coordinate in the direction that we want to move
+        // (that's not a track)
         int nx = x, ny = y;
-        for (int ii = 0; ii < coords.length; ii++) {
+        for (int ii = 0; ii < tidx; ii++) {
             int hx = PointSet.decodeX(coords[ii]);
             int hy = PointSet.decodeY(coords[ii]);
             if (whichDirection(hx, hy) == direction) {
