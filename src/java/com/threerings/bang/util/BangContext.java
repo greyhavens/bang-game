@@ -7,6 +7,7 @@ import com.threerings.crowd.chat.client.MuteDirector;
 
 import com.threerings.parlor.util.ParlorContext;
 
+import com.threerings.bang.chat.client.BangChatDirector;
 import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.util.BoardCache;
 import com.threerings.bang.data.PlayerObject;
@@ -29,4 +30,7 @@ public interface BangContext extends BasicContext, ParlorContext
     
     /** Returns a reference to our board cache. */
     public BoardCache getBoardCache ();
+
+    /** Returns a reference to our chat director. */
+    public BangChatDirector getChatDirector ();
 }

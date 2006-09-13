@@ -11,12 +11,14 @@ import java.util.logging.Level;
 import javax.imageio.ImageIO;
 
 import com.jme.input.KeyInput;
+import com.jme.renderer.ColorRGBA;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
+import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -38,6 +40,10 @@ import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
+import com.threerings.crowd.chat.data.ChatCodes;
+import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.crowd.chat.data.UserMessage;
 
 import static com.threerings.bang.Log.log;
 
@@ -54,6 +60,7 @@ public class FKeyPopups
         TUTORIALS(KeyInput.KEY_T, 0, false, true),
         REPORT_BUG(KeyInput.KEY_F2, 0, false, false),
         CLIENT_LOG(KeyInput.KEY_F3, InputEvent.SHIFT_DOWN_MASK, false, false),
+        CHAT_HISTORY(KeyInput.KEY_F3, 0, false, false),
         SERVER_STATUS(KeyInput.KEY_F4, 0, true, false),
         SERVER_CONFIG(KeyInput.KEY_F5, 0, true, false),
         CLIENT_CONFIG(KeyInput.KEY_F6, CTRL_SHIFT, false, false);
@@ -144,6 +151,9 @@ public class FKeyPopups
             break;
         case CLIENT_LOG:
             popup = createRecentLog();
+            break;
+        case CHAT_HISTORY:
+            popup = createChatHistory();
             break;
         case SERVER_STATUS:
             popup = new ServerStatusView(_ctx);
@@ -270,6 +280,37 @@ public class FKeyPopups
         window.add(new BScrollPane(new BLabel(buf.toString(), "debug_log")));
         window.add(makeDismiss(window), GroupLayout.FIXED);
         window.setPreferredSize(new Dimension(1000, 700));
+        return window;
+    }
+
+    protected BDecoratedWindow createChatHistory ()
+    {
+        BDecoratedWindow window = new BDecoratedWindow(
+            _ctx.getStyleSheet(), _msgs.get("m.chat_history_title"));
+        ((GroupLayout) window.getLayoutManager()).setGap(10);
+        
+        BTextArea history = new BTextArea();
+        history.setStyleClass( "chat_history_log");
+        history.setPreferredSize(new Dimension(800, 600));
+        for (ChatMessage msg : _ctx.getChatDirector().getMessageHistory()) {
+            if (msg instanceof UserMessage) {
+                UserMessage umsg = (UserMessage) msg;
+                if (umsg.localtype == ChatCodes.USER_CHAT_TYPE) {
+                    history.appendText(
+                        "[" + umsg.speaker + " whispers] ", ColorRGBA.magenta);
+                    history.appendText(umsg.message + "\n");
+                } else {
+                    history.appendText(
+                        "<" + umsg.speaker + "> ", ColorRGBA.blue);
+                    history.appendText(umsg.message + "\n");
+                }
+
+            } else if (msg instanceof SystemMessage) {
+                history.appendText(msg.message + "\n", ColorRGBA.red);
+            }
+        }
+        window.add(new BScrollPane(history));
+        window.add(makeDismiss(window), GroupLayout.FIXED);
         return window;
     }
 

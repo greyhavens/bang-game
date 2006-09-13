@@ -44,7 +44,7 @@ public class OverlayChatView extends BWindow
         setLayer(2);
 
         _ctx = ctx;
-        _chatdtr = (BangChatDirector)_ctx.getChatDirector();
+        _chatdtr = _ctx.getChatDirector();
 
         _stamps = new long[CHAT_LINES];
         _history = new MessageLabel[CHAT_LINES];

@@ -568,6 +568,13 @@ player_menu_title {
   font: "Dom Casual" bold 20;
 }
 
+chat_history_log {
+  color: #524129;
+  background: image "ui/textfield.png" framexy;
+  padding: 5;
+}
+
+
 //
 // Dialog Window styles
 

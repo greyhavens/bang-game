@@ -3,6 +3,10 @@
 
 package com.threerings.bang.chat.client;
 
+
+import java.util.LinkedList;
+import java.util.List;
+
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
@@ -12,6 +16,7 @@ import com.threerings.presents.dobj.MessageEvent;
 
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.SpeakService;
+import com.threerings.crowd.chat.data.ChatMessage;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangCodes;
@@ -80,6 +85,12 @@ public class BangChatDirector extends ChatDirector
         return msg;
     }
     
+    /** Returns the most recently received chats. Do not modify this value! */
+    public List<ChatMessage> getMessageHistory ()
+    {
+        return _messageHistory;
+    }
+    
     @Override // documentation inherited
     public String requestChat (
         SpeakService speakSvc, String text, boolean record)
@@ -108,9 +119,21 @@ public class BangChatDirector extends ChatDirector
             // for now all incoming chat messages have the same sound; maybe
             // we'll want special sounds for special messages later
             BangUI.play(BangUI.FeedbackSound.CHAT_RECEIVE);
+            // store the message in our history
+            ChatMessage msg = (ChatMessage) event.getArgs()[0];
+            _messageHistory.add(msg);
+            if (_messageHistory.size() > MESSAGE_HISTORY_LIMIT) {
+                _messageHistory.remove(0);
+            }
         }
         super.messageReceived(event);
     }
+
+    /** The total number of chat messages we store before dumping the oldest */
+    protected static final int MESSAGE_HISTORY_LIMIT = 50;
+
+    /** The most recent chat messages we've received */
+    protected List<ChatMessage> _messageHistory = new LinkedList<ChatMessage>();
 
     protected BangContext _ctx;
     

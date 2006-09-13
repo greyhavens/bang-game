@@ -1046,7 +1046,7 @@ public class BangClient extends BasicClient
             return _config;
         }
 
-        public ChatDirector getChatDirector () {
+        public BangChatDirector getChatDirector () {
             return _chatdir;
         }
 
