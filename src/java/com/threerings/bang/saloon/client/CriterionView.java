@@ -86,8 +86,6 @@ public class CriterionView extends BContainer
         row.add(_go = new BButton(msgs.get("m.go"), _golist, "match"));
         _go.setStyleClass("big_button");
         add(row, BorderLayout.SOUTH);
-
-        // preserve our settings in persistent preferences
     }
 
     public void reenable ()
