@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="objmid" translation="0.0, 0.0, 300.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="ITP_bridge.png" transparent="true">
+  <triMesh name="objmid" translation="0.0, 0.0, 300.0" rotation="0.0, 0.0, 90.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="ITP_bridge.png" transparent="true">
     <vertex location="-0.098152, 116.976, -43.7457" normal="-0.00429315, -0.0509296, -0.998693" tcoords="0.006505, 0.998209"/>
     <vertex location="19.7246, 116.976, -32.4144" normal="0.862747, -0.0509295, -0.503064" tcoords="0.087605, 0.998209"/>
     <vertex location="16.4321, 42.2387, -30.4946" normal="0.863583, -0.025682, -0.503552" tcoords="0.087605, 0.696527"/>
