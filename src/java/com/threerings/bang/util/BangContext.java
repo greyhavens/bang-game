@@ -30,7 +30,4 @@ public interface BangContext extends BasicContext, ParlorContext
     
     /** Returns a reference to our board cache. */
     public BoardCache getBoardCache ();
-
-    /** Returns a reference to our chat director. */
-    public BangChatDirector getChatDirector ();
 }

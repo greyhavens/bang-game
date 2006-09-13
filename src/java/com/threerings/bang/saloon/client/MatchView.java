@@ -101,7 +101,7 @@ public class MatchView extends BContainer
             protected void wasRemoved () {
                 super.wasRemoved();
                 // save halted message for the game
-                _ctx.getChatDirector().setHaltedMessage(
+                ((BangChatDirector)_ctx.getChatDirector()).setHaltedMessage(
                     _input.getText());
             }
         };

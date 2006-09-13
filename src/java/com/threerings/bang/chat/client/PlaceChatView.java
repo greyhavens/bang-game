@@ -14,6 +14,7 @@ import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.client.SpeakService;
 import com.threerings.crowd.chat.data.ChatCodes;
@@ -157,7 +158,7 @@ public class PlaceChatView extends ComicChatView
         super.wasRemoved();
         
         // save halted message for the game
-        _ctx.getChatDirector().setHaltedMessage(
+        ((BangChatDirector)_ctx.getChatDirector()).setHaltedMessage(
             _text.getText());
     }
     

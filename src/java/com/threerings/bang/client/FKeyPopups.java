@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 
@@ -35,6 +36,7 @@ import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.admin.client.RuntimeConfigView;
 import com.threerings.bang.admin.client.ServerStatusView;
+import com.threerings.bang.chat.client.BangChatDirector;
 import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.data.BangCodes;
@@ -292,7 +294,9 @@ public class FKeyPopups
         BTextArea history = new BTextArea();
         history.setStyleClass( "chat_history_log");
         history.setPreferredSize(new Dimension(800, 600));
-        for (ChatMessage msg : _ctx.getChatDirector().getMessageHistory()) {
+        List<ChatMessage> list =
+            ((BangChatDirector)_ctx.getChatDirector()).getMessageHistory();
+        for (ChatMessage msg : list) {
             if (msg instanceof UserMessage) {
                 UserMessage umsg = (UserMessage) msg;
                 if (umsg.localtype == ChatCodes.USER_CHAT_TYPE) {
