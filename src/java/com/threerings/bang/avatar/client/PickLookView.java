@@ -45,18 +45,9 @@ public class PickLookView extends BContainer
         // we'll need this later
         _deflook = _ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.default_look");
 
-        // rebuild our available looks
-        PlayerObject user = _ctx.getUserObject();
-        String[] looks = new String[user.looks.size()];
-        int idx = 0;
-        for (Look look : user.looks) {
-            looks[idx++] = getName(look);
-        }
-        _looks.setItems(looks);
-
         // if we have more than one look or are being used in the barber, add
         // the looks combo, otherwise add a blurb for the barber
-        if (looks.length > 1 || barberMode) {
+        if (_ctx.getUserObject().looks.size() > 1 || barberMode) {
             BImage icon = _ctx.loadImage("ui/barber/caption_look.png");
             add(new BLabel(new ImageIcon(icon)), new Point(20, 0));
             add(_looks, new Rectangle(79, 0, 164, 29));
@@ -100,8 +91,16 @@ public class PickLookView extends BContainer
     {
         super.wasAdded();
 
-        // select their current look (which will update the display)
+        // rebuild our available looks
         PlayerObject user = _ctx.getUserObject();
+        String[] looks = new String[user.looks.size()];
+        int idx = 0;
+        for (Look look : user.looks) {
+            looks[idx++] = getName(look);
+        }
+        _looks.setItems(looks);
+
+        // select their current look (which will update the display)
         Look current = user.getLook(Look.Pose.DEFAULT);
         if (current != null) {
             if (_looks.isAdded()) {
