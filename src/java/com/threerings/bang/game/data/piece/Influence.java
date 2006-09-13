@@ -120,6 +120,14 @@ public abstract class Influence extends SimpleStreamableObject
     }
 
     /**
+     * Adjusts the proximity damage a piece receives from another piece.
+     */
+    public int adjustProxDefend (Piece shooter, int damage)
+    {
+        return damage;
+    }
+
+    /**
      * Modifies the corporeal state of the piece.
      */
     public boolean adjustCorporeality (boolean corporeal)

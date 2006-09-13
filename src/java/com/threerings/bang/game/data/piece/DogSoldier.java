@@ -50,12 +50,14 @@ public class DogSoldier extends Unit
                     !piece.isSameTeam(bangobj, this) && !piece.isAirborne() && 
                     getDistance(piece) == 1 && 
                     bangobj.board.canCross(x, y, piece.x, piece.y)) {
+                int damage = piece.adjustProxDefend(
+                        this, UNIT_PROXIMITY_DAMAGE);
                 if (proxShot == null) {
-                    proxShot = new ProximityShotEffect(this, piece,
-                            UNIT_PROXIMITY_DAMAGE, null, null);
+                    proxShot = new ProximityShotEffect(
+                            this, piece, damage, null, null);
                 } else {
-                    proxShots.add(new ShotEffect(this, piece, 
-                                UNIT_PROXIMITY_DAMAGE, null, null));
+                    proxShots.add(new ShotEffect(
+                                this, piece, damage, null, null));
                 }
             }
         }

@@ -675,6 +675,14 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public int adjustProxDefend (Piece shooter, int damage)
+    {
+        return (influence == null ||
+                (_killShot && !influence.showClientAdjust())) ?
+            damage : influence.adjustDefend(shooter, damage);
+    }
+
+    @Override // documentation inherited
     protected String infoType ()
     {
         return _config.type;

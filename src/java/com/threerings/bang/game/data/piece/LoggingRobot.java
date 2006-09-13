@@ -122,9 +122,9 @@ public class LoggingRobot extends Unit
     protected ProximityShotEffect addProxShot (ProximityShotEffect proxShot, 
             ArrayList<ShotEffect> proxShots, Piece piece, int damage)
     {
+        damage = piece.adjustProxDefend(this, damage);
         if (proxShot == null) {
-            proxShot = new ProximityShotEffect(
-                    this, piece, damage, null, null);
+            proxShot = new ProximityShotEffect(this, piece, damage, null, null);
         } else {
             proxShots.add(new ShotEffect(this, piece, damage, null, null));
         }

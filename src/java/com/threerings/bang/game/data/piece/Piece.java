@@ -977,6 +977,14 @@ public abstract class Piece
     {
         return damage;
     }
+
+    /**
+     * Performs any necessary adjustments to this piece's proximity defense.
+     */
+    protected int adjustProxDefend (Piece target, int damage)
+    {
+        return damage;
+    }
     
     /**
      * Generate a shot effect for this piece.

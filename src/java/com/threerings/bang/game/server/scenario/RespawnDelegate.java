@@ -14,6 +14,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Revolutionary;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
+import com.threerings.bang.game.data.effect.IronPlateEffect;
 import com.threerings.bang.game.data.effect.ResurrectEffect;
 
 import static com.threerings.bang.Log.log;
@@ -82,9 +83,22 @@ public class RespawnDelegate extends ScenarioDelegate
                 bangobj.removeFromPieces(unit.getKey());
             }
 
+            boolean freeIronPlate = true;
+            for (Piece p : bangobj.pieces) {
+                if (p.owner == unit.owner && p.isAlive() && p instanceof Unit) {
+                    freeIronPlate = false;
+                    break;
+                }
+            }
+
             // then position it and add it back at its new location
             unit.position(bspot.x, bspot.y);
             _bangmgr.addPiece(unit, AddPieceEffect.RESPAWNED);
+            if (freeIronPlate) {
+                IronPlateEffect effect = new IronPlateEffect();
+                effect.init(unit);
+                _bangmgr.deployEffect(-1, effect);
+            }
         }
     }
 
