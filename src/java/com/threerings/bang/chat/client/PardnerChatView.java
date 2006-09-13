@@ -17,13 +17,9 @@ import com.threerings.bang.client.MainView;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.util.BangContext;
-import com.threerings.crowd.client.LocationObserver;
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.presents.dobj.AttributeChangeListener;
-import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import static com.threerings.bang.Log.log;
 
@@ -33,8 +29,7 @@ import static com.threerings.bang.Log.log;
  * next to the text.
  */
 public class PardnerChatView extends BDecoratedWindow
-    implements ActionListener, BangCodes, LocationObserver,
-               AttributeChangeListener
+    implements ActionListener, BangCodes
 {
     public PardnerChatView (BangContext ctx)
     {
@@ -43,8 +38,6 @@ public class PardnerChatView extends BDecoratedWindow
         setStyleClass("pardner_chat_view");
         setModal(true);
         setLayer(1);
-
-        _ctx.getLocationDirector().addLocationObserver(this);
 
         add(_tabView = new PardnerChatTabs(ctx));
         
@@ -72,51 +65,6 @@ public class PardnerChatView extends BDecoratedWindow
             return false;
         }
         return _tabView.openUserTab(pardner, entry.avatar, grabFocus) != null;
-    }
-
-    @Override // from BContainer
-    public void wasAdded ()
-    {
-        super.wasAdded();
-        _ctx.getUserObject().addListener(this);
-    }
-    
-    @Override // from BContainer
-    public void wasRemoved ()
-    {
-        super.wasRemoved();
-        _ctx.getUserObject().removeListener(this);
-        _tabView.clear();
-    }
-
-    // from interface AttributeChangeObserver
-    public void attributeChanged (AttributeChangedEvent ace)
-    {
-        if (ace.getName().equals(PlayerObject.LOCATION)) {
-            if (ace.getIntValue() < 0) {
-                _inSaloon = false;
-            }
-        }
-    }
-
-    // from interface LocationObserver
-    public boolean locationMayChange (int placeId)
-    {
-        // never stop location changes
-        return true;
-    }
-
-    // from interface LocationObserver
-    public void locationDidChange (PlaceObject place)
-    {
-        // simply remember whether or not we're in a saloon
-        _inSaloon = place instanceof SaloonObject;
-    }
-
-    // from interface LocationObserver
-    public void locationChangeFailed (int placeId, String reason)
-    {
-        // we don't care
     }
 
     // documentation inherited from interface ActionListener
@@ -176,6 +124,4 @@ public class PardnerChatView extends BDecoratedWindow
     protected BangContext _ctx;
     protected PardnerChatTabs _tabView;
     protected BButton _mute, _close, _resume;
-    /** Whether or not we're currently in a saloon */
-    protected boolean _inSaloon;
 }
