@@ -35,6 +35,7 @@ public class WendigoAttackInfo extends ScenarioInfo
     {
         return super.isValidMarker(marker) || 
             marker.getType() == Marker.SAFE ||
+            marker.getType() == Marker.SAFE_ALT ||
             marker.getType() == Marker.TALISMAN;
     }
 

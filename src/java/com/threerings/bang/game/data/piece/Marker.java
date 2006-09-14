@@ -39,6 +39,9 @@ public class Marker extends Piece
     /** A particular marker type. */
     public static final int FETISH = 8;
 
+    /** A particular marker type. */
+    public static final int SAFE_ALT = 9;
+
     /**
      * Handy function for checking if this piece is a marker and of the
      * specified type.
@@ -97,7 +100,7 @@ public class Marker extends Piece
      */
     public boolean addSprite ()
     {
-        return _type == SAFE;
+        return _type == SAFE || _type == SAFE_ALT;
     }
 
     @Override // documentation inherited

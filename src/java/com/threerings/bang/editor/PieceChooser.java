@@ -58,6 +58,7 @@ public class PieceChooser extends JPanel
         addPiece(root, "markers/robots", new Marker(Marker.ROBOTS));
         addPiece(root, "markers/talisman", new Marker(Marker.TALISMAN));
         addPiece(root, "markers/fetish", new Marker(Marker.FETISH));
+        addPiece(root, "markers/safe_alt", new Marker(Marker.SAFE_ALT));
         
         for (PropConfig config : PropConfig.getConfigs()) {
             Prop prop = Prop.getProp(config.type);

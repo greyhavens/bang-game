@@ -24,6 +24,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.CountEffect;
 import com.threerings.bang.game.data.effect.FadeBoardEffect;
 import com.threerings.bang.game.data.effect.TalismanEffect;
+import com.threerings.bang.game.data.effect.ToggleSwitchEffect;
 import com.threerings.bang.game.data.effect.WendigoEffect;
 
 import com.threerings.bang.game.data.piece.Bonus;
@@ -32,6 +33,7 @@ import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
+import com.threerings.bang.game.data.piece.ToggleSwitch;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.Wendigo;
 
@@ -60,6 +62,7 @@ public class WendigoAttack extends Scenario
      */
     public WendigoAttack ()
     {
+        registerDelegate(new ToggleDelegate());
         registerDelegate(new WendigoDelegate());
         registerDelegate(new RespawnDelegate(RespawnDelegate.RESPAWN_TICKS/2) {
             @Override // documentation inherited
@@ -90,22 +93,25 @@ public class WendigoAttack extends Scenario
         super.filterPieces(bangobj, starts, pieces, updates);
 
         // extract and remove all the safe spots
-        _safePoints.clear();
+        _safePoints[0].clear();
+        _safePoints[1].clear();
         _talismanSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (Marker.isMarker(p, Marker.SAFE)) { 
-                _safePoints.add(p.x, p.y);
+                _safePoints[0].add(p.x, p.y);
                 // we don't remove the markers here since we want to assign it
                 // a pieceId
+
+            } else if (Marker.isMarker(p, Marker.SAFE_ALT)) { 
+                _safePoints[1].add(p.x, p.y);
 
             } else if (Marker.isMarker(p, Marker.TALISMAN)) {
                 _talismanSpots.add(p.x, p.y);
                 iter.remove();
 
-            } else if (p instanceof Prop &&
-                     SACRED_LOCATION.equals(((Prop)p).getType())) {
-                _safePoints.add(p.x, p.y);
+            } else if (p instanceof ToggleSwitch) {
+                _toggleSwitches.add((ToggleSwitch)p);
             }
         }
     }
@@ -148,7 +154,56 @@ public class WendigoAttack extends Scenario
      */
     public PointSet getSafePoints ()
     {
-        return _safePoints;
+        return _safePoints[_activeSafePoints];
+    }
+
+    protected class ToggleDelegate extends ScenarioDelegate
+    {
+        @Override // documentation inherited
+        public void pieceMoved (BangObject bangobj, Piece piece)
+        {
+            checkTSActivation(piece, bangobj.tick);
+            for (ToggleSwitch ts : _toggleSwitches) {
+                if (ts.x == piece.x && ts.y == piece.y) {
+                    ToggleSwitchEffect effect = new ToggleSwitchEffect();
+                    effect.switchId = ts.pieceId;
+                    effect.occupier = piece.pieceId;
+                    if (ts.isActive(bangobj.tick)) {
+                        _activeSafePoints = (_activeSafePoints + 1) % 2;
+                        effect.state = getTSState();
+                        effect.activator = piece.pieceId;
+                    }
+                    _bangmgr.deployEffect(-1, effect);
+                    break;
+                }
+            }
+        }
+
+        @Override // documentation inherited
+        public void pieceWasKilled (BangObject bangobj, Piece piece)
+        {
+            checkTSActivation(piece, bangobj.tick);
+        }
+
+        protected ToggleSwitch.State getTSState ()
+        {
+            return (_activeSafePoints == 0 ?
+                    ToggleSwitch.State.SQUARE : ToggleSwitch.State.CIRCLE);
+        }
+
+        protected void checkTSActivation (Piece piece, short tick)
+        {
+            for (ToggleSwitch ts : _toggleSwitches) {
+                if (piece.pieceId == ts.occupier) {
+                    ToggleSwitchEffect effect = new ToggleSwitchEffect();
+                    effect.switchId = ts.pieceId;
+                    if (piece.pieceId == ts.activator) {
+                        effect.tick = tick;
+                    }
+                    _bangmgr.deployEffect(-1, effect);
+                }
+            }
+        }
     }
 
     protected class WendigoDelegate extends CounterDelegate
@@ -168,7 +223,7 @@ public class WendigoAttack extends Scenario
                 }
                 WendigoEffect effect = WendigoEffect.wendigosAttack(
                         bangobj, _wendigos);
-                effect.safePoints = _safePoints;
+                effect.safePoints = _safePoints[_activeSafePoints];
                 _wendigoRespawnTicks = new int[bangobj.players.length];
                 Arrays.fill(_wendigoRespawnTicks, 3);
                 _bangmgr.deployEffect(-1, effect);
@@ -319,7 +374,7 @@ public class WendigoAttack extends Scenario
                     points[p.owner]++;
                     if (TalismanEffect.TALISMAN_BONUS.equals(
                                 ((Unit)p).holding) &&
-                            _safePoints.contains(p.x, p.y)) {
+                            _safePoints[_activeSafePoints].contains(p.x, p.y)) {
                         talpoints[p.owner] += TALISMAN_SAFE;
                     }
                 }
@@ -381,7 +436,15 @@ public class WendigoAttack extends Scenario
     }
 
     /** Set of the sacred location markers. */
-    protected PointSet _safePoints = new PointSet();
+    protected PointSet[] _safePoints = new PointSet[] {
+        new PointSet(), new PointSet() };
+
+    /** Which set of safepoints are currently active. */
+    protected int _activeSafePoints = 0;
+
+    /** Reference to the toggle switches. */
+    protected ArrayList<ToggleSwitch> _toggleSwitches =
+        new ArrayList<ToggleSwitch>();
 
     /** Respawn ticks for units. */
     protected int[] _wendigoRespawnTicks;

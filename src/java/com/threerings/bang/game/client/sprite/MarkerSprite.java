@@ -25,6 +25,7 @@ import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.openal.SoundGroup;
 
 import static com.threerings.bang.client.BangMetrics.*;
+import com.samskivert.util.HashIntMap;
 
 /**
  * Displays a player start or bonus marker.
@@ -55,26 +56,29 @@ public class MarkerSprite extends PieceSprite
     {
         super.init(ctx, view, board, sounds, piece, tick);
         if (_modelType.equals("highlight")) {
-            if (_safestate[0] == null) {
-                int type = ((Marker)piece).getType();
-                _safestate[0] = RenderUtil.createTextureState(
+            int type = ((Marker)_piece).getType();
+            TextureState[] texstates = _highlightStates.get(type);
+            if (texstates == null) {
+                texstates = new TextureState[DIRECTIONS.length];
+                texstates[0] = RenderUtil.createTextureState(
                         ctx, (String)SPRITES[type*2+1]);
-                Texture ntex = _safestate[0].getTexture();
+                Texture ntex = texstates[0].getTexture();
                 Vector3f up = new Vector3f(0f, 0f, 1f);
                 // create the 4 rotations of the texture
-                for (int ii = 1; ii < _safestate.length; ii++) {
+                for (int ii = 1; ii < texstates.length; ii++) {
                     Texture rtex = ntex.createSimpleClone();
                     Quaternion rot = new Quaternion();
                     rtex.setRotation(rot.fromAngleNormalAxis(
                                 (float)(ii * Math.PI / 2), up));
-                    _safestate[ii] = RenderUtil.createTextureState(
+                    texstates[ii] = RenderUtil.createTextureState(
                             ctx, rtex);
                 }
+                _highlightStates.put(type, texstates);
             }
             _tlight = view.getTerrainNode().createHighlight(
                     piece.x, piece.y, false, (byte)1);
             _tlight.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
-            _tlight.setRenderState(_safestate[piece.orientation]);
+            _tlight.setRenderState(texstates[piece.orientation]);
             _tlight.setRenderState(RenderUtil.blendAlpha);
             attachHighlight(_tlight);
         }
@@ -96,7 +100,8 @@ public class MarkerSprite extends PieceSprite
     public void setOrientation (int orientation)
     {
         if (_modelType.equals("highlight") && _tlight != null) {
-            _tlight.setRenderState(_safestate[orientation]);
+            _tlight.setRenderState(_highlightStates.get(
+                        ((Marker)_piece).getType())[orientation]);
             _tlight.updateRenderState();
         }
     }
@@ -119,15 +124,15 @@ public class MarkerSprite extends PieceSprite
         "extras", "frontier_town/cow", // CATTLE
         "bonuses", "frontier_town/nugget", // LODE
         "bonuses", "indian_post/totem_crown", // TOTEM
-        "highlight", "textures/tile/safe1.png", // SAFE
+        "highlight", "textures/tile/wendigo_safe_square_on.png", // SAFE
         "units", "indian_post/logging_robot", // ROBOTS
         "bonuses", "indian_post/talisman", // TALISMAN
         "bonuses", "indian_post/fetish_turtle", // FETISH
+        "highlight", "textures/tile/wendigo_safe_circle_off.png", //SAFE_ALT
     };
-        
 
     protected String _modelType;
 
-    protected static TextureState[] _safestate = 
-        new TextureState[DIRECTIONS.length];
+    protected static HashIntMap<TextureState[]> _highlightStates = 
+        new HashIntMap<TextureState[]>();
 }
