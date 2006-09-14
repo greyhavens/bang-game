@@ -6,6 +6,7 @@ package com.threerings.bang.game.data.effect;
 import java.awt.Point;
 
 import com.samskivert.util.ArrayUtil;
+import com.samskivert.util.ListUtil;
 
 import com.threerings.bang.game.data.BangObject;
 
@@ -46,6 +47,15 @@ public class TotemEffect extends HoldEffect
      * we're dealing for board based totems. */
     public int baseId = -1;
 
+    /**
+     * Determines whether the given bonus type represents a totem piece.
+     */
+    public static boolean isTotemBonus (String type)
+    {
+        return (type != null && (type.equals(TOTEM_CROWN_BONUS) ||
+            ListUtil.contains(TOTEM_PIECES, type)));
+    }
+    
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {

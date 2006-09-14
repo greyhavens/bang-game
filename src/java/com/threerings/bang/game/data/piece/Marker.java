@@ -90,6 +90,12 @@ public class Marker extends Piece
     }
 
     @Override // documentation inherited
+    public int getGoalRadius (Piece mover)
+    {
+        return (_type == SAFE) ? 0 : -1;
+    }
+    
+    @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new MarkerSprite(_type);
