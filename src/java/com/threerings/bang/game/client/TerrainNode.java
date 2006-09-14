@@ -168,12 +168,18 @@ public class TerrainNode extends Node
         /** The layer of the highlight. */
         public byte layer = 2;
 
+        /** If true, the highlight will be over pieces occupying the tile. */
+        public boolean overPieces;
+
+        /** If true, the highlight will be flat. */
+        public boolean flatten;
+                
         /** Whether or not the user is hovering over the highlight. */
         public boolean hover;
         
         /** Whether or not the user *can* hover over it. */
         public boolean hoverable;
-        
+
         protected Highlight (int x, int y, boolean overPieces, boolean flatten)
         {
             this((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE, TILE_SIZE,
@@ -205,12 +211,12 @@ public class TerrainNode extends Node
             this.x = x;
             this.y = y;
             this.layer = layer;
+            this.overPieces = overPieces;
+            this.flatten = flatten;
             _width = width;
             _height = height;
             _onTile = onTile;
-            _overPieces = overPieces;
-            _flatten = flatten;
-
+            
             setLightCombineMode(LightState.OFF);
             setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
             setRenderState(RenderUtil.overlayZBuf);
@@ -343,14 +349,14 @@ public class TerrainNode extends Node
             Vector3f offset = null;
             getLocalTranslation().set(0f, 0f, 0f);
             float height = 0f;
-            boolean flatten = _flatten && (_board.isBridge(tx, ty) || 
+            boolean flat = flatten && (_board.isBridge(tx, ty) || 
                     !_board.isTraversable(tx, ty));
             int belev = _board.getElevation(tx, ty);
-            if (flatten) {
+            if (flat) {
                 int maxelev = _board.getMaxHeightfieldElevation(tx, ty);
                 height = (float)(Math.max(belev, maxelev) * _elevationScale);
 
-            } else if (_onTile && _overPieces) {
+            } else if (_onTile && overPieces) {
                 int helev = _board.getHeightfieldElevation(tx, ty);
                 if (belev > helev) {
                     offset = new Vector3f(x, y, helev * _elevationScale);
@@ -365,7 +371,7 @@ public class TerrainNode extends Node
             for (int sy = sy0, sy1 = sy0 + _vheight, idx = 0; sy < sy1; sy++) {
                 for (int sx = sx0, sx1 = sx0 + _vwidth; sx < sx1; sx++) {
                     getHeightfieldVertex(sx, sy, vertex);
-                    if (flatten) {
+                    if (flat) {
                         vertex.z = height;
                     } else {
                         if (offset != null) {
@@ -392,13 +398,14 @@ public class TerrainNode extends Node
                 }
             }
             updateModelBound();
+            setIsCollidable(flat || offset != null);
             if (isCollidable()) {
                 updateCollisionTree();
             }
 
             // if the highlight is aligned with a tile, we're done; otherwise,
             // we must update the texture coords as well
-            if (_onTile || flatten) {
+            if (_onTile || flat) {
                 return;
             }
             FloatBuffer tbuf = getTextureBuffer(0, 0);
@@ -440,12 +447,6 @@ public class TerrainNode extends Node
         
         /** The dimensions of the highlight in vertices. */
         protected int _vwidth, _vheight;
-        
-        /** If true, the highlight will be over pieces occupying the tile. */
-        protected boolean _overPieces;
-
-        /** If true, the highlight will be flat. */
-        protected boolean _flatten;
         
         /** The colors for normal and hover modes. */
         protected ColorRGBA _defaultColor = ColorRGBA.white,

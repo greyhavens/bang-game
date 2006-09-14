@@ -8,7 +8,9 @@ import java.awt.image.BufferedImage;
 import java.awt.geom.Arc2D;
 
 import com.jme.image.Texture;
+import com.jme.intersection.PickResults;
 import com.jme.math.Quaternion;
+import com.jme.math.Ray;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -79,7 +81,15 @@ public class PieceStatus extends Node
         _icon = new Quad[numLayers()];
         // configure the info layers
         for (int ii = 0; ii < _info.length; ii++) {
-            _info[ii] = new SharedMesh("info" + ii, highlight);
+            _info[ii] = new SharedMesh("info" + ii, highlight) {
+                public void findPick(Ray ray, PickResults results) {
+                    // the target mesh will be collidable only if it does not
+                    // lie on the terrain
+                    if (getTarget().isCollidable()) {
+                        super.findPick(ray, results);
+                    }
+                }
+            };
             _info[ii].setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
             _info[ii].setRenderState(ctx.getRenderer().createTextureState());
             _info[ii].updateRenderState();

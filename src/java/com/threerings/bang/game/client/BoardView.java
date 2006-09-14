@@ -66,6 +66,7 @@ import com.jmex.effects.particles.ParticleInfluence;
 import com.jmex.effects.particles.SimpleParticleInfluenceFactory;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
@@ -1409,6 +1410,25 @@ public class BoardView extends BComponent
                 tdist = sdist;
             }
         }
+        
+        // if nothing intersected the ray, look for a piece that intersects
+        // the mouse's coordinates on the terrain
+        if (hit == null || thit == null) {
+            for (PieceSprite sprite : _pieces.values()) {
+                if (sprite.getPiece().intersects(_mouse.x, _mouse.y)) {
+                    if (hit == null && isHoverable(sprite)) {
+                        hit = sprite;
+                    }
+                    if (thit == null && hasTooltip(sprite)) {
+                        thit = sprite;
+                    }
+                    if (hit != null && thit != null) {
+                        break;
+                    }
+                }
+            }
+        }
+        
         if (hit != _hover || thit != _thover) {
             hoverSpritesChanged(hit, thit);
         }
@@ -1421,54 +1441,54 @@ public class BoardView extends BComponent
      */
     protected void updateHighlightHover ()
     {
-        // first try picking against the highlights; if that doesn't work,
-        // use whatever tile the mouse is over
-        Vector3f camloc = _ctx.getCameraHandler().getCamera().getLocation();
-        _pick.clear();
-        _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
-        _high.setLocation(-1, -1);
-        float dist = Float.MAX_VALUE;
         TerrainNode.Highlight hover = null;
-        Piece piece = null;
-        // If it's a bonus piece, we'll highlight the tile beneath it
+        
+        // if hovering over a piece that has a highlight underneath it,
+        // use that highlight
         if (_hover != null && _hover instanceof PieceSprite) {
-            piece = ((PieceSprite)_hover).getPiece();
+            Piece piece = ((PieceSprite)_hover).getPiece();
+            hover = _htiles.get(piece.getCoord());
         }
-        for (int ii = 0; ii < _pick.getNumber(); ii++) {
-            PickData pdata = _pick.getPickData(ii);
-            if (notReallyAHit(pdata)) {
-                continue;
-            }
-            Spatial hit = pdata.getTargetMesh().getParentGeom();
-            if (!(hit instanceof TerrainNode.Highlight)) {
-                continue;
-            }
-            TerrainNode.Highlight highlight = (TerrainNode.Highlight)hit;
-            if (!highlight.hoverable) {
-                continue;
-            }
-            float hdist = FastMath.sqr(camloc.x - highlight.x) +
-                FastMath.sqr(camloc.y - highlight.y);
-            if (hdist < dist) {
-                int x = highlight.getTileX(), y = highlight.getTileY();
-                _high.setLocation(x, y);
-                dist = hdist;
-                if (piece == null || (piece.x == x && piece.y == y)) {
-                    hover = highlight;
+        
+        // try picking against the highlight tile geometry (this is only
+        // for floating tiles)
+        if (hover == null) {
+            Vector3f camloc =
+                _ctx.getCameraHandler().getCamera().getLocation();
+            _pick.clear();
+            _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
+            float dist = Float.MAX_VALUE;
+            
+            for (int ii = 0; ii < _pick.getNumber(); ii++) {
+                PickData pdata = _pick.getPickData(ii);
+                if (notReallyAHit(pdata)) {
+                    continue;
                 }
+                Spatial hit = pdata.getTargetMesh().getParentGeom();
+                if (!(hit instanceof TerrainNode.Highlight)) {
+                    continue;
+                }
+                TerrainNode.Highlight highlight = (TerrainNode.Highlight)hit;
+                if (!highlight.hoverable) {
+                    continue;
+                }
+                float hdist = FastMath.sqr(camloc.x - highlight.x) +
+                    FastMath.sqr(camloc.y - highlight.y);
+                if (hdist < dist) {
+                    hover = highlight;
+                    dist = hdist;
+                }            
             }
         }
+        
+        // look for a draped highlight at the terrain mouse coordinates
+        if (hover == null) {
+            hover = _htiles.get(Piece.coord(_mouse.x, _mouse.y));
+        }
+        
+        // note the switch, if there is one
         if (hover != _highlightHover) {
             hoverHighlightChanged(hover);
-        }
-        if (_high.x != -1 && _high.y != -1) {
-            return;
-        } else if (_htiles.contains(_mouse.x, _mouse.y)) {
-            _high.setLocation(_mouse);
-            
-        } else if (_high.x != -1 || _high.y != -1) {
-//             log.info("Clearing highlight.");
-            _high.setLocation(-1, -1);
         }
     }
 
@@ -1490,9 +1510,6 @@ public class BoardView extends BComponent
      */
     protected void hoverSpritesChanged (Sprite hover, Sprite thover)
     {
-        if (hover != null) {
-            hoverHighlightChanged(null);
-        }
         _hover = hover;
         _thover = thover;
     }
@@ -1509,6 +1526,10 @@ public class BoardView extends BComponent
         _highlightHover = hover;
         if (_highlightHover != null) {
             _highlightHover.setHover(true);
+            _high.setLocation(_highlightHover.getTileX(),
+                _highlightHover.getTileY());
+        } else {
+            _high.setLocation(-1, -1);
         }
     }
 
@@ -1538,8 +1559,7 @@ public class BoardView extends BComponent
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             int tx = set.getX(ii), ty = set.getY(ii);
             TerrainNode.Highlight highlight =
-                _tnode.createHighlight(tx, ty, flatten, flatten);
-            highlight.hoverable = hoverable;
+                attachHighlight(tx, ty, flatten, hoverable);
             if (goals != null && goals.contains(tx, ty)) {
                 highlight.setColors(getThrobbingColor(highlightColor),
                     hoverHighlightColor);
@@ -1548,11 +1568,13 @@ public class BoardView extends BComponent
                 highlight.setColors(highlightColor, hoverHighlightColor);
                 highlight.setTextures(tstate, _movhovstate);
             }
-            _hnode.attachChild(highlight);
-            _htiles.add(tx, ty);
+            if (hoverable) {
+                _htiles.put(Piece.coord(tx, ty), highlight);
+            }
         }
-        
-        updateHighlightHover();
+        if (hoverable) {
+            updateHighlightHover();
+        }
     }
 
     /**
@@ -1580,15 +1602,6 @@ public class BoardView extends BComponent
         }
     }
     
-    /** Creates geometry to retexture a tile. */
-    protected void textureTile (int tx, int ty, TextureState tstate)
-    {
-        TerrainNode.Highlight highlight =
-            _tnode.createHighlight(tx, ty, false);
-        highlight.setRenderState(tstate);
-        _texnode.attachChild(highlight);
-    }
-
     /** 
      * Creates geometry to "target" the supplied set of tiles. 
      * 
@@ -1598,22 +1611,46 @@ public class BoardView extends BComponent
     protected void targetTiles (PointSet set, boolean valid)
     {
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
-            TerrainNode.Highlight highlight = _tnode.createHighlight(
-                set.getX(ii), set.getY(ii), true, true);
+            TerrainNode.Highlight highlight = attachHighlight(
+                set.getX(ii), set.getY(ii), true, false);
             highlight.setRenderState(_tgtstate);
-            if (!valid) {
-                highlight.setDefaultColor(INVALID_TARGET_HIGHLIGHT_COLOR);
-            }
             highlight.updateRenderState();
-            _hnode.attachChild(highlight);
+            highlight.setDefaultColor(valid ?
+                ColorRGBA.white : INVALID_TARGET_HIGHLIGHT_COLOR);
         }
     }
 
+    /**
+     * Attaches and returns a terrain highlight from the pool, creating a new
+     * one if necessary.
+     */
+    protected TerrainNode.Highlight attachHighlight (
+        int tx, int ty, boolean flatten, boolean hoverable)
+    {
+        for (TerrainNode.Highlight highlight : _highlights) {
+            if (highlight.getParent() == null) {
+                highlight.overPieces = flatten;
+                highlight.flatten = flatten;
+                highlight.hover = false;
+                highlight.hoverable = hoverable;
+                highlight.setPosition(tx, ty);
+                _hnode.attachChild(highlight);
+                return highlight;
+            }
+        }
+        TerrainNode.Highlight highlight =
+            _tnode.createHighlight(tx, ty, flatten, flatten);
+        highlight.hoverable = hoverable;
+        _hnode.attachChild(highlight);
+        _highlights.add(highlight);
+        return highlight;
+    }
+    
     /** Clears out all highlighted tiles. */
     protected void clearHighlights ()
     {
+        hoverHighlightChanged(null);
         _hnode.detachAllChildren();
-        _hnode.updateGeometricState(0f, true);
         _htiles.clear();
         _throbbers.clear();
     }
@@ -1840,18 +1877,21 @@ public class BoardView extends BComponent
     /** The current tile coordinates of the mouse. */
     protected Point _mouse = new Point(-1, -1);
 
-    /** The set of currently highlighted tiles. */
-    protected PointSet _htiles = new PointSet();
+    /** The pool of terrain highlights created for repeated use. */
+    protected ArrayList<TerrainNode.Highlight> _highlights =
+        new ArrayList<TerrainNode.Highlight>();
 
+    /** Maps encoded tile coordinates to the hoverable highlights
+     * occupying those tiles. */
+    protected HashIntMap<TerrainNode.Highlight> _htiles =
+        new HashIntMap<TerrainNode.Highlight>();
+        
     /** The tile coordinates of the highlight tile that the mouse is
      * hovering over or (-1, -1). */
     protected Point _high = new Point(-1, -1);
 
     /** The highlight currently being hovered over. */
     protected TerrainNode.Highlight _highlightHover;
-
-    /** Stores the former highlight color. */
-    protected ColorRGBA _oldHighlightColor;
 
     /** The grid indicating where the tile boundaries lie. */
     protected GridNode _grid;
