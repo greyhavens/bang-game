@@ -40,6 +40,7 @@ public class CrossStatus extends Node
         _info = new SharedMesh[DIRECTIONS.length];
         for (int ii = 0; ii < _info.length; ii++) {
             _info[ii] = new SharedMesh("info" + ii, highlight);
+            _info[ii].setIsCollidable(false);
             _info[ii].setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
             _info[ii].setRenderState(ctx.getRenderer().createTextureState());
             _info[ii].updateRenderState();
