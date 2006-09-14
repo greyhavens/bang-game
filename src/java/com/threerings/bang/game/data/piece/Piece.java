@@ -605,6 +605,18 @@ public abstract class Piece
     }
 
     /**
+     * Determines whether the specified moving piece will help achieve the
+     * scenario's goals by moving onto or next to this piece.
+     *
+     * @return -1 for no relevance, 0 if the mover scores by landing on this
+     * piece, or +1 if the mover scores by landing next to this piece
+     */
+    public int getGoalRadius (Piece mover)
+    {
+        return -1;
+    }
+    
+    /**
      * Writes the persistent state of this piece to the specified stream.
      *
      * @param scenIds: A sorted array of scenario Ids

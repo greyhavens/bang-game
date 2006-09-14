@@ -17,7 +17,10 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.client.StatsView;
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Marker;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
 
@@ -247,6 +250,45 @@ public abstract class ScenarioInfo
         return false;
     }
 
+    /**
+     * Given a piece and its set of potential moves, determines which of those
+     * moves help achieve the scenario's goals.
+     */
+    public void getMovementGoals (
+        BangObject bangobj, Piece mover, PointSet moves, PointSet goals)
+    {
+        for (Piece piece : bangobj.pieces) {
+            int radius = getGoalRadius(mover, piece);
+            if (radius < 0) {
+                continue;
+            }
+            if (moves.contains(piece.x, piece.y)) {
+                goals.add(piece.x, piece.y);
+            }
+            if (radius < 1) {
+                continue;
+            }
+            for (int dir : Piece.DIRECTIONS) {
+                int x = piece.x + Piece.DX[dir], y = piece.y + Piece.DY[dir];
+                if (moves.contains(x, y)) {
+                    goals.add(x, y);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Determines whether the specified moving piece will help achieve the
+     * scenario's goals by moving onto or next to the specified target.
+     *
+     * @return -1 for no relevance, 0 if the mover scores by landing on the
+     * target, or +1 if the mover scores by landing next to the target
+     */
+    protected int getGoalRadius (Piece mover, Piece target)
+    {
+        return target.getGoalRadius(mover);
+    }
+    
     /**
      * Returns the path to sound clips that should be preloaded when playing
      * this scenario.

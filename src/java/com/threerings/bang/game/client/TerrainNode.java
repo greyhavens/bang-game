@@ -32,6 +32,7 @@ import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
+import com.jme.scene.batch.GeomBatch;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.lod.AreaClodMesh;
 import com.jme.scene.state.AlphaState;
@@ -167,6 +168,12 @@ public class TerrainNode extends Node
         /** The layer of the highlight. */
         public byte layer = 2;
 
+        /** Whether or not the user is hovering over the highlight. */
+        public boolean hover;
+        
+        /** Whether or not the user *can* hover over it. */
+        public boolean hoverable;
+        
         protected Highlight (int x, int y, boolean overPieces, boolean flatten)
         {
             this((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE, TILE_SIZE,
@@ -286,6 +293,36 @@ public class TerrainNode extends Node
         }
 
         /**
+         * Sets the default and hover colors for this highlight.
+         */
+        public void setColors (ColorRGBA defaultColor, ColorRGBA hoverColor)
+        {
+            _defaultColor = defaultColor;
+            _hoverColor = hoverColor;
+            updateHoverState();
+        }
+        
+        /**
+         * Sets the default and hover textures for this highlight.
+         */
+        public void setTextures (
+            TextureState defaultTexture, TextureState hoverTexture)
+        {
+            _defaultTexture = defaultTexture;
+            _hoverTexture = hoverTexture;
+            updateHoverState();
+        }
+        
+        /**
+         * Sets the hover state of this highlight.
+         */
+        public void setHover (boolean hover)
+        {
+            this.hover = hover;
+            updateHoverState();
+        }
+        
+        /**
          * Updates the vertices of the highlight to reflect a change in
          * position or in the underlying terrain.
          */
@@ -378,6 +415,16 @@ public class TerrainNode extends Node
             }
         }
 
+        /**
+         * Updates the state associated with the hover status.
+         */
+        protected void updateHoverState ()
+        {
+            setDefaultColor(hover ? _hoverColor : _defaultColor);
+            setRenderState(hover ? _hoverTexture : _defaultTexture);
+            updateRenderState();
+        }
+        
         @Override // documentation inherited
         protected void setParent (Node parent)
         {
@@ -399,7 +446,14 @@ public class TerrainNode extends Node
 
         /** If true, the highlight will be flat. */
         protected boolean _flatten;
-
+        
+        /** The colors for normal and hover modes. */
+        protected ColorRGBA _defaultColor = ColorRGBA.white,
+            _hoverColor = ColorRGBA.white;
+        
+        /** The textures for normal and hover modes. */
+        protected TextureState _defaultTexture, _hoverTexture;
+        
         /** The zoffset for each layer. */
         protected static final float LAYER_OFFSET = TILE_SIZE/1000;
     }

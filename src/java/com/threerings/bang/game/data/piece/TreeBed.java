@@ -43,6 +43,12 @@ public class TreeBed extends Prop
     }
     
     @Override // documentation inherited
+    public int getGoalRadius (Piece mover)
+    {
+        return (mover.owner != -1 && isAlive() && damage > 0) ? +1 : -1;
+    }
+    
+    @Override // documentation inherited
     public boolean expireWreckage (short tick)
     {
         return false;

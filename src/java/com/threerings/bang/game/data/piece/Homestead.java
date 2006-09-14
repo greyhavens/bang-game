@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.piece;
 
+import com.threerings.bang.data.UnitConfig;
+
 import com.threerings.bang.game.client.sprite.HomesteadSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 
@@ -42,6 +44,14 @@ public class Homestead extends Prop
     public boolean isOwnerConfigurable ()
     {
         return true;
+    }
+    
+    @Override // documentation inherited
+    public int getGoalRadius (Piece mover)
+    {
+        return (owner == -1 && mover instanceof Unit &&
+            ((Unit)mover).getConfig().rank == UnitConfig.Rank.BIGSHOT) ?
+                +1 : -1;
     }
     
     @Override // documentation inherited

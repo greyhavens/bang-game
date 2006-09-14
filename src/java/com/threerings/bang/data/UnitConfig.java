@@ -34,7 +34,7 @@ public class UnitConfig
         HUMAN, STEAM, SPIRIT
     };
 
-   /** Defines a unit's rank. */
+    /** Defines a unit's rank. */
     public enum Rank {
         NORMAL, SPECIAL, BIGSHOT
     }

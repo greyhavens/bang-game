@@ -71,6 +71,14 @@ public class Cow extends Piece
     }
 
     @Override // documentation inherited
+    public int getGoalRadius (Piece mover)
+    {
+        return (mover.owner != owner && mover instanceof Unit &&
+            ((Unit)mover).getConfig().rank == UnitConfig.Rank.BIGSHOT) ?
+                +1 : -1;
+    }
+    
+    @Override // documentation inherited
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
     {

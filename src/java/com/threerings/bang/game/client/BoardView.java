@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.lwjgl.opengl.GL11;
@@ -239,7 +240,15 @@ public class BoardView extends BComponent
         _texnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 
         // the children of this node will display highlighted tiles
-        bnode.attachChild(_hnode = new Node("highlights"));
+        // with colors that may throb on and off
+        bnode.attachChild(_hnode = new Node("highlights") {
+            public void updateWorldData (float time) {
+                super.updateWorldData(time);
+                if (getQuantity() > 0) {
+                    updateThrobbingColors();
+                }
+            }
+        });
         _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 
         // we'll hang all of our pieces off this node
@@ -267,6 +276,14 @@ public class BoardView extends BComponent
         _movhovstate = RenderUtil.createTextureState(
             ctx, "textures/ustatus/movement_hover.png");
 
+        // this is used to indicate a movement goal
+        _goalstate = RenderUtil.createTextureState(
+            ctx, "textures/ustatus/movement_goal.png");
+
+        // this is used to indicate you hovering over a movement goal
+        _goalhovstate = RenderUtil.createTextureState(
+            ctx, "textures/ustatus/movement_goal_hover.png");
+            
         // create a sound group that we'll use for all in-game sounds
         _sounds = ctx.getSoundManager().createGroup(
             BangUI.clipprov, GAME_SOURCE_COUNT);
@@ -1427,6 +1444,9 @@ public class BoardView extends BComponent
                 continue;
             }
             TerrainNode.Highlight highlight = (TerrainNode.Highlight)hit;
+            if (!highlight.hoverable) {
+                continue;
+            }
             float hdist = FastMath.sqr(camloc.x - highlight.x) +
                 FastMath.sqr(camloc.y - highlight.y);
             if (hdist < dist) {
@@ -1483,51 +1503,83 @@ public class BoardView extends BComponent
      */
     protected void hoverHighlightChanged (TerrainNode.Highlight hover)
     {
-        if (_highlightHover != null && _highlightHover.getRenderState(
-                    RenderState.RS_TEXTURE) == _movhovstate) {
-            _highlightHover.setRenderState(_movstate);
-            _highlightHover.setDefaultColor(_oldHighlightColor);
-            _highlightHover.updateRenderState();
+        if (_highlightHover != null) {
+            _highlightHover.setHover(false);
         }
         _highlightHover = hover;
-        if (_highlightHover != null && _highlightHover.getRenderState(
-                    RenderState.RS_TEXTURE) == _movstate) {
-            _oldHighlightColor =
-                _highlightHover.getBatch(0).getDefaultColor();
-            _highlightHover.setDefaultColor(_oldHighlightColor.add(
-                        HOVER_HIGHLIGHT_COLOR));
-            _highlightHover.setRenderState(_movhovstate);
-            _highlightHover.updateRenderState();
+        if (_highlightHover != null) {
+            _highlightHover.setHover(true);
         }
     }
 
-    /** Creates geometry to highlight the supplied set of tiles. */
-    protected void highlightTiles (PointSet set)
+    /** Creates geometry to highlight the supplied set of movement tiles. */
+    protected void highlightMovementTiles (
+        PointSet set, PointSet goals, ColorRGBA highlightColor)
     {
-        highlightTiles(set, MOVEMENT_HIGHLIGHT_COLOR);
+        highlightTiles(set, goals, highlightColor, _movstate, true, true);
     }
 
     /** Creates geometry to highlight the supplied set of tiles. */
-    protected void highlightTiles (PointSet set, ColorRGBA highlightColor)
+    protected void highlightTiles (
+        PointSet set, ColorRGBA highlightColor, TextureState tstate,
+        boolean flatten)
     {
-        highlightTiles(set, highlightColor, _movstate, true);
+        highlightTiles(set, null, highlightColor, tstate, flatten, false);
     }
-
+    
     /** Creates geometry to highlight the supplied set of tiles. */
-    protected void highlightTiles (PointSet set, ColorRGBA highlightColor, 
-            TextureState tstate, boolean flatten)
+    protected void highlightTiles (
+        PointSet set, PointSet goals, ColorRGBA highlightColor,
+        TextureState tstate, boolean flatten, boolean hoverable)
     {
+        ColorRGBA hoverHighlightColor =
+            highlightColor.add(HOVER_HIGHLIGHT_COLOR);
+            
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             int tx = set.getX(ii), ty = set.getY(ii);
             TerrainNode.Highlight highlight =
                 _tnode.createHighlight(tx, ty, flatten, flatten);
-            highlight.setDefaultColor(highlightColor);
-            highlight.setRenderState(tstate);
+            highlight.hoverable = hoverable;
+            if (goals != null && goals.contains(tx, ty)) {
+                highlight.setColors(getThrobbingColor(highlightColor),
+                    hoverHighlightColor);
+                highlight.setTextures(_goalstate, _goalhovstate);
+            } else {
+                highlight.setColors(highlightColor, hoverHighlightColor);
+                highlight.setTextures(tstate, _movhovstate);
+            }
             _hnode.attachChild(highlight);
             _htiles.add(tx, ty);
         }
+        
+        updateHighlightHover();
     }
 
+    /**
+     * Gets a version of the specified color that will pulse on and off over
+     * time.
+     */
+    protected ColorRGBA getThrobbingColor (final ColorRGBA color)
+    {
+        ColorRGBA throbber = _throbbers.get(color);
+        if (throbber == null) {
+            _throbbers.put(color, throbber = new ColorRGBA(color));
+        }
+        return throbber;
+    }
+    
+    /**
+     * Updates the throbbing colors used in the highlights.
+     */
+    protected void updateThrobbingColors ()
+    {
+        float v = FastMath.sin((System.currentTimeMillis() % THROB_PERIOD) *
+            FastMath.TWO_PI / THROB_PERIOD) * 0.5f + 0.5f;
+        for (Map.Entry<ColorRGBA, ColorRGBA> me : _throbbers.entrySet()) {
+            me.getValue().a = FastMath.LERP(v, me.getKey().a, 1f);
+        }
+    }
+    
     /** Creates geometry to retexture a tile. */
     protected void textureTile (int tx, int ty, TextureState tstate)
     {
@@ -1563,6 +1615,7 @@ public class BoardView extends BComponent
         _hnode.detachAllChildren();
         _hnode.updateGeometricState(0f, true);
         _htiles.clear();
+        _throbbers.clear();
     }
 
     /** JME peskily returns bogus hits when we do triangle level picking. */
@@ -1779,7 +1832,7 @@ public class BoardView extends BComponent
     protected TextureState _tgtstate;
 
     /** Used to texture movement highlights. */
-    protected TextureState _movstate, _movhovstate;
+    protected TextureState _movstate, _movhovstate, _goalstate, _goalhovstate;
 
     // TODO: rename _hastate
     protected AlphaState _hastate;
@@ -1823,12 +1876,16 @@ public class BoardView extends BComponent
     protected HashMap<Spatial,Sprite> _plights =
         new HashMap<Spatial,Sprite>();
 
+    /** Maps normal colors to their intensity-throbbing equivalents. */
+    protected HashMap<ColorRGBA, ColorRGBA> _throbbers =
+        new HashMap<ColorRGBA, ColorRGBA>();
+        
     /** Temporary result variables. */
     protected ColorRGBA _color = new ColorRGBA();
     
     /** Used when intersecting the ground. */
     protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
-
+    
     protected static final ColorRGBA DARK =
         new ColorRGBA(0.3f, 0.3f, 0.3f, 1.0f);
     protected static final ColorRGBA LIGHT =
@@ -1848,6 +1905,9 @@ public class BoardView extends BComponent
     protected static final ColorRGBA INVALID_TARGET_HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0f, 0f, 0.5f);
 
+    /** The time in milliseconds that it takes to complete one throb cycle. */
+    protected static final long THROB_PERIOD = 1000L;
+    
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;
 

@@ -1163,7 +1163,7 @@ public class BangBoardView extends BoardView
         // reduce the highlighted move tiles to just the selected tile
         PointSet moves = new PointSet();
         moves.add(tx, ty);
-        highlightTiles(moves, getHighlightColor(_selection));
+        highlightMovementTiles(moves, _goalSet, getHighlightColor(_selection));
 
         // this is a bit hacky, but if the character is heading to a
         // teleporter, they don't get to attack
@@ -1450,11 +1450,17 @@ public class BangBoardView extends BoardView
             pruneAttackSet(_moveSet, _attackSet, false);
             highlightPossibleAttacks();
         }
+        
+        // find the moves that lead to goals
+        _goalSet.clear();
+        _bangobj.scenario.getMovementGoals(
+            _bangobj, _selection, _moveSet, _goalSet);
+        
         // clear out our current location as we don't want to highlight that as
         // a potential move (but we needed it earlier when computing attacks)
         _moveSet.remove(piece.x, piece.y);
-        highlightTiles(_moveSet, getHighlightColor(piece));
-
+        highlightMovementTiles(_moveSet, _goalSet, getHighlightColor(piece));
+        
         // report that the user took an action (for tutorials)
         _ctrl.postEvent(TutorialCodes.UNIT_SELECTED);
     }
@@ -1955,8 +1961,9 @@ public class BangBoardView extends BoardView
     protected boolean _attackEnabled = true;
 
     protected PointSet _moveSet = new PointSet();
+    protected PointSet _goalSet = new PointSet();
     protected PointSet _attackSet = new PointSet();
-
+    
     protected int _pidx;
     protected int _downButton = -1;
 
