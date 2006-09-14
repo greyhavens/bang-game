@@ -50,6 +50,11 @@ public class RoundTimerView extends BWindow
         _bangobj.addListener(this);
     }
 
+    public void setEndState (boolean almostOver)
+    {
+        _almostOver = almostOver;
+    }
+
     public void setStatus (int tick, int lastTick, int duration)
     {
         if (duration > 0) {
@@ -79,7 +84,7 @@ public class RoundTimerView extends BWindow
 
             if (_tickDelta > 0) {
                 // render a pie filling in our ticked region
-                gfx.setColor(TICK_COLOR);
+                gfx.setColor((_almostOver ? ALMOST_OVER_COLOR : TICK_COLOR));
                 gfx.fillArc(0, 0, width, height, start, -_tickDelta);
                 start -= _tickDelta;
             }
@@ -164,14 +169,15 @@ public class RoundTimerView extends BWindow
     {
         super.renderComponent(renderer);
 
-        _overlay.render(renderer, 10, 9, _alpha);
-        _pin.render(renderer, 12, 11, _alpha);
+        _overlay.render(renderer, 17, 8, _alpha);
+        _pin.render(renderer, 19, 12, _alpha);
     }
 
     protected BasicContext _ctx;
     protected BangObject _bangobj;
     protected ImageIcon _pin, _overlay;
     protected int _skipDelta, _tickDelta;
+    protected boolean _almostOver;
 
     protected BufferedImage _needle, _overimg;
 
@@ -180,6 +186,7 @@ public class RoundTimerView extends BWindow
     protected static final int RANGE = 360-(END_ANGLE-START_ANGLE);
 
     protected static final Color CLEAR_COLOR = new Color(255, 255, 255, 0);
-    protected static final Color SKIP_COLOR = new Color(0x72, 0x2A, 0x72, 128);
-    protected static final Color TICK_COLOR = new Color(0x00, 0x2A, 0x72, 128);
+    protected static final Color SKIP_COLOR = new Color(0x72, 0x2A, 0x72, 89);
+    protected static final Color TICK_COLOR = new Color(6, 107, 170, 89);
+    protected static final Color ALMOST_OVER_COLOR = new Color(133, 6, 0, 89);
 }

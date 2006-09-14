@@ -779,6 +779,7 @@ public class BangController extends GameController
                     _bangobj.scenario.getObjectives() != null &&
                     _bangobj.lastTick - _bangobj.tick == ALMOST_OVER_TICKS) {
                     _view.view.fadeMarqueeInOut("m.round_will_end", 1f);
+                    _view.getTimer().setEndState(true);
                 }
             }
         }

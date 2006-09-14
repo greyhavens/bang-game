@@ -341,6 +341,14 @@ public class BangView extends BWindow
     }
 
     /**
+     * Returns a reference to the round timer.
+     */
+    public RoundTimerView getTimer ()
+    {
+        return _timer;
+    }
+
+    /**
      * Prepares for the coming round.
      *
      * @return true if prepared, false if waiting to receive board from server
