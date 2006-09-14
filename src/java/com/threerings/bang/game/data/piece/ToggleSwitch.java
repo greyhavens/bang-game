@@ -6,7 +6,7 @@ package com.threerings.bang.game.data.piece;
 /**
  * Toggles safe zone activation in wendigo attack.
  */
-public class ToggleSwitch extends Piece
+public class ToggleSwitch extends Prop
 {
     public static enum State { SQUARE, CIRCLE };
 
