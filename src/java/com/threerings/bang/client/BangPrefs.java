@@ -210,6 +210,22 @@ public class BangPrefs
     }
 
     /**
+     * Returns the unit status detail preference, true for showing.
+     */
+    public static boolean getUnitStatusDetails ()
+    {
+        return config.getValue("unit_status_details", true);
+    }
+
+    /**
+     * Updates the unit stats detail preference.
+     */
+    public static void updateUnitStatusDetails (boolean details)
+    {
+        config.setValue("unit_status_details", details);
+    }
+
+    /**
      * Used to prevent the tutorials from automatically showing up once a user
      * has dismissed them the first time or completed the first two. This is
      * tracked per-town, so the a player will be shown the tutorial view again

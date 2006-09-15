@@ -43,10 +43,16 @@ public class UnitBonus extends BContainer
 
     public UnitBonus (BasicContext ctx, int gap)
     {
+        this(ctx, gap, false);
+    }
+
+    public UnitBonus (BasicContext ctx, int gap, boolean smallMode)
+    {
         _ctx = ctx;
         _gap = gap;
         _msgs = ctx.getMessageManager().getBundle(RanchCodes.RANCH_MSGS);
         _umsgs = ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
+        _smallMode = smallMode;
     }
 
     /**
@@ -187,7 +193,7 @@ public class UnitBonus extends BContainer
     protected BLabel bonusIconLabel (BonusIcons icon, String tip)
     {
         BLabel label = new BLabel("", "table_data");
-        label.setIcon(getBonusIcon(icon, _ctx));
+        label.setIcon(getBonusIcon(icon, _ctx, _smallMode));
         if (_addTip) {
             label.setTooltipText(tip);
         }
@@ -199,7 +205,13 @@ public class UnitBonus extends BContainer
      */
     public BIcon getBonusIcon (UnitConfig.Mode mode)
     {
-        return getBonusIcon(_modeIconMap.get(mode), _ctx);
+        return getBonusIcon(mode, _ctx, _smallMode);
+    }
+
+    public static BIcon getBonusIcon (
+            UnitConfig.Mode mode, BasicContext ctx, boolean small)
+    {
+        return getBonusIcon(_modeIconMap.get(mode), ctx, small);
     }
 
     /**
@@ -207,7 +219,13 @@ public class UnitBonus extends BContainer
      */
     public BIcon getBonusIcon (UnitConfig.Make make)
     {
-        return getBonusIcon(_makeIconMap.get(make), _ctx);
+        return getBonusIcon(make, _ctx, _smallMode);
+    }
+
+    public static BIcon getBonusIcon (
+            UnitConfig.Make make, BasicContext ctx, boolean small)
+    {
+        return getBonusIcon(_makeIconMap.get(make), ctx, small);
     }
 
     /**
@@ -215,27 +233,39 @@ public class UnitBonus extends BContainer
      */
     public static BIcon getBonusIcon (BonusIcons bi, BasicContext ctx)
     {
+        return getBonusIcon(bi, ctx, false);
+    }
+
+    public static BIcon getBonusIcon (
+            BonusIcons bi, BasicContext ctx, boolean small)
+    {
         int idx = bi.ordinal();
-        if (_bonusIcons[idx] != null) {
-            return _bonusIcons[idx];
+        int isize = (small ? 1 : 0);
+        if (_bonusIcons[isize][idx] != null) {
+            return _bonusIcons[isize][idx];
         }
 
-        BImage icons =
-            ctx.getImageCache().getBImage("ui/ranch/unit_icons.png");
+        String path = "ui/ranch/unit_icons";
+        if (small) {
+            path += "_small";
+        }
+        BImage icons = ctx.getImageCache().getBImage(path + ".png");
         int size = icons.getHeight();
-        _bonusIcons[idx] = new SubimageIcon(
-            icons, idx * ICON_WIDTH, 0, ICON_WIDTH, size);
-        return _bonusIcons[idx];
+        _bonusIcons[isize][idx] = new SubimageIcon(
+            icons, idx * ICON_WIDTH[isize], 0, ICON_WIDTH[isize], size);
+        return _bonusIcons[isize][idx];
     }
 
     protected BasicContext _ctx;
     protected int _gap;
     protected MessageBundle _msgs, _umsgs;
-    protected boolean _addTip;
-    protected static BIcon[] _bonusIcons = 
-        new BIcon[BonusIcons.values().length];
+    protected boolean _addTip, _smallMode;
+    protected static BIcon[][] _bonusIcons = new BIcon[][] { 
+        new BIcon[BonusIcons.values().length],
+        new BIcon[BonusIcons.values().length]
+    };
 
-    protected static final int ICON_WIDTH = 19;
+    protected static final int[] ICON_WIDTH = { 19, 12 };
     protected static final int MAX_COLS = 3;
 
     protected static final HashMap<UnitConfig.Mode, BonusIcons> _modeIconMap =

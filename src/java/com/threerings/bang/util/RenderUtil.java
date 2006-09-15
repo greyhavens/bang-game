@@ -5,9 +5,11 @@ package com.threerings.bang.util;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.BasicStroke;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -207,11 +209,17 @@ public class RenderUtil
     public static Quad createTextQuad (BasicContext ctx, Font font, 
             ColorRGBA color, ColorRGBA ocolor, String text)
     {
+        return createTextQuad(ctx, font, color, ocolor, text, 1);
+    }
+
+    public static Quad createTextQuad (BasicContext ctx, Font font, 
+            ColorRGBA color, ColorRGBA ocolor, String text, int outline)
+    {
         Vector2f[] tcoords = new Vector2f[4];
         Dimension size = new Dimension();
         TextureState tstate = ctx.getRenderer().createTextureState();
         Texture tex = createTextTexture(
-            ctx, font, color, ocolor, text, tcoords, size);
+            ctx, font, color, ocolor, text, tcoords, size, outline);
         tstate.setTexture(tex);
 
         Quad quad = new Quad("text", size.width, size.height);
@@ -238,6 +246,14 @@ public class RenderUtil
     public static Texture createTextTexture (
         BasicContext ctx, Font font, ColorRGBA color, ColorRGBA ocolor,
         String text, Vector2f[] tcoords, Dimension size)
+    {
+        return createTextTexture(
+                ctx, font, color, ocolor, text, tcoords, size, 1);
+    }
+
+    public static Texture createTextTexture (
+        BasicContext ctx, Font font, ColorRGBA color, ColorRGBA ocolor,
+        String text, Vector2f[] tcoords, Dimension size, int outline)
     {
         Graphics2D gfx = _scratch.createGraphics();
         Color acolor = new Color(color.r, color.g, color.b, color.a);
@@ -280,9 +296,19 @@ public class RenderUtil
             gfx.setColor(acolor);
             if (oacolor != null) {
                 gfx.translate(0, layout.getAscent());
+                if (outline > 1) {
+                    gfx.setColor(oacolor);
+                    Stroke oldstroke = gfx.getStroke();
+                    gfx.setStroke(new BasicStroke((float)outline));
+                    gfx.draw(layout.getOutline(null));
+                    gfx.setStroke(oldstroke);
+                    gfx.setColor(acolor);
+                } 
                 gfx.fill(layout.getOutline(null));
-                gfx.setColor(oacolor);
-                gfx.draw(layout.getOutline(null));
+                if (outline <= 1) {
+                    gfx.setColor(oacolor);
+                    gfx.draw(layout.getOutline(null));
+                }
             } else {
                 gfx.setComposite(AlphaComposite.SrcOut);
                 layout.draw(gfx, -(float)bounds.getX(), layout.getAscent());

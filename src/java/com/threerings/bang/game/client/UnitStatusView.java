@@ -7,23 +7,45 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.HashMap;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.background.BBackground;
+import com.jmex.bui.event.MouseAdapter;
+import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
+import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 
+import com.threerings.bang.game.client.sprite.PieceStatus;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Unit;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.ranch.data.RanchCodes;
+import com.threerings.bang.ranch.client.UnitBonus;
+
+import com.threerings.util.MessageBundle;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Displays the status of the various units in iconic form.
@@ -33,7 +55,7 @@ public class UnitStatusView extends BWindow
     public UnitStatusView (
         BangContext ctx, BangBoardView view, BangObject bangobj)
     {
-        super(ctx.getStyleSheet(), GroupLayout.makeVert(GroupLayout.TOP));
+        super(ctx.getStyleSheet(), new AbsoluteLayout(true));
 
         _ctx = ctx;
         _view = view;
@@ -50,7 +72,7 @@ public class UnitStatusView extends BWindow
             pack();
             int width = _ctx.getDisplay().getWidth();
             int height = _ctx.getDisplay().getHeight();
-            setLocation(13, height - getHeight() - 5);
+            setLocation(0, height - getHeight());
         }
     }
 
@@ -64,17 +86,17 @@ public class UnitStatusView extends BWindow
         }
 
         int pieceId = usprite.getPieceId();
-        UnitLabel ulabel = null;
-        for (UnitLabel label : _labels) {
-            if (label.pieceId == pieceId) {
-                ulabel = label;
+        UnitStatus ustatus = null;
+        for (UnitStatus status : _ustatuses) {
+            if (status.pieceId == pieceId) {
+                ustatus = status;
                 break;
             }
         }
-        if (ulabel == null) {
-            _labels.add(ulabel = new UnitLabel());
+        if (ustatus == null) {
+            _ustatuses.add(ustatus = new UnitStatus());
         }
-        ulabel.setUnitSprite(usprite);
+        ustatus.setUnitSprite(usprite);
         resort();
         reposition();
     }
@@ -85,21 +107,21 @@ public class UnitStatusView extends BWindow
     public void unitRemoved (UnitSprite usprite)
     {
         int pieceId = usprite.getPieceId();
-        UnitLabel ulabel = null;
-        for (UnitLabel label : _labels) {
-            if (label.pieceId == pieceId) {
-                ulabel = label;
+        UnitStatus ustatus = null;
+        for (UnitStatus status : _ustatuses) {
+            if (status.pieceId == pieceId) {
+                ustatus = status;
                 break;
             }
         }
-        if (ulabel == null) {
+        if (ustatus == null) {
             return;
         }
 
         // if this unit was hijacked from another player, or a duplicate,
         // remove this label
         if (((Unit)usprite.getPiece()).originalOwner != _pidx) {
-            _labels.remove(ulabel);
+            _ustatuses.remove(ustatus);
             resort();
             reposition();
         }
@@ -107,17 +129,289 @@ public class UnitStatusView extends BWindow
 
     protected void resort ()
     {
-        Collections.sort(_labels);
+        Collections.sort(_ustatuses);
         removeAll();
-        for (UnitLabel label : _labels) {
-            add(label);
+        int yoff = 0;
+        for (UnitStatus status : _ustatuses) {
+            add(status, new Point(0, yoff));
+            yoff += 90;
         }
     }
 
-    protected class UnitLabel extends BButton
-        implements UnitSprite.UpdateObserver, Comparable<UnitLabel>
+    protected class UnitStatus extends BContainer
+        implements UnitSprite.UpdateObserver, Comparable<UnitStatus>
     {
         public int pieceId;
+
+        public UnitLabel label;
+
+        public UnitStatus () {
+            super(new AbsoluteLayout(true)); 
+            if (_selected == null) {
+                _selected = _ctx.getImageCache().getBImage(
+                        "ui/ustatus/unitstatus_select.png");
+            }
+            if (_closeArrow == null) {
+                _closeArrow = new BImage[2];
+                _closeArrow[0] = _ctx.getImageCache().getBImage(
+                        "ui/ustatus/arrow_left_tiny_normal.png");
+                _closeArrow[1] = _ctx.getImageCache().getBImage(
+                        "ui/ustatus/arrow_left_tiny_hover.png");
+            }
+            _closer = _closeArrow[0];
+            add(label = new UnitLabel(), new Point(15, 13));
+            GroupLayout vlay = GroupLayout.makeVert(
+                    GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
+            vlay.setGap(4);
+            _opened = new BContainer(vlay) {
+                public BComponent getHitComponent(int mx, int my) {
+                    return this;
+                }
+            };
+            _opened.setStyleClass("unit_status_container");
+            _opened.addListener(new MouseAdapter() {
+                public void mouseMoved (MouseEvent event) {
+                    if (inRegion(event)) {
+                        _closer = _closeArrow[1];
+                    }
+                }
+                public void mouseExited (MouseEvent event) {
+                        _closer = _closeArrow[0];
+                }
+                public void mousePressed (MouseEvent event) {
+                    if (inRegion(event)) {
+                        toggleDetails(false);
+                    }
+                }
+            });
+            _closed = new BButton(new BlankIcon(39, 32), "") {
+                protected void fireAction (long when, int modifiers) {
+                    toggleDetails(true);
+                }
+            };
+            _closed.setStyleClass("unit_status_closed");
+        }
+
+
+        public void setUnitSprite (UnitSprite sprite) {
+            // clear out our old sprite
+            clearSprite();
+
+            _sprite = sprite;
+            _sprite.addObserver(this);
+            pieceId = _sprite.getPieceId();
+            label.setUnitSprite(sprite);
+            Unit unit = getUnit();
+            _health = new BLabel("", "unit_status_health" + unit.owner); 
+            BContainer healthcont = new BContainer(GroupLayout.makeHStretch());
+            healthcont.add(new Spacer(0, 0));
+            healthcont.add(_health, GroupLayout.FIXED);
+            healthcont.add(new Spacer(0, 0));
+            add(healthcont, new Rectangle(28, 78, 45, 18));
+            _holding = new BLabel("", "unit_status_holding");
+            _influence = new BLabel("", "unit_status_influence");
+            _hindrance = new BLabel("", "unit_status_hindrance");
+
+            _opened.removeAll();
+
+            UnitConfig uc = unit.getConfig();
+            MessageBundle msgs = 
+                _ctx.getMessageManager().getBundle(RanchCodes.RANCH_MSGS);
+            MessageBundle umsgs = 
+                _ctx.getMessageManager().getBundle(BangCodes.UNITS_MSGS);
+            _opened.add(new BLabel(
+                        umsgs.xlate(uc.getName()), "unit_status_name"));
+            _opened.add(new Spacer(118, 2));
+
+            // the unit stats
+            TableLayout tlay = new TableLayout(6, 2, 4);
+            tlay.setHorizontalAlignment(TableLayout.STRETCH);
+            BContainer stats = new BContainer(tlay);
+            stats.add(new Spacer(2, 0));
+            stats.add(new BLabel(msgs.get("m.make"), "unit_status_details"));
+            stats.add(new BLabel(
+                        UnitBonus.getBonusIcon(uc.make, _ctx, true),
+                        "unit_status_number"));
+            stats.add(new Spacer(4, 0));
+            stats.add(new BLabel(msgs.get("m.move"), "unit_status_details"));
+            stats.add(new BLabel("" + uc.moveDistance, "unit_status_number"));
+
+            stats.add(new Spacer(2, 0));
+            stats.add(new BLabel(msgs.get("m.mode"), "unit_status_details"));
+            stats.add(new BLabel(
+                        UnitBonus.getBonusIcon(uc.mode, _ctx, true),
+                        "unit_status_number"));
+            stats.add(new Spacer(4, 0));
+            stats.add(new BLabel(msgs.get("m.shoot"), "unit_status_details"));
+            stats.add(new BLabel(
+                        uc.getDisplayFireDistance(), "unit_status_number"));
+            _opened.add(stats);
+
+            // the unit attack/defend bonus/penalty
+            tlay = new TableLayout(2, 2, 4);
+            tlay.setVerticalAlignment(TableLayout.CENTER);
+            BContainer bonuses = new BContainer(tlay);
+            BLabel bl = new BLabel(":", "unit_status_details");
+            bl.setIcon(UnitBonus.getBonusIcon(
+                        UnitBonus.BonusIcons.ATTACK, _ctx, true));
+            bonuses.add(bl);
+            UnitBonus ub = new UnitBonus(_ctx, 8, true);
+            ub.setUnitConfig(uc, false, UnitBonus.Which.ATTACK);
+            bonuses.add(ub);
+            bl = new BLabel(":", "unit_status_details");
+            bl.setIcon(UnitBonus.getBonusIcon(
+                        UnitBonus.BonusIcons.DEFEND, _ctx, true));
+            bonuses.add(bl);
+            ub = new UnitBonus(_ctx, 8, true);
+            ub.setUnitConfig(uc, false, UnitBonus.Which.DEFEND);
+            bonuses.add(ub);
+            _opened.add(bonuses);
+            toggleDetails(BangPrefs.getUnitStatusDetails());
+        }
+
+        public Unit getUnit () {
+            return (Unit)_sprite.getPiece();
+        }
+
+        @Override // documentation inherited
+        public void renderComponent (Renderer renderer)
+        {
+            if (_sprite.isSelected()) {
+                if (_opened.getParent() == this) {
+                    _opened.render(renderer);
+                    _closer.render(renderer, 
+                            getWidth() - _closer.getWidth() - 4, 2, 1f);
+                } else if (_closed.getParent() == this) {
+                    _closed.render(renderer);
+                }
+                _selected.render(renderer, 0, 
+                        getHeight() - _selected.getHeight(), 1f);
+            }
+            for (int ii = 0, ll = getComponentCount(); ii < ll; ii++) {
+                BComponent comp = getComponent(ii);
+                if (comp != _opened && comp != _closed) {
+                    comp.render(renderer);
+                }
+            }
+        }
+
+        // documentation inherited from interface UnitSprite.UpdateObserver
+        public void updated (UnitSprite sprite) {
+            label.updated(sprite);
+            if (!sprite.isSelected()) {
+                _health.setText("");
+                return;
+            }
+            Unit unit = getUnit();
+            _health.setText("" + (100 - unit.damage) + "%");
+            toggleDetails(BangPrefs.getUnitStatusDetails());
+            if (!BangPrefs.getUnitStatusDetails()) {
+                return;
+            }
+            if (_opened.getParent() != null) {
+                if (_holding.getParent() != null) {
+                    remove(_holding);
+                }
+                if (unit.holding != null) {
+                    String name = unit.holding;
+                    ImageIcon icon = _statusIcons.get(name);
+                    if (icon == null || icon != _holding.getIcon()) {
+                        _holding.setText(_ctx.xlate(
+                            GameCodes.GAME_MSGS, "m.help_bonus_" + 
+                            name.substring(name.lastIndexOf("/")+1) + 
+                            "_title"));
+                        if (icon == null) {
+                            icon = new ImageIcon(_ctx.getImageCache().getBImage(
+                                        "bonuses/" + name + "/holding.png"));
+                            _statusIcons.put(name, icon);
+                        }
+                        _holding.setIcon(icon);
+                        _opened.add(_holding);
+                    }
+                }
+                return;
+            }
+        }
+
+        // documentation inherited from interface Comparable
+        public int compareTo (UnitStatus other) {
+            Unit u1 = getUnit();
+            Unit u2 = other.getUnit();
+            UnitConfig uc1 = u1.getConfig(), uc2 = u2.getConfig();
+            if (uc1.rank != uc2.rank) {
+                return (uc1.rank == UnitConfig.Rank.BIGSHOT ? -1 : 
+                        (uc2.rank == UnitConfig.Rank.BIGSHOT ? 1 : -1));
+            }
+            return -1;
+        }
+
+        protected boolean inRegion (MouseEvent event)
+        {
+            int mx = event.getX(), my = event.getY();
+            java.awt.Rectangle bounds = new java.awt.Rectangle(
+                    _opened.getAbsoluteX() + 38, _opened.getAbsoluteY(),
+                    _opened.getWidth() - 38, _opened.getHeight());
+            return (bounds.contains(mx, my));
+        }
+
+        protected void clearSprite ()
+        {
+            if (_sprite != null) {
+                _sprite.removeObserver(this);
+                _sprite = null;
+            }
+        }
+
+        protected void toggleDetails (boolean details)
+        {
+            BangPrefs.updateUnitStatusDetails(details);
+            if (details) {
+                if (_closed.getParent() != null) {
+                    remove(_closed);
+                }
+                if (_opened.getParent() == null) {
+                    add(_opened, new Point(49, 0));
+                    _closer = _closeArrow[0];
+                }
+            } else {
+                if (_opened.getParent() != null) {
+                    remove(_opened);
+                }
+                if (_closed.getParent() == null) {
+                    add(_closed, new Point(49, 65));
+                }
+            }
+            invalidate();
+        }
+
+        @Override // documentation inherited
+        protected void wasAdded ()
+        {
+            super.wasAdded();
+            _selected.reference();
+            _closeArrow[0].reference();
+            _closeArrow[1].reference();
+        }
+
+        @Override // documentation inherited
+        protected void wasRemoved ()
+        {
+            super.wasRemoved();
+            _selected.release();
+            _closeArrow[0].release();
+            _closeArrow[1].release();
+
+        }
+
+        protected BContainer _opened;
+        protected BButton _closed;
+        protected UnitSprite _sprite;
+        protected BLabel _health, _holding, _influence, _hindrance;
+        protected BImage _closer;
+    }
+    
+    protected class UnitLabel extends BButton
+    {
 
         public UnitLabel () {
             super("");
@@ -125,13 +419,8 @@ public class UnitStatusView extends BWindow
         }
 
         public void setUnitSprite (UnitSprite sprite) {
-            // clear out our old sprite
-            clearSprite();
-
             // observer our new sprite
             _sprite = sprite;
-            _sprite.addObserver(this);
-            pieceId = _sprite.getPieceId();
 
             // setup our background
             _bground = sprite.getUnitStatus().getIconBackground();
@@ -148,7 +437,12 @@ public class UnitStatusView extends BWindow
             return (Unit)_sprite.getPiece();
         }
 
-        // documentation inherited from interface UnitSprite.UpdateObserver
+        @Override // documentation inherited
+        public Dimension computePreferredSize (int whint, int hhint)
+        {
+            return LABEL_PREFERRED_SIZE;
+        }
+
         public void updated (UnitSprite sprite) {
             Unit unit = (Unit)sprite.getPiece();
             if (!unit.isAlive()) {
@@ -183,17 +477,6 @@ public class UnitStatusView extends BWindow
             }
         }
 
-        // documentation inherited from interface Comparable
-        public int compareTo (UnitLabel other) {
-            Unit u1 = getUnit();
-            Unit u2 = other.getUnit();
-            UnitConfig uc1 = u1.getConfig(), uc2 = u2.getConfig();
-            if (uc1.rank != uc2.rank) {
-                return (uc1.rank == UnitConfig.Rank.BIGSHOT ? -1 : 
-                        (uc2.rank == UnitConfig.Rank.BIGSHOT ? 1 : -1));
-            }
-            return -1;
-        }
 
         @Override // documentation inherited
         public BBackground getBackground () {
@@ -259,23 +542,23 @@ public class UnitStatusView extends BWindow
             }
         }
 
-        protected void clearSprite () {
-            if (_sprite != null) {
-                _sprite.removeObserver(this);
-                _sprite = null;
-            }
-            _bground = null;
-        }
-
         protected UnitSprite _sprite;
         protected BBackground _bground;
         protected BImage _influence;
         protected BImage _unit;
+
     }
 
     protected BangContext _ctx;
     protected BangBoardView _view;
     protected BangObject _bangobj;
     protected int _pidx;
-    protected ArrayList<UnitLabel> _labels = new ArrayList<UnitLabel>();
+    protected ArrayList<UnitStatus> _ustatuses = new ArrayList<UnitStatus>();
+
+    protected static BImage _selected;
+    protected static BImage[] _closeArrow;
+    protected static HashMap<String, ImageIcon> _statusIcons = 
+        new HashMap<String, ImageIcon>();
+    protected static final Dimension LABEL_PREFERRED_SIZE = 
+        new Dimension(PieceStatus.ICON_SIZE, PieceStatus.ICON_SIZE);
 }

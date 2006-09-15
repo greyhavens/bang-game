@@ -273,6 +273,17 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
+    public void setSelected (boolean selected)
+    {
+        if (_selected != selected) {
+            super.setSelected(selected);
+            if (_observers != null) {
+                _observers.apply(_updater);
+            }
+        }
+    }
+
+    @Override // documentation inherited
     public void move (Path path)
     {
         super.move(path);

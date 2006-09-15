@@ -172,6 +172,14 @@ public class PieceSprite extends Sprite
     }
 
     /**
+     * Returns the selected status of this sprite.
+     */
+    public boolean isSelected ()
+    {
+        return _selected;
+    }
+
+    /**
      * Indicates that the mouse is hovering over this piece.
      */
     public void setHovered (boolean hovered)
