@@ -172,6 +172,7 @@ public class EffectCache extends PrototypeCache<Spatial>
         
         // copy emission parameters
         instance.setRotateWithScene(true);
+        instance.setTransformParticles(prototype.isTransformParticles());
         instance.setEmissionDirection(prototype.getEmissionDirection());
         instance.setMinimumAngle(prototype.getMinimumAngle());
         instance.setMaximumAngle(prototype.getMaximumAngle());
