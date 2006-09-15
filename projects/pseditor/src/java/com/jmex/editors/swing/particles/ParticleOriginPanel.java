@@ -48,6 +48,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.jme.math.FastMath;
+import com.jme.math.Frustum;
 import com.jme.math.Line;
 import com.jme.math.Rectangle;
 import com.jme.math.Ring;
@@ -81,6 +82,10 @@ public class ParticleOriginPanel extends ParticleEditPanel {
     private ValuePanel ringInnerPanel = new ValuePanel("Inner Radius: ", "",
             0f, Float.MAX_VALUE, 1f);
     private ValuePanel ringOuterPanel = new ValuePanel("Outer Radius: ", "", 0f, Float.MAX_VALUE, 1f);
+    private JPanel frustumParamsPanel;
+    private ValuePanel frustumNearPanel = new ValuePanel("Near: ", "", 0f, Float.MAX_VALUE, 1f);
+    private ValuePanel frustumFarPanel = new ValuePanel("Far: ", "", 0f, Float.MAX_VALUE, 1f);
+    private JCheckBox frustumSolidBox;
 
     public ParticleOriginPanel() {
         super();
@@ -141,7 +146,7 @@ public class ParticleOriginPanel extends ParticleEditPanel {
             new Insets(0, 0, 0, 0), 0, 0));
         
         originTypeBox = new JComboBox(new String[] {
-            "Point", "Line", "Rectangle", "Ring" });
+            "Point", "Line", "Rectangle", "Ring", "Frustum" });
         originTypeBox.setBorder(createTitledBorder(" EMITTER TYPE "));
         originTypeBox.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -155,6 +160,7 @@ public class ParticleOriginPanel extends ParticleEditPanel {
         lineParamsPanel = createLineParamsPanel();
         rectParamsPanel = createRectParamsPanel();
         ringParamsPanel = createRingParamsPanel();
+        frustumParamsPanel = createFrustumParamsPanel();
         
         add(transformPanel, new GridBagConstraints(0, 0, 1, 1, 1.0,
             0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
@@ -240,6 +246,42 @@ public class ParticleOriginPanel extends ParticleEditPanel {
         return ringParamsPanel;
     }
 
+    private JPanel createFrustumParamsPanel() {
+        frustumNearPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                Frustum frustum = getEdittedParticles().getFrustum();
+                frustum.setNear(frustumNearPanel.getFloatValue());
+            }
+        });
+        frustumFarPanel.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                Frustum frustum = getEdittedParticles().getFrustum();
+                frustum.setFar(frustumFarPanel.getFloatValue());
+            }
+        });
+        
+        frustumSolidBox = new JCheckBox(new AbstractAction("Solid") {
+            private static final long serialVersionUID = 1L;
+            public void actionPerformed(ActionEvent e) {
+                getEdittedParticles().getFrustum().setSolid(
+                    frustumSolidBox.isSelected());
+            }
+        });
+        
+        JPanel frustumParamsPanel = new JPanel(new GridBagLayout());
+        frustumParamsPanel.setBorder(createTitledBorder(" FRUSTUM PARAMETERS "));
+        frustumParamsPanel.add(frustumNearPanel, new GridBagConstraints(0, 0, 1, 1, 1.0,
+            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(5, 10, 5, 10), 0, 0));
+        frustumParamsPanel.add(frustumFarPanel, new GridBagConstraints(0, 1, 1, 1, 1.0,
+            0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+            new Insets(5, 10, 5, 10), 0, 0));
+        frustumParamsPanel.add(frustumSolidBox, new GridBagConstraints(0, 2, 1, 1, 1.0,
+            0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE,
+            new Insets(5, 10, 5, 10), 0, 0));
+        return frustumParamsPanel;
+    }
+    
     @Override
     public void updateWidgets() {
         translationPanel.setValue(getEdittedParticles().getLocalTranslation());
@@ -261,6 +303,9 @@ public class ParticleOriginPanel extends ParticleEditPanel {
                 break;
             case ParticleGeometry.ET_RING:
                 originTypeBox.setSelectedItem("Ring"); 
+                break;
+            case ParticleGeometry.ET_FRUSTUM:
+                originTypeBox.setSelectedItem("Frustum");
                 break;
         } 
         updateOriginParams();
@@ -305,6 +350,16 @@ public class ParticleOriginPanel extends ParticleEditPanel {
             ringInnerPanel.setValue(ring.getInnerRadius());
             ringOuterPanel.setValue(ring.getOuterRadius());
             originParamsPanel.add(ringParamsPanel);
+        } else if (type.equals("Frustum")) {
+            getEdittedParticles().setEmitType(ParticleGeometry.ET_FRUSTUM);
+            Frustum frustum = getEdittedParticles().getFrustum();
+            if (frustum == null) {
+                getEdittedParticles().setGeometry(frustum = new Frustum());
+            }
+            frustumNearPanel.setValue(frustum.getNear());
+            frustumFarPanel.setValue(frustum.getFar());
+            frustumSolidBox.setSelected(frustum.isSolid());
+            originParamsPanel.add(frustumParamsPanel);
         }
         originParamsPanel.getParent().validate();
         originParamsPanel.getParent().repaint();
