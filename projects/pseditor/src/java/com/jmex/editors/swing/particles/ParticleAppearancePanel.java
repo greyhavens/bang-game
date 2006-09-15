@@ -388,6 +388,7 @@ public abstract class ParticleAppearancePanel extends ParticleEditPanel {
         
         // copy emission parameters
         newGeom.setRotateWithScene(oldGeom.isRotateWithScene());
+        newGeom.setTransformParticles(oldGeom.isTransformParticles());
         newGeom.setEmissionDirection(oldGeom.getEmissionDirection());
         newGeom.setMinimumAngle(oldGeom.getMinimumAngle());
         newGeom.setMaximumAngle(oldGeom.getMaximumAngle());
