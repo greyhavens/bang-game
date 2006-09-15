@@ -195,7 +195,7 @@ public class Prop extends BigPiece
      */
     public boolean isOmissible ()
     {
-        return isPassable();
+        return (isPassable() && _config.passElev == 0f);
     }
     
     /**
