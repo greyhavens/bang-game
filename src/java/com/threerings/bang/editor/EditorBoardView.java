@@ -831,15 +831,6 @@ public class EditorBoardView extends BoardView
         refreshBoard();
     }
 
-    @Override // documentation inherited
-    public boolean isHoverable (Sprite sprite)
-    {
-        String scenId =
-            ((EditorController)_panel.getController()).getScenarioId();
-        return (sprite instanceof PieceSprite &&
-            ((PieceSprite)sprite).getPiece().isValidScenario(scenId));
-    }
-    
     /**
      * Returns the piece associated with the sprite under the mouse, if
      * there is one and if it is a piece sprite. Returns null otherwise.

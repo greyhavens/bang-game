@@ -1415,7 +1415,8 @@ public class BoardView extends BComponent
         // the mouse's coordinates on the terrain
         if (hit == null || thit == null) {
             for (PieceSprite sprite : _pieces.values()) {
-                if (sprite.getPiece().intersects(_mouse.x, _mouse.y)) {
+                if (sprite.getParent() != null &&
+                    sprite.getPiece().intersects(_mouse.x, _mouse.y)) {
                     if (hit == null && isHoverable(sprite)) {
                         hit = sprite;
                     }
