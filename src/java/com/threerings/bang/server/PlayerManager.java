@@ -570,8 +570,10 @@ public class PlayerManager
         // if the player is online, populate the poster directly from there
         final PlayerObject posterPlayer = BangServer.lookupPlayer(handle);
         if (posterPlayer != null) {
-            info.avatar = posterPlayer.getLook(Look.Pose.WANTED_POSTER).
-                getAvatar(posterPlayer);
+            Look look = posterPlayer.getLook(Look.Pose.WANTED_POSTER);
+            if (look != null) {
+                info.avatar = look.getAvatar(posterPlayer);
+            }
             info.rankings = buildRankings(posterPlayer.ratings);
         }
 
