@@ -349,6 +349,14 @@ public class BangView extends BWindow
     }
 
     /**
+     * Returns the list of markers in game.
+     */
+    public ArrayList<Marker> getMarkers ()
+    {
+        return _markers;
+    }
+
+    /**
      * Prepares for the coming round.
      *
      * @return true if prepared, false if waiting to receive board from server
@@ -403,7 +411,6 @@ public class BangView extends BWindow
     {
         _bangobj.board = (BangBoard)board.clone();
         _bangobj.board.applyShadowPatch(_bangobj.scenario.getIdent());
-        ArrayList<Piece> markers = new ArrayList<Piece>();
 
         // if we arrived in the middle of the game, the pieces will already be
         // configured; otherwise start with the ones provided by the board
@@ -422,7 +429,7 @@ public class BangView extends BWindow
                 piece.init();
                 plist.add(piece);
                 if (piece instanceof Marker) {
-                    markers.add(piece);
+                    _markers.add((Marker)piece);
                 }
             }
             _bangobj.pieces = new ModifiableDSet<Piece>(plist.iterator());
@@ -437,8 +444,8 @@ public class BangView extends BWindow
 
         // Once we've added all the MarkerSprites we don't want the marker
         // pieces hanging around causing problems
-        for (Piece p : markers) {
-            _bangobj.removePieceDirect(p);
+        for (Marker m : _markers) {
+            _bangobj.removePieceDirect(m);
         }
 
         // let the camera and input handlers know that we're getting ready to
@@ -628,6 +635,9 @@ public class BangView extends BWindow
     /** Takes periodic samples of our frames per second and reports them to the
      * server at the end of the round. */
     protected PerformanceTracker _perftrack;
+
+    /** Reference to the markers that have sprites. */
+    ArrayList<Marker> _markers = new ArrayList<Marker>();
 
     /** The time it takes for a played card to fall into position. */
     protected static final float CARD_FALL_DURATION = 0.5f;

@@ -10,6 +10,8 @@ import com.samskivert.util.IntIntMap;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.ToggleSwitch;
+import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.ToggleSwitchEffectHandler;
 
 import static com.threerings.bang.Log.log;
 
@@ -36,6 +38,15 @@ public class ToggleSwitchEffect extends Effect
     /** Id of the occupier or -1 if none. */
     public int occupier = -1;
 
+    @Override // documentation inherited
+    public int [] getWaitPieces ()
+    {
+        if (occupier != -1) {
+            return new int[] { occupier };
+        }
+        return super.getWaitPieces();
+    }
+
     // documentation inherited
     public int[] getAffectedPieces ()
     {
@@ -50,6 +61,10 @@ public class ToggleSwitchEffect extends Effect
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        if (state == null) {
+            return;
+        }
+
         ArrayIntSet switches = new ArrayIntSet();
         for (Piece p : bangobj.pieces) {
             if (p instanceof ToggleSwitch && p.pieceId != switchId &&
@@ -76,10 +91,15 @@ public class ToggleSwitchEffect extends Effect
         }
         ts.activator = activator;
         ts.occupier = occupier;
-        ts.state = state;
+        if (state != null) {
+            ts.state = state;
+        }
         reportEffect(obs, ts, UPDATED);
+        if (switchIds == null) {
+            return true;
+        }
         for (int sid : switchIds) {
-            ts = (ToggleSwitch)bangobj.pieces.get(switchId);
+            ts = (ToggleSwitch)bangobj.pieces.get(sid);
             if (ts == null) {
                 log.warning("Missing target to toggle switch effect [id=" +
                         sid + "].");
@@ -90,5 +110,10 @@ public class ToggleSwitchEffect extends Effect
         }
         return true;
     }
-            
+
+    @Override // documentation inherited
+    public EffectHandler createHandler (BangObject bangobj)
+    {
+        return new ToggleSwitchEffectHandler();
+    }
 }

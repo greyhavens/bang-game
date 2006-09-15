@@ -548,6 +548,12 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public boolean updateSpriteOnTick ()
+    {
+        return true;
+    }
+
+    @Override // documentation inherited
     public int traversalCost (TerrainConfig terrain)
     {
         int cost;

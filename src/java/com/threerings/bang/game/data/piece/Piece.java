@@ -668,6 +668,14 @@ public abstract class Piece
     }
 
     /**
+     * Return true if we want to updated the sprite every tick.
+     */
+    public boolean updateSpriteOnTick ()
+    {
+        return false;
+    }
+
+    /**
      * This is normally not needed, but is used by the editor to assign
      * piece IDs to new pieces.
      */

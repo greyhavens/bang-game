@@ -1666,10 +1666,10 @@ public class BangBoardView extends BoardView
         // update all of our sprites
         for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
             Piece piece = (Piece)iter.next();
-            if (piece instanceof Unit) {
-                UnitSprite usprite = getUnitSprite(piece);
-                if (usprite != null) {
-                    usprite.updated(piece, tick);
+            if (piece.updateSpriteOnTick()) {
+                PieceSprite ps = getPieceSprite(piece);
+                if (ps != null) {
+                    ps.updated(piece, tick);
                 }
             }
         }
