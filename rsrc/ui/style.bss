@@ -1137,6 +1137,77 @@ unit_status_label {
   vertical-align: center;
 }
 
+unit_status_closed {
+  background: image "ui/ustatus/unitstatus_closed.png" centerxy;
+}
+
+unit_status_closed:hover {
+  background: image "ui/ustatus/unitstatus_closed_hover.png" centerxy;
+}
+
+unit_status_container {
+  background: image "ui/ustatus/unitstatus_open.png" framexy 97 32 21 54;
+  padding: 3 7 9 42;
+}
+
+unit_status_name {
+  font: "Dom Casual" plain 16;
+  color: #FFFFFF;
+  text-align: center;
+  text-effect: shadow;
+  effect-color: #341900;
+}
+
+unit_status_health0 {
+  font: "Dom Casual" plain 14;
+  color: #FFFFFF;
+  text-effect: outline;
+  effect-size: 4;
+  effect-color: #002033;
+}
+
+unit_status_health1 {
+  parent: unit_status_health0;
+  effect-color: #330000;
+}
+
+unit_status_health2 {
+  parent: unit_status_health0;
+  effect-color: #003300;
+}
+
+unit_status_health3 {
+  parent: unit_status_health0;
+  effect-color: #333300;
+}
+
+unit_status_details {
+  font: "Dom Casual" plain 12;
+  color: #341900;
+  text-align: center;
+  vertical-align: top;
+}
+
+unit_status_number {
+  parent: unit_status_details;
+  color: #FFFFFF;
+}
+
+unit_status_holding {
+  parent: unit_status_details;
+  color: #FFFFFF;
+}
+
+unit_status_influend {
+  parent: unit_status_details;
+  color: #FFD100;
+}
+
+unit_status_hindrance {
+  parent: unit_status_details;
+  color: #6D0C08;
+}
+
 //
 // Player Status View
 
