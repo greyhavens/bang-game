@@ -977,7 +977,7 @@ public class BoardView extends BComponent
         }
         Prop prop = (Prop)piece;
         if (prop.intersects(_board.getPlayableArea()) &&
-            !prop.isPassable()) {
+            !prop.isOmissible()) {
             return true;
         }
         return BangPrefs.isMediumDetail() ?

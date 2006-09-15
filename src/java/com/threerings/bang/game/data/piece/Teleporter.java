@@ -15,6 +15,12 @@ import com.threerings.bang.game.data.effect.TeleportEffect;
 public class Teleporter extends Prop
 {
     @Override // documentation inherited
+    public boolean isOmissible ()
+    {
+        return false; // although passable, it still has an effect
+    }
+    
+    @Override // documentation inherited
     public boolean isPassable ()
     {
         return true; // teleporters are always passable
