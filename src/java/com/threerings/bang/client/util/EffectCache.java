@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.Properties;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingSphere;
+import com.jme.bounding.BoundingVolume;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -31,6 +33,7 @@ import com.jmex.effects.particles.ParticleGeometry;
 
 import com.samskivert.util.ResultListener;
 
+import com.threerings.jme.util.SpatialVisitor;
 import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.util.BangUtil;
@@ -103,6 +106,26 @@ public class EffectCache extends PrototypeCache<Spatial>
         particles.setLocalScale(Float.parseFloat(
             props.getProperty("scale", "0.025")));
         particles.getLocalRotation().set(Z_UP_ROTATION);
+        
+        String bounds = props.getProperty("bounds", "box");
+        BoundingVolume bproto = null;
+        if ("box".equals(bounds)) {
+            bproto = new BoundingBox();
+        } else if ("sphere".equals(bounds)) {
+            bproto = new BoundingSphere();
+        } else if (!"none".equals(bounds)) {
+            log.warning("Unknown bounding type for effect [effect=" +
+                key + ", bounds=" + bounds + "].");
+        }
+        if (bproto != null) {
+            final BoundingVolume fproto = bproto;
+            new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
+                protected void visit (ParticleGeometry geom) {
+                    geom.getBatch(0).setModelBound(fproto.clone(null));
+                }
+            }.traverse(particles);
+        }
+        
         return particles;
     }
     
@@ -218,7 +241,16 @@ public class EffectCache extends PrototypeCache<Spatial>
             instance.setRenderState(fstate);
         }
         
-        instance.setModelBound(new BoundingBox());
+        // recreate the particles with new parameters and do any warmup
+        // required
+        instance.forceRespawn();
+        instance.warmUp(instance.getParticleController().getIterations());
+        
+        // clone model bounds, if present
+        BoundingVolume bounds = prototype.getBatch(0).getModelBound();
+        if (bounds != null) {
+            instance.getBatch(0).setModelBound(bounds.clone(null));
+        }
         
         return instance;
     }
