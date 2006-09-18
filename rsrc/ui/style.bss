@@ -907,6 +907,13 @@ pardners_button:down {
   background: image "ui/buttons/pardners_down.png" framexy;
 }
 
+tip_label {
+  font: "Dom Casual" plain 18;
+  color: #FEF3B4;
+  text-align: center;
+  padding: 0 0 4 20;
+}
+
 exit_button {
   background: image "ui/buttons/exit_normal.png" framexy;
 }

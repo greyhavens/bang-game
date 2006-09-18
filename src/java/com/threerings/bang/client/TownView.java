@@ -30,6 +30,7 @@ import com.jme.util.TextureManager;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -139,7 +140,7 @@ public class TownView extends BWindow
         gl = GroupLayout.makeHoriz(GroupLayout.LEFT);
         gl.setGap(0);
         BContainer left = new BContainer(gl);
-        _menu.add(left);
+        _menu.add(left, GroupLayout.FIXED);
         BButton button = new BButton(new BlankIcon(142, 33), this, "tutorials");
         button.setStyleClass("tutorials_button");
         left.add(button);
@@ -149,6 +150,7 @@ public class TownView extends BWindow
         button = new BButton(new BlankIcon(142, 33), this, "pardners");
         button.setStyleClass("pardners_button");
         left.add(button);
+        _menu.add(_tip = new BLabel("", "tip_label"));
         button = new BButton(new BlankIcon(128, 30), this, "exit");
         button.setStyleClass("exit_button");
         _menu.add(button, GroupLayout.FIXED);
@@ -466,21 +468,16 @@ public class TownView extends BWindow
             _hsprite = null;
 
             // if we're not yet enabled or the camera is moving, no hovering
-            if (!_active || _ctx.getCameraHandler().cameraIsMoving()) {
+            if (!_active || _ctx.getCameraHandler().cameraIsMoving() ||
+                hover == null) {
+                _tip.setText(_msgs.get("m.tip_select"));
                 return;
             }
 
-            // make sure the sprite we're over is a building
-            if (!(hover instanceof PieceSprite)) {
-                return;
-            }
+            // update the menu tip
             Piece piece = ((PieceSprite)hover).getPiece();
-            if (!(piece instanceof Prop)) {
-                return;
-            }
-            if (!_commands.containsKey(((Prop)piece).getType())) {
-                return;
-            }
+            String cmd = _commands.get(((Prop)piece).getType());
+            _tip.setText(_msgs.get("m.tip_" + cmd));
 
             // highlight the sprite
             _hsprite = (PieceSprite)hover;
@@ -638,7 +635,8 @@ public class TownView extends BWindow
 
     protected TownBoardView _bview;
     protected BContainer _menu;
-
+    protected BLabel _tip;
+    
     /** Maps prop types to commands. */
     protected HashMap<String, String> _commands =
         new HashMap<String, String>();
