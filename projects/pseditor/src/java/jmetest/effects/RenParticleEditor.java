@@ -62,6 +62,7 @@ import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JColorChooser;
 import javax.swing.JFileChooser;
@@ -166,6 +167,8 @@ public class RenParticleEditor extends JFrame {
     private JFileChooser fileChooser = new JFileChooser();
     private File openFile;
 
+    private JCheckBox absolutePathsBox = new JCheckBox("Store Absolute Texture Paths");
+    
     private Preferences prefs = Preferences
             .userNodeForPackage(RenParticleEditor.class);
 
