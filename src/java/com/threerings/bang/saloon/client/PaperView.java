@@ -138,7 +138,6 @@ public class PaperView extends BContainer
 
         switch (_pageNo = pageNo) {
         case 0:
-            refreshNews(true);
             setContents(_news.getDocument());
             break;
 
