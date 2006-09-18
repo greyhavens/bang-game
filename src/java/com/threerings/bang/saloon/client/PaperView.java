@@ -138,6 +138,7 @@ public class PaperView extends BContainer
 
         switch (_pageNo = pageNo) {
         case 0:
+            refreshNews(true);
             setContents(_news.getDocument());
             break;
 
@@ -192,12 +193,13 @@ public class PaperView extends BContainer
     {
         if (_news == null) {
             URL base = DeploymentConfig.getDocBaseURL();
+            String npath = _ctx.getUserObject().townId + NEWS_URL;
             try {
-                URL news = new URL(base, NEWS_URL);
+                URL news = new URL(base, npath);
                 _news = new CachedDocument(news, NEWS_REFRESH_INTERVAL);
             } catch (Exception e) {
                 log.log(Level.WARNING, "Failed to create news URL " +
-                        "[base=" + base + ", path=" + NEWS_URL + "].", e);
+                    "[base=" + base + ", path=" + npath + "].", e);
                 return;
             }
         }
@@ -286,5 +288,5 @@ public class PaperView extends BContainer
     protected static CachedDocument _news;
 
     protected static final long NEWS_REFRESH_INTERVAL = 60 * 60 * 1000L;
-    protected static final String NEWS_URL = "news_incl.html";
+    protected static final String NEWS_URL = "_news_incl.html";
 }
