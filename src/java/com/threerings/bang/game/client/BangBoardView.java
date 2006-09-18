@@ -1119,7 +1119,13 @@ public class BangBoardView extends BoardView
         // select the piece under the mouse if it meets our sundry conditions
         if (piece != null &&  sprite != null && isSelectable(piece)) {
             selectUnit((Unit)piece, false);
-            return;
+            // if shift was held down down when this unit was selected and the
+            // unit has an advance order, clear it out
+            if (_selection != null && _shiftDown &&
+                getUnitSprite(_selection).getAdvanceOrder() !=
+                UnitSprite.AdvanceOrder.NONE) {
+                _ctrl.cancelOrder(_selection.pieceId);
+            }
         }
 
         // if we have a selection
@@ -1330,13 +1336,12 @@ public class BangBoardView extends BoardView
 
             Targetable target = getTargetableSprite(p);
             if (target != null) {
-                Unit attacker = (Unit)_selection;
                 target.setTargeted(_selection.lastActed >= p.lastActed ?
                                    Targetable.TargetMode.MAYBE :
-                                   (attacker.killShot(_bangobj, p) ?
+                                   (_selection.killShot(_bangobj, p) ?
                                        Targetable.TargetMode.KILL_SHOT :
                                        Targetable.TargetMode.SURE_SHOT),
-                                   attacker);
+                                   _selection);
                 target.setPossibleShot(possible);
                 dest.add(p.x, p.y);
             } else {
@@ -1474,7 +1479,7 @@ public class BangBoardView extends BoardView
 
         // refresh our selection
         int[] oaction = _action;
-        Unit oselection = (Unit)_selection;
+        Unit oselection = _selection;
         clearSelection();
         selectUnit(oselection, false);
 
@@ -1955,7 +1960,7 @@ public class BangBoardView extends BoardView
     protected BangConfig _bconfig;
 
     protected Node _cursor;
-    protected Piece _selection;
+    protected Unit _selection;
 
     /** This is disabled by the tutorial controller when the player is not
      * allowed to attack during a tutorial. */
