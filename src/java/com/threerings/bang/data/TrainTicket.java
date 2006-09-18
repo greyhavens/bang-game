@@ -5,7 +5,7 @@ package com.threerings.bang.data;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.station.data.StationCodes;
 
 /**
  * Represents a train ticket purchased by the player giving them access to a
@@ -39,6 +39,22 @@ public class TrainTicket extends Item
     public String getTownId ()
     {
         return BangCodes.TOWN_IDS[_townIndex];
+    }
+
+    /**
+     * Returns the cost of this ticket in scrip.
+     */
+    public int getScripCost ()
+    {
+        return StationCodes.TICKET_SCRIP[getTownIndex()];
+    }
+
+    /**
+     * Returns the cost of this ticket in coins.
+     */
+    public int getCoinCost ()
+    {
+        return StationCodes.TICKET_COINS[getTownIndex()];
     }
 
     @Override // documentation inherited

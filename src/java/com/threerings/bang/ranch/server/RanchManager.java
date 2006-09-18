@@ -107,8 +107,11 @@ public class RanchManager extends PlaceManager
     {
         public RecruitBigShotAction (
             PlayerObject user, UnitConfig config, BigShotItem unit,
-            RanchService.ResultListener listener) {
-            super(user, config.scripCost, config.coinCost);
+            RanchService.ResultListener listener)
+        {
+            // admins get things for free
+            super(user, user.tokens.isAdmin() ? 0 : config.scripCost,
+                user.tokens.isAdmin() ? 0 : config.coinCost);
             _unit = unit;
             _listener = listener;
         }

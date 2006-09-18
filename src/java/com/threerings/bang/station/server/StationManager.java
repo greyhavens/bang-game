@@ -93,8 +93,9 @@ public class StationManager extends PlaceManager
     {
         public BuyTicketAction (PlayerObject user, TrainTicket ticket,
                                 StationService.ConfirmListener listener) {
-            super(user, StationCodes.TICKET_SCRIP[ticket.getTownIndex()],
-                  StationCodes.TICKET_COINS[ticket.getTownIndex()]);
+            // admins get things for free
+            super(user, user.tokens.isAdmin() ? 0 : ticket.getScripCost(),
+                user.tokens.isAdmin() ? 0 : ticket.getCoinCost());
             _ticket = ticket;
             _listener = listener;
         }
