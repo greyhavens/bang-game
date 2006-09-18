@@ -12,6 +12,7 @@ import com.samskivert.util.ObjectUtil;
 import com.threerings.crowd.server.CrowdClient;
 import com.threerings.presents.net.BootstrapData;
 
+import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.data.BangBootstrapData;
@@ -58,7 +59,11 @@ public class BangClient extends CrowdClient
         bbd.bankOid = BangServer.bankmgr.getPlaceObject().getOid();
         bbd.ranchOid = BangServer.ranchmgr.getPlaceObject().getOid();
         bbd.barberOid = BangServer.barbermgr.getPlaceObject().getOid();
-        bbd.stationOid = BangServer.stationmgr.getPlaceObject().getOid();
+        if (RuntimeConfig.server.stationOpenToPublic ||
+            ((PlayerObject)_clobj).tokens.isAdmin() ||
+            ((PlayerObject)_clobj).tokens.isInsider()) {
+            bbd.stationOid = BangServer.stationmgr.getPlaceObject().getOid();
+        }
     }
 
     @Override // documentation inherited

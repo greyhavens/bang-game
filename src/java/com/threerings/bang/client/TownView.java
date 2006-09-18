@@ -106,9 +106,17 @@ public class TownView extends BWindow
             log.log(Level.WARNING, "Failed to load menu properties " +
                     "[path=" + mpath + "].", e);
         }
+
+        BangBootstrapData bbd = (BangBootstrapData)
+            _bctx.getClient().getBootstrapData();
         Enumeration iter = props.propertyNames();
         while (iter.hasMoreElements()) {
             String command = (String)iter.nextElement();
+            // temporary sneakiness to disable the train station for
+            // non-insiders on the public server
+            if (command.equals("station") && bbd.stationOid == 0) {
+                continue;
+            }
             _commands.put(props.getProperty(command), command);
         }
 
