@@ -3,8 +3,7 @@
 
 package com.threerings.bang.game.data.piece;
 
-import com.threerings.util.StreamableArrayList;
-import com.threerings.io.SimpleStreamableObject;
+import java.util.ArrayList;
 
 import com.threerings.bang.game.client.sprite.MarkerSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -15,7 +14,7 @@ import com.threerings.bang.game.data.effect.TotemEffect;
 import static com.threerings.bang.Log.log;
 
 /**
- * A totem base can have totem pieces added to it and toped off by a 
+ * A totem base can have totem pieces added to it and toped off by a
  * totem crown.
  */
 public class TotemBase extends Prop
@@ -50,7 +49,7 @@ public class TotemBase extends Prop
         super.wasDamaged(newDamage);
         _destroyedOwner = -1;
     }
-    
+
     @Override // documentation inherited
     public void wasKilled (short tick)
     {
@@ -67,7 +66,7 @@ public class TotemBase extends Prop
         }
     }
 
-    /** 
+    /**
      * Returns the height of the totem.
      */
     public int getTotemHeight ()
@@ -107,10 +106,10 @@ public class TotemBase extends Prop
      */
     public int getOwner (int idx)
     {
-        return (idx < 0 || idx >= _pieces.size()) ? 
+        return (idx < 0 || idx >= _pieces.size()) ?
             -1 : _pieces.get(idx).owner;
     }
-    
+
     /**
      * Returns the owner of the last piece destroyed.  The destroyed owner
      * will be reset to -1 after calling this function.
@@ -173,7 +172,7 @@ public class TotemBase extends Prop
             TotemEffect.isTotemBonus(((Unit)mover).holding)) ?
                 +1 : -1;
     }
-    
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
@@ -184,13 +183,13 @@ public class TotemBase extends Prop
     public Object clone ()
     {
         TotemBase base = (TotemBase)super.clone();
-        @SuppressWarnings("unchecked") StreamableArrayList<PieceData> npieces =
-            (StreamableArrayList<PieceData>)base._pieces.clone();
+        @SuppressWarnings("unchecked") ArrayList<PieceData> npieces =
+            (ArrayList<PieceData>)base._pieces.clone();
         base._pieces = npieces;
         return base;
     }
 
-    protected class PieceData extends SimpleStreamableObject
+    protected class PieceData
     {
         public int owner;
         public TotemBonus.Type type;
@@ -206,9 +205,9 @@ public class TotemBase extends Prop
             this.owner = owner;
         }
     }
-    
-    protected transient StreamableArrayList<PieceData> _pieces = 
-        new StreamableArrayList<PieceData>();
+
+    protected transient ArrayList<PieceData> _pieces =
+        new ArrayList<PieceData>();
     protected transient int _destroyedOwner = -1;
     protected transient TotemBonus.Type _destroyedType;
 }
