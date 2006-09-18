@@ -53,6 +53,9 @@ $MIRROR $* `find $CLIENT_DIR/$version -type f`
 # mirror the updated installers
 $MIRROR $* $ROOT/pages/$client_ident/*-install.???
 
+# mirror the in-client HTML
+$MIRROR pages/*_news_incl.html
+
 # mirror the Hemiptera Proguard mapping
 $MIRROR $* $ROOT/../threerings/etc/proguard/bang/$version.map
 

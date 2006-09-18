@@ -20,6 +20,9 @@ $MIRROR `find $WEB_DIR/devclient -name '*.jar'` \
 # mirror the updated installers
 $MIRROR $ROOT/pages/devclient/*-install.???
 
+# mirror the in-client HTML
+$MIRROR pages/*_news_incl.html
+
 # mirror the Hemiptera Proguard mapping
 $MIRROR $* $ROOT/../threerings/etc/proguard/bang/0.map
 
