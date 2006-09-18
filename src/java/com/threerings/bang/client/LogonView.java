@@ -199,6 +199,11 @@ public class LogonView extends BWindow
             // configure the client to connect to the town lobby server that
             // this player last accessed
             String townId = BangPrefs.getLastTownId(username);
+            // but make sure this town has been activated on this client
+            if (!BangClient.isTownActive(townId)) {
+                // fall back to frontier town if it has not
+                townId = BangCodes.FRONTIER_TOWN;
+            }
             _ctx.getClient().setServer(DeploymentConfig.getServerHost(townId),
                                        DeploymentConfig.getServerPorts(townId));
 
