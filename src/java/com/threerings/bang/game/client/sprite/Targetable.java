@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Unit;
 
 /**
@@ -15,7 +16,8 @@ public interface Targetable
     /**
      * Indicates that this sprite is targetted.
      */
-    public void setTargeted (TargetMode mode, Unit attacker);
+    public void setTargeted (
+            BangObject bangobj, TargetMode mode, Unit attacker);
 
     /**
      * Indicates that we have requested to shoot this piece but it is not

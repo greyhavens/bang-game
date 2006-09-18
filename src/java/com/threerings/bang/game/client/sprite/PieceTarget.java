@@ -24,6 +24,7 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.IconConfig;
 import com.threerings.bang.util.RenderUtil;
 
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -47,7 +48,7 @@ public class PieceTarget extends Node
     }
 
     // documentation inherited from Targetable
-    public void setTargeted (TargetMode mode, Unit attacker)
+    public void setTargeted (BangObject bangobj, TargetMode mode, Unit attacker)
     {
         boolean addModifiers = false;
         if (_pendingTick == -1) {
@@ -76,7 +77,7 @@ public class PieceTarget extends Node
             }
             return;
         }
-        int diff = attacker.computeDamageDiff(_piece);
+        int diff = attacker.computeDamageDiff(bangobj, _piece);
         if (diff > 0) {
             displayTextureQuad(_modquad[ModIcon.ARROW_UP.idx()],
                     _modtst[ModIcon.ARROW_UP.ordinal()]);

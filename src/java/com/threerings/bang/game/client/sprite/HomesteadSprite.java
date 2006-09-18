@@ -5,6 +5,7 @@ package com.threerings.bang.game.client.sprite;
 
 import com.jme.math.FastMath;
 
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Homestead;
 import com.threerings.bang.game.data.piece.Unit;
@@ -53,9 +54,9 @@ public class HomesteadSprite extends ActiveSprite
     }
     
     // from interface Targetable
-    public void setTargeted (TargetMode mode, Unit attacker)
+    public void setTargeted (BangObject bangobj, TargetMode mode, Unit attacker)
     {
-        _target.setTargeted(mode, attacker);
+        _target.setTargeted(bangobj, mode, attacker);
     }
 
     // from interface Targetable

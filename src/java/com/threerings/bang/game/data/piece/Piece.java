@@ -542,6 +542,14 @@ public abstract class Piece
     }
 
     /**
+     * Returns true if this piece will deflect the shot.
+     */
+    public boolean willDeflect (BangObject bangobj, Piece shooter)
+    {
+        return false;
+    }
+
+    /**
      * When a unit shoots another piece, the unit may also do collateral damage
      * to nearby units. This method should return effects indicating such
      * damage. <em>Note:</em> the piece is responsible for calling {@link

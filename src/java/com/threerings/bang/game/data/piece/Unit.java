@@ -181,9 +181,10 @@ public class Unit extends Piece
      * Returns the difference between the base damage and damage
      * after modifiers.
      */
-    public int computeDamageDiff (Piece target)
+    public int computeDamageDiff (BangObject bangobj, Piece target)
     {
-        return computeDamage(target) - _config.damage;
+        return (target.willDeflect(bangobj, this) ? 0 : 
+                computeDamage(target) - _config.damage);
     }
 
     @Override // documentation inherited

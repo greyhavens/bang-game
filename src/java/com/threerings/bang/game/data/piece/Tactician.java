@@ -20,11 +20,18 @@ import static com.threerings.bang.Log.log;
 public class Tactician extends Unit
 {
     @Override // documentation inherited
+    public boolean willDeflect (BangObject bangobj, Piece shooter)
+    {
+        ShotEffect effect = shooter.generateShotEffect(bangobj, this, 1);
+        return willDeflectEffect(shooter, effect);
+    }
+
+    @Override // documentation inherited
     public ShotEffect deflect (BangObject bangobj, Piece shooter,
                                ShotEffect effect, float scale)
     {
         // we only deflect fire from range units
-        if (!(shooter instanceof Unit) || !effect.isDeflectable()) {
+        if (!willDeflectEffect(shooter, effect)) {
             return effect;
         }
 
@@ -67,6 +74,15 @@ public class Tactician extends Unit
 
         return effect;
     }
+
+    /**
+     * Returns true if the shot will be deflected.
+     */
+    protected boolean willDeflectEffect (Piece shooter, ShotEffect effect)
+    {
+        return ((shooter instanceof Unit) && effect.isDeflectable());
+    }
+
 
     /** Used to deflect shots. */
     protected static short[] DX = { 0, -1, 0, 1 }, DY = { -1, 0, 1, 0 };

@@ -1336,12 +1336,13 @@ public class BangBoardView extends BoardView
 
             Targetable target = getTargetableSprite(p);
             if (target != null) {
-                target.setTargeted(_selection.lastActed >= p.lastActed ?
-                                   Targetable.TargetMode.MAYBE :
-                                   (_selection.killShot(_bangobj, p) ?
-                                       Targetable.TargetMode.KILL_SHOT :
-                                       Targetable.TargetMode.SURE_SHOT),
-                                   _selection);
+                target.setTargeted(_bangobj,
+                        _selection.lastActed >= p.lastActed ?
+                             Targetable.TargetMode.MAYBE :
+                             (_selection.killShot(_bangobj, p) ?
+                                 Targetable.TargetMode.KILL_SHOT :
+                                 Targetable.TargetMode.SURE_SHOT),
+                        _selection);
                 target.setPossibleShot(possible);
                 dest.add(p.x, p.y);
             } else {
@@ -1561,7 +1562,7 @@ public class BangBoardView extends BoardView
         for (PieceSprite s : _pieces.values()) {
             if (s instanceof Targetable) {
                 ((Targetable)s).setTargeted(
-                        Targetable.TargetMode.NONE, null);
+                        _bangobj, Targetable.TargetMode.NONE, null);
             }
         }
     }

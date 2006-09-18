@@ -49,6 +49,7 @@ import com.threerings.bang.game.client.effect.ExplosionViz;
 import com.threerings.bang.game.client.effect.InfluenceViz;
 import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;
@@ -144,9 +145,9 @@ public class UnitSprite extends MobileSprite
     }
 
     // documentation inherited from Targetable
-    public void setTargeted (TargetMode mode, Unit attacker)
+    public void setTargeted (BangObject bangobj, TargetMode mode, Unit attacker)
     {
-        _target.setTargeted(mode, attacker);
+        _target.setTargeted(bangobj, mode, attacker);
     }
 
     /**
