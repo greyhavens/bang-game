@@ -1706,7 +1706,8 @@ public class BangBoardView extends BoardView
         GameCameraHandler camhand = (GameCameraHandler)_ctx.getCameraHandler();
         java.awt.Point start = _bangobj.startPositions[
             Math.max(0, _bangobj.getPlayerIndex(_ctx.getUserObject().handle))];
-        Vector3f gpoint = camhand.getGroundPoint();
+        Vector3f gpoint = camhand.getGroundPoint(),
+            oloc = new Vector3f(camhand.getCamera().getLocation());
         float dx = (start.x + 0.5f) * TILE_SIZE - gpoint.x,
             dy = (start.y + 0.5f) * TILE_SIZE - gpoint.y;
         if (dx >= 0f && dy >= 0f) {
@@ -1716,9 +1717,12 @@ public class BangBoardView extends BoardView
         } else if (dx < 0f && dy < 0f) {
             camhand.orbitCamera(-FastMath.HALF_PI);
         }
+        // first, pan to the appropriate location so we know where it is
+        // and the ground height is up-to-date; then, restore the original
+        // position so that we start the path from the right place
         camhand.panCameraAbs(dx, dy);
         Vector3f pan = camhand.getGroundPoint().subtractLocal(gpoint);
-        camhand.panCameraAbs(-pan.x, -pan.y);
+        camhand.getCamera().setLocation(oloc);
 
         // pan, orbit, and zoom over the board
         camhand.setLimitsEnabled(false);
@@ -1745,7 +1749,6 @@ public class BangBoardView extends BoardView
                 GameCameraHandler camhand =
                     (GameCameraHandler)_ctx.getCameraHandler();
                 camhand.setLimitsEnabled(true);
-                camhand.resetGroundPointHeight();
                 if (isAdded()) {
                     _ctrl.preSelectBoardTourComplete();
                 }
