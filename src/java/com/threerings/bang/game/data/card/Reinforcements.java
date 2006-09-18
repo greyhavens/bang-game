@@ -50,8 +50,7 @@ public class Reinforcements extends Card
     @Override // documentation inherited
     public Effect activate (BangObject bangobj, Object target)
     {
-        DuplicateEffect effect =
-            new DuplicateEffect("frontier_town/gunslinger");
+        DuplicateEffect effect = new DuplicateEffect();
         effect.pieceId = (Integer)target;
         return effect;
     }

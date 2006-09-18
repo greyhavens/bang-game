@@ -6,9 +6,11 @@ package com.threerings.bang.game.data.effect;
 import java.awt.Point;
 
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -70,12 +72,21 @@ public class DuplicateEffect extends BonusEffect
             return;
         }
 
-        // position our new unit
+        // if no unit was specified, pick one randomly based on their
+        // duplication probability
         if (_type == null) {
-            duplicate = unit.duplicate(bangobj);
-        } else {
-            duplicate = unit.duplicate(bangobj, _type);
+            UnitConfig[] configs = UnitConfig.getTownUnits(
+                    bangobj.townId, UnitConfig.Rank.NORMAL);
+            int[] ranks = new int[configs.length];
+            for (int ii = 0; ii < ranks.length; ii++) {
+                ranks[ii] = configs[ii].dupeProb;
+            }
+            int idx = RandomUtil.getWeightedIndex(ranks);
+            _type = configs[idx].type;
         }
+
+        // position our new unit
+        duplicate = unit.duplicate(bangobj, _type);
         duplicate.position(spot.x, spot.y);
         if (duplicate instanceof Unit) {
             ((Unit)duplicate).originalOwner = -1;

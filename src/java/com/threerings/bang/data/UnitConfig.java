@@ -91,6 +91,9 @@ public class UnitConfig
     /** The type of unit this unit duplicates into. */
     public String dupeType;
 
+    /** The probability of this unit being duplicated. */
+    public int dupeProb;
+
     /** The cost of this unit in scrip (or a pass for this unit). */
     public int scripCost;
 
@@ -320,6 +323,7 @@ public class UnitConfig
             BangUtil.getIntProperty(type, props, "initiative", 0);
 
         config.dupeType = props.getProperty("dupe_type", type);
+        config.dupeProb = BangUtil.getIntProperty(type, props, "dupe_prob", 0);
 
         config.scripCost =
             BangUtil.getIntProperty(type, props, "scrip_cost", 999);
