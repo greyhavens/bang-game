@@ -5,6 +5,7 @@
 # Mirrors the Bang Howdy client deployment to the download servers
 
 MIRROR=/export/tools/bin/mirror
+GETDOWN=/export/ship/threerings/projects/getdown
 ROOT=`dirname $0`/..
 export JAVA_HOME=/usr/local/jdk1.5
 
@@ -43,7 +44,7 @@ for FILE in `find $CLIENT_DIR/*/digest.txt -mtime -90`; do
     fi
     echo "Creating patch file from version $VERS to $version..."
     cd $CLIENT_DIR
-    $ROOT/projects/getdown/bin/differ $version $VERS
+    $GETDOWN/bin/differ $version $VERS
 done
 
 # mirror the client
