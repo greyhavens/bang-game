@@ -46,6 +46,8 @@ import com.threerings.bang.ranch.client.UnitBonus;
 import com.threerings.util.MessageBundle;
 
 import static com.threerings.bang.Log.log;
+import com.threerings.bang.game.data.piece.Influence;
+import com.threerings.bang.game.data.piece.Hindrance;
 
 /**
  * Displays the status of the various units in iconic form.
@@ -208,9 +210,9 @@ public class UnitStatusView extends BWindow
             healthcont.add(_health, GroupLayout.FIXED);
             healthcont.add(new Spacer(0, 0));
             add(healthcont, new Rectangle(28, 78, 45, 18));
-            _holding = new BLabel("", "unit_status_holding");
-            _influence = new BLabel("", "unit_status_influence");
-            _hindrance = new BLabel("", "unit_status_hindrance");
+            _holdingL = new BLabel("", "unit_status_holding");
+            _influenceL = new BLabel("", "unit_status_influence");
+            _hindranceL = new BLabel("", "unit_status_hindrance");
 
             _opened.removeAll();
 
@@ -309,27 +311,71 @@ public class UnitStatusView extends BWindow
                 return;
             }
             if (_opened.getParent() != null) {
-                if (_holding.getParent() != null) {
-                    remove(_holding);
-                }
-                if (unit.holding != null) {
-                    String name = unit.holding;
-                    ImageIcon icon = _statusIcons.get(name);
-                    if (icon == null || icon != _holding.getIcon()) {
-                        _holding.setText(_ctx.xlate(
-                            GameCodes.GAME_MSGS, "m.help_bonus_" + 
-                            name.substring(name.lastIndexOf("/")+1) + 
-                            "_title"));
-                        if (icon == null) {
-                            icon = new ImageIcon(_ctx.getImageCache().getBImage(
-                                        "bonuses/" + name + "/holding.png"));
-                            _statusIcons.put(name, icon);
-                        }
-                        _holding.setIcon(icon);
-                        _opened.add(_holding);
-                    }
-                }
+                updateHolding(unit);
+                updateInfluence(unit);
+                updateHindrance(unit);
                 return;
+            }
+        }
+
+        protected void updateHolding (Unit unit) {
+            if (unit.holding == _holdingU) {
+                return;
+            }
+            _holdingU = unit.holding;
+            if (_holdingL.getParent() != null) {
+                _opened.remove(_holdingL);
+            }
+            if (_holdingU != null) {
+                String name = _holdingU;
+                _holdingL.setText(_ctx.xlate(
+                    GameCodes.GAME_MSGS, "m.help_bonus_" + 
+                    name.substring(name.lastIndexOf("/")+1) + 
+                    "_title"));
+                _holdingL.setIcon(new ImageIcon(_ctx.getImageCache().getBImage(
+                                "bonuses/" + name + "/holding.png")));
+                _opened.add(_holdingL);
+            }
+        }
+
+        protected void updateInfluence (Unit unit) {
+            if (unit.influence == _influenceU) {
+                return;
+            }
+            _influenceU = unit.influence;
+            if (_influenceL.getParent() != null) {
+                _opened.remove(_influenceL);
+            }
+            if (_influenceU != null) {
+                String name = _influenceU.getName();
+                _influenceL.setText(_ctx.xlate(
+                    GameCodes.GAME_MSGS, "m.influence_" + name + "_title"));
+                _influenceL.setIcon(new ImageIcon(label.influence));
+                _opened.add(_influenceL);
+            }
+        }
+
+        protected void updateHindrance (Unit unit) {
+            if (unit.hindrance == _hindranceU) {
+                return;
+            }
+            _hindranceU = unit.hindrance;
+            if (_hindranceU != null && !_hindranceU.isVisible()) {
+                return;
+            }
+            if (_hindranceL.getParent() != null) {
+                _opened.remove(_hindranceL);
+            }
+            if (_hindranceU != null) {
+                String name = _hindranceU.getName();
+                _hindranceL.setText(_ctx.xlate(
+                    GameCodes.GAME_MSGS, "m.hindrance_" + name + "_title"));
+                /* Waiting for icons
+                _hindranceL.setIcon(new ImageIcon(
+                            _ctx.getImageCache().getBImage(
+                        "influences/" + _hindranceU.getName() + ".png")));
+                        */
+                _opened.add(_hindranceL);
             }
         }
 
@@ -406,12 +452,16 @@ public class UnitStatusView extends BWindow
         protected BContainer _opened;
         protected BButton _closed;
         protected UnitSprite _sprite;
-        protected BLabel _health, _holding, _influence, _hindrance;
+        protected BLabel _health, _holdingL, _influenceL, _hindranceL;
         protected BImage _closer;
+        protected String _holdingU;
+        protected Influence _influenceU;
+        protected Hindrance _hindranceU;
     }
     
     protected class UnitLabel extends BButton
     {
+        protected BImage influence;
 
         public UnitLabel () {
             super("");
@@ -489,8 +539,8 @@ public class UnitStatusView extends BWindow
             super.wasAdded();
 
             // reference our influence image if we have one
-            if (_influence != null) {
-                _influence.reference();
+            if (influence != null) {
+                influence.reference();
             }
         }
 
@@ -501,8 +551,8 @@ public class UnitStatusView extends BWindow
 
             // release our influence image (but don't clear it as we may be
             // readded)
-            if (_influence != null) {
-                _influence.release();
+            if (influence != null) {
+                influence.release();
             }
         }
 
@@ -512,8 +562,8 @@ public class UnitStatusView extends BWindow
             super.renderComponent(renderer);
 
             // render our influence icon if we have one
-            if (_influence != null) {
-                _influence.render(renderer, getWidth()-19, getHeight()-19, 1f);
+            if (influence != null) {
+                influence.render(renderer, getWidth()-19, getHeight()-19, 1f);
             }
         }
 
@@ -529,22 +579,21 @@ public class UnitStatusView extends BWindow
 
         protected void setInfluence (BImage influence)
         {
-            if (_influence == influence) {
+            if (this.influence == influence) {
                 return;
             }
-            if (_influence != null) {
-                _influence.release();
-                _influence = null;
+            if (this.influence != null) {
+                this.influence.release();
+                this.influence = null;
             }
-            _influence = influence;
-            if (_influence != null) {
-                _influence.reference();
+            this.influence = influence;
+            if (this.influence != null) {
+                this.influence.reference();
             }
         }
 
         protected UnitSprite _sprite;
         protected BBackground _bground;
-        protected BImage _influence;
         protected BImage _unit;
 
     }
@@ -557,8 +606,6 @@ public class UnitStatusView extends BWindow
 
     protected static BImage _selected;
     protected static BImage[] _closeArrow;
-    protected static HashMap<String, ImageIcon> _statusIcons = 
-        new HashMap<String, ImageIcon>();
     protected static final Dimension LABEL_PREFERRED_SIZE = 
         new Dimension(PieceStatus.ICON_SIZE, PieceStatus.ICON_SIZE);
 }

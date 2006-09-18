@@ -80,6 +80,9 @@ public class BuggyLogicEffect extends SetHindranceEffect
             public ExpireInfluenceEffect createExpireEffect () {
                 return new ExpireEffect();
             }
+            public boolean isVisible () {
+                return true;
+            }
             protected int duration () {
                 return RECOVERY_TICKS;
             }
