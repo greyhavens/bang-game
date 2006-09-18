@@ -1,0 +1,75 @@
+Tidyin' Up
+
+We're still workin' hard back here at the Triple-O Ranch.  We've been polishing
+up the basic mechanics of the game so that it's nothing but pure fun with no
+annoying rough edges, or so we hope. To that end, we got a long list of fixes
+and improvements to offer up to ya today:
+
+<ul>
+<li> We added <span class="highlight">tips to the town menu</span> and prettied
+up the buttons. </li>
+
+<li> We added a fancy new <span class="highlight">in-game unit status
+display</span> which gives you details like movement and firing range as well
+as displays current influences, hindrances and anything being carried by your
+unit. </li>
+
+<li> We added a <span class="highlight">Friendly Folks system</span> which
+we're still workin' on. This will allow you to keep track of folks you like
+playing with and will make it easier for you to chat with 'em and get into
+games with 'em. Think of it like bookmarks for people. </li>
+
+<li> We added support for <span class="highlight">bridges</span> to the engine
+and added some new boards that make use of 'em. </li>
+
+<li> We added a whole heap of <span class="highlight">new avatar
+looks</span>. </li>
+
+<li> We added a bunch of <span class="highlight">new boards</span> and added
+<span class="highlight">Land Grab</span> support to many of the old ones. </li>
+
+<li> When your potential moves are displayed, we now highlight any moves that
+accomplish some sort of goal (like picking up or dropping off a nugget, or
+picking up a bonus) and so forth. </li>
+
+<li> We added a <span class="highlight">recent chat</span> display which you
+can open by pressing F3. </li>
+
+<li> The tutorials can now be played in any order. </li>
+
+<li> We added forward/back buttons to the tutorial text. </li>
+
+<li> <span class="highlight">Saloon settings</span> are now saved between
+sessions. </li>
+
+<li> Cards brought into a game are shown in a different color than those
+picked up during play. </li>
+
+<li> We added a button for going right to <span class="highlight">The
+Barber</span> after buyin' new duds at <span class="highlight">The General
+Store</span>. </li>
+
+<li> We added textual descriptions to the modifiers in unit tooltips
+(it now says, for example, "Attack bonus versus range units" in addition to
+showing the icons). </li>
+
+<li> We fixed a problem with dropping in-progress chat when starting a
+game. </li>
+
+<li> We added a random name generator that you can use when namin' yer <span
+class="highlight">Big Shot Units</span>. </li>
+
+<li> We squashed the "missing avatar in chat" bug along with numerous
+others. </li>
+
+</ul>
+</p>
+
+<p>As usual, we did a whole lot of work on <span class="highlight">Indian
+Trading Post</span> and we're getting closer and closer to having it ready for
+ya.</p>
+
+<p>In the meanwhile, enjoy these usability improvements and the new boards and
+we'll keep our noses to the grindstone here at the Triple-O Ranch,</p>
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
