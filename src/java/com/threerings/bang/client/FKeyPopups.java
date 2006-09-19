@@ -65,7 +65,8 @@ public class FKeyPopups
         CHAT_HISTORY(KeyInput.KEY_F3, 0, false, false),
         SERVER_STATUS(KeyInput.KEY_F4, 0, true, false),
         SERVER_CONFIG(KeyInput.KEY_F5, 0, true, false),
-        CLIENT_CONFIG(KeyInput.KEY_F6, CTRL_SHIFT, false, false);
+        CLIENT_CONFIG(KeyInput.KEY_F6, CTRL_SHIFT, false, false),
+        SCREEN_SHOT(KeyInput.KEY_F12, 0, false, false);
 
         public int keyCode () {
             return _keyCode;
