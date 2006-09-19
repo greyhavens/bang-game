@@ -1245,7 +1245,7 @@ public class BangBoardView extends BoardView
             if (_attackSet.size() > 0) {
                 // select a random target and request to shoot it
                 int idx = RandomUtil.getInt(_attackSet.size());
-                Piece target = _bangobj.getPlayerPiece(
+                Piece target = _bangobj.getTarget(
                     _attackSet.getX(idx), _attackSet.getY(idx));
                 // TODO: prefer targets that are guaranteed to be there
                 // when we make our move versus those that may be gone

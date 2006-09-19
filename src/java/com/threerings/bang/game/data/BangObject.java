@@ -396,13 +396,13 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the player piece at the specified coordinates or null if no
-     * owned piece exists at those coordinates.
+     * Returns the targetable piece at the specified coordinates or null if no
+     * targetable piece exists at those coordinates.
      */
-    public Piece getPlayerPiece (int tx, int ty)
+    public Piece getTarget (int tx, int ty)
     {
         for (Piece p : pieces) {
-            if (p.owner >= 0 && p.x == tx && p.y == ty) {
+            if (p.x == tx && p.y == ty && p.isTargetable()) {
                 return p;
             }
         }
