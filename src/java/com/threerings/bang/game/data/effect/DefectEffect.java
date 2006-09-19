@@ -97,7 +97,7 @@ public class DefectEffect extends BonusEffect
             if (p == null || !p.isAlive()) {
                 continue;
             }
-            p.owner = activator;
+            p.setOwner(bangobj, activator);
             reportEffect(obs, p, DEFECTED);
             defected++;
         }

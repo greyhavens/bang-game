@@ -113,7 +113,7 @@ public class TrainDelegate extends ScenarioDelegate
         train.assignPieceId(bangobj);
         train.x = terminal.x;
         train.y = terminal.y;
-        train.owner = last.owner;
+        train.setOwner(bangobj, last.owner);
         train.orientation = terminal.orientation;
         train.type = caboose ? Train.CABOOSE :
             Train.CAR_TYPES[RandomUtil.getInt(Train.CAR_TYPES.length)];

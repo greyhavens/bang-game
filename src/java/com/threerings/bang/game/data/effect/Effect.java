@@ -221,9 +221,9 @@ public abstract class Effect extends SimpleStreamableObject
         // otherwise reshadow the piece to block all ground travel across
         } else {
             int owner = target.owner;
-            target.owner = -1;
+            target.setOwner(bangobj, -1);
             bangobj.board.shadowPiece(target);
-            target.owner = owner;
+            target.setOwner(bangobj, owner);
         }
 
         return true;

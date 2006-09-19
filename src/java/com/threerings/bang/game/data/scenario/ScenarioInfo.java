@@ -271,12 +271,11 @@ public abstract class ScenarioInfo
     }
 
     /**
-     * Determines whether the two identified players are allied in
-     * terms of the scenario.
+     * Returns the team id for the supplied owner.
      */
-    public boolean playersAllied (int pidx1, int pidx2)
+    public int getTeam (int owner)
     {
-        return false;
+        return owner;
     }
 
     /**

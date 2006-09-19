@@ -48,6 +48,9 @@ public abstract class Piece
      * owned piece. */
     public int owner = -1;
 
+    /** The team index of this piece or -1 if it is not on a team. */
+    public int team = -1;
+
     /** The tick on which this piece last acted. */
     public short lastActed;
 
@@ -757,7 +760,7 @@ public abstract class Piece
     {
         boolean valid = (target.isTargetable() && target.isAlive());
         if (!allowSelf) {
-            valid = !target.isSameTeam(bangobj, this) && valid;
+            valid = !target.isSameTeam(this) && valid;
         }
         return valid;
     }
@@ -789,10 +792,17 @@ public abstract class Piece
     /**
      * Returns true if this piece is on the same team as the target.
      */
-    public boolean isSameTeam (BangObject bangobj, Piece target)
+    public boolean isSameTeam (Piece target)
     {
-        return target.owner == owner ||
-            bangobj.scenario.playersAllied(target.owner, owner);
+        return (team == -1 ? target.owner == owner : target.team == team);
+    }
+
+    /**
+     * Use this to update a piece owner so the team will always stay in sync.
+     */
+    public void setOwner (BangObject bangobj, int owner)
+    {
+        this.owner = owner;
     }
 
     /**

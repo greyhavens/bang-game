@@ -60,7 +60,7 @@ public class HomesteadEffect extends Effect
             return false;
         }
         Homestead stead = (Homestead)bangobj.pieces.get(steadId);
-        stead.owner = claimer.owner;
+        stead.setOwner(bangobj, claimer.owner);
         reportEffect(obs, stead, STEAD_CLAIMED);
         return true;
     }

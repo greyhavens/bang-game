@@ -122,11 +122,18 @@ public class Unit extends Piece
     public Unit duplicate (BangObject bangobj, String unitType)
     {
         Unit dup = getUnit(unitType);
-        dup.owner = owner;
+        dup.setOwner(bangobj, owner);
         dup.lastActed = lastActed;
         dup.damage = damage;
         dup.assignPieceId(bangobj);
         return dup;
+    }
+
+    @Override // documentation inherited
+    public void setOwner (BangObject bangobj, int owner)
+    {
+        super.setOwner(bangobj, owner);
+        team = bangobj.scenario.getTeam(owner);
     }
 
     @Override // documentation inherited

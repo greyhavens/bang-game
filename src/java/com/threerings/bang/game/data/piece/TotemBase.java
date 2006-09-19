@@ -31,16 +31,16 @@ public class TotemBase extends Prop
     /**
      * Add a totem piece to the base.
      */
-    public void addPiece (String type, int owner)
+    public void addPiece (BangObject bangobj, String type, int owner)
     {
         int idx = _pieces.size() - 1;
         if (idx > -1) {
             _pieces.get(idx).damage = damage;
         }
-        PieceData data = new PieceData(type, owner);
+        setOwner(bangobj, owner);
+        PieceData data = new PieceData(type, owner, team);
         _pieces.add(data);
         damage = data.type.damage();
-        this.owner = owner;
     }
 
     @Override // documentation inherited
@@ -58,11 +58,14 @@ public class TotemBase extends Prop
         _destroyedOwner = pd.owner;
         _destroyedType = pd.type;
         if (idx > -1) {
-            damage = _pieces.get(idx).damage;
-            owner = _pieces.get(idx).owner;
+            pd = _pieces.get(idx);
+            damage = pd.damage;
+            owner = pd.owner;
+            team = pd.team;
         } else {
             damage = 0;
             owner = -1;
+            team = -1;
         }
     }
 
@@ -191,7 +194,7 @@ public class TotemBase extends Prop
 
     protected class PieceData
     {
-        public int owner;
+        public int owner, team;
         public TotemBonus.Type type;
         public int damage;
 
@@ -199,10 +202,11 @@ public class TotemBase extends Prop
         {
         }
 
-        public PieceData (String type, int owner)
+        public PieceData (String type, int owner, int team)
         {
             this.type = TotemBonus.TOTEM_LOOKUP.get(type);
             this.owner = owner;
+            this.team = team;
         }
     }
 

@@ -30,7 +30,7 @@ public class BuggyLogicEffect extends SetHindranceEffect
         {
             Unit unit = (Unit)bangobj.pieces.get(pieceId);
             if (unit != null) {
-                unit.owner = unit.originalOwner;
+                unit.setOwner(bangobj, unit.originalOwner);
             }
             return super.apply(bangobj, obs);
         }
@@ -57,7 +57,7 @@ public class BuggyLogicEffect extends SetHindranceEffect
     {
         _unit = (Unit)bangobj.pieces.get(pieceId);
         if (_unit != null) {
-            _unit.owner = player;
+            _unit.setOwner(bangobj, player);
         }
         return super.apply(bangobj, obs);
     }

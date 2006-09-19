@@ -57,7 +57,7 @@ public class RespawnDelegate extends ScenarioDelegate
             log.fine("Respawning " + unit + ".");
 
             // reassign the unit to its original owner
-            unit.owner = unit.originalOwner;
+            unit.setOwner(bangobj, unit.originalOwner);
 
             // figure out where to put this guy
             Point spot = _parent.getStartSpot(unit.owner);

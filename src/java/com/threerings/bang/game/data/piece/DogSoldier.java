@@ -47,7 +47,7 @@ public class DogSoldier extends Unit
         ProximityShotEffect proxShot = null;
         for (Piece piece : pieces) {
             if (piece.isTargetable() && piece.isAlive() && 
-                    !piece.isSameTeam(bangobj, this) && !piece.isAirborne() && 
+                    !piece.isSameTeam(this) && !piece.isAirborne() && 
                     getDistance(piece) == 1 && 
                     bangobj.board.canCross(x, y, piece.x, piece.y)) {
                 int damage = piece.adjustProxDefend(

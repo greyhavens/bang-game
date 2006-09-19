@@ -832,12 +832,12 @@ public class BangBoard extends SimpleStreamableObject
             _tstate[_width*piece.y+piece.x] = O_BONUS;
 
         } else if (piece instanceof Cow || piece instanceof Train ||
-            piece.owner < 0) {
+            piece.team < 0) {
             _tstate[_width*piece.y+piece.x] = O_OCCUPIED;
             
         } else {
             _tstate[_width*piece.y+piece.x] = (piece.isAirborne() ?
-                    O_AIRBORNE : (byte)piece.owner);
+                    O_AIRBORNE : (byte)piece.team);
         }
     }
 
@@ -855,7 +855,7 @@ public class BangBoard extends SimpleStreamableObject
                 piece.owner < 0) {
             _tstate[idx] = O_OCCUPIED;
         } else {
-            _tstate[idx] = (byte)piece.owner;
+            _tstate[idx] = (byte)piece.team;
         }
         return old;
     }
@@ -1141,7 +1141,7 @@ public class BangBoard extends SimpleStreamableObject
             return true;
         } else if ((tstate == O_FLAT || tstate == O_BRIDGE) ||
                (piece instanceof Unit && tstate == O_BONUS) ||
-               ((tstate == piece.owner || tstate == O_AIRBORNE) 
+               ((tstate == piece.team || tstate == O_AIRBORNE) 
                 && (_btstate[idx] == O_FLAT || _btstate[idx] == O_BRIDGE) 
                 && !remain)) {
             return canCross(sx, sy, dx, dy);

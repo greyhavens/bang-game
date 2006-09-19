@@ -87,7 +87,7 @@ public class ControlTrainEffect extends Effect
         // update the owners for all train pieces
         for (Piece piece : bangobj.pieces) {
             if (piece instanceof Train) {
-                piece.owner = player;
+                piece.setOwner(bangobj, player);
                 reportEffect(obs, piece, UPDATED);
             }
         }

@@ -43,7 +43,7 @@ public class SpookEffect extends MoveEffect
         if (cow != null) {
             String effect = SPOOKED;
             if (owner != -1 && cow.owner != owner) {
-                cow.owner = owner;
+                cow.setOwner(bangobj, owner);
                 effect = BRANDED;
             }
             // report an effect on the cow so that we can play a sound

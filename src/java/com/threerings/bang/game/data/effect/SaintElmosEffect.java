@@ -60,7 +60,7 @@ public class SaintElmosEffect extends BonusEffect
             newPieces[ii] = Unit.getUnit("windupslinger");
             newPieces[ii].assignPieceId(bangobj);
             newPieces[ii].init();
-            newPieces[ii].owner = owner;
+            newPieces[ii].setOwner(bangobj, owner);
             newPieces[ii].damage = 60;
         }
     }

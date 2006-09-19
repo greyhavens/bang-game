@@ -83,9 +83,9 @@ public class ForestGuardiansInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public boolean playersAllied (int pidx1, int pidx2)
+    public int getTeam (int owner)
     {
-        return (pidx1 < 0) == (pidx2 < 0);
+        return (owner > -1 ? 0 : owner);
     }
 
     @Override // from ScenarioInfo

@@ -58,7 +58,7 @@ public class ResurrectEffect extends Effect
             return false;
         }
 
-        piece.owner = resurrector;
+        piece.setOwner(bangobj, resurrector);
         piece.damage = 50;
         piece.lastActed = (short)(bangobj.tick - 4);
         reportEffect(obs, piece, RESURRECTED);

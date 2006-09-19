@@ -1134,7 +1134,7 @@ public class BangManager extends GameManager
             Unit unit = Unit.getUnit(item.getType());
             unit.assignPieceId(_bangobj);
             unit.init();
-            unit.owner = pidx;
+            unit.setOwner(_bangobj, pidx);
             unit.originalOwner = pidx;
             _bangobj.setBigShotsAt(unit, pidx);
 
@@ -1222,7 +1222,7 @@ public class BangManager extends GameManager
     {
             unit.assignPieceId(_bangobj);
             unit.init();
-            unit.owner = pidx;
+            unit.setOwner(_bangobj, pidx);
             unit.originalOwner = pidx;
     }
 

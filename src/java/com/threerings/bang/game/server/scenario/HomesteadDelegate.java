@@ -111,7 +111,7 @@ public class HomesteadDelegate extends ScenarioDelegate
             if (stead.owner == -1) {
                 continue;
             }
-            stead.owner = owners[stead.owner];
+            stead.setOwner(bangobj, owners[stead.owner]);
             updates.add(stead);
             if (stead.owner != -1) {
                 _claims.add(stead);

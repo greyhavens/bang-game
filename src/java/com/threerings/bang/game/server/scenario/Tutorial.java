@@ -231,7 +231,7 @@ public class Tutorial extends Scenario
                 piece.assignPieceId(_bangobj);
             }
             piece.init();
-            piece.owner = add.owner;
+            piece.setOwner(_bangobj, add.owner);
             switch (add.location.length) {
             case 1:
                 Piece near = _bangobj.pieces.get(add.location[0]);
