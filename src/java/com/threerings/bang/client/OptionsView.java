@@ -303,7 +303,7 @@ public class OptionsView extends BDecoratedWindow
 
         // recenter and invalidate the main view and options window
         if (_parent != null) {
-            if (_parent instanceof ShopView) {
+            if (_parent instanceof ShopView || _parent instanceof LogonView) {
                 _parent.center();
             } else {
                 _parent.setBounds(0, 0, _ctx.getDisplay().getWidth(),
