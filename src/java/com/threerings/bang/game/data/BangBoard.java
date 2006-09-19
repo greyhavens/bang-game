@@ -852,7 +852,7 @@ public class BangBoard extends SimpleStreamableObject
         int idx = _width * y + x;
         byte old = _tstate[idx];
         if (piece instanceof Cow || piece instanceof Train || 
-                piece.owner < 0) {
+                piece.team < 0) {
             _tstate[idx] = O_OCCUPIED;
         } else {
             _tstate[idx] = (byte)piece.team;
