@@ -10,6 +10,8 @@ import java.util.logging.Level;
 
 import com.jme.math.Vector3f;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.io.ObjectInputStream;
 import com.threerings.io.ObjectOutputStream;
 
@@ -195,7 +197,8 @@ public class Prop extends BigPiece
      */
     public boolean isOmissible ()
     {
-        return (isPassable() && _config.passElev == 0f);
+        return (isPassable() && _config.passElev == 0f && 
+                StringUtil.isBlank(_config.blockDir));
     }
     
     /**
