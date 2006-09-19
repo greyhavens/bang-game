@@ -53,7 +53,6 @@ public class WendigoSprite extends MobileSprite
     {
         super.init(ctx, view, board, sounds, piece, tick);
         setRenderState(RenderUtil.blendAlpha);
-        setRenderState(RenderUtil.overlayZBuf);
         setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
         MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.getAmbient().set(ColorRGBA.white);
