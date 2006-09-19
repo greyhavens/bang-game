@@ -48,7 +48,7 @@ public class RuntimeConfigView extends BDecoratedWindow
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle("admin");
 
-        add(_tabs = new TabbedPane(true));
+        add(_tabs = new TabbedPane(false, true));
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         bcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
         add(bcont, GroupLayout.FIXED);

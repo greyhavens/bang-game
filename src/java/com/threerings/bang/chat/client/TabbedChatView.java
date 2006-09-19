@@ -6,6 +6,7 @@ package com.threerings.bang.chat.client;
 import java.util.HashMap;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
@@ -54,7 +55,18 @@ public abstract class TabbedChatView extends BContainer
         layout.setGap(0);
         setLayoutManager(layout);
 
-        add(_pane = new TabbedPane(true));
+        add(_pane = new TabbedPane(true, true) {
+            protected void tabWasRemoved (BComponent tab) {
+                Handle tabOwner = ((UserTab) tab)._user;
+                _users.remove(tabOwner);
+                if (getTabCount() == 0) {
+                    lastTabClosed();
+                }
+            }
+        });
+
+
+        _pane.addListener(this);
         BContainer tcont = new BContainer(GroupLayout.makeHoriz(
             GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.NONE));
         tcont.add(_text = new BTextField());
@@ -142,11 +154,15 @@ public abstract class TabbedChatView extends BContainer
             _pane.addTab(handle.toString(), tab);
             _users.put(handle, tab);
         }
+        _pane.selectTab(tab);
         // this has to be called when the tab is already added
         if (!isAdded()) {
-            if (!displayTabs(focus)) {
+            if (!displayTabs()) {
                 return null;
             }
+        }
+        if (focus) {
+            _text.requestFocus();
         }
         return tab;
     }
@@ -154,7 +170,7 @@ public abstract class TabbedChatView extends BContainer
     /**
      * Displays the chat interface when needed, if it's not already shown.
      */
-    protected abstract boolean displayTabs(boolean grabFocus);
+    protected abstract boolean displayTabs ();
     
     /** Lets subclasses react to the last tab closing */
     protected abstract void lastTabClosed ();
@@ -192,18 +208,8 @@ public abstract class TabbedChatView extends BContainer
          */
         public void mute ()
         {
-            close();
-            _ctx.getMuteDirector().setMuted(_user, true);
-        }
-
-        /**
-         * Closes this tab and hides the pop-up if it was the last tab open.
-         */
-        public void close ()
-        {
             _pane.removeTab(this);
-            _users.remove(_user);
-            lastTabClosed();
+            _ctx.getMuteDirector().setMuted(_user, true);
         }
 
         @Override // documentation inherited

@@ -422,16 +422,12 @@ public class FolkView extends BContainer
         }
     
         @Override // from TabbedChatView
-        protected boolean displayTabs (boolean grabFocus)
+        protected boolean displayTabs ()
         {
-            if (isAdded()) {
-                return true;
+            if (!isAdded()) {
+                showTabs();
             }
-            showTabs();
             _paper.folkChatAlert();
-            if (grabFocus) {
-                _text.requestFocus();
-            }
             return true;
         }
         

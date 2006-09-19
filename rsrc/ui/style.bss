@@ -226,6 +226,12 @@ tabbedpane {
   background: image "ui/window/border_ornate.png" framexy;
 }
 
+tabbedpane_close {
+  background: image "ui/icons/16_icon.png" centerxy;
+  padding: 0 25;
+}
+
+
 tab {
   color: #8c562a;
   background: image "ui/tabs/small_normal.png" framex;

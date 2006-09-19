@@ -44,8 +44,6 @@ public class PardnerChatView extends BDecoratedWindow
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         buttons.add(_mute = new BButton(ctx.xlate(BANG_MSGS, "m.chat_mute"),
             this, "mute"));
-        buttons.add(_close = new BButton(ctx.xlate(BANG_MSGS,
-            "m.chat_close_tab"), this, "close"));
         buttons.add(_resume = new BButton(ctx.xlate(BANG_MSGS,
             "m.status_resume"), this, "resume"));
         add(buttons, GroupLayout.FIXED);
@@ -74,9 +72,6 @@ public class PardnerChatView extends BDecoratedWindow
         if (src == _mute) {
             ((UserTab)_tabView._pane.getSelectedTab()).mute();
     
-        } else if (src == _close) {
-            ((UserTab)_tabView._pane.getSelectedTab()).close();
-    
         } else if (src == _resume) {
             _ctx.getBangClient().clearPopup(this, false);
         }
@@ -92,7 +87,7 @@ public class PardnerChatView extends BDecoratedWindow
         }
     
         @Override // from TabbedChatView
-        protected boolean displayTabs (boolean grabFocus)
+        protected boolean displayTabs ()
         {
             if (isAdded()) {
                 return true;
@@ -108,9 +103,6 @@ public class PardnerChatView extends BDecoratedWindow
             _ctx.getBangClient().displayPopup(PardnerChatView.this, false);
             pack(-1, -1);
             center();
-            if (grabFocus) {
-                _text.requestFocus();
-            }
             return true;
         }
         
