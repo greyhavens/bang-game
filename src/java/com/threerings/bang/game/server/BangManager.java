@@ -349,16 +349,7 @@ public class BangManager extends GameManager
             // the unit probably died or was hijacked
             return;
         }
-
-        // look for any advance order for this unit and clear it
-        for (Iterator<AdvanceOrder> iter = _orders.iterator();
-             iter.hasNext(); ) {
-            AdvanceOrder order = iter.next();
-            if (order.unit.pieceId == pieceId) {
-                reportInvalidOrder(order, ORDER_CLEARED);
-                iter.remove();
-            }
-        }
+        cancelOrder(pieceId);
     }
 
     // documentation inherited from interface BangProvider
@@ -555,6 +546,22 @@ public class BangManager extends GameManager
         // them have become invalid
         if (recheckOrders) {
             validateOrders();
+        }
+    }
+
+    /**
+     * Cancels any pending advance order for the specified piece.
+     */
+    public void cancelOrder (int pieceId)
+    {
+        // look for any advance order for this unit and clear it
+        for (Iterator<AdvanceOrder> iter = _orders.iterator();
+             iter.hasNext(); ) {
+            AdvanceOrder order = iter.next();
+            if (order.unit.pieceId == pieceId) {
+                reportInvalidOrder(order, ORDER_CLEARED);
+                iter.remove();
+            }
         }
     }
 
@@ -2585,11 +2592,15 @@ public class BangManager extends GameManager
         }
 
         public void pieceAffected (Piece piece, String effect) {
-            // if a piece was giddy upped into readiness, immediately execute
-            // any pending move it has registered
             if (effect.equals(AdjustTickEffect.GIDDY_UPPED) &&
                 piece.ticksUntilMovable(_bangobj.tick) == 0) {
+                // if a piece was giddy upped into readiness, immediately
+                // execute any advance order it has registered
                 executeOrders(piece.pieceId);
+            } else if (effect.equals(HoldEffect.DROPPED_BONUS)) {
+                // if a piece dropped its held bonus, cancel any advance order
+                // it has registered
+                cancelOrder(piece.pieceId);
             }
             _scenario.pieceAffected(piece, effect);
         }
