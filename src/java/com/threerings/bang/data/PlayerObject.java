@@ -121,7 +121,7 @@ public class PlayerObject extends BodyObject
     public String lastScenId;
 
     /** The last board played by this player. */
-    public int lastBoardId;
+    public int lastBoardId = -1;
 
     /**
      * Returns the player's rating for the specified scenario. This method will

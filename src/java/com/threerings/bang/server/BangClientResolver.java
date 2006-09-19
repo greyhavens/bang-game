@@ -123,9 +123,6 @@ public class BangClientResolver extends CrowdClientResolver
         // toIntArray() returns a sorted array
         buser.friends = friends.toIntArray();
         buser.foes = foes.toIntArray(); 
-        
-        // they haven't played on any board this session
-        buser.lastBoardId = -1;
     }
 
     protected static HashMap<String,PlayerRecord> _pstash =

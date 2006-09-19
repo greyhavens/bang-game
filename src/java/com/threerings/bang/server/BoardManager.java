@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
@@ -83,6 +84,7 @@ public class BoardManager
     public BoardRecord[] selectBoards (
             int players, String[] scenarios, int[] prevBoardIds)
     {
+        ArrayIntSet prevIds = new ArrayIntSet(prevBoardIds);
         BoardRecord[] choices = new BoardRecord[scenarios.length];
         for (int ii = 0; ii < scenarios.length; ii++) {
             if (choices[ii] != null) {
@@ -101,21 +103,16 @@ public class BoardManager
                 continue;
             }
 
-            // Remove boards in our previous board list unless it is the
-            // last board available
-            if (prevBoardIds != null) {
-                for (Iterator<BoardRecord> iter = candidates.iterator();
-                        iter.hasNext(); ) {
-                    if (candidates.size() <= 1) {
-                        break;
-                    }
-                    BoardRecord brec = iter.next();
-                    for (int bid : prevBoardIds) {
-                        if (brec.boardId == bid) {
-                            iter.remove();
-                            break;
-                        }
-                    }
+            // remove boards in our previous board list unless it is the last
+            // board available
+            for (Iterator<BoardRecord> iter = candidates.iterator();
+                 iter.hasNext(); ) {
+                if (candidates.size() <= 1) {
+                    break;
+                }
+                BoardRecord brec = iter.next();
+                if (prevIds.contains(brec.boardId)) {
+                    iter.remove();
                 }
             }
             Collections.shuffle(candidates);

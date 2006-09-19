@@ -70,7 +70,7 @@ public class BangConfig extends GameConfig
     public byte[] bdata;
 
     /** The previously played boards for each player. */
-    public int[] lastBoardIds;
+    public int[] lastBoardIds = new int[0];
 
     /** Returns the desired number of rounds. */
     public int getRounds ()
