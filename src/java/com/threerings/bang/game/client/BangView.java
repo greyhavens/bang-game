@@ -83,6 +83,12 @@ public class BangView extends BWindow
         _timer = new RoundTimerView(ctx);
     }
 
+    /** Returns a reference to the game controller. */
+    public BangController getController ()
+    {
+        return _ctrl;
+    }
+    
     /**
      * Configures the interface for the specified phase. If the main game
      * display has not yet been configured, this will trigger that

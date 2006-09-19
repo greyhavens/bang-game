@@ -256,9 +256,14 @@ public class EffectHandler extends BoardView.BoardAction
             sprite.updated(piece, _tick);
         }
 
-        // remember the last unit to drop a bonus
+        // remember the last unit to drop a bonus (and cancel its advance
+        // order, if any)
         if (effect.equals(HoldEffect.DROPPED_BONUS)) {
             _dropper = piece;
+            if (((UnitSprite)sprite).getAdvanceOrder() !=
+                    UnitSprite.AdvanceOrder.NONE) {
+                _bview.getController().cancelOrder(piece.pieceId);
+            }
         }
 
         // queue reacting, dying, or generic effects for active sprites
