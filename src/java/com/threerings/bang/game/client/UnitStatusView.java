@@ -184,11 +184,13 @@ public class UnitStatusView extends BWindow
                 }
                 public void mousePressed (MouseEvent event) {
                     toggleDetails(false);
+                    forceUpdate();
                 }
             });
             _closed = new BButton(new BlankIcon(39, 32), "") {
                 protected void fireAction (long when, int modifiers) {
                     toggleDetails(true);
+                    forceUpdate();
                 }
             };
             _closed.setStyleClass("unit_status_closed");

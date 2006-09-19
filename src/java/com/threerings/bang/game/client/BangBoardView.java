@@ -1126,6 +1126,7 @@ public class BangBoardView extends BoardView
                 UnitSprite.AdvanceOrder.NONE) {
                 _ctrl.cancelOrder(_selection.pieceId);
             }
+            return;
         }
 
         // if we have a selection
