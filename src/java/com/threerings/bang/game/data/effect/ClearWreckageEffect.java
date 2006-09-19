@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.effect;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 
@@ -12,11 +13,21 @@ import static com.threerings.bang.Log.log;
  * Clears all wreckage from the board.
  */
 public class ClearWreckageEffect extends GlobalEffect
-{
+{    
+    /** The effect to apply to the board. */
+    public static final String TUMBLEWEED_WIND = "indian_post/tumbleweed_wind";
+    
+    @Override // documentation inherited
+    public boolean apply (BangObject bangobj, Observer obs)
+    {
+        affectBoard(bangobj, TUMBLEWEED_WIND, false, obs);
+        return super.apply(bangobj, obs);
+    }
+    
     @Override // documentation inherited
     public boolean validPiece (Piece piece)
     {
-        return !piece.isAlive();
+        return (piece instanceof Unit && !piece.isAlive());
     }
 
     @Override // documentation inherited
