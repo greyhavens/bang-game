@@ -111,9 +111,9 @@ public abstract class ScenarioInfo
             validIds[ii] = scens.get(ii).getIdent();
         }
         if (prevScids != null) {
-            for (String id : prevScids) {
+            for (String prevId : prevScids) {
                 for (int ii = 0; ii < validIds.length; ii++) {
-                    if (!validIds.equals(id)) {
+                    if (!validIds[ii].equals(prevId)) {
                         weights[ii]++;
                     }
                 }
