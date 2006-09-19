@@ -121,7 +121,11 @@ public class TeleportHandler extends EffectHandler
     @Override // documentation inherited
     public void pieceMoved (Piece piece)
     {
-        // nothing doing
+        // update the sprite
+        _sprite.updated(piece, _tick);
+
+        // let the board view know that this piece has moved
+        _view.pieceDidMove(piece);
     }
     
     /** The sprite being teleported. */
