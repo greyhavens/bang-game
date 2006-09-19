@@ -103,6 +103,10 @@ public class BoardManager
                 continue;
             }
 
+            // we're going to remove previously played boards, so we can't do
+            // that to the canonical list
+            candidates = (BoardList)candidates.clone();
+
             // remove boards in our previous board list unless it is the last
             // board available
             for (Iterator<BoardRecord> iter = candidates.iterator();
