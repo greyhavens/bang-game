@@ -64,6 +64,12 @@ public class PlayerObject extends BodyObject
 
     /** The field name of the <code>foes</code> field. */
     public static final String FOES = "foes";
+
+    /** The field name of the <code>lastScenId</code> field. */
+    public static final String LAST_SCEN_ID = "lastScenId";
+
+    /** The field name of the <code>lastBoardId</code> field. */
+    public static final String LAST_BOARD_ID = "lastBoardId";
     // AUTO-GENERATED: FIELDS END
 
     /** This user's persistent unique id. */
@@ -110,6 +116,12 @@ public class PlayerObject extends BodyObject
 
     /** The player ids of this player's not so friendly folks, sorted. */
     public int[] foes;
+
+    /** The last scenario played by this player. */
+    public String lastScenId;
+
+    /** The last board played by this player. */
+    public int lastBoardId;
 
     /**
      * Returns the player's rating for the specified scenario. This method will
@@ -729,6 +741,38 @@ public class PlayerObject extends BodyObject
         requestElementUpdate(
             FOES, index, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.foes[index] = value;
+    }
+
+    /**
+     * Requests that the <code>lastScenId</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setLastScenId (String value)
+    {
+        String ovalue = this.lastScenId;
+        requestAttributeChange(
+            LAST_SCEN_ID, value, ovalue);
+        this.lastScenId = value;
+    }
+
+    /**
+     * Requests that the <code>lastBoardId</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setLastBoardId (int value)
+    {
+        int ovalue = this.lastBoardId;
+        requestAttributeChange(
+            LAST_BOARD_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.lastBoardId = value;
     }
     // AUTO-GENERATED: METHODS END
 }

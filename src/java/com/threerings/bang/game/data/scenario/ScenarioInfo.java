@@ -4,10 +4,12 @@
 package com.threerings.bang.game.data.scenario;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;
 import com.threerings.io.Streamable;
 import com.threerings.util.MessageBundle;
@@ -86,9 +88,11 @@ public abstract class ScenarioInfo
      *
      * @param includePrior if true scenarios for towns previous to the supplied
      * town will be included in the selection.
+     * @param prevScids a list of scenario ids the players have played recently.
+     * Used to weight the likelyhood of a scenario being chosen.
      */
-    public static String[] selectRandomIds (
-        String townId, int count, int players, boolean includePrior)
+    public static String[] selectRandomIds (String townId, int count, 
+            int players, String[] prevScids, boolean includePrior)
     {
         ArrayList<ScenarioInfo> scens = getScenarios(townId, includePrior);
 
@@ -100,10 +104,35 @@ public abstract class ScenarioInfo
             }
         }
 
+        // generate the scenid weights based on the prevScids
+        int[] weights = new int[scens.size()];
+        String[] validIds = new String[scens.size()];
+        for (int ii = 0, nn = scens.size(); ii < nn; ii++) {
+            validIds[ii] = scens.get(ii).getIdent();
+        }
+        if (prevScids != null) {
+            for (String id : prevScids) {
+                for (int ii = 0; ii < validIds.length; ii++) {
+                    if (!validIds.equals(id)) {
+                        weights[ii]++;
+                    }
+                }
+            }
+        }
+        if (IntListUtil.sum(weights) == 0) {
+            Arrays.fill(weights, 1);
+        }
+
         // now select randomly from the remainder
         String[] scids = new String[count];
         for (int ii = 0; ii < count; ii++) {
-            scids[ii] = RandomUtil.pickRandom(scens).getIdent();
+            int idx = RandomUtil.getWeightedIndex(weights);
+            scids[ii] = validIds[idx];
+            for (int jj = 0; jj < weights.length; jj++) {
+                if (jj != idx) {
+                    weights[idx]+= players;
+                }
+            }
         }
         return scids;
     }

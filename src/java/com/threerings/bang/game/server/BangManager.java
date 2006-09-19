@@ -764,8 +764,8 @@ public class BangManager extends GameManager
 
         // if no boards were specified otherwise, pick them randomly
         if (boards == null) {
-            boards = BangServer.boardmgr.selectBoards(
-                _bconfig.players.length, _bconfig.scenarios);
+            boards = BangServer.boardmgr.selectBoards(_bconfig.players.length, 
+                    _bconfig.scenarios, _bconfig.lastBoardIds);
         }
 
         // set up our round records
@@ -1519,6 +1519,25 @@ public class BangManager extends GameManager
     {
         // broadcast our updated statistics
         _bangobj.setStats(_bangobj.stats);
+
+        int ridx = _bangobj.roundId - (_bangobj.state == BangObject.IN_PLAY ||
+            _bangobj.state == BangObject.POST_ROUND ? 1 : 0);
+        for (int ii = 0; ii < getPlayerCount(); ii++) {
+            if (isAI(ii)) {
+                continue;
+            }
+            PlayerObject user = (PlayerObject)getPlayer(ii);
+            if (user != null) {
+                try {
+                    user.startTransaction();
+                    user.setLastScenId(_bconfig.scenarios[ridx]);
+                    user.setLastBoardId(
+                            _rounds[ridx].board.boardId);
+                } finally {
+                    user.commitTransaction();
+                }
+            }
+        }
 
         // record for all players still in the game that they "used" their
         // units during this round

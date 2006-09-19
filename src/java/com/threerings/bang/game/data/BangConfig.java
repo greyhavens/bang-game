@@ -69,6 +69,9 @@ public class BangConfig extends GameConfig
     /** Used when testing with a specific board. */
     public byte[] bdata;
 
+    /** The previously played boards for each player. */
+    public int[] lastBoardIds;
+
     /** Returns the desired number of rounds. */
     public int getRounds ()
     {

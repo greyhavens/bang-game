@@ -365,6 +365,7 @@ public class ParlorManager extends PlaceManager
         // we can use these values directly as we sanity checked them earlier
         config.seats = _parobj.game.players + _parobj.game.tinCans;
         config.players = new Handle[config.seats];
+        config.lastBoardIds = new int[config.seats];
         config.teamSize = _parobj.game.teamSize;
         config.scenarios = new String[_parobj.game.rounds];
 
@@ -388,6 +389,7 @@ public class ParlorManager extends PlaceManager
                 return; // abandon ship
             }
             config.players[ii] = user.handle;
+            config.lastBoardIds[ii] = user.lastBoardId;
         }
 
         // add our ais (if any)

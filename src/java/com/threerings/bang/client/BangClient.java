@@ -617,7 +617,7 @@ public class BangClient extends BasicClient
                 Arrays.fill(scenarios, scenario);
             } else {
                 scenarios = ScenarioInfo.selectRandomIds(
-                    _ctx.getUserObject().townId, rounds, pcount, false);
+                    _ctx.getUserObject().townId, rounds, pcount, null, false);
             }
             psvc.playComputer(
                 _ctx.getClient(), pcount, scenarios,

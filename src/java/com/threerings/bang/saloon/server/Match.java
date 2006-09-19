@@ -235,13 +235,24 @@ public class Match
             config.players[ii] = ai.handle;
         }
 
+        idx = 0;
+        String[] lastScenIds = new String[humans];
+        config.lastBoardIds = new int[humans];
+        for (int ii = 0; ii < players.length; ii++) {
+            if (players[ii] != null) {
+                lastScenIds[idx] = players[ii].lastScenId;
+                config.lastBoardIds[idx] = players[ii].lastBoardId;
+                idx++;
+            }
+        }
+
         // configure our other bits
         config.teamSize = TEAM_SIZES[config.seats-2];
         // only games versus at least one other human are rated
         config.rated = (humans > 1) ? _criterion.getDesiredRankedness() : false;
         config.scenarios = ScenarioInfo.selectRandomIds(
             ServerConfig.townId, _criterion.getDesiredRounds(),
-            config.seats, false);
+            config.seats, lastScenIds, false);
 
         return config;
     }

@@ -5,6 +5,7 @@ package com.threerings.bang.server;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
@@ -79,7 +80,8 @@ public class BoardManager
      * Randomly selects a set of boards for play given the required number
      * of players and the specified sequence of scenarios.
      */
-    public BoardRecord[] selectBoards (int players, String[] scenarios)
+    public BoardRecord[] selectBoards (
+            int players, String[] scenarios, int[] prevBoardIds)
     {
         BoardRecord[] choices = new BoardRecord[scenarios.length];
         for (int ii = 0; ii < scenarios.length; ii++) {
@@ -97,6 +99,24 @@ public class BoardManager
                 log.warning("Aiya! Missing boards [players=" + players +
                             ", scenario=" + scenario + "].");
                 continue;
+            }
+
+            // Remove boards in our previous board list unless it is the
+            // last board available
+            if (prevBoardIds != null) {
+                for (Iterator<BoardRecord> iter = candidates.iterator();
+                        iter.hasNext(); ) {
+                    if (candidates.size() <= 1) {
+                        break;
+                    }
+                    BoardRecord brec = iter.next();
+                    for (int bid : prevBoardIds) {
+                        if (brec.boardId == bid) {
+                            iter.remove();
+                            break;
+                        }
+                    }
+                }
             }
             Collections.shuffle(candidates);
 
