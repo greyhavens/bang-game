@@ -591,6 +591,16 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Returns the current index into any round-related array. Because the
+     * {@link #roundId} field is updated at slightly wonky times, this method
+     * has to do some figuring out to return the proper index.
+     */
+    public int getRoundIndex ()
+    {
+        return roundId - (state == IN_PLAY || state == POST_ROUND ? 1 : 0);
+    }
+
+    /**
      * Returns a lazily computed mapping from encoded tile coordinates to
      * pieces of track on the board.
      */

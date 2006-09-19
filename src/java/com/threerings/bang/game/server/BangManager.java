@@ -226,9 +226,7 @@ public class BangManager extends GameManager
 
         // note that roundId may currently be one less than the actual round id
         // (if we haven't yet called startGame())
-        int ridx = _bangobj.roundId - (_bangobj.state == BangObject.IN_PLAY ||
-            _bangobj.state == BangObject.POST_ROUND ? 1 : 0);
-        BoardRecord brec = _rounds[ridx].board;
+        BoardRecord brec = _rounds[_bangobj.getRoundIndex()].board;
         try {
             listener.requestProcessed(brec.getBoard(), brec.getPieces());
         } catch (IOException ioe) {
@@ -1520,8 +1518,7 @@ public class BangManager extends GameManager
         // broadcast our updated statistics
         _bangobj.setStats(_bangobj.stats);
 
-        int ridx = _bangobj.roundId - (_bangobj.state == BangObject.IN_PLAY ||
-            _bangobj.state == BangObject.POST_ROUND ? 1 : 0);
+        int ridx = _bangobj.getRoundIndex();
         for (int ii = 0; ii < getPlayerCount(); ii++) {
             if (isAI(ii)) {
                 continue;
@@ -1531,8 +1528,7 @@ public class BangManager extends GameManager
                 try {
                     user.startTransaction();
                     user.setLastScenId(_bconfig.scenarios[ridx]);
-                    user.setLastBoardId(
-                            _rounds[ridx].board.boardId);
+                    user.setLastBoardId(_rounds[ridx].board.boardId);
                 } finally {
                     user.commitTransaction();
                 }
