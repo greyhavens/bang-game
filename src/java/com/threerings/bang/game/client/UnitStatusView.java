@@ -167,23 +167,23 @@ public class UnitStatusView extends BWindow
             vlay.setGap(4);
             _opened = new BContainer(vlay) {
                 public BComponent getHitComponent(int mx, int my) {
-                    return this;
+                    if ((mx >= _x + 38) && (my >= _y) && 
+                            (mx < _x + _width) && (my < _y + _height)) {
+                        return this;
+                    }
+                    return null;
                 }
             };
             _opened.setStyleClass("unit_status_container");
             _opened.addListener(new MouseAdapter() {
                 public void mouseMoved (MouseEvent event) {
-                    if (inRegion(event)) {
-                        _closer = _closeArrow[1];
-                    }
+                    _closer = _closeArrow[1];
                 }
                 public void mouseExited (MouseEvent event) {
-                        _closer = _closeArrow[0];
+                    _closer = _closeArrow[0];
                 }
                 public void mousePressed (MouseEvent event) {
-                    if (inRegion(event)) {
-                        toggleDetails(false);
-                    }
+                    toggleDetails(false);
                 }
             });
             _closed = new BButton(new BlankIcon(39, 32), "") {
@@ -194,6 +194,9 @@ public class UnitStatusView extends BWindow
             _closed.setStyleClass("unit_status_closed");
         }
 
+        public BComponent getHitComponent(int mx, int my) {
+            return super.getHitComponent(mx, my);
+        }
 
         public void setUnitSprite (UnitSprite sprite) {
             // clear out our old sprite
@@ -301,21 +304,31 @@ public class UnitStatusView extends BWindow
         public void updated (UnitSprite sprite) {
             label.updated(sprite);
             if (!sprite.isSelected()) {
+                remove(_closed);
+                remove(_opened);
                 _health.setText("");
+                forceUpdate();
                 return;
             }
             Unit unit = getUnit();
             _health.setText("" + (100 - unit.damage) + "%");
             toggleDetails(BangPrefs.getUnitStatusDetails());
             if (!BangPrefs.getUnitStatusDetails()) {
+                forceUpdate();
                 return;
             }
             if (_opened.getParent() != null) {
                 updateHolding(unit);
                 updateInfluence(unit);
                 updateHindrance(unit);
-                return;
             }
+            forceUpdate();
+        }
+
+        protected void forceUpdate ()
+        {
+            validate();
+            reposition();
         }
 
         protected void updateHolding (Unit unit) {
@@ -391,15 +404,6 @@ public class UnitStatusView extends BWindow
             return -1;
         }
 
-        protected boolean inRegion (MouseEvent event)
-        {
-            int mx = event.getX(), my = event.getY();
-            java.awt.Rectangle bounds = new java.awt.Rectangle(
-                    _opened.getAbsoluteX() + 38, _opened.getAbsoluteY(),
-                    _opened.getWidth() - 38, _opened.getHeight());
-            return (bounds.contains(mx, my));
-        }
-
         protected void clearSprite ()
         {
             if (_sprite != null) {
@@ -415,7 +419,7 @@ public class UnitStatusView extends BWindow
                 if (_closed.getParent() != null) {
                     remove(_closed);
                 }
-                if (_opened.getParent() == null) {
+                if (_opened.getParent() == null && _sprite.isSelected()) {
                     add(_opened, new Point(49, 0));
                     _closer = _closeArrow[0];
                 }
@@ -423,11 +427,10 @@ public class UnitStatusView extends BWindow
                 if (_opened.getParent() != null) {
                     remove(_opened);
                 }
-                if (_closed.getParent() == null) {
+                if (_closed.getParent() == null && _sprite.isSelected()) {
                     add(_closed, new Point(49, 65));
                 }
             }
-            invalidate();
         }
 
         @Override // documentation inherited
