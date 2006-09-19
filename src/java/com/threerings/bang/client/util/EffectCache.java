@@ -121,7 +121,9 @@ public class EffectCache extends PrototypeCache<Spatial>
             final BoundingVolume fproto = bproto;
             new SpatialVisitor<ParticleGeometry>(ParticleGeometry.class) {
                 protected void visit (ParticleGeometry geom) {
-                    geom.getBatch(0).setModelBound(fproto.clone(null));
+                    if (!geom.isTransformParticles()) {
+                        geom.getBatch(0).setModelBound(fproto.clone(null));
+                    }
                 }
             }.traverse(particles);
         }

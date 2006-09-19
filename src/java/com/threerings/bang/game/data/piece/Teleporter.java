@@ -64,14 +64,15 @@ public class Teleporter extends Prop
     }
     
     /**
-     * Returns the name of this teleporter's activation effect, which is
-     * derived from its type.
+     * Returns the name of one of this teleporter's effects.
+     *
+     * @param type the type of effect (e.g., "activate" or "travel")
      */
-    public String getActivateEffect ()
+    public String getEffect (String type)
     {
         String town = _type.substring(0, _type.indexOf('/') + 1),
             name = _type.substring(_type.lastIndexOf('/') + 1);
-        return town + name + "/activate";
+        return town + name + "/" + type;
     }
     
     /** The teleporters with the same prop type, including this one. */
