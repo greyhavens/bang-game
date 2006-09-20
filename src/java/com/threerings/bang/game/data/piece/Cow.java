@@ -48,7 +48,7 @@ public class Cow extends Piece
                     bangobj.grantPoints(
                         this.owner, -CattleRustlingInfo.POINTS_PER_COW);
                 }
-                setOwner(bangobj, spooker.owner);
+                owner = spooker.owner;
                 bangobj.grantPoints(owner, CattleRustlingInfo.POINTS_PER_COW);
             }
         }
