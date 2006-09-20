@@ -224,9 +224,7 @@ public class BangManager extends GameManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // note that roundId may currently be one less than the actual round id
-        // (if we haven't yet called startGame())
-        BoardRecord brec = _rounds[_bangobj.getRoundIndex()].board;
+        BoardRecord brec = _rounds[_activeRoundId].board;
         try {
             listener.requestProcessed(brec.getBoard(), brec.getPieces());
         } catch (IOException ioe) {
@@ -256,7 +254,7 @@ public class BangManager extends GameManager
 
         // fetch the requisite items from their inventory
         Card[] cards = null;
-        if (_bangobj.roundId == 0 && cardIds != null) {
+        if (_activeRoundId == 0 && cardIds != null) {
             cards = new Card[cardIds.length];
             for (int ii = 0; ii < cardIds.length; ii++) {
                 CardItem item = (CardItem)user.inventory.get(cardIds[ii]);
@@ -900,20 +898,20 @@ public class BangManager extends GameManager
     /** Starts the pre-game buying phase. */
     protected void startRound ()
     {
+        _activeRoundId = _bangobj.roundId;
         // set the tick to -1 during the pre-round
         _bangobj.setTick((short)-1);
 
-        // set up our stats for this round; note that roundId is not yet
-        // incremented to the actual roundId
+        // set up our stats for this round
         StatSet[] stats = new StatSet[getPlayerSlots()];
         for (int ii = 0; ii < stats.length; ii++) {
             stats[ii] = new StatSet();
         }
-        _rounds[_bangobj.roundId].stats = stats;
+        _rounds[_activeRoundId].stats = stats;
         _bangobj.stats = stats;
 
         // make sure we have a board at all
-        final BoardRecord brec = _rounds[_bangobj.roundId].board;
+        final BoardRecord brec = _rounds[_activeRoundId].board;
         if (brec == null) {
             log.warning("Missing board, cannot start round " +
                         "[where=" + where() + "].");
@@ -971,7 +969,7 @@ public class BangManager extends GameManager
 
         } else {
             ScenarioInfo info = ScenarioInfo.getScenarioInfo(
-                _bconfig.scenarios[_bangobj.roundId]);
+                _bconfig.scenarios[_activeRoundId]);
             _bangobj.setScenario(info);
             String sclass = info.getScenarioClass();
             try {
@@ -984,7 +982,7 @@ public class BangManager extends GameManager
             }
         }
         _scenario.init(this);
-        _rounds[_bangobj.roundId].scenario = _scenario;
+        _rounds[_activeRoundId].scenario = _scenario;
 
         // create the logic for our ai players, if any
         int aicount = (_AIs == null) ? 0 : _AIs.length;
@@ -1312,9 +1310,8 @@ public class BangManager extends GameManager
                 _bangobj.setDuration((short)duration);
                 _bangobj.setLastTick((short)(_bangobj.duration - 1));
 
-                // note this round's duration for later processing (roundId is
-                // now the actual roundId and thus we have to subtract 1)
-                _rounds[_bangobj.roundId-1].duration = _bangobj.duration;
+                // note this round's duration for later processing
+                _rounds[_activeRoundId].duration = _bangobj.duration;
 
             } catch (InvocationException ie) {
                 log.warning("Scenario initialization failed [game=" + where() +
@@ -1334,7 +1331,7 @@ public class BangManager extends GameManager
 
                 // note that this player is participating in this round by
                 // changing their perRoundPoints from -1 to zero
-                _bangobj.perRoundPoints[_bangobj.roundId-1][ii] = 0;
+                _bangobj.perRoundPoints[_activeRoundId][ii] = 0;
 
                 // first filter out this player's pieces
                 ArrayList<Piece> ppieces = new ArrayList<Piece>();
@@ -1431,11 +1428,10 @@ public class BangManager extends GameManager
 
 
         // note that all active players completed this tick
-        int ridx = _bangobj.roundId-1;
-        _rounds[ridx].lastTick = tick;
+        _rounds[_activeRoundId].lastTick = tick;
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (_bangobj.isActivePlayer(ii)) {
-                _precords[ii].finishedTick[ridx] = tick;
+                _precords[ii].finishedTick[_activeRoundId] = tick;
             }
         }
 
@@ -1526,7 +1522,6 @@ public class BangManager extends GameManager
         _bangobj.setStats(_bangobj.stats);
 
         if (!(_bconfig.practice || _bconfig.tutorial)) {
-            int ridx = _bangobj.getRoundIndex();
             for (int ii = 0; ii < getPlayerCount(); ii++) {
                 if (isAI(ii)) {
                     continue;
@@ -1535,8 +1530,9 @@ public class BangManager extends GameManager
                 if (user != null) {
                     try {
                         user.startTransaction();
-                        user.setLastScenId(_bconfig.scenarios[ridx]);
-                        user.setLastBoardId(_rounds[ridx].board.boardId);
+                        user.setLastScenId(_bconfig.scenarios[_activeRoundId]);
+                        user.setLastBoardId(
+                                _rounds[_activeRoundId].board.boardId);
                     } finally {
                         user.commitTransaction();
                     }
@@ -2742,6 +2738,10 @@ public class BangManager extends GameManager
     /** The extra time to take for the current tick to allow extended effects
      * to complete. */
     protected long _extraTickTime;
+
+    /** Store the round id here since the BangObject doesn't track it the
+     * way we want it in some cases. */
+    protected int _activeRoundId;
 
     /** Marks a piece currently in a move from moveUnit. */
     protected Piece _onTheMove;
