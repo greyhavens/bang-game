@@ -385,11 +385,9 @@ public class UnitStatusView extends BWindow
                 String name = _hindranceU.getName();
                 _hindranceL.setText(_ctx.xlate(
                     GameCodes.GAME_MSGS, "m.hindrance_" + name + "_title"));
-                /* Waiting for icons
                 _hindranceL.setIcon(new ImageIcon(
                             _ctx.getImageCache().getBImage(
                         "influences/" + _hindranceU.getName() + ".png")));
-                        */
                 _opened.add(_hindranceL);
             }
         }
