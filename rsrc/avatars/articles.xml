@@ -89,7 +89,7 @@
   </article>
 
  <article name="male_overalls_pitchfork" townId="frontier_town"
-           slot="clothing" scrip="2000" coins="1">
+           slot="clothing" scrip="2000" coins="1" colors="clothes_p,clothes_s">
     <component cclass="male/clothing_back" name="overalls"/>
     <component cclass="male/clothing_front" name="overalls_pitchfork"/>
   </article>
