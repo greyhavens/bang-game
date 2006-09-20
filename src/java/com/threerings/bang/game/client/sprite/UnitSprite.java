@@ -472,6 +472,7 @@ public class UnitSprite extends MobileSprite
 
     protected Texture createPendingTexture (int tidx)
     {
+        tidx = Math.min(tidx, _pendtexs.length - 1);
         Texture gpendtex = _pendtexs[tidx].createSimpleClone();
         // start with a translation that will render nothing until we are
         // properly updated with our camera rotation on the next call to
