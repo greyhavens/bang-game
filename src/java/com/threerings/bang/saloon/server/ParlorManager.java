@@ -6,6 +6,7 @@ package com.threerings.bang.saloon.server;
 import java.util.HashSet;
 import java.util.logging.Level;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.RandomUtil;
@@ -16,7 +17,10 @@ import com.threerings.media.util.MathUtil;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.dobj.ObjectDeathListener;
+import com.threerings.presents.dobj.ObjectDestroyedEvent;
 
+import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
@@ -232,9 +236,8 @@ public class ParlorManager extends PlaceManager
     @Override // documentation inherited
     protected long idleUnloadPeriod ()
     {
-        // give the players ten minutes (well beyond the length of a game) to
-        // return before unloading
-        return 10 * 60 * 1000L;
+        // one minute idle period
+        return 1 * 60 * 1000L;
     }
 
     @Override // documentation inherited
@@ -407,6 +410,9 @@ public class ParlorManager extends PlaceManager
 
         try {
             BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
+            PlaceObject gameobj = mgr.getPlaceObject();
+            _activeGames.add(gameobj.getOid());
+            gameobj.addListener(_gameOverListener);
             mgr.setPriorLocation("parlor", _parobj.getOid());
         } catch (Exception e) {
             log.log(Level.WARNING, "Choked creating game " + config + ".", e);
@@ -419,10 +425,36 @@ public class ParlorManager extends PlaceManager
         _bdata = null;
     }
 
+    /**
+     * Called to check if we should shutdown.
+     */
+    protected void maybeShutdown ()
+    {
+        if (shouldDeclareEmpty(null)) {
+            placeBecameEmpty();
+        }
+    }
+
+    @Override // documentation inherited
+    protected boolean shouldDeclareEmpty (OccupantInfo leaver)
+    {
+        return super.shouldDeclareEmpty(leaver) && _activeGames.size() == 0;
+    }
+
+
     protected ParlorObject _parobj;
     protected SaloonManager _salmgr;
     protected byte[] _bdata;
     protected String _password;
     protected Interval _starter;
     protected Throttle _throttle = new Throttle(1, 10);
+    protected ArrayIntSet _activeGames = new ArrayIntSet();
+
+    protected ObjectDeathListener _gameOverListener =
+       new ObjectDeathListener() {
+           public void objectDestroyed (ObjectDestroyedEvent event) {
+               _activeGames.remove(event.getTargetOid());
+               maybeShutdown();
+           }
+       }; 
 }
