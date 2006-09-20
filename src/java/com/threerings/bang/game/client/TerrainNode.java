@@ -17,6 +17,7 @@ import org.lwjgl.opengl.GL11;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
 import com.jme.image.Texture;
+import com.jme.intersection.PickResults;
 import com.jme.intersection.TrianglePickResults;
 import com.jme.math.FastMath;
 import com.jme.math.Plane;
@@ -459,6 +460,27 @@ public class TerrainNode extends Node
         protected static final float LAYER_OFFSET = TILE_SIZE/1000;
     }
 
+    /**
+     * Allows sharing the geometry of terrain highlights.
+     */
+    public static class SharedHighlight extends SharedMesh
+    {
+        public SharedHighlight (String name, Highlight target)
+        {
+            super(name, target);
+        }
+        
+        @Override // documentation inherited
+        public void findPick(Ray ray, PickResults results)
+        {
+            // the target mesh will be collidable only if it does not
+            // lie on the terrain
+            if (getTarget().isCollidable()) {
+                super.findPick(ray, results);
+            }
+        }
+    }
+    
     /**
      * An interface for progress update callbacks.
      */

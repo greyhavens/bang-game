@@ -12,6 +12,7 @@ import com.jme.scene.state.TextureState;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
+import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -51,7 +52,7 @@ public class CowSprite extends MobileSprite
         }
         
         // this is used to indicate who owns us
-        _owner = new SharedMesh("owner", _shadow);
+        _owner = new TerrainNode.SharedHighlight("owner", _shadow);
         _owner.setRenderState(_owntex);
         _owner.updateRenderState();
         attachHighlight(_owner);
