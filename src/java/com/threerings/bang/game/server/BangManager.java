@@ -1438,11 +1438,12 @@ public class BangManager extends GameManager
         // Clear the set of shooters for this tick
         _shooters.clear();
 
-        // execute any advance orders
+        // execute any advance orders; we have to operate on a snapshot of the
+        // array because the execution of one order may cause other advance
+        // orders to be cancelled and removed
         int executed = 0;
-        for (Iterator<AdvanceOrder> iter = _orders.iterator();
-             iter.hasNext(); ) {
-            AdvanceOrder order = iter.next();
+        AdvanceOrder[] aos = _orders.toArray(new AdvanceOrder[_orders.size()]);
+        for (AdvanceOrder order : aos) {
             if (order.unit.ticksUntilMovable(tick) <= 0) {
                 try {
                     executeOrder(order.unit, order.x, order.y,
@@ -1451,7 +1452,7 @@ public class BangManager extends GameManager
                 } catch (InvocationException ie) {
                     reportInvalidOrder(order, ie.getMessage());
                 }
-                iter.remove();
+                _orders.remove(order);
             }
         }
 
