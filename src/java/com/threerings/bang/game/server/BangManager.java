@@ -1525,19 +1525,21 @@ public class BangManager extends GameManager
         // broadcast our updated statistics
         _bangobj.setStats(_bangobj.stats);
 
-        int ridx = _bangobj.getRoundIndex();
-        for (int ii = 0; ii < getPlayerCount(); ii++) {
-            if (isAI(ii)) {
-                continue;
-            }
-            PlayerObject user = (PlayerObject)getPlayer(ii);
-            if (user != null) {
-                try {
-                    user.startTransaction();
-                    user.setLastScenId(_bconfig.scenarios[ridx]);
-                    user.setLastBoardId(_rounds[ridx].board.boardId);
-                } finally {
-                    user.commitTransaction();
+        if (!(_bconfig.practice || _bconfig.tutorial)) {
+            int ridx = _bangobj.getRoundIndex();
+            for (int ii = 0; ii < getPlayerCount(); ii++) {
+                if (isAI(ii)) {
+                    continue;
+                }
+                PlayerObject user = (PlayerObject)getPlayer(ii);
+                if (user != null) {
+                    try {
+                        user.startTransaction();
+                        user.setLastScenId(_bconfig.scenarios[ridx]);
+                        user.setLastBoardId(_rounds[ridx].board.boardId);
+                    } finally {
+                        user.commitTransaction();
+                    }
                 }
             }
         }
