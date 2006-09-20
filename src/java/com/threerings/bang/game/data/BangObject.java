@@ -597,7 +597,9 @@ public class BangObject extends GameObject
      */
     public int getRoundIndex ()
     {
-        return roundId - (state == IN_PLAY || state == POST_ROUND ? 1 : 0);
+        return roundId - (state == IN_PLAY || 
+                          state == POST_ROUND || 
+                          state == GAME_OVER ? 1 : 0);
     }
 
     /**

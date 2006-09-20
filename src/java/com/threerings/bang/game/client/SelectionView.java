@@ -243,9 +243,12 @@ public class SelectionView extends SteelWindow
             return;
         }
 
-        int uidx = 0, selected = 0;
+        int uidx = 0, selected = 0, enabled = 0;
         SelectableIcon[] icons = _units.getIcons();
         for (int ii = 0; ii < icons.length; ii++) {
+            if (icons[ii].isEnabled()) {
+                enabled++;
+            }
             if (!icons[ii].isSelected()) {
                 continue;
             }
@@ -260,7 +263,7 @@ public class SelectionView extends SteelWindow
             _team[ii].setText("");
         }
 
-        _ready.setEnabled(selected == _team.length);
+        _ready.setEnabled(selected == _team.length || selected == enabled);
     }
 
     protected IconPalette.Inspector _enabler = new IconPalette.Inspector() {
