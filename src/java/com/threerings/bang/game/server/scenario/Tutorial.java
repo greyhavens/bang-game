@@ -30,6 +30,7 @@ import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.PieceSet;
@@ -270,15 +271,17 @@ public class Tutorial extends Scenario
                 targetId = -1;
                 tx = target.x;
                 ty = target.y;
-                if (_bangobj.board.canOccupy(unit, tx-1, ty)) {
-                    tx -= 1;
-                } else if (_bangobj.board.canOccupy(unit, tx, ty-1)) {
-                    ty -= 1;
-                } else if (_bangobj.board.canOccupy(unit, tx+1, ty)) {
-                    tx += 1;
-                } else if (_bangobj.board.canOccupy(unit, tx, ty+1)) {
-                    ty += 1;
-                } else {
+                boolean foundMove = false;
+                for (int ii = 0; ii < PieceCodes.DIRECTIONS.length; ii++) {
+                    tx = target.x + PieceCodes.DX[ii];
+                    ty = target.y + PieceCodes.DY[ii];
+                    if (_bangobj.board.canOccupy(unit, tx, ty) &&
+                            (tx != unit.x || ty != unit.y)) {
+                        foundMove = true;
+                        break;
+                    }
+                }
+                if (!foundMove) {
                     log.warning("Unable to locate spot near target " +
                         "[tut=" + _config.ident + ", unit=" + unit +
                         ", target=" + target + "].");
