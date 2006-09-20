@@ -248,6 +248,20 @@ public class ImageCache
      */
     public BImage getBImage (String rsrcPath)
     {
+        return getBImage(rsrcPath, false);
+    }
+
+    /**
+     * Loads up an image from the cache if possible or from the resource
+     * manager otherwise, in which case it is prepared for use by BUI.
+     * <em>Note:</em> these images are cached separately from the {@link Image}
+     * and {@link BufferedImage} caches.
+     *
+     * @param returnNull If set to true, will return a null instead of
+     * generating an error image on failure
+     */
+    public BImage getBImage (String rsrcPath, boolean returnNull)
+    {
         // first check the cache
         WeakReference<BImage> iref = _buicache.get(rsrcPath);
         BImage image;
@@ -261,6 +275,9 @@ public class ImageCache
         try {
             bufimg = ImageIO.read(ifile);
         } catch (Throwable t) {
+            if (returnNull) {
+                return null;
+            }
             log.log(Level.WARNING, "Unable to load image resource " +
                     "[path=" + ifile + "].", t);
             // cope; return an error image of abitrary size

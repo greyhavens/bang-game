@@ -8,6 +8,9 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import com.jmex.bui.BImage;
+import com.jmex.bui.icon.ImageIcon;
+
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
 import com.threerings.util.MessageBundle;
@@ -15,6 +18,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.avatar.data.AvatarCodes;
 
 import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
 
@@ -675,6 +679,16 @@ public class Badge extends Item
     {
         String id = Integer.toHexString(getType().code());
         return "badges/" + id.substring(0,1) + "/" + id + ".png";
+    }
+
+    @Override // documentation inherited
+    public ImageIcon createIcon (BasicContext ctx, String iconPath)
+    {
+        BImage bimage = ctx.getImageCache().getBImage(iconPath, true);
+        if (bimage == null) {
+            bimage = ctx.loadImage("badges/noimage.png");
+        }
+        return new ImageIcon(bimage);
     }
 
     @Override // documentation inherited
