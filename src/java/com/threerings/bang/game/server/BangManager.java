@@ -324,7 +324,7 @@ public class BangManager extends GameManager
             }
 
             // clear out any previous advance order for this unit
-            clearOrders(unit.pieceId);
+            clearOrders(unit.pieceId, false);
 
             // queue up our new advance order
             _orders.add(order);
@@ -347,7 +347,7 @@ public class BangManager extends GameManager
             // the unit probably died or was hijacked
             return;
         }
-        cancelOrder(pieceId);
+        clearOrders(pieceId, true);
     }
 
     // documentation inherited from interface BangProvider
@@ -544,22 +544,6 @@ public class BangManager extends GameManager
         // them have become invalid
         if (recheckOrders) {
             validateOrders();
-        }
-    }
-
-    /**
-     * Cancels any pending advance order for the specified piece.
-     */
-    public void cancelOrder (int pieceId)
-    {
-        // look for any advance order for this unit and clear it
-        for (Iterator<AdvanceOrder> iter = _orders.iterator();
-             iter.hasNext(); ) {
-            AdvanceOrder order = iter.next();
-            if (order.unit.pieceId == pieceId) {
-                reportInvalidOrder(order, ORDER_CLEARED);
-                iter.remove();
-            }
         }
     }
 
@@ -1969,12 +1953,16 @@ public class BangManager extends GameManager
     /**
      * Clears any advance order for the specified unit.
      */
-    protected void clearOrders (int unitId)
+    protected void clearOrders (int unitId, boolean report)
     {
         for (int ii = 0, ll = _orders.size(); ii < ll; ii++) {
-            if (_orders.get(ii).unit.pieceId == unitId) {
+            AdvanceOrder order = _orders.get(ii);
+            if (order.unit.pieceId == unitId) {
+                if (report) {
+                    reportInvalidOrder(order, ORDER_CLEARED);
+                }
                 _orders.remove(ii);
-                return;
+                return; // a unit will only have one outstanding order
             }
         }
     }
@@ -2599,7 +2587,7 @@ public class BangManager extends GameManager
             } else if (effect.equals(HoldEffect.DROPPED_BONUS)) {
                 // if a piece dropped its held bonus, cancel any advance order
                 // it has registered
-                cancelOrder(piece.pieceId);
+                clearOrders(piece.pieceId, true);
             }
             _scenario.pieceAffected(piece, effect);
         }
