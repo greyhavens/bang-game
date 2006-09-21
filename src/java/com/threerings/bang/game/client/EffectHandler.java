@@ -508,28 +508,6 @@ public class EffectHandler extends BoardView.BoardAction
     }
 
     /**
-     * Loads up the appropriate sound for the specified unit firing the
-     * specified kind of shot.
-     */
-    protected Sound getShotSound (
-        SoundGroup sounds, String unitType, int shotType)
-    {
-        // no sound for collateral damage shot; the main shot will produce a
-        // sound
-        if (shotType != ShotEffect.COLLATERAL_DAMAGE) {
-            String path = "rsrc/units/" + unitType + "/" +
-                ShotEffect.SHOT_ACTIONS[shotType] + ".wav";
-            // TODO: fall back to a generic sound if we don't have a
-            // special sound for this unit for this shot type
-            if (SoundUtil.haveSound(path)) {
-                return sounds.getSound(path);
-            }
-            // TODO: go back to complaining if we don't have shot sounds
-        }
-        return null;
-    }
-
-    /**
      * If a totem piece has been destroyed, flies it from the totem base onto
      * the board, bouncing it a few times before allowing it to sink into the
      * ground.

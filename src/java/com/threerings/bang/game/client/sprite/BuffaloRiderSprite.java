@@ -9,9 +9,14 @@ import java.awt.Point;
 import com.jme.math.Vector3f;
 
 import com.samskivert.util.ArrayUtil;
+import com.samskivert.util.ListUtil;
+
+import com.threerings.openal.Sound;
+import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.MoveShootHandler;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 import com.threerings.jme.sprite.Path;
@@ -26,6 +31,20 @@ public class BuffaloRiderSprite extends UnitSprite
         super(type);
     }
 
+    @Override // documentation inherited
+    public Sound getShotSound (SoundGroup sounds, ShotEffect shot)
+    {
+        String path = "rsrc/units/indian_post/buffalo_rider/";
+        if (shot.pushx != -1) {
+            return sounds.getSound(path + "attack_push.wav");
+        } else if (ListUtil.contains(shot.attackIcons, "smashed") ||
+            ListUtil.contains(shot.defendIcons, "unmovable")) {
+            return sounds.getSound(path + "attack_push_blocked.wav");
+        } else {
+            return super.getShotSound(sounds, shot);
+        }
+    }
+    
     @Override // documentation inherited
     protected Path createPath (BangBoard board)
     {

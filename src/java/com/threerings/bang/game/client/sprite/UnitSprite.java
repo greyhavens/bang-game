@@ -33,6 +33,8 @@ import com.samskivert.util.ObserverList;
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.SpriteObserver;
+import com.threerings.openal.Sound;
+import com.threerings.openal.SoundGroup;
 
 import com.threerings.media.image.Colorization;
 
@@ -41,6 +43,7 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.ParticleUtil;
 import com.threerings.bang.util.RenderUtil;
+import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.TerrainNode;
@@ -51,6 +54,7 @@ import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.NuggetEffect;
+import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -347,6 +351,27 @@ public class UnitSprite extends MobileSprite
         _effectHandler = handler;
     }
 
+    /**
+     * Returns an instance of the sound to be used for the given shot effect,
+     * or <code>null</code> for none.
+     */
+    public Sound getShotSound (SoundGroup sounds, ShotEffect shot)
+    {
+        // no sound for collateral damage shot; the main shot will produce a
+        // sound
+        if (shot.type != ShotEffect.COLLATERAL_DAMAGE) {
+            String path = "rsrc/units/" + ((Unit)_piece).getType() + "/" +
+                ShotEffect.SHOT_ACTIONS[shot.type] + ".wav";
+            // TODO: fall back to a generic sound if we don't have a
+            // special sound for this unit for this shot type
+            if (SoundUtil.haveSound(path)) {
+                return sounds.getSound(path);
+            }
+            // TODO: go back to complaining if we don't have shot sounds
+        }
+        return null;
+    }
+    
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
