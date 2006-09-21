@@ -96,7 +96,7 @@
 
  <article name="male_overalls_wheat" townId="frontier_town"
            slot="clothing" scrip="2000" coins="1">
-    <component cclass="male/clothing_back" name="overalls"/>
+    <component cclass="male/clothing_back" name="overalls_wheat"/>
     <component cclass="male/clothing_front" name="overalls_wheat"/>
   </article>
 
