@@ -9,9 +9,11 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.jmex.bui.BCheckBox;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
+import com.jmex.bui.background.ImageBackground;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
@@ -51,6 +53,8 @@ public class CardPalette extends IconPalette
         _small = BangPrefs.getCardPaletteSize();
         if (_cardBG == null) {
             _cardBG = new ImageIcon(_ctx.loadImage("ui/pregame/card_bg.png"));
+            _foundBG = new ImageBackground(ImageBackground.CENTER_XY, 
+                    _ctx.loadImage("ui/pstatus/card_found_up.png"));
         }
 
         BContainer selectable = new BContainer(GroupLayout.makeHStretch());
@@ -100,6 +104,10 @@ public class CardPalette extends IconPalette
             if (card.owner != _selfIdx) {
                 continue;
             }
+            if (card.found) {
+                _selcards[iconidx].setBackground(BComponent.DEFAULT, _foundBG);
+                _selcards[iconidx].setBackground(BComponent.HOVER, null);
+            }
             _selcards[iconidx++].setIcon(makeIcon(card));
         }
 
@@ -144,12 +152,30 @@ public class CardPalette extends IconPalette
         _iicont.add(_icont);
         PlayerObject user = _ctx.getUserObject();
         ArrayList<CardItem> carditems = new ArrayList<CardItem>();
+
+        // find cards held over from last round
+        ArrayList<Card> _reservedCards = new ArrayList<Card>();
+        for (Iterator iter = _bangobj.cards.iterator(); iter.hasNext(); ) {
+            Card card = (Card)iter.next();
+            if (card.owner == _selfIdx && card.found == false) {
+                _reservedCards.add(card);
+            }
+        }
+
         for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
             Object item = iter.next();
             if (item instanceof CardItem) {
                 CardItem citem = (CardItem)item;
                 Card card = Card.getCard(citem.getType());
-                if (card != null && card.isPlayable(_bangobj)) {
+                // Update the count based on the reserved cards
+                for (Card reserved : _reservedCards) {
+                    if (card.getType().equals(reserved.getType())) {
+                        citem = (CardItem)citem.clone();
+                        citem.playCard();
+                    }
+                }
+                if (card != null && card.isPlayable(_bangobj) &&
+                    citem.getQuantity() > 0) {
                     carditems.add(citem);
                 }
             }
@@ -196,4 +222,5 @@ public class CardPalette extends IconPalette
     protected BCheckBox _smallView;
     protected boolean _small;
     protected static ImageIcon _cardBG;
+    protected static ImageBackground _foundBG;
 }

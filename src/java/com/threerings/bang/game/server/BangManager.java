@@ -254,12 +254,22 @@ public class BangManager extends GameManager
 
         // fetch the requisite items from their inventory
         Card[] cards = null;
-        if (_activeRoundId == 0 && cardIds != null) {
+        if (cardIds != null) {
             cards = new Card[cardIds.length];
             for (int ii = 0; ii < cardIds.length; ii++) {
                 CardItem item = (CardItem)user.inventory.get(cardIds[ii]);
                 // no magicking up cards
-                if (item.getQuantity() <= 0) {
+                if (item == null) {
+                    continue;
+                }
+                int held = 0;
+                for (Card heldCard : _bangobj.cards) {
+                    if (heldCard.owner == pidx && !heldCard.found &&
+                            heldCard.getType().equals(item.getType())) {
+                        held++;
+                    }
+                }
+                if (item.getQuantity() - held <= 0) {
                     continue;
                 }
                 // TODO: get pissy if they try to use the same card twice
@@ -635,10 +645,11 @@ public class BangManager extends GameManager
 
         case BangObject.SELECT_PHASE:
             resetPreparingStatus(false);
-            _bangobj.setState(BangObject.SELECT_PHASE);
-//             log.info("Starting select phase timer.");
-//             _preGameTimer.state = BangObject.SELECT_PHASE;
-//             _preGameTimer.schedule(15000L);
+            if (!_notingPlayedCards) {
+                startSelectPhase();
+            } else {
+                _notingPlayedCards = false;
+            }
             break;
 
         case BangObject.BUYING_PHASE:
@@ -1069,6 +1080,17 @@ public class BangManager extends GameManager
 
         // transition to the pre-game selection phase
         _scenario.startNextPhase(_bangobj);
+    }
+
+    /**
+     * Starts the select phase.
+     */
+    protected void startSelectPhase ()
+    {
+        _bangobj.setState(BangObject.SELECT_PHASE);
+//        log.info("Starting select phase timer.");
+//        _preGameTimer.state = BangObject.SELECT_PHASE;
+//        _preGameTimer.schedule(15000L);
     }
 
     /**
@@ -1546,6 +1568,26 @@ public class BangManager extends GameManager
         // clear out the various per-player data structures
         _purchases.clear();
 
+        // process any played cards
+        ArrayList<StartingCard> updates = new ArrayList<StartingCard>();
+        ArrayList<StartingCard> removals = new ArrayList<StartingCard>();
+        for (Iterator<StartingCard> iter = _scards.values().iterator(); 
+                iter.hasNext(); ) {
+            StartingCard scard = iter.next();
+            if (!scard.played) {
+                continue;
+            }
+            if (scard.item.playCard()) {
+                removals.add(scard);
+            } else {
+                updates.add(scard);
+            }
+            iter.remove();
+        }
+        if (updates.size() > 0 || removals.size() > 0) {
+            notePlayedCards(updates, removals);
+        }
+
         // maybe start the next round
         if (startNext) {
             startRound();
@@ -1569,23 +1611,6 @@ public class BangManager extends GameManager
         // do the normal round ending stuff as well
         roundDidEnd(false);
 
-        // process any played cards
-        ArrayList<StartingCard> updates = new ArrayList<StartingCard>();
-        ArrayList<StartingCard> removals = new ArrayList<StartingCard>();
-        for (Iterator iter = _scards.values().iterator(); iter.hasNext(); ) {
-            StartingCard scard = (StartingCard)iter.next();
-            if (!scard.played) {
-                continue;
-            }
-            if (scard.item.playCard()) {
-                removals.add(scard);
-            } else {
-                updates.add(scard);
-            }
-        }
-        if (updates.size() > 0 || removals.size() > 0) {
-            notePlayedCards(updates, removals);
-        }
 
         // if this was a tutorial practice session, and we played at least half
         // of it, mark the practice tutorial as completed
@@ -2331,6 +2356,7 @@ public class BangManager extends GameManager
                                 "[item=" + scard.item + "]", pe);
                     }
                 }
+                _notingPlayedCards = true;
                 return true;
             }
 
@@ -2346,6 +2372,15 @@ public class BangManager extends GameManager
                     if (user != null) {
                         user.removeFromInventory(scard.item.getKey());
                     }
+                }
+                // We've completed, allow the select phase to start
+                if (_notingPlayedCards) {
+                    _notingPlayedCards = false;
+
+                // if we've already tried to start the select phase then
+                // better get it going
+                } else {
+                    startSelectPhase();
                 }
             }
         });
@@ -2734,6 +2769,9 @@ public class BangManager extends GameManager
 
     /** Marks a piece currently in a move from moveUnit. */
     protected Piece _onTheMove;
+
+    /** Set to true when we're in the process of noting played cards. */
+    protected boolean _notingPlayedCards;
 
     /** A list of effects to do after the shooting has stopped. */
     protected ArrayList<Effect> _postShotEffects = new ArrayList<Effect>();
