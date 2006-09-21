@@ -427,6 +427,17 @@ public class UnitSprite extends MobileSprite
                 _model.getAnimation("shooting").frameRate;
         }
     }
+
+    @Override // from MobileSprite
+    protected String getMoveSound ()
+    {
+        Unit unit = (Unit)_piece;
+        if (unit.getConfig().moveSound != null) {
+            return unit.getConfig().moveSound;
+        } else {
+            return super.getMoveSound();
+        }
+    }
     
     /**
      * Updates the visibility and location of the status display.
@@ -446,10 +457,11 @@ public class UnitSprite extends MobileSprite
     protected void setCoord (BangBoard board, Vector3f[] coords, int idx,
                              int nx, int ny, boolean moving)
     {
-        // make an exception for the death flights of flyers: only the
-        // last coordinate is on the ground
+        // make an exception for the death flights of flyers: only the last
+        // coordinate is on the ground
         int elev;
-        if (_piece.isAirborne() && !_piece.isAlive() && idx != coords.length-1) {
+        if (_piece.isAirborne() && !_piece.isAlive() &&
+            idx != coords.length-1) {
             elev = ((Unit)_piece).computeAreaFlightElevation(board, nx, ny);
         } else {
             elev = _piece.computeElevation(board, nx, ny, moving);
@@ -537,6 +549,7 @@ public class UnitSprite extends MobileSprite
     protected static final String[] PRELOAD_SOUNDS = {
         "launch",
         "shooting",
+        "proximity",
         "returning_fire",
         "dud",
         "misfire",

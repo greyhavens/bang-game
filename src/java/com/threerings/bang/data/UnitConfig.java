@@ -116,6 +116,9 @@ public class UnitConfig
     /** A custom class for this unit, if one was specified. */
     public String unitClass;
 
+    /** A generic movement sound to use for this unit. */
+    public String moveSound;
+
     /** If this unit uses a gun. */
     public boolean gunUser;
 
@@ -279,6 +282,7 @@ public class UnitConfig
         UnitConfig config = new UnitConfig();
         config.type = type;
         config.unitClass = props.getProperty("class");
+        config.moveSound = props.getProperty("move_sound");
         config.badgeCode = BangUtil.getIntProperty(type, props, "badge", 0);
 
         String modestr =

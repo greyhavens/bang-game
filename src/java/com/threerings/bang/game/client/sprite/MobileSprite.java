@@ -343,8 +343,7 @@ public class MobileSprite extends ActiveSprite
         super.createSounds(sounds);
 
         // load up our movement sounds
-        String spre = "rsrc/" + _type + "/" + _name;
-        String spath = spre + "/move.wav";
+        String spath = "rsrc/" + getMoveSound();
         if (SoundUtil.haveSound(spath)) {
             _moveSound = sounds.getSound(spath);
         } else {
@@ -352,6 +351,7 @@ public class MobileSprite extends ActiveSprite
         }
 
         // preload any associated sounds
+        String spre = "rsrc/" + _type + "/" + _name;
         String[] preload = getPreloadSounds();
         int pcount = (preload == null) ? 0 : preload.length;
         for (int ii = 0; ii < pcount; ii++) {
@@ -363,8 +363,17 @@ public class MobileSprite extends ActiveSprite
     }
 
     /**
+     * Returns the path to the sound to play when this sprite moves. This is
+     * assumed to be relative to rsrc/.
+     */
+    protected String getMoveSound ()
+    {
+        return _type + "/" + _name + "/move.wav";
+    }
+
+    /**
      * Returns an array of sound identifiers that will be preloaded for this
-     * mobile sprite.
+     * mobile sprite. These are assumed to be relative to rsrc/type/name/.
      */
     protected String[] getPreloadSounds ()
     {
@@ -511,11 +520,9 @@ public class MobileSprite extends ActiveSprite
     
     protected ParticleMesh _dust;
     protected Sound _moveSound;
-
     protected PieceSprite _tsprite;
 
     protected int _moveAction = MOVE_NORMAL;
-
     protected String _moveType = MOVE_WALKING;
 
     protected static TextureState _dusttex;
