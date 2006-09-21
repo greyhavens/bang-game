@@ -176,9 +176,7 @@ public class MobileSprite extends ActiveSprite
         }
 
         // start the movement sound
-        if (_moveSound != null) {
-            _moveSound.loop(false);
-        }
+        startMoveSound();
 
         // turn on the dust
         if (_dust != null) {
@@ -192,9 +190,7 @@ public class MobileSprite extends ActiveSprite
         super.pathCompleted();
 
         // stop our movement sound
-        if (_moveSound != null) {
-            _moveSound.stop();
-        }
+        stopMoveSound();
 
         // deactivate the dust
         if (_dust != null) {
@@ -371,6 +367,26 @@ public class MobileSprite extends ActiveSprite
         return _type + "/" + _name + "/move.wav";
     }
 
+    /**
+     * Starts playing the move sound in a loop.
+     */
+    protected void startMoveSound ()
+    {
+        if (_moveSound != null) {
+            _moveSound.loop(false);
+        }
+    }
+    
+    /**
+     * Stops looping the move sound.
+     */
+    protected void stopMoveSound ()
+    {
+        if (_moveSound != null) {
+            _moveSound.stop();
+        }
+    }
+    
     /**
      * Returns an array of sound identifiers that will be preloaded for this
      * mobile sprite. These are assumed to be relative to rsrc/type/name/.
