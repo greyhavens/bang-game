@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BScrollPane;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -166,12 +167,16 @@ public class PaperView extends BContainer
     protected void setContents (String contents)
     {
         if (_contents == null) {
-            _contents = new HTMLView();
+            _contents = new HTMLView(); 
             _contents.setStyleClass("news_contents");
         }
-        if (_contents.getParent() == null) {
+        if (_contscroll == null) {
+            _contscroll = new BScrollPane(_contents);
+            _contscroll.setShowScrollbarAlways(false);
+        }
+        if (_contscroll.getParent() == null) {
             _contcont.removeAll();
-            _contcont.add(_contents, BorderLayout.CENTER);
+            _contcont.add(_contscroll, BorderLayout.CENTER);
         }
 
         if (contents == null) {
@@ -279,6 +284,7 @@ public class PaperView extends BContainer
     protected TopScoreView _topscore;
     protected FolkView _folks;
     protected HTMLView _contents;
+    protected BScrollPane _contscroll;
 
     protected int _pageNo;
     protected VelocityEngine _vformatter;
