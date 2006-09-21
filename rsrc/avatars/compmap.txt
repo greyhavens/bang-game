@@ -1,4 +1,4 @@
-434
+441
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -223,6 +223,7 @@ male/clothing_back := duster := 214
 male/clothing_back := fat_suspenders := 320
 male/clothing_back := fringe := 215
 male/clothing_back := ironplate_poncho := 256
+male/clothing_back := overalls := 435
 male/clothing_back := plate_poncho := 216
 male/clothing_back := poncho := 217
 male/clothing_back := revolutionary := 406
@@ -243,6 +244,8 @@ male/clothing_front := federal_jacket_shotgun := 374
 male/clothing_front := flask_fringe := 251
 male/clothing_front := ironplate_poncho := 252
 male/clothing_front := lapels_suit := 222
+male/clothing_front := overalls_pitchfork := 436
+male/clothing_front := overalls_wheat := 437
 male/clothing_front := rifle_duster := 253
 male/clothing_front := skinny_prospector_beans := 362
 male/clothing_front := skinny_prospector_pick := 363
@@ -289,6 +292,7 @@ male/eyes := squinty := 7
 male/eyes := stare := 419
 male/eyes := weary := 229
 male/eyes := wide := 230
+male/glasses := goggles := 438
 male/glasses := round := 8
 male/glasses := steamgoggles := 34
 male/hair_back := braids := 35
@@ -323,6 +327,7 @@ male/hat := revolutionary := 411
 male/hat := sombrero := 258
 male/hat := stetson := 232
 male/hat := ten_gallon := 259
+male/hat := topper_native := 439
 male/hat := trickster_raven := 412
 male/hat := war_bonnet := 297
 male/hat := widebrim := 44
@@ -334,10 +339,12 @@ male/hat_back := feather_double := 45
 male/hat_back := feather_one := 294
 male/hat_back := feather_single := 46
 male/hat_back := feather_two := 299
+male/hat_back := native_topper := 440
 male/hat_back := revolutionary := 413
 male/hat_back := sombrero := 260
 male/hat_back := stetson := 233
 male/hat_back := ten_gallon := 261
+male/hat_back := topper_native := 441
 male/hat_back := war_bonnet := 300
 male/hat_back := wolf_mask := 301
 male/hat_band := border_band_sombrero := 262
