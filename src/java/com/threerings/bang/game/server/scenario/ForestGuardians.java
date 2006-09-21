@@ -65,7 +65,7 @@ public class ForestGuardians extends Scenario
     public ForestGuardians ()
     {
         registerDelegate(new TrainDelegate());
-        registerDelegate(new RespawnDelegate());
+        registerDelegate(new RespawnDelegate(8));
         registerDelegate(_lrdelegate = new LoggingRobotDelegate());
     }
     
@@ -345,9 +345,11 @@ public class ForestGuardians extends Scenario
         _bangmgr.deployEffect(-1, new MarqueeEffect(
             MessageBundle.compose("m.wave", "m.nth." + (++_wave))));
         
-        // reset all of the trees
-        for (TreeBed tree : _trees) {
-            _bangmgr.deployEffect(-1, new TreeBedEffect(tree, 50, 0));
+        // reset all of the trees for waves after the first
+        if (_wave > 1) {
+            for (TreeBed tree : _trees) {
+                _bangmgr.deployEffect(-1, new TreeBedEffect(tree, 50, 0));
+            }
         }
         
         // notify the delegate
