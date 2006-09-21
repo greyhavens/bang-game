@@ -1160,7 +1160,7 @@ unit_status_closed:hover {
 
 unit_status_container {
   background: image "ui/ustatus/unitstatus_open.png" framexy 97 32 21 54;
-  padding: 3 7 9 42;
+  padding: 3 9 11 42;
 }
 
 unit_status_name {
@@ -1208,16 +1208,18 @@ unit_status_number {
 
 unit_status_holding {
   parent: unit_status_details;
+  text-align: left;
+  vertical-align: center;
   color: #FFFFFF;
 }
 
-unit_status_influend {
-  parent: unit_status_details;
+unit_status_influence {
+  parent: unit_status_holding;
   color: #FFD100;
 }
 
 unit_status_hindrance {
-  parent: unit_status_details;
+  parent: unit_status_holding;
   color: #6D0C08;
 }
 
