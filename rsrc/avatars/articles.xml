@@ -146,8 +146,7 @@
 
   <article name="male_chillkat_blanket" townId="indian_post"
            slot="clothing" scrip="2000" coins="2" colors="clothes_p,clothes_s">
-    <component cclass="male/clothing_back" name="a_tlingit"/>
-    <component cclass="male/clothing_front" name="tlingit_chillkat_blanket"/>
+    <component cclass="male/clothing_back" name="tlingit_chillkat_blanket"/>
   </article>
 
   <article name="male_dagger_and_salmon" townId="indian_post"
