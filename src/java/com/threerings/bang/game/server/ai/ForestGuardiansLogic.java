@@ -42,7 +42,7 @@ public class ForestGuardiansLogic extends AILogic
         for (Piece piece : pieces) {
             if (piece instanceof TreeBed) {
                 TreeBed tree = (TreeBed)piece;
-                if ((tree.growth != TreeBed.FULLY_GROWN || tree.damage != 0) &&
+                if (tree.isAlive() && tree.damage != 0 &&
                     (ctree == null || unit.getDistance(tree) <
                         unit.getDistance(ctree))) {
                     ctree = tree;

@@ -15,6 +15,7 @@ import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.Interval;
 
 import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.Path;
@@ -307,7 +308,10 @@ public class EffectHandler extends BoardView.BoardAction
     // documentation inherited from interface Effect.Observer
     public void boardAffected (String effect)
     {
-        if (_ctx.getEffectCache().haveEffect(effect)) {
+        if (effect != null && effect.startsWith("m.")) {
+            _view.fadeMarqueeInOut(effect, 1f);
+            notePender(2f);
+        } else if (_ctx.getEffectCache().haveEffect(effect)) {
             _view.displayCameraParticles(effect, CAMERA_EFFECT_DURATION);
         } else if (HighNoonEffect.HIGH_NOON.equals(effect)) {
             _view.setHighNoon(true);
@@ -718,6 +722,16 @@ public class EffectHandler extends BoardView.BoardAction
         return (!_applying && _penders.size() == 0);
     }
 
+    protected void notePender (float duration)
+    {
+        final int penderId = notePender();
+        new Interval(_ctx.getApp()) {
+            public void expired () {
+                maybeComplete(penderId);
+            }
+        }.schedule((long)(duration * 1000));
+    }
+    
     protected int notePender ()
     {
         _penders.add(++_nextPenderId);
