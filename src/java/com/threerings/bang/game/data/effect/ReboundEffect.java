@@ -85,7 +85,7 @@ public class ReboundEffect extends BonusEffect
     @Override // documentation inherited
     protected String getActivatedEffect ()
     {
-        return null;
+        return "frontier_town/spring";
     }
 
     @Override // from BonusEffect

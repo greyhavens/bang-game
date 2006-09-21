@@ -35,8 +35,15 @@ public class TotemEffect extends HoldEffect
     /** The bonus identifier for the totem crown piece. */
     public static final String TOTEM_CROWN_BONUS = "indian_post/totem_crown";
 
+    /** Indicates that we picked up a totem. */
+    public static final String PICKED_UP_TOTEM = "indian_post/totem/pickedup";
+        
+    /** Indicates that we picked up a totem crown. */
+    public static final String PICKED_UP_CROWN =
+        "indian_post/totem_crown/pickedup";
+    
     /** The identifier for the type of effect that we produce. */
-    public static final String TOTEM_ADDED = "indian_post/totem_added";
+    public static final String TOTEM_ADDED = "indian_post/totem/added";
 
     /** The normal totem pieces. */
     public static final String[] TOTEM_PIECES = {
@@ -80,5 +87,12 @@ public class TotemEffect extends HoldEffect
             }
         }
         return true;
+    }
+    
+    @Override // documentation inherited
+    public String getPickedUpEffect ()
+    {
+        return TOTEM_CROWN_BONUS.equals(type) ?
+            PICKED_UP_CROWN : PICKED_UP_TOTEM;
     }
 }

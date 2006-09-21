@@ -29,7 +29,7 @@ public class HoldEffect extends BonusEffect
     public static final String PICKED_UP_BONUS = "picked_up_bonus";
 
     /** The identifier for the type of effect that we produce. */
-    public static final String DROPPED_BONUS = "dropped_bonus";
+    public static final String DROPPED_BONUS = "frontier_town/bonus/dropped";
 
     /** If true, the piece in question is dropping a bonus; */
     public boolean dropping;

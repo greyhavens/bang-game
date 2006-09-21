@@ -318,6 +318,12 @@ public class EffectHandler extends BoardView.BoardAction
         } else if (effect == null && _view.isHighNoon()) {
             _view.setHighNoon(false);
         }
+        
+        // perhaps play a sound to go with our visual effect
+        String soundPath = getSoundPath(effect);
+        if (soundPath != null) {
+            _sounds.getSound(soundPath).play(true);
+        }
     }
 
     // documentation inherited from interface Effect.Observer

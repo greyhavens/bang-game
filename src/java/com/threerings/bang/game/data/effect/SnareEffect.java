@@ -38,7 +38,7 @@ public class SnareEffect extends SetHindranceEffect
     @Override // documentation inherited
     protected String getEffectName ()
     {
-        return "snare";
+        return "indian_post/snare";
     }
 
     @Override // documentation inherited

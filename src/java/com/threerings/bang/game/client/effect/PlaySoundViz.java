@@ -22,7 +22,7 @@ public class PlaySoundViz extends EffectViz
     public void display (PieceSprite target)
     {
         // TODO: set the location of the sound
-        _sound.play(false);
+        _sound.play(true);
     }
 
     protected Sound _sound;
