@@ -196,10 +196,6 @@ public class UnitStatusView extends BWindow
             _closed.setStyleClass("unit_status_closed");
         }
 
-        public BComponent getHitComponent(int mx, int my) {
-            return super.getHitComponent(mx, my);
-        }
-
         public void setUnitSprite (UnitSprite sprite) {
             // clear out our old sprite
             clearSprite();
@@ -315,15 +311,9 @@ public class UnitStatusView extends BWindow
             Unit unit = getUnit();
             _health.setText("" + (100 - unit.damage) + "%");
             toggleDetails(BangPrefs.getUnitStatusDetails());
-            if (!BangPrefs.getUnitStatusDetails()) {
-                forceUpdate();
-                return;
-            }
-            if (_opened.getParent() != null) {
-                updateHolding(unit);
-                updateInfluence(unit);
-                updateHindrance(unit);
-            }
+            updateHolding(unit);
+            updateInfluence(unit);
+            updateHindrance(unit);
             forceUpdate();
         }
 
