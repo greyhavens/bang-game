@@ -75,6 +75,12 @@
     <aspect name="hook" townId="frontier_town" scrip="500" coins="0"/>
     <aspect name="long" townId="frontier_town" scrip="500" coins="0"/>
     <aspect name="flat" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="beak" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="boxer" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="button" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="creased" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="dwarf" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="rail" townId="frontier_town" scrip="500" coins="0"/>
   </class>
 
   <class name="male/mustache">
@@ -89,6 +95,7 @@
     <aspect name="chop" townId="frontier_town" scrip="750" coins="1"/>
     <aspect name="neat" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="latin" townId="frontier_town" scrip="750" coins="1"/>
+    <aspect name="droopy" townId="frontier_town" scrip="500" coins="1"/>
   </class>
 
   <class name="male/mouth">
@@ -113,6 +120,11 @@
     <aspect name="sideburns" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="grant" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="muttonchops" townId="frontier_town" scrip="600" coins="1"/>
+    <aspect name="chops" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="braid" townId="frontier_town" scrip="750" coins="1"/>
+    <aspect name="fro" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="spikey" townId="frontier_town" scrip="750" coins="1"/>
+    <aspect name="stubble" townId="frontier_town" scrip="600" coins="1"/>
   </class>
 
   <!-- female avatar aspects -->
