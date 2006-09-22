@@ -20,12 +20,23 @@ public class RepairEffect extends BonusEffect
     /** The identifier for the type of effect that we produce. */
     public static final String REPAIRED = "frontier_town/repair";
 
+    /** The identifier for the type of effect that we produce. */
+    public static final String HALF_REPAIRED = "frontier_town/half_repair";
+    
     /** The base amount by which to repair the piece. */
     public int baseRepair = 100;
 
     /** The updated damage for the affected piece. */
     public int newDamage;
 
+    /**
+     * Determines whether the given piece effect is one of the repair effects.
+     */
+    public static boolean isRepairEffect (String effect)
+    {
+        return REPAIRED.equals(effect) || HALF_REPAIRED.equals(effect);
+    }
+    
     /**
      * The constructor used when we're created by a bonus.
      */
@@ -73,7 +84,7 @@ public class RepairEffect extends BonusEffect
         }
 
         piece.damage = newDamage;
-        reportEffect(obs, piece, REPAIRED);
+        reportEffect(obs, piece, baseRepair == 100 ? REPAIRED : HALF_REPAIRED);
         return true;
     }
 

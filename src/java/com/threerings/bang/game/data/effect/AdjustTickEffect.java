@@ -23,9 +23,16 @@ public class AdjustTickEffect extends Effect
     /** Identifies the use of this effect by the Giddy Up card. */
     public static final String GIDDY_UPPED = "frontier_town/giddy_up";
 
+    /** Identifies the use of this effect by the Half Giddy Up card. */
+    public static final String HALF_GIDDY_UPPED =
+        "frontier_town/half_giddy_up";
+    
     /** The piece that we will be affecting. */
     public int pieceId;
 
+    /** The delta from the board tick at activation time. */
+    public int delta;
+    
     /** The new last acted time to assign to this piece. */
     public short newLastActed;
 
@@ -36,7 +43,7 @@ public class AdjustTickEffect extends Effect
     public AdjustTickEffect (int pieceId, int delta)
     {
         this.pieceId = pieceId;
-        _delta = delta;
+        this.delta = delta;
     }
 
     @Override // documentation inherited
@@ -54,7 +61,7 @@ public class AdjustTickEffect extends Effect
             return;
         }
         newLastActed = (short)Math.max(bangobj.tick - 4,
-            Math.min(p.lastActed + _delta, bangobj.tick));
+            Math.min(p.lastActed + delta, bangobj.tick));
 
         // make sure we're actually changing something
         if (p.lastActed == newLastActed) {
@@ -73,8 +80,12 @@ public class AdjustTickEffect extends Effect
     {
         Piece piece = (Piece)bangobj.pieces.get(pieceId);
         if (piece != null) {
-            String effect = (newLastActed < bangobj.tick) ?
-                GIDDY_UPPED : STARED_DOWN;
+            String effect;
+            if (delta > 0) {
+                effect = STARED_DOWN;
+            } else {
+                effect = (delta <= -4 ? GIDDY_UPPED : HALF_GIDDY_UPPED);
+            }
             piece.lastActed = newLastActed;
             reportEffect(observer, piece, effect);
         }
@@ -91,7 +102,4 @@ public class AdjustTickEffect extends Effect
         }
         return MessageBundle.compose("m.effect_staredown", piece.getName());
     }
-    
-    /** The delta from the board tick at activation time. */
-    protected transient int _delta;
 }

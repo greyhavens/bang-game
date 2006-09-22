@@ -192,7 +192,7 @@ public class EffectHandler extends BoardView.BoardAction
         } else if (effect.equals(ShotEffect.EXPLODED)) {
             wasDamaged = true;
             effviz = new ExplosionViz();
-        } else if (effect.equals(RepairEffect.REPAIRED) ||
+        } else if (RepairEffect.isRepairEffect(effect) ||
                    effect.equals(NuggetEffect.NUGGET_ADDED)) {
             effviz = new RepairViz();
         }
@@ -642,7 +642,12 @@ public class EffectHandler extends BoardView.BoardAction
                 if (BangPrefs.isHighDetail()) {
                     sprite.displayDustRing();
                 }
-                bounceSprite(_sprite, TILE_SIZE / 4);
+                _sounds.getSound(DROPPED_SOUND).play(true);
+                if (piece instanceof LoggingRobot) {
+                    ((UnitSprite)sprite).queueAction("unfolding");
+                } else {
+                    bounceSprite(_sprite, TILE_SIZE / 4);
+                }
                 maybeComplete(penderId);
             }
         });
@@ -695,12 +700,9 @@ public class EffectHandler extends BoardView.BoardAction
                     }
                 });
             }
-        } else if (sprite instanceof UnitSprite &&
-            ((UnitSprite)sprite).getPiece() instanceof LoggingRobot) {
-            ((UnitSprite)sprite).queueAction("unfolding");   
         }
     }
-     
+    
     protected boolean isCompleted ()
     {
         return (!_applying && _penders.size() == 0);
@@ -771,4 +773,9 @@ public class EffectHandler extends BoardView.BoardAction
     protected static final String[] SOUND_SUFFIXES = {
         ".wav", "/activate.wav"
     };
+    
+    /** The sound to play when pieces hit the ground after dropping from the
+     * sky. */
+    protected static final String DROPPED_SOUND =
+        "rsrc/extras/frontier_town/barricade/dropped.wav";
 }

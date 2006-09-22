@@ -50,4 +50,10 @@ public class Spring extends AddPieceCard
         return Bonus.createBonus(
             BonusConfig.getConfig("frontier_town/spring"));
     }
+    
+    @Override // documentation inherited
+    protected String getAddedEffect ()
+    {
+        return "frontier_town/spring/place";
+    }
 }
