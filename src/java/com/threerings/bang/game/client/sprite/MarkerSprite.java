@@ -100,7 +100,7 @@ public class MarkerSprite extends PieceSprite
             }
             _tlight = view.getTerrainNode().createHighlight(
                     piece.x, piece.y, false, (byte)1);
-            _tlight.setLightCombineMode(LightState.REPLACE);
+            _tlight.setLightCombineMode(LightState.OFF);
             _tlight.setTextureBuffer(0, _tlight.getTextureBuffer(0, 0), 1);
             setOrientation(piece.orientation);
             attachHighlight(_tlight);
