@@ -34,6 +34,12 @@ public class NightmareShotEffect extends BallisticShotEffect
     }
     
     @Override // documentation inherited
+    public Trajectory getTrajectory ()
+    {
+        return Trajectory.FLAT;
+    }
+    
+    @Override // documentation inherited
     protected String getEffect ()
     {
         return DAMAGED;

@@ -142,6 +142,16 @@ public class UnitSprite extends MobileSprite
         return _ballisticShotDelay;
     }
     
+    /**
+     * Returns the source node whose location should be used as the starting
+     * point of ballistic shots, or <code>null</code> if a source was not
+     * configured.
+     */
+    public Spatial getBallisticShotSource ()
+    {
+        return _ballisticShotSource;
+    }
+    
     @Override // documentation inherited
     public String getHelpIdent (int pidx)
     {
@@ -451,6 +461,10 @@ public class UnitSprite extends MobileSprite
             _ballisticShotDelay = (float)Integer.parseInt(bframe) /
                 _model.getAnimation("shooting").frameRate;
         }
+        String bsource = _model.getProperties().getProperty(
+            "ballistic_shot_source");
+        _ballisticShotSource = (bsource == null ?
+            null : _model.getDescendant(bsource));
     }
 
     @Override // from MobileSprite
@@ -532,6 +546,7 @@ public class UnitSprite extends MobileSprite
     };
 
     protected float _ballisticShotDelay;
+    protected Spatial _ballisticShotSource;
     
     protected TerrainNode.Highlight _pendnode;
     protected TextureState _pendtst;

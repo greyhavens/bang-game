@@ -14,6 +14,9 @@ import com.threerings.bang.game.data.piece.Piece;
  */
 public class BallisticShotEffect extends ShotEffect
 {
+    /** Types of projectile trajectories. */
+    public enum Trajectory { FLAT, HIGH_ARC };
+    
     public BallisticShotEffect (Piece shooter, Piece target, int damage,
                                 String[] attackIcons, String[] defendIcons)
     {
@@ -45,6 +48,14 @@ public class BallisticShotEffect extends ShotEffect
         return "units/frontier_town/artillery/shell";
     }
 
+    /**
+     * Returns the type of trajectory that should be followed by the shot.
+     */
+    public Trajectory getTrajectory ()
+    {
+        return Trajectory.HIGH_ARC;
+    }
+    
     @Override // documentation inherited
     protected String getEffect ()
     {

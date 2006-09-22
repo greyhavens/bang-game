@@ -6,6 +6,7 @@ package com.threerings.bang.game.client;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.scene.Spatial;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.BallisticPath;
@@ -19,6 +20,7 @@ import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.ShotSprite;
+import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.BallisticShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
@@ -129,17 +131,43 @@ public class BallisticShotHandler extends ShotHandler
     @Override // documentation inherited
     protected void fireShot (int sx, int sy, int tx, int ty)
     {
+        // if the shooter sprite has a node configured as a ballistic
+        // shot source, use its translation; otherwise, just use a
+        // point one half tile above the ground
+        Vector3f start = null;
+        UnitSprite usprite = _view.getUnitSprite(_shooter);
+        if (_sidx == 0 && usprite != null) {
+            Spatial src = usprite.getBallisticShotSource();
+            if (src != null) {
+                start = new Vector3f(src.getWorldTranslation());
+            }
+        }
         float escale = _bangobj.board.getElevationScale(TILE_SIZE);
-        Vector3f start = new Vector3f(
-            sx * TILE_SIZE + TILE_SIZE/2, sy * TILE_SIZE + TILE_SIZE/2,
-            _bangobj.board.getElevation(sx, sy) * escale + TILE_SIZE/2);
+        if (start == null) {
+            start = new Vector3f(
+                sx * TILE_SIZE + TILE_SIZE/2, sy * TILE_SIZE + TILE_SIZE/2,
+                _bangobj.board.getElevation(sx, sy) * escale + TILE_SIZE/2);
+        }
         Vector3f end = new Vector3f(
             tx * TILE_SIZE + TILE_SIZE/2, ty * TILE_SIZE + TILE_SIZE/2,
             _bangobj.board.getElevation(tx, ty) * escale + TILE_SIZE/2);
-        PathParams pparams = computePathParams(start, end);
-        _ssprite = new ShotSprite(
-            _ctx, ((BallisticShotEffect)_shot).getShotType(),
-            _view.getUnitSprite(_shooter).getColorizations());
+        PathParams pparams;
+        Vector3f gravity;
+        BallisticShotEffect bshot = (BallisticShotEffect)_shot;
+        if (bshot.getTrajectory() == BallisticShotEffect.Trajectory.FLAT) {
+            Vector3f velocity = end.subtract(start);
+            float length = velocity.length();
+            pparams = new PathParams(
+                velocity.normalizeLocal().mult(FLAT_TRAJECTORY_SPEED),
+                length / FLAT_TRAJECTORY_SPEED);
+            gravity = Vector3f.ZERO;
+        } else { // BallisticShotEffect.Trajectory.HIGH_ARC
+            pparams = computePathParams(start, end);
+            gravity = GRAVITY_VECTOR;
+        }
+        
+        _ssprite = new ShotSprite(_ctx, bshot.getShotType(),
+            (usprite == null) ? null : usprite.getColorizations());
         
         _penderId = notePender();
         _ssprite.setLocalTranslation(start);
@@ -151,15 +179,17 @@ public class BallisticShotHandler extends ShotHandler
         final MobileSprite dsprite = getDeflectorSprite();
         final float btime = pparams.duration - (dsprite == null ?
             0f : getActionDuration(dsprite, "blocking") * 0.5f);
-        final float delay = (_sidx == 0) ?
-            _view.getUnitSprite(_shooter).getBallisticShotDelay() : 0f;
+        final float delay = (_sidx == 0 && usprite != null) ?
+            usprite.getBallisticShotDelay() : 0f;
+        _ssprite.setCullMode(Spatial.CULL_ALWAYS);
         _ssprite.move(new OrientingBallisticPath(_ssprite,
-            new Vector3f(1, 0, 0), start, pparams.velocity, GRAVITY_VECTOR,
+            new Vector3f(1, 0, 0), start, pparams.velocity, gravity,
             pparams.duration) {
             public void update (float time) {
                 if ((_daccum += time) < delay) {
                     return;
                 }
+                _ssprite.setCullMode(Spatial.CULL_DYNAMIC);
                 super.update(time);
                 if (dsprite != null && !_blocking && _accum >= btime) {
                     _deflectSound.play(false);
@@ -246,4 +276,7 @@ public class BallisticShotHandler extends ShotHandler
     protected int _penderId;
     protected ShotSprite _ssprite;
     protected Sound _launchSound, _deflectSound;
+    
+    /** The speed (u/s) at which to fire projectiles with flat trajectories. */
+    protected static final float FLAT_TRAJECTORY_SPEED = 50f;
 }
