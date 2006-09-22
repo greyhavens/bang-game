@@ -71,10 +71,8 @@ public class MoveShootHandler extends EffectHandler
      */
     public void fireShot ()
     {
-        if (_bangSound != null) {
-            _bangSound.play(false);
-        }
-
+        playSounds(_bangSounds, true);
+        
         _applying = true;
         apply(_shot);
         maybeComplete(_shotPender);
@@ -105,19 +103,14 @@ public class MoveShootHandler extends EffectHandler
      */
     protected void prepareSounds (SoundGroup sounds)
     {
-        // load up the sound that will go with our shootin'
-        if (_shooter instanceof Unit) {
-            UnitSprite usprite = _view.getUnitSprite(_shooter);
-            if (usprite != null) {
-                _bangSound = usprite.getShotSound(sounds, _shot);
-            }
-        }
+        // load up the sounds that will go with our shootin'
+        _bangSounds = getShotSounds(_shooter, _shot);
     }
 
     protected MoveShootEffect _moveShoot;
     protected int _shotPender;
     protected ShotEffect _shot;
-    protected Sound _bangSound;
+    protected Sound[] _bangSounds;
 
     protected Piece _shooter, _target;
 }

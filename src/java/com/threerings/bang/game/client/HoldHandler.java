@@ -145,10 +145,8 @@ public class HoldHandler extends EffectHandler
                 super.wasRemoved();
                 _view.removeSprite(_sprite);
                 if (!added) {
-                    UnitSprite usprite = _view.getUnitSprite(unit);
-                    if (usprite != null) {
-                        usprite.updated(unit, _tick);
-                    }
+                    HoldHandler.super.pieceAffected(unit,
+                        NuggetEffect.PICKED_UP_NUGGET);
                 } else if (rejected) {
                     rejectNugget(claim);
                 }
@@ -199,10 +197,8 @@ public class HoldHandler extends EffectHandler
                 super.wasRemoved();
                 HoldHandler.super.pieceRemoved(
                     ((PieceSprite)_sprite).getPiece());
-                UnitSprite usprite = _view.getUnitSprite(picker);
-                if (usprite != null) {
-                    usprite.updated(picker, _tick);
-                }
+                HoldHandler.super.pieceAffected(picker,
+                    ((HoldEffect)_effect).getPickedUpEffect());
                 maybeComplete(penderId);
             }    
         });

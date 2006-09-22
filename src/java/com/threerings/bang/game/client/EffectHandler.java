@@ -493,6 +493,59 @@ public class EffectHandler extends BoardView.BoardAction
     }
 
     /**
+     * Returns an array of sounds that contains both the principal shot sound
+     * and the sounds of any influences.
+     */
+    protected Sound[] getShotSounds (Piece shooter, ShotEffect shot)
+    {
+        if (!(shooter instanceof Unit)) {
+            return null;
+        }
+        UnitSprite usprite = _view.getUnitSprite(shooter);
+        if (usprite == null) {
+            return null;
+        }
+        ArrayList<Sound> sounds = new ArrayList<Sound>();
+        Sound psound = usprite.getShotSound(_sounds, shot);
+        if (psound != null) {
+            sounds.add(psound);
+        }
+        addInfluenceSounds(sounds, shot.attackIcons);
+        addInfluenceSounds(sounds, shot.defendIcons);
+        return sounds.toArray(new Sound[sounds.size()]);
+    }
+    
+    /**
+     * Looks for sounds representing the named influences, loading them and
+     * adding them to the list if present.
+     */
+    protected void addInfluenceSounds (
+        ArrayList<Sound> sounds, String[] influences)
+    {
+        if (influences == null) {
+            return;
+        }
+        for (String influence : influences) {
+            String path = "rsrc/influences/sounds/" + influence + ".wav";
+            if (SoundUtil.haveSound(path)) {
+                sounds.add(_sounds.getSound(path));
+            }       
+        }
+    }
+    
+    /**
+     * Plays a group of sounds simultaneously.
+     */
+    protected void playSounds (Sound[] sounds, boolean allowDefer)
+    {
+        if (sounds != null) {
+            for (Sound sound : sounds) {
+                sound.play(allowDefer);
+            }
+        }
+    }
+    
+    /**
      * Queues up an action on a sprite and sets up the necessary observation to
      * ensure that we wait until the action is completed to complete our
      * effect.

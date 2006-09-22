@@ -40,10 +40,8 @@ public class ProximityShotHandler extends ShotHandler
 
     protected void fireShot (int sx, int sy, int tx, int ty)
     {
-        // play the bang sound
-        if (_bangSound != null) {
-            _bangSound.play(false);
-        }
+        // play the bang sounds
+        playSounds(_bangSounds, true);
 
         apply(_effect);
         maybeComplete(-1);

@@ -88,13 +88,8 @@ public abstract class ShotHandler extends EffectHandler
      */
     protected void prepareSounds (SoundGroup sounds)
     {
-        // load up the sound that will go with our shootin'
-        if (_shooter instanceof Unit) {
-            UnitSprite usprite = _view.getUnitSprite(_shooter);
-            if (usprite != null) {
-                _bangSound = usprite.getShotSound(sounds, _shot);
-            }
-        }
+        // load up the sounds that will go with our shootin'
+        _bangSounds = getShotSounds(_shooter, _shot);
     }
 
     protected void fireShot ()
@@ -150,7 +145,7 @@ public abstract class ShotHandler extends EffectHandler
     protected abstract void fireShot (int sx, int sy, int tx, int ty);
 
     protected ShotEffect _shot;
-    protected Sound _bangSound;
+    protected Sound[] _bangSounds;
 
     protected Piece _shooter, _target;
     protected int _sidx;

@@ -44,10 +44,8 @@ public class ChainingShotHandler extends ShotHandler
         // first off immediately
         new Interval(_ctx.getClient().getRunQueue()) {
             public void expired () {
-                // play the bang sound
-                if (_bangSound != null) {
-                    _bangSound.play(false);
-                }
+                // play the bang sounds
+                playSounds(_bangSounds, true);
                 
                 // keep applying the next level until done
                 if (!_cseffect.apply(_bangobj, ChainingShotHandler.this,

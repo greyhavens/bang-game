@@ -11,10 +11,8 @@ public class InstantShotHandler extends ShotHandler
 {
     protected void fireShot (int sx, int sy, int tx, int ty)
     {
-        // play the bang sound
-        if (_bangSound != null) {
-            _bangSound.play(false);
-        }
+        // play the bang sounds
+        playSounds(_bangSounds, true);
 
         // apply the effect and complete our handling if that did not result in
         // anything that needs waiting for

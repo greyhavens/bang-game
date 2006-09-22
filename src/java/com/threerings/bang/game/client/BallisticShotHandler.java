@@ -191,8 +191,8 @@ public class BallisticShotHandler extends ShotHandler
         // this action to finish
         int penderId = _penderId;
         if (!fireNextSegment()) {
-            if (_target != null && _bangSound != null) {
-                _bangSound.play(false); // bang!
+            if (_target != null) {
+                playSounds(_bangSounds, true);
             }
 
             // apply the effect and complete our handling if that did not
