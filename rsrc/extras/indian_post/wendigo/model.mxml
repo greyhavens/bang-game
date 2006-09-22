@@ -23,7 +23,7 @@
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
     </vertex>
-    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143993, 0.989192" tcoords="-0.755486, 0.946485">
+    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143992, 0.989192" tcoords="-0.755486, 0.946485">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
@@ -548,27 +548,27 @@
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
     </vertex>
-    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436779, 0.476651" tcoords="-0.837167, 0.798644">
+    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436778, 0.476651" tcoords="-0.837167, 0.798644">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143993, 0.989192" tcoords="-0.755486, 0.946485">
+    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143992, 0.989192" tcoords="-0.755486, 0.946485">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
     </vertex>
-    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436779, 0.476651" tcoords="-0.837167, 0.798644">
+    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436778, 0.476651" tcoords="-0.837167, 0.798644">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="0.296819, -2.80708, 11.3471" normal="0.0272424, 0.223781, 0.974259" tcoords="-0.816846, 0.903809">
+    <vertex location="0.296819, -2.80708, 11.3471" normal="0.0272425, 0.223781, 0.974259" tcoords="-0.816846, 0.903809">
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
     </vertex>
-    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143993, 0.989192" tcoords="-0.755486, 0.946485">
+    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143992, 0.989192" tcoords="-0.755486, 0.946485">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
@@ -628,7 +628,7 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
     </vertex>
-    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.091136" tcoords="-0.850034, 0.709502">
+    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.0911361" tcoords="-0.850034, 0.709502">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -638,7 +638,7 @@
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
     </vertex>
-    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.091136" tcoords="-0.850034, 0.709502">
+    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.0911361" tcoords="-0.850034, 0.709502">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -648,12 +648,12 @@
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
     </vertex>
-    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.091136" tcoords="-0.850034, 0.709502">
+    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.0911361" tcoords="-0.850034, 0.709502">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436779, 0.476651" tcoords="-0.837167, 0.798644">
+    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436778, 0.476651" tcoords="-0.837167, 0.798644">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -663,7 +663,7 @@
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
     </vertex>
-    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190958, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
+    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190959, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -683,27 +683,27 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
     </vertex>
-    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190958, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
+    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190959, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436779, 0.476651" tcoords="-0.837167, 0.798644">
+    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436778, 0.476651" tcoords="-0.837167, 0.798644">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436779, 0.476651" tcoords="-0.837167, 0.798644">
+    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436778, 0.476651" tcoords="-0.837167, 0.798644">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190958, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
+    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190959, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="0.296819, -2.80708, 11.3471" normal="0.0272424, 0.223781, 0.974259" tcoords="-0.816846, 0.903809">
+    <vertex location="0.296819, -2.80708, 11.3471" normal="0.0272425, 0.223781, 0.974259" tcoords="-0.816846, 0.903809">
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
@@ -713,7 +713,7 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
     </vertex>
-    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436779, 0.476651" tcoords="-0.837167, 0.798644">
+    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436778, 0.476651" tcoords="-0.837167, 0.798644">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -723,12 +723,12 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
     </vertex>
-    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436779, 0.476651" tcoords="-0.837167, 0.798644">
+    <vertex location="-4.11885, -3.87808, 9.64733" normal="-0.878007, -0.0436778, 0.476651" tcoords="-0.837167, 0.798644">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.091136" tcoords="-0.850034, 0.709502">
+    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.0911361" tcoords="-0.850034, 0.709502">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -743,7 +743,7 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
     </vertex>
-    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.091136" tcoords="-0.850034, 0.709502">
+    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.0911361" tcoords="-0.850034, 0.709502">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -753,7 +753,7 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
     </vertex>
-    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.091136" tcoords="-0.850034, 0.709502">
+    <vertex location="-4.09025, -5.36876, 6.58929" normal="-0.884046, -0.458429, 0.0911361" tcoords="-0.850034, 0.709502">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -773,7 +773,7 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
     </vertex>
-    <vertex location="0.161991, -8.91456, 6.52525" normal="-0.00968879, -0.938001, -0.346496" tcoords="-0.996295, 0.610102">
+    <vertex location="0.161991, -8.91456, 6.52525" normal="-0.00968878, -0.938001, -0.346496" tcoords="-0.996295, 0.610102">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.0"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -793,7 +793,7 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
     </vertex>
-    <vertex location="0.161991, -8.91456, 6.52525" normal="-0.00968879, -0.938001, -0.346496" tcoords="-0.996295, 0.610102">
+    <vertex location="0.161991, -8.91456, 6.52525" normal="-0.00968878, -0.938001, -0.346496" tcoords="-0.996295, 0.610102">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.0"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -823,7 +823,7 @@
       <boneWeight bone="Bip01 Spine" weight="0.5"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
     </vertex>
-    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143993, 0.989192" tcoords="-0.755486, 0.946485">
+    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143992, 0.989192" tcoords="-0.755486, 0.946485">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
@@ -1343,7 +1343,7 @@
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
     </vertex>
-    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143993, 0.989192" tcoords="-0.755486, 0.946485">
+    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143992, 0.989192" tcoords="-0.755486, 0.946485">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
@@ -1358,12 +1358,12 @@
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143993, 0.989192" tcoords="-0.755486, 0.946485">
+    <vertex location="0.309422, -0.461689, 11.7978" normal="0.02766, -0.143992, 0.989192" tcoords="-0.755486, 0.946485">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
     </vertex>
-    <vertex location="0.296819, -2.80708, 11.3471" normal="0.0272424, 0.223781, 0.974259" tcoords="-0.816846, 0.903809">
+    <vertex location="0.296819, -2.80708, 11.3471" normal="0.0272425, 0.223781, 0.974259" tcoords="-0.816846, 0.903809">
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
@@ -1458,7 +1458,7 @@
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190958, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
+    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190959, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -1468,12 +1468,12 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.0"/>
     </vertex>
-    <vertex location="4.47042, -6.30579, 11.1692" normal="0.903798, 0.273497, 0.329164" tcoords="-0.899322, 0.814212">
+    <vertex location="4.47042, -6.30579, 11.1692" normal="0.903798, 0.273498, 0.329164" tcoords="-0.899322, 0.814212">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
     </vertex>
-    <vertex location="4.47042, -6.30579, 11.1692" normal="0.903798, 0.273497, 0.329164" tcoords="-0.899322, 0.814212">
+    <vertex location="4.47042, -6.30579, 11.1692" normal="0.903798, 0.273498, 0.329164" tcoords="-0.899322, 0.814212">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
@@ -1483,7 +1483,7 @@
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190958, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
+    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190959, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -1493,22 +1493,22 @@
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="0.296819, -2.80708, 11.3471" normal="0.0272424, 0.223781, 0.974259" tcoords="-0.816846, 0.903809">
+    <vertex location="0.296819, -2.80708, 11.3471" normal="0.0272425, 0.223781, 0.974259" tcoords="-0.816846, 0.903809">
       <boneWeight bone="Bip01 Spine" weight="0.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
     </vertex>
-    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190958, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
+    <vertex location="0.313984, -3.50844, 11.9609" normal="0.0190959, 0.730239, 0.682924" tcoords="-0.845913, 0.902842">
       <boneWeight bone="Bip01 Spine2" weight="0.5"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="4.47042, -6.30579, 11.1692" normal="0.903798, 0.273497, 0.329164" tcoords="-0.899322, 0.814212">
+    <vertex location="4.47042, -6.30579, 11.1692" normal="0.903798, 0.273498, 0.329164" tcoords="-0.899322, 0.814212">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
     </vertex>
-    <vertex location="3.52309, -7.60701, 8.35352" normal="0.945212, -0.324722, -0.0336185" tcoords="-0.916228, 0.733361">
+    <vertex location="3.52309, -7.60701, 8.35353" normal="0.945212, -0.324722, -0.0336185" tcoords="-0.916228, 0.733361">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
@@ -1523,7 +1523,7 @@
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="3.52309, -7.60701, 8.35352" normal="0.945212, -0.324722, -0.0336185" tcoords="-0.916228, 0.733361">
+    <vertex location="3.52309, -7.60701, 8.35353" normal="0.945212, -0.324722, -0.0336185" tcoords="-0.916228, 0.733361">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
@@ -1533,7 +1533,7 @@
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
     </vertex>
-    <vertex location="3.52309, -7.60701, 8.35352" normal="0.945212, -0.324722, -0.0336185" tcoords="-0.916228, 0.733361">
+    <vertex location="3.52309, -7.60701, 8.35353" normal="0.945212, -0.324722, -0.0336185" tcoords="-0.916228, 0.733361">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
@@ -1573,7 +1573,7 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.5"/>
     </vertex>
-    <vertex location="0.161991, -8.91456, 6.52525" normal="-0.00968879, -0.938001, -0.346496" tcoords="-0.996295, 0.610102">
+    <vertex location="0.161991, -8.91456, 6.52525" normal="-0.00968878, -0.938001, -0.346496" tcoords="-0.996295, 0.610102">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.0"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -1583,7 +1583,7 @@
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
       <boneWeight bone="Bip01 Spine2" weight="0.0"/>
     </vertex>
-    <vertex location="0.161991, -8.91456, 6.52525" normal="-0.00968879, -0.938001, -0.346496" tcoords="-0.996295, 0.610102">
+    <vertex location="0.161991, -8.91456, 6.52525" normal="-0.00968878, -0.938001, -0.346496" tcoords="-0.996295, 0.610102">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
       <boneWeight bone="Bip01 Spine3" weight="0.0"/>
       <boneWeight bone="Bip01 Spine1" weight="0.0"/>
@@ -1617,25 +1617,25 @@
       <boneWeight bone="Bip01 Spine" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
     </vertex>
-    <vertex location="0.029974, 2.77489, -1.12617" normal="0.000998651, -0.139637, -0.990202" tcoords="-0.763282, 0.826838">
+    <vertex location="0.029974, 2.77489, -1.12617" normal="0.000998618, -0.139638, -0.990202" tcoords="-0.763282, 0.826838">
       <boneWeight bone="Bip01 Spine" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
     </vertex>
-    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311827, -0.999864" tcoords="-0.586688, 0.854687">
+    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311825, -0.999864" tcoords="-0.586688, 0.854687">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
     <vertex location="4.75367, 3.02532, 3.57833" normal="0.990963, -0.133225, -0.0155752" tcoords="-0.763282, 0.564791">
       <boneWeight bone="Bip01 Spine" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
     </vertex>
-    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442299, 0.00565323" tcoords="-0.586688, 0.536943">
+    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442298, 0.00565326" tcoords="-0.586688, 0.536943">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
     <vertex location="4.75367, 3.02532, 3.57833" normal="0.990963, -0.133225, -0.0155752" tcoords="-0.763282, 0.564791">
       <boneWeight bone="Bip01 Spine" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
     </vertex>
-    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311827, -0.999864" tcoords="-0.586688, 0.854687">
+    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311825, -0.999864" tcoords="-0.586688, 0.854687">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
     <vertex location="-4.69391, 3.01541, 3.57866" normal="-0.990179, -0.13885, -0.0163063" tcoords="-0.763282, 0.826838">
@@ -1645,17 +1645,17 @@
     <vertex location="-5.70552, 10.3654, 3.521" normal="-0.999614, -0.0180818, 0.0210893" tcoords="-0.586688, 0.854687">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
-    <vertex location="0.029974, 2.77489, -1.12617" normal="0.000998651, -0.139637, -0.990202" tcoords="-0.763282, 0.564791">
+    <vertex location="0.029974, 2.77489, -1.12617" normal="0.000998618, -0.139638, -0.990202" tcoords="-0.763282, 0.564791">
       <boneWeight bone="Bip01 Spine" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
     </vertex>
     <vertex location="-5.70552, 10.3654, 3.521" normal="-0.999614, -0.0180818, 0.0210893" tcoords="-0.586688, 0.854687">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
-    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311827, -0.999864" tcoords="-0.586688, 0.536943">
+    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311825, -0.999864" tcoords="-0.586688, 0.536943">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
-    <vertex location="0.029974, 2.77489, -1.12617" normal="0.000998651, -0.139637, -0.990202" tcoords="-0.763282, 0.564791">
+    <vertex location="0.029974, 2.77489, -1.12617" normal="0.000998618, -0.139638, -0.990202" tcoords="-0.763282, 0.564791">
       <boneWeight bone="Bip01 Spine" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
     </vertex>
@@ -1680,11 +1680,11 @@
     <vertex location="-5.70552, 10.3654, 3.521" normal="-0.999614, -0.0180818, 0.0210893" tcoords="-0.586688, 0.854687">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
-    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321582, -0.945104" tcoords="-0.461296, 0.549722">
+    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321581, -0.945104" tcoords="-0.461296, 0.549722">
       <boneWeight bone="strand_inside_bottom_left_1" weight="0.5"/>
       <boneWeight bone="strand_inside_bottom_right_1" weight="0.5"/>
     </vertex>
-    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311827, -0.999864" tcoords="-0.586688, 0.536943">
+    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311825, -0.999864" tcoords="-0.586688, 0.536943">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
     <vertex location="-5.1902, 16.8923, 2.97037" normal="-0.979541, -0.0102764, 0.200981" tcoords="-0.461296, 0.841907">
@@ -1695,7 +1695,7 @@
       <boneWeight bone="strand_inside_bottom_right_1" weight="0.5"/>
       <boneWeight bone="strand_inside_top_right_1" weight="0.5"/>
     </vertex>
-    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311827, -0.999864" tcoords="-0.586688, 0.536943">
+    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311825, -0.999864" tcoords="-0.586688, 0.536943">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
     <vertex location="-5.70552, 10.3654, 3.521" normal="-0.999614, -0.0180818, 0.0210893" tcoords="-0.586688, 0.854687">
@@ -1704,7 +1704,7 @@
     <vertex location="-1.36052, 21.0356, -6.49051" normal="-0.715464, -0.567157, -0.407975" tcoords="-0.333353, 0.594167">
       <boneWeight bone="strand_inside_bottom_right_1" weight="1.0"/>
     </vertex>
-    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321582, -0.945104" tcoords="-0.461296, 0.549722">
+    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321581, -0.945104" tcoords="-0.461296, 0.549722">
       <boneWeight bone="strand_inside_bottom_left_1" weight="0.5"/>
       <boneWeight bone="strand_inside_bottom_right_1" weight="0.5"/>
     </vertex>
@@ -1718,7 +1718,7 @@
     <vertex location="-4.95511, 23.3776, -3.5829" normal="-0.705088, -0.564465, -0.429221" tcoords="-0.333353, 0.797462">
       <boneWeight bone="strand_inside_bottom_right_1" weight="1.0"/>
     </vertex>
-    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321582, -0.945104" tcoords="-0.461296, 0.549722">
+    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321581, -0.945104" tcoords="-0.461296, 0.549722">
       <boneWeight bone="strand_inside_bottom_left_1" weight="0.5"/>
       <boneWeight bone="strand_inside_bottom_right_1" weight="0.5"/>
     </vertex>
@@ -1765,7 +1765,7 @@
       <boneWeight bone="Bip01 Spine" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
     </vertex>
-    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442299, 0.00565323" tcoords="-0.586688, 0.536943">
+    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442298, 0.00565326" tcoords="-0.586688, 0.536943">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
     <vertex location="0.0297851, 3.26584, 8.28315" normal="0.00226399, -0.134376, 0.990928" tcoords="-0.763282, 0.826838">
@@ -1776,28 +1776,28 @@
       <boneWeight bone="Bip01 Spine" weight="0.5"/>
       <boneWeight bone="Bip01 Spine1" weight="0.5"/>
     </vertex>
-    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442299, 0.00565323" tcoords="-0.586688, 0.536943">
+    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442298, 0.00565326" tcoords="-0.586688, 0.536943">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
     <vertex location="5.19876, 15.7011, 3.12953" normal="0.973547, -0.125015, 0.191251" tcoords="-0.461296, 0.549722">
       <boneWeight bone="strand_inside_bottom_left_1" weight="0.5"/>
       <boneWeight bone="strand_inside_top_left_1" weight="0.5"/>
     </vertex>
-    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442299, 0.00565323" tcoords="-0.586688, 0.536943">
+    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442298, 0.00565326" tcoords="-0.586688, 0.536943">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
-    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321582, -0.945104" tcoords="-0.461296, 0.841907">
+    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321581, -0.945104" tcoords="-0.461296, 0.841907">
       <boneWeight bone="strand_inside_bottom_left_1" weight="0.5"/>
       <boneWeight bone="strand_inside_bottom_right_1" weight="0.5"/>
     </vertex>
-    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321582, -0.945104" tcoords="-0.461296, 0.841907">
+    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321581, -0.945104" tcoords="-0.461296, 0.841907">
       <boneWeight bone="strand_inside_bottom_left_1" weight="0.5"/>
       <boneWeight bone="strand_inside_bottom_right_1" weight="0.5"/>
     </vertex>
-    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442299, 0.00565323" tcoords="-0.586688, 0.536943">
+    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442298, 0.00565326" tcoords="-0.586688, 0.536943">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
-    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311827, -0.999864" tcoords="-0.586688, 0.854687">
+    <vertex location="0.0224102, 10.4934, -2.20528" normal="0.0161967, -0.00311825, -0.999864" tcoords="-0.586688, 0.854687">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
     <vertex location="0.2452, 19.2273, 7.56521" normal="0.0355037, 0.192151, 0.980723" tcoords="-0.461296, 0.841907">
@@ -1818,7 +1818,7 @@
     <vertex location="0.0221816, 10.2494, 9.24776" normal="-0.00326902, 0.0234469, 0.99972" tcoords="-0.586688, 0.854687">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
-    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442299, 0.00565323" tcoords="-0.586688, 0.536943">
+    <vertex location="5.75011, 10.3774, 3.52148" normal="0.999974, -0.00442298, 0.00565326" tcoords="-0.586688, 0.536943">
       <boneWeight bone="Bip01 Spine" weight="1.0"/>
     </vertex>
     <vertex location="0.2452, 19.2273, 7.56521" normal="0.0355037, 0.192151, 0.980723" tcoords="-0.461296, 0.549722">
@@ -1862,7 +1862,7 @@
       <boneWeight bone="strand_inside_bottom_left_1" weight="0.5"/>
       <boneWeight bone="strand_inside_top_left_1" weight="0.5"/>
     </vertex>
-    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321582, -0.945104" tcoords="-0.461296, 0.841907">
+    <vertex location="-0.031125, 14.3163, -1.5587" normal="-0.0580015, -0.321581, -0.945104" tcoords="-0.461296, 0.841907">
       <boneWeight bone="strand_inside_bottom_left_1" weight="0.5"/>
       <boneWeight bone="strand_inside_bottom_right_1" weight="0.5"/>
     </vertex>
@@ -2265,7 +2265,7 @@
       <boneWeight bone="Bip01 R UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-7.75006, -0.227, 33.3725" normal="0.28786, -0.270798, 0.918589" tcoords="0.204823, 0.420782">
+    <vertex location="-7.75006, -0.227, 33.3725" normal="0.287859, -0.270797, 0.918589" tcoords="0.204823, 0.420782">
       <boneWeight bone="Bip01 R UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -2277,7 +2277,7 @@
       <boneWeight bone="Bip01 R UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-7.75006, -0.227, 33.3725" normal="0.28786, -0.270798, 0.918589" tcoords="0.204823, 0.420782">
+    <vertex location="-7.75006, -0.227, 33.3725" normal="0.287859, -0.270797, 0.918589" tcoords="0.204823, 0.420782">
       <boneWeight bone="Bip01 R UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -2289,7 +2289,7 @@
       <boneWeight bone="Bip01 R UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-7.75006, -0.227, 33.3725" normal="0.28786, -0.270798, 0.918589" tcoords="0.204823, 0.420782">
+    <vertex location="-7.75006, -0.227, 33.3725" normal="0.287859, -0.270797, 0.918589" tcoords="0.204823, 0.420782">
       <boneWeight bone="Bip01 R UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -2612,7 +2612,7 @@
     <vertex location="-1.44105, -22.9109, 9.79072" normal="-0.610221, -0.600762, 0.516446" tcoords="0.09478, 0.493857">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-0.0204632, -24.0733, 9.55486" normal="-1.94973e-007, -0.728731, 0.684801" tcoords="0.007782, 0.48936">
+    <vertex location="-0.0204632, -24.0733, 9.55487" normal="-1.94973e-007, -0.728731, 0.684801" tcoords="0.007782, 0.48936">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-0.0204651, -18.7451, 13.2762" normal="-2.67817e-007, -0.30819, 0.951325" tcoords="0.175878, 0.700565">
@@ -2707,7 +2707,7 @@
     <vertex location="-3.51094, -12.8124, 12.8639" normal="-0.906166, -0.184923, 0.380352" tcoords="0.47714, 0.723575">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-2.40042, -19.27, 9.68374" normal="-0.95493, -0.290363, -0.0616322" tcoords="0.247889, 0.524104">
+    <vertex location="-2.40042, -19.27, 9.68375" normal="-0.95493, -0.290363, -0.0616322" tcoords="0.247889, 0.524104">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-3.78557, -15.5171, 8.64996" normal="-0.746748, -0.345699, -0.568208" tcoords="0.421897, 0.52363">
@@ -2719,7 +2719,7 @@
     <vertex location="-2.61338, -15.066, 8.18551" normal="-0.396948, -0.246372, -0.884157" tcoords="0.457483, 0.457539">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-5.28972, -11.8331, 8.91096" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
+    <vertex location="-5.28972, -11.8331, 8.91097" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-5.03515, -9.8817, 7.95705" normal="-0.926706, -0.0657396, -0.369992" tcoords="0.63896, 0.566132">
@@ -2761,13 +2761,13 @@
     <vertex location="-5.00507, -12.0461, 10.6207" normal="-0.803179, -0.360359, 0.474389" tcoords="0.553402, 0.639837">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-5.28972, -11.8331, 8.91096" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
+    <vertex location="-5.28972, -11.8331, 8.91097" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-3.78557, -15.5171, 8.64996" normal="-0.746748, -0.345699, -0.568208" tcoords="0.421897, 0.52363">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-5.28972, -11.8331, 8.91096" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
+    <vertex location="-5.28972, -11.8331, 8.91097" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-5.13149, -11.0878, 11.2786" normal="-0.779852, -0.383081, 0.495056" tcoords="0.585373, 0.674642">
@@ -2820,10 +2820,10 @@
     <vertex location="-3.78557, -15.5171, 8.64996" normal="-0.746748, -0.345699, -0.568208" tcoords="0.421897, 0.52363">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-2.40042, -19.27, 9.68374" normal="-0.95493, -0.290363, -0.0616322" tcoords="0.247889, 0.524104">
+    <vertex location="-2.40042, -19.27, 9.68375" normal="-0.95493, -0.290363, -0.0616322" tcoords="0.247889, 0.524104">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-2.40042, -19.27, 9.68374" normal="-0.95493, -0.290363, -0.0616322" tcoords="0.247889, 0.524104">
+    <vertex location="-2.40042, -19.27, 9.68375" normal="-0.95493, -0.290363, -0.0616322" tcoords="0.247889, 0.524104">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-1.44105, -22.9109, 9.79072" normal="-0.610221, -0.600762, 0.516446" tcoords="0.09478, 0.493857">
@@ -2897,12 +2897,12 @@
     <vertex location="-4.27883, -8.61868, 11.7856" normal="-0.934669, 0.0801875, 0.346359" tcoords="0.652335, 0.743651">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-3.75414, -2.59011, 4.25318" normal="0.745333, 0.648685, 0.153904" tcoords="0.976498, 0.089459">
+    <vertex location="-3.75414, -2.59011, 4.25319" normal="0.745333, 0.648685, 0.153904" tcoords="0.976498, 0.089459">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-4.44778, -2.19355, 2.94233" normal="0.290607, 0.876197, -0.384482" tcoords="0.922518, 0.021416">
+    <vertex location="-4.44778, -2.19355, 2.94234" normal="0.290607, 0.876197, -0.384482" tcoords="0.922518, 0.021416">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -2912,12 +2912,12 @@
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
     </vertex>
-    <vertex location="-6.2094, -5.29032, 0.900039" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="-6.2094, -5.29032, 0.900041" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-6.75653, -3.61346, 3.32619" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
+    <vertex location="-6.75653, -3.61346, 3.3262" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -2947,7 +2947,7 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-6.2094, -5.29032, 0.900039" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="-6.2094, -5.29032, 0.900041" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -2962,7 +2962,7 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-9.14479, -8.76339, -0.565389" normal="-0.900963, -0.109296, 0.419905" tcoords="0.528949, 0.099252">
+    <vertex location="-9.14479, -8.76339, -0.565387" normal="-0.900963, -0.109296, 0.419905" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -2972,17 +2972,12 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-9.14479, -8.76339, -0.565389" normal="-0.900963, -0.109296, 0.419905" tcoords="0.462165, 0.122283">
+    <vertex location="-9.14479, -8.76339, -0.565387" normal="-0.900963, -0.109296, 0.419905" tcoords="0.462165, 0.122283">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-7.46615, -8.68437, -0.620104" normal="0.803403, -0.562342, 0.195741" tcoords="0.454446, 0.18813">
-      <boneWeight bone="Bip01 Head" weight="0.0"/>
-      <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
-      <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
-    </vertex>
-    <vertex location="-7.08239, -6.45897, 3.00105" normal="-0.863045, -0.459792, 0.20915" tcoords="0.283378, 0.186247">
+    <vertex location="-7.46615, -8.68437, -0.620102" normal="0.803403, -0.562342, 0.195741" tcoords="0.454446, 0.18813">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -2992,7 +2987,12 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-7.46615, -8.68437, -0.620104" normal="0.803403, -0.562342, 0.195741" tcoords="0.454446, 0.18813">
+    <vertex location="-7.08239, -6.45897, 3.00105" normal="-0.863045, -0.459792, 0.20915" tcoords="0.283378, 0.186247">
+      <boneWeight bone="Bip01 Head" weight="0.0"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
+    </vertex>
+    <vertex location="-7.46615, -8.68437, -0.620102" normal="0.803403, -0.562342, 0.195741" tcoords="0.454446, 0.18813">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3007,22 +3007,22 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-7.46615, -8.68437, -0.620104" normal="0.803403, -0.562342, 0.195741" tcoords="0.528949, 0.099252">
+    <vertex location="-7.46615, -8.68437, -0.620102" normal="0.803403, -0.562342, 0.195741" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-6.2094, -5.29032, 0.900039" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="-6.2094, -5.29032, 0.900041" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-6.2094, -5.29032, 0.900039" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="-6.2094, -5.29032, 0.900041" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-7.46615, -8.68437, -0.620104" normal="0.803403, -0.562342, 0.195741" tcoords="0.528949, 0.099252">
+    <vertex location="-7.46615, -8.68437, -0.620102" normal="0.803403, -0.562342, 0.195741" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3037,7 +3037,7 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-5.02407, -7.59582, 4.862" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.18385, 0.234074">
+    <vertex location="-5.02407, -7.59582, 4.86201" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.18385, 0.234074">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3055,7 +3055,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-6.75653, -3.61346, 3.32619" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
+    <vertex location="-6.75653, -3.61346, 3.3262" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -3069,7 +3069,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.29812, -5.34733, 7.28045" normal="0.758486, 0.457986, 0.463625" tcoords="0.959224, 0.279067">
+    <vertex location="-3.29812, -5.34733, 7.28046" normal="0.758486, 0.457986, 0.463625" tcoords="0.959224, 0.279067">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3077,7 +3077,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-5.02407, -7.59582, 4.862" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
+    <vertex location="-5.02407, -7.59582, 4.86201" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3091,7 +3091,7 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-5.02407, -7.59582, 4.862" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
+    <vertex location="-5.02407, -7.59582, 4.86201" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3124,7 +3124,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.21277, -7.52102, 6.8103" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
+    <vertex location="-3.21277, -7.52102, 6.81031" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3136,27 +3136,12 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-9.01038, -11.8187, -2.72231" normal="-0.735068, -0.670579, 0.1" tcoords="0.620066, 0.134162">
+    <vertex location="-9.01038, -11.8187, -2.7223" normal="-0.735068, -0.670579, 0.1" tcoords="0.620066, 0.134162">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-7.88204, -11.2943, -4.52033" normal="0.118338, -0.156371, -0.980584" tcoords="0.691817, 0.189699">
-      <boneWeight bone="Bip01 Head" weight="0.0"/>
-      <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
-      <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
-    </vertex>
-    <vertex location="-7.33175, -11.7397, -2.77702" normal="0.739511, -0.650264, 0.174011" tcoords="0.612875, 0.198582">
-      <boneWeight bone="Bip01 Head" weight="0.0"/>
-      <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
-      <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
-    </vertex>
-    <vertex location="-7.46615, -8.68437, -0.620104" normal="0.803403, -0.562342, 0.195741" tcoords="0.454446, 0.18813">
-      <boneWeight bone="Bip01 Head" weight="0.0"/>
-      <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
-      <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
-    </vertex>
-    <vertex location="-9.14479, -8.76339, -0.565389" normal="-0.900963, -0.109296, 0.419905" tcoords="0.462165, 0.122283">
+    <vertex location="-7.88204, -11.2943, -4.52032" normal="0.118338, -0.156371, -0.980584" tcoords="0.691817, 0.189699">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3166,12 +3151,12 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-9.14479, -8.76339, -0.565389" normal="-0.900963, -0.109296, 0.419905" tcoords="0.462165, 0.122283">
+    <vertex location="-7.46615, -8.68437, -0.620102" normal="0.803403, -0.562342, 0.195741" tcoords="0.454446, 0.18813">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-9.01038, -11.8187, -2.72231" normal="-0.735068, -0.670579, 0.1" tcoords="0.620066, 0.134162">
+    <vertex location="-9.14479, -8.76339, -0.565387" normal="-0.900963, -0.109296, 0.419905" tcoords="0.462165, 0.122283">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3181,7 +3166,22 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-7.88204, -11.2943, -4.52033" normal="0.118338, -0.156371, -0.980584" tcoords="0.384409, 0.028611">
+    <vertex location="-9.14479, -8.76339, -0.565387" normal="-0.900963, -0.109296, 0.419905" tcoords="0.462165, 0.122283">
+      <boneWeight bone="Bip01 Head" weight="0.0"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
+    </vertex>
+    <vertex location="-9.01038, -11.8187, -2.7223" normal="-0.735068, -0.670579, 0.1" tcoords="0.620066, 0.134162">
+      <boneWeight bone="Bip01 Head" weight="0.0"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
+    </vertex>
+    <vertex location="-7.33175, -11.7397, -2.77702" normal="0.739511, -0.650264, 0.174011" tcoords="0.612875, 0.198582">
+      <boneWeight bone="Bip01 Head" weight="0.0"/>
+      <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
+      <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
+    </vertex>
+    <vertex location="-7.88204, -11.2943, -4.52032" normal="0.118338, -0.156371, -0.980584" tcoords="0.384409, 0.028611">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3196,7 +3196,7 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-7.46615, -8.68437, -0.620104" normal="0.803403, -0.562342, 0.195741" tcoords="0.528949, 0.099252">
+    <vertex location="-7.46615, -8.68437, -0.620102" normal="0.803403, -0.562342, 0.195741" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3211,27 +3211,27 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-7.88204, -11.2943, -4.52033" normal="0.118338, -0.156371, -0.980584" tcoords="0.384409, 0.028611">
+    <vertex location="-7.88204, -11.2943, -4.52032" normal="0.118338, -0.156371, -0.980584" tcoords="0.384409, 0.028611">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-9.01038, -11.8187, -2.72231" normal="-0.735068, -0.670579, 0.1" tcoords="0.388906, 0.117852">
+    <vertex location="-9.01038, -11.8187, -2.7223" normal="-0.735068, -0.670579, 0.1" tcoords="0.388906, 0.117852">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-9.14479, -8.76339, -0.565389" normal="-0.900963, -0.109296, 0.419905" tcoords="0.528949, 0.099252">
+    <vertex location="-9.14479, -8.76339, -0.565387" normal="-0.900963, -0.109296, 0.419905" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-4.44778, -2.19355, 2.94233" normal="0.290607, 0.876197, -0.384482" tcoords="0.922518, 0.021416">
+    <vertex location="-4.44778, -2.19355, 2.94234" normal="0.290607, 0.876197, -0.384482" tcoords="0.922518, 0.021416">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-6.75653, -3.61346, 3.32619" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
+    <vertex location="-6.75653, -3.61346, 3.3262" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -3250,7 +3250,7 @@
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
     </vertex>
-    <vertex location="-6.75653, -3.61346, 3.32619" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
+    <vertex location="-6.75653, -3.61346, 3.3262" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -3284,7 +3284,7 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.75414, -2.59011, 4.25318" normal="0.745333, 0.648685, 0.153904" tcoords="0.932457, 0.100498">
+    <vertex location="-3.75414, -2.59011, 4.25319" normal="0.745333, 0.648685, 0.153904" tcoords="0.932457, 0.100498">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3293,12 +3293,12 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.75414, -2.59011, 4.25318" normal="0.745333, 0.648685, 0.153904" tcoords="0.932457, 0.100498">
+    <vertex location="-3.75414, -2.59011, 4.25319" normal="0.745333, 0.648685, 0.153904" tcoords="0.932457, 0.100498">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.29812, -5.34733, 7.28045" normal="0.758486, 0.457986, 0.463625" tcoords="0.924037, 0.264428">
+    <vertex location="-3.29812, -5.34733, 7.28046" normal="0.758486, 0.457986, 0.463625" tcoords="0.924037, 0.264428">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3306,7 +3306,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.75414, -2.59011, 4.25318" normal="0.745333, 0.648685, 0.153904" tcoords="0.932457, 0.100498">
+    <vertex location="-3.75414, -2.59011, 4.25319" normal="0.745333, 0.648685, 0.153904" tcoords="0.932457, 0.100498">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3316,12 +3316,12 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-4.44778, -2.19355, 2.94233" normal="0.290607, 0.876197, -0.384482" tcoords="0.922518, 0.021416">
+    <vertex location="-4.44778, -2.19355, 2.94234" normal="0.290607, 0.876197, -0.384482" tcoords="0.922518, 0.021416">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-4.44778, -2.19355, 2.94233" normal="0.290607, 0.876197, -0.384482" tcoords="0.922518, 0.021416">
+    <vertex location="-4.44778, -2.19355, 2.94234" normal="0.290607, 0.876197, -0.384482" tcoords="0.922518, 0.021416">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3349,13 +3349,13 @@
     <vertex location="-3.74331, -14.1349, 12.1246" normal="-0.892691, -0.100635, 0.43929" tcoords="0.440222, 0.674805">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-2.40042, -19.27, 9.68374" normal="-0.95493, -0.290363, -0.0616322" tcoords="0.247889, 0.524104">
+    <vertex location="-2.40042, -19.27, 9.68375" normal="-0.95493, -0.290363, -0.0616322" tcoords="0.247889, 0.524104">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-2.7996, -17.8421, 11.9742" normal="-0.840882, -0.281618, 0.462177" tcoords="0.288399, 0.625153">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-5.02407, -7.59582, 4.862" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
+    <vertex location="-5.02407, -7.59582, 4.86201" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3395,19 +3395,19 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.21277, -7.52102, 6.8103" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
+    <vertex location="-3.21277, -7.52102, 6.81031" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.29812, -5.34733, 7.28045" normal="0.758486, 0.457986, 0.463625" tcoords="0.924037, 0.264428">
+    <vertex location="-3.29812, -5.34733, 7.28046" normal="0.758486, 0.457986, 0.463625" tcoords="0.924037, 0.264428">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.29812, -5.34733, 7.28045" normal="0.758486, 0.457986, 0.463625" tcoords="0.924037, 0.264428">
+    <vertex location="-3.29812, -5.34733, 7.28046" normal="0.758486, 0.457986, 0.463625" tcoords="0.924037, 0.264428">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.21277, -7.52102, 6.8103" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
+    <vertex location="-3.21277, -7.52102, 6.81031" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3415,7 +3415,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-5.02407, -7.59582, 4.862" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
+    <vertex location="-5.02407, -7.59582, 4.86201" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3431,7 +3431,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.21277, -7.52102, 6.8103" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
+    <vertex location="-3.21277, -7.52102, 6.81031" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3512,7 +3512,7 @@
     <vertex location="-4.6747, -10.699, 12.0747" normal="-0.777696, -0.228871, 0.585498" tcoords="0.583593, 0.713786">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-5.28972, -11.8331, 8.91096" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
+    <vertex location="-5.28972, -11.8331, 8.91097" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-5.00507, -12.0461, 10.6207" normal="-0.803179, -0.360359, 0.474389" tcoords="0.553402, 0.639837">
@@ -3536,7 +3536,7 @@
     <vertex location="-4.16728, -13.6939, 10.9617" normal="-0.899279, -0.151108, 0.410444" tcoords="0.473993, 0.637463">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-2.40042, -19.27, 9.68374" normal="-0.95493, -0.290363, -0.0616322" tcoords="0.247889, 0.524104">
+    <vertex location="-2.40042, -19.27, 9.68375" normal="-0.95493, -0.290363, -0.0616322" tcoords="0.247889, 0.524104">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-1.44105, -22.9109, 9.79072" normal="-0.610221, -0.600762, 0.516446" tcoords="0.09478, 0.493857">
@@ -3572,14 +3572,14 @@
     <vertex location="-3.78557, -15.5171, 8.64996" normal="-0.746748, -0.345699, -0.568208" tcoords="0.421897, 0.52363">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-5.28972, -11.8331, 8.91096" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
+    <vertex location="-5.28972, -11.8331, 8.91097" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-5.03515, -9.8817, 7.95705" normal="-0.926706, -0.0657396, -0.369992" tcoords="0.63896, 0.566132">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-5.28972, -11.8331, 8.91096" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
+    <vertex location="-5.28972, -11.8331, 8.91097" normal="-0.895647, -0.276705, -0.348211" tcoords="0.580309, 0.584978">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="-5.69299, -9.04391, 10.4328" normal="-0.836368, 0.544154, 0.0662155" tcoords="0.689371, 0.665103">
@@ -3614,7 +3614,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-6.75653, -3.61346, 3.32619" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
+    <vertex location="-6.75653, -3.61346, 3.3262" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -3623,7 +3623,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-4.44778, -2.19355, 2.94233" normal="0.290607, 0.876197, -0.384482" tcoords="0.922518, 0.021416">
+    <vertex location="-4.44778, -2.19355, 2.94234" normal="0.290607, 0.876197, -0.384482" tcoords="0.922518, 0.021416">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3633,7 +3633,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-6.75653, -3.61346, 3.32619" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
+    <vertex location="-6.75653, -3.61346, 3.3262" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -3643,11 +3643,11 @@
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
     </vertex>
-    <vertex location="-3.29812, -5.34733, 7.28045" normal="0.758486, 0.457986, 0.463625" tcoords="0.959224, 0.279067">
+    <vertex location="-3.29812, -5.34733, 7.28046" normal="0.758486, 0.457986, 0.463625" tcoords="0.959224, 0.279067">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.75414, -2.59011, 4.25318" normal="0.745333, 0.648685, 0.153904" tcoords="0.976498, 0.089459">
+    <vertex location="-3.75414, -2.59011, 4.25319" normal="0.745333, 0.648685, 0.153904" tcoords="0.976498, 0.089459">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3660,7 +3660,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.29812, -5.34733, 7.28045" normal="0.758486, 0.457986, 0.463625" tcoords="0.959224, 0.279067">
+    <vertex location="-3.29812, -5.34733, 7.28046" normal="0.758486, 0.457986, 0.463625" tcoords="0.959224, 0.279067">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3676,7 +3676,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-5.02407, -7.59582, 4.862" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
+    <vertex location="-5.02407, -7.59582, 4.86201" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3693,7 +3693,7 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-5.02407, -7.59582, 4.862" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
+    <vertex location="-5.02407, -7.59582, 4.86201" normal="-0.0256435, -0.944036, -0.328845" tcoords="0.741051, 0.270812">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3709,11 +3709,11 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.21277, -7.52102, 6.8103" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
+    <vertex location="-3.21277, -7.52102, 6.81031" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-3.21277, -7.52102, 6.8103" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
+    <vertex location="-3.21277, -7.52102, 6.81031" normal="0.885022, 0.103068, -0.453997" tcoords="0.817306, 0.345423">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
@@ -3737,7 +3737,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-6.2094, -5.29032, 0.900039" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="-6.2094, -5.29032, 0.900041" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3747,12 +3747,12 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-6.75653, -3.61346, 3.32619" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
+    <vertex location="-6.75653, -3.61346, 3.3262" normal="-0.866925, 0.484979, 0.11505" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
     </vertex>
-    <vertex location="-6.2094, -5.29032, 0.900039" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="-6.2094, -5.29032, 0.900041" normal="0.101373, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -3772,12 +3772,12 @@
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-7.88204, -11.2943, -4.52033" normal="0.118338, -0.156371, -0.980584" tcoords="0.384409, 0.028611">
+    <vertex location="-7.88204, -11.2943, -4.52032" normal="0.118338, -0.156371, -0.980584" tcoords="0.384409, 0.028611">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="-9.14479, -8.76339, -0.565389" normal="-0.900963, -0.109296, 0.419905" tcoords="0.528949, 0.099252">
+    <vertex location="-9.14479, -8.76339, -0.565387" normal="-0.900963, -0.109296, 0.419905" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 R Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 R UpperArm" weight="1.0"/>
@@ -4009,7 +4009,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.041604" tcoords="0.080631, 0.246925">
+    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.0416041" tcoords="0.080631, 0.246925">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4021,7 +4021,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.041604" tcoords="0.080631, 0.246925">
+    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.0416041" tcoords="0.080631, 0.246925">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4053,7 +4053,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.041604" tcoords="0.080631, 0.246925">
+    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.0416041" tcoords="0.080631, 0.246925">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4065,7 +4065,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.041604" tcoords="0.080631, 0.246925">
+    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.0416041" tcoords="0.080631, 0.246925">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4073,7 +4073,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.041604" tcoords="0.080631, 0.246925">
+    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.0416041" tcoords="0.080631, 0.246925">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4081,7 +4081,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="7.70911, -0.226999, 33.3725" normal="-0.287862, -0.270804, 0.918586" tcoords="0.204823, 0.420782">
+    <vertex location="7.70911, -0.226999, 33.3725" normal="-0.287857, -0.270802, 0.918589" tcoords="0.204823, 0.420782">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4093,7 +4093,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="7.70911, -0.226999, 33.3725" normal="-0.287862, -0.270804, 0.918586" tcoords="0.204823, 0.420782">
+    <vertex location="7.70911, -0.226999, 33.3725" normal="-0.287857, -0.270802, 0.918589" tcoords="0.204823, 0.420782">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4101,11 +4101,11 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.041604" tcoords="0.080631, 0.246925">
+    <vertex location="9.44586, 2.14346, 27.4812" normal="-0.122428, 0.991605, -0.0416041" tcoords="0.080631, 0.246925">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="7.70911, -0.226999, 33.3725" normal="-0.287862, -0.270804, 0.918586" tcoords="0.204823, 0.420782">
+    <vertex location="7.70911, -0.226999, 33.3725" normal="-0.287857, -0.270802, 0.918589" tcoords="0.204823, 0.420782">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4113,7 +4113,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="13.459, -1.37813, 21.7998" normal="-0.643458, -0.677073, -0.357119" tcoords="0.061098, 0.443948">
+    <vertex location="13.459, -1.37813, 21.7999" normal="-0.643458, -0.677073, -0.357119" tcoords="0.061098, 0.443948">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4125,7 +4125,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="13.459, -1.37813, 21.7998" normal="-0.643458, -0.677073, -0.357119" tcoords="0.061098, 0.443948">
+    <vertex location="13.459, -1.37813, 21.7999" normal="-0.643458, -0.677073, -0.357119" tcoords="0.061098, 0.443948">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4137,7 +4137,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="13.459, -1.37813, 21.7998" normal="-0.643458, -0.677073, -0.357119" tcoords="0.061098, 0.443948">
+    <vertex location="13.459, -1.37813, 21.7999" normal="-0.643458, -0.677073, -0.357119" tcoords="0.061098, 0.443948">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4153,7 +4153,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="13.459, -1.37813, 21.7998" normal="-0.643458, -0.677073, -0.357119" tcoords="0.061098, 0.443948">
+    <vertex location="13.459, -1.37813, 21.7999" normal="-0.643458, -0.677073, -0.357119" tcoords="0.061098, 0.443948">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4185,7 +4185,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="13.459, -1.37813, 21.7998" normal="-0.643458, -0.677073, -0.357119" tcoords="0.149848, 0.003225">
+    <vertex location="13.459, -1.37813, 21.7999" normal="-0.643458, -0.677073, -0.357119" tcoords="0.149848, 0.003225">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4309,11 +4309,11 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="13.459, -1.37813, 21.7998" normal="-0.643458, -0.677073, -0.357119" tcoords="0.171581, 0.075087">
+    <vertex location="13.459, -1.37813, 21.7999" normal="-0.643458, -0.677073, -0.357119" tcoords="0.171581, 0.075087">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="13.459, -1.37813, 21.7998" normal="-0.643458, -0.677073, -0.357119" tcoords="0.171581, 0.075087">
+    <vertex location="13.459, -1.37813, 21.7999" normal="-0.643458, -0.677073, -0.357119" tcoords="0.171581, 0.075087">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4365,7 +4365,7 @@
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="13.459, -1.37813, 21.7998" normal="-0.643458, -0.677073, -0.357119" tcoords="0.171581, 0.075087">
+    <vertex location="13.459, -1.37813, 21.7999" normal="-0.643458, -0.677073, -0.357119" tcoords="0.171581, 0.075087">
       <boneWeight bone="Bip01 L UpperArm" weight="0.0"/>
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
@@ -4421,7 +4421,7 @@
     <vertex location="-0.0204644, -21.6659, 12.1168" normal="-2.51459e-007, -0.596162, 0.802864" tcoords="0.074373, 0.613367">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="-0.0204632, -24.0733, 9.55486" normal="-1.94973e-007, -0.728731, 0.684801" tcoords="0.007782, 0.48936">
+    <vertex location="-0.0204632, -24.0733, 9.55487" normal="-1.94973e-007, -0.728731, 0.684801" tcoords="0.007782, 0.48936">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="1.40012, -22.9109, 9.79072" normal="0.61022, -0.600762, 0.516446" tcoords="0.09478, 0.493857">
@@ -4481,7 +4481,7 @@
     <vertex location="3.06219, -12.0333, 11.3365" normal="0.870294, -0.262027, 0.41705" tcoords="0.507914, 0.678044">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="4.99641, -9.89297, 7.95018" normal="0.94111, -0.0313703, -0.336641" tcoords="0.63896, 0.566132">
+    <vertex location="4.99641, -9.89297, 7.95019" normal="0.94111, -0.0313703, -0.336641" tcoords="0.63896, 0.566132">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -4525,20 +4525,20 @@
     <vertex location="2.57245, -15.066, 8.18551" normal="0.397316, -0.24698, -0.883822" tcoords="0.457483, 0.457539">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="3.74465, -15.5171, 8.64996" normal="0.746748, -0.345698, -0.568208" tcoords="0.421897, 0.52363">
+    <vertex location="3.74465, -15.5171, 8.64997" normal="0.746748, -0.345698, -0.568208" tcoords="0.421897, 0.52363">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="2.57245, -15.066, 8.18551" normal="0.397316, -0.24698, -0.883822" tcoords="0.457483, 0.457539">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="4.99641, -9.89297, 7.95018" normal="0.94111, -0.0313703, -0.336641" tcoords="0.63896, 0.566132">
+    <vertex location="4.99641, -9.89297, 7.95019" normal="0.94111, -0.0313703, -0.336641" tcoords="0.63896, 0.566132">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
     <vertex location="5.2488, -11.8331, 8.91097" normal="0.896237, -0.277603, -0.345969" tcoords="0.580309, 0.584978">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="4.99641, -9.89297, 7.95018" normal="0.94111, -0.0313703, -0.336641" tcoords="0.63896, 0.566132">
+    <vertex location="4.99641, -9.89297, 7.95019" normal="0.94111, -0.0313703, -0.336641" tcoords="0.63896, 0.566132">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -4573,7 +4573,7 @@
     <vertex location="4.96414, -12.0461, 10.6207" normal="0.803179, -0.360359, 0.47439" tcoords="0.553402, 0.639837">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="3.74465, -15.5171, 8.64996" normal="0.746748, -0.345698, -0.568208" tcoords="0.421897, 0.52363">
+    <vertex location="3.74465, -15.5171, 8.64997" normal="0.746748, -0.345698, -0.568208" tcoords="0.421897, 0.52363">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="5.2488, -11.8331, 8.91097" normal="0.896237, -0.277603, -0.345969" tcoords="0.580309, 0.584978">
@@ -4632,7 +4632,7 @@
     <vertex location="2.35949, -19.27, 9.68375" normal="0.95493, -0.290363, -0.0616313" tcoords="0.247889, 0.524104">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="3.74465, -15.5171, 8.64996" normal="0.746748, -0.345698, -0.568208" tcoords="0.421897, 0.52363">
+    <vertex location="3.74465, -15.5171, 8.64997" normal="0.746748, -0.345698, -0.568208" tcoords="0.421897, 0.52363">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="2.35949, -19.27, 9.68375" normal="0.95493, -0.290363, -0.0616313" tcoords="0.247889, 0.524104">
@@ -4693,7 +4693,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="2.72291, -7.95482, 9.40531" normal="0.0909354, 0.986653, 0.135079" tcoords="0.939398, 0.41807">
+    <vertex location="2.72291, -7.95482, 9.40532" normal="0.0909354, 0.986653, 0.135079" tcoords="0.939398, 0.41807">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -4724,7 +4724,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.17065, -5.3016, 0.893171" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="6.17065, -5.3016, 0.893173" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -4734,7 +4734,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.71778, -3.62473, 3.31932" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
+    <vertex location="6.71778, -3.62473, 3.31933" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -4764,7 +4764,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.17065, -5.3016, 0.893171" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="6.17065, -5.3016, 0.893173" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -4779,12 +4779,12 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="9.10604, -8.77466, -0.572259" normal="0.900963, -0.109295, 0.419904" tcoords="0.528949, 0.099252">
+    <vertex location="9.10604, -8.77466, -0.572258" normal="0.900963, -0.109295, 0.419904" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="9.10604, -8.77466, -0.572259" normal="0.900963, -0.109295, 0.419904" tcoords="0.462165, 0.122283">
+    <vertex location="9.10604, -8.77466, -0.572258" normal="0.900963, -0.109295, 0.419904" tcoords="0.462165, 0.122283">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -4794,7 +4794,7 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="7.4274, -8.69564, -0.626973" normal="-0.803403, -0.562343, 0.195741" tcoords="0.454446, 0.18813">
+    <vertex location="7.4274, -8.69564, -0.626971" normal="-0.803403, -0.562343, 0.195741" tcoords="0.454446, 0.18813">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -4809,7 +4809,7 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="7.4274, -8.69564, -0.626973" normal="-0.803403, -0.562343, 0.195741" tcoords="0.454446, 0.18813">
+    <vertex location="7.4274, -8.69564, -0.626971" normal="-0.803403, -0.562343, 0.195741" tcoords="0.454446, 0.18813">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -4819,17 +4819,17 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.17065, -5.3016, 0.893171" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="6.17065, -5.3016, 0.893173" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="7.4274, -8.69564, -0.626973" normal="-0.803403, -0.562343, 0.195741" tcoords="0.528949, 0.099252">
+    <vertex location="7.4274, -8.69564, -0.626971" normal="-0.803403, -0.562343, 0.195741" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.17065, -5.3016, 0.893171" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="6.17065, -5.3016, 0.893173" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -4839,7 +4839,7 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="7.4274, -8.69564, -0.626973" normal="-0.803403, -0.562343, 0.195741" tcoords="0.528949, 0.099252">
+    <vertex location="7.4274, -8.69564, -0.626971" normal="-0.803403, -0.562343, 0.195741" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -4863,7 +4863,7 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.71778, -3.62473, 3.31932" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
+    <vertex location="6.71778, -3.62473, 3.31933" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -4881,11 +4881,11 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="4.07778, -5.21518, 7.16695" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
+    <vertex location="4.07778, -5.21518, 7.16696" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.76272, -6.3943, 6.03029" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
+    <vertex location="3.76272, -6.3943, 6.0303" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -4916,7 +4916,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="4.99641, -9.89297, 7.95018" normal="0.94111, -0.0313703, -0.336641" tcoords="0.782315, 0.424608">
+    <vertex location="4.99641, -9.89297, 7.95019" normal="0.94111, -0.0313703, -0.336641" tcoords="0.782315, 0.424608">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -4928,7 +4928,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="2.72291, -7.95482, 9.40531" normal="0.0909354, 0.986653, 0.135079" tcoords="0.939398, 0.41807">
+    <vertex location="2.72291, -7.95482, 9.40532" normal="0.0909354, 0.986653, 0.135079" tcoords="0.939398, 0.41807">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -4948,7 +4948,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="8.97163, -11.83, -2.72918" normal="0.735068, -0.670579, 0.0999994" tcoords="0.620066, 0.134162">
+    <vertex location="8.97163, -11.83, -2.72917" normal="0.735068, -0.670579, 0.0999994" tcoords="0.620066, 0.134162">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -4963,7 +4963,7 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="7.4274, -8.69564, -0.626973" normal="-0.803403, -0.562343, 0.195741" tcoords="0.454446, 0.18813">
+    <vertex location="7.4274, -8.69564, -0.626971" normal="-0.803403, -0.562343, 0.195741" tcoords="0.454446, 0.18813">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -4973,12 +4973,12 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="9.10604, -8.77466, -0.572259" normal="0.900963, -0.109295, 0.419904" tcoords="0.462165, 0.122283">
+    <vertex location="9.10604, -8.77466, -0.572258" normal="0.900963, -0.109295, 0.419904" tcoords="0.462165, 0.122283">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="9.10604, -8.77466, -0.572259" normal="0.900963, -0.109295, 0.419904" tcoords="0.462165, 0.122283">
+    <vertex location="9.10604, -8.77466, -0.572258" normal="0.900963, -0.109295, 0.419904" tcoords="0.462165, 0.122283">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -4988,7 +4988,7 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="8.97163, -11.83, -2.72918" normal="0.735068, -0.670579, 0.0999994" tcoords="0.620066, 0.134162">
+    <vertex location="8.97163, -11.83, -2.72917" normal="0.735068, -0.670579, 0.0999994" tcoords="0.620066, 0.134162">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -5008,7 +5008,7 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="7.4274, -8.69564, -0.626973" normal="-0.803403, -0.562343, 0.195741" tcoords="0.528949, 0.099252">
+    <vertex location="7.4274, -8.69564, -0.626971" normal="-0.803403, -0.562343, 0.195741" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -5028,12 +5028,12 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="9.10604, -8.77466, -0.572259" normal="0.900963, -0.109295, 0.419904" tcoords="0.528949, 0.099252">
+    <vertex location="9.10604, -8.77466, -0.572258" normal="0.900963, -0.109295, 0.419904" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="8.97163, -11.83, -2.72918" normal="0.735068, -0.670579, 0.0999994" tcoords="0.388906, 0.117852">
+    <vertex location="8.97163, -11.83, -2.72917" normal="0.735068, -0.670579, 0.0999994" tcoords="0.388906, 0.117852">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -5048,16 +5048,16 @@
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
     </vertex>
-    <vertex location="6.71778, -3.62473, 3.31932" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
+    <vertex location="6.71778, -3.62473, 3.31933" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
     </vertex>
-    <vertex location="4.07778, -5.21518, 7.16695" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
+    <vertex location="4.07778, -5.21518, 7.16696" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.71778, -3.62473, 3.31932" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
+    <vertex location="6.71778, -3.62473, 3.31933" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -5079,7 +5079,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.45215, -6.67875, 8.09576" normal="-0.497584, 0.557409, 0.664609" tcoords="0.879753, 0.362152">
+    <vertex location="3.45215, -6.67875, 8.09577" normal="-0.497584, 0.557409, 0.664609" tcoords="0.879753, 0.362152">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5087,7 +5087,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="2.72291, -7.95482, 9.40531" normal="0.0909354, 0.986653, 0.135079" tcoords="0.860225, 0.496834">
+    <vertex location="2.72291, -7.95482, 9.40532" normal="0.0909354, 0.986653, 0.135079" tcoords="0.860225, 0.496834">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5096,7 +5096,7 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.76272, -6.3943, 6.03029" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
+    <vertex location="3.76272, -6.3943, 6.0303" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5110,7 +5110,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.76272, -6.3943, 6.03029" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
+    <vertex location="3.76272, -6.3943, 6.0303" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5179,7 +5179,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="4.07778, -5.21518, 7.16695" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
+    <vertex location="4.07778, -5.21518, 7.16696" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5191,11 +5191,11 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="4.07778, -5.21518, 7.16695" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
+    <vertex location="4.07778, -5.21518, 7.16696" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.45215, -6.67875, 8.09576" normal="-0.497584, 0.557409, 0.664609" tcoords="0.929309, 0.340844">
+    <vertex location="3.45215, -6.67875, 8.09577" normal="-0.497584, 0.557409, 0.664609" tcoords="0.929309, 0.340844">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5203,7 +5203,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.45215, -6.67875, 8.09576" normal="-0.497584, 0.557409, 0.664609" tcoords="0.879753, 0.362152">
+    <vertex location="3.45215, -6.67875, 8.09577" normal="-0.497584, 0.557409, 0.664609" tcoords="0.879753, 0.362152">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5219,7 +5219,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.76272, -6.3943, 6.03029" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
+    <vertex location="3.76272, -6.3943, 6.0303" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5235,11 +5235,11 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.76272, -6.3943, 6.03029" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
+    <vertex location="3.76272, -6.3943, 6.0303" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.76272, -6.3943, 6.03029" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
+    <vertex location="3.76272, -6.3943, 6.0303" normal="-0.886643, -0.146274, -0.438712" tcoords="0.835553, 0.269021">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5336,7 +5336,7 @@
     <vertex location="4.12635, -13.6939, 10.9617" normal="0.899278, -0.151107, 0.410445" tcoords="0.473993, 0.637463">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="3.74465, -15.5171, 8.64996" normal="0.746748, -0.345698, -0.568208" tcoords="0.421897, 0.52363">
+    <vertex location="3.74465, -15.5171, 8.64997" normal="0.746748, -0.345698, -0.568208" tcoords="0.421897, 0.52363">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
     <vertex location="4.96414, -12.0461, 10.6207" normal="0.803179, -0.360359, 0.47439" tcoords="0.553402, 0.639837">
@@ -5384,10 +5384,10 @@
     <vertex location="5.2488, -11.8331, 8.91097" normal="0.896237, -0.277603, -0.345969" tcoords="0.580309, 0.584978">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="3.74465, -15.5171, 8.64996" normal="0.746748, -0.345698, -0.568208" tcoords="0.421897, 0.52363">
+    <vertex location="3.74465, -15.5171, 8.64997" normal="0.746748, -0.345698, -0.568208" tcoords="0.421897, 0.52363">
       <boneWeight bone="Bip01 Head" weight="1.0"/>
     </vertex>
-    <vertex location="4.99641, -9.89297, 7.95018" normal="0.94111, -0.0313703, -0.336641" tcoords="0.63896, 0.566132">
+    <vertex location="4.99641, -9.89297, 7.95019" normal="0.94111, -0.0313703, -0.336641" tcoords="0.63896, 0.566132">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5402,7 +5402,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="4.99641, -9.89297, 7.95018" normal="0.94111, -0.0313703, -0.336641" tcoords="0.782315, 0.424608">
+    <vertex location="4.99641, -9.89297, 7.95019" normal="0.94111, -0.0313703, -0.336641" tcoords="0.782315, 0.424608">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5422,7 +5422,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="4.07778, -5.21518, 7.16695" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
+    <vertex location="4.07778, -5.21518, 7.16696" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5430,7 +5430,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.71778, -3.62473, 3.31932" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
+    <vertex location="6.71778, -3.62473, 3.31933" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -5440,7 +5440,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.71778, -3.62473, 3.31932" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
+    <vertex location="6.71778, -3.62473, 3.31933" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -5464,7 +5464,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="4.07778, -5.21518, 7.16695" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
+    <vertex location="4.07778, -5.21518, 7.16696" normal="0.377854, 0.554371, 0.741552" tcoords="0.924037, 0.264428">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5472,7 +5472,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.45215, -6.67875, 8.09576" normal="-0.497584, 0.557409, 0.664609" tcoords="0.929309, 0.340844">
+    <vertex location="3.45215, -6.67875, 8.09577" normal="-0.497584, 0.557409, 0.664609" tcoords="0.929309, 0.340844">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5480,11 +5480,11 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.45215, -6.67875, 8.09576" normal="-0.497584, 0.557409, 0.664609" tcoords="0.929309, 0.340844">
+    <vertex location="3.45215, -6.67875, 8.09577" normal="-0.497584, 0.557409, 0.664609" tcoords="0.929309, 0.340844">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="2.72291, -7.95482, 9.40531" normal="0.0909354, 0.986653, 0.135079" tcoords="0.939398, 0.41807">
+    <vertex location="2.72291, -7.95482, 9.40532" normal="0.0909354, 0.986653, 0.135079" tcoords="0.939398, 0.41807">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5513,7 +5513,7 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="3.45215, -6.67875, 8.09576" normal="-0.497584, 0.557409, 0.664609" tcoords="0.879753, 0.362152">
+    <vertex location="3.45215, -6.67875, 8.09577" normal="-0.497584, 0.557409, 0.664609" tcoords="0.879753, 0.362152">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
@@ -5545,16 +5545,16 @@
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="4.99641, -9.89297, 7.95018" normal="0.94111, -0.0313703, -0.336641" tcoords="0.782315, 0.424608">
+    <vertex location="4.99641, -9.89297, 7.95019" normal="0.94111, -0.0313703, -0.336641" tcoords="0.782315, 0.424608">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.17065, -5.3016, 0.893171" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="6.17065, -5.3016, 0.893173" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.71778, -3.62473, 3.31932" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
+    <vertex location="6.71778, -3.62473, 3.31933" normal="0.866925, 0.484979, 0.115049" tcoords="0.832743, 0.086698">
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
       <boneWeight bone="Bip01 Head" weight="0.0"/>
@@ -5564,7 +5564,7 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="6.17065, -5.3016, 0.893171" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
+    <vertex location="6.17065, -5.3016, 0.893173" normal="-0.101375, 0.418067, -0.902742" tcoords="0.721632, 0.045801">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -5584,7 +5584,7 @@
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
     </vertex>
-    <vertex location="9.10604, -8.77466, -0.572259" normal="0.900963, -0.109295, 0.419904" tcoords="0.528949, 0.099252">
+    <vertex location="9.10604, -8.77466, -0.572258" normal="0.900963, -0.109295, 0.419904" tcoords="0.528949, 0.099252">
       <boneWeight bone="Bip01 Head" weight="0.0"/>
       <boneWeight bone="Bip01 L Forearm" weight="0.0"/>
       <boneWeight bone="Bip01 L UpperArm" weight="1.0"/>
@@ -5946,23 +5946,23 @@
 
   <node name="Bip01" translation="0.0, 230.205, 338.743" rotation="0.524375, 0.524375, -0.474374, 0.474375" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Footsteps" parent="Bip01" translation="-5.69613, 6.5069e-007, -0.571771" rotation="0.524375, 0.524375, -0.474374, -0.474375" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Footsteps" parent="Bip01" translation="-9.18767, 1.04954e-006, -0.922246" rotation="0.524375, 0.524375, -0.474374, -0.474375" scale="1.0, 1.0, 1.0"/>
 
   <node name="Bip01 Pelvis" parent="Bip01" translation="1.15591e-005, 0.0, -4.9019e-006" rotation="0.414127, 0.573148, 0.573148, -0.414128" scale="1.0, 1.0, 1.0"/>
 
   <node name="Bip01 Spine" parent="Bip01 Pelvis" translation="41.3399, 13.598, 3.84724e-005" rotation="-2.15261e-006, -7.77546e-007, 0.129814, 0.991538" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Spine1" parent="Bip01 Spine" translation="88.2549, -0.069463, -1.9269e-007" rotation="0.0, 2.035e-007, -0.0733703, 0.997305" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Spine1" parent="Bip01 Spine" translation="88.2549, -0.0694634, -1.9269e-007" rotation="0.0, 2.035e-007, -0.0733703, 0.997305" scale="1.0, 1.0, 1.0"/>
 
   <node name="Bip01 Spine2" parent="Bip01 Spine1" translation="88.1765, -0.0692372, -1.92074e-007" rotation="0.0, 2.37847e-007, -0.0857539, 0.996316" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Spine3" parent="Bip01 Spine2" translation="88.2652, -0.0702693, -1.9495e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Spine3" parent="Bip01 Spine2" translation="88.2652, -0.0702986, -1.95028e-007" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Neck" parent="Bip01 Spine3" translation="88.2652, -0.0226226, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Neck" parent="Bip01 Spine3" translation="88.2652, -0.0226214, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 Head" parent="Bip01 Neck" translation="28.3845, 2.59807e-006, 0.0" rotation="0.0, -1.27215e-007, 0.0458656, 0.998948" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 Head" parent="Bip01 Neck" translation="28.3845, 3.76625e-006, 0.0" rotation="0.0, -1.27215e-007, 0.0458656, 0.998948" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 HeadNub" parent="Bip01 Head" translation="148.453, -1.64407e-005, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 HeadNub" parent="Bip01 Head" translation="148.453, -1.59153e-005, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
 
   <triMesh name="wendigo_teeth_top_right" parent="Bip01 Head" translation="-194.444, 10.6765, -0.000274658" rotation="0.497121, -0.502862, 0.497121, 0.502864" scale="16.7676, 16.7676, 16.7676" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="wendigo_rags.png" transparent="true">
     <vertex location="-0.0204652, -23.4469, -0.832463" normal="-0.866555, -0.499082, 0.0" tcoords="-0.994106, 0.089841"/>
@@ -6111,7 +6111,7 @@
     <vertex location="112.117, 39.4568, -45.7663" normal="0.878698, 0.0, 0.477378" tcoords="0.24129, 0.833641"/>
   </triMesh>
 
-  <triMesh name="wendigo_spine_02" parent="wendigo_spine_01" translation="3.17999e-006, 73.5111, -1.20068" rotation="0.0850802, 0.0, 0.0, 0.996374" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
+  <triMesh name="wendigo_spine_02" parent="wendigo_spine_01" translation="3.17985e-006, 73.5111, -1.20068" rotation="0.0850802, 0.0, 0.0, 0.996374" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
     <vertex location="-19.6059, 32.1835, 30.9984" normal="0.422332, -0.277851, 0.862806" tcoords="0.503002, 0.992883"/>
     <vertex location="-102.272, 40.9374, -0.152497" normal="-0.651823, -0.235829, 0.720771" tcoords="0.313123, 0.946373"/>
     <vertex location="-19.6059, 22.7204, -6.4084" normal="0.37322, -0.900349, 0.223782" tcoords="0.497367, 0.905318"/>
@@ -6228,7 +6228,7 @@
     <vertex location="0.279695, 0.367705, 0.485233" normal="0.0, -0.949767, -0.312958" tcoords="0.127804, 0.874109"/>
   </triMesh>
 
-  <triMesh name="wendigo_spine_03" parent="wendigo_spine_02" translation="3.22389e-006, 72.2101, 24.4114" rotation="0.144443, 0.0, 0.0, 0.989513" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
+  <triMesh name="wendigo_spine_03" parent="wendigo_spine_02" translation="3.22375e-006, 72.2101, 24.4114" rotation="0.144443, 0.0, 0.0, 0.989513" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="wendigo_skull.png" transparent="false">
     <vertex location="0.279692, 65.5884, -25.1967" normal="0.0, 0.580895, -0.813978" tcoords="0.118121, 0.692955"/>
     <vertex location="0.279692, 23.1829, -31.5919" normal="0.0, -0.315006, -0.94909" tcoords="0.011401, 0.692955"/>
     <vertex location="-29.8513, 62.9942, -7.99512" normal="-0.772063, 0.514423, -0.373211" tcoords="0.118121, 0.786595"/>
@@ -6345,25 +6345,13 @@
     <vertex location="112.117, 45.4305, -39.842" normal="0.878698, -0.0711881, 0.47204" tcoords="0.24129, 0.833641"/>
   </triMesh>
 
-  <triMesh name="emitter_eye_right" parent="Bip01 Head" translation="22.657, -25.7261, -60.3143" rotation="0.494321, -0.505614, 0.494321, 0.505616" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true">
-    <vertex location="-9.95805, 8.26504, 1.39386" normal="-0.875202, -0.386371, 0.291099" tcoords="1.0, 0.0"/>
-    <vertex location="0.0540599, -20.6695, -6.90862" normal="-0.875202, -0.386371, 0.291099" tcoords="0.0, 0.0"/>
-    <vertex location="1.00839, 4.16174, 28.9187" normal="-0.875202, -0.386371, 0.291099" tcoords="1.0, 1.0"/>
-  </triMesh>
+  <node name="Bip01 L Clavicle" parent="Bip01 Neck" translation="6.86059e-006, 0.022565, 20.4125" rotation="0.707107, -0.000282518, 0.707107, 0.000280557" scale="1.0, 1.0, 1.0"/>
 
-  <triMesh name="emitter_eye_left" parent="Bip01 Head" translation="22.8158, -29.2002, 58.8861" rotation="0.494321, -0.505614, 0.494321, 0.505616" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true">
-    <vertex location="-1.37001, -19.0316, -11.7177" normal="0.910603, -0.381161, 0.159747" tcoords="0.0, 0.0"/>
-    <vertex location="8.71751, 9.29967, -1.62016" normal="0.910603, -0.381161, 0.159747" tcoords="1.0, 0.0"/>
-    <vertex location="0.821137, 2.14933, 26.3304" normal="0.910603, -0.381161, 0.159747" tcoords="1.0, 1.0"/>
-  </triMesh>
+  <node name="Bip01 L UpperArm" parent="Bip01 L Clavicle" translation="49.1999, -1.38128e-005, 1.04425e-005" rotation="-0.292809, 0.632109, -0.0742534, 0.713574" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L Clavicle" parent="Bip01 Neck" translation="-1.50214e-006, 0.0225639, 20.4125" rotation="0.707107, -0.000282518, 0.707107, 0.000280557" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Forearm" parent="Bip01 L UpperArm" translation="126.321, -1.9183e-007, -9.81283e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 L UpperArm" parent="Bip01 L Clavicle" translation="49.1999, -1.26379e-005, 2.05638e-006" rotation="-0.292809, 0.632109, -0.0742534, 0.713574" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Forearm" parent="Bip01 L UpperArm" translation="126.321, 3.00033e-006, -4.30793e-006" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
-
-  <node name="Bip01 L Hand" parent="Bip01 L Forearm" translation="125.621, 1.37333e-005, 1.31586e-006" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 L Hand" parent="Bip01 L Forearm" translation="125.621, 9.28284e-006, -4.18904e-006" rotation="-0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
 
   <triMesh name="wendigo_teeth_bottom_left" parent="Bip01 L Forearm" translation="-162.107, -88.8174, -87.8722" rotation="0.333465, -0.520703, 0.497252, 0.608613" scale="16.7676, 16.7676, 16.7676" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="wendigo_rags.png" transparent="true">
     <vertex location="5.3642, -18.2436, -7.9042" normal="0.826143, -0.478702, 0.297206" tcoords="-0.974924, 0.175642"/>
@@ -6392,13 +6380,13 @@
     <vertex location="5.16601, -12.7576, -6.09391" normal="0.688347, 0.0846591, 0.720425" tcoords="-0.541478, 0.240227"/>
   </triMesh>
 
-  <node name="Bip01 R Clavicle" parent="Bip01 Neck" translation="5.15425e-006, 0.0226739, -20.4125" rotation="-0.707107, 0.000280557, 0.707107, 0.000282518" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Clavicle" parent="Bip01 Neck" translation="1.3517e-005, 0.0226751, -20.4125" rotation="-0.707107, 0.000280557, 0.707107, 0.000282518" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R UpperArm" parent="Bip01 R Clavicle" translation="49.1999, 5.01464e-006, -6.87763e-007" rotation="0.292809, -0.632109, -0.0742534, 0.713574" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R UpperArm" parent="Bip01 R Clavicle" translation="49.1999, 3.8398e-006, -9.07386e-006" rotation="0.292809, -0.632109, -0.0742534, 0.713574" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Forearm" parent="Bip01 R UpperArm" translation="126.321, -1.11729e-005, 1.0693e-005" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Forearm" parent="Bip01 R UpperArm" translation="126.321, -1.4365e-005, 9.39165e-007" rotation="0.0, 0.0, -0.681354, 0.731954" scale="1.0, 1.0, 1.0"/>
 
-  <node name="Bip01 R Hand" parent="Bip01 R Forearm" translation="125.621, -1.34534e-005, -4.63726e-006" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
+  <node name="Bip01 R Hand" parent="Bip01 R Forearm" translation="125.621, -1.79038e-005, 8.67651e-007" rotation="0.706825, 0.0, 0.0, 0.707388" scale="1.0, 1.0, 1.0"/>
 
   <triMesh name="wendigo_teeth-bottom_right" parent="Bip01 R Forearm" translation="-162.108, -88.8173, 87.8717" rotation="0.495317, -0.609844, 0.331205, 0.522546" scale="16.7676, 16.7676, 16.7676" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="wendigo_rags.png" transparent="true">
     <vertex location="-5.40513, -18.2436, -7.9042" normal="-0.826143, -0.478702, 0.297206" tcoords="-0.974924, 0.175642"/>
