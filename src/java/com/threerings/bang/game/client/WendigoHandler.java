@@ -10,8 +10,8 @@ import com.threerings.bang.game.client.sprite.WendigoSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ShotEffect;
-import com.threerings.bang.game.data.effect.StampedeEffect.Collision;
 import com.threerings.bang.game.data.effect.WendigoEffect;
+import com.threerings.bang.game.data.effect.WendigoEffect.Collision;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -104,13 +104,22 @@ public class WendigoHandler extends EffectHandler
 
         public void expired ()
         {
-            if (_collision.deathEffect != null) {
-                apply(_collision.deathEffect);
-            }
             Piece target = (Piece)_bangobj.pieces.get(_collision.targetId);
-            if (target != null) {
-                Effect.damage(_bangobj, WendigoHandler.this, -1, target, 100,
-                        ShotEffect.DAMAGED);
+            if (_collision.isKill()) {
+                if (_collision.deathEffect != null) {
+                    apply(_collision.deathEffect);
+                }        
+                if (target != null) {
+                    Effect.damage(_bangobj, WendigoHandler.this, -1, target,
+                        100, ShotEffect.DAMAGED);
+                }
+            } else {
+                if (_collision.safe) {
+                    pieceAffected(target, WendigoEffect.SAFE_PROTECT);
+                }
+                if (_collision.talisman) {
+                    pieceAffected(target, WendigoEffect.TALISMAN_PROTECT);
+                }
             }
         }
 

@@ -16,8 +16,6 @@ import com.threerings.bang.game.client.WendigoHandler;
 
 import com.threerings.bang.game.data.BangObject;
 
-import com.threerings.bang.game.data.effect.StampedeEffect.Collision;
-
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
@@ -42,6 +40,13 @@ public class WendigoEffect extends Effect
     /** The identifier for the type of effect that we produce. */
     public static final String EATEN = "bang";
 
+    /** The effect reported for units protected by a safe spot. */
+    public static final String SAFE_PROTECT = "indian_post/safe_spot/protect";
+    
+    /** The effect reported for units protected by a talisman. */
+    public static final String TALISMAN_PROTECT =
+        "indian_post/talisman/protect";
+    
     /** An array of wendigo movements. */
     public Movement[] moves;
 
@@ -57,6 +62,44 @@ public class WendigoEffect extends Effect
         public int pieceId;
     }
 
+    public static class Collision extends SimpleStreamableObject
+    {
+        /** The timestep at which the collision occurred. */
+        public int step;
+
+        /** The id of the unit hit. */
+        public int targetId;
+
+        /** Whether or not the unit was on a safe spot. */
+        public boolean safe;
+        
+        /** Whether or not the unit was holding a talisman. */
+        public boolean talisman;
+        
+        /** The unit's death effect, if it died. */
+        public Effect deathEffect;
+        
+        public Collision ()
+        {
+        }
+
+        public Collision (
+            int step, int targetId, boolean safe, boolean talisman,
+            Effect deathEffect)
+        {
+            this.step = step;
+            this.targetId = targetId;
+            this.safe = safe;
+            this.talisman = talisman;
+            this.deathEffect = deathEffect;
+        }
+        
+        public boolean isKill ()
+        {
+            return !(safe || talisman);
+        }
+    }
+    
     public static WendigoEffect wendigosAttack (
             BangObject bangobj, ArrayList<Wendigo> wendigos)
     {
@@ -166,11 +209,18 @@ public class WendigoEffect extends Effect
         // apply the collisions in order
         for (Collision collision : collisions) {
             Piece target = bangobj.pieces.get(collision.targetId);
-            if (collision.deathEffect != null) {
-                collision.deathEffect.apply(bangobj, obs);
-            }
-            if (target != null) {
+            if (collision.isKill()) {
+                if (collision.deathEffect != null) {
+                    collision.deathEffect.apply(bangobj, obs);
+                }        
                 damage(bangobj, obs, -1, target, 100, EATEN);
+            } else {
+                if (collision.safe) {
+                    reportEffect(obs, target, SAFE_PROTECT);
+                }
+                if (collision.talisman) {
+                    reportEffect(obs, target, TALISMAN_PROTECT);
+                }
             }
         }
         return true;
@@ -199,9 +249,7 @@ public class WendigoEffect extends Effect
         int idx = (horiz ? w.y : w.x);
         int step = (horiz ? w.x : w.y);
         for (Piece p : bangobj.pieces) {
-            if (p instanceof Unit && p.isAlive() && 
-                    (safePoints == null || !safePoints.contains(p.x, p.y)) &&
-                    !TalismanEffect.TALISMAN_BONUS.equals(((Unit)p).holding)) {
+            if (p instanceof Unit && p.isAlive()) {
                 int pidx = (horiz ? p.y : p.x);
                 if (idx == pidx || idx + 1 == pidx) {
                     Unit unit = (Unit)p.clone();
@@ -210,14 +258,21 @@ public class WendigoEffect extends Effect
                     if (col != null && col.step <= dist) {
                         continue;
                     }
-                    dammap.increment(unit.owner, 100 - unit.damage);
-                    Effect deffect = unit.willDie(bangobj, -1);
-                    if (deffect != null) {
-                        deffect.prepare(bangobj, dammap);
+                    boolean safe = (safePoints != null &&
+                        safePoints.contains(unit.x, unit.y)),
+                            talisman = TalismanEffect.TALISMAN_BONUS.equals(
+                        unit.holding);
+                    Effect deffect = null;
+                    if (!(safe || talisman)) {
+                        dammap.increment(unit.owner, 100 - unit.damage);
+                        deffect = unit.willDie(bangobj, -1);
+                        if (deffect != null) {
+                            deffect.prepare(bangobj, dammap);
+                        }
+                        unit.damage = 100;
                     }
-                    unit.damage = 100;
-                    col = new Collision(
-                            dist, unit.pieceId, unit.x, unit.y, deffect);
+                    col = new Collision(dist, unit.pieceId, safe, talisman,
+                        deffect);
                     _colMap.put(unit.pieceId, col);
                 }
             }
