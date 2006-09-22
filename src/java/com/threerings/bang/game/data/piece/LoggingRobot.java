@@ -62,6 +62,11 @@ public class LoggingRobot extends Unit
     public boolean validTarget (
         BangObject bangobj, Piece target, boolean allowSelf)
     {
+        // locust robots can attack trees directly
+        if (_type == LOCUST && target instanceof TreeBed && target.isAlive() &&
+            ((TreeBed)target).growth > 0) {
+            return true;
+        }
         // logging robots can't see units holding the fox fetish
         return super.validTarget(bangobj, target, allowSelf) &&
             (!(target instanceof Unit) ||
@@ -85,7 +90,7 @@ public class LoggingRobot extends Unit
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
     {
-        if (!isAlive()) {
+        if (!isAlive() || _type == LOCUST) {
             return null;
         }
         ArrayList<Effect> effects = super.tick(tick, bangobj, pieces);
@@ -103,11 +108,6 @@ public class LoggingRobot extends Unit
             } else if (piece instanceof TreeBed && 
                     ((TreeBed)piece).growth > 0) {
                 TreeBed tb = (TreeBed)piece;
-                if (_type == LOCUST) { // locusts can only damage one tree
-                    effects.add(new ShotEffect(this, tb,
-                        getTreeProximityDamage(tb), null, null));
-                    return effects;
-                }
                 proxShot = addProxShot(
                         proxShot, proxShots, tb, getTreeProximityDamage(tb));
             }

@@ -1011,7 +1011,7 @@ public abstract class Piece
     /**
      * Performs any necessary adjustments to this piece's defense.
      */
-    protected int adjustDefend (Piece target, int damage)
+    protected int adjustDefend (Piece shooter, int damage)
     {
         return damage;
     }
