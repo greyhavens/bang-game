@@ -1,0 +1,11 @@
+<?xml version="1.0" standalone="yes"?>
+
+<model>
+
+  <triMesh name="emitter" translation="0, 0, 0" rotation="0, 0, 0, 1" scale="1, 1, 1" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" transparent="false">
+    <vertex location="0, 0, 0" normal="0, 0, 0" tcoords="0, 0"/>
+    <vertex location="0, 0, 0" normal="0, 0, 0" tcoords="0, 0"/>
+    <vertex location="0, 0, 0" normal="0, 0, 0" tcoords="0, 0"/>
+  </triMesh>
+
+</model>
