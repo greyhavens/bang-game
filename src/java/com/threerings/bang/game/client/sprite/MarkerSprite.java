@@ -158,7 +158,7 @@ public class MarkerSprite extends PieceSprite
         "extras", "frontier_town/cow", // CATTLE
         "bonuses", "frontier_town/nugget", // LODE
         "bonuses", "indian_post/totem_crown", // TOTEM
-        "highlight", "textures/tile/safe_circle", // SAFE
+        "highlight", "textures/tile/safe_square", // SAFE
         "units", "indian_post/logging_robot", // ROBOTS
         "bonuses", "indian_post/talisman", // TALISMAN
         "bonuses", "indian_post/fetish_turtle", // FETISH
