@@ -1,4 +1,4 @@
-441
+460
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -200,15 +200,24 @@ female/nose := sharp := 125
 female/nose := up := 126
 female/nose := wrinkled := 210
 male/background := grad_circle := 1
+male/beard := braid := 445
+male/beard := chops := 446
 male/beard := colonel := 2
+male/beard := fro := 447
 male/beard := goatee := 21
 male/beard := grant := 267
 male/beard := grizzly := 3
 male/beard := muttonchops := 359
 male/beard := sideburns := 211
+male/beard := spikey := 448
+male/beard := stubble := 449
+male/beard_back := braid := 450
+male/beard_back := chops := 451
+male/beard_back := fro := 452
 male/beard_back := grant := 268
 male/beard_back := grizzly := 4
 male/beard_back := muttonchops := 360
+male/beard_back := spikey := 453
 male/clothing_back := a_chubby_geronimo := 368
 male/clothing_back := a_duster := 212
 male/clothing_back := a_fat_suspenders := 319
@@ -224,6 +233,7 @@ male/clothing_back := fat_suspenders := 320
 male/clothing_back := fringe := 215
 male/clothing_back := ironplate_poncho := 256
 male/clothing_back := overalls := 435
+male/clothing_back := overalls_wheat := 443
 male/clothing_back := plate_poncho := 216
 male/clothing_back := poncho := 217
 male/clothing_back := revolutionary := 406
@@ -232,6 +242,7 @@ male/clothing_back := shotgun_fringe := 219
 male/clothing_back := storm_caller := 407
 male/clothing_back := suit := 220
 male/clothing_back := suit_bow := 5
+male/clothing_back := tlingit_chillkat_blanket := 444
 male/clothing_back := trickster_raven := 408
 male/clothing_back := western_jacket := 22
 male/clothing_back := wolf_spear := 354
@@ -323,6 +334,7 @@ male/hair_middle := long_straight := 423
 male/hat := buffalo := 356
 male/hat := coonskin := 322
 male/hat := cowboy := 11
+male/hat := native_topper := 442
 male/hat := revolutionary := 411
 male/hat := sombrero := 258
 male/hat := stetson := 232
@@ -421,6 +433,7 @@ male/mouth := stern := 74
 male/mouth := worried := 282
 male/mustache := chop := 428
 male/mustache := curly := 429
+male/mustache := droopy := 454
 male/mustache := gringo := 75
 male/mustache := handlebar := 17
 male/mustache := latin := 430
@@ -431,10 +444,16 @@ male/mustache := piano := 76
 male/mustache := u := 432
 male/mustache := villain := 433
 male/mustache := wyatt := 77
+male/nose := beak := 455
+male/nose := boxer := 456
+male/nose := button := 457
+male/nose := creased := 458
+male/nose := dwarf := 459
 male/nose := flat := 434
 male/nose := hook := 245
 male/nose := long := 246
 male/nose := mel := 78
 male/nose := pointy := 18
 male/nose := pug := 247
+male/nose := rail := 460
 male/nose := wide := 79
