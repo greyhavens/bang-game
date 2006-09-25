@@ -160,9 +160,7 @@ public class HoldEffect extends BonusEffect
     }
 
     /**
-     * Returns the identifier for the dropped bonus effect.  The identifier
-     * should contain the string "dropped" somewhere in order to identify it
-     * as a dropped effect.
+     * Returns the identifier for the dropped bonus effect.
      */
     public String getDroppedEffect ()
     {

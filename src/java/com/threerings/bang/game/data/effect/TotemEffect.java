@@ -86,7 +86,8 @@ public class TotemEffect extends HoldEffect
             TotemBase base = (TotemBase)bangobj.pieces.get(baseId);
             if (dropping) {
                 base.addPiece(bangobj, type, unit.owner);
-                reportEffect(obs, base, TOTEM_ADDED);
+                reportEffect(obs, base, TOTEM_CROWN_BONUS.equals(type) ?
+                    CROWN_ADDED : TOTEM_ADDED);
             }
         }
         return true;
