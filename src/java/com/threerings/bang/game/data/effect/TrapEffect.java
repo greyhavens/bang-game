@@ -18,7 +18,10 @@ import static com.threerings.bang.Log.log;
  * The effect of activating a trap.
  */
 public class TrapEffect extends BonusEffect
-{   
+{
+    /** Fired off when the bear trap is activated. */
+    public static final String ACTIVATED_TRAP = "indian_post/trap";
+    
     /** The victim's new damage. */
     public int newDamage;
 
