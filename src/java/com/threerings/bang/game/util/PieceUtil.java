@@ -19,11 +19,11 @@ public class PieceUtil
      * Returns a list of the pieces in the supplied collection that
      * overlap the supplied piece or null if no pieces overlap.
      */
-    public static ArrayList<Piece> getOverlappers (Iterator iter, Piece piece)
+    public static ArrayList<Piece> getOverlappers (
+        Iterable<Piece> pieces, Piece piece)
     {
         ArrayList<Piece> lappers = null;
-        while (iter.hasNext()) {
-            Piece p = (Piece)iter.next();
+        for (Piece p : pieces) {
             if (p.pieceId != piece.pieceId && p.intersects(piece)) {
                 if (lappers == null) {
                     lappers = new ArrayList<Piece>();

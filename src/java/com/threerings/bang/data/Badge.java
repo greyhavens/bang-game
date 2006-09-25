@@ -583,8 +583,7 @@ public class Badge extends Item
     {
         // first enumerate the badges they already hold
         _badgeCodes.clear();
-        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
-            Object item = iter.next();
+        for (Item item : user.inventory) {
             if (item instanceof Badge) {
                 _badgeCodes.add(((Badge)item).getCode());
             }

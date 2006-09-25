@@ -129,7 +129,7 @@ public class PlayerObject extends BodyObject
      */
     public Rating getRating (String scenario)
     {
-        Rating rating = (Rating)ratings.get(scenario);
+        Rating rating = ratings.get(scenario);
         if (rating == null) {
             rating = new Rating();
             rating.scenario = scenario;

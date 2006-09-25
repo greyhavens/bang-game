@@ -29,7 +29,7 @@ public class UnderdogSoldierLogic extends PieceLogic
        Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         // determine each player's rank based on their points
-        int[] spoints = (int[])_bangobj.points.clone();
+        int[] spoints = _bangobj.points.clone();
         int[] rank = new int[_bangobj.players.length];
         Arrays.sort(spoints);
         ArrayUtil.reverse(spoints);

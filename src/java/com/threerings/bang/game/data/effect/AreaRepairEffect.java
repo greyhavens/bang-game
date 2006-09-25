@@ -37,7 +37,7 @@ public class AreaRepairEffect extends AreaEffect
         // compute the new total damage for each affected piece
         newDamage = new int[pieces.length];
         for (int ii = 0; ii < pieces.length; ii++) {
-            Piece target = (Piece)bangobj.pieces.get(pieces[ii]);
+            Piece target = bangobj.pieces.get(pieces[ii]);
             int prepair = baseRepair / (target.getDistance(x, y)+1);
             newDamage[ii] = Math.max(0, target.damage - prepair);
         }

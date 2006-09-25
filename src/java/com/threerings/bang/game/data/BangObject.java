@@ -297,7 +297,7 @@ public class BangObject extends GameObject
      * simultaneous iteration and removal. */
     public Piece[] getPieceArray ()
     {
-        return (Piece[])pieces.toArray(new Piece[pieces.size()]);
+        return pieces.toArray(new Piece[pieces.size()]);
     }
 
     /**
@@ -331,7 +331,7 @@ public class BangObject extends GameObject
      */
     public ArrayList<Piece> getOverlappers (Piece piece)
     {
-        return PieceUtil.getOverlappers(pieces.iterator(), piece);
+        return PieceUtil.getOverlappers(pieces, piece);
     }
 
     /**
@@ -581,7 +581,7 @@ public class BangObject extends GameObject
      */
     public int[] getFilteredPoints ()
     {
-        int[] apoints = (int[])points.clone();
+        int[] apoints = points.clone();
         for (int ii = 0; ii < apoints.length; ii++) {
             if (!isActivePlayer(ii)) {
                 apoints[ii] = 0;

@@ -163,8 +163,8 @@ public class Look extends SimpleStreamableObject
     {
         try {
             Look look = (Look)super.clone();
-            look.aspects = (int[])look.aspects.clone();
-            look.articles = (int[])look.articles.clone();
+            look.aspects = look.aspects.clone();
+            look.articles = look.articles.clone();
             return look;
         } catch (CloneNotSupportedException cnse) {
             throw new RuntimeException(cnse);

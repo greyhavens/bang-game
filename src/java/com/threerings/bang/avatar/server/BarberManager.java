@@ -149,7 +149,7 @@ public class BarberManager extends PlaceManager
         PlayerObject user = (PlayerObject)caller;
 
         // locate the look in question
-        Look look = (Look)user.looks.get(name);
+        Look look = user.looks.get(name);
         if (look == null) {
             log.warning("Asked to configure unknown look [who=" + user.who() +
                         ", look=" + name +

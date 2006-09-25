@@ -167,7 +167,7 @@ public class BangBoardView extends BoardView
      */
     public void clearPendingShot (int targetId)
     {
-        Piece piece = (Piece)_bangobj.pieces.get(targetId);
+        Piece piece = _bangobj.pieces.get(targetId);
         if (piece != null) {
             getTargetableSprite(piece).setPendingShot(false);
         }
@@ -1081,7 +1081,7 @@ public class BangBoardView extends BoardView
         Piece piece = null;
         if (_hover instanceof Targetable) {
             sprite = (PieceSprite)_hover;
-            piece = (Piece)_bangobj.pieces.get(sprite.getPieceId());
+            piece = _bangobj.pieces.get(sprite.getPieceId());
             if (piece != null && !piece.isAlive()) {
                 sprite = null;
                 piece = null;
@@ -1672,8 +1672,7 @@ public class BangBoardView extends BoardView
     protected void ticked (short tick)
     {
         // update all of our sprites
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece piece = (Piece)iter.next();
+        for (Piece piece : _bangobj.pieces) {
             if (piece.updateSpriteOnTick()) {
                 PieceSprite ps = getPieceSprite(piece);
                 if (ps != null) {
@@ -1880,7 +1879,7 @@ public class BangBoardView extends BoardView
 
             int x = mx, y = my;
             if (mx == Short.MAX_VALUE) {
-                Piece target = (Piece)_bangobj.pieces.get(targetId);
+                Piece target = _bangobj.pieces.get(targetId);
                 if (target == null) {
                     target = _unit.getPiece();
                 }
@@ -1903,7 +1902,7 @@ public class BangBoardView extends BoardView
             }
 
             // mark our attacker as targeted
-            Piece target = (Piece)_bangobj.pieces.get(targetId);
+            Piece target = _bangobj.pieces.get(targetId);
             if (target != null) {
                 _target = getTargetableSprite(target);
                 if (_target != null) {

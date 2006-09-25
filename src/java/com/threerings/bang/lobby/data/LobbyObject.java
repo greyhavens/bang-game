@@ -38,7 +38,7 @@ public class LobbyObject extends PlaceObject
     public String[] scenarios;
 
     // documentation inherited
-    public DSet getTables ()
+    public DSet<Table> getTables ()
     {
         return tableSet;
     }

@@ -158,7 +158,7 @@ public class TrainDelegate extends ScenarioDelegate
             if (train.path.isEmpty()) {
                 _bangmgr.deployEffect(-1, new ControlTrainEffect());    
             } else {
-                Point pt = (Point)train.path.remove(0);
+                Point pt = train.path.remove(0);
                 moveTrain(bangobj, train, pt.x, pt.y);
                 return true;
             }
@@ -206,8 +206,7 @@ public class TrainDelegate extends ScenarioDelegate
             return null; // quick check for common case
         }
         Piece blocker = null;
-        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
-            Piece piece = (Piece)it.next();
+        for (Piece piece : bangobj.pieces) {
             if (piece.intersects(x, y) &&
                 train.preventsOverlap(piece)) {
                 if (piece instanceof Unit) {

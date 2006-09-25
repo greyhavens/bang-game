@@ -310,7 +310,7 @@ public class BangManager extends GameManager
         PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
 
-        Piece piece = (Piece)_bangobj.pieces.get(pieceId);
+        Piece piece = _bangobj.pieces.get(pieceId);
         if (piece == null || piece.owner != pidx) {
             // the unit probably died or was hijacked
             log.info("Rejecting order for invalid piece [who=" + user.who() +
@@ -352,7 +352,7 @@ public class BangManager extends GameManager
     {
         PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
-        Piece piece = (Piece)_bangobj.pieces.get(pieceId);
+        Piece piece = _bangobj.pieces.get(pieceId);
         if (piece == null || piece.owner != pidx) {
             // the unit probably died or was hijacked
             return;
@@ -366,7 +366,7 @@ public class BangManager extends GameManager
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
-        Card card = (Card)_bangobj.cards.get(cardId);
+        Card card = _bangobj.cards.get(cardId);
         if (card == null ||
             card.owner != getPlayerIndex(user.getVisibleName())) {
             log.warning("Rejecting invalid card request [who=" + user.who() +
@@ -393,7 +393,7 @@ public class BangManager extends GameManager
         deployEffect(card.owner, effect, true);
         
         // if this card was a starting card, note that it was consumed
-        StartingCard scard = (StartingCard)_scards.get(cardId);
+        StartingCard scard = _scards.get(cardId);
         if (scard != null) {
             scard.played = true;
         }
@@ -459,7 +459,7 @@ public class BangManager extends GameManager
             _bangobj.startTransaction();
 
             // make sure the target is still around before we do anything
-            Piece target = (Piece)_bangobj.pieces.get(targetId);
+            Piece target = _bangobj.pieces.get(targetId);
             if (targetId > 0 && target == null) {
                 throw new InvocationException(TARGET_NO_LONGER_VALID);
             }
@@ -2071,7 +2071,7 @@ public class BangManager extends GameManager
     {
         // filter AIs from the scores; the ratings computations below will
         // ignore players whose score is set to zero
-        scores = (int[])scores.clone();
+        scores = scores.clone();
         for (int ii = 0; ii < scores.length; ii++) {
             if (isAI(ii)) {
                 scores[ii] = 0;
@@ -2497,7 +2497,7 @@ public class BangManager extends GameManager
             // make sure our target is still around
             Piece target = null;
             if (targetId > 0) {
-                target = (Piece)_bangobj.pieces.get(targetId);
+                target = _bangobj.pieces.get(targetId);
                 if (target == null || !target.isAlive()) {
                     return TARGET_NO_LONGER_VALID;
                 }

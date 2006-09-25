@@ -48,8 +48,7 @@ public class Tactician extends Unit
 
         // check to see if there is a piece at these coordinates
         Piece ntarget = null;
-        for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece piece = (Piece)iter.next();
+        for (Piece piece : bangobj.pieces) {
             if (piece.x == nx && piece.y == ny) {
                 ntarget = piece;
                 break;

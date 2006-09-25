@@ -156,9 +156,7 @@ public class IconViz extends EffectViz
                         FastMath.LERP(alpha, _card ? 1.5f : 0.5f, 1f);
                     billboardRise(_elapsed);
                 }
-                Iterator iter = children.iterator();
-                while (iter.hasNext()) {
-                    Spatial child = (Spatial)iter.next();
+                for (Spatial child : children) {
                     if (child instanceof Geometry) {
                         ((Geometry)child).getBatch(0).getDefaultColor().a = 
                             alpha;

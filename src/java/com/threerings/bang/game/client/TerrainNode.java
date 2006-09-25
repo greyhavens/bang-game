@@ -1383,8 +1383,7 @@ public class TerrainNode extends Node
                 tbuf0, ibuf);
             mesh.setTextureBuffer(0, tbuf1, 1);
             if (!_editorMode) {
-                ((TriangleBatch)mesh.getBatch(0)).setMode(
-                    TriangleBatch.TRIANGLE_STRIP);
+                mesh.getBatch(0).setMode(TriangleBatch.TRIANGLE_STRIP);
             }
             mesh.setModelBound(new BoundingBox());
             mesh.updateModelBound();
@@ -1825,8 +1824,7 @@ public class TerrainNode extends Node
             ibuf.put(7).put(5).put(1).put(3).put(0);
             
             reconstruct(vbuf, nbuf, null, tbuf, ibuf);
-            ((TriangleBatch)getBatch(0)).setMode(
-                TriangleBatch.TRIANGLE_STRIP);
+            getBatch(0).setMode(TriangleBatch.TRIANGLE_STRIP);
                     
             setModelBound(new BoundingBox());
             updateModelBound();

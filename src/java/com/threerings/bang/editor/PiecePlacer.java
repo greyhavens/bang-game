@@ -203,7 +203,7 @@ public class PiecePlacer extends EditorTool
     public void hoverSpriteChanged (Sprite hover)
     {
         // update the cursor when we're hovering over a piece
-        ((EditorContext)_ctx).getFrame().setCursor(
+        _ctx.getFrame().setCursor(
             hover == null ? Cursor.getDefaultCursor() :
             Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }

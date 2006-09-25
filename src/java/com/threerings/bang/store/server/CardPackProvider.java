@@ -11,6 +11,7 @@ import com.samskivert.io.PersistenceException;
 
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.game.data.card.Card;
@@ -40,8 +41,7 @@ public class CardPackProvider extends Provider
         // and which require the creation of new CardItem inventory items and
         // add the cards to the appropriate items
         HashMap<String,CardItem> have = new HashMap<String,CardItem>();
-        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
-            Object item = iter.next();
+        for (Item item : user.inventory) {
             if (item instanceof CardItem) {
                 CardItem citem = (CardItem)item;
                 have.put(citem.getType(), citem);

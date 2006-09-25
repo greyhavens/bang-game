@@ -395,7 +395,7 @@ public class ActiveSprite extends PieceSprite
             _nextIdle = Float.MAX_VALUE;
             
         } else if (ianims.length > 1) {
-            _idle = (String)RandomUtil.pickRandom(ianims, _idle);
+            _idle = RandomUtil.pickRandom(ianims, _idle);
             duration = _nextIdle = setAction(_idle);
         }
         if (duration > 0f && offset) {

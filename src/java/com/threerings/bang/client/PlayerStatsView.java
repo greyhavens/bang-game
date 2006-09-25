@@ -32,7 +32,7 @@ public class PlayerStatsView extends BContainer
         // clear out and refresh our stats labels
         removeAll();
         PlayerObject user = _ctx.getUserObject();
-        Stat[] stats = (Stat[])user.stats.toArray(new Stat[user.stats.size()]);
+        Stat[] stats = user.stats.toArray(new Stat[user.stats.size()]);
         // TODO: sort on translated key
         for (int ii = 0; ii < stats.length; ii++) {
             boolean hidden = stats[ii].getType().isHidden();

@@ -784,8 +784,7 @@ public class EditorController extends GameController
      */
     protected Track getTrack (int tx, int ty)
     {
-        for (Iterator it = _bangobj.pieces.iterator(); it.hasNext(); ) {
-            Piece piece = (Piece)it.next();
+        for (Piece piece : _bangobj.pieces) {
             if (piece.x == tx && piece.y == ty && piece instanceof Track) {
                 return (Track)piece;
             }
@@ -872,7 +871,7 @@ public class EditorController extends GameController
          */
         protected void swapSaved ()
         {
-            Piece tmp = (Piece)_bangobj.pieces.get(saved.getKey());
+            Piece tmp = _bangobj.pieces.get(saved.getKey());
             _bangobj.updatePieces(saved);
             saved = tmp;
         }

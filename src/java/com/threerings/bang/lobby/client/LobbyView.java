@@ -260,8 +260,7 @@ public class LobbyView extends BWindow
         String id = ((ScenarioLabel)_scenarios.getSelectedItem()).id;
         for (int ii = 0; ii < config.scenarios.length; ii++) {
             if (id.equals("random")) {
-                config.scenarios[ii] = (String)
-                    RandomUtil.pickRandom(_lobobj.scenarios);
+                config.scenarios[ii] = RandomUtil.pickRandom(_lobobj.scenarios);
             } else {
                 config.scenarios[ii] = id;
             }

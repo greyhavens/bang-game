@@ -487,8 +487,7 @@ public class TownView extends BWindow
 
         protected Viewpoint getViewpoint (String name)
         {
-            for (Iterator it = _bangobj.pieces.iterator(); it.hasNext(); ) {
-                Piece piece = (Piece)it.next();
+            for (Piece piece : _bangobj.pieces) {
                 if ((piece instanceof Viewpoint) &&
                     name.equals(((Viewpoint)piece).name)) {
                     return (Viewpoint)piece;

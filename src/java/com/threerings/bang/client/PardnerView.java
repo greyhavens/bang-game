@@ -178,8 +178,8 @@ public class PardnerView extends IconPalette
         clear();
         _picons.clear();
         PlayerObject user = _ctx.getUserObject();
-        for (Iterator it = user.pardners.iterator(); it.hasNext(); ) {
-            new PardnerIcon((PardnerEntry)it.next()).insert();
+        for (PardnerEntry entry : user.pardners) {
+            new PardnerIcon(entry).insert();
         }
 
         // these start out as disabled/empty

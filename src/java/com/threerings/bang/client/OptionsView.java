@@ -262,7 +262,7 @@ public class OptionsView extends BDecoratedWindow
             ModeItem current = null;
             ModeItem[] items = new ModeItem[modes.size()];
             for (int ii = 0; ii < items.length; ii++) {
-                DisplayMode mode = (DisplayMode)modes.get(ii);
+                DisplayMode mode = modes.get(ii);
                 items[ii] = new ModeItem(mode);
                 if (isCurrent(mode)) {
                     current = items[ii];

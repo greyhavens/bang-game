@@ -43,8 +43,7 @@ public abstract class AreaEffect extends Effect
     {
         ArrayIntSet affected = new ArrayIntSet();
         int r2 = radius * radius;
-        for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
+        for (Piece p : bangobj.pieces) {
             if (isPieceAffected(p) &&
                 MathUtil.distanceSq(p.x, p.y, x, y) <= r2) {
                 affected.add(p.pieceId);
@@ -77,7 +76,7 @@ public abstract class AreaEffect extends Effect
     {
         boolean success = true;
         for (int ii = 0; ii < pieces.length; ii++) {
-            Piece target = (Piece)bangobj.pieces.get(pieces[ii]);
+            Piece target = bangobj.pieces.get(pieces[ii]);
             if (target == null) {
                 log.warning("Missing piece for area effect [pid=" + pieces[ii] +
                             ", effect=" + this + "].");

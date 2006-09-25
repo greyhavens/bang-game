@@ -36,7 +36,7 @@ public class StoreManager extends PlaceManager
         PlayerObject user = (PlayerObject)caller;
 
         // make sure we sell the good in question
-        Good good = (Good)_stobj.goods.get(type);
+        Good good = _stobj.goods.get(type);
         if (good == null) {
             log.warning("Requested to buy unknown good [who=" + user.who() +
                         ", type=" + type + "].");

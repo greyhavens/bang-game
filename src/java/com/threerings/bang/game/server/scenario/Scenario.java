@@ -158,7 +158,7 @@ public abstract class Scenario
 
         // scale from 1/1 to 2/3 over the course of ten minutes
         float factor = 1f + 0.5f * delta / TIME_SCALE_CAP;
-        long baseTime = (long)Math.round(getBaseTickTime() / factor);
+        long baseTime = Math.round(getBaseTickTime() / factor);
 
         // scale this base time by the average number of units in play
         long tickTime = baseTime * bangobj.getAverageUnitCount();
@@ -467,7 +467,7 @@ public abstract class Scenario
                 // inversely proportional to that player's power
                 int pidx = reachers[ii].get(0);
                 float ifactor = 1f - bangobj.pdata[pidx].powerFactor;
-                weights[ii] = (int)Math.round(10 * Math.max(0, ifactor)) + 1;
+                weights[ii] = Math.round(10 * Math.max(0, ifactor)) + 1;
 
             } else {
                 // if multiple players can reach it, give it a nudge if

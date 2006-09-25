@@ -83,7 +83,7 @@ public class PlagueEffect extends BonusEffect
             newPieces[ii].init();
             newPieces[ii].assignPieceId(bangobj);
             newPieces[ii].setOwner(bangobj,
-                ((Piece)bangobj.pieces.get(pieceIds[ii])).owner);
+                bangobj.pieces.get(pieceIds[ii]).owner);
             newPieces[ii].damage = 40;
         }
     }
@@ -95,7 +95,7 @@ public class PlagueEffect extends BonusEffect
 
         // remove the old pieces and add new windup gun slingers instead
         for (int ii = 0; ii < pieceIds.length; ii++) {
-            Piece p = (Piece)bangobj.pieces.get(pieceIds[ii]);
+            Piece p = bangobj.pieces.get(pieceIds[ii]);
             if (p == null) {
                 continue;
             }

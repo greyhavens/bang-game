@@ -166,7 +166,7 @@ public class BangUtil
         String ppath = props.getProperty("extends");
         if (!StringUtil.isBlank(ppath)) {
             Properties parent = resourceToProperties(ppath, history);
-            Enumeration iter = parent.propertyNames();
+            Enumeration<?> iter = parent.propertyNames();
             while (iter.hasMoreElements()) {
                 String key = (String)iter.nextElement();
                 if (props.getProperty(key) == null) {

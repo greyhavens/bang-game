@@ -328,7 +328,7 @@ public class ShotEffect extends Effect
         if (targetId == -1) {
             return true;
         }
-        Piece target = (Piece)bangobj.pieces.get(targetId);
+        Piece target = bangobj.pieces.get(targetId);
         if (target == null) {
             log.warning("Missing shot target " + this + ".");
             return false;

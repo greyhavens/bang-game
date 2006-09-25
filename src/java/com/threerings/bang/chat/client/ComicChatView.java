@@ -52,7 +52,7 @@ import static com.threerings.bang.Log.log;
  * Displays chat with avatar icons and speech balloons.
  */
 public abstract class ComicChatView
-    extends BScrollingList<EntryBuilder, BComponent>
+    extends BScrollingList<EntryBuilder<BComponent>, BComponent>
 {
     /**
      *  A factory of entries to send into {@link BScrollingList}.
@@ -97,7 +97,7 @@ public abstract class ComicChatView
     }
 
     @Override // from BScrollingList
-        protected BComponent createComponent (EntryBuilder builder)
+        protected BComponent createComponent (EntryBuilder<BComponent> builder)
     {
         return builder.build();
     }
@@ -110,7 +110,7 @@ public abstract class ComicChatView
      *  version of the generated {@link ChatEntry} so that a second chat
      *  message may be appended to it.
      */
-    protected class ChatEntryBuilder implements EntryBuilder<ChatEntry>
+    protected class ChatEntryBuilder implements EntryBuilder<BComponent>
     {
         /**
          *  Construct a {@link ChatEntry} or read it from cache, then return it.
@@ -226,7 +226,7 @@ public abstract class ComicChatView
         final String formattedMsg = SystemChatView.format(_ctx, msg);
         final String style = SystemChatView.getAttentionLevel(msg) +
             "_chat_label";
-        addValue(new EntryBuilder() {
+        addValue(new EntryBuilder<BComponent>() {
             public BComponent build() {
                 return new BLabel(formattedMsg, style);
             }

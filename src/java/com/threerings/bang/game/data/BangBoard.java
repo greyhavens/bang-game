@@ -685,7 +685,7 @@ public class BangBoard extends SimpleStreamableObject
      * done at the start of the game; all subsequent changes are
      * incremental.
      */
-    public void shadowPieces (Iterator iter)
+    public void shadowPieces (Iterator<Piece> iter)
     {
         shadowPieces(iter, 0, 0, _width, _height);
     }
@@ -696,7 +696,7 @@ public class BangBoard extends SimpleStreamableObject
      * incremental.  Only the specified region will be affected.
      */
     public void shadowPieces (
-        Iterator iter, int x, int y, int width, int height)
+        Iterator<Piece> iter, int x, int y, int width, int height)
     {
         // start out with _tstate configured according to the board
         for (int yy = y, ymax = y + height; yy < ymax; yy++) {
@@ -719,7 +719,7 @@ public class BangBoard extends SimpleStreamableObject
         
         Rectangle rect = new Rectangle(x, y, width, height);
         while (iter.hasNext()) {
-            Piece piece = (Piece)iter.next();
+            Piece piece = iter.next();
             if (piece.intersects(rect)) {
                 shadowPiece(piece);
             }

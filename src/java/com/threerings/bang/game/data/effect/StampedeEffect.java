@@ -249,7 +249,7 @@ public class StampedeEffect extends Effect
             dirs = new int[] { dir, (dir + rot) % 4, (dir + rot + 2) % 4,
                 (dir + 2) % 4 };
         } else {
-            dirs = (int[])DIRECTIONS.clone();
+            dirs = DIRECTIONS.clone();
             ArrayUtil.shuffle(dirs);
         }
         PointList bpath = null;
@@ -289,8 +289,7 @@ public class StampedeEffect extends Effect
     {
         // clone all the non-flying units
         ArrayList<Piece> units = new ArrayList<Piece>();
-        for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
-            Piece piece = (Piece)it.next();
+        for (Piece piece : bangobj.pieces) {
             if (piece instanceof Unit && !piece.isAirborne()) {
                 units.add((Piece)piece.clone());
             }

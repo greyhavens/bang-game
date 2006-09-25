@@ -63,7 +63,7 @@ public class CattleDelegate extends ScenarioDelegate
     public void pieceMoved (BangObject bangobj, Piece piece)
     {
         if (piece instanceof Unit) {
-            checkSpookedCattle(bangobj, (Unit)piece, 1);
+            checkSpookedCattle(bangobj, piece, 1);
 
         } else if (piece instanceof Train &&
                    ((Train)piece).type == Train.ENGINE) {

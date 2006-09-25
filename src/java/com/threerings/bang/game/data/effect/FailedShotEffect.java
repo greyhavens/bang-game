@@ -82,7 +82,7 @@ public class FailedShotEffect extends ShotEffect
         }
         Piece target;
         if (targetId != -1 && 
-                (target = (Piece)bangobj.pieces.get(targetId)) != null) {
+                (target = bangobj.pieces.get(targetId)) != null) {
             reportEffect(obs, target, DUDDED);
         }
         return true;

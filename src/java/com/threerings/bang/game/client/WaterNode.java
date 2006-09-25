@@ -337,7 +337,7 @@ public class WaterNode extends Node
         // create the trimesh
         _patches[px][py] = new TriMesh("patch", _vbuf, _nbuf, null, null,
             ibuf);
-        ((TriangleBatch)_patches[px][py].getBatch(0)).setMode(
+        _patches[px][py].getBatch(0).setMode(
             TriangleBatch.TRIANGLE_STRIP);
         _patches[px][py].setModelBound(new BoundingBox(
             new Vector3f((px+0.5f) * TILE_SIZE, (py+0.5f) * TILE_SIZE, 0f),

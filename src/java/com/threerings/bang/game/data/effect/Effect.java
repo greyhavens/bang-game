@@ -108,7 +108,7 @@ public abstract class Effect extends SimpleStreamableObject
         BangObject bangobj, Observer obs, int collider, int targetId,
         int damage, int x, int y, String effect)
     {
-        Piece target = (Piece)bangobj.pieces.get(targetId);
+        Piece target = bangobj.pieces.get(targetId);
         if (target == null) {
             log.warning("Missing collision target " +
                         "[targetId=" + targetId + "].");

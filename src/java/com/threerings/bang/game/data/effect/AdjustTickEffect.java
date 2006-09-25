@@ -78,7 +78,7 @@ public class AdjustTickEffect extends Effect
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer observer)
     {
-        Piece piece = (Piece)bangobj.pieces.get(pieceId);
+        Piece piece = bangobj.pieces.get(pieceId);
         if (piece != null) {
             String effect;
             if (delta > 0) {

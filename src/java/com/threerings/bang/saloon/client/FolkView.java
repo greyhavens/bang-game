@@ -118,7 +118,7 @@ public class FolkView extends BContainer
             
         } else if (SaloonObject.OCCUPANT_INFO.equals(ere.getName())) {
             FolkCell cell = _folks.get(
-                (Handle) ((BangOccupantInfo) ere.getOldEntry()).username);
+                ((BangOccupantInfo) ere.getOldEntry()).username);
             if (cell != null) {
                 cell.removeCell();
             }
@@ -200,7 +200,7 @@ public class FolkView extends BContainer
         for (OccupantInfo info : _salobj.occupantInfo) {
             // if they're our friend but not yet listed, do list them
             if (_user.isFriend(((BangOccupantInfo) info).playerId) &&
-                !_folks.containsKey((Handle) info.username)) {
+                !_folks.containsKey(info.username)) {
                 new FolkCell((Handle) info.username, false).insertCell();
             }
         }

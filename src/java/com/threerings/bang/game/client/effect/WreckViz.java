@@ -61,7 +61,7 @@ public class WreckViz extends ParticleEffectViz
             String[] wtypes = ((MobileSprite)target).getWreckageTypes();
             if (wtypes != null && wtypes.length > 0) {
                 for (int i = 0; i < _wreckage.length; i++) {
-                    _wreckage[i].bind((String)RandomUtil.pickRandom(wtypes));
+                    _wreckage[i].bind(RandomUtil.pickRandom(wtypes));
                     target.attachChild(_wreckage[i]);
                     _wreckage[i].updateRenderState();
                 }

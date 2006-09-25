@@ -74,7 +74,7 @@ public class AreaDamageEffect extends AreaEffect
         newDamage = new int[pieces.length];
         deathEffects = new Effect[pieces.length];
         for (int ii = 0; ii < pieces.length; ii++) {
-            Piece target = (Piece)bangobj.pieces.get(pieces[ii]);
+            Piece target = bangobj.pieces.get(pieces[ii]);
             int damage = getDamage(target);
             newDamage[ii] = target.damage + damage;
             dammap.increment(target.owner, damage);

@@ -28,14 +28,14 @@ public class MoveShootHandler extends EffectHandler
     {
         _moveShoot = (MoveShootEffect)_effect;
         _shot = _moveShoot.shotEffect;
-        _shooter = (Piece)_bangobj.pieces.get(_moveShoot.pieceId);
+        _shooter = _bangobj.pieces.get(_moveShoot.pieceId);
         if (_shooter == null) {
             log.warning("Missing shooter? [moveShoot=" + _moveShoot + "].");
             return false;
         }
 
         if (_shot.targetId != -1) {
-            _target = (Piece)_bangobj.pieces.get(_shot.targetId);
+            _target = _bangobj.pieces.get(_shot.targetId);
             if (_target == null) {
                 log.warning("Missing target? [shot=" + _shot + "].");
             }

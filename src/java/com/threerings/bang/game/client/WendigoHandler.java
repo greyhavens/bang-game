@@ -104,7 +104,7 @@ public class WendigoHandler extends EffectHandler
 
         public void expired ()
         {
-            Piece target = (Piece)_bangobj.pieces.get(_collision.targetId);
+            Piece target = _bangobj.pieces.get(_collision.targetId);
             if (_collision.isKill()) {
                 if (_collision.deathEffect != null) {
                     apply(_collision.deathEffect);

@@ -160,7 +160,7 @@ public class MobileSprite extends ActiveSprite
     public void move (BangBoard board, List<Point> path, float speed)
     {
         move(createPath(board, path, speed));
-        Point pt = (Point)path.get(path.size() - 1);
+        Point pt = path.get(path.size() - 1);
         _px = pt.x;
         _py = pt.y;
     }

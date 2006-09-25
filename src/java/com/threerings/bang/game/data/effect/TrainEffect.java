@@ -65,7 +65,7 @@ public class TrainEffect extends Effect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        Piece target = (Piece)bangobj.pieces.get(targetId);
+        Piece target = bangobj.pieces.get(targetId);
         if (target != null) {
             int damage = Math.min(100, target.damage + COLLISION_DAMAGE);
             dammap.increment(target.owner, damage - target.damage);

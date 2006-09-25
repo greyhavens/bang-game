@@ -21,7 +21,7 @@ public class PowerUpEffect extends SetInfluenceEffect
                 return "power_up";
             }
             public int adjustAttack (Piece target, int damage) {
-                return (int)Math.round(1.3f * damage);
+                return Math.round(1.3f * damage);
             }
             public boolean didAdjustAttack () {
                 return true;

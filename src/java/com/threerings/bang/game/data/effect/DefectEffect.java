@@ -93,7 +93,7 @@ public class DefectEffect extends BonusEffect
         // swipe away!
         int defected = 0;
         for (int ii = 0; ii < pieceIds.length; ii++) {
-            Piece p = (Piece)bangobj.pieces.get(pieceIds[ii]);
+            Piece p = bangobj.pieces.get(pieceIds[ii]);
             if (p == null || !p.isAlive()) {
                 continue;
             }

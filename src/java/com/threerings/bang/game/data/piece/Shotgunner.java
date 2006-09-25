@@ -21,8 +21,7 @@ public class Shotgunner extends Unit
     {
         // we damage pieces to the left and right of the one we're shooting
         ArrayList<Effect> shots = new ArrayList<Effect>();
-        for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
+        for (Piece p : bangobj.pieces) {
             if (target.getDistance(p) == 1 && validTarget(bangobj, p, false) &&
                 // if it's not in line with us but is in line with the target,
                 // then it's properly perpendicular

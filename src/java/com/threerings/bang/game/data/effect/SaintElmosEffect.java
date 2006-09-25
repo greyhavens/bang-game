@@ -45,8 +45,7 @@ public class SaintElmosEffect extends BonusEffect
 
         // roll through and note all dead pieces
         ArrayIntSet pieces = new ArrayIntSet();
-        for (Iterator iter = bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece p = (Piece)iter.next();
+        for (Piece p : bangobj.pieces) {
             if (!p.isAlive() && p.owner >= 0 &&
                 // make sure we don't try to turn a dirigible over a
                 // building or water into a windup gunman
@@ -72,7 +71,7 @@ public class SaintElmosEffect extends BonusEffect
 
         // remove the old pieces and add new windup gun slingers instead
         for (int ii = 0; ii < pieceIds.length; ii++) {
-            Piece p = (Piece)bangobj.pieces.get(pieceIds[ii]);
+            Piece p = bangobj.pieces.get(pieceIds[ii]);
             if (p == null) {
                 continue;
             }

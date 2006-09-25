@@ -22,7 +22,7 @@ public class RandomLogic extends AILogic
     {
         UnitConfig[] configs = UnitConfig.getTownUnits(_bangobj.townId,
             UnitConfig.Rank.BIGSHOT);
-        return ((UnitConfig)RandomUtil.pickRandom(configs)).type;
+        return RandomUtil.pickRandom(configs).type;
     }
 
     // documentation inherited

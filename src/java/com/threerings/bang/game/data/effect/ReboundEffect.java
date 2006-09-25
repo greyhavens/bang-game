@@ -56,7 +56,7 @@ public class ReboundEffect extends BonusEffect
     public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
-        Piece target = (Piece)bangobj.pieces.get(pieceId);
+        Piece target = bangobj.pieces.get(pieceId);
         if (target == null) {
             log.warning("Missing target for rebound effect " +
                 "[id=" + pieceId + "].");

@@ -71,7 +71,7 @@ public abstract class Card extends SimpleStreamableObject
 
             // clone the weights and adjust them based on the point factor
             if (pointFactor < 1f || pointFactor > 1.25f) {
-                weights = (int[])weights.clone();
+                weights = weights.clone();
                 if (pointFactor < 1) {
                     // for players at a disadvantage, add a constant value to
                     // all weights which will reduce the rarity variance

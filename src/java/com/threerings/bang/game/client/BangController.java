@@ -452,7 +452,7 @@ public class BangController extends GameController
             return;
         }
 
-        Card card = (Card)_bangobj.cards.get(cardId);
+        Card card = _bangobj.cards.get(cardId);
         Card activeCard = getPlacingCard();
         if (card == null) {
             log.warning("Requested to place non-existent card '" +
@@ -749,7 +749,7 @@ public class BangController extends GameController
         }
 
         // determine each player's rank based on those points
-        int[] spoints = (int[])_bangobj.points.clone();
+        int[] spoints = _bangobj.points.clone();
         Arrays.sort(spoints);
         ArrayUtil.reverse(spoints);
         int rank = 0;

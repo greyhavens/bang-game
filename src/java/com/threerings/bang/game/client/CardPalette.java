@@ -26,6 +26,7 @@ import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
@@ -99,8 +100,7 @@ public class CardPalette extends IconPalette
     {
         // start with the cards already in the game object
         int iconidx = 0;
-        for (Iterator iter = _bangobj.cards.iterator(); iter.hasNext(); ) {
-            Card card = (Card)iter.next();
+        for (Card card : _bangobj.cards) {
             if (card.owner != _selfIdx) {
                 continue;
             }
@@ -155,15 +155,13 @@ public class CardPalette extends IconPalette
 
         // find cards held over from last round
         ArrayList<Card> _reservedCards = new ArrayList<Card>();
-        for (Iterator iter = _bangobj.cards.iterator(); iter.hasNext(); ) {
-            Card card = (Card)iter.next();
+        for (Card card : _bangobj.cards) {
             if (card.owner == _selfIdx && card.found == false) {
                 _reservedCards.add(card);
             }
         }
 
-        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
-            Object item = iter.next();
+        for (Item item : user.inventory) {
             if (item instanceof CardItem) {
                 CardItem citem = (CardItem)item;
                 Card card = Card.getCard(citem.getType());

@@ -253,8 +253,7 @@ public class ViewpointEditor extends EditorTool
             // selected one
             Object selected = vlist.getSelectedValue();
             lmodel.clear();
-            for (Iterator it = bangobj.pieces.iterator(); it.hasNext(); ) {
-                Object piece = it.next();
+            for (Piece piece : bangobj.pieces) {
                 if (piece instanceof Viewpoint) {
                     lmodel.addElement(piece);
                     if (piece.equals(selected)) {

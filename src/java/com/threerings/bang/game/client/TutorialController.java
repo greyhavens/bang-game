@@ -191,7 +191,7 @@ public class TutorialController
             int id = ((TutorialConfig.CenterOn)action).id;
             Piece p = null;
             if (what.equals("piece")) {
-                p = (Piece)_bangobj.pieces.get(id);
+                p = _bangobj.pieces.get(id);
 
             } else if (what.equals("special")) {
                 // locate the specified counter or homestead

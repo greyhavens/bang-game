@@ -43,7 +43,7 @@ public abstract class BonusEffect extends Effect
     {
         // if this effect was really triggered by activating a bonus...
         if (bonusId != -1) {
-            Piece piece = (Piece)bangobj.pieces.get(pieceId);
+            Piece piece = bangobj.pieces.get(pieceId);
             int points = getBonusPoints();
             if (piece == null || piece.owner == -1 || points == 0) {
                 return;

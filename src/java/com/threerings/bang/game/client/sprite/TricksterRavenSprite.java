@@ -32,8 +32,7 @@ public class TricksterRavenSprite extends UnitSprite
         boolean walking = path.size() <= 4;
         if (walking) {
             Point lastp = null;
-            for (Iterator iter = path.iterator(); iter.hasNext(); ) {
-                Point p = (Point)iter.next();
+            for (Point p : path) {
                 if (!board.isTraversable(p.x, p.y) || (lastp != null && 
                             !board.canCross(lastp.x, lastp.y, p.x, p.y))) {
                     walking = false;

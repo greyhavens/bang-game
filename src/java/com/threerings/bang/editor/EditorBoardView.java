@@ -435,7 +435,7 @@ public class EditorBoardView extends BoardView
             for (int x = 0; x < width; x++) {
                 // average this pixel and its eight neighbors
                 smoothed[idx++] = (byte)
-                    (((int)_board.getHeightfieldValue(x-1, y-1) +
+                    ((_board.getHeightfieldValue(x-1, y-1) +
                     _board.getHeightfieldValue(x, y-1) +
                     _board.getHeightfieldValue(x+1, y-1) +
                     _board.getHeightfieldValue(x-1, y) +
@@ -820,9 +820,8 @@ public class EditorBoardView extends BoardView
         // then move the pieces
         xoff = (width - _board.getWidth())/2;
         yoff = (height - _board.getHeight())/2;
-        for (Iterator it = _bangobj.pieces.iterator(); it.hasNext(); ) {
+        for (Piece piece : _bangobj.pieces) {
             // set location directly in order to retain fine positions
-            Piece piece = (Piece)it.next();
             piece.x += xoff;
             piece.y += yoff;
         }
@@ -839,7 +838,7 @@ public class EditorBoardView extends BoardView
     {
         int pid = (_hover instanceof PieceSprite) ?
             ((PieceSprite)_hover).getPieceId() : -1;
-        return (Piece)_bangobj.pieces.get(pid);
+        return _bangobj.pieces.get(pid);
     }
 
     @Override // documentation inherited
@@ -945,8 +944,7 @@ public class EditorBoardView extends BoardView
      */
     protected void updatePieces ()
     {
-        for (Iterator iter = _bangobj.pieces.iterator(); iter.hasNext(); ) {
-            Piece piece = (Piece)iter.next();
+        for (Piece piece : _bangobj.pieces) {
             queuePieceUpdate(piece, piece);
         }
     }
@@ -1075,7 +1073,7 @@ public class EditorBoardView extends BoardView
         public BufferEdit () {
             // on construction, save the entire buffer; when we're commited,
             // we can choose what to throw away
-            _saved = (byte[])getBuffer().clone();
+            _saved = getBuffer().clone();
         }
         
         /**
@@ -1124,7 +1122,7 @@ public class EditorBoardView extends BoardView
         {
             byte[] buf = getBuffer();
             if (_modified == null) {
-                byte[] tmp = (byte[])buf.clone();
+                byte[] tmp = buf.clone();
                 System.arraycopy(_saved, 0, buf, 0, _saved.length);
                 _saved = tmp;
                 
@@ -1226,9 +1224,9 @@ public class EditorBoardView extends BoardView
 
     /** An iterator that filters pieces based on the scenario. */
     protected class FilterPieceIterator 
-        implements Iterator
+        implements Iterator<Piece>
     {
-        public FilterPieceIterator (Iterator iter) {
+        public FilterPieceIterator (Iterator<Piece> iter) {
             _iter = iter;
             _scenId = ((EditorController)_panel.getController()).
                 getScenarioId();
@@ -1239,7 +1237,7 @@ public class EditorBoardView extends BoardView
             return _piece != null;
         }
 
-        public Object next () 
+        public Piece next () 
             throws NoSuchElementException
         {
             if (!hasNext()) {
@@ -1259,7 +1257,7 @@ public class EditorBoardView extends BoardView
         protected void getNext () {
             _piece = null;
             while (_iter.hasNext()) {
-                Piece p = (Piece)_iter.next();
+                Piece p = _iter.next();
                 if (p.isValidScenario(_scenId)) {
                     _piece = p;
                     break;
@@ -1267,7 +1265,7 @@ public class EditorBoardView extends BoardView
             }
         }
 
-        protected Iterator _iter;
+        protected Iterator<Piece> _iter;
         protected String _scenId;
         protected Piece _piece;
     };

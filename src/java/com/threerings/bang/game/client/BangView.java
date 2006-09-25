@@ -580,7 +580,7 @@ public class BangView extends BWindow
 
             // make sure we're not too late to the party
             if (_bangobj != null) {
-                int[] histo = (int[])_perfhisto.getBuckets().clone();
+                int[] histo = _perfhisto.getBuckets().clone();
                 String driver = GL11.glGetString(GL11.GL_VENDOR) + ", " +
                     GL11.glGetString(GL11.GL_RENDERER) + ", " +
                     GL11.glGetString(GL11.GL_VERSION);

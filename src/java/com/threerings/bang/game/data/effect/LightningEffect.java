@@ -135,7 +135,7 @@ public class LightningEffect extends Effect
                 remaining = true;
                 break;
             }
-            Piece target = (Piece)bangobj.pieces.get(cd.pieceId);
+            Piece target = bangobj.pieces.get(cd.pieceId);
             if (target == null) {
                 log.warning("Missing piece for lightning effect " +
                             "[pieceId=" + cd.pieceId + "].");

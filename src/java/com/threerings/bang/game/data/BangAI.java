@@ -50,8 +50,8 @@ public class BangAI extends GameAI
             NameFactory.getCreator().getHandleRoots(ai.isMale);
         for (int ii = 0; ii < 25; ii++) {
             String name;
-            name = (String)RandomUtil.pickRandom(prefs) + " "
-                + (String)RandomUtil.pickRandom(roots);
+            name = RandomUtil.pickRandom(prefs) + " "
+                + RandomUtil.pickRandom(roots);
             if (!usedNames.contains(name)) {
                 usedNames.add(name);
                 ai.handle = new Handle(name);
@@ -72,7 +72,7 @@ public class BangAI extends GameAI
      */
     public static int[] getAvatarPrint (boolean isMale)
     {
-        return (int[])RandomUtil.pickRandom(AVATAR_PRINTS[isMale ? 0 : 1]);
+        return RandomUtil.pickRandom(AVATAR_PRINTS[isMale ? 0 : 1]);
     }
 
     protected static final int[][][] AVATAR_PRINTS = {

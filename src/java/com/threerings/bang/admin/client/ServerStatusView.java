@@ -205,8 +205,7 @@ public class ServerStatusView extends BDecoratedWindow
         _genstats[3].setText(String.valueOf(_statobj.pendingMatches));
         _genstats[4].setText(String.valueOf(_statobj.games.size()));
         int playersInGames = 0;
-        for (Iterator iter = _statobj.games.iterator(); iter.hasNext(); ) {
-            StatusObject.GameInfo gi = (StatusObject.GameInfo)iter.next();
+        for (StatusObject.GameInfo gi : _statobj.games) {
             playersInGames += gi.players;
         }
         _genstats[5].setText(String.valueOf(playersInGames));

@@ -60,8 +60,7 @@ public class GoodsPalette extends IconPalette
         // filter out all matching goods
         ArrayList<Good> filtered = new ArrayList<Good>();
         PlayerObject self = _ctx.getUserObject();
-        for (Iterator iter = _stobj.goods.iterator(); iter.hasNext(); ) {
-            Good good = (Good)iter.next();
+        for (Good good : _stobj.goods) {
             if ((_filter == null || _filter.isValid(good)) &&
                 good.isAvailable(self)) {
                 filtered.add(good);

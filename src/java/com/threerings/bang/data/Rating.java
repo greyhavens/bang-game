@@ -88,7 +88,7 @@ public class Rating extends SimpleStreamableObject
             return -1;
         }
 
-        int nrat = (int)Math.round(ratings[pidx].rating + dR/opponents);
+        int nrat = Math.round(ratings[pidx].rating + dR/opponents);
         return MathUtil.bound(MINIMUM_RATING, nrat, MAXIMUM_RATING);
     }
 

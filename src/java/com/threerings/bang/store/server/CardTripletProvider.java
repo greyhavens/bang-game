@@ -11,6 +11,7 @@ import com.samskivert.io.PersistenceException;
 
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.game.data.card.Card;
@@ -34,8 +35,7 @@ public class CardTripletProvider extends Provider
         _card = ((CardTripletGood)good).getCardType();
 
         // determine whether or not the user has this type of card
-        for (Iterator iter = user.inventory.iterator(); iter.hasNext(); ) {
-            Object item = iter.next();
+        for (Item item : user.inventory) {
             if (item instanceof CardItem &&
                 ((CardItem)item).getType().equals(_card)) {
                 _original = (CardItem)item;
