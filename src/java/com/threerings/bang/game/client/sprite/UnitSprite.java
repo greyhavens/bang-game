@@ -382,6 +382,16 @@ public class UnitSprite extends MobileSprite
         return (SoundUtil.haveSound(path) ? sounds.getSound(path) : null);
     }
     
+    /**
+     * Returns an instance of the sound to be used when the unit dies, or
+     * <code>null</code> for none.
+     */
+    public Sound getDyingSound (SoundGroup sounds)
+    {
+        String path = "rsrc/units/" + ((Unit)_piece).getType() + "/dying.wav";
+        return SoundUtil.haveSound(path) ? sounds.getSound(path) : null;
+    }
+    
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
@@ -593,6 +603,7 @@ public class UnitSprite extends MobileSprite
         "returning_fire",
         "dud",
         "misfire",
+        "dying",
     };
     
     /** The effect displayed on the death flights of airborne steam units. */

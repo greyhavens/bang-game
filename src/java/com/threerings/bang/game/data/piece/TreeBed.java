@@ -71,12 +71,7 @@ public class TreeBed extends Prop
             short tick, BangObject bangobj, Piece[] pieces)
     {
         // can't heal dead trees
-        ArrayList<Effect> effects = new ArrayList<Effect>();
         if (!isAlive()) {
-            if (tick - lastActed > RESURRECTION_TICKS_PER_LEVEL * growth) {
-                effects.add(new TreeBedEffect(this, 50, 0));
-                return effects;
-            }
             return null;
         }
 
@@ -106,6 +101,7 @@ public class TreeBed extends Prop
             damage == 0 && tdamage < 0)) {
             return null;
         }
+        ArrayList<Effect> effects = new ArrayList<Effect>();
         effects.add(new TreeBedEffect(this,
             growers.toArray(new Piece[growers.size()]), tdamage));
         return effects;
@@ -116,8 +112,4 @@ public class TreeBed extends Prop
     {
         return new TreeBedSprite();
     }
-
-    /** The number of ticks it takes per level grown for a stump to turn back
-     * into a living bed. */
-    protected static final int RESURRECTION_TICKS_PER_LEVEL = 2;
 }

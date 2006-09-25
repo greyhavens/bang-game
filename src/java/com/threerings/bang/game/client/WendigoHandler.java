@@ -5,6 +5,8 @@ package com.threerings.bang.game.client;
 
 import com.samskivert.util.Interval;
 
+import com.threerings.openal.Sound;
+
 import com.threerings.bang.game.client.sprite.WendigoSprite;
 
 import com.threerings.bang.game.data.BangObject;
@@ -26,6 +28,9 @@ public class WendigoHandler extends EffectHandler
     {
         WendigoEffect effect = (WendigoEffect)_effect;
 
+        // play the flight sound
+        _sounds.getSound(SOUND_PATH + "flight.wav").play(true);
+        
         long delay = 0;
         for (WendigoEffect.Movement m : effect.moves) {
             Piece piece = _bangobj.pieces.get(m.pieceId);
@@ -106,6 +111,7 @@ public class WendigoHandler extends EffectHandler
         {
             Piece target = _bangobj.pieces.get(_collision.targetId);
             if (_collision.isKill()) {
+                _sounds.getSound(SOUND_PATH + "kill.wav").play(true);
                 if (_collision.deathEffect != null) {
                     apply(_collision.deathEffect);
                 }        
@@ -114,6 +120,7 @@ public class WendigoHandler extends EffectHandler
                         100, ShotEffect.DAMAGED);
                 }
             } else {
+                _sounds.getSound(SOUND_PATH + "defense.wav").play(true);
                 if (_collision.safe) {
                     pieceAffected(target, WendigoEffect.SAFE_PROTECT);
                 }
@@ -127,4 +134,7 @@ public class WendigoHandler extends EffectHandler
     }
 
     protected static final long WENDIGO_SPACING = 150;
+    
+    protected static final String SOUND_PATH =
+        "rsrc/extras/indian_post/wendigo/";
 }

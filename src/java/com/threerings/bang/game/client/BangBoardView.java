@@ -62,6 +62,8 @@ import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.util.LinearTimeFunction;
 import com.threerings.jme.util.TimeFunction;
 
+import com.threerings.openal.Sound;
+
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
@@ -573,11 +575,20 @@ public class BangBoardView extends BoardView
         _wendigoAmbiance = enable;
         refreshLights();
 
-        // fade in/out the music
+        // fade in/out the music and 
         if (enable) {
             _ctx.getBangClient().fadeOutMusic(duration);
+            _sounds.getSound(WENDIGO_AMBIANCE_START).play(true);
+            if (_wendigoLoop == null) {
+                _wendigoLoop = _sounds.getSound(WENDIGO_AMBIANCE_LOOP);
+            }
+            _wendigoLoop.loop(true);
+            
         } else {
-            _ctrl.startScenarioMusic(duration);
+            if (_wendigoLoop != null) {
+                _wendigoLoop.stop();
+            }
+            _ctrl.startScenarioMusic(duration);        
         }
         
         // store the new values and transition to them
@@ -2020,6 +2031,9 @@ public class BangBoardView extends BoardView
     /** Whether or not wendigo ambiance mode is active. */
     protected boolean _wendigoAmbiance;
 
+    /** The looping wendigo ambiance sound. */
+    protected Sound _wendigoLoop;
+    
     /** The marquee to display. */
     protected static enum MarqueeMode { NONE, GAME, ROUND };
     protected MarqueeMode _pendingMarquee = MarqueeMode.NONE;
@@ -2045,4 +2059,12 @@ public class BangBoardView extends BoardView
     
     /** The time it takes to fade in and out of high noon mode. */
     protected static final float NOON_FADE_DURATION = 1f;
+    
+    /** The sound to play when entering wendigo ambiance mode. */
+    protected static final String WENDIGO_AMBIANCE_START =
+        "rsrc/extras/indian_post/wendigo/ambiance_start.wav";
+    
+    /** The sound to loop continuously while in wendigo ambiance mode. */
+    protected static final String WENDIGO_AMBIANCE_LOOP =
+        "rsrc/extras/indian_post/wendigo/ambiance_loop.wav";
 }

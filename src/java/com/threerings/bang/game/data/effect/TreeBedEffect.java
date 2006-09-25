@@ -21,9 +21,15 @@ import static com.threerings.bang.Log.log;
  */
 public class TreeBedEffect extends Effect
 {
-    /** Indicates that the tree grew (negative damage). */
-    public static final String GREW = "indian_post/tree_growth";
+    /** Indicates that the tree sprouted from a stump. */
+    public static final String SPROUTED = "indian_post/tree_bed/sprouted";
+    
+    /** Indicates that the tree grew towards the next stage. */
+    public static final String GREW = "indian_post/tree_bed/grew";
 
+    /** Indicates that the tree grew into another stage. */
+    public static final String BLOOMED = "indian_post/tree_bed/bloomed";
+    
     /** The id of the affected tree bed. */
     public int bedId;
 
@@ -119,10 +125,14 @@ public class TreeBedEffect extends Effect
         if (growth >= 0) {
             bed.growth = growth;
             bed.damage = damage;
-            reportEffect(observer, bed, UPDATED);
+            reportEffect(observer, bed, SPROUTED);
         } else {
+            int ogrowth = bed.growth;
             bed.damage(damage);
             reportEffect(observer, bed, GREW);
+            if (bed.growth > ogrowth) {
+                reportEffect(observer, bed, BLOOMED);
+            }
         }
         return true;
     }

@@ -270,10 +270,17 @@ public class EffectHandler extends BoardView.BoardAction
                     queueAction(asprite, "reacting");
                 } else if (asprite.hasAction("dying")) {
                     queueAction(asprite,  "dying");
+                    if (sprite instanceof UnitSprite) {
+                        Sound dsound =
+                            ((UnitSprite)sprite).getDyingSound(_sounds);
+                        if (dsound != null) {
+                            dsound.play(true);
+                        }
+                    }
                 } else {
                     // units with no dying animation just switch to their
-                    // dead model; the wreck viz or explosion should hide the
-                    // sudden transition
+                    // dead model; the wreck viz or explosion should hide
+                    // the sudden transition
                     queueAction(asprite, ActiveSprite.DEAD);
                 }
             } else if (asprite.hasAction(effect)) {

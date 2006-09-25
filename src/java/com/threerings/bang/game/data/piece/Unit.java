@@ -716,5 +716,5 @@ public class Unit extends Piece
 
     /** The base amount by which units next to trees decrease their damage and
      * encourage them to grow. */
-    protected static final int TREE_PROXIMITY_DAMAGE = -10;
+    protected static final int TREE_PROXIMITY_DAMAGE = -15;
 }
