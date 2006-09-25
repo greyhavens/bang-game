@@ -1304,6 +1304,11 @@ offer_right {
 //
 // Barber styles
 
+barber_tip_label {
+  parent: "center_label";
+  font: "Helvetica" plain 15;
+}
+
 avatar_view {
   color: #442801;
   padding: 7 12 7 12;

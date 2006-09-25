@@ -40,6 +40,9 @@ public class BarberView extends ShopView
 
         add(new BLabel(_msgs.get("m.welcome"), "shop_status"),
             new Rectangle(203, 655, 610, 40));
+        add(_tip = new BLabel(_msgs.get("m.looks_tip"), "barber_tip_label"),
+            new Rectangle(185, 565, 390, 55));
+
         add(_status = new StatusLabel(ctx), new Rectangle(230, 10, 500, 50));
         _status.setStyleClass("shop_status");
         _status.setText(getShopTip());
@@ -102,12 +105,13 @@ public class BarberView extends ShopView
     @Override // documentation inherited
     protected void renderComponent (Renderer renderer)
     {
-        super.renderComponent(renderer);
-
         // hackity hack hack hack
         if (_active == _wearclothes) {
             _faketab.render(renderer, 179, 598, _alpha);
         }
+
+        // render our children components over the fake tab
+        super.renderComponent(renderer);
     }
 
     protected ActionListener _selector = new ActionListener() {
@@ -115,11 +119,11 @@ public class BarberView extends ShopView
             if (event.getAction().equals("newlook")) {
                 remove(_active);
                 add(_active = _newlook, CONTENT_RECT);
-                _status.setText(_msgs.get("m.shop_tip.0"));
+                _tip.setText(_msgs.get("m.looks_tip"));
             } else {
                 remove(_active);
                 add(_active = _wearclothes, CONTENT_RECT);
-                _status.setText(_msgs.get("m.change_tip"));
+                _tip.setText(_msgs.get("m.change_tip"));
             }
             BangUI.play(BangUI.FeedbackSound.TAB_SELECTED);
         }
@@ -127,6 +131,7 @@ public class BarberView extends ShopView
 
     protected AvatarView _avatar;
     protected BComponent _active;
+    protected BLabel _tip;
     protected StatusLabel _status;
     protected NewLookView _newlook;
     protected WearClothingView _wearclothes;
