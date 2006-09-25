@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.effect;
 
 import java.awt.Point;
 
+import java.util.HashSet;
 import java.util.logging.Level;
 
 import com.samskivert.util.IntIntMap;
@@ -82,6 +83,15 @@ public class HoldEffect extends BonusEffect
         }
     }
 
+    /**
+     * Determines whether the given effect represents the dropping of
+     * some kind of bonus.
+     */
+    public static boolean isDroppedEffect (String effect)
+    {
+        return _droppedEffects.contains(effect);
+    }
+    
     @Override // documentation inherited
     public int[] getWaitPieces ()
     {
@@ -150,7 +160,9 @@ public class HoldEffect extends BonusEffect
     }
 
     /**
-     * Returns the identifier for the dropped bonus effect.
+     * Returns the identifier for the dropped bonus effect.  The identifier
+     * should contain the string "dropped" somewhere in order to identify it
+     * as a dropped effect.
      */
     public String getDroppedEffect ()
     {
@@ -175,5 +187,12 @@ public class HoldEffect extends BonusEffect
     protected int getBonusPoints ()
     {
         return 5; // give 'em five points for picking something up
+    }
+    
+    /** Contains identifiers for all bonus drop effects.  Subclasses should add
+     * their identifiers to the set in a static initializer. */
+    protected static HashSet<String> _droppedEffects = new HashSet<String>();
+    static {
+        _droppedEffects.add(DROPPED_BONUS);
     }
 }

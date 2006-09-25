@@ -2619,7 +2619,7 @@ public class BangManager extends GameManager
                 // if a piece was giddy upped into readiness, immediately
                 // execute any advance order it has registered
                 executeOrders(piece.pieceId);
-            } else if (effect.equals(HoldEffect.DROPPED_BONUS)) {
+            } else if (HoldEffect.isDroppedEffect(effect)) {
                 // if a piece dropped its held bonus, cancel any advance order
                 // it has registered
                 clearOrders(piece.pieceId, true);

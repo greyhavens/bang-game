@@ -258,7 +258,7 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // remember the last unit to drop a bonus
-        if (effect.equals(HoldEffect.DROPPED_BONUS)) {
+        if (HoldEffect.isDroppedEffect(effect)) {
             _dropper = piece;
         }
 
@@ -401,6 +401,15 @@ public class EffectHandler extends BoardView.BoardAction
         if (!card.shouldShowVisualization(_pidx)) {
             return;
         }
+        
+        // play a sound effect, if one exists
+        String path = "rsrc/cards/" + card.getTownId() + "/" + card.getType() +
+            "/play.wav";
+        if (SoundUtil.haveSound(path)) {
+            _sounds.getSound(path).play(true);
+        }
+        
+        // display the visualization
         IconViz iviz;
         switch (card.getPlacementMode()) {
             case VS_PIECE:
@@ -695,7 +704,7 @@ public class EffectHandler extends BoardView.BoardAction
                 if (BangPrefs.isHighDetail()) {
                     sprite.displayDustRing();
                 }
-                _sounds.getSound(DROPPED_SOUND).play(true);
+                getLandSound(piece).play(true);
                 if (piece instanceof LoggingRobot) {
                     ((UnitSprite)sprite).queueAction("unfolding");
                 } else {
@@ -709,6 +718,21 @@ public class EffectHandler extends BoardView.BoardAction
             sprite.getModelNode().startAnimation("unfolding");
             sprite.getModelNode().pauseAnimation(true);
         }
+    }
+    
+    /**
+     * Find and returns a sound to play on a piece's landing after its drop.
+     */
+    protected Sound getLandSound (Piece piece)
+    {
+        if (piece instanceof Unit) {
+            String path = "rsrc/units/" + ((Unit)piece).getType() +
+                "/land.wav";
+            if (SoundUtil.haveSound(path)) {
+                return _sounds.getSound(path);
+            }
+        }
+        return _sounds.getSound(DEFAULT_LAND_SOUND);
     }
     
     /**
@@ -827,8 +851,8 @@ public class EffectHandler extends BoardView.BoardAction
         ".wav", "/activate.wav"
     };
     
-    /** The sound to play when pieces hit the ground after dropping from the
-     * sky. */
-    protected static final String DROPPED_SOUND =
-        "rsrc/extras/frontier_town/barricade/dropped.wav";
+    /** The backup place to look for a sound to play on a unit's landing, for
+     * units that do not have a custom landing sound. */
+    protected static final String DEFAULT_LAND_SOUND =
+        "rsrc/extras/frontier_town/barricade/land.wav";
 }

@@ -18,10 +18,7 @@ import static com.threerings.bang.Log.log;
  * The effect of activating a trap.
  */
 public class TrapEffect extends BonusEffect
-{
-    /** The identifier for the type of effect that we produce. */
-    public static final String ACTIVATED_TRAP = "indian_post/trap";
-
+{   
     /** The victim's new damage. */
     public int newDamage;
 
@@ -76,7 +73,6 @@ public class TrapEffect extends BonusEffect
         if (bonus != null) {
             causer = bonus.owner;
             _type = ((Bonus)bonus).getConfig().type;
-            _type = _type.substring(_type.lastIndexOf('/') + 1);
         }
 
         // remove the bonus
@@ -92,7 +88,7 @@ public class TrapEffect extends BonusEffect
         if (deathEffect != null) {
             deathEffect.apply(bangobj, obs);
         }
-        damage(bangobj, obs, causer, piece, newDamage, "trap".equals(_type) ?
+        damage(bangobj, obs, causer, piece, newDamage, _type.endsWith("trap") ?
             ShotEffect.DAMAGED : ShotEffect.EXPLODED);
 
         return true;
@@ -111,13 +107,15 @@ public class TrapEffect extends BonusEffect
         if (piece == null || piece.owner != pidx) {
             return null;
         }
-        return MessageBundle.compose("m.effect_" + _type, piece.getName());
+        String type = _type.substring(_type.lastIndexOf('/') + 1);
+        return MessageBundle.compose("m.effect_" + type, piece.getName());
     }
 
     @Override // documentation inherited
     protected String getActivatedEffect ()
     {
-        return "trap".equals(_type) ? ACTIVATED_TRAP : null;
+        // the name of the bonus doubles as its activation effect
+        return _type;
     }
 
     @Override // from BonusEffect

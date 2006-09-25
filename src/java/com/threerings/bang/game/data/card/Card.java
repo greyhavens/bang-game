@@ -214,6 +214,15 @@ public abstract class Card extends SimpleStreamableObject
     {
         return true;
     }
+
+    /**
+     * Returns the identifier for a piece or board effect to apply on
+     * activation, or <code>null</code> for none.
+     */
+    public String getEffect ()
+    {
+        return null;
+    }
     
     /**
      * Activates the specified card at the supplied coordinates. The
