@@ -136,6 +136,11 @@
     <aspect name="heart" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="pointy" townId="frontier_town" scrip="250" coins="0"/>
     <aspect name="round" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="cheeks" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="granny" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="obese" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="rascal" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="slant" townId="frontier_town" scrip="250" coins="0"/>
   </class>
 
   <class name="female/hair">
@@ -184,6 +189,10 @@
     <aspect name="sly" townId="frontier_town" scrip="500" coins="1"/>
     <aspect name="squinty" townId="frontier_town" scrip="500" coins="0"/>
     <aspect name="left" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="glass" townId="frontier_town" scrip="500" coins="1"/>
+    <aspect name="scar" townId="frontier_town" scrip="750" coins="1"/>
+    <aspect name="lashy" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="sharp" townId="frontier_town" scrip="500" coins="0"/>
   </class>
 
   <class name="female/nose">
@@ -192,6 +201,15 @@
     <aspect name="wrinkled" townId="frontier_town" scrip="500" coins="0"/>
     <aspect name="hook" townId="frontier_town" scrip="500" coins="0"/>
     <aspect name="sharp" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="button" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="corner" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="curve" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="flat" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="latina" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="nub" townId="frontier_town" scrip="250" coins="0"/>
+    <aspect name="picasso" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="pointy" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="wide" townId="frontier_town" scrip="250" coins="0"/>
   </class>
 
   <class name="female/mouth">
@@ -209,5 +227,9 @@
     <aspect name="sad" townId="frontier_town" scrip="750" coins="0"/>
     <aspect name="smug" townId="frontier_town" scrip="750" coins="0"/>
     <aspect name="stern" townId="frontier_town" scrip="500" coins="0"/>
+    <aspect name="chew" townId="frontier_town" scrip="750" coins="0"/>
+    <aspect name="puzzled" townId="frontier_town" scrip="750" coins="0"/>
+    <aspect name="surly" townId="frontier_town" scrip="750" coins="0"/>
+    <aspect name="straw" townId="frontier_town" scrip="500" coins="1"/>
   </class>
 </aspects>
