@@ -380,6 +380,20 @@
     <component cclass="male/hat_back" name="native_topper"/>
   </article>
 
+ <article name="male_tlingit_wooden" townId="indian_post"
+           slot="hat" scrip="2500" coins="2"
+           colors="clothes_p,clothes_s,clothes_t">
+    <component cclass="male/hat" name="tlingit_wooden"/>
+    <component cclass="male/hat_back" name="tlingit_wooden"/>
+  </article>
+
+ <article name="male_tlingit_headress" townId="indian_post"
+           slot="hat" scrip="2000" coins="3"
+           colors="clothes_p,clothes_s,clothes_t">
+    <component cclass="male/hat" name="tlingit_headress"/>
+    <component cclass="male/hat_back" name="tlingit_headress"/>
+  </article>
+
 
   <!-- male jewelry: frontier town -->
 
