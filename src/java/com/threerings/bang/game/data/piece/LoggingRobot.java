@@ -90,10 +90,10 @@ public class LoggingRobot extends Unit
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
     {
-        if (!isAlive() || _type == LOCUST) {
-            return null;
-        }
         ArrayList<Effect> effects = super.tick(tick, bangobj, pieces);
+        if (!isAlive() || _type == LOCUST) {
+            return effects;
+        }
         ArrayList<ShotEffect> proxShots = new ArrayList<ShotEffect>();
         ProximityShotEffect proxShot = null;
         for (Piece piece : pieces) {
