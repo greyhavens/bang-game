@@ -13,3 +13,8 @@ for PROJECT in jme-bui narya nenya vilya; do
 done
 cd $BANG_HOME
 $ANT savedoc
+
+# mirror out our Narya, Nenya, and Vilya javadocs to the public servers
+if [ -x /export/ship/threerings/bin/mirror_javadoc ]; then
+    /export/ship/threerings/bin/mirror_javadoc
+fi
