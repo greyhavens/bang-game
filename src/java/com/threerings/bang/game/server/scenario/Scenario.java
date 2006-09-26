@@ -72,7 +72,6 @@ public abstract class Scenario
         ArrayList<Piece> updates)
     {
         // extract the bonus spawn markers from the pieces array
-        _bonusSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (!p.isValidScenario(bangobj.scenario.getIdent())) {
@@ -81,9 +80,6 @@ public abstract class Scenario
             } else if (p instanceof Marker) {
                 Marker m = (Marker)p;
                 if (!bangobj.scenario.isValidMarker(m)) {
-                    iter.remove();
-                } else if (Marker.isMarker(m, Marker.BONUS)) {
-                    _bonusSpots.add(m.x, m.y);
                     iter.remove();
                 }
             }
@@ -486,19 +482,6 @@ public abstract class Scenario
             }
         }
 
-        // if we're placing this at one of the standard bonus spots, zero out
-        // weightings for any spots that already have a bonus
-        if (spots == _bonusSpots) {
-            for (int ii = 0; ii < pieces.length; ii++) {
-                if (pieces[ii] instanceof Bonus) {
-                    int spidx = ((Bonus)pieces[ii]).spot;
-                    if (spidx >= 0) {
-                        weights[spidx] = 0;
-                    }
-                }
-            }
-        }
-
         // make sure there is at least one available spot
         if (IntListUtil.sum(weights) == 0) {
             log.info("Dropping bonus. No unused spots.");
@@ -636,43 +619,6 @@ public abstract class Scenario
         return idx;
     }
 
-    /**
-     * Returns a list of bonus spot indexes in order descending order based on
-     * distance to starting positions.
-     */
-    protected ArrayList<BonusSorter> sortBonusList ()
-    {
-        // sort the bonus spots by distance to nearest starting point
-        ArrayList<BonusSorter> sorters = new ArrayList<BonusSorter>();
-        for (int ii = 0; ii < _bonusSpots.size(); ii++) {
-            BonusSorter sorter = new BonusSorter();
-            sorter.index = (short)ii;
-            int x = _bonusSpots.getX(ii), y = _bonusSpots.getY(ii);
-            for (int ss = 0; ss < _startSpots.length; ss++) {
-                int distsq = MathUtil.distanceSq(
-                    x, y, _startSpots[ss].x, _startSpots[ss].y);
-                sorter.minDistSq = Math.max(sorter.minDistSq, distsq);
-            }
-            sorters.add(sorter);
-        }
-        Collections.sort(sorters);
-        return sorters;
-    }
-
-    protected static class BonusSorter implements Comparable<BonusSorter>
-    {
-        /** The index of this bonus spot. */
-        public short index;
-
-        /** The distance (squared) from the bonus spot to the closest player. */
-        public int minDistSq;
-
-        /** Compare based on distance to nearest player. */
-        public int compareTo (BonusSorter other) {
-            return other.minDistSq - minDistSq;
-        }
-    }
-
     /** The Bang game manager. */
     protected BangManager _bangmgr;
 
@@ -682,9 +628,6 @@ public abstract class Scenario
 
     /** Used to track the locations where players are started. */
     protected Point[] _startSpots;
-
-    /** Used to track the locations of all bonus spawn points. */
-    protected PointSet _bonusSpots = new PointSet();
 
     /** Used when determining where to place a bonus. */
     protected PointSet _tpoints = new PointSet();
