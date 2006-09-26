@@ -83,7 +83,7 @@ public class IconViz extends EffectViz
                 _billboard.attachChild(IconConfig.createIcon(_ctx,
                     "textures/effects/cardback.png", ICON_SIZE, ICON_SIZE));
                 _billboard.attachChild(IconConfig.createIcon(_ctx,
-                    _ipath, CARD_WIDTH, ICON_SIZE));
+                    _ipath, CARD_SIZE, CARD_SIZE));
                 
             } else {
                 ColorRGBA color = ColorRGBA.white;
@@ -219,8 +219,8 @@ public class IconViz extends EffectViz
     /** The size of the icon. */
     protected static final float ICON_SIZE = TILE_SIZE / 2;
     
-    /** The width of cards, if {@link #ICON_SIZE} is the height. */
-    protected static final float CARD_WIDTH = ICON_SIZE * 30 / 39;
+    /** The size of the card icons (bigger because the icons are resized). */
+    protected static final float CARD_SIZE = ICON_SIZE * 62 / 39;
     
     /** The length of time it takes for the icon to rise up and fade in. */
     protected static final float RISE_DURATION = 0.5f;

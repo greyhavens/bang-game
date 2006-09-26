@@ -30,6 +30,7 @@ import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.RenderUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -77,17 +78,21 @@ public class ImageCache
     public static Image createImage (
         BufferedImage bufimg, float scale, boolean flip)
     {
-        // convert the the image to the format that OpenGL prefers
+        // make sure images are square powers of two
         int width = (int)(bufimg.getWidth() * scale),
-            height = (int)(bufimg.getHeight() * scale);
+            height = (int)(bufimg.getHeight() * scale),
+            tsize = RenderUtil.nextPOT(Math.max(width, height));
+        
+        // convert the the image to the format that OpenGL prefers
         BufferedImage dispimg = createCompatibleImage(
-            width, height, bufimg.getColorModel().hasAlpha());
+            tsize, tsize, bufimg.getColorModel().hasAlpha());
 
         // flip the image to convert into OpenGL's coordinate system
         AffineTransform tx = null;
         if (flip) {
             tx = AffineTransform.getScaleInstance(scale, -scale);
-            tx.translate(0, -bufimg.getHeight());
+            tx.translate((tsize - width) / 2,
+                (height - tsize) / 2 - bufimg.getHeight());
         }
 
         // "convert" the image by rendering the old into the new
