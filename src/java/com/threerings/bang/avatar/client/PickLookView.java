@@ -44,7 +44,7 @@ public class PickLookView extends BContainer
 
         // if we have more than one look or are being used in the barber, add
         // the looks combo, otherwise add a blurb for the barber
-        if (_ctx.getUserObject().looks.size() > 1 || barberMode) {
+        if (barberMode) {
             BImage icon = _ctx.loadImage("ui/barber/caption_look.png");
             add(new BLabel(new ImageIcon(icon)), new Point(20, 0));
             add(_looks, new Rectangle(79, 0, 164, 29));
@@ -133,14 +133,6 @@ public class PickLookView extends BContainer
 
         // update the interface
         refreshDisplay();
-
-        // if we don't have a barber object, we need to tell the server that we
-        // updated our preferred look
-        if (_barbobj == null) {
-            AvatarService asvc = (AvatarService)
-                _ctx.getClient().requireService(AvatarService.class);
-            asvc.selectLook(_ctx.getClient(), look.name);
-        }
     }
 
     protected void flushModifiedLook ()
