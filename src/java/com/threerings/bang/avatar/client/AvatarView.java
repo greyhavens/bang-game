@@ -19,6 +19,7 @@ import com.jme.util.geom.BufferUtils;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.event.BEvent;
 import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.IntListUtil;
@@ -30,6 +31,9 @@ import com.threerings.media.util.MultiFrameImage;
 import com.threerings.cast.ActionFrames;
 import com.threerings.cast.CharacterDescriptor;
 
+import com.threerings.bang.client.PlayerPopupMenu;
+import com.threerings.bang.data.Handle;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
@@ -164,7 +168,7 @@ public class AvatarView extends BLabel
      * size of the avatar imagery. This should be at least 2.
      * @param framed whether to render a frame around the avatar image.
      * @param named whether to display a banner containing the name of the
-     * avatar (which is set with {@link #setText}).
+     * avatar (which is set with {@link #setHandle}).
      */
     public AvatarView (BasicContext ctx, int scale,
                        boolean framed, boolean named)
@@ -215,6 +219,25 @@ public class AvatarView extends BLabel
     }
 
     /**
+     * Configures the handle of the avatar we're viewing. This will also
+     * activate the player popup menu.
+     */
+    public void setHandle (Handle handle)
+    {
+        setHandle(_handle, _handle.toString());
+    }
+
+    /**
+     * Configures the handle of the avatar we're viewing and potentially
+     * modified version of that handle for display.
+     */
+    public void setHandle (Handle handle, String displayHandle)
+    {
+        _handle = handle;
+        setText(displayHandle);
+    }
+
+    /**
      * Indicates whether to flip our avatar image around the y axis. This
      * should be called before any call to {@link #setAvatar}.
      *
@@ -248,6 +271,19 @@ public class AvatarView extends BLabel
         } else {
             getImage(_ctx, avatar, WIDTH/_scale, HEIGHT/_scale, _mirror, rl);
         }
+    }
+
+    @Override // from BComponent
+    public boolean dispatchEvent (BEvent event)
+    {
+        // pop up a player menu if they click the mouse and we know who we're
+        // looking at
+        boolean handled = false;
+        if (_handle != null && _ctx instanceof BangContext) {
+            handled = PlayerPopupMenu.checkPopup(
+                (BangContext)_ctx, getWindow(), event, _handle, false);
+        }
+        return handled || super.dispatchEvent(event);
     }
 
     @Override // documentation inherited
@@ -363,6 +399,7 @@ public class AvatarView extends BLabel
     protected int[] _avatar;
     protected int _scale;
     protected boolean _mirror;
+    protected Handle _handle;
 
     /** Used to flip texture coordinates. */
     protected static Vector2f _tcoord = new Vector2f();

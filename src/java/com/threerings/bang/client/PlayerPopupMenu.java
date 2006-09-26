@@ -28,8 +28,9 @@ public class PlayerPopupMenu extends BPopupMenu
     implements ActionListener
 {
     /**
-     * A convnience method that checks for a mouse click and popups up the
-     * specified player's context menu if appropriate.
+     * Checks for a mouse click and popups up the specified player's context
+     * menu if appropriate. Assumes that since we're looking the player up by
+     * oid, we're in the same room as them and want to allow them to be muted.
      */
     public static boolean checkPopup (
         BangContext ctx, BWindow parent, BEvent event, int playerOid)
@@ -41,20 +42,22 @@ public class PlayerPopupMenu extends BPopupMenu
         BangOccupantInfo boi = (BangOccupantInfo)
             ctx.getOccupantDirector().getOccupantInfo(playerOid);
         return (boi == null) ? false :
-            checkPopup(ctx, parent, event, (Handle)boi.username);
+            checkPopup(ctx, parent, event, (Handle)boi.username, true);
     }
 
     /**
-     * A convnience method that checks for a mouse click and popups up the
-     * specified player's context menu if appropriate.
+     * Checks for a mouse click and popups up the specified player's context
+     * menu if appropriate.
      */
     public static boolean checkPopup (
-        BangContext ctx, BWindow parent, BEvent event, Handle handle)
+        BangContext ctx, BWindow parent, BEvent event, Handle handle,
+        boolean allowMute)
     {
         if (event instanceof MouseEvent) {
             MouseEvent mev = (MouseEvent)event;
             if (mev.getType() == MouseEvent.MOUSE_PRESSED) {
-                PlayerPopupMenu menu = new PlayerPopupMenu(ctx, parent, handle);
+                PlayerPopupMenu menu =
+                    new PlayerPopupMenu(ctx, parent, handle, allowMute);
                 menu.popup(mev.getX(), mev.getY(), false);
                 return true;
             }
@@ -65,7 +68,8 @@ public class PlayerPopupMenu extends BPopupMenu
     /**
      * Creates a popup menu for the specified player.
      */
-    public PlayerPopupMenu (BangContext ctx, BWindow parent, Handle handle)
+    public PlayerPopupMenu (
+        BangContext ctx, BWindow parent, Handle handle, boolean allowMute)
     {
         super(parent);
 
@@ -92,10 +96,14 @@ public class PlayerPopupMenu extends BPopupMenu
             return;
         }
 
-        // add an item for muting/unmuting
-        String mute = _ctx.getMuteDirector().isMuted(handle) ?
-            "unmute" : "mute";
-        addMenuItem(new BMenuItem(msgs.get("m.pm_" + mute), mute));
+        // add an item for muting/unmuting (always allow unmuting, only allow
+        // muting if the caller indicates that we're in a context where it is
+        // appropriate)
+        boolean muted = _ctx.getMuteDirector().isMuted(handle);
+        if (muted || allowMute) {
+            String mute = muted ? "unmute" : "mute";
+            addMenuItem(new BMenuItem(msgs.get("m.pm_" + mute), mute));
+        }
 
         // add an item for inviting them to be our pardner
         if (!_ctx.getUserObject().pardners.containsKey(handle)) {

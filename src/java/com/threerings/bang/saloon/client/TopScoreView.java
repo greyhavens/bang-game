@@ -7,10 +7,13 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.Spacer;
+import com.jmex.bui.event.BEvent;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.client.PlayerPopupMenu;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
@@ -26,6 +29,7 @@ public class TopScoreView extends BContainer
     {
         super(new BorderLayout());
         setStyleClass("top_score_view");
+        _ctx = ctx;
 
         add(new BLabel(ctx.xlate(SaloonCodes.SALOON_MSGS, "m.top_scores"),
                        "top_score_header"), BorderLayout.NORTH);
@@ -56,7 +60,7 @@ public class TopScoreView extends BContainer
             AvatarView aview = new AvatarView(ctx, 4, false, true);
             col.add(aview, GroupLayout.FIXED);
             if (list.players.length > 0) {
-                aview.setText("1. " + list.players[0]);
+                aview.setHandle(list.players[0], "1. " + list.players[0]);
             }
             if (list.topDogSnapshot != null) {
                 aview.setAvatar(list.topDogSnapshot);
@@ -66,9 +70,29 @@ public class TopScoreView extends BContainer
             ((GroupLayout)col.getLayoutManager()).setGap(0);
             row.add(col);
             for (int ii = 1; ii < list.players.length; ii++) {
-                String name = (ii + 1) + ". " + list.players[ii];
-                col.add(new BLabel(name, "top_score_list"));
+                col.add(new PlayerLabel(ii + 1, list.players[ii]));
             }
         }
     }
+
+    protected class PlayerLabel extends BLabel
+    {
+        public PlayerLabel (int rank, Handle handle) {
+            super(rank + ". " + handle, "top_score_list");
+            _handle = handle;
+        }
+
+        @Override // from BComponent
+            public boolean dispatchEvent (BEvent event)
+        {
+            // pop up a player menu if they click the mouse
+            return PlayerPopupMenu.checkPopup(
+                _ctx, getWindow(), event, _handle, false) ||
+                super.dispatchEvent(event);
+        }
+
+        protected Handle _handle;
+    }
+
+    protected BangContext _ctx;
 }

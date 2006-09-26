@@ -318,7 +318,7 @@ public abstract class ComicChatView
         public boolean dispatchEvent (BEvent event) {
             // pop up a player menu if they click the mouse
             return PlayerPopupMenu.checkPopup(
-                _ctx, getWindow(), event, _handle) ||
+                _ctx, getWindow(), event, _handle, true) ||
                 super.dispatchEvent(event);
         }
 
