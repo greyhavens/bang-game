@@ -45,6 +45,15 @@ public class MoneyLabel extends BContainer
         _coins.setText(String.valueOf(coins));
     }
 
+    /**
+     * Configures the style class of our scrip and coin labels.
+     */
+    public void setStyleClass (String styleClass)
+    {
+        _scrip.setStyleClass(styleClass);
+        _coins.setStyleClass(styleClass);
+    }
+
     protected BangContext _ctx;
     protected BLabel _scrip, _coins;
 }

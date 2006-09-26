@@ -39,11 +39,8 @@ public class PickLookView extends BContainer
 
         _ctx = ctx;
         add(_avatar = new AvatarView(ctx, 2, true, false), new Point(0, 36));
-        _looks = new BComboBox();
+        _looks = new LookComboBox(ctx);
         _looks.addListener(this);
-
-        // we'll need this later
-        _deflook = _ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.default_look");
 
         // if we have more than one look or are being used in the barber, add
         // the looks combo, otherwise add a blurb for the barber
@@ -91,20 +88,12 @@ public class PickLookView extends BContainer
     {
         super.wasAdded();
 
-        // rebuild our available looks
-        PlayerObject user = _ctx.getUserObject();
-        String[] looks = new String[user.looks.size()];
-        int idx = 0;
-        for (Look look : user.looks) {
-            looks[idx++] = getName(look);
-        }
-        _looks.setItems(looks);
-
         // select their current look (which will update the display)
+        PlayerObject user = _ctx.getUserObject();
         Look current = user.getLook(Look.Pose.DEFAULT);
         if (current != null) {
             if (_looks.isAdded()) {
-                _looks.selectItem(getName(current));
+                _looks.selectLook(current);
             } else {
                 selectLook(current);
             }
@@ -125,17 +114,7 @@ public class PickLookView extends BContainer
     {
         // potentially flush any changes to our old look
         flushModifiedLook();
-
-        String name = (String)_looks.getSelectedItem();
-        if (name.equals(_deflook)) {
-            name = "";
-        }
-        selectLook(_ctx.getUserObject().looks.get(name));
-    }
-
-    protected String getName (Look look)
-    {
-        return !StringUtil.isBlank(look.name) ? look.name : _deflook;
+        selectLook(_looks.getSelectedLook());
     }
 
     protected void selectLook (Look look)
@@ -182,7 +161,6 @@ public class PickLookView extends BContainer
     protected BarberObject _barbobj;
 
     protected AvatarView _avatar;
-    protected BComboBox _looks;
-    protected String _deflook;
+    protected LookComboBox _looks;
     protected Look _selection, _orig;
 }

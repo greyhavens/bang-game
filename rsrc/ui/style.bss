@@ -1359,6 +1359,27 @@ fa_inner_box {
   padding: 20 50;
 }
 
+barber_char_content {
+  padding: 25;
+}
+
+barber_char_header {
+  font: "Old Town Wide" plain 40;
+  text-align: center;
+  text-effect: shadow;
+  color: #4C2602;
+  effect-color: #D1C581;
+}
+
+barber_char_tip {
+  font: "Helvetica" plain 12;
+}
+
+barber_char_cost {
+  parent: "money_label";
+  color: #4C2602;
+}
+
 //
 // Saloon styles
 

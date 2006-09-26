@@ -38,8 +38,7 @@ public class WearClothingView extends BContainer
 
         add(_pick = new PickLookView(ctx, true), new Point(707, 135));
         add(_articles = new ArticlePalette(ctx, this, _pick),
-            new Rectangle(139, 5, ItemIcon.ICON_SIZE.width*4,
-                          ItemIcon.ICON_SIZE.height*3+27));
+            CONTENT_RECT);
 
         // create our tab display which will trigger the avatar display
         String[] tabs = new String[AvatarLogic.SLOTS.length];
@@ -111,4 +110,8 @@ public class WearClothingView extends BContainer
     protected int _slotidx = -1;
     protected PickLookView _pick;
     protected ArticlePalette _articles;
+
+    protected static final Rectangle CONTENT_RECT =
+        new Rectangle(139, 5, ItemIcon.ICON_SIZE.width*4,
+                      ItemIcon.ICON_SIZE.height*3+27);
 }
