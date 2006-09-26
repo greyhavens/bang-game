@@ -7,11 +7,13 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.util.AuditLogger;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
+import com.samskivert.util.Invoker;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 
@@ -291,13 +293,19 @@ public class BangServer extends CrowdServer
         townobj = omgr.registerObject(new TownObject());
         createTownObjectUpdateInterval();
 
+        // if we're a town server, queue up an interval to periodically grind
+        // our ratings tables
+        if (ServerConfig.isTownServer) {
+            createRankRecalculateInterval();
+        }
+
         log.info("Bang server v" + DeploymentConfig.getVersion() +
                  " initialized.");
     }
 
     /**
-     * Creates the interval that updates the town object's population
-     * once every thirty seconds.
+     * Creates the interval that updates the town object's population once
+     * every thirty seconds.
      */
     protected void createTownObjectUpdateInterval ()
     {
@@ -309,6 +317,32 @@ public class BangServer extends CrowdServer
                 }
             }
         }.schedule(30000L, true);
+    }
+
+    /**
+     * Creates the interval that regrinds our ratings table and produces the
+     * rank distributions every six hours.
+     */
+    protected void createRankRecalculateInterval ()
+    {
+        final Invoker.Unit grinder = new Invoker.Unit("rankGrinder") {
+            public boolean invoke () {
+                try {
+                    log.info("Recalculating rankings...");
+                    ratingrepo.calculateRanks();
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Failed to recalculate ranks.", pe);
+                }
+                return false;
+            }
+        };
+
+        // regrind 5 minutes after reboot and then every six hours
+        new Interval(omgr) {
+            public void expired () {
+                invoker.postUnit(grinder);
+            }
+        }.schedule(5 * 60 * 1000L, 6 * 60 * 60 * 1000L);
     }
 
     /**

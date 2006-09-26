@@ -366,19 +366,19 @@ public class RatingRepository extends SimpleRepository
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
     {
-            JDBCUtil.createTableIfMissing(conn, "RATINGS", new String[] {
-                "PLAYER_ID INTEGER NOT NULL",
-                "SCENARIO VARCHAR(2) NOT NULL",
-                "RATING SMALLINT NOT NULL",
-                "EXPERIENCE INTEGER NOT NULL",
-                "PRIMARY KEY (PLAYER_ID, SCENARIO)",
-            }, "");
-            JDBCUtil.createTableIfMissing(conn, "RANKS", new String[] {
-                "SCENARIO VARCHAR(2) NOT NULL",
-                "RANK SMALLINT NOT NULL",
-                "LEVEL SMALLINT NOT NULL",
-                "PRIMARY KEY (SCENARIO, RANK)",
-            }, "");
+        JDBCUtil.createTableIfMissing(conn, "RATINGS", new String[] {
+            "PLAYER_ID INTEGER NOT NULL",
+            "SCENARIO VARCHAR(2) NOT NULL",
+            "RATING SMALLINT NOT NULL",
+            "EXPERIENCE INTEGER NOT NULL",
+            "PRIMARY KEY (PLAYER_ID, SCENARIO)",
+        }, "");
+        JDBCUtil.createTableIfMissing(conn, "RANKS", new String[] {
+            "SCENARIO VARCHAR(2) NOT NULL",
+            "RANK SMALLINT NOT NULL",
+            "LEVEL SMALLINT NOT NULL",
+            "PRIMARY KEY (SCENARIO, RANK)",
+        }, "");
     }
 
     /** Extends {@link RankLevels} with data collected using calculations */

@@ -39,6 +39,11 @@ public class ServerConfig
     /** The id of the town this server is handling. */
     public static String townId;
 
+    /** Eventually we'll have servers for the "town" and servers for games
+     * started from that town. For now all servers are town servers and games
+     * are played on the town server. */
+    public static boolean isTownServer = true;
+
     /** The secret used to authenticate other servers in our cluster. */
     public static String sharedSecret;
 
