@@ -83,7 +83,7 @@ public class TopScoreView extends BContainer
         }
 
         @Override // from BComponent
-            public boolean dispatchEvent (BEvent event)
+        public boolean dispatchEvent (BEvent event)
         {
             // pop up a player menu if they click the mouse
             return PlayerPopupMenu.checkPopup(
