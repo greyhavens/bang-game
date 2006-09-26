@@ -4,6 +4,7 @@
 package com.threerings.bang.avatar.server;
 
 import com.threerings.bang.avatar.client.AvatarService;
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.Client;
@@ -26,5 +27,5 @@ public interface AvatarProvider extends InvocationProvider
     /**
      * Handles a {@link AvatarService#selectLook} request.
      */
-    public void selectLook (ClientObject caller, String arg1);
+    public void selectLook (ClientObject caller, Look.Pose arg1, String arg2);
 }

@@ -4,6 +4,7 @@
 package com.threerings.bang.avatar.data;
 
 import com.threerings.bang.avatar.client.AvatarService;
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.Client;
@@ -38,10 +39,10 @@ public class AvatarMarshaller extends InvocationMarshaller
     public static final int SELECT_LOOK = 2;
 
     // documentation inherited from interface
-    public void selectLook (Client arg1, String arg2)
+    public void selectLook (Client arg1, Look.Pose arg2, String arg3)
     {
         sendRequest(arg1, SELECT_LOOK, new Object[] {
-            arg2
+            arg2, arg3
         });
     }
 

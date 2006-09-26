@@ -324,7 +324,7 @@ public class BarberManager extends PlaceManager
     }
 
     // documentation inherited from interface AvatarProvider
-    public void selectLook (ClientObject caller, String name)
+    public void selectLook (ClientObject caller, Look.Pose pose, String name)
     {
         PlayerObject user = (PlayerObject)caller;
 
@@ -336,7 +336,7 @@ public class BarberManager extends PlaceManager
             return;
         }
 
-        user.setPosesAt(name, Look.Pose.DEFAULT.ordinal());
+        user.setPosesAt(name, pose.ordinal());
     }
 
     @Override // documentation inherited

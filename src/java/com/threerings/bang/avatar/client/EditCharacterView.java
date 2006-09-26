@@ -8,10 +8,12 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
-import com.jmex.bui.util.Point;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Point;
 
 import com.threerings.util.MessageBundle;
 
@@ -54,9 +56,14 @@ public class EditCharacterView extends BContainer
         for (Look.Pose pose : Look.Pose.values()) {
             String pname = pose.toString().toLowerCase();
             poses.add(new BLabel(_msgs.get("m.pose_" + pname), "right_label"));
-            LookComboBox looks = new LookComboBox(ctx);
+            final LookComboBox looks = new LookComboBox(ctx);
             looks.selectLook(user.getLook(pose));
-            // TODO: add a listener; persist changes
+            final Look.Pose fpose = pose;
+            looks.addListener(new ActionListener() {
+                public void actionPerformed (ActionEvent event) {
+                    configureLook(fpose, looks.getSelectedLook());
+                }
+            });
             poses.add(looks);
         }
         contents.add(poses);
@@ -88,6 +95,13 @@ public class EditCharacterView extends BContainer
                     "barber_char_header"), GroupLayout.FIXED);
         row.add(new BLabel(_msgs.get("m." + type + "_tip"), "barber_char_tip"));
         return row;
+    }
+
+    protected void configureLook (Look.Pose pose, Look look)
+    {
+        AvatarService asvc = (AvatarService)
+            _ctx.getClient().requireService(AvatarService.class);
+        asvc.selectLook(_ctx.getClient(), pose, look.name);
     }
 
     protected BangContext _ctx;

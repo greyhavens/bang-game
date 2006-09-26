@@ -8,6 +8,7 @@ import com.threerings.presents.client.InvocationService;
 
 import com.threerings.bang.data.Handle;
 
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;
 
 /**
@@ -28,5 +29,5 @@ public interface AvatarService extends InvocationService
      *
      * @param name the name of the look to be selected.
      */
-    public void selectLook (Client client, String name);
+    public void selectLook (Client client, Look.Pose pose, String name);
 }
