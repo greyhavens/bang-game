@@ -139,8 +139,36 @@ public class ParlorGameConfigView extends BContainer
         if (event.getSource() == _create) {
             startMatchMaking();
         } else {
-            _parobj.service.updateGameConfig(_ctx.getClient(), makeConfig());
+            if (shouldSyncGameConfig()) {
+                _parobj.service.updateGameConfig(
+                        _ctx.getClient(), makeConfig());
+            }
         }
+    }
+
+    protected boolean shouldSyncGameConfig ()
+    {
+        if (_parobj.game == null) {
+            return true;
+        }
+        if (((Integer)_boxes[0].getSelectedItem()).intValue() != 
+                _parobj.game.rounds ||
+            ((Integer)_boxes[1].getSelectedItem()).intValue() != 
+                _parobj.game.players ||
+            ((Integer)_boxes[2].getSelectedItem()).intValue() != 
+                _parobj.game.tinCans ||
+            ((Integer)_boxes[3].getSelectedItem()).intValue() != 
+                _parobj.game.teamSize) {
+            return true;
+        }
+        HashSet<String> set = new HashSet<String>();
+        CollectionUtil.addAll(set, _parobj.game.scenarios);
+        for (int ii = 0; ii < _scenIds.length; ii++) {
+            if (_scens[ii].isSelected() != set.contains(_scenIds[ii])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected void updateDisplay ()
