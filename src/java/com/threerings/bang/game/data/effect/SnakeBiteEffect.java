@@ -8,6 +8,8 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Hindrance;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.client.effect.IconInfluenceViz;
+import com.threerings.bang.game.client.effect.InfluenceViz;
 
 /**
  * An effect that causes a human unit to take damage at every step.
@@ -27,6 +29,9 @@ public class SnakeBiteEffect extends SetHindranceEffect
         return new Hindrance() {
             public String getName () {
                 return "snake_bite";
+            }
+            public InfluenceViz createViz (boolean high) {
+                return new IconInfluenceViz("snake_bite");
             }
             public Effect tick () {
                 return new DamageEffect(target, DAMAGE_PER_TICK);

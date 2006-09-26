@@ -9,6 +9,8 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Hindrance;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.client.effect.IconInfluenceViz;
+import com.threerings.bang.game.client.effect.InfluenceViz;
 
 /**
  * Stops a unit from moving for some ticks.
@@ -21,6 +23,9 @@ public class SnareEffect extends SetHindranceEffect
         return new Hindrance() {
             public String getName () {
                 return "snare";
+            }
+            public InfluenceViz createViz (boolean high) {
+                return new IconInfluenceViz("snare");
             }
             public int adjustMoveDistance (int moveDistance) {
                 return 0;
