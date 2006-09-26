@@ -5,6 +5,7 @@ package com.threerings.bang.avatar.server;
 
 import com.threerings.bang.avatar.client.AvatarService;
 import com.threerings.bang.avatar.data.AvatarMarshaller;
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.Client;
@@ -28,13 +29,13 @@ public class AvatarDispatcher extends InvocationDispatcher
         this.provider = provider;
     }
 
-    // documentation inherited
+    // from InvocationDispatcher
     public InvocationMarshaller createMarshaller ()
     {
         return new AvatarMarshaller();
     }
 
-    // documentation inherited
+    @SuppressWarnings("unchecked") // from InvocationDispatcher
     public void dispatchRequest (
         ClientObject source, int methodId, Object[] args)
         throws InvocationException
@@ -50,7 +51,7 @@ public class AvatarDispatcher extends InvocationDispatcher
         case AvatarMarshaller.SELECT_LOOK:
             ((AvatarProvider)provider).selectLook(
                 source,
-                (String)args[0]
+                (Look.Pose)args[0], (String)args[1]
             );
             return;
 
