@@ -7,6 +7,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.UnitConfig;
 
+import com.threerings.bang.game.client.effect.IconInfluenceViz;
 import com.threerings.bang.game.client.effect.InfluenceViz;
 import com.threerings.bang.game.client.effect.ParticleInfluenceViz;
 import com.threerings.bang.game.data.BangObject;
@@ -70,7 +71,9 @@ public class BuggyLogicEffect extends SetHindranceEffect
                 return "buggy_logic";
             }
             public InfluenceViz createViz (boolean high) {
-                return new ParticleInfluenceViz("boom_town/buggy_logic");
+                return (high ? 
+                        new ParticleInfluenceViz("boom_town/buggy_logic") :
+                        new IconInfluenceViz("buggy_logic"));
             }
             public Effect maybeGeneratePostOrderEffect () {
                 ExpireInfluenceEffect effect = createExpireEffect();
