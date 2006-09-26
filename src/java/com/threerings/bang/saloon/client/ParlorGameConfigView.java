@@ -151,14 +151,10 @@ public class ParlorGameConfigView extends BContainer
         if (_parobj.game == null) {
             return true;
         }
-        if (((Integer)_boxes[0].getSelectedItem()).intValue() != 
-                _parobj.game.rounds ||
-            ((Integer)_boxes[1].getSelectedItem()).intValue() != 
-                _parobj.game.players ||
-            ((Integer)_boxes[2].getSelectedItem()).intValue() != 
-                _parobj.game.tinCans ||
-            ((Integer)_boxes[3].getSelectedItem()).intValue() != 
-                _parobj.game.teamSize) {
+        if ((Integer)_boxes[0].getSelectedItem() != _parobj.game.rounds ||
+            (Integer)_boxes[1].getSelectedItem() != _parobj.game.players ||
+            (Integer)_boxes[2].getSelectedItem() != _parobj.game.tinCans ||
+            (Integer)_boxes[3].getSelectedItem() != _parobj.game.teamSize) {
             return true;
         }
         HashSet<String> set = new HashSet<String>();

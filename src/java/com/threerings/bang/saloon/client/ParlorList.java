@@ -53,7 +53,8 @@ public class ParlorList extends BContainer
         add(new BScrollPane(_list), BorderLayout.CENTER);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
-        buttons.add(new BButton(ctx.xlate(SaloonCodes.SALOON_MSGS, "m.create"),
+        buttons.add(_enterParlor = new BButton(
+                    ctx.xlate(SaloonCodes.SALOON_MSGS, "m.create"),
                                 this, "create"));
         add(buttons, BorderLayout.SOUTH);
     }
@@ -69,6 +70,9 @@ public class ParlorList extends BContainer
         // add info on the existing parlors (TODO: sort sensibly)
         for (ParlorInfo info : _salobj.parlors) {
             _rows.put(info.creator, new ParlorRow(info));
+            if(_ctx.getUserObject().handle.equals(info.creator)) {
+                updateEnterButton(info);
+            }
         }
     }
 
@@ -121,6 +125,9 @@ public class ParlorList extends BContainer
             ParlorInfo info = (ParlorInfo)event.getEntry();
             // TODO: insert at appropriate spot
             _rows.put(info.creator, new ParlorRow(info));
+            if(_ctx.getUserObject().handle.equals(info.creator)) {
+                updateEnterButton(info);
+            }
         }
     }
 
@@ -135,6 +142,9 @@ public class ParlorList extends BContainer
             } else {
                 row.update(info);
             }
+            if(_ctx.getUserObject().handle.equals(info.creator)) {
+                updateEnterButton(info);
+            }
         }
     }
 
@@ -142,13 +152,31 @@ public class ParlorList extends BContainer
     public void entryRemoved (EntryRemovedEvent event)
     {
         if (SaloonObject.PARLORS.equals(event.getName())) {
-            ParlorRow row = _rows.remove((Handle)event.getKey());
+            Handle handle = (Handle)event.getKey();
+            ParlorRow row = _rows.remove(handle);
             if (row == null) {
                 log.warning("No row for removed parlor " +
                             "[key=" + event.getKey() + "].");
             } else {
                 row.clear();
             }
+            if(_ctx.getUserObject().handle.equals(handle)) {
+                updateEnterButton(null);
+            }
+        }
+    }
+
+    protected void updateEnterButton (ParlorInfo info)
+    {
+        if (info == null) {
+            _enterParlor.setText(_ctx.xlate(
+                        SaloonCodes.SALOON_MSGS, "m.create"));
+            _enterParlor.setAction("create");
+        } else {
+            _enterParlor.setText(_ctx.xlate(
+                        SaloonCodes.SALOON_MSGS, "m.to_parlor"));
+            _enterParlor.setAction("enter");
+            _enterParlor.setProperty("info", info);
         }
     }
 
@@ -234,6 +262,7 @@ public class ParlorList extends BContainer
     protected BangContext _ctx;
     protected SaloonObject _salobj;
     protected BContainer _list;
+    protected BButton _enterParlor;
 
     protected HashMap<Handle,ParlorRow> _rows = new HashMap<Handle,ParlorRow>();
 
