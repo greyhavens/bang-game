@@ -53,9 +53,8 @@ public class ParlorList extends BContainer
         add(new BScrollPane(_list), BorderLayout.CENTER);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
-        buttons.add(_enterParlor = new BButton(
-                    ctx.xlate(SaloonCodes.SALOON_MSGS, "m.create"),
-                                this, "create"));
+        String label = ctx.xlate(SaloonCodes.SALOON_MSGS, "m.create");
+        buttons.add(_enterParlor = new BButton(label, this, "create"));
         add(buttons, BorderLayout.SOUTH);
     }
 
@@ -70,7 +69,7 @@ public class ParlorList extends BContainer
         // add info on the existing parlors (TODO: sort sensibly)
         for (ParlorInfo info : _salobj.parlors) {
             _rows.put(info.creator, new ParlorRow(info));
-            if(_ctx.getUserObject().handle.equals(info.creator)) {
+            if (_ctx.getUserObject().handle.equals(info.creator)) {
                 updateEnterButton(info);
             }
         }
