@@ -233,6 +233,7 @@ public class Tutorial extends Scenario
             }
             piece.init();
             piece.setOwner(_bangobj, add.owner);
+            piece.lastActed = Short.MIN_VALUE;
             switch (add.location.length) {
             case 1:
                 Piece near = _bangobj.pieces.get(add.location[0]);
