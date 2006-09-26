@@ -6684,231 +6684,6 @@
     <vertex location="-3.14876, -3.01186, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
   </triMesh>
 
-  <triMesh name="buzzsaws 01" parent="Bone_root" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779765" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-1.45748, -38.5187, 48.8146" normal="1.0, -1.58403e-006, 0.0" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-1.45748, -38.5186, -45.1511" normal="1.0, -1.58488e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-1.45736, 39.8239, 48.8147" normal="1.0, -1.5847e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="-1.45735, 39.824, -45.151" normal="1.0, -1.58555e-006, 0.0" tcoords="0.496094, 0.503906"/>
-    <vertex location="-1.45736, 39.8239, 48.8147" normal="1.0, -1.5847e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="-1.45748, -38.5186, -45.1511" normal="1.0, -1.58488e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-1.43328, -38.5186, -45.1511" normal="-1.0, 1.5847e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-1.43328, -38.5187, 48.8146" normal="-1.0, 1.58555e-006, 0.0" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-1.43316, 39.8239, 48.8147" normal="-1.0, 1.58488e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="-1.43316, 39.8239, 48.8147" normal="-1.0, 1.58488e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="-1.43315, 39.824, -45.151" normal="-1.0, 1.58403e-006, 0.0" tcoords="0.496094, 0.503906"/>
-    <vertex location="-1.43328, -38.5186, -45.1511" normal="-1.0, 1.5847e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 02" parent="Bone_root" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779695" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-34.7958, 17.3443, -18.6289" normal="0.999518, -1.59517e-006, 0.0310514" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-36.0587, 17.3443, 22.0226" normal="0.999518, -1.59907e-006, 0.0310514" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-34.7959, -16.5647, -18.6289" normal="0.999518, -1.59826e-006, 0.0310514" tcoords="0.496094, 0.996094"/>
-    <vertex location="-36.0588, -16.5647, 22.0226" normal="0.999518, -1.60216e-006, 0.0310514" tcoords="0.496094, 0.503906"/>
-    <vertex location="-34.7959, -16.5647, -18.6289" normal="0.999518, -1.59826e-006, 0.0310514" tcoords="0.496094, 0.996094"/>
-    <vertex location="-36.0587, 17.3443, 22.0226" normal="0.999518, -1.59907e-006, 0.0310514" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-36.0137, 17.3443, 22.024" normal="-0.999518, 1.59789e-006, -0.0310515" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-34.7508, 17.3443, -18.6275" normal="-0.999518, 1.59692e-006, -0.0310515" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-34.7509, -16.5647, -18.6275" normal="-0.999518, 1.59769e-006, -0.0310515" tcoords="0.496094, 0.996094"/>
-    <vertex location="-34.7509, -16.5647, -18.6275" normal="-0.999518, 1.59769e-006, -0.0310515" tcoords="0.496094, 0.996094"/>
-    <vertex location="-36.0138, -16.5647, 22.024" normal="-0.999518, 1.59867e-006, -0.0310515" tcoords="0.496094, 0.503906"/>
-    <vertex location="-36.0137, 17.3443, 22.024" normal="-0.999518, 1.59789e-006, -0.0310515" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 03" parent="Bone_root" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779695" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="22.835, -28.3253, -33.9273" normal="-0.990303, -0.0729695, 0.118217" tcoords="0.00390625, 0.996094"/>
-    <vertex location="31.2944, -27.702, 37.321" normal="-0.990303, -0.0729695, 0.118217" tcoords="0.00390625, 0.503906"/>
-    <vertex location="18.4391, 31.3347, -33.9273" normal="-0.990303, -0.0729695, 0.118217" tcoords="0.496094, 0.996094"/>
-    <vertex location="26.8984, 31.958, 37.321" normal="-0.990303, -0.0729695, 0.118217" tcoords="0.496094, 0.503906"/>
-    <vertex location="18.4391, 31.3347, -33.9273" normal="-0.990303, -0.0729695, 0.118217" tcoords="0.496094, 0.996094"/>
-    <vertex location="31.2944, -27.702, 37.321" normal="-0.990303, -0.0729695, 0.118217" tcoords="0.00390625, 0.503906"/>
-    <vertex location="31.2665, -27.7041, 37.3243" normal="0.990303, 0.0729695, -0.118217" tcoords="0.00390625, 0.503906"/>
-    <vertex location="22.8072, -28.3273, -33.924" normal="0.990303, 0.0729695, -0.118217" tcoords="0.00390625, 0.996094"/>
-    <vertex location="18.4112, 31.3327, -33.924" normal="0.990303, 0.0729695, -0.118217" tcoords="0.496094, 0.996094"/>
-    <vertex location="18.4112, 31.3327, -33.924" normal="0.990303, 0.0729695, -0.118217" tcoords="0.496094, 0.996094"/>
-    <vertex location="26.8705, 31.9559, 37.3243" normal="0.990303, 0.0729695, -0.118217" tcoords="0.496094, 0.503906"/>
-    <vertex location="31.2665, -27.7041, 37.3243" normal="0.990303, 0.0729695, -0.118217" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 04" parent="Bone_root" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779765" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="30.6124, -22.7019, 29.8436" normal="1.0, -1.59256e-006, 0.0" tcoords="0.00390625, 0.996094"/>
-    <vertex location="30.6124, -22.7018, -26.18" normal="1.0, -1.61532e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-    <vertex location="30.6125, 24.007, 29.8436" normal="1.0, -1.61062e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="30.6125, 24.0071, -26.18" normal="1.0, -1.63339e-006, 0.0" tcoords="0.496094, 0.503906"/>
-    <vertex location="30.6125, 24.007, 29.8436" normal="1.0, -1.61062e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="30.6124, -22.7018, -26.18" normal="1.0, -1.61532e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-    <vertex location="30.6036, -22.7018, -26.18" normal="-1.0, 1.61062e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-    <vertex location="30.6036, -22.7019, 29.8436" normal="-1.0, 1.63339e-006, 0.0" tcoords="0.00390625, 0.996094"/>
-    <vertex location="30.6037, 24.007, 29.8436" normal="-1.0, 1.61532e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="30.6037, 24.007, 29.8436" normal="-1.0, 1.61532e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="30.6037, 24.0071, -26.18" normal="-1.0, 1.59256e-006, 0.0" tcoords="0.496094, 0.503906"/>
-    <vertex location="30.6036, -22.7018, -26.18" normal="-1.0, 1.61062e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 05" parent="Bone_root" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779695" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-8.0213, -30.5777, 44.0199" normal="0.999501, -0.020532, -0.0239891" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-10.0524, -31.1134, -40.145" normal="0.999501, -0.020532, -0.0239891" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-6.59126, 39.5992, 43.5387" normal="0.999501, -0.020532, -0.0239891" tcoords="0.496094, 0.996094"/>
-    <vertex location="-8.62231, 39.0635, -40.6262" normal="0.999501, -0.020532, -0.0239891" tcoords="0.496094, 0.503906"/>
-    <vertex location="-6.59126, 39.5992, 43.5387" normal="0.999501, -0.020532, -0.0239891" tcoords="0.496094, 0.996094"/>
-    <vertex location="-10.0524, -31.1134, -40.145" normal="0.999501, -0.020532, -0.0239891" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-10.0521, -31.1134, -40.145" normal="-0.999501, 0.020532, 0.0239891" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-8.02102, -30.5777, 44.0199" normal="-0.999501, 0.020532, 0.0239891" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-6.59098, 39.5992, 43.5387" normal="-0.999501, 0.020532, 0.0239891" tcoords="0.496094, 0.996094"/>
-    <vertex location="-6.59098, 39.5992, 43.5387" normal="-0.999501, 0.020532, 0.0239891" tcoords="0.496094, 0.996094"/>
-    <vertex location="-8.62203, 39.0635, -40.6262" normal="-0.999501, 0.020532, 0.0239891" tcoords="0.496094, 0.503906"/>
-    <vertex location="-10.0521, -31.1134, -40.145" normal="-0.999501, 0.020532, 0.0239891" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 06" parent="Bone_root" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779695" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-27.2954, 26.5757, -36.633" normal="0.996958, 0.0729696, 0.0273865" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-29.2201, 25.9523, 35.0899" normal="0.996958, 0.0729696, 0.0273865" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-22.9178, -33.0843, -37.034" normal="0.996958, 0.0729696, 0.0273865" tcoords="0.496094, 0.996094"/>
-    <vertex location="-24.8424, -33.7077, 34.6889" normal="0.996958, 0.0729696, 0.0273865" tcoords="0.496094, 0.503906"/>
-    <vertex location="-22.9178, -33.0843, -37.034" normal="0.996958, 0.0729696, 0.0273865" tcoords="0.496094, 0.996094"/>
-    <vertex location="-29.2201, 25.9523, 35.0899" normal="0.996958, 0.0729696, 0.0273865" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-29.201, 25.9537, 35.0905" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-27.2764, 26.5771, -36.6325" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-22.8987, -33.0829, -37.0335" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.496094, 0.996094"/>
-    <vertex location="-22.8987, -33.0829, -37.0335" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.496094, 0.996094"/>
-    <vertex location="-24.8233, -33.7063, 34.6894" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.496094, 0.503906"/>
-    <vertex location="-29.201, 25.9537, 35.0905" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 07" parent="Bone_root" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779695" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-16.585, -30.4813, 43.9114" normal="0.999386, 0.0189216, 0.0294983" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-14.514, -30.4813, -26.2537" normal="0.999386, 0.0189216, 0.0294982" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-17.6919, 28.0328, 43.8787" normal="0.999386, 0.0189216, 0.0294982" tcoords="0.496094, 0.996094"/>
-    <vertex location="-15.6209, 28.0329, -26.2864" normal="0.999386, 0.0189216, 0.0294982" tcoords="0.496094, 0.503906"/>
-    <vertex location="-17.6919, 28.0328, 43.8787" normal="0.999386, 0.0189216, 0.0294982" tcoords="0.496094, 0.996094"/>
-    <vertex location="-14.514, -30.4813, -26.2537" normal="0.999386, 0.0189216, 0.0294982" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-14.5131, -30.4813, -26.2537" normal="-0.999386, -0.0189216, -0.0294982" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-16.5841, -30.4813, 43.9114" normal="-0.999386, -0.0189216, -0.0294983" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-17.691, 28.0329, 43.8788" normal="-0.999386, -0.0189216, -0.0294982" tcoords="0.496094, 0.996094"/>
-    <vertex location="-17.691, 28.0329, 43.8788" normal="-0.999386, -0.0189216, -0.0294982" tcoords="0.496094, 0.996094"/>
-    <vertex location="-15.62, 28.0329, -26.2863" normal="-0.999386, -0.0189216, -0.0294982" tcoords="0.496094, 0.503906"/>
-    <vertex location="-14.5131, -30.4813, -26.2537" normal="-0.999386, -0.0189216, -0.0294982" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 08" parent="Bone_root" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779695" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="15.3829, 28.7316, 43.9114" normal="-0.999386, -0.0189218, 0.0294988" tcoords="0.00390625, 0.996094"/>
-    <vertex location="13.3118, 28.7317, -26.2537" normal="-0.999386, -0.0189218, 0.0294989" tcoords="0.00390625, 0.503906"/>
-    <vertex location="16.4898, -29.7825, 43.8787" normal="-0.999386, -0.0189218, 0.0294988" tcoords="0.496094, 0.996094"/>
-    <vertex location="14.4187, -29.7825, -26.2864" normal="-0.999386, -0.0189218, 0.0294989" tcoords="0.496094, 0.503906"/>
-    <vertex location="16.4898, -29.7825, 43.8787" normal="-0.999386, -0.0189218, 0.0294988" tcoords="0.496094, 0.996094"/>
-    <vertex location="13.3118, 28.7317, -26.2537" normal="-0.999386, -0.0189218, 0.0294989" tcoords="0.00390625, 0.503906"/>
-    <vertex location="13.4493, 28.7343, -26.2578" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.00390625, 0.503906"/>
-    <vertex location="15.5204, 28.7342, 43.9073" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.00390625, 0.996094"/>
-    <vertex location="16.6273, -29.7799, 43.8746" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.496094, 0.996094"/>
-    <vertex location="16.6273, -29.7799, 43.8746" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.496094, 0.996094"/>
-    <vertex location="14.5562, -29.7799, -26.2905" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.496094, 0.503906"/>
-    <vertex location="13.4493, 28.7343, -26.2578" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 09" parent="Bone_root" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779695" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="33.5936, -19.0939, -18.629" normal="-0.999518, 1.55325e-006, 0.0310522" tcoords="0.00390625, 0.996094"/>
-    <vertex location="34.8565, -19.094, 22.0226" normal="-0.999518, 1.49056e-006, 0.0310521" tcoords="0.00390625, 0.503906"/>
-    <vertex location="33.5937, 14.8151, -18.6289" normal="-0.999518, 1.5035e-006, 0.0310521" tcoords="0.496094, 0.996094"/>
-    <vertex location="34.8566, 14.815, 22.0226" normal="-0.999518, 1.44081e-006, 0.0310521" tcoords="0.496094, 0.503906"/>
-    <vertex location="33.5937, 14.8151, -18.6289" normal="-0.999518, 1.5035e-006, 0.0310521" tcoords="0.496094, 0.996094"/>
-    <vertex location="34.8565, -19.094, 22.0226" normal="-0.999518, 1.49056e-006, 0.0310521" tcoords="0.00390625, 0.503906"/>
-    <vertex location="34.8019, -19.094, 22.0243" normal="0.999518, -1.50525e-006, -0.0310522" tcoords="0.00390625, 0.503906"/>
-    <vertex location="33.539, -19.0939, -18.6273" normal="0.999518, -1.44256e-006, -0.0310522" tcoords="0.00390625, 0.996094"/>
-    <vertex location="33.5391, 14.8151, -18.6272" normal="0.999518, -1.49231e-006, -0.0310522" tcoords="0.496094, 0.996094"/>
-    <vertex location="33.5391, 14.8151, -18.6272" normal="0.999518, -1.49231e-006, -0.0310522" tcoords="0.496094, 0.996094"/>
-    <vertex location="34.802, 14.815, 22.0243" normal="0.999518, -1.555e-006, -0.0310523" tcoords="0.496094, 0.503906"/>
-    <vertex location="34.8019, -19.094, 22.0243" normal="0.999518, -1.50525e-006, -0.0310522" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 10" parent="Bone_root" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779765" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.4036, 23.3083, 29.8436" normal="-1.0, 1.55172e-006, 0.0" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-32.4036, 23.3083, -26.18" normal="-1.0, 1.50619e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-32.4037, -23.4006, 29.8436" normal="-1.0, 1.51559e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="-32.4037, -23.4006, -26.18" normal="-1.0, 1.47005e-006, -1.36181e-007" tcoords="0.496094, 0.503906"/>
-    <vertex location="-32.4037, -23.4006, 29.8436" normal="-1.0, 1.51559e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="-32.4036, 23.3083, -26.18" normal="-1.0, 1.50619e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-32.5606, 23.3083, -26.18" normal="1.0, -1.50619e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-32.5607, 23.3083, 29.8436" normal="1.0, -1.55172e-006, 0.0" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-32.5607, -23.4006, 29.8436" normal="1.0, -1.51559e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="-32.5607, -23.4006, 29.8436" normal="1.0, -1.51559e-006, 0.0" tcoords="0.496094, 0.996094"/>
-    <vertex location="-32.5607, -23.4006, -26.18" normal="1.0, -1.47005e-006, 1.36181e-007" tcoords="0.496094, 0.503906"/>
-    <vertex location="-32.5606, 23.3083, -26.18" normal="1.0, -1.50619e-006, 0.0" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 11" parent="Bone_root" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779765" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-13.4603, 35.0242, 46.5724" normal="-0.998341, 1.51222e-006, -0.0575764" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-8.29979, 35.0243, -42.9087" normal="-0.998341, 1.50512e-006, -0.0575764" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-13.4605, -39.7034, 46.5723" normal="-0.998341, 1.50659e-006, -0.0575764" tcoords="0.496094, 0.996094"/>
-    <vertex location="-8.2999, -39.7033, -42.9088" normal="-0.998341, 1.49948e-006, -0.0575764" tcoords="0.496094, 0.503906"/>
-    <vertex location="-13.4605, -39.7034, 46.5723" normal="-0.998341, 1.50659e-006, -0.0575764" tcoords="0.496094, 0.996094"/>
-    <vertex location="-8.29979, 35.0243, -42.9087" normal="-0.998341, 1.50512e-006, -0.0575764" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-8.30579, 35.0243, -42.9091" normal="0.998341, -1.50748e-006, 0.0575764" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-13.4664, 35.0242, 46.5721" normal="0.998341, -1.52496e-006, 0.0575764" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-13.4665, -39.7034, 46.572" normal="0.998341, -1.51109e-006, 0.0575764" tcoords="0.496094, 0.996094"/>
-    <vertex location="-13.4665, -39.7034, 46.572" normal="0.998341, -1.51109e-006, 0.0575764" tcoords="0.496094, 0.996094"/>
-    <vertex location="-8.3059, -39.7033, -42.9091" normal="0.998341, -1.4936e-006, 0.0575764" tcoords="0.496094, 0.503906"/>
-    <vertex location="-8.30579, 35.0243, -42.9091" normal="0.998341, -1.50748e-006, 0.0575764" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 12" parent="Bone_root" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779765" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="11.6691, -34.4178, 46.5724" normal="0.998341, -1.46815e-006, -0.0575762" tcoords="0.00390625, 0.996094"/>
-    <vertex location="6.50856, -34.4177, -42.9088" normal="0.998341, -1.46105e-006, -0.0575763" tcoords="0.00390625, 0.503906"/>
-    <vertex location="11.6692, 40.3098, 46.5724" normal="0.998341, -1.46251e-006, -0.0575763" tcoords="0.496094, 0.996094"/>
-    <vertex location="6.50867, 40.3098, -42.9087" normal="0.998341, -1.45541e-006, -0.0575763" tcoords="0.496094, 0.503906"/>
-    <vertex location="11.6692, 40.3098, 46.5724" normal="0.998341, -1.46251e-006, -0.0575763" tcoords="0.496094, 0.996094"/>
-    <vertex location="6.50856, -34.4177, -42.9088" normal="0.998341, -1.46105e-006, -0.0575763" tcoords="0.00390625, 0.503906"/>
-    <vertex location="6.46427, -34.4177, -42.9062" normal="-0.998341, 1.45647e-006, 0.0575762" tcoords="0.00390625, 0.503906"/>
-    <vertex location="11.6248, -34.4178, 46.5749" normal="-0.998341, 1.46521e-006, 0.0575762" tcoords="0.00390625, 0.996094"/>
-    <vertex location="11.6249, 40.3098, 46.575" normal="-0.998341, 1.45827e-006, 0.0575762" tcoords="0.496094, 0.996094"/>
-    <vertex location="11.6249, 40.3098, 46.575" normal="-0.998341, 1.45827e-006, 0.0575762" tcoords="0.496094, 0.996094"/>
-    <vertex location="6.46438, 40.3098, -42.9062" normal="-0.998341, 1.44953e-006, 0.0575763" tcoords="0.496094, 0.503906"/>
-    <vertex location="6.46427, -34.4177, -42.9062" normal="-0.998341, 1.45647e-006, 0.0575762" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 13" parent="Bone_root" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779765" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="21.2001, -29.2583, 37.6065" normal="0.997184, -1.58324e-006, -0.0749965" tcoords="0.00390625, 0.996094"/>
-    <vertex location="15.819, -29.2582, -33.9429" normal="0.997184, -1.56551e-006, -0.0749965" tcoords="0.00390625, 0.503906"/>
-    <vertex location="21.2002, 30.5635, 37.6065" normal="0.997184, -1.56917e-006, -0.0749965" tcoords="0.496094, 0.996094"/>
-    <vertex location="15.8191, 30.5635, -33.9429" normal="0.997184, -1.55145e-006, -0.0749965" tcoords="0.496094, 0.503906"/>
-    <vertex location="21.2002, 30.5635, 37.6065" normal="0.997184, -1.56917e-006, -0.0749965" tcoords="0.496094, 0.996094"/>
-    <vertex location="15.819, -29.2582, -33.9429" normal="0.997184, -1.56551e-006, -0.0749965" tcoords="0.00390625, 0.503906"/>
-    <vertex location="15.8128, -29.2582, -33.9424" normal="-0.997184, 1.53513e-006, 0.0749965" tcoords="0.00390625, 0.503906"/>
-    <vertex location="21.194, -29.2583, 37.6069" normal="-0.997184, 1.54666e-006, 0.0749965" tcoords="0.00390625, 0.996094"/>
-    <vertex location="21.194, 30.5635, 37.607" normal="-0.997184, 1.53751e-006, 0.0749965" tcoords="0.496094, 0.996094"/>
-    <vertex location="21.194, 30.5635, 37.607" normal="-0.997184, 1.53751e-006, 0.0749965" tcoords="0.496094, 0.996094"/>
-    <vertex location="15.8129, 30.5635, -33.9424" normal="-0.997184, 1.52598e-006, 0.0749965" tcoords="0.496094, 0.503906"/>
-    <vertex location="15.8128, -29.2582, -33.9424" normal="-0.997184, 1.53513e-006, 0.0749965" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 14" parent="Bone_root" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779765" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-22.9914, 29.8647, 41.5855" normal="-0.997184, 1.55171e-006, -0.0749966" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-17.6103, 29.8647, -29.9639" normal="-0.997184, 1.56944e-006, -0.0749966" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-22.9915, -29.957, 41.5855" normal="-0.997184, 1.56578e-006, -0.0749966" tcoords="0.496094, 0.996094"/>
-    <vertex location="-17.6103, -29.957, -29.9639" normal="-0.997184, 1.5835e-006, -0.0749966" tcoords="0.496094, 0.503906"/>
-    <vertex location="-22.9915, -29.957, 41.5855" normal="-0.997184, 1.56578e-006, -0.0749966" tcoords="0.496094, 0.996094"/>
-    <vertex location="-17.6103, 29.8647, -29.9639" normal="-0.997184, 1.56944e-006, -0.0749966" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-17.5681, 29.8647, -29.9607" normal="0.997184, -1.55192e-006, 0.0749966" tcoords="0.00390625, 0.503906"/>
-    <vertex location="-22.9492, 29.8647, 41.5887" normal="0.997184, -1.51513e-006, 0.0749967" tcoords="0.00390625, 0.996094"/>
-    <vertex location="-22.9493, -29.957, 41.5886" normal="0.997184, -1.54433e-006, 0.0749966" tcoords="0.496094, 0.996094"/>
-    <vertex location="-22.9493, -29.957, 41.5886" normal="0.997184, -1.54433e-006, 0.0749966" tcoords="0.496094, 0.996094"/>
-    <vertex location="-17.5682, -29.957, -29.9608" normal="0.997184, -1.58111e-006, 0.0749966" tcoords="0.496094, 0.503906"/>
-    <vertex location="-17.5681, 29.8647, -29.9607" normal="0.997184, -1.55192e-006, 0.0749966" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
-  <triMesh name="buzzsaws 15" parent="Bone_root" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.936571, 0.936571, 0.779695" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="5.83716, 28.891, 43.9627" normal="-0.995604, 0.0629822, -0.0693216" tcoords="0.00390625, 0.996094"/>
-    <vertex location="11.703, 29.1773, -40.0233" normal="-0.995604, 0.0629822, -0.0693217" tcoords="0.00390625, 0.503906"/>
-    <vertex location="1.44355, -41.1624, 43.417" normal="-0.995604, 0.0629822, -0.0693217" tcoords="0.496094, 0.996094"/>
-    <vertex location="7.30942, -40.8761, -40.569" normal="-0.995604, 0.0629822, -0.0693217" tcoords="0.496094, 0.503906"/>
-    <vertex location="1.44355, -41.1624, 43.417" normal="-0.995604, 0.0629822, -0.0693217" tcoords="0.496094, 0.996094"/>
-    <vertex location="11.703, 29.1773, -40.0233" normal="-0.995604, 0.0629822, -0.0693217" tcoords="0.00390625, 0.503906"/>
-    <vertex location="11.6723, 29.1792, -40.0255" normal="0.995604, -0.0629822, 0.0693216" tcoords="0.00390625, 0.503906"/>
-    <vertex location="5.80642, 28.8929, 43.9605" normal="0.995604, -0.0629822, 0.0693216" tcoords="0.00390625, 0.996094"/>
-    <vertex location="1.41282, -41.1604, 43.4149" normal="0.995604, -0.0629822, 0.0693216" tcoords="0.496094, 0.996094"/>
-    <vertex location="1.41282, -41.1604, 43.4149" normal="0.995604, -0.0629822, 0.0693216" tcoords="0.496094, 0.996094"/>
-    <vertex location="7.27869, -40.8741, -40.5711" normal="0.995604, -0.0629822, 0.0693217" tcoords="0.496094, 0.503906"/>
-    <vertex location="11.6723, 29.1792, -40.0255" normal="0.995604, -0.0629822, 0.0693216" tcoords="0.00390625, 0.503906"/>
-  </triMesh>
-
   <triMesh name="blur" parent="Bone_root" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.646608, 0.646608, 0.646608" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
     <vertex location="-111.0, 111.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.515625, 0.484375"/>
     <vertex location="-111.0, -111.0, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.515625, 0.0078125"/>
@@ -6920,112 +6695,100 @@
 
   <node name="Bone_blades" parent="Bone_root" translation="22.405, 0.775101, 0.506752" rotation="-9.53674e-007, 0.0, 2.38493e-007, 1.0" scale="1.0, 1.0, 1.0"/>
 
-  <triMesh name="saw blade 01" parent="Bone_blades" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052" offsetTranslation="32.8289, -32.0515, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
+  <triMesh name="buzzsaws 01" parent="Bone_root" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="blades.png" transparent="true">
+    <vertex location="-1.48971, -41.1521, 51.9251" normal="1.0, -1.58474e-006, 0.0" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-1.4897, -41.1521, -48.4044" normal="1.0, -1.58474e-006, 0.0" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-1.48957, 42.4962, 51.9251" normal="1.0, -1.58474e-006, 0.0" tcoords="0.496094, 0.996094"/>
+    <vertex location="-1.48957, 42.4962, -48.4044" normal="1.0, -1.58474e-006, 0.0" tcoords="0.496094, 0.503906"/>
+    <vertex location="-1.48957, 42.4962, 51.9251" normal="1.0, -1.58474e-006, 0.0" tcoords="0.496094, 0.996094"/>
+    <vertex location="-1.4897, -41.1521, -48.4044" normal="1.0, -1.58474e-006, 0.0" tcoords="0.00390625, 0.503906"/>
+    <vertex location="12.5259, -36.7736, 49.531" normal="0.998341, -1.51271e-006, -0.0575763" tcoords="0.00390625, 0.996094"/>
+    <vertex location="7.01583, -36.7735, -46.0103" normal="0.998341, -1.51271e-006, -0.0575763" tcoords="0.00390625, 0.503906"/>
+    <vertex location="12.526, 43.015, 49.531" normal="0.998341, -1.51271e-006, -0.0575763" tcoords="0.496094, 0.996094"/>
+    <vertex location="7.01595, 43.015, -46.0102" normal="0.998341, -1.51271e-006, -0.0575763" tcoords="0.496094, 0.503906"/>
+    <vertex location="12.526, 43.015, 49.531" normal="0.998341, -1.51271e-006, -0.0575763" tcoords="0.496094, 0.996094"/>
+    <vertex location="7.01583, -36.7735, -46.0103" normal="0.998341, -1.51271e-006, -0.0575763" tcoords="0.00390625, 0.503906"/>
+    <vertex location="22.7024, -31.2646, 39.9579" normal="0.997184, -1.62274e-006, -0.0749965" tcoords="0.00390625, 0.996094"/>
+    <vertex location="16.9568, -31.2645, -36.4372" normal="0.997184, -1.60614e-006, -0.0749965" tcoords="0.00390625, 0.503906"/>
+    <vertex location="22.7025, 32.6086, 39.9579" normal="0.997184, -1.60957e-006, -0.0749965" tcoords="0.496094, 0.996094"/>
+    <vertex location="16.9569, 32.6086, -36.4371" normal="0.997184, -1.59297e-006, -0.0749965" tcoords="0.496094, 0.503906"/>
+    <vertex location="22.7025, 32.6086, 39.9579" normal="0.997184, -1.60957e-006, -0.0749965" tcoords="0.496094, 0.996094"/>
+    <vertex location="16.9568, -31.2645, -36.4372" normal="0.997184, -1.60614e-006, -0.0749965" tcoords="0.00390625, 0.503906"/>
+    <vertex location="32.7521, -24.2642, 31.6693" normal="1.0, -1.60628e-006, 0.0" tcoords="0.00390625, 0.996094"/>
+    <vertex location="32.7521, -24.2641, -28.1486" normal="1.0, -1.60628e-006, 0.0" tcoords="0.00390625, 0.503906"/>
+    <vertex location="32.7522, 25.6081, 31.6693" normal="1.0, -1.60628e-006, 0.0" tcoords="0.496094, 0.996094"/>
+    <vertex location="32.7522, 25.6082, -28.1486" normal="1.0, -1.60628e-006, 0.0" tcoords="0.496094, 0.503906"/>
+    <vertex location="32.7522, 25.6081, 31.6693" normal="1.0, -1.60628e-006, 0.0" tcoords="0.496094, 0.996094"/>
+    <vertex location="32.7521, -24.2641, -28.1486" normal="1.0, -1.60628e-006, 0.0" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-14.3055, 37.3714, 49.531" normal="-0.998341, 1.57143e-006, -0.0575764" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-8.79541, 37.3715, -46.0102" normal="-0.998341, 1.56478e-006, -0.0575764" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-14.3056, -42.4171, 49.531" normal="-0.998341, 1.56615e-006, -0.0575764" tcoords="0.496094, 0.996094"/>
+    <vertex location="-8.79553, -42.417, -46.0103" normal="-0.998341, 1.5595e-006, -0.0575764" tcoords="0.496094, 0.503906"/>
+    <vertex location="-14.3056, -42.4171, 49.531" normal="-0.998341, 1.56615e-006, -0.0575764" tcoords="0.496094, 0.996094"/>
+    <vertex location="-8.79541, 37.3715, -46.0102" normal="-0.998341, 1.56478e-006, -0.0575764" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-34.5317, 24.8621, 31.6693" normal="-1.0, 1.52979e-006, 0.0" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-34.5317, 24.8621, -28.1486" normal="-1.0, 1.48714e-006, 0.0" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-34.5318, -25.0102, 31.6693" normal="-1.0, 1.49595e-006, 0.0" tcoords="0.496094, 0.996094"/>
+    <vertex location="-34.5318, -25.0102, -28.1486" normal="-1.0, 1.4533e-006, -1.27543e-007" tcoords="0.496094, 0.503906"/>
+    <vertex location="-34.5318, -25.0102, 31.6693" normal="-1.0, 1.49595e-006, 0.0" tcoords="0.496094, 0.996094"/>
+    <vertex location="-34.5317, 24.8621, -28.1486" normal="-1.0, 1.48714e-006, 0.0" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-24.482, 31.8625, 44.2064" normal="-0.997184, 1.60217e-006, -0.0749967" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-18.7364, 31.8625, -32.1887" normal="-0.997184, 1.61878e-006, -0.0749966" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-24.4821, -32.0107, 44.2063" normal="-0.997184, 1.61535e-006, -0.0749966" tcoords="0.496094, 0.996094"/>
+    <vertex location="-18.7365, -32.0106, -32.1887" normal="-0.997184, 1.63195e-006, -0.0749966" tcoords="0.496094, 0.503906"/>
+    <vertex location="-24.4821, -32.0107, 44.2063" normal="-0.997184, 1.61535e-006, -0.0749966" tcoords="0.496094, 0.996094"/>
+    <vertex location="-18.7364, 31.8625, -32.1887" normal="-0.997184, 1.61878e-006, -0.0749966" tcoords="0.00390625, 0.503906"/>
   </triMesh>
 
-  <triMesh name="saw blade 02" parent="Bone_blades" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052" offsetTranslation="32.866, -32.3243, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-  </triMesh>
-
-  <triMesh name="saw blade 03" parent="Bone_blades" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052" offsetTranslation="32.0645, -32.2778, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-  </triMesh>
-
-  <triMesh name="saw blade 04" parent="Bone_blades" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189601" scale="1.07595, 1.07595, 1.29052" offsetTranslation="32.4287, -32.0647, -36.9402" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-  </triMesh>
-
-  <triMesh name="saw blade 05" parent="Bone_blades" translation="65.3063, 68.958, -0.456436" rotation="0.690752, -0.184923, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052" offsetTranslation="32.1159, -32.3617, -46.6817" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-  </triMesh>
-
-  <triMesh name="saw blade 06" parent="Bone_blades" translation="3.37287, -68.7427, 0.498459" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052" offsetTranslation="31.5538, -32.6184, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-  </triMesh>
-
-  <triMesh name="saw blade 07" parent="Bone_blades" translation="4.57467, -60.0754, 35.986" rotation="0.00441985, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="0.132976, 0.178139, -1.12001" normal="-0.0261772, -1.20266e-007, 0.999657" tcoords="0.0, 0.0"/>
-    <vertex location="0.132993, -69.7588, -1.12001" normal="-0.0261772, -1.21924e-007, 0.999657" tcoords="0.0, 0.5"/>
-    <vertex location="70.0459, 0.178155, 0.710743" normal="-0.0261772, -1.21924e-007, 0.999657" tcoords="0.5, 0.0"/>
-    <vertex location="70.0459, -69.7587, 0.710735" normal="-0.0261772, -1.23583e-007, 0.999657" tcoords="0.5, 0.5"/>
-    <vertex location="70.0459, 0.178155, 0.710743" normal="-0.0261772, -1.21924e-007, 0.999657" tcoords="0.5, 0.0"/>
-    <vertex location="0.132993, -69.7588, -1.12001" normal="-0.0261772, -1.21924e-007, 0.999657" tcoords="0.0, 0.5"/>
-  </triMesh>
-
-  <triMesh name="saw blade 08" parent="Bone_blades" translation="3.43562, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052" offsetTranslation="32.8289, -32.0515, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-  </triMesh>
-
-  <triMesh name="saw blade 09" parent="Bone_blades" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052" offsetTranslation="32.4287, -32.0647, -36.9402" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-  </triMesh>
-
-  <triMesh name="saw blade 10" parent="Bone_blades" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="0.45098, -0.0900767, -1.12003" normal="-0.0261774, -7.08338e-007, 0.999657" tcoords="0.0, 0.0"/>
-    <vertex location="0.45096, -70.027, -1.12008" normal="-0.0261774, -7.0814e-007, 0.999657" tcoords="0.0, 0.5"/>
-    <vertex location="70.3639, -0.0900975, 0.710734" normal="-0.0261774, -7.0814e-007, 0.999657" tcoords="0.5, 0.0"/>
-    <vertex location="70.3639, -70.027, 0.710684" normal="-0.0261774, -7.07941e-007, 0.999657" tcoords="0.5, 0.5"/>
-    <vertex location="70.3639, -0.0900975, 0.710734" normal="-0.0261774, -7.0814e-007, 0.999657" tcoords="0.5, 0.0"/>
-    <vertex location="0.45096, -70.027, -1.12008" normal="-0.0261774, -7.0814e-007, 0.999657" tcoords="0.0, 0.5"/>
-  </triMesh>
-
-  <triMesh name="saw blade 11" parent="Bone_blades" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052" offsetTranslation="32.866, -32.3243, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-  </triMesh>
-
-  <triMesh name="saw blade 12" parent="Bone_blades" translation="4.2143, -0.286369, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052" offsetTranslation="32.0645, -32.2778, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
-    <vertex location="-32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.5"/>
-    <vertex location="32.5, 32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.5, 0.0"/>
-    <vertex location="-32.5, -32.5, 0.0" normal="0.0, 0.0, 1.0" tcoords="0.0, 0.5"/>
+  <triMesh name="buzzsaws 02" parent="Bone_root" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="blades.png" transparent="true">
+    <vertex location="-38.4555, 18.579, 23.3301" normal="-0.999518, 1.60185e-006, -0.0310515" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-37.1071, 18.579, -20.0746" normal="-0.999518, 1.60094e-006, -0.0310515" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-37.1071, -17.6265, -20.0746" normal="-0.999518, 1.60166e-006, -0.0310515" tcoords="0.496094, 0.996094"/>
+    <vertex location="-37.1071, -17.6265, -20.0746" normal="-0.999518, 1.60166e-006, -0.0310515" tcoords="0.496094, 0.996094"/>
+    <vertex location="-38.4556, -17.6265, 23.3301" normal="-0.999518, 1.60258e-006, -0.0310515" tcoords="0.496094, 0.503906"/>
+    <vertex location="-38.4555, 18.579, 23.3301" normal="-0.999518, 1.60185e-006, -0.0310515" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-10.6879, -33.1606, -43.0478" normal="-0.999501, 0.0205321, 0.0239891" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-8.51927, -32.5886, 46.8171" normal="-0.999501, 0.0205321, 0.0239891" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-6.99237, 42.3411, 46.3034" normal="-0.999501, 0.0205321, 0.0239891" tcoords="0.496094, 0.996094"/>
+    <vertex location="-6.99237, 42.3411, 46.3034" normal="-0.999501, 0.0205321, 0.0239891" tcoords="0.496094, 0.996094"/>
+    <vertex location="-9.16098, 41.7691, -43.5616" normal="-0.999501, 0.0205321, 0.0239891" tcoords="0.496094, 0.503906"/>
+    <vertex location="-10.6879, -33.1606, -43.0478" normal="-0.999501, 0.0205321, 0.0239891" tcoords="0.00390625, 0.503906"/>
+    <vertex location="14.2586, 30.7375, -28.2157" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.00390625, 0.503906"/>
+    <vertex location="16.4699, 30.7375, 46.7013" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.00390625, 0.996094"/>
+    <vertex location="17.6518, -31.7395, 46.6664" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.496094, 0.996094"/>
+    <vertex location="17.6518, -31.7395, 46.6664" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.496094, 0.996094"/>
+    <vertex location="15.4405, -31.7395, -28.2507" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.496094, 0.503906"/>
+    <vertex location="14.2586, 30.7375, -28.2157" normal="0.999386, 0.0189218, -0.0294988" tcoords="0.00390625, 0.503906"/>
+    <vertex location="33.4591, -29.5181, 39.6645" normal="0.990303, 0.0729695, -0.118217" tcoords="0.00390625, 0.503906"/>
+    <vertex location="24.4268, -30.1836, -36.4091" normal="0.990303, 0.0729695, -0.118217" tcoords="0.00390625, 0.996094"/>
+    <vertex location="19.7331, 33.5169, -36.409" normal="0.990303, 0.0729695, -0.118217" tcoords="0.496094, 0.996094"/>
+    <vertex location="19.7331, 33.5169, -36.409" normal="0.990303, 0.0729695, -0.118217" tcoords="0.496094, 0.996094"/>
+    <vertex location="28.7654, 34.1824, 39.6646" normal="0.990303, 0.0729695, -0.118217" tcoords="0.496094, 0.503906"/>
+    <vertex location="33.4591, -29.5181, 39.6645" normal="0.990303, 0.0729695, -0.118217" tcoords="0.00390625, 0.503906"/>
+    <vertex location="37.2625, -20.3271, 23.3301" normal="0.999518, -1.56004e-006, -0.0310522" tcoords="0.00390625, 0.503906"/>
+    <vertex location="35.914, -20.3271, -20.0746" normal="0.999518, -1.56004e-006, -0.0310522" tcoords="0.00390625, 0.996094"/>
+    <vertex location="35.9141, 15.8784, -20.0746" normal="0.999518, -1.56004e-006, -0.0310522" tcoords="0.496094, 0.996094"/>
+    <vertex location="35.9141, 15.8784, -20.0746" normal="0.999518, -1.56004e-006, -0.0310522" tcoords="0.496094, 0.996094"/>
+    <vertex location="37.2625, 15.8784, 23.3301" normal="0.999518, -1.56004e-006, -0.0310522" tcoords="0.496094, 0.503906"/>
+    <vertex location="37.2625, -20.3271, 23.3301" normal="0.999518, -1.56004e-006, -0.0310522" tcoords="0.00390625, 0.503906"/>
+    <vertex location="12.5409, 31.2134, -42.9179" normal="0.995604, -0.0629823, 0.0693217" tcoords="0.00390625, 0.503906"/>
+    <vertex location="6.27775, 30.9076, 46.7561" normal="0.995604, -0.0629823, 0.0693216" tcoords="0.00390625, 0.996094"/>
+    <vertex location="1.58659, -43.8901, 46.1734" normal="0.995604, -0.0629823, 0.0693217" tcoords="0.496094, 0.996094"/>
+    <vertex location="1.58659, -43.8901, 46.1734" normal="0.995604, -0.0629823, 0.0693217" tcoords="0.496094, 0.996094"/>
+    <vertex location="7.84972, -43.5844, -43.5005" normal="0.995604, -0.0629823, 0.0693217" tcoords="0.496094, 0.503906"/>
+    <vertex location="12.5409, 31.2134, -42.9179" normal="0.995604, -0.0629823, 0.0693217" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-15.4517, -32.4856, -28.2158" normal="-0.999386, -0.0189215, -0.0294982" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-17.663, -32.4856, 46.7013" normal="-0.999386, -0.0189215, -0.0294983" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-18.8448, 29.9914, 46.6664" normal="-0.999386, -0.0189215, -0.0294982" tcoords="0.496094, 0.996094"/>
+    <vertex location="-18.8448, 29.9914, 46.6664" normal="-0.999386, -0.0189215, -0.0294982" tcoords="0.496094, 0.996094"/>
+    <vertex location="-16.6336, 29.9914, -28.2506" normal="-0.999386, -0.0189216, -0.0294982" tcoords="0.496094, 0.503906"/>
+    <vertex location="-15.4517, -32.4856, -28.2158" normal="-0.999386, -0.0189215, -0.0294982" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-31.1537, 27.7699, 37.2824" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.00390625, 0.503906"/>
+    <vertex location="-29.0988, 28.4355, -39.2979" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.00390625, 0.996094"/>
+    <vertex location="-24.4246, -35.2649, -39.7262" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.496094, 0.996094"/>
+    <vertex location="-24.4246, -35.2649, -39.7262" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.496094, 0.996094"/>
+    <vertex location="-26.4796, -35.9305, 36.8542" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.496094, 0.503906"/>
+    <vertex location="-31.1537, 27.7699, 37.2824" normal="-0.996958, -0.0729696, -0.0273865" tcoords="0.00390625, 0.503906"/>
   </triMesh>
 
   <triMesh name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
@@ -7830,6 +7593,81 @@
     <vertex location="-18.328, -12.4413, 19.5878" normal="-0.82579, -0.505366, 0.250352" tcoords="0.00390625, 0.910156"/>
     <vertex location="-22.9046, 0.537492, 30.4083" normal="-0.825374, -0.503688, 0.255061" tcoords="0.238281, 0.910156"/>
     <vertex location="-27.14, 0.124779, 15.8875" normal="-0.82572, -0.505079, 0.251161" tcoords="0.238281, 0.820313"/>
+  </triMesh>
+
+  <triMesh name="blades" translation="-1.44236, -0.927111, 56.9645" rotation="0.0, 0.0, 1.0, 0.0" scale="1.07595, 1.07595, 1.29052" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="blades.png" transparent="true">
+    <vertex location="-55.5741, 32.9316, 8.6793" normal="3.55434e-007, 0.0218275, 0.999762" tcoords="0.00390625, 0.0078125"/>
+    <vertex location="-120.574, 32.9318, 8.67932" normal="3.62128e-007, 0.0218275, 0.999762" tcoords="0.00390625, 0.496094"/>
+    <vertex location="-55.5742, -32.0461, 10.0979" normal="3.62127e-007, 0.0218275, 0.999762" tcoords="0.503906, 0.0078125"/>
+    <vertex location="-120.574, -32.046, 10.098" normal="3.68821e-007, 0.0218275, 0.999762" tcoords="0.503906, 0.496094"/>
+    <vertex location="-55.5742, -32.0461, 10.0979" normal="3.62127e-007, 0.0218275, 0.999762" tcoords="0.503906, 0.0078125"/>
+    <vertex location="-120.574, 32.9318, 8.67932" normal="3.62128e-007, 0.0218275, 0.999762" tcoords="0.00390625, 0.496094"/>
+    <vertex location="-31.895, 56.3251, 8.67928" normal="0.010914, 0.0189028, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="-88.1866, 88.8253, 8.67931" normal="0.010914, 0.0189028, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="-64.384, 0.0528645, 10.0979" normal="0.010914, 0.0189028, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="-120.676, 32.553, 10.0979" normal="0.010914, 0.0189028, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="-64.384, 0.0528645, 10.0979" normal="0.010914, 0.0189028, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="-88.1866, 88.8253, 8.67931" normal="0.010914, 0.0189028, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="0.308451, 64.745, 8.67928" normal="0.0189029, 0.0109136, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="-32.1914, 121.037, 8.67927" normal="0.0189029, 0.0109136, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="-55.964, 32.2563, 10.0979" normal="0.0189029, 0.0109136, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="-88.4639, 88.548, 10.0979" normal="0.0189029, 0.0109136, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="-55.964, 32.2563, 10.0979" normal="0.0189029, 0.0109136, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="-32.1914, 121.037, 8.67927" normal="0.0189029, 0.0109136, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="32.4074, 55.9351, 8.67925" normal="0.0218276, -1.30284e-007, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="32.4075, 120.935, 8.67925" normal="0.0218276, -1.29643e-007, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="-32.5704, 55.9352, 10.0979" normal="0.0218276, -1.29643e-007, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="-32.5702, 120.935, 10.0979" normal="0.0218276, -1.29003e-007, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="-32.5704, 55.9352, 10.0979" normal="0.0218276, -1.29643e-007, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="32.4075, 120.935, 8.67925" normal="0.0218276, -1.29643e-007, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="55.8009, 32.256, 8.67925" normal="0.0189032, -0.0109134, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="88.301, 88.5476, 8.67923" normal="0.0189032, -0.0109134, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="-0.471426, 64.7449, 10.0979" normal="0.0189032, -0.0109134, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="32.0286, 121.037, 10.0979" normal="0.0189032, -0.0109134, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="-0.471426, 64.7449, 10.0979" normal="0.0189032, -0.0109134, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="88.301, 88.5476, 8.67923" normal="0.0189032, -0.0109134, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="64.2207, 0.0525306, 8.67927" normal="0.0109134, -0.0189023, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="120.512, 32.5525, 8.67926" normal="0.0109134, -0.0189023, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="31.732, 56.3249, 10.0978" normal="0.0109134, -0.0189023, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="88.0236, 88.8248, 10.0978" normal="0.0109134, -0.0189023, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="31.732, 56.3249, 10.0978" normal="0.0109134, -0.0189023, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="120.512, 32.5525, 8.67926" normal="0.0109134, -0.0189023, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="55.4108, -32.0463, 8.67923" normal="1.44481e-006, -0.0218277, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="120.411, -32.0466, 8.67913" normal="1.44417e-006, -0.0218277, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="55.411, 32.9314, 10.0979" normal="1.44417e-006, -0.0218277, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="120.411, 32.9311, 10.0978" normal="1.44353e-006, -0.0218277, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="55.411, 32.9314, 10.0979" normal="1.44417e-006, -0.0218277, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="120.411, -32.0466, 8.67913" normal="1.44417e-006, -0.0218277, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="31.7318, -55.4399, 8.67926" normal="-0.0109134, -0.0189024, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="88.0234, -87.94, 8.67926" normal="-0.0109134, -0.0189024, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="64.2207, 0.832387, 10.0978" normal="-0.0109134, -0.0189024, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="120.512, -31.6677, 10.0978" normal="-0.0109134, -0.0189024, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="64.2207, 0.832387, 10.0978" normal="-0.0109134, -0.0189024, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="88.0234, -87.94, 8.67926" normal="-0.0109134, -0.0189024, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="-0.471657, -63.8598, 8.67927" normal="-0.018903, -0.0109132, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="32.0283, -120.151, 8.67929" normal="-0.018903, -0.0109132, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="55.8008, -31.371, 10.0979" normal="-0.018903, -0.0109132, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="88.3007, -87.6627, 10.0979" normal="-0.018903, -0.0109132, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="55.8008, -31.371, 10.0979" normal="-0.018903, -0.0109132, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="32.0283, -120.151, 8.67929" normal="-0.018903, -0.0109132, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="-32.5706, -55.0498, 8.67928" normal="-0.0218271, 0.0, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="-32.5708, -120.05, 8.67927" normal="-0.0218271, 0.0, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="32.4071, -55.05, 10.0979" normal="-0.0218271, 0.0, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="32.407, -120.05, 10.0979" normal="-0.0218271, 0.0, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="32.4071, -55.05, 10.0979" normal="-0.0218271, 0.0, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="-32.5708, -120.05, 8.67927" normal="-0.0218271, 0.0, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="-55.9641, -31.3708, 8.6793" normal="-0.018902, 0.0109136, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="-88.4642, -87.6623, 8.67933" normal="-0.018902, 0.0109136, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="0.308164, -63.8597, 10.0979" normal="-0.018902, 0.0109136, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="-32.1919, -120.151, 10.0979" normal="-0.018902, 0.0109136, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="0.308164, -63.8597, 10.0979" normal="-0.018902, 0.0109136, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="-88.4642, -87.6623, 8.67933" normal="-0.018902, 0.0109136, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="-64.384, 0.832686, 8.6793" normal="-0.010913, 0.0189028, 0.999762" tcoords="0.0, 0.0"/>
+    <vertex location="-120.676, -31.6672, 8.67933" normal="-0.010913, 0.0189028, 0.999762" tcoords="0.0, 0.5"/>
+    <vertex location="-31.8953, -55.4398, 10.0979" normal="-0.010913, 0.0189028, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="-88.187, -87.9396, 10.0979" normal="-0.010913, 0.0189028, 0.999762" tcoords="0.5, 0.5"/>
+    <vertex location="-31.8953, -55.4398, 10.0979" normal="-0.010913, 0.0189028, 0.999762" tcoords="0.5, 0.0"/>
+    <vertex location="-120.676, -31.6672, 8.67933" normal="-0.010913, 0.0189028, 0.999762" tcoords="0.0, 0.5"/>
   </triMesh>
 
 </model>

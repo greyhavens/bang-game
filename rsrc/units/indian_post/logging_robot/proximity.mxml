@@ -17,33 +17,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.646608, 0.646608, 0.646608"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="-9.53674e-007, 0.0, 2.38493e-007, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.678366, 0.199549, 0.670141, 0.225633" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.217238, 0.67291, -0.208013, 0.675818" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="0.151049, 0.682532, 0.154926, 0.698092" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.696101, -0.163641, 0.684366, -0.142505" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.527316, -0.482983, 0.515216, -0.47246" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.478863, 0.509269, 0.476353, 0.533313" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.33042, 0.625158, 0.322579, 0.62924" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.599026, 0.366912, 0.593469, 0.392859" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.711476, 0.0185872, 0.701145, 0.0430302" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.625159, -0.330419, 0.62924, -0.322579" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="-0.38541, 0.598334, -0.374371, 0.594392" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286369, 70.0557" rotation="-0.034262, 0.701628, -0.0274805, 0.711189" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -52,6 +27,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 62.8269" rotation="0.0, 0.0, 0.98941, -0.145145" scale="0.584209, 0.584209, 0.700713"/>
   </frame>
 
   <frame>
@@ -69,33 +45,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.475543, 0.523315, -0.482048, 0.517329" scale="0.646608, 0.646608, 0.646608"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="-0.0190892, 0.0, 2.3787e-007, 0.999818" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.648354, 0.282201, 0.636955, 0.307063" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.299077, 0.640744, -0.290284, 0.644775" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="0.0652445, 0.702236, 0.0671718, 0.705759" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.704864, -0.0759896, 0.702996, -0.056461" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.584875, -0.414032, 0.568159, -0.404591" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37286, -68.7427, 0.498459" rotation="0.411661, 0.563057, 0.406688, 0.590005" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.24496, 0.611984, 0.236674, 0.713761" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.548537, 0.438095, 0.540423, 0.463814" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.712436, 0.106152, 0.681559, 0.12901" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.611985, -0.24496, 0.713761, -0.236674" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="-0.457022, 0.546178, -0.444917, 0.543018" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286369, 70.0557" rotation="-0.12048, 0.683118, -0.115051, 0.711053" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -104,6 +55,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 61.316" rotation="0.0, 0.0, 0.993087, -0.117377" scale="0.711698, 0.711698, 0.853625"/>
   </frame>
 
   <frame>
@@ -121,33 +73,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.413646, 0.573495, -0.420783, 0.56828" scale="0.646608, 0.646608, 0.646608"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="-0.061049, 0.0, 2.35948e-007, 0.998135" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.566482, 0.4232, 0.549692, 0.44479" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.437884, 0.55521, -0.430248, 0.561147" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.0960135, 0.69865, -0.0978398, 0.702209" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.703377, 0.0890536, 0.697395, 0.104739" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.664222, -0.269412, 0.645669, -0.263323" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37286, -68.7427, 0.498459" rotation="0.271373, 0.642326, 0.261087, 0.667538" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.0776317, 0.65328, 0.0688607, 0.749971" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.433552, 0.552127, 0.419883, 0.575228" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.669109, 0.2648, 0.633668, 0.283971" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.653281, -0.0776311, 0.749971, -0.0688605" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.569935, -0.427041, 0.557503, -0.426616" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286369, 70.0557" rotation="-0.276028, 0.637168, -0.273144, 0.665746" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -156,6 +83,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 58.5023" rotation="0.0, 0.0, 0.998361, -0.0572361" scale="0.948463, 0.948463, 1.13761"/>
   </frame>
 
   <frame>
@@ -173,33 +101,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250915" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4816, 0.704604, 0.219289" rotation="-0.313098, 0.634011, -0.320999, 0.630047" scale="0.646608, 0.646608, 0.646608"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="-0.102901, 0.0, 2.32888e-007, 0.994692" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498458" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.00441985, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286369, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -208,6 +111,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 56.9645" rotation="0.0, 0.0, 1.0, 0.0" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -225,33 +129,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.179695, 0.683893, -0.18823, 0.681593" scale="0.646608, 0.646608, 0.646608"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="-0.121869, 0.0, 2.49452e-007, 0.992546" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37286, -68.7427, 0.498459" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.00441986, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286369, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -260,6 +139,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 56.9472" rotation="0.0, 0.0, 0.999554, 0.0298715" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -277,33 +157,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.0264272, 0.706613, -0.0352581, 0.706227" scale="0.646608, 0.646608, 0.646608"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="-0.0599659, 0.0, 2.40149e-007, 0.9982" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37286, -68.7427, 0.498459" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.00441985, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441968" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286369, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -312,6 +167,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 56.9338" rotation="0.0, 0.0, 0.98084, -0.194814" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -329,33 +185,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="0.128109, 0.695405, 0.119407, 0.696952" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="-0.0285321, 0.0, 2.38331e-007, 0.999593" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.9581, -0.456436" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.00441985, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06852, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95012, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.21431, -0.286369, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -364,6 +195,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 52.8263" rotation="0.0, 0.0, 0.911923, -0.410362" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -381,33 +213,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="0.264866, 0.655627, 0.256649, 0.658886" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.0053248, 0.0, 2.38519e-007, 0.999986" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78222, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.00441985, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06852, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0934" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.21431, -0.286369, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -416,6 +223,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 52.8345" rotation="0.0, 0.0, 0.911312, -0.411716" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -433,33 +241,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="0.369653, 0.602791, 0.362089, 0.607364" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.0409586, 0.0, 2.37618e-007, 0.999161" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75267, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78222, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57468, -60.0754, 35.986" rotation="0.00441985, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.28637, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -468,6 +251,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 52.8578" rotation="0.0, 0.0, 0.910837, -0.412767" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -485,33 +269,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="0.435126, 0.557374, 0.428124, 0.56277" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.0777108, 0.0, 2.37411e-007, 0.996976" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78222, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57468, -60.0754, 35.986" rotation="0.00441985, 0.707093, -0.00441958, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286369, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -520,6 +279,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 52.8948" rotation="0.0, 0.0, 0.910462, -0.413592" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -537,33 +297,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="0.457896, 0.538823, 0.451125, 0.544505" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.114917, 0.0, 2.37026e-007, 0.993375" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.7822, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456435" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57468, -60.0754, 35.986" rotation="0.00441985, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06852, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0934" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286369, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -572,6 +307,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 52.9439" rotation="0.0, 0.0, 0.910155, -0.414268" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -589,33 +325,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="0.457896, 0.538823, 0.451125, 0.544505" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.151916, 0.0, 2.36185e-007, 0.988393" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456435" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498458" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57468, -60.0754, 35.986" rotation="0.00441986, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95012, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.21431, -0.28637, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -624,6 +335,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 53.0035" rotation="0.0, 0.0, 0.90988, -0.414872" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -641,33 +353,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="0.457896, 0.538823, 0.451125, 0.544505" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.188057, 0.0, 2.34998e-007, 0.982158" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75267, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63492, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456438" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.49846" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57468, -60.0754, 35.986" rotation="0.00441984, 0.707093, -0.00441958, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441928, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.21431, -0.286368, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -676,6 +363,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 53.0721" rotation="0.0, 0.0, 0.909602, -0.415481" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -693,33 +381,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="0.457896, 0.538823, 0.451125, 0.544505" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.222709, 0.0, 2.43225e-007, 0.974885" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.7822, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456435" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.00441986, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.0044193, 0.707093, 0.00441968" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95012, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.21432, -0.286371, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -728,6 +391,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 53.1481" rotation="0.0, 0.0, 0.909286, -0.416171" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -745,33 +409,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="0.321865, 0.629605, 0.313969, 0.63358" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.255266, 0.0, 2.24496e-007, 0.966871" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75267, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456433" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498458" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57468, -60.0754, 35.986" rotation="0.00441985, 0.707093, -0.00441957, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06852, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95012, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286368, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -780,6 +419,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 53.2299" rotation="0.0, 0.0, 0.908898, -0.41702" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -797,33 +437,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.0264273, 0.706613, -0.0352582, 0.706227" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.28515, 0.0, 2.23734e-007, 0.958483" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75267, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63494, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.7822, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.45644" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37286, -68.7427, 0.49846" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57468, -60.0754, 35.986" rotation="0.00441984, 0.707093, -0.00441958, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06852, 59.418, -34.5108" rotation="0.707093, -0.00441928, 0.707093, 0.0044197" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95012, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.21431, -0.286369, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -832,6 +447,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 53.316" rotation="0.0, 0.0, 0.9084, -0.418102" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -849,33 +465,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.367994, 0.603805, -0.375513, 0.599157" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.311815, 0.0, 2.2496e-007, 0.950143" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75267, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78222, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456439" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37286, -68.7427, 0.498461" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.00441984, 0.707093, -0.00441958, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06852, 59.418, -34.5108" rotation="0.707093, -0.00441929, 0.707093, 0.00441969" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.21431, -0.286369, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -884,6 +475,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 53.4048" rotation="0.0, 0.0, 0.907757, -0.419496" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -901,33 +493,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.25273, 1.25273, 1.25273"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.334742, 0.0, 2.24006e-007, 0.94231" scale="0.462749, 0.462749, 0.462749"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456434" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498458" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57468, -60.0754, 35.986" rotation="0.00441986, 0.707093, -0.00441956, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43562, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06852, 59.418, -34.5108" rotation="0.707093, -0.0044193, 0.707093, 0.00441968" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.21431, -0.286373, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -936,6 +503,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.92711, 53.4947" rotation="0.0, 0.0, 0.906933, -0.421276" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -953,33 +521,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.595702, 0.595702, 0.595702"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.353434, 0.0, 2.21158e-007, 0.93546" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456438" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498461" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.00441983, 0.707093, -0.00441959, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441928, 0.707093, 0.0044197" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286366, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -988,6 +531,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 57.3584" rotation="0.0, 0.0, 0.903939, -0.427662" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -1005,33 +549,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.595702, 0.595702, 0.595702"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.367403, 0.0, 2.22777e-007, 0.930062" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75267, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456435" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37286, -68.7427, 0.498458" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.00441984, 0.707093, -0.00441958, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.9759, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441928, 0.707093, 0.0044197" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286366, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -1040,6 +559,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 57.266" rotation="0.0, 0.0, 0.895112, -0.445841" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -1057,33 +577,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.595702, 0.595702, 0.595702"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.37616, 0.0, 2.2e-007, 0.926555" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.509576, 0.490237, 0.490237, 0.509576" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.503408, 0.496569, -0.496568, 0.503408" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.181176, 0.675159, -0.184922, 0.690752" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.69301, 0.176273, 0.672842, 0.189602" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456434" rotation="0.690752, -0.184924, 0.675159, -0.181177" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498453" rotation="0.189602, 0.672842, 0.176274, 0.69301" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.00441988, 0.707093, -0.00441954, 0.707093" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.361921, 0.602054, 0.345011, 0.622504" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.622505, 0.34501, 0.602054, 0.361921" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.707093, -0.00441932, 0.707093, 0.00441966" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.618143, -0.352766, 0.606531, -0.354367" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286373, 70.0557" rotation="-0.354367, 0.606531, -0.352766, 0.618143" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -1092,6 +587,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 57.1736" rotation="0.0, 0.0, 0.877267, -0.480003" scale="1.07595, 1.07595, 1.29052"/>
   </frame>
 
   <frame>
@@ -1109,33 +605,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.595702, 0.595702, 0.595702"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.379197, 0.0, 2.21789e-007, 0.925316" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.571233, 0.416765, 0.554688, 0.438544" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63492, 35.1669, 60.793" rotation="-0.431575, 0.560127, -0.423873, 0.565978" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="-0.088185, 0.699643, -0.0898233, 0.703317" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.704385, 0.0810238, 0.698486, 0.0969239" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.661349, -0.276946, 0.642428, -0.270565" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.278573, 0.638995, 0.268656, 0.66476" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.0842447, 0.647874, 0.0754866, 0.753302" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.439686, 0.547136, 0.426443, 0.570494" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.766082, 0.234427, 0.541998, 0.253773" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.647874, -0.0842442, 0.753302, -0.0754865" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="0.565119, -0.433542, 0.55259, -0.432813" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286368, 70.0557" rotation="-0.24698, 0.545132, -0.243988, 0.763087" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -1144,6 +615,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 58.6224" rotation="0.0, 0.0, -0.835104, 0.550093" scale="0.942355, 0.942355, 1.13028"/>
   </frame>
 
   <frame>
@@ -1161,33 +633,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.595702, 0.595702, 0.595702"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.379197, 0.0, 2.21789e-007, 0.925316" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.657135, 0.261102, 0.646546, 0.286319" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63492, 35.1669, 60.793" rotation="-0.278215, 0.650074, -0.269296, 0.653819" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="0.0876687, 0.699708, 0.0901342, 0.703278" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.702096, -0.0989192, 0.700749, -0.0789153" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.571392, -0.432732, 0.554581, -0.422722" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.429621, 0.549253, 0.425555, 0.576758" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.265741, 0.599282, 0.257558, 0.709864" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.562323, 0.42009, 0.555211, 0.446159" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.791504, 0.0265141, 0.608557, 0.049768" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.599282, -0.265741, 0.709863, -0.257558" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="-0.439184, 0.560745, -0.427086, 0.557028" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286368, 70.0557" rotation="-0.0421609, 0.609133, -0.0364114, 0.791109" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -1196,6 +643,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 61.313" rotation="0.0, 0.0, -0.775917, 0.630835" scale="0.694245, 0.694245, 0.832692"/>
   </frame>
 
   <frame>
@@ -1213,33 +661,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.595702, 0.595702, 0.595702"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.379197, 0.0, 2.2055e-007, 0.925316" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.686424, 0.169769, 0.679346, 0.196187" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63493, 35.1669, 60.793" rotation="-0.18768, 0.681745, -0.178336, 0.684249" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="0.180677, 0.675293, 0.185229, 0.69067" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.6883, -0.193849, 0.677499, -0.172221" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456437" rotation="0.505747, -0.505525, 0.494117, -0.494484" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.500621, 0.487897, 0.499162, 0.512027" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.357374, 0.61015, 0.349719, 0.61457" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.61446, 0.340433, 0.610041, 0.366599" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.71161, -0.0124647, 0.702355, 0.0124059" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.610151, -0.357374, 0.61457, -0.349719" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="-0.358944, 0.614576, -0.348087, 0.610156" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.28637, 70.0557" rotation="-0.00362474, 0.702455, 0.00356723, 0.71171" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -1248,6 +671,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 62.7617" rotation="0.0, 0.0, -0.744182, 0.667977" scale="0.560647, 0.560647, 0.672452"/>
   </frame>
 
   <frame>
@@ -1265,33 +689,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.08, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.595702, 0.595702, 0.595702"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.379197, 0.0, 2.20845e-007, 0.925316" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.686424, 0.169769, 0.679346, 0.196187" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63492, 35.1669, 60.793" rotation="-0.18768, 0.681745, -0.178336, 0.684249" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.7822, -34.8491, 60.7373" rotation="0.180677, 0.675293, 0.185229, 0.69067" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.6883, -0.193849, 0.677499, -0.172221" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.505747, -0.505525, 0.494117, -0.494484" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37286, -68.7427, 0.498459" rotation="0.500621, 0.487897, 0.499162, 0.512027" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.357374, 0.61015, 0.349719, 0.61457" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.61446, 0.340433, 0.610041, 0.366599" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.71161, -0.0124647, 0.702355, 0.0124059" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.610151, -0.357374, 0.61457, -0.349719" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.9501, 60.3771, 35.0934" rotation="-0.358944, 0.614576, -0.348087, 0.610156" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286369, 70.0557" rotation="-0.00362475, 0.702455, 0.00356722, 0.71171" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -1300,6 +699,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 62.7617" rotation="0.0, 0.0, -0.744182, 0.667977" scale="0.560647, 0.560647, 0.672452"/>
   </frame>
 
   <frame>
@@ -1317,33 +717,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.595702, 0.595702, 0.595702"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.379197, 0.0, 2.23094e-007, 0.925316" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.686424, 0.169769, 0.679346, 0.196187" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63492, 35.1669, 60.793" rotation="-0.18768, 0.681745, -0.178336, 0.684249" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="0.180677, 0.675293, 0.185229, 0.69067" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.6883, -0.193849, 0.677499, -0.172221" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.505747, -0.505524, 0.494117, -0.494484" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37286, -68.7427, 0.49846" rotation="0.500621, 0.487897, 0.499162, 0.512027" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.357374, 0.61015, 0.349719, 0.61457" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.61446, 0.340433, 0.610041, 0.366599" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.71161, -0.0124647, 0.702355, 0.0124059" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.610151, -0.357374, 0.61457, -0.349719" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="-0.358944, 0.614576, -0.348087, 0.610156" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286369, 70.0557" rotation="-0.00362476, 0.702455, 0.00356721, 0.71171" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -1352,6 +727,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 62.7617" rotation="0.0, 0.0, -0.744182, 0.667977" scale="0.560647, 0.560647, 0.672452"/>
   </frame>
 
   <frame>
@@ -1369,33 +745,8 @@
     <transform name="fire" translation="82.3258, 0.309895, -0.250916" rotation="0.488164, 0.482099, 0.511205, 0.517635" scale="1.0, 1.0, 1.0"/>
     <transform name="buzzsaws 01" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
     <transform name="buzzsaws 02" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 03" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 04" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 05" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 06" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 07" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 08" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 09" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
-    <transform name="buzzsaws 10" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 11" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 12" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 13" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 14" translation="77.9437, -1.44916, 1.59908" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.832575"/>
-    <transform name="buzzsaws 15" translation="78.0799, -1.15759, 0.426071" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="1.0, 1.0, 0.8325"/>
     <transform name="blur" translation="25.4817, 0.704604, 0.219289" rotation="-0.496865, 0.503116, -0.503115, 0.496865" scale="0.595702, 0.595702, 0.595702"/>
     <transform name="Bone_blades" translation="22.405, 0.775101, 0.506752" rotation="0.379197, 0.0, 2.21789e-007, 0.925316" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 01" translation="3.75266, -35.4879, -59.2933" rotation="0.686424, 0.169769, 0.679346, 0.196187" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 02" translation="4.63492, 35.1669, 60.793" rotation="-0.18768, 0.681745, -0.178336, 0.684249" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 03" translation="3.78221, -34.8491, 60.7373" rotation="0.180677, 0.675293, 0.185229, 0.69067" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 04" translation="52.283, 33.2708, -60.4788" rotation="0.6883, -0.193849, 0.677499, -0.172221" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 05" translation="65.3063, 68.958, -0.456436" rotation="0.505747, -0.505524, 0.494117, -0.494484" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 06" translation="3.37287, -68.7427, 0.498459" rotation="0.500621, 0.487897, 0.499162, 0.512027" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 07" translation="4.57467, -60.0754, 35.986" rotation="0.357374, 0.61015, 0.349719, 0.61457" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 08" translation="3.43561, -60.8502, -33.5743" rotation="0.61446, 0.340433, 0.610041, 0.366599" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 09" translation="51.8423, -1.97589, -69.281" rotation="0.71161, -0.0124647, 0.702355, 0.0124059" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 10" translation="6.06851, 59.418, -34.5108" rotation="0.610151, -0.357374, 0.61457, -0.349719" scale="1.0, 1.0, 1.0"/>
-    <transform name="saw blade 11" translation="4.95011, 60.3771, 35.0933" rotation="-0.358944, 0.614576, -0.348087, 0.610156" scale="1.07595, 1.07595, 1.29052"/>
-    <transform name="saw blade 12" translation="4.2143, -0.286368, 70.0557" rotation="-0.00362476, 0.702455, 0.00356721, 0.71171" scale="1.07595, 1.07595, 1.29052"/>
     <transform name="leg FR" translation="-16.8223, -8.18411, 41.4985" rotation="0.0, 0.0, 0.237218, 0.971456" scale="1.0, 1.0, 1.0"/>
     <transform name="foot FR" translation="-62.5488, 0.140137, -11.0315" rotation="0.0, 0.0, -0.0139969, 0.999902" scale="1.0, 1.0, 1.0"/>
     <transform name="leg FL" translation="15.0822, -7.30169, 41.4985" rotation="0.0, 0.0, 0.973868, 0.227116" scale="1.0, 1.0, 1.0"/>
@@ -1404,6 +755,7 @@
     <transform name="foot BL" translation="-60.8139, 0.0466463, -11.0315" rotation="0.0, 0.0, 0.00995451, 0.99995" scale="1.0, 1.0, 1.0"/>
     <transform name="leg BR" translation="-12.5446, 18.2124, 41.4985" rotation="0.0, 0.0, -0.405285, 0.91419" scale="1.0, 1.0, 1.0"/>
     <transform name="foot BR" translation="-60.9218, 0.86993, -11.4462" rotation="0.0, 0.0, 0.0306411, 0.99953" scale="1.0, 1.0, 1.0"/>
+    <transform name="blades" translation="-1.44236, -0.927111, 62.7617" rotation="0.0, 0.0, -0.744182, 0.667977" scale="0.560647, 0.560647, 0.672452"/>
   </frame>
 
 </animation>
