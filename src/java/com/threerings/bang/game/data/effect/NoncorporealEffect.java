@@ -23,7 +23,7 @@ public class NoncorporealEffect extends SetInfluenceEffect
             public String getName () {
                 return "spirit_walk";
             }
-            public InfluenceViz createViz () {
+            public InfluenceViz createViz (boolean high) {
                 return new NoncorporealViz();
             }
             public int adjustTraversalCost (

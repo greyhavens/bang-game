@@ -104,6 +104,12 @@ public class Unit extends Piece
         return _config;
     }
 
+    /** Returns the height of the unit in tiles. */
+    public float getHeight ()
+    {
+        return _config.height;
+    }
+
     /**
      * Creates a new unit that is an exact duplicate of this unit, unless
      * this unit is a Big Shot in which case a suitable substitute type is

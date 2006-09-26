@@ -160,7 +160,7 @@ public class PieceStatus extends Node
             ColorRGBA color = getColor(), dcolor = getDarkerColor();
             _info[0].setDefaultColor(dcolor);
             _icon[0].setDefaultColor(dcolor);
-            for (int ii = 1; ii < _info.length; ii++) {
+            for (int ii = 1; ii < recolorLayers(); ii++) {
                 _info[ii].setDefaultColor(color);
                 _icon[ii].setDefaultColor(color);
             }
@@ -237,6 +237,14 @@ public class PieceStatus extends Node
     protected int numLayers ()
     {
         return 2;
+    }
+
+    /**
+     * Number of layers to recolor.
+     */
+    protected int recolorLayers ()
+    {
+        return numLayers();
     }
 
     protected Texture prepare (String path)

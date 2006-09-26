@@ -61,6 +61,9 @@ public class UnitConfig
      * Make#SPIRIT}. */
     public Make make;
 
+    /** The height of this unit in tiles. */
+    public float height;
+
     /** The rank of this unit: {@link Rank#NORMAL}, {@link Rank#SPECIAL} or
      * {@link Rank#BIGSHOT}. */
     public Rank rank;
@@ -322,6 +325,7 @@ public class UnitConfig
         config.gunUser = BangUtil.getBooleanProperty(
                 type, props, "gun_user", true);
         config.male = BangUtil.getBooleanProperty(type, props, "male", true);
+        config.height = BangUtil.getFloatProperty(type, props, "height", 1f);
 
         config.initiative =
             BangUtil.getIntProperty(type, props, "initiative", 0);

@@ -619,6 +619,15 @@ public class BangBoardView extends BoardView
     {
         return _pmoves;
     }
+
+    @Override // documentation inherited
+    public void addSprite (Sprite sprite)
+    {
+        if (sprite instanceof UnitSprite) {
+            ((UnitSprite)sprite).setPidx(_pidx);
+        }
+        super.addSprite(sprite);
+    }
     
     /**
      * Continues switching into or out of "high noon" mode after the screen has
@@ -675,7 +684,6 @@ public class BangBoardView extends BoardView
 
         // create our cursor
         _cursor = new Node("cursor");
-        _cursor.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
         // _cursor.setLocalScale(0.75f);
         _ctx.loadModel("bonuses", "frontier_town/bonus_point",
                        new ResultAttacher<Model>(_cursor));
@@ -1457,6 +1465,7 @@ public class BangBoardView extends BoardView
             return; // we might still be setting up
         }
         sprite.setSelected(true);
+        _cursor.setLocalTranslation(new Vector3f(0, 0, sprite.getHeight()));
         sprite.attachChild(_cursor);
         if (scrollCamera) {
             centerCameraOnPiece(_selection);

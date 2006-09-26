@@ -69,7 +69,7 @@ public class BuggyLogicEffect extends SetHindranceEffect
             public String getName () {
                 return "buggy_logic";
             }
-            public InfluenceViz createViz () {
+            public InfluenceViz createViz (boolean high) {
                 return new ParticleInfluenceViz("boom_town/buggy_logic");
             }
             public Effect maybeGeneratePostOrderEffect () {

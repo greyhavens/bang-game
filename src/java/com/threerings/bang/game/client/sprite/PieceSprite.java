@@ -6,6 +6,9 @@ package com.threerings.bang.game.client.sprite;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import com.jme.bounding.BoundingBox;
+import com.jme.bounding.BoundingSphere;
+import com.jme.bounding.BoundingVolume;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
@@ -444,6 +447,14 @@ public class PieceSprite extends Sprite
     public ArrayList getModelControllers ()
     {
         return (_model == null ? null : _model.getControllers());
+    }
+
+    /**
+     * Returns the height of the model.
+     */
+    public float getHeight ()
+    {
+        return (_piece.getHeight() * TILE_SIZE);
     }
 
     /**

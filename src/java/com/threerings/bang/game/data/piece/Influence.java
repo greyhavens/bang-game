@@ -32,9 +32,14 @@ public abstract class Influence extends SimpleStreamableObject
         _startTick = tick;
     }
 
-    /** Creates a visualization for the influence, or returns <code>null</code>
-     * for none. */
-    public InfluenceViz createViz ()
+    /** 
+     * Creates a visualization for the influence, or returns <code>null</code>
+     * for none. 
+     *
+     * @param high set to true for a high detail visualization, false for a low
+     * detail visualization
+     **/
+    public InfluenceViz createViz (boolean high)
     {
         return null;
     }
@@ -142,6 +147,14 @@ public abstract class Influence extends SimpleStreamableObject
             BangObject bangobj, Piece target, ShotEffect shot)
     {
         return Piece.NO_EFFECTS;
+    }
+
+    /**
+     * Returns true if this influence is hidden from opponents.
+     */
+    public boolean hidden ()
+    {
+        return false;
     }
 
     /**

@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 
+import java.util.HashMap;
+
 import com.jme.image.Texture;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -23,6 +25,8 @@ import com.jmex.bui.background.BBackground;
 
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.piece.Influence;
 
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
@@ -46,7 +50,6 @@ public class UnitStatus extends PieceStatus
     {
         super(ctx, highlight);
 
-        // we'll set up textures in the first call to update()
     }
 
     /**
@@ -54,7 +57,7 @@ public class UnitStatus extends PieceStatus
      * state.
      */
     public void update (Piece piece, int ticksToMove,
-                        UnitSprite.AdvanceOrder pendo, boolean selected)
+                    UnitSprite.AdvanceOrder pendo, boolean selected, int pidx)
     {
         super.update(piece, selected);
 
@@ -91,6 +94,46 @@ public class UnitStatus extends PieceStatus
                 getTextureState(_icon[3]).setTexture(otex.createSimpleClone());
             }
         }
+
+        Unit unit = (Unit)piece;
+        if (unit.influence == null || unit.influence != _influence) {
+            _influence = unit.influence;
+            if (_influence == null || 
+                    (_influence.hidden() && unit.owner != pidx)) {
+                _info[4].setCullMode(CULL_ALWAYS);
+            } else {
+                String name = _influence.getName();
+                Texture tex = _modtexs.get(name);
+                if (tex == null) {
+                    tex = RenderUtil.createTexture(
+                            _ctx.getImageCache().getImage(
+                                "influences/icons/" + name + ".png", 
+                                true));
+                    tex.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
+                    _modtexs.put(name, tex);
+                }
+                _info[4].setCullMode(CULL_DYNAMIC);
+                getTextureState(_info[4]).setTexture(tex.createSimpleClone());
+            }
+        }
+        _icon[4].setCullMode(CULL_ALWAYS);
+    }
+
+    @Override // documentatio inherited
+    public void rotateWithCamera (Quaternion camrot, Vector3f camtrans)
+    {
+        super.rotateWithCamera(camrot, camtrans);
+
+        if (_info[4].getCullMode() != CULL_ALWAYS) {
+            Texture tex = getTextureState(_info[4]).getTexture(0);
+            if (tex != null) {
+                Vector3f trans = new Vector3f(2f, 2f, 2f);
+                camrot.mult(trans, trans);
+                trans.set(-0.8f - trans.x, -0.2f - trans.y, 0f);
+                tex.setScale(new Vector3f(4f, 4f, 4f));
+                tex.setTranslation(trans);
+            }
+        }
     }
 
     @Override // documentation inherited
@@ -114,12 +157,27 @@ public class UnitStatus extends PieceStatus
     @Override // documentation inherited
     protected int numLayers ()
     {
+        return 5;
+    }
+
+    @Override // documentation inherited
+    protected int recolorLayers ()
+    {
         return 4;
     }
 
     protected int _ticksToMove = -1;
+    protected Influence _influence;
     protected UnitSprite.AdvanceOrder _pendo;
 
     protected static Texture[] _ticktexs;
     protected static Texture _outtex, _routtex, _movetex, _shoottex;
+    protected static HashMap<String, Texture> _modtexs = 
+       new HashMap<String, Texture>(); 
+
+    protected static final float MOD_OFFSET = 3f * TILE_SIZE / 8f;
+    protected static final Vector3f[] MOD_COORDS = {
+        new Vector3f( MOD_OFFSET, -MOD_OFFSET, 0f),
+        new Vector3f(-MOD_OFFSET, -MOD_OFFSET, 0f)
+    };
 }

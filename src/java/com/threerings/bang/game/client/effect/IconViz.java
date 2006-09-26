@@ -76,6 +76,7 @@ public class IconViz extends EffectViz
     @Override // documentation inherited
     protected void didInit ()
     {
+        _zOffset = (_target != null ? _target.getHeight() : 1f) * TILE_SIZE;
         createBillboard();
         if (_ipath != null) {
             if (_card) {
@@ -147,12 +148,12 @@ public class IconViz extends EffectViz
                     
                 } else if (_elapsed >= RISE_DURATION) {
                     alpha = 1f;
-                    localTranslation.z = TILE_SIZE * 1;
+                    localTranslation.z = _zOffset;
                     billboardLinger(_elapsed);
                     
                 } else {
                     alpha = _elapsed / RISE_DURATION;
-                    localTranslation.z = TILE_SIZE *
+                    localTranslation.z = _zOffset *
                         FastMath.LERP(alpha, _card ? 1.5f : 0.5f, 1f);
                     billboardRise(_elapsed);
                 }
@@ -211,6 +212,9 @@ public class IconViz extends EffectViz
     
     /** The icon billboard. */
     protected BillboardNode _billboard;
+
+    /** The z offset of the billboard. */
+    protected float _zOffset;
     
     /** The size of the icon. */
     protected static final float ICON_SIZE = TILE_SIZE / 2;

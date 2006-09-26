@@ -22,7 +22,7 @@ public class IronPlateEffect extends SetInfluenceEffect
             public String getName () {
                 return "iron_plate";
             }
-            public InfluenceViz createViz () {
+            public InfluenceViz createViz (boolean high) {
                 return new IronPlateViz();
             }
             public int adjustDefend (Piece shooter, int damage) {
@@ -32,6 +32,9 @@ public class IronPlateEffect extends SetInfluenceEffect
                 return 0;
             }
             public boolean didAdjustDefend () {
+                return true;
+            }
+            public boolean hidden () {
                 return true;
             }
             protected int duration () {

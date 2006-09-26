@@ -38,6 +38,7 @@ import com.threerings.openal.SoundGroup;
 
 import com.threerings.media.image.Colorization;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
@@ -113,6 +114,14 @@ public class UnitSprite extends MobileSprite
             }
         }
         super.setHovered(hovered);
+    }
+
+    /**
+     * Sets the player index observing this sprite.
+     */
+    public void setPidx (int pidx)
+    {
+        _pidx = pidx;
     }
 
     /**
@@ -242,6 +251,7 @@ public class UnitSprite extends MobileSprite
                         _zations, new ResultAttacher<Model>(_holding));
             }
             if (_holding.getParent() == null) {
+                _holding.setLocalTranslation(new Vector3f(0, 0, getHeight()));
                 attachChild(_holding);
                 _holding.updateRenderState();
             }
@@ -256,7 +266,7 @@ public class UnitSprite extends MobileSprite
             }
             _influence = unit.influence;
             if (_influence != null) {
-                _influenceViz = _influence.createViz();
+                _influenceViz = _influence.createViz(BangPrefs.isHighDetail());
                 if (_influenceViz != null) {
                     _influenceViz.init(_ctx, this);
                 }
@@ -268,7 +278,7 @@ public class UnitSprite extends MobileSprite
             }
             _hindrance = unit.hindrance;
             if (_hindrance != null) {
-                _hindranceViz = _hindrance.createViz();
+                _hindranceViz = _hindrance.createViz(BangPrefs.isHighDetail());
                 if (_hindranceViz != null) {
                     _hindranceViz.init(_ctx, this);
                 }
@@ -446,7 +456,8 @@ public class UnitSprite extends MobileSprite
             _piece.x, _piece.y, true, true);
         attachHighlight(_status = new UnitStatus(_ctx, _tlight));
         _ustatus = (UnitStatus)_status;
-        _ustatus.update(_piece, _piece.ticksUntilMovable(_tick), _pendo, false);
+        _ustatus.update(
+                _piece, _piece.ticksUntilMovable(_tick), _pendo, false, _pidx);
 
         _target = new PieceTarget(_piece, _ctx);
         attachChild(_target);
@@ -454,7 +465,6 @@ public class UnitSprite extends MobileSprite
         // when holding a bonus it is shown over our head
         _holding = new Node("holding");
         _holding.addController(new Spinner(_holding, FastMath.PI/2));
-        _holding.setLocalTranslation(new Vector3f(0, 0, TILE_SIZE));
         _holding.setLocalScale(0.5f);
 
         // configure our colors
@@ -495,7 +505,8 @@ public class UnitSprite extends MobileSprite
     {
         if (_piece.isAlive() && !isMoving()) {
             int ticks = _piece.ticksUntilMovable(_tick);
-            _ustatus.update(_piece, ticks, _pendo, _hovered || _selected);
+            _ustatus.update(
+                    _piece, ticks, _pendo, _hovered || _selected, _pidx);
             _ustatus.setCullMode(CULL_DYNAMIC);
         } else {
             _ustatus.setCullMode(CULL_ALWAYS);
@@ -561,6 +572,8 @@ public class UnitSprite extends MobileSprite
     protected TerrainNode.Highlight _pendnode;
     protected TextureState _pendtst;
     protected Texture[] _pendtexs;
+
+    protected int _pidx = -1;
 
     protected Quaternion _gcamrot = new Quaternion();
     protected Vector3f _gcamtrans = new Vector3f();

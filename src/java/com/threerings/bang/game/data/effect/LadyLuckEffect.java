@@ -24,7 +24,7 @@ public class LadyLuckEffect extends SetInfluenceEffect
             public String getName () {
                 return "lady_luck";
             }
-            public InfluenceViz createViz () {
+            public InfluenceViz createViz (boolean high) {
                 return new ParticleInfluenceViz("frontier_town/lucky");
             }
             public int adjustAttack (Piece target, int damage) {
