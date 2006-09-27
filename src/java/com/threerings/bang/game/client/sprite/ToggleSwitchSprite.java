@@ -3,39 +3,19 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import com.jme.scene.Spatial;
-import com.jme.scene.state.TextureState;
-
-import com.threerings.bang.game.client.BoardView;
-import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.ToggleSwitch;
-import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.RenderUtil;
-
-import com.threerings.jme.model.ModelSpatial;
-import com.threerings.jme.model.TextureProvider;
-
-import com.threerings.openal.SoundGroup;
 
 import static com.threerings.bang.Log.log;
 
 /**
  * Displays a toggle switch for the Wendigo Attack scenario.
  */
-public class ToggleSwitchSprite extends PropSprite
+public class ToggleSwitchSprite extends ActiveSprite
 {
     public ToggleSwitchSprite ()
     {
-        super("indian_post/special/wendigo_toggle_switch");
-    }
-
-    @Override // documentation inherited
-    public void init (BasicContext ctx, BoardView view, BangBoard board,
-            SoundGroup sounds, Piece piece, short tick)
-    {
-        super.init(ctx, view, board, sounds, piece, tick);
-        _ts = (ToggleSwitch)piece;
+        super("props", "indian_post/special/wendigo_toggle_switch");
     }
 
     @Override // documentation inherited
@@ -45,70 +25,66 @@ public class ToggleSwitchSprite extends PropSprite
     }
 
     @Override // documentation inherited
-    public boolean hasTooltip ()
-    {
-        return true;
-    }
-
-    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
-        if (_ts.isActive(tick)) {
-            _state = (_ts.state == ToggleSwitch.State.SQUARE ?
+        ToggleSwitch ts = (ToggleSwitch)_piece;
+        State state;
+        if (ts.isActive(tick)) {
+            state = (ts.state == ToggleSwitch.State.SQUARE ?
                     State.SQUARE : State.CIRCLE);
-        } else if (_ts.activator != -1) {
-            _state = State.TICK_4;
+        } else if (ts.activator != -1) {
+            state = State.TICK_4;
         } else {
-            _state = State.values()[_ts.ticksUntilMovable(tick)];
+            state = State.values()[ts.ticksUntilMovable(tick)];
         }
-        _model.resolveTextures(new ToggleTextureProvider());
-        _model.updateRenderState();
-    }
-
-    protected class ToggleTextureProvider
-        implements TextureProvider
-    {
-        public TextureState getTexture (String name)
-        {
-            return _tstates[_state.ordinal()];
+        if (state != _state) {
+            String action = _state.getEndAnimation();
+            if (action != null) {
+                queueAction(action);
+            }
+            _state = state;
+            queueAction(_state.getStartAnimation());
         }
     }
 
     @Override // documentation inherited
-    protected void createGeometry ()
+    protected void startNextIdle (boolean offset)
     {
-        super.createGeometry();
-        if (_tstates[0] == null) {
-            for (State state : State.values()) {
-                _tstates[state.ordinal()] = RenderUtil.createTextureState(
-                        _ctx, state.getTextureName());
-            }
-        }
+        queueAction(_state.getIdleAnimation());
     }
-
-    protected ToggleSwitch _ts;
 
     protected static enum State
     {
-        TICK_0("four"), TICK_1("three"), TICK_2("two"), TICK_3("one"), 
-        TICK_4("zero"), SQUARE("square"), CIRCLE("circle");
+        TICK_0("charge_4", false), TICK_1("charge_3", false), 
+        TICK_2("charge_2", false), TICK_3("charge_1", false), 
+        TICK_4("charge_0", false), 
+        SQUARE("square", true), CIRCLE("circle", true);
 
-        State (String name)
+        State (String name, boolean offAnim)
         {
             _name = name;
+            _offAnim = offAnim;
+        }
+        
+        public String getStartAnimation ()
+        {
+            return _name + (_offAnim ? "_active_start" : "_start");
         }
 
-        public String getTextureName ()
+        public String getIdleAnimation ()
         {
-            return "props/indian_post/special/wendigo_toggle_switch/" +
-                "toggle_switch_" + _name + ".png";
+            return _name + (_offAnim ? "_active_loop" : "_loop");
+        }
+
+        public String getEndAnimation ()
+        {
+            return (_offAnim ? _name + "_discharge" : null);
         }
 
         protected String _name;
+        protected boolean _offAnim;
     };
-    protected State _state;
 
-    protected static TextureState[] _tstates = 
-        new TextureState[State.values().length];
+    protected State _state = State.SQUARE;
 }

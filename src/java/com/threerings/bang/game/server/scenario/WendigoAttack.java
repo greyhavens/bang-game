@@ -197,8 +197,11 @@ public class WendigoAttack extends Scenario
                 if (piece.pieceId == ts.occupier) {
                     ToggleSwitchEffect effect = new ToggleSwitchEffect();
                     effect.switchId = ts.pieceId;
+                    effect.occupier = piece.pieceId;
                     if (piece.pieceId == ts.activator) {
                         effect.tick = tick;
+                    } else {
+                        effect.tick = -1;
                     }
                     _bangmgr.deployEffect(-1, effect);
                 }
