@@ -20,5 +20,5 @@ public interface BarberCodes extends InvocationCodes
     public static final int HANDLE_CHANGE_SCRIP_COST = 1000;
 
     /** The cost of a handle change in coins. */
-    public static final int HANDLE_CHANGE_COIN_COST = 1;
+    public static final int HANDLE_CHANGE_COIN_COST = 4;
 }

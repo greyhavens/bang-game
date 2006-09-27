@@ -81,6 +81,7 @@ public class BarberView extends ShopView
         BarberObject barbobj = (BarberObject)plobj;
         _newlook.setBarberObject(barbobj);
         _wearclothes.setBarberObject(barbobj);
+        _editchar.setBarberObject(barbobj);
     }
 
     @Override // documentation inherited

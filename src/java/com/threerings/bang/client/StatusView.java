@@ -134,7 +134,7 @@ public class StatusView extends BWindow
         setModal(true);
 
         PlayerObject user = ctx.getUserObject();
-        add(new BLabel(user.handle.toString(), "status_handle"),
+        add(_handle = new BLabel("", "status_handle"),
             new Rectangle(40, 590, 195, 33));
         BButton btn = new BButton(_msgs.get("m.status_poster"), this, "poster");
         btn.setStyleClass("big_button");
@@ -200,6 +200,14 @@ public class StatusView extends BWindow
         _tabs.selectTab(tabidx);
     }
 
+    @Override // from BComponent
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        // our handle can be changed, so set it every time
+        _handle.setText(_ctx.getUserObject().handle.toString());
+    }
+
     protected void selectTab (int tabidx)
     {
         // create our tabs on the fly
@@ -257,7 +265,7 @@ public class StatusView extends BWindow
 
     protected HackyTabs _tabs;
     protected BComponent _tab;
-    protected BLabel _tabinfo;
+    protected BLabel _tabinfo, _handle;
 
     protected InventoryPalette _items, _badges, _duds;
     protected UnitPalette _bigshots;

@@ -80,11 +80,9 @@ public class CreateAvatarView extends BDecoratedWindow
         col.add(_handle = new BTextField(""));
         _handle.setPreferredWidth(150);
         _handle.setDocument(new HandleDocument());
-        _handle.addListener(new TextListener() {
-            public void textChanged (TextEvent event) {
-                handleUpdated(_handle.getText().trim());
-            }
-        });
+        _handle.addListener(new HandleListener(
+                                _done, _status, _msgs.get("m.create_defstatus"),
+                                _msgs.get("m.invalid_handle")));
 
         ImageIcon dicon = new ImageIcon(ctx.loadImage("ui/icons/dice.png"));
         BButton btn;
@@ -134,19 +132,6 @@ public class CreateAvatarView extends BDecoratedWindow
         _handle.setText(fname + " " + sname);
     }
 
-    protected void handleUpdated (String text)
-    {
-        boolean valid = NameFactory.getValidator().isValidHandle(
-            new Handle(text));
-        _done.setEnabled(valid);
-        String status = "m.create_defstatus";
-        if (!valid && text.length() >=
-            NameFactory.getValidator().getMinHandleLength()) {
-            status = "m.invalid_handle";
-        }
-        _status.setStatus(_msgs.get(status), false);
-    }
-
     protected void createAvatar ()
     {
         AvatarService asvc = (AvatarService)
@@ -179,6 +164,33 @@ public class CreateAvatarView extends BDecoratedWindow
         if (_failed) {
             _status.setStatus(_msgs.get("m.create_defstatus"), false);
         }
+    }
+
+    protected static class HandleListener implements TextListener
+    {
+        public HandleListener (
+            BButton button, StatusLabel status,
+            String defaultStatus, String invalidStatus)
+        {
+            _button = button;
+            _status = status;
+            _defstatus = defaultStatus;
+            _invstatus = invalidStatus;
+        }
+
+        public void textChanged (TextEvent event) {
+            String text = ((BTextField)event.getSource()).getText();
+            boolean valid =
+                NameFactory.getValidator().isValidHandle(new Handle(text));
+            _button.setEnabled(valid);
+            int minLength = NameFactory.getValidator().getMinHandleLength();
+            _status.setStatus((!valid && text.length() >= minLength) ?
+                _invstatus : _defstatus, false);
+        }
+
+        protected BButton _button;
+        protected StatusLabel _status;
+        protected String _defstatus, _invstatus;
     }
 
     protected static class HandleDocument extends LengthLimitedDocument

@@ -10,6 +10,7 @@ import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.TextEvent;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
@@ -19,10 +20,12 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.StatusLabel;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.data.BarberCodes;
+import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 
 /**
@@ -43,7 +46,7 @@ public class EditCharacterView extends BContainer
 
         // everything else needs to go in the main content area
         BContainer contents = new BContainer(
-            GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
+            GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.CENTER,
                 GroupLayout.STRETCH));
         contents.setStyleClass("barber_char_content");
         add(contents, WearClothingView.CONTENT_RECT);
@@ -75,8 +78,7 @@ public class EditCharacterView extends BContainer
 
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.LEFT);
         ncont.add(new BLabel(_msgs.get("m.handle")));
-        ncont.add(_handle = new BTextField(
-                      _ctx.getUserObject().handle.toString()));
+        ncont.add(_handle = new BTextField());
         _handle.setPreferredWidth(150);
         ncont.add(new BLabel(_msgs.get("m.handle_cost"), "barber_char_cost"));
         MoneyLabel cost = new MoneyLabel(ctx);
@@ -84,9 +86,38 @@ public class EditCharacterView extends BContainer
             BarberCodes.HANDLE_CHANGE_COIN_COST, false);
         cost.setStyleClass("m.barber_char_cost");
         ncont.add(cost);
-        ncont.add(new BButton(_msgs.get("m.buy_handle"), "buy_handle"));
-
+        ncont.add(_buy = new BButton(_msgs.get("m.buy_handle"), "buy_handle"));
+        _buy.addListener(new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                changeHandle(new Handle(_handle.getText()));
+            }
+        });
+        _buy.setEnabled(false);
         contents.add(ncont);
+
+        // configure our handle text field with standard validators
+        _handle.setDocument(new CreateAvatarView.HandleDocument());
+        _handle.addListener(new CreateAvatarView.HandleListener(
+                                _buy, _status, "",
+                                _msgs.get("m.invalid_handle")) {
+            public void textChanged (TextEvent event) {
+                super.textChanged(event);
+                if (_handle.getText().equals(
+                        _ctx.getUserObject().handle.toString())) {
+                    _buy.setEnabled(false);
+                }
+            }
+        });
+        _handle.setText(_ctx.getUserObject().handle.toString());
+    }
+
+    /**
+     * Called by the {@link BarberView} to give us a reference to our barber
+     * object when needed.
+     */
+    public void setBarberObject (BarberObject barbobj)
+    {
+        _barbobj = barbobj;
     }
 
     protected BContainer createHeader (String type)
@@ -105,9 +136,27 @@ public class EditCharacterView extends BContainer
         asvc.selectLook(_ctx.getClient(), pose, look.name);
     }
 
+    protected void changeHandle (Handle handle)
+    {
+        _buy.setEnabled(false);
+
+        BarberService.ConfirmListener cl = new BarberService.ConfirmListener() {
+            public void requestProcessed () {
+                _status.setText(_msgs.get("m.handle_changed"));
+            }
+            public void requestFailed (String reason) {
+                _status.setText(_msgs.xlate(reason));
+                _buy.setEnabled(true);
+            }
+        };
+        _barbobj.service.changeHandle(_ctx.getClient(), handle, cl);
+    }
+
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected StatusLabel _status;
+    protected BarberObject _barbobj;
 
     protected BTextField _handle;
+    protected BButton _buy;
 }
