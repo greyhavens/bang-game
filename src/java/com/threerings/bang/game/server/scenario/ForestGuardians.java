@@ -148,8 +148,8 @@ public class ForestGuardians extends Scenario
             }
         }
         
-        // if all trees are dead, the game is over
-        if (living == 0) {
+        // if half of the trees are dead, the game is over
+        if (living < _trees.size() / 2) {
             bangobj.setLastTick(tick);
             
         // if all living trees are fully grown, count down towards ending the
@@ -574,11 +574,11 @@ public class ForestGuardians extends Scenario
     protected int _grownTicks;
     
     /** The tick at which to activate the first wave. */
-    protected static final int FIRST_WAVE_TICK = 4;
+    protected static final int FIRST_WAVE_TICK = 2;
     
     /** The number of ticks the players must hold the trees at full growth in
      * order to bring on the next wave. */
-    protected static final int NEXT_WAVE_TICKS = 4;
+    protected static final int NEXT_WAVE_TICKS = 2;
     
     /** The number of remaining ticks required to start another wave. */
     protected static final int MIN_WAVE_TICKS = 16;
