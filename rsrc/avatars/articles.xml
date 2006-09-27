@@ -585,7 +585,6 @@
   <article name="female_hunter" townId="indian_post"
            slot="clothing" scrip="2500" coins="2">
     <component cclass="female/clothing_back" name="hunter"/>
-    <component cclass="female/clothing_front" name="earing_hunter"/>
   </article>
 
   <article name="female_gatherer" townId="indian_post"
