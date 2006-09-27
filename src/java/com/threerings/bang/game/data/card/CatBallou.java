@@ -7,6 +7,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.DropCardEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 /**
  * A card that allows the player to retire one of an opponent's cards at
@@ -44,6 +45,13 @@ public class CatBallou extends Card
         return 60;
     }
 
+    @Override // documentation inherited
+    public boolean isPlayable (BangObject bangobj)
+    {
+        return super.isPlayable(bangobj) &&
+            bangobj.scenario.getTeams() != ScenarioInfo.Teams.COOP;
+    }
+    
     @Override // documentation inherited
     public boolean isValidPlayer (BangObject bangobj, int pidx)
     {
