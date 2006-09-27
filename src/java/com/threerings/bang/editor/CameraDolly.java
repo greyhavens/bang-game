@@ -174,5 +174,5 @@ public class CameraDolly extends EditorTool
     protected static final float MIN_ELEVATION = FastMath.PI / 16.0f;
 
     /** The maximum elevation. */
-    protected static final float MAX_ELEVATION = FastMath.PI * 7.0f / 16.0f;
+    protected static final float MAX_ELEVATION = FastMath.HALF_PI;
 }
