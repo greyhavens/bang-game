@@ -51,9 +51,7 @@ public class WendigoLogic extends AILogic
     @Override // documentation inherited
     public void tick (Piece[] pieces, short tick)
     {
-        if (_safePoints == null) {
-            _safePoints = _scenario.getSafePoints();
-        }
+        _safePoints = _scenario.getSafePoints();
         _wendigoX = null;
         _wendigoY = null;
         super.tick(pieces, tick);

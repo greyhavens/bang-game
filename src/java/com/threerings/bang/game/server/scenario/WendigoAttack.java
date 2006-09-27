@@ -267,8 +267,7 @@ public class WendigoAttack extends Scenario
             Rectangle playarea = bangobj.board.getPlayableArea();
             // First decide horizontal or vertical attack
             boolean horiz = (RandomUtil.getInt(2) == 0);
-            int max = (horiz ? playarea.height : playarea.width) / 2;
-            int num = Math.min(max, Math.max(1, max * ++_numAttacks/6));
+            int num = (horiz ? playarea.height : playarea.width) / 2;
             _wendigos = new ArrayList<Wendigo>(num);
             int off = 0;
             int length = 0;
@@ -302,35 +301,54 @@ public class WendigoAttack extends Scenario
                 int idx = (IntListUtil.sum(weights) == 0 ?
                     RandomUtil.getInt(length) :
                     RandomUtil.getWeightedIndex(weights));
-                int size = RandomUtil.getInt(2);
                 weights[idx] = 0;
                 boolean side = RandomUtil.getInt(2) == 0;
-                createWendigo(bangobj, idx + off, horiz, side, 
-                        playarea, false, tick);
+                int cidx = idx, ridx = idx, lidx = idx;
+                boolean leftside = false, rightside = false;
+                boolean arms = RandomUtil.getInt(3) != 0;
+                if (idx - 1 >= 0) {
+                    if (arms && idx - 2 >= 0 && weights[idx - 2] > 0) {
+                        rightside = true;
+                        ridx = idx - 2;
+                    }
+                    weights[idx - 1] = 0;
+                }
                 if (idx + 1 < weights.length) {
-                    if (size > 0 && idx + 2 < weights.length && 
+                    if (arms && idx + 2 < weights.length && 
                             weights[idx + 2] > 0) {
-                        createWendigo(bangobj, idx + 2 + off, horiz, side, 
-                                playarea, true, tick);
-                        num--;
-                        weights[idx + 2] = 0;
-                        if (idx + 3 < weights.length) {
-                            weights[idx + 3] = 0;
-                        }
+                        leftside = true;
+                        lidx = idx + 2;
                     }
                     weights[idx + 1] = 0;
                 }
-                if (idx - 1 >= 0) {
-                    if (size > 0 && idx - 2 >= 0 && weights[idx - 2] > 0) {
-                        createWendigo(bangobj, idx - 2 + off, horiz, side, 
-                                playarea, true, tick);
+                if (rightside || leftside) {
+                    num--;
+                    if (leftside && rightside) {
                         num--;
-                        weights[idx - 2] = 0;
-                        if (idx - 3 >= 0) {
-                            weights[idx - 3] = 0;
-                        }
+                    } else if (leftside) {
+                        ridx = idx;
+                        cidx++;
+                    } else {
+                        lidx = cidx;
+                        cidx--;
                     }
-                    weights[idx - 1] = 0;
+                    num--;
+                    weights[ridx] = 0;
+                    if (ridx - 1 >= 0) {
+                        weights[idx - 1] = 0;
+                    }
+                    weights[lidx] = 0;
+                    if (lidx + 1 < weights.length) {
+                        weights[lidx + 1] = 0;
+                    }
+                }
+                createWendigo(bangobj, cidx + off, horiz, side, 
+                        playarea, false, tick);
+                if (leftside || rightside) {
+                    createWendigo(bangobj, ridx + off, horiz, side, 
+                            playarea, true, tick);
+                    createWendigo(bangobj, lidx + off, horiz, side, 
+                            playarea, true, tick);
                 }
                 int sum = 0;
                 for (int weight : weights) {
