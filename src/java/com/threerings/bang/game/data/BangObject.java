@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import com.samskivert.util.ArrayIntSet;
@@ -608,7 +609,9 @@ public class BangObject extends GameObject
      */
     public HashIntMap<Track> getTracks ()
     {
-        if (_tracks == null) {
+        if (_trackBoardHash == null || 
+                !Arrays.equals(_trackBoardHash, boardHash)) {
+            _trackBoardHash = (byte[])boardHash.clone();
             _tracks = new HashIntMap<Track>();
             for (Piece piece : pieces) {
                 if (piece instanceof Track) {
@@ -1207,4 +1210,5 @@ public class BangObject extends GameObject
 
     /** Maps encoded tile coordinates to pieces of track on the board. */
     protected transient HashIntMap<Track> _tracks;
+    protected transient byte[] _trackBoardHash;
 }
