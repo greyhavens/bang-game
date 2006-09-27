@@ -193,7 +193,8 @@ public class EffectHandler extends BoardView.BoardAction
             wasDamaged = true;
             effviz = new ExplosionViz();
         } else if (RepairEffect.isRepairEffect(effect) ||
-                   effect.equals(NuggetEffect.NUGGET_ADDED)) {
+                   effect.equals(NuggetEffect.NUGGET_ADDED) ||
+                   effect.equals(TreeBedEffect.SPROUTED)) {
             effviz = new RepairViz();
         }
 

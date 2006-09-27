@@ -148,8 +148,8 @@ public class ForestGuardians extends Scenario
             }
         }
         
-        // if half of the trees are dead, the game is over
-        if (living < _trees.size() / 2) {
+        // if all the trees are dead, the game is over
+        if (living == 0) {
             bangobj.setLastTick(tick);
             
         // if all living trees are fully grown, count down towards ending the
@@ -335,13 +335,19 @@ public class ForestGuardians extends Scenario
         }
         
         // record stats and points for trees grown, add the score to the
-        // total, and start the next wave
+        // total
         for (int ii = 0; ii < bangobj.stats.length; ii++) {
             bangobj.stats[ii].incrementStat(Stat.Type.TREES_ELDER, grown);
             bangobj.grantPoints(ii, ForestGuardiansInfo.GROWTH_POINTS[
                 TreeBed.FULLY_GROWN - 1] * grown);
         }
         _wavePoints += grown;
+        
+        // if at least half the trees were saved, increase the difficulty
+        // level
+        if (grown >= _trees.size() / 2) {
+            _difficulty++;
+        }
         startNextWave(bangobj);
     }
     
@@ -398,13 +404,13 @@ public class ForestGuardians extends Scenario
         {
             // spawn the next wave
             float ratio = BASE_ROBOT_RATIO +
-                ROBOT_RATIO_INCREMENT * (_wave - 1);
+                ROBOT_RATIO_INCREMENT * _difficulty;
             _target = (int)Math.round((_bangmgr.getTeamSize() + 1) *
                 _bangmgr.getPlayerCount() * ratio);
             spawnRobots(bangobj, _target);
             
             // determine the rate at which robots respawn
-            _rate = BASE_RESPAWN_RATE + RESPAWN_RATE_INCREMENT * (_wave - 1);
+            _rate = BASE_RESPAWN_RATE + RESPAWN_RATE_INCREMENT * _difficulty;
         }
         
         public void waveEnded (BangObject bangobj)
@@ -565,6 +571,9 @@ public class ForestGuardians extends Scenario
     
     /** The current wave of robots. */
     protected int _wave;
+    
+    /** The difficulty level of the current wave. */
+    protected int _difficulty;
     
     /** The number of points accumulated in the completed waves. */
     protected int _wavePoints;
