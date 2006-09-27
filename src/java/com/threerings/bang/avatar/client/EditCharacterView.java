@@ -80,7 +80,8 @@ public class EditCharacterView extends BContainer
         _handle.setPreferredWidth(150);
         ncont.add(new BLabel(_msgs.get("m.handle_cost"), "barber_char_cost"));
         MoneyLabel cost = new MoneyLabel(ctx);
-        cost.setMoney(1000, 1, false);
+        cost.setMoney(BarberCodes.HANDLE_CHANGE_SCRIP_COST,
+            BarberCodes.HANDLE_CHANGE_COIN_COST, false);
         cost.setStyleClass("m.barber_char_cost");
         ncont.add(cost);
         ncont.add(new BButton(_msgs.get("m.buy_handle"), "buy_handle"));

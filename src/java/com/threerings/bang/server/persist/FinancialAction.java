@@ -111,8 +111,9 @@ public abstract class FinancialAction extends Invoker.Unit
     protected FinancialAction (PlayerObject user, int scripCost, int coinCost)
     {
         _user = user;
-        _scripCost = scripCost;
-        _coinCost = coinCost;
+        // admins get everything for free because they're cool like that
+        _scripCost = user.tokens.isAdmin() ? 0 : scripCost;
+        _coinCost = user.tokens.isAdmin() ? 0 : coinCost;
     }
 
     /**

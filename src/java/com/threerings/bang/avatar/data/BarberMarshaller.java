@@ -5,6 +5,7 @@ package com.threerings.bang.avatar.data;
 
 import com.threerings.bang.avatar.client.BarberService;
 import com.threerings.bang.avatar.data.LookConfig;
+import com.threerings.bang.data.Handle;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -20,8 +21,21 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class BarberMarshaller extends InvocationMarshaller
     implements BarberService
 {
+    /** The method id used to dispatch {@link #changeHandle} requests. */
+    public static final int CHANGE_HANDLE = 1;
+
+    // documentation inherited from interface
+    public void changeHandle (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, CHANGE_HANDLE, new Object[] {
+            arg2, listener3
+        });
+    }
+
     /** The method id used to dispatch {@link #configureLook} requests. */
-    public static final int CONFIGURE_LOOK = 1;
+    public static final int CONFIGURE_LOOK = 2;
 
     // documentation inherited from interface
     public void configureLook (Client arg1, String arg2, int[] arg3)
@@ -32,7 +46,7 @@ public class BarberMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #purchaseLook} requests. */
-    public static final int PURCHASE_LOOK = 2;
+    public static final int PURCHASE_LOOK = 3;
 
     // documentation inherited from interface
     public void purchaseLook (Client arg1, LookConfig arg2, InvocationService.ConfirmListener arg3)

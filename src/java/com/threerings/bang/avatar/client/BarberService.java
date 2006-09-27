@@ -6,6 +6,8 @@ package com.threerings.bang.avatar.client;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
+import com.threerings.bang.data.Handle;
+
 import com.threerings.bang.avatar.data.LookConfig;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
@@ -39,4 +41,10 @@ public interface BarberService extends InvocationService
      * configure the look.
      */
     public void configureLook (Client client, String name, int[] articles);
+
+    /**
+     * Requests that a player's handle be changed. This will charge the player
+     * the associated handle changing fee.
+     */
+    public void changeHandle (Client client, Handle handle, ConfirmListener cl);
 }

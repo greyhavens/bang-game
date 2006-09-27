@@ -53,19 +53,20 @@ public class BarberView extends ShopView
         // put our new look and change clothes interfaces in tabs
         _newlook = new NewLookView(ctx, _status);
         _wearclothes = new WearClothingView(ctx, _status);
+        _editchar = new EditCharacterView(ctx, _status);
 
-        // start with the new look view "selected"
-        add(_active = _newlook, CONTENT_RECT);
+        // start with the wear clothes view "selected"
+        add(_active = _wearclothes, CONTENT_RECT);
 
         // do our hacky fake tab business
-        _faketab = _ctx.loadImage("ui/barber/top_change_clothes.png");
-        BButton btn;
-        add(btn = new BButton("", _selector, "newlook"),
-            new Rectangle(193, 621, 245, 30));
-        btn.setStyleClass("invisibutton");
-        add(btn = new BButton("", _selector, "change"),
-            new Rectangle(450, 621, 235, 30));
-        btn.setStyleClass("invisibutton");
+        _looktab = _ctx.loadImage("ui/barber/top_looks.png");
+        _chartab = _ctx.loadImage("ui/barber/top_character.png");
+
+        for (int ii = 0; ii < TABS.length; ii++) {
+            BButton btn = new BButton("", _selector, TABS[ii]);
+            add(btn, new Rectangle(TAB_LOCS[ii], 623, 150, 30));
+            btn.setStyleClass("invisibutton");
+        }
 
         add(new WalletLabel(ctx, true), new Rectangle(40, 38, 150, 40));
         add(createHelpButton(), new Point(745, 25));
@@ -92,22 +93,26 @@ public class BarberView extends ShopView
     protected void wasAdded ()
     {
         super.wasAdded();
-        _faketab.reference();
+        _looktab.reference();
+        _chartab.reference();
     }
 
     @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        _faketab.release();
+        _looktab.release();
+        _chartab.release();
     }
 
     @Override // documentation inherited
     protected void renderComponent (Renderer renderer)
     {
         // hackity hack hack hack
-        if (_active == _wearclothes) {
-            _faketab.render(renderer, 179, 598, _alpha);
+        if (_active == _newlook) {
+            _looktab.render(renderer, 179, 598, _alpha);
+        } else if (_active == _editchar) {
+            _chartab.render(renderer, 179, 598, _alpha);
         }
 
         // render our children components over the fake tab
@@ -116,15 +121,22 @@ public class BarberView extends ShopView
 
     protected ActionListener _selector = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
-            if (event.getAction().equals("newlook")) {
-                remove(_active);
-                add(_active = _newlook, CONTENT_RECT);
-                _tip.setText(_msgs.get("m.looks_tip"));
-            } else {
-                remove(_active);
-                add(_active = _wearclothes, CONTENT_RECT);
-                _tip.setText(_msgs.get("m.change_tip"));
+            BComponent nactive;
+            String action = event.getAction(), tip;
+            if (action.equals("looks")) {
+                nactive = _newlook;
+                tip = "looks";
+            } else if (action.equals("clothes")) {
+                nactive = _wearclothes;
+                tip = "clothes";
+            } else { // if (action.equals("character")) {
+                nactive = _editchar;
+                tip = "character";
             }
+
+            remove(_active);
+            add(_active = nactive, CONTENT_RECT);
+            _tip.setText(_msgs.get("m." + tip + "_tip"));
             BangUI.play(BangUI.FeedbackSound.TAB_SELECTED);
         }
     };
@@ -133,9 +145,14 @@ public class BarberView extends ShopView
     protected BComponent _active;
     protected BLabel _tip;
     protected StatusLabel _status;
+    protected BImage _looktab, _chartab;
+
     protected NewLookView _newlook;
     protected WearClothingView _wearclothes;
-    protected BImage _faketab;
+    protected EditCharacterView _editchar;
 
     protected static Rectangle CONTENT_RECT = new Rectangle(40, 65, 980, 545);
+
+    protected static final String[] TABS = { "clothes", "looks", "character" };
+    protected static final int[] TAB_LOCS = { 200, 370, 540 };
 }

@@ -15,4 +15,10 @@ public interface BarberCodes extends InvocationCodes
 
     /** The maximum length of a "look" name. */
     public static final int MAX_LOOK_NAME_LENGTH = 24;
+
+    /** The cost of a handle change in scrip. */
+    public static final int HANDLE_CHANGE_SCRIP_COST = 1000;
+
+    /** The cost of a handle change in coins. */
+    public static final int HANDLE_CHANGE_COIN_COST = 1;
 }

@@ -94,7 +94,7 @@ public class BarberManager extends PlaceManager
         });
     }
 
-    // documentation inherited from interface BarberProvider
+    // from interface BarberProvider
     public void purchaseLook (ClientObject caller, LookConfig config,
                               BarberService.ConfirmListener cl)
         throws InvocationException
@@ -121,12 +121,6 @@ public class BarberManager extends PlaceManager
             throw new InvocationException("m.name_already_used");
         }
 
-        // if they're an admin, zero out the cost as admins get everything for
-        // free (they're cheeky like that)
-        if (user.tokens.isAdmin()) {
-            cost[0] = cost[1] = 0;
-        }
-
         // copy the articles from their "active" look
         Look current = user.getLook(Look.Pose.DEFAULT);
         if (current != null) {
@@ -143,7 +137,7 @@ public class BarberManager extends PlaceManager
         new BuyLookAction(user, look, cost[0], cost[1], cl).start();
     }
 
-    // documentation inherited from interface BarberProvider
+    // from interface BarberProvider
     public void configureLook (ClientObject caller, String name, int[] articles)
     {
         PlayerObject user = (PlayerObject)caller;
@@ -194,7 +188,26 @@ public class BarberManager extends PlaceManager
         user.updateLooks(look);
     }
 
-    // documentation inherited from interface AvatarProvider
+    // from interface BarberProvider
+    public void changeHandle (
+        ClientObject caller, Handle handle, BarberService.ConfirmListener cl)
+        throws InvocationException
+    {
+        PlayerObject user = (PlayerObject)caller;
+
+        // make sure it's actually different
+        if (user.handle.equals(handle)) {
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // make sure their handle passes muster
+        validateHandle(user, handle);
+
+        // do the deed
+        new ChangeHandleAction(user, handle, cl).start();
+    }
+
+    // from interface AvatarProvider
     public void createAvatar (
         ClientObject caller, final Handle handle, boolean isMale,
         LookConfig config, int zations, final AvatarService.ConfirmListener cl)
@@ -210,23 +223,8 @@ public class BarberManager extends PlaceManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // this should be prevented by the client
-        if (!NameFactory.getValidator().isValidHandle(handle)) {
-            log.warning("User tried to use invalid handle [who=" + user.who() +
-                        ", handle=" + handle + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
-
-        // prevent the use of reserved names by non-admins
-        if (!user.tokens.isAdmin() &&
-            NameFactory.getValidator().isReservedHandle(handle)) {
-            throw new InvocationException(AvatarCodes.ERR_RESERVED_HANDLE);
-        }
-
-        // discourage the kiddies from being obviously vulgar
-        if (NameFactory.getValidator().isVulgarHandle(handle)) {
-            throw new InvocationException(AvatarCodes.ERR_VULGAR_HANDLE);
-        }
+        // make sure their handle passes muster
+        validateHandle(user, handle);
 
         // go ahead and set their gender in the user object
         user.setIsMale(isMale);
@@ -323,7 +321,7 @@ public class BarberManager extends PlaceManager
         });
     }
 
-    // documentation inherited from interface AvatarProvider
+    // from interface AvatarProvider
     public void selectLook (ClientObject caller, Look.Pose pose, String name)
     {
         PlayerObject user = (PlayerObject)caller;
@@ -372,6 +370,28 @@ public class BarberManager extends PlaceManager
                              new BarberDispatcher(this), false));
     }
 
+    protected void validateHandle (PlayerObject user, Handle handle)
+        throws InvocationException
+    {
+        // this should be prevented by the client
+        if (!NameFactory.getValidator().isValidHandle(handle)) {
+            log.warning("User tried to use invalid handle [who=" + user.who() +
+                        ", handle=" + handle + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // prevent the use of reserved names by non-admins
+        if (!user.tokens.isAdmin() &&
+            NameFactory.getValidator().isReservedHandle(handle)) {
+            throw new InvocationException(AvatarCodes.ERR_RESERVED_HANDLE);
+        }
+
+        // discourage the kiddies from being obviously vulgar
+        if (NameFactory.getValidator().isVulgarHandle(handle)) {
+            throw new InvocationException(AvatarCodes.ERR_VULGAR_HANDLE);
+        }
+    }
+
     /** Used to purchase a new avatar look. */
     protected static final class BuyLookAction extends FinancialAction
     {
@@ -414,6 +434,47 @@ public class BarberManager extends PlaceManager
         }
 
         protected Look _look;
+        protected BarberService.ConfirmListener _listener;
+    }
+
+    /** Used to purchase a handle change. */
+    protected static final class ChangeHandleAction extends FinancialAction
+    {
+        public ChangeHandleAction (
+            PlayerObject user, Handle handle,
+            BarberService.ConfirmListener listener) {
+            super(user, BarberCodes.HANDLE_CHANGE_SCRIP_COST,
+                BarberCodes.HANDLE_CHANGE_COIN_COST);
+            _ohandle = user.handle;
+            _handle = handle;
+            _listener = listener;
+        }
+
+        protected int getCoinType () {
+            return CoinTransaction.HANDLE_CHANGE;
+        }
+        protected String getCoinDescrip () {
+            return MessageBundle.compose("m.handle_change", _ohandle, _handle);
+        }
+
+        protected void persistentAction () throws PersistenceException {
+            BangServer.playrepo.configurePlayer(
+                _user.playerId, _handle, _user.isMale);
+        }
+        protected void rollbackPersistentAction () throws PersistenceException {
+            BangServer.playrepo.configurePlayer(
+                _user.playerId, _ohandle, _user.isMale);
+        }
+
+        protected void actionCompleted () {
+            _user.setHandle(_handle);
+            _listener.requestProcessed();
+        }
+        protected void actionFailed () {
+            _listener.requestFailed(INTERNAL_ERROR);
+        }
+
+        protected Handle _ohandle, _handle;
         protected BarberService.ConfirmListener _listener;
     }
 
