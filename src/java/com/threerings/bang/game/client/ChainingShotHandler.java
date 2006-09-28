@@ -40,6 +40,7 @@ public class ChainingShotHandler extends ShotHandler
 
     protected void fireShot (int sx, int sy, int tx, int ty)
     {
+        final int pender = notePender();
         // schedule an interval for the chain levels, firing the
         // first off immediately
         new Interval(_ctx.getClient().getRunQueue()) {
@@ -51,7 +52,7 @@ public class ChainingShotHandler extends ShotHandler
                 if (!_cseffect.apply(_bangobj, ChainingShotHandler.this,
                         _level++)) {
                     cancel();
-                    maybeComplete(-1);
+                    maybeComplete(pender);
                 }
             }
             protected int _level;
