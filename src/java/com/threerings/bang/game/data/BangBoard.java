@@ -869,8 +869,7 @@ public class BangBoard extends SimpleStreamableObject
             return;
         } 
         _tstate[_width * y + x] = state;
-    }
-            
+    }       
 
     /**
      * Returns the combined elevation (heightfield elevation plus piece

@@ -39,10 +39,6 @@ public class TreeBedEffect extends Effect
     /** The amount of damage inflicted. */
     public int damage;
 
-    /** If greater than zero, the growth value to which the tree
-     * should be reset. */
-    public byte growth = -1;
-
     /**
      * No-arg constructor for deserialization.
      */
@@ -65,18 +61,6 @@ public class TreeBedEffect extends Effect
             pieceIds[ii] = pieces[ii].pieceId;
         }
         this.damage = damage;
-    }
-
-    /**
-     * Creates a tree bed effect that will reset the tree with the
-     * given amount of initial damage and growth.
-     */
-    public TreeBedEffect (TreeBed bed, int damage, int growth)
-    {
-        bedId = bed.pieceId;
-        pieceIds = NO_PIECES;
-        this.damage = damage;
-        this.growth = (byte)growth;
     }
 
     // documentation inherited
@@ -121,18 +105,12 @@ public class TreeBedEffect extends Effect
             return false;
         }
         
-        // enact the tree's growth or damage
-        if (growth >= 0) {
-            bed.growth = growth;
-            bed.damage = damage;
-            reportEffect(observer, bed, SPROUTED);
-        } else {
-            int ogrowth = bed.growth;
-            bed.damage(damage);
-            reportEffect(observer, bed, GREW);
-            if (bed.growth > ogrowth) {
-                reportEffect(observer, bed, BLOOMED);
-            }
+        // enact the tree's damage
+        int ogrowth = bed.growth;
+        bed.damage(damage);
+        reportEffect(observer, bed, GREW);
+        if (bed.growth > ogrowth) {
+            reportEffect(observer, bed, BLOOMED);
         }
         return true;
     }

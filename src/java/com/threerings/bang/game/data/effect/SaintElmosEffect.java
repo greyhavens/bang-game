@@ -75,9 +75,8 @@ public class SaintElmosEffect extends BonusEffect
             if (p == null) {
                 continue;
             }
-            bangobj.removePieceDirect(p);
             reportEffect(obs, p, ELMOED);
-            reportRemoval(obs, p);
+            removeAndReport(bangobj, p, obs);
 
             newPieces[ii].position(p.x, p.y);
             addAndReport(bangobj, newPieces[ii], obs);

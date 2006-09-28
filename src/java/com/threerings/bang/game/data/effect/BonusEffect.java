@@ -67,8 +67,7 @@ public abstract class BonusEffect extends Effect
                 if (effect != null) {
                     reportEffect(obs, bonus, effect);
                 }
-                bangobj.removePieceDirect(bonus);
-                reportRemoval(obs, bonus);
+                removeAndReport(bangobj, bonus, obs);
             }
         }
         return true;

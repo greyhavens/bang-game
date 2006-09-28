@@ -35,6 +35,7 @@ public class TreeBed extends Prop
     @Override // documentation inherited
     public void init ()
     {
+        growth = 0;
         damage = 50;
     }
     

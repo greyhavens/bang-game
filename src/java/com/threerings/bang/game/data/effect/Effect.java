@@ -215,8 +215,7 @@ public abstract class Effect extends SimpleStreamableObject
 
         // if the should be removed when killed, do so now
         if (target.removeWhenDead()) {
-            bangobj.removePieceDirect(target);
-            reportRemoval(obs, target);
+            removeAndReport(bangobj, target, obs);
 
         // otherwise reshadow the piece to block all ground travel across
         } else {
@@ -369,6 +368,16 @@ public abstract class Effect extends SimpleStreamableObject
         }
     }
     
+    /** A helper function for removing a piece and reporting it. */
+    protected static void removeAndReport (
+        BangObject bangobj, Piece piece, Observer obs)
+    {
+        bangobj.removePieceDirect(piece);
+        if (obs != null) {
+            obs.pieceRemoved(piece);
+        }
+    }
+    
     /** A helper function for reporting a piece affecting. */
     protected static void reportEffect (
         Observer obs, Piece piece, String effect)
@@ -407,14 +416,6 @@ public abstract class Effect extends SimpleStreamableObject
     {
         if (obs != null) {
             obs.pieceKilled(piece);
-        }
-    }
-
-    /** A helper function for reporting a piece addition. */
-    protected static void reportRemoval (Observer obs, Piece piece)
-    {
-        if (obs != null) {
-            obs.pieceRemoved(piece);
         }
     }
 
