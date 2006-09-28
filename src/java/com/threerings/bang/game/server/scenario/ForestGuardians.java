@@ -65,7 +65,7 @@ public class ForestGuardians extends Scenario
     public ForestGuardians ()
     {
         registerDelegate(new TrainDelegate());
-        registerDelegate(new RespawnDelegate(8));
+        registerDelegate(_rdelegate = new RespawnDelegate(8));
         registerDelegate(_lrdelegate = new LoggingRobotDelegate());
     }
     
@@ -344,6 +344,9 @@ public class ForestGuardians extends Scenario
             _difficulty++;
         }
         
+        // respawn all player units on the next tick
+        _rdelegate.respawnAll(tick);
+        
         // count down towards starting the next wave
         _nextWaveCountdown = NEXT_WAVE_TICKS;
     }
@@ -526,6 +529,9 @@ public class ForestGuardians extends Scenario
             }
         };
     }
+    
+    /** The delegate responsible for respawning player units. */
+    protected RespawnDelegate _rdelegate;
     
     /** The delegate that spawns and controls logging robots. */
     protected LoggingRobotDelegate _lrdelegate;

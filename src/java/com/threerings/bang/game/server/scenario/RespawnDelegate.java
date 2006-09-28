@@ -37,6 +37,16 @@ public class RespawnDelegate extends ScenarioDelegate
         _respawnTicks = respawnTicks;
     }
 
+    /**
+     * Sets all units to respawn at the next tick.
+     */
+    public void respawnAll (short tick)
+    {
+        for (Unit unit : _respawns) {
+            unit.setRespawnTick(tick);
+        }
+    }
+    
     @Override // from ScenarioDelegate
     public void roundWillStart (BangObject bangobj)
     {
