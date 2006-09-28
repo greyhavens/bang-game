@@ -65,11 +65,12 @@ public class TreeBedSprite extends ActiveSprite
         }
         
         // perhaps create, update, or remove the damaged texture overlay
-        if (tree.damage > 50) {
+        float pdamage = tree.getPercentDamage();
+        if (pdamage > 0f) {
             if (!_oadded) {
                 addDamageOverlay();
             }
-            _omstate.getDiffuse().a = (tree.damage - 50) / 50f;
+            _omstate.getDiffuse().a = pdamage;
             
         } else if (_oadded) {
             new SpatialVisitor<ModelMesh>(ModelMesh.class) {

@@ -39,9 +39,9 @@ public class LoggingRobot extends Unit
         "indian_post/logging_robot", "indian_post/locust_robot" };
     
     @Override // documentation inherited
-    public int getTreeProximityDamage (TreeBed bed)
+    public int getTreeProximityDamage ()
     {
-        return TREE_PROXIMITY_DAMAGE[bed.growth];
+        return TREE_PROXIMITY_DAMAGE;
     }
     
     @Override // documentation inherited
@@ -109,7 +109,7 @@ public class LoggingRobot extends Unit
                     ((TreeBed)piece).growth > 0) {
                 TreeBed tb = (TreeBed)piece;
                 proxShot = addProxShot(
-                        proxShot, proxShots, tb, getTreeProximityDamage(tb));
+                        proxShot, proxShots, tb, TREE_PROXIMITY_DAMAGE);
             }
         }
         if (proxShot != null) {
@@ -145,9 +145,9 @@ public class LoggingRobot extends Unit
     /** The specific logging robot variety. */
     protected transient int _type;
     
-    /** For each tree growth state, the amount by which logging robots next to
-     * trees increase their damage. */
-    public static final int[] TREE_PROXIMITY_DAMAGE = { 0, 20, 15, 10 };
+    /** The amount by which logging robots next to trees increase their
+     * damage. */
+    public static final int TREE_PROXIMITY_DAMAGE = 15;
     
     /** The base amount by which normal logging robots next to units damage
      * them with their rotating saw blades. */

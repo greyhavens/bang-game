@@ -24,19 +24,22 @@ public class TreeBed extends Prop
     /** The final phase of the tree's growth. */
     public static final byte FULLY_GROWN = 3;
 
+    /** The damage levels at which the tree grows to new phases. */
+    public static final int[] GROWTH_DAMAGE = { 66, 33, 0 };
+    
     /** The current growth phase of the tree, from 0 to FULLY_GROWN. */
     public byte growth;
 
     public TreeBed ()
     {
-        damage = 50;
+        damage = 100;
     }
     
     @Override // documentation inherited
     public void init ()
     {
         growth = 0;
-        damage = 50;
+        damage = 100;
     }
     
     @Override // documentation inherited
@@ -46,27 +49,44 @@ public class TreeBed extends Prop
     }
     
     @Override // documentation inherited
+    public boolean isAlive ()
+    {
+        return super.isAlive() || growth == 0;
+    }
+    
+    @Override // documentation inherited
     public boolean expireWreckage (short tick)
     {
         return false;
     }
 
     /**
-     * "Damages" this tree bed by the specified amount, causing it to grow
-     * higher if the increment is negative and lower if the increment is
-     * positive.
+     * "Damages" this tree bed by the specified amount, causing it to grow to
+     * new phases when the damage reaches certain threshold levels.
      */
     public void damage (int dinc)
     {
-        damage += dinc;
-        if (damage <= 0 && growth < FULLY_GROWN) {
-            growth++;
-            damage = 50;
-        } else {
-            damage = Math.max(Math.min(damage, 100), 0);
+        damage = Math.max(Math.min(damage + dinc, 100), 0);
+        for (int ii = 0; ii < GROWTH_DAMAGE.length; ii++) {
+            if (damage <= GROWTH_DAMAGE[ii]) {
+                growth = (byte)Math.max(growth, ii + 1);
+            }
         }
     }
 
+    /**
+     * Returns the amount of damage in proportion to the tree's current growth
+     * state.
+     */
+    public float getPercentDamage ()
+    {
+        if (growth == 0) {
+            return 0f;
+        }
+        int gdamage = GROWTH_DAMAGE[growth - 1];
+        return (float)Math.max(0, (damage - gdamage)) / (100 - gdamage);
+    }
+    
     @Override // documentation inherited
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
@@ -88,7 +108,7 @@ public class TreeBed extends Prop
                 if (FetishEffect.FROG_FETISH.equals(unit.holding)) {
                     doubleGrowth = true;
                 }
-                int pdamage = unit.getTreeProximityDamage(this);
+                int pdamage = unit.getTreeProximityDamage();
                 if (pdamage > 0) {
                     continue;
                 } else {

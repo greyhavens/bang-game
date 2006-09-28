@@ -281,11 +281,12 @@ public class ForestGuardians extends Scenario
     
     /**
      * Computes the current aggression (from -1 to +1), which depends on the
-     * number of living trees.
+     * number of living trees and the wave performance.
      */
     protected float computeAggression (BangObject bangobj)
     {
-        int treePoints = 0, maxPoints = 0;
+        int treePoints = _wavePoints * TreeBed.FULLY_GROWN,
+            maxPoints = _trees.size() * TreeBed.FULLY_GROWN * (_wave - 1);
         for (TreeBed tree : _trees) {
             maxPoints += TreeBed.FULLY_GROWN;
             if (tree.isAlive()) {
