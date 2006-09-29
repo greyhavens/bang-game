@@ -78,6 +78,17 @@ public class UnitStatusView extends BWindow
         }
     }
 
+    @Override // documentation inherited
+    public BComponent getHitComponent (int mx, int my) {
+        BComponent hit = super.getHitComponent(mx, my);
+        // if we didn't find a hit and we're outside our normal width
+        // then let it pass through
+        if (hit == this && mx > _selected.getWidth()) {
+            return null;
+        }
+        return hit;
+    }
+
     /**
      * Called when a unit sprite is added to the game.
      */
@@ -166,7 +177,7 @@ public class UnitStatusView extends BWindow
                     GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
             vlay.setGap(4);
             _opened = new BContainer(vlay) {
-                public BComponent getHitComponent(int mx, int my) {
+                public BComponent getHitComponent (int mx, int my) {
                     if ((mx >= _x + 38) && (my >= _y) && 
                             (mx < _x + _width) && (my < _y + _height)) {
                         return this;
@@ -194,6 +205,16 @@ public class UnitStatusView extends BWindow
                 }
             };
             _closed.setStyleClass("unit_status_closed");
+        }
+
+        public BComponent getHitComponent (int mx, int my) {
+            BComponent hit = super.getHitComponent(mx, my);
+            // if we didn't find a hit and we're outside our normal width
+            // then let it pass through
+            if (hit == this && mx > _selected.getWidth()) {
+                return null;
+            }
+            return hit;
         }
 
         public void setUnitSprite (UnitSprite sprite) {
