@@ -56,6 +56,6 @@ public interface GameCodes extends InvocationCodes
     public static final int MAX_CARDS = 3;
 
     /** Set to true to compile in sync debugging mode. */
-    public static final boolean SYNC_DEBUG = true &&
+    public static final boolean SYNC_DEBUG = false &&
         (DeploymentConfig.getVersion() == 0);
 }
