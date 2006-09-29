@@ -147,7 +147,7 @@ public class LoggingRobot extends Unit
     
     /** The amount by which logging robots next to trees increase their
      * damage. */
-    public static final int TREE_PROXIMITY_DAMAGE = 15;
+    public static final int TREE_PROXIMITY_DAMAGE = 13;
     
     /** The base amount by which normal logging robots next to units damage
      * them with their rotating saw blades. */

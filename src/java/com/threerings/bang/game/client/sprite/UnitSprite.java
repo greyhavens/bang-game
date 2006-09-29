@@ -358,6 +358,9 @@ public class UnitSprite extends MobileSprite
     @Override // documentation inherited
     public boolean removed ()
     {
+        // make sure the unit is "dead" so that the unit status display doesn't
+        // pop back up
+        _piece.damage = 100; 
         queueAction(REMOVED);
         return true;
     }
