@@ -615,9 +615,12 @@ public class BangObject extends GameObject
      */
     public HashIntMap<Track> getTracks ()
     {
-        if (_trackBoardHash == null || 
-                !Arrays.equals(_trackBoardHash, boardHash)) {
-            _trackBoardHash = (byte[])boardHash.clone();
+        if (_trackBoardHash == null ||
+            !Arrays.equals(_trackBoardHash, boardHash)) {
+            // boardHash is null when testing uploaded boards
+            if (boardHash != null) {
+                _trackBoardHash = (byte[])boardHash.clone();
+            }
             _tracks = new HashIntMap<Track>();
             for (Piece piece : pieces) {
                 if (piece instanceof Track) {
@@ -657,9 +660,10 @@ public class BangObject extends GameObject
      */
     public void tick (short tick)
     {
-        if (GameCodes.SYNC_DEBUG) {
-            setDebugPieces((pieces == null ? null :
-                        (ModifiableDSet<Piece>)pieces.clone()));
+        if (GameCodes.SYNC_DEBUG && pieces != null) {
+            @SuppressWarnings("unchecked") ModifiableDSet<Piece> clone =
+                (ModifiableDSet<Piece>)pieces.clone();
+            setDebugPieces(clone);
         }
         setTick(tick);
     }
