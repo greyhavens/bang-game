@@ -185,19 +185,21 @@ public class MobileSprite extends ActiveSprite
     }
 
     @Override // documentation inherited
+    public void cancelMove ()
+    {
+        super.cancelMove();
+
+        moveEnded();
+    }
+
+    @Override // documentation inherited
     public void pathCompleted ()
     {
         super.pathCompleted();
 
-        // stop our movement sound
-        stopMoveSound();
-
-        // deactivate the dust
-        if (_dust != null) {
-            _dust.setReleaseRate(0);
-        }
+        moveEnded();
     }
-    
+
     @Override // documentation inherited
     public void setOrientation (int orientation)
     {
@@ -384,6 +386,20 @@ public class MobileSprite extends ActiveSprite
     {
         if (_moveSound != null) {
             _moveSound.stop();
+        }
+    }
+
+    /**
+     * Called to stop associated move effects.
+     */
+    protected void moveEnded ()
+    {
+        // stop our movement sound
+        stopMoveSound();
+
+        // deactivate the dust
+        if (_dust != null) {
+            _dust.setReleaseRate(0);
         }
     }
     
