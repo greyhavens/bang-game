@@ -64,7 +64,8 @@ public class WendigoAttack extends Scenario
     {
         registerDelegate(new ToggleDelegate());
         registerDelegate(new WendigoDelegate());
-        registerDelegate(new RespawnDelegate(RespawnDelegate.RESPAWN_TICKS/2) {
+        registerDelegate(new RespawnDelegate(
+                    RespawnDelegate.RESPAWN_TICKS/2, false) {
             @Override // documentation inherited
             public void pieceWasKilled (BangObject bangobj, Piece piece) {
                 int oldRT = _respawnTicks;

@@ -34,7 +34,13 @@ public class RespawnDelegate extends ScenarioDelegate
 
     public RespawnDelegate (int respawnTicks)
     {
+        this(respawnTicks, true);
+    }
+
+    public RespawnDelegate (int respawnTicks, boolean freeIronPlate)
+    {
         _respawnTicks = respawnTicks;
+        _freeIronPlate = freeIronPlate;
     }
 
     /**
@@ -93,7 +99,8 @@ public class RespawnDelegate extends ScenarioDelegate
                 bangobj.removeFromPieces(unit.getKey());
             }
 
-            boolean freeIronPlate = !bangobj.hasLiveUnits(unit.owner);
+            boolean freeIronPlate = _freeIronPlate && 
+                !bangobj.hasLiveUnits(unit.owner);
 
             // then position it and add it back at its new location
             unit.position(bspot.x, bspot.y);
@@ -158,4 +165,7 @@ public class RespawnDelegate extends ScenarioDelegate
 
     /** The number of ticks that must elapse before a unit is respawned. */
     protected int _respawnTicks = RESPAWN_TICKS;
+
+    /** If we're giving out the free iron plates. */
+    protected boolean _freeIronPlate;
 }
