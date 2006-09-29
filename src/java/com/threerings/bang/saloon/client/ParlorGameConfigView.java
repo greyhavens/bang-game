@@ -148,6 +148,9 @@ public class ParlorGameConfigView extends BContainer
 
     protected boolean shouldSyncGameConfig ()
     {
+        if (_updatingDisplay) {
+            return false;
+        }
         if (_parobj.game == null) {
             return true;
         }
@@ -169,6 +172,7 @@ public class ParlorGameConfigView extends BContainer
 
     protected void updateDisplay ()
     {
+        _updatingDisplay = true;
         if (_parobj.game != null) {
             _boxes[0].selectItem(Integer.valueOf(_parobj.game.rounds));
             _boxes[1].selectItem(Integer.valueOf(_parobj.game.players));
@@ -192,6 +196,7 @@ public class ParlorGameConfigView extends BContainer
             _scens[ii].setEnabled(canCreate);
         }
         _create.setEnabled(canCreate);
+        _updatingDisplay = false;
     }
 
     protected ParlorGameConfig makeConfig ()
@@ -268,6 +273,8 @@ public class ParlorGameConfigView extends BContainer
     protected String[] _scenIds;
     protected BCheckBox[] _scens;
     protected BButton _create;
+
+    protected boolean _updatingDisplay = false;
 
     // only usable by admins for now
     protected BTextField _board;
