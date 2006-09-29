@@ -56,7 +56,7 @@ public class IconViz extends EffectViz
         return new IconViz(card.getIconPath("icon"), true);
     }
     
-    protected IconViz (String ipath)
+    public IconViz (String ipath)
     {
         _ipath = ipath;
     }

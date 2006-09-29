@@ -43,6 +43,7 @@ import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.game.client.effect.IconViz;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -132,6 +133,14 @@ public class BangController extends GameController
                 reason = MessageBundle.compose(
                     "m.order_invalidated_unit",
                     unit.getConfig().getName(), reason);
+                    
+                // show a question mark over the unit
+                IconViz iviz = new IconViz("textures/effects/invalidated.png");
+                iviz.init(_ctx, _view.view, unit, null);
+                PieceSprite sprite = _view.view.getPieceSprite(unit);
+                if (sprite != null) {
+                    iviz.display(sprite);
+                }
             } else {
                 reason = MessageBundle.compose("m.order_invalidated", reason);
             }
