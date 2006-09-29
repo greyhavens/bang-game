@@ -31,6 +31,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.client.util.StateSaver;
 import com.threerings.bang.util.BangContext;
@@ -48,11 +49,12 @@ import com.threerings.bang.saloon.data.SaloonCodes;
 public class ParlorGameConfigView extends BContainer
     implements AttributeChangeListener, ActionListener
 {
-    public ParlorGameConfigView (BangContext ctx)
+    public ParlorGameConfigView (BangContext ctx, StatusLabel status)
     {
         super(new BorderLayout(0, 10));
 
         _ctx = ctx;
+        _status = status;
         _msgs = ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
 
         BContainer main = new BContainer(
@@ -240,11 +242,10 @@ public class ParlorGameConfigView extends BContainer
                 error = MessageBundle.taint(e.getMessage());
             }
             if (error != null) {
-                String msg = MessageBundle.compose(
-                    "m.board_load_failed",
-                    MessageBundle.taint(board.getPath()), error);
-                _ctx.getChatDirector().displayFeedback(
-                    SaloonCodes.SALOON_MSGS, msg);
+                String msg = MessageBundle.taint(board.getPath());
+                msg = MessageBundle.compose("m.board_load_failed", msg, error);
+                msg = _ctx.xlate(SaloonCodes.SALOON_MSGS, msg);
+                _status.setStatus(msg, true);
                 return;
             }
         }
@@ -268,6 +269,7 @@ public class ParlorGameConfigView extends BContainer
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected ParlorObject _parobj;
+    protected StatusLabel _status;
 
     protected BComboBox[] _boxes = new BComboBox[4];
     protected String[] _scenIds;

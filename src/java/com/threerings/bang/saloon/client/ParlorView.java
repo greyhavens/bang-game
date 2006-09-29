@@ -64,7 +64,7 @@ public class ParlorView extends ShopView
         _status.setText(_msgs.get("m.intro_tip"));
 
         // create our config view, but we'll add it later
-        _gconfig = new ParlorGameConfigView(_ctx);
+        _gconfig = new ParlorGameConfigView(_ctx, _status);
 
         // load up our extra background
         _bgoverlay = ctx.loadImage("ui/saloon/parlor_bg.png");
