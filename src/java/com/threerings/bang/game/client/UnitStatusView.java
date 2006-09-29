@@ -575,12 +575,11 @@ public class UnitStatusView extends BWindow
             if (this.influence == influence) {
                 return;
             }
-            if (this.influence != null) {
+            if (isAdded() && this.influence != null) {
                 this.influence.release();
-                this.influence = null;
             }
             this.influence = influence;
-            if (this.influence != null) {
+            if (isAdded() && this.influence != null) {
                 this.influence.reference();
             }
         }
