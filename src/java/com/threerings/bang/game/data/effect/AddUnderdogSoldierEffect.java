@@ -28,6 +28,7 @@ public class AddUnderdogSoldierEffect extends AddPieceEffect
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         if (bangobj.board.isOccupiable(piece.x, piece.y)) {
+            piece.assignPieceId(bangobj);
             super.prepare(bangobj, dammap);
         } else {
             piece = null;
