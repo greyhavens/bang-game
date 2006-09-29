@@ -35,13 +35,21 @@ public class AddPieceEffect extends Effect
     
     public AddPieceEffect (Piece piece)
     {
-        this.piece = piece;
+        this(piece, null); 
     }
     
     public AddPieceEffect (Piece piece, String effect)
     {
         this.piece = piece;
         this.effect = effect;
+    }
+
+    @Override // documentation inherited
+    public Object clone ()
+    {
+        AddPieceEffect effect = (AddPieceEffect)super.clone();
+        effect.piece = (Piece)piece.clone();
+        return effect;
     }
     
     // documentation inherited

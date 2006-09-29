@@ -29,6 +29,7 @@ import static com.threerings.bang.Log.log;
  * communicated through an ordered stream of effects.
  */
 public abstract class Effect extends SimpleStreamableObject
+    implements Cloneable
 {
     /** An effect to use when a piece's internal status is updated and it
      * should be refreshed, but no other visible change will take place. */
@@ -229,6 +230,19 @@ public abstract class Effect extends SimpleStreamableObject
     }
 
     /**
+     * All effects should be cloned before distributed to ensure they are
+     * not altered before getting sent to the client.
+     */
+    public Object clone ()
+    {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException cnse) {
+            throw new RuntimeException(cnse);
+        }
+    }
+
+    /**
      * Initializes this effect (called only on the server) with the piece that
      * activated the bonus.
      */
@@ -361,7 +375,7 @@ public abstract class Effect extends SimpleStreamableObject
     protected static void addAndReport (
         BangObject bangobj, Piece piece, Observer obs)
     {
-        bangobj.addPieceDirect(piece);
+        bangobj.addPieceDirect((Piece)piece.clone());
         piece.wasAdded(bangobj);
         if (obs != null) {
             obs.pieceAdded(piece);

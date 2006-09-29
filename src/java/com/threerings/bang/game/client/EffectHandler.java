@@ -5,7 +5,9 @@ package com.threerings.bang.game.client;
 
 import java.awt.Rectangle;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
@@ -72,7 +74,6 @@ import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
-import java.util.ArrayList;
 
 /**
  * Handles the visual representation of a complex effect on the client.
@@ -105,10 +106,10 @@ public class EffectHandler extends BoardView.BoardAction
     }
 
     @Override // documentation inherited
-    public boolean canExecute (
-            ArrayIntSet penders, HashSet<Rectangle> boundset)
+    public boolean canExecute (ArrayIntSet penders, 
+            HashSet<Rectangle> boundset, LinkedList<Integer> syncQueue)
     {
-        if (!super.canExecute(penders, boundset)) {
+        if (!super.canExecute(penders, boundset, syncQueue)) {
             return false;
         }
         boolean can = true;

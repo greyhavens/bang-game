@@ -83,6 +83,14 @@ public class HoldEffect extends BonusEffect
         }
     }
 
+    @Override // documentation inherited
+    public Object clone ()
+    {
+        HoldEffect effect = (HoldEffect)super.clone();
+        effect.drop = (drop == null ? null : (Bonus)drop.clone());
+        return effect;
+    }
+
     /**
      * Determines whether the given effect represents the dropping of
      * some kind of bonus.

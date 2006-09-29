@@ -163,6 +163,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>pieces</code> field. */
     public static final String PIECES = "pieces";
 
+    /** The field name of the <code>debugPieces</code> field. */
+    public static final String DEBUG_PIECES = "debugPieces";
+
     /** The field name of the <code>cards</code> field. */
     public static final String CARDS = "cards";
 
@@ -274,6 +277,9 @@ public class BangObject extends GameObject
 
     /** Contains information on all pieces on the board. */
     public ModifiableDSet<Piece> pieces;
+
+    /** For debugging purposes. */
+    public ModifiableDSet<Piece> debugPieces;
 
     /** Contains information on all available cards. */
     public ModifiableDSet<Card> cards = new ModifiableDSet<Card>();
@@ -644,6 +650,18 @@ public class BangObject extends GameObject
     public String piecesToString ()
     {
         return (pieces == null) ? "null" : String.valueOf(pieces.size());
+    }
+
+    /**
+     * Helper for ticking.
+     */
+    public void tick (short tick)
+    {
+        if (GameCodes.SYNC_DEBUG) {
+            setDebugPieces((pieces == null ? null :
+                        (ModifiableDSet<Piece>)pieces.clone()));
+        }
+        setTick(tick);
     }
 
     @Override // documentation inherited
@@ -1026,6 +1044,54 @@ public class BangObject extends GameObject
         @SuppressWarnings("unchecked") ModifiableDSet<com.threerings.bang.game.data.piece.Piece> clone =
             (value == null) ? null : (ModifiableDSet<com.threerings.bang.game.data.piece.Piece>)value.clone();
         this.pieces = clone;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>debugPieces</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToDebugPieces (Piece elem)
+    {
+        requestEntryAdd(DEBUG_PIECES, debugPieces, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>debugPieces</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromDebugPieces (Comparable key)
+    {
+        requestEntryRemove(DEBUG_PIECES, debugPieces, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>debugPieces</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateDebugPieces (Piece elem)
+    {
+        requestEntryUpdate(DEBUG_PIECES, debugPieces, elem);
+    }
+
+    /**
+     * Requests that the <code>debugPieces</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setDebugPieces (ModifiableDSet<com.threerings.bang.game.data.piece.Piece> value)
+    {
+        requestAttributeChange(DEBUG_PIECES, value, this.debugPieces);
+        @SuppressWarnings("unchecked") ModifiableDSet<com.threerings.bang.game.data.piece.Piece> clone =
+            (value == null) ? null : (ModifiableDSet<com.threerings.bang.game.data.piece.Piece>)value.clone();
+        this.debugPieces = clone;
     }
 
     /**

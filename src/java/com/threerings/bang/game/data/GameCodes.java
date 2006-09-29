@@ -5,6 +5,7 @@ package com.threerings.bang.game.data;
 
 import com.threerings.presents.data.InvocationCodes;
 
+import com.threerings.bang.util.DeploymentConfig;
 import com.threerings.bang.game.client.BangService;
 
 /**
@@ -53,4 +54,8 @@ public interface GameCodes extends InvocationCodes
 
     /** The maximum number of cards a player can hold in a game. */
     public static final int MAX_CARDS = 3;
+
+    /** Set to true to compile in sync debugging mode. */
+    public static final boolean SYNC_DEBUG = true &&
+        (DeploymentConfig.getVersion() == 0);
 }

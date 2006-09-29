@@ -34,6 +34,14 @@ public class GrantCardEffect extends BonusEffect
     }
 
     @Override // documentation inherited
+    public Object clone ()
+    {
+        GrantCardEffect effect = (GrantCardEffect)super.clone();
+        effect.card = (Card)card.clone();
+        return effect;
+    }
+
+    @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
         return new int[0];

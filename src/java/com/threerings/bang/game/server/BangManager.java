@@ -601,13 +601,19 @@ public class BangManager extends GameManager
      */
     public boolean deployEffect (int effector, Effect effect, boolean prepared)
     {
-        // prepare the effect
-        effect.prepare(_bangobj, _damage);
+        if (!prepared) {
+            // prepare the effect
+            effect.prepare(_bangobj, _damage);
 
-        // make sure the effect is still applicable
-        if (!effect.isApplicable()) {
-            _damage.clear();
-            return false;
+            // make sure the effect is still applicable
+            if (!effect.isApplicable()) {
+                _damage.clear();
+                return false;
+            }
+        }
+
+        if (SYNC_DEBUG) {
+            log.info("Applying effect " + effect);
         }
 
         // record our damage if appropriate
@@ -618,7 +624,7 @@ public class BangManager extends GameManager
         }
 
         // broadcast the effect to the client
-        _bangobj.setEffect(effect);
+        _bangobj.setEffect((Effect)effect.clone());
 
         // on the server we apply the effect immediately
         return effect.apply(_bangobj, _effector);
@@ -845,7 +851,7 @@ public class BangManager extends GameManager
             // queue up the first board tick
             _ticker.schedule(_scenario.getTickTime(_bconfig, _bangobj), false);
             // let the players know we're ready to go with the first tick
-            _bangobj.setTick((short)0);
+            _bangobj.tick((short)0);
             break;
 
         default:
@@ -895,7 +901,7 @@ public class BangManager extends GameManager
     {
         _activeRoundId = _bangobj.roundId;
         // set the tick to -1 during the pre-round
-        _bangobj.setTick((short)-1);
+        _bangobj.tick((short)-1);
 
         // set up our stats for this round
         StatSet[] stats = new StatSet[getPlayerSlots()];
@@ -2586,7 +2592,7 @@ public class BangManager extends GameManager
             // reset the extra tick time and update the game's tick counter
             int nextTick = (_bangobj.tick + 1) % Short.MAX_VALUE;
             _extraTickTime = 0L;
-            _bangobj.setTick((short)nextTick);
+            _bangobj.tick((short)nextTick);
 
             // queue up the next tick
             long tickTime = _scenario.getTickTime(_bconfig, _bangobj) +

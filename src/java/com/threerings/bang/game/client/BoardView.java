@@ -13,9 +13,12 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -81,6 +84,8 @@ import com.threerings.jme.util.SpatialVisitor;
 import com.threerings.jme.util.TimeFunction;
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -120,6 +125,9 @@ public class BoardView extends BComponent
      */
     public abstract static class BoardAction
     {
+        /** The id of this action. */
+        public int actionId;
+
         /** Configured to the time at which this action was started. */
         public long start;
 
@@ -144,9 +152,12 @@ public class BoardView extends BComponent
 
         /** Returns true if this action can be executed, false if it operates
          * on a piece that is currently involved in another action. */
-        public boolean canExecute (
-                ArrayIntSet penders, HashSet<Rectangle> boundset)
+        public boolean canExecute (ArrayIntSet penders, 
+                HashSet<Rectangle> boundset, LinkedList<Integer> syncQueue)
         {
+            if (!syncQueue.isEmpty() && actionId > syncQueue.getFirst()) {
+                return false;
+            }
             for (int ii = 0; ii < pieceIds.length; ii++) {
                 if (penders.contains(pieceIds[ii])) {
                     return false;
@@ -714,8 +725,9 @@ public class BoardView extends BComponent
      */
     public void executeAction (BoardAction action)
     {
+        action.actionId = ++_maxActionId;
         // if we can execute this action immediately, do so
-        if (action.canExecute(_punits, _pbounds)) {
+        if (action.canExecute(_punits, _pbounds, _syncQueue)) {
             processAction(action);
         } else {
             if (ACTION_DEBUG) {
@@ -783,7 +795,20 @@ public class BoardView extends BComponent
      */
     public void queuePieceRemoval (Piece piece)
     {
+        for (SyncAction sa : _syncActions) {
+            sa.removePiece(piece);
+        }
         executeAction(new PieceRemovedAction(piece, _bangobj.tick));
+    }
+
+    /**
+     * Called to sync all the board actions for a tick.
+     */
+    public void queueSyncAction ()
+    {
+        SyncAction sa = new SyncAction(_bangobj.tick);
+        _syncActions.add(sa);
+        executeAction(sa);
     }
 
     // documentation inherited from interface MouseMotionListener
@@ -1157,10 +1182,12 @@ public class BoardView extends BComponent
             _pbounds.add(r);
         }
 
+        _syncQueue.clear();
+
         Iterator<BoardAction> iter = _pactions.iterator();
         while (iter.hasNext()) {
             BoardAction action = iter.next();
-            if (action.canExecute(_punits, _pbounds)) {
+            if (action.canExecute(_punits, _pbounds, _syncQueue)) {
                 iter.remove();
                 // this only queues up the action for processing, so we need
                 // not worry that the action will complete immediately and
@@ -1674,6 +1701,9 @@ public class BoardView extends BComponent
         if (action.bounds != null) {
             _pbounds.add(action.bounds);
         }
+        if (action instanceof SyncAction) {
+            _syncQueue.addLast(action.actionId);
+        }
     }
 
     /** Used to increment and decrement executing status for pieces. */
@@ -1808,9 +1838,123 @@ public class BoardView extends BComponent
         }
     }
 
+    /** Used to sync all the board actions on a tick and compare the server
+     * state to the client state. */
+    protected class SyncAction extends BoardAction
+    {
+        public short tick;
+
+        public SyncAction (short tick) {
+            this.pieceIds = new int[0];
+            this.waiterIds = new int[0];
+            this.moveIds = new int[0];
+            this.bounds = null;
+            this.tick = tick;
+
+            for (Piece p : _bangobj.debugPieces) {
+                _spieces.add((Piece)p.clone());
+            }
+        }
+
+        public void removePiece (Piece piece)
+        {
+            for (Iterator<Piece> iter = _spieces.iterator(); iter.hasNext(); ) {
+                if (iter.next().pieceId == piece.pieceId) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+
+        @Override // documentation inherited
+        public boolean canExecute (ArrayIntSet penders,
+                HashSet<Rectangle> boundset, LinkedList<Integer> syncQueue)
+        {
+            return (penders.isEmpty() && boundset.isEmpty() && 
+                    syncQueue.isEmpty());
+        }
+
+        public boolean execute () {
+            for (Piece p : _bangobj.pieces) {
+                _cpieces.add((Piece)p.clone());
+            }
+            pieceComparator pc = new pieceComparator();
+            Collections.sort(_cpieces, pc);
+            Collections.sort(_spieces, pc);
+            boolean errors = false;
+            Iterator<Piece> citer = _cpieces.iterator(), 
+                    siter = _spieces.iterator(); 
+            Piece cpiece = null, spiece = null;
+            if (citer.hasNext()) {
+                cpiece = citer.next();
+            }
+            if (siter.hasNext()) {
+                spiece = siter.next();
+            }
+            while (cpiece != null || spiece != null) {
+                int comp = pc.compare(cpiece, spiece);
+                if (comp == 0) {
+                    if (citer.hasNext()) {
+                        cpiece = citer.next();
+                    } else {
+                        cpiece = null;
+                    }
+                    if (siter.hasNext()) {
+                        spiece = siter.next();
+                    } else {
+                        spiece = null;
+                    }
+                } else if (comp < 0) {
+                    log.warning("Client has extra piece [piece=" + 
+                            cpiece + "].");
+                    errors = true;
+                    if (citer.hasNext()) {
+                        cpiece = citer.next();
+                    } else {
+                        cpiece = null;
+                    }
+                } else {
+                    log.warning("Server has extra piece [piece=" +
+                            spiece + "].");
+                    errors = true;
+                    if (siter.hasNext()) {
+                        spiece = siter.next();
+                    } else {
+                        spiece = null;
+                    }
+                }
+            }
+            if (!errors) {
+                log.info("Sync on tick " + tick + " passed.");
+            } else {
+                System.exit(0);
+            }
+            return false;
+        }
+
+        protected ArrayList<Piece> _cpieces = new ArrayList<Piece>(),
+                                   _spieces = new ArrayList<Piece>();
+    }
+
+    protected static class pieceComparator
+        implements Comparator<Piece>
+    {
+        public int compare (Piece p1, Piece p2)
+        {
+            if (p1 == null && p2 == null) {
+                return 0;
+            } else if (p1 == null) {
+                return 1;
+            } else if (p2 == null) {
+                return -1;
+            }
+            return p1.pieceId - p2.pieceId;
+        }
+    }
+
     /** Listens for various different events and does the right thing. */
     protected class BoardEventListener
-        implements SetListener
+        implements SetListener, AttributeChangeListener
     {
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
@@ -1828,6 +1972,12 @@ public class BoardView extends BComponent
         public void entryRemoved (EntryRemovedEvent event) {
             if (event.getName().equals(BangObject.PIECES)) {
                 queuePieceRemoval((Piece)event.getOldEntry());
+            }
+        }
+
+        public void attributeChanged (AttributeChangedEvent event) {
+            if (event.getName().equals(BangObject.DEBUG_PIECES)) {
+                queueSyncAction();
             }
         }
     };
@@ -1923,6 +2073,12 @@ public class BoardView extends BComponent
         
     /** Temporary result variables. */
     protected ColorRGBA _color = new ColorRGBA();
+
+    /** The max id action. */
+    protected int _maxActionId = 0;
+
+    protected LinkedList<Integer> _syncQueue = new LinkedList<Integer>();
+    protected ArrayList<SyncAction> _syncActions = new ArrayList<SyncAction>();
     
     /** Used when intersecting the ground. */
     protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
