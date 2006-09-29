@@ -175,6 +175,10 @@ public class TutorialController
             // wait for the specified event
             _pending = (TutorialConfig.Wait)action;
 
+            // Log a message in an attempt to debug tutorial hangups
+            log.info("Tutorial controller waiting [event=" + _pending.event +
+                    ", allowAttack=" + _pending.allowAttack + "].");
+
             // only allow attacking for actions that allow it
             _view.view._attackEnabled = _pending.allowAttack;
 
