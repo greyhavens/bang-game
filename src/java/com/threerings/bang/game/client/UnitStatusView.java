@@ -211,7 +211,8 @@ public class UnitStatusView extends BWindow
             BComponent hit = super.getHitComponent(mx, my);
             // if we didn't find a hit and we're outside our normal width
             // then let it pass through
-            if (hit == this && mx > _selected.getWidth()) {
+            if (hit == this && (mx > _selected.getWidth() ||
+                        getHeight() - my > _selected.getHeight())) {
                 return null;
             }
             return hit;
