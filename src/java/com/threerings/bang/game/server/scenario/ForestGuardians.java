@@ -405,6 +405,11 @@ public class ForestGuardians extends Scenario
         @Override // documentation inherited
         public void tick (BangObject bangobj, short tick)
         {
+            // don't do anything between waves
+            if (_nextWaveCountdown >= 0) {
+                return;
+            }
+            
             // update bots according to logic
             _logic.tick(bangobj.getPieceArray(), tick);
             

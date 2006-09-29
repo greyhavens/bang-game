@@ -97,8 +97,7 @@ public class RobotWaveEffect extends Effect
             if (tree.isAlive()) {
                 living++;
             }
-            tree.growth = 0;
-            tree.damage = 50;
+            tree.init();
             reportEffect(observer, tree, TreeBedEffect.SPROUTED);
         }
         
