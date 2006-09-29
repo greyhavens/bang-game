@@ -778,7 +778,7 @@ public class BangBoard extends SimpleStreamableObject
                             }
                             _estate[idx] = (byte)tileelev;
                         }
-                        if (p.shadowBonus()) {
+                        if (p.shadowBonus() && _tstate[idx] >= O_BRIDGE) {
                             _tstate[idx] = O_BONUS;
                         }
                     }
