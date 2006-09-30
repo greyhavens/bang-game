@@ -631,6 +631,17 @@
     <component cclass="female/clothing_back" name="shoulder_cape"/>
   </article>
 
+  <article name="female_gorget_vest" townId="indian_post"
+           slot="clothing" scrip="2500" coins="1">
+    <component cclass="female/clothing_back" name="gorget_vest"/>
+  </article>
+
+  <article name="female_jacket_hatchet" townId="indian_post"
+           slot="clothing" scrip="2500" coins="1">
+    <component cclass="female/clothing_back" name="jacket_hatchet"/>
+    <component cclass="female/clothing_front" name="hatchet_jacket"/>
+  </article>
+
 
   <!-- female familiars: frontier town -->
   <article name="female_mini_blimp" townId="frontier_town"
