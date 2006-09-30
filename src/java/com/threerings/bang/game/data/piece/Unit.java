@@ -301,6 +301,14 @@ public class Unit extends Piece
     }
 
     /**
+     * Returns true if we shoot first and ask questions later.
+     */
+    public boolean shootsFirst ()
+    {
+        return false;
+    }
+
+    /**
      * Used for overriding the shoot function.
      */
     protected ShotEffect unitShoot (

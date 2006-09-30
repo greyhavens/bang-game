@@ -22,6 +22,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
@@ -251,6 +252,15 @@ public abstract class ScenarioInfo
         default:
             return false;
         }
+    }
+
+    /**
+     * Returns true if the shooter at the supplied location should be able to
+     * shoot their target.
+     */
+    public boolean validShot (Unit shooter, PointSet moves, Piece target)
+    {
+        return true;
     }
 
     /**

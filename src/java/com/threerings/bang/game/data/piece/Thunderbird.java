@@ -39,6 +39,12 @@ public class Thunderbird extends Unit
     }
 
     @Override // documentation inherited
+    public boolean shootsFirst ()
+    {
+        return true;
+    }
+
+    @Override // documentation inherited
     public boolean checkLineOfSight (
             BangBoard board, int tx, int ty, Piece target)
     {

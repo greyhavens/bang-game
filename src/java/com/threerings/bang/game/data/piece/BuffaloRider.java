@@ -23,6 +23,12 @@ import static com.threerings.bang.Log.log;
 public class BuffaloRider extends Unit
 {
     @Override // documentation inherited
+    public boolean shootsFirst ()
+    {
+        return true;
+    }
+
+    @Override // documentation inherited
     protected ShotEffect unitShoot (
             BangObject bangobj, Piece target, float scale)
     {

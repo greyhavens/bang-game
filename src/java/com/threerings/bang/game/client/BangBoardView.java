@@ -1330,7 +1330,8 @@ public class BangBoardView extends BoardView
                     }
                     possible = _selection.validTarget(_bangobj, p, false) &&
                         _selection.computeShotLocation(
-                                _board, p, moves, true) != null;
+                                _board, p, moves, true) != null &&
+                        _bangobj.scenario.validShot(_selection, moves, p);
                 } else if (_hover == target) {
                     possible = true;
                 }
@@ -1350,7 +1351,8 @@ public class BangBoardView extends BoardView
         for (Piece p : _bangobj.pieces) {
             if (!_selection.validTarget(_bangobj, p, false) ||
                 _selection.computeShotLocation(
-                    _board, p, moves, true) == null) {
+                    _board, p, moves, true) == null ||
+                !_bangobj.scenario.validShot(_selection, moves, p)) {
                 continue;
             }
 
