@@ -9,6 +9,7 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.event.ActionEvent;
@@ -52,9 +53,10 @@ public class ParlorList extends BContainer
             TableLayout.STRETCH);
         add(new BScrollPane(_list), BorderLayout.CENTER);
 
-        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
-        String label = ctx.xlate(SaloonCodes.SALOON_MSGS, "m.create");
+        BContainer buttons = GroupLayout.makeHBox(GroupLayout.RIGHT);
+        String label = ctx.xlate(SaloonCodes.SALOON_MSGS, "m.create_parlor");
         buttons.add(_enterParlor = new BButton(label, this, "create"));
+        buttons.add(new Spacer(20, 5));
         add(buttons, BorderLayout.SOUTH);
     }
 
@@ -169,7 +171,7 @@ public class ParlorList extends BContainer
     {
         if (info == null) {
             _enterParlor.setText(_ctx.xlate(
-                        SaloonCodes.SALOON_MSGS, "m.create"));
+                        SaloonCodes.SALOON_MSGS, "m.create_parlor"));
             _enterParlor.setAction("create");
         } else {
             _enterParlor.setText(_ctx.xlate(

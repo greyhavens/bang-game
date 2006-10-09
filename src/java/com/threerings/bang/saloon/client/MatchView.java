@@ -63,7 +63,7 @@ public class MatchView extends BContainer
                  GroupLayout.FIXED);
         main.add(_right = GroupLayout.makeVBox(GroupLayout.CENTER));
         ((GroupLayout)_right.getLayoutManager()).setGap(0);
-        main.setPreferredSize(new Dimension(395, 203));
+        main.setPreferredSize(new Dimension(395, 224));
         add(main, GroupLayout.FIXED);
 
         // this will contain our current criterion
@@ -94,6 +94,7 @@ public class MatchView extends BContainer
         _chat = new ChatView(_ctx, _ctx.getChatDirector()) {
             /* ChatView() */ {
                 _text.setStyleClass("match_chat_text");
+                _input.setStyleClass("match_chat_input");
             }
             protected boolean handlesType (String localType) {
                 return "match_chat".equals(localType);
@@ -105,10 +106,13 @@ public class MatchView extends BContainer
                     _input.getText());
             }
         };
-        ((BorderLayout)_chat.getLayoutManager()).setGaps(2, 3);
+        ((BorderLayout)_chat.getLayoutManager()).setGaps(2, 0);
         _chat.setEnabled(false);
         icon = new ImageIcon(_ctx.loadImage("ui/chat/bubble_icon.png"));
-        _chat.setChatButton(new BButton(icon, ""));
+        BButton chat = new BButton(icon, "");
+        chat.setStyleClass("arrow_button");
+        _chat.setChatButton(chat);
+        _chat.setStyleClass("match_chat");
         add(_chat);
     }
 

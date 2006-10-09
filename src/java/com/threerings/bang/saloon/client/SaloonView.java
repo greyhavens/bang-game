@@ -39,7 +39,7 @@ public class SaloonView extends ShopView
         add(new WalletLabel(ctx, true), new Rectangle(25, 40, 150, 40));
         add(createHelpButton(), new Point(800, 25));
         add(new TownButton(ctx), new Point(870, 25));
-        add(_paper = new PaperView(ctx), new Rectangle(48, 68, 516, 576));
+        add(_paper = new PaperView(ctx), new Rectangle(542, 68, 465, 576));
 
         add(_parlist = new ParlorList(ctx), PARLIST_RECT);
 
@@ -140,9 +140,9 @@ public class SaloonView extends ShopView
     protected ParlorList _parlist;
 
     protected static final Rectangle CRIT_RECT =
-        new Rectangle(594, 328, 395, 233);
+        new Rectangle(77, 305, 440, 255);
     protected static final Rectangle MATCH_RECT =
-        new Rectangle(594, 77, 395, 493);
+        new Rectangle(77, 114, 440, 456);
     protected static final Rectangle PARLIST_RECT =
-        new Rectangle(610, 85, 365, 170);
+        new Rectangle(95, 81, 407, 168);
 }

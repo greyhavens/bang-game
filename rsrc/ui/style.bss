@@ -1380,7 +1380,8 @@ barber_char_cost {
 // Saloon styles
 
 news_view {
-  padding: 10 10 0 10;
+  padding: 18 10 10 10;
+  // border: 1 solid #FFFFFF;
 }
 
 news_nameplate {
@@ -1396,6 +1397,30 @@ news_masthead {
 news_mastlabel {
   color: #553817;
   font: "Dom Casual" plain 14;
+}
+
+news_news {
+  background: image "ui/saloon/news_normal.png";
+}
+
+news_news:selected {
+  background: image "ui/saloon/news_selected.png";
+}
+
+news_folks {
+  background: image "ui/saloon/folks_normal.png";
+}
+
+news_folks:selected {
+  background: image "ui/saloon/folks_selected.png";
+}
+
+news_top_scores {
+  background: image "ui/saloon/top_scores_normal.png";
+}
+
+news_top_scores:selected {
+  background: image "ui/saloon/top_scores_selected.png";
 }
 
 news_contents {
@@ -1476,13 +1501,21 @@ match_slot {
 }
 
 match_chat_header {
-  padding: 28 0 7 25;
+  padding: 16 0 5 8;
+}
+
+match_chat {
+  padding: 0 3 0 6;
 }
 
 match_chat_text {
-  font: "Dom Casual" plain 17;
-  padding: 2 4;
-//  border: 1 solid #000000;
+  font: "Dom Casual" plain 16;
+  // border: 1 solid #000000;
+}
+
+match_chat_input {
+  parent: "textfield";
+  font: "Dom Casual" plain 16;
 }
 
 lobby_chat {
