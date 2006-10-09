@@ -1,4 +1,4 @@
-486
+489
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -6,8 +6,10 @@ female/clothing_back := duster_smoking := 326
 female/clothing_back := frontier_dress := 175
 female/clothing_back := frontier_dress_holding := 176
 female/clothing_back := gatherer := 393
+female/clothing_back := gorget_vest := 487
 female/clothing_back := gunslinger := 80
 female/clothing_back := hunter := 394
+female/clothing_back := jacket_hatchet := 488
 female/clothing_back := kneel := 334
 female/clothing_back := kneel_rifle := 327
 female/clothing_back := madam_cash := 316
@@ -34,6 +36,7 @@ female/clothing_front := cash_madam := 328
 female/clothing_front := earing_hunter := 397
 female/clothing_front := fan_bodice := 183
 female/clothing_front := flirt_peasant_dress := 184
+female/clothing_front := hatchet_jacket := 489
 female/clothing_front := madam_cash := 318
 female/clothing_front := panning_kneel := 335
 female/clothing_front := peaked_boots := 329
