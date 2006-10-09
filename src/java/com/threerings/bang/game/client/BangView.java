@@ -94,13 +94,13 @@ public class BangView extends BWindow
      * display has not yet been configured, this will trigger that
      * configuration as well.
      */
-    public void setPhase (int phase)
+    public boolean setPhase (int phase)
     {
         // if we're not added to the UI hierarchy yet, we need to hold off a
         // moment
         if (!isAdded() || _preparing) {
             _pendingPhase = phase;
-            return;
+            return false;
         }
         _pendingPhase = -1;
 
@@ -113,7 +113,7 @@ public class BangView extends BWindow
         // prepare prior to starting whichever phase is first
         if (!_prepared && !prepareForRound(config, pidx)) {
             _pendingPhase = phase;
-            return; // will be called again when preparation is finished
+            return false; // will be called again when preparation is finished
         }
 
         switch (phase) {
@@ -153,7 +153,12 @@ public class BangView extends BWindow
             view.startRound();
             _perftrack.start();
             break;
+
+        case BangObject.POST_ROUND:
+            endRound();
+            break;
         }
+        return true;
     }
 
     /**

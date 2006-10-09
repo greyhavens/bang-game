@@ -644,6 +644,9 @@ public class StatsView extends SteelWindow
         } else {
             statSet = _ctrl.getStatSetArray(round);
         }
+        if (statSet == null) {
+            return;
+        }
 
         // which stats are we displaying
         ArrayList<Stat.Type> statTypes = new ArrayList<Stat.Type>();

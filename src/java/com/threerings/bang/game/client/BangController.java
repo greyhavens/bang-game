@@ -546,14 +546,19 @@ public class BangController extends GameController
         if (event.getName().equals(BangObject.STATS) &&
             // we handle things specially in the tutorial and practice
             !_config.tutorial && !_config.practice) {
-            // keep the stats for this round around for later
-            _statMap.put(_bangobj.roundId, _bangobj.stats);
-            // create our stats view now that we have our stats; we'll hold off
-            // on showing it until both post-round conditions have been met
-            _statsView = _bangobj.scenario.getStatsView(_ctx);
-            _statsView.init(BangController.this, _bangobj, true);
-            _postRoundMultex.satisfied(Multex.CONDITION_TWO);
+            storeStats();
         }
+    }
+
+    protected void storeStats ()
+    {
+        // keep the stats for this round around for later
+        _statMap.put(_bangobj.roundId, _bangobj.stats);
+        // create our stats view now that we have our stats; we'll hold off
+        // on showing it until both post-round conditions have been met
+        _statsView = _bangobj.scenario.getStatsView(_ctx);
+        _statsView.init(BangController.this, _bangobj, true);
+        _postRoundMultex.satisfied(Multex.CONDITION_TWO);
     }
 
     @Override // documentation inherited
@@ -573,12 +578,20 @@ public class BangController extends GameController
             return true;
 
         } else if (state == BangObject.BUYING_PHASE) {
+            // If we're still showing the stats (ie. watching the game),
+            // force them to move on since the next round will be starting
+            // shortly
+            if (_statsView != null) {
+                _ctx.getBangClient().clearPopup(_statsView, true);
+                statsDismissed();
+            }
             _view.setPhase(state);
             return true;
 
         } else if (state == BangObject.POST_ROUND) {
             // let the view know that this round is over
-            _view.endRound();
+            _view.setPhase(state);
+            _startRoundMultex.reset();
 
             // fade out the current board and prepare to fade in the next
             _view.view.doInterRoundMarqueeFade();
@@ -617,7 +630,7 @@ public class BangController extends GameController
         super.gameWillReset();
 
         // let the view know that the final round is over
-        _view.endRound();
+        _view.setPhase(BangObject.POST_ROUND);
     }
 
     @Override // documentation inherited
@@ -625,8 +638,15 @@ public class BangController extends GameController
     {
         super.gameDidEnd();
 
-        // let interested parties know that the final round is over
-        _view.endRound();
+        // Let interested parties know that the final round is over.
+        // If setPhase returns false it means we've just started watching,
+        // so we'll jump straight to the end game stats view
+        if (!_view.setPhase(BangObject.POST_ROUND)) {
+            storeStats();
+            _postRoundMultex.satisfied(Multex.CONDITION_ONE);
+            return;
+        }
+
         if (_tutcont != null) {
             _tutcont.gameDidEnd();
             // no "game over" marquee for tutorials
