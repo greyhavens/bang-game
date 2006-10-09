@@ -1359,10 +1359,6 @@ fa_inner_box {
   padding: 20 50;
 }
 
-barber_char_content {
-  padding: 25;
-}
-
 barber_char_header {
   font: "Old Town Wide" plain 40;
   text-align: center;

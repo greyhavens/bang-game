@@ -45,20 +45,25 @@ public class WearClothingView extends BContainer
         for (int ii = 0; ii < tabs.length; ii++) {
             tabs[ii] = AvatarLogic.SLOTS[ii].name;
         }
+        final BImage blankbg = ctx.loadImage("ui/barber/tabs_back.png");
         final BImage tabbg = ctx.loadImage("ui/barber/side_change_clothes.png");
         add(new HackyTabs(ctx, true, "ui/barber/tab_", tabs, 54, 30) {
             protected void wasAdded () {
                 super.wasAdded();
+                blankbg.reference();
                 tabbg.reference();
             }
             protected void wasRemoved () {
                 super.wasRemoved();
+                blankbg.release();
                 tabbg.release();
             }
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
-                tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42,
-                    _alpha);
+                blankbg.render(
+                    renderer, -5, _height - blankbg.getHeight() - 5, _alpha);
+                tabbg.render(
+                    renderer, 0, _height - tabbg.getHeight() - 42, _alpha);
             }
             protected void tabSelected (int index) {
                 setSlot(index);

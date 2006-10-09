@@ -88,6 +88,7 @@ public class NewLookView extends BContainer
         _buy.setStyleClass("big_button");
 
         _palette = new IconPalette(null, 4, 3, ChoiceIcon.ICON_SIZE, 1);
+        _palette.setPaintBackground(true);
         _palette.setAllowsEmptySelection(false);
         add(_palette, new Rectangle(139, 5, ChoiceIcon.ICON_SIZE.width*4,
                                     ChoiceIcon.ICON_SIZE.height*3+27));
@@ -131,6 +132,7 @@ public class NewLookView extends BContainer
             }
         }
         String[] tarray = tabs.toArray(new String[tabs.size()]);
+        final BImage blankbg = _ctx.loadImage("ui/barber/tabs_back.png");
         final BImage tabbg = _ctx.loadImage("ui/barber/side_new_look.png");
         final BImage malebg = isMale ?
             _ctx.loadImage("ui/barber/side_new_look_male.png") : null;
@@ -138,6 +140,7 @@ public class NewLookView extends BContainer
             ctx, true, "ui/barber/tab_", tarray, 54, 30) {
             protected void wasAdded () {
                 super.wasAdded();
+                blankbg.reference();
                 tabbg.reference();
                 if (malebg != null) {
                     malebg.reference();
@@ -145,6 +148,7 @@ public class NewLookView extends BContainer
             }
             protected void wasRemoved () {
                 super.wasRemoved();
+                blankbg.release();
                 tabbg.release();
                 if (malebg != null) {
                     malebg.release();
@@ -152,8 +156,10 @@ public class NewLookView extends BContainer
             }
             protected void renderBackground (Renderer renderer) {
                 super.renderBackground(renderer);
-                tabbg.render(renderer, 0, _height - tabbg.getHeight() - 42,
-                    _alpha);
+                blankbg.render(
+                    renderer, -5, _height - blankbg.getHeight() - 5, _alpha);
+                tabbg.render(
+                    renderer, 0, _height - tabbg.getHeight() - 42, _alpha);
                 if (malebg != null) {
                     malebg.render(
                         renderer, 0, _height - malebg.getHeight() - 42,

@@ -24,6 +24,7 @@ public class ArticlePalette extends IconPalette
                            PickLookView view)
     {
         super(inspector, 4, 3, ItemIcon.ICON_SIZE, 1);
+        setPaintBackground(true);
         _ctx = ctx;
         _view = view;
     }

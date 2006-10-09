@@ -15,6 +15,7 @@ import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Point;
+import com.jmex.bui.util.Rectangle;
 
 import com.threerings.util.MessageBundle;
 
@@ -44,15 +45,8 @@ public class EditCharacterView extends BContainer
         // add a display of our current look
         add(new PickLookView(ctx, true), new Point(707, 135));
 
-        // everything else needs to go in the main content area
-        BContainer contents = new BContainer(
-            GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.CENTER,
-                GroupLayout.STRETCH));
-        contents.setStyleClass("barber_char_content");
-        add(contents, WearClothingView.CONTENT_RECT);
-
         // create the UI for configuring our poses
-        contents.add(createHeader("poses"));
+        add(new BLabel(_msgs.get("m.poses_tip"), "barber_char_tip"), POSES_TIP);
 
         PlayerObject user = ctx.getUserObject();
         BContainer poses = new BContainer(new TableLayout(2, 5, 5));
@@ -69,23 +63,24 @@ public class EditCharacterView extends BContainer
             });
             poses.add(looks);
         }
-        contents.add(poses);
-
-        contents.add(new Spacer(25, 25));
+        add(poses, POSES_RECT);
 
         // create the UI for changing our handle
-        contents.add(createHeader("handle"));
+        add(new BLabel(_msgs.get("m.handle_tip"), "barber_char_tip"),
+            HANDLE_TIP);
 
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.LEFT);
         ncont.add(new BLabel(_msgs.get("m.handle")));
         ncont.add(_handle = new BTextField());
         _handle.setPreferredWidth(150);
+        ncont.add(new Spacer(5, 5));
         ncont.add(new BLabel(_msgs.get("m.handle_cost"), "barber_char_cost"));
         MoneyLabel cost = new MoneyLabel(ctx);
         cost.setMoney(BarberCodes.HANDLE_CHANGE_SCRIP_COST,
             BarberCodes.HANDLE_CHANGE_COIN_COST, false);
         cost.setStyleClass("m.barber_char_cost");
         ncont.add(cost);
+        ncont.add(new Spacer(5, 5));
         ncont.add(_buy = new BButton(_msgs.get("m.buy_handle"), "buy_handle"));
         _buy.addListener(new ActionListener() {
             public void actionPerformed (ActionEvent event) {
@@ -93,7 +88,7 @@ public class EditCharacterView extends BContainer
             }
         });
         _buy.setEnabled(false);
-        contents.add(ncont);
+        add(ncont, HANDLE_RECT);
 
         // configure our handle text field with standard validators
         _handle.setDocument(new CreateAvatarView.HandleDocument());
@@ -159,4 +154,16 @@ public class EditCharacterView extends BContainer
 
     protected BTextField _handle;
     protected BButton _buy;
+
+    protected static final Point POSES_TIP = new Point(170, 450);
+    protected static final Rectangle POSES_RECT =
+        new Rectangle(100, 250, 500, 180);
+
+    protected static final Point HANDLE_TIP = new Point(200, 220);
+    protected static final Rectangle HANDLE_RECT =
+        new Rectangle(100, 160, 500, 40);
+
+    protected static final Point DISCARDS_TIP = new Point(250, 75);
+    protected static final Rectangle DISCARDS_RECT =
+        new Rectangle(100, 50, 200, 100);
 }
