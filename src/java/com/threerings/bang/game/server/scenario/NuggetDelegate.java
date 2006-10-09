@@ -8,6 +8,7 @@ import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.FoolsNuggetEffect;
+import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Counter;
@@ -81,7 +82,13 @@ public class NuggetDelegate extends CounterDelegate
             effect.dropping = true;
             
         } else if (_allowClaimWithdrawal && counter.owner != unit.owner &&
-                   counter.count > 0 && unit.canActivateBonus(_nuggetBonus)) {
+                   counter.count > 0 && unit.canActivateBonus(_nuggetBonus) &&
+                   !NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
+            if (unit.holding != null) {
+                HoldEffect dropEffect = HoldEffect.dropBonus(
+                        bangobj, unit, -1, unit.holding);
+                _bangmgr.deployEffect(unit.owner, dropEffect);
+            }
             effect = new NuggetEffect();
             effect.dropping = false;
         }
