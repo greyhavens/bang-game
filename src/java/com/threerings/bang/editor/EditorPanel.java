@@ -174,6 +174,9 @@ public class EditorPanel extends JPanel
         createCheckBoxMenuItem(view, msgs.get("m.menu_wireframe"),
             KeyEvent.VK_W, KeyEvent.VK_W, EditorController.TOGGLE_WIREFRAME,
             false);
+        createCheckBoxMenuItem(view, msgs.get("m.menu_bounds"),
+            KeyEvent.VK_B, KeyEvent.VK_B, EditorController.TOGGLE_BOUNDS,
+            false);
         createCheckBoxMenuItem(view, msgs.get("m.menu_grid"),
             KeyEvent.VK_G, KeyEvent.VK_G, EditorController.TOGGLE_GRID,
             true);

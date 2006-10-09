@@ -264,7 +264,7 @@ public class BoardView extends BComponent
         _hnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
 
         // we'll hang all of our pieces off this node
-        _pnode = new Node("pieces");
+        _pnode = createPieceNode();
         if (Config.displayModels) {
             _node.attachChild(_pnode);
         }
@@ -971,6 +971,14 @@ public class BoardView extends BComponent
         _ctx.getRenderer().clearQueue();
     }
 
+    /**
+     * Creates the piece node.
+     */
+    protected Node createPieceNode ()
+    {
+        return new Node("pieces");
+    }
+    
     /**
      * Checks whether or not we should show the sky node (i.e., whether the
      * player will ever see the sky).

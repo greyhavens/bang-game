@@ -18,11 +18,14 @@ import com.jme.math.FastMath;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.Renderer;
 import com.jme.scene.Line;
+import com.jme.scene.Node;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.WireframeState;
 import com.jme.util.geom.BufferUtils;
+import com.jme.util.geom.Debugger;
 
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
@@ -158,6 +161,14 @@ public class EditorBoardView extends BoardView
         _node.updateRenderState();
     }
 
+    /**
+     * Activates or deactivates bounding volume rendering.
+     */
+    public void toggleBounds ()
+    {
+        _showBounds = !_showBounds;
+    }
+    
     /**
      * Shows or hides the unoccupiable tile highlights.
      */
@@ -842,6 +853,21 @@ public class EditorBoardView extends BoardView
     }
 
     @Override // documentation inherited
+    protected Node createPieceNode ()
+    {
+        return new Node("pieces") {
+            public void draw (Renderer r) {
+                super.draw(r);
+                if (_showBounds) {
+                    for (int ii = 0, nn = getQuantity(); ii < nn; ii++) {
+                        Debugger.drawBounds(getChild(ii), r);
+                    }
+                }
+            }
+        };
+    }
+    
+    @Override // documentation inherited
     protected boolean shouldShowStarter (Piece piece)
     {
         // always show everything
@@ -1283,6 +1309,9 @@ public class EditorBoardView extends BoardView
     /** Whether or not to show the highlights. */
     protected boolean _showHighlights;
 
+    /** Whether or not to show the bounding volumes. */
+    protected boolean _showBounds;
+    
     /** The in-progress edits, if any. */
     protected HeightfieldEdit _hfedit;
     protected TerrainEdit _tedit;
