@@ -48,9 +48,6 @@ public class RepairViz extends ParticleEffectViz
         // and the swirl effect
         displayParticles(target, _swirls[0].particles, true);
         displayParticles(target, _swirls[1].particles, true);
-        
-        // note that the effect was displayed
-        
     }
     
     @Override // documentation inherited
