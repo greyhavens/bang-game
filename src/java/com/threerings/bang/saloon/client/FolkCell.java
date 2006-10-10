@@ -21,6 +21,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.data.OccupantInfo;
 
+import com.threerings.bang.chat.client.PlaceChatView;
 import com.threerings.bang.client.InvitePardnerDialog;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.WantedPosterView;
@@ -41,13 +42,14 @@ import static com.threerings.bang.Log.log;
 public class FolkCell extends BContainer
     implements Comparable<FolkCell>
 {
-    public FolkCell (FolkView view, Handle handle, boolean isPardner)
+    public FolkCell (BangContext ctx, PlaceChatView chat, Handle handle,
+                     boolean isPardner)
     {
         super(GroupLayout.makeHoriz(GroupLayout.LEFT));
         setPreferredSize(new Dimension(200, 18));
 
-        _ctx = view._ctx;
-        _view = view;
+        _ctx = ctx;
+        _chat = chat;
         _handle = handle;
         _isPardner = isPardner;
 
@@ -169,7 +171,7 @@ public class FolkCell extends BContainer
         public void actionPerformed (ActionEvent event)
         {
             if ("chat".equals(event.getAction())) {
-                _view._folkTabs.openUserTab(_handle, getAvatar(), true);
+                _chat.openUserTab(_handle, getAvatar(), true);
 
             } else if ("remove".equals(event.getAction())) {
                 OccupantInfo info =
@@ -205,7 +207,7 @@ public class FolkCell extends BContainer
 
             } else if ("invite_pardner".equals(event.getAction())) {
                 _ctx.getBangClient().displayPopup(
-                    new InvitePardnerDialog(_ctx, _handle), true, 400);
+                    new InvitePardnerDialog(_ctx, null, _handle), true, 400);
 
             } else if ("view_poster".equals(event.getAction())) {
                 WantedPosterView.displayWantedPoster(_ctx, _handle);
@@ -216,8 +218,8 @@ public class FolkCell extends BContainer
     /** Provides access to client services. */
     protected BangContext _ctx;
 
-    /** The view with whom we're working. */
-    protected FolkView _view;
+    /** The chat view we use to chat with our folk. */
+    protected PlaceChatView _chat;
 
     /** The handle of the player this cell represents */
     protected Handle _handle;

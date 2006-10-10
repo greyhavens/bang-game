@@ -3,10 +3,7 @@
 
 package com.threerings.bang.saloon.client;
 
-import com.jme.renderer.Renderer;
-
 import com.jmex.bui.BButton;
-import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -55,10 +52,9 @@ public class ParlorView extends ShopView
         add(new BButton(_msgs.get("m.to_saloon"), this, "to_saloon"),
             new Point(870, 25));
 
-        add(_config = new ParlorConfigView(_ctx),
-            new Rectangle(103, 124, 410, 132));
-        add(_chat = new PlaceChatView(_ctx, _msgs.get("m.parlor_chat")),
-            new Rectangle(570, 75, 425, 535));
+        add(_config = new ParlorConfigView(_ctx), SaloonView.PARLIST_RECT);
+        add(_chat = new PlaceChatView(ctx, _msgs.get("m.parlor_chat")),
+            new Rectangle(552, 78, 445, 551));
 
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
@@ -66,9 +62,6 @@ public class ParlorView extends ShopView
 
         // create our config view, but we'll add it later
         _gconfig = new ParlorGameConfigView(_ctx, _status);
-
-        // load up our extra background
-        _bgoverlay = ctx.loadImage("ui/saloon/parlor_bg.png");
     }
 
     /**
@@ -89,7 +82,7 @@ public class ParlorView extends ShopView
         }
 
         // display a match view for this pending match
-        add(_mview = new ParlorMatchView(_ctx, _parobj), GAME_RECT);
+        add(_mview = new ParlorMatchView(_ctx, _parobj), SaloonView.CRIT_RECT);
     }
 
     /**
@@ -106,7 +99,7 @@ public class ParlorView extends ShopView
 
         // redisplay the criterion view
         if (!_gconfig.isAdded()) {
-            add(_gconfig, GAME_RECT);
+            add(_gconfig, SaloonView.CRIT_RECT);
         }
     }
 
@@ -134,7 +127,6 @@ public class ParlorView extends ShopView
 
         _gconfig.willEnterPlace(_parobj);
         _config.willEnterPlace(_parobj);
-        _chat.willEnterPlace(plobj);
 
         // show the match view if there's a game already in progress
         if (_parobj.playerOids != null) {
@@ -165,33 +157,11 @@ public class ParlorView extends ShopView
     {
         _gconfig.didLeavePlace();
         _config.didLeavePlace();
-        _chat.didLeavePlace(plobj);
 
         if (_parobj != null) {
             _parobj.removeListener(_occlist);
             _parobj = null;
         }
-    }
-
-    @Override // documentation inherited
-    protected void wasAdded ()
-    {
-        super.wasAdded();
-        _bgoverlay.reference();
-    }
-
-    @Override // documentation inherited
-    protected void wasRemoved ()
-    {
-        super.wasRemoved();
-        _bgoverlay.release();
-    }
-
-    @Override // documentation inherited
-    protected void renderBackground (Renderer renderer)
-    {
-        super.renderBackground(renderer);
-        _bgoverlay.render(renderer, 39, 65, _alpha);
     }
 
     @Override // documentation inherited
@@ -215,21 +185,17 @@ public class ParlorView extends ShopView
             }
         }
         protected void reportOccupant (String msg, Name who) {
-            _chat.displayInfo(SaloonCodes.SALOON_MSGS,
-                MessageBundle.tcompose(msg, who));
+            msg = MessageBundle.tcompose(msg, who);
+            _chat.displayInfo(SaloonCodes.SALOON_MSGS, msg);
         }
     };
 
     protected ParlorObject _parobj;
     protected ParlorController _ctrl;
-    protected BImage _bgoverlay;
     protected StatusLabel _status;
     protected PlaceChatView _chat;
 
     protected ParlorGameConfigView _gconfig;
     protected ParlorConfigView _config;
     protected ParlorMatchView _mview;
-
-    protected static final Rectangle GAME_RECT =
-        new Rectangle(102, 315, 410, 232);
 }

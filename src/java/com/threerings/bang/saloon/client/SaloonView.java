@@ -47,15 +47,6 @@ public class SaloonView extends ShopView
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
         _status.setText(getShopTip());
-
-//         // add a test game button for developer testing
-//         if (ctx.getUserObject().tokens.isAdmin()) {
-//             BButton btn;
-//             add(btn = new BButton(
-//                     new ImageIcon(ctx.loadImage("ui/icons/dice.png")),
-//                     _ctrl, SaloonController.TEST_GAME), new Point(895, 274));
-//             btn.setStyleClass("arrow_button");
-//         }
     }
 
     /**

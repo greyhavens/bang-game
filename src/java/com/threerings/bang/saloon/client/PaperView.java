@@ -23,6 +23,7 @@ import com.jmex.bui.text.HTMLView;
 import com.samskivert.util.ResultListener;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.chat.client.PlaceChatView;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.CachedDocument;
@@ -59,12 +60,23 @@ public class PaperView extends BContainer
 
         add(_contcont = new BContainer(new BorderLayout()));
 
-        // read in the main news page
-        refreshNews(false);
+        // this container will display the friendly folks UI
+        _folks = new BContainer(GroupLayout.makeVStretch());
+        _folks.add(_chat = new PaperChatView(_ctx, "m.saloon_chat"));
 
         // when the news is loaded; it will display the news tab, but we need
         // to hand set the proper navigation button to selected
         _navi[0].setSelected(true);
+
+        // any time after the first that we enter the saloon during a session,
+        // start on the friendly folks page
+        if (_shownNews) {
+            displayPage(1);
+        } else {
+            // load and display the news page
+            refreshNews(false);
+            _shownNews = true;
+        }
     }
 
     /**
@@ -73,22 +85,22 @@ public class PaperView extends BContainer
     public void init (SaloonObject salobj)
     {
         _salobj = salobj;
-        // create the folkview as soon as we're ready
-        _folks = new FolkView(_ctx, this, _salobj);
+        // create the folkview now that we have our saloon object
+        _folks.add(0, new FolkView(_ctx, _salobj, _chat), GroupLayout.FIXED);
     }
 
     /**
-     * Called when the FolkView chat interface demands focus.
+     * Returns the chat view
      */
-    public void folkChatAlert ()
+    public PlaceChatView getChat ()
     {
-        displayPage(1);
+        return _chat;
     }
 
     protected BToggleButton createMastheadButton (String id)
     {
         BToggleButton button = new BToggleButton("", id);
-        button.addListener(_listener);
+        button.addListener(_navigator);
         button.setStyleClass("news_" + id);
         return button;
     }
@@ -176,6 +188,19 @@ public class PaperView extends BContainer
         }
     }
 
+    /** Displays place and player to player chat. */
+    protected class PaperChatView extends PlaceChatView
+    {
+        public PaperChatView (BangContext ctx, String title) {
+            super(ctx, ctx.xlate(SaloonCodes.SALOON_MSGS, title));
+        }
+        protected boolean displayTabs () {
+            displayPage(1);
+            return true;
+        }
+    }
+
+    /** Used to asynchronously update the news. */
     protected ResultListener<String> _newsup = new ResultListener<String>() {
         public void requestCompleted (String result) {
             updateNews(result);
@@ -197,7 +222,8 @@ public class PaperView extends BContainer
         }
     };
 
-    protected ActionListener _listener = new ActionListener() {
+    /** Listens for navigation button presses. */
+    protected ActionListener _navigator = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             String action = event.getAction();
             if (action.equals("news")) {
@@ -214,16 +240,20 @@ public class PaperView extends BContainer
     protected MessageBundle _msgs;
     protected SaloonObject _salobj;
 
+    protected int _pageNo;
     protected BContainer _contcont;
     protected BToggleButton[] _navi;
-    protected TopScoreView _topscore;
-    protected FolkView _folks;
+
     protected HTMLView _contents;
     protected BScrollPane _contscroll;
 
-    protected int _pageNo;
+    protected BContainer _folks;
+    protected PaperChatView _chat;
+
+    protected TopScoreView _topscore;
 
     protected static CachedDocument _news;
+    protected static boolean _shownNews;
 
     protected static final long NEWS_REFRESH_INTERVAL = 60 * 60 * 1000L;
     protected static final String NEWS_URL = "_news_incl.html";

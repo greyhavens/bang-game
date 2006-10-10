@@ -9,7 +9,6 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.layout.BorderLayout;
-import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
@@ -40,25 +39,24 @@ import static com.threerings.bang.Log.log;
 public class FolkView extends BContainer
     implements SetListener, AttributeChangeListener, ElementUpdateListener
 {
-    public FolkView (BangContext ctx, PaperView paper, SaloonObject salobj)
+    public FolkView (BangContext ctx, SaloonObject salobj, PlaceChatView chat)
     {
-        super(GroupLayout.makeVStretch());
+        super(new BorderLayout());
+
         _ctx = ctx;
-        _paper = paper;
         _salobj = salobj;
+        _chat = chat;
         _user = ctx.getUserObject();
 
-        // and the dynamic list
         TableLayout listLayout = new TableLayout(2, 2, 10);
         listLayout.setEqualRows(true);
         _folkList = new BContainer(listLayout);
         BScrollPane scrolly = new BScrollPane(_folkList);
         scrolly.setStyleClass("folk_list_box");
-        scrolly.setPreferredSize(new Dimension(434, 137));
-        add(scrolly, GroupLayout.FIXED);
+        add(scrolly, BorderLayout.CENTER);
 
-        // and finally create (but do not add) the chat interface
-        add(_folkTabs = new PardnerChatTabs(ctx));
+        // we don't want to grow beyond the size of our background image
+        setPreferredSize(new Dimension(434, 137));
     }
 
     // from interface SetListener
@@ -68,7 +66,7 @@ public class FolkView extends BContainer
             PardnerEntry entry = (PardnerEntry) eae.getEntry();
             // if our new pardner is here with us, add to display
             if (_salobj.getOccupantInfo((Handle) entry.getKey()) != null) {
-                insertCell(new FolkCell(this, entry.handle, true));
+                insertCell(new FolkCell(_ctx, _chat, entry.handle, true));
             }
 
         } else if (SaloonObject.OCCUPANT_INFO.equals(eae.getName())) {
@@ -76,7 +74,8 @@ public class FolkView extends BContainer
             // if the new occupant is a friend of pardner, add to display
             boolean pard = _user.pardners.containsKey(info.username);
             if (pard || _user.isFriend(info.playerId)) {
-                insertCell(new FolkCell(this, (Handle) info.username, pard));
+                Handle handle = (Handle)info.username;
+                insertCell(new FolkCell(_ctx, _chat, handle, pard));
             }
         }
     }
@@ -132,6 +131,7 @@ public class FolkView extends BContainer
         _user.addListener(this);
         // register as a listener for saloon occupant updates
         _salobj.addListener(this);
+
         // fill the list with initial data
         recomputeList();
     }
@@ -141,6 +141,7 @@ public class FolkView extends BContainer
     {
         super.wasRemoved();
 
+        // clear out our listeners
         _user.removeListener(this);
         _salobj.removeListener(this);
     }
@@ -155,14 +156,15 @@ public class FolkView extends BContainer
         for (PardnerEntry entry : _user.pardners) {
             // list any pardner who is in our saloon
             if (_salobj.getOccupantInfo(entry.handle) != null) {
-                insertCell(new FolkCell(this, entry.handle, true));
+                insertCell(new FolkCell(_ctx, _chat, entry.handle, true));
             }
         }
         for (OccupantInfo info : _salobj.occupantInfo) {
             // if they're our friend but not yet listed, do list them
             if (_user.isFriend(((BangOccupantInfo) info).playerId) &&
                 !_folks.containsKey(info.username)) {
-                insertCell(new FolkCell(this, (Handle) info.username, false));
+                Handle handle = (Handle)info.username;
+                insertCell(new FolkCell(_ctx, _chat, handle, false));
             }
         }
     }
@@ -189,47 +191,29 @@ public class FolkView extends BContainer
         _folkList.add(cell);
     }
 
-    /** Remove a FolkCell from the friendly folks list */
+    /** Removes a cell from the friendly folks list. */
     protected void removeCell (FolkCell cell)
     {
         _folks.remove(cell._handle);
         _folkList.remove(cell);
     }
 
-    /** A subclass that knows how to show and hide the chat tabs */
-    protected class PardnerChatTabs extends PlaceChatView
-    {
-        public PardnerChatTabs (BangContext ctx)
-        {
-            super(ctx, ctx.xlate(SaloonCodes.SALOON_MSGS, "m.saloon_chat"));
-        }
+    /** A reference to our context */
+    protected BangContext _ctx;
 
-        @Override // from TabbedChatView
-        protected boolean displayTabs () {
-            _paper.folkChatAlert();
-            return true;
-        }
-    }
+    /** The chat view in which we display chat with folks */
+    protected PlaceChatView _chat;
 
-    /** Maps handles of displayed people to their display cells */
-    protected HashMap<Handle, FolkCell> _folks =
-        new HashMap<Handle, FolkCell>();
-
-    /** The table containing the actual FolkCell components */
-    protected BContainer _folkList;
-
-    /** The tabbed chat view for our folks */
-    protected PardnerChatTabs _folkTabs;
+    /** A reference to the saloon we're in */
+    protected SaloonObject _salobj;
 
     /** A reference to our player object */
     protected PlayerObject _user;
 
-    /** A reference to our context */
-    protected BangContext _ctx;
+    /** The table containing the actual FolkCell components */
+    protected BContainer _folkList;
 
-    /** A reference to the paper view in which we are but one page */
-    protected PaperView _paper;
-
-    /** A reference to the saloon we're in */
-    protected SaloonObject _salobj;
+    /** Maps handles of displayed people to their display cells */
+    protected HashMap<Handle, FolkCell> _folks =
+        new HashMap<Handle, FolkCell>();
 }

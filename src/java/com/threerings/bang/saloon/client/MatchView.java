@@ -141,8 +141,11 @@ public class MatchView extends BContainer
         _chat.setSpeakService(_mobj.speakService);
         _chat.setEnabled(true);
         _chat.requestFocus();
-        _chat.displayMessage(new SystemMessage(_msgs.get("m.chat_here"),
-                                               null, SystemMessage.INFO));
+
+        // TODO: this doesn't work
+        _chat.displayMessage(
+            new SystemMessage(_msgs.get("m.chat_here"),
+                              null, SystemMessage.INFO), false);
     }
 
     // documentation inherited from interface Subscriber
