@@ -9,6 +9,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.bui.OptionDialog;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
@@ -20,10 +21,13 @@ import com.threerings.bang.util.BangContext;
 public class InvitePardnerDialog extends OptionDialog
     implements OptionDialog.ResponseReceiver
 {
-    public InvitePardnerDialog (BangContext ctx, Handle handle)
+    public InvitePardnerDialog (
+        BangContext ctx, StatusLabel status, Handle handle)
     {
         super(ctx, BangCodes.BANG_MSGS, "m.confirm_invite",
               new String[] { "m.invite", "m.cancel" }, null);
+
+        _status = status;
         _handle = handle;
         _receiver = this;
 
@@ -44,19 +48,25 @@ public class InvitePardnerDialog extends OptionDialog
         psvc.invitePardner(_ctx.getClient(), _handle, (String)result,
             new InvocationService.ConfirmListener() {
                 public void requestProcessed () {
-                    displayFeedback(
-                        MessageBundle.tcompose("m.pardner_invited", _handle));
+                    displayStatus(MessageBundle.tcompose(
+                                      "m.pardner_invited", _handle), false);
                 }
                 public void requestFailed (String cause) {
-                    displayFeedback(cause);
+                    displayStatus(cause, true);
                 }
             });
     }
 
-    protected void displayFeedback (String message)
+    protected void displayStatus (String message, boolean flash)
     {
-        _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, message);
+        if (_status == null) {
+            _ctx.getChatDirector().displayFeedback(
+                BangCodes.BANG_MSGS, message);
+        } else {
+            _status.setStatus(_ctx.xlate(BangCodes.BANG_MSGS, message), flash);
+        }
     }
 
+    protected StatusLabel _status;
     protected Handle _handle;
 }

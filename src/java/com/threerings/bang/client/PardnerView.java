@@ -137,7 +137,7 @@ public class PardnerView extends IconPalette
         } else { // src == _name || src == _submit
             if (_submit.isEnabled()) {
                 InvitePardnerDialog popup = new InvitePardnerDialog(
-                    _ctx, new Handle(_name.getText()));
+                    _ctx, _status, new Handle(_name.getText()));
                 _ctx.getBangClient().displayPopup(popup, true, 400);
                 _name.setText("");
             }
