@@ -93,19 +93,24 @@ public class SystemChatView extends BWindow
     }
     
     // documentation inherited from interface ChatDisplay
-    public void displayMessage (ChatMessage msg)
+    public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
+        if (alreadyDisplayed) {
+            return false;
+        }
+
         String level = getAttentionLevel(msg);
         if (level == null ||
             PlaceChatView.PLACE_CHAT_VIEW_TYPE.equals(msg.localtype) ||
             !_ctx.getBangClient().canDisplayPopup(MainView.Type.SYSTEM)) {
-            return;
+            return false;
         }
         if (!isAdded()) {
             _ctx.getRootNode().addWindow(this);
             _ctx.getRootNode().addController(_fctrl);
         }
         add(new MessageLabel(format(_ctx, msg), level + "_chat_label"));
+        return true;
     }
 
     // documentation inherited from interface ChatDisplay

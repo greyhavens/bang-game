@@ -17,9 +17,7 @@ import com.threerings.bang.client.MainView;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
-import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.util.BangContext;
-import com.threerings.crowd.data.PlaceObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -90,11 +88,6 @@ public class PardnerChatView extends BDecoratedWindow
         {
             if (isAdded()) {
                 return true;
-            }
-            PlaceObject place = _ctx.getLocationDirector().getPlaceObject();
-            if (place instanceof SaloonObject) {
-                // we're in the saloon and it will display the tell message
-                return false;
             }
             if (!_ctx.getBangClient().canDisplayPopup(MainView.Type.CHAT)) {
                 return false;

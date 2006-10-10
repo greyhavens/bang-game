@@ -49,8 +49,10 @@ public class TabbedChatView extends BContainer
         super(GroupLayout.makeVStretch());
 
         _ctx = ctx;
-        _ctx.getChatDirector().addChatDisplay(this);
         _tabSize = tabSize;
+
+        // we want to be first to hear about chat messages
+        _ctx.getChatDirector().pushChatDisplay(this);
 
         add(_pane = new TabbedPane(true) {
             protected void tabWasRemoved (BComponent tab) {
@@ -88,8 +90,13 @@ public class TabbedChatView extends BContainer
     }
 
     // from interface ChatDisplay
-    public void displayMessage (ChatMessage msg)
+    public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
+        // if the message was already displayed, we don't do anything
+        if (alreadyDisplayed) {
+            return false;
+        }
+
         // we handle player-to-player chat
         if (msg instanceof PlayerMessage &&
             ChatCodes.USER_CHAT_TYPE.equals(msg.localtype)) {
@@ -97,23 +104,26 @@ public class TabbedChatView extends BContainer
             Handle handle = (Handle)pmsg.speaker;
             UserTab tab = openUserTab(handle, pmsg.avatar, false);
             if (tab == null) {
-                return;
+                return false;
             }
             if (tab != _pane.getSelectedTab()) {
                 _pane.getTabButton(tab).setIcon(_alert);
             }
             tab.appendReceived(pmsg);
+            return true;
+
+        } else if (msg instanceof SystemMessage && SystemMessage.FEEDBACK ==
+                   ((SystemMessage)msg).attentionLevel) {
+            // we also have to handle feedback messages because that's how tell
+            // failures are reported
+            UserTab tab = (UserTab)_pane.getSelectedTab();
+            if (tab != null) {
+                tab.appendSystem(msg);
+                return true;
+            }
         }
 
-// TODO: right now this shows up in the main UI which is weird but we need to
-// differentiate between feedback as a result of our tell and general chat
-// feedback messages to do the right thing...
-//         } else if (msg instanceof SystemMessage &&
-//                    ((SystemMessage)msg).attentionLevel ==
-//                    SystemMessage.FEEDBACK) {
-//             // we also have to handle feedback messages because that's how tell
-//             // failures are reported
-//             ((PardnerTab)_tabs.getSelectedTab()).appendSystem(msg, "feedback");
+        return false;
     }
 
     // from interface ActionListener

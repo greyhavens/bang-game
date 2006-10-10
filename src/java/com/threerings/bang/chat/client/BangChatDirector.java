@@ -32,7 +32,7 @@ public class BangChatDirector extends ChatDirector
     {
         super(ctx, ctx.getMessageManager(), BangCodes.CHAT_MSGS);
         _ctx = ctx;
-        
+
         // add mute command handlers
         MessageBundle msg = _msgmgr.getBundle(_bundle);
         registerCommandHandler(msg, "mute", new CommandHandler() {
@@ -74,7 +74,7 @@ public class BangChatDirector extends ChatDirector
     {
         _haltedMessage = msg;
     }
-    
+
     /**
      * Clears and returns the stored halted message.
      */
@@ -84,13 +84,15 @@ public class BangChatDirector extends ChatDirector
         _haltedMessage = "";
         return msg;
     }
-    
-    /** Returns the most recently received chats. Do not modify this value! */
+
+    /**
+     * Returns the most recently received chats. Do not modify this value!
+     */
     public List<ChatMessage> getMessageHistory ()
     {
         return _messageHistory;
     }
-    
+
     @Override // documentation inherited
     public String requestChat (
         SpeakService speakSvc, String text, boolean record)
@@ -115,29 +117,39 @@ public class BangChatDirector extends ChatDirector
     @Override // documentation inherited
     public void messageReceived (MessageEvent event)
     {
+        // we override messageReceived() here rather than dispatchMessage()
+        // because we only want to make noise when a message comes in over the
+        // network not when things like tell feedback are dispatched locally
         if (CHAT_NOTIFICATION.equals(event.getName())) {
             // for now all incoming chat messages have the same sound; maybe
             // we'll want special sounds for special messages later
             BangUI.play(BangUI.FeedbackSound.CHAT_RECEIVE);
-            // store the message in our history
-            ChatMessage msg = (ChatMessage) event.getArgs()[0];
-            _messageHistory.add(msg);
-            if (_messageHistory.size() > MESSAGE_HISTORY_LIMIT) {
-                _messageHistory.remove(0);
-            }
         }
         super.messageReceived(event);
     }
 
-    /** The total number of chat messages we store before dumping the oldest */
-    protected static final int MESSAGE_HISTORY_LIMIT = 50;
+    @Override // documentation inherited
+    public void dispatchMessage (ChatMessage message)
+    {
+        super.dispatchMessage(message);
+
+        // store the message in our history
+        _messageHistory.add(message);
+        if (_messageHistory.size() > MESSAGE_HISTORY_LIMIT) {
+            _messageHistory.remove(0);
+        }
+    }
+
+    /** Provides acces to client services. */
+    protected BangContext _ctx;
 
     /** The most recent chat messages we've received */
     protected List<ChatMessage> _messageHistory = new LinkedList<ChatMessage>();
 
-    protected BangContext _ctx;
-    
     /** The text of any message being composed on the client when the last chat
      * entry field disappeared. */
     protected String _haltedMessage = "";
+
+    /** The total number of chat messages we store before dumping the oldest */
+    protected static final int MESSAGE_HISTORY_LIMIT = 50;
 }

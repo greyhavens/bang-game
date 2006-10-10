@@ -135,8 +135,12 @@ public class OverlayChatView extends BWindow
     }
 
     // documentation inherited from interface ChatDisplay
-    public void displayMessage (ChatMessage msg)
+    public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
+        if (alreadyDisplayed) {
+            return false;
+        }
+
         if (msg instanceof UserMessage) {
             UserMessage umsg = (UserMessage) msg;
             if (umsg.localtype == ChatCodes.USER_CHAT_TYPE) {
@@ -145,12 +149,15 @@ public class OverlayChatView extends BWindow
             } else {
                 appendMessage(umsg.speaker, umsg.message);
             }
+            return true;
 
         } else if (msg instanceof SystemMessage) {
             appendMessage(msg.message, ColorRGBA.white);
+            return true;
 
         } else {
             log.warning("Received unknown message type: " + msg + ".");
+            return false;
         }
     }
 

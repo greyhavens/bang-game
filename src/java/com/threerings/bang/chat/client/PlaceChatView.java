@@ -49,26 +49,8 @@ public class PlaceChatView extends TabbedChatView
     }
 
     /**
-     * This should be called on the place chat view when we have access to our
-     * place object.
-     */
-    public void willEnterPlace (PlaceObject plobj)
-    {
-        setSpeakService(plobj.speakService);
-    }
-
-    /**
-     * This should be called when we have left our place.
-     */
-    public void didLeavePlace (PlaceObject plobj)
-    {
-        clearSpeakService();
-    }
-
-    /**
      * A place chat view can be used on a custom speak service by calling this
-     * method instead of calling {@link #willEnterPlace}. It should be paired
-     * with a call to {@link #clearSpeakService}.
+     * method. It should be paired with a call to {@link #clearSpeakService}.
      *
      * <p><em>Note:</em> in that case, {@link #getSpeakerAvatar} will likely
      * need to be overridden as the default implementation obtains avatars from
@@ -78,7 +60,6 @@ public class PlaceChatView extends TabbedChatView
     {
         if (spsvc != null) {
             _spsvc = spsvc;
-            _ctx.getChatDirector().addChatDisplay(this);
         }
     }
 
@@ -89,7 +70,6 @@ public class PlaceChatView extends TabbedChatView
     public void clearSpeakService ()
     {
         if (_spsvc != null) {
-            _ctx.getChatDirector().removeChatDisplay(this);
             _spsvc = null;
         }
     }
@@ -103,23 +83,34 @@ public class PlaceChatView extends TabbedChatView
     }
 
     // documentation inherited from interface ChatDisplay
-    public void displayMessage (ChatMessage msg)
+    public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
+        if (alreadyDisplayed) {
+            return false;
+        }
+
         if (msg instanceof UserMessage) {
             UserMessage umsg = (UserMessage)msg;
             if (umsg.mode == ChatCodes.BROADCAST_MODE) {
                 // we don't handle broadcast messages
             } else if (umsg.localtype.equals(ChatCodes.USER_CHAT_TYPE)) {
                 // our parent class handles player to player chat
-                super.displayMessage(msg);
+                return super.displayMessage(msg, alreadyDisplayed);
             } else {
                 _pchat.appendReceived(umsg);
+                return true;
             }
 
-        } else if (msg instanceof SystemMessage &&
-            PLACE_CHAT_VIEW_TYPE.equals(msg.localtype)) {
-            _pchat.appendSystem(msg);
+        } else if (msg instanceof SystemMessage) {
+            SystemMessage smsg = (SystemMessage)msg;
+            if (PLACE_CHAT_VIEW_TYPE.equals(msg.localtype) ||
+                SystemMessage.FEEDBACK == smsg.attentionLevel) {
+                _pchat.appendSystem(msg);
+                return true;
+            }
         }
+
+        return false;
     }
 
     // documentation inherited from interface ActionListener
@@ -131,17 +122,21 @@ public class PlaceChatView extends TabbedChatView
             return;
         }
 
+        // make sure this came from a known widget
         Object src = ae.getSource();
-        if (src == _send || (src == _input && _send.isEnabled())) {
-            String msg = _input.getText().trim();
-            _input.setText("");
-            String error = _ctx.getChatDirector().requestChat(null, msg, true);
-            if (!ChatCodes.SUCCESS.equals(error)) {
-                SystemMessage sysmsg = new SystemMessage(
-                    _ctx.xlate(BangCodes.CHAT_MSGS, error), null,
-                    SystemMessage.FEEDBACK);
-                _pchat.appendSystem(sysmsg);
-            }
+        if (src != _send && !(src == _input && _send.isEnabled())) {
+            return;
+        }
+
+        // request to chat
+        String msg = _input.getText().trim();
+        _input.setText("");
+        String error = _ctx.getChatDirector().requestChat(_spsvc, msg, true);
+        if (!ChatCodes.SUCCESS.equals(error)) {
+            error = _ctx.xlate(BangCodes.CHAT_MSGS, error);
+            SystemMessage sysmsg = new SystemMessage(
+                error, null, SystemMessage.FEEDBACK);
+            _pchat.appendSystem(sysmsg);
         }
     }
 

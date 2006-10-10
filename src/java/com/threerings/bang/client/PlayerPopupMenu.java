@@ -123,7 +123,7 @@ public class PlayerPopupMenu extends BPopupMenu
 
         } else if ("invite_pardner".equals(event.getAction())) {
             _ctx.getBangClient().displayPopup(
-                new InvitePardnerDialog(_ctx, _handle), true, 400);
+                new InvitePardnerDialog(_ctx, null, _handle), true, 400);
 
         } else if ("view_poster".equals(event.getAction())) {
             WantedPosterView.displayWantedPoster(_ctx, _handle);
