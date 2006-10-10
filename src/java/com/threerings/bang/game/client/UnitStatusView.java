@@ -322,6 +322,14 @@ public class UnitStatusView extends BWindow
 
         // documentation inherited from interface UnitSprite.UpdateObserver
         public void updated (UnitSprite sprite) {
+            Unit unit = getUnit();
+            if (!unit.isAlive()) {
+                // if this unit is not originally ours, remove ourselves
+                if (unit.originalOwner != _pidx) {
+                    UnitStatusView.this.remove(this);
+                    return;
+                }
+            }
             label.updated(sprite);
             if (!sprite.isSelected()) {
                 remove(_closed);
@@ -330,7 +338,6 @@ public class UnitStatusView extends BWindow
                 forceUpdate();
                 return;
             }
-            Unit unit = getUnit();
             _health.setText("" + (100 - unit.damage) + "%");
             toggleDetails(BangPrefs.getUnitStatusDetails());
             updateHolding(unit);
@@ -511,18 +518,13 @@ public class UnitStatusView extends BWindow
         public void updated (UnitSprite sprite) {
             Unit unit = (Unit)sprite.getPiece();
             if (!unit.isAlive()) {
-                // if this unit is not originally ours, remove ourselves
-                if (unit.originalOwner != _pidx) {
-                    UnitStatusView.this.remove(this);
-                } else {
-                    // clear out any influence when the unit dies
-                    setInfluence(null);
-                    // clear out our background when our unit dies
-                    _bground = null;
-                    // and draw our icon at 50% alpha
-                    _unit.setDefaultColor(ColorRGBA.white);
-                    setAlpha(0.5f);
-                }
+                // clear out any influence when the unit dies
+                setInfluence(null);
+                // clear out our background when our unit dies
+                _bground = null;
+                // and draw our icon at 50% alpha
+                _unit.setDefaultColor(ColorRGBA.white);
+                setAlpha(0.5f);
             } else {
                 if (unit.influence == null) {
                     setInfluence(null);
