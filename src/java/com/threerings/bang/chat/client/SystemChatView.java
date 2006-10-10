@@ -95,13 +95,13 @@ public class SystemChatView extends BWindow
     // documentation inherited from interface ChatDisplay
     public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
-        if (alreadyDisplayed) {
+        if (alreadyDisplayed ||
+            !msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE)) {
             return false;
         }
 
         String level = getAttentionLevel(msg);
         if (level == null ||
-            PlaceChatView.PLACE_CHAT_VIEW_TYPE.equals(msg.localtype) ||
             !_ctx.getBangClient().canDisplayPopup(MainView.Type.SYSTEM)) {
             return false;
         }

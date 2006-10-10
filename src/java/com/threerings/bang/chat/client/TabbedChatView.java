@@ -151,6 +151,11 @@ public class TabbedChatView extends BContainer
 
     /**
      * Ensure that a given user tab exists, possibly creating it.
+     *
+     * @param focus if true the user's tab will be made visible and the chat
+     * input field will be focused. If false, the tab will be added if it does
+     * not exist but will not be made current, nor will focus be moved to the
+     * input field.
      */
     public UserTab openUserTab (Handle handle, int[] avatar, boolean focus)
     {
@@ -160,16 +165,19 @@ public class TabbedChatView extends BContainer
             _pane.addTab(handle.toString(), tab, true);
             _users.put(handle, tab);
         }
-        _pane.selectTab(tab);
 
         // this has to be called when the tab is already added
         if (!isAdded()) {
             if (!displayTabs()) {
                 return null;
             }
+            // if the interface was totally hidden, go ahead and select our tab
+            // because they obviously weren't attending to the current tab
+            _pane.selectTab(tab);
         }
 
         if (focus) {
+            _pane.selectTab(tab);
             _input.requestFocus();
         }
         return tab;

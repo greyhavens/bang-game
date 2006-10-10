@@ -14,7 +14,6 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 
-import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.jme.chat.ChatView;
 import com.threerings.util.MessageBundle;
 
@@ -138,14 +137,11 @@ public class MatchView extends BContainer
         updateStarting();
 
         _ctx.getChatDirector().addAuxiliarySource(_mobj, "match_chat");
-        _chat.setSpeakService(_mobj.speakService);
+        _chat.setSpeakService(_mobj.speakService, "match_chat");
         _chat.setEnabled(true);
         _chat.requestFocus();
-
-        // TODO: this doesn't work
-        _chat.displayMessage(
-            new SystemMessage(_msgs.get("m.chat_here"),
-                              null, SystemMessage.INFO), false);
+        _ctx.getChatDirector().displayInfo(
+            SaloonCodes.SALOON_MSGS, "m.chat_here", "match_chat");
     }
 
     // documentation inherited from interface Subscriber

@@ -44,7 +44,13 @@ public class PlaceChatView extends TabbedChatView
     {
         super(ctx, new Dimension(400, 400));
 
-        _pchat = new ComicPlaceChatView(ctx, _tabSize);
+        _pchat = new ComicChatView(ctx, _tabSize, true) {
+            protected int[] getSpeakerAvatar (Handle speaker) {
+                BangOccupantInfo boi = (BangOccupantInfo)
+                    _ctx.getOccupantDirector().getOccupantInfo(speaker);
+                return boi == null ? null : boi.avatar;
+            }
+        };
         _pane.addTab(title, _pchat);
     }
 
@@ -89,13 +95,16 @@ public class PlaceChatView extends TabbedChatView
             return false;
         }
 
+        // if it's not place chat, pass it to our parent
+        if (!msg.localtype.equals(PLACE_CHAT_VIEW_TYPE) &&
+            !msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE)) {
+            return super.displayMessage(msg, alreadyDisplayed);
+        }
+
         if (msg instanceof UserMessage) {
             UserMessage umsg = (UserMessage)msg;
             if (umsg.mode == ChatCodes.BROADCAST_MODE) {
-                // we don't handle broadcast messages
-            } else if (umsg.localtype.equals(ChatCodes.USER_CHAT_TYPE)) {
-                // our parent class handles player to player chat
-                return super.displayMessage(msg, alreadyDisplayed);
+                return false; // we don't handle broadcast messages
             } else {
                 _pchat.appendReceived(umsg);
                 return true;
@@ -150,23 +159,6 @@ public class PlaceChatView extends TabbedChatView
             _input.getText());
     }
 
-    protected class ComicPlaceChatView extends ComicChatView
-    {
-        public ComicPlaceChatView (BangContext ctx, Dimension tabSize)
-        {
-            super(ctx, tabSize, true);
-            // _vport.setStyleClass("place_chat_viewport");
-        }
-
-        @Override // documentation inherited
-        protected int[] getSpeakerAvatar (Handle speaker)
-        {
-            BangOccupantInfo boi = (BangOccupantInfo)
-                _ctx.getOccupantDirector().getOccupantInfo(speaker);
-            return boi == null ? null : boi.avatar;
-        }
-    }
-
     protected SpeakService _spsvc;
-    protected ComicPlaceChatView _pchat;
+    protected ComicChatView _pchat;
 }
