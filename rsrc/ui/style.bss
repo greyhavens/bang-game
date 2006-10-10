@@ -236,7 +236,7 @@ tab {
   color: #8c562a;
   background: image "ui/tabs/small_normal.png" framex;
   font: "Old Town" plain 24;
-  text-align: center;
+  text-align: left;
   vertical-align: center;
   padding: 0 25;
 }
