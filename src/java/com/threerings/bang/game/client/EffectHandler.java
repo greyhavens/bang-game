@@ -58,6 +58,7 @@ import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.effect.ResurrectEffect;
+import com.threerings.bang.game.data.effect.RobotWaveEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.TreeBedEffect;
 
@@ -195,7 +196,7 @@ public class EffectHandler extends BoardView.BoardAction
             effviz = new ExplosionViz();
         } else if (RepairEffect.isRepairEffect(effect) ||
                    effect.equals(NuggetEffect.NUGGET_ADDED) ||
-                   effect.equals(TreeBedEffect.SPROUTED)) {
+                   effect.equals(RobotWaveEffect.TREE_COUNTED)) {
             effviz = new RepairViz();
         }
 

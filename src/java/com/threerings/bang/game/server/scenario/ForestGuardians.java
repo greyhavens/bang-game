@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import com.jme.math.FastMath;
@@ -16,6 +17,7 @@ import com.jme.math.FastMath;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntListUtil;
+import com.samskivert.util.QuickSort;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 
@@ -125,6 +127,9 @@ public class ForestGuardians extends Scenario
             Bonus.createBonus("indian_post/fetish_frog"), _fetishSpots);
         placeBonus(bangobj, pieces,
             Bonus.createBonus("indian_post/fetish_turtle"), _fetishSpots);
+    
+        // remove all but a random subset of the tree beds
+        resetTrees(bangobj);
     }
     
     @Override // documentation inherited
@@ -133,7 +138,7 @@ public class ForestGuardians extends Scenario
         super.tick(bangobj, tick);
         
         int living = 0, grown = 0;
-        for (TreeBed tree : _trees) {
+        for (TreeBed tree : _ctrees) {
             if (tree.isAlive()) {
                 living++;
                 if (tree.growth == TreeBed.FULLY_GROWN) {
@@ -169,8 +174,8 @@ public class ForestGuardians extends Scenario
         // proportion to their growth so as not to penalize players if a
         // wave ends early because the clock ran out.
         int treePoints = _wavePoints * TreeBed.FULLY_GROWN,
-            maxPoints = _trees.size() * TreeBed.FULLY_GROWN * (_wave - 1);
-        for (TreeBed tree : _trees) {
+            maxPoints = _waveMax * TreeBed.FULLY_GROWN;
+        for (TreeBed tree : _ctrees) {
             if (tree.growth == 0) {
                 continue;
             }
@@ -286,8 +291,8 @@ public class ForestGuardians extends Scenario
     protected float computeAggression (BangObject bangobj)
     {
         int treePoints = _wavePoints * TreeBed.FULLY_GROWN,
-            maxPoints = _trees.size() * TreeBed.FULLY_GROWN * (_wave - 1);
-        for (TreeBed tree : _trees) {
+            maxPoints = _ctrees.size() * TreeBed.FULLY_GROWN * (_wave - 1);
+        for (TreeBed tree : _ctrees) {
             maxPoints += TreeBed.FULLY_GROWN;
             if (tree.isAlive()) {
                 treePoints += tree.growth;
@@ -304,7 +309,7 @@ public class ForestGuardians extends Scenario
         BangObject bangobj, Marker marker, float absAggr)
     {
         int total = 1;
-        for (TreeBed tree : _trees) {
+        for (TreeBed tree : _ctrees) {
             if (!tree.isAlive() || tree.growth == 0) {
                 continue;
             }
@@ -335,21 +340,70 @@ public class ForestGuardians extends Scenario
                 TreeBed.FULLY_GROWN - 1] * grown);
         }
         _wavePoints += grown;
+        _waveMax += _ctrees.size();
         
         // announce the end of the wave
         _bangmgr.deployEffect(-1, new RobotWaveEffect());
         
         // if at least half the trees were saved, increase the difficulty
         // level
-        if (grown >= _trees.size() / 2) {
+        if (grown >= _ctrees.size() / 2) {
             _difficulty++;
         }
+        
+        // reset the trees and choose a new subset
+        resetTrees(bangobj);
         
         // respawn all player units on the next tick
         _rdelegate.respawnAll(tick);
         
         // count down towards starting the next wave
         _nextWaveCountdown = NEXT_WAVE_TICKS;
+    }
+    
+    /**
+     * Adds and removes trees such that the board contains a random subset
+     * of them.
+     */
+    protected void resetTrees (final BangObject bangobj)
+    {
+        // shuffle the trees and move any currently visible to the end
+        Collections.shuffle(_trees);
+        QuickSort.sort(_trees, new Comparator<TreeBed>() {
+            public int compare (TreeBed t1, TreeBed t2) {
+                boolean c1 = bangobj.pieces.contains(t1),
+                    c2 = bangobj.pieces.contains(t2);
+                return (c1 == c2) ? 0 : (c1 ? +1 : -1);
+            }
+        });
+     
+        // determine the desired number of trees and add/remove accordingly
+        float ratio = BASE_TREE_RATIO + TREE_RATIO_INCREMENT * _difficulty;
+        int ntrees = (int)Math.round(getUnitTotal() * ratio);
+        _ctrees.clear();
+        for (TreeBed tree : _trees) {
+            if (ntrees-- > 0) {
+                if (!bangobj.pieces.contains(tree)) {
+                    _bangmgr.addPiece(tree);
+                }
+                _bangmgr.deployEffect(-1, new TreeBedEffect(tree));
+                _ctrees.add(tree);
+                
+            } else {
+                if (bangobj.pieces.contains(tree)) {
+                    _bangmgr.deployEffect(-1, new ClearPieceEffect(tree));
+                }
+            }
+        }
+    }
+    
+    /**
+     * Returns the total number of player units, living or dead, including
+     * Big Shots.
+     */
+    protected int getUnitTotal ()
+    {
+        return (_bangmgr.getTeamSize() + 1) * _bangmgr.getPlayerCount();
     }
     
     /**
@@ -393,13 +447,13 @@ public class ForestGuardians extends Scenario
             // spawn the next wave
             float ratio = BASE_ROBOT_RATIO +
                 ROBOT_RATIO_INCREMENT * _difficulty;
-            _target = (int)Math.round((_bangmgr.getTeamSize() + 1) *
-                _bangmgr.getPlayerCount() * ratio);
+            _target = (int)Math.round(getUnitTotal() * ratio);
             _living = 0;
             spawnRobots(bangobj, _target);
             
             // determine the rate at which robots respawn
-            _rate = BASE_RESPAWN_RATE + RESPAWN_RATE_INCREMENT * _difficulty;
+            _rate = Math.min(BASE_RESPAWN_RATE +
+                RESPAWN_RATE_INCREMENT * _difficulty, 1f);
         }
         
         @Override // documentation inherited
@@ -417,7 +471,8 @@ public class ForestGuardians extends Scenario
             if (_living < _target) {
                 // double the rate because we want that to be the average
                 // number of bots per tick
-                _accum += (FastMath.nextRandomFloat() * _rate * 2f);
+                _accum += (FastMath.nextRandomFloat() *
+                    _rate * (_target - _living) * 2f);
                 int nbots = (int)_accum;
                 if (nbots > 0) {
                     spawnRobots(bangobj, nbots);
@@ -545,8 +600,10 @@ public class ForestGuardians extends Scenario
     /** The spots from which robots emerge. */
     protected ArrayList<Marker> _robotSpots = new ArrayList<Marker>();
     
-    /** The tree beds on the board. */
-    protected ArrayList<TreeBed> _trees = new ArrayList<TreeBed>();
+    /** The tree beds on the board to begin with and the trees that are
+     * currently on the board. */
+    protected ArrayList<TreeBed> _trees = new ArrayList<TreeBed>(),
+        _ctrees = new ArrayList<TreeBed>();
     
     /** The payouts for each player, determined at the end of the round. */
     protected int[] _payouts;
@@ -563,6 +620,9 @@ public class ForestGuardians extends Scenario
     /** The number of points accumulated in the completed waves. */
     protected int _wavePoints;
     
+    /** The possible number of points that could have been accumulated. */
+    protected int _waveMax;
+    
     /** The countdown towards starting the next wave. */
     protected int _nextWaveCountdown = NEXT_WAVE_TICKS;
     
@@ -577,13 +637,25 @@ public class ForestGuardians extends Scenario
     protected static final float BASE_ROBOT_RATIO = 1 / 3f;
     
     /** The increment in number of logging robots per unit for each wave. */
-    protected static final float ROBOT_RATIO_INCREMENT = 1 / 6f;
+    protected static final float ROBOT_RATIO_INCREMENT = 1 / 24f;
+    
+    /** The base proportion of high-powered robots. */
+    protected static final float BASE_SUPER_RATIO = 0f;
+    
+    /** The proportionate increment of high-powered robots. */
+    protected static final float SUPER_RATIO_INCREMENT = 1 / 8f;
+    
+    /** The base number of tree beds to create per unit. */
+    protected static final float BASE_TREE_RATIO = 1 / 3f;
+    
+    /** The increment in number of trees per unit for each wave. */
+    protected static final float TREE_RATIO_INCREMENT = 1 / 24f;
     
     /** The base rate at which logging robots respawn (bots per tick). */
-    protected static final float BASE_RESPAWN_RATE = 0.25f;
+    protected static final float BASE_RESPAWN_RATE = 1 / 8f;
     
     /** The increment in bots per tick for each wave. */
-    protected static final float RESPAWN_RATE_INCREMENT = 0.25f;
+    protected static final float RESPAWN_RATE_INCREMENT = 7 / 64f;
     
     /** Payout adjustments for rankings in 2/3/4 player games. */
     protected static final int[][] PAYOUT_ADJUSTMENTS = {

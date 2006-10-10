@@ -34,9 +34,10 @@ public class TreeBedEffect extends Effect
     public int bedId;
 
     /** The ids of the pieces growing or shrinking the tree. */
-    public int[] pieceIds;
+    public int[] pieceIds = NO_PIECES;
 
-    /** The amount of damage inflicted. */
+    /** The amount of damage inflicted, or {@link Integer#MIN_VALUE} to reset
+     * the tree back to a sprout. */
     public int damage;
 
     /**
@@ -63,6 +64,16 @@ public class TreeBedEffect extends Effect
         this.damage = damage;
     }
 
+    /**
+     * Creates a new tree bed effect that will reset the tree back to
+     * a sprout.
+     */
+    public TreeBedEffect (TreeBed bed)
+    {
+        bedId = bed.pieceId;
+        damage = Integer.MIN_VALUE;
+    }
+    
     // documentation inherited
     public int[] getAffectedPieces ()
     {
@@ -105,12 +116,18 @@ public class TreeBedEffect extends Effect
             return false;
         }
         
-        // enact the tree's damage
-        int ogrowth = bed.growth;
-        bed.damage(damage);
-        reportEffect(observer, bed, GREW);
-        if (bed.growth > ogrowth) {
-            reportEffect(observer, bed, BLOOMED);
+        // enact the tree's damage or reset it
+        if (damage == Integer.MIN_VALUE) {
+            bed.init();
+            reportEffect(observer, bed, SPROUTED);
+            
+        } else {
+            int ogrowth = bed.growth;
+            bed.damage(damage);
+            reportEffect(observer, bed, GREW);
+            if (bed.growth > ogrowth) {
+                reportEffect(observer, bed, BLOOMED);
+            }
         }
         return true;
     }

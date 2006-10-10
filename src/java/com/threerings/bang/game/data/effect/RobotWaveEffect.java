@@ -22,6 +22,9 @@ import static com.threerings.bang.Log.*;
  */
 public class RobotWaveEffect extends Effect
 {
+    /** Indicates that a tree was counted towards the wave score. */
+    public static final String TREE_COUNTED = "indian_post/tree_bed/counted";
+    
     /** The number of the wave beginning, or -1 if the wave is ending. */
     public int wave = -1;
     
@@ -86,7 +89,7 @@ public class RobotWaveEffect extends Effect
             return true;
         }
         
-        // reset all trees
+        // count the living trees
         for (int treeId : treeIds) {
             TreeBed tree = (TreeBed)bangobj.pieces.get(treeId);
             if (tree == null) {
@@ -96,9 +99,8 @@ public class RobotWaveEffect extends Effect
             }
             if (tree.isAlive()) {
                 living++;
+                reportEffect(observer, tree, TREE_COUNTED);
             }
-            tree.init();
-            reportEffect(observer, tree, TreeBedEffect.SPROUTED);
         }
         
         // clear all logging robots

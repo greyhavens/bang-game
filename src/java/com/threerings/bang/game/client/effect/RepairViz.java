@@ -50,7 +50,7 @@ public class RepairViz extends ParticleEffectViz
         displayParticles(target, _swirls[1].particles, true);
         
         // note that the effect was displayed
-        effectDisplayed();
+        
     }
     
     @Override // documentation inherited
@@ -207,6 +207,10 @@ public class RepairViz extends ParticleEffectViz
                     if ((_elapsed += time) > GLOW_DURATION) {
                         particles.removeController(this);
                         removeParticles(particles);
+                        if (!_displayed) { // report completion
+                            effectDisplayed();
+                            _displayed = true;
+                        }
                         return;
                         
                     } else if (_elapsed > SWIRL_DURATION) {
@@ -231,6 +235,9 @@ public class RepairViz extends ParticleEffectViz
     
     /** The swirls of sparkles. */
     protected Swirl[] _swirls;
+    
+    /** Whether or not we have reported ourself as displayed. */
+    protected boolean _displayed;
     
     /** The size of the texture to render. */
     protected static final int TEXTURE_SIZE = 128;
