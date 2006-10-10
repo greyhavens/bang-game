@@ -19,6 +19,7 @@ import com.jmex.bui.util.Rectangle;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Handle;
@@ -71,7 +72,7 @@ public class EditCharacterView extends BContainer
 
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.LEFT);
         ncont.add(new BLabel(_msgs.get("m.handle")));
-        ncont.add(_handle = new BTextField());
+        ncont.add(_handle = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH));
         _handle.setPreferredWidth(150);
         ncont.add(new Spacer(5, 5));
         ncont.add(new BLabel(_msgs.get("m.handle_cost"), "barber_char_cost"));

@@ -69,12 +69,12 @@ public class FullTransact extends BContainer
 
         BContainer moffer = GroupLayout.makeHBox(GroupLayout.LEFT);
         moffer.add(new BLabel(BangUI.coinIcon));
-        moffer.add(_coins = new BTextField(""));
+        moffer.add(_coins = new BTextField("", 20));
         _coins.addListener(_textlist);
         _coins.setPreferredWidth(30);
         moffer.add(new BLabel(_msgs.get("m.for")));
         moffer.add(new BLabel(BangUI.scripIcon));
-        moffer.add(_scrip = new BTextField(""));
+        moffer.add(_scrip = new BTextField("", 20));
         _scrip.setPreferredWidth(40);
         _scrip.addListener(_textlist);
         moffer.add(new BLabel(_msgs.get("m.each")));

@@ -48,7 +48,7 @@ public class CreateParlorDialog extends BDecoratedWindow
         row = GroupLayout.makeHBox(GroupLayout.LEFT);
         row.add(_usePass = new BCheckBox(_msgs.get("m.use_password")));
         _usePass.setTooltipText(_msgs.get("m.use_password_tip"));
-        row.add(_password = new BTextField());
+        row.add(_password = new BTextField(50));
         _password.setPreferredWidth(75);
         params.add(row);
 

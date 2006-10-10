@@ -27,6 +27,7 @@ import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.chat.data.PlayerMessage;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.TabbedPane;
 import com.threerings.bang.data.BangCodes;
@@ -65,7 +66,7 @@ public class TabbedChatView extends BContainer
         BContainer tcont = new BContainer(
             GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER,
                                   GroupLayout.NONE));
-        tcont.add(_input = new BTextField());
+        tcont.add(_input = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH));
         _input.addListener(this);
         ImageIcon icon = new ImageIcon(
             _ctx.loadImage("ui/chat/bubble_icon.png"));

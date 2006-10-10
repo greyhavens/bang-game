@@ -95,7 +95,7 @@ public class PardnerView extends IconPalette
         layout.setGap(10);
         bcont = new BContainer(layout);
         bcont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));
-        bcont.add(_name = new BTextField());
+        bcont.add(_name = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH));
         _name.setPreferredWidth(324);
         bcont.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
             "m.pardner_submit"), this, "submit"));

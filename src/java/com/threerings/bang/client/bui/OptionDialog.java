@@ -14,6 +14,7 @@ import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.ListUtil;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
@@ -133,7 +134,8 @@ public class OptionDialog extends BDecoratedWindow
 
     protected void setRequiresString (int width, String defaultValue)
     {
-        add(1, _input = new BTextField(defaultValue), GroupLayout.FIXED);
+        add(1, _input = new BTextField(defaultValue, 
+                    BangUI.TEXT_FIELD_MAX_LENGTH), GroupLayout.FIXED);
         _input.addListener(this);
         _input.setPreferredWidth(width);
         _input.requestFocus();

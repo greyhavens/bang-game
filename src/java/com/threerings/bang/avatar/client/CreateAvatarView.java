@@ -25,6 +25,7 @@ import com.samskivert.util.RandomUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangClient;
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
@@ -77,7 +78,7 @@ public class CreateAvatarView extends BDecoratedWindow
 
         col = GroupLayout.makeHBox(GroupLayout.RIGHT);
         col.add(new BLabel(_msgs.get("m.handle"), "dialog_label"));
-        col.add(_handle = new BTextField(""));
+        col.add(_handle = new BTextField("", BangUI.TEXT_FIELD_MAX_LENGTH));
         _handle.setPreferredWidth(150);
         _handle.setDocument(new HandleDocument());
         _handle.addListener(new HandleListener(

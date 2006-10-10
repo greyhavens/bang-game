@@ -24,6 +24,7 @@ import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.util.BangContext;
@@ -51,7 +52,7 @@ public class OverlayChatView extends BWindow
         for (int ii = 0; ii < _history.length; ii++) {
             add(_history[ii] = new MessageLabel());
         }
-        add(_input = new BTextField() {
+        add(_input = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH) {
             public void render (Renderer renderer) {
                 if (hasFocus()) {
                     super.render(renderer);

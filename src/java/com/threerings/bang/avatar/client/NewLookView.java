@@ -74,8 +74,8 @@ public class NewLookView extends BContainer
 
         BImage icon = _ctx.loadImage("ui/barber/caption_name.png");
         add(new BLabel(new ImageIcon(icon)), new Point(726, 135));
-        add(_name = new BTextField(""), new Rectangle(786, 135, 164, 29));
-        // TODO: limit to BarberCodes.MAX_LOOK_NAME_LENGTH
+        add(_name = new BTextField("", BarberCodes.MAX_LOOK_NAME_LENGTH), 
+                new Rectangle(786, 135, 164, 29));
 
         BContainer cost = GroupLayout.makeHBox(GroupLayout.LEFT);
         cost.add(new BLabel(_msgs.get("m.look_price")));

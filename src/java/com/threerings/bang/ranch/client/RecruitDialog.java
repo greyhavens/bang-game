@@ -54,7 +54,8 @@ public class RecruitDialog extends BDecoratedWindow
 
         BContainer row = new BContainer(GroupLayout.makeHStretch());
         row.add(new BLabel(_msgs.get("m.rd_name")), GroupLayout.FIXED);
-        row.add(_name = new BTextField(config.pickRandomName()));
+        row.add(_name = new BTextField(
+                    config.pickRandomName(), BigShotItem.MAX_NAME_LENGTH));
         BButton random = new BButton(new ImageIcon(
             ctx.loadImage("ui/icons/dice.png")), this, "random");
         random.setStyleClass("arrow_button");

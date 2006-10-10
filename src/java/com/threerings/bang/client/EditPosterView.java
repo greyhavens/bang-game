@@ -217,7 +217,8 @@ public class EditPosterView extends BContainer
             }
             BContainer statementBox = GroupLayout.makeHBox(GroupLayout.TOP);
 
-            _textField = new BTextField(_poster.statement);
+            _textField = new BTextField(
+                    _poster.statement, BangUI.TEXT_FIELD_MAX_LENGTH);
             _textField.setPreferredWidth(200);
             statementBox.add(_textField);
 

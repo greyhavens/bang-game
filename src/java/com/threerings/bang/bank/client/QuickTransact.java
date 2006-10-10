@@ -43,7 +43,7 @@ public class QuickTransact extends BContainer
         String msg = buying ? "m.buy" : "m.sell";
         add(new BLabel(_msgs.get(msg)), GroupLayout.FIXED);
         add(new BLabel(BangUI.coinIcon), GroupLayout.FIXED);
-        add(_coins = new BTextField(), GroupLayout.FIXED);
+        add(_coins = new BTextField(20), GroupLayout.FIXED);
         _coins.setPreferredWidth(30);
         _coins.addListener(_coinlist);
         add(new BLabel(_msgs.get("m.for")), GroupLayout.FIXED);

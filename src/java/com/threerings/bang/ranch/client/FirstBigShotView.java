@@ -70,7 +70,7 @@ public class FirstBigShotView extends BDecoratedWindow
         add(ncont, GroupLayout.FIXED);
 
         ncont.add(new BLabel(_msgs.get("m.firstbs_name"), "dialog_label"));
-        ncont.add(_name = new BTextField(""));
+        ncont.add(_name = new BTextField(BigShotItem.MAX_NAME_LENGTH));
         _name.setPreferredWidth(150);
         _name.addListener(new TextListener() {
             public void textChanged (TextEvent event) {
