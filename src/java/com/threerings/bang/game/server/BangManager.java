@@ -141,12 +141,13 @@ public class BangManager extends GameManager
     /** Used to rank the players at the end of the game. */
     public static class RankRecord implements Comparable<RankRecord>
     {
-        public int pidx, points, kills;
+        public int pidx, points, kills, connected;
 
-        public RankRecord (int pidx, int points, int kills) {
+        public RankRecord (int pidx, int points, int kills, int connected) {
             this.pidx = pidx;
             this.points = points;
             this.kills = kills;
+            this.connected = connected;
         }
 
         public int compareTo (RankRecord other) {
@@ -155,6 +156,9 @@ public class BangManager extends GameManager
                 return delta;
             }
             if ((delta = (other.kills - kills)) != 0) {
+                return delta;
+            }
+            if ((delta = (other.connected - connected)) != 0) {
                 return delta;
             }
             return 0;
@@ -1753,7 +1757,8 @@ public class BangManager extends GameManager
                         Stat.Type.UNITS_KILLED);
                 }
             }
-            _ranks[ii] = new RankRecord(ii, points[ii], kills);
+            _ranks[ii] = new RankRecord(ii, points[ii], kills, 
+                    (isActivePlayer(ii) ? 1 : 0));
         }
 
         // first shuffle, then sort so that ties are resolved randomly
