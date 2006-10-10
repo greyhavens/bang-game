@@ -30,35 +30,22 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
 /**
- * A chat view implementation that uses avatars and balloons but speaks on the
- * default PlaceObject chat channel.
+ * Extends the {@link TabbedChatView} and adds a tab for speaking on the
+ * current PlaceObject chat channel.
  */
-public class PlaceChatView extends ComicChatView
-    implements ChatDisplay, ActionListener
+public class PlaceChatView extends TabbedChatView
 {
     /** A chat "localtype" for messages generated on the client that should
      * be shown in the place chat view as opposed to the
      * {@link SystemChatView}. */
     public static final String PLACE_CHAT_VIEW_TYPE = "placeChatView";
-    
-    public PlaceChatView (BangContext ctx)
-    {
-        super(ctx, new Dimension(400, 400), true);
-        _vport.setStyleClass("place_chat_viewport");
 
-        BContainer tcont = new BContainer(
-            GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER,
-                                  GroupLayout.NONE));
-        tcont.add(new Spacer(5, 5), GroupLayout.FIXED);
-        tcont.add(_text = new BTextField());
-        _text.addListener(this);
-        ImageIcon icon = new ImageIcon(
-            _ctx.loadImage("ui/chat/bubble_icon.png"));
-        tcont.add(_send = new BButton(icon, this, "send"), GroupLayout.FIXED);
-        add(tcont, BorderLayout.SOUTH);
-        
-        // disable send until some text is entered
-        new EnablingValidator(_text, _send);
+    public PlaceChatView (BangContext ctx, String title)
+    {
+        super(ctx, new Dimension(400, 400));
+
+        _pchat = new ComicPlaceChatView(ctx, _tabSize);
+        _pane.addTab(title, _pchat);
     }
 
     /**
@@ -114,7 +101,7 @@ public class PlaceChatView extends ComicChatView
     {
         _ctx.getChatDirector().displayInfo(bundle, msg, PLACE_CHAT_VIEW_TYPE);
     }
-    
+
     // documentation inherited from interface ChatDisplay
     public void displayMessage (ChatMessage msg)
     {
@@ -123,31 +110,37 @@ public class PlaceChatView extends ComicChatView
             if (umsg.mode == ChatCodes.BROADCAST_MODE) {
                 // we don't handle broadcast messages
             } else if (umsg.localtype.equals(ChatCodes.USER_CHAT_TYPE)) {
-                // we don't handle user-to-user chat, let the pardner chat view
-                // deal with that
+                // our parent class handles player to player chat
+                super.displayMessage(msg);
             } else {
-                appendReceived(umsg);
+                _pchat.appendReceived(umsg);
             }
-            
+
         } else if (msg instanceof SystemMessage &&
             PLACE_CHAT_VIEW_TYPE.equals(msg.localtype)) {
-            appendSystem(msg);
+            _pchat.appendSystem(msg);
         }
     }
 
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent ae)
     {
+        // if the place chat tab is not selected, let our parent handle it
+        if (_pane.getSelectedTab() != _pchat) {
+            super.actionPerformed(ae);
+            return;
+        }
+
         Object src = ae.getSource();
-        if (src == _send || (src == _text && _send.isEnabled())) {
-            String msg = _text.getText().trim();
-            _text.setText("");
+        if (src == _send || (src == _input && _send.isEnabled())) {
+            String msg = _input.getText().trim();
+            _input.setText("");
             String error = _ctx.getChatDirector().requestChat(null, msg, true);
             if (!ChatCodes.SUCCESS.equals(error)) {
                 SystemMessage sysmsg = new SystemMessage(
                     _ctx.xlate(BangCodes.CHAT_MSGS, error), null,
                     SystemMessage.FEEDBACK);
-                appendSystem(sysmsg);
+                _pchat.appendSystem(sysmsg);
             }
         }
     }
@@ -156,21 +149,29 @@ public class PlaceChatView extends ComicChatView
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        
+
         // save halted message for the game
         ((BangChatDirector)_ctx.getChatDirector()).setHaltedMessage(
-            _text.getText());
+            _input.getText());
     }
-    
-    @Override // documentation inherited
-    protected int[] getSpeakerAvatar (Handle speaker)
+
+    protected class ComicPlaceChatView extends ComicChatView
     {
-        BangOccupantInfo boi = (BangOccupantInfo)
-            _ctx.getOccupantDirector().getOccupantInfo(speaker);
-        return boi == null ? null : boi.avatar;
+        public ComicPlaceChatView (BangContext ctx, Dimension tabSize)
+        {
+            super(ctx, tabSize, true);
+            // _vport.setStyleClass("place_chat_viewport");
+        }
+
+        @Override // documentation inherited
+        protected int[] getSpeakerAvatar (Handle speaker)
+        {
+            BangOccupantInfo boi = (BangOccupantInfo)
+                _ctx.getOccupantDirector().getOccupantInfo(speaker);
+            return boi == null ? null : boi.avatar;
+        }
     }
 
     protected SpeakService _spsvc;
-    protected BTextField _text;
-    protected BButton _send;
+    protected ComicPlaceChatView _pchat;
 }

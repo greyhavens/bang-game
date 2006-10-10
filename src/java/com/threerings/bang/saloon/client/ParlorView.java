@@ -57,7 +57,8 @@ public class ParlorView extends ShopView
 
         add(_config = new ParlorConfigView(_ctx),
             new Rectangle(103, 124, 410, 132));
-        add(_chat = new PlaceChatView(_ctx), new Rectangle(570, 75, 425, 535));
+        add(_chat = new PlaceChatView(_ctx, _msgs.get("m.parlor_chat")),
+            new Rectangle(570, 75, 425, 535));
 
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");

@@ -62,7 +62,7 @@ public class OptionsView extends BDecoratedWindow
         _parent = parent;
         _msgs = ctx.getMessageManager().getBundle(BangCodes.OPTS_MSGS);
 
-        TabbedPane tabs = new TabbedPane(false, false);
+        TabbedPane tabs = new TabbedPane(false);
         tabs.setPreferredSize(new Dimension(375, 275));
 
         TableLayout layout = new TableLayout(2, 10, 10);

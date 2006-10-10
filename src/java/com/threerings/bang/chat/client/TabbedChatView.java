@@ -40,22 +40,18 @@ import static com.threerings.bang.Log.log;
  * The common superclass for displaying user-to-user tells in a tabbed
  * view that shows the users' avatars next to the text.
  */
-public abstract class TabbedChatView extends BContainer
+public class TabbedChatView extends BContainer
     implements ActionListener, ChatDisplay
 {
     public TabbedChatView (BangContext ctx, Dimension tabSize)
     {
-        super();
+        super(GroupLayout.makeVStretch());
+
         _ctx = ctx;
         _ctx.getChatDirector().addChatDisplay(this);
         _tabSize = tabSize;
 
-        GroupLayout layout = GroupLayout.makeVert(
-            GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH); 
-        layout.setGap(0);
-        setLayoutManager(layout);
-
-        add(_pane = new TabbedPane(true, true) {
+        add(_pane = new TabbedPane(true) {
             protected void tabWasRemoved (BComponent tab) {
                 Handle tabOwner = ((UserTab) tab)._user;
                 _users.remove(tabOwner);
@@ -65,19 +61,19 @@ public abstract class TabbedChatView extends BContainer
             }
         });
 
-
         _pane.addListener(this);
-        BContainer tcont = new BContainer(GroupLayout.makeHoriz(
-            GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.NONE));
-        tcont.add(_text = new BTextField());
-        _text.addListener(this);
-        tcont.add(_send = new BButton(new ImageIcon(
-            _ctx.loadImage("ui/chat/bubble_icon.png")), this, "send"),
-            GroupLayout.FIXED);
-        add(tcont);
+        BContainer tcont = new BContainer(
+            GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER,
+                                  GroupLayout.NONE));
+        tcont.add(_input = new BTextField());
+        _input.addListener(this);
+        ImageIcon icon = new ImageIcon(
+            _ctx.loadImage("ui/chat/bubble_icon.png"));
+        tcont.add(_send = new BButton(icon, this, "send"), GroupLayout.FIXED);
+        add(tcont, GroupLayout.FIXED);
 
         // disable send until some text is entered
-        new EnablingValidator(_text, _send);
+        new EnablingValidator(_input, _send);
 
         _alert = new ImageIcon(_ctx.loadImage("ui/chat/alert_icon.png"));
     }
@@ -87,7 +83,7 @@ public abstract class TabbedChatView extends BContainer
     {
         _pane.removeAllTabs();
         _users.clear();
-        _text.setText("");
+        _input.setText("");
     }
 
     // from interface ChatDisplay
@@ -117,16 +113,15 @@ public abstract class TabbedChatView extends BContainer
 //             // we also have to handle feedback messages because that's how tell
 //             // failures are reported
 //             ((PardnerTab)_tabs.getSelectedTab()).appendSystem(msg, "feedback");
-        
     }
 
     // from interface ActionListener
     public void actionPerformed (ActionEvent ae)
     {
         Object src = ae.getSource();
-        if (src == _send || (src == _text && _send.isEnabled())) {
-            String msg = _text.getText().trim();
-            _text.setText("");
+        if (src == _send || (src == _input && _send.isEnabled())) {
+            String msg = _input.getText().trim();
+            _input.setText("");
             if (msg.startsWith("/")) {
                 String error = _ctx.getChatDirector().requestChat(
                     null, msg, true);
@@ -136,7 +131,7 @@ public abstract class TabbedChatView extends BContainer
                         null, SystemMessage.FEEDBACK);
                     ((UserTab)_pane.getSelectedTab()).appendSystem(sysmsg);
                 }
-    
+
             } else {
                 ((UserTab)_pane.getSelectedTab()).requestTell(msg);
             }
@@ -151,29 +146,42 @@ public abstract class TabbedChatView extends BContainer
         UserTab tab = _users.get(handle);
         if (tab == null) {
             tab = new UserTab(_ctx, handle, avatar);
-            _pane.addTab(handle.toString(), tab);
+            _pane.addTab(handle.toString(), tab, true);
             _users.put(handle, tab);
         }
         _pane.selectTab(tab);
+
         // this has to be called when the tab is already added
         if (!isAdded()) {
             if (!displayTabs()) {
                 return null;
             }
         }
+
         if (focus) {
-            _text.requestFocus();
+            _input.requestFocus();
         }
         return tab;
     }
 
     /**
-     * Displays the chat interface when needed, if it's not already shown.
+     * Allows subclasses to bring the chat interface to front if it is hidden
+     * and a chat message arrives.
+     *
+     * @return true if the tabs were brought to front, false if that was not
+     * possible.
      */
-    protected abstract boolean displayTabs ();
-    
-    /** Lets subclasses react to the last tab closing */
-    protected abstract void lastTabClosed ();
+    protected boolean displayTabs ()
+    {
+        return false;
+    }
+
+    /**
+     * Lets subclasses react to the last tab closing.
+     */
+    protected void lastTabClosed ()
+    {
+    }
 
     /**
      * Handles the chat display for single user.
@@ -248,7 +256,7 @@ public abstract class TabbedChatView extends BContainer
     }
 
     protected BangContext _ctx;
-    protected BTextField _text;
+    protected BTextField _input;
     protected BButton _send;
     protected TabbedPane _pane;
     protected Dimension _tabSize;

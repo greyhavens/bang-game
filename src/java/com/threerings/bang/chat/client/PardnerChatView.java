@@ -40,7 +40,7 @@ public class PardnerChatView extends BDecoratedWindow
         setLayer(1);
 
         add(_tabView = new PardnerChatTabs(ctx));
-        
+
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         buttons.add(_mute = new BButton(ctx.xlate(BANG_MSGS, "m.chat_mute"),
             this, "mute"));
@@ -48,7 +48,7 @@ public class PardnerChatView extends BDecoratedWindow
             "m.status_resume"), this, "resume"));
         add(buttons, GroupLayout.FIXED);
     }
-    
+
     /**
      * Displays the chat view, if possible, with a tab for talking to the
      * named pardner.
@@ -71,7 +71,7 @@ public class PardnerChatView extends BDecoratedWindow
         Object src = ae.getSource();
         if (src == _mute) {
             ((UserTab)_tabView._pane.getSelectedTab()).mute();
-    
+
         } else if (src == _resume) {
             _ctx.getBangClient().clearPopup(this, false);
         }
@@ -80,19 +80,18 @@ public class PardnerChatView extends BDecoratedWindow
     /** A subclass that knows how to display and clear the chat popup */
     protected class PardnerChatTabs extends TabbedChatView
     {
-    
         public PardnerChatTabs (BangContext ctx)
         {
             super(ctx, new Dimension(400, 400));
         }
-    
+
         @Override // from TabbedChatView
         protected boolean displayTabs ()
         {
             if (isAdded()) {
                 return true;
             }
-            PlaceObject place = _ctx.getLocationDirector().getPlaceObject(); 
+            PlaceObject place = _ctx.getLocationDirector().getPlaceObject();
             if (place instanceof SaloonObject) {
                 // we're in the saloon and it will display the tell message
                 return false;
@@ -105,7 +104,7 @@ public class PardnerChatView extends BDecoratedWindow
             center();
             return true;
         }
-        
+
         @Override // from TabbedChatView
         protected void lastTabClosed ()
         {

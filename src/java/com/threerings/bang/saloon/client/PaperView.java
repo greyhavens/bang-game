@@ -50,6 +50,7 @@ public class PaperView extends BContainer
         _msgs = ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ((GroupLayout)buttons.getLayoutManager()).setGap(0);
         _navi = new BToggleButton[3];
         buttons.add(_navi[0] = createMastheadButton("news"));
         buttons.add(_navi[1] = createMastheadButton("folks"));

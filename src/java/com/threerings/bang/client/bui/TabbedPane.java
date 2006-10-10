@@ -12,9 +12,8 @@ import com.jmex.bui.background.BBackground;
  */
 public class TabbedPane extends BTabbedPane
 {
-    public TabbedPane (boolean hasCloseButton, boolean leaveRoomForScrollbar)
+    public TabbedPane (boolean leaveRoomForScrollbar)
     {
-        super(hasCloseButton);
         _leaveRoomForScrollbar = leaveRoomForScrollbar;
     }
 
