@@ -781,8 +781,9 @@ public class BangController extends GameController
         int[] spoints = _bangobj.points.clone();
         Arrays.sort(spoints);
         ArrayUtil.reverse(spoints);
-        int rank = 0;
+        int rank = -1;
         for (int rr = 0; rr < spoints.length; rr++) {
+            rank++;
             if (rr > 0 && spoints[rr] == spoints[rr-1]) {
                 continue;
             }
@@ -791,7 +792,6 @@ public class BangController extends GameController
                     _view.pstatus[ii].setRank(rank);
                 }
             }
-            rank++;
         }
     }
 
