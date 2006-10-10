@@ -52,13 +52,21 @@ public class ParlorView extends ShopView
         add(new BButton(_msgs.get("m.to_saloon"), this, "to_saloon"),
             new Point(870, 25));
 
-        add(_config = new ParlorConfigView(_ctx), SaloonView.PARLIST_RECT);
+        add(_config = new ParlorConfigView(_ctx),
+            new Rectangle(95, 119, 407, 130));
         add(_chat = new PlaceChatView(ctx, _msgs.get("m.parlor_chat")),
             new Rectangle(552, 78, 445, 551));
 
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
         _status.setText(_msgs.get("m.intro_tip"));
+
+        // display some images over the ones baked into the background
+        ImageIcon banner = new ImageIcon(
+            _ctx.loadImage("ui/saloon/play_parlor_game.png"));
+        add(new BLabel(banner), new Point(206, 578));
+        banner = new ImageIcon(_ctx.loadImage("ui/saloon/parlor_settings.png"));
+        add(new BLabel(banner), new Point(90, 260));
 
         // create our config view, but we'll add it later
         _gconfig = new ParlorGameConfigView(_ctx, _status);
