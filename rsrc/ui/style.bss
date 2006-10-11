@@ -832,6 +832,10 @@ poster_gang {
   font: "Dom Casual" plain 20;
 }
 
+poster_avatar {
+  size: 243 300;
+}
+
 poster_statement_box {
   color: #4a2805;
   text-align: center;
