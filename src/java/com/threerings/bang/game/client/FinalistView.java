@@ -63,7 +63,7 @@ public class FinalistView extends BContainer
 
         // start with a blank avatar
         setAvatar(new BlankIcon(AvatarLogic.FRAMED_WIDTH/scale,
-                                AvatarLogic.HEIGHT/scale));
+                                AvatarLogic.FRAMED_HEIGHT/scale));
 
         // then if we have a real one, load it up in the background
         if (avatar != null) {

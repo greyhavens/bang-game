@@ -103,14 +103,17 @@ public class AvatarLogic
     /** The colorization class for eye colors. */
     public static final String EYES = "iris_t";
 
-    /** The width of our avatar source images. */
+    /** The width of our avatar source images when shown in a frame. */
     public static final int FRAMED_WIDTH = 468;
+
+    /** The height of our avatar source images when shown in a frame. */
+    public static final int FRAMED_HEIGHT = 600;
 
     /** The width of our avatar source images. */
     public static final int WIDTH = 540;
 
     /** The height of our avatar source images. */
-    public static final int HEIGHT = 600;
+    public static final int HEIGHT = 640;
 
     /**
      * Returns the index in the {@link #SLOTS} array of the specified slot.
