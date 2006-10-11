@@ -397,6 +397,11 @@ public class BangBoardView extends BoardView
         _pidx = pidx;
         _bangobj.addListener(_ticker);
 
+        // Make sure our lights are setup properly
+        _highNoon = false;
+        _wendigoAmbiance = false;
+        refreshLights();
+
         // preload our sounds for this scenario
         for (String clip : bangobj.scenario.getPreLoadClips()) {
             _sounds.preloadClip(clip);

@@ -607,6 +607,9 @@ public class BangController extends GameController
      */
     protected void roundDidStart ()
     {
+        _bangobj.boardEffect = null;
+        _bangobj.globalHindrance = null;
+
         // display the unit selection if appropriate
         _view.setPhase(BangView.PRE_SELECT_PHASE);
 

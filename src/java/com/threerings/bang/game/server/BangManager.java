@@ -955,6 +955,9 @@ public class BangManager extends GameManager
             return;
         }
 
+        _bangobj.boardEffect = null;
+        _bangobj.globalHindrance = null;
+
         // create the appropriate scenario to handle this round
         if (_bconfig.tutorial) {
             _bangobj.setScenario(new TutorialInfo());
