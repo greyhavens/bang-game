@@ -110,6 +110,7 @@ public class WantedPosterView extends BContainer
 
         _ctx = ctx;
         _avatarSepia = _ctx.loadImage("ui/wanted/sepia_avatar.png");
+        _badgeSepia = _ctx.loadImage("ui/wanted/sepia_items.png");
     }
 
     @Override // from BContainer
@@ -117,6 +118,7 @@ public class WantedPosterView extends BContainer
     {
         super.wasAdded();
         _avatarSepia.reference();
+        _badgeSepia.reference();
     }
 
     @Override // from BContainer
@@ -124,6 +126,7 @@ public class WantedPosterView extends BContainer
     {
         super.wasRemoved();
         _avatarSepia.release();
+        _badgeSepia.release();
     }
 
     /**
@@ -254,9 +257,26 @@ public class WantedPosterView extends BContainer
         // overlay the avatar with the sepia at a low alpha level
         AvatarView avatar = new AvatarView(_ctx, 2, false, false) {
             @Override // from BComponent
-            protected void renderComponent(Renderer renderer) {
+            protected void renderComponent (Renderer renderer) {
                 super.renderComponent(renderer);
                 _avatarSepia.render(renderer, 0, 0, _width, _height, 0.25f);
+            }
+            @Override // from AvatarView
+            protected void renderImage (Renderer renderer) {
+                if (_image != null) {
+                    int sx = 0;
+                    int ix = (getWidth() - _image.getWidth())/2;
+                    if (ix < 0) {
+                        sx = -ix;
+                        ix = 0;
+                    }
+                    int iy = 0;
+                    if (_scroll != null) {
+                        iy = _scroll.getHeight()/2;
+                    }
+                    _image.render(renderer, sx, 0, getWidth(), getHeight(),
+                            ix, iy, _alpha);
+                }
             }
         };
         avatar.setStyleClass("poster_avatar");
@@ -270,7 +290,13 @@ public class WantedPosterView extends BContainer
     protected BComponent buildBadgeView ()
     {
         IconPalette palette = new IconPalette(
-            null, PosterInfo.BADGES, 1, ItemIcon.ICON_SIZE, 0);
+            null, PosterInfo.BADGES, 1, ItemIcon.ICON_SIZE, 0) {
+            @Override // from BComponent
+            protected void renderComponent (Renderer renderer) {
+                super.renderComponent(renderer);
+                _badgeSepia.render(renderer, 0, 0, _width, _height, 0.25f);
+            }
+        };
         palette.setShowNavigation(false);
         for (int badgeIx = 0; badgeIx < PosterInfo.BADGES; badgeIx ++) {
             int id = _poster.badgeIds[badgeIx];
@@ -304,4 +330,7 @@ public class WantedPosterView extends BContainer
 
     /** A pointer to the sepia overlay for the avatar view */
     protected BImage _avatarSepia;
+
+    /** A pointer to the sepia overlay for the badge view */
+    protected BImage _badgeSepia;
 }

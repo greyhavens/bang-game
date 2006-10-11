@@ -128,23 +128,19 @@ public class EditPosterView extends BContainer
                     return;
                 }
 
-                Badge badge = (Badge) ((ItemIcon) icon).getItem();
-                int badgeCode = badge.getType().code();
-
-                for (int i = 0; i < PosterInfo.BADGES; i ++) {
-                    if (poster.badgeIds[i] == badgeCode && !selected) {
-                        poster.badgeIds[i] = -1;
-                    } else if (poster.badgeIds[i] == -1 && selected) {
-                        poster.badgeIds[i] = badgeCode;
-                    } else {
-                        continue;
+                int idx = 0;
+                for ( ; idx < poster.badgeIds.length; idx++) {
+                    SelectableIcon sicon = _palette.getSelectedIcon(idx);
+                    if (sicon == null) {
+                        break;
                     }
-                    _posterView.buildPoster();
-                    return;
+                    Badge badge = (Badge) ((ItemIcon) sicon).getItem();
+                    poster.badgeIds[idx] = badge.getType().code();
                 }
-                // this should not happen
-                BangUI.play(BangUI.FeedbackSound.INVALID_ACTION);
-                return;
+                for ( ; idx < poster.badgeIds.length; idx++) {
+                    poster.badgeIds[idx] = -1;
+                }
+                _posterView.buildPoster();
             }
         });
     }

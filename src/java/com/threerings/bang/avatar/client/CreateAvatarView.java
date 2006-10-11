@@ -78,7 +78,7 @@ public class CreateAvatarView extends BDecoratedWindow
 
         col = GroupLayout.makeHBox(GroupLayout.RIGHT);
         col.add(new BLabel(_msgs.get("m.handle"), "dialog_label"));
-        col.add(_handle = new BTextField("", BangUI.TEXT_FIELD_MAX_LENGTH));
+        col.add(_handle = new BTextField(""));
         _handle.setPreferredWidth(150);
         _handle.setDocument(new HandleDocument());
         _handle.addListener(new HandleListener(
