@@ -85,6 +85,9 @@ public class UnitSprite extends MobileSprite
     public UnitSprite (String type)
     {
         super("units", type);
+        UnitConfig uconfig = UnitConfig.getConfig(type);
+        _name = uconfig.model;
+        _variant = uconfig.variant;
     }
 
     @Override // documentation inherited
@@ -387,7 +390,7 @@ public class UnitSprite extends MobileSprite
         } else if (shot.type == ShotEffect.DUD) {
             return sounds.getSound("rsrc/cards/frontier_town/dud/shot.wav");
         }
-        String path = "rsrc/units/" + ((Unit)_piece).getType() + "/" +
+        String path = "rsrc/units/" + _name + "/" +
             ShotEffect.SHOT_ACTIONS[shot.type] + ".wav";
         // TODO: fall back to a generic sound if we don't have a
         // special sound for this unit for this shot type
@@ -401,7 +404,7 @@ public class UnitSprite extends MobileSprite
      */
     public Sound getDyingSound (SoundGroup sounds)
     {
-        String path = "rsrc/units/" + ((Unit)_piece).getType() + "/dying.wav";
+        String path = "rsrc/units/" + _name + "/dying.wav";
         return SoundUtil.haveSound(path) ? sounds.getSound(path) : null;
     }
     
@@ -440,13 +443,12 @@ public class UnitSprite extends MobileSprite
         }
 
         // make sure the pending move textures for our unit type are loaded
-        String type = unit.getType();
-        _pendtexs = _pendtexmap.get(type);
+        _pendtexs = _pendtexmap.get(_name);
         if (_pendtexs == null) {
-            _pendtexmap.put(type, _pendtexs = new Texture[4]);
+            _pendtexmap.put(_name, _pendtexs = new Texture[4]);
             for (int ii = 0; ii < _pendtexs.length; ii++) {
                 _pendtexs[ii] = _ctx.getTextureCache().getTexture(
-                    "units/" + type + "/pending.png", 64, 64, 2, ii);
+                    "units/" + _name + "/pending.png", 64, 64, 2, ii);
                 _pendtexs[ii].setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
                 RenderUtil.createTextureState(_ctx, _pendtexs[ii]).load();
             }

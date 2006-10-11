@@ -446,10 +446,22 @@ public class ForestGuardians extends Scenario
         {
             // spawn the next wave
             float ratio = BASE_ROBOT_RATIO +
-                ROBOT_RATIO_INCREMENT * _difficulty;
-            _target = (int)Math.round(getUnitTotal() * ratio);
-            _living = 0;
-            spawnRobots(bangobj, _target);
+                    ROBOT_RATIO_INCREMENT * _difficulty,
+                sratio = BASE_SUPER_RATIO +
+                    SUPER_RATIO_INCREMENT * _difficulty;
+            int rcount = (int)Math.round(getUnitTotal() * ratio), // total bots
+                scount = (int)Math.round(rcount * sratio), // super bots
+                ncount = rcount - scount; // non-super bots
+            _target[LoggingRobot.LOCUST] = ncount / 2;
+            _target[LoggingRobot.NORMAL] =
+                ncount - _target[LoggingRobot.LOCUST];
+            _target[LoggingRobot.SUPER_LOCUST] = scount / 2;
+            _target[LoggingRobot.SUPER] =
+                scount - _target[LoggingRobot.SUPER_LOCUST];
+            for (int ii = 0; ii < LoggingRobot.UNIT_TYPES.length; ii++) {
+                _living[ii] = 0;
+                spawnRobots(bangobj, ii, _target[ii]);
+            }
             
             // determine the rate at which robots respawn
             _rate = Math.min(BASE_RESPAWN_RATE +
@@ -463,23 +475,25 @@ public class ForestGuardians extends Scenario
             if (_nextWaveCountdown >= 0) {
                 return;
             }
-            
+
             // update bots according to logic
             _logic.tick(bangobj.getPieceArray(), tick);
             
-            // consider spawning more bots
-            if (_living < _target) {
+            // consider spawning more bots of each type
+            for (int ii = 0; ii < LoggingRobot.UNIT_TYPES.length; ii++) {
+                int delta = _target[ii] - _living[ii];
+                if (delta <= 0) {
+                    _accum[ii] = 0f;
+                    continue;
+                }
                 // double the rate because we want that to be the average
                 // number of bots per tick
-                _accum += (FastMath.nextRandomFloat() *
-                    _rate * (_target - _living) * 2f);
-                int nbots = (int)_accum;
+                int nbots = (int)(_accum[ii] +=
+                    (FastMath.nextRandomFloat() * _rate * delta * 2));
                 if (nbots > 0) {
-                    spawnRobots(bangobj, nbots);
-                    _accum -= nbots;
+                    spawnRobots(bangobj, ii, nbots);
+                    _accum[ii] -= nbots;
                 }
-            } else {
-                _accum = 0f;
             }
         }
         
@@ -487,11 +501,11 @@ public class ForestGuardians extends Scenario
         public void pieceWasKilled (BangObject bangobj, Piece piece)
         {
             if (piece instanceof LoggingRobot) {
-                _living--;
+                _living[((LoggingRobot)piece).getRobotType()]--;
             }
         }
         
-        protected void spawnRobots (BangObject bangobj, int count)
+        protected void spawnRobots (BangObject bangobj, int type, int count)
         {
             Point[] bspots = findRobotSpawnPoints(bangobj, count);
             for (Point bspot : bspots) {
@@ -500,24 +514,24 @@ public class ForestGuardians extends Scenario
                         "[where=" + _bangmgr.where() + "]");
                     return;
                 }
-                Unit unit = Unit.getUnit(
-                    RandomUtil.pickRandom(LoggingRobot.UNIT_TYPES));
+                Unit unit = Unit.getUnit(LoggingRobot.UNIT_TYPES[type]);
                 unit.assignPieceId(bangobj);
                 unit.position(bspot.x, bspot.y);
-                _bangmgr.addPiece(unit, (bangobj.tick >= 0) ?
-                    AddPieceEffect.DROPPED : null);
-                _living++;
+                _bangmgr.addPiece(unit, AddPieceEffect.DROPPED);
+                _living[type]++;
             }
         }
         
         /** The logic used to control the robots. */
         protected LoggingRobotLogic _logic;
         
-        /** The number of living robots and the target number. */
-        protected int _living, _target;
+        /** The number of living robots of each type and the target numbers. */
+        protected int[] _living = new int[LoggingRobot.UNIT_TYPES.length],
+            _target = new int[LoggingRobot.UNIT_TYPES.length];
         
-        /** The rate at which robots respawn and the accumulator. */
-        protected float _rate, _accum;
+        /** The rate at which robots respawn and the accumulators. */
+        protected float _rate;
+        protected float[] _accum = new float[LoggingRobot.UNIT_TYPES.length];
     }
     
     /** Controls the behavior of the logging robots. */

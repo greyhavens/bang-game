@@ -147,7 +147,7 @@ public class ActiveSprite extends PieceSprite
         // pose
         if (_dead && piece.isAlive()) {
             log.info("Resurrected " + piece);
-            loadModel(_type, _name);
+            loadModel(_type, _name, _variant);
             _dead = false;
         }
     }
@@ -236,7 +236,7 @@ public class ActiveSprite extends PieceSprite
         _procActions.put(DEAD, new ProceduralAction() {
             public float activate () {
                 String oname = _name;
-                loadModel(_type, getDeadModel());
+                loadModel(_type, getDeadModel(), _variant);
                 _name = oname;
                 _dead = true;
                 return FastMath.FLT_EPSILON;
@@ -309,7 +309,7 @@ public class ActiveSprite extends PieceSprite
         super.createGeometry();
 
         // load our model
-        loadModel(_type, _name);
+        loadModel(_type, _name, _variant);
     }
 
     @Override // documentation inherited

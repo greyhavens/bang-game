@@ -53,6 +53,12 @@ public class UnitConfig
      * etc.). */
     public String type;
 
+    /** The unit model (usually the same as the unit type). */
+    public String model;
+    
+    /** The model variant, where <code>null</code> is the default. */
+    public String variant;
+    
     /** The modality of this unit: {@link Mode#GROUND}, {@link Mode#AIR} or
      * {@link Mode#RANGE}. */
     public Mode mode;
@@ -284,6 +290,8 @@ public class UnitConfig
         // fill in a config instance from the properties file
         UnitConfig config = new UnitConfig();
         config.type = type;
+        config.model = props.getProperty("model", type);
+        config.variant = props.getProperty("variant");
         config.unitClass = props.getProperty("class");
         config.moveSound = props.getProperty("move_sound");
         config.badgeCode = BangUtil.getIntProperty(type, props, "badge", 0);

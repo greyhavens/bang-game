@@ -667,15 +667,24 @@ public class PieceSprite extends Sprite
      */
     protected void loadModel (String type, String name)
     {
+        loadModel(type, name, null);
+    }
+    
+    /**
+     * Loads the identified model and attaches it to this sprite.
+     */
+    protected void loadModel (String type, String name, String variant)
+    {
         _type = type;
         _name = name;
+        _variant = variant;
         
         // if we're not displaying units, don't load any models
         if (!Config.displayUnits) {
             return;
         }
         _view.addResolving(this);
-        _ctx.getModelCache().getModel(type, name, _zations,
+        _ctx.getModelCache().getModel(type, name, variant, _zations,
             new ResultAttacher<Model>(this) {
             public void requestCompleted (Model model) {
                 super.requestCompleted(model);
@@ -731,8 +740,8 @@ public class PieceSprite extends Sprite
     /** Most pieces have an underlying model, so we provide a reference. */
     protected Model _model;
 
-    /** The type and name of the loaded model. */
-    protected String _type, _name;
+    /** The type, name, and variant of the loaded model. */
+    protected String _type, _name, _variant;
 
     /** The number of damage indicators being shown. */
     protected int _damOn, _damOff;

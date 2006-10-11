@@ -34,9 +34,24 @@ public class LoggingRobot extends Unit
     /** Indicates that this robot is of the locust variety. */
     public static final int LOCUST = 1;
     
+    /** Indicates that this robot is of the super variety. */
+    public static final int SUPER = 2;
+    
+    /** Indicates that this robot is of the super locust variety. */
+    public static final int SUPER_LOCUST = 3;
+    
     /** The two different logging robot unit types. */
     public static final String[] UNIT_TYPES = {
-        "indian_post/logging_robot", "indian_post/locust_robot" };
+        "indian_post/logging_robot", "indian_post/locust_robot",
+        "indian_post/super_logging_robot", "indian_post/super_locust_robot" };
+    
+    /**
+     * Returns the type of this robot ({@link #NORMAL}, {@link #LOCUST}, etc.)
+     */
+    public int getRobotType ()
+    {
+        return _type;
+    }
     
     @Override // documentation inherited
     public int getTreeProximityDamage ()
@@ -47,7 +62,7 @@ public class LoggingRobot extends Unit
     @Override // documentation inherited
     public boolean isFlyer ()
     {
-        return _type == LOCUST;
+        return isLocust();
     }
     
     @Override // documentation inherited
@@ -63,7 +78,7 @@ public class LoggingRobot extends Unit
         BangObject bangobj, Piece target, boolean allowSelf)
     {
         // locust robots can attack trees directly
-        if (_type == LOCUST && target instanceof TreeBed && target.isAlive() &&
+        if (isLocust() && target instanceof TreeBed && target.isAlive() &&
             ((TreeBed)target).growth > 0) {
             return true;
         }
@@ -77,7 +92,7 @@ public class LoggingRobot extends Unit
     protected ShotEffect generateShotEffect (
             BangObject bangobj, Piece target, int damage)
     {
-        if (_type == LOCUST) {
+        if (isLocust()) {
             return new ShotEffect(this, target, damage,
                 attackInfluenceIcons(), defendInfluenceIcons(target));
         } else {
@@ -91,7 +106,7 @@ public class LoggingRobot extends Unit
             short tick, BangObject bangobj, Piece[] pieces)
     {
         ArrayList<Effect> effects = super.tick(tick, bangobj, pieces);
-        if (!isAlive() || _type == LOCUST) {
+        if (!isAlive() || isLocust()) {
             return effects;
         }
         ArrayList<ShotEffect> proxShots = new ArrayList<ShotEffect>();
@@ -103,13 +118,14 @@ public class LoggingRobot extends Unit
             }
             if (_type == NORMAL && piece instanceof Unit &&
                     piece.owner != -1 && !piece.isAirborne()) {
-                proxShot = addProxShot(
-                        proxShot, proxShots, piece, UNIT_PROXIMITY_DAMAGE);
+                proxShot = addProxShot(proxShot, proxShots, piece,
+                    scaleProximityDamage(UNIT_PROXIMITY_DAMAGE));
+                    
             } else if (piece instanceof TreeBed && 
                     ((TreeBed)piece).growth > 0) {
                 TreeBed tb = (TreeBed)piece;
-                proxShot = addProxShot(
-                        proxShot, proxShots, tb, TREE_PROXIMITY_DAMAGE);
+                proxShot = addProxShot(proxShot, proxShots, tb,
+                    scaleProximityDamage(TREE_PROXIMITY_DAMAGE));
             }
         }
         if (proxShot != null) {
@@ -142,6 +158,23 @@ public class LoggingRobot extends Unit
         }
     }
     
+    /**
+     * Determines whether this robot is of the alternate, "locust" variety.
+     */
+    protected boolean isLocust ()
+    {
+        return (_type == LOCUST || _type == SUPER_LOCUST);
+    }
+    
+    /**
+     * Scales the given proximity damage according to the type of this robot.
+     */
+    protected int scaleProximityDamage (int damage)
+    {
+        return (_type == SUPER) ?
+            (int)(damage * SUPER_PROXIMITY_DAMAGE_SCALE) : damage;
+    }
+    
     /** The specific logging robot variety. */
     protected transient int _type;
     
@@ -152,4 +185,7 @@ public class LoggingRobot extends Unit
     /** The base amount by which normal logging robots next to units damage
      * them with their rotating saw blades. */
     public static final int UNIT_PROXIMITY_DAMAGE = 5;
+    
+    /** A multiplier for super robots' proximity damage. */
+    public static final float SUPER_PROXIMITY_DAMAGE_SCALE = 1.5f;
 }

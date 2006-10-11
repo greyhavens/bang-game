@@ -45,7 +45,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Maintains a cache of particle system effects.
  */
-public class EffectCache extends PrototypeCache<Spatial>
+public class EffectCache extends PrototypeCache<String, Spatial>
 {    
     /** The rotation from y-up coordinates to z-up coordinates. */
     public static final Quaternion Z_UP_ROTATION = new Quaternion();

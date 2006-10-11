@@ -18,7 +18,7 @@ import static com.threerings.bang.Log.log;
 /**
  * The base class of caches of prototypes used to create cloned instances.
  */
-public abstract class PrototypeCache<T>
+public abstract class PrototypeCache<S, T>
 {
     public PrototypeCache (BasicContext ctx)
     {
@@ -26,20 +26,30 @@ public abstract class PrototypeCache<T>
     }
     
     /**
-     * Creates an instance of the identified object, loading it on the invoker
-     * thread if necessary.
+     * Creates an instance of the identified object, loading its prototype
+     * on the invoker thread if necessary.
      */
     protected void getInstance (
-        String key, Colorization[] zations, ResultListener<T> rl)
+        S key, Colorization[] zations, ResultListener<T> rl)
+    {
+        getPrototype(key, (rl == null) ?
+            null : new InstanceCreator(key, zations, rl));
+    }
+    
+    /**
+     * Fetches the prototype for the identified object, loading it on the
+     * invoker thread if necessary.
+     */
+    protected void getPrototype (S key, ResultListener<T> rl)
     {
         Object value = _prototypes.get(key);
         if (value == null) {
             ResultListenerList<T> rll = new ResultListenerList<T>();
             if (rl != null) {
-                rll.add(new InstanceCreator(key, zations, rl));
+                rll.add(rl);
             }
             _prototypes.put(key, rll);
-            _ctx.getInvoker().postUnit(new PrototypeLoader(key));
+            postPrototypeLoader(key);
             
         } else if (rl == null) {
             return;
@@ -47,22 +57,30 @@ public abstract class PrototypeCache<T>
         } else if (value instanceof ResultListenerList) {
             @SuppressWarnings("unchecked") ResultListenerList<T> rll =
                 (ResultListenerList<T>)value;
-            rll.add(new InstanceCreator(key, zations, rl));
+            rll.add(rl);
             
         } else if (value instanceof Exception) {
             rl.requestFailed((Exception)value);
             
         } else {
             @SuppressWarnings("unchecked") T prototype = (T)value;
-            rl.requestCompleted(createInstance(key, prototype, zations));
+            rl.requestCompleted(prototype);
         }
+    }
+    
+    /**
+     * Queues up a prototype loader for the identified object.
+     */
+    protected void postPrototypeLoader (S key)
+    {
+        _ctx.getInvoker().postUnit(new PrototypeLoader(key));
     }
     
     /**
      * Loads the prototype corresponding to the given key on the invoker
      * thread.
      */
-    protected abstract T loadPrototype (String key)
+    protected abstract T loadPrototype (S key)
         throws Exception;
     
     /**
@@ -74,7 +92,32 @@ public abstract class PrototypeCache<T>
      * Creates and returns a new instance from the given prototype.
      */
     protected abstract T createInstance (
-        String key, T prototype, Colorization[] zations);
+        S key, T prototype, Colorization[] zations);
+    
+    /**
+     * Called on the main thread after the prototype has been successfully
+     * loaded and initialized.
+     */
+    protected void loadPrototypeCompleted (S key, T prototype)
+    {
+        @SuppressWarnings("unchecked") ResultListener<T> rl =
+            (ResultListener<T>)_prototypes.get(key);
+        
+        _prototypes.put(key, prototype);
+        rl.requestCompleted(prototype);
+            
+    }
+    
+    /**
+     * Called on the main thread after the prototype failed to load.
+     */
+    protected void loadPrototypeFailed (S key, Exception cause)
+    {
+        @SuppressWarnings("unchecked") ResultListener<T> rl =
+            (ResultListener<T>)_prototypes.get(key);
+        _prototypes.put(key, cause);
+        rl.requestFailed(cause);
+    }
     
     /**
      * Normalizes the provided relative path.
@@ -95,7 +138,7 @@ public abstract class PrototypeCache<T>
         implements ResultListener<T>
     {
         public InstanceCreator (
-            String key, Colorization[] zations, ResultListener<T> listener)
+            S key, Colorization[] zations, ResultListener<T> listener)
         {
             _key = key;
             _zations = zations;
@@ -115,7 +158,7 @@ public abstract class PrototypeCache<T>
         }
         
         /** The object key. */
-        protected String _key;
+        protected S _key;
         
         /** The colorizations to apply to the instance, or <code>null</code>
          * for none. */
@@ -128,7 +171,7 @@ public abstract class PrototypeCache<T>
     /** Loads a prototype on the invoker thread. */
     protected class PrototypeLoader extends Invoker.Unit
     {
-        public PrototypeLoader (String key)
+        public PrototypeLoader (S key)
         {
             _key = key;
         }
@@ -149,21 +192,16 @@ public abstract class PrototypeCache<T>
         @Override // documentation inherited
         public void handleResult ()
         {
-            @SuppressWarnings("unchecked") ResultListener<T> rl =
-                (ResultListener<T>)_prototypes.get(_key);
             if (_prototype != null) {
                 initPrototype(_prototype);
-                _prototypes.put(_key, _prototype);
-                rl.requestCompleted(_prototype);
-                
+                loadPrototypeCompleted(_key, _prototype);
             } else {
-                _prototypes.put(_key, _cause);
-                rl.requestFailed(_cause);
+                loadPrototypeFailed(_key, _cause);
             }
         }
         
-        /** The name of the prototype to load. */
-        protected String _key;
+        /** Identifies the prototype to load. */
+        protected S _key;
         
         /** In case of success, the loaded prototype. */
         protected T _prototype;
@@ -178,8 +216,8 @@ public abstract class PrototypeCache<T>
     /** Maps keys to prototypes for those that have been loaded, to
      * {@link ResultListenerList}s for those being loaded, or to
      * {@link Exception}s for those that failed to load. */
-    protected HashMap<String, Object> _prototypes =
-        new HashMap<String, Object>();
+    protected HashMap<S, Object> _prototypes =
+        new HashMap<S, Object>();
     
     /** Used to normalize relative paths. */
     protected static final String PATH_DOTDOT = "[^/.]+/\\.\\./";

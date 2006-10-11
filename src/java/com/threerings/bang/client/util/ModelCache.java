@@ -14,6 +14,8 @@ import com.jme.scene.Spatial;
 import com.jme.scene.state.TextureState;
 
 import com.samskivert.util.Invoker;
+import com.samskivert.util.ListUtil;
+import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.ResultListenerList;
 
@@ -30,7 +32,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Maintains a cache of resolved 3D models.
  */
-public class ModelCache extends PrototypeCache<Model>
+public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
 {
     public ModelCache (BasicContext ctx)
     {
@@ -63,16 +65,61 @@ public class ModelCache extends PrototypeCache<Model>
         String type, String name, Colorization[] zations,
         ResultListener<Model> rl)
     {
-        String key = type + "/" + name;
-        getInstance(key, zations, rl);
+        getModel(type, name, null, zations, rl);
     }
 
+    /**
+     * Loads an instance of the specified model.
+     *
+     * @param variant the model variant desired, or <code>null</code>
+     * for the default
+     * @param zations colorizations to apply to the model's textures, or
+     * <code>null</code> for none
+     * @param rl the listener to notify with the resulting model, or
+     * <code>null</code> to load the model without creating an instance
+     */
+    public void getModel (
+        String type, String name, String variant, Colorization[] zations,
+        ResultListener<Model> rl)
+    {
+        getInstance(new ModelKey(type, name, variant), zations, rl);
+    }
+    
+    @Override // documentation inherited
+    protected void postPrototypeLoader (final ModelKey key)
+    {
+        // variants are loaded by loading and configuring the default prototype
+        if (key.variant != null) {
+            getPrototype(key.getDefaultVariantKey(),
+                new ResultListener<Model>() {
+                public void requestCompleted (Model result) {
+                    // if it's not a listed variant, it's the default
+                    String[] variants = result.getVariantNames();
+                    if (ListUtil.contains(variants, key.variant)) {
+                        Model prototype = result.createPrototype(key.variant);
+                        prototype.resolveTextures(
+                            new ModelTextureProvider(key, null));
+                        loadPrototypeCompleted(key, prototype);
+                    } else {
+                        loadPrototypeCompleted(key, result);
+                    }
+                }
+                public void requestFailed (Exception cause) {
+                    loadPrototypeFailed(key, cause);
+                }
+            });
+            
+        } else {
+            super.postPrototypeLoader(key);
+        }
+    }
+    
     // documentation inherited
-    protected Model loadPrototype (String key)
+    protected Model loadPrototype (ModelKey key)
         throws Exception
     {
         File file = _ctx.getResourceManager().getResourceFile(
-            key + "/model.dat");
+            key.type + "/model.dat");
         long start = PerfMonitor.getCurrentMicros();
         int size = (int)file.length();
         Model model = Model.readFromFile(file, size >= MIN_MAP_SIZE &&
@@ -81,7 +128,7 @@ public class ModelCache extends PrototypeCache<Model>
         PerfMonitor.recordModelLoad(start, size);
         return model;
     }
-    
+
     // documentation inherited
     protected void initPrototype (Model prototype)
     {
@@ -94,7 +141,7 @@ public class ModelCache extends PrototypeCache<Model>
     
     // documentation inherited
     protected Model createInstance (
-        String key, Model prototype, Colorization[] zations)
+        ModelKey key, Model prototype, Colorization[] zations)
     {
         Model instance = prototype.createInstance();
         if (zations != null) {
@@ -108,7 +155,7 @@ public class ModelCache extends PrototypeCache<Model>
     protected class ModelTextureProvider
         implements TextureProvider
     {
-        public ModelTextureProvider (String key, Colorization[] zations)
+        public ModelTextureProvider (ModelKey key, Colorization[] zations)
         {
             _key = key;
             _zations = zations;
@@ -118,7 +165,7 @@ public class ModelCache extends PrototypeCache<Model>
         public TextureState getTexture (String name)
         {
             String path = name.startsWith("/") ?
-                name.substring(1) : cleanPath(_key + "/" + name);
+                name.substring(1) : cleanPath(_key.type + "/" + name);
             TextureState tstate = _tstates.get(path);
             if (tstate == null) {
                 _tstates.put(path,
@@ -132,7 +179,7 @@ public class ModelCache extends PrototypeCache<Model>
         }
         
         /** The model key. */
-        protected String _key;
+        protected ModelKey _key;
         
         /** The colorizations to apply, or <code>null</code> for none. */
         protected Colorization[] _zations;
@@ -140,6 +187,46 @@ public class ModelCache extends PrototypeCache<Model>
         /** Maps texture paths to texture states created so far. */
         protected HashMap<String, TextureState> _tstates =
             new HashMap<String, TextureState>();
+    }
+    
+    /** Identifies a model type/variant. */
+    protected static class ModelKey
+    {
+        public String type, variant;
+        
+        public ModelKey (String type, String name, String variant)
+        {
+            this.type = type + "/" + name;
+            this.variant = variant;
+        }
+        
+        /**
+         * Returns the key of the default variant of this model.
+         */
+        public ModelKey getDefaultVariantKey ()
+        {
+            return new ModelKey(type);
+        }
+        
+        @Override // documentation inherited
+        public boolean equals (Object other)
+        {
+            ModelKey okey = (ModelKey)other;
+            return type.equals(okey.type) &&
+                ObjectUtil.equals(variant, okey.variant);
+        }
+        
+        @Override // documentation inherited
+        public int hashCode ()
+        {
+            return type.hashCode() +
+                (variant == null ? 0 : variant.hashCode());
+        }
+        
+        protected ModelKey (String type)
+        {
+            this.type = type;
+        }
     }
     
     /** Models bigger than this have their buffers mapped into memory. */
