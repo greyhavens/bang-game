@@ -331,7 +331,7 @@ public class AvatarView extends BLabel
     {
         if (_image != null) {
             int ix = (getWidth() - _image.getWidth())/2;
-            int iy = 0;
+            int iy = (getHeight() - _image.getHeight())/2;
             if (_scroll != null) {
                 iy = _scroll.getHeight()/2;
             }
