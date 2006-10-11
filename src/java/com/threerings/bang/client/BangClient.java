@@ -394,6 +394,11 @@ public class BangClient extends BasicClient
      */
     public boolean canDisplayPopup (MainView.Type type)
     {
+        // don't allow popups during view transitions
+        if (_viewTransition) {
+            return false;
+        }
+
         // only allow status view after we've created our avatar
         if (type == MainView.Type.STATUS &&
             _ctx.getUserObject().handle == null) {
@@ -935,10 +940,12 @@ public class BangClient extends BasicClient
                 protected void fadeComplete () {
                     super.fadeComplete();
                     _ctx.getRootNode().removeWindow(_mview);
+                    _viewTransition = false;
                     fadeInMainView(view);
                 }
             };
             _ctx.getInterface().attachChild(fade);
+            _viewTransition = true;
         } else {
             fadeInMainView(view);
         }
@@ -1128,4 +1135,5 @@ public class BangClient extends BasicClient
     protected String _playingMusic;
     protected OggFileStream _mstream;
     protected boolean _playedIntro;
+    protected boolean _viewTransition = false;
 }
