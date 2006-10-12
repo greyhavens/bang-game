@@ -15,10 +15,15 @@ import com.jme.scene.state.TextureState;
 import com.jme.util.geom.BufferUtils;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
+import com.threerings.bang.game.client.BoardView;
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
+
+import com.threerings.openal.SoundGroup;
 
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -49,12 +54,27 @@ public class CounterSprite extends PropSprite
     {
         return Coloring.DYNAMIC;
     }
-    
+
+    @Override // documentation inherited
+    public void init (BasicContext ctx, BoardView view, BangBoard board,
+                      SoundGroup sounds, Piece piece, short tick)
+    {
+        super.init(ctx, view, board, sounds, piece, tick);
+        updateCount(piece);
+    }
+
     @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
+        updateCount(piece);
+    }
 
+    /**
+     * Updates the count hovering over the sprite.
+     */
+    protected void updateCount (Piece piece)
+    {
         // recompute and display our nugget count
         Counter counter = (Counter)piece;
         if (_piece.owner >= 0 && _dcount != counter.count) {
