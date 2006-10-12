@@ -1,4 +1,4 @@
-489
+492
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -167,7 +167,10 @@ female/head := round := 207
 female/head := sharp := 113
 female/head := slant := 473
 female/jewelry := earing_hoop := 114
+female/jewelry := earring_bone := 490
 female/jewelry := earring_hoop := 132
+female/jewelry_back := earring_bone := 491
+female/jewelry_back := earring_hoop := 492
 female/makeup := badger := 314
 female/makeup := bear := 153
 female/makeup := beautymark := 115

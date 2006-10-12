@@ -848,15 +848,16 @@
 
 
   <!-- female jewelry: frontier town -->
-
   <article name="female_earring_hoop" townId="frontier_town"
            slot="jewelry" scrip="2500" coins="2" colors="clothes_p">
     <component cclass="female/jewelry" name="earring_hoop"/>
+    <component cclass="female/jewelry_back" name="earring_hoop"/>
   </article>
 
   <article name="female_earring_bone" townId="frontier_town"
            slot="jewelry" scrip="3000" coins="2" colors="clothes_s,clothes_t">
     <component cclass="female/jewelry" name="earring_bone"/>
+    <component cclass="female/jewelry_back" name="earring_bone"/>
   </article>
 
 
