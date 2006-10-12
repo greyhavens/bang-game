@@ -42,6 +42,9 @@ public class Marker extends Piece
     /** A particular marker type. */
     public static final int SAFE_ALT = 9;
 
+    /** A particular marker type. */
+    public static final int IMPASS = 10;
+
     /**
      * Handy function for checking if this piece is a marker and of the
      * specified type.
@@ -49,6 +52,17 @@ public class Marker extends Piece
     public static boolean isMarker (Piece piece, int type)
     {
         return (piece instanceof Marker) && ((Marker)piece).getType() == type;
+    }
+
+    /**
+     * Creates the appropriate Marker.
+     */
+    public static Marker getMarker (int type)
+    {
+        if (type == SAFE || type == SAFE_ALT) {
+            return new SafeMarker(type);
+        }
+        return new Marker(type);
     }
 
     /**
@@ -90,12 +104,6 @@ public class Marker extends Piece
     }
 
     @Override // documentation inherited
-    public int getGoalRadius (Piece mover)
-    {
-        return (_type == SAFE) ? 0 : -1;
-    }
-    
-    @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new MarkerSprite(_type);
@@ -106,7 +114,15 @@ public class Marker extends Piece
      */
     public boolean addSprite ()
     {
-        return _type == SAFE || _type == SAFE_ALT;
+        return false;
+    }
+
+    /**
+     * Returns true if we want this marker in the pieces array.
+     */
+    public boolean keepMarker ()
+    {
+        return _type == IMPASS || addSprite();
     }
 
     @Override // documentation inherited

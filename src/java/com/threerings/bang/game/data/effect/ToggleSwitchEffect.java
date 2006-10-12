@@ -9,6 +9,7 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.SafeMarker;
 import com.threerings.bang.game.data.piece.ToggleSwitch;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.ToggleSwitchEffectHandler;
@@ -97,6 +98,12 @@ public class ToggleSwitchEffect extends Effect
         }
         if (state != null) {
             ts.state = state;
+            for (Piece p : bangobj.pieces) {
+                if (p instanceof SafeMarker) {
+                    ((SafeMarker)p).setSquare(
+                            state == ToggleSwitch.State.SQUARE);
+                }
+            }
         }
         reportEffect(obs, ts, UPDATED);
         if (switchIds == null) {

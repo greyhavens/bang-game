@@ -815,8 +815,14 @@ public class BangBoard extends SimpleStreamableObject
                 }
             }
 
-        } else if (!_playarea.contains(piece.x, piece.y) ||
-            piece instanceof Marker) {
+        } else if (!_playarea.contains(piece.x, piece.y)) {
+            return;
+
+        } else if (piece instanceof Marker) {
+            if (Marker.isMarker(piece, Marker.IMPASS)) {
+                int idx = _width * piece.y + piece.x;
+                _tstate[idx] = _btstate[idx] = O_IMPASS;
+            }
             return;
 
         } else if (piece instanceof Track) {

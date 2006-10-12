@@ -360,14 +360,6 @@ public class BangView extends BWindow
     }
 
     /**
-     * Returns the list of markers in game.
-     */
-    public ArrayList<Marker> getMarkers ()
-    {
-        return _markers;
-    }
-
-    /**
      * Prepares for the coming round.
      *
      * @return true if prepared, false if waiting to receive board from server
@@ -429,19 +421,17 @@ public class BangView extends BWindow
             _bangobj.maxPieceId = 0;
             ArrayList<Piece> plist = new ArrayList<Piece>();
             for (Piece piece : pieces) {
-                if ((piece instanceof Marker && 
+                if (!piece.isValidScenario(_bangobj.scenario.getIdent())) {
+                    continue;
+                } else if (piece instanceof Marker && 
                         (!_bangobj.scenario.isValidMarker((Marker)piece) ||
-                        !((Marker)piece).addSprite())) ||
-                    !piece.isValidScenario(_bangobj.scenario.getIdent())) {
+                         !((Marker)piece).keepMarker())) {
                     continue;
                 }
                 piece = (Piece)piece.clone();
                 piece.assignPieceId(_bangobj);
                 piece.init();
                 plist.add(piece);
-                if (piece instanceof Marker) {
-                    _markers.add((Marker)piece);
-                }
             }
             _bangobj.pieces = new ModifiableDSet<Piece>(plist.iterator());
             for (Piece update : _bangobj.boardUpdates) {
@@ -452,12 +442,6 @@ public class BangView extends BWindow
         // tell the board view to start the game so that we can see the board
         // while we're buying pieces
         view.prepareForRound(_bangobj, config, pidx);
-
-        // Once we've added all the MarkerSprites we don't want the marker
-        // pieces hanging around causing problems
-        for (Marker m : _markers) {
-            _bangobj.removePieceDirect(m);
-        }
 
         // let the camera and input handlers know that we're getting ready to
         // start
@@ -646,9 +630,6 @@ public class BangView extends BWindow
     /** Takes periodic samples of our frames per second and reports them to the
      * server at the end of the round. */
     protected PerformanceTracker _perftrack;
-
-    /** Reference to the markers that have sprites. */
-    ArrayList<Marker> _markers = new ArrayList<Marker>();
 
     /** The time it takes for a played card to fall into position. */
     protected static final float CARD_FALL_DURATION = 0.5f;

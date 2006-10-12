@@ -28,6 +28,7 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
+import com.threerings.bang.game.data.piece.SafeMarker;
 import com.threerings.bang.game.data.piece.Viewpoint;
 import com.threerings.bang.util.BasicContext;
 
@@ -49,16 +50,17 @@ public class PieceChooser extends JPanel
         PieceCategory root = new PieceCategory("", "");
         
         addPiece(root, "viewpoint", new Viewpoint());
-        addPiece(root, "markers/start", new Marker(Marker.START));
+        addPiece(root, "markers/start", Marker.getMarker(Marker.START));
         //addPiece(root, "markers/bonus", new Marker(Marker.BONUS));
-        addPiece(root, "markers/cattle", new Marker(Marker.CATTLE));
-        addPiece(root, "markers/lode", new Marker(Marker.LODE));
-        addPiece(root, "markers/totem", new Marker(Marker.TOTEM));
-        addPiece(root, "markers/safe", new Marker(Marker.SAFE));
-        addPiece(root, "markers/robots", new Marker(Marker.ROBOTS));
-        addPiece(root, "markers/talisman", new Marker(Marker.TALISMAN));
-        addPiece(root, "markers/fetish", new Marker(Marker.FETISH));
-        addPiece(root, "markers/safe_alt", new Marker(Marker.SAFE_ALT));
+        addPiece(root, "markers/cattle", Marker.getMarker(Marker.CATTLE));
+        addPiece(root, "markers/lode", Marker.getMarker(Marker.LODE));
+        addPiece(root, "markers/totem", Marker.getMarker(Marker.TOTEM));
+        addPiece(root, "markers/safe", Marker.getMarker(Marker.SAFE));
+        addPiece(root, "markers/robots", Marker.getMarker(Marker.ROBOTS));
+        addPiece(root, "markers/talisman", Marker.getMarker(Marker.TALISMAN));
+        addPiece(root, "markers/fetish", Marker.getMarker(Marker.FETISH));
+        addPiece(root, "markers/safe_alt", Marker.getMarker(Marker.SAFE_ALT));
+        addPiece(root, "markers/impass", Marker.getMarker(Marker.IMPASS));
         
         for (PropConfig config : PropConfig.getConfigs()) {
             Prop prop = Prop.getProp(config.type);

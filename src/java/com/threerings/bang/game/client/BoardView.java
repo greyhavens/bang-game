@@ -102,6 +102,7 @@ import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.util.PointSet;
@@ -1002,6 +1003,10 @@ public class BoardView extends BComponent
      */
     protected boolean shouldShowStarter (Piece piece)
     {
+        // some markers don't like being seen
+        if (piece instanceof Marker && !((Marker)piece).addSprite()) {
+            return false;
+        }
         // for medium detail, omit half of the props that are outside of the
         // board or passable; for low detail, omit all of them
         if (!(piece instanceof Prop) ||

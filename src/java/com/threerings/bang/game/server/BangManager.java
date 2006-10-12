@@ -1060,11 +1060,7 @@ public class BangManager extends GameManager
         _bangobj.maxPieceId = 0;
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
-            if (p instanceof Marker) {
-                // We need to keep in sync with the pieceIds on the client
-                if (((Marker)p).addSprite()) {
-                    p.assignPieceId(_bangobj);
-                }
+            if (p instanceof Marker && !((Marker)p).keepMarker()) {
                 iter.remove();
                 continue;
             }

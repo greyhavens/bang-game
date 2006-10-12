@@ -224,7 +224,7 @@ public class BoardData
         String type = oin.readUTF();
         Piece piece;
         if (type.equals("__marker__")) {
-            piece = new Marker(oin.readInt());
+            piece = Marker.getMarker(oin.readInt());
         } else if (type.equals("__track__")) {
             piece = new Track(oin.readByte());
         } else if (type.equals("__viewpoint__")) {

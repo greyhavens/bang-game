@@ -4,11 +4,13 @@
 package com.threerings.bang.game.client;
 
 import com.threerings.bang.game.client.sprite.MarkerSprite;
+import com.threerings.bang.game.client.sprite.SafeMarkerSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ToggleSwitchEffect;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.SafeMarker;
 import com.threerings.bang.game.data.piece.ToggleSwitch;
 import com.threerings.bang.util.BangContext;
 
@@ -34,13 +36,11 @@ public class ToggleSwitchEffectHandler extends EffectHandler
     public void pieceAffected (Piece piece, String effect)
     {
         if (piece.pieceId == _tse.switchId && _tse.state != null) {
-            boolean square = _tse.state == ToggleSwitch.State.SQUARE;
-            for (Marker m : _bview.getMarkers()) {
-                MarkerSprite sprite = (MarkerSprite)_view.getPieceSprite(m);
-                if (Marker.isMarker(m, Marker.SAFE)) {
-                    sprite.setOnOff(m.orientation, square);
-                } else if (Marker.isMarker(m, Marker.SAFE_ALT)) {
-                    sprite.setOnOff(m.orientation, !square);
+            for (Piece p : _bangobj.pieces) {
+                if (p instanceof SafeMarker) {
+                    SafeMarkerSprite sprite = 
+                        (SafeMarkerSprite)_view.getPieceSprite(p);
+                    sprite.updated(p, _tick);
                 }
             }
         }

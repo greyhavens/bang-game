@@ -6,6 +6,7 @@ package com.threerings.bang.game.util;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 
@@ -24,7 +25,8 @@ public class PieceUtil
     {
         ArrayList<Piece> lappers = null;
         for (Piece p : pieces) {
-            if (p.pieceId != piece.pieceId && p.intersects(piece)) {
+            if (p.pieceId != piece.pieceId && p.intersects(piece) && 
+                    !(p instanceof Marker)) {
                 if (lappers == null) {
                     lappers = new ArrayList<Piece>();
                 }
