@@ -9,6 +9,7 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.card.Card;
+import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.*;
 
@@ -56,7 +57,39 @@ public class PlayCardEffect extends Effect
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // no-op
+        switch (card.getPlacementMode()) {
+          case VS_PIECE:
+            Piece piece = bangobj.pieces.get((Integer)target);
+            if (!card.isValidPiece(bangobj, piece)) {
+                target = null;
+            }
+            break;
+          case VS_AREA:
+            int[] coords = (int[])target;
+            if (!card.isValidLocation(bangobj, coords[0], coords[1])) {
+                target = null;
+            }
+            break;
+          case VS_PLAYER:
+            if (!card.isValidPlayer(bangobj, (Integer)target)) {
+                target = null;
+            }
+        }
+    }
+
+    @Override // documentation inherited
+    public boolean isApplicable ()
+    {
+        switch (card.getPlacementMode()) {
+          case VS_PIECE:
+          case VS_AREA:
+          case VS_PLAYER:
+            if (target == null) {
+                return false;
+            }
+            break;
+        }
+        return super.isApplicable();
     }
     
     // documentation inherited
