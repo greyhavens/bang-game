@@ -1004,7 +1004,8 @@ public class BoardView extends BComponent
     protected boolean shouldShowStarter (Piece piece)
     {
         // some markers don't like being seen
-        if (piece instanceof Marker && !((Marker)piece).addSprite()) {
+        if (!PieceSprite.isEditorMode() && piece instanceof Marker && 
+                !((Marker)piece).addSprite()) {
             return false;
         }
         // for medium detail, omit half of the props that are outside of the

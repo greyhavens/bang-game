@@ -248,6 +248,7 @@ public abstract class ScenarioInfo
         switch (marker.getType()) {
         case Marker.START:
         case Marker.BONUS:
+        case Marker.IMPASS:
             return true;
         default:
             return false;
