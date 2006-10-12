@@ -842,7 +842,8 @@ public class BangBoard extends SimpleStreamableObject
             _tstate[_width*piece.y+piece.x] = O_OCCUPIED;
             
         } else {
-            _tstate[_width*piece.y+piece.x] = (piece.isAirborne() ?
+            _tstate[_width*piece.y+piece.x] = 
+                (piece.isAirborne() && piece.isAlive() ?
                     O_AIRBORNE : (byte)piece.team);
         }
     }
