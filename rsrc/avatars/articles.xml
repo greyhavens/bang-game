@@ -650,6 +650,7 @@
   <article name="female_shirt_rifle" townId="indian_post"
            slot="clothing" scrip="2000" coins="1">
     <component cclass="female/clothing_back" name="shirt_rifle"/>
+    <component cclass="female/clothing_front" name="rifle_shirt"/>
   </article>
 
 
