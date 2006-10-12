@@ -172,6 +172,11 @@
     <component cclass="male/clothing_front" name="storm_caller"/>
   </article>
 
+  <article name="male_mink_shirt" townId="indian_post"
+           slot="clothing" scrip="1500" coins="2">
+    <component cclass="male/clothing_back" name="mink_shirt"/>
+  </article>
+
 
   <!-- male familiars: frontier town -->
 
@@ -642,6 +647,11 @@
     <component cclass="female/clothing_front" name="hatchet_jacket"/>
   </article>
 
+  <article name="female_shirt_rifle" townId="indian_post"
+           slot="clothing" scrip="2000" coins="1">
+    <component cclass="female/clothing_back" name="shirt_rifle"/>
+  </article>
+
 
   <!-- female familiars: frontier town -->
   <article name="female_mini_blimp" townId="frontier_town"
@@ -838,6 +848,16 @@
 
 
   <!-- female jewelry: frontier town -->
+
+  <article name="female_earring_hoop" townId="frontier_town"
+           slot="jewelry" scrip="2500" coins="2" colors="clothes_p">
+    <component cclass="female/jewelry" name="earring_hoop"/>
+  </article>
+
+  <article name="female_earring_bone" townId="frontier_town"
+           slot="jewelry" scrip="3000" coins="2" colors="clothes_s,clothes_t">
+    <component cclass="female/jewelry" name="earring_bone"/>
+  </article>
 
 
   <!-- female face paint: frontier town -->
