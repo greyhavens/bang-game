@@ -52,8 +52,6 @@ public class LassoBonusEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        super.prepare(bangobj, dammap);
-
         // find the bonus
         Bonus bonus = null;
         for (Piece piece : bangobj.pieces) {
@@ -74,6 +72,8 @@ public class LassoBonusEffect extends BonusEffect
             return;
         }
         bonusId = bonus.pieceId;
+
+        super.prepare(bangobj, dammap);
 
         // grant the corresponding card
         if (ctype.equals("__random__")) {

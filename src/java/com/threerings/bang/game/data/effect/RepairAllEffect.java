@@ -6,6 +6,7 @@ package com.threerings.bang.game.data.effect;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
+import com.threerings.bang.game.data.piece.Unit;
 
 /**
  * Heals all the living pieces on the board.
@@ -15,7 +16,8 @@ public class RepairAllEffect extends GlobalEffect
     @Override // documentation inherited
     public boolean validPiece (Piece piece)
     {
-        return (piece.isTargetable() && piece.isAlive() && piece.damage > 0);
+        return (piece.isTargetable() && piece instanceof Unit && 
+                piece.isAlive() && piece.damage > 0);
     }
 
     @Override // documentation inherited

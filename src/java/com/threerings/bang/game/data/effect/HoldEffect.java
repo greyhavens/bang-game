@@ -121,8 +121,6 @@ public class HoldEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        super.prepare(bangobj, dammap);
-
         if (!dropping) {
             Unit unit = (Unit)bangobj.pieces.get(pieceId);
             if (unit == null) {
@@ -136,6 +134,8 @@ public class HoldEffect extends BonusEffect
             // bonus; we'll need to update their holding again in apply to
             // ensure that it happens on the client
             unit.holding = type;
+            super.prepare(bangobj, dammap);
+
         }
     }
 

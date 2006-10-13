@@ -66,8 +66,6 @@ public class DuplicateEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        super.prepare(bangobj, dammap);
-
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit == null) {
             return;
@@ -79,6 +77,8 @@ public class DuplicateEffect extends BonusEffect
             log.info("Dropped duplicate effect. No spots [unit=" + unit + "].");
             return;
         }
+
+        super.prepare(bangobj, dammap);
 
         // if no unit was specified, pick one randomly based on their
         // duplication probability

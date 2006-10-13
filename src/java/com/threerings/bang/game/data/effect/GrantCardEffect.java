@@ -50,13 +50,13 @@ public class GrantCardEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        super.prepare(bangobj, dammap);
-
         // make sure our player has room for another card
         if (bangobj.countPlayerCards(_player) >= GameCodes.MAX_CARDS) {
             log.info("No soup four you! " + _player + ".");
             return;
         }
+
+        super.prepare(bangobj, dammap);
 
         card = Card.newCard(
             Card.selectRandomCard(bangobj.townId, bangobj, _player));
