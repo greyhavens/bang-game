@@ -7,7 +7,11 @@ export JAVA_HOME=/usr/local/java
 ROOT=`dirname $0 | sed s:/bin$::`
 ANT=/export/tools/bin/ant
 BANG_HOME=$ROOT/../bang
-for PROJECT in jme-bui narya nenya vilya; do
+for PROJECT in narya nenya vilya; do
+    cd $BANG_HOME/projects/$PROJECT
+    $ANT savedoc snapshot
+done
+for PROJECT in jme-bui; do
     cd $BANG_HOME/projects/$PROJECT
     $ANT savedoc
 done
