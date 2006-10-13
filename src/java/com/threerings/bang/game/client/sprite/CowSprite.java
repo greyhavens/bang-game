@@ -9,6 +9,8 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.state.TextureState;
 
+import com.threerings.jme.sprite.Path;
+
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 
@@ -52,10 +54,11 @@ public class CowSprite extends MobileSprite
         }
         
         // this is used to indicate who owns us
-        _owner = new TerrainNode.SharedHighlight("owner", _shadow);
-        _owner.setRenderState(_owntex);
-        _owner.updateRenderState();
-        attachHighlight(_owner);
+        _tlight = _view.getTerrainNode().createHighlight(
+                _piece.x, _piece.y, true, true);
+        _tlight.setRenderState(_owntex);
+        _tlight.updateRenderState();
+        attachHighlight(_tlight);
 
         // configure our colors
         configureOwnerColors();
@@ -67,15 +70,29 @@ public class CowSprite extends MobileSprite
         return PRELOAD_SOUNDS;
     }
 
+    @Override // documentation inherited
+    protected void moveEnded ()
+    {
+        super.moveEnded();
+        configureOwnerColors();
+    }
+
+    @Override // documentation inherited
+    public void move (Path path)
+    {
+        super.move(path);
+        _tlight.setCullMode(CULL_ALWAYS);
+    }
+
     /** Sets up our colors according to our owning player. */
     protected void configureOwnerColors ()
     {
-        if (_piece.owner < 0) {
-            _owner.setCullMode(CULL_ALWAYS);
+        if (_piece.owner < 0 || isMoving()) {
+            _tlight.setCullMode(CULL_ALWAYS);
         } else {
-            _owner.setDefaultColor(JPIECE_COLORS[_piece.owner + 1]);
-            _owner.updateRenderState();
-            _owner.setCullMode(CULL_DYNAMIC);
+            _tlight.setDefaultColor(JPIECE_COLORS[_piece.owner + 1]);
+            _tlight.updateRenderState();
+            _tlight.setCullMode(CULL_DYNAMIC);
         }
     }
 
@@ -85,8 +102,6 @@ public class CowSprite extends MobileSprite
             ctx, "textures/ustatus/selected.png");
         _owntex.getTexture().setWrap(Texture.WM_CLAMP_S_CLAMP_T);
     }
-
-    protected SharedMesh _owner;
 
     protected static TextureState _owntex;
 
