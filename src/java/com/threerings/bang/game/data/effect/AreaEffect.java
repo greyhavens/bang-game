@@ -65,10 +65,10 @@ public abstract class AreaEffect extends Effect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds (BangObject bangobj)
+    public Rectangle[] getBounds (BangObject bangobj)
     {
-        return new Rectangle(x - radius, y - radius, 
-                radius * 2 + 1, radius * 2 + 1);
+        return new Rectangle[] { new Rectangle(x - radius, y - radius, 
+                radius * 2 + 1, radius * 2 + 1) };
     }
 
     @Override // documentation inherited

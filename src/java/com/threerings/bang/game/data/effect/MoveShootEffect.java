@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.effect;
 
 import java.awt.Rectangle;
 
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.data.BangObject;
@@ -36,11 +37,10 @@ public class MoveShootEffect extends MoveEffect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds (BangObject bangobj)
+    public Rectangle[] getBounds (BangObject bangobj)
     {
-        Rectangle rect = super.getBounds(bangobj);
-        rect.add(shotEffect.getBounds(bangobj));
-        return rect;
+        return concatenate(super.getBounds(bangobj), 
+                shotEffect.getBounds(bangobj));
     }
 
     @Override // documentation inherited

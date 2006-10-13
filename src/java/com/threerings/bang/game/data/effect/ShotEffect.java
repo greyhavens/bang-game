@@ -206,7 +206,7 @@ public class ShotEffect extends Effect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds (BangObject bangobj)
+    public Rectangle[] getBounds (BangObject bangobj)
     {
         Rectangle rect = (pushx > -1) ?
         new Rectangle(pushx, pushy, 1, 1) : null;
@@ -218,7 +218,7 @@ public class ShotEffect extends Effect
         }
         rect.width++;
         rect.height++;
-        return rect;
+        return new Rectangle[] { rect };
     }
 
     @Override // documentation inherited

@@ -59,9 +59,9 @@ public class AddPieceEffect extends Effect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds (BangObject bangobj)
+    public Rectangle[] getBounds (BangObject bangobj)
     {
-        return new Rectangle(piece.x, piece.y, 1, 1);
+        return new Rectangle[] { new Rectangle(piece.x, piece.y, 1, 1) };
     }
     
     // documentation inherited

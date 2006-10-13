@@ -281,7 +281,7 @@ public abstract class Effect extends SimpleStreamableObject
      * Returns the bounds we must have exclusive access to before activating
      * this effect.  Can return null for no area exclusion.
      */
-    public Rectangle getBounds (BangObject bangobj)
+    public Rectangle[] getBounds (BangObject bangobj)
     {
         return null;
     }
@@ -475,6 +475,16 @@ public abstract class Effect extends SimpleStreamableObject
     protected static int[] concatenate (int[] a1, int[] a2)
     {
         int[] result = new int[a1.length + a2.length];
+        System.arraycopy(a1, 0, result, 0, a1.length);
+        System.arraycopy(a2, 0, result, a1.length, a2.length);
+        return result;
+    }
+
+    /** Concatenates two generic arrays and returns the result. */
+    protected static <T> T[] concatenate (T[] a1, T[] a2)
+    {
+        @SuppressWarnings("unchecked") T[] result = 
+            (T[])new Object[a1.length + a2.length];
         System.arraycopy(a1, 0, result, 0, a1.length);
         System.arraycopy(a2, 0, result, a1.length, a2.length);
         return result;

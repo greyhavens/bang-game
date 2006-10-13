@@ -30,11 +30,13 @@ public class ReboundEffect extends BonusEffect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds (BangObject bangobj)
+    public Rectangle[] getBounds (BangObject bangobj)
     {
         Piece piece = bangobj.pieces.get(pieceId);
-        return new Rectangle(Math.min(piece.x, x), Math.min(piece.y, y),
-                Math.abs(piece.x - x) + 1, Math.abs(piece.y - y) + 1);
+        return new Rectangle[] {
+            new Rectangle(Math.min(piece.x, x), Math.min(piece.y, y),
+                Math.abs(piece.x - x) + 1, Math.abs(piece.y - y) + 1)
+        };
     }
 
     @Override // documentation inherited

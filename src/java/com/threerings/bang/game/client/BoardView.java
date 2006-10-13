@@ -149,7 +149,7 @@ public class BoardView extends BComponent
         /** The board action must specify the boundaries affected by the
          * action.  This will be used to ensure that a piece does not enter
          * the affected area if not participating in the action. */
-        public Rectangle bounds;
+        public Rectangle[] bounds;
 
         /** Returns true if this action can be executed, false if it operates
          * on a piece that is currently involved in another action. */
@@ -171,8 +171,10 @@ public class BoardView extends BComponent
             }
             if (bounds != null) {
                 for (Rectangle r : boundset) {
-                    if (r.intersects(bounds)) {
-                        return false;
+                    for (Rectangle b : bounds) {
+                        if (r.intersects(b)) {
+                            return false;
+                        }
                     }
                 }
             }
@@ -1713,7 +1715,9 @@ public class BoardView extends BComponent
             }
         }
         if (action.bounds != null) {
-            _pbounds.add(action.bounds);
+            for (Rectangle b : action.bounds) {
+                _pbounds.add(b);
+            }
         }
         if (action instanceof SyncAction) {
             _syncQueue.addLast(action.actionId);
@@ -1729,11 +1733,13 @@ public class BoardView extends BComponent
             }
         }
         if (action.bounds != null) {
-            for (int ii = 0; ii < Math.abs(delta); ii++) {
-                if (delta > 0) {
-                    _ebounds.add(action.bounds);
-                } else {
-                    _ebounds.remove(action.bounds);
+            for (Rectangle b : action.bounds) {
+                for (int ii = 0; ii < Math.abs(delta); ii++) {
+                    if (delta > 0) {
+                        _ebounds.add(b);
+                    } else {
+                        _ebounds.remove(b);
+                    }
                 }
             }
         }
@@ -1784,7 +1790,8 @@ public class BoardView extends BComponent
             this.pieceIds = new int[] { piece.pieceId };
             this.waiterIds = new int[0];
             this.moveIds = new int[0];
-            this.bounds = new Rectangle(piece.x, piece.y, 1, 1);
+            this.bounds = new Rectangle[] { 
+                new Rectangle(piece.x, piece.y, 1, 1) };
         }
 
         public boolean execute () {
@@ -1839,7 +1846,8 @@ public class BoardView extends BComponent
             this.pieceIds = new int[] { piece.pieceId };
             this.waiterIds = new int[0];
             this.moveIds = new int[0];
-            this.bounds = new Rectangle(piece.x, piece.y, 1, 1);
+            this.bounds = new Rectangle[] { 
+                new Rectangle(piece.x, piece.y, 1, 1) };
         }
 
         public boolean execute () {

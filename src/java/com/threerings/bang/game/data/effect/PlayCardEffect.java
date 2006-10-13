@@ -42,13 +42,14 @@ public class PlayCardEffect extends Effect
     }
     
     @Override // documentation inherited
-    public Rectangle getBounds (BangObject bangobj)
+    public Rectangle[] getBounds (BangObject bangobj)
     {
         if (card.getPlacementMode() == Card.PlacementMode.VS_AREA) {
             int[] coords = (int[])target;
             int radius = card.getRadius();
-            return new Rectangle(coords[0] - radius, coords[1] - radius,
-                radius * 2 + 1, radius * 2 + 1);
+            return new Rectangle[] {
+                new Rectangle(coords[0] - radius, coords[1] - radius,
+                    radius * 2 + 1, radius * 2 + 1) };
         } else {
             return null;
         }

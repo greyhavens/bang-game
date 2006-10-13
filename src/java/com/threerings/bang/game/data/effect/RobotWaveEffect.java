@@ -60,9 +60,9 @@ public class RobotWaveEffect extends Effect
     }
     
     @Override // documentation inherited
-    public Rectangle getBounds (BangObject bangobj)
+    public Rectangle[] getBounds (BangObject bangobj)
     {
-        return bangobj.board.getPlayableArea();
+        return new Rectangle[] { bangobj.board.getPlayableArea() };
     }
     
     // documentation inherited

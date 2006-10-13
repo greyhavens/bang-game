@@ -98,7 +98,7 @@ public class EffectHandler extends BoardView.BoardAction
         pieceIds = effect.getAffectedPieces();
         waiterIds = effect.getWaitPieces();
         moveIds = effect.getMovePieces();
-        bounds = effect.getBounds(_bangobj);
+        bounds = effect.getBounds(bangobj);
 
         // if this is a move effect, note the pending move
         for (int id : moveIds) {
@@ -129,11 +129,11 @@ public class EffectHandler extends BoardView.BoardAction
                 }
                 MoveEffect move = (MoveEffect)handler._effect;
                 Piece pender = _bangobj.pieces.get(move.pieceId);
-                if (piece == null) {
+                if (pender == null) {
                     continue;
                 }
                 if (_bangobj.board.computePath(
-                        piece.x, piece.y, move.nx, move.ny, piece) == null) {
+                        move.ox, move.oy, move.nx, move.ny, pender) == null) {
                     can = false;
                     break;
                 }

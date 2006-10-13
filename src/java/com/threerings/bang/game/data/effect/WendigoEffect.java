@@ -163,9 +163,9 @@ public class WendigoEffect extends Effect
     }
 
     @Override // documentation inherited
-    public Rectangle getBounds (BangObject bangobj)
+    public Rectangle[] getBounds (BangObject bangobj)
     {
-        return (Rectangle)bangobj.board.getPlayableArea().clone();
+        return new Rectangle[] { bangobj.board.getPlayableArea() };
     }
 
     @Override // documentation inherited
