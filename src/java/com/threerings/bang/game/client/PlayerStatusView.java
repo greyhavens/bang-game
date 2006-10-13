@@ -10,6 +10,8 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BMenuItem;
+import com.jmex.bui.BPopupMenu;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.MouseAdapter;
@@ -26,6 +28,7 @@ import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.ResultListener;
 
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.ElementUpdateListener;
@@ -39,14 +42,18 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
+
+import com.threerings.util.MessageBundle;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -135,12 +142,18 @@ public class PlayerStatusView extends BContainer
     // documentation inherited from interface AttributeChangeListener
     public void attributeChanged (AttributeChangedEvent event)
     {
-        if (event.getName().equals(BangObject.STATE)) {
+        String name = event.getName();
+        if (name.equals(BangObject.STATE)) {
             updatePoints();
             updateStatus();
 
-        } else if (event.getName().equals(BangObject.PLAYER_INFO)) {
+        } else if (name.equals(BangObject.PLAYER_INFO)) {
             updateAvatar();
+        } else if (name.equals(PlayerObject.FRIENDS) ||
+                name.equals(PlayerObject.FOES)) {
+            if (_ffbutton != null) {
+                updateFFButton();
+            }
         }
     }
 
@@ -262,11 +275,66 @@ public class PlayerStatusView extends BContainer
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        try {
-            _ctrl.placeCard(Integer.parseInt(event.getAction()));
-        } catch (Exception e) {
-            log.warning("Bogus card '" + event.getAction() + "': " + e);
+        String action = event.getAction();
+        if ("ff".equals(action)) {
+            new PlayerPopup(_bangobj.playerInfo[_pidx].playerId).popup(
+                    getAbsoluteX() + 10, getAbsoluteY() + 65, true);
+        } else {
+            try {
+                _ctrl.placeCard(Integer.parseInt(event.getAction()));
+            } catch (Exception e) {
+                log.warning("Bogus card '" + event.getAction() + "': " + e);
+            }
         }
+    }
+
+    /**
+     * Show the friendly folks menu.
+     */
+    public void showFriendlyFolks ()
+    {
+        _ctx.getUserObject().addListener(this);
+        updateFFButton();
+    }
+
+    /**
+     * Updates the friendly folks button.
+     */
+    protected void updateFFButton ()
+    {
+        if (_ffbutton != null) {
+            remove(_ffbutton);
+        }
+        int opinion;
+        int playerId = _bangobj.playerInfo[_pidx].playerId;
+        if (_ctx.getUserObject().isFriend(playerId)) {
+            opinion = PlayerService.FOLK_IS_FRIEND;
+        } else if (_ctx.getUserObject().isFoe(playerId)) {
+            opinion = PlayerService.FOLK_IS_FOE;
+        } else {
+            opinion = PlayerService.FOLK_NEUTRAL;
+        }
+        BIcon icon = getFFIcon(opinion);
+        _ffbutton = new BButton(icon, "ff");
+        _ffbutton.setStyleClass("player_status_ff");
+        _ffbutton.addListener(this);
+        add(_ffbutton, FF_LOC);
+    }
+
+    /**
+     * Returns the appropriate friendly folks icon.
+     */
+    protected BIcon getFFIcon (int opinion)
+    {
+        String iconpath = "ui/pstatus/folks/";
+        if (opinion == PlayerService.FOLK_IS_FRIEND) {
+            iconpath += "thumbs_up.png";
+        } else if (opinion == PlayerService.FOLK_IS_FOE) {
+            iconpath += "thumbs_down.png";
+        } else {
+            iconpath += "ff.png";
+        }
+        return new ImageIcon(_ctx.loadImage(iconpath));
     }
 
     /**
@@ -421,6 +489,76 @@ public class PlayerStatusView extends BContainer
             RANK_RECT.width, RANK_RECT.height);
     }
 
+    /**
+     * A popup menu to set a player's friendly folks status.
+     */
+    protected class PlayerPopup extends BPopupMenu
+        implements ActionListener
+    {
+        public PlayerPopup (int playerId)
+        {
+            super(PlayerStatusView.this.getWindow());
+            addListener(this);
+            setLayer(3);
+
+            PlayerObject player = _ctx.getUserObject();
+            _playerId = playerId;
+
+            boolean isFriend = player.isFriend(_playerId);
+            boolean isFoe = player.isFoe(_playerId);
+            BMenuItem menuitem;
+            if (!isFriend) {
+                add(menuitem = new BMenuItem(
+                    _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_thumbs_up"), 
+                    getFFIcon(PlayerService.FOLK_IS_FRIEND), "make_friend"));
+                menuitem.setStyleClass("player_status_ff_menuitem");
+            }
+            if (isFriend || isFoe) {
+                add(menuitem = new BMenuItem(
+                    _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_neutral"), 
+                    getFFIcon(PlayerService.FOLK_NEUTRAL), "make_neutral"));
+                menuitem.setStyleClass("player_status_ff_menuitem");
+            }
+            if (!isFoe) {
+                add(menuitem = new BMenuItem(
+                    _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_thumbs_down"), 
+                    getFFIcon(PlayerService.FOLK_IS_FOE), "make_foe"));
+                menuitem.setStyleClass("player_status_ff_menuitem");
+            }
+        }
+
+        // from interface ActionListener
+        public void actionPerformed (ActionEvent event)
+        {
+            String action = event.getAction();
+            int opinion;
+            if ("make_friend".equals(action)) {
+                opinion = PlayerService.FOLK_IS_FRIEND;
+            } else if ("make_foe".equals(action)) {
+                opinion = PlayerService.FOLK_IS_FOE;
+            } else {
+                opinion = PlayerService.FOLK_NEUTRAL;
+            }
+            InvocationService.ConfirmListener listener =
+                new InvocationService.ConfirmListener() {
+                public void requestProcessed () {
+                    // TODO: confirmation?
+                }
+                public void requestFailed(String cause) {
+                    log.warning("Folk note request failed: " + cause);
+                    _ctx.getChatDirector().displayFeedback(
+                        GameCodes.GAME_MSGS,
+                        MessageBundle.tcompose("m.folk_note_failed", cause));
+                }
+            };
+            PlayerService psvc = (PlayerService)
+                _ctx.getClient().requireService(PlayerService.class);
+            psvc.noteFolk(_ctx.getClient(), _playerId, opinion, listener);
+        }
+
+        protected int _playerId;
+    }
+
     protected BangContext _ctx;
     protected BangObject _bangobj;
     protected BangConfig _bconfig;
@@ -434,9 +572,12 @@ public class PlayerStatusView extends BContainer
     protected BLabel _player, _points, _ranklbl;
     protected BButton[] _cards = new BButton[GameCodes.MAX_CARDS];
 
+    protected BButton _ffbutton;
+
     protected static final Point BACKGROUND_LOC = new Point(33, 13);
     protected static final Point AVATAR_LOC = new Point(33, 8);
     protected static final Point CASH_LOC = new Point(97, 34);
+    protected static final Point FF_LOC = new Point(0, 30);
 
     protected static final Rectangle RANK_RECT = new Rectangle(8, 35, 21, 23);
     protected static final Rectangle NAME_RECT = new Rectangle(11, 0, 100, 16);

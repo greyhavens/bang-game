@@ -1061,6 +1061,26 @@ player_status_cont {
   font: "Dom Casual" bold 16;
 }
 
+player_status_ff {
+  background: image "ui/pstatus/folks/circle_normal.png" centerxy;
+  padding: 7 7 7 7;
+}
+
+player_status_ff:hover {
+  background: image "ui/pstatus/folks/circle_hover.png" centerxy;
+  padding: 7 7 7 7;
+}
+
+player_status_ff_menuitem {
+  parent: "menuitem";
+  color: #4C2602;
+  font: "Dom Casual" plain 16;
+}
+
+player_status_ff_menuitem:hover {
+  parent: "menuitem:hover";
+}
+
 card_button {
   background: image "ui/pstatus/card_up.png" framexy;
   padding: 1 1 0 0;
