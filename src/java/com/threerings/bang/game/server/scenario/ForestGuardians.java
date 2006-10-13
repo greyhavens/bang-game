@@ -361,7 +361,7 @@ public class ForestGuardians extends Scenario
         // if at least half the trees were saved, increase the difficulty
         // level
         if (grown >= _ctrees.size() / 2) {
-            _difficulty++;
+            _difficulty = Math.min(_difficulty + 1, MAX_DIFFICULTY);
         }
         
         // reset the trees and choose a new subset
@@ -401,7 +401,8 @@ public class ForestGuardians extends Scenario
         
         // determine the desired number of trees and add/remove accordingly
         float ratio = BASE_TREE_RATIO + TREE_RATIO_INCREMENT * _difficulty;
-        int ntrees = (int)Math.round(getUnitTotal() * ratio);
+        int ntrees = Math.min(MAX_TREES,
+            (int)Math.round(getUnitTotal() * ratio));
         _ctrees.clear();
         for (TreeBed tree : _trees) {
             if (ntrees-- > 0) {
@@ -471,7 +472,8 @@ public class ForestGuardians extends Scenario
                     ROBOT_RATIO_INCREMENT * _difficulty,
                 sratio = BASE_SUPER_RATIO +
                     SUPER_RATIO_INCREMENT * _difficulty;
-            int rcount = (int)Math.round(getUnitTotal() * ratio), // total bots
+            int rcount = Math.min(MAX_ROBOTS,
+                (int)Math.round(getUnitTotal() * ratio)), // total bots
                 scount = (int)Math.round(rcount * sratio), // super bots
                 ncount = rcount - scount; // non-super bots
             _target[LoggingRobot.LOCUST] = ncount / 2;
@@ -673,17 +675,23 @@ public class ForestGuardians extends Scenario
      * rating is very high). */
     protected static final int MAX_INITIAL_DIFFICULTY = 4;
     
+    /** The maximum attainable difficulty level. */
+    protected static final int MAX_DIFFICULTY = 9;
+    
     /** The base number of logging robots to keep alive per unit. */
     protected static final float BASE_ROBOT_RATIO = 1 / 3f;
     
     /** The increment in number of logging robots per unit for each wave. */
     protected static final float ROBOT_RATIO_INCREMENT = 1 / 24f;
     
+    /** The maximum number of logging robots on the board. */
+    protected static final int MAX_ROBOTS = 6;
+    
     /** The base proportion of high-powered robots. */
     protected static final float BASE_SUPER_RATIO = 0f;
     
     /** The proportionate increment of high-powered robots. */
-    protected static final float SUPER_RATIO_INCREMENT = 1 / 8f;
+    protected static final float SUPER_RATIO_INCREMENT = 1 / 9f;
     
     /** The base number of tree beds to create per unit. */
     protected static final float BASE_TREE_RATIO = 1 / 3f;
@@ -691,15 +699,18 @@ public class ForestGuardians extends Scenario
     /** The increment in number of trees per unit for each wave. */
     protected static final float TREE_RATIO_INCREMENT = 1 / 24f;
     
+    /** The maximum number of trees on the board. */
+    protected static final int MAX_TREES = 8;
+    
     /** The base rate at which logging robots respawn (bots per tick). */
     protected static final float BASE_RESPAWN_RATE = 1 / 8f;
     
     /** The increment in bots per tick for each wave. */
-    protected static final float RESPAWN_RATE_INCREMENT = 7 / 64f;
+    protected static final float RESPAWN_RATE_INCREMENT = 3 / 72f;
     
     /** The increment in the point multiplier (which starts at 1) for each
-     * wave. */
-    protected static final float POINT_MULTIPLIER_INCREMENT = 0.1f;
+     * difficulty level. */
+    protected static final float POINT_MULTIPLIER_INCREMENT = 1 / 9f;
     
     /** Payout adjustments for rankings in 2/3/4 player games. */
     protected static final int[][] PAYOUT_ADJUSTMENTS = {
