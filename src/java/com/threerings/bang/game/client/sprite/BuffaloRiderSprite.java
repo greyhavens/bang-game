@@ -36,10 +36,10 @@ public class BuffaloRiderSprite extends UnitSprite
     {
         String path = "rsrc/units/indian_post/buffalo_rider/";
         if (shot.pushx != -1) {
-            return sounds.getSound(path + "attack_push.wav");
+            return sounds.getSound(path + "attack_push.ogg");
         } else if (ListUtil.contains(shot.attackIcons, "smashed") ||
             ListUtil.contains(shot.defendIcons, "unmovable")) {
-            return sounds.getSound(path + "attack_push_blocked.wav");
+            return sounds.getSound(path + "attack_push_blocked.ogg");
         } else {
             return super.getShotSound(sounds, shot);
         }

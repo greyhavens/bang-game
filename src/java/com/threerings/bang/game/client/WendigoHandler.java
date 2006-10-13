@@ -29,7 +29,7 @@ public class WendigoHandler extends EffectHandler
         WendigoEffect effect = (WendigoEffect)_effect;
 
         // play the flight sound
-        _sounds.getSound(SOUND_PATH + "flight.wav").play(true);
+        _sounds.getSound(SOUND_PATH + "flight.ogg").play(true);
         
         long delay = 0;
         for (WendigoEffect.Movement m : effect.moves) {
@@ -111,7 +111,7 @@ public class WendigoHandler extends EffectHandler
         {
             Piece target = _bangobj.pieces.get(_collision.targetId);
             if (_collision.isKill()) {
-                _sounds.getSound(SOUND_PATH + "kill.wav").play(true);
+                _sounds.getSound(SOUND_PATH + "kill.ogg").play(true);
                 if (_collision.deathEffect != null) {
                     apply(_collision.deathEffect);
                 }        
@@ -120,7 +120,7 @@ public class WendigoHandler extends EffectHandler
                         100, ShotEffect.DAMAGED);
                 }
             } else {
-                _sounds.getSound(SOUND_PATH + "defense.wav").play(true);
+                _sounds.getSound(SOUND_PATH + "defense.ogg").play(true);
                 if (_collision.safe) {
                     pieceAffected(target, WendigoEffect.SAFE_PROTECT);
                 }

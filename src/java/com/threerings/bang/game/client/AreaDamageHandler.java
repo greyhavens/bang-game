@@ -34,9 +34,9 @@ public class AreaDamageHandler extends EffectHandler
     public boolean execute ()
     {
         // we first wait for the missile sounds to resolve
-        _explodeSound = _sounds.getSound("rsrc/sounds/effects/missile.wav");
+        _explodeSound = _sounds.getSound("rsrc/sounds/effects/missile.ogg");
         _whistleSound = _sounds.getSound(
-            "rsrc/sounds/effects/bomb_whistle.wav");
+            "rsrc/sounds/effects/bomb_whistle.ogg");
         _whistleSound.play(new Sound.StartObserver() {
             public void soundStarted (Sound sound) {
                 // then we create the visualization

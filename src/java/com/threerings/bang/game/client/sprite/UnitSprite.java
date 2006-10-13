@@ -388,10 +388,10 @@ public class UnitSprite extends MobileSprite
         if (shot.type == ShotEffect.COLLATERAL_DAMAGE) {
             return null;
         } else if (shot.type == ShotEffect.DUD) {
-            return sounds.getSound("rsrc/cards/frontier_town/dud/shot.wav");
+            return sounds.getSound("rsrc/cards/frontier_town/dud/shot.ogg");
         }
         String path = "rsrc/units/" + _name + "/" +
-            ShotEffect.SHOT_ACTIONS[shot.type] + ".wav";
+            ShotEffect.SHOT_ACTIONS[shot.type] + ".ogg";
         // TODO: fall back to a generic sound if we don't have a
         // special sound for this unit for this shot type
         // TODO: go back to complaining if we don't have shot sounds
@@ -404,7 +404,7 @@ public class UnitSprite extends MobileSprite
      */
     public Sound getDyingSound (SoundGroup sounds)
     {
-        String path = "rsrc/units/" + _name + "/dying.wav";
+        String path = "rsrc/units/" + _name + "/dying.ogg";
         return SoundUtil.haveSound(path) ? sounds.getSound(path) : null;
     }
     

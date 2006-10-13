@@ -260,7 +260,7 @@ public class BangUI
         Sound sound = _sounds.get(ident);
         if (sound == null) {
             sound = _sgroup.getSound(
-                "sounds/feedback/" + ident.toString().toLowerCase() + ".wav");
+                "sounds/feedback/" + ident.toString().toLowerCase() + ".ogg");
             _sounds.put(ident, sound);
         }
         if (sound != null) {
@@ -273,9 +273,9 @@ public class BangUI
      */
     public static void playShopEntry (String townId, String shoppe)
     {
-        String tpath = "menu/" + townId + "/" + shoppe + ".wav";
+        String tpath = "menu/" + townId + "/" + shoppe + ".ogg";
         if (!SoundUtil.haveSound(tpath)) {
-            tpath = "menu/" + shoppe + ".wav";
+            tpath = "menu/" + shoppe + ".ogg";
         }
         Sound sound = _sgroup.getSound(tpath);
         if (sound != null) {

@@ -106,19 +106,23 @@
     </copy>
   </target>
 
-  <!-- enumerates all of our sounds into a master list -->
+  <!-- encodes our sounds to ogg and enumerates them into a master list -->
   <target name="sounds">
+    <exec executable="bin/encode_sounds"/> 
     <exec executable="find" output="rsrc/sounds.txt">
       <arg value="rsrc"/>
       <arg value="-name"/>
-      <arg value="*.wav"/>
+      <arg value="*.ogg"/>
+      <arg value="!"/>
+      <arg value="-wholename"/>
+      <arg value="rsrc/sounds/music/*"/>
     </exec>
     <jar file="rsrc/sounds/effects/bundle.jar" basedir="rsrc/sounds/effects">
-      <include name="**/*.wav"/>
+      <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/sounds/feedback/bundle.jar" basedir="rsrc/sounds/feedback">
-      <include name="**/*.wav"/>
+      <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
   </target>
@@ -135,7 +139,7 @@
       <include name="**/unit.properties"/>
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
-      <include name="**/*.wav"/>
+      <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/props/${town}/bundle.jar" basedir="rsrc/props/${town}">
@@ -143,7 +147,7 @@
       <include name="**/prop.properties"/>
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
-      <include name="**/*.wav"/>
+      <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/bonuses/${town}/bundle.jar" basedir="rsrc/bonuses/${town}">
@@ -151,7 +155,7 @@
       <include name="**/bonus.properties"/>
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
-      <include name="**/*.wav"/>
+      <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/effects/${town}/bundle.jar" basedir="rsrc/effects/${town}">
@@ -159,7 +163,7 @@
       <include name="**/effect.properties"/>
       <include name="**/effect.jme"/>
       <include name="**/*.png"/>
-      <include name="**/*.wav"/>
+      <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/icons/${town}/bundle.jar" basedir="rsrc/icons/${town}">
@@ -171,7 +175,7 @@
     <jar file="rsrc/extras/${town}/bundle.jar" basedir="rsrc/extras/${town}">
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
-      <include name="**/*.wav"/>
+      <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/goods/${town}/bundle.jar" basedir="rsrc/goods/${town}">
@@ -199,7 +203,7 @@
     <jar file="rsrc/units/wreckage/bundle.jar" basedir="rsrc/units/wreckage">
       <include name="**/*.png"/>
       <include name="**/model.dat"/>
-      <include name="**/*.wav"/>
+      <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
     <antcall target="town_bundles">

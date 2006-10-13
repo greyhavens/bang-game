@@ -353,7 +353,7 @@ public class MobileSprite extends ActiveSprite
         String[] preload = getPreloadSounds();
         int pcount = (preload == null) ? 0 : preload.length;
         for (int ii = 0; ii < pcount; ii++) {
-            spath = spre + "/" + preload[ii] + ".wav";
+            spath = spre + "/" + preload[ii] + ".ogg";
             if (SoundUtil.haveSound(spath)) {
                 sounds.preloadClip(spath);
             }
@@ -366,7 +366,7 @@ public class MobileSprite extends ActiveSprite
      */
     protected String getMoveSound ()
     {
-        return _type + "/" + _name + "/move.wav";
+        return _type + "/" + _name + "/move.ogg";
     }
 
     /**

@@ -98,7 +98,7 @@ public class BonusSprite extends ActiveSprite
     protected void createSounds (SoundGroup sounds)
     {
         // preload any sound associated with activating this bonus
-        String spath = "rsrc/bonuses/" + _name + "/activate.wav";
+        String spath = "rsrc/bonuses/" + _name + "/activate.ogg";
         if (SoundUtil.haveSound(spath)) {
             sounds.preloadClip(spath);
         }

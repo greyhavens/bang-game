@@ -416,7 +416,7 @@ public class EffectHandler extends BoardView.BoardAction
         
         // play a sound effect, if one exists
         String path = "rsrc/cards/" + card.getTownId() + "/" + card.getType() +
-            "/play.wav";
+            "/play.ogg";
         if (SoundUtil.haveSound(path)) {
             _sounds.getSound(path).play(true);
         }
@@ -547,7 +547,7 @@ public class EffectHandler extends BoardView.BoardAction
             return;
         }
         for (String influence : influences) {
-            String path = "rsrc/influences/sounds/" + influence + ".wav";
+            String path = "rsrc/influences/sounds/" + influence + ".ogg";
             if (SoundUtil.haveSound(path)) {
                 sounds.add(_sounds.getSound(path));
             }       
@@ -739,7 +739,7 @@ public class EffectHandler extends BoardView.BoardAction
     {
         if (piece instanceof Unit) {
             String path = "rsrc/units/" + ((Unit)piece).getType() +
-                "/land.wav";
+                "/land.ogg";
             if (SoundUtil.haveSound(path)) {
                 return _sounds.getSound(path);
             }
@@ -860,11 +860,11 @@ public class EffectHandler extends BoardView.BoardAction
 
     /** Used by {@link #getSoundPath}. */
     protected static final String[] SOUND_SUFFIXES = {
-        ".wav", "/activate.wav"
+        ".ogg", "/activate.ogg"
     };
     
     /** The backup place to look for a sound to play on a unit's landing, for
      * units that do not have a custom landing sound. */
     protected static final String DEFAULT_LAND_SOUND =
-        "rsrc/extras/frontier_town/barricade/land.wav";
+        "rsrc/extras/frontier_town/barricade/land.ogg";
 }

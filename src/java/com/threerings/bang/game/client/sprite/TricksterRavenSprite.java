@@ -62,9 +62,9 @@ public class TricksterRavenSprite extends UnitSprite
 
         // load the sounds for flying
         String path = "rsrc/units/indian_post/tricksterraven/";
-        _flyStart = sounds.getSound(path + "to_raven.wav");
-        _flyLoop = sounds.getSound(path + "flying.wav");
-        _flyStop = sounds.getSound(path + "to_human.wav");
+        _flyStart = sounds.getSound(path + "to_raven.ogg");
+        _flyLoop = sounds.getSound(path + "flying.ogg");
+        _flyStop = sounds.getSound(path + "to_human.ogg");
     }
     
     @Override // documentation inherited

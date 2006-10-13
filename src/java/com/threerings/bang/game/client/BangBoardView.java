@@ -2078,9 +2078,9 @@ public class BangBoardView extends BoardView
     
     /** The sound to play when entering wendigo ambiance mode. */
     protected static final String WENDIGO_AMBIANCE_START =
-        "rsrc/extras/indian_post/wendigo/ambiance_start.wav";
+        "rsrc/extras/indian_post/wendigo/ambiance_start.ogg";
     
     /** The sound to loop continuously while in wendigo ambiance mode. */
     protected static final String WENDIGO_AMBIANCE_LOOP =
-        "rsrc/extras/indian_post/wendigo/ambiance_loop.wav";
+        "rsrc/extras/indian_post/wendigo/ambiance_loop.ogg";
 }

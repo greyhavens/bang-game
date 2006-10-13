@@ -115,7 +115,7 @@ public class BallisticShotHandler extends ShotHandler
         // if the shooter has a "launch" sound, grab that
         if (_shooter instanceof Unit) {
             Unit sunit = (Unit)_shooter;
-            String lpath = "rsrc/units/" + sunit.getType() + "/launch.wav";
+            String lpath = "rsrc/units/" + sunit.getType() + "/launch.ogg";
             if (SoundUtil.haveSound(lpath)) {
                 _launchSound = sounds.getSound(lpath);
             }
@@ -124,7 +124,7 @@ public class BallisticShotHandler extends ShotHandler
         // if there will be a deflection, load the deflect shot sound
         if (_shot.deflectorIds != null) {
             _deflectSound = sounds.getSound(
-                "rsrc/sounds/effects/deflect_shot.wav");
+                "rsrc/sounds/effects/deflect_shot.ogg");
         }
     }
 
