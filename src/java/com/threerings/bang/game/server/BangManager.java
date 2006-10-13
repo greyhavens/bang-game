@@ -22,8 +22,9 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntIntMap;
-import com.samskivert.util.Interval;
+import com.samskivert.util.IntListUtil;
 import com.samskivert.util.IntSet;
+import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
@@ -2079,6 +2080,12 @@ public class BangManager extends GameManager
      */
     protected void computeRatings (String scenario, int[] scores)
     {
+        // compute the average score for coop scenarios
+        boolean coop = (!scenario.equals(ScenarioInfo.OVERALL_IDENT) &&
+            ScenarioInfo.getScenarioInfo(scenario).getTeams() ==
+                ScenarioInfo.Teams.COOP);
+        int avgscore = coop ? (IntListUtil.sum(scores) / scores.length) : 0;
+        
         // filter AIs from the scores; the ratings computations below will
         // ignore players whose score is set to zero
         scores = scores.clone();
@@ -2095,9 +2102,13 @@ public class BangManager extends GameManager
         }
 
         // now compute the adjusted ratings
+        int pctile = coop ? BangServer.ratingmgr.getPercentile(
+            scenario, ratings.length, avgscore, true) : 0;
         int[] nratings = new int[ratings.length];
         for (int pidx = 0; pidx < ratings.length; pidx++) {
-            nratings[pidx] = Rating.computeRating(scores, ratings, pidx);
+            nratings[pidx] = coop ?
+                Rating.computeCoopRating(pctile, ratings, pidx) :
+                Rating.computeRating(scores, ratings, pidx);
         }
 
         // finally store the adjusted ratings back in the ratings objects and

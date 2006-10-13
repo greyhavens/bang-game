@@ -13,9 +13,9 @@ import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.util.AuditLogger;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
-import com.samskivert.util.Invoker;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
+import com.samskivert.util.Tuple;
 
 import com.threerings.admin.server.AdminProvider;
 import com.threerings.admin.server.ConfigRegistry;
@@ -107,6 +107,9 @@ public class BangServer extends CrowdServer
     /** Manages global player related bits. */
     public static PlayerManager playmgr;
 
+    /** Manages rating bits. */
+    public static RatingManager ratingmgr;
+    
     /** Manages the persistent repository of player data. */
     public static PlayerRepository playrepo;
 
@@ -197,11 +200,12 @@ public class BangServer extends CrowdServer
 
         // create our various supporting managers
         playmgr = new PlayerManager();
+        ratingmgr = new RatingManager();
         coinmgr = new BangCoinManager(conprov, actionrepo);
         coinexmgr = new BangCoinExchangeManager(conprov);
         actionmgr = new AccountActionManager(omgr, actionrepo);
         adminmgr = new BangAdminManager();
-
+        
         // if we have a shared secret, assume we're running in a cluster
         String node = System.getProperty("node");
         if (node != null && ServerConfig.sharedSecret != null) {
@@ -239,6 +243,9 @@ public class BangServer extends CrowdServer
             peermgr.shutdown();
         }
 
+        // shut down the rating manager
+        ratingmgr.shutdown();
+        
         // close our audit logs
         _glog.close();
         _ilog.close();
@@ -273,6 +280,7 @@ public class BangServer extends CrowdServer
         parmgr.init(invmgr, plreg);
         boardmgr.init(conprov);
         playmgr.init(conprov);
+        ratingmgr.init(conprov);
         coinexmgr.init();
         adminmgr.init(this);
         if (peermgr != null) {
@@ -293,12 +301,6 @@ public class BangServer extends CrowdServer
         townobj = omgr.registerObject(new TownObject());
         createTownObjectUpdateInterval();
 
-        // if we're a town server, queue up an interval to periodically grind
-        // our ratings tables
-        if (ServerConfig.isTownServer) {
-            createRankRecalculateInterval();
-        }
-
         log.info("Bang server v" + DeploymentConfig.getVersion() +
                  " initialized.");
     }
@@ -318,33 +320,7 @@ public class BangServer extends CrowdServer
             }
         }.schedule(30000L, true);
     }
-
-    /**
-     * Creates the interval that regrinds our ratings table and produces the
-     * rank distributions every six hours.
-     */
-    protected void createRankRecalculateInterval ()
-    {
-        final Invoker.Unit grinder = new Invoker.Unit("rankGrinder") {
-            public boolean invoke () {
-                try {
-                    log.info("Recalculating rankings...");
-                    ratingrepo.calculateRanks();
-                } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to recalculate ranks.", pe);
-                }
-                return false;
-            }
-        };
-
-        // regrind 5 minutes after reboot and then every six hours
-        new Interval(omgr) {
-            public void expired () {
-                invoker.postUnit(grinder);
-            }
-        }.schedule(5 * 60 * 1000L, 6 * 60 * 60 * 1000L);
-    }
-
+    
     /**
      * Returns the player object for the specified user if they are online
      * currently, null otherwise. This should only be called from the dobjmgr

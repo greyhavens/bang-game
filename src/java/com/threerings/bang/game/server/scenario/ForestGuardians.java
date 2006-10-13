@@ -187,8 +187,8 @@ public class ForestGuardians extends Scenario
             for (int ii = 0; ii < bangobj.stats.length; ii++) {
                 bangobj.stats[ii].incrementStat(
                     ForestGuardiansInfo.GROWTH_STATS[tree.growth-1], 1);
-                bangobj.grantPoints(ii,
-                    ForestGuardiansInfo.GROWTH_POINTS[tree.growth-1]);
+                bangobj.grantPoints(ii, scalePoints(
+                    ForestGuardiansInfo.GROWTH_POINTS[tree.growth-1]));
             }
         }
         
@@ -336,8 +336,9 @@ public class ForestGuardians extends Scenario
         // total
         for (int ii = 0; ii < bangobj.stats.length; ii++) {
             bangobj.stats[ii].incrementStat(Stat.Type.TREES_ELDER, grown);
-            bangobj.grantPoints(ii, ForestGuardiansInfo.GROWTH_POINTS[
-                TreeBed.FULLY_GROWN - 1] * grown);
+            bangobj.grantPoints(ii, scalePoints(
+                ForestGuardiansInfo.GROWTH_POINTS[TreeBed.FULLY_GROWN - 1] *
+                    grown));
         }
         _wavePoints += grown;
         _waveMax += _ctrees.size();
@@ -362,6 +363,15 @@ public class ForestGuardians extends Scenario
     }
     
     /**
+     * Scales a base number of points according to the current difficulty
+     * level.
+     */
+    protected int scalePoints (int base)
+    {
+        return (int)(base * (1f + _difficulty * POINT_MULTIPLIER_INCREMENT));
+    }
+    
+    /**
      * Adds and removes trees such that the board contains a random subset
      * of them.
      */
@@ -376,7 +386,7 @@ public class ForestGuardians extends Scenario
                 return (c1 == c2) ? 0 : (c1 ? +1 : -1);
             }
         });
-     
+        
         // determine the desired number of trees and add/remove accordingly
         float ratio = BASE_TREE_RATIO + TREE_RATIO_INCREMENT * _difficulty;
         int ntrees = (int)Math.round(getUnitTotal() * ratio);
@@ -670,6 +680,10 @@ public class ForestGuardians extends Scenario
     
     /** The increment in bots per tick for each wave. */
     protected static final float RESPAWN_RATE_INCREMENT = 7 / 64f;
+    
+    /** The increment in the point multiplier (which starts at 1) for each
+     * wave. */
+    protected static final float POINT_MULTIPLIER_INCREMENT = 0.1f;
     
     /** Payout adjustments for rankings in 2/3/4 player games. */
     protected static final int[][] PAYOUT_ADJUSTMENTS = {

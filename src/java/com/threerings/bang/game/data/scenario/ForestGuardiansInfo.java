@@ -17,10 +17,7 @@ public class ForestGuardiansInfo extends ScenarioInfo
 {
     /** The string identifier for this scenario. */
     public static final String IDENT = "fg";
-
-    /** Points per tree grown. */
-    public static final int POINTS_PER_TREE = 25;
-
+    
     /** Points earned at each tick for contributing to trees' growth. */
     public static final int POINTS_PER_TREE_GROWTH = 1;
 
@@ -29,7 +26,7 @@ public class ForestGuardiansInfo extends ScenarioInfo
         Stat.Type.TREES_SAPLING, Stat.Type.TREES_MATURE,
         Stat.Type.TREES_ELDER };
 
-    /** Points awarded for living trees at the end of the game. */
+    /** Points awarded for living trees at the end of each wave. */
     public static final int[] GROWTH_POINTS = { 15, 25, 35 };
 
     @Override // from ScenarioInfo

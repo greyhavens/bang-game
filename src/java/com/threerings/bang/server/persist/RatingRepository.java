@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.samskivert.io.PersistenceException;
@@ -22,6 +23,9 @@ import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntTuple;
 import com.samskivert.util.QuickSort;
 import com.samskivert.util.StringUtil;
+
+import com.threerings.parlor.rating.util.Percentiler;
+
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Rating;
@@ -57,6 +61,30 @@ public class RatingRepository extends SimpleRepository
         }
     }
 
+    /** Identifies a score tracker by scenario and number of players. */
+    public static class TrackerKey
+    {
+        public String scenario;
+        public int players;
+        
+        public TrackerKey (String scenario, int players)
+        {
+            this.scenario = scenario;
+            this.players = players;
+        }
+        
+        public int hashCode ()
+        {
+            return scenario.hashCode() + players;
+        }
+        
+        public boolean equals (Object other)
+        {
+            TrackerKey okey = (TrackerKey)other;
+            return scenario.equals(okey.scenario) && players == okey.players;
+        }
+    }
+    
     /**
      * The database identifier used when establishing a database
      * connection. This value being <code>ratingdb</code>.
@@ -362,6 +390,105 @@ public class RatingRepository extends SimpleRepository
         return met;
     }
 
+    /**
+     * Loads up and returns the score percentile trackers for all scenarios
+     * and player counts.  The percentilers are stored into the supplied hash
+     * map, indexed on the scenario id/player count for which they are
+     * applicable.
+     *
+     * @exception PersistenceException thrown if an error occurs
+     * communicating with the underlying persistence facilities.
+     */
+    public void loadScoreTrackers (final HashMap<TrackerKey, Percentiler> map)
+        throws PersistenceException
+    {
+        execute(new Operation<Void>() {
+            public Void invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                PreparedStatement stmt = null;
+                try {
+                    // build the statement
+                    String query =
+                        "select SCENARIO, PLAYERS, DATA from SCORE_TRACKERS";
+                    stmt = conn.prepareStatement(query);
+
+                    // read the results
+                    ResultSet rs = stmt.executeQuery();
+                    while (rs.next()) {
+                        String scenario = rs.getString(1);
+                        int players = rs.getInt(2);
+                        byte[] data = (byte[])rs.getObject(3);
+                        // create a score tracker from this data
+                        Percentiler pt = new Percentiler(data);
+                        // insert it into the table
+                        map.put(new TrackerKey(scenario, players), pt);
+                    }
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Stores the specified score tracker into the database.
+     *
+     * @exception PersistenceException thrown if a problem occurrs in the
+     * underlying persistence services.
+     */
+    public void storeScoreTracker (final TrackerKey key, Percentiler tracker)
+        throws PersistenceException
+    {
+        // convert the tracker to its serialized representation
+        final byte[] data = tracker.toBytes();
+
+        executeUpdate(new Operation<Void>() {
+            public Void invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                PreparedStatement stmt = null;
+
+                // first try updating
+                try {
+                    String query = "update SCORE_TRACKERS" +
+                        " set DATA = ? where SCENARIO = ? and PLAYERS = ?";
+                    stmt = conn.prepareStatement(query);
+                    stmt.setObject(1, data);
+                    stmt.setString(2, key.scenario);
+                    stmt.setInt(3, key.players);
+
+                    // if we modified something, we're done
+                    if (stmt.executeUpdate() == 1) {
+                        return null;
+                    }
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+
+                // if that modified zero rows, do the insert
+                try {
+                    String query = "insert into SCORE_TRACKERS" +
+                        " (SCENARIO, PLAYERS, DATA) values (?, ?, ?)";
+                    stmt = conn.prepareStatement(query);
+                    stmt.setString(1, key.scenario);
+                    stmt.setInt(2, key.players);
+                    stmt.setObject(3, data);
+
+                    JDBCUtil.checkedUpdate(stmt, 1);
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+    }
+    
     @Override // documentation inherited
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
@@ -378,6 +505,12 @@ public class RatingRepository extends SimpleRepository
             "RANK SMALLINT NOT NULL",
             "LEVEL SMALLINT NOT NULL",
             "PRIMARY KEY (SCENARIO, RANK)",
+        }, "");
+        JDBCUtil.createTableIfMissing(conn, "SCORE_TRACKERS", new String[] {
+            "SCENARIO VARCHAR(2) NOT NULL",
+            "PLAYERS INTEGER NOT NULL",
+            "DATA BLOB NOT NULL",
+            "PRIMARY KEY (SCENARIO, PLAYERS)",
         }, "");
     }
 

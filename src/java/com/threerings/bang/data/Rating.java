@@ -144,6 +144,48 @@ public class Rating extends SimpleStreamableObject
     }
 
     /**
+     * Computes a player's updated rating for a cooperative game.
+     *
+     * @param pctile the percentile score that the team achieved for the round
+     */
+    public static int computeCoopRating (
+        int pctile, Rating[] ratings, int pidx)
+    {
+        // map our percentile to a rating value and compute the team's average
+        // rating
+        int erat = MINIMUM_RATING +
+            (pctile * (MAXIMUM_RATING - MINIMUM_RATING) / 100);
+        int trat = 0;
+        for (Rating rating : ratings) {
+            trat += rating.rating;
+        }
+        trat = MathUtil.bound(MINIMUM_RATING, trat / ratings.length,
+            MAXIMUM_RATING);
+        
+        // compute the K value. Low exp players get to move more quickly.
+        float K;
+        if (ratings[pidx].experience < 20) {
+            if (ratings[pidx].experience < 10) {
+                K = 500f; // 0-9 rounds
+            } else {
+                K = 250f; // 10-19 rounds
+            }
+        } else {
+            K = 125f; // 20+ rounds
+        }
+
+        // compute the delta rating as a percentage of the team's
+        // current rating (eg. they should have been 12% better or worse)
+        float pctdiff = ((float)(erat - trat) / trat);
+
+        // update the player's rating
+        int nrat = (int) Math.round(ratings[pidx].rating + pctdiff * K);
+
+        // make sure the rating remains within a valid range
+        return MathUtil.bound(MINIMUM_RATING, nrat, MAXIMUM_RATING);
+    }
+    
+    /**
      * Returns true if this rating is provisional (experience < 20).
      */
     public boolean isProvisional ()

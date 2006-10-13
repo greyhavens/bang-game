@@ -490,7 +490,7 @@ public class PlayerManager
     {
         // create a game configuration from that
         BangConfig config = new BangConfig();
-        config.rated = false;
+        config.rated = true;
         config.players = new Name[players];
         config.ais = new BangAI[players];
         config.teamSize = Match.TEAM_SIZES[players-2];
