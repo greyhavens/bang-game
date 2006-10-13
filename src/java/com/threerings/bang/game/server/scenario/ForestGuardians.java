@@ -28,6 +28,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.parlor.game.data.GameAI;
 
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 
@@ -128,6 +129,17 @@ public class ForestGuardians extends Scenario
         placeBonus(bangobj, pieces,
             Bonus.createBonus("indian_post/fetish_turtle"), _fetishSpots);
     
+        // set the initial difficulty level based on the average player rating
+        int nplayers = _bangmgr.getPlayerSlots(), trating = 0;
+        for (int ii = 0; ii < nplayers; ii++) {
+            trating += _bangmgr.getPlayerRecord(ii).getRating(
+                ForestGuardiansInfo.IDENT).rating;
+        }
+        float rratio = ((float)(trating / nplayers) - Rating.DEFAULT_RATING) /
+            (Rating.MAXIMUM_RATING - Rating.DEFAULT_RATING);
+        _difficulty = (int)Math.max(0,
+            Math.round(rratio * MAX_INITIAL_DIFFICULTY));
+        
         // remove all but a random subset of the tree beds
         resetTrees(bangobj);
     }
@@ -656,6 +668,10 @@ public class ForestGuardians extends Scenario
     
     /** The number of remaining ticks required to start another wave. */
     protected static final int MIN_WAVE_TICKS = 16;
+    
+    /** The maximum initial difficulty level (set when the average player
+     * rating is very high). */
+    protected static final int MAX_INITIAL_DIFFICULTY = 4;
     
     /** The base number of logging robots to keep alive per unit. */
     protected static final float BASE_ROBOT_RATIO = 1 / 3f;

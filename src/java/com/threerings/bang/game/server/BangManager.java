@@ -203,6 +203,14 @@ public class BangManager extends GameManager
     }
 
     /**
+     * Returns the player record at the specified index.
+     */
+    public PlayerRecord getPlayerRecord (int pidx)
+    {
+        return _precords[pidx];
+    }
+    
+    /**
      * Called by the client when it has processed a particular tutorial action.
      * This is passed through to the {@link Tutorial} scenario.
      */
