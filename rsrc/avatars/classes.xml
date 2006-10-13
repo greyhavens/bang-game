@@ -76,6 +76,8 @@
          renderPriority="110" shadow="female/shadow"/>
   <class name="female/nose" colors="skin" shadow="female/shadow"
          renderPriority="120"/>
+  <class name="female/jewelry" colors="clothes_p,clothes_s"
+         renderPriority="160"/>
   <class name="female/hair_front" colors="hair,clothes_s" mask="female/hat"
          renderPriority="130"/>
   <class name="female/clothing_middle"
@@ -83,8 +85,6 @@
          renderPriority="140"/>
   <class name="female/glasses" colors="clothes_p,clothes_s"
          renderPriority="150"/>
-  <class name="female/jewelry" colors="clothes_p,clothes_s"
-         renderPriority="160"/>
   <class name="female/hat" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="170"/>
   <class name="female/hat_band" colors="clothes_p,clothes_s,clothes_t"
