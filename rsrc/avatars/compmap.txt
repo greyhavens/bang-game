@@ -1,4 +1,4 @@
-492
+495
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -20,6 +20,7 @@ female/clothing_back := peasant_dress := 179
 female/clothing_back := poncho := 248
 female/clothing_back := poncho_closed := 249
 female/clothing_back := revolutionary := 389
+female/clothing_back := shirt_rifle := 493
 female/clothing_back := shoulder_cape := 377
 female/clothing_back := shoulder_wrap := 395
 female/clothing_back := squaw := 81
@@ -43,6 +44,7 @@ female/clothing_front := peaked_boots := 329
 female/clothing_front := pistol_boots := 330
 female/clothing_front := pistol_peasant_dress := 185
 female/clothing_front := rifle_kneel := 331
+female/clothing_front := rifle_shirt := 494
 female/clothing_front := smoking_duster := 332
 female/clothing_front := storm_caller := 388
 female/clothing_front := trickster_raven := 382
@@ -260,6 +262,7 @@ male/clothing_back := duster := 214
 male/clothing_back := fat_suspenders := 320
 male/clothing_back := fringe := 215
 male/clothing_back := ironplate_poncho := 256
+male/clothing_back := mink_shirt := 495
 male/clothing_back := overalls := 435
 male/clothing_back := overalls_wheat := 443
 male/clothing_back := plate_poncho := 216
