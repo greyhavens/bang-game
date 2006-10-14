@@ -15,7 +15,7 @@ cd $BANG_HOME
 
 # Encode any sounds that have been modified
 for SOUND in `find rsrc -name '*.wav'`; do
-    if [[ $SOUND -nt ${SOUND/%wav/ogg} ]]; then
+    if [[ $SOUND -nt ${SOUND%wav}ogg ]]; then
         oggenc -q $QUALITY $SOUND
     fi
 done
