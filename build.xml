@@ -101,6 +101,7 @@
        <exclude name="**/*.txt"/>
        <exclude name="**/*.jar"/>
        <exclude name="**/*.dat"/>
+       <exclude name="**/*.wav"/>
        <exclude name="**/source/**"/>
       </fileset>
     </copy>
