@@ -115,7 +115,7 @@
       <arg value="-name"/>
       <arg value="*.ogg"/>
       <arg value="!"/>
-      <arg value="-wholename"/>
+      <arg value="-path"/>
       <arg value="rsrc/sounds/music/*"/>
     </exec>
     <jar file="rsrc/sounds/effects/bundle.jar" basedir="rsrc/sounds/effects">
