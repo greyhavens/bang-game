@@ -34,10 +34,10 @@ public class RobotWaveHandler extends EffectHandler
         if (wave < 10) {
             msg = "m.nth." + wave;
         } else {
-            msg = MessageBundle.compose("m.nth.ten_plus", wave);
+            msg = MessageBundle.tcompose("m.nth.ten_plus", wave);
         }
         _view.fadeMarqueeInOut(MessageBundle.compose("m.wave_start", msg,
-            MessageBundle.compose("m.stars", difficulty + 1)), 1f);
+            MessageBundle.tcompose("m.stars", difficulty + 1)), 1f);
         notePender(2f);
     }
     

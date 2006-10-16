@@ -407,7 +407,7 @@ public class ForestGuardians extends Scenario
         for (TreeBed tree : _trees) {
             if (ntrees-- > 0) {
                 if (!bangobj.pieces.contains(tree)) {
-                    _bangmgr.addPiece(tree);
+                    addTree(bangobj, tree);
                 }
                 _bangmgr.deployEffect(-1, new TreeBedEffect(tree));
                 _ctrees.add(tree);
@@ -427,6 +427,30 @@ public class ForestGuardians extends Scenario
     protected int getUnitTotal ()
     {
         return (_bangmgr.getTeamSize() + 1) * _bangmgr.getPlayerCount();
+    }
+    
+    /**
+     * Adds a tree (back) to the board, moving any unit occupying its space.
+     */
+    protected void addTree (BangObject bangobj, TreeBed tree)
+    {
+        if (!bangobj.board.isOccupiable(tree.x, tree.y)) {
+            for (Piece piece : bangobj.pieces) {
+                if (piece instanceof Unit && piece.intersects(tree)) {
+                    Point spot = bangobj.board.getOccupiableSpot(
+                        tree.x, tree.y, 3);
+                    if (spot != null) {
+                        _bangmgr.deployEffect(-1,
+                            ((Unit)piece).generateMoveEffect(
+                                bangobj, spot.x, spot.y, null));
+                    } else {
+                        log.warning("Unable to find spot to move unit " +
+                            "[unit=" + piece + "].");
+                    }
+                }
+            }
+        }
+        _bangmgr.addPiece(tree);
     }
     
     /**
