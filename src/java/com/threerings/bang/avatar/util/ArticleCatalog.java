@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 import com.samskivert.util.StringUtil;
+import com.samskivert.util.Tuple;
 
 import static com.threerings.bang.Log.log;
 
@@ -115,10 +116,29 @@ public class ArticleCatalog
     public void addArticle (Article article)
     {
         _articles.put(article.name, article);
+        if (article.colors != null) {
+            for (Component comp : article.components) {
+                _colorLookup.put(new Tuple<String, String>(
+                            comp.cclass, comp.name), article.colors);
+            }
+        }
+    }
+
+    /**
+     * Returns the color overrides for this component/class or null if no
+     * suck overrides exist.
+     */
+    public String[] getColorOverrides (String cclass, String name)
+    {
+        return _colorLookup.get(new Tuple<String, String>(cclass, name));
     }
 
     /** A mapping of all known articles by name. */
     protected HashMap<String,Article> _articles = new HashMap<String,Article>();
+
+    /** A mapping of component class and name to colors. */
+    protected HashMap<Tuple<String, String>, String[]> _colorLookup =
+        new HashMap<Tuple<String, String>, String[]>();
 
     /** Increase this value when object's serialized state is impacted by a
      * class change (modification of fields, inheritance). */

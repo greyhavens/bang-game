@@ -319,6 +319,10 @@ public class AvatarLogic
         // if we weren't provided with classes, use the values from the
         // component class record
         if (colors == null) {
+            colors = _artcat.getColorOverrides(
+                    ccomp.componentClass.name, ccomp.name);
+        }
+        if (colors == null) {
             colors = ccomp.componentClass.colors;
         }
 
@@ -328,22 +332,25 @@ public class AvatarLogic
         _colors[2] = decodeTertiary(fqComponentId);
 
         // look up the actual colorizations from those
-        Colorization[] zations = new Colorization[colors.length];
+        Colorization[] zations = new Colorization[5];
         for (int cc = 0; cc < colors.length; cc++) {
             if (colors[cc].equals(SKIN)) {
-                zations[cc] = _globals[0];
+                zations[3] = _globals[0];
             } else if (colors[cc].equals(HAIR)) {
-                zations[cc] = _globals[1];
+                zations[4] = _globals[1];
             } else {
-                zations[cc] = _pository.getColorization(
-                    colors[cc], _colors[getColorIndex(colors[cc])]);
+                int cidx = getColorIndex(colors[cc]);
+                zations[cidx] = _pository.getColorization(
+                    colors[cc], _colors[cidx]);
             }
         }
 
-//         log.info("Decoded colors for " + ccomp.name + " into " +
-//                  StringUtil.toString(zations) + " using " +
-//                  StringUtil.toString(colors) + " and " +
-//                  StringUtil.toString(_colors));
+        /*
+        log.info("Decoded colors for " + ccomp.name + " into " +
+                  StringUtil.toString(zations) + " using " +
+                  StringUtil.toString(colors) + " and " +
+                  StringUtil.toString(_colors));
+        */
 
         return zations;
     }
