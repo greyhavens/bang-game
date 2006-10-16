@@ -18,7 +18,7 @@ public class RobotWaveHandler extends EffectHandler
         super.execute();
         RobotWaveEffect reffect = (RobotWaveEffect)_effect;
         if (reffect.wave > 0) {
-            displayStartMarquee(reffect.wave);
+            displayStartMarquee(reffect.wave, reffect.difficulty);
         } else {
             displayEndMarquee(reffect.living, reffect.treeIds.length);
         }
@@ -28,7 +28,7 @@ public class RobotWaveHandler extends EffectHandler
     /**
      * Displays the marquee indicating the start of the wave.
      */
-    protected void displayStartMarquee (int wave)
+    protected void displayStartMarquee (int wave, int difficulty)
     {
         String msg;
         if (wave < 10) {
@@ -36,8 +36,8 @@ public class RobotWaveHandler extends EffectHandler
         } else {
             msg = MessageBundle.compose("m.nth.ten_plus", wave);
         }
-        _view.fadeMarqueeInOut(MessageBundle.compose(
-            "m.wave_start", msg), 1f);
+        _view.fadeMarqueeInOut(MessageBundle.compose("m.wave_start", msg,
+            MessageBundle.compose("m.stars", difficulty + 1)), 1f);
         notePender(2f);
     }
     

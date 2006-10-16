@@ -28,6 +28,9 @@ public class RobotWaveEffect extends Effect
     /** The number of the wave beginning, or -1 if the wave is ending. */
     public int wave = -1;
     
+    /** The difficulty level of the wave. */
+    public int difficulty = -1;
+    
     /** The piece ids of the trees that will be sprouted at the wave's end. */
     public int[] treeIds = NO_PIECES;
     
@@ -41,9 +44,10 @@ public class RobotWaveEffect extends Effect
     /**
      * Creates an effect representing the start of a wave.
      */
-    public RobotWaveEffect (int wave)
+    public RobotWaveEffect (int wave, int difficulty)
     {
         this.wave = wave;
+        this.difficulty = difficulty;
     }
     
     /**

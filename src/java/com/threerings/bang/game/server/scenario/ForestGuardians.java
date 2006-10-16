@@ -435,7 +435,7 @@ public class ForestGuardians extends Scenario
     protected void startNextWave (BangObject bangobj)
     {
         // announce the start of the wave
-        _bangmgr.deployEffect(-1, new RobotWaveEffect(++_wave));
+        _bangmgr.deployEffect(-1, new RobotWaveEffect(++_wave, _difficulty));
         
         // notify the delegate
         _lrdelegate.waveStarted(bangobj);
