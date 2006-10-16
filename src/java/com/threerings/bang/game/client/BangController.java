@@ -342,7 +342,7 @@ public class BangController extends GameController
      */
     public void handleSelectNextUnit (Object source)
     {
-        if (_bangobj == null || !_bangobj.isInteractivePlay()) {
+        if (_pidx == -1 || _bangobj == null || !_bangobj.isInteractivePlay()) {
             return;
         }
 
