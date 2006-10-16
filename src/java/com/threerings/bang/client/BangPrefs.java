@@ -259,6 +259,8 @@ public class BangPrefs
      */
     public static String getLastTownId (String username)
     {
+        // avoid funny business if the user types their name in a strange case
+        username = username.toLowerCase();
         return config.getValue(username + ".town_id", BangCodes.FRONTIER_TOWN);
     }
 
@@ -268,6 +270,8 @@ public class BangPrefs
      */
     public static void setLastTownId (String username, String townId)
     {
+        // avoid funny business if the user types their name in a strange case
+        username = username.toLowerCase();
         config.setValue(username + ".town_id", townId);
     }
 
