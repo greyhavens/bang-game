@@ -1366,7 +1366,7 @@ public class BangManager extends GameManager
                 }
 
                 // now position each of them
-                Piece p = _starts.remove(0);
+                Piece p = _starts.get(ii);
                 ArrayList<Point> spots = _bangobj.board.getOccupiableSpots(
                     ppieces.size(), p.x, p.y, 4);
                 while (spots.size() > 0 && ppieces.size() > 0) {
