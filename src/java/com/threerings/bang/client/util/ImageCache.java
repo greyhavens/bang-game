@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
@@ -69,10 +70,10 @@ public class ImageCache
         BufferedImage bufimg, Colorization[] zations, float scale,
         boolean flip)
     {
-        return createImage(ImageUtil.recolorImage(bufimg, zations), scale,
-            flip);
+        return createImage(
+            ImageUtil.recolorImage(bufimg, zations), scale, flip);
     }
-        
+
     /**
      * Creates a JME-compatible image from the supplied buffered image.
      */
@@ -83,7 +84,7 @@ public class ImageCache
         int width = (int)(bufimg.getWidth() * scale),
             height = (int)(bufimg.getHeight() * scale),
             tsize = RenderUtil.nextPOT(Math.max(width, height));
-        
+
         // convert the the image to the format that OpenGL prefers
         BufferedImage dispimg = createCompatibleImage(
             tsize, tsize, bufimg.getColorModel().hasAlpha());
@@ -127,7 +128,7 @@ public class ImageCache
                 false, null);
         }
     }
-    
+
     /**
      * Converts an image that was created with {@link #createCompatibleImage}
      * into a JME {@link Image}. The data is assumed to have already been
@@ -143,7 +144,7 @@ public class ImageCache
         image.setData(convertImage(bufimg, null));
         return image;
     }
-    
+
     /**
      * Converts the supplied image (which must have been created with {@link
      * #createCompatibleImage}) into a {@link ByteBuffer} that can be passed to
@@ -189,7 +190,7 @@ public class ImageCache
     {
         return getImage(rsrcPath, scale, true);
     }
-    
+
     /**
      * Loads up an image from the cache if possible or from the resource
      * manager otherwise, in which case it is prepared for use by JME and
@@ -205,7 +206,7 @@ public class ImageCache
     {
         return getImage(rsrcPath, 1f, flip);
     }
-    
+
     /**
      * Loads up an image from the cache if possible or from the resource
      * manager otherwise, in which case it is prepared for use by JME and
@@ -321,7 +322,7 @@ public class ImageCache
             silimg = new BufferedImage(
                 bufimg.getWidth(), bufimg.getHeight(),
                 BufferedImage.TYPE_4BYTE_ABGR);
-            new BandCombineOp(NON_ALPHA_TO_BLACK, null).filter(
+            new BandCombineOp(NON_ALPHA_TO_BROWN, null).filter(
                 bufimg.getRaster(), silimg.getRaster());
 
         } catch (Throwable t) {
@@ -405,11 +406,11 @@ public class ImageCache
         ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] { 8, 8, 8, 0 },
         false, false, ComponentColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
 
-    /** An operation that converts all channels except alpha to black. */
-    protected static final float[][] NON_ALPHA_TO_BLACK = {
-        { 0, 0, 0, 0 },
-        { 0, 0, 0, 0 },
-        { 0, 0, 0, 0 },
-        { 0, 0, 0, 1f }
+    /** An operation that converts all channels except alpha to brown. */
+    protected static final float[][] NON_ALPHA_TO_BROWN = {
+        { 0, 0, 0, 0x66/255f },
+        { 0, 0, 0, 0x57/255f },
+        { 0, 0, 0, 0x34/255f },
+        { 0, 0, 0, 0.5f }
     };
 }
