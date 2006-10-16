@@ -6,11 +6,11 @@ package com.threerings.bang.game.data.effect;
 import java.awt.Rectangle;
 import java.awt.Point;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
 import com.samskivert.util.IntIntMap;
-
 import com.threerings.util.MessageBundle;
 
 import com.threerings.io.SimpleStreamableObject;
@@ -483,8 +483,8 @@ public abstract class Effect extends SimpleStreamableObject
     /** Concatenates two generic arrays and returns the result. */
     protected static <T> T[] concatenate (T[] a1, T[] a2)
     {
-        @SuppressWarnings("unchecked") T[] result = 
-            (T[])new Object[a1.length + a2.length];
+        @SuppressWarnings("unchecked") T[] result = (T[])Array.newInstance(
+            a1.getClass().getComponentType(), a1.length + a2.length);
         System.arraycopy(a1, 0, result, 0, a1.length);
         System.arraycopy(a2, 0, result, a1.length, a2.length);
         return result;
