@@ -23,8 +23,14 @@ public class ItemIcon extends PaletteIcon
         _item = item;
         _small = small;
         setIcon(_item.createIcon(ctx, _item.getIconPath(small)));
-        setText(ctx.xlate(BangCodes.BANG_MSGS, _item.getName(small)));
-        setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, _item.getTooltip()));
+        String text = _item.getName(small);
+        if (text != null) {
+            setText(ctx.xlate(BangCodes.BANG_MSGS, text));
+        }
+        String tt = _item.getTooltip();
+        if (tt != null) {
+            setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, tt));
+        }
     }
 
     /** Returns the item associated with this icon. */

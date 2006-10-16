@@ -231,7 +231,7 @@ public class StatusView extends BWindow
 
         case 2:
             if (_badges == null) {
-                _badges = new InventoryPalette(_ctx, BADGE_PRED);
+                _badges = new BadgePalette(_ctx);
             }
             tab = _badges;
             break;
@@ -286,9 +286,6 @@ public class StatusView extends BWindow
                 !(item instanceof BigShotItem);
         }
     };
-
-    protected static final Predicate<Item> BADGE_PRED =
-        new Predicate.InstanceOf<Item>(Badge.class);
 
     protected static final Predicate<Item> DUDS_PRED =
         new Predicate.InstanceOf<Item>(Article.class);

@@ -14,6 +14,7 @@ import java.nio.ByteOrder;
 import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BandCombineOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.ComponentColorModel;
@@ -296,6 +297,50 @@ public class ImageCache
     }
 
     /**
+     * Loads up a silhouette image (in which all non-transparent pixels are set
+     * to black) from the cache if possible or from the resource manager
+     * otherwise, in which case it is prepared for use by BUI.
+     */
+    public BImage getSilhouetteBImage (String rsrcPath, boolean returnNull)
+    {
+        // first check the cache
+        String key = "silhouette:" + rsrcPath;
+        WeakReference<BImage> iref = _buicache.get(key);
+        BImage image;
+        if (iref != null && (image = iref.get()) != null) {
+            return image;
+        }
+
+        // load the image data from the resource manager
+        BufferedImage bufimg, silimg;
+        File ifile = _ctx.getResourceManager().getResourceFile(rsrcPath);
+        try {
+            bufimg = ImageIO.read(ifile);
+
+            // now turn it into a silhouette
+            silimg = new BufferedImage(
+                bufimg.getWidth(), bufimg.getHeight(),
+                BufferedImage.TYPE_4BYTE_ABGR);
+            new BandCombineOp(NON_ALPHA_TO_BLACK, null).filter(
+                bufimg.getRaster(), silimg.getRaster());
+
+        } catch (Throwable t) {
+            if (returnNull) {
+                return null;
+            }
+            log.log(Level.WARNING, "Unable to load image resource " +
+                    "[path=" + ifile + "].", t);
+            // cope; return an error image of abitrary size
+            silimg = ImageUtil.createErrorImage(64, 64);
+        }
+
+        // create and cache a new BUI image with the appropriate data
+        image = new BImage(silimg, true);
+        _buicache.put(key, new WeakReference<BImage>(image));
+        return image;
+    }
+
+    /**
      * Colorizes the image with supplied path (which must be an 8-bit
      * colormapped image), then converts the colorized image into a form that
      * JME can display.
@@ -359,4 +404,12 @@ public class ImageCache
     protected static ColorModel GL_OPAQUE_MODEL = new ComponentColorModel(
         ColorSpace.getInstance(ColorSpace.CS_sRGB), new int[] { 8, 8, 8, 0 },
         false, false, ComponentColorModel.OPAQUE, DataBuffer.TYPE_BYTE);
+
+    /** An operation that converts all channels except alpha to black. */
+    protected static final float[][] NON_ALPHA_TO_BLACK = {
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 0 },
+        { 0, 0, 0, 1f }
+    };
 }

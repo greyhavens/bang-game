@@ -6,6 +6,7 @@ package com.threerings.bang.data;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import com.jmex.bui.BImage;
@@ -51,16 +52,18 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 500;
             }
         },
-//         GAMES_PLAYED_4 {
-//             public boolean qualifies (PlayerObject user) {
-//                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 2000;
-//             }
-//         },
-//         GAMES_PLAYED_5 {
-//             public boolean qualifies (PlayerObject user) {
-//                 return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
-//             }
-//         },
+        GAMES_PLAYED_4 {
+            public boolean qualifies (PlayerObject user) {
+                return false;
+                // return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 2000;
+            }
+        },
+        GAMES_PLAYED_5 {
+            public boolean qualifies (PlayerObject user) {
+                return false;
+                // return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
+            }
+        },
 
         // units killed badges
         UNITS_KILLED_1 {
@@ -215,7 +218,7 @@ public class Badge extends Item
             }
         },
 
-        // cards played badges
+        // cash earned badges
         CASH_EARNED_1 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CASH_EARNED) >= 10000;
@@ -349,7 +352,7 @@ public class Badge extends Item
             }
         },
 
-        // trees saved badges
+        // wendigo survival badges
         WENDIGO_SURVIVALS_1 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(
@@ -552,6 +555,9 @@ public class Badge extends Item
             StringBuilder codestr = new StringBuilder();
             _code = BangUtil.crc32(name());
 
+            if (_codeToType == null) {
+                _codeToType = new HashIntMap<Type>();
+            }
             if (_codeToType.containsKey(_code)) {
                 log.warning("Badge type collision! " + this + " and " +
                             _codeToType.get(_code) + " both map to '" +
@@ -564,13 +570,101 @@ public class Badge extends Item
         protected int _code;
     };
 
-    public static void main (String[] args) {
-        for (Type type : Type.values()) {
-            if (args.length != 0) {
+    /** Defines the layout of the badge table. */
+    public static Type[] LAYOUT =
+    {
+        // general series badges
+        Type.GAMES_PLAYED_1, Type.GAMES_PLAYED_2, Type.GAMES_PLAYED_3,
+        Type.GAMES_PLAYED_4, Type.GAMES_PLAYED_5,
+
+        Type.UNITS_KILLED_1, Type.UNITS_KILLED_2, Type.UNITS_KILLED_3,
+        Type.UNITS_LOST_1, Type.UNITS_LOST_2,
+
+        Type.HIGHEST_POINTS_1, Type.HIGHEST_POINTS_2,
+        Type.CONSEC_KILLS_1, Type.CONSEC_KILLS_2, Type.CONSEC_KILLS_3,
+
+        Type.CONSEC_WINS_1, Type.CONSEC_WINS_2, Type.CONSEC_WINS_3,
+        Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,
+
+        Type.SHOTS_FIRED_1, Type.SHOTS_FIRED_2,
+        Type.DISTANCE_MOVED_1, Type.DISTANCE_MOVED_2, Type.DISTANCE_MOVED_3,
+
+        Type.CARDS_PLAYED_1, Type.CARDS_PLAYED_2, Type.CARDS_PLAYED_3,
+        null, null,
+
+        Type.BONUSES_COLLECTED_1, Type.BONUSES_COLLECTED_2,
+        Type.BONUSES_COLLECTED_3, null, null,
+
+        Type.CASH_EARNED_1, Type.CASH_EARNED_2, Type.CASH_EARNED_3,
+        Type.GAMES_HOSTED_1, Type.GAMES_HOSTED_2,
+
+        Type.CHAT_SENT_1, Type.CHAT_SENT_2, Type.CHAT_SENT_3,
+        Type.CHAT_RECEIVED_1, Type.CHAT_RECEIVED_2,
+
+        Type.LOOKS_BOUGHT_1, Type.LOOKS_BOUGHT_2,
+        Type.DUDS_BOUGHT_1, Type.DUDS_BOUGHT_2, Type.DUDS_BOUGHT_3,
+
+//         DAILY_HIGH_SCORER, WEEKLY_HIGH_SCORER, MONTHLY_HIGH_SCORER,
+
+        // frontier town badges
+        Type.NUGGETS_CLAIMED_1, Type.NUGGETS_CLAIMED_2, Type.NUGGETS_CLAIMED_3,
+        Type.NUGGETS_CLAIMED_4, null,
+
+        Type.CATTLE_RUSTLED_1, Type.CATTLE_RUSTLED_2, Type.CATTLE_RUSTLED_3,
+        Type.CATTLE_RUSTLED_4, null,
+
+        Type.STEADS_CLAIMED_1, Type.STEADS_CLAIMED_2, Type.STEADS_CLAIMED_3,
+        null, null,
+
+        Type.CAVALRY_USER, Type.TACTICIAN_USER, Type.CODGER_USER,
+        Type.FT_BIGSHOT_USER, Type.FT_ALLUNIT_USER,
+
+        // indian trading post badges
+        Type.TOTEMS_STACKED_1, Type.TOTEMS_STACKED_2, Type.TOTEMS_STACKED_3,
+        Type.TOTEMS_STACKED_4, Type.TOTEMS_STACKED_5,
+
+        Type.TREES_SAVED_1, Type.TREES_SAVED_2, Type.TREES_SAVED_3,
+        Type.TREES_SAVED_4, Type.TREES_SAVED_5,
+
+        Type.WENDIGO_SURVIVALS_1, Type.WENDIGO_SURVIVALS_2,
+        Type.WENDIGO_SURVIVALS_3, null, null,
+
+        Type.STORM_CALLER_USER, Type.TRICKSTER_RAVEN_USER,
+        Type.REVOLUTIONARY_USER, Type.ITP_BIGSHOT_USER, Type.ITP_ALLUNIT_USER,
+
+        // general non-series (wacky) badges
+        Type.IRON_HORSE, Type.SAINT_NICK, Type.NIGHT_OWL,
+        Type.HIGH_NOON, Type.NEW_SHERRIF_IN_TOWN,
+    };
+
+    /**
+     * Used to check certain badge bits.
+     */
+    public static void main (String[] args)
+    {
+        if (args.length > 0 && "check".indexOf(args[0]) != -1) {
+            HashSet<Type> laidout = new HashSet<Type>();
+            for (Type type : LAYOUT) {
+                laidout.add(type);
+            }
+            for (Type type : Type.values()) {
+                if (!laidout.contains(type) && type != Type.UNUSED) {
+                    System.err.println("Not in layout: " + type);
+                }
+            }
+
+        } else if (args.length > 0 && "dump".indexOf(args[0]) != -1) {
+            for (Type type : Type.values()) {
                 System.err.println(type + " = " + type.code());
-            } else {
+            }
+
+        } else if (args.length > 0 && "xlate".indexOf(args[0]) != -1) {
+            for (Type type : Type.values()) {
                 System.err.println(type.key() + " = " + type);
             }
+
+        } else {
+            System.err.println("Usage: Badge [check|dump|xlate]");
         }
     }
 
@@ -647,6 +741,15 @@ public class Badge extends Item
     }
 
     /**
+     * Configures this badge to display a silhouette image and no name or
+     * tooltip.  Used when displaying unearned badges in the badge list.
+     */
+    public void setSilhouette (boolean silhouette)
+    {
+        _silhouette = silhouette;
+    }
+
+    /**
      * Creates a new, unowned badge with the specified type code.
      */
     protected Badge (int code)
@@ -657,12 +760,18 @@ public class Badge extends Item
     @Override // documentation inherited
     public String getName ()
     {
+        if (_silhouette) {
+            return null;
+        }
         return MessageBundle.qualify(BangCodes.BADGE_MSGS, getType().key());
     }
 
     @Override // documentation inherited
     public String getTooltip ()
     {
+        if (_silhouette) {
+            return null;
+        }
         String reward = getReward(), msg;
         if (reward == null) {
             msg = MessageBundle.compose("m.badge_icon_nil", getType().key());
@@ -683,9 +792,18 @@ public class Badge extends Item
     @Override // documentation inherited
     public ImageIcon createIcon (BasicContext ctx, String iconPath)
     {
-        BImage bimage = ctx.getImageCache().getBImage(iconPath, true);
-        if (bimage == null) {
-            bimage = ctx.loadImage("badges/noimage.png");
+        BImage bimage;
+        if (_silhouette) {
+            bimage = ctx.getImageCache().getSilhouetteBImage(iconPath, true);
+            if (bimage == null) {
+                bimage = ctx.getImageCache().getSilhouetteBImage(
+                    "badges/noimage.png", true);
+            }
+        } else {
+            bimage = ctx.getImageCache().getBImage(iconPath, true);
+            if (bimage == null) {
+                bimage = ctx.loadImage("badges/noimage.png");
+            }
         }
         return new ImageIcon(bimage);
     }
@@ -782,8 +900,11 @@ public class Badge extends Item
     /** The unique code for the type of this badge. */
     protected int _code;
 
+    /** Used when displaying unearned badges. */
+    protected transient boolean _silhouette;
+
     /** The table mapping stat codes to enumerated types. */
-    protected static HashIntMap<Type> _codeToType = new HashIntMap<Type>();
+    protected static HashIntMap<Type> _codeToType;
 
     /** Trigger the loading of the enum when we load this class. */
     protected static Type _trigger = Type.UNUSED;

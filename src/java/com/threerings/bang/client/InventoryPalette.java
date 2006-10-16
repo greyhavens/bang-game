@@ -26,7 +26,7 @@ public class InventoryPalette extends IconPalette
      */
     public InventoryPalette (BangContext ctx, Predicate<Item> itemp)
     {
-        this(ctx, itemp, 5, 3);
+        this(ctx, itemp, COLUMNS, 3);
     }
 
     /**
@@ -57,18 +57,7 @@ public class InventoryPalette extends IconPalette
 
         // populate our item display every time we are shown as we may be
         // hidden, the player's inventory updated, then reshown again
-        int added = 0;
-        PlayerObject user = _ctx.getUserObject();
-        Item[] items = user.inventory.toArray(new Item[user.inventory.size()]);
-        Arrays.sort(items, new ItemComparator());
-        // sort the items in some vaguely sensible order
-        for (Item item : items) {
-            if (!_itemp.isMatch(item)) {
-                continue;
-            }
-            addIcon(new ItemIcon(_ctx, item));
-            added++;
-        }
+        populate();
     }
 
     @Override // documentation inherited
@@ -78,6 +67,24 @@ public class InventoryPalette extends IconPalette
 
         // clear out our item display
         clear();
+    }
+
+    /**
+     * Populates the palette with icons based on the contents of the players
+     * inventory.
+     */
+    protected void populate ()
+    {
+        PlayerObject user = _ctx.getUserObject();
+        Item[] items = user.inventory.toArray(new Item[user.inventory.size()]);
+        Arrays.sort(items, new ItemComparator());
+        // sort the items in some vaguely sensible order
+        for (Item item : items) {
+            if (!_itemp.isMatch(item)) {
+                continue;
+            }
+            addIcon(new ItemIcon(_ctx, item));
+        }
     }
 
     /** Used to sort the inventory display. */
@@ -96,4 +103,6 @@ public class InventoryPalette extends IconPalette
 
     protected BangContext _ctx;
     protected Predicate<Item> _itemp;
+
+    protected static final int COLUMNS = 5;
 }
