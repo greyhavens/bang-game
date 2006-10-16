@@ -166,6 +166,9 @@ public class ParlorView extends ShopView
         _gconfig.didLeavePlace();
         _config.didLeavePlace();
 
+        // unregister our chat display
+        _chat.shutdown();
+
         if (_parobj != null) {
             _parobj.removeListener(_occlist);
             _parobj = null;

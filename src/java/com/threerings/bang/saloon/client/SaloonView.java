@@ -115,6 +115,7 @@ public class SaloonView extends ShopView
     public void didLeavePlace (PlaceObject plobj)
     {
         _parlist.didLeavePlace();
+        _paper.shutdown();
     }
 
     @Override // documentation inherited

@@ -90,6 +90,15 @@ public class PaperView extends BContainer
     }
 
     /**
+     * Called when we're going away.
+     */
+    public void shutdown ()
+    {
+        // unregister our chat display
+        _chat.shutdown();
+    }
+
+    /**
      * Returns the chat view
      */
     public PlaceChatView getChat ()

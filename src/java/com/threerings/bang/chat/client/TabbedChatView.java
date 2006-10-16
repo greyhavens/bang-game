@@ -81,6 +81,15 @@ public class TabbedChatView extends BContainer
         _alert = new ImageIcon(_ctx.loadImage("ui/chat/alert_icon.png"));
     }
 
+    /**
+     * This must be called when we are leaving the room in which this chat view
+     * is displaying chat.
+     */
+    public void shutdown ()
+    {
+        _ctx.getChatDirector().removeChatDisplay(this);
+    }
+
     // from interface ChatDisplay
     public void clear ()
     {
