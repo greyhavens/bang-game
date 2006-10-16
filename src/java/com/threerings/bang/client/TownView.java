@@ -121,6 +121,9 @@ public class TownView extends BWindow
             _commands.put(props.getProperty(command), command);
         }
 
+        // create the town display
+        add(_bview = new TownBoardView(ctx));
+
         // create our overlay menu buttons
         GroupLayout gl = GroupLayout.makeHoriz(
                 GroupLayout.STRETCH, GroupLayout.LEFT, GroupLayout.NONE);
@@ -154,9 +157,6 @@ public class TownView extends BWindow
         button = new BButton(new BlankIcon(128, 30), this, "exit");
         button.setStyleClass("exit_button");
         _menu.add(button, GroupLayout.FIXED);
-
-        // create the town display
-        add(_bview = new TownBoardView(ctx));
     }
 
     /**
