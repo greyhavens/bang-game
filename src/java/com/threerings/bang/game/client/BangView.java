@@ -144,10 +144,14 @@ public class BangView extends BWindow
         case BangObject.IN_PLAY:
             if (config.practice) {
                 showPractice();
-                showUnitStatus();
+                if (pidx != -1) {
+                    showUnitStatus();
+                }
             } else if (!config.tutorial) {
                 showRoundTimer();
-                showUnitStatus();
+                if (pidx != -1) {
+                    showUnitStatus();
+                }
             }
             clearOverlay();
             view.startRound();

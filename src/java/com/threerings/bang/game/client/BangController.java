@@ -221,6 +221,10 @@ public class BangController extends GameController
         // we may be returning to an already started game
         if (_bangobj.state != BangObject.PRE_GAME) {
             stateDidChange(_bangobj.state);
+            if (!_musicStarted) {
+                // start up the music for this scenario
+                startScenarioMusic(3f);
+            }
         }
 
         // if we're just observing an auto-play game, let the manager know
@@ -533,8 +537,9 @@ public class BangController extends GameController
 
     public void startScenarioMusic (float duration)
     {
-       _ctx.getBangClient().queueMusic(
-           _bangobj.scenario.getMusic(), true, duration);
+        _musicStarted = true;
+        _ctx.getBangClient().queueMusic(
+            _bangobj.scenario.getMusic(), true, duration);
     }
 
     @Override // documentation inherited
@@ -899,6 +904,9 @@ public class BangController extends GameController
 
     /** Stores previous round stats data. */
     protected HashIntMap<StatSet[]> _statMap = new HashIntMap<StatSet[]>();
+
+    /** Keeps track of if we've started the music. */
+    protected boolean _musicStarted;
 
     /** Used to by {@link #handleSelectNextUnit}. */
     protected static Comparator<Unit> UNIT_COMPARATOR = new Comparator<Unit>() {
