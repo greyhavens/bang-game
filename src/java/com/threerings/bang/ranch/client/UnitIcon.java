@@ -52,7 +52,7 @@ public class UnitIcon extends PaletteIcon
             setLocked(ctx, locked);
             if (locked) {
                 setEnabled(!disableUnavail);
-                setTooltipText(getTooltipText() + "\n\n" + 
+                setTooltipText(getTooltipText() + BADGE_SEP + 
                     ctx.xlate(BangCodes.UNITS_MSGS,
                         _config.getName() + "_badge"));
             }
@@ -135,11 +135,27 @@ public class UnitIcon extends PaletteIcon
     @Override // documentation inherited
     protected BComponent createTooltipComponent (String tiptext)
     {
+        // do some hackery to display our badge requirements below our
+        // bonus/penalty stuff
+        String badgetip = null;
+        int sepidx = tiptext.indexOf(BADGE_SEP);
+        if (sepidx != -1) {
+            badgetip = tiptext.substring(sepidx+BADGE_SEP.length());
+            tiptext= tiptext.substring(0, sepidx);
+        }
+
         BContainer tooltip = GroupLayout.makeVBox(GroupLayout.CENTER);
+        ((GroupLayout)tooltip.getLayoutManager()).setOffAxisJustification(
+            GroupLayout.LEFT);
+        ((GroupLayout)tooltip.getLayoutManager()).setGap(15);
         tooltip.add(super.createTooltipComponent(tiptext));
         UnitBonus ubonus = new UnitBonus(_ctx, 25);
         ubonus.setUnitConfig(_config, false, UnitBonus.Which.BOTH);
         tooltip.add(ubonus);
+
+        if (badgetip != null) {
+            tooltip.add(super.createTooltipComponent(badgetip));
+        }
         return tooltip;
     }
 
@@ -147,4 +163,6 @@ public class UnitIcon extends PaletteIcon
     protected UnitConfig _config;
     protected BImage _lock;
     protected BasicContext _ctx;
+
+    protected static final String BADGE_SEP = "\n\n";
 }
