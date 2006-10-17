@@ -865,9 +865,9 @@
   </article>
 
   <article name="female_topper" townId="indian_post"
-           slot="hat" scrip="2500" coins="2"
-           colors="clothes_p,clothes_s,clothes_t">
+           slot="hat" scrip="2500" coins="2" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="topper"/>
+    <component cclass="female/hat_back" name="topper"/>
   </article>
 
   <article name="female_feather_coronet" townId="indian_post"
