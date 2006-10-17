@@ -20,6 +20,7 @@ import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
@@ -387,6 +388,11 @@ public abstract class Effect extends SimpleStreamableObject
         BangObject bangobj, Piece piece, Observer obs)
     {
         bangobj.removePieceDirect(piece);
+        if (piece instanceof Prop) {
+            // removing props requires building the shadow from scratch
+            bangobj.board.shadowPieces(bangobj.pieces.iterator(), piece.x,
+                piece.y, piece.getWidth(), piece.getLength());
+        }
         if (obs != null) {
             obs.pieceRemoved(piece);
         }
