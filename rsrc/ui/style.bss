@@ -1172,8 +1172,10 @@ tutorial_click:disabled {
 }
 
 tutorial_steps {
-  font: "Old Town" bold 24;
+  parent: "tutorial_click";
   color: #4C2602;
+  // we need this so that we are the same height as tutorial_click text
+  effect-color: #FFFFFF00;
   text-align: right;
 }
 

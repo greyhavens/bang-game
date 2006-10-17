@@ -262,7 +262,8 @@ public class TutorialController
         }
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
-        _view.tutwin.pack(510, -1);
+        // take up all the space between the two player status views
+        _view.tutwin.pack(width - 2*(246+10), -1);
         _view.tutwin.setLocation((width - _view.tutwin.getWidth())/2, 2);
     }
 
