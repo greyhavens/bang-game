@@ -55,7 +55,9 @@ public class BadgePalette extends InventoryPalette
                 row[column].setSilhouette(true);
             }
 
-            if (column == COLUMNS-1 && count > 0) {
+            // if we have a badge from this row, or it's one of the first six
+            // rows, show the whole row
+            if (column == COLUMNS-1 && (count > 0 || (ii/COLUMNS) < 6)) {
                 for (int jj = 0; jj < COLUMNS; jj++) {
                     addIcon(new ItemIcon(_ctx, row[jj]));
                 }
