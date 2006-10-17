@@ -53,6 +53,9 @@ public class Unit extends Piece
     /** An additional influence caused by the thing being held. */
     public transient Influence holdingInfluence;
 
+    /** Used to track consecutive kills by this unit. */
+    public transient int consecKills;
+
     /**
      * Instantiates a unit of the specified type.
      */
@@ -75,6 +78,18 @@ public class Unit extends Piece
     }
 
     /**
+     * Called to reinitialize this unit just prior to respawning it.
+     */
+    public void respawnInit ()
+    {
+        damage = 0;
+        consecKills = 0;
+        influence = null;
+        holding = null;
+        setRespawnTick((short)0);
+    }
+
+    /**
      * Configures this piece with a new influence.
      */
     public void setInfluence (Influence influence, short tick)
@@ -92,19 +107,25 @@ public class Unit extends Piece
         this.hindrance = hindrance;
     }
 
-    /** Returns the type of the unit. */
+    /**
+     * Returns the type of the unit.
+     */
     public String getType ()
     {
         return _config.type;
     }
 
-    /** Returns our unit configuration. */
+    /**
+     * Returns our unit configuration.
+     */
     public UnitConfig getConfig ()
     {
         return _config;
     }
 
-    /** Returns the height of the unit in tiles. */
+    /**
+     * Returns the height of the unit in tiles.
+     */
     public float getHeight ()
     {
         return _config.height;

@@ -57,7 +57,7 @@ public abstract class Effect extends SimpleStreamableObject
          * Indicates that the board was affected with the named visual effect.
          */
         public void boardAffected (String effect);
-        
+
         /**
          * Indicates that the specified piece was moved or reoriented.
          */
@@ -79,17 +79,17 @@ public abstract class Effect extends SimpleStreamableObject
          * Indicates that the card has been added to a player's hand.
          */
         public void cardAdded (Card card);
-        
+
         /**
          * Indicates that a card has been removed from a player's hand.
          */
         public void cardRemoved (Card card);
-        
+
         /**
          * Indicates that a user played a card.
          */
         public void cardPlayed (Card card, Object target);
-        
+
         /**
          * Indicates that the tick was delayed for the specified amount of time
          * in order to let an effect run its course.
@@ -117,7 +117,7 @@ public abstract class Effect extends SimpleStreamableObject
             return false;
         }
 
-        return collide(bangobj, obs, collider, target, 
+        return collide(bangobj, obs, collider, target,
                 Math.min(100, target.damage + damage), x, y, effect);
 
     }
@@ -177,7 +177,7 @@ public abstract class Effect extends SimpleStreamableObject
         boolean alive = target.isAlive();
         if (!alive) {
             target.wasKilled(bangobj.tick);
-       
+
             // airborn targets must land when they die
             if (target.isAirborne() && !target.removeWhenDead()) {
                 Point pt = bangobj.board.getOccupiableSpot(
@@ -187,7 +187,7 @@ public abstract class Effect extends SimpleStreamableObject
                 }
             }
         }
-        
+
         // report that the target was affected
         reportEffect(obs, target, effect);
 
@@ -269,7 +269,7 @@ public abstract class Effect extends SimpleStreamableObject
 
     /**
      * Returns an array of pieces that will be moved by this effect.  The
-     * default implementation returns nothing, however, some effects will 
+     * default implementation returns nothing, however, some effects will
      * cause pieces to move and should be specified here if they may block
      * the path of another piece.
      */
@@ -314,7 +314,7 @@ public abstract class Effect extends SimpleStreamableObject
     {
         return true;
     }
-    
+
     /**
      * Applies this effect to the board and pieces. Any modifications to pieces
      * or the board should be made directly as this is executed on both the
@@ -333,7 +333,7 @@ public abstract class Effect extends SimpleStreamableObject
      * is only used for in the field debugging).
      */
     public abstract boolean apply (BangObject bangobj, Observer observer);
-    
+
     /**
      * Creates an {@link EffectHandler} to manage the (potentially complicated)
      * visualization of this effect.
@@ -342,7 +342,7 @@ public abstract class Effect extends SimpleStreamableObject
     {
         return new EffectHandler();
     }
-    
+
     /**
      * Returns the base amount of damage inflicted on the specified piece
      * (that is, the amount before it's limited by the piece's remaining
@@ -352,7 +352,7 @@ public abstract class Effect extends SimpleStreamableObject
     {
         return 0;
     }
-    
+
     /**
      * Returns a translatable description of the effect to display on the
      * client, or <code>null</code> for none.
@@ -363,7 +363,7 @@ public abstract class Effect extends SimpleStreamableObject
     {
         return null;
     }
-    
+
     @Override // documentation inherited
     public String toString ()
     {
@@ -382,7 +382,7 @@ public abstract class Effect extends SimpleStreamableObject
             obs.pieceAdded(piece);
         }
     }
-    
+
     /** A helper function for removing a piece and reporting it. */
     protected static void removeAndReport (
         BangObject bangobj, Piece piece, Observer obs)
@@ -397,7 +397,7 @@ public abstract class Effect extends SimpleStreamableObject
             obs.pieceRemoved(piece);
         }
     }
-    
+
     /** A helper function for reporting a piece affecting. */
     protected static void reportEffect (
         Observer obs, Piece piece, String effect)
@@ -418,7 +418,7 @@ public abstract class Effect extends SimpleStreamableObject
             obs.boardAffected(effect);
         }
     }
-    
+
     /** A helper function for moving a piece and reporting it. */
     protected static void moveAndReport (
         BangObject bangobj, Piece piece, int nx, int ny, Observer obs)
@@ -448,7 +448,7 @@ public abstract class Effect extends SimpleStreamableObject
             obs.cardAdded(card);
         }
     }
-    
+
     /** Removes a card and reports it to the observer. */
     protected static void removeAndReport (
         BangObject bangobj, Card card, Observer obs)
@@ -458,7 +458,7 @@ public abstract class Effect extends SimpleStreamableObject
             obs.cardRemoved(card);
         }
     }
-    
+
     /** Removes a card and reports its being played to the observer. */
     protected static void playAndReport (
         BangObject bangobj, Card card, Object target, Observer obs)
@@ -468,7 +468,7 @@ public abstract class Effect extends SimpleStreamableObject
             obs.cardPlayed(card, target);
         }
     }
-    
+
     /** A helper function for reporting a tick delay. */
     protected static void reportDelay (Observer obs, long extraTime)
     {
@@ -495,7 +495,7 @@ public abstract class Effect extends SimpleStreamableObject
         System.arraycopy(a2, 0, result, a1.length, a2.length);
         return result;
     }
-    
+
     /** Returns a translatable string representing the names of the pieces
      * identified in the piece id array owned by the specified player. */
     protected String getPieceNames (
@@ -518,7 +518,7 @@ public abstract class Effect extends SimpleStreamableObject
                 names.toArray(new String[nsize]));
         }
     }
-    
+
     /** Used by {@link #getWaitPieces}. */
     protected static final int[] NO_PIECES = new int[0];
 }

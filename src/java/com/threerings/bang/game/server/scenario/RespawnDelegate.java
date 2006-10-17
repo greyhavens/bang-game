@@ -88,10 +88,7 @@ public class RespawnDelegate extends ScenarioDelegate
             }
 
             // reset the units vital statistics
-            unit.damage = 0;
-            unit.influence = null;
-            unit.holding = null;
-            unit.setRespawnTick((short)0);
+            unit.respawnInit();
 
             // if the unit is still in play for some reason, remove it first
             if (bangobj.pieces.containsKey(unit.getKey())) {

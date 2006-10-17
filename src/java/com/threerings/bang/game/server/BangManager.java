@@ -2199,9 +2199,10 @@ public class BangManager extends GameManager
                 // check to see if any "max" stat was exceeded in this round
                 user.stats.maxStat(Stat.Type.HIGHEST_POINTS,
                                    _bangobj.perRoundPoints[rr][pidx]);
-                user.stats.maxStat(Stat.Type.MOST_KILLS,
-                                   _rounds[rr].stats[pidx].getIntStat(
-                                       Stat.Type.UNITS_KILLED));
+                for (int ss = 0; ss < MAX_STATS.length; ss += 2) {
+                    int v = _rounds[rr].stats[pidx].getIntStat(MAX_STATS[ss+1]);
+                    user.stats.maxStat(MAX_STATS[ss], v);
+                }
             }
 
             // note their cash earned
@@ -2698,7 +2699,15 @@ public class BangManager extends GameManager
         }
 
         public void pieceKilled (Piece piece) {
+            // let the scenario know that the piece was killed
             _scenario.pieceWasKilled(_bangobj, piece);
+
+            // if this is a unit and owned by a player, update their
+            // consecutive kills
+            if (piece.owner != -1 && piece instanceof Unit) {
+                _bangobj.stats[piece.owner].maxStat(
+                    Stat.Type.CONSEC_KILLS, ((Unit)piece).consecKills);
+            }
         }
 
         public void pieceRemoved (Piece piece) {
@@ -2830,5 +2839,12 @@ public class BangManager extends GameManager
         Stat.Type.POINTS_EARNED,
         Stat.Type.SHOTS_FIRED,
         Stat.Type.DISTANCE_MOVED,
+    };
+
+    /** Stats that we max() at the end of the game into the player's persistent
+     * stats. */
+    protected static final Stat.Type[] MAX_STATS = {
+        Stat.Type.MOST_KILLS, Stat.Type.UNITS_KILLED,
+        Stat.Type.CONSEC_KILLS, Stat.Type.CONSEC_KILLS,
     };
 }
