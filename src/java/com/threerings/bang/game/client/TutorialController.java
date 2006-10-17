@@ -5,6 +5,7 @@ package com.threerings.bang.game.client;
 
 import java.util.ArrayList;
 
+import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -16,6 +17,7 @@ import com.jmex.bui.event.MouseAdapter;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
+import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 
@@ -56,7 +58,7 @@ public class TutorialController
         _msgs = _ctx.getMessageManager().getBundle(
             "tutorials." + _config.ident);
         _gmsgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
-        
+
         // create and add the window in which we'll display info text
         _view.tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null) {
             public BComponent getHitComponent (int mx, int my) {
@@ -65,33 +67,38 @@ public class TutorialController
                     _pending == null || TutorialCodes.TEXT_CLICKED.equals(
                         _pending.event)) ? comp : null;
             }
+            protected void renderBackground (Renderer renderer) {
+                getBackground().render(renderer, 0, 0, _width, _height, 0.5f);
+            }
         };
         _view.tutwin.setStyleClass("tutorial_window");
         _view.tutwin.setLayer(1);
         _view.tutwin.setLayoutManager(new BorderLayout(5, 15));
-        
-        BContainer north = new BContainer(new BorderLayout());
+
+        BContainer north = new BContainer(
+            GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER,
+                                  GroupLayout.CONSTRAIN));
         _view.tutwin.add(north, BorderLayout.NORTH);
-        _back = new BButton(new ImageIcon(
-            ctx.loadImage("ui/icons/left_arrow.png")), this, "back");
-        _back.setStyleClass("arrow_button");
+        _back = new BButton("", this, "back");
+        _back.setStyleClass("tutorial_back");
         _back.setEnabled(false);
-        north.add(_back, BorderLayout.WEST);
-        north.add(_title = new BLabel("", "tutorial_title"),
-            BorderLayout.CENTER);
-        _forward = new BButton(new ImageIcon(
-            ctx.loadImage("ui/icons/right_arrow.png")), this, "forward");
-        _forward.setStyleClass("arrow_button");
+        north.add(_back, GroupLayout.FIXED);
+
+        north.add(_title = new BLabel("", "tutorial_title"));
+
+        _forward = new BButton("", this, "forward");
+        _forward.setStyleClass("tutorial_forward");
         _forward.setEnabled(false);
-        north.add(_forward, BorderLayout.EAST);
-        
+        north.add(_forward, GroupLayout.FIXED);
+
         _view.tutwin.add(_info = new BLabel("", "tutorial_text"),
                          BorderLayout.CENTER);
 
-        BContainer south = new BContainer(new BorderLayout(15, 5));
+        BContainer south = new BContainer(GroupLayout.makeHStretch());
         _view.tutwin.add(south, BorderLayout.SOUTH);
-        south.add(_click = new BLabel("", "tutorial_steps"), BorderLayout.WEST);
-        south.add(_steps = new BLabel("", "tutorial_steps"), BorderLayout.EAST);
+        south.add(new BLabel("", "tutorial_click"));
+        south.add(_click = new BLabel("", "tutorial_click"), GroupLayout.FIXED);
+        south.add(_steps = new BLabel("", "tutorial_steps"));
 
         _view.tutwin.addListener(_clicklist);
         _info.addListener(_clicklist);
@@ -134,7 +141,7 @@ public class TutorialController
         _forward.setEnabled(_hidx < _history.size() - 1);
         _click.setEnabled(!_forward.isEnabled());
     }
-    
+
     /** Called from {@link BangController#gameDidEnd}. */
     public void gameDidEnd ()
     {
@@ -170,7 +177,7 @@ public class TutorialController
             _back.setEnabled(_hidx > 0);
             _forward.setEnabled(false);
             _click.setEnabled(true);
-            
+
         } else if (action instanceof TutorialConfig.Wait) {
             // wait for the specified event
             _pending = (TutorialConfig.Wait)action;
@@ -227,7 +234,7 @@ public class TutorialController
             } else if (name.equals("round_timer")) {
                 _view.showRoundTimer();
             }
-            
+
         } else {
             log.warning("Unknown action " + action);
         }
@@ -255,9 +262,8 @@ public class TutorialController
         }
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
-        _view.tutwin.pack(600, -1);
-        _view.tutwin.setLocation((width - _view.tutwin.getWidth())/2,
-                                 height - _view.tutwin.getHeight() - 10);
+        _view.tutwin.pack(510, -1);
+        _view.tutwin.setLocation((width - _view.tutwin.getWidth())/2, 2);
     }
 
     protected void processedAction (TutorialConfig.Action action)
@@ -290,10 +296,10 @@ public class TutorialController
 
     protected BLabel _title, _info, _click, _steps;
     protected BButton _back, _forward;
-    
+
     protected TutorialConfig _config;
     protected TutorialConfig.Wait _pending;
-    
+
     protected ArrayList<TutorialConfig.Text> _history =
         new ArrayList<TutorialConfig.Text>();
     protected int _hidx = -1;

@@ -231,7 +231,6 @@ tabbedpane_close {
   padding: 0 25;
 }
 
-
 tab {
   color: #8c562a;
   background: image "ui/tabs/small_normal.png" framex;
@@ -1112,14 +1111,41 @@ overlay_chat {
 }
 
 tutorial_window {
-  background: solid #FFFFFF66;
-  border: 1 solid #4C2602;
+  background: image "ui/tutorials/bubble.png" framexy;
   padding: 25;
 }
 
+tutorial_forward {
+  background: image "ui/icons/right_arrow.png";
+}
+tutorial_forward:hover {
+  background: image "ui/icons/right_arrow.png";
+}
+tutorial_forward:down {
+  background: image "ui/icons/right_arrow.png";
+}
+tutorial_forward:disabled {
+  background: blank 32 21;
+}
+
+tutorial_back {
+  background: image "ui/icons/left_arrow.png";
+}
+tutorial_back:hover {
+  background: image "ui/icons/left_arrow.png";
+}
+tutorial_back:down {
+  background: image "ui/icons/left_arrow.png";
+}
+tutorial_back:disabled {
+  background: blank 32 21;
+}
+
 tutorial_title {
-  font: "Old Town Wide" plain 20;
-  color: #000000;
+  font: "Old Town" bold 34;
+  color: #FFFFFF;
+  text-effect: shadow;
+  effect-color: #000000;
   text-align: center;
 }
 
@@ -1133,14 +1159,22 @@ tutorial_text:disabled {
   color: #4C260277;
 }
 
-tutorial_steps {
-  font: "Helvetica" plain 12;
-  color: #000000;
-  text-align: right;
+tutorial_click {
+  font: "Old Town" bold 24;
+  color: #FEDA13;
+  text-effect: shadow;
+  effect-color: #493F05;
+  text-align: center;
 }
 
-tutorial_steps:disabled {
+tutorial_click:disabled {
   color: #00000000;
+}
+
+tutorial_steps {
+  font: "Old Town" bold 24;
+  color: #4C2602;
+  text-align: right;
 }
 
 context_help_title {
