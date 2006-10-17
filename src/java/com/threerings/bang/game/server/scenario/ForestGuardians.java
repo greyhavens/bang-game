@@ -142,13 +142,23 @@ public class ForestGuardians extends Scenario
         
         // remove all but a random subset of the tree beds
         resetTrees(bangobj);
+        
+        // start the first wave on the second tick
+        _nextWaveTick = NEXT_WAVE_TICKS;
     }
     
     @Override // documentation inherited
     public void tick (BangObject bangobj, short tick)
     {
+        // don't do anything until the wave has started
         super.tick(bangobj, tick);
+        if (tick < _nextWaveTick) {
+            return;
+        } else if (tick == _nextWaveTick) {
+            startNextWave(bangobj);
+        }
         
+        // count the living and fully grown trees
         int living = 0, grown = 0;
         for (TreeBed tree : _ctrees) {
             if (tree.isAlive()) {
@@ -166,10 +176,6 @@ public class ForestGuardians extends Scenario
         // if all living trees are fully grown, end the wave
         } else if (living == grown) {
             endWave(bangobj, tick, grown);
-        
-        // consider starting the next wave
-        } else if (_nextWaveCountdown-- == 0) {
-            startNextWave(bangobj);
         }
     }
     
@@ -371,7 +377,7 @@ public class ForestGuardians extends Scenario
         _rdelegate.respawnAll(tick);
         
         // count down towards starting the next wave
-        _nextWaveCountdown = NEXT_WAVE_TICKS;
+        _nextWaveTick = tick + NEXT_WAVE_TICKS;
     }
     
     /**
@@ -409,8 +415,9 @@ public class ForestGuardians extends Scenario
                 if (!bangobj.pieces.contains(tree)) {
                     addTree(bangobj, tree);
                 }
+                // reset and retrieve the cloned instance
                 _bangmgr.deployEffect(-1, new TreeBedEffect(tree));
-                _ctrees.add(tree);
+                _ctrees.add((TreeBed)bangobj.pieces.get(tree.pieceId));
                 
             } else {
                 if (bangobj.pieces.contains(tree)) {
@@ -520,7 +527,7 @@ public class ForestGuardians extends Scenario
         public void tick (BangObject bangobj, short tick)
         {
             // don't do anything between waves
-            if (_nextWaveCountdown >= 0) {
+            if (tick <= _nextWaveTick) {
                 return;
             }
 
@@ -685,8 +692,8 @@ public class ForestGuardians extends Scenario
     /** The possible number of points that could have been accumulated. */
     protected int _waveMax;
     
-    /** The countdown towards starting the next wave. */
-    protected int _nextWaveCountdown = NEXT_WAVE_TICKS;
+    /** The tick at which to start the next wave. */
+    protected int _nextWaveTick;
     
     /** The number of ticks the players must hold the trees at full growth in
      * order to bring on the next wave. */
