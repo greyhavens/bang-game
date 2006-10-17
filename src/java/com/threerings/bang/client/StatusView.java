@@ -147,9 +147,8 @@ public class StatusView extends BWindow
 
         BContainer btns = GroupLayout.makeHBox(GroupLayout.CENTER);
         ((GroupLayout)btns.getLayoutManager()).setGap(15);
-        btns.add(new BButton(_msgs.get("m.status_quit"), this, "quit"));
         btns.add(new BButton(_msgs.get("m.status_to_town"), this, "to_town"));
-        btns.add(new BButton(_msgs.get("m.status_resume"), this, "resume"));
+        btns.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
         add(btns, new Rectangle(652, 8, 310, 35));
 
         add(_tabs = new HackyTabs(ctx, false, "ui/status/tab_", TABS, 137, 17) {
@@ -166,16 +165,13 @@ public class StatusView extends BWindow
     public void actionPerformed (ActionEvent event)
     {
         String cmd = event.getAction();
-        if (cmd.equals("quit")) {
-            _ctx.getApp().stop();
-
-        } else if (cmd.equals("to_town")) {
+        if (cmd.equals("to_town")) {
             if (_ctx.getLocationDirector().leavePlace()) {
                 _ctx.getBangClient().clearPopup(this, true);
                 _ctx.getBangClient().showTownView();
             }
 
-        } else if (cmd.equals("resume")) {
+        } else if (cmd.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);
 
         } else if (cmd.equals("poster")) {

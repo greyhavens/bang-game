@@ -87,7 +87,7 @@ public class WantedPosterView extends BContainer
 
         // then a button that knows how to clear the popup
         final BButton backButton = new BButton(
-            ctx.xlate(BangCodes.BANG_MSGS, "m.poster_dismiss"));
+            ctx.xlate(BangCodes.BANG_MSGS, "m.dismiss"));
         backButton.addListener(new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 if (event.getSource() == backButton) {

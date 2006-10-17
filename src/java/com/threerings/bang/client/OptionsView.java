@@ -113,7 +113,7 @@ public class OptionsView extends BDecoratedWindow
 
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ((GroupLayout)bcont.getLayoutManager()).setGap(25);
-        // bcont.add(new BButton(_msgs.get("m.exit"), this, "exit"));
+        bcont.add(new BButton(_msgs.get("m.quit"), this, "quit"));
         bcont.add(new BButton(_msgs.get("m.resume"), this, "dismiss"));
         add(bcont, GroupLayout.FIXED);
 
@@ -127,7 +127,7 @@ public class OptionsView extends BDecoratedWindow
     {
         if ("dismiss".equals(event.getAction())) {
             _ctx.getBangClient().clearPopup(this, true);
-        } else if ("exit".equals(event.getAction())) {
+        } else if ("quit".equals(event.getAction())) {
             _ctx.getApp().stop();
         } else if (BList.SELECT.equals(event.getAction())) {
             _remove.setEnabled(_muted.getSelectedValue() != null);
