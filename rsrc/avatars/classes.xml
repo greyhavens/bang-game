@@ -6,11 +6,11 @@
   <!-- male component classes -->
   <class name="male/hat_back" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="10"/>
-  <class name="male/hair_back" colors="hair,clothes_s"
+  <class name="male/hair_back" colors="hair,clothes_s" mask="male/hat"
          renderPriority="20"/>
   <class name="male/clothing_back" colors="skin,clothes_p,clothes_s,clothes_t"
          renderPriority="30"/>
-  <class name="male/hair_middle" colors="hair,clothes_s"
+  <class name="male/hair_middle" colors="hair,clothes_s" mask="male/hat"
          renderPriority="40"/>
   <class name="male/beard_back" colors="hair"
          renderPriority="50"/>
@@ -54,11 +54,11 @@
   <!-- female component classes -->
   <class name="female/hat_back" colors="clothes_p,clothes_s,clothes_t"
          renderPriority="10"/>
-  <class name="female/hair_back" colors="hair,clothes_s"
+  <class name="female/hair_back" colors="hair,clothes_s" mask="female/hat"
          renderPriority="20"/>
   <class name="female/clothing_back" colors="skin,clothes_p,clothes_s,clothes_t"
          renderPriority="30"/>
-  <class name="female/hair_middle" colors="hair,clothes_s"
+  <class name="female/hair_middle" colors="hair,clothes_s" mask="female/hat"
          renderPriority="40"/>
   <class name="female/jewelry_back" colors="clothes_p,clothes_s"
          renderPriority="50"/>
