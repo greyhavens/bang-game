@@ -42,8 +42,8 @@ public class PardnerChatView extends BDecoratedWindow
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         buttons.add(_mute = new BButton(ctx.xlate(BANG_MSGS, "m.chat_mute"),
             this, "mute"));
-        buttons.add(_resume = new BButton(ctx.xlate(BANG_MSGS,
-            "m.status_resume"), this, "resume"));
+        buttons.add(_resume = new BButton(ctx.xlate(BANG_MSGS, "m.dismiss"),
+                                          this, "resume"));
         add(buttons, GroupLayout.FIXED);
     }
 
