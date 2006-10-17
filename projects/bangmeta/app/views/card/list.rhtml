@@ -31,6 +31,7 @@
       <th>Effect</th>
       <th>Dur.</th>
       <th>Bonus model</th>
+      <th>Qualifier</th>
       <th>AV</th>
       <th>AS</th>
       <th>OV</th>
@@ -58,6 +59,7 @@
           <% end %>
       </td>
       <td><%= bonus_model_link(@card) %></td>
+      <td><%= @card.qualifier %></td>
       <td><%= viz_icon(@card, @card.activation_viz, @card.activation_viz_path) %></td>
       <td><%= sound_icon(@card, @card.activation_sound, @card.activation_sound_path) %></td>
       <td><%= viz_icon(@card, @card.ongoing_viz, @card.ongoing_viz_path) %></td>

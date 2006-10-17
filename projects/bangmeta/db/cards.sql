@@ -15,6 +15,7 @@ create table cards
      coins integer not null,
      effect varchar(255) not null,
      duration integer not null,
+     qualifier varchar(255) not null,
      bonus_model varchar(255) not null,
      bonus_model_path varchar(255) not null,
      activation_viz varchar(255) not null,
