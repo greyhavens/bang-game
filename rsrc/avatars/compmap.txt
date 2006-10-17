@@ -1,4 +1,4 @@
-497
+502
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := duster := 325
@@ -85,6 +85,7 @@ female/eyes := sly := 92
 female/eyes := small := 93
 female/eyes := squinty := 142
 female/familiar := mini_blimp := 386
+female/glasses := mask := 498
 female/glasses := round := 94
 female/glasses := steamgoggles := 336
 female/hair_back := back_curly := 191
@@ -131,10 +132,12 @@ female/hat := revolutionary := 403
 female/hat := saloon_feather := 398
 female/hat := sombrero := 198
 female/hat := stetson := 110
+female/hat := topper := 499
 female/hat := trickster_raven := 404
 female/hat := war_bonnet := 350
 female/hat_back := bonnet := 199
 female/hat_back := eagle_mask := 351
+female/hat_back := feather_coronet := 500
 female/hat_back := feather_double := 144
 female/hat_back := feather_one := 312
 female/hat_back := feather_single := 145
@@ -143,6 +146,7 @@ female/hat_back := longbrim := 131
 female/hat_back := revolutionary := 405
 female/hat_back := sombrero := 200
 female/hat_back := stetson := 111
+female/hat_back := topper := 501
 female/hat_back := war_bonnet := 352
 female/hat_band := border_band_sombrero := 201
 female/hat_band := border_sombrero := 202
@@ -337,6 +341,7 @@ male/eyes := stare := 419
 male/eyes := weary := 229
 male/eyes := wide := 230
 male/glasses := goggles := 438
+male/glasses := mask := 502
 male/glasses := round := 8
 male/glasses := steamgoggles := 34
 male/hair_back := braids := 35
