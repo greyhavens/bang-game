@@ -33,28 +33,22 @@ public class TreeBedSprite extends ActiveSprite
     /** The color of the tree's status display. */
     public static final ColorRGBA STATUS_COLOR =
         new ColorRGBA(0.388f, 1f, 0.824f, 1f);
-    
+
     /** The border color of the status display. */
     public static final ColorRGBA DARKER_STATUS_COLOR =
         new ColorRGBA(0.194f, 0.5f, 0.412f, 1f);
-        
+
     public TreeBedSprite ()
     {
         super("props", "indian_post/special/tree_bed");
     }
-    
-    @Override // documentation inherited
-    public String getHelpIdent (int pidx)
-    {
-        return "indian_post/special/tree_bed";
-    }
-    
+
     @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
         TreeBed tree = (TreeBed)piece;
-        
+
         // grow to the next stage
         while (_growth < tree.growth) {
             queueAction("grow_stage" + (++_growth));
@@ -63,7 +57,7 @@ public class TreeBedSprite extends ActiveSprite
             _growth = tree.growth;
             _nextIdle = FastMath.FLT_EPSILON;
         }
-        
+
         // perhaps create, update, or remove the damaged texture overlay
         float pdamage = tree.getPercentDamage();
         if (pdamage > 0f) {
@@ -71,7 +65,7 @@ public class TreeBedSprite extends ActiveSprite
                 addDamageOverlay();
             }
             _omstate.getDiffuse().a = pdamage;
-            
+
         } else if (_oadded) {
             new SpatialVisitor<ModelMesh>(ModelMesh.class) {
                 protected void visit (ModelMesh mesh) {
@@ -81,7 +75,7 @@ public class TreeBedSprite extends ActiveSprite
             _oadded = false;
         }
     }
-    
+
     @Override // documentation inherited
     protected void addProceduralActions ()
     {
@@ -91,7 +85,7 @@ public class TreeBedSprite extends ActiveSprite
             public float activate () {
                 daction.activate();
                 dropTrunk();
-                return TRUNK_FALL_DURATION;                
+                return TRUNK_FALL_DURATION;
             }
         });
         _procActions.put("reacting", new ProceduralAction() {
@@ -100,40 +94,46 @@ public class TreeBedSprite extends ActiveSprite
             }
         });
     }
-    
+
     @Override // from PieceSprite
     protected void createGeometry ()
     {
         super.createGeometry();
-        
+
         _growth = ((TreeBed)_piece).growth;
-        
+
         _tlight = _view.getTerrainNode().createHighlight(
             _piece.x, _piece.y, false, false);
         attachHighlight(_status = new PieceStatus(_ctx, _tlight, STATUS_COLOR,
             DARKER_STATUS_COLOR));
         updateStatus();
     }
-   
+
+    @Override // documentation inherited
+    protected String getHelpIdent (int pidx)
+    {
+        return "tree_bed";
+    }
+
     @Override // documentation inherited
     protected String[] getIdleAnimations ()
     {
         return _dead ? null : new String[] { "idle_stage" + _growth };
     }
-    
+
     @Override // documentation inherited
     protected String getDeadModel ()
     {
         return _name + "/stump" + _growth;
     }
-     
+
     @Override // documentation inherited
     protected void modelLoaded (Model model)
     {
         super.modelLoaded(model);
         _oadded = false;
     }
-    
+
     /**
      * Adds a tree trunk model above the stump and animates its falling
      * over towards the nearest logging robot.
@@ -148,7 +148,7 @@ public class TreeBedSprite extends ActiveSprite
             }
         });
     }
-    
+
     /**
      * Continues the trunk drop animation after the model has been loaded.
      */
@@ -158,14 +158,14 @@ public class TreeBedSprite extends ActiveSprite
             RandomUtil.getInt(PieceCodes.DIRECTIONS.length)];
         final Vector3f axis = new Vector3f(PieceCodes.DX[dir],
             PieceCodes.DY[dir], 0f);
-        
+
         final MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.getAmbient().set(ColorRGBA.white);
         mstate.getDiffuse().set(ColorRGBA.white);
         model.setRenderState(mstate);
         model.setRenderState(RenderUtil.blendAlpha);
         model.updateRenderState();
-        
+
         model.addController(new Controller() {
             public void update (float time) {
                 if ((_elapsed += time) >= TRUNK_FALL_DURATION) {
@@ -180,7 +180,7 @@ public class TreeBedSprite extends ActiveSprite
             protected float _elapsed;
         });
     }
-    
+
     /**
      * Adds the damaged texture overlay to the current model.
      */
@@ -207,19 +207,19 @@ public class TreeBedSprite extends ActiveSprite
         }.traverse(_model);
         _oadded = true;
     }
-    
+
     /** The currently depicted growth stage. */
     protected byte _growth;
-    
+
     /** The damaged texture overlay. */
     protected RenderState[] _overlay;
-    
+
     /** The overlay's material state. */
     protected MaterialState _omstate;
-    
+
     /** Whether or not the overlay has been added. */
     protected boolean _oadded;
-    
+
     /** The duration of the falling trunk animation. */
     protected static final float TRUNK_FALL_DURATION = 1f;
 }

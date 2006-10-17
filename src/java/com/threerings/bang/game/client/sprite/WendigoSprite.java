@@ -63,12 +63,6 @@ public class WendigoSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public String getHelpIdent (int pidx)
-    {
-        return "wendigo";
-    }
-
-    @Override // documentation inherited
     public Shadow getShadowType ()
     {
         return Shadow.NONE;
@@ -86,7 +80,7 @@ public class WendigoSprite extends MobileSprite
     /**
      * Perform a move with an associate penderId for the WendigoHandler.
      */
-    public void move (BangBoard board, int ox, int oy, int nx, int ny, 
+    public void move (BangBoard board, int ox, int oy, int nx, int ny,
             float speed, WendigoHandler handler, int penderId)
     {
         PointList path = new PointList();
@@ -135,16 +129,16 @@ public class WendigoSprite extends MobileSprite
             stepy = (end.y > start.y) ? 1 : -1;
             offx = 1;
         }
-        for (int xx = start.x + stepx, yy = start.y + stepy; 
-                !(xx == end.x + stepx && yy == end.y + stepy); 
+        for (int xx = start.x + stepx, yy = start.y + stepy;
+                !(xx == end.x + stepx && yy == end.y + stepy);
                 xx += stepx, yy += stepy) {
             tsum += _piece.computeElevation(board, xx, yy);
             inc++;
             // check if we collide with any units at this coordinate
-            for (Iterator<Piece> iter = colliders.iterator(); 
+            for (Iterator<Piece> iter = colliders.iterator();
                     iter.hasNext(); ) {
                 Piece p = iter.next();
-                if ((p.x == xx && p.y == yy) || 
+                if ((p.x == xx && p.y == yy) ||
                         (p.x == xx + offx && p.y == yy + offy)) {
                     psum += p.computeElevation(board, p.x, p.y);
                     pieces++;
@@ -195,6 +189,12 @@ public class WendigoSprite extends MobileSprite
         super.pathCompleted();
         _view.removeSprite(WendigoSprite.this);
         _handler.pathCompleted(_penderId);
+    }
+
+    @Override // documentation inherited
+    protected String getHelpIdent (int pidx)
+    {
+        return "wendigo";
     }
 
     @Override // documentation inherited

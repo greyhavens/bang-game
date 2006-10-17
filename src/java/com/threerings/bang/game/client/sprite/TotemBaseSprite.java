@@ -43,12 +43,6 @@ public class TotemBaseSprite extends TargetablePropSprite
     }
 
     @Override // documentation inherited
-    public String getHelpIdent (int pidx)
-    {
-        return _config.type;
-    }
-
-    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
@@ -119,7 +113,7 @@ public class TotemBaseSprite extends TargetablePropSprite
         int size = _totemPieces.size();
         return (size > 0) ? _totemPieces.get(size - 1) : null;
     }
-    
+
     /**
      * Adjusts the translations of all the totem pieces to compensate for the
      * rising node translation.
@@ -134,6 +128,12 @@ public class TotemBaseSprite extends TargetablePropSprite
                 height -= _totemHeights.get(ii - 1);
             }
         }
+    }
+
+    @Override // documentation inherited
+    protected String getHelpIdent (int pidx)
+    {
+        return "totem_base";
     }
 
     @Override // documentation inherited

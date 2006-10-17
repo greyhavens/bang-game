@@ -34,13 +34,6 @@ public class BonusSprite extends ActiveSprite
     }
 
     @Override // documentation inherited
-    public String getHelpIdent (int pidx)
-    {
-        // strip off the town prefix when reporting our bonus type
-        return "bonus_" + _name.substring(_name.lastIndexOf("/")+1);
-    }
-
-    @Override // documentation inherited
     public Shadow getShadowType ()
     {
         return isHidden() ? Shadow.NONE : Shadow.DYNAMIC;
@@ -53,7 +46,14 @@ public class BonusSprite extends ActiveSprite
     {
         return BonusConfig.getConfig(_name).hidden;
     }
-    
+
+    @Override // documentation inherited
+    protected String getHelpIdent (int pidx)
+    {
+        // strip off the town prefix when reporting our bonus type
+        return "bonus_" + _name.substring(_name.lastIndexOf("/")+1);
+    }
+
     @Override // documentation inherited
     protected void addProceduralActions ()
     {
@@ -74,7 +74,7 @@ public class BonusSprite extends ActiveSprite
             }
         });
     }
-    
+
     @Override // documentation inherited
     protected void createGeometry ()
     {
@@ -103,10 +103,10 @@ public class BonusSprite extends ActiveSprite
             sounds.preloadClip(spath);
         }
     }
-    
+
     /** The spinner that rotates the bonus. */
     protected Spinner _spinner;
-    
+
     /** The time it takes for cards to fly up in the air. */
     protected static final float CARD_FLIGHT_DURATION = 0.25f;
 }

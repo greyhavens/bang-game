@@ -24,6 +24,7 @@ import com.jmex.effects.particles.ParticleMesh;
 import com.samskivert.util.PropertiesUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.LinePath;
@@ -45,6 +46,7 @@ import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -93,13 +95,28 @@ public class PieceSprite extends Sprite
     }
 
     /**
+     * Returns the tooltip text to display when hovering over this sprite or
+     * null if it has no tooltip. This will be translated via the {@link
+     * GameCodes#GAME_MSGS} bundle and should be qualified if needed.
+     */
+    public String getTooltip (int pidx)
+    {
+        String ident = getHelpIdent(pidx);
+        if (ident == null) {
+            return null;
+        }
+        ident = "m.help_" + ident;
+        return MessageBundle.compose("m.help_tip", ident + "_title", ident);
+    }
+
+    /**
      * Returns the help text identifier for this piece, or null if it has no
      * associated help.
      *
      * @param pidx our player's index for sprites that return different help
      * depending on whether they are ours or an opponent's.
      */
-    public String getHelpIdent (int pidx)
+    protected String getHelpIdent (int pidx)
     {
         return null;
     }

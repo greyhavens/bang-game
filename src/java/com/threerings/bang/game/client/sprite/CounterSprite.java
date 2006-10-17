@@ -42,12 +42,6 @@ public class CounterSprite extends PropSprite
     {
         return true;
     }
-    
-    @Override // documentation inherited
-    public String getHelpIdent (int pidx)
-    {
-        return (pidx == _piece.owner ? "own_" : "other_") + _config.type;
-    }
 
     @Override // documentation inherited
     public Coloring getColoringType ()
@@ -118,6 +112,12 @@ public class CounterSprite extends PropSprite
                     0, 0, (_config.height + 0.5f) * TILE_SIZE));
         attachChild(bbn);
         _counter.setCullMode(CULL_ALWAYS);
+    }
+
+    @Override // documentation inherited
+    protected String getHelpIdent (int pidx)
+    {
+        return (pidx == _piece.owner ? "own_" : "other_") + _config.type;
     }
 
     protected Quad _counter;

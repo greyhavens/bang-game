@@ -26,18 +26,12 @@ public class TotemSprite extends BonusSprite
     }
 
     @Override // documentation inherited
-    public String getHelpIdent (int pidx)
+    protected String getHelpIdent (int pidx)
     {
         String ident = super.getHelpIdent(pidx);
         if (!TotemEffect.TOTEM_CROWN_BONUS.equals(_name)) {
             ident = "bonus_totem";
         }
         return ident;
-    }
-
-    @Override // documentation inherited
-    public String getHelpTitleIdent (int pidx)
-    {
-        return super.getHelpIdent(pidx) + "_title";    
     }
 }

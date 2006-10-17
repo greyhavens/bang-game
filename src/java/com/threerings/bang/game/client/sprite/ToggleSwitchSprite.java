@@ -19,12 +19,6 @@ public class ToggleSwitchSprite extends ActiveSprite
     }
 
     @Override // documentation inherited
-    public String getHelpIdent (int pidx)
-    {
-        return "indian_post/special/wendigo_toggle_switch";
-    }
-
-    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
@@ -49,6 +43,12 @@ public class ToggleSwitchSprite extends ActiveSprite
     }
 
     @Override // documentation inherited
+    protected String getHelpIdent (int pidx)
+    {
+        return "indian_post/special/wendigo_toggle_switch";
+    }
+
+    @Override // documentation inherited
     protected void startNextIdle (boolean offset)
     {
         queueAction(_state.getIdleAnimation());
@@ -56,9 +56,9 @@ public class ToggleSwitchSprite extends ActiveSprite
 
     protected static enum State
     {
-        TICK_0("charge_4", false), TICK_1("charge_3", false), 
-        TICK_2("charge_2", false), TICK_3("charge_1", false), 
-        TICK_4("charge_0", false), 
+        TICK_0("charge_4", false), TICK_1("charge_3", false),
+        TICK_2("charge_2", false), TICK_3("charge_1", false),
+        TICK_4("charge_0", false),
         SQUARE("square", true), CIRCLE("circle", true);
 
         State (String name, boolean offAnim)
@@ -66,7 +66,7 @@ public class ToggleSwitchSprite extends ActiveSprite
             _name = name;
             _offAnim = offAnim;
         }
-        
+
         public String getStartAnimation ()
         {
             return _name + (_offAnim ? "_active_start" : "_start");

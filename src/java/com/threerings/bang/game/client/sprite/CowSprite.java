@@ -31,12 +31,6 @@ public class CowSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public String getHelpIdent (int pidx)
-    {
-        return "cow";
-    }
-
-    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
@@ -52,7 +46,7 @@ public class CowSprite extends MobileSprite
         if (_owntex == null) {
             loadTextures(_ctx);
         }
-        
+
         // this is used to indicate who owns us
         _tlight = _view.getTerrainNode().createHighlight(
                 _piece.x, _piece.y, true, true);
@@ -62,6 +56,12 @@ public class CowSprite extends MobileSprite
 
         // configure our colors
         configureOwnerColors();
+    }
+
+    @Override // documentation inherited
+    protected String getHelpIdent (int pidx)
+    {
+        return "cow";
     }
 
     @Override // documentation inherited

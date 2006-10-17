@@ -29,6 +29,7 @@ import com.jme.scene.state.TextureState;
 
 import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ObserverList;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Path;
@@ -40,6 +41,7 @@ import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.ParticleUtil;
@@ -47,13 +49,14 @@ import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.client.BangBoardView;
-import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.effect.ExplosionViz;
 import com.threerings.bang.game.client.effect.InfluenceViz;
 import com.threerings.bang.game.client.effect.ParticlePool;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Influence;
@@ -95,13 +98,13 @@ public class UnitSprite extends MobileSprite
     {
         return Coloring.STATIC;
     }
-    
+
     @Override // documentation inherited
     public boolean isHoverable ()
     {
         return true;
     }
-    
+
     @Override // documentation inherited
     public void setHovered (boolean hovered)
     {
@@ -143,7 +146,7 @@ public class UnitSprite extends MobileSprite
     {
         return _holding;
     }
-    
+
     /**
      * Returns the delay to use before releasing the shot sprite from the
      * unit sprite (in order to match the shooting animation) if this is
@@ -153,7 +156,7 @@ public class UnitSprite extends MobileSprite
     {
         return _ballisticShotDelay;
     }
-    
+
     /**
      * Returns the source node whose location should be used as the starting
      * point of ballistic shots, or <code>null</code> if a source was not
@@ -162,12 +165,6 @@ public class UnitSprite extends MobileSprite
     public Spatial getBallisticShotSource ()
     {
         return _ballisticShotSource;
-    }
-    
-    @Override // documentation inherited
-    public String getHelpIdent (int pidx)
-    {
-        return "unit_" + ((Unit)_piece).getType();
     }
 
     // documentation inherited from Targetable
@@ -234,6 +231,28 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
+    public String getTooltip (int pidx)
+    {
+        Unit unit = (Unit)_piece;
+        String type = unit.getType();
+        String msg = "m.unit_icon";
+        String[] args = new String[] {
+            UnitConfig.getName(type), UnitConfig.getTip(type) };
+        if (unit.holding != null) {
+            msg = "m.holding_unit_icon";
+            String hroot = unit.holding.substring(
+                unit.holding.lastIndexOf("/")+1);
+            args = new String[] { args[0], args[1], null, null };
+            args[2] = MessageBundle.qualify(
+                GameCodes.GAME_MSGS, "m.help_bonus_" + hroot + "_title");
+            args[3] = MessageBundle.qualify(
+                GameCodes.GAME_MSGS, "m.help_bonus_" + hroot);
+        }
+        return MessageBundle.qualify(
+            BangCodes.UNITS_MSGS, MessageBundle.compose(msg, args));
+    }
+
+    @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {
         super.updated(piece, tick);
@@ -250,7 +269,7 @@ public class UnitSprite extends MobileSprite
         if (unit.holding != null) {
             if (!unit.holding.equals(_holdingType)) {
                 _holding.detachAllChildren();
-                _ctx.getModelCache().getModel("bonuses", unit.holding, 
+                _ctx.getModelCache().getModel("bonuses", unit.holding,
                         _zations, new ResultAttacher<Model>(_holding));
             }
             if (_holding.getParent() == null) {
@@ -287,7 +306,7 @@ public class UnitSprite extends MobileSprite
                 }
             }
         }
-        
+
         // if our pending node is showing, update it to reflect our correct
         // ticks until movable
         if (_pendnode != null && ticks > 0) {
@@ -316,7 +335,7 @@ public class UnitSprite extends MobileSprite
     {
         super.move(path);
         _ustatus.setCullMode(CULL_ALWAYS);
-        
+
         // load the fire effect for the death flights of airborne steam units
         if (path instanceof MoveUnitPath && !_piece.isAlive() &&
             _piece.isAirborne() && ((Unit)_piece).getConfig().make ==
@@ -346,7 +365,7 @@ public class UnitSprite extends MobileSprite
         super.pathCompleted();
         updateTileHighlight();
         updateStatus();
-        
+
         // turn the fire off and display an explosion when the unit reaches the
         // end of its death flight
         if (_fire != null) {
@@ -363,11 +382,11 @@ public class UnitSprite extends MobileSprite
     {
         // make sure the unit is "dead" so that the unit status display doesn't
         // pop back up
-        _piece.damage = 100; 
+        _piece.damage = 100;
         queueAction(REMOVED);
         return true;
     }
-    
+
     /**
      * Configure an effect handler that gets called during the "shot" part
      * of a path.
@@ -397,7 +416,7 @@ public class UnitSprite extends MobileSprite
         // TODO: go back to complaining if we don't have shot sounds
         return (SoundUtil.haveSound(path) ? sounds.getSound(path) : null);
     }
-    
+
     /**
      * Returns an instance of the sound to be used when the unit dies, or
      * <code>null</code> for none.
@@ -407,7 +426,7 @@ public class UnitSprite extends MobileSprite
         String path = "rsrc/units/" + _name + "/dying.ogg";
         return SoundUtil.haveSound(path) ? sounds.getSound(path) : null;
     }
-    
+
     @Override // documentation inherited
     public void updateWorldData (float time)
     {
@@ -502,7 +521,7 @@ public class UnitSprite extends MobileSprite
             return super.getMoveSound();
         }
     }
-    
+
     /**
      * Updates the visibility and location of the status display.
      */
@@ -573,7 +592,7 @@ public class UnitSprite extends MobileSprite
 
     protected float _ballisticShotDelay;
     protected Spatial _ballisticShotSource;
-    
+
     protected TerrainNode.Highlight _pendnode;
     protected TextureState _pendtst;
     protected Texture[] _pendtexs;
@@ -594,11 +613,11 @@ public class UnitSprite extends MobileSprite
 
     protected InfluenceViz _influenceViz, _hindranceViz;
     protected Influence _influence, _hindrance;
-    
+
     protected Spatial _fire;
-    
+
     protected EffectHandler _effectHandler;
-    
+
     protected static HashMap<String,Texture[]> _pendtexmap =
         new HashMap<String,Texture[]>();
 
@@ -623,7 +642,7 @@ public class UnitSprite extends MobileSprite
         "misfire",
         "dying",
     };
-    
+
     /** The effect displayed on the death flights of airborne steam units. */
     protected static final String FIRE_EFFECT = "frontier_town/fire";
 }

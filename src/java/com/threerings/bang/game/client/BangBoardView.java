@@ -301,7 +301,7 @@ public class BangBoardView extends BoardView
             return _card.isValidPiece(_bangobj, piece);
         }
         PieceSprite psprite;
-        return (piece instanceof Unit) && (piece.owner == _pidx) && 
+        return (piece instanceof Unit) && (piece.owner == _pidx) &&
             piece.isAlive() && (_pendmap.get(piece.pieceId) <= 0) &&
             ((psprite = getPieceSprite(piece)) != null) && !psprite.isMoving();
     }
@@ -509,7 +509,7 @@ public class BangBoardView extends BoardView
         return (sprite instanceof PieceSprite &&
             ((PieceSprite)sprite).hasTooltip());
     }
-    
+
     /**
      * Fires off a particle effect on top of the camera (for bursts of rain and
      * such).
@@ -534,7 +534,7 @@ public class BangBoardView extends BoardView
             protected float _accum;
         };
         _node.attachChild(cnode);
-        
+
         // attach an instance of the effect to the node
         _ctx.loadEffect(effect, new ResultAttacher<Spatial>(cnode) {
             public void requestCompleted (Spatial result) {
@@ -543,7 +543,7 @@ public class BangBoardView extends BoardView
             }
         });
     }
-   
+
     /**
      * Checks whether the board is in "high noon" mode.
      */
@@ -551,14 +551,14 @@ public class BangBoardView extends BoardView
     {
         return _highNoon;
     }
-    
+
     /**
      * Fades into or out of "high noon" mode.
      */
     public void setHighNoon (final boolean enable)
     {
         _highNoon = enable;
-        
+
         // fade to white before changing lights
         _ctx.getInterface().attachChild(new FadeInOutEffect(
             ColorRGBA.white, 0f, 1f, NOON_FADE_DURATION, false) {
@@ -576,11 +576,11 @@ public class BangBoardView extends BoardView
     {
         // store the values before updating
         final DirectionalLight[] olights = copyLights();
-        
+
         _wendigoAmbiance = enable;
         refreshLights();
 
-        // fade in/out the music and 
+        // fade in/out the music and
         if (enable) {
             _ctx.getBangClient().fadeOutMusic(duration);
             _sounds.getSound(WENDIGO_AMBIANCE_START).play(true);
@@ -588,14 +588,14 @@ public class BangBoardView extends BoardView
                 _wendigoLoop = _sounds.getSound(WENDIGO_AMBIANCE_LOOP);
             }
             _wendigoLoop.loop(true);
-            
+
         } else {
             if (_wendigoLoop != null) {
                 _wendigoLoop.stop();
             }
-            _ctrl.startScenarioMusic(duration);        
+            _ctrl.startScenarioMusic(duration);
         }
-        
+
         // store the new values and transition to them
         final DirectionalLight[] nlights = copyLights();
         _node.addController(new Controller() {
@@ -633,7 +633,7 @@ public class BangBoardView extends BoardView
         }
         super.addSprite(sprite);
     }
-    
+
     /**
      * Continues switching into or out of "high noon" mode after the screen has
      * faded to white.
@@ -645,18 +645,18 @@ public class BangBoardView extends BoardView
             RenderState.RS_MATERIAL);
         mstate.setColorMaterial(_highNoon ?
             MaterialState.CM_NONE : MaterialState.CM_DIFFUSE);
-        
+
         // switch to high noon lighting or restore the original
         refreshLights();
         for (PieceSprite sprite : _pieces.values()) {
             sprite.updateShadowValue();
         }
-        
+
         // fade back in
         _ctx.getInterface().attachChild(new FadeInOutEffect(
             ColorRGBA.white, 1f, 0f, NOON_FADE_DURATION, false));
     }
-    
+
     @Override // documentation inherited
     protected void refreshLights ()
     {
@@ -665,7 +665,7 @@ public class BangBoardView extends BoardView
             _lights[0].getDirection().set(-0.501f, 0.213f, -0.839f);
             _lights[0].getDiffuse().set(1f, 1f, 0.8f, 1f);
             _lights[0].getAmbient().set(0.16f, 0.16f, 0.05f, 1f);
-            
+
             _lights[1].getDirection().set(0.9994f, 0f, 0.035f);
             _lights[1].getDiffuse().set(1f, 0.8f, 0.2f, 1f);
             _lights[1].getAmbient().set(0.06f, 0.15f, 0.18f, 1f);
@@ -681,7 +681,7 @@ public class BangBoardView extends BoardView
             _lights[1].getDirection().set(0f, 0f, 1f);
         }
     }
-    
+
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -715,7 +715,7 @@ public class BangBoardView extends BoardView
     {
         return false;
     }
-    
+
     @Override // documentation inherited
     protected void createMarquee (String text)
     {
@@ -834,7 +834,7 @@ public class BangBoardView extends BoardView
         highlightPossibleAttacks();
 
         // update tile highlights for card placement
-        if (_card != null && 
+        if (_card != null &&
             _card.getPlacementMode() == Card.PlacementMode.VS_PIECE) {
             if (hover instanceof PieceSprite) {
                 Piece piece = ((PieceSprite)hover).getPiece();
@@ -846,29 +846,16 @@ public class BangBoardView extends BoardView
                 updatePlacingCard(_mouse.x, _mouse.y);
             }
         }
-        
+
         // display contextual help on units and other special sprites
         _tiptext = null;
         if (thover instanceof PieceSprite) {
-            String item = ((PieceSprite)thover).getHelpIdent(_pidx);
-            if (item != null) {
-                if (item.startsWith("unit_")) {
-                    String type = item.substring(5);
-                    String msg = MessageBundle.compose(
-                        "m.unit_icon", UnitConfig.getName(type),
-                        UnitConfig.getTip(type));
-                    _tiptext = _ctx.xlate(BangCodes.UNITS_MSGS, msg);
-                } else {
-                    item = "m.help_" + item;
-                    String title =
-                        ((PieceSprite)thover).getHelpTitleIdent(_pidx);
-                    String msg = MessageBundle.compose(
-                        "m.help_tip", "m.help_" + title, item);
-                    _tiptext = _ctx.xlate(GameCodes.GAME_MSGS, msg);
-                }
+            _tiptext = ((PieceSprite)thover).getTooltip(_pidx);
+            if (_tiptext != null) {
+                _tiptext = _ctx.xlate(GameCodes.GAME_MSGS, _tiptext);
             }
         }
-        
+
         // force an update to the tooltip window as we're one big window with
         // lots of different tips
         _ctx.getRootNode().tipTextChanged(this);
@@ -956,7 +943,7 @@ public class BangBoardView extends BoardView
             final List<java.awt.Point> path = AStarPathUtil.getPath(
                 _tpred, unit.getStepper(), unit, _board.getWidth() / 2,
                 corner.x, corner.y, unit.x, unit.y, false);
-            
+
             // strip off all but the last location that is not visible given
             // the current camera position
             if (path != null) {
@@ -1036,7 +1023,7 @@ public class BangBoardView extends BoardView
             (x < _board.getWidth() / 2) ? 0 : _board.getWidth() - 1,
             (y < _board.getHeight() / 2) ? 0 : _board.getHeight() - 1);
     }
-    
+
     /** Called by the {@link EffectHandler} when a piece was affected. */
     protected void pieceWasAffected (Piece piece, String effect)
     {
@@ -1203,7 +1190,7 @@ public class BangBoardView extends BoardView
         /* Removed to test post shot teleportation
         if (_selection.getMinFireDistance() > 0) {
             for (Piece piece : _bangobj.pieces) {
-                if (piece.x == tx && piece.y == ty && 
+                if (piece.x == tx && piece.y == ty &&
                         piece instanceof Teleporter) {
                     willTeleport = true;
                     break;
@@ -1256,7 +1243,7 @@ public class BangBoardView extends BoardView
             if (_action == null) {
                 _action = new int[] { _selection.pieceId,
                                       Short.MAX_VALUE, Short.MAX_VALUE, -1 };
-            } 
+            }
             // note the piece we desire to fire upon
             _action[3] = piece.pieceId;
 
@@ -1327,7 +1314,7 @@ public class BangBoardView extends BoardView
                 boolean possible = false;
                 if (_hover == null || hoveringAttack == false) {
                     PointSet moves = new PointSet();
-                    if (_highlightHover != null) { 
+                    if (_highlightHover != null) {
                         moves.add(_highlightHover.getTileX(),
                                 _highlightHover.getTileY());
                     } else {
@@ -1485,17 +1472,17 @@ public class BangBoardView extends BoardView
             pruneAttackSet(_moveSet, _attackSet, false);
             highlightPossibleAttacks();
         }
-        
+
         // find the moves that lead to goals
         _goalSet.clear();
         _bangobj.scenario.getMovementGoals(
             _bangobj, _selection, _moveSet, _goalSet);
-        
+
         // clear out our current location as we don't want to highlight that as
         // a potential move (but we needed it earlier when computing attacks)
         _moveSet.remove(piece.x, piece.y);
         highlightMovementTiles(_moveSet, _goalSet, getHighlightColor(piece));
-        
+
         // report that the user took an action (for tutorials)
         _ctrl.postEvent(TutorialCodes.UNIT_SELECTED);
     }
@@ -1513,8 +1500,8 @@ public class BangBoardView extends BoardView
         selectUnit(oselection, false);
 
         if (oaction != null) {
-            // if we had already selected a movement, reconfigure that (it 
-            // might no longer be valid but handleClickToMove will ignore 
+            // if we had already selected a movement, reconfigure that (it
+            // might no longer be valid but handleClickToMove will ignore
             // us in that case
             if (oaction[3] == -1) {
                 log.info("Reissuing click to move +" + oaction[1] +
@@ -1817,7 +1804,7 @@ public class BangBoardView extends BoardView
         }
         return nlights;
     }
-    
+
     /**
      * Interpolates between two sets of lights and stores the result in the
      * board lights.
@@ -1840,7 +1827,7 @@ public class BangBoardView extends BoardView
                 _lights[ii].getDirection());
         }
     }
-    
+
     /**
      * Converts a RGB value to a YUV value.
      */
@@ -2000,7 +1987,7 @@ public class BangBoardView extends BoardView
     protected PointSet _moveSet = new PointSet();
     protected PointSet _goalSet = new PointSet();
     protected PointSet _attackSet = new PointSet();
-    
+
     protected int _pidx;
     protected int _downButton = -1;
 
@@ -2043,17 +2030,17 @@ public class BangBoardView extends BoardView
 
     /** Whether or not "high noon" mode is active. */
     protected boolean _highNoon;
-    
+
     /** Whether or not wendigo ambiance mode is active. */
     protected boolean _wendigoAmbiance;
 
     /** The looping wendigo ambiance sound. */
     protected Sound _wendigoLoop;
-    
+
     /** The marquee to display. */
     protected static enum MarqueeMode { NONE, GAME, ROUND };
     protected MarqueeMode _pendingMarquee = MarqueeMode.NONE;
-    
+
     /** The color of BigShot movement highlights. */
     protected static final ColorRGBA BMOVE_HIGHLIGHT_COLOR =
         new ColorRGBA(0.5f, 1f, 0f, 0.5f);
@@ -2072,14 +2059,14 @@ public class BangBoardView extends BoardView
 
     /** The duration of the board tour in seconds. */
     protected static final float BOARD_TOUR_DURATION = 10f;
-    
+
     /** The time it takes to fade in and out of high noon mode. */
     protected static final float NOON_FADE_DURATION = 1f;
-    
+
     /** The sound to play when entering wendigo ambiance mode. */
     protected static final String WENDIGO_AMBIANCE_START =
         "rsrc/extras/indian_post/wendigo/ambiance_start.ogg";
-    
+
     /** The sound to loop continuously while in wendigo ambiance mode. */
     protected static final String WENDIGO_AMBIANCE_LOOP =
         "rsrc/extras/indian_post/wendigo/ambiance_loop.ogg";
