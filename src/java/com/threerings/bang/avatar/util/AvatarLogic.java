@@ -319,11 +319,12 @@ public class AvatarLogic
         // if we weren't provided with classes, use the values from the
         // component class record
         if (colors == null) {
-            colors = _artcat.getColorOverrides(
-                    ccomp.componentClass.name, ccomp.name);
-        }
-        if (colors == null) {
             colors = ccomp.componentClass.colors;
+            String[] ocolors = _artcat.getColorOverrides(
+                    ccomp.componentClass.name, ccomp.name);
+            if (ocolors != null) {
+                colors = concatenate(colors, ocolors);
+            }
         }
 
         // decode the colorization color id values
@@ -544,6 +545,14 @@ public class AvatarLogic
             }
         }
         return componentIds;
+    }
+
+    protected static String[] concatenate (String[] a1, String[] a2)
+    {
+        String[] result = new String[a1.length + a2.length];
+        System.arraycopy(a1, 0, result, 0, a1.length);
+        System.arraycopy(a2, 0, result, a1.length, a2.length);
+        return result;
     }
 
     protected ComponentRepository _crepo;
