@@ -197,6 +197,11 @@
     <component cclass="male/glasses" name="goggles"/>
   </article>
 
+  <article name="male_mask" townId="frontier_town"
+           slot="glasses" scrip="3500" coins="5" colors="clothes_p">
+    <component cclass="male/glasses" name="mask"/>
+  </article>
+
 
   <!-- male hats: frontier town -->
   <article name="male_stetson_bare" townId="frontier_town"
@@ -679,6 +684,11 @@
     <component cclass="female/glasses" name="steamgoggles"/>
   </article>
 
+  <article name="female_mask" townId="frontier_town"
+           slot="glasses" scrip="3500" coins="5" colors="clothes_p">
+    <component cclass="female/glasses" name="mask"/>
+  </article>
+
 
   <!-- female hats: frontier town -->
   <article name="female_longbrim" townId="frontier_town"
@@ -852,6 +862,17 @@
            slot="hat" scrip="2500" coins="3"
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="trickster_raven"/>
+  </article>
+
+  <article name="female_topper" townId="indian_post"
+           slot="hat" scrip="2500" coins="2"
+           colors="clothes_p,clothes_s,clothes_t">
+    <component cclass="female/hat" name="topper"/>
+  </article>
+
+  <article name="female_feather_coronet" townId="indian_post"
+           slot="hat" scrip="2250" coins="3" colors="clothes_p,clothes_s,clothes_t">
+    <component cclass="female/hat_back" name="feather_coronet"/>
   </article>
 
 
