@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashSet;
 
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
 
@@ -318,13 +319,13 @@ public class AvatarLogic
 
         // if we weren't provided with classes, use the values from the
         // component class record
+        HashSet<String> colset = new HashSet<String>();
         if (colors == null) {
-            colors = ccomp.componentClass.colors;
-            String[] ocolors = _artcat.getColorOverrides(
-                    ccomp.componentClass.name, ccomp.name);
-            if (ocolors != null) {
-                colors = concatenate(colors, ocolors);
-            }
+            CollectionUtil.addAll(colset, ccomp.componentClass.colors);
+            CollectionUtil.addAll(colset, _artcat.getColorOverrides(
+                                      ccomp.componentClass.name, ccomp.name));
+        } else {
+            CollectionUtil.addAll(colset, colors);
         }
 
         // decode the colorization color id values
@@ -334,15 +335,14 @@ public class AvatarLogic
 
         // look up the actual colorizations from those
         Colorization[] zations = new Colorization[5];
-        for (int cc = 0; cc < colors.length; cc++) {
-            if (colors[cc].equals(SKIN)) {
+        for (String color : colset) {
+            if (color.equals(SKIN)) {
                 zations[3] = _globals[0];
-            } else if (colors[cc].equals(HAIR)) {
+            } else if (color.equals(HAIR)) {
                 zations[4] = _globals[1];
             } else {
-                int cidx = getColorIndex(colors[cc]);
-                zations[cidx] = _pository.getColorization(
-                    colors[cc], _colors[cidx]);
+                int cidx = getColorIndex(color);
+                zations[cidx] = _pository.getColorization(color, _colors[cidx]);
             }
         }
 
@@ -545,14 +545,6 @@ public class AvatarLogic
             }
         }
         return componentIds;
-    }
-
-    protected static String[] concatenate (String[] a1, String[] a2)
-    {
-        String[] result = new String[a1.length + a2.length];
-        System.arraycopy(a1, 0, result, 0, a1.length);
-        System.arraycopy(a2, 0, result, a1.length, a2.length);
-        return result;
     }
 
     protected ComponentRepository _crepo;
