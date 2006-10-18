@@ -5,8 +5,19 @@
 # Does the hourly build of the development deployment and mirrors the results
 # to the development server.
 
-ROOT=`dirname $0`/..
+ROOT=`dirname $0`
+ROOT=`cd $ROOT ; cd .. ; pwd`
 
+# run the full rebuild
 $ROOT/bin/all_rebuild --update --devclient --pseditor > /tmp/rebuild-bang.log
+
+# if the compmap.txt file has changed, check it in
+COMPMAP="$ROOT/rsrc/avatars/compmap.txt"
+CMSTATUS=`svn status $COMPMAP | awk '{ print $1 }'`
+if [ "M" = "$CMSTATUS" ]; then
+    svn commit -m "New component mappings." $COMPMAP
+fi
+
+# mirror the results to the dev server
 $ROOT/bin/release_mirror >> /tmp/rebuild-bang.log
 $ROOT/bin/devclient_mirror >> /tmp/rebuild-bang.log

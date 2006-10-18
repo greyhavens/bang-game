@@ -83,13 +83,6 @@ if [ $? != 0 ]; then
     exit 255
 fi
 
-# if the compmap.txt file has changed, check it in
-COMPMAP="$ROOT/rsrc/avatars/compmap.txt"
-CMSTATUS=`svn status $COMPMAP | awk '{ print $1 }'`
-if [ "M" = "$CMSTATUS" ]; then
-    svn commit -m "New component mappings." $COMPMAP
-fi
-
 # build the production client if requested
 if [ ! -z "$CLIENT" ]; then
     # update the build version as we're building the production client
