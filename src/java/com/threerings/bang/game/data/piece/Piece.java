@@ -758,9 +758,10 @@ public abstract class Piece
     public boolean validTarget (
         BangObject bangobj, Piece target, boolean allowSelf)
     {
-        boolean valid = (target.isTargetable() && target.isAlive());
-        if (!allowSelf) {
-            valid = !target.isSameTeam(this) && valid;
+        boolean valid = (isAlive() && target.isTargetable() && 
+                target.isAlive());
+        if (valid && !allowSelf) {
+            valid = !target.isSameTeam(this);
         }
         return valid;
     }

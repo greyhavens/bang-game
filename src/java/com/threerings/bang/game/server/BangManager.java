@@ -1918,6 +1918,13 @@ public class BangManager extends GameManager
         if (peffect != null) {
             deployEffect(-1, peffect);
         }
+
+        // Effects that resulted because of the move might prevent us from
+        // shooting our target
+        if (!(meffect instanceof MoveShootEffect)) {
+            checkTarget(unit, target, unit.x, unit.y);
+        }
+
         
         return meffect;
     }
