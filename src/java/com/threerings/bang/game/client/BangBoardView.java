@@ -738,7 +738,7 @@ public class BangBoardView extends BoardView
 
         // set up two rows with two slots each that will hold our marquee bits
         GroupLayout layout = GroupLayout.makeVert(GroupLayout.CENTER);
-        layout.setGap(30);
+        layout.setGap(10);
         BContainer info = new BContainer(layout);
         BContainer[] cols = new BContainer[2];
         _pmarquees.add(cols[0] = new BContainer(layout));
