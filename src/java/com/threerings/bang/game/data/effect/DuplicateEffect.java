@@ -99,9 +99,6 @@ public class DuplicateEffect extends BonusEffect
         if (duplicate instanceof Unit) {
             ((Unit)duplicate).originalOwner = -1;
         }
-
-        // update the board shadow to reflect its future existence
-        bangobj.board.shadowPiece(duplicate);
     }
 
     @Override // documentation inherited
