@@ -28,5 +28,6 @@
       <arg line="public"/>
       <arg line="${install.dir}"/>
     </exec>
+    <mkdir dir="${install.dir}/log"/>
   </target>
 </project>
