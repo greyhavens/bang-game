@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.logging.Level;
 
@@ -618,7 +619,8 @@ public class BangManager extends GameManager
     
     /**
      * Prepares an effect and posts it to the game object, recording damage
-     * done in the process.
+     * done in the process. Will also process any other effects that got
+     * queued for immediate deployment.
      *
      * @param prepared if true, the effect has already been prepared and
      * determined to be applicable
@@ -626,6 +628,37 @@ public class BangManager extends GameManager
      * not applicable or failed to apply.
      */
     public boolean deployEffect (int effector, Effect effect, boolean prepared)
+    {
+        boolean ret = actuallyDeployEffect(effector, effect, prepared);
+        while (!_deployQueue.isEmpty()) {
+            Deployable deploy = _deployQueue.removeFirst();
+            actuallyDeployEffect(
+                    deploy.effector, deploy.effect, deploy.prepared);
+        }
+        return ret;
+    }
+
+    /**
+     * Queues an effect for deployment after the current effect finishes
+     * being applied.
+     */
+    public void queueDeployEffect (
+            int effector, Effect effect, boolean prepared)
+    {
+        _deployQueue.add(new Deployable(effector, effect, prepared));
+    }
+
+    /**
+     * Prepares an effect and posts it to the game object, recording damage
+     * done in the process.
+     *
+     * @param prepared if true, the effect has already been prepared and
+     * determined to be applicable
+     * @return true if the effect was deployed, false if the effect was either
+     * not applicable or failed to apply.
+     */
+    protected boolean actuallyDeployEffect (
+            int effector, Effect effect, boolean prepared)
     {
         if (!prepared) {
             // prepare the effect
@@ -2624,6 +2657,21 @@ public class BangManager extends GameManager
         }
     }
 
+    /** Holds the information for deploying an effect. */
+    protected class Deployable
+    {
+        public int effector;
+        public Effect effect;
+        public boolean prepared;
+
+        public Deployable (int effector, Effect effect, boolean prepared)
+        {
+            this.effector = effector;
+            this.effect = effect;
+            this.prepared = prepared;
+        }
+    }
+
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
         public void expired () {
@@ -2698,7 +2746,7 @@ public class BangManager extends GameManager
                                 _postShotEffects.add(effect);
                                 continue;
                             } else {
-                                deployEffect(piece.owner, effect);
+                                queueDeployEffect(piece.owner, effect, false);
                             }
                             // small hackery: note that this player collected 
                             // a bonus
@@ -2833,6 +2881,10 @@ public class BangManager extends GameManager
 
     /** A list of effects to do after the shooting has stopped. */
     protected ArrayList<Effect> _postShotEffects = new ArrayList<Effect>();
+
+    /** A queue of effects to be deployed. */
+    protected LinkedList<Deployable> _deployQueue = 
+        new LinkedList<Deployable>();
 
     /** A set of units which shot this tick. */
     protected ArrayIntSet _shooters = new ArrayIntSet();

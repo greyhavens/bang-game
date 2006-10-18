@@ -26,6 +26,7 @@ import com.threerings.bang.game.client.StampedeHandler;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.util.PointList;
+import com.threerings.bang.game.util.PointSet;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
@@ -298,6 +299,7 @@ public class StampedeEffect extends Effect
         // step through the path, updating units and generating collisions
         ArrayList<Collision> cols = new ArrayList<Collision>();
         Point loc = new Point();
+        PointSet newlocs = new PointSet();
         for (int ii = 0, nn = path.size(); ii < nn; ii++) {
             for (Piece unit : units) {
                 loc.setLocation(unit.x, unit.y);
@@ -309,7 +311,8 @@ public class StampedeEffect extends Effect
                         Point nloc = new Point(loc.x + DX[jj], loc.y + DY[jj]);
                         if (bangobj.board.isOccupiable(nloc.x, nloc.y) &&
                             !containsBison(nloc, ii - 1) &&
-                            !containsBison(nloc, ii + 1)) {
+                            !containsBison(nloc, ii + 1) &&
+                            !newlocs.contains(nloc.x, nloc.y)) {
                             nlocs.add(nloc);
                         }
                     }
@@ -327,9 +330,7 @@ public class StampedeEffect extends Effect
                     unit.damage = damage;
                     cols.add(new Collision(ii, unit.pieceId, nloc.x, nloc.y,
                         deffect));
-                    bangobj.board.clearShadow(unit);
-                    unit.position(nloc.x, nloc.y);
-                    bangobj.board.shadowPiece(unit);
+                    newlocs.add(nloc.x, nloc.y);
                 }
             }
         }
