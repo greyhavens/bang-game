@@ -67,7 +67,7 @@ public class AddPieceEffect extends Effect
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        bangobj.board.shadowPiece(piece);
+        // nothing doing
     }
     
     // documentation inherited
