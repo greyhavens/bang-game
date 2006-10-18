@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AdjustTickEffect;
@@ -37,6 +38,12 @@ public class GiddyUp extends Card
     public int getScripCost ()
     {
         return 120;
+    }
+
+    @Override // documentation inherited
+    public Badge.Type getQualifier ()
+    {
+        return Badge.Type.NUGGETS_CLAIMED_2;
     }
 
     @Override // documentation inherited

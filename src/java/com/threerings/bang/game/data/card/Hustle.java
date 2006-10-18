@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 
@@ -44,6 +45,12 @@ public class Hustle extends Card
     public int getScripCost ()
     {
         return 120;
+    }
+
+    @Override // documentation inherited
+    public Badge.Type getQualifier ()
+    {
+        return Badge.Type.CONSEC_KILLS_1;
     }
 
     @Override // documentation inherited

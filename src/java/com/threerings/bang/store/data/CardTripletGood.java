@@ -5,6 +5,7 @@ package com.threerings.bang.store.data;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.game.data.card.Card;
@@ -17,10 +18,12 @@ public class CardTripletGood extends Good
     /**
      * Creates a good representing the specified card.
      */
-    public CardTripletGood (String cardType, int scripCost, int coinCost)
+    public CardTripletGood (String cardType, int scripCost, int coinCost,
+                            Badge.Type qualifier)
     {
         super("card_trip_" + cardType, scripCost, coinCost);
         _cardType = cardType;
+        _qualifier = qualifier;
     }
 
     /** A constructor only used during serialization. */
@@ -54,8 +57,10 @@ public class CardTripletGood extends Good
     @Override // documentation inherited
     public boolean isAvailable (PlayerObject user)
     {
-        // anyone can buy cards (for now)
-        return true;
+        // if this card pack has a badge qualifier, make sure the user holds
+        // that badge (and allow admins access to everything)
+        return _qualifier == null || user.tokens.isAdmin() ||
+            user.holdsBadge(_qualifier);
     }
 
     @Override // documentation inherited
@@ -87,6 +92,7 @@ public class CardTripletGood extends Good
     }
 
     protected String _cardType;
+    protected Badge.Type _qualifier;
 
     protected transient int _quantity;
 }

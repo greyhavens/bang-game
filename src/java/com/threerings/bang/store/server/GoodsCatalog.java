@@ -75,7 +75,7 @@ public class GoodsCatalog
                 continue;
             }
             Good good = new CardTripletGood(
-                card.getType(), card.getScripCost(), 0);
+                card.getType(), card.getScripCost(), 0, card.getQualifier());
             registerGood(card.getTownId(), good, pf);
         }
 

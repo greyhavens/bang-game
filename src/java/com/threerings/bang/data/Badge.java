@@ -17,6 +17,7 @@ import com.samskivert.util.HashIntMap;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.game.data.card.Card;
 
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.BasicContext;
@@ -895,6 +896,16 @@ public class Badge extends Item
         registerReward(Type.CONSEC_WINS_1, MessageBundle.compose(key, msg));
         msg = MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.shotgunner");
         registerReward(Type.HIGHEST_POINTS_1, MessageBundle.compose(key, msg));
+        msg = MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.dogsoldier");
+        registerReward(Type.CONSEC_KILLS_2, MessageBundle.compose(key, msg));
+
+        key = "m.cards_enabled";
+        for (Card card : Card.getCards()) {
+            msg = MessageBundle.qualify(
+                BangCodes.CARDS_MSGS, "m." + card.getType());
+            registerReward(
+                card.getQualifier(), MessageBundle.compose(key, msg));
+        }
     }
 
     /** The unique code for the type of this badge. */

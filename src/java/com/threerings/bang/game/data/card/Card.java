@@ -13,6 +13,7 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
@@ -146,6 +147,15 @@ public abstract class Card extends SimpleStreamableObject
 
     /** Returns a string type identifier for this card. */
     public abstract String getType ();
+
+    /**
+     * Returns the badge necessary to enable this card for purchase in three
+     * packs at the General Store or null if it has no qualifier.
+     */
+    public Badge.Type getQualifier ()
+    {
+        return null;
+    }
 
     /**
      * Determines whether this card can be played in the identified game.
