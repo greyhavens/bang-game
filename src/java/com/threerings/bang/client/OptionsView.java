@@ -75,7 +75,7 @@ public class OptionsView extends BDecoratedWindow
         cont.add(_modes = new BComboBox());
 
         cont.add(new BLabel(_msgs.get("m.fullscreen"), "right_label"));
-        cont.add(_fullscreen = new BCheckBox(_msgs.get("m.restart")));
+        cont.add(_fullscreen = new BCheckBox(""));
         _fullscreen.setSelected(BangPrefs.isFullscreen());
         _fullscreen.addListener(_modelist);
 
@@ -280,7 +280,11 @@ public class OptionsView extends BDecoratedWindow
 
     protected void updateDisplayMode (DisplayMode mode, boolean confirm)
     {
-        BangPrefs.updateFullscreen(_fullscreen.isSelected());
+        if (_fullscreen.isSelected() != BangPrefs.isFullscreen()) {
+            BangPrefs.updateFullscreen(_fullscreen.isSelected());
+            fullscreenRestart();
+            return;
+        }
         if (mode == null || (_mode != null && _mode.equals(mode))) {
             return;
         }
@@ -336,6 +340,26 @@ public class OptionsView extends BDecoratedWindow
         OptionDialog.showConfirmDialog(
             _ctx, BangCodes.OPTS_MSGS, "m.keep_mode", rr);
 
+    }
+
+    protected void fullscreenRestart ()
+    {
+        if (_ctx.getDisplay().isFullScreen() == BangPrefs.isFullscreen()) {
+            _fullscreen.setText("");
+            return;
+        }
+
+        _fullscreen.setText(_msgs.get("m.restart"));
+
+        OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
+            public void resultPosted (int button, Object result) {
+                if (button == OptionDialog.OK_BUTTON) {
+                    _ctx.getApp().stop();
+                }
+            }
+        };
+        OptionDialog.showConfirmDialog(_ctx, BangCodes.OPTS_MSGS,
+                "m.fullscreen_changed", "m.quit", "m.resume", rr);
     }
 
     protected boolean isCurrent (DisplayMode mode)
