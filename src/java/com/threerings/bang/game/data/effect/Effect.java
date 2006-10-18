@@ -293,10 +293,13 @@ public abstract class Effect extends SimpleStreamableObject
     /**
      * Prepares this effect for application. This is executed on the server
      * before the effect is applied on the server and then distributed to the
-     * client for application there. The effect should determine which pieces
-     * it will impact as well as decide where it will be placing new pieces
-     * (and update the board shadow to reflect those piece additions, though it
-     * should not actually add the pieces until it is applied).
+     * client for application there. Effects <em>must not</em> make any
+     * modifications to the game state in prepare as they may be canceled after
+     * calling prepare if {@link #isApplicable} then returns false. They should
+     * simply decide what they're going to do, which pieces they are going to
+     * effect, etc. and then actually effect any changes in {@link #apply}
+     * (which will be called immediately after prepare on the server, with only
+     * an intervening call to {@link #isApplicable}).
      *
      * @param dammap a mapping that should be used to record damage done
      * to a particular player's units (player index -> accumulated
