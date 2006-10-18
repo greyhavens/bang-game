@@ -402,7 +402,9 @@ public class BangManager extends GameManager
         // play the played-card effect immediately before the card's actual
         // effect
         log.info("Playing card: " + card);
-        deployEffect(card.owner, new PlayCardEffect(card, target));
+        if (!deployEffect(card.owner, new PlayCardEffect(card, target))) {
+            throw new InvocationException(CARD_UNPLAYABLE);
+        }
         deployEffect(card.owner, effect, true);
         
         // if this card was a starting card, note that it was consumed

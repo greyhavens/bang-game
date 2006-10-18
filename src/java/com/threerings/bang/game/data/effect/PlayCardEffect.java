@@ -65,12 +65,6 @@ public class PlayCardEffect extends Effect
                 target = null;
             }
             break;
-          case VS_AREA:
-            int[] coords = (int[])target;
-            if (!card.isValidLocation(bangobj, coords[0], coords[1])) {
-                target = null;
-            }
-            break;
           case VS_PLAYER:
             if (!card.isValidPlayer(bangobj, (Integer)target)) {
                 target = null;
