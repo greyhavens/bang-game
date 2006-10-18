@@ -172,10 +172,12 @@ public class ForestGuardians extends Scenario
         // if all the trees are dead, the game is over
         if (living == 0) {
             bangobj.setLastTick(tick);
-            
-        // if all living trees are fully grown, end the wave
-        } else if (living == grown) {
-            endWave(bangobj, tick, grown);
+        
+        // when all trees are fully grown and there are no more
+        // logging robots, the logging robot delegate will end the
+        // wave   
+        } else {
+            _allGrown = (living == grown);
         }
     }
     
@@ -342,13 +344,21 @@ public class ForestGuardians extends Scenario
     /**
      * Ends the current wave and either starts the next or ends the game.
      */
-    protected void endWave (BangObject bangobj, short tick, int grown)
+    protected void endWave (BangObject bangobj, short tick)
     {
         // if there isn't time to start another wave, end the game
         if (bangobj.lastTick - tick < MIN_WAVE_TICKS) {
             bangobj.setLastTick(tick);
             return;
         }
+        
+        // clear all advance orders
+        _bangmgr.clearOrders();
+        
+        // announce the end of the wave
+        RobotWaveEffect rweffect = new RobotWaveEffect();
+        _bangmgr.deployEffect(-1, rweffect);
+        int grown = rweffect.living;
         
         // record stats and points for trees grown, add the score to the
         // total
@@ -360,12 +370,6 @@ public class ForestGuardians extends Scenario
         }
         _wavePoints += grown;
         _waveMax += _ctrees.size();
-        
-        // clear all advance orders
-        _bangmgr.clearOrders();
-        
-        // announce the end of the wave
-        _bangmgr.deployEffect(-1, new RobotWaveEffect());
         
         // if at least half the trees were saved, increase the difficulty
         // level
@@ -428,6 +432,7 @@ public class ForestGuardians extends Scenario
                 }
             }
         }
+        _allGrown = false;
     }
     
     /**
@@ -532,12 +537,21 @@ public class ForestGuardians extends Scenario
             // don't do anything between waves
             if (tick <= _nextWaveTick) {
                 return;
-            }
 
+            // if all trees are grown and all bots are dead, end the wave
+            } else if (_allGrown && IntListUtil.sum(_living) == 0) {
+                endWave(bangobj, tick);
+                return;
+            }
+            
             // update bots according to logic
             _logic.tick(bangobj.getPieceArray(), tick);
             
-            // consider spawning more bots of each type
+            // consider spawning more bots of each type if the trees are still
+            // growing
+            if (_allGrown) {
+                return;
+            }
             for (int ii = 0; ii < LoggingRobot.UNIT_TYPES.length; ii++) {
                 int delta = _target[ii] - _living[ii];
                 if (delta <= 0) {
@@ -697,6 +711,9 @@ public class ForestGuardians extends Scenario
     
     /** The tick at which to start the next wave. */
     protected int _nextWaveTick;
+    
+    /** Set when all living trees are fully grown. */
+    protected boolean _allGrown;
     
     /** The number of ticks the players must hold the trees at full growth in
      * order to bring on the next wave. */

@@ -11,7 +11,6 @@ import com.samskivert.util.IntIntMap;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.RobotWaveHandler;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.piece.LoggingRobot;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 
@@ -33,9 +32,6 @@ public class RobotWaveEffect extends Effect
     
     /** The piece ids of the trees that will be sprouted at the wave's end. */
     public int[] treeIds = NO_PIECES;
-    
-    /** The piece ids of the robots that will be cleared at the wave's end. */
-    public int[] botIds = NO_PIECES;
     
     /** After applying an end-of-wave effect, this will contain the number of
      * living trees. */
@@ -60,7 +56,7 @@ public class RobotWaveEffect extends Effect
     // documentation inherited
     public int[] getAffectedPieces ()
     {
-        return concatenate(treeIds, botIds);
+        return treeIds;
     }
     
     @Override // documentation inherited
@@ -76,12 +72,10 @@ public class RobotWaveEffect extends Effect
             return;
         }
         
-        // find the ids of all trees and logging robots
+        // find the ids of all trees
         for (Piece piece : bangobj.pieces) {
             if (piece instanceof TreeBed) {
                 treeIds = ArrayUtil.append(treeIds, piece.pieceId);
-            } else if (piece instanceof LoggingRobot) {
-                botIds = ArrayUtil.append(botIds, piece.pieceId);
             }
         }
     }
@@ -105,17 +99,6 @@ public class RobotWaveEffect extends Effect
                 living++;
                 reportEffect(observer, tree, TREE_COUNTED);
             }
-        }
-        
-        // clear all logging robots
-        for (int botId : botIds) {
-            LoggingRobot bot = (LoggingRobot)bangobj.pieces.get(botId);
-            if (bot == null) {
-                log.warning("Missing robot to clear [pieceId=" +
-                    botId + "].");
-                continue;
-            }
-            removeAndReport(bangobj, bot, observer);
         }
         
         return true;
