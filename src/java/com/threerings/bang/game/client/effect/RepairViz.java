@@ -152,9 +152,10 @@ public class RepairViz extends ParticleEffectViz
                 FastMath.LERP(py - psize, bottom, top));
             _trenderer.updateCamera();
             _target.setLightCombineMode(LightState.OFF);
+            int ocmode = _target.getCullMode();
             _target.setCullMode(CULL_NEVER);
             _trenderer.render(_target, _texture);
-            _target.setCullMode(CULL_INHERIT);
+            _target.setCullMode(ocmode);
             _target.setLightCombineMode(LightState.INHERIT);
             rcam.update();
 

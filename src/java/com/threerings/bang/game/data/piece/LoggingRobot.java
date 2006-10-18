@@ -116,8 +116,8 @@ public class LoggingRobot extends Unit
                 !bangobj.board.canCross(x, y, piece.x, piece.y)) {
                 continue;
             }
-            if (_type == NORMAL && piece instanceof Unit &&
-                    piece.owner != -1 && !piece.isAirborne()) {
+            if (piece instanceof Unit && piece.owner != -1 &&
+                !piece.isAirborne()) {
                 proxShot = addProxShot(proxShot, proxShots, piece,
                     scaleProximityDamage(UNIT_PROXIMITY_DAMAGE));
                     
