@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
 
+import com.jme.system.DisplaySystem;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BComboBox;
@@ -74,8 +75,8 @@ public class OptionsView extends BDecoratedWindow
         cont.add(_modes = new BComboBox());
 
         cont.add(new BLabel(_msgs.get("m.fullscreen"), "right_label"));
-        cont.add(_fullscreen = new BCheckBox(""));
-        _fullscreen.setSelected(Display.isFullscreen());
+        cont.add(_fullscreen = new BCheckBox(_msgs.get("m.restart")));
+        _fullscreen.setSelected(BangPrefs.isFullscreen());
         _fullscreen.addListener(_modelist);
 
         cont.add(new BLabel(_msgs.get("m.detail_lev"), "right_label"));
@@ -279,9 +280,8 @@ public class OptionsView extends BDecoratedWindow
 
     protected void updateDisplayMode (DisplayMode mode, boolean confirm)
     {
-        if (mode == null ||
-            (_mode != null && _mode.equals(mode) &&
-             Display.isFullscreen() == _fullscreen.isSelected())) {
+        BangPrefs.updateFullscreen(_fullscreen.isSelected());
+        if (mode == null || (_mode != null && _mode.equals(mode))) {
             return;
         }
 
@@ -294,8 +294,9 @@ public class OptionsView extends BDecoratedWindow
         // here so that JME doesn't freak out
         int bpp = Math.max(16, _mode.getBitsPerPixel());
         int width = _mode.getWidth(), height = _mode.getHeight();
-        _ctx.getDisplay().recreateWindow(
-            width, height, bpp, _mode.getFrequency(), _fullscreen.isSelected());
+        DisplaySystem ds = _ctx.getDisplay();
+        ds.recreateWindow(
+            width, height, bpp, _mode.getFrequency(), ds.isFullScreen());
 
         // reconfigure the camera frustum in case the aspect ratio changed
         _ctx.getCameraHandler().getCamera().setFrustumPerspective(
@@ -323,7 +324,6 @@ public class OptionsView extends BDecoratedWindow
                 case OptionDialog.OK_BUTTON:
                     // store these settings for later
                     BangPrefs.updateDisplayMode(_mode);
-                    BangPrefs.updateFullscreen(_fullscreen.isSelected());
                     break;
 
                 default:
