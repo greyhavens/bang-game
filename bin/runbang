@@ -10,7 +10,7 @@ DESC="Bang game server"
 
 BANG_HOME=`dirname $0 | sed s:/bin$::`
 BANG_USER=www-data
-TOOLS_HOME=/export/tools
+TOOLS_HOME=$BANG_HOME/projects/tools
 HOSTNAME=`hostname`
 
 # Make sure our nodename was properly specified
@@ -115,12 +115,12 @@ $JAVA_VM $JAVA_ARGS $CLASS >>$LOGFILE 2>&1
 EXIT_CODE=$?
 
 # Mail out some reports
-# cat $LOGFILE | /export/tools/bin/sum_invokers | \
+# cat $LOGFILE | $BANG_HOME/projects/tools/bin/sum_invokers | \
 #     $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
-# cat $LOGFILE | /export/tools/bin/lfilter | \
+# cat $LOGFILE | $BANG_HOME/projects/tools/bin/lfilter | \
 #     grep -v "Invoker unit" | grep ' ! ' | cut -c 25-80 | sort | uniq -c | \
 #     sort -nr | $MAIL -s "$HOSTNAME: $BANG_HOME error summary" $LOG_EMAIL
-cat $LOGFILE | /export/tools/bin/lfilter | \
+cat $LOGFILE | $BANG_HOME/projects/tools/bin/lfilter | \
     $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
 
 # Archive the server log

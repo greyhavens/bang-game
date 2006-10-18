@@ -5,8 +5,8 @@
 umask 002
 export JAVA_HOME=/usr/local/java
 ROOT=`dirname $0 | sed s:/bin$::`
-ANT=/export/tools/bin/ant
 BANG_HOME=$ROOT/../bang
+ANT=$BANG_HOME/projects/tools/bin/ant
 for PROJECT in narya nenya vilya; do
     cd $BANG_HOME/projects/$PROJECT
     $ANT savedoc snapshot

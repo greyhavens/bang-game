@@ -27,7 +27,7 @@ for BANGLOG in $BANG_HOME/log/stdout-*.log ; do
         # extract the node name
         NODE=`echo $BANGLOG | sed 's:.*stdout-\(.*\).log:\1:'`
         # mail out some reports
-        cat $ARCHLOG | /export/tools/bin/sum_invokers > $FILTLOG
+        cat $ARCHLOG | $BANG_HOME/projects/tools/bin/sum_invokers > $FILTLOG
         if [ -s $FILTLOG ]; then
             cat $FILTLOG | $MAIL -s \
                 "$HOSTNAME: $BANG_HOME $NODE invoker summary" $LOG_EMAIL
@@ -35,7 +35,8 @@ for BANGLOG in $BANG_HOME/log/stdout-*.log ; do
         # change directory to $BANG_HOME so that filter_interesting can
         # maintain a local DBM file of interesting warning messages
         cd $BANG_HOME
-        cat $ARCHLOG | /export/tools/bin/filter_interesting > $FILTLOG
+        cat $ARCHLOG | \
+            $BANG_HOME/projects/tools/bin/filter_interesting > $FILTLOG
         if [ -s $FILTLOG ]; then
             cat $FILTLOG | $MAIL -s \
                 "$HOSTNAME: $BANG_HOME $NODE filtered log" $LOG_EMAIL

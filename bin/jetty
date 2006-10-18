@@ -43,7 +43,7 @@ fi
 # Read in our configuration
 . $ROOT/server.conf
 
-JETTY_HOME=/export/tools/jetty
+JETTY_HOME=$ROOT/projects/tools/jetty
 JETTY_INSTALL_TRACE_FILE="lib/org.mortbay.jmx.jar"
 JETTY_CONSOLE=$ROOT/log/jetty-console.log
 
