@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
@@ -51,6 +52,12 @@ public class FoolsGold extends AddPieceCard
     public int getScripCost ()
     {
         return 90;
+    }
+
+    @Override // documentation inherited
+    public Badge.Type getQualifier ()
+    {
+        return Badge.Type.NUGGETS_CLAIMED_1;
     }
 
     // documentation inherited

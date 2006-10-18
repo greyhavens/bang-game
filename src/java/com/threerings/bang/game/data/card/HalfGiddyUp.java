@@ -43,7 +43,7 @@ public class HalfGiddyUp extends Card
     @Override // documentation inherited
     public Badge.Type getQualifier ()
     {
-        return Badge.Type.NUGGETS_CLAIMED_1;
+        return Badge.Type.STEADS_CLAIMED_1;
     }
 
     @Override // documentation inherited

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.AdjustTickEffect;
@@ -44,6 +45,12 @@ public class Staredown extends Card
     public int getWeight ()
     {
         return 60;
+    }
+
+    @Override // documentation inherited
+    public Badge.Type getQualifier ()
+    {
+        return Badge.Type.CATTLE_RUSTLED_1;
     }
 
     @Override // documentation inherited
