@@ -84,7 +84,7 @@ public class BonusSprite extends ActiveSprite
         // as well
         String effect = BonusConfig.getConfig(_name).particleEffect;
         if (effect != null && BangPrefs.isHighDetail()) {
-            _ctx.loadEffect(effect, new ResultAttacher<Spatial>(this) {
+            _ctx.loadParticles(effect, new ResultAttacher<Spatial>(this) {
                 public void requestCompleted (Spatial result) {
                     super.requestCompleted(result);
                     result.getLocalTranslation().set(0, 0,

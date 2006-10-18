@@ -117,7 +117,7 @@ public class GunshotEmission extends FrameEmission
     {
         super.setSpriteRefs(ctx, view, sprite);
         if (_effect != null && BangPrefs.isHighDetail()) {
-            _ctx.loadEffect(_effect,
+            _ctx.loadParticles(_effect,
                 new ResultAttacher<Spatial>(_model.getEmissionNode()) {
                 public void requestCompleted (Spatial result) {
                     super.requestCompleted(result);

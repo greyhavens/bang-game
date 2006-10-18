@@ -32,18 +32,14 @@ for TOWN in $TOWNS; do
         rsrc/bonuses/$TOWN/bonuses.txt
 done
 
-# Update our list of effects
+# Update our lists of particle effects and icons
 for TOWN in $TOWNS; do
-    find rsrc/effects/$TOWN -name 'effect.properties' | \
-        sed 's:rsrc/effects/::g' | sed 's:/effect.properties::' | sort > \
-        rsrc/effects/$TOWN/effects.txt
-done
-
-# Update our list of icons
-for TOWN in $TOWNS; do
-    find rsrc/icons/$TOWN -name 'icon.properties' | \
-        sed 's:rsrc/icons/::g' | sed 's:/icon.properties::' | sort > \
-        rsrc/icons/$TOWN/icons.txt
+    find rsrc/effects/$TOWN -name 'particles.properties' | \
+        sed 's:rsrc/effects/::g' | sed 's:/particles.properties::' | sort > \
+        rsrc/effects/$TOWN/particles.txt
+    find rsrc/effects/$TOWN -name 'icon.properties' | \
+        sed 's:rsrc/effects/::g' | sed 's:/icon.properties::' | sort > \
+        rsrc/effects/$TOWN/icons.txt
 done
 
 # Update our list of terrain codes

@@ -26,7 +26,7 @@ public class ShotSprite extends Sprite
     public ShotSprite (BangContext ctx, String type, Colorization[] zations)
     {
         if (type.startsWith("effects/")) {
-            ctx.loadEffect(type.substring(8),
+            ctx.loadParticles(type.substring(8),
                 new ResultAttacher<Spatial>(this));
         } else {
             int idx = type.indexOf('/');

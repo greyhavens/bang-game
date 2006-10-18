@@ -146,7 +146,7 @@ public class IconConfig
     protected Quad createIconInstance (BasicContext ctx, String path)
     {
         TextureState tstate = RenderUtil.createTextureState(
-            ctx, "icons/" + path + "/icon.png");
+            ctx, "effects/" + path + "/icon.png");
         if (frameWidth <= 0) {
             return createIcon(tstate, width, height);
         }
@@ -209,7 +209,7 @@ public class IconConfig
     protected static void registerIcon (String icon)
     {
         Properties props = BangUtil.resourceToProperties(
-            "rsrc/icons/" + icon + "/icon.properties");
+            "rsrc/effects/" + icon + "/icon.properties");
         
         IconConfig iconfig = new IconConfig();
         iconfig.width = BangUtil.getFloatProperty(
@@ -244,7 +244,7 @@ public class IconConfig
     static {
         // register our icons
         for (String icon : BangUtil.townResourceToStrings(
-            "rsrc/icons/TOWN/icons.txt")) {
+            "rsrc/effects/TOWN/icons.txt")) {
             registerIcon(icon);
         }
     }

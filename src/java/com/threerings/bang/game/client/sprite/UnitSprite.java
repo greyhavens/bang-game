@@ -340,7 +340,7 @@ public class UnitSprite extends MobileSprite
         if (path instanceof MoveUnitPath && !_piece.isAlive() &&
             _piece.isAirborne() && ((Unit)_piece).getConfig().make ==
                 UnitConfig.Make.STEAM) {
-            _ctx.loadEffect(FIRE_EFFECT, new ResultAttacher<Spatial>(this) {
+            _ctx.loadParticles(FIRE_EFFECT, new ResultAttacher<Spatial>(this) {
                 public void requestCompleted (Spatial result) {
                     if (isMoving()) {
                         super.requestCompleted(result);

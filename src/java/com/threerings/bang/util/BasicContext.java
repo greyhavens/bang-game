@@ -25,9 +25,9 @@ import com.threerings.util.MessageManager;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.GlobalKeyManager;
-import com.threerings.bang.client.util.EffectCache;
 import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.ModelCache;
+import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.client.util.TextureCache;
 
 import static com.threerings.bang.Log.log;
@@ -72,8 +72,8 @@ public interface BasicContext extends JmeContext
     /** Returns a reference to our model cache. */
     public ModelCache getModelCache ();
     
-    /** Returns a reference to our effect cache. */
-    public EffectCache getEffectCache ();
+    /** Returns a reference to our particle effect cache. */
+    public ParticleCache getParticleCache ();
     
     /** Returns a reference to our character manager. */
     public CharacterManager getCharacterManager ();
@@ -88,7 +88,7 @@ public interface BasicContext extends JmeContext
     public void loadModel (String type, String name, ResultListener<Model> rl);
 
     /** Loads a particle effect asynchronously from the cache. */
-    public void loadEffect (String name, ResultListener<Spatial> rl);
+    public void loadParticles (String name, ResultListener<Spatial> rl);
     
     /** Loads an image from the cache. */
     public BImage loadImage (String rsrcPath);

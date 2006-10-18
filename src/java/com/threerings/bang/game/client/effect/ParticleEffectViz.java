@@ -52,7 +52,7 @@ public abstract class ParticleEffectViz extends EffectViz
      */
     protected void displayEffect (String name, final PieceSprite target)
     {
-        ParticlePool.getEffect(name,
+        ParticlePool.getParticles(name,
             new ResultAttacher<Spatial>(_view.getPieceNode()) {
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);

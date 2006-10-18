@@ -302,7 +302,7 @@ public class EffectHandler extends BoardView.BoardAction
 
         // perhaps display a generic particle effect
         if (BangPrefs.isMediumDetail() &&
-            _ctx.getEffectCache().haveEffect(effect)) {
+            _ctx.getParticleCache().haveParticles(effect)) {
             sprite.displayParticles(effect, true);
         }
 
@@ -323,7 +323,7 @@ public class EffectHandler extends BoardView.BoardAction
         if (effect != null && effect.startsWith("m.")) {
             _view.fadeMarqueeInOut(effect, 1f);
             notePender(2f);
-        } else if (_ctx.getEffectCache().haveEffect(effect)) {
+        } else if (_ctx.getParticleCache().haveParticles(effect)) {
             _view.displayCameraParticles(effect, CAMERA_EFFECT_DURATION);
         } else if (HighNoonEffect.HIGH_NOON.equals(effect)) {
             _view.setHighNoon(true);

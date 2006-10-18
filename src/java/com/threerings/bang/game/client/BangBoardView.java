@@ -536,7 +536,7 @@ public class BangBoardView extends BoardView
         _node.attachChild(cnode);
 
         // attach an instance of the effect to the node
-        _ctx.loadEffect(effect, new ResultAttacher<Spatial>(cnode) {
+        _ctx.loadParticles(effect, new ResultAttacher<Spatial>(cnode) {
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
                 addWindInfluence(result);

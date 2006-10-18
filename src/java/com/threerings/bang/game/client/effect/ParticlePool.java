@@ -126,7 +126,7 @@ public class ParticlePool
         return steamCloud;
     }
     
-    public static void getEffect (
+    public static void getParticles (
         String name, final ResultAttacher<Spatial> rl)
     {
         ArrayList<Spatial> particles = _effects.get(name);
@@ -142,7 +142,7 @@ public class ParticlePool
             }
         }
         final ArrayList<Spatial> fparticles = particles;
-        _ctx.loadEffect(name, new ResultListener<Spatial>() {
+        _ctx.loadParticles(name, new ResultListener<Spatial>() {
             public void requestCompleted (Spatial result) {
                 result.addController(new ParticleUtil.ParticleRemover(result));
                 fparticles.add(result);

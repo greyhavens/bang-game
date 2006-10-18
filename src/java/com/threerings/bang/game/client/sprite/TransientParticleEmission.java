@@ -14,7 +14,7 @@ import com.jme.scene.Spatial;
 
 import com.threerings.jme.model.Model;
 
-import com.threerings.bang.client.util.EffectCache;
+import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.client.util.ResultAttacher;
 
 import com.threerings.bang.game.client.effect.ParticlePool;
@@ -73,14 +73,15 @@ public class TransientParticleEmission extends FrameEmission
         if (_ctx == null) {
             return;
         }
-        ParticlePool.getEffect(_effect,
+        ParticlePool.getParticles(_effect,
             new ResultAttacher<Spatial>(_view.getPieceNode()) {
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
                 result.getLocalTranslation().set(
                     _target.getWorldTranslation());
                 if (_rotate) {
-                    _target.getWorldRotation().mult(EffectCache.Z_UP_ROTATION,
+                    _target.getWorldRotation().mult(
+                        ParticleCache.Z_UP_ROTATION,
                         result.getLocalRotation());
                 }
             }

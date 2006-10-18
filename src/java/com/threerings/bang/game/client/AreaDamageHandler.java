@@ -82,7 +82,7 @@ public class AreaDamageHandler extends EffectHandler
     @Override // documentation inherited
     protected void apply (Effect effect)
     {
-        ParticlePool.getEffect("frontier_town/mushroom_cloud",
+        ParticlePool.getParticles("frontier_town/mushroom_cloud",
             new ResultAttacher<Spatial>(_view.getPieceNode()) {
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);

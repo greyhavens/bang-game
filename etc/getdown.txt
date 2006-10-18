@@ -62,7 +62,6 @@ uresource = rsrc/units/wreckage/bundle.jar
 # Frontier Town game resources
 uresource = rsrc/bonuses/frontier_town/bundle.jar
 uresource = rsrc/effects/frontier_town/bundle.jar
-uresource = rsrc/icons/frontier_town/bundle.jar
 uresource = rsrc/extras/frontier_town/bundle.jar
 uresource = rsrc/props/frontier_town/bundle.jar
 uresource = rsrc/units/frontier_town/bundle.jar
@@ -74,7 +73,6 @@ auxgroups = indian_post
 # Indian Trading Post game resources
 indian_post.uresource = rsrc/bonuses/indian_post/bundle.jar
 indian_post.uresource = rsrc/effects/indian_post/bundle.jar
-indian_post.uresource = rsrc/icons/indian_post/bundle.jar
 indian_post.uresource = rsrc/extras/indian_post/bundle.jar
 indian_post.uresource = rsrc/props/indian_post/bundle.jar
 indian_post.uresource = rsrc/units/indian_post/bundle.jar

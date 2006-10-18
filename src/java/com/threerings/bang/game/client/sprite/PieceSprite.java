@@ -36,7 +36,7 @@ import com.threerings.media.util.MathUtil;
 import com.threerings.openal.SoundGroup;
 
 import com.threerings.bang.client.Config;
-import com.threerings.bang.client.util.EffectCache;
+import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.data.TerrainConfig;
 import com.threerings.bang.util.BasicContext;
@@ -483,11 +483,12 @@ public class PieceSprite extends Sprite
     {
         final Quaternion rot = new Quaternion(localRotation);
         final Vector3f trans = new Vector3f(localTranslation);
-        ParticlePool.getEffect(name,
+        ParticlePool.getParticles(name,
             new ResultAttacher<Spatial>(_view.getPieceNode()) {
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
-                rot.mult(EffectCache.Z_UP_ROTATION, result.getLocalRotation());
+                rot.mult(ParticleCache.Z_UP_ROTATION,
+                    result.getLocalRotation());
                 if (center) {
                     rot.multLocal(result.getLocalTranslation().set(
                         0f, 0f, _piece.getHeight() *

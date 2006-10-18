@@ -26,7 +26,7 @@ public class ParticleInfluenceViz extends InfluenceViz
     public void init (BasicContext ctx, PieceSprite target)
     {
         super.init(ctx, target);
-        _ctx.loadEffect(_effect, new ResultAttacher<Spatial>(target) {
+        _ctx.loadParticles(_effect, new ResultAttacher<Spatial>(target) {
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
                 _particles = result;

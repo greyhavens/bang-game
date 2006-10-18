@@ -45,7 +45,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Maintains a cache of particle system effects.
  */
-public class EffectCache extends PrototypeCache<String, Spatial>
+public class ParticleCache extends PrototypeCache<String, Spatial>
 {    
     /** The rotation from y-up coordinates to z-up coordinates. */
     public static final Quaternion Z_UP_ROTATION = new Quaternion();
@@ -53,19 +53,19 @@ public class EffectCache extends PrototypeCache<String, Spatial>
         Z_UP_ROTATION.fromAngleNormalAxis(FastMath.HALF_PI, Vector3f.UNIT_X);
     }
     
-    public EffectCache (BasicContext ctx)
+    public ParticleCache (BasicContext ctx)
     {
         super(ctx);
-        Collections.addAll(_effects, BangUtil.townResourceToStrings(
-            "rsrc/effects/TOWN/effects.txt"));
+        Collections.addAll(_particles, BangUtil.townResourceToStrings(
+            "rsrc/effects/TOWN/particles.txt"));
     }
     
     /**
-     * Determines whether the names effect exists.
+     * Determines whether the named particle effect exists.
      */
-    public boolean haveEffect (String name)
+    public boolean haveParticles (String name)
     {
-        return _effects.contains(name);
+        return _particles.contains(name);
     }
     
     /**
@@ -73,7 +73,7 @@ public class EffectCache extends PrototypeCache<String, Spatial>
      *
      * @param rl the listener to notify with the resulting effect
      */
-    public void getEffect (String name, ResultListener<Spatial> rl)
+    public void getParticles (String name, ResultListener<Spatial> rl)
     {
         getInstance(name, null, rl);
     }
@@ -92,7 +92,7 @@ public class EffectCache extends PrototypeCache<String, Spatial>
         });
         Spatial particles = (Spatial)BinaryImporter.getInstance().load(
             _ctx.getResourceManager().getResource(
-                "effects/" + key + "/effect.jme"));
+                "effects/" + key + "/particles.jme"));
         if (particles instanceof ParticleGeometry) {
             // wrap geometry in container to preserve relative transforms
             Node container = new Node("effect");
@@ -102,7 +102,7 @@ public class EffectCache extends PrototypeCache<String, Spatial>
         TextureKey.setLocationOverride(null);
         Properties props = new Properties();
         props.load(_ctx.getResourceManager().getResource(
-            "effects/" + key + "/effect.properties"));
+            "effects/" + key + "/particles.properties"));
         particles.setLocalScale(Float.parseFloat(
             props.getProperty("scale", "0.025")));
         particles.getLocalRotation().set(Z_UP_ROTATION);
@@ -257,6 +257,6 @@ public class EffectCache extends PrototypeCache<String, Spatial>
         return instance;
     }
     
-    /** The effects available for loading. */
-    protected HashSet<String> _effects = new HashSet<String>();
+    /** The particle effects available for loading. */
+    protected HashSet<String> _particles = new HashSet<String>();
 }

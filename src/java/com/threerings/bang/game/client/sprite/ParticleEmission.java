@@ -22,7 +22,7 @@ import com.threerings.jme.model.Model;
 import com.threerings.jme.util.SpatialVisitor;
 
 import com.threerings.bang.client.BangPrefs;
-import com.threerings.bang.client.util.EffectCache;
+import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.util.BasicContext;
 
@@ -61,7 +61,7 @@ public class ParticleEmission extends SpriteEmission
     {
         super.setSpriteRefs(ctx, view, sprite);
         if (_effect != null && BangPrefs.isHighDetail()) {
-            _ctx.loadEffect(_effect,
+            _ctx.loadParticles(_effect,
                 new ResultAttacher<Spatial>(_model.getEmissionNode()) {
                 public void requestCompleted (Spatial result) {
                     super.requestCompleted(result);
@@ -127,7 +127,7 @@ public class ParticleEmission extends SpriteEmission
             return;
         }
         _particles.getLocalTranslation().set(_target.getWorldTranslation());
-        _target.getWorldRotation().mult(EffectCache.Z_UP_ROTATION,
+        _target.getWorldRotation().mult(ParticleCache.Z_UP_ROTATION,
             _particles.getLocalRotation());
     }
     

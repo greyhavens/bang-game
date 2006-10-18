@@ -56,9 +56,9 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
 
-import com.threerings.bang.client.util.EffectCache;
 import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.ModelCache;
+import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.client.util.PerfMonitor;
 import com.threerings.bang.client.util.TextureCache;
 
@@ -134,7 +134,7 @@ public class BasicClient
         _icache = new ImageCache(_ctx);
         _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
-        _ecache = new EffectCache(_ctx);
+        _pcache = new ParticleCache(_ctx);
         
         // intialize our performance monitor
         PerfMonitor.init(_ctx);
@@ -296,8 +296,8 @@ public class BasicClient
             return _mcache;
         }
         
-        public EffectCache getEffectCache () {
-            return _ecache;
+        public ParticleCache getParticleCache () {
+            return _pcache;
         }
         
         public DisplaySystem getDisplay () {
@@ -350,8 +350,8 @@ public class BasicClient
             _mcache.getModel(type, name, rl);
         }
 
-        public void loadEffect (String name, ResultListener<Spatial> rl) {
-            _ecache.getEffect(name, rl);
+        public void loadParticles (String name, ResultListener<Spatial> rl) {
+            _pcache.getParticles(name, rl);
         }
         
         public BImage loadImage (String rsrcPath) {
@@ -372,7 +372,7 @@ public class BasicClient
     protected ImageCache _icache;
     protected TextureCache _tcache;
     protected ModelCache _mcache;
-    protected EffectCache _ecache;
+    protected ParticleCache _pcache;
     protected CharacterManager _charmgr;
     protected AvatarLogic _alogic;
 

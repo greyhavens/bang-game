@@ -86,7 +86,6 @@
        <exclude name="units/**"/>
        <exclude name="props/**"/>
        <exclude name="effects/**"/>
-       <exclude name="icons/**"/>
        <exclude name="extras/**"/>
        <exclude name="bonuses/**"/>
        <exclude name="boards/**"/>
@@ -160,17 +159,13 @@
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/effects/${town}/bundle.jar" basedir="rsrc/effects/${town}">
-      <include name="**/effects.txt"/>
-      <include name="**/effect.properties"/>
-      <include name="**/effect.jme"/>
-      <include name="**/*.png"/>
-      <include name="**/*.ogg"/>
-      <exclude name="**/source/**"/>
-    </jar>
-    <jar file="rsrc/icons/${town}/bundle.jar" basedir="rsrc/icons/${town}">
+      <include name="**/particles.txt"/>
+      <include name="**/particles.properties"/>
+      <include name="**/particles.jme"/>
       <include name="**/icons.txt"/>
       <include name="**/icon.properties"/>
-      <include name="**/icon.png"/>
+      <include name="**/*.png"/>
+      <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/extras/${town}/bundle.jar" basedir="rsrc/extras/${town}">
@@ -473,7 +468,6 @@
         <exclude name="rsrc/units/**"/>
         <exclude name="rsrc/props/**"/>
         <exclude name="rsrc/effects/**"/>
-        <exclude name="rsrc/icons/**"/>
         <exclude name="rsrc/bonuses/**"/>
         <exclude name="rsrc/extras/**"/>
       </fileset>
@@ -487,7 +481,6 @@
         <include name="rsrc/**/*.properties"/>
         <include name="rsrc/**/*.dat"/>
         <exclude name="**/model.properties"/>
-        <exclude name="**/icon.properties"/>
       </fileset>
     </jar>
   </target>
