@@ -106,8 +106,8 @@ public class ServerConfig
         serverRoot = new File(config.getValue("server_root", "/tmp"));
         sharedSecret = config.getValue("server_secret", (String)null);
 
-        // if we're running from a tool, stop here
-        if (Boolean.getBoolean("bang.tool")) {
+        // if we're not a server node (we're the webapp or a tool) stop here
+        if (!Boolean.isSet("is_node")) {
             return;
         }
 

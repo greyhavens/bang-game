@@ -27,7 +27,6 @@ fi
 JAVA_ARGS="-server -mx$TOOL_MEMORY \
     -Dno_unpack_resources=true \
     -Dbang.home=$BANG_HOME \
-    -Dbang.tool=true \
     -Dresource_dir=$BANG_HOME/rsrc \
     -Drsrc_cache_dir=/tmp"
 

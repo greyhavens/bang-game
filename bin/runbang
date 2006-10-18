@@ -46,6 +46,7 @@ JAVA_ARGS="-server -mx$SERVER_MEMORY \
     -Dresource_dir=$BANG_HOME/rsrc \
     -Dno_unpack_resources=true \
     -Dhostname=$HOSTNAME \
+    -Dis_node=true \
     -Dnode=$NODE \
     -Drsrc_cache_dir=/tmp -Dlog_level=$LOGLEVEL"
 

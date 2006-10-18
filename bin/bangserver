@@ -12,7 +12,7 @@ HOSTNAME=`hostname`
 NODE="frontier_town"
 
 SARGS="-server -Djava.awt.headless=true"
-SARGS="$SARGS -Dbang.home=$ROOT -Dhostname=$HOSTNAME"
+SARGS="$SARGS -Dbang.home=$ROOT -Dhostname=$HOSTNAME -Dis_node=true"
 SARGS="$SARGS -Dresource_dir=$ROOT/rsrc -Dno_unpack_resources=true"
 
 # extract -D arguments so that we can put them before the classname
