@@ -410,7 +410,7 @@ public class PlayerStatusView extends BContainer
         if (_bangobj.playerInfo != null &&
             _bangobj.playerInfo[_pidx].avatar != null) {
             AvatarView.getFramableImage(
-                _ctx, _bangobj.playerInfo[_pidx].avatar, 10,
+                _ctx, _bangobj.playerInfo[_pidx].avatar, 9,
                 new ResultListener<BImage>() {
                 public void requestCompleted (BImage image) {
                     setAvatar(new ImageIcon(image));
@@ -574,14 +574,14 @@ public class PlayerStatusView extends BContainer
 
     protected BButton _ffbutton;
 
-    protected static final Point BACKGROUND_LOC = new Point(33, 13);
-    protected static final Point AVATAR_LOC = new Point(33, 8);
-    protected static final Point CASH_LOC = new Point(97, 34);
-    protected static final Point FF_LOC = new Point(0, 30);
+    protected static final Point BACKGROUND_LOC = new Point(33, 15);
+    protected static final Point AVATAR_LOC = new Point(33, 4);
+    protected static final Point CASH_LOC = new Point(97, 36);
+    protected static final Point FF_LOC = new Point(0, 32);
 
-    protected static final Rectangle RANK_RECT = new Rectangle(8, 35, 21, 23);
-    protected static final Rectangle NAME_RECT = new Rectangle(11, 0, 100, 16);
-    protected static final Rectangle CARD_RECT = new Rectangle(146, 16, 30, 39);
+    protected static final Rectangle RANK_RECT = new Rectangle(8, 37, 21, 23);
+    protected static final Rectangle NAME_RECT = new Rectangle(11, 2, 100, 16);
+    protected static final Rectangle CARD_RECT = new Rectangle(146, 18, 30, 39);
 
     /** The height from which to drop added cards into the hand (also the
      * height to which to fly played cards). */
