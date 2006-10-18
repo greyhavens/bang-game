@@ -9,6 +9,7 @@ import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.bang.game.client.effect.InfluenceViz;
 import com.threerings.bang.game.client.effect.IconInfluenceViz;
+import com.threerings.bang.game.client.effect.ParticleInfluenceViz;
 
 /**
  * An effect that limits a units ability to attack until it is attacked or
@@ -24,7 +25,9 @@ public class PeacePipeEffect extends SetHindranceEffect
                 return "peace_pipe";
             }
             public InfluenceViz createViz (boolean high) {
-                return new IconInfluenceViz("peace_pipe");
+                return (high ? 
+                        new ParticleInfluenceViz("indian_post/peaced_out") :
+                        new IconInfluenceViz("peace_pipe"));
             }
             public boolean validTarget (
                     Unit shooter, Piece targer, boolean allowSelf) {
