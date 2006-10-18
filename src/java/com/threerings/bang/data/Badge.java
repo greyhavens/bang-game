@@ -901,10 +901,13 @@ public class Badge extends Item
 
         key = "m.cards_enabled";
         for (Card card : Card.getCards()) {
+            Type qual = card.getQualifier();
+            if (qual == null) {
+                continue;
+            }
             msg = MessageBundle.qualify(
                 BangCodes.CARDS_MSGS, "m." + card.getType());
-            registerReward(
-                card.getQualifier(), MessageBundle.compose(key, msg));
+            registerReward(qual, MessageBundle.compose(key, msg));
         }
     }
 
