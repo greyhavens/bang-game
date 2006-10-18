@@ -361,6 +361,9 @@ public class ForestGuardians extends Scenario
         _wavePoints += grown;
         _waveMax += _ctrees.size();
         
+        // clear all advance orders
+        _bangmgr.clearOrders();
+        
         // announce the end of the wave
         _bangmgr.deployEffect(-1, new RobotWaveEffect());
         

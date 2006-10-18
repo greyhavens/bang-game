@@ -107,7 +107,7 @@ public class ServerConfig
         sharedSecret = config.getValue("server_secret", (String)null);
 
         // if we're not a server node (we're the webapp or a tool) stop here
-        if (!Boolean.isSet("is_node")) {
+        if (!Boolean.getBoolean("is_node")) {
             return;
         }
 

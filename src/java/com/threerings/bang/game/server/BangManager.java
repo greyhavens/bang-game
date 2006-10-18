@@ -573,6 +573,17 @@ public class BangManager extends GameManager
     }
 
     /**
+     * Clears out all advance orders for all units.
+     */
+    public void clearOrders ()
+    {
+        for (AdvanceOrder order : _orders) {
+            reportInvalidOrder(order, ORDER_CLEARED);
+        }
+        _orders.clear();
+    }
+    
+    /**
      * Adds a piece to the board by deploying an {@link AddPieceEffect}.  The
      * piece should already have a valid piece id.
      */
