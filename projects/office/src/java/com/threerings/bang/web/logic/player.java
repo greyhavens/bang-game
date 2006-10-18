@@ -12,7 +12,7 @@ import com.samskivert.velocity.InvocationContext;
 import com.threerings.user.OOOUser;
 
 import com.threerings.bang.data.Stat;
-import com.threerings.bang.server.persist.Player;
+import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.server.persist.StatRepository;
 
 import com.threerings.bang.web.OfficeApp;
@@ -42,7 +42,7 @@ public class player extends AdminLogic
                 app.getSiteIdentifier().getSiteString(target.siteId));
 
         // load up their Bang! player record
-        Player player = app.getPlayerRepository().loadPlayer(who);
+        PlayerRecord player = app.getPlayerRepository().loadPlayer(who);
         if (player != null) {
             ctx.put("player", player);
             ctx.put("stats", app.getStatRepository().loadStats(
