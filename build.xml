@@ -385,7 +385,7 @@
       <fileset dir="lib" includes="commons-digester.jar"/>
       <fileset dir="lib" includes="commons-logging.jar"/>
     </copy>
-    <copy file="/export/tools/lib/java/getdown-pro.jar"
+    <copy file="projects/tools/lib/java/getdown-pro.jar"
           tofile="${client_dir}/code/getdown-pro-new.jar"/>
     <delete file="dist/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">

@@ -3,8 +3,7 @@
 <project name="Avatar component bundles" default="all" basedir=".">
   <!-- declare our classpath -->
   <path id="classpath">
-    <fileset dir="../../lib" includes="**/*.jar"/>
-    <fileset dir="/export/tools/lib/java" includes="**/*.jar"/>
+    <fileset dir="../../dist/lib" includes="**/*.jar"/>
   </path>
 
   <target name="town_bundles">
