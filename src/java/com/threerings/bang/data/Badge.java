@@ -894,7 +894,7 @@ public class Badge extends Item
         key = "m.unit_enabled";
         msg = MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.sharpshooter");
         registerReward(Type.CONSEC_WINS_1, MessageBundle.compose(key, msg));
-        msg = MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.shotgunner");
+        msg = MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.steamgunman");
         registerReward(Type.HIGHEST_POINTS_1, MessageBundle.compose(key, msg));
         msg = MessageBundle.qualify(BangCodes.UNITS_MSGS, "m.dogsoldier");
         registerReward(Type.CONSEC_KILLS_2, MessageBundle.compose(key, msg));
