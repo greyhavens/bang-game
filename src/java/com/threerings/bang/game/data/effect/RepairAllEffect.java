@@ -13,6 +13,16 @@ import com.threerings.bang.game.data.piece.Unit;
  */
 public class RepairAllEffect extends GlobalEffect
 {
+    /** The effect applied to the board. */
+    public static final String FORGIVEN = "indian_post/forgiven";
+    
+    @Override // documentation inherited
+    public boolean apply (BangObject bangobj, Observer obs)
+    {
+        affectBoard(bangobj, FORGIVEN, false, obs);
+        return super.apply(bangobj, obs);
+    }
+    
     @Override // documentation inherited
     public boolean validPiece (Piece piece)
     {
