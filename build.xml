@@ -15,7 +15,7 @@
   <!-- define our subprojects and include the standard build system -->
   <property name="libs.dir"      value="projects/tools/lib/java"/>
   <property name="projects.root" value="."/>
-  <property name="projects"      value="samskivert,narya,nenya,vilya,jme-bui,threerings"/>
+  <property name="projects"      value="samskivert,jme-bui,narya,nenya,vilya,threerings"/>
   <import file="${projects.root}/projects/tools/etc/build-support.xml"/>
 
   <!-- declare the libraries needed by the Bang runtime -->
