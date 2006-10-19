@@ -674,7 +674,7 @@ public class PlayerManager
         final int[] nfriends, nfoes;
         if (note == PlayerService.FOLK_IS_FRIEND && ixFriend < 0) {
             opinion = FolkRecord.FRIEND;
-            nfriends = ArrayUtil.insert(user.friends, folkId, 1+ixFriend);
+            nfriends = ArrayUtil.insert(user.friends, folkId, -1*(1+ixFriend));
             nfoes = (ixFoe >= 0) ?
                 ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
 
@@ -682,7 +682,7 @@ public class PlayerManager
             opinion = FolkRecord.FOE;
             nfriends = (ixFriend >= 0) ?
                 ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
-            nfoes = ArrayUtil.insert(user.foes, folkId, 1+ixFoe);
+            nfoes = ArrayUtil.insert(user.foes, folkId, -1*(1+ixFoe));
 
         } else if (note == PlayerService.FOLK_NEUTRAL &&
             (ixFoe >= 0 || ixFriend >= 0)) {
@@ -702,8 +702,13 @@ public class PlayerManager
                 _playrepo.registerOpinion(user.playerId, folkId, opinion);
             }
             public void handleSuccess() {
-                user.setFriends(nfriends);
-                user.setFoes(nfoes);
+                user.startTransaction();
+                try {
+                    user.setFriends(nfriends);
+                    user.setFoes(nfoes);
+                } finally {
+                    user.commitTransaction();
+                }
                 ((PlayerService.ConfirmListener)_listener).requestProcessed();
             }
             public String getFailureMessage() {

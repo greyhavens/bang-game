@@ -810,7 +810,6 @@ public class BangController extends GameController
      */
     protected void showFriendlyFolks ()
     {
-        log.info("showing friendly folks");
         if (_pidx == -1) {
             return;
         }
