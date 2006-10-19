@@ -5,7 +5,7 @@
 # Mirrors changes to the Bang Howdy website to the appropriate servers
 
 ROOT=`dirname $0`/..
-MIRROR=$ROOT/projects/tools/bin/mirror
+MIRROR=/export/tools/bin/mirror
 
 # mirror the client
 echo "** Mirroring website documents and images..."

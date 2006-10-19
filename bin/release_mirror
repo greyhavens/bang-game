@@ -5,7 +5,7 @@
 # Mirrors Bang server runtime files to the appropriate server machines 
 
 ROOT=`dirname $0 | sed s:/bin$::`
-MIRROR=$ROOT/projects/tools/bin/mirror
+MIRROR=/export/tools/bin/mirror
 cd $ROOT
 
 # mirror the library files

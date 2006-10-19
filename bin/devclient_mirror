@@ -5,7 +5,7 @@
 # Mirrors Bang development client release files to the development server
 
 ROOT=`dirname $0 | sed s:/bin$::`
-MIRROR=$ROOT/projects/tools/bin/mirror
+MIRROR=/export/tools/bin/mirror
 cd $ROOT
 
 WEB_DIR=`grep web_dir $ROOT/deployment.properties | awk -F= '{ print $2 }'`
