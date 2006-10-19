@@ -182,7 +182,8 @@ public class TrainDelegate extends ScenarioDelegate
 
         } else {
             log.warning("Train configured to move to non-existent track!? " +
-                        "[in=" + _bangmgr.where() + ", train=" + train + "].");
+                        "[in=" + _bangmgr.where() + ", train=" + train +
+                        ", tracks=" + bangobj.getTracks().keySet() + "].");
         }
 
         // if there's nowhere to go, flag to disappear on next tick

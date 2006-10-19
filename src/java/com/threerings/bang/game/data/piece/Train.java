@@ -142,4 +142,11 @@ public class Train extends Piece
     {
         return type == CABOOSE || lastX == UNSET;
     }
+    
+    @Override // documentation inherited
+    public String toString ()
+    {
+        return super.toString() + " lx:" + lastX + " ly:" + lastY + " nx:" +
+            nextX + " ny:" + nextY + " p:" + path + " t:" + type;
+    }
 }
