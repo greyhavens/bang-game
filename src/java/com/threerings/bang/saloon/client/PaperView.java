@@ -117,6 +117,7 @@ public class PaperView extends BContainer
     protected void displayPage (int pageNo)
     {
         if (_pageNo == pageNo) {
+            _navi[_pageNo].setSelected(true);
             return;
         }
 
