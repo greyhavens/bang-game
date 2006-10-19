@@ -19,7 +19,8 @@ if [ -z "$JAVA_HOME" ]; then
 fi
 
 # load up some handy shell functions
-. $ROOT/projects/tools/lib/sh/build_helper
+TOOLS_DIR=$ROOT/projects/tools
+. $TOOLS_DIR/lib/sh/build_helper
 
 # make sure directories are created sanely
 umask 002
@@ -86,7 +87,7 @@ fi
 # build the production client if requested
 if [ ! -z "$CLIENT" ]; then
     # update the build version as we're building the production client
-    BUILD_VERSION=`$ROOT/projects/tools/bin/buildstamp`
+    BUILD_VERSION=`$TOOLS_DIR/bin/buildstamp`
     echo "Updating build version to $BUILD_VERSION"
     echo "version=$BUILD_VERSION" > $ROOT/build.properties
     echo "config_version=$BUILD_VERSION" >> $ROOT/build.properties
