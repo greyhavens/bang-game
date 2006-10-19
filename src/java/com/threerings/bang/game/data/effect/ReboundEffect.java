@@ -78,7 +78,7 @@ public class ReboundEffect extends BonusEffect
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(pieceId);
-        if (piece == null || piece.owner != pidx) {
+        if (piece == null || piece.owner != pidx || pidx == -1) {
             return null;
         }
         return MessageBundle.compose("m.effect_spring", piece.getName());

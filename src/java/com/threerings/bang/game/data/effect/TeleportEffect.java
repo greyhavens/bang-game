@@ -180,7 +180,8 @@ public class TeleportEffect extends Effect
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
-        if (damageEffect == null || _piece == null || _piece.owner != pidx) {
+        if (damageEffect == null || _piece == null || _piece.owner != pidx || 
+                pidx == -1) {
             return null;
         }
         return MessageBundle.compose(

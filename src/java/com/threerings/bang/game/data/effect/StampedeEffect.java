@@ -201,6 +201,9 @@ public class StampedeEffect extends Effect
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
+        if (pidx == -1) {
+            return null;
+        }
         int[] pieceIds = new int[collisions.length];
         for (int ii = 0; ii < pieceIds.length; ii++) {
             pieceIds[ii] = collisions[ii].targetId;

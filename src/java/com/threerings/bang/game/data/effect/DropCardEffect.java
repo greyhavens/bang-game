@@ -76,7 +76,7 @@ public class DropCardEffect extends Effect
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
-        if (pidx != _card.owner) {
+        if (pidx != _card.owner || pidx == -1) {
             return null;
         }
         return MessageBundle.compose("m.effect_drop_card",

@@ -46,7 +46,7 @@ public abstract class SetInfluenceEffect extends BonusEffect
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(pieceId);
-        if (!(piece instanceof Unit) || piece.owner != pidx) {
+        if (!(piece instanceof Unit) || piece.owner != pidx || pidx == -1) {
             return null;
         }
         String name = ((Unit)piece).influence.getName();

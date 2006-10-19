@@ -32,8 +32,8 @@ public class FoolsNuggetEffect extends NuggetEffect
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(pieceId);
-        if (piece == null || piece.owner != pidx || claimId <= 0 ||
-            !dropping) {
+        if (piece == null || piece.owner != pidx || pidx == -1 || 
+                claimId <= 0 || !dropping) {
             return null;
         }
         return MessageBundle.compose("m.effect_fools_gold", piece.getName());

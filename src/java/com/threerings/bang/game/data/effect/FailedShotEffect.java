@@ -108,7 +108,7 @@ public class FailedShotEffect extends ShotEffect
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(shooterId);
-        if (piece == null || piece.owner != pidx) {
+        if (piece == null || piece.owner != pidx || pidx == -1) {
             return null;
         }
         if (baseDamage == 0) {

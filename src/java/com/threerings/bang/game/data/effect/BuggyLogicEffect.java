@@ -95,7 +95,7 @@ public class BuggyLogicEffect extends SetHindranceEffect
     @Override // from Effect
     public String getDescription (BangObject bangobj, int pidx)
     {
-        if (_unit == null || _unit.originalOwner != pidx) {
+        if (_unit == null || _unit.originalOwner != pidx || pidx == -1) {
             return null;
         }
         String name = _unit.hindrance.getName();

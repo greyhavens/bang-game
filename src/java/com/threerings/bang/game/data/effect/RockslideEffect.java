@@ -148,6 +148,9 @@ public class RockslideEffect extends Effect
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
+        if (pidx == -1) {
+            return null;
+        }
         String names = getPieceNames(bangobj, pidx, pieces);
         return (names == null) ?
             null : MessageBundle.compose("m.effect_rockslide", names);

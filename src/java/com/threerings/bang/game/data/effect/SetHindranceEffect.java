@@ -62,7 +62,7 @@ public abstract class SetHindranceEffect extends BonusEffect
     @Override // from Effect
     public String getDescription (BangObject bangobj, int pidx)
     {
-        if (_unit == null || _unit.owner != pidx) {
+        if (_unit == null || _unit.owner != pidx || pidx == -1) {
             return null;
         }
         String name = _unit.hindrance.getName();

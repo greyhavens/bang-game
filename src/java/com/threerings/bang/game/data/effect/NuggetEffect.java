@@ -82,7 +82,7 @@ public class NuggetEffect extends HoldEffect
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(pieceId);
-        if (piece == null || piece.owner != pidx || !dropping ||
+        if (piece == null || piece.owner != pidx || pidx == -1 || !dropping ||
             claimId > 0) {
             return null;
         }

@@ -96,7 +96,7 @@ public class AdjustTickEffect extends Effect
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(pieceId);
-        if (piece == null || piece.owner != pidx ||
+        if (piece == null || piece.owner != pidx || pidx == -1 ||
             newLastActed < bangobj.tick) {
             return null;
         }

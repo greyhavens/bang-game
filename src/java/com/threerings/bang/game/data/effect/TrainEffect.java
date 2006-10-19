@@ -108,7 +108,7 @@ public class TrainEffect extends Effect
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(targetId);
-        if (piece == null || piece.owner != pidx || !_wasAlive) {
+        if (piece == null || piece.owner != pidx || !_wasAlive || pidx == -1) {
             return null;
         }
         return MessageBundle.compose("m.effect_train", piece.getName());
