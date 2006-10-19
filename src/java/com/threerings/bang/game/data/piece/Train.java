@@ -107,8 +107,8 @@ public class Train extends Piece
     @Override // documentation inherited
     public boolean preventsOverlap (Piece lapper)
     {
-        return !lapper.isAirborne() && !(lapper instanceof Track) &&
-            !(lapper instanceof Bonus);
+        return !(lapper.isAirborne() || lapper instanceof Track ||
+            lapper instanceof Bonus || lapper instanceof Prop);
     }
 
     @Override // documentation inherited

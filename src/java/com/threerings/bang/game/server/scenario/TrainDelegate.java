@@ -100,7 +100,7 @@ public class TrainDelegate extends ScenarioDelegate
         train.nextX = (short)(train.x + PieceCodes.DX[train.orientation]);
         train.nextY = (short)(train.y + PieceCodes.DY[train.orientation]);
         _bangmgr.addPiece(train);
-        _trains.add(train);
+        _trains.add((Train)bangobj.pieces.get(train.pieceId));
     }
 
     /**
@@ -120,7 +120,7 @@ public class TrainDelegate extends ScenarioDelegate
         train.nextX = last.x;
         train.nextY = last.y;
         _bangmgr.addPiece(train);
-        _trains.add(train);
+        _trains.add((Train)bangobj.pieces.get(train.pieceId));
     }
 
     /**
