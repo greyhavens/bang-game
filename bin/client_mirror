@@ -4,7 +4,8 @@
 #
 # Mirrors the Bang Howdy client deployment to the download servers
 
-ROOT=`dirname $0`/..
+ROOT=`dirname $0`
+ROOT=`cd $ROOT ; cd .. ; pwd`
 GETDOWN=$ROOT/../threerings/projects/getdown
 MIRROR=$ROOT/projects/tools/bin/mirror
 export JAVA_HOME=/usr/local/jdk1.5
