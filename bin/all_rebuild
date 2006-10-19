@@ -18,17 +18,13 @@ if [ -z "$JAVA_HOME" ]; then
     export JAVA_HOME=/usr/local/jdk1.5
 fi
 
-# load up some handy shell functions
-TOOLS_DIR=$ROOT/projects/tools
-. $TOOLS_DIR/lib/sh/build_helper
-
 # make sure directories are created sanely
 umask 002
 
 # "parse" our arguments
 while [ ! -z "$1" ]; do
     if [ $1 = "--update" ]; then
-        UPDATE=true
+        UPDATE="update"
     fi
     if [ $1 = "--client" ]; then
         CLIENT=true
@@ -38,10 +34,6 @@ while [ ! -z "$1" ]; do
     fi
     if [ $1 = "--pseditor" ]; then
         PSEDITOR=true
-    fi
-    if [ $1 = "--revdate" ]; then
-        REVDATE="-r {$2}"
-        shift
     fi
     shift
 done
@@ -57,28 +49,9 @@ fi
 # bookkeeping
 echo "*** Starting build in $ROOT at" `date`
 
-if [ ! -z "$UPDATE" ]; then
-    # update the whole enchilada
-    echo "Updating main tree..."
-    cd $ROOT
-    svn update -q $REVDATE
-    if [ $? != 0 ] ; then
-        echo >&2 "*** svn update failed in" `pwd`
-        rm -f $LOCKFILE
-        exit 255
-    fi
-fi
-
-# rebuild our libraries
-build_libraries samskivert jme-bui narya nenya vilya threerings
-
-# make sure our main project symlinks are up to date
-cd $ROOT/lib
-make_symlinks `cat LIBS`
-
 # build the main thang
 cd $ROOT
-$ANT distclean dist mdist
+$ANT cleanall $UPDATE distall
 if [ $? != 0 ]; then
     rm -f $LOCKFILE
     exit 255
@@ -87,7 +60,7 @@ fi
 # build the production client if requested
 if [ ! -z "$CLIENT" ]; then
     # update the build version as we're building the production client
-    BUILD_VERSION=`$TOOLS_DIR/bin/buildstamp`
+    BUILD_VERSION=`$ROOT/projects/tools/bin/buildstamp`
     echo "Updating build version to $BUILD_VERSION"
     echo "version=$BUILD_VERSION" > $ROOT/build.properties
     echo "config_version=$BUILD_VERSION" >> $ROOT/build.properties
