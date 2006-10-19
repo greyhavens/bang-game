@@ -686,6 +686,9 @@ public class BangController extends GameController
      */
     protected void preSelectBoardTourComplete ()
     {
+        if (_bangobj == null) {
+            return;
+        }
         if (!_config.tutorial) {
             // display the player status displays
             _view.showPlayerStatus();
@@ -696,8 +699,7 @@ public class BangController extends GameController
             // ready for our tutorial/practice/test game
             playerReady();
 
-        } else if (_bangobj != null &&
-                   _bangobj.state == BangObject.SELECT_PHASE) {
+        } else if (_bangobj.state == BangObject.SELECT_PHASE) {
             // display the selection dialog
             _view.setPhase(BangObject.SELECT_PHASE);
         }
