@@ -1,0 +1,90 @@
+Ridin' 'em In
+
+We been out roundin' up them dogies for quite a while now and we reckon it's
+just about time to ride 'em on in. We been fixin' bugs and polishin' up both
+<span class="highlight">Frontier Town</span> and the old
+<span class="highlight">Indian Trading Post</span> and we got some changes to
+report:
+
+<ul>
+<li> We added a <span class="highlight">Character page</span> to the Barber
+where you 'kin pick which avatar poses should be used in which situations (like
+yer <span class="highlight">Victory pose</span> and yer <span
+class="highlight">Wanted Poster pose</span>). You 'kin also use it to change
+yer Handle if ya done picked a dud when ya first signed up. </li>
+
+<li> We redesigned the <span class="highlight">Saloon user interface</span> to
+make things a bit simpler and clearer. </li>
+
+<li> We finished up the <span class="highlight">Friendly Folks system</span> so
+now at the end of a game, you 'kin give yer opponents a thumbs up if ya like
+'em real good and want to be matched with 'em again, or a thumbs down if they
+bugged ya and ya don't ever want to be stuck in a game with 'em again. </li>
+
+<li> We fancied up the <span class="highlight">Badge display</span> a bit so
+that now it shows ya a shadow of Badges that ya ain't yet earned. But let it be
+known that it don't show ya all the unearned Badges, just Badges from a series
+that ya have at least one of already. There's plenty of surprises lurkin' in
+there. </li>
+
+<li> We also wired up some of the Card Packs in the General Store to be
+unlocked by certain Badges. Most of y'all will probably already have 'em all
+unlocked already but for a new player it'll add some fun and excitement when
+they earn them Badges.  </li>
+
+<li> We now display <span class="highlight">influence icons</span> next to
+units in the game when they have an influence (like
+<span class="highlight">Ramblin'</span> or
+<span class="highlight">Hustle</span>). We already had 'em in the
+<span class="highlight">Unit Status display</span> in the corner, but sometimes
+it's hard to tear yer eyes away from the action long enough to look up
+there.</li>
+
+<li> We also now display a question mark over the head of a Unit when their
+Advance Order is canceled because it is no longer valid. We'll also be adding a
+question mark that lingers on their Unit Status display until the next time you
+select the unit, but that didn't make it into this here release. </li>
+
+<li> We wired up the <span class="highlight">Ranking Levels</span>, so now you
+can see in yer <span class="highlight">Wanted Poster</span> how well ya stack
+up against the other cowpokes. The ranking order is: tenderfoot, cowpoke,
+Scofflaw, Rebel, Law Breaker, BANDIT, OUTLAW, RENEGADE. We'll stick that list
+somewhere that folks can easily find at some point. </li>
+
+<li> You 'kin click on the Cowpokes in the <span class="highlight">High Score
+lists</span> now and check out their <span class="highlight">Wanted
+Posters</span>. </li>
+
+<li> We also added a bunch of fancy new particle effects and more great sound
+effects. </li>
+
+</ul>
+</p>
+
+<p> On top of that, we done fixed so dang many bugs that I can hardly keep
+count. A great big thanks to Sheriff Mark for his hard work on that front. </p>
+
+<p> As I mentioned at the start of this here ramble, we can finally see the
+light at the end of the tunnel and we're dang close to lettin' y'all head on
+over to the <span class="highlight">Indian Trading Post</span>. Here's a
+screenshot of a new gameplay mode called <span class="highlight">Wendigo
+Attack</span>: </p>
+
+<script language="JavaScript">
+//<![CDATA[
+function show_month(month,image) {
+  window.open("/screenshots/2006/" + month + "/shot.html?" + image, "image",
+    "resizable=no,status=no,width=1034,height=778,dependent=yes");
+  return false;
+}
+//]]>
+</script>
+<p align="center"><a href="/screenshots/2006/10/shot.html?itp_wendigo"
+ onclick="return show_month('10', 'itp_wendigo')">
+<img src="/screenshots/2006/10/thumbs/itp_wendigo.jpg"
+ border="0" alt=""/></a></p>
+
+<p> Keep yer ears peeled and if all goes according to plan, the next thing ya
+hear from me will be "Welcome to the Indian Tradin' Post!" </p>
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
