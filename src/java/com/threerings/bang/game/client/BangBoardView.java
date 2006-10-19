@@ -821,29 +821,33 @@ public class BangBoardView extends BoardView
 
         super.hoverSpritesChanged(hover, thover);
 
-        // if we're hovering over a unit we can click, mark it as such
-        if (hover instanceof UnitSprite) {
-            UnitSprite usprite = (UnitSprite)hover;
-            Piece piece = usprite.getPiece();
-            if (piece.isAlive() && (isSelectable(piece) ||
-                                    _attackSet.contains(piece.x, piece.y))) {
-                usprite.setHovered(true);
+        if (_pidx != -1) {
+
+            // if we're hovering over a unit we can click, mark it as such
+            if (hover instanceof UnitSprite) {
+                UnitSprite usprite = (UnitSprite)hover;
+                Piece piece = usprite.getPiece();
+                if (piece.isAlive() && (isSelectable(piece) ||
+                                _attackSet.contains(piece.x, piece.y))) {
+                    usprite.setHovered(true);
+                }
             }
-        }
 
-        highlightPossibleAttacks();
+            highlightPossibleAttacks();
 
-        // update tile highlights for card placement
-        if (_card != null &&
-            _card.getPlacementMode() == Card.PlacementMode.VS_PIECE) {
-            if (hover instanceof PieceSprite) {
-                Piece piece = ((PieceSprite)hover).getPiece();
-                clearHighlights();
-                _attackSet.clear();
-                _attackSet.add(piece.x, piece.y);
-                targetTiles(_attackSet, _card.isValidPiece(_bangobj, piece));
-            } else {
-                updatePlacingCard(_mouse.x, _mouse.y);
+            // update tile highlights for card placement
+            if (_card != null &&
+                _card.getPlacementMode() == Card.PlacementMode.VS_PIECE) {
+                if (hover instanceof PieceSprite) {
+                    Piece piece = ((PieceSprite)hover).getPiece();
+                    clearHighlights();
+                    _attackSet.clear();
+                    _attackSet.add(piece.x, piece.y);
+                    targetTiles(
+                            _attackSet, _card.isValidPiece(_bangobj, piece));
+                } else {
+                    updatePlacingCard(_mouse.x, _mouse.y);
+                }
             }
         }
 
@@ -1386,7 +1390,7 @@ public class BangBoardView extends BoardView
     protected void handleRightPress (int mx, int my)
     {
         // nothing doing if the game is not in play
-        if (_bangobj == null || !_bangobj.isInteractivePlay()) {
+        if (_bangobj == null || !_bangobj.isInteractivePlay() || _pidx == -1) {
             return;
         }
 
