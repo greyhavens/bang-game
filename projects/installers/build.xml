@@ -7,7 +7,8 @@
   <property file="${base.dir}/deployment.properties"/>
 
   <target name="prepare">
-    <copy todir="data" file="/export/tools/lib/java/getdown-pro.jar"/>
+    <copy todir="data"
+          file="${base.dir}/projects/tools/lib/java/getdown-pro.jar"/>
   </target>
 
   <!-- builds and installs the dev installers -->

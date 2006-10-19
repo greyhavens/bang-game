@@ -16,8 +16,7 @@
 
   <!-- declare our classpath -->
   <path id="classpath">
-    <fileset dir="${base.dir}/lib" includes="**/*.jar"/>
-    <fileset dir="/export/tools/lib/java" includes="**/*.jar"/>
+    <fileset dir="${base.dir}/dist/lib" includes="**/*.jar"/>
   </path>
 
   <taskdef name="jarbundler" classpathref="classpath"
