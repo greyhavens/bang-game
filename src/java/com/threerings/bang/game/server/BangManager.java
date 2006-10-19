@@ -2123,8 +2123,10 @@ public class BangManager extends GameManager
 
         int earnings = 0;
         for (int rr = 0; rr < _bconfig.getRounds(); rr++) {
-            // if the round was not played, skip it
-            if (_rounds[rr].duration == 0 || _rounds[rr].lastTick == 0) {
+            // if the round was not played to at least half it's desired
+            // duration, skip it
+            if (_rounds[rr].duration == 0 || 
+                    _rounds[rr].lastTick < _rounds[rr].duration/2) {
                 continue;
             }
             earnings += _rounds[rr].scenario.computeEarnings(

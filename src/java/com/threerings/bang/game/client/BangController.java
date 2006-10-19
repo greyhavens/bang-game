@@ -747,6 +747,11 @@ public class BangController extends GameController
      */
     protected void readyForRound ()
     {
+        // We could have left the game before this being called
+        if (_bangobj == null) {
+            return;
+        }
+
         // reenable the camera controls now that we're fully operational
         _ctx.getInputHandler().setEnabled(true);
 
