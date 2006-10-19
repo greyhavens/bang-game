@@ -12,15 +12,48 @@
   <property name="savedoc.dir"  value="docs"/>
   <property name="nartool.path"   value="projects/narya/bin"/>
 
+  <!-- define our subprojects and include the standard build system -->
+  <property name="libs.dir"      value="projects/tools/lib/java"/>
+  <property name="projects.root" value="."/>
+  <property name="projects"      value="samskivert,narya,nenya,vilya,jme-bui,threerings"/>
+  <import file="${projects.root}/projects/tools/etc/build-support.xml"/>
+
+  <!-- declare the libraries needed by the Bang runtime -->
+  <fileset dir="${projects.root}" id="dist.libs">
+    <include name="${libs.dir}/commons-beanutils.jar"/>
+    <include name="${libs.dir}/commons-collections.jar"/>
+    <include name="${libs.dir}/commons-digester.jar"/>
+    <include name="${libs.dir}/commons-io.jar"/>
+    <include name="${libs.dir}/commons-lang.jar"/>
+    <include name="${libs.dir}/commons-logging.jar"/>
+    <include name="${libs.dir}/getdown.jar"/>
+    <include name="${libs.dir}/junit-3.7.jar"/>
+    <include name="${libs.dir}/mysql-connector-java-3.1.12-bin.jar"/>
+    <include name="${libs.dir}/servlet-2.3.jar"/>
+    <include name="${libs.dir}/velocity-1.5-dev.jar"/>
+    <include name="${project.dir}/narya/dist/narya-tools.jar"/>
+    <include name="lib/lwjgl.jar"/>
+    <include name="lib/lwjgl_util.jar"/>
+    <include name="lib/jme.jar"/>
+    <include name="lib/jme-awt.jar"/>
+    <include name="lib/jme-effects.jar"/>
+    <include name="lib/jme-gamestates.jar"/>
+    <include name="lib/jme-model.jar"/>
+    <include name="lib/jme-sound.jar"/>
+    <include name="lib/jme-sound.jar"/>
+    <include name="lib/jme-terrain.jar"/>
+    <include name="lib/hemiptera.jar"/>
+  </fileset>
+
   <!-- declare our classpath -->
   <path id="classpath">
     <pathelement location="${deploy.dir}/classes"/>
-    <fileset dir="dist" includes="bang-code.jar"/>
-    <fileset dir="lib" includes="**/*.jar"/>
+    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+    <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
   </path>
 
   <!-- generates additional methods for distributed object classes -->
-  <target name="gendobj" depends="prepare">
+  <target name="gendobj" depends="prepare,copydistlibs">
     <taskdef name="dobj"
              classname="com.threerings.presents.tools.GenDObjectTask"
              classpathref="classpath"/>
@@ -38,7 +71,7 @@
 
   <!-- generates marshaller and dispatcher classes for all invocation -->
   <!-- service declarations -->
-  <target name="genservice"> 
+  <target name="genservice" depends="prepare,copydistlibs">
     <taskdef name="service"
              classname="com.threerings.presents.tools.GenServiceTask"
              classpathref="classpath"/>
@@ -56,7 +89,7 @@
 
   <!-- generates sender and decoder classes for all invocation -->
   <!-- receiver declarations -->
-  <target name="genreceiver"> 
+  <target name="genreceiver" depends="prepare,copydistlibs">
     <taskdef name="receiver"
              classname="com.threerings.presents.tools.GenReceiverTask"
              classpathref="classpath"/>
@@ -282,7 +315,7 @@
   </target>
 
   <!-- build the java class files -->
-  <target name="compile" depends="prepare">
+  <target name="compile" depends="prepare,copydistlibs">
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
            debug="on" optimize="off" deprecation="on">
       <classpath refid="classpath"/>
@@ -484,5 +517,11 @@
       </fileset>
     </jar>
   </target>
+
+  <!-- rebuilds all subprojects and the whole top-level distribution -->
+  <target name="distall" depends="distprojects,dist,mdist"/>
+
+  <!-- fully cleans out the installed application and all subprojects -->
+  <target name="cleanall" depends="distclean,cleanprojects"/>
 
 </project>
