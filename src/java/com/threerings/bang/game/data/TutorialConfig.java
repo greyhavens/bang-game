@@ -14,6 +14,15 @@ import com.samskivert.util.StringUtil;
 public class TutorialConfig
     implements Serializable
 {
+    public interface WaitAction
+    {
+        public String getEvent ();
+
+        public boolean allowAttack ();
+
+        public int getIndex ();
+    }
+
     public static class Action implements Serializable
     {
         public int index;
@@ -34,9 +43,25 @@ public class TutorialConfig
     }
 
     public static class Wait extends Action
+        implements WaitAction
     {
         public String event;
         public boolean allowAttack;
+
+        public String getEvent ()
+        {
+            return event;
+        }
+
+        public boolean allowAttack ()
+        {
+            return allowAttack;
+        }
+
+        public int getIndex ()
+        {
+            return index;
+        }
 
         private static final long serialVersionUID = 1;
     }
@@ -65,6 +90,30 @@ public class TutorialConfig
         public int id;
         public int[] location = { Short.MAX_VALUE, Short.MAX_VALUE };
         public int target;
+
+        private static final long serialVersionUID = 1;
+    }
+
+    public static class MoveUnitAndWait extends MoveUnit
+        implements WaitAction
+    {
+        public String event;
+        public boolean allowAttack;
+
+        public String getEvent ()
+        {
+            return event;
+        }
+
+        public boolean allowAttack ()
+        {
+            return allowAttack;
+        }
+
+        public int getIndex ()
+        {
+            return index;
+        }
 
         private static final long serialVersionUID = 1;
     }

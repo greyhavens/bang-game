@@ -65,7 +65,7 @@ public class TutorialController
                 BComponent comp = super.getHitComponent(mx, my);
                 return (comp == _back || comp == _forward ||
                     _pending == null || TutorialCodes.TEXT_CLICKED.equals(
-                        _pending.event)) ? comp : null;
+                        _pending.getEvent())) ? comp : null;
             }
             protected void renderBackground (Renderer renderer) {
                 getBackground().render(renderer, 0, 0, _width, _height, 0.5f);
@@ -118,8 +118,8 @@ public class TutorialController
      */
     public void handleEvent (String event)
     {
-        if (_pending != null && event.matches(_pending.event)) {
-            processedAction(_pending);
+        if (_pending != null && event.matches(_pending.getEvent())) {
+            processedAction(_pending.getIndex());
             _pending = null;
         }
     }
@@ -178,22 +178,6 @@ public class TutorialController
             _forward.setEnabled(false);
             _click.setEnabled(true);
 
-        } else if (action instanceof TutorialConfig.Wait) {
-            // wait for the specified event
-            _pending = (TutorialConfig.Wait)action;
-
-            // Log a message in an attempt to debug tutorial hangups
-            log.info("Tutorial controller waiting [event=" + _pending.event +
-                    ", allowAttack=" + _pending.allowAttack + "].");
-
-            // only allow attacking for actions that allow it
-            _view.view._attackEnabled = _pending.allowAttack;
-
-            // let them know if we're waiting for them to click
-            if (TutorialCodes.TEXT_CLICKED.matches(_pending.event)) {
-                _click.setText(_gmsgs.get("m.tutorial_click"));
-            }
-
         } else if (action instanceof TutorialConfig.AddPiece) {
             // nothing to do here
 
@@ -235,12 +219,29 @@ public class TutorialController
                 _view.showRoundTimer();
             }
 
+        } else if (action instanceof TutorialConfig.WaitAction) {
+            // we'll handle this later
+
         } else {
             log.warning("Unknown action " + action);
         }
 
+        if (action instanceof TutorialConfig.WaitAction) {
+            // wait for the specified event
+            _pending = (TutorialConfig.WaitAction)action;
+
+            // only allow attacking for actions that allow it
+            _view.view._attackEnabled = _pending.allowAttack();
+
+            // let them know if we're waiting for them to click
+            if (TutorialCodes.TEXT_CLICKED.matches(_pending.getEvent())) {
+                _click.setText(_gmsgs.get("m.tutorial_click"));
+            }
+        }
+
+
         if (_pending == null) {
-            processedAction(action);
+            processedAction(action.index);
         }
     }
 
@@ -267,10 +268,10 @@ public class TutorialController
         _view.tutwin.setLocation((width - _view.tutwin.getWidth())/2, 2);
     }
 
-    protected void processedAction (TutorialConfig.Action action)
+    protected void processedAction (int index)
     {
         // send a message to the server indicating we've processed this action
-        _bangobj.manager.invoke(TutorialCodes.ACTION_PROCESSED, action.index);
+        _bangobj.manager.invoke(TutorialCodes.ACTION_PROCESSED, index);
     }
 
     protected MouseAdapter _clicklist = new MouseAdapter() {
@@ -299,7 +300,7 @@ public class TutorialController
     protected BButton _back, _forward;
 
     protected TutorialConfig _config;
-    protected TutorialConfig.Wait _pending;
+    protected TutorialConfig.WaitAction _pending;
 
     protected ArrayList<TutorialConfig.Text> _history =
         new ArrayList<TutorialConfig.Text>();
