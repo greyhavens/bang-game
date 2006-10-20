@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ClearPieceEffect;
@@ -30,6 +31,13 @@ public class Barricade extends Piece
         ArrayList<Effect> effects = new ArrayList<Effect>();
         effects.add(new ClearPieceEffect(this));
         return effects;
+    }
+
+    @Override // documentation inherited
+    public int computeElevation (
+            BangBoard board, int tx, int ty, boolean moving)
+    {
+        return board.getElevation(tx, ty);
     }
     
     @Override // documentation inherited
