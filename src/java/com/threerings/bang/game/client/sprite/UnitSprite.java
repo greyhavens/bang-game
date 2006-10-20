@@ -404,13 +404,16 @@ public class UnitSprite extends MobileSprite
     {
         // no sound for collateral damage shot; the main shot will produce a
         // sound
+        String type = ShotEffect.SHOT_ACTIONS[shot.type];
         if (shot.type == ShotEffect.COLLATERAL_DAMAGE) {
             return null;
         } else if (shot.type == ShotEffect.DUD) {
             return sounds.getSound("rsrc/cards/frontier_town/dud/shot.ogg");
+        } else if (shot.type == ShotEffect.MISFIRE) {
+            // for now just use our normal shot sound
+            type = "shooting";
         }
-        String path = "rsrc/units/" + _name + "/" +
-            ShotEffect.SHOT_ACTIONS[shot.type] + ".ogg";
+        String path = "rsrc/units/" + _name + "/" + type + ".ogg";
         // TODO: fall back to a generic sound if we don't have a
         // special sound for this unit for this shot type
         // TODO: go back to complaining if we don't have shot sounds
