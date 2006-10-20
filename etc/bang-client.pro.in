@@ -3,39 +3,39 @@
 #
 # Proguard configuration file for Bang! production client
 
--injars ../lib/commons-io.jar(!META-INF/*)
--injars ../lib/commons-collections.jar(!META-INF/*)
--injars ../lib/getdown.jar(!META-INF/*,!**/tools/**)
--injars ../lib/narya-base.jar(!META-INF/*,!**/tools/**)
--injars ../lib/narya-distrib.jar(!META-INF/*,!**/tools/**)
--injars ../lib/nenya-rsrc.jar(!META-INF/*,!**/tools/**)
--injars ../lib/nenya-media.jar(!META-INF/*,!**/tools/**)
--injars ../lib/nenya-cast.jar(!META-INF/*,!**/tools/**)
--injars ../lib/nenya-jme.jar(
+-injars ../dist/lib/commons-io.jar(!META-INF/*)
+-injars ../dist/lib/commons-collections.jar(!META-INF/*)
+-injars ../dist/lib/getdown.jar(!META-INF/*,!**/tools/**)
+-injars ../dist/lib/narya-base.jar(!META-INF/*,!**/tools/**)
+-injars ../dist/lib/narya-distrib.jar(!META-INF/*,!**/tools/**)
+-injars ../dist/lib/nenya-rsrc.jar(!META-INF/*,!**/tools/**)
+-injars ../dist/lib/nenya-media.jar(!META-INF/*,!**/tools/**)
+-injars ../dist/lib/nenya-cast.jar(!META-INF/*,!**/tools/**)
+-injars ../dist/lib/nenya-jme.jar(
   !META-INF/*,!**/jme/tools/*Task.class,**/jme/tools/**,!**/tools/**)
--injars ../lib/nenya-openal.jar(!META-INF/*,!**/tools/**)
--injars ../lib/vilya-parlor.jar(!META-INF/*,!**/tools/**)
--injars ../lib/samskivert.jar(!META-INF/*,!**/velocity/**)
--injars ../lib/jme.jar(!META-INF/*)
--injars ../lib/jme-effects.jar(!META-INF/*)
--injars ../lib/jme-model.jar(!META-INF/*)
--injars ../lib/jme-terrain.jar(!META-INF/*)
--injars ../lib/jme-awt.jar(!META-INF/*)
--injars ../lib/jme-sound.jar(!META-INF/*,!**/fmod/**)
--injars ../lib/jme-gamestates.jar(!META-INF/*)
--injars ../lib/jme-scene.jar(!META-INF/*)
--injars ../lib/jme-bui.jar(!META-INF/*,!**/tests/**)
--injars ../lib/threerings.jar(**/coin/**,**/IdentUtil*.class)
--injars ../lib/hemiptera.jar(!**/web/**,!**/persist/**,!install.properties)
--injars ../lib/jorbis-0.0.12.jar(!META-INF/*)
--injars ../lib/jogg-0.0.5.jar(!META-INF/*)
+-injars ../dist/lib/nenya-openal.jar(!META-INF/*,!**/tools/**)
+-injars ../dist/lib/vilya-parlor.jar(!META-INF/*,!**/tools/**)
+-injars ../dist/lib/samskivert.jar(!META-INF/*,!**/velocity/**)
+-injars ../dist/lib/jme.jar(!META-INF/*)
+-injars ../dist/lib/jme-effects.jar(!META-INF/*)
+-injars ../dist/lib/jme-model.jar(!META-INF/*)
+-injars ../dist/lib/jme-terrain.jar(!META-INF/*)
+-injars ../dist/lib/jme-awt.jar(!META-INF/*)
+-injars ../dist/lib/jme-sound.jar(!META-INF/*,!**/fmod/**)
+-injars ../dist/lib/jme-gamestates.jar(!META-INF/*)
+-injars ../dist/lib/jme-scene.jar(!META-INF/*)
+-injars ../dist/lib/jme-bui.jar(!META-INF/*,!**/tests/**)
+-injars ../dist/lib/threerings.jar(**/coin/**,**/IdentUtil*.class)
+-injars ../dist/lib/hemiptera.jar(!**/web/**,!**/persist/**,!install.properties)
+-injars ../dist/lib/jorbis-0.0.12.jar(!META-INF/*)
+-injars ../dist/lib/jogg-0.0.5.jar(!META-INF/*)
 -injars ../dist/bang-code.jar(!META-INF/*,!**/tools/**,!**/tests/**)
 
 -libraryjars <java.home>/lib/rt.jar
--libraryjars ../lib/lwjgl.jar
--libraryjars ../lib/commons-beanutils.jar
--libraryjars ../lib/commons-digester.jar
--libraryjars ../lib/commons-logging.jar
+-libraryjars ../dist/lib/lwjgl.jar
+-libraryjars ../dist/lib/commons-beanutils.jar
+-libraryjars ../dist/lib/commons-digester.jar
+-libraryjars ../dist/lib/commons-logging.jar
 
 # -dontoptimize
 # -dontobfuscate
