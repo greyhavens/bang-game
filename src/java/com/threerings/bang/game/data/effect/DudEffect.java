@@ -55,4 +55,12 @@ public class DudEffect extends SetHindranceEffect
     {
         return "frontier_town/dud";
     }
+
+    @Override // from Effect
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        // don't report to the player that the dud was played on their unit,
+        // they'll find out when they next shoot
+        return null;
+    }
 }

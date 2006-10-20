@@ -54,4 +54,12 @@ public class MisfireEffect extends SetHindranceEffect
     {
         return "frontier_town/misfire";
     }
+
+    @Override // from Effect
+    public String getDescription (BangObject bangobj, int pidx)
+    {
+        // don't report to the player that the misfire was played on their
+        // unit, they'll find out when they next shoot
+        return null;
+    }
 }
