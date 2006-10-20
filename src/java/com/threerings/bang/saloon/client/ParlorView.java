@@ -47,7 +47,7 @@ public class ParlorView extends ShopView
         // add our various interface components
         add(new BLabel(_msgs.get("m.title"), "shop_status"),
             new Rectangle(266, 656, 491, 33));
-        add(new WalletLabel(ctx, true), new Rectangle(25, 37, 150, 40));
+        add(new WalletLabel(ctx, true), new Rectangle(25, 40, 150, 40));
         add(createHelpButton(), new Point(800, 25));
         add(new BButton(_msgs.get("m.to_saloon"), this, "to_saloon"),
             new Point(870, 25));
