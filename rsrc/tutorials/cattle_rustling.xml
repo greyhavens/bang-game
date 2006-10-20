@@ -32,8 +32,8 @@
 
   <!-- have the AI rebrand the cattle, have the player rebrand it back -->
   <center_on what="piece" id="1002"/>
-  <move_unit id="1003" target="1002"/>
-  <wait event="effect:frontier_town/cow/branded"/>
+  <move_unit_and_wait id="1003" target="1002" 
+        event="effect:frontier_town/cow/branded"/>
   <text message="cattle_rerebranding" step="2"/>
   <wait event="effect:frontier_town/cow/branded"/>
 
