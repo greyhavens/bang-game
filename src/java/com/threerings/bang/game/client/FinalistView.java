@@ -19,6 +19,7 @@ import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.ResultListener;
 import com.threerings.util.Name;
+import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
@@ -55,7 +56,12 @@ public class FinalistView extends BContainer
             new BImage(medal.getSubimage(mwidth * pidx, 0, mwidth, mheight)));
 
         // load up our background
-        _background = ctx.loadImage("ui/postgame/background" + rank + ".png");
+        Colorization[] zations = {
+            ctx.getAvatarLogic().getColorPository().getColorization(
+                    "metal", rank + 1)
+        };
+        _background = ctx.getImageCache().createColorizedBImage(
+                "ui/postgame/background.png", zations, false);
 
         // create our avatar imagery
         boolean winner = (rank == 0);
@@ -125,7 +131,8 @@ public class FinalistView extends BContainer
         super.renderBackground(renderer);
 
         int ax = (_width - _avatar.getWidth())/2, ay = _banner.getHeight()/2;
-        _background.render(renderer, ax, ay, _alpha);
+        _background.render(renderer, ax, ay, 
+                _avatar.getWidth(), _avatar.getHeight(), _alpha);
         _avatar.render(renderer, ax, ay, _alpha);
         _frame.render(renderer, ax-(_frame.getWidth()-_avatar.getWidth())/2,
                       ay-(_frame.getHeight()-_avatar.getHeight())/2, _alpha);
