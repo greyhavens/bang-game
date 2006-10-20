@@ -306,6 +306,7 @@
   <!-- cleans out the compiled code -->
   <target name="clean">
     <delete dir="${deploy.dir}/classes/com"/>
+    <delete><fileset dir="." includes="debug.txt.*"/></delete>
   </target>
 
   <!-- fully cleans out the installed application -->
