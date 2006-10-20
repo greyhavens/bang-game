@@ -112,7 +112,7 @@ public class CattleDelegate extends ScenarioDelegate
     {
         Effect effect = cow.spook(bangobj, spooker, herd);
         if (effect != null) {
-            _bangmgr.deployEffect(spooker.owner, effect);
+            _bangmgr.queueDeployEffect(spooker.owner, effect, false);
         }
     }
     

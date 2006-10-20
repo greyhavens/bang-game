@@ -111,60 +111,9 @@ public class Cow extends Piece
     protected SpookEffect move (BangObject bangobj, int direction,
                                 int owner, int spookerId)
     {
-        // otherwise look around for somewhere nicer to stand
-        _moves.clear();
-        bangobj.board.computeMoves(this, _moves, null);
-        int[] coords = _moves.toIntArray();
-        ArrayUtil.shuffle(coords);
-
-        // move any coords containing train tracks to the end
-        int tidx = coords.length;
-        for (int ii = 0; ii < tidx; ) {
-            if (bangobj.getTracks().containsKey(coords[ii])) {
-                int tmp = coords[--tidx];
-                coords[tidx] = coords[ii];
-                coords[ii] = tmp;
-            } else {
-                ii++;
-            }
-        }
-        
-        // first look for a coordinate in the direction that we want to move
-        // (that's not a track)
-        int nx = x, ny = y;
-        for (int ii = 0; ii < tidx; ii++) {
-            int hx = PointSet.decodeX(coords[ii]);
-            int hy = PointSet.decodeY(coords[ii]);
-            if (whichDirection(hx, hy) == direction) {
-                nx = hx;
-                ny = hy;
-                break;
-            }
-        }
-
-        // if that failed, go with anything that works
-        if (nx == x && ny == y && coords.length > 0) {
-            nx = PointSet.decodeX(coords[0]);
-            ny = PointSet.decodeY(coords[0]);
-        }
-
-        SpookEffect spook = new SpookEffect();
+        SpookEffect spook = new SpookEffect(owner, spookerId, direction);
         spook.init(this);
-        spook.owner = owner;
-        spook.spookerId = spookerId;
-        spook.nx = (short)nx;
-        spook.ny = (short)ny;
         return spook;
-    }
-
-    protected int whichDirection (int nx, int ny)
-    {
-        if (nx == x) {
-            return (ny < y) ? NORTH : SOUTH;
-        } else if (ny == y) {
-            return (nx < x) ? WEST : EAST;
-        }
-        return -1;
     }
 
     /** Used for temporary calculations. */
