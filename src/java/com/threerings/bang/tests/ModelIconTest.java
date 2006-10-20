@@ -31,8 +31,11 @@ public class ModelIconTest extends TestApp
 
     protected void createInterface (BWindow window)
     {
-        window.add(new UnitIcon(_ctx, UnitConfig.getConfig("steamgunman")));
-        window.add(new UnitIcon(_ctx, UnitConfig.getConfig("gunslinger")));
-        window.add(new UnitIcon(_ctx, UnitConfig.getConfig("dirigible")));
+        for (String type : TYPES) {
+            window.add(new UnitIcon(_ctx, UnitConfig.getConfig(type, true)));
+        }
     }
+
+    protected static final String[] TYPES = {
+        "steamgunman", "gunslinger", "dirigible" };
 }

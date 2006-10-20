@@ -88,7 +88,7 @@ public class UnitSprite extends MobileSprite
     public UnitSprite (String type)
     {
         super("units", type);
-        UnitConfig uconfig = UnitConfig.getConfig(type);
+        UnitConfig uconfig = UnitConfig.getConfig(type, true);
         _name = uconfig.model;
         _variant = uconfig.variant;
     }

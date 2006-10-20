@@ -151,14 +151,23 @@ public class UnitConfig
 
     /**
      * Returns the unit configuration for the specified unit type.
+     *
+     * @param require if true and the requested configuration is unknown, a
+     * warning and stack trace will be logged. If false, null will be silently
+     * returned for an unknown unit type. This allows certain situations to
+     * proceed, for example a player may have ITP Big Shots in their inventory
+     * but be playing on a client that has never visited ITP and thus does not
+     * know about ITP units.
      */
-    public static UnitConfig getConfig (String type)
+    public static UnitConfig getConfig (String type, boolean require)
     {
         ensureUnitsRegistered();
         UnitConfig config = _types.get(type);
         if (config == null) {
-            log.warning("Requested unknown unit config '" + type + "'!");
-            Thread.dumpStack();
+            if (require) {
+                log.warning("Requested unknown unit config '" + type + "'!");
+                Thread.dumpStack();
+            }
         }
         return config;
     }

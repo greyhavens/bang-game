@@ -46,7 +46,7 @@ public class UnitPassGood extends Good
     {
         // make sure the player doesn't already have the badge requirement for
         // this unit or the pass itself
-        UnitConfig uc = UnitConfig.getConfig(getUnitType());
+        UnitConfig uc = UnitConfig.getConfig(getUnitType(), true);
         return (uc == null) ? false : !uc.hasAccess(user);
     }
 

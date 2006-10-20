@@ -61,7 +61,7 @@ public class Unit extends Piece
      */
     public static Unit getUnit (String type)
     {
-        UnitConfig config = UnitConfig.getConfig(type);
+        UnitConfig config = UnitConfig.getConfig(type, true);
         Unit unit = null;
         try {
             if (config.unitClass != null) {
@@ -200,7 +200,7 @@ public class Unit extends Piece
         throws IOException, ClassNotFoundException
     {
         in.defaultReadObject();
-        init(UnitConfig.getConfig(in.readUTF()));
+        init(UnitConfig.getConfig(in.readUTF(), true));
     }
 
     /** Writes some custom information for this piece. */

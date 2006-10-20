@@ -126,7 +126,7 @@ public class PlayerManager
         }
 
         // sanity check: make sure the big shot is valid
-        UnitConfig config = UnitConfig.getConfig(type);
+        UnitConfig config = UnitConfig.getConfig(type, false);
         if (config == null ||
             ListUtil.indexOf(RanchCodes.STARTER_BIGSHOTS, config.type) == -1) {
             log.warning("Player requested invalid free big shot " +

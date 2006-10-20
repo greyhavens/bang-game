@@ -41,7 +41,7 @@ public class RanchManager extends PlaceManager
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
-        UnitConfig config = UnitConfig.getConfig(type);
+        UnitConfig config = UnitConfig.getConfig(type, false);
         if (config == null) {
             log.warning("Requested to recruit bogus unit [who=" + user.who() +
                         ", type=" + type + "].");

@@ -58,7 +58,8 @@ public class FirstBigShotView extends BDecoratedWindow
 
         UnitConfig[] units = new UnitConfig[RanchCodes.STARTER_BIGSHOTS.length];
         for (int ii = 0; ii < units.length; ii++) {
-            units[ii] = UnitConfig.getConfig(RanchCodes.STARTER_BIGSHOTS[ii]);
+            units[ii] = UnitConfig.getConfig(
+                RanchCodes.STARTER_BIGSHOTS[ii], true);
         }
         _bigshots = new UnitPalette(ctx, this, units.length, 1);
         _bigshots.setShowNavigation(false);

@@ -94,7 +94,13 @@ public class UnitPalette extends IconPalette
         for (Item item : user.inventory) {
             if (item instanceof BigShotItem) {
                 BigShotItem bsitem = (BigShotItem)item;
-                UnitConfig config = UnitConfig.getConfig(bsitem.getType());
+                UnitConfig config =
+                    UnitConfig.getConfig(bsitem.getType(), false);
+                if (config == null) {
+                    // we may be seeing our ITP bigshots on a client that has
+                    // never been to ITP... no problem, just skip 'em
+                    continue;
+                }
                 if (filterTown && BangUtil.getTownIndex(user.townId) <
                     BangUtil.getTownIndex(config.getTownId())) {
                     continue;
