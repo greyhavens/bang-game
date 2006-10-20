@@ -30,6 +30,7 @@
     <include name="${libs.dir}/getdown.jar"/>
     <include name="${libs.dir}/junit-3.7.jar"/>
     <include name="${libs.dir}/mysql-connector-java-3.1.12-bin.jar"/>
+    <include name="${libs.dir}/proguard.jar"/>
     <include name="${libs.dir}/servlet-2.3.jar"/>
     <include name="${libs.dir}/velocity-1.5-dev.jar"/>
     <include name="${project.dir}/narya/dist/narya-tools.jar"/>
@@ -40,9 +41,11 @@
     <include name="lib/jme-effects.jar"/>
     <include name="lib/jme-gamestates.jar"/>
     <include name="lib/jme-model.jar"/>
-    <include name="lib/jme-sound.jar"/>
+    <include name="lib/jme-scene.jar"/>
     <include name="lib/jme-sound.jar"/>
     <include name="lib/jme-terrain.jar"/>
+    <include name="lib/jorbis-0.0.12.jar"/>
+    <include name="lib/jogg-0.0.5.jar"/>
     <include name="lib/hemiptera.jar"/>
   </fileset>
 
@@ -353,7 +356,7 @@
   <target name="baseclient" depends="dist,mdist">
     <!-- generate the all-in-wonder jar file -->
     <taskdef resource="proguard/ant/task.properties"
-             classpath="lib/proguard.jar"/>
+             classpath="${deploy.dir}/lib/proguard.jar"/>
     <proguard configuration="etc/bang-client.pro"/>
 
     <!-- create our directories if necessary -->
@@ -380,11 +383,11 @@
     <copy todir="${client_dir}/code">
       <fileset dir="dist" includes="bang-pcode.jar"/>
       <fileset dir="dist" includes="bang-config.jar"/>
-      <fileset dir="lib" includes="lwjgl.jar"/>
-      <fileset dir="lib" includes="lwjgl_util.jar"/>
-      <fileset dir="lib" includes="commons-beanutils.jar"/>
-      <fileset dir="lib" includes="commons-digester.jar"/>
-      <fileset dir="lib" includes="commons-logging.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="lwjgl.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="lwjgl_util.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="commons-beanutils.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="commons-digester.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="commons-logging.jar"/>
     </copy>
     <copy file="projects/tools/lib/java/getdown-pro.jar"
           tofile="${client_dir}/code/getdown-pro-new.jar"/>
@@ -412,8 +415,8 @@
     <taskdef name="digest"
       classname="com.threerings.getdown.tools.DigesterTask">
      <classpath>
-       <pathelement path="lib/samskivert.jar"/>
-       <pathelement path="lib/getdown.jar"/>
+       <pathelement path="${deploy.dir}/lib/samskivert.jar"/>
+       <pathelement path="${deploy.dir}/lib/getdown.jar"/>
      </classpath>
     </taskdef>
     <digest appdir="${client_dir}"/>
