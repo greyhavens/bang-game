@@ -145,7 +145,7 @@
 
   <!-- encodes our sounds to ogg and enumerates them into a master list -->
   <target name="sounds">
-    <exec executable="bin/encode_sounds"/> 
+    <exec executable="${basedir}/bin/encode_sounds"/> 
     <exec executable="find" output="rsrc/sounds.txt">
       <arg value="rsrc"/>
       <arg value="-name"/>
@@ -166,7 +166,7 @@
 
   <!-- enumerates all of our units, props, etc. into master lists -->
   <target name="lists">
-    <exec executable="bin/update_lists"/>
+    <exec executable="${basedir}/bin/update_lists"/>
   </target>
 
   <!-- builds bundles for a specific town -->
