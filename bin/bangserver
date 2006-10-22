@@ -4,30 +4,24 @@
 #
 # Command line launcher for the Bang! development server
 
-ROOT=`dirname $0`/..
+BANG_HOME=`dirname $0`/..
 CLASS=com.threerings.bang.server.BangServer
 HOSTNAME=`hostname`
 
 # this may be overridden layer
 NODE="frontier_town"
-
-SARGS="-server -Djava.awt.headless=true"
-SARGS="$SARGS -Dbang.home=$ROOT -Dhostname=$HOSTNAME -Dis_node=true"
-SARGS="$SARGS -Dresource_dir=$ROOT/rsrc -Dno_unpack_resources=true"
-
-# extract -D arguments so that we can put them before the classname
-while [ ! -z "$1" ]; do
-    case "$1" in
-        -D*)
-            SARGS="$SARGS $1"
-            ;;
-
-        *)
-            NODE="$1"
-            ;;
-    esac
+if [ ! -z "$1" ]; then
+    NODE="$1"
     shift
-done
-SARGS="$SARGS -Dnode=$NODE"
+fi
 
-$ROOT/bin/runjava -- $SARGS $CLASS $ARGS
+SERVER_MEMORY=384M
+if [ -f $BANG_HOME/server.conf ]; then
+    . $BANG_HOME/server.conf
+else
+    echo "Can't load $BANG_HOME/server.conf; can't run tool."
+    exit 255
+fi
+
+$BANG_HOME/bin/bangjava -server -Djava.awt.headless=true -mx$SERVER_MEMORY \
+  -Dhostname=$HOSTNAME -Dnode=$NODE -Dis_node=true $CLASS $*

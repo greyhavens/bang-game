@@ -4,33 +4,4 @@
 #
 # Command line launcher for the Bang! editor
 
-BANG_HOME=`dirname $0`
-BANG_HOME=`cd $BANG_HOME/.. ; pwd`
-ARGS=""
-JARGS="-Dresource_dir=$BANG_HOME/rsrc -Dno_unpack_resources=true"
-
-# parse our arguments
-while [ ! -z "$1" ]; do
-    case "$1" in
-        -build)
-            ant
-            if [ $? != 0 ]; then
-                echo "Compilation failed."
-                exit 255
-            fi
-            ;;
-
-        *)
-            ARGS="$ARGS $1"
-            ;;
-    esac
-    shift
-done
-
-# load resources directly from the rsrc directory
-export CLASSPATH=$BANG_HOME
-CLASS=com.threerings.bang.editor.EditorApp
-$BANG_HOME/bin/runjava -- -Dno_log_redir=true $JARGS $CLASS $ARGS
-
-# restore key repeat, which LWJGL borks if the game crashes
-xset r on
+`dirname $0`/bangtest com.threerings.bang.editor.EditorApp $*

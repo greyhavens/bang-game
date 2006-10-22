@@ -2,13 +2,11 @@
 #
 # $Id$
 #
-# Command line launcher for the Bang! development client
+# Command line launcher for Bang! test harnesses
 
 BANG_HOME=`dirname $0`
 BANG_HOME=`cd $BANG_HOME/.. ; pwd`
 ARGS=""
-JARGS="-Dresource_dir=$BANG_HOME/rsrc -Dno_unpack_resources=true"
-JARGS="$JARGS -Dbang.home=$BANG_HOME"
 
 # parse our arguments
 while [ ! -z "$1" ]; do
@@ -28,9 +26,7 @@ while [ ! -z "$1" ]; do
     shift
 done
 
-# load resources directly from the rsrc directory
-export CLASSPATH=$BANG_HOME
-$BANG_HOME/bin/runjava -- -Dno_log_redir=true $JARGS $ARGS
+$BANG_HOME/bin/bangjava -Dno_log_redir=true $ARGS
 
 # restore key repeat, which LWJGL borks if the game crashes
 xset r on

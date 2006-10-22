@@ -7,7 +7,7 @@
 BANG_HOME=`dirname $0`
 BANG_HOME=`cd $BANG_HOME/.. ; pwd`
 ARGS=""
-JARGS="-Dresource_dir=$BANG_HOME/rsrc -Dno_unpack_resources=true"
+JARGS=""
 
 # parse our arguments
 while [ ! -z "$1" ]; do
@@ -64,10 +64,8 @@ while [ ! -z "$1" ]; do
     shift
 done
 
-# load resources directly from the rsrc directory
-export CLASSPATH=$BANG_HOME
 CLASS=com.threerings.bang.client.BangApp
-$BANG_HOME/bin/runjava -- -Dno_log_redir=true $JARGS $CLASS $ARGS
+$BANG_HOME/bin/bangjava -Dno_log_redir=true $JARGS $CLASS $ARGS
 
 # restore key repeat, which LWJGL borks if the game crashes
 xset r on

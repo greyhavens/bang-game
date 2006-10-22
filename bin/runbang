@@ -84,7 +84,7 @@ CLASSPATH=$BANG_HOME:$CLASSPATH
 export CLASSPATH
 
 # Set up the LD_LIBRARY_PATH to include our shared libraries
-LD_LIBRARY_PATH=$BANG_HOME/lib/`uname -m`-`uname -s`
+LD_LIBRARY_PATH=$BANG_HOME/dist/lib/`uname -m`-`uname -s`
 export LD_LIBRARY_PATH
 
 # Create the logfile
