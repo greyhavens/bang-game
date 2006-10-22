@@ -8,19 +8,15 @@ ROOT=`dirname $0 | sed s:/bin$::`
 MIRROR=/export/tools/bin/mirror
 cd $ROOT
 
-# mirror the library files
-echo "** Mirroring libraries..."
-$MIRROR lib/*.jar lib/i?86-*/lib*.so
+# mirror the code
+echo "** Mirroring jar files..."
+$MIRROR dist/lib/*.jar dist/lib/*/lib*.so dist/*.jar
 
-# mirror the project jar files
-echo "** Mirroring project jars..."
-$MIRROR dist/*.jar projects/*/dist/*.jar
-
-# mirror the project jar files
+# mirror the media
 echo "** Mirroring resources and boards..."
 $MIRROR `find rsrc -name '*.jar' -o -name '*.board'`
 
-# mirror the configuration files
+# mirror the configuration
 echo "** Mirroring configuration files..."
 $MIRROR server.conf *.properties build.xml log/README \
     rsrc/config/resource/manager.properties
