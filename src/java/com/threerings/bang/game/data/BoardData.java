@@ -171,6 +171,9 @@ public class BoardData
         ArrayList<Piece> plist = new ArrayList<Piece>();
         for (int ii = 0; ii < pcount; ii++) {
             Piece p = readPiece(oin);
+            if (p == null) {
+                continue;
+            }
             if (!(p instanceof Viewpoint) && !rect.contains(p.x, p.y)) {
                 log.warning("Rececting OOB piece " + p + ".");
             } else {
@@ -231,6 +234,10 @@ public class BoardData
             piece = new Viewpoint();
         } else {
             piece = Prop.getProp(type);
+        }
+        if (piece == null) {
+            log.warning("Unknown piece type [type=" + type + "].");
+            return null;
         }
         piece.unpersistFrom(oin, scenIds);
         return piece;
