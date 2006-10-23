@@ -296,8 +296,8 @@
   <target name="avatars" depends="catalogs">
     <taskdef name="metabundle" classpathref="classpath"
       classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
-    <metabundle actiondef="rsrc/avatars/actions.xml"
-      classdef="rsrc/avatars/classes.xml" target="rsrc/avatars/metadata.jar"/>
+    <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
+      classdef="${basedir}/rsrc/avatars/classes.xml" target="rsrc/avatars/metadata.jar"/>
     <ant target="bundles" dir="rsrc/avatars" antfile="build.xml"/>
   </target>
 
