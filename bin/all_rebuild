@@ -50,9 +50,19 @@ fi
 # bookkeeping
 echo "*** Starting build in $ROOT at" `date`
 
+# update if requested
+if [ ! -z "$UPDATE" ]; then
+    svn update
+    if [ $? != 0 ] ; then
+        echo >&2 "*** svn update failed in $ROOT"
+        rm -f $LOCKFILE
+        exit 255
+    fi
+fi
+
 # build the main thang
 cd $ROOT
-$ANT cleanall $UPDATE distall
+$ANT cleanall distall
 if [ $? != 0 ]; then
     rm -f $LOCKFILE
     exit 255
