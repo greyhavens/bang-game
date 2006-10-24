@@ -22,6 +22,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.crowd.data.OccupantInfo;
 
 import com.threerings.bang.chat.client.PlaceChatView;
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.InvitePardnerDialog;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.WantedPosterView;
@@ -135,6 +136,7 @@ public class FolkCell extends BContainer
 
             setStyleClass("folk_menu");
             addListener(this);
+            setLayer(BangUI.POPUP_MENU_LAYER);
 
             MessageBundle bangMsgs =
                 _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);

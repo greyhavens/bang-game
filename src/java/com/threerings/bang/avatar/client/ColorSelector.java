@@ -32,6 +32,7 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.avatar.util.ColorConstraints;
+import com.threerings.bang.client.BangUI;
 
 /**
  * Displays a popup menu in which the user can select a particular colorization
@@ -141,6 +142,7 @@ public class ColorSelector extends BComponent
                     _menu = new BPopupMenu(getWindow(), true);
                     _menu.setStyleClass("color_selector_popup");
                     _menu.addListener(_listener);
+                    _menu.setLayer(BangUI.POPUP_MENU_LAYER);
                     _menu.addMenuItem(new SwatchMenuItem(_selidx, true));
                     for (int ii = 0; ii < _swatches.length; ii++) {
                         _menu.addMenuItem(new SwatchMenuItem(ii, false));

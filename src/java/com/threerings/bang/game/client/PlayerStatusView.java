@@ -42,6 +42,7 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
@@ -499,7 +500,7 @@ public class PlayerStatusView extends BContainer
         {
             super(PlayerStatusView.this.getWindow());
             addListener(this);
-            setLayer(3);
+            setLayer(BangUI.POPUP_MENU_LAYER);
 
             PlayerObject player = _ctx.getUserObject();
             _playerId = playerId;

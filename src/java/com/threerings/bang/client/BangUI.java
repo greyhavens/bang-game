@@ -84,6 +84,9 @@ public class BangUI
     /** The default max length of any text field. */
     public static final int TEXT_FIELD_MAX_LENGTH = 300;
 
+    /** The default layer for BPopupMenus. */
+    public static final int POPUP_MENU_LAYER = 5;
+
     /** A font used to render counters in the game. */
     public static Font COUNTER_FONT;
 

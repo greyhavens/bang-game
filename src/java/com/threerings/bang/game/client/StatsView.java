@@ -12,7 +12,6 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BMenuItem;
-import com.jmex.bui.BPopupMenu;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.Spacer;

@@ -77,6 +77,7 @@ public class PlayerPopupMenu extends BPopupMenu
         _ctx = ctx;
         _handle = handle;
         addListener(this);
+        setLayer(BangUI.POPUP_MENU_LAYER);
 
         MessageBundle msgs = ctx.getMessageManager().getBundle(
             BangCodes.BANG_MSGS);
