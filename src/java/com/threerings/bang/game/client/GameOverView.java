@@ -58,8 +58,8 @@ public class GameOverView extends SteelWindow
                 "ui/postgame/" + info.getIdent() + "_on.png");
         BufferedImage off = ctx.getImageCache().getBufferedImage(
                 "ui/postgame/" + info.getIdent() + "_off.png");
-        int width = on.getWidth() * (small ? 0.5 : 1), 
-            height = on.getHeight() * (small ? 0.5 : 1);
+        int width = (int)(on.getWidth() * (small ? 0.5 : 1)), 
+            height = (int)(on.getHeight() * (small ? 0.5 : 1));
         BufferedImage bar = ctx.getImageCache().createCompatibleImage(
                 width, height, true);
         Graphics2D g = bar.createGraphics();
