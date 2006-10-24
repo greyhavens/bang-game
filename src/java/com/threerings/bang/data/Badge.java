@@ -258,6 +258,11 @@ public class Badge extends Item
                     10000;
             }
         },
+        NUGGETS_CLAIMED_5 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: 10 nuggets in a round
+            }
+        },
 
         // cattle rustled badges
         CATTLE_RUSTLED_1 {
@@ -280,6 +285,11 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.CATTLE_RUSTLED) >= 10000;
             }
         },
+        CATTLE_RUSTLED_5 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: all cattle branded at same time
+            }
+        },
 
         // homesteads claimed badges
         STEADS_CLAIMED_1 {
@@ -297,7 +307,16 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.STEADS_CLAIMED) >= 500;
             }
         },
-        // TODO: two land grab specials
+        STEADS_DESTROYED_1 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: STEADS_DESTROYED >= 10
+            }
+        },
+        STEADS_DESTROYED_2 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: STEADS_DESTROYED >= 50
+            }
+        },
 
         // totems stacked badges
         TOTEMS_STACKED_1 {
@@ -329,27 +348,27 @@ public class Badge extends Item
         // trees saved badges
         TREES_SAVED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TREES_SAPLING) >= 50;
+                return false; // TODO: five perfect waves
             }
         },
         TREES_SAVED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TREES_MATURE) >= 50;
+                return user.stats.getIntStat(Stat.Type.TREES_ELDER) >= 250;
             }
         },
         TREES_SAVED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TREES_ELDER) >= 50;
+                return false; // TODO: 20+ trees saved in one game
             }
         },
         TREES_SAVED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TREES_MATURE) >= 500;
+                return false; // TODO: player kills N hard robots in one round
             }
         },
         TREES_SAVED_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TREES_ELDER) >= 250;
+                return false; // TODO: complete a wave at 10 saws difficulty
             }
         },
 
@@ -357,22 +376,31 @@ public class Badge extends Item
         WENDIGO_SURVIVALS_1 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(
-                    Stat.Type.WENDIGO_SURVIVALS) >= 100;
+                    Stat.Type.WENDIGO_SURVIVALS) >= 30;
             }
         },
         WENDIGO_SURVIVALS_2 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(
-                    Stat.Type.WENDIGO_SURVIVALS) >= 1000;
+                    Stat.Type.WENDIGO_SURVIVALS) >= 500;
             }
         },
         WENDIGO_SURVIVALS_3 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(
-                    Stat.Type.WENDIGO_SURVIVALS) >= 10000;
+                    Stat.Type.WENDIGO_SURVIVALS) >= 5000;
             }
         },
-        // TODO: two wendigo attack specials
+        WENDIGO_SURVIVALS_4 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: 100 talisman+safespot survivals
+            }
+        },
+        WENDIGO_SURVIVALS_5 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: 50 whole team survivals
+            }
+        },
 
         // frontier town unit usage badges
         CAVALRY_USER {
