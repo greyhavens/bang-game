@@ -637,13 +637,13 @@ public class Badge extends Item
 
         // frontier town badges
         Type.NUGGETS_CLAIMED_1, Type.NUGGETS_CLAIMED_2, Type.NUGGETS_CLAIMED_3,
-        Type.NUGGETS_CLAIMED_4, null,
+        Type.NUGGETS_CLAIMED_4, Type.NUGGETS_CLAIMED_5,
 
         Type.CATTLE_RUSTLED_1, Type.CATTLE_RUSTLED_2, Type.CATTLE_RUSTLED_3,
-        Type.CATTLE_RUSTLED_4, null,
+        Type.CATTLE_RUSTLED_4, Type.CATTLE_RUSTLED_5,
 
         Type.STEADS_CLAIMED_1, Type.STEADS_CLAIMED_2, Type.STEADS_CLAIMED_3,
-        null, null,
+        Type.STEADS_DESTROYED_1, Type.STEADS_DESTROYED_2,
 
         Type.CAVALRY_USER, Type.TACTICIAN_USER, Type.CODGER_USER,
         Type.FT_BIGSHOT_USER, Type.FT_ALLUNIT_USER,
@@ -656,7 +656,8 @@ public class Badge extends Item
         Type.TREES_SAVED_4, Type.TREES_SAVED_5,
 
         Type.WENDIGO_SURVIVALS_1, Type.WENDIGO_SURVIVALS_2,
-        Type.WENDIGO_SURVIVALS_3, null, null,
+        Type.WENDIGO_SURVIVALS_3, Type.WENDIGO_SURVIVALS_4,
+        Type.WENDIGO_SURVIVALS_5,
 
         Type.STORM_CALLER_USER, Type.TRICKSTER_RAVEN_USER,
         Type.REVOLUTIONARY_USER, Type.ITP_BIGSHOT_USER, Type.ITP_ALLUNIT_USER,
