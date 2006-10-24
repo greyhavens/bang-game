@@ -607,13 +607,13 @@ public class Badge extends Item
         Type.GAMES_PLAYED_4, Type.GAMES_PLAYED_5,
 
         Type.UNITS_KILLED_1, Type.UNITS_KILLED_2, Type.UNITS_KILLED_3,
-        Type.UNITS_LOST_1, Type.UNITS_LOST_2,
+        null, null,
 
         Type.HIGHEST_POINTS_1, Type.HIGHEST_POINTS_2,
         Type.CONSEC_KILLS_1, Type.CONSEC_KILLS_2, Type.CONSEC_KILLS_3,
 
         Type.CONSEC_WINS_1, Type.CONSEC_WINS_2, Type.CONSEC_WINS_3,
-        Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,
+        null, null,
 
         Type.SHOTS_FIRED_1, Type.SHOTS_FIRED_2,
         Type.DISTANCE_MOVED_1, Type.DISTANCE_MOVED_2, Type.DISTANCE_MOVED_3,
@@ -660,6 +660,10 @@ public class Badge extends Item
 
         Type.STORM_CALLER_USER, Type.TRICKSTER_RAVEN_USER,
         Type.REVOLUTIONARY_USER, Type.ITP_BIGSHOT_USER, Type.ITP_ALLUNIT_USER,
+
+        // you suck badges
+        Type.UNITS_LOST_1, Type.UNITS_LOST_2, null,
+        Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,
 
         // general non-series (wacky) badges
         Type.IRON_HORSE, Type.SAINT_NICK, Type.NIGHT_OWL,
