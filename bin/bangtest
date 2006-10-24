@@ -20,7 +20,7 @@ while [ ! -z "$1" ]; do
             ;;
 
         *)
-            ARGS="$ARGS $1"
+            ARGS="$ARGS '$1'"
             ;;
     esac
     shift
@@ -30,7 +30,7 @@ done
 cd $BANG_HOME
 ant copyresults
 
-$BANG_HOME/bin/bangjava -Dno_log_redir=true $ARGS
+eval $BANG_HOME/bin/bangjava -Dno_log_redir=true $ARGS
 
 # restore key repeat, which LWJGL borks if the game crashes
 xset r on

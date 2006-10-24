@@ -54,11 +54,11 @@ while [ ! -z "$1" ]; do
             ;;
 
         -D*)
-            JARGS="$JARGS $1"
+            JARGS="$JARGS '$1'"
             ;;
 
         *)
-            ARGS="$ARGS $1"
+            ARGS="$ARGS '$1'"
             ;;
     esac
     shift
@@ -69,7 +69,7 @@ cd $BANG_HOME
 ant copyresults
 
 CLASS=com.threerings.bang.client.BangApp
-$BANG_HOME/bin/bangjava -Dno_log_redir=true $JARGS $CLASS $ARGS
+eval $BANG_HOME/bin/bangjava -Dno_log_redir=true $JARGS $CLASS $ARGS
 
 # restore key repeat, which LWJGL borks if the game crashes
 xset r on

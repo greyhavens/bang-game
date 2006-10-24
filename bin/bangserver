@@ -5,7 +5,6 @@
 # Command line launcher for the Bang! development server
 
 BANG_HOME=`dirname $0`/..
-CLASS=com.threerings.bang.server.BangServer
 HOSTNAME=`hostname`
 
 # this may be overridden layer
@@ -27,5 +26,6 @@ fi
 cd $BANG_HOME
 ant copyresults
 
+CLASS=com.threerings.bang.server.BangServer
 $BANG_HOME/bin/bangjava -server -Djava.awt.headless=true -mx$SERVER_MEMORY \
-  -Dhostname=$HOSTNAME -Dnode=$NODE -Dis_node=true $CLASS $*
+  -Dhostname=$HOSTNAME -Dnode=$NODE -Dis_node=true $CLASS "$@"

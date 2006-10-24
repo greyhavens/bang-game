@@ -25,11 +25,11 @@ JAVA_ARGS="-Dno_unpack_resources=true \
 while [ ! -z "$1" ]; do
     case "$1" in
         -D*)
-            JAVA_ARGS="$JAVA_ARGS $1"
+            JAVA_ARGS="$JAVA_ARGS '$1'"
             ;;
 
         *)
-            ARGS="$ARGS $1"
+            ARGS="$ARGS '$1'"
             ;;
     esac
     shift
@@ -56,4 +56,5 @@ LD_LIBRARY_PATH=$BANG_HOME/dist/lib/`uname -m`-`uname -s`
 export LD_LIBRARY_PATH
 
 # do the deed
-$JAVA_VM $JAVA_ARGS $ARGS
+echo $JAVA_VM $JAVA_ARGS $ARGS
+eval $JAVA_VM $JAVA_ARGS $ARGS
