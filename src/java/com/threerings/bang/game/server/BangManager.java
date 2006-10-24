@@ -1609,6 +1609,39 @@ public class BangManager extends GameManager
                     }
                 }
             }
+            // calculate per round rankings
+            RankRecord[] ranks = new RankRecord[_bangobj.points.length];
+            for (int ii = 0; ii < ranks.length; ii++) {
+                ranks[ii] = new RankRecord(
+                    ii, _bangobj.perRoundPoints[_activeRoundId][ii],
+                    _rounds[_activeRoundId].stats[ii].getIntStat(
+                        Stat.Type.UNITS_KILLED),
+                    (isActivePlayer(ii) ? 1 : 0));
+            }
+            // we'll allow ties in the per round rankings
+            Arrays.sort(ranks);
+            short rank = 0;
+            boolean coop = (_bangobj.scenario.getTeams() == 
+                    ScenarioInfo.Teams.COOP);
+            if (coop) {
+                int avgscore = (IntListUtil.sum(_bangobj.points) / 
+                        _bangobj.points.length);
+                rank = (short)(BangObject.COOP_RANK + 
+                    BangServer.ratingmgr.getPercentile(
+                        _bangobj.scenario.getIdent(), ranks.length, 
+                        avgscore, false)); 
+            }
+            int high = _bangobj.points[ranks[0].pidx];
+            for (int ii = 0; ii < ranks.length; ii++) {
+                if (!coop) {
+                    int points = _bangobj.points[ranks[ii].pidx];
+                    if (points < high) {
+                        rank = (short)ii;
+                        high = points;
+                    }
+                }
+                _bangobj.perRoundRanks[_activeRoundId][ranks[ii].pidx] = rank;
+            }
         }
 
         // record for all players still in the game that they "used" their
@@ -1764,6 +1797,7 @@ public class BangManager extends GameManager
         // broadcast the per-round earnings which will be displayed on one
         // stats panel
         _bangobj.setPerRoundPoints(_bangobj.perRoundPoints);
+        _bangobj.setPerRoundRanks(_bangobj.perRoundRanks);
 
         // record this game to the server stats log (before we sort the awards)
         recordGame(awards, gameSecs);

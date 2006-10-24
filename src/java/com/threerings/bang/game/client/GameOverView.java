@@ -3,11 +3,15 @@
 
 package com.threerings.bang.game.client;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.AffineTransformOp;
+import java.awt.geom.AffineTransform;
 import java.text.NumberFormat;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
@@ -35,6 +39,8 @@ import com.threerings.bang.game.client.BangController;
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.game.data.BangConfig;
 
 /**
  * Displays the results at the end of the game.
@@ -42,6 +48,32 @@ import com.threerings.bang.game.data.GameCodes;
 public class GameOverView extends SteelWindow
     implements ActionListener
 {
+    /**
+     * Creates the BLabel showing the coop performance of a team.
+     */
+    public static BLabel createCoopIcon (
+            BasicContext ctx, ScenarioInfo info, int rank, boolean small)
+    {
+        BufferedImage on = ctx.getImageCache().getBufferedImage(
+                "ui/postgame/" + info.getIdent() + "_on.png");
+        BufferedImage off = ctx.getImageCache().getBufferedImage(
+                "ui/postgame/" + info.getIdent() + "_off.png");
+        int width = on.getWidth() * (small ? 0.5 : 1), 
+            height = on.getHeight() * (small ? 0.5 : 1);
+        BufferedImage bar = ctx.getImageCache().createCompatibleImage(
+                width, height, true);
+        Graphics2D g = bar.createGraphics();
+        AffineTransformOp halfOp = (small ? 
+                new AffineTransformOp(
+                    AffineTransform.getScaleInstance(0.5, 0.5),
+                    AffineTransformOp.TYPE_BILINEAR) :
+                null);
+        g.drawImage(off, halfOp, 0, 0);
+        g.drawImage(on.getSubimage(0, 0, rank * on.getWidth() / 100, 
+                                   on.getHeight()), halfOp, 0, 0);
+        return new BLabel(new ImageIcon(new BImage(bar)));
+    }
+
     /**
      * The constructor used by the actual game.
      */
@@ -71,23 +103,87 @@ public class GameOverView extends SteelWindow
         Award award = null;
 
         _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
-        _contents.add(new Spacer(1, -50)); // kids, don't try this at home
 
         // display the players' avatars in rank order
-        GroupLayout gl = GroupLayout.makeHoriz(GroupLayout.CENTER);
-        gl.setGap(15);
-        BContainer who = new BContainer(gl);
-        for (int ii = 0; ii < bangobj.awards.length; ii++) {
-            int apidx = bangobj.awards[ii].pidx;
-            if (pidx == apidx) {
-                award = bangobj.awards[ii];
-                _cueidx = award.rank;
+        if (bangobj.roundId == 1 && 
+                bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP) {
+            BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
+            _contents.add(row);
+            row.add(new CoopFinalistView(ctx, bangobj));
+            for (int ii = 0; ii < bangobj.awards.length; ii++) {
+                if (pidx == bangobj.awards[ii].pidx) {
+                    award = bangobj.awards[ii];
+                    _cueidx = award.rank;
+                }
             }
-            who.add(new FinalistView(ctx, apidx, bangobj.players[apidx],
-                                     bangobj.playerInfo[apidx].avatar,
-                                     bangobj.awards[ii].rank));
+        } else {
+            _contents.add(new Spacer(1, -50)); // kids, don't try this at home
+            GroupLayout gl = GroupLayout.makeHoriz(GroupLayout.CENTER);
+            gl.setGap(15);
+            BContainer who = new BContainer(gl);
+            GroupLayout vl = GroupLayout.makeVert(GroupLayout.CENTER);
+            vl.setGap(15);
+            BContainer split = new BContainer(vl);
+            BContainer losers = new BContainer(gl);
+            for (int ii = 0; ii < bangobj.awards.length; ii++) {
+                int apidx = bangobj.awards[ii].pidx;
+                if (pidx == apidx) {
+                    award = bangobj.awards[ii];
+                    _cueidx = award.rank;
+                }
+                FinalistView view = new FinalistView(ctx, apidx, 
+                    bangobj.players[apidx], bangobj.playerInfo[apidx].avatar, 
+                    bangobj.awards[ii].rank);
+                if (ii == 0) {
+                    who.add(view);
+                    who.add(split);
+                    if (bangobj.roundId > 1) {
+                        split.add(new Spacer(1, 20));
+                    }
+                    split.add(losers);
+                } else {
+                    losers.add(view);
+                }
+                    
+            }
+
+            // Display a summary of your round ranks for a multi-round game
+            if (bangobj.roundId > 1) {
+                BangConfig bconfig;
+                if (ctrl == null) {
+                    bconfig = new BangConfig();
+                    bconfig.scenarios = new String[] { "tb", "wa", "fg" };
+                } else {
+                    bconfig = (BangConfig)ctrl.getPlaceConfig();
+                }
+                BContainer ranks = new BContainer(new TableLayout(3, 2, 5));
+                for (int ii = 0; ii < bangobj.perRoundRanks.length; ii++) {
+                    ranks.add(new BLabel(msgs.get(
+                        "m.endgame_round", "" + (ii + 1)), "endgame_round"));
+                    String scid = bconfig.scenarios[ii];
+                    ranks.add(new BLabel(msgs.get("m.scenario_" + scid), 
+                               "endgame_desc"));
+                    ScenarioInfo info = ScenarioInfo.getScenarioInfo(scid);
+                    int rank = bangobj.perRoundRanks[ii][pidx];
+                    if (info.getTeams() == ScenarioInfo.Teams.COOP) {
+                        rank -= BangObject.COOP_RANK;
+                        ranks.add(createCoopIcon(_ctx, info, rank, true));
+                    } else {
+                        ranks.add(new BLabel(msgs.get("m.endgame_place",
+                            msgs.get("m.endgame_rank" + rank)), 
+                                    "endgame_desc"));
+                    }
+                                    
+                }
+                ranks.add(new BLabel(msgs.get("m.endgame_overall"), 
+                            "endgame_round"));
+                ranks.add(new Spacer(1, 30));
+                ranks.add(new BLabel(msgs.get("m.endgame_place",
+                    msgs.get("m.endgame_rank" + _cueidx)), "endgame_desc"));
+                split.add(ranks);
+            }
+            _contents.add(who);
         }
-        _contents.add(who);
 
         // display our earnings and awarded badge (if any)
         if (award != null) {

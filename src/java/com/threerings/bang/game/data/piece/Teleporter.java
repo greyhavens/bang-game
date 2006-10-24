@@ -49,10 +49,9 @@ public class Teleporter extends Prop
     {
         if (_group == null) {
             ArrayList<Teleporter> group = new ArrayList<Teleporter>();
-            for (Piece piece : bangobj.pieces) {
-                if (piece instanceof Teleporter &&
-                    ((Teleporter)piece).getType().equals(getType())) {
-                    group.add((Teleporter)piece);
+            for (Teleporter teleporter : bangobj.getTeleporters().values()) {
+                if (teleporter.getType().equals(getType())) {
+                    group.add(teleporter);
                 }
             }
             _group = group.toArray(new Teleporter[group.size()]);

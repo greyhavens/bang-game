@@ -70,6 +70,31 @@ public class AvatarView extends BLabel
     }
 
     /**
+     * Obtains a coop framable (shorter) image for the specified avatar, 
+     * scaled by one over the specified factor.
+     */
+    public static void getCoopFramableImage (
+        BasicContext ctx, int[] avatar, final int reduction,
+        final ResultListener<BImage> receiver)
+    {
+        getImage(ctx, avatar, new ResultListener<BufferedImage>() {
+            public void requestCompleted (BufferedImage base) {
+                BufferedImage cropped = base.getSubimage(
+                    0, (HEIGHT-FRAMED_HEIGHT)/2,
+                    WIDTH, FRAMED_HEIGHT);
+                receiver.requestCompleted(
+                    new BImage(cropped.getScaledInstance(
+                                   WIDTH/reduction,
+                                   FRAMED_HEIGHT/reduction,
+                                   BufferedImage.SCALE_SMOOTH)));
+            }
+            public void requestFailed (Exception cause) {
+                receiver.requestFailed(cause);
+            }
+        });
+    }
+
+    /**
      * Obtains and scales an image for the specified avatar. The source image
      * will be cached.
      */

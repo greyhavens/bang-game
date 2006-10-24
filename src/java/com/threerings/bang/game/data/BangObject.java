@@ -23,6 +23,7 @@ import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Hindrance;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
@@ -181,6 +182,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>perRoundPoints</code> field. */
     public static final String PER_ROUND_POINTS = "perRoundPoints";
 
+    /** The field name of the <code>perRoundRanks</code> field. */
+    public static final String PER_ROUND_RANKS = "perRoundRanks";
+
     /** The field name of the <code>awards</code> field. */
     public static final String AWARDS = "awards";
     // AUTO-GENERATED: FIELDS END
@@ -202,6 +206,9 @@ public class BangObject extends GameObject
 
     /** A {@link #playerStatus} constant used before the game starts. */
     public static final int PLAYER_PREPARING = 2;
+
+    /** An offset for {@link #perRoundRank} for coop ranks. */
+    public static final short COOP_RANK = 100;
 
     /** Contains the representation of the game board. */
     public transient BangBoard board;
@@ -296,6 +303,10 @@ public class BangObject extends GameObject
     /** Points earned per player per round, this is only broadcast to the
      * client at the end of the game. */
     public int[][] perRoundPoints;
+
+    /** Rank for each player in each round, either an individual rank or
+     * the team rank for a coop game. */
+    public short[][] perRoundRanks;
 
     /** Used to report cash and badges awarded at the end of the game. */
     public Award[] awards;
@@ -629,6 +640,28 @@ public class BangObject extends GameObject
             }
         }
         return _tracks;
+    }
+
+    /**
+     * Returns a lazily computed mapping from encoded tile coordinates to
+     * teleporters on the board.
+     */
+    public HashIntMap<Teleporter> getTeleporters ()
+    {
+        if (_teleporterBoardHash == null ||
+            !Arrays.equals(_teleporterBoardHash, boardHash)) {
+            // boardHash is null when testing uploaded boards
+            if (boardHash != null) {
+                _teleporterBoardHash = (byte[])boardHash.clone();
+            }
+            _teleporters = new HashIntMap<Teleporter>();
+            for (Piece piece : pieces) {
+                if (piece instanceof Teleporter) {
+                    _teleporters.put(piece.getCoord(), (Teleporter)piece);
+                }
+            }
+        }
+        return _teleporters;
     }
 
     @Override // documentation inherited
@@ -1245,6 +1278,39 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Requests that the <code>perRoundRanks</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setPerRoundRanks (short[][] value)
+    {
+        short[][] ovalue = this.perRoundRanks;
+        requestAttributeChange(
+            PER_ROUND_RANKS, value, ovalue);
+        this.perRoundRanks = (value == null) ? null : (short[][])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>perRoundRanks</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setPerRoundRanksAt (short[] value, int index)
+    {
+        short[] ovalue = this.perRoundRanks[index];
+        requestElementUpdate(
+            PER_ROUND_RANKS, index, value, ovalue);
+        this.perRoundRanks[index] = value;
+    }
+
+    /**
      * Requests that the <code>awards</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
@@ -1281,4 +1347,8 @@ public class BangObject extends GameObject
     /** Maps encoded tile coordinates to pieces of track on the board. */
     protected transient HashIntMap<Track> _tracks;
     protected transient byte[] _trackBoardHash;
+
+    /** Maps encoded tile coordinates to teleporters on the board. */
+    protected transient HashIntMap<Teleporter> _teleporters;
+    protected transient byte[] _teleporterBoardHash;
 }

@@ -1166,6 +1166,9 @@ public class BangBoard extends SimpleStreamableObject
         if (!_playarea.contains(sx, sy) || !_playarea.contains(dx, dy)) {
             return false;
         }
+        if (Math.abs(sx - dx) + Math.abs(sy - dy) > 1) {
+            return false;
+        }
         if ((isBridge(sx, sy) || isBridge(dx, dy)) && 
                 Math.abs(getElevation(sx, sy) - getElevation(dx, dy)) >
                 MAX_OCCUPIABLE_HEIGHT_DELTA) {

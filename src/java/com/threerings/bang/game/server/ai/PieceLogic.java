@@ -14,6 +14,7 @@ import com.threerings.bang.game.server.BangManager;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.bang.game.util.PointSet;
@@ -99,7 +100,7 @@ public abstract class PieceLogic
     protected Point getClosestPoint (Unit unit, PointSet moves, int dx, int dy)
     {
         List<Point> path = AStarPathUtil.getPath(
-                _bangobj.board, unit.getStepper(), unit,
+                _bangobj.board, getStepper(), unit,
                 getMaxLookahead(), unit.x, unit.y, dx, dy, true);
         if (path == null || path.size() < 2) {
             return null;
@@ -120,6 +121,25 @@ public abstract class PieceLogic
     protected int getMaxLookahead ()
     {
         return _bangobj.board.getWidth() / 2;
+    }
+
+    protected AStarPathUtil.Stepper getStepper ()
+    {
+        return new AStarPathUtil.Stepper () {
+            public void considerSteps (int x, int y)
+            {
+                considerStep(x, y - 1, 1);
+                considerStep(x - 1, y, 1);
+                considerStep(x + 1, y, 1);
+                considerStep(x, y + 1, 1);
+
+                Teleporter teleporter = _bangobj.getTeleporters().get(
+                        Piece.coord(x, y));
+                if (teleporter == null) {
+                    return;
+                }
+            }
+        };
     }
 
     /** Reference to the Bang Manager. */

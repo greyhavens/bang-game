@@ -25,6 +25,8 @@ import com.threerings.bang.game.client.GameOverView;
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
+import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
 
 /**
  * Test harness for the game over view.
@@ -59,6 +61,15 @@ public class GameOverViewTest extends TestApp
         };
         bangobj.playerInfo = new BangObject.PlayerInfo[bangobj.players.length];
         bangobj.awards = new Award[bangobj.players.length];
+        bangobj.roundId = 3;
+        bangobj.scenario = new ForestGuardiansInfo();
+        bangobj.perRoundRanks = new short[][] {
+            { 0, 1, 2, 3 },
+            { 0, 1, 2, 3 },
+            { 155, 155, 155, 155 }
+        };
+        bangobj.state = BangObject.GAME_OVER;
+        bangobj.priorLocation = new BangObject.PriorLocation("saloon", 0);
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
             bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;
