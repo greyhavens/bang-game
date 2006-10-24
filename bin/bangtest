@@ -26,6 +26,10 @@ while [ ! -z "$1" ]; do
     shift
 done
 
+# copy any built jar files into dist/lib
+cd $BANG_HOME
+ant copyresults
+
 $BANG_HOME/bin/bangjava -Dno_log_redir=true $ARGS
 
 # restore key repeat, which LWJGL borks if the game crashes

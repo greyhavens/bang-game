@@ -16,29 +16,29 @@ while [ ! -z "$1" ]; do
             GO=`echo $1 | sed 's:-go=::g'`;
             JARGS="$JARGS -Dgo=$GO";
             ;;
-        
+
         -test=*)
             BOARD=`echo $1 | sed 's:-test=::g'`;
             JARGS="$JARGS -Dboard=\"$BOARD\" -Dtest=true";
             ;;
-        
+
         -test)
             JARGS="$JARGS -Dtest=true";
             ;;
-        
+
         -autoplay)
             JARGS="$JARGS -Dautoplay=true";
             ;;
-            
+
         -tutorial)
             JARGS="$JARGS -Dtutorial=test";
             ;;
-        
+
         -tutorial=*)
             TUTORIAL=`echo $1 | sed 's:-tutorial=::g'`;
             JARGS="$JARGS -Dtutorial=$TUTORIAL";
             ;;
-        
+
         -build)
             ant
             if [ $? != 0 ]; then
@@ -63,6 +63,10 @@ while [ ! -z "$1" ]; do
     esac
     shift
 done
+
+# copy any built jar files into dist/lib
+cd $BANG_HOME
+ant copyresults
 
 CLASS=com.threerings.bang.client.BangApp
 $BANG_HOME/bin/bangjava -Dno_log_redir=true $JARGS $CLASS $ARGS
