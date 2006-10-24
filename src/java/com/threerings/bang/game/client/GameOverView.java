@@ -148,7 +148,7 @@ public class GameOverView extends SteelWindow
             }
 
             // Display a summary of your round ranks for a multi-round game
-            if (bangobj.roundId > 1) {
+            if (bangobj.roundId > 1 && pidx > -1) {
                 BangConfig bconfig;
                 if (ctrl == null) {
                     bconfig = new BangConfig();

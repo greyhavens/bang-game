@@ -35,13 +35,7 @@ import com.threerings.media.image.Colorization;
 public class CoopFinalistView extends BContainer
 {
     /**
-     * Creates a view for the specified player, rank, etc.
-     *
-     * @param pidx the player's index in the game (so we can display a medal of
-     * the correct player color).
-     * @param name the player's name.
-     * @param avatar the player's avatar information.
-     * @param rank the plaer's rank at the end of the game.
+     * Creates a view showing all the players in one frame.
      */
     public CoopFinalistView (BasicContext ctx, BangObject bangobj)
     {
