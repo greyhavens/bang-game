@@ -17,9 +17,16 @@ import static com.threerings.bang.Log.log;
  */
 public class PropConfig
 {
-    /** The name of this prop type (ie. <code>buildings/saloon</code>). */
+    /** The name of this prop type (e.g.,
+     * <code>frontier_town/buildings/saloon</code>). */
     public String type;
 
+    /** The prop model (usually the same as the prop type). */
+    public String model;
+    
+    /** The prop variant, where <code>null</code> is the default. */
+    public String variant;
+    
     /** The width of this prop in tiles. */
     public int width;
 
@@ -97,6 +104,8 @@ public class PropConfig
         // fill in a config instance from the properties file
         PropConfig config = new PropConfig();
         config.type = type;
+        config.model = props.getProperty("model", type);
+        config.variant = props.getProperty("variant");
         config.propClass = props.getProperty("class");
         config.scenario = props.getProperty("scenario");
 

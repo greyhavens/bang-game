@@ -114,7 +114,7 @@ public class PropSprite extends PieceSprite
         
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
-        loadModel("props", _config.type);
+        loadModel("props", _config.model, _config.variant);
     }
 
     @Override // documentation inherited
