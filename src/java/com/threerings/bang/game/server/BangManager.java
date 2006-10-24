@@ -845,6 +845,7 @@ public class BangManager extends GameManager
         int slots = getPlayerSlots();
         _bangobj.points = new int[slots];
         _bangobj.perRoundPoints = new int[_bconfig.scenarios.length][slots];
+        _bangobj.perRoundRanks = new short[_bconfig.scenarios.length][slots];
         for (int ii = 0; ii < _bangobj.perRoundPoints.length; ii++) {
             Arrays.fill(_bangobj.perRoundPoints[ii], -1);
         }
