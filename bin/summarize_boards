@@ -15,6 +15,7 @@
 }
 
 @boards = {}
+@scores = {}
 @scentots = {}
 
 ARGV.each do |file|
@@ -36,7 +37,14 @@ ARGV.each do |file|
     @scentots[scen] = [0, 0, 0] if (@scentots[scen].nil?)
     @scentots[scen][@pcount-2] += 1
     @boards[@name] = {} if (@boards[@name].nil?)
-    @boards[@name][scen] = [] if (@boards[@name][scen].nil?)
+    if (@boards[@name][scen].nil?)
+      @boards[@name][scen] = []
+      if (@scores[@name].nil?)
+        @scores[@name] = (2 ** @scens.index(scen))
+      else
+        @scores[@name] += (2 ** @scens.index(scen))
+      end
+    end
     @boards[@name][scen][@pcount-2] = 1
   end
 end
@@ -59,7 +67,9 @@ print "<tr><th style='border-right: 2px solid'>Board</th>"
 end
 print "</tr>\n"
 
-@boards.keys.sort.each do |name|
+@boards.keys.sort { |aname, bname|
+  @scores[aname] - @scores[bname]
+}.each do |name|
   schash = @boards[name]
   print "<tr><td style='border-right: 2px solid'>#{name}</td>"
   @scens.each do |scen|
@@ -68,14 +78,14 @@ print "</tr>\n"
       print "<td colspan='3' style='border-right: 2px solid'>&nbsp;</td>"
     else
       [0, 1, 2].each do |idx|
-        bgcolor = pcounts[idx].nil? ? "#CCCCCC" : @colors[scen];
+        bgcolor = pcounts[idx].nil? ? "#CCCCCC" : @colors[scen]
         val = pcounts[idx].nil? ? "" : "&middot;"
         border = (idx == 2) ? "style='border-right: 2px solid'" : ""
         print "<td align='center' bgcolor='#{bgcolor}' #{border}>#{val}</td>"
       end
     end
   end
-  print "</tr>\n";
+  print "</tr>\n"
 end
 
 print "<tr><th style='border-right: 2px solid'>#{@boards.size}</th>"
