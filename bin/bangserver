@@ -22,10 +22,6 @@ else
     exit 255
 fi
 
-# copy any built jar files into dist/lib
-cd $BANG_HOME
-ant copyresults
-
 CLASS=com.threerings.bang.server.BangServer
 $BANG_HOME/bin/bangjava -server -Djava.awt.headless=true -mx$SERVER_MEMORY \
   -Dhostname=$HOSTNAME -Dnode=$NODE -Dis_node=true $CLASS "$@"

@@ -64,10 +64,6 @@ while [ ! -z "$1" ]; do
     shift
 done
 
-# copy any built jar files into dist/lib
-cd $BANG_HOME
-ant copyresults
-
 CLASS=com.threerings.bang.client.BangApp
 eval $BANG_HOME/bin/bangjava -Dno_log_redir=true $JARGS $CLASS $ARGS
 

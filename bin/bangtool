@@ -18,4 +18,4 @@ fi
 umask 002
 
 # do the deed
-$BANG_HOME/bin/bangjava -server -Djava.awt.headless=true -mx$TOOL_MEMORY $*
+$BANG_HOME/bin/bangjava -nodevlibs -server -Djava.awt.headless=true -mx$TOOL_MEMORY $*

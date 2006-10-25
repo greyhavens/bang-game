@@ -24,6 +24,10 @@ JAVA_ARGS="-Dno_unpack_resources=true \
 # extract -D arguments so that we can put them before the classname
 while [ ! -z "$1" ]; do
     case "$1" in
+        -nodevlibs)
+            NODEVLIBS=true
+            ;;
+
         -D*)
             JAVA_ARGS="$JAVA_ARGS '$1'"
             ;;
@@ -43,11 +47,25 @@ fi
 
 # add all necessary JAR files and $BANG_HOME to the CLASSPATH
 CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"
-for jar in $BANG_HOME/dist/lib/*.jar $BANG_HOME/dist/bang-*.jar; do
-    if [ -e $jar ]; then
-        CLASSPATH=$jar:$CLASSPATH
+for JAR in $BANG_HOME/dist/lib/*.jar; do
+    # if we're using devlibs and this jar file exists in projects/*/dist; use
+    # that one instead of the one in dist/lib
+    if [ -z "$NODEVLIBS" ]; then
+        JARNAME=$(basename $JAR)
+        PROJJAR=$(echo $BANG_HOME/projects/*/dist/$JARNAME)
+        if [ -e "$PROJJAR" ]; then
+            JAR=$PROJJAR
+        fi
     fi
+    CLASSPATH=$CLASSPATH:$JAR
 done
+if [ -z "$NODEVLIBS" -a -d $BANG_HOME/dist/classes ]; then
+    CLASSPATH=$BANG_HOME/dist/classes:$CLASSPATH
+else
+    for JAR in $BANG_HOME/dist/bang-*.jar; do
+        CLASSPATH=$JAR:$CLASSPATH
+    done
+fi
 CLASSPATH=$BANG_HOME:$CLASSPATH
 export CLASSPATH
 
