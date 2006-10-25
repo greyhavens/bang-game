@@ -43,7 +43,8 @@ public class Cow extends Piece
         int owner = -1;
         if (spooker instanceof Unit && !herd) {
             Unit unit = (Unit)spooker;
-            if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT) {
+            if (unit.getConfig().rank == UnitConfig.Rank.BIGSHOT &&
+                    bangobj.board.canCross(spooker.x, spooker.y, x, y)) {
                 if (this.owner != -1) {
                     bangobj.grantPoints(
                         this.owner, -CattleRustlingInfo.POINTS_PER_COW);
