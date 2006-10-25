@@ -624,10 +624,14 @@ public class BangClient extends BasicClient
                 scenarios = ScenarioInfo.selectRandomIds(
                     _ctx.getUserObject().townId, rounds, pcount, null, false);
             }
+            String board = System.getProperty("board");
+            if (board != null) {
+                // hackery to work around shell escaping problems
+                board = board.replace("~", "'");
+            }
             psvc.playComputer(
-                _ctx.getClient(), pcount, scenarios,
-                System.getProperty("board"), Boolean.parseBoolean(
-                    System.getProperty("autoplay")), rl);
+                _ctx.getClient(), pcount, scenarios, board,
+                Boolean.parseBoolean(System.getProperty("autoplay")), rl);
         }
     }
 
