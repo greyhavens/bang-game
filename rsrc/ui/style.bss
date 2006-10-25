@@ -1046,6 +1046,11 @@ card_icon {
 //
 // In-game styles
 
+marquee_title {
+  font: "Old Town" plain 96;
+  color: #FFFFFF;
+}
+
 marquee_subtitle {
   font: "Dom Casual" bold 24;
   color: #FFFFFF;

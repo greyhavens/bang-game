@@ -21,13 +21,10 @@ import static com.threerings.bang.Log.*;
  */
 public class RobotWaveEffect extends Effect
 {
-    /** Indicates that a tree was counted towards the wave score. */
-    public static final String TREE_COUNTED = "indian_post/tree_bed/counted";
+    /** The number of the wave beginning or ending. */
+    public int wave;
     
-    /** The number of the wave beginning, or -1 if the wave is ending. */
-    public int wave = -1;
-    
-    /** The difficulty level of the wave. */
+    /** The difficulty level of the wave beginning, or -1 if ending. */
     public int difficulty = -1;
     
     /** The piece ids of the trees that will be sprouted at the wave's end. */
@@ -36,6 +33,13 @@ public class RobotWaveEffect extends Effect
     /** After applying an end-of-wave effect, this will contain the number of
      * living trees. */
     public transient int living;
+    
+    /**
+     * No-arg constructor for deserialization.
+     */
+    public RobotWaveEffect ()
+    {
+    }
     
     /**
      * Creates an effect representing the start of a wave.
@@ -49,8 +53,9 @@ public class RobotWaveEffect extends Effect
     /**
      * Creates an effect representing the end of a wave.
      */
-    public RobotWaveEffect ()
+    public RobotWaveEffect (int wave)
     {
+        this.wave = wave;
     }
     
     // documentation inherited
@@ -68,7 +73,7 @@ public class RobotWaveEffect extends Effect
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        if (wave > 0) {
+        if (difficulty >= 0) {
             return;
         }
         
@@ -83,7 +88,7 @@ public class RobotWaveEffect extends Effect
     // documentation inherited    
     public boolean apply (BangObject bangobj, Observer observer)
     {
-        if (wave > 0) {
+        if (difficulty >= 0) {
             return true;
         }
         
@@ -97,7 +102,6 @@ public class RobotWaveEffect extends Effect
             }
             if (tree.isAlive()) {
                 living++;
-                reportEffect(observer, tree, TREE_COUNTED);
             }
         }
         

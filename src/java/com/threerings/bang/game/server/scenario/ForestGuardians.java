@@ -356,7 +356,7 @@ public class ForestGuardians extends Scenario
         _bangmgr.clearOrders();
         
         // announce the end of the wave
-        RobotWaveEffect rweffect = new RobotWaveEffect();
+        RobotWaveEffect rweffect = new RobotWaveEffect(_wave);
         _bangmgr.deployEffect(-1, rweffect);
         int grown = rweffect.living;
         
