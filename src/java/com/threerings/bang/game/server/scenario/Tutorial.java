@@ -178,7 +178,7 @@ public class Tutorial extends Scenario
         return 4000;
     }
 
-    protected void processAction (int actionId)
+    protected boolean processAction (int actionId)
     {
         TutorialConfig.Action action = _config.getAction(actionId);
 
@@ -201,7 +201,7 @@ public class Tutorial extends Scenario
                 if (user == null) {
                     log.warning("No player in tutorial, can't place Big Shot " +
                                 "[game=" + _bangobj.which() + "].");
-                    return;
+                    return false;
                 }
 
                 // locate a bigshot in the player's inventory
@@ -216,13 +216,13 @@ public class Tutorial extends Scenario
                     log.warning("Player has no Big Shot in tutorial " +
                                 "[game=" + _bangobj.which() +
                                 ", user=" + user.who() + "].");
-                    return;
+                    return false;
                 }
                 piece = Unit.getUnit(bsitem.getType());
 
             } else {
                 log.warning("Requested to add unknown piece type " + add + ".");
-                return;
+                return false;
             }
 
             // use a particular id if asked to do so
@@ -240,14 +240,14 @@ public class Tutorial extends Scenario
                 if (near == null) {
                     log.warning("Can't add piece near non-existent piece " +
                                 add + ".");
-                    return;
+                    return false;
                 } else {
                     Point spot = _bangobj.board.getOccupiableSpot(
                         near.x, near.y, 2);
                     if (spot == null) {
                         log.warning("Can't find spot near piece " +
                                     "[piece=" + near + ", add=" + add + "].");
-                        return;
+                        return false;
                     } else {
                         piece.position(spot.x, spot.y);
                     }
@@ -296,12 +296,17 @@ public class Tutorial extends Scenario
                             ie.getMessage());
             }
         }
+
+        return (action instanceof TutorialConfig.WaitAction);
     }
 
     protected AttributeChangeListener _acl = new AttributeChangeListener() {
         public void attributeChanged (AttributeChangedEvent event) {
             if (event.getName().equals(BangObject.ACTION_ID)) {
-                processAction(event.getIntValue());
+                int actionId = event.getIntValue();
+                while (!processAction(actionId)) {
+                    actionId++;
+                }
             }
         }
     };

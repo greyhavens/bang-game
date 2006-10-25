@@ -166,7 +166,7 @@ public class TutorialController
         }
     }
 
-    protected void processAction (int actionId)
+    protected boolean processAction (int actionId)
     {
         TutorialConfig.Action action = _config.getAction(actionId);
         if (action instanceof TutorialConfig.Text) {
@@ -237,12 +237,10 @@ public class TutorialController
             if (TutorialCodes.TEXT_CLICKED.matches(_pending.getEvent())) {
                 _click.setText(_gmsgs.get("m.tutorial_click"));
             }
+            return true;
         }
 
-
-        if (_pending == null) {
-            processedAction(action.index);
-        }
+        return false;
     }
 
     protected void displayMessage (String message, int step)
@@ -286,7 +284,10 @@ public class TutorialController
     protected AttributeChangeListener _acl = new AttributeChangeListener() {
         public void attributeChanged (AttributeChangedEvent event) {
             if (event.getName().equals(BangObject.ACTION_ID)) {
-                processAction(event.getIntValue());
+                int actionId = event.getIntValue();
+                while (!processAction(actionId)) {
+                    actionId++;
+                }
             }
         }
     };
