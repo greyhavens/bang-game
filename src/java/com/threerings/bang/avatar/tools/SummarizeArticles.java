@@ -46,7 +46,11 @@ public class SummarizeArticles
 
         public int compareTo (ArticleRow other)
         {
-            return name.compareTo(other.name);
+            int rv;
+            if ((rv = average(coins) - average(other.coins)) != 0) {
+                return rv;
+            }
+            return average(scrip) - average(other.scrip);
         }
 
         public String toString ()
@@ -61,6 +65,18 @@ public class SummarizeArticles
             appendCost(buf, "#99CCFF", coins[0], scrip[0]);
             appendCost(buf, "#FF9999", coins[1], scrip[1]);
             return buf.toString();
+        }
+
+        protected int average (int[] values)
+        {
+            int total = 0, count = 0;
+            for (int ii = 0; ii < values.length; ii++) {
+                if (values[ii] != 0) {
+                    total += values[ii];
+                    count++;
+                }
+            }
+            return (count == 0) ? 0 : total/count;
         }
 
         protected void appendCost (
@@ -89,8 +105,8 @@ public class SummarizeArticles
         ArticleCatalog artcat = (ArticleCatalog)CompiledConfig.loadConfig(
             rmgr.getResource(ArticleCatalog.CONFIG_PATH));
 
-        ArticleRowList[][] articles = new ArticleRowList[
-            BangCodes.TOWN_IDS.length][AvatarLogic.SLOTS.length];
+        ArticleRowList[][][] articles = new ArticleRowList[
+            BangCodes.TOWN_IDS.length][AvatarLogic.SLOTS.length][10];
         HashMap<String,ArticleRow> allarts = new HashMap<String,ArticleRow>();
 
         HashMap<String,ComparableArrayList<ArticleRow>> artmap =
@@ -98,9 +114,10 @@ public class SummarizeArticles
         for (ArticleCatalog.Article article : artcat.getArticles()) {
             int townIdx = BangUtil.getTownIndex(article.townId);
             int slotIdx = AvatarLogic.getSlotIndex(article.slot);
-            ArticleRowList arts = articles[townIdx][slotIdx];
+            ArticleRowList arts = articles[townIdx][slotIdx][article.coins];
             if (arts == null) {
-                arts = (articles[townIdx][slotIdx] = new ArticleRowList());
+                arts = (articles[townIdx][slotIdx][article.coins] =
+                        new ArticleRowList());
             }
             ArticleRow row = new ArticleRow(article);
             ArticleRow orow = allarts.get(row.name);
@@ -108,9 +125,20 @@ public class SummarizeArticles
                 orow.setCost(article);
             } else {
                 allarts.put(row.name, row);
-                arts.insertSorted(row);
+                arts.add(row);
             }
         }
+
+        // now sort all of our lists
+        for (int tt = 0; tt < articles.length; tt++) {
+            for (int ss = 0; ss < articles[tt].length; ss++) {
+                for (int cc = 0; cc < articles[tt][ss].length; cc++) {
+                    if (articles[tt][ss][cc] != null) {
+                        articles[tt][ss][cc].sort();
+                    }
+                }
+            }
+        };
 
         System.out.println("<html><head><title>Article Catalog</title></head>");
         System.out.println("<body>");
@@ -127,7 +155,7 @@ public class SummarizeArticles
         }
         System.out.println("</tr>");
 
-        System.out.print("<tr><th>Slot</th>");
+        System.out.print("<tr style='border-bottom: 2px solid'><th>Slot</th>");
         for (int ii = 0; ii < BangCodes.TOWN_IDS.length; ii++) {
             System.out.print("<th>Count</th><th>Coins</th><th>Scrip</th>" +
                              "<th>Count</th><th>Coins</th><th>Scrip</th>");
@@ -144,27 +172,22 @@ public class SummarizeArticles
                 scosts[tt][0] = scosts[tt][1] = 0;
             }
 
-            int row = 0, remain;
-            do {
-                remain = 0;
-                for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
-                    ArticleRowList arl = articles[tt][ss];
-                    if (arl != null && arl.size() > row) {
-                        ArticleRow arow = arl.get(row);
-                        for (int gg = 0; gg < 2; gg++) {
-                            if (arow.scrip[gg] > 0) {
-                                totals[tt][gg]++;
-                                ccosts[tt][gg] += arow.coins[gg];
-                                scosts[tt][gg] += arow.scrip[gg];
+            for (int tt = 0; tt < articles.length; tt++) {
+                for (int cc = 0; cc < articles[tt][ss].length; cc++) {
+                    ArticleRowList arl = articles[tt][ss][cc];
+                    if (arl != null) {
+                        for (ArticleRow arow : arl) {
+                            for (int gg = 0; gg < 2; gg++) {
+                                if (arow.scrip[gg] > 0) {
+                                    totals[tt][gg]++;
+                                    ccosts[tt][gg] += arow.coins[gg];
+                                    scosts[tt][gg] += arow.scrip[gg];
+                                }
                             }
-                        }
-                        if (arl.size() > row+1) {
-                            remain++;
                         }
                     }
                 }
-                row++;
-            } while (remain > 0);
+            }
 
             System.out.print("<tr><td>" + AvatarLogic.SLOTS[ss].name + "</td>");
             for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
@@ -193,34 +216,54 @@ public class SummarizeArticles
         }
         System.out.println("</tr>");
 
-        for (int ss = 0; ss < AvatarLogic.SLOTS.length; ss++) {
-            System.out.print(
-                "<tr><th>" + AvatarLogic.SLOTS[ss].name + "</th>");
+        String[] cols = new String[articles.length];
+        for (int ss = 0; ss < articles[0].length; ss++) {
+            System.out.print("<tr style='border-top: 2px solid'>" +
+                             "<th bgcolor='#CCCCCC'>" +
+                             AvatarLogic.SLOTS[ss].name + "</th>");
             for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
-                System.out.print("<th colspan=5>" +
+                System.out.print("<th bgcolor='#CCCCCC' colspan=5>" +
                                  BangCodes.TOWN_IDS[tt] + "</th>");
             }
             System.out.println("</tr>");
 
-            int row = 0, remain;
-            do {
-                remain = 0;
-                System.out.print("<tr><td></td>");
-                for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
-                    ArticleRowList arl = articles[tt][ss];
-                    if (arl == null || arl.size() <= row) {
-                        System.out.print("<td colspan=5></td>");
-                    } else {
-                        ArticleRow arow = arl.get(row);
-                        System.out.print(arow.toHTML());
-                        if (arl.size() > row+1) {
-                            remain++;
+            for (int cc = 0; cc < articles[0][ss].length; cc++) {
+                int row = 0, remain;
+                boolean wrotesep = false;
+                do {
+                    remain = 0;
+                    StringBuilder buf = new StringBuilder();
+                    int wrote = 0;
+                    for (int tt = 0; tt < BangCodes.TOWN_IDS.length; tt++) {
+                        cols[tt] = null;
+                        ArticleRowList arl = articles[tt][ss][cc];
+                        if (arl != null && arl.size() > row) {
+                            ArticleRow arow = arl.get(row);
+                            cols[tt] = arow.toHTML();
+                            wrote++;
+                            if (arl.size() > row+1) {
+                                remain++;
+                            }
                         }
                     }
-                }
-                row++;
-                System.out.println("</tr>");
-            } while (remain > 0);
+                    row++;
+                    if (wrote > 0) {
+                        if (wrotesep) {
+                            System.out.println("<tr>");
+                        } else {
+                            System.out.println(
+                                "<tr style='border-top: 2px solid'>");
+                            wrotesep = true;
+                        }
+                        System.out.print("<td></td>");
+                        for (String col : cols) {
+                            System.out.print(
+                                col == null ? "<td colspan=5></td>" : col);
+                        }
+                        System.out.println("</tr>");
+                    }
+                } while (remain > 0);
+            }
         }
         System.out.println("</table>");
 
