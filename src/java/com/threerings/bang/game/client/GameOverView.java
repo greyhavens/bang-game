@@ -69,8 +69,11 @@ public class GameOverView extends SteelWindow
                     AffineTransformOp.TYPE_BILINEAR) :
                 null);
         g.drawImage(off, halfOp, 0, 0);
-        g.drawImage(on.getSubimage(0, 0, rank * on.getWidth() / 100, 
-                                   on.getHeight()), halfOp, 0, 0);
+        int onWidth = rank * on.getWidth() / 100;
+        if (onWidth > 0 && onWidth <= on.getWidth()) {
+            g.drawImage(on.getSubimage(0, 0, rank * on.getWidth() / 100, 
+                                       on.getHeight()), halfOp, 0, 0);
+        }
         return new BLabel(new ImageIcon(new BImage(bar)));
     }
 
