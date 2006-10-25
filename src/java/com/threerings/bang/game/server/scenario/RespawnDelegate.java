@@ -104,6 +104,7 @@ public class RespawnDelegate extends ScenarioDelegate
             _bangmgr.addPiece(unit, AddPieceEffect.RESPAWNED);
             if (freeIronPlate) {
                 IronPlateEffect effect = new IronPlateEffect();
+                effect.freebie = true;
                 effect.init(unit);
                 _bangmgr.deployEffect(-1, effect);
             }

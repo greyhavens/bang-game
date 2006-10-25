@@ -9,15 +9,21 @@ import com.threerings.bang.game.data.piece.Influence;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * An effect that causes the piece in question to become invincible for seven
  * ticks.
  */
 public class IronPlateEffect extends SetInfluenceEffect
 {
+    /** This is a free iron plate, so everyone gets to see it. */
+    public boolean freebie;
+
     @Override // documentation inherited
     protected Influence createInfluence (Unit target)
     {
+        final boolean isFreebie = freebie;
         return new Influence() {
             public String getName () {
                 return "iron_plate";
@@ -35,7 +41,10 @@ public class IronPlateEffect extends SetInfluenceEffect
                 return true;
             }
             public boolean hidden () {
-                return true;
+                return !isFreebie;
+            }
+            public boolean showClientAdjust () {
+                return isFreebie;
             }
             protected int duration () {
                 return 7;

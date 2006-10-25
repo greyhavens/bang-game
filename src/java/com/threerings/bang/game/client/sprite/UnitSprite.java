@@ -317,6 +317,7 @@ public class UnitSprite extends MobileSprite
         if (_observers != null) {
             _observers.apply(_updater);
         }
+        updateStatus();
     }
 
     @Override // documentation inherited

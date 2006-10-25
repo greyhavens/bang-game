@@ -24,14 +24,4 @@ public class TotemSprite extends BonusSprite
     {
         return Coloring.STATIC;
     }
-
-    @Override // documentation inherited
-    protected String getHelpIdent (int pidx)
-    {
-        String ident = super.getHelpIdent(pidx);
-        if (!TotemEffect.TOTEM_CROWN_BONUS.equals(_name)) {
-            ident = "bonus_totem";
-        }
-        return ident;
-    }
 }
