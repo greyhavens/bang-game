@@ -1,5 +1,5 @@
 <!-- build configuration -->
-<project name="bang" default="compile" basedir=".">
+<project name="bang" default="qcompile" basedir=".">
 
   <!-- read in our deployment properties -->
   <property file="deployment.properties"/>
@@ -21,7 +21,8 @@
   <import file="${projects.root}/projects/tools/etc/build-support.xml"/>
 
   <!-- declare the properties files. -->
-  <property name="props.list"     value="server.properties,deployment.properties"/>
+  <property name="props.list"
+            value="server.properties,deployment.properties"/>
   <property name="optprops.list"  value="build.properties"/>
 
   <!-- declare the libraries needed by the Bang runtime -->
@@ -228,7 +229,8 @@
       <include name="**/*.png"/>
       <exclude name="**/source/**"/>
     </jar>
-    <jar file="rsrc/sounds/music/${town}/bundle.jar" basedir="rsrc/sounds/music/${town}">
+    <jar file="rsrc/sounds/music/${town}/bundle.jar"
+         basedir="rsrc/sounds/music/${town}">
       <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
@@ -302,7 +304,8 @@
     <taskdef name="metabundle" classpathref="classpath"
       classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
     <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
-      classdef="${basedir}/rsrc/avatars/classes.xml" target="rsrc/avatars/metadata.jar"/>
+      classdef="${basedir}/rsrc/avatars/classes.xml"
+      target="rsrc/avatars/metadata.jar"/>
     <ant target="bundles" dir="rsrc/avatars" antfile="build.xml"/>
   </target>
 
@@ -333,13 +336,14 @@
   </target>
 
   <!-- build the java class files -->
-  <target name="compile" depends="prepare">
+  <target name="qcompile">
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
            debug="on" optimize="off" deprecation="on">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint:unchecked"/>
     </javac>
   </target>
+  <target name="compile" depends="prepare,qcompile"/>
 
   <!-- build the javadoc documentation -->
   <target name="javadoc" depends="prepare">
