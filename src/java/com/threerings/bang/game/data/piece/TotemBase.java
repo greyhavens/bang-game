@@ -19,6 +19,13 @@ import static com.threerings.bang.Log.log;
  */
 public class TotemBase extends Prop
 {
+    @Override // documentation inherited
+    public void init ()
+    {
+        super.init();
+        lastActed = Short.MAX_VALUE;
+    }
+
     /**
      * Returns true if a totem piece can be added to the base.
      */

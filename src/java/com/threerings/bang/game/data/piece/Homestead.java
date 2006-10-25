@@ -17,6 +17,13 @@ public class Homestead extends Prop
     public transient int previousOwner = -1;
 
     @Override // documentation inherited
+    public void init ()
+    {
+        super.init();
+        lastActed = Short.MAX_VALUE;
+    }
+
+    @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new HomesteadSprite();

@@ -38,8 +38,15 @@ public class TreeBed extends Prop
     @Override // documentation inherited
     public void init ()
     {
+        lastActed = Short.MAX_VALUE;
         growth = 0;
         damage = 100;
+    }
+
+    @Override // documentation inherited
+    public void wasKilled (short tick)
+    {
+        // don't reset our lastActed
     }
     
     @Override // documentation inherited
