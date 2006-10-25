@@ -102,10 +102,9 @@
 
 
   <!-- male clothing: indian trading post -->
-  <article name="male_wolf_hunter" townId="indian_post"
-           slot="clothing" scrip="1500" coins="3">
-    <component cclass="male/clothing_back" name="wolf_spear"/>
-    <component cclass="male/clothing_front" name="wolf_hunter"/>
+  <article name="male_mink_shirt" townId="indian_post"
+           slot="clothing" scrip="1500" coins="2">
+    <component cclass="male/clothing_back" name="mink_shirt"/>
   </article>
 
   <article name="male_fat_rifle" townId="indian_post"
@@ -114,47 +113,54 @@
     <component cclass="male/clothing_front" name="chubby_geronimo_rifle"/>
   </article>
 
+  <article name="male_chillkat_blanket" townId="indian_post"
+           slot="clothing" scrip="2000" coins="2" colors="clothes_p,clothes_s">
+    <component cclass="male/clothing_back" name="tlingit_chillkat_blanket"/>
+  </article>
+
   <article name="male_fat_tomahawk" townId="indian_post"
            slot="clothing" scrip="2500" coins="2">
     <component cclass="male/clothing_back" name="a_chubby_geronimo"/>
     <component cclass="male/clothing_front" name="chubby_geronimo_tomahawk"/>
   </article>
 
+  <article name="male_warrior_pistol" townId="indian_post"
+           slot="clothing" scrip="1500" coins="3">
+    <component cclass="male/clothing_back" name="a_warrior"/>
+    <component cclass="male/clothing_front" name="warrior_pistol"/>
+  </article>
+
+  <article name="male_wolf_hunter" townId="indian_post"
+           slot="clothing" scrip="2000" coins="3">
+    <component cclass="male/clothing_back" name="wolf_spear"/>
+    <component cclass="male/clothing_front" name="wolf_hunter"/>
+  </article>
+
   <article name="male_fed_jacket_revolver" townId="indian_post"
-           slot="clothing" scrip="1500" coins="2">
+           slot="clothing" scrip="2000" coins="3">
     <component cclass="male/clothing_back" name="a_federal_jacket"/>
     <component cclass="male/clothing_front" name="federal_jacket_revolver"/>
   </article>
 
   <article name="male_fed_jacket_shotgun" townId="indian_post"
-           slot="clothing" scrip="1500" coins="2">
+           slot="clothing" scrip="2500" coins="3">
     <component cclass="male/clothing_back" name="a_federal_jacket"/>
     <component cclass="male/clothing_front" name="federal_jacket_shotgun"/>
   </article>
 
-  <article name="male_warrior_pistol" townId="indian_post"
-           slot="clothing" scrip="1500" coins="2">
-    <component cclass="male/clothing_back" name="a_warrior"/>
-    <component cclass="male/clothing_front" name="warrior_pistol"/>
-  </article>
-
   <article name="male_warrior_shield" townId="indian_post"
-           slot="clothing" scrip="3000" coins="2">
+           slot="clothing" scrip="3000" coins="3">
     <component cclass="male/clothing_back" name="a_warrior"/>
     <component cclass="male/clothing_front" name="warrior_shield"/>
   </article>
 
-  <article name="male_chillkat_blanket" townId="indian_post"
-           slot="clothing" scrip="2000" coins="2" colors="clothes_p,clothes_s">
-    <component cclass="male/clothing_back" name="tlingit_chillkat_blanket"/>
-  </article>
-
   <article name="male_dagger_and_salmon" townId="indian_post"
-           slot="clothing" scrip="1500" coins="1" colors="clothes_p">
+           slot="clothing" scrip="1500" coins="3" colors="clothes_p">
     <component cclass="male/clothing_back" name="a_tlingit"/>
     <component cclass="male/clothing_front" name="tlingit_dagger"/>
   </article>
 
+<!--
   <article name="male_revolutionary" townId="indian_post"
            slot="clothing" scrip="3500" coins="3">
     <component cclass="male/clothing_back" name="revolutionary"/>
@@ -171,11 +177,7 @@
     <component cclass="male/clothing_back" name="storm_caller"/>
     <component cclass="male/clothing_front" name="storm_caller"/>
   </article>
-
-  <article name="male_mink_shirt" townId="indian_post"
-           slot="clothing" scrip="1500" coins="2">
-    <component cclass="male/clothing_back" name="mink_shirt"/>
-  </article>
+-->
 
 
   <!-- male familiars: frontier town -->
@@ -370,6 +372,7 @@
     <component cclass="male/hat_band" name="medallion_buffalo"/>
   </article> 
 
+<!--
   <article name="male_revolutionary_hat" townId="indian_post"
            slot="hat" scrip="2500" coins="3"
            colors="clothes_p,clothes_s,clothes_t">
@@ -382,8 +385,9 @@
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="trickster_raven"/>
   </article>
+-->
 
- <article name="male_native_topper" townId="indian_post"
+ <article name="male_topper" townId="indian_post"
            slot="hat" scrip="2000" coins="2"
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="native_topper"/>
@@ -574,7 +578,7 @@
   </article>
 
   <article name="female_boots_peaked" townId="frontier_town"
-           slot="clothing" scrip="3500" coins="4">
+           slot="clothing" scrip="3500" coins="3">
     <component cclass="female/clothing_back" name="boots"/>
     <component cclass="female/clothing_front" name="peaked_boots"/>
   </article>
@@ -588,6 +592,16 @@
 
   <!-- female clothing: indian trading post -->
 
+  <article name="female_wrap" townId="indian_post"
+           slot="clothing" scrip="1500" coins="1">
+    <component cclass="female/clothing_back" name="wrap"/>
+  </article>
+
+  <article name="female_youth_dress" townId="indian_post"
+           slot="clothing" scrip="1200" coins="1">
+    <component cclass="female/clothing_back" name="youth_dress"/>
+  </article>
+
   <article name="female_robe" townId="indian_post"
            slot="clothing" scrip="2000" coins="2">
     <component cclass="female/clothing_back" name="robe"/>
@@ -595,21 +609,50 @@
   </article>
 
   <article name="female_shoulder_wrap" townId="indian_post"
-           slot="clothing" scrip="1000" coins="1">
+           slot="clothing" scrip="1000" coins="2">
     <component cclass="female/clothing_back" name="shoulder_wrap"/>
   </article>
 
-  <article name="female_hunter" townId="indian_post"
+  <article name="female_wolf_handler" townId="indian_post"
+           slot="clothing" scrip="3000" coins="3">
+    <component cclass="female/clothing_back" name="wolf_handler"/>
+    <component cclass="female/clothing_front" name="wolf_handler"/>
+  </article>
+
+  <article name="female_shoulder_cape" townId="indian_post"
+           slot="clothing" scrip="2100" coins="2">
+    <component cclass="female/clothing_back" name="shoulder_cape"/>
+  </article>
+
+  <article name="female_gorget_vest" townId="indian_post"
            slot="clothing" scrip="2500" coins="2">
+    <component cclass="female/clothing_back" name="gorget_vest"/>
+  </article>
+
+  <article name="female_jacket_hatchet" townId="indian_post"
+           slot="clothing" scrip="2500" coins="3">
+    <component cclass="female/clothing_back" name="jacket_hatchet"/>
+    <component cclass="female/clothing_front" name="hatchet_jacket"/>
+  </article>
+
+  <article name="female_shirt_rifle" townId="indian_post"
+           slot="clothing" scrip="2000" coins="3">
+    <component cclass="female/clothing_back" name="shirt_rifle"/>
+    <component cclass="female/clothing_front" name="rifle_shirt"/>
+  </article>
+
+  <article name="female_hunter" townId="indian_post"
+           slot="clothing" scrip="2500" coins="3">
     <component cclass="female/clothing_back" name="hunter"/>
   </article>
 
   <article name="female_gatherer" townId="indian_post"
-           slot="clothing" scrip="2000" coins="2">
+           slot="clothing" scrip="2000" coins="3">
     <component cclass="female/clothing_back" name="gatherer"/>
     <component cclass="female/clothing_front" name="basket_gatherer"/>
   </article>
 
+<!--
   <article name="female_revolutionary" townId="indian_post"
            slot="clothing" scrip="3750" coins="4" colors="clothes_p,clothes_s">
     <component cclass="female/clothing_back" name="revolutionary"/>
@@ -626,52 +669,16 @@
     <component cclass="female/clothing_back" name="trickster_raven"/>
     <component cclass="female/clothing_front" name="trickster_raven"/>
   </article>
-
-  <article name="female_wolf_handler" townId="indian_post"
-           slot="clothing" scrip="3000" coins="3">
-    <component cclass="female/clothing_back" name="wolf_handler"/>
-    <component cclass="female/clothing_front" name="wolf_handler"/>
-  </article>
-
-  <article name="female_wrap" townId="indian_post"
-           slot="clothing" scrip="1500" coins="1">
-    <component cclass="female/clothing_back" name="wrap"/>
-  </article>
-
-  <article name="female_youth_dress" townId="indian_post"
-           slot="clothing" scrip="1200" coins="1">
-    <component cclass="female/clothing_back" name="youth_dress"/>
-  </article>
-
-  <article name="female_shoulder_cape" townId="indian_post"
-           slot="clothing" scrip="2100" coins="1">
-    <component cclass="female/clothing_back" name="shoulder_cape"/>
-  </article>
-
-  <article name="female_gorget_vest" townId="indian_post"
-           slot="clothing" scrip="2500" coins="1">
-    <component cclass="female/clothing_back" name="gorget_vest"/>
-  </article>
-
-  <article name="female_jacket_hatchet" townId="indian_post"
-           slot="clothing" scrip="2500" coins="1">
-    <component cclass="female/clothing_back" name="jacket_hatchet"/>
-    <component cclass="female/clothing_front" name="hatchet_jacket"/>
-  </article>
-
-  <article name="female_shirt_rifle" townId="indian_post"
-           slot="clothing" scrip="2000" coins="1">
-    <component cclass="female/clothing_back" name="shirt_rifle"/>
-    <component cclass="female/clothing_front" name="rifle_shirt"/>
-  </article>
+-->
 
 
   <!-- female familiars: frontier town -->
+<!--
   <article name="female_mini_blimp" townId="frontier_town"
-           slot="familiar" scrip="300" coins="1" colors="clothes_t">
+           slot="familiar" scrip="3000" coins="2" colors="clothes_t">
     <component cclass="female/familiar" name="mini_blimp"/>
   </article>
-
+-->
 
   <!-- female eye glasses: frontier town -->
   <article name="female_round_glasses" townId="frontier_town"
@@ -772,7 +779,7 @@
   </article>
 
   <article name="female_stetson_king" townId="frontier_town"
-           slot="hat" scrip="2500" coins="2">
+           slot="hat" scrip="2500" coins="3">
     <component cclass="female/hat" name="stetson"/>
     <component cclass="female/hat_back" name="stetson"/>
     <component cclass="female/hat_band" name="king_stetson"/>
@@ -852,6 +859,7 @@
     <component cclass="female/hat_band" name="cougar_mask"/>
   </article>
 
+<!--
   <article name="female_revolutionary_hat" townId="indian_post"
            slot="hat" scrip="2500" coins="3" colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="revolutionary"/>
@@ -863,6 +871,7 @@
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="trickster_raven"/>
   </article>
+-->
 
   <article name="female_topper" townId="indian_post"
            slot="hat" scrip="2500" coins="2" colors="clothes_p,clothes_s,clothes_t">
