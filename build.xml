@@ -8,6 +8,7 @@
   <!-- things you probably don't want to change -->
   <property name="src.dir"      value="src/java"/>
   <property name="deploy.dir"   value="dist"/>
+  <property name="app.name"     value="bang"/>
   <property name="javadoc.dir"  value="${deploy.dir}/docs"/>
   <property name="savedoc.dir"  value="docs"/>
   <property name="nartool.path"   value="projects/narya/bin"/>
@@ -18,6 +19,10 @@
   <property name="projects"
             value="samskivert,jme-bui,narya,nenya,vilya,threerings"/>
   <import file="${projects.root}/projects/tools/etc/build-support.xml"/>
+
+  <!-- declare the properties files. -->
+  <property name="props.list"     value="server.properties,deployment.properties"/>
+  <property name="optprops.list"  value="build.properties"/>
 
   <!-- declare the libraries needed by the Bang runtime -->
   <fileset dir="${projects.root}" id="dist.libs">
@@ -57,7 +62,7 @@
   </path>
 
   <!-- generates additional methods for distributed object classes -->
-  <target name="gendobj" depends="prepare,copydistlibs">
+  <target name="gendobj" depends="prepare">
     <taskdef name="dobj"
              classname="com.threerings.presents.tools.GenDObjectTask"
              classpathref="classpath"/>
@@ -75,7 +80,7 @@
 
   <!-- generates marshaller and dispatcher classes for all invocation -->
   <!-- service declarations -->
-  <target name="genservice" depends="prepare,copydistlibs">
+  <target name="genservice" depends="prepare">
     <taskdef name="service"
              classname="com.threerings.presents.tools.GenServiceTask"
              classpathref="classpath"/>
@@ -93,7 +98,7 @@
 
   <!-- generates sender and decoder classes for all invocation -->
   <!-- receiver declarations -->
-  <target name="genreceiver" depends="prepare,copydistlibs">
+  <target name="genreceiver" depends="prepare">
     <taskdef name="receiver"
              classname="com.threerings.presents.tools.GenReceiverTask"
              classpathref="classpath"/>
@@ -112,7 +117,7 @@
   </target>
 
   <!-- prepares the application directories -->
-  <target name="prepare" depends="lists">
+  <target name="prepare" depends="copydistlibs,copydistprops,lists">
     <mkdir dir="${deploy.dir}"/>
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/classes/rsrc"/>
@@ -328,7 +333,7 @@
   </target>
 
   <!-- build the java class files -->
-  <target name="compile" depends="prepare,copydistlibs">
+  <target name="compile" depends="prepare">
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
            debug="on" optimize="off" deprecation="on">
       <classpath refid="classpath"/>
