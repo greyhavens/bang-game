@@ -48,6 +48,9 @@ public class TerrainConfig
      * terrain.  The alpha value controls the "dustiness." */
     public ColorRGBA dustColor;
 
+    /** Whether to use this texture in low graphics mode. */
+    public boolean lowDetail;
+
     /**
      * Returns the terrain configuration for the specified terrain type.
      */
@@ -99,6 +102,8 @@ public class TerrainConfig
         config.traversalCost = BangUtil.getIntProperty(type, props,
             "traversal", BangBoard.BASE_TRAVERSAL);
         config.scale = BangUtil.getFloatProperty(type, props, "scale", 1f);
+        config.lowDetail = BangUtil.getBooleanProperty(
+                type, props, "low_detail", true);
         
         // the default dust color is that of dirt
         float[] dcolor = StringUtil.parseFloatArray(

@@ -1619,6 +1619,23 @@ public class TerrainNode extends Node
                     }
                 }
             }
+
+            // don't use certain textures as the base in low detail mode,
+            // unless they're the only texture in that region
+            if (!BangPrefs.isMediumDetail() && 
+                    !TerrainConfig.getConfig(ccode-1).lowDetail) {
+                ccount = 0;
+                for (IntIntMap.IntIntEntry entry : codes.entrySet()) {
+                    count = entry.getIntValue();
+                    code = entry.getIntKey();
+                    if (count > ccount && 
+                        TerrainConfig.getConfig(code-1).lowDetail) {
+                        ccount = count;
+                        ccode = code;
+                    }
+                }
+            }
+
             if (layers == null || layers[0] != ccode) {
                 layers = new int[] { ccode };
                 rect = bounds;
