@@ -10,6 +10,8 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.samskivert.util.ArrayUtil;
+
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BasicContext;
 
@@ -26,7 +28,14 @@ public class ForestGuardiansStatsView extends StatsView
     @Override // documentation inherited
     protected void loadGameData ()
     {
+        // record the most recent wave scores for display
         _scores = _bobj.stats[0].getIntArrayStat(Stat.Type.WAVE_SCORES);
+        if (_scores.length > MAX_WAVE_SCORES) {
+            _wavenum = 1 + (_scores.length - MAX_WAVE_SCORES);
+            _scores = ArrayUtil.splice(_scores, 0, _wavenum - 1);
+        } else {
+            _wavenum = 1;
+        }
         _points = _bobj.stats[0].getIntStat(Stat.Type.WAVE_POINTS);
         _icons = new ImageIcon[ICON_NAMES.length];
         for (int ii = 0; ii < ICON_NAMES.length; ii++) {
@@ -62,7 +71,7 @@ public class ForestGuardiansStatsView extends StatsView
         _headers = new BLabel[_scores.length];
         for (int ii = 0; ii < _scores.length; ii++) {
             hcont.add(_headers[ii] = new BLabel(_msgs.get("m.wave_title",
-                Integer.toString(ii + 1)), "endgame_wave_header") {
+                Integer.toString(_wavenum + ii)), "endgame_wave_header") {
                 protected Dimension computePreferredSize (
                     int whint, int hhint) {
                     Dimension d = super.computePreferredSize(whint, hhint);
@@ -109,12 +118,18 @@ public class ForestGuardiansStatsView extends StatsView
     /** The points earned in the waves. */
     protected int _points;
     
+    /** The wave number of the first wave in the score list. */
+    protected int _wavenum;
+    
     /** The wave header labels. */
     protected BLabel[] _headers;
     
     /** The icons for the various performance levels. */
     protected ImageIcon[] _icons;
  
+    /** The maximum number of waves for which we can fit performance levels. */
+    protected static final int MAX_WAVE_SCORES = 5;
+    
     /** The names of the icons to use for the performance levels. */   
     protected static final String[] ICON_NAMES = { "trees_stump",
         "trees_sprout", "trees_sapling", "trees_mature", "trees_elder" };
