@@ -21,6 +21,9 @@ import static com.threerings.bang.Log.*;
  */
 public class RobotWaveEffect extends Effect
 {
+    /** The maximum wave performance level (the minimum is zero). */
+    public static final int MAX_PERFORMANCE = 4;
+    
     /** The number of the wave beginning or ending. */
     public int wave;
     
@@ -33,6 +36,15 @@ public class RobotWaveEffect extends Effect
     /** After applying an end-of-wave effect, this will contain the number of
      * living trees. */
     public transient int living;
+    
+    /**
+     * Returns a performance level for the described wave (between zero and
+     * {@link #MAX_PERFORMANCE}, inclusive).
+     */
+    public static int getPerformance (int living, int total)
+    {
+        return living * MAX_PERFORMANCE / total;
+    }
     
     /**
      * No-arg constructor for deserialization.
@@ -92,7 +104,7 @@ public class RobotWaveEffect extends Effect
             return true;
         }
         
-        // count the living trees
+        // count the living treesreturn living * MAX_PERFORMANCE / treeIds.length;
         for (int treeId : treeIds) {
             TreeBed tree = (TreeBed)bangobj.pieces.get(treeId);
             if (tree == null) {
@@ -112,5 +124,15 @@ public class RobotWaveEffect extends Effect
     public EffectHandler createHandler (BangObject bangobj)
     {
         return new RobotWaveHandler();
+    }
+
+    /**
+     * Returns a performance level for the wave completed, which will be
+     * between zero and {@link #MAX_PERFORMANCE}, inclusive.  This method
+     * will return a valid result only after the effect has been applied.
+     */
+    public int getPerformance ()
+    {
+        return getPerformance(living, treeIds.length);
     }
 }

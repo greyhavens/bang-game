@@ -185,7 +185,7 @@ public class RobotWaveHandler extends EffectHandler
         protected void initContent (BContainer cont)
         {
             cont.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS,
-                MessageBundle.tcompose("m.wave_start", _wave)),
+                MessageBundle.tcompose("m.wave_title", _wave)),
                 "marquee_title"));
         
             BContainer scont = new BContainer(
@@ -232,14 +232,14 @@ public class RobotWaveHandler extends EffectHandler
             }
             cont.add(_tcont);
             
-            int perf = 4 * _living / _total;
+            RobotWaveEffect reffect = (RobotWaveEffect)_effect;
             cont.add(_plabel = new BLabel(_ctx.xlate(GameCodes.GAME_MSGS,
-                "m.wave_perf" + perf), "marquee_subtitle"));
+                "m.wave_perf" + reffect.getPerformance()),
+                "marquee_subtitle"));
             _plabel.setAlpha(0f);
             
             // collect the sprites to count in random order (but with
             // living sprites at the beginning and dead ones at the end)
-            RobotWaveEffect reffect = (RobotWaveEffect)_effect;
             ArrayUtil.shuffle(reffect.treeIds);
             for (int treeId : reffect.treeIds) {
                 Piece piece = _bangobj.pieces.get(treeId);
@@ -267,7 +267,9 @@ public class RobotWaveHandler extends EffectHandler
             while (_tidx < nidx) {
                 if (++_tidx < _total) {
                     _tcont.getComponent(_tidx).setAlpha(1f);
-                    if (_tidx < _tsprites.size()) { // count the sprite
+                    if (_tidx < _tsprites.size()) {
+                        // count the sprite and make it invisible.  if it is
+                        // not removed, it will be made visible again on reset
                         PieceSprite sprite = _tsprites.get(_tidx);
                         sprite.setCullMode(Spatial.CULL_ALWAYS);
                         sprite.getHighlight().setCullMode(Spatial.CULL_ALWAYS);

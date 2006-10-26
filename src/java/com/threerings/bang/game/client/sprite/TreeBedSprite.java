@@ -49,16 +49,16 @@ public class TreeBedSprite extends ActiveSprite
         super.updated(piece, tick);
         TreeBed tree = (TreeBed)piece;
 
-        // at this point, make sure the tree is visible; it may have been
-        // hidden temporarily for counting by RobotWaveHandler
-        setCullMode(CULL_INHERIT);
-        _hnode.setCullMode(CULL_INHERIT);
-        
         // grow to the next stage
         while (_growth < tree.growth) {
             queueAction("grow_stage" + (++_growth));
         }
         if (_growth != tree.growth) {
+            // make sure the tree is visible; it may have been
+            // hidden temporarily for counting by RobotWaveHandler
+            setCullMode(CULL_INHERIT);
+            _hnode.setCullMode(CULL_INHERIT);
+            
             _growth = tree.growth;
             _nextIdle = FastMath.FLT_EPSILON;
         }

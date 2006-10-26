@@ -206,21 +206,43 @@ public class StatsView extends SteelWindow
         // calculate the total scenario points for each player
         _scenPoints = new int[_bobj.players.length];
         _objectives = new int[_bobj.players.length];
-        int[] ppo = _bobj.scenario.getPointsPerObjectives();
+        
         int objSum;
         for (int ii = 0; ii < _scenPoints.length; ii++) {
             _scenPoints[ii] = (_secStatType == null) ? 0 :
                 getIntStat(ii, _secStatType);
-            objSum = 0;
-            for (int jj = 0; jj < _statTypes.length; jj++) {
-                int objs = getIntStat(ii, _statTypes[jj]);
-                objSum += objs;
-                _scenPoints[ii] += ppo[jj] * objs;
-            }
-            _objectives[ii] = objSum;
+            _objectives[ii] = getObjectiveCount(ii);
+            _scenPoints[ii] += getObjectivePoints(ii);
         }
     }
 
+    /**
+     * Gets the total number of primary objectives attained by the
+     * specified player.
+     */
+    protected int getObjectiveCount (int pidx)
+    {
+        int count = 0;
+        for (Stat.Type type : _statTypes) {
+            count += getIntStat(pidx, type);
+        }
+        return count;
+    }
+    
+    /**
+     * Gets the total primary objective points earned by the specified
+     * player.
+     */
+    protected int getObjectivePoints (int pidx)
+    {
+        int points = 0;
+        int[] ppo = _bobj.scenario.getPointsPerObjectives();
+        for (int ii = 0; ii < _statTypes.length; ii++) {
+            points += ppo[ii] * getIntStat(pidx, _statTypes[ii]);
+        }
+        return points;
+    }
+    
     /**
      * Sets the primary contents.
      */
@@ -253,7 +275,7 @@ public class StatsView extends SteelWindow
         }
         return stats[pidx].getIntStat(type);
     }
-
+    
     /**
      * Show, and possibly animated, the total game objectives met by
      * the players.
@@ -283,7 +305,7 @@ public class StatsView extends SteelWindow
         if (_secStatType != null) {
             maxIcons -= 2;
             secLabels = 3;
-            offset = 120;
+            offset = SECONDARY_OBJECTIVE_WIDTH;
         }
         if (!_showMultiplier) {
             maxIcons++;
@@ -420,14 +442,7 @@ public class StatsView extends SteelWindow
         _showing = 0;
         Interval showObjectives = new Interval(_ctx.getApp()) {
             public void expired () {
-                boolean noshow = true;
-                for (int ii = 0; ii < _labels.length; ii++) {
-                    if (_showing < _labels[ii].length - 1) {
-                        _labels[ii][_showing].setAlpha(1f);
-                        noshow = false;
-                    }
-                }
-                if (noshow) {
+                if (!showObjectiveLabels(_showing)) {
                     BangUI.play(BangUI.FeedbackSound.CHAT_SEND);
                     for (int ii = 0; ii < _labels.length; ii++) {
                         int length = _labels[ii].length;
@@ -450,6 +465,25 @@ public class StatsView extends SteelWindow
 
     }
 
+    /**
+     * Shows all of the objective labels at the specified index for all
+     * players.
+     *
+     * @return true if new objective labels were made visible, false if we
+     * have reached the end of the objective labels for all players
+     */
+    protected boolean showObjectiveLabels (int idx)
+    {
+        boolean showed = false;
+        for (BLabel[] labels : _labels) {
+            if (idx < labels.length - 1) {
+                labels[idx].setAlpha(1f);
+                showed = true;
+            }
+        }
+        return showed;
+    }
+    
     /**
      * Show and possibly animate the game points.
      */
@@ -794,6 +828,9 @@ public class StatsView extends SteelWindow
     protected static final int GRID_HEIGHT = 100;
     protected static final int NUM_VIEWABLE_COLS = 6;
 
+    /** The width of the secondary objective icon, points, and plus sign. */
+    protected static final int SECONDARY_OBJECTIVE_WIDTH = 120;
+    
     protected static final Stat.Type[] BASE_STAT_TYPES = {
         // Global Stats
         Stat.Type.DAMAGE_DEALT, Stat.Type.UNITS_KILLED,

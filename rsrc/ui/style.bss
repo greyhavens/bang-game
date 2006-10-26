@@ -1676,6 +1676,12 @@ endgame_player_small {
   color: #442801;
 }
 
+endgame_wave_header {
+  font: "Dom Casual" plain 14;
+  text-align: center;
+  color: #7D4924;
+}
+
 endgame_round {
   font: "Old Town Wide" plain 18;
   text-align: left;

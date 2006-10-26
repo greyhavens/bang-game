@@ -194,22 +194,32 @@ public class ForestGuardians extends Scenario
         // proportion to their growth so as not to penalize players if a
         // wave ends early because the clock ran out.
         int treePoints = _wavePoints * TreeBed.FULLY_GROWN,
-            maxPoints = _waveMax * TreeBed.FULLY_GROWN;
+            maxPoints = _waveMax * TreeBed.FULLY_GROWN,
+            living = 0, total = 0;
         for (TreeBed tree : _ctrees) {
             if (tree.growth == 0) {
                 continue;
             }
+            total++;
             maxPoints += tree.growth;
             if (!tree.isAlive()) {
                 continue;
             }
+            living++;
             treePoints += tree.growth;
+            int points = scalePoints(
+                ForestGuardiansInfo.GROWTH_POINTS[tree.growth-1]);
             for (int ii = 0; ii < bangobj.stats.length; ii++) {
                 bangobj.stats[ii].incrementStat(
                     ForestGuardiansInfo.GROWTH_STATS[tree.growth-1], 1);
-                bangobj.grantPoints(ii, scalePoints(
-                    ForestGuardiansInfo.GROWTH_POINTS[tree.growth-1]));
+                bangobj.stats[ii].incrementStat(Stat.Type.WAVE_POINTS, points);
+                bangobj.grantPoints(ii, points);
             }
+        }
+        int perf = (total > 0 ? RobotWaveEffect.getPerformance(living, total) :
+            RobotWaveEffect.MAX_PERFORMANCE);
+        for (StatSet stats : bangobj.stats) {
+            stats.appendStat(Stat.Type.WAVE_SCORES, perf);
         }
         
         _payouts = new int[bangobj.players.length];
@@ -358,15 +368,17 @@ public class ForestGuardians extends Scenario
         // announce the end of the wave
         RobotWaveEffect rweffect = new RobotWaveEffect(_wave);
         _bangmgr.deployEffect(-1, rweffect);
-        int grown = rweffect.living;
+        int grown = rweffect.living, perf = rweffect.getPerformance();
         
         // record stats and points for trees grown, add the score to the
         // total
+        int points = scalePoints(ForestGuardiansInfo.GROWTH_POINTS[
+            TreeBed.FULLY_GROWN - 1] * grown);
         for (int ii = 0; ii < bangobj.stats.length; ii++) {
             bangobj.stats[ii].incrementStat(Stat.Type.TREES_ELDER, grown);
-            bangobj.grantPoints(ii, scalePoints(
-                ForestGuardiansInfo.GROWTH_POINTS[TreeBed.FULLY_GROWN - 1] *
-                    grown));
+            bangobj.stats[ii].appendStat(Stat.Type.WAVE_SCORES, perf);
+            bangobj.stats[ii].incrementStat(Stat.Type.WAVE_POINTS, points);
+            bangobj.grantPoints(ii, points);
         }
         _wavePoints += grown;
         _waveMax += _ctrees.size();

@@ -84,6 +84,25 @@ public final class StatSet extends DSet<Stat>
     }
 
     /**
+     * Appends an integer value to an {@link IntArrayStat}.
+     *
+     * @exception ClassCastException thrown if the registered type of the
+     * specified stat is not an {@link IntArrayStat}.
+     */
+    public void appendStat (Stat.Type type, int value)
+    {
+        IntArrayStat stat = (IntArrayStat)get(type.name());
+        if (stat == null) {
+            stat = (IntArrayStat)type.newStat();
+            stat.appendValue(value);
+            addStat(stat);
+        } else {
+            stat.appendValue(value);
+            updateStat(stat);
+        }
+    }
+    
+    /**
      * Adds a string value to a {@link StringSetStat}.
      *
      * @exception ClassCastException thrown if the registered type of the
@@ -128,6 +147,15 @@ public final class StatSet extends DSet<Stat>
         return (stat == null) ? 0 : stat.getValue();
     }
 
+    /**
+     * Returns the current value of the specified integer array statistic.
+     */
+    public int[] getIntArrayStat (Stat.Type type)
+    {
+        IntArrayStat stat = (IntArrayStat)get(type.name());
+        return (stat == null) ? new int[0] : stat.getValue();
+    }
+    
     /**
      * Returns true if the specified {@link StringSetStat} contains the
      * specified value, false otherwise.

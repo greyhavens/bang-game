@@ -74,7 +74,9 @@ public abstract class Stat
         TREES_MATURE(new IntStat()),
         TREES_ELDER(new IntStat()),
         TREE_POINTS(new IntStat()),
-
+        WAVE_SCORES(new IntArrayStat()),
+        WAVE_POINTS(new IntStat()),
+        
         // stats derived from in-game statistics
         HIGHEST_POINTS(new IntStat()),
         MOST_KILLS(new IntStat()),

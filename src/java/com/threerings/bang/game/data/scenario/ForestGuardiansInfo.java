@@ -6,7 +6,10 @@ package com.threerings.bang.game.data.scenario;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.util.BasicContext;
 
+import com.threerings.bang.game.client.ForestGuardiansStatsView;
+import com.threerings.bang.game.client.StatsView;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.piece.Marker;
 
@@ -95,5 +98,11 @@ public class ForestGuardiansInfo extends ScenarioInfo
     public Teams getTeams ()
     {
         return Teams.COOP;
+    }
+    
+    @Override // from ScenarioInfo
+    public StatsView getStatsView (BasicContext ctx)
+    {
+        return new ForestGuardiansStatsView(ctx);
     }
 }
