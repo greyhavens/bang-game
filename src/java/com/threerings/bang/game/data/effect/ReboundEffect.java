@@ -10,6 +10,8 @@ import com.samskivert.util.IntIntMap;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.ReboundHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -20,6 +22,9 @@ import static com.threerings.bang.Log.log;
  */
 public class ReboundEffect extends BonusEffect
 {
+    /** Fired off when the spring is activated. */
+    public static final String ACTIVATED_SPRING = "frontier_town/spring";
+    
     /** The x and y coordinates to which the target was sent. */
     public short x, y;
 
@@ -75,6 +80,12 @@ public class ReboundEffect extends BonusEffect
     }
     
     @Override // documentation inherited
+    public EffectHandler createHandler (BangObject bangobj)
+    {
+        return new ReboundHandler();
+    }
+    
+    @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(pieceId);
@@ -87,7 +98,7 @@ public class ReboundEffect extends BonusEffect
     @Override // documentation inherited
     protected String getActivatedEffect ()
     {
-        return "frontier_town/spring";
+        return ACTIVATED_SPRING;
     }
 
     @Override // from BonusEffect

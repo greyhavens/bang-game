@@ -245,10 +245,18 @@ public class ActiveSprite extends PieceSprite
         _procActions.put(REMOVED, new ProceduralAction() {
             public float activate () {
                 // have the unit sink into the ground and fade away
-                startRiseFade(-TILE_SIZE * 0.5f, false, REMOVAL_DURATION);
+                startRiseFade(-getRemoveDepth(), false, REMOVAL_DURATION);
                 return REMOVAL_DURATION;
             }
         });
+    }
+    
+    /**
+     * Returns the depth to which the model sinks when faded out and removed.
+     */
+    protected float getRemoveDepth ()
+    {
+        return TILE_SIZE * 0.5f;
     }
     
     /**

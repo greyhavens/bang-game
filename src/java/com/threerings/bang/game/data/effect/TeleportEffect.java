@@ -151,10 +151,7 @@ public class TeleportEffect extends Effect
             damageEffect.apply(bangobj, obs);
         } else {
             // move the piece and report the effect
-            bangobj.board.clearShadow(_piece);
-            _piece.position(dest[0], dest[1]);
-            bangobj.board.shadowPiece(_piece);
-            obs.pieceMoved(_piece);
+            moveAndReport(bangobj, _piece, dest[0], dest[1], obs);
         }
 
         // Make sure the teleporter maintains the proper board state

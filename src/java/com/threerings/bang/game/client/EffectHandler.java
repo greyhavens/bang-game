@@ -705,6 +705,7 @@ public class EffectHandler extends BoardView.BoardAction
         float duration = FastMath.sqrt(
             -2f * PIECE_DROP_HEIGHT / BallisticShotHandler.GRAVITY);
         final int penderId = notePender();
+        sprite.getLocalTranslation().set(start);
         sprite.move(new BallisticPath(sprite, start, new Vector3f(),
             BallisticShotHandler.GRAVITY_VECTOR, duration) {
             public void wasRemoved () {
@@ -716,8 +717,10 @@ public class EffectHandler extends BoardView.BoardAction
                     sprite.displayDustRing();
                 }
                 getLandSound(piece).play(true);
-                if (piece instanceof LoggingRobot) {
-                    ((UnitSprite)sprite).queueAction("unfolding");
+                if (piece instanceof Unit) {
+                    ((UnitSprite)sprite).queueAction(
+                        piece instanceof LoggingRobot ?
+                            "unfolding" : "reacting");
                 } else {
                     bounceSprite(_sprite, TILE_SIZE / 4);
                 }

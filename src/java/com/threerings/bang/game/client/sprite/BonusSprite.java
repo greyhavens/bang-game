@@ -16,6 +16,7 @@ import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.GrantCardEffect;
+import com.threerings.bang.game.data.effect.ReboundEffect;
 import com.threerings.bang.game.data.effect.SnareEffect;
 import com.threerings.bang.game.data.effect.TrapEffect;
 
@@ -76,8 +77,16 @@ public class BonusSprite extends ActiveSprite
         };
         _procActions.put(TrapEffect.ACTIVATED_TRAP, tactivate);
         _procActions.put(SnareEffect.ACTIVATED_SNARE, tactivate);
+        _procActions.put(ReboundEffect.ACTIVATED_SPRING, tactivate);
     }
 
+    @Override // documentation inherited
+    protected float getRemoveDepth ()
+    {
+        // snares and springs are taller than dead units
+        return TILE_SIZE;
+    }
+    
     @Override // documentation inherited
     protected void createGeometry ()
     {
