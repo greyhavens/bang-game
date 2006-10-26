@@ -342,7 +342,8 @@
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
            debug="on" optimize="off" deprecation="on">
       <classpath refid="classpath"/>
-      <compilerarg value="-Xlint:unchecked"/>
+      <compilerarg value="-Xlint"/>
+      <compilerarg value="-Xlint:-serial"/>
     </javac>
   </target>
   <target name="compile" depends="prepare,qcompile"/>
