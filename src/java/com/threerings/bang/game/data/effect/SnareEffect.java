@@ -17,6 +17,12 @@ import com.threerings.bang.game.client.effect.InfluenceViz;
  */
 public class SnareEffect extends SetHindranceEffect
 {
+    /** Fired off on the snare when activated. */
+    public static final String ACTIVATED_SNARE = "indian_post/snare";
+    
+    /** Fired off on the snared unit. */
+    public static final String ENSNARED = "indian_post/ensnared";
+    
     @Override // documentation inherited
     protected Hindrance createHindrance (final Unit target)
     {
@@ -41,11 +47,17 @@ public class SnareEffect extends SetHindranceEffect
     }
 
     @Override // documentation inherited
-    protected String getEffectName ()
+    protected String getActivatedEffect ()
     {
-        return "indian_post/snare";
+        return ACTIVATED_SNARE;
     }
 
+    @Override // documentation inherited
+    protected String getEffectName()
+    {
+        return ENSNARED;
+    }
+    
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {

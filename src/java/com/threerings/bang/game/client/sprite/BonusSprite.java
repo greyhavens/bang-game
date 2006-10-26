@@ -16,6 +16,7 @@ import com.threerings.bang.util.SoundUtil;
 
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.GrantCardEffect;
+import com.threerings.bang.game.data.effect.SnareEffect;
 import com.threerings.bang.game.data.effect.TrapEffect;
 
 import static com.threerings.bang.client.BangMetrics.*;
@@ -66,13 +67,15 @@ public class BonusSprite extends ActiveSprite
                 return CARD_FLIGHT_DURATION;
             }
         });
-        _procActions.put(TrapEffect.ACTIVATED_TRAP, new ProceduralAction() {
+        ProceduralAction tactivate = new ProceduralAction() {
             public float activate () {
                 float duration = setAction("activated");
                 queueAction(REMOVED);
                 return duration;
             }
-        });
+        };
+        _procActions.put(TrapEffect.ACTIVATED_TRAP, tactivate);
+        _procActions.put(SnareEffect.ACTIVATED_SNARE, tactivate);
     }
 
     @Override // documentation inherited
