@@ -42,7 +42,7 @@ public class WhiteStag extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 15;
+        return 0; // DISABLED: 15;
     }
 
     @Override // documentation inherited

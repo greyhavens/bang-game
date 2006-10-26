@@ -41,7 +41,7 @@ public class Rockslide extends Card
     @Override // documentation inherited
     public int getWeight ()
     {
-        return 35;
+        return 0; // DISABLED: 35;
     }
 
     @Override // documentation inherited
