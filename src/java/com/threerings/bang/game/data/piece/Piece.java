@@ -588,6 +588,22 @@ public abstract class Piece
     {
         return null;  
     }
+
+    /**
+     * Called after a piece dies to see if there are any post death effects.
+     */
+    public Effect didDie (BangObject bangobj)
+    {
+        return null;
+    }
+
+    /**
+     * Called when a piece dies to see if they crash into anything.
+     */
+    public Point maybeCrash (BangObject bangobj, int shooter)
+    {
+        return null;
+    }
     
     /**
      * Returns true if this piece prevents other pieces from occupying the

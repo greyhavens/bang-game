@@ -2804,6 +2804,12 @@ public class BangManager extends GameManager
         }
 
         public void pieceKilled (Piece piece) {
+            // Queue a post death effect
+            Effect effect = piece.didDie(_bangobj);
+            if (effect != null) {
+                queueDeployEffect(piece.owner, effect, false);
+            }
+
             // let the scenario know that the piece was killed
             _scenario.pieceWasKilled(_bangobj, piece);
 

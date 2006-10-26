@@ -179,12 +179,9 @@ public abstract class Effect extends SimpleStreamableObject
             target.wasKilled(bangobj.tick);
 
             // airborn targets must land when they die
-            if (target.isAirborne() && !target.removeWhenDead()) {
-                Point pt = bangobj.board.getOccupiableSpot(
-                    target.x, target.y, 5, new Random(bangobj.tick));
-                if (pt != null) {
-                    moveAndReport(bangobj, target, pt.x, pt.y, obs);
-                }
+            Point pt = target.maybeCrash(bangobj, shooter);
+            if (pt != null) {
+                moveAndReport(bangobj, target, pt.x, pt.y, obs, false);
             }
         }
 
@@ -426,9 +423,17 @@ public abstract class Effect extends SimpleStreamableObject
     protected static void moveAndReport (
         BangObject bangobj, Piece piece, int nx, int ny, Observer obs)
     {
+        moveAndReport(bangobj, piece, nx, ny, obs, true);
+    }
+
+    protected static void moveAndReport (BangObject bangobj, Piece piece,
+            int nx, int ny, Observer obs, boolean shadow)
+    {
         bangobj.board.clearShadow(piece);
         piece.position(nx, ny);
-        bangobj.board.shadowPiece(piece);
+        if (shadow) {
+            bangobj.board.shadowPiece(piece);
+        }
         if (obs != null) {
             obs.pieceMoved(piece);
         }
