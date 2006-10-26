@@ -108,10 +108,10 @@ public class BangClientResolver extends CrowdClientResolver
         buser.poses[Look.Pose.DEFAULT.ordinal()] = player.look;
         buser.poses[Look.Pose.VICTORY.ordinal()] = player.victoryLook;
         buser.poses[Look.Pose.WANTED_POSTER.ordinal()] = player.wantedLook;
-        
+
         // load up this player's pardners
         BangServer.playmgr.loadPardners(buser);
-        
+
         // load this player's friends and foes
         ArrayList<FolkRecord> folks =
             BangServer.playrepo.loadOpinions(buser.playerId);
@@ -122,7 +122,7 @@ public class BangClientResolver extends CrowdClientResolver
         }
         // toIntArray() returns a sorted array
         buser.friends = friends.toIntArray();
-        buser.foes = foes.toIntArray(); 
+        buser.foes = foes.toIntArray();
     }
 
     protected static HashMap<String,PlayerRecord> _pstash =
