@@ -53,5 +53,5 @@ public class Revolutionary extends Unit
         return shot;
     }
 
-    protected static final float SWORD_ATTACK_BONUS = 1.25f;
+    protected static final float SWORD_ATTACK_BONUS = 1.5f;
 }
