@@ -6,13 +6,22 @@
 
 BANG_HOME=`dirname $0`/..
 HOSTNAME=`hostname`
-
-# this may be overridden layer
+JARGS=""
 NODE="frontier_town"
-if [ ! -z "$1" ]; then
-    NODE="$1"
+
+# parse our arguments
+while [ ! -z "$1" ]; do
+    case "$1" in
+        -D*)
+            JARGS="$JARGS $1"
+            ;;
+
+        *)
+            NODE="$1"
+            ;;
+    esac
     shift
-fi
+done
 
 SERVER_MEMORY=384M
 if [ -f $BANG_HOME/server.conf ]; then
@@ -24,4 +33,4 @@ fi
 
 CLASS=com.threerings.bang.server.BangServer
 $BANG_HOME/bin/bangjava -server -Djava.awt.headless=true -mx$SERVER_MEMORY \
-  -Dhostname=$HOSTNAME -Dnode=$NODE -Dis_node=true $CLASS "$@"
+  -Dhostname=$HOSTNAME -Dnode=$NODE -Dis_node=true $JARGS $CLASS
