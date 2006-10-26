@@ -61,7 +61,4 @@ public class ReboundHandler extends EffectHandler
         sprite.setOrientation(piece.orientation);
         dropPiece(piece);
     }
-    
-    /** The sprite being bounced. */
-    protected PieceSprite _sprite;
 }
