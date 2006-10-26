@@ -131,7 +131,7 @@ public abstract class ScenarioInfo
             scids[ii] = validIds[idx];
             for (int jj = 0; jj < weights.length; jj++) {
                 if (jj != idx) {
-                    weights[idx]+= players;
+                    weights[jj] += players;
                 }
             }
         }
