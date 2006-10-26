@@ -104,7 +104,7 @@ public class RobotWaveEffect extends Effect
             return true;
         }
         
-        // count the living treesreturn living * MAX_PERFORMANCE / treeIds.length;
+        // count the living trees
         for (int treeId : treeIds) {
             TreeBed tree = (TreeBed)bangobj.pieces.get(treeId);
             if (tree == null) {
