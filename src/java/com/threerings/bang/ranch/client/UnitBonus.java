@@ -132,8 +132,8 @@ public class UnitBonus extends BContainer
             setLayoutManager(GroupLayout.makeHoriz(GroupLayout.CENTER));
             String none = "m.no_mods";
             switch (which) {
-            case ATTACK: none = "m.no_attack_mods";
-            case DEFEND: none = "m.no_defend_mods";
+            case ATTACK: none = "m.no_attack_mods"; break;
+            case DEFEND: none = "m.no_defend_mods"; break;
             }
             add(bonusIconLabel(BonusIcons.NA, _msgs.get(none)));
 
