@@ -5,13 +5,14 @@ package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.game.data.BangObject;
 
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
-import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 /**
  * A card that allows the player to make a unit drop any held bonus (it's
@@ -29,7 +30,8 @@ public class DropNugget extends Card
     public boolean isPlayable (BangObject bangobj)
     {
         return super.isPlayable(bangobj) &&
-            bangobj.scenario.hasHoldableBonuses();
+            bangobj.scenario.hasHoldableBonuses() &&
+            bangobj.scenario.getTeams() != ScenarioInfo.Teams.COOP;
     }
     
     @Override // documentation inherited
