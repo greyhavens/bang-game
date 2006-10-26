@@ -44,7 +44,11 @@ public class IconViz extends EffectViz
      */
     public static IconViz createIconViz (Piece piece, String effect)
     {
-        return IconConfig.haveIcon(effect) ? new IconViz(effect) : null;
+        if (RepairEffect.isRepairEffect(effect)) {
+            return new IconViz(RepairEffect.REPAIRED);
+        } else {
+            return IconConfig.haveIcon(effect) ? new IconViz(effect) : null;
+        }
     }
     
     /**

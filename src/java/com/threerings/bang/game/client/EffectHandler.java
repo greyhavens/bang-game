@@ -193,8 +193,9 @@ public class EffectHandler extends BoardView.BoardAction
         } else if (effect.equals(ShotEffect.EXPLODED)) {
             wasDamaged = true;
             effviz = new ExplosionViz();
-        } else if (RepairEffect.isRepairEffect(effect) ||
-                   effect.equals(NuggetEffect.NUGGET_ADDED)) {
+        } else if ((_effect instanceof RepairEffect &&
+            RepairEffect.isRepairEffect(effect)) ||
+                effect.equals(NuggetEffect.NUGGET_ADDED)) {
             effviz = new RepairViz();
         }
 
