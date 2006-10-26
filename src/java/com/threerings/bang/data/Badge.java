@@ -424,7 +424,7 @@ public class Badge extends Item
         FT_BIGSHOT_USER {
             public boolean qualifies (PlayerObject user) {
                 return checkUnitUsage(user.stats,
-                    BangCodes.FRONTIER_TOWN, BIGSHOT_UNITS, 5);
+                    BangCodes.FRONTIER_TOWN, BIGSHOT_UNITS, 1);
             }
         },
         FT_ALLUNIT_USER {
@@ -456,7 +456,7 @@ public class Badge extends Item
         ITP_BIGSHOT_USER {
             public boolean qualifies (PlayerObject user) {
                 return checkUnitUsage(user.stats,
-                    BangCodes.INDIAN_POST, BIGSHOT_UNITS, 5);
+                    BangCodes.INDIAN_POST, BIGSHOT_UNITS, 1);
             }
         },
         ITP_ALLUNIT_USER {
