@@ -108,7 +108,7 @@ public class PlayerSlot extends AvatarView
     @Override // documentation inherited
     protected Dimension computePreferredSize (int whint, int hhint)
     {
-        return new Dimension(120, 75);
+        return new Dimension(120, 90);
     }
 
     @Override // documentation inherited
@@ -118,8 +118,7 @@ public class PlayerSlot extends AvatarView
             super.renderImage(renderer);
         } else {
             int ix = (getWidth() - _silhouette.getWidth())/2;
-            int iy = getHeight() - _silhouette.getHeight() - 5;
-            _silhouette.render(renderer, ix, iy, 1f);
+            _silhouette.render(renderer, ix, _emptyScroll.getHeight()-1, 1f);
         }
     }
 
