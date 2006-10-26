@@ -36,6 +36,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
+import com.jmex.bui.icon.BlankIcon;
 
 /**
  * Handles some shared stuff for our shop views (General Store, Bank, Barber,
@@ -142,6 +143,13 @@ public abstract class ShopView extends BWindow
         // add our town label
         add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + townId),
                        "town_name_label"), new Rectangle(851, 637, 165, 20));
+        // add a blank button over the shop image that returns to the town
+        _townBtn = new BButton(new BlankIcon(_shopimg.getWidth(), 
+                    _shopimg.getHeight()), _ctrl, "to_town"); 
+        _townBtn.setStyleClass("invisibutton");
+        add(_townBtn, new Point(
+                    1012-_shopimg.getWidth(), 756-_shopimg.getHeight()));
+
     }
 
     @Override // documentation inherited
@@ -244,6 +252,10 @@ public abstract class ShopView extends BWindow
                 _ctx.getBangClient().clearPopup(_intro, true);
             } else if ("help".equals(event.getAction())) {
                 showHelp();
+            } else if ("to_town".equals(event.getAction())) {
+                _townBtn.setEnabled(false);
+                _ctx.getLocationDirector().leavePlace();
+                _ctx.getBangClient().showTownView();
             }
         }
     };
@@ -251,6 +263,7 @@ public abstract class ShopView extends BWindow
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BWindow _intro;
+    protected BButton _townBtn;
     protected BImage _background, _shopimg, _shopname;
     protected BImage _shopkeep, _shopkbg, _keepname;
     protected Point _nameloc;
