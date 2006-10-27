@@ -652,6 +652,17 @@
     <component cclass="female/clothing_front" name="basket_gatherer"/>
   </article>
 
+  <article name="female_dogsoldier" townId="indian_post"
+           slot="clothing" scrip="2100" coins="3">
+    <component cclass="female/clothing_back" name="dogsoldier"/>
+    <component cclass="female/clothing_front" name="dogsoldier"/>
+  </article>
+
+  <article name="female_jacket_collar" townId="indian_post"
+           slot="clothing" scrip="1250" coins="2">
+    <component cclass="female/clothing_back" name="jacket_collar"/>
+  </article>
+
 <!--
   <article name="female_revolutionary" townId="indian_post"
            slot="clothing" scrip="3750" coins="4" colors="clothes_p,clothes_s">
@@ -882,6 +893,12 @@
   <article name="female_feather_coronet" townId="indian_post"
            slot="hat" scrip="2250" coins="3" colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat_back" name="feather_coronet"/>
+  </article>
+
+  <article name="female_thunderbird" townId="indian_post"
+           slot="hat" scrip="2100" coins="3">
+    <component cclass="female/hat" name="thunderbird"/>
+    <component cclass="female/hat_back" name="thunderbird"/>
   </article>
 
 
