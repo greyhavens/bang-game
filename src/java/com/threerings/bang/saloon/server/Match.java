@@ -42,11 +42,13 @@ public class Match
     /** Creates a new match with the specified player. */
     public Match (PlayerObject player, Criterion criterion)
     {
-        players = new PlayerObject[criterion.getDesiredPlayers()];
+        players = new PlayerObject[GameCodes.MAX_PLAYERS];
+        _playerCriterions = new Criterion[GameCodes.MAX_PLAYERS];
         players[0] = player;
         Rating rating = player.getRating(ScenarioInfo.OVERALL_IDENT);
         _minRating = _avgRating = _maxRating = rating.rating;
-        _criterion = criterion;
+        _playerCriterions[0] = criterion;
+        rebuildCriterion();
     }
 
     /**
@@ -107,6 +109,7 @@ public class Match
             for (int ii = 0; ii < players.length; ii++) {
                 if (players[ii] == null) {
                     players[ii] = player;
+                    _playerCriterions[ii] = criterion;
                     matchobj.setPlayerOidsAt(player.getOid(), ii);
                     added = ii;
                     break;
@@ -158,7 +161,17 @@ public class Match
             int poid = matchobj.playerOids[ii];
             if (poid == playerOid) {
                 players[ii] = null;
-                matchobj.setPlayerOidsAt(0, ii);
+                _playerCriterions[ii] = null;
+                try {
+                    matchobj.startTransaction();
+                    matchobj.setPlayerOidsAt(0, ii);
+
+                    // recreate the criterion now that this player is gone
+                    rebuildCriterion();
+                    matchobj.setCriterion(_criterion);
+                } finally {
+                    matchobj.commitTransaction();
+                }
                 return true;
             }
         }
@@ -185,7 +198,9 @@ public class Match
     public Readiness checkReady ()
     {
         int count = getPlayerCount();
-        if (count == _criterion.getDesiredPlayers()) {
+        if (_criterion == null) {
+            return Readiness.NOT_READY;
+        } else if (count == _criterion.getDesiredPlayers()) {
             return Readiness.START_NOW;
         } else if (_criterion.couldStart(count)) {
             return Readiness.COULD_START;
@@ -203,7 +218,8 @@ public class Match
         // if there are at least two players, just wait ten seconds; otherwise
         // wait ten seconds for every empty seat
         int humans = getPlayerCount();
-        return ((humans > 1) ? 1 : players.length - humans) * BASE_WAIT;
+        return ((humans > 1) ? 1 : 
+                _criterion.getDesiredPlayers() - humans) * BASE_WAIT;
     }
 
     /**
@@ -257,7 +273,25 @@ public class Match
         return config;
     }
 
+    /**
+     * Rebuilds the criterion based on the stored player preferences.
+     */
+    protected void rebuildCriterion ()
+    {
+        _criterion = null;
+        for (int ii = 0; ii < _playerCriterions.length; ii++) {
+            if (_playerCriterions[ii] != null) {
+                if (_criterion == null) {
+                    _criterion = (Criterion)_playerCriterions[ii].clone();
+                } else {
+                    _criterion.merge(_playerCriterions[ii]);
+                }
+            }
+        }
+    }
+
     protected Criterion _criterion;
+    protected Criterion[] _playerCriterions;
     protected int _minRating, _avgRating, _maxRating;
 
     protected static final long BASE_WAIT = 10000L;

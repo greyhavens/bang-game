@@ -14,6 +14,7 @@ import static com.threerings.bang.Log.log;
  * Defines various criterion for finding opponents.
  */
 public class Criterion extends SimpleStreamableObject
+    implements Cloneable
 {
     /** Controls ranking closeness when matchmaking. */
     public static final int TIGHT = 0;
@@ -44,6 +45,16 @@ public class Criterion extends SimpleStreamableObject
     public static int compose (boolean val1, boolean val2, boolean val3)
     {
         return (val1 ? 1 : 0) | (val2 ? (1<<1) : 0) | (val3 ? (1<<2) : 0);
+    }
+
+    @Override // documentation inherited
+    public Object clone ()
+    {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException cnse) {
+            throw new RuntimeException(cnse);
+        }
     }
 
     /**
