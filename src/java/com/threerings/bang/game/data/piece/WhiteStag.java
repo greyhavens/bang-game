@@ -3,13 +3,15 @@
 
 package com.threerings.bang.game.data.piece;
 
+import com.threerings.bang.game.data.BangObject;
+
 /**
  * The white stag.
  */
 public class WhiteStag extends BuffaloRider
 {
     @Override // documentation inherited
-    public boolean canActivateBonus (Bonus bonus)
+    public boolean canActivateBonus (BangObject bangobj, Bonus bonus)
     {
         return false;
     }

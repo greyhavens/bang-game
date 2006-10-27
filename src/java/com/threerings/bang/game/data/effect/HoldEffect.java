@@ -59,12 +59,6 @@ public class HoldEffect extends BonusEffect
         if (bonus == null) {
             return null;
         }
-        Point spot = bangobj.board.getOccupiableSpot(unit.x, unit.y, 3);
-        if (spot == null) {
-            log.warning("Unable to find spot to drop bonus " +
-                "[unit=" + unit + ", type=" + type + "].");
-            return null;
-        }
         try {
             HoldEffect effect = (HoldEffect)Class.forName(
                     bonus.getConfig().effectClass).newInstance();
@@ -72,9 +66,8 @@ public class HoldEffect extends BonusEffect
             effect.dropping = true;
             effect.causerId = causerId;
             effect.drop = bonus;
-            effect.drop.assignPieceId(bangobj);
-            effect.drop.position(spot.x, spot.y);
             effect.type = type;
+            effect.drop.position(unit.x, unit.y);
             return effect;
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to instantiate effect class " +
@@ -136,7 +129,21 @@ public class HoldEffect extends BonusEffect
             unit.holding = type;
             super.prepare(bangobj, dammap);
 
+        } else if (drop != null) {
+            Point spot = bangobj.board.getOccupiableSpot(drop.x,drop.y, 3);
+            if (spot == null) {
+                drop.position(-1, -1);
+            } else {
+                drop.position(spot.x, spot.y);
+                drop.assignPieceId(bangobj);
+            }
         }
+    }
+
+    @Override // documentation inherited
+    public boolean isApplicable ()
+    {
+        return (drop == null || drop.x != -1);
     }
 
     @Override // documentation inherited

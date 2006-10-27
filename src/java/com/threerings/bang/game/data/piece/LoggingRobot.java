@@ -66,10 +66,10 @@ public class LoggingRobot extends Unit
     }
     
     @Override // documentation inherited
-    public boolean canActivateBonus (Bonus bonus)
+    public boolean canActivateBonus (BangObject bangobj, Bonus bonus)
     {
         BonusConfig bconfig = bonus.getConfig();
-        return super.canActivateBonus(bonus) &&
+        return super.canActivateBonus(bangobj, bonus) &&
             !(bconfig.holdable || bconfig.playersOnly);
     }
     

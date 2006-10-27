@@ -16,6 +16,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.UnitSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.ExpireHindranceEffect;
 import com.threerings.bang.game.data.effect.ExpireInfluenceEffect;
@@ -190,9 +191,11 @@ public class Unit extends Piece
     /**
      * Indicates whether or not this piece can activate bonuses.
      */
-    public boolean canActivateBonus (Bonus bonus)
+    public boolean canActivateBonus (BangObject bangobj, Bonus bonus)
     {
-        return isAlive();
+        return isAlive() && 
+            (!"frontier_town/card".equals(bonus.getConfig().type) || 
+                bangobj.countPlayerCards(owner) < GameCodes.MAX_CARDS);
     }
 
     /** Configures the instance after unserialization. */
@@ -344,7 +347,7 @@ public class Unit extends Piece
         ArrayList<Effect> effects = new ArrayList<Effect>();
         if (other instanceof Bonus) {
             Bonus bonus = (Bonus)other;
-            if (canActivateBonus(bonus)) {
+            if (canActivateBonus(bangobj, bonus)) {
                 if (bonus.getConfig().holdable && holding != null) {
                     effects.add(HoldEffect.dropBonus(
                             bangobj, this, -1, holding)); 
