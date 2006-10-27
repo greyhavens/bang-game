@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
@@ -37,6 +38,12 @@ public class Firestarter extends Card
     public int getScripCost ()
     {
         return 120;
+    }
+
+    @Override // documentation inherited
+    public Badge.Type getQualifier ()
+    {
+        return Badge.Type.WENDIGO_SURVIVALS_2;
     }
 
     @Override // documentation inherited

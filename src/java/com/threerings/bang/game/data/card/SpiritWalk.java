@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
@@ -35,6 +36,18 @@ public class SpiritWalk extends Card
     }
 
     @Override // documentation inherited
+    public int getScripCost ()
+    {
+        return 120;
+    }
+
+    @Override // documentation inherited
+    public Badge.Type getQualifier ()
+    {
+        return Badge.Type.WENDIGO_SURVIVALS_1;
+    }
+
+    @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
         return (target instanceof Unit && target.isAlive());
@@ -46,11 +59,5 @@ public class SpiritWalk extends Card
         NoncorporealEffect effect = new NoncorporealEffect();
         effect.pieceId = (Integer)target;
         return effect;
-    }
-
-    @Override // documentation inherited
-    public int getScripCost ()
-    {
-        return 120;
     }
 }

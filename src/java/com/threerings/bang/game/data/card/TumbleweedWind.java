@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.data.card;
 
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 
 import com.threerings.bang.game.data.BangObject;
@@ -43,6 +44,12 @@ public class TumbleweedWind extends Card
     public int getWeight ()
     {
         return 40;
+    }
+
+    @Override // documentation inherited
+    public Badge.Type getQualifier ()
+    {
+        return Badge.Type.TREES_SAVED_2;
     }
 
     @Override // documenataion inherited

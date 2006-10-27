@@ -67,7 +67,6 @@ public abstract class Stat
         TOTEMS_MEDIUM(new IntStat()),
         TOTEMS_LARGE(new IntStat()),
         TOTEMS_CROWN(new IntStat()),
-        TOTEMS_STACKED(new IntStat()),
         TOTEM_POINTS(new IntStat()),
         WENDIGO_SURVIVALS(new IntStat()),
         TALISMAN_POINTS(new IntStat()),

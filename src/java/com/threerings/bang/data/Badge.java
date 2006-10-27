@@ -321,17 +321,17 @@ public class Badge extends Item
         // totems stacked badges
         TOTEMS_STACKED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TOTEMS_STACKED) >= 10;
+                return getTotemsStacked(user.stats) >= 10;
             }
         },
         TOTEMS_STACKED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TOTEMS_STACKED) >= 100;
+                return getTotemsStacked(user.stats) >= 100;
             }
         },
         TOTEMS_STACKED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.TOTEMS_STACKED) >= 1000;
+                return getTotemsStacked(user.stats) >= 1000;
             }
         },
         TOTEMS_STACKED_4 {
@@ -862,6 +862,14 @@ public class Badge extends Item
                         "[type=" + type + ", old=" + old +
                         ", new=" + message + "].");
         }
+    }
+
+    /** Used by Totem Building badges. */
+    protected static int getTotemsStacked (StatSet stats)
+    {
+        return stats.getIntStat(Stat.Type.TOTEMS_SMALL) +
+            stats.getIntStat(Stat.Type.TOTEMS_MEDIUM) +
+            stats.getIntStat(Stat.Type.TOTEMS_LARGE);
     }
 
     /** Used by unit usage badges. */
