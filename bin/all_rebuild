@@ -51,6 +51,7 @@ fi
 echo "*** Starting build in $ROOT at" `date`
 
 # update if requested
+cd $ROOT
 if [ ! -z "$UPDATE" ]; then
     svn update
     if [ $? != 0 ] ; then
@@ -61,7 +62,6 @@ if [ ! -z "$UPDATE" ]; then
 fi
 
 # build the main thang
-cd $ROOT
 $ANT cleanall distall
 if [ $? != 0 ]; then
     rm -f $LOCKFILE
