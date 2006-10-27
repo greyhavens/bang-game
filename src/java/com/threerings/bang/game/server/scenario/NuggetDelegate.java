@@ -82,7 +82,8 @@ public class NuggetDelegate extends CounterDelegate
             effect.dropping = true;
             
         } else if (_allowClaimWithdrawal && counter.owner != unit.owner &&
-                   counter.count > 0 && unit.canActivateBonus(_nuggetBonus) &&
+                   counter.count > 0 && 
+                   unit.canActivateBonus(bangobj, _nuggetBonus) &&
                    !NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
             if (unit.holding != null) {
                 HoldEffect dropEffect = HoldEffect.dropBonus(
