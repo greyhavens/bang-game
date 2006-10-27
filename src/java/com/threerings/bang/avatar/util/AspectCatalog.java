@@ -85,7 +85,8 @@ public class AspectCatalog
     public Collection<Aspect> getAspects (String aclass)
     {
         AspectClass ccrec = _classes.get(aclass);
-        return (ccrec == null) ? null : ccrec.aspects.values();
+        return (ccrec == null) ?
+            new ArrayList<Aspect>() : ccrec.aspects.values();
     }
 
     /**
