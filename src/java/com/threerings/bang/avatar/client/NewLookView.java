@@ -44,6 +44,7 @@ import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.BarberCodes;
@@ -382,8 +383,12 @@ public class NewLookView extends BContainer
                 _icons.add(_choice = new ChoiceIcon(prefix, null));
             }
 
+            int townIdx = BangUtil.getTownIndex(_ctx.getUserObject().townId);
             Look look = _ctx.getUserObject().getLook(Look.Pose.DEFAULT);
             for (AspectCatalog.Aspect entry : aspects) {
+                if (BangUtil.getTownIndex(entry.townId) > townIdx) {
+                    continue;
+                }
                 ChoiceIcon choice = new ChoiceIcon(prefix, entry);
                 choice.components =
                     new CharacterComponent[aspect.classes.length];

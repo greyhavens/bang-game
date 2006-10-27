@@ -24,6 +24,7 @@ import com.threerings.cast.NoSuchComponentException;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.Look;
@@ -391,6 +392,15 @@ public class AvatarLogic
                 log.warning("Requested to purchase look with unknown aspect " +
                             "[who=" + user.who() + ", class=" + acname +
                             ", choice=" + config.aspects[ii] + "].");
+                return null;
+            }
+
+            // make sure the aspect is from the appropriate town
+            if (BangUtil.getTownIndex(aspect.townId) >
+                BangUtil.getTownIndex(user.townId)) {
+                log.warning("Requested to purchase look in invalid town " +
+                            "[who=" + user.who() + ", intown=" + user.townId +
+                            ", aspect=" + aspect + "].");
                 return null;
             }
 
