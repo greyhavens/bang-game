@@ -30,7 +30,7 @@ public class ForestGuardiansInfo extends ScenarioInfo
         Stat.Type.TREES_ELDER };
 
     /** Points awarded for living trees at the end of each wave. */
-    public static final int[] GROWTH_POINTS = { 15, 25, 35 };
+    public static final int[] GROWTH_POINTS = { 1, 3, 5 };
 
     @Override // from ScenarioInfo
     public String getIdent ()
