@@ -1,6 +1,7 @@
-502
+507
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
+female/clothing_back := dogsoldier := 503
 female/clothing_back := duster := 325
 female/clothing_back := duster_smoking := 326
 female/clothing_back := frontier_dress := 175
@@ -9,6 +10,7 @@ female/clothing_back := gatherer := 393
 female/clothing_back := gorget_vest := 487
 female/clothing_back := gunslinger := 80
 female/clothing_back := hunter := 394
+female/clothing_back := jacket_collar := 504
 female/clothing_back := jacket_hatchet := 488
 female/clothing_back := kneel := 334
 female/clothing_back := kneel_rifle := 327
@@ -35,6 +37,7 @@ female/clothing_front := arms_down_bodice := 181
 female/clothing_front := basket_gatherer := 396
 female/clothing_front := book_frontier_dress := 182
 female/clothing_front := cash_madam := 328
+female/clothing_front := dogsoldier := 505
 female/clothing_front := earing_hunter := 397
 female/clothing_front := fan_bodice := 183
 female/clothing_front := flirt_peasant_dress := 184
@@ -132,6 +135,7 @@ female/hat := revolutionary := 403
 female/hat := saloon_feather := 398
 female/hat := sombrero := 198
 female/hat := stetson := 110
+female/hat := thunderbird := 506
 female/hat := topper := 499
 female/hat := trickster_raven := 404
 female/hat := war_bonnet := 350
@@ -146,6 +150,7 @@ female/hat_back := longbrim := 131
 female/hat_back := revolutionary := 405
 female/hat_back := sombrero := 200
 female/hat_back := stetson := 111
+female/hat_back := thunderbird := 507
 female/hat_back := topper := 501
 female/hat_back := war_bonnet := 352
 female/hat_band := border_band_sombrero := 201
