@@ -405,62 +405,61 @@ public class Badge extends Item
         // frontier town unit usage badges
         CAVALRY_USER {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getMapValue(
-                    Stat.Type.UNITS_USED, "frontier_town/cavalry") >= 100;
+                return checkBigShotUsage(user.stats, "frontier_town/cavalry");
             }
         },
         TACTICIAN_USER {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getMapValue(
-                    Stat.Type.UNITS_USED, "frontier_town/tactician") >= 100;
+                return checkBigShotUsage(user.stats, "frontier_town/tactician");
             }
         },
         CODGER_USER {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getMapValue(
-                    Stat.Type.UNITS_USED, "frontier_town/codger") >= 100;
+                return checkBigShotUsage(user.stats, "frontier_town/coder");
             }
         },
         FT_BIGSHOT_USER {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: 10 wins with each bigshot
+                return checkUnitUsage(
+                    user.stats, Stat.Type.BIGSHOT_WINS,
+                    BangCodes.FRONTIER_TOWN, BIGSHOT_UNITS, 10);
             }
         },
         FT_ALLUNIT_USER {
             public boolean qualifies (PlayerObject user) {
-                return checkUnitUsage(user.stats,
-                    BangCodes.FRONTIER_TOWN, ALL_UNITS, 10);
+                return checkUnitUsage(user.stats, Stat.Type.UNITS_USED,
+                                      BangCodes.FRONTIER_TOWN, ALL_UNITS, 1);
             }
         },
 
         // indian trading post unit usage badges
         STORM_CALLER_USER {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getMapValue(
-                    Stat.Type.UNITS_USED, "indian_post/stormcaller") >= 100;
+                return checkBigShotUsage(user.stats, "indian_post/stormcaller");
             }
         },
         TRICKSTER_RAVEN_USER {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getMapValue(
-                    Stat.Type.UNITS_USED, "indian_post/tricksterraven") >= 100;
+                return checkBigShotUsage(
+                    user.stats, "indian_post/tricksterraven");
             }
         },
         REVOLUTIONARY_USER {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getMapValue(
-                    Stat.Type.UNITS_USED, "indian_post/revolutionary") >= 100;
+                return checkBigShotUsage(
+                    user.stats, "indian_post/revolutionary");
             }
         },
         ITP_BIGSHOT_USER {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: 10 wins with each bigshot
+                return checkUnitUsage(user.stats, Stat.Type.BIGSHOT_WINS,
+                                      BangCodes.INDIAN_POST, BIGSHOT_UNITS, 10);
             }
         },
         ITP_ALLUNIT_USER {
             public boolean qualifies (PlayerObject user) {
-                return checkUnitUsage(user.stats,
-                    BangCodes.INDIAN_POST, ALL_UNITS, 10);
+                return checkUnitUsage(user.stats, Stat.Type.UNITS_USED,
+                                      BangCodes.INDIAN_POST, ALL_UNITS, 1);
             }
         },
 
@@ -867,15 +866,22 @@ public class Badge extends Item
 
     /** Used by unit usage badges. */
     protected static boolean checkUnitUsage (
-        StatSet stats, String townId, EnumSet<UnitConfig.Rank> which,
-        int usages)
+        StatSet stats, Stat.Type stat,
+        String townId, EnumSet<UnitConfig.Rank> which, int usages)
     {
         for (UnitConfig cfg : UnitConfig.getTownUnits(townId, which)) {
-            if (stats.getMapValue(Stat.Type.UNITS_USED, cfg.type) < usages) {
+            if (stats.getMapValue(stat, cfg.type) < usages) {
                 return false;
             }
         }
         return true;
+    }
+
+    /** Used by Big Shot usage badges. */
+    protected static boolean checkBigShotUsage (StatSet stats, String type)
+    {
+        return stats.getMapValue(Stat.Type.UNITS_USED, type) >= 100 ||
+            stats.getMapValue(Stat.Type.BIGSHOT_WINS, type) >= 30;
     }
 
     /**

@@ -172,7 +172,7 @@ public class BangManager extends GameManager
     {
         /** The scenario used for the round. */
         public Scenario scenario;
-        
+
         /** The last tick recorded for this round. */
         public int lastTick;
 
@@ -210,7 +210,7 @@ public class BangManager extends GameManager
     {
         return _precords[pidx];
     }
-    
+
     /**
      * Called by the client when it has processed a particular tutorial action.
      * This is passed through to the {@link Tutorial} scenario.
@@ -399,7 +399,7 @@ public class BangManager extends GameManager
             _damage.clear();
             throw new InvocationException(CARD_UNPLAYABLE);
         }
-        
+
         // play the played-card effect immediately before the card's actual
         // effect
         log.info("Playing card: " + card);
@@ -407,7 +407,7 @@ public class BangManager extends GameManager
             throw new InvocationException(CARD_UNPLAYABLE);
         }
         deployEffect(card.owner, effect, true);
-        
+
         // if this card was a starting card, note that it was consumed
         StartingCard scard = _scards.get(cardId);
         if (scard != null) {
@@ -438,7 +438,7 @@ public class BangManager extends GameManager
         // if all players are AIs, the human observer determines when to
         // proceed
         if (_bconfig.allPlayersAIs()) {
-            playersAllHere(); 
+            playersAllHere();
         } else {
             super.playerReady(caller);
         }
@@ -452,7 +452,7 @@ public class BangManager extends GameManager
             }
         }
     }
-    
+
     /**
      * Attempts to move the specified unit to the specified coordinates and
      * optionally fire upon the specified target.
@@ -558,7 +558,7 @@ public class BangManager extends GameManager
                 }
             }
             _postShotEffects.clear();
-            
+
             // finally update our metrics
             _bangobj.updateData();
 
@@ -583,7 +583,7 @@ public class BangManager extends GameManager
         }
         _orders.clear();
     }
-    
+
     /**
      * Adds a piece to the board by deploying an {@link AddPieceEffect}.  The
      * piece should already have a valid piece id.
@@ -592,7 +592,7 @@ public class BangManager extends GameManager
     {
         addPiece(piece, null);
     }
-    
+
     /**
      * Adds a piece to the board by deploying an {@link AddPieceEffect}.  The
      * piece should already have a valid piece id.
@@ -604,7 +604,7 @@ public class BangManager extends GameManager
     {
         deployEffect(-1, new AddPieceEffect(piece, effect));
     }
-    
+
     /**
      * Prepares an effect and posts it to the game object, recording damage
      * done in the process.
@@ -616,7 +616,7 @@ public class BangManager extends GameManager
     {
         return deployEffect(effector, effect, false);
     }
-    
+
     /**
      * Prepares an effect and posts it to the game object, recording damage
      * done in the process. Will also process any other effects that got
@@ -759,7 +759,7 @@ public class BangManager extends GameManager
                 _bangobj.boardName + ", pcount=" +
                 _bangobj.players.length + "]";
     }
-    
+
     @Override // documentation inherited
     protected PlaceObject createPlaceObject ()
     {
@@ -827,7 +827,7 @@ public class BangManager extends GameManager
 
         // if no boards were specified otherwise, pick them randomly
         if (boards == null) {
-            boards = BangServer.boardmgr.selectBoards(_bconfig.players.length, 
+            boards = BangServer.boardmgr.selectBoards(_bconfig.players.length,
                     _bconfig.scenarios, _bconfig.lastBoardIds);
         }
 
@@ -1622,15 +1622,15 @@ public class BangManager extends GameManager
             // we'll allow ties in the per round rankings
             Arrays.sort(ranks);
             short rank = 0;
-            boolean coop = (_bangobj.scenario.getTeams() == 
+            boolean coop = (_bangobj.scenario.getTeams() ==
                     ScenarioInfo.Teams.COOP);
             if (coop) {
-                int avgscore = (IntListUtil.sum(_bangobj.points) / 
+                int avgscore = (IntListUtil.sum(_bangobj.points) /
                         _bangobj.points.length);
-                rank = (short)(BangObject.COOP_RANK + 
+                rank = (short)(BangObject.COOP_RANK +
                     BangServer.ratingmgr.getPercentile(
-                        _bangobj.scenario.getIdent(), ranks.length, 
-                        avgscore, false)); 
+                        _bangobj.scenario.getIdent(), ranks.length,
+                        avgscore, false));
             }
             int high = _bangobj.points[ranks[0].pidx];
             for (int ii = 0; ii < ranks.length; ii++) {
@@ -1647,20 +1647,11 @@ public class BangManager extends GameManager
 
         // record for all players still in the game that they "used" their
         // units during this round
-        for (Piece piece : _purchases.values()) {
-            if (!(piece instanceof Unit) || piece.owner < 0) {
-                continue;
-            }
-            int ploid = _playerOids[piece.owner];
-            if (ploid <= 0 || !_bangobj.isActivePlayer(piece.owner)) {
-                continue;
-            }
-            PlayerObject user = (PlayerObject)BangServer.omgr.getObject(ploid);
-            if (user == null) {
-                continue;
-            }
-            user.stats.incrementMapStat(
-                Stat.Type.UNITS_USED, ((Unit)piece).getType(), 1);
+        noteUnitsUsed(_purchases, Stat.Type.UNITS_USED, -1);
+
+        // also keep track of all big shot units used during the game
+        for (Unit unit : _bangobj.bigShots) {
+            _bigshots.add(unit);
         }
 
         // clear out the various per-player data structures
@@ -1669,7 +1660,7 @@ public class BangManager extends GameManager
         // process any played cards
         ArrayList<StartingCard> updates = new ArrayList<StartingCard>();
         ArrayList<StartingCard> removals = new ArrayList<StartingCard>();
-        for (Iterator<StartingCard> iter = _scards.values().iterator(); 
+        for (Iterator<StartingCard> iter = _scards.values().iterator();
                 iter.hasNext(); ) {
             StartingCard scard = iter.next();
             if (!scard.played) {
@@ -1708,7 +1699,6 @@ public class BangManager extends GameManager
 
         // do the normal round ending stuff as well
         roundDidEnd(false);
-
 
         // if this was a tutorial practice session, and we played at least half
         // of it, mark the practice tutorial as completed
@@ -1846,7 +1836,7 @@ public class BangManager extends GameManager
                         Stat.Type.UNITS_KILLED);
                 }
             }
-            _ranks[ii] = new RankRecord(ii, points[ii], kills, 
+            _ranks[ii] = new RankRecord(ii, points[ii], kills,
                     (isActivePlayer(ii) ? 1 : 0));
         }
 
@@ -2004,7 +1994,7 @@ public class BangManager extends GameManager
             checkTarget(unit, target, unit.x, unit.y);
         }
 
-        
+
         return meffect;
     }
 
@@ -2128,7 +2118,7 @@ public class BangManager extends GameManager
             if (ii == pidx) {
                 ddone = -3 * ddone / 2;
             } else {
-                ddone = _scenario.modifyDamageDone(pidx, ii, ddone);    
+                ddone = _scenario.modifyDamageDone(pidx, ii, ddone);
             }
             total += ddone;
         }
@@ -2160,7 +2150,7 @@ public class BangManager extends GameManager
         for (int rr = 0; rr < _bconfig.getRounds(); rr++) {
             // if the round was not played to at least half it's desired
             // duration, skip it
-            if (_rounds[rr].duration == 0 || 
+            if (_rounds[rr].duration == 0 ||
                     _rounds[rr].lastTick < _rounds[rr].duration/2) {
                 continue;
             }
@@ -2183,7 +2173,7 @@ public class BangManager extends GameManager
             ScenarioInfo.getScenarioInfo(scenario).getTeams() ==
                 ScenarioInfo.Teams.COOP);
         int avgscore = coop ? (IntListUtil.sum(scores) / scores.length) : 0;
-        
+
         // filter AIs from the scores; the ratings computations below will
         // ignore players whose score is set to zero
         scores = scores.clone();
@@ -2258,6 +2248,8 @@ public class BangManager extends GameManager
                 if (award.rank == 0) {
                     user.stats.incrementStat(Stat.Type.GAMES_WON, 1);
                     user.stats.incrementStat(Stat.Type.CONSEC_WINS, 1);
+                    // note this win for all the big shots they used
+                    noteUnitsUsed(_bigshots, Stat.Type.BIGSHOT_WINS, pidx);
                 } else {
                     user.stats.setStat(Stat.Type.CONSEC_WINS, 0);
                 }
@@ -2307,6 +2299,28 @@ public class BangManager extends GameManager
 
         } finally {
             user.commitTransaction();
+        }
+    }
+
+    /**
+     * A helper function for recording unit usage related stats.
+     */
+    protected void noteUnitsUsed (PieceSet units, Stat.Type stat, int pidx)
+    {
+        for (Piece piece : units.values()) {
+            if (!(piece instanceof Unit) || piece.owner < 0 ||
+                (pidx != -1 && piece.owner != pidx)) {
+                continue;
+            }
+            int ploid = _playerOids[piece.owner];
+            if (ploid <= 0 || !_bangobj.isActivePlayer(piece.owner)) {
+                continue;
+            }
+            PlayerObject user = (PlayerObject)BangServer.omgr.getObject(ploid);
+            if (user == null) {
+                continue;
+            }
+            user.stats.incrementMapStat(stat, ((Unit)piece).getType(), 1);
         }
     }
 
@@ -2737,7 +2751,7 @@ public class BangManager extends GameManager
             String pieceLogic = piece.getLogic();
             if (pieceLogic != null) {
                 try {
-                    PieceLogic plogic = 
+                    PieceLogic plogic =
                         (PieceLogic)Class.forName(pieceLogic).newInstance();
                     plogic.init(BangManager.this, piece);
                     _pLogics.put(piece.pieceId, plogic);
@@ -2764,7 +2778,7 @@ public class BangManager extends GameManager
 
         public void boardAffected (String effect) {
         }
-        
+
         public void pieceMoved (Piece piece) {
             // let the scenario know that the unit moved
             _scenario.pieceMoved(_bangobj, piece);
@@ -2778,14 +2792,14 @@ public class BangManager extends GameManager
                         for (Effect effect : effects) {
                             if (effect == null) {
                                 continue;
-                            } else if (_onTheMove == piece && 
+                            } else if (_onTheMove == piece &&
                                     effect instanceof TeleportEffect) {
                                 _postShotEffects.add(effect);
                                 continue;
                             } else {
                                 queueDeployEffect(piece.owner, effect, false);
                             }
-                            // small hackery: note that this player collected 
+                            // small hackery: note that this player collected
                             // a bonus
                             if (effect instanceof HoldEffect &&
                                 ((HoldEffect)effect).dropping == false &&
@@ -2833,7 +2847,7 @@ public class BangManager extends GameManager
 
         public void cardPlayed (Card card, Object target) {
         }
-        
+
         public void tickDelayed (long extraTime) {
             // if we are currently processing a tick, add to the extra tick
             // time; otherwise, postpone the next tick
@@ -2885,6 +2899,9 @@ public class BangManager extends GameManager
     /** The purchases made by players in the buying phase. */
     protected PieceSet _purchases = new PieceSet();
 
+    /** The Big Shots used by the players during all rounds of this game. */
+    protected PieceSet _bigshots = new PieceSet();
+
     /** Used to record damage done during an attack. */
     protected IntIntMap _damage = new IntIntMap();
 
@@ -2926,7 +2943,7 @@ public class BangManager extends GameManager
     protected ArrayList<Effect> _postShotEffects = new ArrayList<Effect>();
 
     /** A queue of effects to be deployed. */
-    protected LinkedList<Deployable> _deployQueue = 
+    protected LinkedList<Deployable> _deployQueue =
         new LinkedList<Deployable>();
 
     /** A set of units which shot this tick. */

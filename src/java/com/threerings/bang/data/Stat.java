@@ -56,6 +56,7 @@ public abstract class Stat
         DISTANCE_MOVED(new IntStat()),
         SHOTS_FIRED(new IntStat()),
         UNITS_USED(new ByteByteStringMapStat(), true, true),
+        BIGSHOT_WINS(new ByteByteStringMapStat(), true, true),
 
         CATTLE_RUSTLED(new IntStat()),
         BRAND_POINTS(new IntStat()),
