@@ -105,7 +105,9 @@ if [ ! -z "$DEVCLIENT" ]; then
     $ROOT/bin/bangtool com.threerings.bang.game.tools.PrintDamageTable \
         indian_post > $ROOT/pages/units.html
 
-    # update our article catalog sumamry
+    # update our aspect and article catalog sumamries
+    $ROOT/bin/bangtool com.threerings.bang.avatar.tools.SummarizeAspects \
+        > $ROOT/pages/aspects.html
     $ROOT/bin/bangtool com.threerings.bang.avatar.tools.SummarizeArticles \
         > $ROOT/pages/articles.html
 
