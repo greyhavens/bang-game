@@ -80,12 +80,11 @@ public class AvatarView extends BLabel
         getImage(ctx, avatar, new ResultListener<BufferedImage>() {
             public void requestCompleted (BufferedImage base) {
                 BufferedImage cropped = base.getSubimage(
-                    0, (HEIGHT-FRAMED_HEIGHT)/2,
-                    WIDTH, FRAMED_HEIGHT);
+                    0, 0, WIDTH, HEIGHT);
                 receiver.requestCompleted(
                     new BImage(cropped.getScaledInstance(
                                    WIDTH/reduction,
-                                   FRAMED_HEIGHT/reduction,
+                                   HEIGHT/reduction,
                                    BufferedImage.SCALE_SMOOTH)));
             }
             public void requestFailed (Exception cause) {

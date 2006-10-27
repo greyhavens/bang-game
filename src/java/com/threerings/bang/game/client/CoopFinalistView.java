@@ -139,7 +139,7 @@ public class CoopFinalistView extends BContainer
             (_avatars[0].getWidth()*_players - bwidth)/(_players - 1);
         int avx = ax+17;
         for (int ii = 0; ii < _players; ii++) {
-            _avatars[ii].render(renderer, avx, ay+20, _alpha);
+            _avatars[ii].render(renderer, avx, ay+17, _alpha);
             avx += adelta;
         }
         _frame.render(renderer, ax, ay, _alpha);
