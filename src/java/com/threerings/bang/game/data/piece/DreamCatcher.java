@@ -4,7 +4,9 @@
 package com.threerings.bang.game.data.piece;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.NightmareShotEffect;
+import com.threerings.bang.game.data.effect.RepairEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.util.PointSet;
 
@@ -22,17 +24,33 @@ public class DreamCatcher extends BallisticUnit
     }
 
     @Override // documentation inherited
-    public boolean killShot (BangObject bangobj, Piece target)
+    public int computeScaledDamage (
+            BangObject bangobj, Piece target, float scale)
     {
-        return false;
+        // damage level, influences, and hindrances do not affect the
+        // Dream Catcher's absorption attack
+        return computeDamage(target);
     }
-
+    
+    @Override // documentation inherited
+    protected int computeDamage (Piece target)
+    {
+        // likewise with attack and defend modifiers
+        return _config.damage;
+    }
+    
     @Override // documentation inherited
     protected ShotEffect unitShoot (
             BangObject bangobj, Piece target, float scale)
     {
-        // she does no damage
-        ShotEffect shot = super.unitShoot(bangobj, target, 0f);
+        // any damage she does is absorbed as health
+        ShotEffect shot = super.unitShoot(bangobj, target, 1f);
+        int tdamage = shot.newDamage - target.damage;
+        if (tdamage > 0 && damage > 0) {
+            RepairEffect reffect = new RepairEffect(pieceId);
+            reffect.baseRepair = tdamage;
+            shot.preShotEffects = new Effect[] { reffect };
+        }
 
         // She will reset the target's tick counter and force them to move.
         // They will try to move away from her, where their movement distance

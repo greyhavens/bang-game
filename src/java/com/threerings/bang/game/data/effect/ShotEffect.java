@@ -236,12 +236,13 @@ public class ShotEffect extends Effect
             if (newDamage == 100) {
                 Effect effect = target.willDie(bangobj, shooterId);
                 if (effect != null) {
-                    preShotEffects = new Effect[] { effect };
+                    preShotEffects = ArrayUtil.append(preShotEffects, effect);
                 }
             } else {
                 Piece shooter = bangobj.pieces.get(shooterId);
                 if (shooter != null) {
-                    preShotEffects = shooter.willShoot(bangobj, target, this);
+                    preShotEffects = ArrayUtil.concatenate(preShotEffects,
+                        shooter.willShoot(bangobj, target, this));
                 } else {
                     log.warning("Shot effect missing shooter [id=" +
                         shooterId + "].");
