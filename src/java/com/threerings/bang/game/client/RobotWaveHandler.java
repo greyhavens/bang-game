@@ -22,6 +22,7 @@ import com.jmex.bui.util.Point;
 
 import com.samskivert.util.ArrayUtil;
 
+import com.threerings.openal.Sound;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.game.client.effect.RepairViz;
@@ -252,6 +253,12 @@ public class RobotWaveHandler extends EffectHandler
                 }
                 _tsprites.add(piece.isAlive() ? 0 : _tsprites.size(), sprite);
             }
+            
+            // load the living and dead count sounds
+            _lsound = _sounds.getSound(LIVING_SOUND);
+            if (_living != _total) {
+                _dsound = _sounds.getSound(DEAD_SOUND);
+            }
         }
         
         @Override // documentation inherited
@@ -276,8 +283,13 @@ public class RobotWaveHandler extends EffectHandler
                         queueEffect(sprite, sprite.getPiece(),
                             new RepairViz());
                     }
-                } else {
+                    (_tidx < _living ? _lsound : _dsound).play(true);
+                    
+                } else if (_tidx == _total) {
                     _plabel.setAlpha(1f);
+                    if (_living == _total) { // perfect score
+                        _sounds.getSound(PERFECT_SOUND).play(true);
+                    }
                 }
             }
         }
@@ -287,6 +299,7 @@ public class RobotWaveHandler extends EffectHandler
         protected BLabel _plabel;
         protected ArrayList<PieceSprite> _tsprites =
             new ArrayList<PieceSprite>();
+        protected Sound _lsound, _dsound;
     }
     
     /** The time it takes the buzzsaw to fly across the screen, revealing the
@@ -301,4 +314,16 @@ public class RobotWaveHandler extends EffectHandler
     
     /** The time it takes the marquee to fade out. */
     protected static final float FADE_DURATION = 0.5f;
+    
+    /** Played once for each living tree counted. */
+    protected static final String LIVING_SOUND =
+        "rsrc/bonuses/indian_post/totem_crown/pickedup.ogg";
+    
+    /** Played once for each dead tree counted. */
+    protected static final String DEAD_SOUND =
+        "rsrc/effects/indian_post/totem/pickedup.ogg";
+    
+    /** Played when the performance is announced to be perfect. */
+    protected static final String PERFECT_SOUND =
+        "rsrc/bonuses/indian_post/totem_crown/added.ogg";
 }
