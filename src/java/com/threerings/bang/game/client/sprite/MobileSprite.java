@@ -238,6 +238,18 @@ public class MobileSprite extends ActiveSprite
         updateHighlight();
         updateShadowValue();
     }
+
+    @Override // documentation inherited
+    public void updateWorldData (float time)
+    {
+        super.updateWorldData(time);
+
+        if (!isMoving() && _moveSound != null && _moveSound.isPlaying()) {
+            log.warning("Move sound playing when not moving [piece=" + 
+                    _piece + "]");
+            stopMoveSound();
+        }
+    }
     
     /**
      * Adds any procedural actions for this sprite.
