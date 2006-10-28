@@ -3,12 +3,19 @@
 
 package com.threerings.bang.game.client;
 
+import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
+
 import com.samskivert.util.Interval;
 
+import com.threerings.bang.client.BangPrefs;
+
+import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.effect.ChainingShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
-
 import com.threerings.bang.game.data.piece.Piece;
+
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Waits for all sprites involved in a shot to stop moving and then animates
@@ -16,6 +23,13 @@ import com.threerings.bang.game.data.piece.Piece;
  */
 public class ChainingShotHandler extends ShotHandler
 {
+    /** The color of the light flash to show for the main bolt. */
+    public static final ColorRGBA LIGHT_FLASH_COLOR =
+        new ColorRGBA(0.9f, 1f, 1f, 1f);
+    
+    /** The duration of the light flash. */
+    public static final float LIGHT_FLASH_DURATION = 0.25f;
+    
     @Override // documentation inherited
     public boolean execute ()
     {
@@ -35,6 +49,17 @@ public class ChainingShotHandler extends ShotHandler
             }
         }
         super.pieceAffected(piece, effect);
+        if (effect.equals(ChainingShotEffect.PRIMARY_EFFECT) &&
+            BangPrefs.isMediumDetail()) {
+            // fire off a flash of light for the main bolt
+            PieceSprite sprite = _view.getPieceSprite(piece);
+            if (sprite != null) {
+                Vector3f trans = sprite.getWorldTranslation();
+                _view.createLightFlash(
+                    new Vector3f(trans.x, trans.y, trans.z + TILE_SIZE),
+                    LIGHT_FLASH_COLOR, LIGHT_FLASH_DURATION);
+            }
+        }
         _effect = _cseffect;
     }
 
