@@ -3,6 +3,8 @@
 
 package com.threerings.bang.data;
 
+import java.util.Comparator;
+
 import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
 
@@ -26,6 +28,17 @@ import static com.threerings.bang.Log.log;
  */
 public class Article extends Item
 {
+    /** Used to sort articles. */
+    public static final Comparator<Article> ARTICLE_COMP =
+        new Comparator<Article>() {
+        public int compare (Article a1, Article a2) {
+            int a1idx = AvatarLogic.getSlotIndex(a1.getSlot());
+            int a2idx = AvatarLogic.getSlotIndex(a2.getSlot());
+            return (a1idx == a2idx) ?
+            (a2.getItemId() - a1.getItemId()) : (a1idx - a2idx);
+        }
+    };
+
     /**
      * Returns the path to the icon for an article of the specified type.
      */

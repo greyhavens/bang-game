@@ -5,6 +5,8 @@ package com.threerings.bang.avatar.client;
 
 import java.util.Iterator;
 
+import com.samskivert.util.SortableArrayList;
+
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.Article;
@@ -51,17 +53,25 @@ public class ArticlePalette extends IconPalette
             articleId = look.articles[slidx];
         }
 
+        // extract the articles from their inventory and sort them
+        SortableArrayList<Article> articles = new SortableArrayList<Article>();
         for (Iterator iter = player.inventory.iterator(); iter.hasNext(); ) {
             Item item = (Item)iter.next();
             if (!(item instanceof Article) ||
                 !((Article)item).getSlot().equals(slot)) {
                 continue;
             }
-            ItemIcon icon = new ItemIcon(_ctx, item);
+            articles.add((Article)item);
+        }
+        articles.sort(Article.ARTICLE_COMP);
+
+        // now create icons for each article
+        for (Article article : articles) {
+            ItemIcon icon = new ItemIcon(_ctx, article);
             addIcon(icon);
 
             // if this is the currently worn article, select it
-            if (item.getItemId() == articleId) {
+            if (article.getItemId() == articleId) {
                 icon.setSelected(true);
             }
         }

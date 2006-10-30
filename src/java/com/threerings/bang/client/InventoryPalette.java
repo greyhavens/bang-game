@@ -10,9 +10,10 @@ import java.util.Iterator;
 import com.samskivert.util.Predicate;
 
 import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -90,13 +91,17 @@ public class InventoryPalette extends IconPalette
     /** Used to sort the inventory display. */
     protected class ItemComparator implements Comparator<Item> {
         public int compare (Item one, Item two) {
-            if (one.getClass().equals(two.getClass())) {
+            if (!one.getClass().equals(two.getClass())) {
+                return one.getClass().getName().compareTo(
+                    two.getClass().getName());
+            }
+            // compare articles specially to make Rick happy
+            if (one instanceof Article) {
+                return Article.ARTICLE_COMP.compare((Article)one, (Article)two);
+            } else {
                 String t1 = _ctx.xlate(BangCodes.BANG_MSGS, one.getName(false));
                 return t1.compareTo(
                     _ctx.xlate(BangCodes.BANG_MSGS, two.getName(false)));
-            } else {
-                return one.getClass().getName().compareTo(
-                    two.getClass().getName());
             }
         }
     };
