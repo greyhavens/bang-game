@@ -75,7 +75,7 @@ public class Tutorial extends Scenario
         } else if (_config.ident.equals("land_grab")) {
             registerDelegate(new HomesteadDelegate());
         } else if (_config.ident.equals("totem_building")) {
-            registerDelegate(new TotemBuilding.TotemBaseDelegate());
+            registerDelegate(new TotemBaseDelegate());
         }
 
         // now that our delegates are registered we can call super.init
