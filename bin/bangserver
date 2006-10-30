@@ -33,4 +33,4 @@ fi
 
 CLASS=com.threerings.bang.server.BangServer
 $BANG_HOME/bin/bangjava -server -Djava.awt.headless=true -mx$SERVER_MEMORY \
-  -Dhostname=$HOSTNAME -Dnode=$NODE -Dis_node=true $JARGS $CLASS
+  -Dhostname=$HOSTNAME -Dnode=$NODE -Dis_node=true -nodevlibs $JARGS $CLASS
