@@ -155,7 +155,7 @@ public class TotemBuilding extends Scenario
         }
     }
 
-    protected class TotemBaseDelegate extends CounterDelegate
+    protected static class TotemBaseDelegate extends CounterDelegate
     {
         @Override // documentation inherited
         public void roundWillStart (BangObject bangobj)
