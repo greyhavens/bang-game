@@ -1651,7 +1651,9 @@ public class BangManager extends GameManager
 
         // also keep track of all big shot units used during the game
         for (Unit unit : _bangobj.bigShots) {
-            _bigshots.add(unit);
+            if (unit != null) {
+                _bigshots.add(unit);
+            }
         }
 
         // clear out the various per-player data structures
