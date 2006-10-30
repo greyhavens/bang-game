@@ -8,8 +8,17 @@ import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.LightState;
+import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
 
+import com.samskivert.util.HashIntMap;
+
+import com.threerings.openal.SoundGroup;
+
+import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.util.RenderUtil;
+import com.threerings.bang.game.client.BoardView;
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
@@ -33,10 +42,32 @@ public class MarkerSprite extends PieceSprite
             sphere.updateModelBound();
             sphere.setLightCombineMode(LightState.OFF);
             attachChild(sphere);
-        } else if (!_modelType.equals("highlight")) {
+        } else if (!_modelType.equals("highlight") && 
+                !_modelType.equals("terrain")) {
             _type = _modelType;
             _name = (String)SPRITES[type*2+1];
         }
+    }
+
+    @Override // documentation inherited
+    public void init (BasicContext ctx, BoardView view, BangBoard board,
+            SoundGroup sounds, Piece piece, short tick)
+    {
+        super.init(ctx, view, board, sounds, piece, tick);
+        if (!_modelType.equals("terrain")) {
+            return;
+        }
+        int type = ((Marker)_piece).getType();
+        TextureState tstate = _textureStates.get(type);
+        if (tstate == null) {
+            tstate = RenderUtil.createTextureState(
+                ctx, (String)SPRITES[type*2+1]);
+            _textureStates.put(type, tstate);
+        }
+        _tlight = view.getTerrainNode().createHighlight(
+                piece.x, piece.y, false, (byte)1);
+        _tlight.setRenderState(tstate);
+        attachHighlight(_tlight);
     }
 
     @Override // documentation inherited
@@ -74,8 +105,11 @@ public class MarkerSprite extends PieceSprite
         "bonuses", "indian_post/talisman", // TALISMAN
         "bonuses", "indian_post/fetish_turtle", // FETISH
         "highlight", "textures/tile/safe_circle", //SAFE_ALT
-        "sphere", ColorRGBA.red, // IMPASS
+        "terrain", "textures/tile/impass.png", // IMPASS
     };
 
     protected String _modelType;
+
+    protected static HashIntMap<TextureState> _textureStates =
+        new HashIntMap<TextureState>();
 }
