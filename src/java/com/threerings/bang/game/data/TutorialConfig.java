@@ -19,8 +19,6 @@ public class TutorialConfig
         public String getEvent ();
 
         public boolean allowAttack ();
-
-        public int getIndex ();
     }
 
     public static class Action implements Serializable
@@ -48,31 +46,34 @@ public class TutorialConfig
         public String event;
         public boolean allowAttack;
 
-        public String getEvent ()
-        {
+        public String getEvent () {
             return event;
         }
 
-        public boolean allowAttack ()
-        {
+        public boolean allowAttack () {
             return allowAttack;
-        }
-
-        public int getIndex ()
-        {
-            return index;
         }
 
         private static final long serialVersionUID = 1;
     }
 
     public static class AddPiece extends Action
+        implements WaitAction
     {
         public String what;
         public String type;
         public int id;
         public int[] location;
         public int owner;
+
+        public String getEvent () {
+            return type.equals("unit") ?
+                TutorialCodes.UNIT_ADDED : TutorialCodes.PIECE_ADDED;
+        }
+
+        public boolean allowAttack () {
+            return false;
+        }
 
         private static final long serialVersionUID = 1;
     }
@@ -100,19 +101,12 @@ public class TutorialConfig
         public String event;
         public boolean allowAttack;
 
-        public String getEvent ()
-        {
+        public String getEvent () {
             return event;
         }
 
-        public boolean allowAttack ()
-        {
+        public boolean allowAttack () {
             return allowAttack;
-        }
-
-        public int getIndex ()
-        {
-            return index;
         }
 
         private static final long serialVersionUID = 1;
@@ -124,7 +118,7 @@ public class TutorialConfig
 
         private static final long serialVersionUID = 1;
     }
-    
+
     /** The identifier for this tutorial, which defines its message bundle. */
     public String ident;
 

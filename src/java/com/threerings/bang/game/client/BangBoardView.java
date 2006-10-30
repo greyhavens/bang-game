@@ -890,10 +890,10 @@ public class BangBoardView extends BoardView
         // if this piece influenced our selection, refresh it
         checkForSelectionInfluence();
 
-        // if this is a unit, we need to tell the unit status view and,
-        // if it's before the first tick, reposition the unit so it can
-        // run in from off the board
+        // if this is not a unit, we can stop here
         if (!(piece instanceof Unit)) {
+            // report to our tutorial controller that a piece was added
+            _ctrl.postEvent(TutorialCodes.PIECE_ADDED);
             return;
         }
 
@@ -913,6 +913,9 @@ public class BangBoardView extends BoardView
             Point corner = getStartCorner(piece);
             sprite.setLocation(_board, corner.x, corner.y);
         }
+
+        // report to our tutorial controller that a unit was added
+        _ctrl.postEvent(TutorialCodes.UNIT_ADDED);
     }
 
     /**

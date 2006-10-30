@@ -35,6 +35,7 @@ import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Homestead;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.TotemBase;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import static com.threerings.bang.Log.log;
@@ -118,8 +119,9 @@ public class TutorialController
      */
     public void handleEvent (String event)
     {
+        log.fine("Received tutorial event: " + event + ".");
         if (_pending != null && event.matches(_pending.getEvent())) {
-            processedAction(_pending.getIndex());
+            processedAction(((TutorialConfig.Action)_pending).index);
             _pending = null;
         }
     }
@@ -189,21 +191,22 @@ public class TutorialController
                 p = _bangobj.pieces.get(id);
 
             } else if (what.equals("special")) {
-                // locate the specified counter or homestead
+                // locate the specified special piece
                 for (Piece cp : _bangobj.pieces) {
-                    if ((cp instanceof Counter || cp instanceof Homestead) &&
-                        cp.owner == id) {
+                    if (((cp instanceof Counter ||
+                          cp instanceof Homestead) && cp.owner == id) ||
+                        (cp instanceof TotemBase &&
+                         (cp.x * 100 + cp.y == id))) {
                         p = cp;
                         break;
                     }
                 }
-
-            } else {
-                log.warning("Requested to center camera on unknown entity " +
-                            "[what=" + what + ", id=" + id + "].");
             }
             if (p != null) {
                 _view.view.centerCameraOnPiece(p);
+            } else {
+                log.warning("Requested to center camera on unknown entity " +
+                            "[what=" + what + ", id=" + id + "].");
             }
 
         } else if (action instanceof TutorialConfig.MoveUnit) {
@@ -229,6 +232,7 @@ public class TutorialController
         if (action instanceof TutorialConfig.WaitAction) {
             // wait for the specified event
             _pending = (TutorialConfig.WaitAction)action;
+            log.fine("Waiting for tutorial event: " + _pending + ".");
 
             // only allow attacking for actions that allow it
             _view.view._attackEnabled = _pending.allowAttack();
