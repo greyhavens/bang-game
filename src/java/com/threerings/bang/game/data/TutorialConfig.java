@@ -26,7 +26,8 @@ public class TutorialConfig
         public int index;
 
         public String toString () {
-            return getClass().getName() + StringUtil.fieldsToString(this);
+            return StringUtil.shortClassName(this) +
+                StringUtil.fieldsToString(this);
         }
 
         private static final long serialVersionUID = 1;
@@ -67,7 +68,7 @@ public class TutorialConfig
         public int owner;
 
         public String getEvent () {
-            return type.equals("unit") ?
+            return what.equals("unit") ?
                 TutorialCodes.UNIT_ADDED : TutorialCodes.PIECE_ADDED;
         }
 
