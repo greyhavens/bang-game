@@ -10,6 +10,7 @@ import com.threerings.jme.sprite.BallisticPath;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.effect.ReboundEffect;
+import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.*;
@@ -44,6 +45,15 @@ public class ReboundHandler extends EffectHandler
         });
     }
     
+    @Override // documentation inherited
+    public void pieceAffected (Piece piece, String effect)
+    {
+        // postpone the damage effect until landing
+        if (!effect.equals(ShotEffect.DAMAGED) || _dropped) {
+            super.pieceAffected(piece, effect);
+        }
+    }
+    
     /**
      * Moves the piece to its new location and drops it onto the board.
      */
@@ -60,5 +70,9 @@ public class ReboundHandler extends EffectHandler
             piece.computeElevation(_bangobj.board, piece.x, piece.y));
         sprite.setOrientation(piece.orientation);
         dropPiece(piece);
+        _dropped = true;
     }
+    
+    /** Set when the piece has been dropped from the sky. */
+    protected boolean _dropped;
 }

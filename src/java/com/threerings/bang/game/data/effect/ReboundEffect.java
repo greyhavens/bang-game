@@ -3,16 +3,19 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.ReboundHandler;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.piece.LoggingRobot;
 import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.log;
@@ -20,7 +23,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Sends the victim back to its last position.
  */
-public class ReboundEffect extends BonusEffect
+public class ReboundEffect extends TrapEffect
 {
     /** Fired off when the spring is activated. */
     public static final String ACTIVATED_SPRING = "frontier_town/spring";
@@ -29,18 +32,11 @@ public class ReboundEffect extends BonusEffect
     public short x, y;
 
     @Override // documentation inherited
-    public int[] getAffectedPieces ()
-    {
-        return new int[] { pieceId };
-    }
-
-    @Override // documentation inherited
     public Rectangle[] getBounds (BangObject bangobj)
     {
         Piece piece = bangobj.pieces.get(pieceId);
-        return new Rectangle[] {
-            new Rectangle(Math.min(piece.x, x), Math.min(piece.y, y),
-                Math.abs(piece.x - x) + 1, Math.abs(piece.y - y) + 1)
+        return new Rectangle [] { 
+            new Rectangle(piece.x, piece.y, 1, 1), new Rectangle(x, y, 1, 1) 
         };
     }
 
@@ -48,35 +44,52 @@ public class ReboundEffect extends BonusEffect
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         super.prepare(bangobj, dammap);
-
         Piece target = bangobj.pieces.get(pieceId);
         if (target == null) {
             log.warning("Missing target for rebound effect " +
                 "[id=" + pieceId + "].");
             return;
         }
-        x = target.lastX;
-        y = target.lastY;
+        
+        // choose a random distance within the limits; it doesn't matter that
+        // it will be biased towards the edges
+        int dist = RandomUtil.getInt(MAX_REBOUND_DISTANCE + 1,
+            MIN_REBOUND_DISTANCE - 1);
+        Point pt = bangobj.board.getOccupiableSpot(target.x, target.y, dist,
+            dist + 3, null);
+        if (pt == null) {
+            log.warning("Couldn't find occupiable spot for rebound effect " +
+                "[x=" + target.x + ", y=" + target.y + ", dist=" + dist +
+                "].");
+            x = target.x;
+            y = target.y;
+        } else {
+            x = (short)pt.x;
+            y = (short)pt.y;
+        }
     }
 
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
-        super.apply(bangobj, obs);
+        // move the piece
         Piece target = bangobj.pieces.get(pieceId);
         if (target == null) {
             log.warning("Missing target for rebound effect " +
                 "[id=" + pieceId + "].");
             return false;            
         }
-        if (!bangobj.board.isOccupiable(x, y)) {
-            log.warning("Attempting to rebound, but previous location is " +
-                "unoccupiable! [target=" + target + ", x=" + x + ", y=" + y +
-                "].");
-            return false;
-        }
         moveAndReport(bangobj, target, x, y, obs);
-        return true;
+        
+        // then remove the bonus and damage the piece
+        return super.apply(bangobj, obs);
+    }
+    
+    @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        // logging robots are built to stand being dropped from the sky
+        return (piece instanceof LoggingRobot) ? 0 : REBOUND_DAMAGE;
     }
     
     @Override // documentation inherited
@@ -85,25 +98,12 @@ public class ReboundEffect extends BonusEffect
         return new ReboundHandler();
     }
     
-    @Override // documentation inherited
-    public String getDescription (BangObject bangobj, int pidx)
-    {
-        Piece piece = bangobj.pieces.get(pieceId);
-        if (piece == null || piece.owner != pidx || pidx == -1) {
-            return null;
-        }
-        return MessageBundle.compose("m.effect_spring", piece.getName());
-    }
+    /** The minimum distance away to send sprung pieces. */
+    protected static final int MIN_REBOUND_DISTANCE = 5;
     
-    @Override // documentation inherited
-    protected String getActivatedEffect ()
-    {
-        return ACTIVATED_SPRING;
-    }
-
-    @Override // from BonusEffect
-    protected int getBonusPoints ()
-    {
-        return 0; // no points for springing
-    }
+    /** The maximum distance away. */
+    protected static final int MAX_REBOUND_DISTANCE = 10;
+    
+    /** The amount of damage caused on landing. */
+    protected static final int REBOUND_DAMAGE = 20;
 }

@@ -131,7 +131,7 @@ public class TrapEffect extends BonusEffect
      */
     protected int getDamage (Piece piece)
     {
-        return Math.min(TRAP_DAMAGE, 100-piece.damage);
+        return Math.min(getBaseDamage(piece), 100-piece.damage);
     }
 
     /** The type of the trap. */

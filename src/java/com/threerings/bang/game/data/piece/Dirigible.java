@@ -46,7 +46,7 @@ public class Dirigible extends Unit
             return new Point (_deathTarget.x, _deathTarget.y);
         }
 
-        return bangobj.board.getOccupiableSpot(x, y, 5, rand);
+        return bangobj.board.getOccupiableSpot(x, y, 1, 5, rand);
     }
 
     @Override // documentation inherited

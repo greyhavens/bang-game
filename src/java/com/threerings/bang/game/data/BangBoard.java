@@ -606,7 +606,7 @@ public class BangBoard extends SimpleStreamableObject
     public ArrayList<Point> getOccupiableSpots (
         int count, int cx, int cy, int maxdist)
     {
-        return getOccupiableSpots(count, cx, cy, maxdist, null);
+        return getOccupiableSpots(count, cx, cy, 1, maxdist, null);
     }
 
     /**
@@ -622,12 +622,12 @@ public class BangBoard extends SimpleStreamableObject
      * default
      */
     public ArrayList<Point> getOccupiableSpots (
-        int count, int cx, int cy, int maxdist, Random rnd)
+        int count, int cx, int cy, int mindist, int maxdist, Random rnd)
     {
         ArrayList<Point> ospots = new ArrayList<Point>();
         PointSet spots = new PointSet();
       SEARCH:
-        for (int dist = 1; dist <= maxdist; dist++) {
+        for (int dist = mindist; dist <= maxdist; dist++) {
             spots.clear();
             spots.addFrame(cx, cy, dist, _playarea);
             int[] coords = spots.toIntArray();
@@ -660,7 +660,7 @@ public class BangBoard extends SimpleStreamableObject
      */
     public Point getOccupiableSpot (int cx, int cy, int maxdist)
     {
-        return getOccupiableSpot(cx, cy, maxdist, null);
+        return getOccupiableSpot(cx, cy, 1, maxdist, null);
     }
 
     /**
@@ -674,9 +674,11 @@ public class BangBoard extends SimpleStreamableObject
      * @param rnd a random number generator, or <code>null</code> to use the
      * default
      */
-    public Point getOccupiableSpot (int cx, int cy, int maxdist, Random rnd)
+    public Point getOccupiableSpot (
+        int cx, int cy, int mindist, int maxdist, Random rnd)
     {
-        ArrayList<Point> spots = getOccupiableSpots(1, cx, cy, maxdist, rnd);
+        ArrayList<Point> spots = getOccupiableSpots(
+            1, cx, cy, mindist, maxdist, rnd);
         return (spots.size() > 0) ? spots.get(0) : null;
     }
 

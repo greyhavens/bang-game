@@ -180,6 +180,15 @@ public class PieceSprite extends Sprite
         return _hnode;
     }
 
+    /**
+     * Returns a reference to the shadow highlight (or <code>null</code> if
+     * this piece is not of type {@link Shadow#DYNAMIC}).
+     */
+    public TerrainNode.Highlight getShadow ()
+    {
+        return _shadow;
+    }
+    
     /** Indicates to this piece that it is selected by the user. May
      * someday trigger a special "selected" rendering mode, but presently
      * does nothing. */

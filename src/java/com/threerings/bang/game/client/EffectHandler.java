@@ -706,10 +706,17 @@ public class EffectHandler extends BoardView.BoardAction
             -2f * PIECE_DROP_HEIGHT / BallisticShotHandler.GRAVITY);
         final int penderId = notePender();
         sprite.getLocalTranslation().set(start);
+        sprite.getShadow().getBatch(0).getDefaultColor().a = 0f;
         sprite.move(new BallisticPath(sprite, start, new Vector3f(),
             BallisticShotHandler.GRAVITY_VECTOR, duration) {
+            public void update (float time) {
+                super.update(time);
+                sprite.getShadow().getBatch(0).getDefaultColor().a =
+                    Math.min(_accum / _duration, 1f);
+            }
             public void wasRemoved () {
                 super.wasRemoved();
+                sprite.getShadow().getBatch(0).getDefaultColor().a = 1f;
                 sprite.setLocation(piece.x, piece.y, piece.computeElevation(
                     _bangobj.board, piece.x, piece.y));
                 sprite.updateWorldVectors();
@@ -718,9 +725,11 @@ public class EffectHandler extends BoardView.BoardAction
                 }
                 getLandSound(piece).play(true);
                 if (piece instanceof Unit) {
-                    ((UnitSprite)sprite).queueAction(
-                        piece instanceof LoggingRobot ?
-                            "unfolding" : "reacting");
+                    if (piece instanceof LoggingRobot) {
+                        ((UnitSprite)sprite).queueAction("unfolding");
+                    } else {
+                        pieceAffected(piece, ShotEffect.DAMAGED);
+                    }
                 } else {
                     bounceSprite(_sprite, TILE_SIZE / 4);
                 }
