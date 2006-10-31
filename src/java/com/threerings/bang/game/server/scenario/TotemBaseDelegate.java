@@ -166,8 +166,7 @@ public class TotemBaseDelegate extends CounterDelegate
 
             for (int pp = 0; pp < points.length; pp++) {
                 int diff = points[pp] + totemPoints[pp] - _points[pp];
-                bangobj.grantPoints(pp,
-                                    points[pp] + totemPoints[pp] - _points[pp]);
+                bangobj.grantPoints(pp, diff);
                 _points[pp] = points[pp] + totemPoints[pp];
                 bangobj.stats[pp].setStat(
                     Stat.Type.TOTEM_POINTS, totemPoints[pp]);
