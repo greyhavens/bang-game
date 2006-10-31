@@ -298,14 +298,22 @@ public class WendigoDelegate extends CounterDelegate
     {
         int[] points = new int[bangobj.players.length];
         int[] talpoints = new int[bangobj.players.length];
+        boolean[] teamSurvival = new boolean[bangobj.players.length];
+        Arrays.fill(teamSurvival, true);
+
         Piece[] pieces = bangobj.getPieceArray();
         for (Piece p : pieces) {
-            if (p instanceof Unit && p.isAlive() && p.owner > -1) {
-                points[p.owner]++;
-                if (TalismanEffect.TALISMAN_BONUS.equals(
+            if (p instanceof Unit && p.owner > -1) {
+                if (p.isAlive()) {
+                    points[p.owner]++;
+                    if (TalismanEffect.TALISMAN_BONUS.equals(
                             ((Unit)p).holding) &&
-                        getSafePoints().contains(p.x, p.y)) {
-                    talpoints[p.owner] += TALISMAN_SAFE;
+                        _safePoints[_activeSafePoints].contains(
+                            p.x, p.y)) {
+                        talpoints[p.owner]++;
+                    }
+                } else {
+                    teamSurvival[p.owner] = false;
                 }
             }
         }
@@ -314,13 +322,15 @@ public class WendigoDelegate extends CounterDelegate
         try {
             for (int idx = 0; idx < points.length; idx++) {
                 if (points[idx] > 0) {
-                    bangobj.grantPoints(idx, points[idx] *
-                            WendigoAttackInfo.POINTS_PER_SURVIVAL +
-                            talpoints[idx]);
+                    int talpts = talpoints[idx] * TALISMAN_SAFE;
+                    bangobj.grantPoints(
+                        idx, points[idx] * pointsPerCounter() + talpts);
                     bangobj.stats[idx].incrementStat(
-                            Stat.Type.WENDIGO_SURVIVALS, points[idx]);
+                        Stat.Type.WENDIGO_SURVIVALS, points[idx]);
                     bangobj.stats[idx].incrementStat(
-                            Stat.Type.TALISMAN_POINTS, talpoints[idx]);
+                        Stat.Type.TALISMAN_POINTS, talpts);
+                    bangobj.stats[idx].incrementStat(
+                        Stat.Type.TALISMAN_SPOT_SURVIVALS, talpoints[idx]);
                 }
             }
         } finally {
