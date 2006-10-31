@@ -41,6 +41,7 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.LoggingRobot;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
@@ -662,9 +663,10 @@ public class ForestGuardians extends Scenario
         protected void moveUnit (
             Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
         {
-            // find closest living tree, closet unit
+            // find closest living tree, closest unit, closest teleporter
             TreeBed ctree = null;
             Unit cunit = null;
+            Teleporter tporter = null;
             for (Piece piece : pieces) {
                 if (piece instanceof TreeBed) {
                     TreeBed tree = (TreeBed)piece;
@@ -678,6 +680,11 @@ public class ForestGuardians extends Scenario
                         (cunit == null || unit.getDistance(piece) <
                             unit.getDistance(cunit))) {
                     cunit = (Unit)piece;
+                    
+                } else if (piece instanceof Teleporter &&
+                    (tporter == null || unit.getDistance(piece) <
+                        unit.getDistance(tporter))) {
+                    tporter = (Teleporter)piece;
                 }
             }
             
@@ -691,12 +698,17 @@ public class ForestGuardians extends Scenario
             
             // if there's a living tree, head towards it
             } else if (ctree != null && moveUnit(pieces, unit, moves, ctree.x,
-                ctree.y, _teval)) {
+                ctree.y, 1, _teval)) {
                 return;
             
             // otherwise, head towards the closet unit
             } else if (cunit != null && moveUnit(pieces, unit, moves, cunit.x,
-                cunit.y, _teval)) {
+                cunit.y, -1, _teval)) {
+                return;
+            
+            // or the closest teleporter
+            } else if (tporter != null && moveUnit(pieces, unit, moves,
+                tporter.x, tporter.y, 0, _teval)) {
                 return;
             }
         }

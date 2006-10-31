@@ -16,6 +16,7 @@ import com.threerings.bang.game.data.effect.TalismanEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
+import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.Wendigo;
 import com.threerings.bang.game.util.PointSet;
@@ -62,7 +63,7 @@ public class WendigoLogic extends AILogic
         Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
     {
         Unit ctarget = null;
-        Piece talisman = null;
+        Piece talisman = null, tporter = null;
         boolean breached = false;
         boolean wendigos = true;
         if (_wendigoX == null) {
@@ -89,6 +90,9 @@ public class WendigoLogic extends AILogic
                     unit.validTarget(_bangobj, target, false)) {
                     ctarget = target;
                 }
+            } else if (p instanceof Teleporter && (tporter == null ||
+                unit.getDistance(p) < unit.getDistance(tporter))) {
+                tporter = p;
             }
         }
         PointSet preferredMoves = new PointSet();
@@ -153,18 +157,22 @@ public class WendigoLogic extends AILogic
         // if we're closer to a safe zone, move there
         if ((talisman == null || dist < unit.getDistance(talisman)) && 
                 (ctarget == null || dist < unit.getDistance(ctarget)) &&
-                 moveUnit(pieces, unit, moves, safe.x, safe.y, 
+                 moveUnit(pieces, unit, moves, safe.x, safe.y, 0,
                      TARGET_EVALUATOR)) {
             return;
                     
         // otherwise, move towards nearest free talisman
-        } else if (moveUnit(pieces, unit, moves, talisman)) {
+        } else if (moveUnit(pieces, unit, moves, talisman, 0)) {
             return;
 
         // or nearest talisman holding target
-        } else if (moveUnit(pieces, unit, moves, ctarget)) {
+        } else if (moveUnit(pieces, unit, moves, ctarget, -1)) {
             return;
 
+        // or nearest teleporter
+        } else if (moveUnit(pieces, unit, moves, tporter, 0)) {
+            return;
+            
         } else {
             // shoot anyone we can find
             Piece target = getBestTarget(pieces, unit, attacks,
@@ -183,10 +191,10 @@ public class WendigoLogic extends AILogic
      * false if we couldn't find a path
      */
     protected boolean moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, Piece target)
+        Piece[] pieces, Unit unit, PointSet moves, Piece target, int tdist)
     {
-        return (target != null) && 
-            moveUnit(pieces, unit, moves, target.x, target.y, TARGET_EVALUATOR);
+        return (target != null) && moveUnit(pieces, unit, moves, target.x,
+            target.y, tdist, TARGET_EVALUATOR);
     }
 
     /** Ranks units by properties that should make them good at getting to safe 

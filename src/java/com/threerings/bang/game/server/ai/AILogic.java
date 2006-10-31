@@ -116,14 +116,17 @@ public abstract class AILogic extends PieceLogic
      * Attempts to move the unit towards the provided destination and fire
      * off a shot at the best target.
      *
+     * @param tdist the desired distance to the target: 0 to land on the
+     * target, 1 to land next to the target, or, as a special case, -1 to
+     * land within the unit's firing range
      * @return true if we successfully moved towards the destination,
      * false if we couldn't find a path
      */
     protected boolean moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, int dx, int dy,
+        Piece[] pieces, Unit unit, PointSet moves, int dx, int dy, int tdist,
         TargetEvaluator evaluator)
     {
-        Point dest = getClosestPoint(unit, moves, dx, dy);
+        Point dest = getClosestPoint(unit, moves, dx, dy, tdist);
         if (dest == null) {
             return false;
         }

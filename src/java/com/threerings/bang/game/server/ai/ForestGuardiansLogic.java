@@ -7,6 +7,7 @@ import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
@@ -38,7 +39,7 @@ public class ForestGuardiansLogic extends AILogic
     {
         // search for closest growing tree, closest logging robot
         TreeBed ctree = null;
-        Piece cbot = null;
+        Piece cbot = null, tporter = null;
         for (Piece piece : pieces) {
             if (piece instanceof TreeBed) {
                 TreeBed tree = (TreeBed)piece;
@@ -51,11 +52,15 @@ public class ForestGuardiansLogic extends AILogic
                 piece.isAlive() && (cbot == null || unit.getDistance(piece) <
                     unit.getDistance(cbot))) {
                 cbot = piece;
+                
+            } else if (piece instanceof Teleporter && (tporter == null ||
+                unit.getDistance(piece) < unit.getDistance(tporter))) {
+                tporter = piece;
             }
         }
         
         // if there's a tree that needs growing, go to it
-        if (ctree != null && moveUnit(pieces, unit, moves, ctree.x, ctree.y,
+        if (ctree != null && moveUnit(pieces, unit, moves, ctree.x, ctree.y, 1,
                 TARGET_EVALUATOR)) {
             return;
         
@@ -64,8 +69,14 @@ public class ForestGuardiansLogic extends AILogic
             executeOrder(unit, Short.MAX_VALUE, 0, cbot);
         
         // if there's a logging robot at all, move towards it
-        } else if (cbot != null) {
-            moveUnit(pieces, unit, moves, cbot.x, cbot.y, TARGET_EVALUATOR);
+        } else if (cbot != null && moveUnit(pieces, unit, moves, cbot.x,
+            cbot.y, -1, TARGET_EVALUATOR)) {
+            return;
+        
+        // if there's a teleporter, try that
+        } else if (tporter != null && moveUnit(pieces, unit, moves, tporter.x,
+            tporter.y, 0, TARGET_EVALUATOR)) {
+            return;
         }
     }
     

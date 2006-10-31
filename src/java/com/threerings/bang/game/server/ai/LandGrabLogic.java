@@ -14,6 +14,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Homestead;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
+import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
 
@@ -97,7 +98,8 @@ public class LandGrabLogic extends AILogic
         // find the best thing to shoot in the general direction of the
         // objective homestead
         if (ostead != null) {
-            Point mv = getClosestPoint(unit, moves, ostead.x, ostead.y);
+            Point mv = getClosestPoint(unit, moves, ostead.x, ostead.y,
+                (ostead.owner < 0) ? 1 : -1);
             if (mv != null) {
                 if (isBShot && ostead.owner < 0 && 
                         ostead.getDistance(mv.x, mv.y) == 1) {
@@ -120,9 +122,22 @@ public class LandGrabLogic extends AILogic
             }
         }
 
+        // look for a teleporter
+        Piece cporter = null;
+        for (Teleporter tporter : _bangobj.getTeleporters().values()) {
+            if (cporter == null || unit.getDistance(tporter) <
+                    unit.getDistance(cporter)) {
+                cporter = tporter;
+            }
+        }
+        if (cporter != null && moveUnit(pieces, unit, moves, cporter.x,
+                cporter.y, 0, TARGET_EVALUATOR)) {
+            return;
+        }
+        
         // otherwise just go shoot at anything
-        if (moveUnit(pieces, unit, moves, control.x, control.y, 
-                    TARGET_EVALUATOR)) {
+        if (moveUnit(pieces, unit, moves, control.x, control.y, -1,
+                TARGET_EVALUATOR)) {
             return;
         }
         Piece target = getBestTarget(

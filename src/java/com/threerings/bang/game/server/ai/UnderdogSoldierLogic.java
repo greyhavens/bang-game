@@ -13,6 +13,7 @@ import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.bang.game.util.PointSet;
@@ -43,6 +44,7 @@ public class UnderdogSoldierLogic extends PieceLogic
         }
         // Find the closests unit for each player
         TargetOption to = null;
+        Piece tporter = null;
         for (Piece p : pieces) {
             if (p.isTargetable() && unit.validTarget(_bangobj, p, false) &&
                     p.owner >= 0) {
@@ -55,6 +57,9 @@ public class UnderdogSoldierLogic extends PieceLogic
                         to = option;
                     }
                 }
+            } else if (p instanceof Teleporter && (tporter == null ||
+                unit.getDistance(p) < unit.getDistance(tporter))) {
+                tporter = p;
             }
         }
         if (to != null) {
@@ -63,11 +68,21 @@ public class UnderdogSoldierLogic extends PieceLogic
                 executeOrder(unit, Short.MAX_VALUE, 0, target);
                 return;
             } else {
-                Point dest = getClosestPoint(unit, moves, target.x, target.y);
+                Point dest = getClosestPoint(unit, moves, target.x, target.y,
+                    1); // get next to it to do proximity attack
                 if (dest != null) {
                     executeOrder(unit, dest.x, dest.y, null);
                     return;
                 }
+            }
+        }
+        
+        // try to use a teleporter
+        if (tporter != null) {
+            Point dest = getClosestPoint(unit, moves, tporter.x, tporter.y, 0);
+            if (dest != null) {
+                executeOrder(unit, dest.x, dest.y, null);
+                return;
             }
         }
         

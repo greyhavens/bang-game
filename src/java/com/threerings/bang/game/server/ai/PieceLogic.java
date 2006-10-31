@@ -4,7 +4,10 @@
 package com.threerings.bang.game.server.ai;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
+
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.media.util.AStarPathUtil;
 
@@ -96,17 +99,59 @@ public abstract class PieceLogic
      * Gets the closest point to the provided destination that the unit can
      * reach in one move (or <code>null</code> if the destination is
      * unreachable).
+     *
+     * @param tdist the desired distance to the target: 0 to land on the
+     * target, 1 to land next to the target, or, as a special case, -1 to
+     * land within the unit's firing range
      */
-    protected Point getClosestPoint (Unit unit, PointSet moves, int dx, int dy)
+    protected Point getClosestPoint (
+        Unit unit, PointSet moves, int dx, int dy, int tdist)
     {
+        int mindist = (tdist < 0) ? unit.getMinFireDistance() : 0,
+            maxdist = (tdist < 0) ? unit.getMaxFireDistance() : tdist;
+        
+        // find out if we're already there
+        int dist = Piece.getDistance(unit.x, unit.y, dx, dy);
+        if (dist >= mindist && dist <= maxdist) {
+            return new Point(unit.x, unit.y);
+        }
+        
+        // next, look for points within the current move set that
+        // satisfy the distance requirement
+        ArrayList<Point> pts = new ArrayList<Point>();
+        boolean close = false;
+        for (int ii = 0, nn = moves.size(); ii < nn; ii++) {
+            int mx = moves.getX(ii), my = moves.getY(ii);
+            dist = Piece.getDistance(mx, my, dx, dy);
+            if (dist >= mindist) {
+                if (dist <= maxdist) {
+                    pts.add(new Point(mx, my));
+                }
+            } else {
+                close = true;
+            }
+        }
+        if (pts.size() > 0) {
+            return RandomUtil.pickRandom(pts);
+        } else if (close) {
+            // if there are points that are too close, pathfinding will not do
+            // us any good
+            return null;
+        }
+        
+        // then do a search to find further points
         List<Point> path = AStarPathUtil.getPath(
                 _bangobj.board, getStepper(), unit,
                 getMaxLookahead(), unit.x, unit.y, dx, dy, true);
         if (path == null || path.size() < 2) {
-            return null;
+            return null; // not even a partial path
+        }
+        Point pt = path.get(path.size() - 1);
+        if (Piece.getDistance(pt.x, pt.y, dx, dy) > maxdist) {
+            return null; // not close enough
         }
         for (int ii = path.size() - 1; ii >= 0; ii--) {
-            Point pt = path.get(ii);
+            pt = path.get(ii);
             if (moves.contains(pt.x, pt.y)) {
                 return pt;
             }
@@ -122,10 +167,10 @@ public abstract class PieceLogic
     {
         return _bangobj.board.getWidth() / 2;
     }
-
+    
     protected AStarPathUtil.Stepper getStepper ()
     {
-        return new AStarPathUtil.Stepper () {
+        return new AStarPathUtil.Stepper() {
             public void considerSteps (int x, int y)
             {
                 considerStep(x, y - 1, 1);

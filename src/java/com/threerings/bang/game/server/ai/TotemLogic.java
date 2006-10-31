@@ -10,6 +10,7 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
+import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.TotemBase;
 import com.threerings.bang.game.data.piece.TotemBonus;
 import com.threerings.bang.game.data.piece.Unit;
@@ -45,7 +46,7 @@ public class TotemLogic extends AILogic
     {
         TotemBase obase = null, cbase = null, ebase = null, lbase = null;
         Unit ctarget = null;
-        Piece ctotem = null;
+        Piece ctotem = null, tporter = null;
         boolean breached = false;
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof TotemBase) {
@@ -76,6 +77,9 @@ public class TotemLogic extends AILogic
                     unit.validTarget(_bangobj, target, false)) {
                     ctarget = target;
                 }
+            } else if (pieces[ii] instanceof Teleporter && (tporter == null ||
+                unit.getDistance(pieces[ii]) < unit.getDistance(tporter))) {
+                tporter = pieces[ii];
             }
         }
         if (obase == null) {
@@ -89,7 +93,7 @@ public class TotemLogic extends AILogic
         if ((TotemBonus.isHolding(unit) || 
              (breached && obase.numPieces() > 0 &&
               unit.getDistance(obase) > DEFENSIVE_PERIMETER)) &&
-            moveUnit(pieces, unit, moves, obase)) {
+            moveUnit(pieces, unit, moves, obase, 1)) {
             return;
 
         // if there's a totem within reach, grab it
@@ -106,17 +110,25 @@ public class TotemLogic extends AILogic
             executeOrder(unit, Short.MAX_VALUE, 0, cbase);
 
         // otherwise, move towards nearest free totem
-        } else if (ctotem != null && moveUnit(pieces, unit, moves, ctotem)) {
+        } else if (ctotem != null &&
+            moveUnit(pieces, unit, moves, ctotem, 0)) {
             return;
 
         // or nearest loaded base
-        } else if (cbase != null && moveUnit(pieces, unit, moves, cbase)) {
+        } else if (cbase != null &&
+            moveUnit(pieces, unit, moves, cbase, -1)) {
             return;
 
         // or nearest totem holding target
-        } else if (ctarget != null && moveUnit(pieces, unit, moves, ctarget)) {
+        } else if (ctarget != null &&
+            moveUnit(pieces, unit, moves, ctarget, -1)) {
             return;
 
+        // or nearest teleporter
+        } else if (tporter != null &&
+            moveUnit(pieces, unit, moves, tporter, 0)) {
+            return;
+            
         // or just try to find something to shoot
         } else {
             Piece target = getBestTarget(pieces, unit, attacks,
@@ -135,10 +147,10 @@ public class TotemLogic extends AILogic
      * false if we couldn't find a path
      */
     protected boolean moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, Piece target)
+        Piece[] pieces, Unit unit, PointSet moves, Piece target, int tdist)
     {
-        return (target != null) && 
-            moveUnit(pieces, unit, moves, target.x, target.y, TARGET_EVALUATOR);
+        return (target != null) && moveUnit(pieces, unit, moves, target.x,
+            target.y, tdist, TARGET_EVALUATOR);
     }
 
     /**

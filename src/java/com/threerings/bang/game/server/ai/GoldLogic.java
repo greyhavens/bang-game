@@ -13,6 +13,7 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
+import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.util.PointSet;
 
@@ -61,7 +62,7 @@ public class GoldLogic extends AILogic
         // near our claim
         Counter oclaim = null, cclaim = null;
         Unit ctarget = null;
-        Piece cnugget = null;
+        Piece cnugget = null, tporter = null;
         boolean breached = false;
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Counter) {
@@ -90,6 +91,9 @@ public class GoldLogic extends AILogic
                     _claimloc.x, _claimloc.y) <= DEFENSIVE_PERIMETER) {
                     breached = true;                
                 }
+            } else if (pieces[ii] instanceof Teleporter && (tporter == null ||
+                unit.getDistance(pieces[ii]) < unit.getDistance(tporter))) {
+                tporter = pieces[ii];
             }
         }
         if (oclaim == null) {
@@ -105,7 +109,7 @@ public class GoldLogic extends AILogic
         if ((NuggetEffect.NUGGET_BONUS.equals(unit.holding) || 
              (breached && oclaim.count > 0 &&
               unit.getDistance(oclaim) > DEFENSIVE_PERIMETER)) &&
-            moveUnit(pieces, unit, moves, oclaim)) {
+            moveUnit(pieces, unit, moves, oclaim, 1)) {
             return;
         
         // if there's a nugget within reach, grab it
@@ -115,7 +119,7 @@ public class GoldLogic extends AILogic
         
         // if there's a loaded claim within reach, steal from it
         } else if (cclaim != null && containsAdjacent(moves, cclaim) &&
-            moveUnit(pieces, unit, moves, cclaim)) {
+            moveUnit(pieces, unit, moves, cclaim, 1)) {
             return;
         
         // if there's a nugget holding target within reach, shoot it
@@ -123,15 +127,23 @@ public class GoldLogic extends AILogic
             executeOrder(unit, Short.MAX_VALUE, 0, ctarget);
         
         // otherwise, move towards nearest free nugget
-        } else if (cnugget != null && moveUnit(pieces, unit, moves, cnugget)) {
+        } else if (cnugget != null &&
+            moveUnit(pieces, unit, moves, cnugget, 0)) {
             return;
         
         // or nearest loaded claim
-        } else if (cclaim != null && moveUnit(pieces, unit, moves, cclaim)) {
+        } else if (cclaim != null &&
+            moveUnit(pieces, unit, moves, cclaim, 1)) {
             return;
             
         // or nearest nugget holding target
-        } else if (ctarget != null && moveUnit(pieces, unit, moves, ctarget)) {
+        } else if (ctarget != null &&
+            moveUnit(pieces, unit, moves, ctarget, -1)) {
+            return;
+        
+        // or nearest teleporter
+        } else if (tporter != null &&
+            moveUnit(pieces, unit, moves, tporter, 0)) {
             return;
             
         // or just try to find something to shoot 
@@ -152,9 +164,9 @@ public class GoldLogic extends AILogic
      * false if we couldn't find a path
      */
     protected boolean moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, Piece target)
+        Piece[] pieces, Unit unit, PointSet moves, Piece target, int tdist)
     {
-        return moveUnit(pieces, unit, moves, target.x, target.y,
+        return moveUnit(pieces, unit, moves, target.x, target.y, tdist,
             TARGET_EVALUATOR);
     }
     
