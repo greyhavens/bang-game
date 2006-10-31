@@ -33,7 +33,7 @@ public class TotemBonus extends Bonus
             _value = value;
             _height = height;
             _damage = damage;
-            _stat = stat;
+            _stat = stat.ordinal();
         }
 
         public String bonus () {
@@ -53,12 +53,12 @@ public class TotemBonus extends Bonus
         }
 
         public Stat.Type stat () {
-            return _stat;
+            return Stat.Type.values()[_stat];
         }
 
         protected String _bonus;
         protected int _height, _value, _damage;
-        protected Stat.Type _stat;
+        protected int _stat;
     }
 
     public static final HashMap<String, Type> TOTEM_LOOKUP =

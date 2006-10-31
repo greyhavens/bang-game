@@ -743,7 +743,7 @@ public class Unit extends Piece
     @Override // documentation inherited
     protected String infoType ()
     {
-        return _config.type;
+        return (_config != null ? _config.type : "");
     }
 
     protected transient UnitConfig _config;

@@ -12,6 +12,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.TotemEffect;
 
 import static com.threerings.bang.Log.log;
+import com.threerings.io.SimpleStreamableObject;
 
 /**
  * A totem base can have totem pieces added to it and toped off by a
@@ -199,7 +200,7 @@ public class TotemBase extends Prop
         return base;
     }
 
-    protected class PieceData
+    protected static class PieceData extends SimpleStreamableObject
     {
         public int owner, team;
         public TotemBonus.Type type;
@@ -217,8 +218,7 @@ public class TotemBase extends Prop
         }
     }
 
-    protected transient ArrayList<PieceData> _pieces =
-        new ArrayList<PieceData>();
+    protected ArrayList<PieceData> _pieces = new ArrayList<PieceData>();
     protected transient int _destroyedOwner = -1;
     protected transient TotemBonus.Type _destroyedType;
 }

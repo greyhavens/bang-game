@@ -215,7 +215,8 @@ public class Bonus extends Piece
     @Override // documentation inherited
     public String toString ()
     {
-        return super.toString() + " t:" + _config.type;
+        return super.toString() + " t:" + 
+            (_config != null ? _config.type : "unknown");
     }
 
     /** Configures the instance after unserialization. */
