@@ -213,7 +213,7 @@ public class WendigoEffect extends Effect
                 if (collision.deathEffect != null) {
                     collision.deathEffect.apply(bangobj, obs);
                 }        
-                damage(bangobj, obs, -1, target, 100, EATEN);
+                damage(bangobj, obs, -1, null, target, 100, EATEN);
             } else {
                 if (collision.safe) {
                     reportEffect(obs, target, SAFE_PROTECT);

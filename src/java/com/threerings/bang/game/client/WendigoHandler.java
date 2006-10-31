@@ -116,8 +116,8 @@ public class WendigoHandler extends EffectHandler
                     apply(_collision.deathEffect);
                 }        
                 if (target != null) {
-                    Effect.damage(_bangobj, WendigoHandler.this, -1, target,
-                        100, ShotEffect.DAMAGED);
+                    Effect.damage(_bangobj, WendigoHandler.this, -1, null,
+                        target, 100, ShotEffect.DAMAGED);
                 }
             } else {
                 _sounds.getSound(SOUND_PATH + "defense.ogg").play(true);

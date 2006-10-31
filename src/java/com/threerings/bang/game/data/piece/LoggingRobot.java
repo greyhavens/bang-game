@@ -53,6 +53,14 @@ public class LoggingRobot extends Unit
         return _type;
     }
     
+    /**
+     * Determines whether this robot is one of the "super" varieties.
+     */
+    public boolean isSuper ()
+    {
+        return (_type == SUPER || _type == SUPER_LOCUST);
+    }
+    
     @Override // documentation inherited
     public int getTreeProximityDamage ()
     {

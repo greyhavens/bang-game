@@ -77,8 +77,8 @@ public class FailedShotEffect extends ShotEffect
             BangObject bangobj, Unit shooter, Observer obs)
     {
         if (baseDamage > 0) {
-            return damage(
-                    bangobj, obs, shooter.owner, shooter, newDamage, DAMAGED);
+            return damage(bangobj, obs, shooter.owner, null, shooter,
+                newDamage, DAMAGED);
         }
         Piece target;
         if (targetId != -1 && 

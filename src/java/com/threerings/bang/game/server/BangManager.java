@@ -1590,6 +1590,13 @@ public class BangManager extends GameManager
      */
     protected void roundDidEnd (boolean startNext)
     {
+        // record the consecutive kill counts of living units
+        for (Piece piece : _bangobj.pieces) {
+            if (piece.isAlive()) {
+                recordConsecKills(piece);
+            }
+        }
+        
         // broadcast our updated statistics
         _bangobj.setStats(_bangobj.stats);
 
@@ -1684,7 +1691,21 @@ public class BangManager extends GameManager
             startRound();
         }
     }
-
+    
+    /**
+     * Records and clears out the consecutive kill count of the specified
+     * piece, if it is a player-owned unit.
+     */
+    protected void recordConsecKills (Piece piece)
+    {
+        if (piece.owner != -1 && piece instanceof Unit) {
+            Unit unit = (Unit)piece;
+            _bangobj.stats[piece.owner].maxStat(Stat.Type.CONSEC_KILLS,
+                unit.consecKills);
+            unit.consecKills = 0;
+        }
+    }
+    
     @Override // documentation inherited
     protected void gameWasCancelled ()
     {
@@ -2819,7 +2840,7 @@ public class BangManager extends GameManager
 
         }
 
-        public void pieceKilled (Piece piece) {
+        public void pieceKilled (Piece piece, int shooter) {
             // Queue a post death effect
             Effect effect = piece.didDie(_bangobj);
             if (effect != null) {
@@ -2827,14 +2848,11 @@ public class BangManager extends GameManager
             }
 
             // let the scenario know that the piece was killed
-            _scenario.pieceWasKilled(_bangobj, piece);
+            _scenario.pieceWasKilled(_bangobj, piece, shooter);
 
             // if this is a unit and owned by a player, update their
             // consecutive kills
-            if (piece.owner != -1 && piece instanceof Unit) {
-                _bangobj.stats[piece.owner].maxStat(
-                    Stat.Type.CONSEC_KILLS, ((Unit)piece).consecKills);
-            }
+            recordConsecKills(piece);
         }
 
         public void pieceRemoved (Piece piece) {

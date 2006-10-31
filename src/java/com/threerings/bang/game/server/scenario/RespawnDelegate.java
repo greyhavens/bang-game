@@ -112,7 +112,7 @@ public class RespawnDelegate extends ScenarioDelegate
     }
 
     @Override // from ScenarioDelegate
-    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter)
     {
         if (!(piece instanceof Unit) || ((Unit)piece).originalOwner == -1) {
             return;

@@ -69,10 +69,15 @@ public class LandGrab extends Scenario
     {
         super.recordStats(bangobj, gameTime, pidx, user);
 
-        // persist the number of homesteads they claimed
-        int steads = bangobj.stats[pidx].getIntStat(Stat.Type.STEADS_CLAIMED);
-        if (steads > 0) {
-            user.stats.incrementStat(Stat.Type.STEADS_CLAIMED, steads);
+        // persist the number of homesteads they claimed and destroyed
+        int claimed = bangobj.stats[pidx].getIntStat(Stat.Type.STEADS_CLAIMED),
+            destroyed = bangobj.stats[pidx].getIntStat(
+                Stat.Type.STEADS_DESTROYED);
+        if (claimed > 0) {
+            user.stats.incrementStat(Stat.Type.STEADS_CLAIMED, claimed);
+        }
+        if (destroyed > 0) {
+            user.stats.incrementStat(Stat.Type.STEADS_DESTROYED, destroyed);
         }
     }
 

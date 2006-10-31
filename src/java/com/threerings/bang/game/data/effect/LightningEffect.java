@@ -147,7 +147,8 @@ public class LightningEffect extends Effect
             reportEffect(obs, target, (pieceId == cd.pieceId ? 
                         ChainingShotEffect.PRIMARY_EFFECT :
                         ChainingShotEffect.SECONDARY_EFFECT));
-            damage(bangobj, obs, -1, target, cd.newDamage, ShotEffect.DAMAGED); 
+            damage(bangobj, obs, -1, null, target, cd.newDamage,
+                ShotEffect.DAMAGED); 
         }
         return remaining;
     }

@@ -78,7 +78,8 @@ public class DamageEffect extends Effect
             deathEffect.apply(bangobj, obs);
         }
         Piece piece = bangobj.pieces.get(pieceId);
-        return damage(bangobj, obs, -1, piece, ndamage, ShotEffect.DAMAGED);
+        return damage(bangobj, obs, -1, null, piece, ndamage,
+            ShotEffect.DAMAGED);
     }
     
     @Override // documentation inherited

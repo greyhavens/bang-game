@@ -67,14 +67,15 @@ public class WendigoAttack extends Scenario
         registerDelegate(new RespawnDelegate(
                     RespawnDelegate.RESPAWN_TICKS/2, false) {
             @Override // documentation inherited
-            public void pieceWasKilled (BangObject bangobj, Piece piece) {
+            public void pieceWasKilled (
+                BangObject bangobj, Piece piece, int shooter) {
                 int oldRT = _respawnTicks;
                 // if units were killed by a wendigo they respawn quicker
                 if (_wendigoRespawnTicks != null && piece.owner != -1) {
                     _respawnTicks = Math.min(
                         _wendigoRespawnTicks[piece.owner]++, _respawnTicks);
                 }
-                super.pieceWasKilled(bangobj, piece);
+                super.pieceWasKilled(bangobj, piece, shooter);
                 _respawnTicks = oldRT;
             }
         });
@@ -197,7 +198,8 @@ public class WendigoAttack extends Scenario
         }
 
         @Override // documentation inherited
-        public void pieceWasKilled (BangObject bangobj, Piece piece)
+        public void pieceWasKilled (
+            BangObject bangobj, Piece piece, int shooter)
         {
             checkTSActivation(piece, bangobj.tick);
         }

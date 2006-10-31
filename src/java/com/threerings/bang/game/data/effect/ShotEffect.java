@@ -345,10 +345,11 @@ public class ShotEffect extends Effect
         // finally do the damage
         String effect = getEffect();
         if (pushx != -1) {
-            return collide(bangobj, obs, shooter.owner, target, newDamage,
-                    pushx, pushy, effect);
+            return collide(bangobj, obs, shooter.owner, shooter, target,
+                newDamage, pushx, pushy, effect);
         }
-        return damage(bangobj, obs, shooter.owner, target, newDamage, effect);
+        return damage(bangobj, obs, shooter.owner, shooter, target, newDamage,
+            effect);
     }
 
     @Override // documentation inherited

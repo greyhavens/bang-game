@@ -126,7 +126,7 @@ public class AreaDamageEffect extends AreaEffect
         if (deathEffects[pidx] != null) {
             deathEffects[pidx].apply(bangobj, obs);
         }
-        damage(bangobj, obs, causer, piece, newDamage[pidx],
+        damage(bangobj, obs, causer, null, piece, newDamage[pidx],
             ShotEffect.DAMAGED);
     }
 }

@@ -141,6 +141,13 @@ public abstract class Piece
     }
 
     /**
+     * Called on a piece when it has killed another piece.
+     */
+    public void didKill ()
+    {
+    }
+    
+    /**
      * Called on a piece when it has been damaged.
      */
     public void wasDamaged (int newDamage)

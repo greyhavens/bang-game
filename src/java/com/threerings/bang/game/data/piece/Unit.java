@@ -415,6 +415,12 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
+    public void didKill ()
+    {
+        consecKills++;
+    }
+    
+    @Override // documentation inherited
     public String[] attackInfluenceIcons ()
     {
         if (_attackIcons == null) {

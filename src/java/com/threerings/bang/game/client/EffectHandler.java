@@ -376,7 +376,7 @@ public class EffectHandler extends BoardView.BoardAction
     }
 
     // documentation inherited from interface Effect.Observer
-    public void pieceKilled (Piece piece)
+    public void pieceKilled (Piece piece, int shooter)
     {
         _view.pieceWasKilled(piece.pieceId);
         // Allow non-ActiveSprites to update themselves when they're killed

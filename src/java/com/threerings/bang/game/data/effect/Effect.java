@@ -67,8 +67,11 @@ public abstract class Effect extends SimpleStreamableObject
          * Indicates that the piece in question was killed (killed pieces are
          * not automatically removed; if a piece was removed that will be
          * reported separately with a call to {@link #pieceRemoved}).
+         *
+         * @param shooter the index of the player that shot the piece, or -1
+         * if a player was not responsible
          */
-        public void pieceKilled (Piece piece);
+        public void pieceKilled (Piece piece, int shooter);
 
         /**
          * Indicates that the specified piece was removed from the board.
@@ -100,26 +103,32 @@ public abstract class Effect extends SimpleStreamableObject
     /**
      * Handles a collision that moves and damages a unit.
      *
-     * @param collider the index of the user causing the collision, or -1.
+     * @param colliderIdx the index of the user causing the collision, or -1.
+     * @param colliderId the id of the colliding piece, or -1.
      * @param damage the amount of damage caused by the collision.
      *
      * @return true if all went well, false if we failed to collide or do
      * damage.
      */
     public static boolean collide (
-        BangObject bangobj, Observer obs, int collider, int targetId,
-        int damage, int x, int y, String effect)
+        BangObject bangobj, Observer obs, int colliderIdx, int colliderId,
+        int targetId, int damage, int x, int y, String effect)
     {
+        Piece collider = null;
+        if (colliderId != -1 &&
+            (collider = bangobj.pieces.get(colliderId)) == null) {
+            log.warning("Missing colliding piece " +
+                        "[colliderId=" + colliderId + "].");
+            return false;
+        }
         Piece target = bangobj.pieces.get(targetId);
         if (target == null) {
             log.warning("Missing collision target " +
                         "[targetId=" + targetId + "].");
             return false;
         }
-
-        return collide(bangobj, obs, collider, target,
+        return collide(bangobj, obs, colliderIdx, collider, target,
                 Math.min(100, target.damage + damage), x, y, effect);
-
     }
 
     /**
@@ -132,10 +141,9 @@ public abstract class Effect extends SimpleStreamableObject
      * damage.
      */
     public static boolean collide (
-        BangObject bangobj, Observer obs, int collider, Piece target,
-        int newDamage, int x, int y, String effect)
+        BangObject bangobj, Observer obs, int colliderIdx, Piece collider,
+        Piece target, int newDamage, int x, int y, String effect)
     {
-
         // move the target to its new coordinates
         if (target instanceof Unit && (target.x != x || target.y != y)) {
             moveAndReport(bangobj, target, x, y, obs);
@@ -143,7 +151,8 @@ public abstract class Effect extends SimpleStreamableObject
 
         // damage the target if it's still alive
         if (target.isAlive()) {
-            return damage(bangobj, obs, collider, target, newDamage, effect);
+            return damage(bangobj, obs, colliderIdx, collider, target,
+                newDamage, effect);
         }
 
         return true;
@@ -153,20 +162,23 @@ public abstract class Effect extends SimpleStreamableObject
      * Damages the supplied piece by the specified amount, properly removing it
      * from the board if appropriate and reporting the specified effect.
      *
-     * @param shooter the index of the player doing the damage or -1 if the
+     * @param shooterIdx the index of the player doing the damage or -1 if the
      * damage was not originated by a player.
+     * @param shooter the piece doing the damage, or <code>null</code> if the
+     * damage wasn't caused by a piece.
      * @param newDamage the new total damage to assign to the damaged piece.
      *
      * @return true if the damage was applied, false if the target was already
      * dead and we were unable to apply the damage.
      */
-    public static boolean damage (BangObject bangobj, Observer obs, int shooter,
-                                  Piece target, int newDamage, String effect)
+    public static boolean damage (
+        BangObject bangobj, Observer obs, int shooterIdx, Piece shooter,
+        Piece target, int newDamage, String effect)
     {
         // sanity check
         if (!target.isAlive()) {
             log.warning("Not damaging already dead target " +
-                        "[target=" + target + ", shooter=" + shooter +
+                        "[target=" + target + ", shooter=" + shooterIdx +
                         ", nd=" + newDamage + ", effect=" + effect + "].");
             return false;
         }
@@ -177,9 +189,12 @@ public abstract class Effect extends SimpleStreamableObject
         boolean alive = target.isAlive();
         if (!alive) {
             target.wasKilled(bangobj.tick);
-
+            if (shooter != null) {
+                shooter.didKill();
+            }
+            
             // airborn targets must land when they die
-            Point pt = target.maybeCrash(bangobj, shooter);
+            Point pt = target.maybeCrash(bangobj, shooterIdx);
             if (pt != null) {
                 moveAndReport(bangobj, target, pt.x, pt.y, obs, false);
             }
@@ -193,19 +208,19 @@ public abstract class Effect extends SimpleStreamableObject
             // if the piece was killed but remained alive for some reason
             // still report the kill
             if (!alive) {
-                reportKill(obs, target);
+                reportKill(obs, target, shooterIdx);
             }
             return true;
         }
 
         // report that the target was killed
-        reportKill(obs, target);
+        reportKill(obs, target, shooterIdx);
 
         // if we have a shooter and we're on the server, record the kill
-        if (shooter != -1 && bangobj.getManager().isManager(bangobj) &&
+        if (shooterIdx != -1 && bangobj.getManager().isManager(bangobj) &&
                 target instanceof Unit) {
             // record the kill statistics
-            bangobj.stats[shooter].incrementStat(Stat.Type.UNITS_KILLED, 1);
+            bangobj.stats[shooterIdx].incrementStat(Stat.Type.UNITS_KILLED, 1);
             if (target.owner != -1) {
                 bangobj.stats[target.owner].incrementStat(
                     Stat.Type.UNITS_LOST, 1);
@@ -440,10 +455,10 @@ public abstract class Effect extends SimpleStreamableObject
     }
 
     /** A helper function for reporting piece death. */
-    protected static void reportKill (Observer obs, Piece piece)
+    protected static void reportKill (Observer obs, Piece piece, int shooter)
     {
         if (obs != null) {
-            obs.pieceKilled(piece);
+            obs.pieceKilled(piece, shooter);
         }
     }
 

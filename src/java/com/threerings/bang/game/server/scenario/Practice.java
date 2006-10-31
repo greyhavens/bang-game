@@ -94,7 +94,7 @@ public class Practice extends Scenario
     }
 
     @Override // documentation inherited
-    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter)
     {
         // give the AI a new unit to replace the fallen
         if (_bangmgr.isAI(piece.owner)) {
@@ -105,7 +105,7 @@ public class Practice extends Scenario
             _bangmgr.initAndPrepareUnit((Unit)piece, owner);
             piece.lastActed = bangobj.tick;
         }
-        super.pieceWasKilled(bangobj, piece);
+        super.pieceWasKilled(bangobj, piece, shooter);
     }
 
     @Override // documentation inherited

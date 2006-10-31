@@ -171,7 +171,7 @@ public class RockslideEffect extends Effect
             if (deathEffects[ii] != null) {
                 deathEffects[ii].apply(bangobj, obs);
             }
-            damage(bangobj, obs, causer, target, newDamage[ii],
+            damage(bangobj, obs, causer, null, target, newDamage[ii],
                     ShotEffect.DAMAGED);
         }
         return success;

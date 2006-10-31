@@ -95,8 +95,8 @@ public class StampedeHandler extends CollisionHandler
                 apply(_collision.deathEffect);
             }
             Effect.collide(_bangobj, StampedeHandler.this, _stampede.causer,
-                           _collision.targetId, StampedeEffect.COLLISION_DAMAGE,
-                           _collision.x, _collision.y, ShotEffect.DAMAGED);
+                -1, _collision.targetId, StampedeEffect.COLLISION_DAMAGE,
+                _collision.x, _collision.y, ShotEffect.DAMAGED);
         }
 
         protected StampedeEffect.Collision _collision;

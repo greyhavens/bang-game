@@ -173,15 +173,20 @@ public class HomesteadDelegate extends ScenarioDelegate
     }
 
     @Override // from Scenario
-    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter)
     {
-        super.pieceWasKilled(bangobj, piece);
+        super.pieceWasKilled(bangobj, piece, shooter);
 
-        // if this was a homestead, deduct points from the previous owner
+        // if this was a homestead, deduct points from the previous owner and
+        // update the destroy count of the shooting player (if any)
         if (piece instanceof Homestead) {
             Homestead stead = (Homestead)piece;
             bangobj.grantPoints(stead.previousOwner,
-                                -LandGrabInfo.POINTS_PER_STEAD);
+                -LandGrabInfo.POINTS_PER_STEAD);
+            if (shooter != -1) {
+                bangobj.stats[shooter].incrementStat(
+                    Stat.Type.STEADS_DESTROYED, 1);
+            }
         }
     }
 

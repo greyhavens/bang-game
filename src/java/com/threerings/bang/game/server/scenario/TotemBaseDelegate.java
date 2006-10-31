@@ -50,7 +50,7 @@ public class TotemBaseDelegate extends CounterDelegate
     }
 
     @Override // documentation inherited
-    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter)
     {
         if (piece instanceof TotemBase) {
             TotemBase base = (TotemBase)piece;

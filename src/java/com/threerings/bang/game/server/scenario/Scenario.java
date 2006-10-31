@@ -315,11 +315,11 @@ public abstract class Scenario
      * Called when a piece was killed. The scenario can choose to respawn the
      * piece later, and do whatever else is appropriate.
      */
-    public void pieceWasKilled (BangObject bangobj, Piece piece)
+    public void pieceWasKilled (BangObject bangobj, Piece piece, int shooter)
     {
         // allow our delegates to participate
         for (ScenarioDelegate delegate : _delegates) {
-            delegate.pieceWasKilled(bangobj, piece);
+            delegate.pieceWasKilled(bangobj, piece, shooter);
         }
     }
 

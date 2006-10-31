@@ -179,8 +179,9 @@ public class StampedeEffect extends Effect
             if (collision.deathEffect != null) {
                 collision.deathEffect.apply(bangobj, obs);
             }
-            collide(bangobj, obs, causer, collision.targetId, COLLISION_DAMAGE,
-                    collision.x, collision.y, ShotEffect.DAMAGED);
+            collide(bangobj, obs, causer, -1, collision.targetId,
+                COLLISION_DAMAGE, collision.x, collision.y,
+                ShotEffect.DAMAGED);
         }
 
         return true;

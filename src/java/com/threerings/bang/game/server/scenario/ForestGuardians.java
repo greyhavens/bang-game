@@ -252,6 +252,23 @@ public class ForestGuardians extends Scenario
                 user.stats.incrementStat(stat, grown);
             }
         }
+        
+        // and the number of super robots killed
+        int kills = bangobj.stats[pidx].getIntStat(Stat.Type.HARD_ROBOT_KILLS);
+        if (kills > 0) {
+            user.stats.incrementStat(Stat.Type.HARD_ROBOT_KILLS, kills);
+        }
+        
+        // and the number of perfect waves
+        int waves = count(
+            bangobj.stats[pidx].getIntArrayStat(Stat.Type.WAVE_SCORES),
+            RobotWaveEffect.MAX_PERFORMANCE);
+        if (waves > 0) {
+            user.stats.incrementStat(Stat.Type.PERFECT_WAVES, waves);
+        }
+        
+        // and the highest difficulty level reached
+        user.stats.maxStat(Stat.Type.HIGHEST_SAWS, _difficulty + 1);
     }
     
     @Override // documentation inherited
@@ -582,10 +599,17 @@ public class ForestGuardians extends Scenario
         }
         
         @Override // documentation inherited
-        public void pieceWasKilled (BangObject bangobj, Piece piece)
+        public void pieceWasKilled (
+            BangObject bangobj, Piece piece, int shooter)
         {
+            // update type counts and record super robot kills
             if (piece instanceof LoggingRobot) {
-                _living[((LoggingRobot)piece).getRobotType()]--;
+                LoggingRobot bot = (LoggingRobot)piece;
+                _living[bot.getRobotType()]--;
+                if (bot.isSuper() && shooter != -1) {
+                    bangobj.stats[shooter].incrementStat(
+                        Stat.Type.HARD_ROBOT_KILLS, 1);
+                }
             }
         }
         
