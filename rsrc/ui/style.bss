@@ -1385,7 +1385,7 @@ avatar_view_framed_4 {
 
 avatar_view_framed_8 {
   font: "Dom Casual" plain 13;
-  padding: 0 0 5 0;
+  padding: 0 12 5 10;
 }
 
 avatar_view_unframed_2 {
@@ -1401,7 +1401,7 @@ avatar_view_unframed_4 {
 avatar_view_unframed_8 {
   parent: "avatar_view";
   font: "Dom Casual" plain 13;
-  padding: 0 0 5 0;
+  padding: 0 12 5 10;
 }
 
 colorsel_label {
@@ -1552,7 +1552,7 @@ match_slot {
   font: "Dom Casual" plain 13;
   text-align: center;
   vertical-align: bottom;
-  padding: 0 0 5 0;
+  padding: 0 12 5 12;
 }
 
 match_chat_header {
