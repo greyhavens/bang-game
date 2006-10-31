@@ -222,6 +222,9 @@ public class TutorialController
                 _view.showRoundTimer();
             }
 
+        } else if (action instanceof TutorialConfig.ScenarioAction) {
+            // currently nothing to do here
+
         } else if (action instanceof TutorialConfig.WaitAction) {
             // we'll handle this later
 
@@ -232,7 +235,8 @@ public class TutorialController
         if (action instanceof TutorialConfig.WaitAction) {
             // wait for the specified event
             _pending = (TutorialConfig.WaitAction)action;
-            log.fine("Waiting for tutorial event: " + _pending + ".");
+            log.fine("Waiting [event=" + _pending.getEvent() +
+                     ", action=" + _pending + "].");
 
             // only allow attacking for actions that allow it
             _view.view._attackEnabled = _pending.allowAttack();

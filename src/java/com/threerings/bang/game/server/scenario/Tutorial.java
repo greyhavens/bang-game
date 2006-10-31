@@ -76,6 +76,8 @@ public class Tutorial extends Scenario
             registerDelegate(new HomesteadDelegate());
         } else if (_config.ident.equals("totem_building")) {
             registerDelegate(new TotemBaseDelegate());
+        } else if (_config.ident.equals("wendigo_attack")) {
+            registerDelegate(_wendel = new WendigoDelegate());
         }
 
         // now that our delegates are registered we can call super.init
@@ -137,6 +139,12 @@ public class Tutorial extends Scenario
     public void tick (BangObject bangobj, short tick)
     {
         super.tick(bangobj, tick);
+
+        // if we're ready to deploy the wendigo, do so
+        if (_wendigoTick == tick) {
+            _wendel.deployWendigo(bangobj, tick);
+            _wendigoTick = -1;
+        }
 
         // end the scenario if we've reached the last action
         if (_nextActionId >= _config.getActionCount()) {
@@ -297,6 +305,13 @@ public class Tutorial extends Scenario
                 log.warning("Unable to execute action " + mua + ":" +
                             ie.getMessage());
             }
+
+        } else if (action instanceof TutorialConfig.ScenarioAction) {
+            String type = ((TutorialConfig.ScenarioAction)action).type;
+            if (type.equals("wendigo")) {
+                _wendel.createWendigo(_bangobj, _bangobj.tick);
+                _wendigoTick = _bangobj.tick + WendigoAttack.WENDIGO_WAIT;
+            }
         }
 
         return (action instanceof TutorialConfig.WaitAction);
@@ -317,4 +332,7 @@ public class Tutorial extends Scenario
     protected BangObject _bangobj;
     protected int _nextActionId;
     protected boolean _firstTime = false;
+
+    protected WendigoDelegate _wendel;
+    protected int _wendigoTick = -1;
 }

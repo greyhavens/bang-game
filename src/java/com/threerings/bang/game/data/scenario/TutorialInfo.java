@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.scenario;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.game.data.piece.Marker;
 
 /**
  * Contains metadata on the Tutorial scenario.
@@ -24,6 +25,12 @@ public class TutorialInfo extends ScenarioInfo
     public String getTownId ()
     {
         return BangCodes.FRONTIER_TOWN;
+    }
+
+    @Override // from ScenarioInfo
+    public boolean isValidMarker (Marker marker)
+    {
+        return true; // if it's on a tutorial board, we need it
     }
 
     @Override // from ScenarioInfo
