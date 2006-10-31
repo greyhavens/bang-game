@@ -24,7 +24,7 @@ public class BarberMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #changeHandle} requests. */
     public static final int CHANGE_HANDLE = 1;
 
-    // documentation inherited from interface
+    // from interface BarberService
     public void changeHandle (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
     {
         InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
@@ -37,7 +37,7 @@ public class BarberMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #configureLook} requests. */
     public static final int CONFIGURE_LOOK = 2;
 
-    // documentation inherited from interface
+    // from interface BarberService
     public void configureLook (Client arg1, String arg2, int[] arg3)
     {
         sendRequest(arg1, CONFIGURE_LOOK, new Object[] {
@@ -48,7 +48,7 @@ public class BarberMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #purchaseLook} requests. */
     public static final int PURCHASE_LOOK = 3;
 
-    // documentation inherited from interface
+    // from interface BarberService
     public void purchaseLook (Client arg1, LookConfig arg2, InvocationService.ConfirmListener arg3)
     {
         InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
@@ -57,5 +57,4 @@ public class BarberMarshaller extends InvocationMarshaller
             arg2, listener3
         });
     }
-
 }

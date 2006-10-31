@@ -20,7 +20,9 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class BankMarshaller extends InvocationMarshaller
     implements BankService
 {
-    // documentation inherited
+    /**
+     * Marshalls results to implementations of {@link OfferListener}.
+     */
     public static class OfferMarshaller extends ListenerMarshaller
         implements OfferListener
     {
@@ -28,7 +30,7 @@ public class BankMarshaller extends InvocationMarshaller
          * responses. */
         public static final int GOT_OFFERS = 1;
 
-        // documentation inherited from interface
+        // from interface OfferMarshaller
         public void gotOffers (CoinExOfferInfo[] arg1, CoinExOfferInfo[] arg2)
         {
             _invId = null;
@@ -37,7 +39,7 @@ public class BankMarshaller extends InvocationMarshaller
                                new Object[] { arg1, arg2 }));
         }
 
-        // documentation inherited
+        @Override // from InvocationMarshaller
         public void dispatchResponse (int methodId, Object[] args)
         {
             switch (methodId) {
@@ -56,7 +58,7 @@ public class BankMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #cancelOffer} requests. */
     public static final int CANCEL_OFFER = 1;
 
-    // documentation inherited from interface
+    // from interface BankService
     public void cancelOffer (Client arg1, int arg2, InvocationService.ConfirmListener arg3)
     {
         InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
@@ -69,7 +71,7 @@ public class BankMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #getMyOffers} requests. */
     public static final int GET_MY_OFFERS = 2;
 
-    // documentation inherited from interface
+    // from interface BankService
     public void getMyOffers (Client arg1, BankService.OfferListener arg2)
     {
         BankMarshaller.OfferMarshaller listener2 = new BankMarshaller.OfferMarshaller();
@@ -82,7 +84,7 @@ public class BankMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #postOffer} requests. */
     public static final int POST_OFFER = 3;
 
-    // documentation inherited from interface
+    // from interface BankService
     public void postOffer (Client arg1, int arg2, int arg3, boolean arg4, boolean arg5, InvocationService.ResultListener arg6)
     {
         InvocationMarshaller.ResultMarshaller listener6 = new InvocationMarshaller.ResultMarshaller();
@@ -91,5 +93,4 @@ public class BankMarshaller extends InvocationMarshaller
             Integer.valueOf(arg2), Integer.valueOf(arg3), Boolean.valueOf(arg4), Boolean.valueOf(arg5), listener6
         });
     }
-
 }

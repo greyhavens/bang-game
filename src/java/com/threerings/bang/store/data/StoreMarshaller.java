@@ -22,7 +22,7 @@ public class StoreMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #buyGood} requests. */
     public static final int BUY_GOOD = 1;
 
-    // documentation inherited from interface
+    // from interface StoreService
     public void buyGood (Client arg1, String arg2, Object[] arg3, InvocationService.ConfirmListener arg4)
     {
         InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
@@ -31,5 +31,4 @@ public class StoreMarshaller extends InvocationMarshaller
             arg2, arg3, listener4
         });
     }
-
 }

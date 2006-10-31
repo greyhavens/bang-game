@@ -23,7 +23,7 @@ public class RanchMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #recruitBigShot} requests. */
     public static final int RECRUIT_BIG_SHOT = 1;
 
-    // documentation inherited from interface
+    // from interface RanchService
     public void recruitBigShot (Client arg1, String arg2, Name arg3, InvocationService.ResultListener arg4)
     {
         InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
@@ -32,5 +32,4 @@ public class RanchMarshaller extends InvocationMarshaller
             arg2, arg3, listener4
         });
     }
-
 }

@@ -21,7 +21,9 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class BangMarshaller extends InvocationMarshaller
     implements BangService
 {
-    // documentation inherited
+    /**
+     * Marshalls results to implementations of {@link BoardListener}.
+     */
     public static class BoardMarshaller extends ListenerMarshaller
         implements BoardListener
     {
@@ -29,7 +31,7 @@ public class BangMarshaller extends InvocationMarshaller
          * responses. */
         public static final int REQUEST_PROCESSED = 1;
 
-        // documentation inherited from interface
+        // from interface BoardMarshaller
         public void requestProcessed (BangBoard arg1, Piece[] arg2)
         {
             _invId = null;
@@ -38,7 +40,7 @@ public class BangMarshaller extends InvocationMarshaller
                                new Object[] { arg1, arg2 }));
         }
 
-        // documentation inherited
+        @Override // from InvocationMarshaller
         public void dispatchResponse (int methodId, Object[] args)
         {
             switch (methodId) {
@@ -57,7 +59,7 @@ public class BangMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #cancelOrder} requests. */
     public static final int CANCEL_ORDER = 1;
 
-    // documentation inherited from interface
+    // from interface BangService
     public void cancelOrder (Client arg1, int arg2)
     {
         sendRequest(arg1, CANCEL_ORDER, new Object[] {
@@ -68,7 +70,7 @@ public class BangMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #getBoard} requests. */
     public static final int GET_BOARD = 2;
 
-    // documentation inherited from interface
+    // from interface BangService
     public void getBoard (Client arg1, BangService.BoardListener arg2)
     {
         BangMarshaller.BoardMarshaller listener2 = new BangMarshaller.BoardMarshaller();
@@ -81,7 +83,7 @@ public class BangMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #order} requests. */
     public static final int ORDER = 3;
 
-    // documentation inherited from interface
+    // from interface BangService
     public void order (Client arg1, int arg2, short arg3, short arg4, int arg5, InvocationService.ResultListener arg6)
     {
         InvocationMarshaller.ResultMarshaller listener6 = new InvocationMarshaller.ResultMarshaller();
@@ -94,7 +96,7 @@ public class BangMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #playCard} requests. */
     public static final int PLAY_CARD = 4;
 
-    // documentation inherited from interface
+    // from interface BangService
     public void playCard (Client arg1, int arg2, Object arg3, InvocationService.ConfirmListener arg4)
     {
         InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
@@ -107,7 +109,7 @@ public class BangMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #reportPerformance} requests. */
     public static final int REPORT_PERFORMANCE = 5;
 
-    // documentation inherited from interface
+    // from interface BangService
     public void reportPerformance (Client arg1, String arg2, String arg3, int[] arg4)
     {
         sendRequest(arg1, REPORT_PERFORMANCE, new Object[] {
@@ -118,7 +120,7 @@ public class BangMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #selectStarters} requests. */
     public static final int SELECT_STARTERS = 6;
 
-    // documentation inherited from interface
+    // from interface BangService
     public void selectStarters (Client arg1, int arg2, int[] arg3)
     {
         sendRequest(arg1, SELECT_STARTERS, new Object[] {
@@ -129,12 +131,11 @@ public class BangMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #selectTeam} requests. */
     public static final int SELECT_TEAM = 7;
 
-    // documentation inherited from interface
+    // from interface BangService
     public void selectTeam (Client arg1, String[] arg2)
     {
         sendRequest(arg1, SELECT_TEAM, new Object[] {
             arg2
         });
     }
-
 }

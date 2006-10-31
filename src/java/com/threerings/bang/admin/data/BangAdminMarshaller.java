@@ -21,12 +21,11 @@ public class BangAdminMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #scheduleReboot} requests. */
     public static final int SCHEDULE_REBOOT = 1;
 
-    // documentation inherited from interface
+    // from interface BangAdminService
     public void scheduleReboot (Client arg1, int arg2)
     {
         sendRequest(arg1, SCHEDULE_REBOOT, new Object[] {
             Integer.valueOf(arg2)
         });
     }
-
 }

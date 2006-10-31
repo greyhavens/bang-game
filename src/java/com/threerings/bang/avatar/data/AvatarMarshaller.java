@@ -25,7 +25,7 @@ public class AvatarMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #createAvatar} requests. */
     public static final int CREATE_AVATAR = 1;
 
-    // documentation inherited from interface
+    // from interface AvatarService
     public void createAvatar (Client arg1, Handle arg2, boolean arg3, LookConfig arg4, int arg5, InvocationService.ConfirmListener arg6)
     {
         InvocationMarshaller.ConfirmMarshaller listener6 = new InvocationMarshaller.ConfirmMarshaller();
@@ -38,12 +38,11 @@ public class AvatarMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #selectLook} requests. */
     public static final int SELECT_LOOK = 2;
 
-    // documentation inherited from interface
+    // from interface AvatarService
     public void selectLook (Client arg1, Look.Pose arg2, String arg3)
     {
         sendRequest(arg1, SELECT_LOOK, new Object[] {
             arg2, arg3
         });
     }
-
 }

@@ -22,7 +22,7 @@ public class StationMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #buyTicket} requests. */
     public static final int BUY_TICKET = 1;
 
-    // documentation inherited from interface
+    // from interface StationService
     public void buyTicket (Client arg1, InvocationService.ConfirmListener arg2)
     {
         InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
@@ -31,5 +31,4 @@ public class StationMarshaller extends InvocationMarshaller
             listener2
         });
     }
-
 }

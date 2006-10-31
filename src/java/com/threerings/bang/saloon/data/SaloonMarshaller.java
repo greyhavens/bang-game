@@ -24,7 +24,7 @@ public class SaloonMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #createParlor} requests. */
     public static final int CREATE_PARLOR = 1;
 
-    // documentation inherited from interface
+    // from interface SaloonService
     public void createParlor (Client arg1, boolean arg2, String arg3, InvocationService.ResultListener arg4)
     {
         InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
@@ -37,7 +37,7 @@ public class SaloonMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #findMatch} requests. */
     public static final int FIND_MATCH = 2;
 
-    // documentation inherited from interface
+    // from interface SaloonService
     public void findMatch (Client arg1, Criterion arg2, InvocationService.ResultListener arg3)
     {
         InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
@@ -50,7 +50,7 @@ public class SaloonMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #joinParlor} requests. */
     public static final int JOIN_PARLOR = 3;
 
-    // documentation inherited from interface
+    // from interface SaloonService
     public void joinParlor (Client arg1, Handle arg2, String arg3, InvocationService.ResultListener arg4)
     {
         InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
@@ -63,12 +63,11 @@ public class SaloonMarshaller extends InvocationMarshaller
     /** The method id used to dispatch {@link #leaveMatch} requests. */
     public static final int LEAVE_MATCH = 4;
 
-    // documentation inherited from interface
+    // from interface SaloonService
     public void leaveMatch (Client arg1, int arg2)
     {
         sendRequest(arg1, LEAVE_MATCH, new Object[] {
             Integer.valueOf(arg2)
         });
     }
-
 }
