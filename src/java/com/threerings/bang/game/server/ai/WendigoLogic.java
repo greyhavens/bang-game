@@ -52,7 +52,7 @@ public class WendigoLogic extends AILogic
     @Override // documentation inherited
     public void tick (Piece[] pieces, short tick)
     {
-        _safePoints = _scenario.getSafePoints();
+        _safeSpots = _scenario.getSafeSpots();
         _wendigoX = null;
         _wendigoY = null;
         super.tick(pieces, tick);
@@ -99,13 +99,13 @@ public class WendigoLogic extends AILogic
         preferredMoves.retainAll(moves);
         for (int ii = 0; ii < moves.size(); ii++) {
             int x = moves.getX(ii), y = moves.getY(ii);
-            if (_safePoints.contains(x, y) || 
+            if (_safeSpots.contains(x, y) ||
                     (!_wendigoX.contains(x) && !_wendigoY.contains(y))) {
                 preferredMoves.add(x, y);
             }
         }
-        boolean inDanger = !_safePoints.contains(unit.x, unit.y) && 
-            (_wendigoX.contains(unit.x) || _wendigoY.contains(unit.y)); 
+        boolean inDanger = !_safeSpots.contains(unit.x, unit.y) &&
+            (_wendigoX.contains(unit.x) || _wendigoY.contains(unit.y));
         boolean holdingTalisman = TalismanEffect.TALISMAN_BONUS.equals(
                 unit.holding);
 
@@ -125,7 +125,7 @@ public class WendigoLogic extends AILogic
                         preferredMoves.getY(midx), null);
             }
             return;
-            
+
         // if there's a talisman within reach, grab it
         } else if (talisman != null && moves.contains(talisman.x, talisman.y)) {
             executeOrder(unit, talisman.x, talisman.y, getBestTarget(
@@ -146,8 +146,8 @@ public class WendigoLogic extends AILogic
 
         int dist = Integer.MAX_VALUE;
         Point safe = new Point(unit.x, unit.y);
-        for (int ii = 0; ii < _safePoints.size(); ii++) {
-            int x = _safePoints.getX(ii), y = _safePoints.getY(ii);
+        for (int ii = 0; ii < _safeSpots.size(); ii++) {
+            int x = _safeSpots.getX(ii), y = _safeSpots.getY(ii);
             int tdist = unit.getDistance(x, y);
             if (tdist < dist) {
                 dist = tdist;
@@ -155,12 +155,12 @@ public class WendigoLogic extends AILogic
             }
         }
         // if we're closer to a safe zone, move there
-        if ((talisman == null || dist < unit.getDistance(talisman)) && 
+        if ((talisman == null || dist < unit.getDistance(talisman)) &&
                 (ctarget == null || dist < unit.getDistance(ctarget)) &&
                  moveUnit(pieces, unit, moves, safe.x, safe.y, 0,
                      TARGET_EVALUATOR)) {
             return;
-                    
+
         // otherwise, move towards nearest free talisman
         } else if (moveUnit(pieces, unit, moves, talisman, 0)) {
             return;
@@ -172,7 +172,7 @@ public class WendigoLogic extends AILogic
         // or nearest teleporter
         } else if (moveUnit(pieces, unit, moves, tporter, 0)) {
             return;
-            
+
         } else {
             // shoot anyone we can find
             Piece target = getBestTarget(pieces, unit, attacks,
@@ -197,7 +197,7 @@ public class WendigoLogic extends AILogic
             target.y, tdist, TARGET_EVALUATOR);
     }
 
-    /** Ranks units by properties that should make them good at getting to safe 
+    /** Ranks units by properties that should make them good at getting to safe
      * zones: speed and attack power. */
     protected static final UnitConfigEvaluator OFFENSE_EVALUATOR =
         new UnitConfigEvaluator() {
@@ -206,22 +206,22 @@ public class WendigoLogic extends AILogic
         }
     };
 
-    /** Ranks potential targets by talsman holdingness, inside safe area, 
-     * the amount of damage the unit will do, and the amount of damage the 
+    /** Ranks potential targets by talsman holdingness, inside safe area,
+     * the amount of damage the unit will do, and the amount of damage the
      * target has already taken. */
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
 
-        public int getWeight (BangObject bangobj, Unit unit, Piece target, 
+        public int getWeight (BangObject bangobj, Unit unit, Piece target,
                 int dist, PointSet preferredMoves) {
             int preferredBonus = (!preferredMoves.isEmpty() &&
-                    unit.computeShotLocation(bangobj.board, target, 
+                    unit.computeShotLocation(bangobj.board, target,
                         preferredMoves, true) == null) ? 0 : 5000;
-            return ((target instanceof Unit) && 
+            return ((target instanceof Unit) &&
                     TalismanEffect.TALISMAN_BONUS.equals(
                         ((Unit)target).holding) ? 1000 : 0) +
                 preferredBonus +
-                unit.computeScaledDamage(bangobj, target, 1f) * 
+                unit.computeScaledDamage(bangobj, target, 1f) *
                 100 + target.damage;
         }
     };
@@ -229,8 +229,8 @@ public class WendigoLogic extends AILogic
     /** Reference to the scenario. */
     protected WendigoAttack _scenario;
 
-    /** The set of safe points on the board. */
-    protected PointSet _safePoints;
+    /** The set of safe spots on the board. */
+    protected PointSet _safeSpots;
 
     /** The X and Y coordinates that aren't safe due to wendigo. */
     protected ArrayIntSet _wendigoX, _wendigoY;

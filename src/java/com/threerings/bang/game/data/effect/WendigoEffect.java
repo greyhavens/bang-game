@@ -53,8 +53,8 @@ public class WendigoEffect extends Effect
     /** The list of collisions between the wendigo and units. */
     public Collision[] collisions;
 
-    /** Set of safe points where units are not affected. */
-    public transient PointSet safePoints;
+    /** Set of safe spots where units are not affected. */
+    public transient PointSet safeSpots;
 
     public static class Movement extends SimpleStreamableObject
     {
@@ -258,10 +258,10 @@ public class WendigoEffect extends Effect
                     if (col != null && col.step <= dist) {
                         continue;
                     }
-                    boolean safe = (safePoints != null &&
-                        safePoints.contains(unit.x, unit.y)),
-                            talisman = TalismanEffect.TALISMAN_BONUS.equals(
-                        unit.holding);
+                    boolean safe = (safeSpots != null &&
+                                    safeSpots.contains(unit.x, unit.y));
+                    boolean talisman =
+                        TalismanEffect.TALISMAN_BONUS.equals(unit.holding);
                     Effect deffect = null;
                     if (!(safe || talisman)) {
                         dammap.increment(unit.owner, 100 - unit.damage);

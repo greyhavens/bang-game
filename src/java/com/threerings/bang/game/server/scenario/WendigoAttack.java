@@ -169,11 +169,11 @@ public class WendigoAttack extends Scenario
     }
 
     /**
-     * Returns the set of safe points on the board.
+     * Returns the set of safe spots on the board.
      */
-    public PointSet getSafePoints ()
+    public PointSet getSafeSpots ()
     {
-        return _wendel.getSafePoints();
+        return _wendel.getSafeSpots();
     }
 
     /** Handles the Wendigo and safe spots. */

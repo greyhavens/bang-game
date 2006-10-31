@@ -39,9 +39,9 @@ public class WendigoDelegate extends CounterDelegate
     /**
      * Returns the set of active safe points.
      */
-    public PointSet getSafePoints ()
+    public PointSet getSafeSpots ()
     {
-        return _safePoints[_activeSafePoints];
+        return _safeSpots[_activeSafeSpots];
     }
 
     /**
@@ -168,7 +168,7 @@ public class WendigoDelegate extends CounterDelegate
         }
         WendigoEffect effect =
             WendigoEffect.wendigoAttack(bangobj, _wendigo);
-        effect.safePoints = getSafePoints();
+        effect.safeSpots = getSafeSpots();
         _wendigoRespawnTicks = new int[bangobj.players.length];
         Arrays.fill(_wendigoRespawnTicks, 3);
         _bangmgr.deployEffect(-1, effect);
@@ -185,17 +185,17 @@ public class WendigoDelegate extends CounterDelegate
         super.filterPieces(bangobj, starts, pieces, updates);
 
         // extract and remove all the safe spots
-        _safePoints[0].clear();
-        _safePoints[1].clear();
+        _safeSpots[0].clear();
+        _safeSpots[1].clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (Marker.isMarker(p, Marker.SAFE)) {
-                _safePoints[0].add(p.x, p.y);
+                _safeSpots[0].add(p.x, p.y);
                 // we don't remove the markers here since we want to assign
                 // it a pieceId
 
             } else if (Marker.isMarker(p, Marker.SAFE_ALT)) {
-                _safePoints[1].add(p.x, p.y);
+                _safeSpots[1].add(p.x, p.y);
 
             } else if (p instanceof ToggleSwitch) {
                 _toggleSwitches.add((ToggleSwitch)p);
@@ -214,7 +214,7 @@ public class WendigoDelegate extends CounterDelegate
                 effect.switchId = ts.pieceId;
                 effect.occupier = piece.pieceId;
                 if (ts.isActive(bangobj.tick)) {
-                    _activeSafePoints = (_activeSafePoints + 1) % 2;
+                    _activeSafeSpots = (_activeSafeSpots + 1) % 2;
                     effect.state = getTSState();
                     effect.activator = piece.pieceId;
                 }
@@ -245,7 +245,7 @@ public class WendigoDelegate extends CounterDelegate
 
     protected ToggleSwitch.State getTSState ()
     {
-        return (_activeSafePoints == 0 ?
+        return (_activeSafeSpots == 0 ?
                 ToggleSwitch.State.SQUARE : ToggleSwitch.State.CIRCLE);
     }
 
@@ -296,8 +296,8 @@ public class WendigoDelegate extends CounterDelegate
      */
     protected void updatePoints (BangObject bangobj)
     {
-        int[] points = new int[bangobj.players.length];
-        int[] talpoints = new int[bangobj.players.length];
+        int[] survivals = new int[bangobj.players.length];
+        int[] talsurvivals = new int[bangobj.players.length];
         boolean[] teamSurvival = new boolean[bangobj.players.length];
         Arrays.fill(teamSurvival, true);
 
@@ -305,12 +305,11 @@ public class WendigoDelegate extends CounterDelegate
         for (Piece p : pieces) {
             if (p instanceof Unit && p.owner > -1) {
                 if (p.isAlive()) {
-                    points[p.owner]++;
-                    if (TalismanEffect.TALISMAN_BONUS.equals(
-                            ((Unit)p).holding) &&
-                        _safePoints[_activeSafePoints].contains(
-                            p.x, p.y)) {
-                        talpoints[p.owner]++;
+                    survivals[p.owner]++;
+                    if (getSafeSpots().contains(p.x, p.y) &&
+                        TalismanEffect.TALISMAN_BONUS.equals(
+                            ((Unit)p).holding)) {
+                        talsurvivals[p.owner]++;
                     }
                 } else {
                     teamSurvival[p.owner] = false;
@@ -320,17 +319,21 @@ public class WendigoDelegate extends CounterDelegate
 
         bangobj.startTransaction();
         try {
-            for (int idx = 0; idx < points.length; idx++) {
-                if (points[idx] > 0) {
-                    int talpts = talpoints[idx] * TALISMAN_SAFE;
+            for (int idx = 0; idx < survivals.length; idx++) {
+                if (survivals[idx] > 0) {
+                    int talpts = talsurvivals[idx] * TALISMAN_SAFE;
                     bangobj.grantPoints(
-                        idx, points[idx] * pointsPerCounter() + talpts);
+                        idx, survivals[idx] * pointsPerCounter() + talpts);
                     bangobj.stats[idx].incrementStat(
-                        Stat.Type.WENDIGO_SURVIVALS, points[idx]);
+                        Stat.Type.WENDIGO_SURVIVALS, survivals[idx]);
                     bangobj.stats[idx].incrementStat(
                         Stat.Type.TALISMAN_POINTS, talpts);
                     bangobj.stats[idx].incrementStat(
-                        Stat.Type.TALISMAN_SPOT_SURVIVALS, talpoints[idx]);
+                        Stat.Type.TALISMAN_SPOT_SURVIVALS, talsurvivals[idx]);
+                }
+                if (teamSurvival[idx]) {
+                    bangobj.stats[idx].incrementStat(
+                        Stat.Type.WHOLE_TEAM_SURVIVALS, 1);
                 }
             }
         } finally {
@@ -343,10 +346,10 @@ public class WendigoDelegate extends CounterDelegate
 
         int queuePiece = _wendigo.get(0).pieceId;
         for (Counter counter : _counters) {
-            if (points[counter.owner] > 0) {
+            if (survivals[counter.owner] > 0) {
                 _bangmgr.deployEffect(
                         -1, CountEffect.changeCount(counter.pieceId,
-                            counter.count + points[counter.owner],
+                            counter.count + survivals[counter.owner],
                             queuePiece));
             }
         }
@@ -368,13 +371,13 @@ public class WendigoDelegate extends CounterDelegate
     protected ArrayList<ToggleSwitch> _toggleSwitches =
         new ArrayList<ToggleSwitch>();
 
-    /** Which set of safepoints are currently active. */
-    protected int _activeSafePoints = 0;
+    /** Which set of safe spots are currently active. */
+    protected int _activeSafeSpots = 0;
 
     /** Set of the sacred location markers. */
-    protected PointSet[] _safePoints = new PointSet[] {
+    protected PointSet[] _safeSpots = new PointSet[] {
         new PointSet(), new PointSet() };
 
-    /** Number of points for having a talisman on a safe zone. */
-    protected static final int TALISMAN_SAFE = 40;
+    /** Number of extra points for having a talisman on a safe zone. */
+    protected static final int TALISMAN_SAFE = 25;
 }
