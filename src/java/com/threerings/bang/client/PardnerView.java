@@ -303,8 +303,14 @@ public class PardnerView extends IconPalette
                 _location.render(renderer, 6, 67, _alpha);
             }
             _scroll.render(renderer, 8, 8, _alpha);
-            _handle.render(renderer, (_width - _handle.getSize().width) / 2,
-                _last == null ? 16 : 24, _alpha);
+            Dimension size = _handle.getSize();
+            int w = size.width, h = size.height;
+            if (_width < size.width + 29) {
+                h = size.height * (_width - 29) / size.width;
+                w = _width - 29;
+            }
+            _handle.render(renderer, (_width - w) / 2,
+                _last == null ? 16 : 24, w, h, _alpha);
             if (_last != null) {
                 _last.render(renderer, (_width - _last.getSize().width) / 2,
                     12, _alpha);

@@ -80,9 +80,11 @@ public class CoopFinalistView extends BContainer
                     }
                 });
             }
-            add(new BLabel(bangobj.players[ii].toString(), 
-                        "endgame_player_small"), 
-                    new Rectangle(NAME_OFFSET[ii] + ax, 28, 136, 17));
+            BLabel handle = new BLabel(bangobj.players[ii].toString(), 
+                        "endgame_player_small");
+            handle.setWrap(false);
+            handle.setFit(true);
+            add(handle, new Rectangle(NAME_OFFSET[ii] + ax, 28, 136, 17));
         }
 
         MessageBundle msgs = ctx.getMessageManager().getBundle(

@@ -89,6 +89,8 @@ public class PlayerStatusView extends BContainer
             _ctx.getUserObject().getVisibleName());
         _player = new BLabel(_bangobj.players[_pidx].toString(),
                              "player_status" + _pidx);
+        _player.setWrap(false);
+        _player.setFit(true);
         String hmsg = "m.help_" + (_pidx == selfidx ? "you" : "they");
         _player.setTooltipText(ctx.xlate(GameCodes.GAME_MSGS, hmsg));
         add(_player, NAME_RECT);
@@ -581,7 +583,7 @@ public class PlayerStatusView extends BContainer
     protected static final Point FF_LOC = new Point(0, 32);
 
     protected static final Rectangle RANK_RECT = new Rectangle(8, 37, 21, 23);
-    protected static final Rectangle NAME_RECT = new Rectangle(11, 2, 100, 16);
+    protected static final Rectangle NAME_RECT = new Rectangle(12, 2, 98, 16);
     protected static final Rectangle CARD_RECT = new Rectangle(146, 18, 30, 39);
 
     /** The height from which to drop added cards into the hand (also the

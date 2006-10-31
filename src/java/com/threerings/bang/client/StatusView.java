@@ -136,6 +136,8 @@ public class StatusView extends BWindow
         PlayerObject user = ctx.getUserObject();
         add(_handle = new BLabel("", "status_handle"),
             new Rectangle(40, 590, 195, 33));
+        _handle.setWrap(false);
+        _handle.setFit(true);
         BButton btn = new BButton(_msgs.get("m.status_poster"), this, "poster");
         btn.setStyleClass("big_button");
         add(btn, new Point(40, 147));

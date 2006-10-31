@@ -91,7 +91,10 @@ public class FinalistView extends BContainer
 
         // create a label for their name
         String sclass = "endgame_player_" + (winner ? "big" : "small");
-        add(new BLabel(name.toString(), sclass), NAME_RECTS[winner ? 0 : 1]);
+        BLabel handle = new BLabel(name.toString(), sclass);
+        handle.setWrap(false);
+        handle.setFit(true);
+        add(handle, NAME_RECTS[winner ? 0 : 1]);
     }
 
     @Override // documentation inherited

@@ -206,6 +206,8 @@ public class AvatarView extends BLabel
             setStyleClass("avatar_view_unframed_" + scale);
         }
         setOrientation(VERTICAL);
+        setWrap(false);
+        setFit(true);
         _ctx = ctx;
         _scale = scale;
 

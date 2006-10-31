@@ -188,7 +188,10 @@ public class WantedPosterView extends BContainer
         BContainer box = GroupLayout.makeVBox(GroupLayout.CENTER);
         box.setStyleClass("poster_handle_box");
 
-        box.add(new BLabel(_poster.handle.toString(), "poster_handle"));
+        BLabel handle = new BLabel(_poster.handle.toString(), "poster_handle");
+        handle.setWrap(false);
+        handle.setFit(true);
+        box.add(handle);
 
         // TODO: disabled until there are actually gangs
         String gang = " "; // = "Member of the \"DALTON GANG\"";
