@@ -393,12 +393,14 @@ public class Badge extends Item
         },
         WENDIGO_SURVIVALS_4 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: 100 talisman+safespot survivals
+                return user.stats.getIntStat(
+                        Stat.Type.TALISMAN_SPOT_SURVIVALS) >= 100;
             }
         },
         WENDIGO_SURVIVALS_5 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: 50 whole team survivals
+                return user.stats.getIntStat(
+                        Stat.Type.WHOLE_TEAM_SURVIVALS) >= 50;
             }
         },
 

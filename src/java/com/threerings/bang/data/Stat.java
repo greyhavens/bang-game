@@ -70,6 +70,8 @@ public abstract class Stat
         TOTEM_POINTS(new IntStat()),
         WENDIGO_SURVIVALS(new IntStat()),
         TALISMAN_POINTS(new IntStat()),
+        TALISMAN_SPOT_SURVIVALS(new IntStat()),
+        WHOLE_TEAM_SURVIVALS(new IntStat()),
         TREES_SAPLING(new IntStat()),
         TREES_MATURE(new IntStat()),
         TREES_ELDER(new IntStat()),

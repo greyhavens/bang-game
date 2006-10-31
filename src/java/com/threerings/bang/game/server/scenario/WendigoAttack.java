@@ -148,6 +148,22 @@ public class WendigoAttack extends Scenario
         if (survivals > 0) {
             user.stats.incrementStat(Stat.Type.WENDIGO_SURVIVALS, survivals);
         }
+
+        // record the talisman on safe spot survivals
+        survivals = bangobj.stats[pidx].getIntStat(
+                Stat.Type.TALISMAN_SPOT_SURVIVALS);
+        if (survivals > 0) {
+            user.stats.incrementStat(
+                    Stat.Type.TALISMAN_SPOT_SURVIVALS, survivals);
+        }
+
+        // record the whole team survivals
+        survivals = bangobj.stats[pidx].getIntStat(
+                Stat.Type.WHOLE_TEAM_SURVIVALS);
+        if (survivals > 0) {
+            user.stats.incrementStat(
+                    Stat.Type.WHOLE_TEAM_SURVIVALS, survivals);
+        }
     }
 
     /**
@@ -390,14 +406,21 @@ public class WendigoAttack extends Scenario
         {
             int[] points = new int[bangobj.players.length];
             int[] talpoints = new int[bangobj.players.length];
+            boolean[] teamSurvival = new boolean[bangobj.players.length];
             Piece[] pieces = bangobj.getPieceArray();
+            Arrays.fill(teamSurvival, true);
             for (Piece p : pieces) {
-                if (p instanceof Unit && p.isAlive() && p.owner > -1) {
-                    points[p.owner]++;
-                    if (TalismanEffect.TALISMAN_BONUS.equals(
-                                ((Unit)p).holding) &&
-                            _safePoints[_activeSafePoints].contains(p.x, p.y)) {
-                        talpoints[p.owner] += TALISMAN_SAFE;
+                if (p instanceof Unit && p.owner > -1) {
+                    if (p.isAlive()) {
+                        points[p.owner]++;
+                        if (TalismanEffect.TALISMAN_BONUS.equals(
+                                    ((Unit)p).holding) &&
+                                _safePoints[_activeSafePoints].contains(
+                                    p.x, p.y)) {
+                            talpoints[p.owner]++;
+                        }
+                    } else {
+                        teamSurvival[p.owner] = false;
                     }
                 }
             }
@@ -412,7 +435,11 @@ public class WendigoAttack extends Scenario
                         bangobj.stats[idx].incrementStat(
                                 Stat.Type.WENDIGO_SURVIVALS, points[idx]);
                         bangobj.stats[idx].incrementStat(
-                                Stat.Type.TALISMAN_POINTS, talpoints[idx]);
+                                Stat.Type.TALISMAN_POINTS, 
+                                talpoints[idx]*TALISMAN_SAFE);
+                        bangobj.stats[idx].incrementStat(
+                                Stat.Type.TALISMAN_SPOT_SURVIVALS, 
+                                talpoints[idx]);
                     }
                 }
             } finally {
