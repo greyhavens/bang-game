@@ -12,8 +12,8 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="objplatformy_joe" translation="0.0, 0.0, -10.6474" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
-    <transform name="Box01" translation="0.000247313, 0.000168376, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="objplatformy_joe" translation="0.0, 0.0, -72.683" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="Box01" translation="0.000247313, 0.000168376, -73.0697" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="objplatformy_joe01" translation="0.0, 0.0, 13.3398" rotation="0.0, 0.0, 0.0, 1.0" scale="0.153128, 0.153128, 0.737646"/>
   </frame>
 
@@ -42,7 +42,7 @@
     <transform name="Spot02" translation="-1603.97, 630.946, 52.0416" rotation="-0.0515549, -0.611734, -0.229105, 0.755404" scale="1.0, 1.0, 1.0"/>
     <transform name="Spot03" translation="-658.67, 440.929, -2183.11" rotation="-0.0293747, 0.974477, 0.127775, -0.182223" scale="1.0, 1.0, 1.0"/>
     <transform name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
-    <transform name="objplatformy_joe" translation="0.0, 0.0, 313.449" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
+    <transform name="objplatformy_joe" translation="0.0, 0.0, 311.274" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
     <transform name="Box01" translation="0.000247313, 8.58935e-005, 1886.97" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 72.792"/>
     <transform name="objplatformy_joe01" translation="0.0, 0.0, -159.375" rotation="0.0, 0.0, 0.0, 1.0" scale="0.153128, 0.153128, 0.737646"/>
   </frame>

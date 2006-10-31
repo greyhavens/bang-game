@@ -20,7 +20,7 @@
 
   <node name="Camera01.Target" translation="20.2857, -57.4256, 99.9108" rotation="0.707107, 0.0, 0.0, 0.707107" scale="1.0, 1.0, 1.0"/>
 
-  <triMesh name="objplatformy_joe" translation="0.0, 0.0, -10.6474" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="spring4.png" transparent="false">
+  <triMesh name="objplatformy_joe" translation="0.0, 0.0, -72.683" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="spring4.png" transparent="true">
     <vertex location="86.3568, 22.1726, -6.01078" normal="0.0, 1.61292e-007, 1.0" tcoords="2.29017, 1.80862"/>
     <vertex location="64.9933, 61.0327, -6.01079" normal="0.0, 1.61292e-007, 1.0" tcoords="2.33032, 1.80862"/>
     <vertex location="0.0, 0.0, -6.01078" normal="0.0, 1.61292e-007, 1.0" tcoords="2.75002, 1.80862"/>
@@ -254,7 +254,7 @@
     <vertex location="86.3568, 22.1726, -21.9288" normal="0.0, 0.0, -1.0" tcoords="2.29017, 1.60942"/>
   </triMesh>
 
-  <triMesh name="Box01" translation="0.000247313, 0.000168376, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="spring4.png" transparent="true">
+  <triMesh name="Box01" translation="0.000247313, 0.000168376, -73.0697" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="spring4.png" transparent="true">
     <vertex location="40.4871, 10.3471, -25.9197" normal="0.710217, 0.182352, -0.679955" tcoords="2.29017, 1.0051"/>
     <vertex location="36.6477, 20.0442, -25.9197" normal="0.642556, 0.353246, -0.679955" tcoords="2.33032, 1.0051"/>
     <vertex location="36.6477, 20.0442, -21.9288" normal="0.876308, 0.481752, 0.0" tcoords="2.33032, 1.60942"/>
@@ -482,7 +482,7 @@
     <vertex location="0.187225, -0.000168376, -25.9197" normal="0.0, 0.0, -1.0" tcoords="2.75002, 1.0051"/>
   </triMesh>
 
-  <triMesh name="objplatformy_joe01" translation="0.0, 0.0, 13.3398" rotation="0.0, 0.0, 0.0, 1.0" scale="0.153128, 0.153128, 0.737646" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="spring4.png" transparent="false">
+  <triMesh name="objplatformy_joe01" translation="0.0, 0.0, 13.3398" rotation="0.0, 0.0, 0.0, 1.0" scale="0.153128, 0.153128, 0.737646" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="spring4.png" transparent="true">
     <vertex location="86.3568, 22.1726, -6.01078" normal="0.0, 1.61292e-007, 1.0" tcoords="2.29017, 1.80862"/>
     <vertex location="64.9933, 61.0327, -6.01079" normal="0.0, 1.61292e-007, 1.0" tcoords="2.33032, 1.80862"/>
     <vertex location="0.0, 0.0, -6.01078" normal="0.0, 1.61292e-007, 1.0" tcoords="2.75002, 1.80862"/>
