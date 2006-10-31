@@ -42,11 +42,11 @@ public class WendigoEffect extends Effect
 
     /** The effect reported for units protected by a safe spot. */
     public static final String SAFE_PROTECT = "indian_post/safe_spot/protect";
-    
+
     /** The effect reported for units protected by a talisman. */
     public static final String TALISMAN_PROTECT =
         "indian_post/talisman/protect";
-    
+
     /** An array of wendigo movements. */
     public Movement[] moves;
 
@@ -72,13 +72,13 @@ public class WendigoEffect extends Effect
 
         /** Whether or not the unit was on a safe spot. */
         public boolean safe;
-        
+
         /** Whether or not the unit was holding a talisman. */
         public boolean talisman;
-        
+
         /** The unit's death effect, if it died. */
         public Effect deathEffect;
-        
+
         public Collision ()
         {
         }
@@ -93,21 +93,21 @@ public class WendigoEffect extends Effect
             this.talisman = talisman;
             this.deathEffect = deathEffect;
         }
-        
+
         public boolean isKill ()
         {
             return !(safe || talisman);
         }
     }
-    
-    public static WendigoEffect wendigosAttack (
-            BangObject bangobj, ArrayList<Wendigo> wendigos)
+
+    public static WendigoEffect wendigoAttack (
+        BangObject bangobj, ArrayList<Wendigo> wendigo)
     {
         WendigoEffect effect = new WendigoEffect();
-        effect.moves = new Movement[wendigos.size()];
+        effect.moves = new Movement[wendigo.size()];
         Rectangle playarea = bangobj.board.getPlayableArea();
         for (int ii = 0; ii < effect.moves.length; ii++) {
-            Wendigo w = wendigos.get(ii);
+            Wendigo w = wendigo.get(ii);
             effect.moves[ii] = new Movement();
             effect.moves[ii].pieceId = w.pieceId;
             switch (w.orientation) {
@@ -174,7 +174,7 @@ public class WendigoEffect extends Effect
         _colMap = new HashIntMap<Collision>();
         for (Movement m : moves) {
             Piece w = bangobj.pieces.get(m.pieceId);
-            if (w == null) { 
+            if (w == null) {
                 continue;
             }
 
@@ -190,7 +190,7 @@ public class WendigoEffect extends Effect
         for (Movement m : moves) {
             Piece piece = bangobj.pieces.get(m.pieceId);
             if (piece == null) {
-                log.warning("Missing target for wendigo effect [id=" + 
+                log.warning("Missing target for wendigo effect [id=" +
                         m.pieceId + "].");
                 return false;
             }
@@ -199,7 +199,7 @@ public class WendigoEffect extends Effect
 
             // delay the tick by the amount of time it takes for the wendigo
             // to run it's course
-            pathlength = Math.max(pathlength, 
+            pathlength = Math.max(pathlength,
                     Math.abs((piece.orientation == EAST ||
                     piece.orientation == WEST) ?
                         piece.x - m.nx : piece.y - m.ny));
@@ -212,7 +212,7 @@ public class WendigoEffect extends Effect
             if (collision.isKill()) {
                 if (collision.deathEffect != null) {
                     collision.deathEffect.apply(bangobj, obs);
-                }        
+                }
                 damage(bangobj, obs, -1, null, target, 100, EATEN);
             } else {
                 if (collision.safe) {
@@ -237,7 +237,7 @@ public class WendigoEffect extends Effect
     {
         return 100;
     }
-    
+
     /**
      * Create the list of units that the wendigo eats.
      */
@@ -278,7 +278,7 @@ public class WendigoEffect extends Effect
             }
         }
     }
-    
+
     /** Mapping of target piece Ids to collision records. */
     protected transient HashIntMap<Collision> _colMap;
 }
