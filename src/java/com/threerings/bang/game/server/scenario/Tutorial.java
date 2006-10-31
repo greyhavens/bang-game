@@ -270,7 +270,7 @@ public class Tutorial extends Scenario
 
             // if the target is not shootable, we want just to move next to it
             Piece target = _bangobj.pieces.get(targetId);
-            if (!unit.validTarget(_bangobj, target, false)) {
+            if (target != null && !unit.validTarget(_bangobj, target, false)) {
                 targetId = -1;
                 tx = target.x;
                 ty = target.y;
