@@ -195,9 +195,10 @@ public class Prop extends BigPiece
      * Determines whether this prop can be omitted from the board view in low
      * detail modes (i.e., it has no effect on gameplay).
      */
-    public boolean isOmissible ()
+    public boolean isOmissible (BangBoard board)
     {
-        return (isPassable() && _config.passElev == 0f && 
+        return !intersects(board.getPlayableArea()) ||
+            (isPassable() && _config.passElev == 0f && 
                 StringUtil.isBlank(_config.blockDir));
     }
     
