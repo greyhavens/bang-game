@@ -7,12 +7,12 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
+import com.threerings.bang.game.client.EffectHandler;
+import com.threerings.bang.game.client.ToggleSwitchEffectHandler;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.SafeMarker;
 import com.threerings.bang.game.data.piece.ToggleSwitch;
-import com.threerings.bang.game.client.EffectHandler;
-import com.threerings.bang.game.client.ToggleSwitchEffectHandler;
 
 import static com.threerings.bang.Log.log;
 
@@ -21,6 +21,9 @@ import static com.threerings.bang.Log.log;
  */
 public class ToggleSwitchEffect extends Effect
 {
+    /** The effect generated on the {@link ToggleSwitch} pieces. */
+    public static final String SWITCH_TOGGLED = "indian_post/switch_toggled";
+
     /** Changes to the last acted tick. */
     public short tick;
 
@@ -105,19 +108,21 @@ public class ToggleSwitchEffect extends Effect
                 }
             }
         }
-        reportEffect(obs, ts, UPDATED);
+
+        reportEffect(obs, ts, SWITCH_TOGGLED);
         if (switchIds == null) {
             return true;
         }
+
         for (int sid : switchIds) {
             ts = (ToggleSwitch)bangobj.pieces.get(sid);
             if (ts == null) {
-                log.warning("Missing target to toggle switch effect [id=" +
-                        sid + "].");
+                log.warning("Missing target for toggle effect " +
+                            "[id=" + sid + "].");
                 return false;
             }
             ts.state = state;
-            reportEffect(obs, ts, UPDATED);
+            reportEffect(obs, ts, SWITCH_TOGGLED);
         }
         return true;
     }
