@@ -111,14 +111,6 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         return action;
     }
 
-    /**
-     * Called when all trees are grown, causes us to stop spawning robots.
-     */
-    public void allTreesGrown ()
-    {
-        _ctrees = null;
-    }
-
     @Override // documentation inherited
     public void filterPieces (
         BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces,
