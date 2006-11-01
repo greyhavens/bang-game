@@ -593,6 +593,12 @@
     <component cclass="female/clothing_front" name="pistol_boots"/>
   </article>
 
+  <article name="female_tin_can_pete" townId="frontier_town"
+           slot="clothing" scrip="1600" coins="2" colors="clothes_p">
+    <component cclass="female/clothing_back" name="tin_can_pete"/>
+    <component cclass="female/clothing_front" name="tin_can_pete"/>
+  </article>
+
 
   <!-- female clothing: indian trading post -->
 
