@@ -101,10 +101,10 @@ public class EnglishNameCreator extends NameCreator
     };
 
     protected static final String[] AI_PREFIXES = {
-//         "Clankin",
-//         "Lugbolt",
-//         "Robo",
-//         "Steam",
+        "Clankin",
+        "Lugbolt",
+        "Robo",
+        "Steam",
         "Tin Can",
     };
 
