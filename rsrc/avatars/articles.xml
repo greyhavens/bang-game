@@ -101,7 +101,8 @@
   </article>
 
   <article name="male_tin_can_willy" townId="frontier_town"
-           slot="clothing" scrip="1600" coins="2" colors="clothes_p,clothes_s">
+           slot="clothing" scrip="1600" coins="2" qualifier="ai"
+           colors="clothes_p,clothes_s">
     <component cclass="male/clothing_back" name="tin_can_willy"/>
     <component cclass="male/clothing_front" name="tin_can_willy"/>
   </article>
@@ -167,24 +168,22 @@
     <component cclass="male/clothing_front" name="tlingit_dagger"/>
   </article>
 
-<!--
   <article name="male_revolutionary" townId="indian_post"
-           slot="clothing" scrip="3500" coins="3">
+           slot="clothing" scrip="3500" coins="3" qualifier="bigshot">
     <component cclass="male/clothing_back" name="revolutionary"/>
   </article>
 
   <article name="male_trickster_raven" townId="indian_post"
-           slot="clothing" scrip="3500" coins="3">
+           slot="clothing" scrip="3500" coins="3" qualifier="bigshot">
     <component cclass="male/clothing_back" name="trickster_raven"/>
     <component cclass="male/clothing_front" name="trickster_raven"/>
   </article>
 
   <article name="male_storm_caller" townId="indian_post"
-           slot="clothing" scrip="3500" coins="3">
+           slot="clothing" scrip="3500" coins="3" qualifier="bigshot">
     <component cclass="male/clothing_back" name="storm_caller"/>
     <component cclass="male/clothing_front" name="storm_caller"/>
   </article>
--->
 
 
   <!-- male familiars: frontier town -->
@@ -379,20 +378,18 @@
     <component cclass="male/hat_band" name="medallion_buffalo"/>
   </article> 
 
-<!--
   <article name="male_revolutionary_hat" townId="indian_post"
-           slot="hat" scrip="2500" coins="3"
+           slot="hat" scrip="2500" coins="3" qualifier="bigshot"
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="revolutionary"/>
     <component cclass="male/hat_back" name="revolutionary"/>
   </article>
 
   <article name="male_trickster_raven_hat" townId="indian_post"
-           slot="hat" scrip="2500" coins="3"
+           slot="hat" scrip="2500" coins="3" qualifier="bigshot"
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="trickster_raven"/>
   </article>
--->
 
  <article name="male_topper" townId="indian_post"
            slot="hat" scrip="2000" coins="2"
@@ -670,33 +667,31 @@
     <component cclass="female/clothing_back" name="jacket_collar"/>
   </article>
 
-<!--
   <article name="female_revolutionary" townId="indian_post"
-           slot="clothing" scrip="3750" coins="4" colors="clothes_p,clothes_s">
+           slot="clothing" scrip="3750" coins="4" qualifier="bigshot"
+           colors="clothes_p,clothes_s">
     <component cclass="female/clothing_back" name="revolutionary"/>
   </article>
 
   <article name="female_storm_caller" townId="indian_post"
-           slot="clothing" scrip="3750" coins="4">
+           slot="clothing" scrip="3750" coins="4" qualifier="bigshot">
     <component cclass="female/clothing_back" name="storm_caller"/>
     <component cclass="female/clothing_front" name="storm_caller"/>
   </article>
 
   <article name="female_trickster_raven" townId="indian_post"
-           slot="clothing" scrip="3750" coins="4">
+           slot="clothing" scrip="3750" coins="4" qualifier="bigshot">
     <component cclass="female/clothing_back" name="trickster_raven"/>
     <component cclass="female/clothing_front" name="trickster_raven"/>
   </article>
--->
 
 
   <!-- female familiars: frontier town -->
-<!--
   <article name="female_mini_blimp" townId="frontier_town"
-           slot="familiar" scrip="3000" coins="2" colors="clothes_t">
+           slot="familiar" scrip="3000" coins="2" qualifier="familiar"
+           colors="clothes_t">
     <component cclass="female/familiar" name="mini_blimp"/>
   </article>
--->
 
   <!-- female eye glasses: frontier town -->
   <article name="female_round_glasses" townId="frontier_town"
@@ -877,28 +872,29 @@
     <component cclass="female/hat_band" name="cougar_mask"/>
   </article>
 
-<!--
   <article name="female_revolutionary_hat" townId="indian_post"
-           slot="hat" scrip="2500" coins="3" colors="clothes_p,clothes_s">
+           slot="hat" scrip="2500" coins="3" qualifier="bigshot"
+           colors="clothes_p,clothes_s">
     <component cclass="female/hat" name="revolutionary"/>
     <component cclass="female/hat_back" name="revolutionary"/>
   </article>
 
   <article name="female_trickster_raven_hat" townId="indian_post"
-           slot="hat" scrip="2500" coins="3"
+           slot="hat" scrip="2500" coins="3" qualifier="bigshot"
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="trickster_raven"/>
   </article>
--->
 
   <article name="female_topper" townId="indian_post"
-           slot="hat" scrip="2500" coins="2" colors="clothes_p,clothes_s,clothes_t">
+           slot="hat" scrip="2500" coins="2" 
+           colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="topper"/>
     <component cclass="female/hat_back" name="topper"/>
   </article>
 
   <article name="female_feather_coronet" townId="indian_post"
-           slot="hat" scrip="2250" coins="3" colors="clothes_p,clothes_s,clothes_t">
+           slot="hat" scrip="2250" coins="3" 
+           colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat_back" name="feather_coronet"/>
   </article>
 
