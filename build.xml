@@ -29,6 +29,7 @@
   <fileset dir="${projects.root}" id="dist.libs">
     <include name="${libs.dir}/ant.jar"/>
     <include name="${libs.dir}/ant-nodeps.jar"/>
+    <include name="${libs.dir}/ant-contrib.jar"/>
     <include name="${libs.dir}/commons-beanutils.jar"/>
     <include name="${libs.dir}/commons-collections.jar"/>
     <include name="${libs.dir}/commons-digester.jar"/>
