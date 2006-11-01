@@ -1,4 +1,4 @@
-511
+512
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := dogsoldier := 503
@@ -307,6 +307,7 @@ male/clothing_front := skinny_prospector_beans := 362
 male/clothing_front := skinny_prospector_pick := 363
 male/clothing_front := smoking_fat_suspenders := 321
 male/clothing_front := storm_caller := 409
+male/clothing_front := tin_can_pete := 512
 male/clothing_front := tin_can_willy := 509
 male/clothing_front := tlingit_chillkat_blanket := 391
 male/clothing_front := tlingit_dagger := 392
