@@ -32,6 +32,13 @@ public class PaletteIcon extends SelectableIcon
         return _text.getText();
     }
 
+    /** Sets the text style to non-wrapping and fitted. */
+    public void setFitted (boolean fit)
+    {
+        _text.setWrap(!fit);
+        _text.setFit(fit);
+    }
+
     public Dimension getPreferredSize (int whint, int hhint)
     {
         return (_small ? SMALL_ICON_SIZE : ICON_SIZE);

@@ -12,6 +12,7 @@ import com.samskivert.util.Predicate;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
@@ -84,7 +85,11 @@ public class InventoryPalette extends IconPalette
             if (!_itemp.isMatch(item)) {
                 continue;
             }
-            addIcon(new ItemIcon(_ctx, item));
+            ItemIcon icon = new ItemIcon(_ctx, item);
+            if (item instanceof CardItem) {
+                icon.setFitted(true);
+            }
+            addIcon(icon);
         }
     }
 

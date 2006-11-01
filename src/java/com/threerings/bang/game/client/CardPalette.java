@@ -187,6 +187,8 @@ public class CardPalette extends IconPalette
             ItemIcon iicon = new ItemIcon(_ctx, citem, _small);
             if (_small) {
                 iicon.setStyleClass("card_palette_icon");
+            } else { 
+                iicon.setFitted(true);
             }
             addIcon(iicon);
             for (SelectableIcon icon : selected) {

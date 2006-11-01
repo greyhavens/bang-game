@@ -21,6 +21,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.avatar.util.ColorConstraints;
 
 import com.threerings.bang.store.data.ArticleGood;
+import com.threerings.bang.store.data.CardTripletGood;
 import com.threerings.bang.store.data.Good;
 
 /**
@@ -73,6 +74,10 @@ public class GoodsIcon extends PaletteIcon
                 good.getIconPath(), zations, true);
         } else {
             image = _ctx.loadImage(good.getIconPath());
+        }
+
+        if (_good instanceof CardTripletGood) {
+            setFitted(true);
         }
 
         setIcon(new ImageIcon(image));
