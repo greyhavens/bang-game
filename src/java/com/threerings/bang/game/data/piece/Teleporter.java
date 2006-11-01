@@ -18,7 +18,8 @@ public class Teleporter extends Prop
     @Override // documentation inherited
     public boolean isOmissible (BangBoard board)
     {
-        return false; // although passable, it still has an effect
+        // although passable, it still has an effect
+        return !intersects(board.getPlayableArea()); 
     }
     
     @Override // documentation inherited
