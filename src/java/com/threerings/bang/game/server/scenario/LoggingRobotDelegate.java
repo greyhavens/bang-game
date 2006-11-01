@@ -142,7 +142,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         // update bots according to logic
         _logic.tick(bangobj.getPieceArray(), tick);
 
-        // once all the robots are grown, we stop
+        // once all the trees are grown, we stop spawning robots
         if (_ctrees == null) {
             return;
         }
