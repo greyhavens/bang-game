@@ -4,6 +4,9 @@
 package com.threerings.bang.game.server.ai;
 
 import java.awt.Point;
+import java.util.ArrayList;
+
+import com.samskivert.util.RandomUtil;
 
 import com.threerings.bang.data.UnitConfig;
 
@@ -44,24 +47,28 @@ public class TotemLogic extends AILogic
     protected void moveUnit (
         Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
     {
-        TotemBase obase = null, cbase = null, ebase = null, lbase = null;
+        TotemBase cbase = null;
+        ArrayList<TotemBase> baseAttack = new ArrayList<TotemBase>(), 
+            baseMove = new ArrayList<TotemBase>();
         Unit ctarget = null;
         Piece ctotem = null, tporter = null;
-        boolean breached = false;
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof TotemBase) {
                 TotemBase base = (TotemBase)pieces[ii];
                 if (!base.canAddPiece()) {
                     continue;
-                } else if (base.getTopOwner() == _pidx || 
-                        base.getTopOwner() == -1 && 
-                    (obase == null ||
-                     unit.getDistance(base) < unit.getDistance(obase))) {
-                    obase = base;
-                } else if (base.numPieces() > 0 && (cbase == null ||
-                    unit.getDistance(base) < unit.getDistance(cbase))) {
-                    lbase = cbase;
+                }
+                if (cbase == null || 
+                        unit.getDistance(base) < unit.getDistance(cbase)) {
                     cbase = base;
+                }
+                if (base.numPieces() > 0 && base.getTopOwner() != _pidx) {
+                    if (moves.contains(base.x, base.y)) {
+                        baseMove.add(base);
+                    }
+                    if (attacks.contains(base.x, base.y)) {
+                        baseAttack.add(base);
+                    }
                 }
             } else if (pieces[ii] instanceof TotemBonus) {
                 if (ctotem == null || unit.getDistance(pieces[ii]) <
@@ -82,60 +89,63 @@ public class TotemLogic extends AILogic
                 tporter = pieces[ii];
             }
         }
-        if (obase == null) {
-            obase = cbase;
-            cbase = lbase;
-        }
-        if (_baseloc == null) {
-            _baseloc = new Point(obase.x, obase.y);
-        }
-        // if we have a totem or our base is in danger, haul ass back home
-        if ((TotemBonus.isHolding(unit) || 
-             (breached && obase.numPieces() > 0 &&
-              unit.getDistance(obase) > DEFENSIVE_PERIMETER)) &&
-            moveUnit(pieces, unit, moves, obase, 1)) {
+        // if we're holding a totem piece, let's try to place it
+        if (TotemBonus.isHolding(unit) && 
+                moveUnit(pieces, unit, moves, cbase, 1)) {
             return;
+        }
 
         // if there's a totem within reach, grab it
-        } else if (ctotem != null && moves.contains(ctotem.x, ctotem.y)) {
+        if (ctotem != null && moves.contains(ctotem.x, ctotem.y)) {
             executeOrder(unit, ctotem.x, ctotem.y, getBestTarget(
                 pieces, unit, ctotem.x, ctotem.y, TARGET_EVALUATOR));
+            return;
+        }
 
         // if there's a totem holding target within reach, shoot it
-        } else if (ctarget != null && attacks.contains(ctarget.x, ctarget.y)) {
+        if (ctarget != null && attacks.contains(ctarget.x, ctarget.y)) {
             executeOrder(unit, Short.MAX_VALUE, 0, ctarget);
+            return;
+        }
 
         // if there's a loaded base within reach, shoot it 
-        } else if (cbase != null && attacks.contains(cbase.x, cbase.y)) {
-            executeOrder(unit, Short.MAX_VALUE, 0, cbase);
+        if (!baseAttack.isEmpty() && 
+                executeOrder(unit, Short.MAX_VALUE, 0, 
+                    baseAttack.get(RandomUtil.getInt(baseAttack.size())))) {
+            return;
+        }
 
         // otherwise, move towards nearest free totem
-        } else if (ctotem != null &&
+        if (ctotem != null &&
             moveUnit(pieces, unit, moves, ctotem, 0)) {
             return;
+        }
 
         // or nearest loaded base
-        } else if (cbase != null &&
-            moveUnit(pieces, unit, moves, cbase, -1)) {
+        // if there's a loaded base within reach, shoot it 
+        if (!baseMove.isEmpty() && 
+            moveUnit(pieces, unit, moves, baseMove.get(
+                    RandomUtil.getInt(baseAttack.size())), -1)) {
             return;
+        }
 
         // or nearest totem holding target
-        } else if (ctarget != null &&
+        if (ctarget != null &&
             moveUnit(pieces, unit, moves, ctarget, -1)) {
             return;
+        }
 
         // or nearest teleporter
-        } else if (tporter != null &&
+        if (tporter != null &&
             moveUnit(pieces, unit, moves, tporter, 0)) {
             return;
+        }
             
         // or just try to find something to shoot
-        } else {
-            Piece target = getBestTarget(pieces, unit, attacks,
-                EMPTY_POINT_SET, TARGET_EVALUATOR);
-            if (target != null) {
-                executeOrder(unit, Short.MAX_VALUE, 0, target);
-            }
+        Piece target = getBestTarget(pieces, unit, attacks,
+            EMPTY_POINT_SET, TARGET_EVALUATOR);
+        if (target != null) {
+            executeOrder(unit, Short.MAX_VALUE, 0, target);
         }
     }
 
@@ -166,9 +176,6 @@ public class TotemLogic extends AILogic
         }
         return false;
     }
-
-    /** The location of our own totem base. */
-    protected Point _baseloc;
 
     /** Ranks units by properties that should make them good at gathering
      * totems: speed and attack power. */
