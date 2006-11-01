@@ -1,4 +1,4 @@
-509
+511
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := dogsoldier := 503
@@ -29,6 +29,7 @@ female/clothing_back := shoulder_wrap := 395
 female/clothing_back := squaw := 81
 female/clothing_back := storm_caller := 387
 female/clothing_back := striped_vest := 180
+female/clothing_back := tin_can_pete := 510
 female/clothing_back := trickster_raven := 378
 female/clothing_back := wolf_handler := 379
 female/clothing_back := wrap := 380
@@ -52,6 +53,7 @@ female/clothing_front := rifle_shirt := 494
 female/clothing_front := robe := 497
 female/clothing_front := smoking_duster := 332
 female/clothing_front := storm_caller := 388
+female/clothing_front := tin_can_pete := 511
 female/clothing_front := trickster_raven := 382
 female/clothing_front := wolf_handler := 383
 female/clothing_props := rifle_squaw := 82
