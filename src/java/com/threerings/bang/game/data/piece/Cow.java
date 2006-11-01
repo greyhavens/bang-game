@@ -80,6 +80,12 @@ public class Cow extends Piece
     }
     
     @Override // documentation inherited
+    public boolean getFenceBlocksGoal ()
+    {
+        return true;
+    }
+    
+    @Override // documentation inherited
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
     {

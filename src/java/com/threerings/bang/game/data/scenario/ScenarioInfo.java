@@ -307,9 +307,11 @@ public abstract class ScenarioInfo
             if (radius < 1) {
                 continue;
             }
+            boolean fblock = piece.getFenceBlocksGoal();
             for (int dir : Piece.DIRECTIONS) {
                 int x = piece.x + Piece.DX[dir], y = piece.y + Piece.DY[dir];
-                if (moves.contains(x, y)) {
+                if (moves.contains(x, y) && (!fblock ||
+                        bangobj.board.canCross(x, y, piece.x, piece.y))) {
                     goals.add(x, y);
                 }
             }

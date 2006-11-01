@@ -651,6 +651,15 @@ public abstract class Piece
     }
     
     /**
+     * Determines whether the specified moving piece can attain its goal if
+     * the goal radius is +1 even if there is a fence in the way.
+     */
+    public boolean getFenceBlocksGoal ()
+    {
+        return false;
+    }
+    
+    /**
      * Writes the persistent state of this piece to the specified stream.
      *
      * @param scenIds: A sorted array of scenario Ids
