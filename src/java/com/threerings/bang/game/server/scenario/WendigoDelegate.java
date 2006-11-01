@@ -58,7 +58,7 @@ public class WendigoDelegate extends CounterDelegate
      * fades the board to let the players know the wendigo are coming. This
      * should be called prior to deploying them via {@link #deployWendigo}.
      */
-    public void createWendigo (BangObject bangobj, short tick)
+    public void prepareWendigo (BangObject bangobj, short tick)
     {
         // fade the board to let the players know the wendigo are coming
         _bangmgr.deployEffect(-1, new FadeBoardEffect());

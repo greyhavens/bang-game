@@ -309,7 +309,7 @@ public class Tutorial extends Scenario
         } else if (action instanceof TutorialConfig.ScenarioAction) {
             String type = ((TutorialConfig.ScenarioAction)action).type;
             if (type.equals("wendigo")) {
-                _wendel.createWendigo(_bangobj, _bangobj.tick);
+                _wendel.prepareWendigo(_bangobj, _bangobj.tick);
                 _wendigoTick = _bangobj.tick + WendigoAttack.WENDIGO_WAIT;
             }
         }

@@ -133,7 +133,7 @@ public class WendigoAttack extends Scenario
             }
 
         } else {
-            _wendel.createWendigo(bangobj, tick);
+            _wendel.prepareWendigo(bangobj, tick);
             _nextWendigo += WENDIGO_WAIT;
         }
     }
