@@ -23,6 +23,11 @@ p {
   font-size: 36;
 }
 
+.smheadline { 
+  font-variant: "Old Town Wide";
+  font-size: 30;
+}
+
 .subhead { 
   font-variant: "Dom Casual";
   font-size: 24;
