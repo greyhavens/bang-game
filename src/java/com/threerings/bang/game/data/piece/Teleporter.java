@@ -5,6 +5,7 @@ package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
 
+import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.TeleportEffect;
 
@@ -15,7 +16,7 @@ import com.threerings.bang.game.data.effect.TeleportEffect;
 public class Teleporter extends Prop
 {
     @Override // documentation inherited
-    public boolean isOmissible ()
+    public boolean isOmissible (BangBoard board)
     {
         return false; // although passable, it still has an effect
     }
