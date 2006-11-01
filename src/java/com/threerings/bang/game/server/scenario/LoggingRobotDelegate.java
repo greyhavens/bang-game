@@ -153,10 +153,11 @@ public class LoggingRobotDelegate extends ScenarioDelegate
                 _accum[ii] = 0f;
                 continue;
             }
-            // double the rate because we want that to be the average
-            // number of bots per tick
-            int nbots = (int)(_accum[ii] +=
-                              (FastMath.nextRandomFloat() * _rate * delta * 2));
+
+            // double the rate because we want that to be the average number of
+            // bots per tick
+            _accum[ii] += (FastMath.nextRandomFloat() * _rate * delta * 2);
+            int nbots = (int)_accum[ii];
             if (nbots > 0) {
                 spawnRobots(bangobj, ii, nbots);
                 _accum[ii] -= nbots;
@@ -187,6 +188,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
                             "[where=" + _bangmgr.where() + "]");
                 return;
             }
+
             Unit unit = Unit.getUnit(LoggingRobot.UNIT_TYPES[type]);
             unit.assignPieceId(bangobj);
             unit.position(bspot.x, bspot.y);
@@ -205,11 +207,11 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         // weight the spawn points
         int[] weights = new int[_robotSpots.size()];
         int wmax = 0;
-        float aggression = computeAggression(bangobj),
-            absAggr = Math.abs(aggression);
+        float aggression = computeAggression(bangobj);
+        float absAggr = Math.abs(aggression);
         for (int ii = 0; ii < weights.length; ii++) {
-            weights[ii] = weightSpawnPoint(bangobj, _robotSpots.get(ii),
-                absAggr);
+            weights[ii] = weightSpawnPoint(
+                bangobj, _robotSpots.get(ii), absAggr);
             wmax = Math.max(weights[ii], wmax);
         }
         if (aggression > 0f) { // invert weights for positive aggression
@@ -226,14 +228,14 @@ public class LoggingRobotDelegate extends ScenarioDelegate
             if (idx == -1) {
                 return points;
             }
+
             Marker marker = _robotSpots.get(idx);
-            points[ii] = bangobj.board.getOccupiableSpot(
-                marker.x, marker.y, 3);
+            points[ii] = bangobj.board.getOccupiableSpot(marker.x, marker.y, 3);
             if (points[ii] == null) {
                 weights[idx] = -1;
             } else {
-                bangobj.board.shadowPieceTemp(dummy,
-                    points[ii].x, points[ii].y);
+                bangobj.board.shadowPieceTemp(
+                    dummy, points[ii].x, points[ii].y);
                 ii++;
             }
         }
