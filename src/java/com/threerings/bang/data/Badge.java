@@ -103,7 +103,7 @@ public class Badge extends Item
         },
         HIGHEST_POINTS_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.HIGHEST_POINTS) >= 1000;
+                return user.stats.getIntStat(Stat.Type.HIGHEST_POINTS) >= 800;
             }
         },
 
