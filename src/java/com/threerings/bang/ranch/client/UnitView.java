@@ -121,12 +121,12 @@ public class UnitView extends BGeomView
                     model.getName() + ", value=" + crot + "].");
             }
         }
-        Vector3f left = new Vector3f(-FastMath.cos(heading),
-            -FastMath.sin(heading), 0f);
-        Quaternion rot = new Quaternion();
-        rot.fromAngleNormalAxis(-pitch, left);
-        _camera.setFrame(loc, left, rot.mult(Vector3f.UNIT_Z),
-            rot.multLocal(new Vector3f(left.y, -left.x, 0f)));
+        _camera.getLocation().set(loc);
+        float sinh = FastMath.sin(heading), cosh = FastMath.cos(heading),
+            sinp = FastMath.sin(pitch), cosp = FastMath.cos(pitch);
+        _camera.getLeft().set(-cosh, -sinh, 0f);
+        _camera.getUp().set(sinh * sinp, -cosh * sinp, cosp);
+        _camera.getDirection().set(-sinh * cosp, cosh * cosp, sinp);
     }
     
     @Override // documentation inherited
