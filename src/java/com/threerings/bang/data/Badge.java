@@ -82,16 +82,14 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 5000;
             }
         },
-
-        // units lost badges
-        UNITS_LOST_1 {
+        UNITS_KILLED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_LOST) >= 100;
+                return false; // TODO: kill ratio > 1 && UK2?
             }
         },
-        UNITS_LOST_2 {
+        UNITS_KILLED_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_LOST) >= 10000;
+                return false; // TODO: kill ratio > 2 && UK3?
             }
         },
 
@@ -124,8 +122,7 @@ public class Badge extends Item
             }
         },
 
-        // consecutive event badges (wins means first place, losses means
-        // fourth place only, not non-first place or even last place )
+        // consecutive wins badges (wins means first place)
         CONSEC_WINS_1 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CONSEC_WINS) >= 5;
@@ -141,6 +138,31 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.CONSEC_WINS) >= 30;
             }
         },
+        CONSEC_WINS_4 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: win ratio > 1 && CW1?
+            }
+        },
+        CONSEC_WINS_5 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: win ratio > 3 && CW3?
+            }
+        },
+
+        // you suck badges
+        UNITS_LOST_1 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.UNITS_LOST) >= 100;
+            }
+        },
+        UNITS_LOST_2 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.UNITS_LOST) >= 10000;
+            }
+        },
+
+        // consecutive losses (fourth place only, not non-first place or even
+        // last place)
         CONSEC_LOSSES_1 {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.CONSEC_LOSSES) >= 5;
@@ -198,12 +220,22 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.CARDS_PLAYED) >= 5000;
             }
         },
+        CARDS_PLAYED_4 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: 30 wins with 0 cards brought in?
+            }
+        },
+        CARDS_PLAYED_5 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: 100 wins with < 2 cards brought in?
+            }
+        },
 
         // bonuses collected badges
         BONUSES_COLLECTED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.BONUSES_COLLECTED) >=
-                    100;
+                return user.stats.getIntStat(
+                    Stat.Type.BONUSES_COLLECTED) >= 100;
             }
         },
         BONUSES_COLLECTED_2 {
@@ -216,6 +248,16 @@ public class Badge extends Item
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(
                     Stat.Type.BONUSES_COLLECTED) >= 10000;
+            }
+        },
+        BONUSES_COLLECTED_4 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: 6+ bonuses collected in a round?
+            }
+        },
+        BONUSES_COLLECTED_5 {
+            public boolean qualifies (PlayerObject user) {
+                return false; // TODO: 10+ bonuses collected in a round?
             }
         },
 
