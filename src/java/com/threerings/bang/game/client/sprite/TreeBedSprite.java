@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import com.jme.image.Texture;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -64,23 +65,23 @@ public class TreeBedSprite extends ActiveSprite
         }
 
         // perhaps create, update, or remove the damaged texture overlay
-        float pdamage = tree.getPercentDamage();
-        if (pdamage > 0f) {
-            if (!_oadded) {
-                addDamageOverlay();
-            }
-            _omstate.getDiffuse().a = pdamage;
-
-        } else if (_oadded) {
-            new SpatialVisitor<ModelMesh>(ModelMesh.class) {
-                protected void visit (ModelMesh mesh) {
-                    mesh.removeOverlay(_overlay);
-                }
-            }.traverse(_model);
-            _oadded = false;
-        }
+        float pdamage = Math.min(1f, tree.getPercentDamage() * 2f);
+        setTextureStates((_growth == TreeBed.FULLY_GROWN) ?
+            _mtstate : _btstate, _dtstate, pdamage);
     }
 
+    @Override // documentation inherited
+    public void updateWorldData (float time)
+    {
+        // transition into the max texture during the third growth stage
+        if (_nextAction > 0 && _action.equals("grow_stage3"))  {
+            float alpha = Math.max(0f, (_nextAction - time) /
+                _finalGrowthDuration);
+            setTextureStates(_mtstate, _btstate, alpha);
+        }
+        super.updateWorldData(time);
+    }
+    
     @Override // documentation inherited
     protected void addProceduralActions ()
     {
@@ -99,7 +100,7 @@ public class TreeBedSprite extends ActiveSprite
             }
         });
     }
-
+    
     @Override // from PieceSprite
     protected void createGeometry ()
     {
@@ -136,7 +137,26 @@ public class TreeBedSprite extends ActiveSprite
     protected void modelLoaded (Model model)
     {
         super.modelLoaded(model);
-        _oadded = false;
+        if (_finalGrowthDuration == 0f) {
+            _finalGrowthDuration =
+                model.getAnimation("grow_stage3").getDuration();
+        }
+        if (_btstate == null) {
+            Texture etex = _ctx.getTextureCache().getTexture(EMISSIVE_TEXTURE);
+            etex.setApply(Texture.AM_BLEND);
+            etex.setBlendColor(ColorRGBA.white);
+            _btstate = _ctx.getRenderer().createTextureState();
+            _btstate.setTexture(etex, 0);
+            _btstate.setTexture(
+                _ctx.getTextureCache().getTexture(BASE_TEXTURE), 1);
+            _mtstate = _ctx.getRenderer().createTextureState();
+            _mtstate.setTexture(etex, 0);
+            _mtstate.setTexture(
+                _ctx.getTextureCache().getTexture(MAX_TEXTURE), 1);
+            _dtstate = RenderUtil.createTextureState(_ctx, DAMAGE_TEXTURE);
+        }
+        _ptstate = _btstate;
+        _ststate = null;
     }
 
     /**
@@ -187,44 +207,91 @@ public class TreeBedSprite extends ActiveSprite
     }
 
     /**
-     * Adds the damaged texture overlay to the current model.
+     * Blends between two texture states.
      */
-    protected void addDamageOverlay ()
+    protected void setTextureStates (
+        TextureState t1, TextureState t2, float alpha)
     {
-        if (_overlay == null) {
-            _overlay = new RenderState[3];
-            _overlay[0] = RenderUtil.blendAlpha;
-            _overlay[1] = _omstate = _ctx.getRenderer().createMaterialState();
-            _overlay[2] = RenderUtil.createTextureState(_ctx,
-                "props/indian_post/special/tree_bed/alpha_dead.png");
-            _omstate.getAmbient().set(ColorRGBA.white);
-            _omstate.getDiffuse().set(ColorRGBA.white);
-        }
-        new SpatialVisitor<ModelMesh>(ModelMesh.class) {
-            protected void visit (ModelMesh mesh) {
-                TextureState tstate = (TextureState)mesh.getRenderState(
-                    RenderState.RS_TEXTURE);
-                if (tstate.getTexture().getImageLocation().indexOf(
-                        "alpha") != -1) {
-                    mesh.addOverlay(_overlay);
-                }
+        if (alpha == 0f) {
+            t2 = null;
+        } else if (alpha == 1f) {
+            t1 = t2;
+            t2 = null;
+        } else {
+            if (_overlay == null) {
+                _overlay = new RenderState[2];
+                _overlay[0] = _omstate =
+                    _ctx.getRenderer().createMaterialState();
+                _omstate.getAmbient().set(ColorRGBA.white);
+                _omstate.getDiffuse().set(ColorRGBA.white);
             }
-        }.traverse(_model);
-        _oadded = true;
+            _omstate.getDiffuse().a = alpha;
+            _overlay[1] = t2;
+        }
+        final boolean swap = (_ptstate != t1),
+            add = (_ststate == null && t2 != null),
+            remove = (_ststate != null && t2 == null);
+        _ptstate = t1;
+        _ststate = t2;
+        if (swap || add || remove) {
+            new SpatialVisitor<ModelMesh>(ModelMesh.class) {
+                protected void visit (ModelMesh mesh) {
+                    TextureState tstate = (TextureState)mesh.getRenderState(
+                        RenderState.RS_TEXTURE);
+                    if (tstate.getTexture(0).getImageLocation().indexOf(
+                            "alpha") != -1) {
+                        if (swap) {
+                            mesh.setRenderState(_ptstate);
+                        }
+                        if (add) {
+                            mesh.addOverlay(_overlay);
+                        } else if (remove) {
+                            mesh.removeOverlay(_overlay);
+                        }
+                    }
+                }
+            }.traverse(_model);
+            if (swap) {
+                _model.updateRenderState();
+            }
+        }
     }
-
+    
     /** The currently depicted growth stage. */
     protected byte _growth;
 
-    /** The damaged texture overlay. */
+    /** The damaged or maxed texture overlay. */
     protected RenderState[] _overlay;
 
     /** The overlay's material state. */
     protected MaterialState _omstate;
 
-    /** Whether or not the overlay has been added. */
-    protected boolean _oadded;
-
+    /** The current primary and secondary texture states. */
+    protected TextureState _ptstate, _ststate;
+    
+    /** The duration of the final growth animation. */
+    protected static float _finalGrowthDuration;
+    
+    /** The base, max, and damaged texture states. */
+    protected static TextureState _btstate, _mtstate, _dtstate;
+    
     /** The duration of the falling trunk animation. */
     protected static final float TRUNK_FALL_DURATION = 1f;
+    
+    /** The prefix common to all texture paths. */
+    protected static final String TEXTURE_ROOT =
+        "props/indian_post/special/tree_bed/alpha";
+        
+    /** The base leaf texture. */
+    protected static final String BASE_TEXTURE = TEXTURE_ROOT + ".png";
+        
+    /** The texture to use for the maximum growth level. */
+    protected static final String MAX_TEXTURE = TEXTURE_ROOT + "_max.png";
+        
+    /** The texture to use to indicate damage. */
+    protected static final String DAMAGE_TEXTURE = TEXTURE_ROOT + "_dead.png";
+        
+    /** The emissive texture map. */
+    protected static final String EMISSIVE_TEXTURE =
+        TEXTURE_ROOT + "_emissive.png";
 }
