@@ -59,12 +59,6 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         _target[LoggingRobot.SUPER] =
             scount - _target[LoggingRobot.SUPER_LOCUST];
 
-        // spawn the next wave
-        for (int ii = 0; ii < LoggingRobot.UNIT_TYPES.length; ii++) {
-            _living[ii] = 0;
-            spawnRobots(bangobj, ii, _target[ii]);
-        }
-
         // determine the rate at which robots respawn
         _rate = Math.min(BASE_RESPAWN_RATE +
                          RESPAWN_RATE_INCREMENT * _difficulty, 1f);
@@ -74,6 +68,12 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         _difficulty = difficulty;
         _ctrees = trees;
         _treesGrown = treesGrown;
+        
+        // spawn the next wave
+        for (int ii = 0; ii < LoggingRobot.UNIT_TYPES.length; ii++) {
+            _living[ii] = 0;
+            spawnRobots(bangobj, ii, _target[ii]);
+        }
     }
 
     /**
@@ -102,7 +102,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         WaveAction action = WaveAction.CONTINUE;
         if (living == grown) {
             // ...stop spawning new robots
-            _ctrees = null;
+            _rate = 0f;
             // ...and when all robots are dead, end the wave
             if (IntListUtil.sum(_living) == 0) {
                 action = WaveAction.END_WAVE;
@@ -143,7 +143,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         _logic.tick(bangobj.getPieceArray(), tick);
 
         // once all the trees are grown, we stop spawning robots
-        if (_ctrees == null) {
+        if (_rate == 0f) {
             return;
         }
 
