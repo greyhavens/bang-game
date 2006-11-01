@@ -19,9 +19,11 @@ public class ArticleGood extends Good
     /**
      * Creates a good representing the specified article.
      */
-    public ArticleGood (String type, int scripCost, int coinCost)
+    public ArticleGood (
+            String type, int scripCost, int coinCost, String qualifier)
     {
         super(type, scripCost, coinCost);
+        _qualifier = qualifier;
     }
 
     /** A constructor only used during serialization. */
@@ -40,7 +42,9 @@ public class ArticleGood extends Good
     {
         // make sure the gender matches
         boolean isMale = (_type.indexOf("female") == -1);
-        return user.isMale == isMale;
+        return user.isMale == isMale && 
+            (_qualifier == null || 
+             (user.tokens.isAdmin() && !"ai".equals(_qualifier))
     }
 
     @Override // documentation inherited
@@ -54,4 +58,6 @@ public class ArticleGood extends Good
     {
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.article_tip");
     }
+
+    protected String _qualifier;
 }

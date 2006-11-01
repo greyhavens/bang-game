@@ -86,7 +86,7 @@ public class GoodsCatalog
                  _alogic.getArticleCatalog().getArticles()) {
             ArticleGood good = new ArticleGood(
                 article.townId + "/" + article.name, article.scrip,
-                article.coins);
+                article.coins, article.qualifier);
             registerGood(article.townId, good, pf);
         }
 

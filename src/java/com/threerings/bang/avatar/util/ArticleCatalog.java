@@ -51,6 +51,9 @@ public class ArticleCatalog
          * only be one starter for each gender.) */
         public boolean starter;
 
+        /** A qualification needed to access the article. */
+        public String qualifier;
+
         /** The list of components that make up this article. */
         public ArrayList<Component> components = new ArrayList<Component>();
 
