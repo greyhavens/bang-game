@@ -64,10 +64,9 @@ public class TreeBedSprite extends ActiveSprite
             _nextIdle = FastMath.FLT_EPSILON;
         }
 
-        // perhaps create, update, or remove the damaged texture overlay
-        float pdamage = Math.min(1f, tree.getPercentDamage() * 2f);
+        // blend between the base or maxed texture and the damaged texture
         setTextureStates((_growth == TreeBed.FULLY_GROWN) ?
-            _mtstate : _btstate, _dtstate, pdamage);
+            _mtstate : _btstate, _dtstate, tree.getPercentDamage());
     }
 
     @Override // documentation inherited
@@ -142,18 +141,21 @@ public class TreeBedSprite extends ActiveSprite
                 model.getAnimation("grow_stage3").getDuration();
         }
         if (_btstate == null) {
-            Texture etex = _ctx.getTextureCache().getTexture(EMISSIVE_TEXTURE);
+            String troot = _type + "/" + _name + "/alpha";
+            Texture etex = _ctx.getTextureCache().getTexture(
+                troot + "_emissive.png");
             etex.setApply(Texture.AM_BLEND);
             etex.setBlendColor(ColorRGBA.white);
             _btstate = _ctx.getRenderer().createTextureState();
             _btstate.setTexture(etex, 0);
             _btstate.setTexture(
-                _ctx.getTextureCache().getTexture(BASE_TEXTURE), 1);
+                _ctx.getTextureCache().getTexture(troot + ".png"), 1);
             _mtstate = _ctx.getRenderer().createTextureState();
             _mtstate.setTexture(etex, 0);
             _mtstate.setTexture(
-                _ctx.getTextureCache().getTexture(MAX_TEXTURE), 1);
-            _dtstate = RenderUtil.createTextureState(_ctx, DAMAGE_TEXTURE);
+                _ctx.getTextureCache().getTexture(troot + "_max.png"), 1);
+            _dtstate = RenderUtil.createTextureState(_ctx,
+                troot + "_dead.png");
         }
         _ptstate = _btstate;
         _ststate = null;
@@ -277,21 +279,4 @@ public class TreeBedSprite extends ActiveSprite
     
     /** The duration of the falling trunk animation. */
     protected static final float TRUNK_FALL_DURATION = 1f;
-    
-    /** The prefix common to all texture paths. */
-    protected static final String TEXTURE_ROOT =
-        "props/indian_post/special/tree_bed/alpha";
-        
-    /** The base leaf texture. */
-    protected static final String BASE_TEXTURE = TEXTURE_ROOT + ".png";
-        
-    /** The texture to use for the maximum growth level. */
-    protected static final String MAX_TEXTURE = TEXTURE_ROOT + "_max.png";
-        
-    /** The texture to use to indicate damage. */
-    protected static final String DAMAGE_TEXTURE = TEXTURE_ROOT + "_dead.png";
-        
-    /** The emissive texture map. */
-    protected static final String EMISSIVE_TEXTURE =
-        TEXTURE_ROOT + "_emissive.png";
 }
