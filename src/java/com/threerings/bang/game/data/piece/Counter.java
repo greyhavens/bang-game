@@ -15,6 +15,12 @@ public class Counter extends Prop
     public int count;
 
     @Override // documentation inherited
+    public boolean isOmissible ()
+    {
+        return false;
+    }
+    
+    @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new CounterSprite(_type);
