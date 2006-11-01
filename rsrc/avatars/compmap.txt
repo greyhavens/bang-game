@@ -1,4 +1,4 @@
-512
+513
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := dogsoldier := 503
@@ -53,6 +53,7 @@ female/clothing_front := rifle_shirt := 494
 female/clothing_front := robe := 497
 female/clothing_front := smoking_duster := 332
 female/clothing_front := storm_caller := 388
+female/clothing_front := tin_can_clementine := 513
 female/clothing_front := tin_can_pete := 511
 female/clothing_front := trickster_raven := 382
 female/clothing_front := wolf_handler := 383
