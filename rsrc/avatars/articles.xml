@@ -100,6 +100,13 @@
     <component cclass="male/clothing_front" name="overalls_wheat"/>
   </article>
 
+  <article name="male_tin_can_willy" townId="frontier_town"
+           slot="clothing" scrip="1600" coins="2" colors="clothes_p,clothes_s">
+    <component cclass="male/clothing_back" name="tin_can_willy"/>
+    <component cclass="male/clothing_front" name="tin_can_willy"/>
+  </article>
+
+
 
   <!-- male clothing: indian trading post -->
   <article name="male_mink_shirt" townId="indian_post"
