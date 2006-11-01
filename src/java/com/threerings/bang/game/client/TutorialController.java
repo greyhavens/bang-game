@@ -35,6 +35,7 @@ import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Homestead;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.ToggleSwitch;
 import com.threerings.bang.game.data.piece.TotemBase;
 import com.threerings.bang.game.util.TutorialUtil;
 
@@ -195,7 +196,8 @@ public class TutorialController
                 for (Piece cp : _bangobj.pieces) {
                     if (((cp instanceof Counter ||
                           cp instanceof Homestead) && cp.owner == id) ||
-                        (cp instanceof TotemBase &&
+                        ((cp instanceof TotemBase ||
+                          cp instanceof ToggleSwitch) &&
                          (cp.x * 100 + cp.y == id))) {
                         p = cp;
                         break;
