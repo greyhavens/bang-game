@@ -59,7 +59,7 @@ public class LogonView extends BWindow
 {
     /**
      * Converts an arbitrary exception into a translatable error string (which
-     * should be looked up in the @{link BangAuthCodes#AUTH_MSGS} bundle). If
+     * should be looked up in the {@link BangAuthCodes#AUTH_MSGS} bundle). If
      * the exception indicates that the client is out of date, the process of
      * updating the client <em>will be started</em>; the client will exit a few
      * seconds later, so be sure to display the returned error message.
