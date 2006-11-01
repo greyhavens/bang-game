@@ -1479,7 +1479,7 @@ news_top_scores:selected {
 }
 
 news_contents {
-  padding: 0 10 10 5;
+  padding: 0 10 10 11;
 }
 
 news_buttons {
