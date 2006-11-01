@@ -126,14 +126,15 @@ public class BangController extends GameController
     // documentation inherited from interface BangReceiver
     public void orderInvalidated (int unitId, String reason)
     {
-        if (!reason.equals(GameCodes.ORDER_CLEARED)) {
+        if (!reason.equals(GameCodes.ORDER_CLEARED) &&
+            !reason.equals(GameCodes.MOVER_NO_LONGER_VALID)) {
             // TEMP: report the failure via chat feedback
             Unit unit = (Unit)_bangobj.pieces.get(unitId);
             if (unit != null) {
                 reason = MessageBundle.compose(
                     "m.order_invalidated_unit",
                     unit.getConfig().getName(), reason);
-                    
+
                 // show a question mark over the unit
                 IconViz iviz = new IconViz("textures/effects/invalidated.png");
                 iviz.init(_ctx, _view.view, unit, null);
@@ -456,8 +457,6 @@ public class BangController extends GameController
         _bangobj.service.cancelOrder(_ctx.getClient(), pieceId);
     }
 
-    
-    
     /** Handles a request to place a card. */
     public void placeCard (int cardId)
     {
@@ -471,32 +470,32 @@ public class BangController extends GameController
             log.warning("Requested to place non-existent card '" +
                         cardId + "'.");
 
-        } else if (activeCard != null && activeCard.getPlacementMode() == 
+        } else if (activeCard != null && activeCard.getPlacementMode() ==
                 Card.PlacementMode.VS_CARD && card.owner != _pidx) {
             activateCard(activeCard.cardId, new Integer(card.cardId));
 
         } else if (card.getPlacementMode() == Card.PlacementMode.VS_BOARD) {
             activateCard(card.cardId, null);
-            
+
         } else if (card.owner == _pidx) {
             // instruct the board view to activate placement mode
             _view.view.placeCard(card);
             postEvent(TutorialCodes.CARD_SELECTED);
         }
     }
-    
+
     /** Returns the card being placed, if any. */
     public Card getPlacingCard ()
     {
         return _view.view.getCard();
     }
-    
+
     /** Cancels the card placement operation. */
     public void cancelCardPlacement ()
     {
         _view.view.clearPlacingCard();
     }
-    
+
     /** Handles a request to activate a card. */
     public void activateCard (int cardId, Object target)
     {
@@ -730,7 +729,7 @@ public class BangController extends GameController
     {
         // potentially display the post-game stats
         _postRoundMultex.satisfied(Multex.CONDITION_ONE);
-        
+
         if (_config.practice) {
             BangBootstrapData bbd = (BangBootstrapData)
                 _ctx.getClient().getBootstrapData();
@@ -885,7 +884,7 @@ public class BangController extends GameController
     /** Used to start the new round after two conditions have been met. */
     protected Multex _startRoundMultex;
 
-    /** Used to show the stats once we've faded in our Round/Game Over 
+    /** Used to show the stats once we've faded in our Round/Game Over
      * marquee and the stats have arrived. */
     protected Multex _postRoundMultex;
 
