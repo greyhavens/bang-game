@@ -44,7 +44,7 @@ public class ArticleGood extends Good
         boolean isMale = (_type.indexOf("female") == -1);
         return user.isMale == isMale && 
             (_qualifier == null || 
-             (user.tokens.isAdmin() && !"ai".equals(_qualifier))
+             (user.tokens.isAdmin() && !"ai".equals(_qualifier)));
     }
 
     @Override // documentation inherited
