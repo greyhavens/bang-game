@@ -7,6 +7,7 @@ import com.jme.renderer.Renderer;
 
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Rectangle;
+import com.jmex.bui.util.Point;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
@@ -21,10 +22,12 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
 
 import com.threerings.media.image.Colorization;
@@ -37,7 +40,8 @@ public class CoopFinalistView extends BContainer
     /**
      * Creates a view showing all the players in one frame.
      */
-    public CoopFinalistView (BasicContext ctx, BangObject bangobj)
+    public CoopFinalistView (
+            BasicContext ctx, BangObject bangobj, BangController ctrl)
     {
         super(new AbsoluteLayout());
         setStyleClass("endgame_border");
@@ -85,6 +89,18 @@ public class CoopFinalistView extends BContainer
             handle.setWrap(false);
             handle.setFit(true);
             add(handle, new Rectangle(NAME_OFFSET[ii] + ax, 28, 136, 17));
+            if (ctx instanceof BangContext) {
+                BangContext bctx = (BangContext)ctx;
+                int myidx = bangobj.getPlayerIndex(
+                        bctx.getUserObject().getVisibleName());
+                if (myidx != -1 && myidx != ii) {
+                    BangConfig config = (BangConfig)ctrl.getPlaceConfig();
+                    if (config.ais[ii] == null) {
+                        add(new FriendlyFolkButton(bctx, bangobj, ii),
+                                new Point(FF_OFFSET[ii] + ax, 48));
+                    }
+                }
+            }
         }
 
         MessageBundle msgs = ctx.getMessageManager().getBundle(
@@ -175,4 +191,5 @@ public class CoopFinalistView extends BContainer
     protected BLabel _titleLabel;
 
     protected static final int[] NAME_OFFSET = { 7, 155, 303, 451 };
+    protected static final int[] FF_OFFSET = { 112, 260, 408, 556 };
 }

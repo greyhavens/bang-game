@@ -16,6 +16,7 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Rectangle;
+import com.jmex.bui.util.Point;
 
 import com.samskivert.util.ResultListener;
 import com.threerings.util.Name;
@@ -24,7 +25,10 @@ import com.threerings.media.image.Colorization;
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
+import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.BangObject;
 
 /**
  * Displays a player's avatar and name and a medal indicating their rank at the
@@ -43,10 +47,13 @@ public class FinalistView extends BContainer
      * zero (1st place) the view will be in the large format, otherwise it will
      * be in the small format.
      */
-    public FinalistView (BasicContext ctx, int pidx, Name name, int[] avatar,
-                         int rank)
+    public FinalistView (BasicContext ctx, BangObject bangobj, 
+            BangController ctrl, int pidx, int rank)
     {
         super(new AbsoluteLayout());
+
+        Name name = bangobj.players[pidx];
+        int[] avatar = bangobj.playerInfo[pidx].avatar;
 
         // load up our medal image and extract the appropriate colored tile
         BufferedImage medal = ctx.getImageCache().getBufferedImage(
@@ -95,6 +102,18 @@ public class FinalistView extends BContainer
         handle.setWrap(false);
         handle.setFit(true);
         add(handle, NAME_RECTS[winner ? 0 : 1]);
+        if (ctx instanceof BangContext) {
+            BangContext bctx = (BangContext)ctx;
+            int myidx = bangobj.getPlayerIndex(
+                    bctx.getUserObject().getVisibleName());
+            if (myidx != -1 && myidx != pidx) {
+                BangConfig config = (BangConfig)ctrl.getPlaceConfig();
+                if (config.ais[pidx] == null) {
+                    add(new FriendlyFolkButton(bctx, bangobj, pidx), 
+                            FF_POS[winner ? 0 : 1]);
+                }
+            }
+        }
     }
 
     @Override // documentation inherited
@@ -167,5 +186,10 @@ public class FinalistView extends BContainer
     protected static final Rectangle[] NAME_RECTS = {
         new Rectangle(21, 13, 251, 25),
         new Rectangle(7, 6, 136, 17),
+    };
+
+    protected static final Point[] FF_POS = {
+        new Point(244, 40),
+        new Point(113, 20),
     };
 }

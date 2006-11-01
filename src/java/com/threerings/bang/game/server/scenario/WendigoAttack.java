@@ -48,7 +48,7 @@ public class WendigoAttack extends Scenario
      */
     public WendigoAttack ()
     {
-        registerDelegate(new WendigoDelegate());
+        registerDelegate(_wendel = new WendigoDelegate());
         // respawn in half the time as normal
         int rticks = RespawnDelegate.RESPAWN_TICKS/2;
         registerDelegate(new RespawnDelegate(rticks, false) {

@@ -112,7 +112,7 @@ public class GameOverView extends SteelWindow
                 bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP) {
             BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
             _contents.add(row);
-            row.add(new CoopFinalistView(ctx, bangobj));
+            row.add(new CoopFinalistView(ctx, bangobj, ctrl));
             for (int ii = 0; ii < bangobj.awards.length; ii++) {
                 if (pidx == bangobj.awards[ii].pidx) {
                     award = bangobj.awards[ii];
@@ -134,9 +134,8 @@ public class GameOverView extends SteelWindow
                     award = bangobj.awards[ii];
                     _cueidx = award.rank;
                 }
-                FinalistView view = new FinalistView(ctx, apidx, 
-                    bangobj.players[apidx], bangobj.playerInfo[apidx].avatar, 
-                    bangobj.awards[ii].rank);
+                FinalistView view = new FinalistView(
+                        ctx, bangobj, ctrl, apidx, bangobj.awards[ii].rank);
                 if (ii == 0) {
                     who.add(view);
                     who.add(split);

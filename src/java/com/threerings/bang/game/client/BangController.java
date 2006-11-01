@@ -734,8 +734,6 @@ public class BangController extends GameController
             BangBootstrapData bbd = (BangBootstrapData)
                 _ctx.getClient().getBootstrapData();
             _ctx.getLocationDirector().moveTo(bbd.ranchOid);
-        } else if (!_config.tutorial) {
-            showFriendlyFolks();
         }
     }
 
@@ -808,23 +806,6 @@ public class BangController extends GameController
                     _view.pstatus[ii].setRank(rank);
                 }
             }
-        }
-    }
-
-    /**
-     * Display friendly folks menu at the end of the game.
-     */
-    protected void showFriendlyFolks ()
-    {
-        if (_pidx == -1) {
-            return;
-        }
-
-        for (int ii = 0; ii < _bangobj.players.length; ii++) {
-            if (ii == _pidx || _config.ais[ii] != null) {
-                continue;
-            }
-            _view.pstatus[ii].showFriendlyFolks();
         }
     }
 

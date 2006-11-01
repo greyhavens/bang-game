@@ -152,11 +152,6 @@ public class PlayerStatusView extends BContainer
 
         } else if (name.equals(BangObject.PLAYER_INFO)) {
             updateAvatar();
-        } else if (name.equals(PlayerObject.FRIENDS) ||
-                name.equals(PlayerObject.FOES)) {
-            if (_ffbutton != null) {
-                updateFFButton();
-            }
         }
     }
 
@@ -278,16 +273,10 @@ public class PlayerStatusView extends BContainer
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        String action = event.getAction();
-        if ("ff".equals(action)) {
-            new PlayerPopup(_bangobj.playerInfo[_pidx].playerId).popup(
-                    getAbsoluteX() + 10, getAbsoluteY() + 65, true);
-        } else {
-            try {
-                _ctrl.placeCard(Integer.parseInt(event.getAction()));
-            } catch (Exception e) {
-                log.warning("Bogus card '" + event.getAction() + "': " + e);
-            }
+        try {
+            _ctrl.placeCard(Integer.parseInt(event.getAction()));
+        } catch (Exception e) {
+            log.warning("Bogus card '" + event.getAction() + "': " + e);
         }
     }
 
@@ -296,48 +285,7 @@ public class PlayerStatusView extends BContainer
      */
     public void showFriendlyFolks ()
     {
-        _ctx.getUserObject().addListener(this);
-        updateFFButton();
-    }
-
-    /**
-     * Updates the friendly folks button.
-     */
-    protected void updateFFButton ()
-    {
-        if (_ffbutton != null) {
-            remove(_ffbutton);
-        }
-        int opinion;
-        int playerId = _bangobj.playerInfo[_pidx].playerId;
-        if (_ctx.getUserObject().isFriend(playerId)) {
-            opinion = PlayerService.FOLK_IS_FRIEND;
-        } else if (_ctx.getUserObject().isFoe(playerId)) {
-            opinion = PlayerService.FOLK_IS_FOE;
-        } else {
-            opinion = PlayerService.FOLK_NEUTRAL;
-        }
-        BIcon icon = getFFIcon(opinion);
-        _ffbutton = new BButton(icon, "ff");
-        _ffbutton.setStyleClass("player_status_ff");
-        _ffbutton.addListener(this);
-        add(_ffbutton, FF_LOC);
-    }
-
-    /**
-     * Returns the appropriate friendly folks icon.
-     */
-    protected BIcon getFFIcon (int opinion)
-    {
-        String iconpath = "ui/pstatus/folks/";
-        if (opinion == PlayerService.FOLK_IS_FRIEND) {
-            iconpath += "thumbs_up.png";
-        } else if (opinion == PlayerService.FOLK_IS_FOE) {
-            iconpath += "thumbs_down.png";
-        } else {
-            iconpath += "ff.png";
-        }
-        return new ImageIcon(_ctx.loadImage(iconpath));
+        add(new FriendlyFolkButton(_ctx, _bangobj, _pidx), FF_LOC);
     }
 
     /**
@@ -492,76 +440,6 @@ public class PlayerStatusView extends BContainer
             RANK_RECT.width, RANK_RECT.height);
     }
 
-    /**
-     * A popup menu to set a player's friendly folks status.
-     */
-    protected class PlayerPopup extends BPopupMenu
-        implements ActionListener
-    {
-        public PlayerPopup (int playerId)
-        {
-            super(PlayerStatusView.this.getWindow());
-            addListener(this);
-            setLayer(BangUI.POPUP_MENU_LAYER);
-
-            PlayerObject player = _ctx.getUserObject();
-            _playerId = playerId;
-
-            boolean isFriend = player.isFriend(_playerId);
-            boolean isFoe = player.isFoe(_playerId);
-            BMenuItem menuitem;
-            if (!isFriend) {
-                add(menuitem = new BMenuItem(
-                    _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_thumbs_up"), 
-                    getFFIcon(PlayerService.FOLK_IS_FRIEND), "make_friend"));
-                menuitem.setStyleClass("player_status_ff_menuitem");
-            }
-            if (isFriend || isFoe) {
-                add(menuitem = new BMenuItem(
-                    _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_neutral"), 
-                    getFFIcon(PlayerService.FOLK_NEUTRAL), "make_neutral"));
-                menuitem.setStyleClass("player_status_ff_menuitem");
-            }
-            if (!isFoe) {
-                add(menuitem = new BMenuItem(
-                    _ctx.xlate(GameCodes.GAME_MSGS, "m.folk_thumbs_down"), 
-                    getFFIcon(PlayerService.FOLK_IS_FOE), "make_foe"));
-                menuitem.setStyleClass("player_status_ff_menuitem");
-            }
-        }
-
-        // from interface ActionListener
-        public void actionPerformed (ActionEvent event)
-        {
-            String action = event.getAction();
-            int opinion;
-            if ("make_friend".equals(action)) {
-                opinion = PlayerService.FOLK_IS_FRIEND;
-            } else if ("make_foe".equals(action)) {
-                opinion = PlayerService.FOLK_IS_FOE;
-            } else {
-                opinion = PlayerService.FOLK_NEUTRAL;
-            }
-            InvocationService.ConfirmListener listener =
-                new InvocationService.ConfirmListener() {
-                public void requestProcessed () {
-                    // TODO: confirmation?
-                }
-                public void requestFailed(String cause) {
-                    log.warning("Folk note request failed: " + cause);
-                    _ctx.getChatDirector().displayFeedback(
-                        GameCodes.GAME_MSGS,
-                        MessageBundle.tcompose("m.folk_note_failed", cause));
-                }
-            };
-            PlayerService psvc = (PlayerService)
-                _ctx.getClient().requireService(PlayerService.class);
-            psvc.noteFolk(_ctx.getClient(), _playerId, opinion, listener);
-        }
-
-        protected int _playerId;
-    }
-
     protected BangContext _ctx;
     protected BangObject _bangobj;
     protected BangConfig _bconfig;
@@ -574,8 +452,6 @@ public class PlayerStatusView extends BContainer
 
     protected BLabel _player, _points, _ranklbl;
     protected BButton[] _cards = new BButton[GameCodes.MAX_CARDS];
-
-    protected BButton _ffbutton;
 
     protected static final Point BACKGROUND_LOC = new Point(33, 15);
     protected static final Point AVATAR_LOC = new Point(33, 4);

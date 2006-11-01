@@ -16,7 +16,7 @@ import com.threerings.bang.game.client.FinalistView;
 import com.threerings.bang.tests.TestApp;
 
 /**
- * Test harness for the finalist view.
+ * Test harness for the finalist view.  (Is no longer functional)
  */
 public class FinalistViewTest extends TestApp
 {
@@ -35,6 +35,7 @@ public class FinalistViewTest extends TestApp
     protected void createInterface (BWindow window)
     {
         window.setLayoutManager(GroupLayout.makeHoriz(GroupLayout.CENTER));
+        /*
         window.add(new FinalistView(_ctx, 0, new Name("Rabid Jerrymanderer"),
                                     TEST_AVATAR, 0));
         window.add(new FinalistView(_ctx, 1, new Name("WwWwWwWwWwWwWwWwWw"),
@@ -43,6 +44,7 @@ public class FinalistViewTest extends TestApp
                                     TEST_AVATAR, 2));
         window.add(new FinalistView(_ctx, 3, new Name("Wild Annie"),
                                     TEST_AVATAR, 3));
+                                    */
     }
 
     protected static final int[] TEST_AVATAR = {
