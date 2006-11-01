@@ -1206,7 +1206,9 @@ public class BangBoardView extends BoardView
         }
         */
 
-        // potentially display our potential attacks
+        // potentially display our potential attacks (if shift is held down, we
+        // don't generate an attack set which causes us to move immediately to
+        // our clicked destination without attacking)
         if (!_shiftDown && _attackEnabled && !willTeleport) {
             pruneAttackSet(moves, _attackSet, true);
         }
