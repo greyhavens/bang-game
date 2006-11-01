@@ -176,6 +176,14 @@ public class WendigoAttack extends Scenario
         return _wendel.getSafeSpots();
     }
 
+    /**
+     * Returns true if the wendigo are prepared.
+     */
+    public boolean areWendigoPrepared ()
+    {
+        return _wendel.wendigoReady();
+    }
+
     /** Handles the Wendigo and safe spots. */
     protected WendigoDelegate _wendel;
 

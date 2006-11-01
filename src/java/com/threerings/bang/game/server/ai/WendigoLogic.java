@@ -17,6 +17,7 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Teleporter;
+import com.threerings.bang.game.data.piece.ToggleSwitch;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.Wendigo;
 import com.threerings.bang.game.util.PointSet;
@@ -52,9 +53,6 @@ public class WendigoLogic extends AILogic
     @Override // documentation inherited
     public void tick (Piece[] pieces, short tick)
     {
-        _safeSpots = _scenario.getSafeSpots();
-        _wendigoX = null;
-        _wendigoY = null;
         super.tick(pieces, tick);
     }
 
@@ -62,26 +60,26 @@ public class WendigoLogic extends AILogic
     protected void moveUnit (
         Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
     {
+        PointSet safeSpots = _scenario.getSafeSpots();
         Unit ctarget = null;
         Piece talisman = null, tporter = null;
-        boolean breached = false;
+        ToggleSwitch tswitch = null;
+        int safeties = 0;
         boolean wendigos = true;
-        if (_wendigoX == null) {
-            _wendigoX = new PointSet();
-            _wendigoY = new PointSet();
-        }
         for (Piece p : pieces) {
-            if (p instanceof Wendigo) {
-                _wendigoX.add(p.x);
-                _wendigoX.add(p.x + 1);
-                _wendigoY.add(p.y);
-                _wendigoY.add(p.y + 1);
-                wendigos = true;
-            } else if (Bonus.isBonus(p, TalismanEffect.TALISMAN_BONUS)) {
+            if (Bonus.isBonus(p, TalismanEffect.TALISMAN_BONUS)) {
                 if (talisman == null || unit.getDistance(p) <
                         unit.getDistance(talisman)) {
                     talisman = p;
                 }
+
+            } else if (p instanceof ToggleSwitch && 
+                    ((ToggleSwitch)p).isActive(_bangobj.tick)) {
+                if (tswitch == null || 
+                        unit.getDistance(p) < unit.getDistance(tswitch)) {
+                    tswitch = (ToggleSwitch)p;
+                }
+                
             } else if (p instanceof Unit && p.owner != _pidx) {
                 Unit target = (Unit)p;
                 if (TalismanEffect.TALISMAN_BONUS.equals(target.holding) &&
@@ -90,22 +88,18 @@ public class WendigoLogic extends AILogic
                     unit.validTarget(_bangobj, target, false)) {
                     ctarget = target;
                 }
+
+            } else if (p instanceof Unit && safeSpots.contains(p.x, p.y)) {
+                safeties++;
+
             } else if (p instanceof Teleporter && (tporter == null ||
                 unit.getDistance(p) < unit.getDistance(tporter))) {
                 tporter = p;
             }
         }
-        PointSet preferredMoves = new PointSet();
-        preferredMoves.retainAll(moves);
-        for (int ii = 0; ii < moves.size(); ii++) {
-            int x = moves.getX(ii), y = moves.getY(ii);
-            if (_safeSpots.contains(x, y) ||
-                    (!_wendigoX.contains(x) && !_wendigoY.contains(y))) {
-                preferredMoves.add(x, y);
-            }
-        }
-        boolean inDanger = !_safeSpots.contains(unit.x, unit.y) &&
-            (_wendigoX.contains(unit.x) || _wendigoY.contains(unit.y));
+        PointSet preferredMoves = (PointSet)moves.clone();
+        preferredMoves.retainAll(safeSpots);
+        boolean inDanger = _scenario.areWendigoPrepared();
         boolean holdingTalisman = TalismanEffect.TALISMAN_BONUS.equals(
                 unit.holding);
 
@@ -142,14 +136,20 @@ public class WendigoLogic extends AILogic
                 executeOrder(unit, Short.MAX_VALUE, 0, ctarget);
             }
             return;
+
+        } else if (tswitch != null && safeties == 0 && 
+                moves.contains(tswitch.x, tswitch.y)) {
+            executeOrder(unit, tswitch.x, tswitch.y, getBestTarget(
+                pieces, unit, tswitch.x, tswitch.y, TARGET_EVALUATOR));
+            return;
         }
 
         int dist = Integer.MAX_VALUE;
         Point safe = new Point(unit.x, unit.y);
-        for (int ii = 0; ii < _safeSpots.size(); ii++) {
-            int x = _safeSpots.getX(ii), y = _safeSpots.getY(ii);
+        for (int ii = 0; ii < safeSpots.size(); ii++) {
+            int x = safeSpots.getX(ii), y = safeSpots.getY(ii);
             int tdist = unit.getDistance(x, y);
-            if (tdist < dist) {
+            if (tdist < dist && _bangobj.board.isOccupiable(x, y)) {
                 dist = tdist;
                 safe.setLocation(x, y);
             }
@@ -171,6 +171,10 @@ public class WendigoLogic extends AILogic
 
         // or nearest teleporter
         } else if (moveUnit(pieces, unit, moves, tporter, 0)) {
+            return;
+
+        // or nearest switch
+        } else if (moveUnit(pieces, unit, moves, tswitch, 0)) {
             return;
 
         } else {
@@ -228,15 +232,4 @@ public class WendigoLogic extends AILogic
 
     /** Reference to the scenario. */
     protected WendigoAttack _scenario;
-
-    /** The set of safe spots on the board. */
-    protected PointSet _safeSpots;
-
-    /** The X and Y coordinates that aren't safe due to wendigo. */
-    protected ArrayIntSet _wendigoX, _wendigoY;
-
-    /** When enemy units get this close to our totem base, we start
-     * sending units to defend it. */
-    protected static final int DEFENSIVE_PERIMETER = 3;
-
 }
