@@ -1,0 +1,85 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="wendigo_attack" board="Wendigo Attack" players="2">
+  <show_view name="player_status"/>
+
+  <!-- start them off with a friendly welcome -->
+  <text message="welcome" step="1"/>
+  <wait event="text_clicked"/>
+
+  <!-- explain the wendigo and their scariness -->
+  <text message="intro" step="1"/>
+  <wait event="text_clicked"/>
+  <text message="intro2" step="1"/>
+  <wait event="text_clicked"/>
+  <text message="stayin_alive" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- have 'em pick up a talisman -->
+  <add_piece what="unit" id="1000" type="indian_post/buffalo_rider"
+             location="25,13" owner="0"/>
+  <add_piece what="bonus" id="1010" type="indian_post/talisman"
+             location="22,13" owner="-1"/>
+  <center_on what="piece" id="1010"/>
+  <text message="talisman" step="2"/>
+  <wait event="effect:indian_post/talisman/pickedup"/>
+
+  <text message="got_talisman" step="2"/>
+  <wait event="text_clicked"/>
+  <text message="got_talisman2" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- have 'em stand on a petroglyph -->
+  <add_piece what="unit" id="1001" type="indian_post/dreamcatcher"
+             location="19,16" owner="0"/>
+  <text message="petroglyph" step="2"/>
+  <wait event="text_clicked"/>
+  <text message="petroglyph2" step="2"/>
+  <wait event="unit_moved"/> <!-- todo: require on petroglyphs -->
+
+  <!-- add a sacrificial lamb -->
+  <add_piece what="unit" id="2000" type="frontier_town/gunslinger"
+             location="27,15" owner="1"/>
+  <text message="on_petroglyphs" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- cue the wendigo! -->
+  <scenario_action type="wendigo"/>
+  <text message="wendigo_nigh" step="2"/>
+  <wait event="text_clicked"/>
+  <text message="wendigo_nigh2" step="2"/>
+  <wait event="unit_killed"/>
+
+  <text message="wendigo_passed" step="2"/>
+  <wait event="text_clicked"/>
+  <text message="wendigo_passed2" step="2"/>
+  <wait event="text_clicked"/>
+
+  <!-- explain scoring -->
+  <text message="wendigo_scoring" step="3"/>
+  <wait event="text_clicked"/>
+  <text message="wendigo_scoring2" step="3"/>
+  <wait event="text_clicked"/>
+
+  <!-- explain switches -->
+  <text message="wendigo_switches" step="4"/>
+  <wait event="text_clicked"/>
+
+  <center_on what="special" id="1812"/>
+  <text message="wendigo_switches2" step="4"/>
+  <wait event="text_clicked"/>
+
+  <!-- have 'em actually toggle a switch -->
+  <text message="wendigo_switches3" step="4"/>
+  <wait event="effect:indian_post/switch_toggled"/>
+
+  <text message="switch_toggled" step="4"/>
+  <wait event="text_clicked"/>
+  <text message="switch_toggled2" step="4"/>
+  <wait event="text_clicked"/>
+
+  <!-- wrap up and end the tutorial -->
+  <text message="done"/>
+  <wait event="text_clicked"/>
+
+</tutorial>
