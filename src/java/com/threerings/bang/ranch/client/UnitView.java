@@ -61,11 +61,13 @@ public class UnitView extends BGeomView
                 if (_config != config) {
                     return;
                 }
-                super.requestCompleted(model);
+                super.requestCompleted(_model = model);
                 if (model.hasAnimation("standing")) {
                     model.startAnimation("standing");
                 }
-                positionCamera(model);
+                if (_camera != null) {
+                    positionCamera(_camera, model);
+                }
             }
         });
     }
@@ -91,10 +93,20 @@ public class UnitView extends BGeomView
         _frame.release();
     }
 
+    @Override // documentation inherited
+    protected Camera createCamera (DisplaySystem ds)
+    {
+        Camera camera = super.createCamera(ds);
+        if (_model != null) {
+            positionCamera(camera, _model);
+        }
+        return camera;
+    }
+    
     /**
      * Positions the camera as appropriate for the model.
      */
-    protected void positionCamera (Model model)
+    protected void positionCamera (Camera camera, Model model)
     {
         Properties props = model.getProperties();
         String cpos = props.getProperty("camera_position"),
@@ -121,12 +133,12 @@ public class UnitView extends BGeomView
                     model.getName() + ", value=" + crot + "].");
             }
         }
-        _camera.getLocation().set(loc);
+        camera.getLocation().set(loc);
         float sinh = FastMath.sin(heading), cosh = FastMath.cos(heading),
             sinp = FastMath.sin(pitch), cosp = FastMath.cos(pitch);
-        _camera.getLeft().set(-cosh, -sinh, 0f);
-        _camera.getUp().set(sinh * sinp, -cosh * sinp, cosp);
-        _camera.getDirection().set(-sinh * cosp, cosh * cosp, sinp);
+        camera.getLeft().set(-cosh, -sinh, 0f);
+        camera.getUp().set(sinh * sinp, -cosh * sinp, cosp);
+        camera.getDirection().set(-sinh * cosp, cosh * cosp, sinp);
     }
     
     @Override // documentation inherited
@@ -140,4 +152,5 @@ public class UnitView extends BGeomView
     protected Node _unode;
     protected BImage _frame;
     protected UnitConfig _config;
+    protected Model _model;
 }
