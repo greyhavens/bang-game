@@ -48,7 +48,7 @@
   <text message="wendigo_nigh" step="2"/>
   <wait event="text_clicked"/>
   <text message="wendigo_nigh2" step="2"/>
-  <wait event="unit_killed"/>
+  <wait event="unit_killed:.*"/>
 
   <text message="wendigo_passed" step="2"/>
   <wait event="text_clicked"/>

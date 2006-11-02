@@ -40,7 +40,7 @@
   <!-- have them destroy the enemy homestead -->
   <center_on what="piece" id="1002"/>
   <text message="destroy_homestead" step="3"/>
-  <wait event="unit_killed" allowAttack="true"/>
+  <wait event="unit_killed:.*" allowAttack="true"/>
 
   <!-- then claim it for themselves -->
   <text message="reclaim_homestead" step="3"/>
