@@ -78,6 +78,9 @@ public class Tutorial extends Scenario
             registerDelegate(new TotemBaseDelegate());
         } else if (_config.ident.equals("wendigo_attack")) {
             registerDelegate(_wendel = new WendigoDelegate());
+        } else if (_config.ident.equals("forest_guardians")) {
+            registerDelegate(new LoggingRobotDelegate());
+            registerDelegate(_treedel = new TreeBedDelegate());
         }
 
         // now that our delegates are registered we can call super.init
@@ -311,6 +314,9 @@ public class Tutorial extends Scenario
             if (type.equals("wendigo")) {
                 _wendel.prepareWendigo(_bangobj, _bangobj.tick);
                 _wendigoTick = _bangobj.tick + WendigoAttack.WENDIGO_WAIT;
+
+            } else if (type.equals("reset_trees")) {
+                _treedel.resetTrees(_bangobj, 0);
             }
         }
 
@@ -333,6 +339,10 @@ public class Tutorial extends Scenario
     protected int _nextActionId;
     protected boolean _firstTime = false;
 
+    // used for the Wengido Attack tutorial
     protected WendigoDelegate _wendel;
     protected int _wendigoTick = -1;
+
+    // used for the Forest Guardians tutorial
+    protected TreeBedDelegate _treedel;
 }

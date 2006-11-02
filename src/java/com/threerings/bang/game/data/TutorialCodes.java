@@ -35,12 +35,11 @@ public interface TutorialCodes
             "land_grab",
             PRACTICE_PREFIX + LandGrabInfo.IDENT,
         }, { // indian post tutorials
-            // "itp_units",
             "wendigo_attack",
             PRACTICE_PREFIX + WendigoAttackInfo.IDENT,
             "totem_building",
             PRACTICE_PREFIX + TotemBuildingInfo.IDENT,
-            // "forest_guardians",
+            "forest_guardians",
             PRACTICE_PREFIX + ForestGuardiansInfo.IDENT,
         }
     };
