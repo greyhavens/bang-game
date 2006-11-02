@@ -100,15 +100,9 @@ public class WendigoAttack extends Scenario
     {
         super.roundWillStart(bangobj, starts, purchases);
 
-        int[] weights = new int[_talismanSpots.size()];
-        Arrays.fill(weights, 1);
-        int placed = 1;
-        for (int ii = 0; (ii < bangobj.players.length - 1) && 
-                (ii < weights.length); ii++) {
-            int idx = RandomUtil.getWeightedIndex(weights);
+        for (int ii = 0, nn = _talismanSpots.size(); ii < nn; ii++) {
             Bonus talisman = dropBonus(bangobj, TalismanEffect.TALISMAN_BONUS,
-                _talismanSpots.getX(idx), _talismanSpots.getY(idx));
-            weights[idx] = 0;
+                _talismanSpots.getX(ii), _talismanSpots.getY(ii));
         }
     }
 
