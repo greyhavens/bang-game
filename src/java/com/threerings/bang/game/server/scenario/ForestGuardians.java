@@ -29,9 +29,7 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.effect.ClearPieceEffect;
 import com.threerings.bang.game.data.effect.RobotWaveEffect;
-import com.threerings.bang.game.data.effect.TreeBedEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
@@ -62,8 +60,9 @@ public class ForestGuardians extends Scenario
     public ForestGuardians ()
     {
         registerDelegate(new TrainDelegate());
-        registerDelegate(_rdelegate = new RespawnDelegate(8));
-        registerDelegate(_lrdelegate = new LoggingRobotDelegate());
+        registerDelegate(_respdel = new RespawnDelegate(8));
+        registerDelegate(_logrobdel = new LoggingRobotDelegate());
+        registerDelegate(_treedel = new TreeBedDelegate());
     }
 
     @Override // documentation inherited
@@ -79,26 +78,15 @@ public class ForestGuardians extends Scenario
     {
         super.filterPieces(bangobj, starts, pieces, updates);
 
-        // extract and remove all fetish markers; store the tree beds
+        // extract and remove all fetish markers
         _fetishSpots.clear();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (Marker.isMarker(p, Marker.FETISH)) {
                 _fetishSpots.add(p.x, p.y);
                 iter.remove();
-            } else if (p instanceof TreeBed) {
-                TreeBed tree = (TreeBed)p;
-                _trees.add(tree);
             }
         }
-    }
-
-    @Override // documentation inherited
-    public int modifyDamageDone (int pidx, int tidx, int ddone)
-    {
-        // points are granted for shooting the robots; subtracted for shooting
-        // your teammates
-        return (tidx == -1) ? ddone : (-3 * ddone / 2);
     }
 
     @Override // documentation inherited
@@ -131,7 +119,7 @@ public class ForestGuardians extends Scenario
             Math.round(rratio * MAX_INITIAL_DIFFICULTY));
 
         // remove all but a random subset of the tree beds
-        resetTrees(bangobj);
+        _treedel.resetTrees(bangobj, _difficulty);
 
         // start the first wave on the second tick
         _nextWaveTick = NEXT_WAVE_TICKS;
@@ -151,7 +139,7 @@ public class ForestGuardians extends Scenario
 
         } else {
             // if all trees are grown and all bots are dead, end the wave
-            switch (_lrdelegate.isWaveOver(bangobj, tick)) {
+            switch (_logrobdel.isWaveOver(bangobj, tick)) {
             case END_WAVE:
                 endWave(bangobj, tick);
                 break;
@@ -165,19 +153,18 @@ public class ForestGuardians extends Scenario
     @Override // documentation inherited
     public void roundDidEnd (BangObject bangobj)
     {
-        // nothing to do if we end before the first wave
         super.roundDidEnd(bangobj);
+
+        // nothing to do if we end before the first wave
         if (_wave < 1) {
             return;
         }
 
-        // at the end of the game, grant points for all trees still alive in
-        // proportion to their growth so as not to penalize players if a
-        // wave ends early because the clock ran out.
-        int treePoints = _treesGrown * TreeBed.FULLY_GROWN,
-            maxPoints = _waveMax * TreeBed.FULLY_GROWN,
-            living = 0, total = 0;
-        for (TreeBed tree : _ctrees) {
+        // have the tree bed delegate compute our final score and payouts
+        int treePoints = _treesGrown * TreeBed.FULLY_GROWN;
+        int maxPoints = _waveMax * TreeBed.FULLY_GROWN;
+        int living = 0, total = 0;
+        for (TreeBed tree : _treedel.getWaveTrees()) {
             if (tree.growth == 0) {
                 continue;
             }
@@ -197,8 +184,9 @@ public class ForestGuardians extends Scenario
                 bangobj.grantPoints(ii, points);
             }
         }
+
         int perf = (total > 0 ? RobotWaveEffect.getPerformance(living, total) :
-            RobotWaveEffect.MAX_PERFORMANCE);
+                    RobotWaveEffect.MAX_PERFORMANCE);
         for (StatSet stats : bangobj.stats) {
             stats.appendStat(Stat.Type.WAVE_SCORES, perf);
         }
@@ -206,16 +194,15 @@ public class ForestGuardians extends Scenario
         _payouts = new int[bangobj.players.length];
         Arrays.fill(_payouts, 60 + (95 - 60) * treePoints / maxPoints);
 
-        int[] points = bangobj.perRoundPoints[bangobj.roundId-1],
-            spoints = new ArrayIntSet(points).toIntArray();
-        if (spoints.length < 2) {
-            return;
-        }
-        for (int ii = 0; ii < _payouts.length; ii++) {
-            int ppoints = points[ii];
-            _payouts[ii] += PAYOUT_ADJUSTMENTS[spoints.length-2][
-                IntListUtil.indexOf(spoints, ppoints)] /
+        int[] points = bangobj.perRoundPoints[bangobj.roundId-1];
+        int[] spoints = new ArrayIntSet(points).toIntArray();
+        if (spoints.length >= 2) {
+            for (int ii = 0; ii < _payouts.length; ii++) {
+                int ppoints = points[ii];
+                _payouts[ii] += PAYOUT_ADJUSTMENTS[spoints.length-2][
+                    IntListUtil.indexOf(spoints, ppoints)] /
                     count(points, ppoints);
+            }
         }
     }
 
@@ -269,6 +256,15 @@ public class ForestGuardians extends Scenario
     }
 
     /**
+     * Scales a base number of points according to the current difficulty
+     * level.
+     */
+    protected int scalePoints (int base)
+    {
+        return (int)(base * (1f + _difficulty * POINT_MULTIPLIER_INCREMENT));
+    }
+
+    /**
      * Ends the current wave and either starts the next or ends the game.
      */
     protected void endWave (BangObject bangobj, short tick)
@@ -286,106 +282,32 @@ public class ForestGuardians extends Scenario
         RobotWaveEffect rweffect = new RobotWaveEffect(_wave);
         _bangmgr.deployEffect(-1, rweffect);
         int grown = rweffect.living, perf = rweffect.getPerformance();
+        _treesGrown += grown;
+        _waveMax += _treedel.getWaveTrees().size();
 
-        // record stats and points for trees grown, add the score to the
-        // total
-        int points = scalePoints(ForestGuardiansInfo.GROWTH_POINTS[
-            TreeBed.FULLY_GROWN - 1] * grown);
+        // record stats and points for trees grown, add the score to the total
+        int points = scalePoints(
+            ForestGuardiansInfo.GROWTH_POINTS[TreeBed.FULLY_GROWN - 1] * grown);
         for (int ii = 0; ii < bangobj.stats.length; ii++) {
             bangobj.stats[ii].incrementStat(Stat.Type.TREES_ELDER, grown);
             bangobj.stats[ii].appendStat(Stat.Type.WAVE_SCORES, perf);
             bangobj.stats[ii].incrementStat(Stat.Type.WAVE_POINTS, points);
             bangobj.grantPoints(ii, points);
         }
-        _treesGrown += grown;
-        _waveMax += _ctrees.size();
 
-        // if at least half the trees were saved, increase the difficulty
-        // level
-        if (grown >= _ctrees.size() / 2) {
+        // if at least half the trees were saved, increase the difficulty level
+        if (grown >= _treedel.getWaveTrees().size() / 2) {
             _difficulty = Math.min(_difficulty + 1, MAX_DIFFICULTY);
         }
 
         // reset the trees and choose a new subset
-        resetTrees(bangobj);
+        _treedel.resetTrees(bangobj, _difficulty);
 
         // respawn all player units on the next tick
-        _rdelegate.respawnAll(tick);
+        _respdel.respawnAll(tick);
 
         // count down towards starting the next wave
         _nextWaveTick = tick + NEXT_WAVE_TICKS;
-    }
-
-    /**
-     * Scales a base number of points according to the current difficulty
-     * level.
-     */
-    protected int scalePoints (int base)
-    {
-        return (int)(base * (1f + _difficulty * POINT_MULTIPLIER_INCREMENT));
-    }
-
-    /**
-     * Adds and removes trees such that the board contains a random subset
-     * of them.
-     */
-    protected void resetTrees (final BangObject bangobj)
-    {
-        // shuffle the trees and move any currently visible to the end
-        Collections.shuffle(_trees);
-        QuickSort.sort(_trees, new Comparator<TreeBed>() {
-            public int compare (TreeBed t1, TreeBed t2) {
-                boolean c1 = bangobj.pieces.contains(t1),
-                    c2 = bangobj.pieces.contains(t2);
-                return (c1 == c2) ? 0 : (c1 ? +1 : -1);
-            }
-        });
-
-        // determine the desired number of trees and add/remove accordingly
-        float ratio = BASE_TREE_RATIO + TREE_RATIO_INCREMENT * _difficulty;
-        int units = (_bangmgr.getTeamSize() + 1) * _bangmgr.getPlayerCount();
-        int ntrees = Math.min(MAX_TREES, (int)Math.round(units * ratio));
-        _ctrees.clear();
-        for (TreeBed tree : _trees) {
-            if (ntrees-- > 0) {
-                if (!bangobj.pieces.contains(tree)) {
-                    addTree(bangobj, tree);
-                }
-                // reset and retrieve the cloned instance
-                _bangmgr.deployEffect(-1, new TreeBedEffect(tree));
-                _ctrees.add((TreeBed)bangobj.pieces.get(tree.pieceId));
-
-            } else {
-                if (bangobj.pieces.contains(tree)) {
-                    _bangmgr.deployEffect(-1, new ClearPieceEffect(tree));
-                }
-            }
-        }
-        _allGrown = false;
-    }
-
-    /**
-     * Adds a tree (back) to the board, moving any unit occupying its space.
-     */
-    protected void addTree (BangObject bangobj, TreeBed tree)
-    {
-        if (!bangobj.board.isOccupiable(tree.x, tree.y)) {
-            for (Piece piece : bangobj.pieces) {
-                if (piece instanceof Unit && piece.intersects(tree)) {
-                    Point spot = bangobj.board.getOccupiableSpot(
-                        tree.x, tree.y, 3);
-                    if (spot != null) {
-                        _bangmgr.deployEffect(-1,
-                            ((Unit)piece).generateMoveEffect(
-                                bangobj, spot.x, spot.y, null));
-                    } else {
-                        log.warning("Unable to find spot to move unit " +
-                            "[unit=" + piece + "].");
-                    }
-                }
-            }
-        }
-        _bangmgr.addPiece(tree);
     }
 
     /**
@@ -396,9 +318,9 @@ public class ForestGuardians extends Scenario
         // announce the start of the wave
         _bangmgr.deployEffect(-1, new RobotWaveEffect(++_wave, _difficulty));
 
-        // notify the delegate
-        _lrdelegate.waveStarted(
-            bangobj, _wave, _difficulty, _ctrees, _treesGrown);
+        // notify the logging robot delegate
+        _logrobdel.waveStarted(
+            bangobj, _wave, _difficulty, _treedel.getWaveTrees(), _treesGrown);
     }
 
     /**
@@ -416,16 +338,13 @@ public class ForestGuardians extends Scenario
     }
 
     /** The delegate responsible for respawning player units. */
-    protected RespawnDelegate _rdelegate;
+    protected RespawnDelegate _respdel;
 
     /** The delegate that spawns and controls logging robots. */
-    protected LoggingRobotDelegate _lrdelegate;
+    protected LoggingRobotDelegate _logrobdel;
 
-    /** The tree beds on the board to begin with. */
-    protected ArrayList<TreeBed> _trees = new ArrayList<TreeBed>();
-
-    /** The trees that are currently on the board. */
-    protected ArrayList<TreeBed> _ctrees = new ArrayList<TreeBed>();
+    /** The delegate that manages the tree beds. */
+    protected TreeBedDelegate _treedel;
 
     /** The payouts for each player, determined at the end of the round. */
     protected int[] _payouts;
@@ -448,9 +367,6 @@ public class ForestGuardians extends Scenario
     /** The tick at which to start the next wave. */
     protected int _nextWaveTick;
 
-    /** Set when all living trees are fully grown. */
-    protected boolean _allGrown;
-
     /** The number of ticks the players must hold the trees at full growth in
      * order to bring on the next wave. */
     protected static final int NEXT_WAVE_TICKS = 2;
@@ -464,15 +380,6 @@ public class ForestGuardians extends Scenario
 
     /** The maximum attainable difficulty level. */
     protected static final int MAX_DIFFICULTY = 9;
-
-    /** The base number of tree beds to create per unit. */
-    protected static final float BASE_TREE_RATIO = 1 / 3f;
-
-    /** The increment in number of trees per unit for each wave. */
-    protected static final float TREE_RATIO_INCREMENT = 1 / 24f;
-
-    /** The maximum number of trees on the board. */
-    protected static final int MAX_TREES = 8;
 
     /** The increment in the point multiplier (which starts at 1) for each
      * difficulty level. */
