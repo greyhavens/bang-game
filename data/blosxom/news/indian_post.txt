@@ -1,0 +1,77 @@
+Welcome to the Indian Trading Post
+
+<img align="right" src="/images/itp_map.png">
+Pardners, we're pleased as punch to announce that
+<span class="highlight">Indian Trading Post</span> is now available on the
+public beta server. It's been a long road, but we're mighty happy with how it
+all came together. We've introduced a pile of new stuff to the game.</p>
+
+<p>There are three new <span class="highlight">Big Shot units</span>:
+
+<ul>
+<li> The <span class="highlight">Storm Caller</span> attacks his opponents with
+a bolt of lightning that chains to anyone unlucky enough to be standin' next to
+his target. </li>
+
+<li> The <span class="highlight">Trickster Raven</span> transforms from human
+to raven form to fly from place to place around the board. </li>
+
+<li> The <span class="highlight">Revolutionary</span> is an inspiration to his
+team. He gives a 10% attack bonus to all allied ground units, and when he is
+killed, all currently dead units on his team are immediately respawned to
+avenge him. </li>
+</ul>
+
+There are four new stock units:
+
+<ul>
+<li> The <span class="highlight">Dream Catcher</span> attacks by flinging
+nightmares at her target which cause them to run in terror, reset their
+initiative and drain some of their health into the Dream Catcher. </li>
+
+<li> The <span class="highlight">Buffalo Rider</span> rams her target with a
+mighty buffalo. If she starts her attack from far enough away, she'll knock
+them back into the next board space. </li>
+
+<li> The <span class="highlight">Thunderbird</span> is our first
+<span class="highlight">Spirit</span> unit and has the ability to attack its
+target on the way to its destination instead of moving first and then
+attacking. </li>
+
+<li> The <span class="highlight">Dog Soldier</span> is a tank of a unit that
+stakes himself into the ground to avoid being moved when attacked by the
+Buffalo Rider or the Dream Catcher. He also gets a small additional attack on
+every tick which damages all enemy units that are standing next to him. </li>
+</ul>
+
+There are three new gameplay scenarios:
+
+<ul>
+<li> In <span class="highlight">Wendigo Attack</span> the players battle it out
+while trying to survive the onslaught of the deadly
+<span class="highlight">Wendigo</span>. Only by carrying a
+<span class="highlight">Sacred Talisman</span> or standing on a
+<span class="highlight">Petroglyph of Protection</span> can they avoid an icy
+doom. </li>
+
+<li> In <span class="highlight">Totem Building</span> players work to build the
+most and the biggest <span class="highlight">Totem Poles</span> using different
+kinds of <span class="highlight">Totems</span> that they pick up around the
+board. </li>
+
+<li> In <span class="highlight">Forest Guardians</span> players cooperate
+rather than compete and do battle against the dastardly
+<span class="highlight">Logging Robots</span> who wish to decimate the forests
+to further the expansion of their
+<span class="highlight">Furniture Empire</span>. </li>
+</ul>
+
+There are over a dozen <span class="highlight">new cards and bonuses</span> and
+even more <span class="highlight">new badges</span> to be discovered.
+</p>
+
+<p>We'll be workin' away to fix all the bugs that will no doubt be uncovered
+now that all this new code is getting some serious use. In the meanwhile, enjoy
+and we'll see ya down at the <span class="highlight">Big Bear Saloon</span>,</p>
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
