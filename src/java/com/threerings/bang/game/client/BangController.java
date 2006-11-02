@@ -742,7 +742,7 @@ public class BangController extends GameController
         boolean alert = !reason.equals(GameCodes.ORDER_CLEARED) &&
             !reason.equals(GameCodes.MOVER_NO_LONGER_VALID);
         _view.view.orderInvalidated(unitId, targetId, alert);
-        if (alert) {
+        if (alert && _view.ustatus != null) {
             _view.ustatus.orderInvalidated(unitId, targetId);
         }
     }
