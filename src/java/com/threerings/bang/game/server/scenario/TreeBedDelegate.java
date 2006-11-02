@@ -36,17 +36,25 @@ public class TreeBedDelegate extends ScenarioDelegate
     public void filterPieces (BangObject bangobj, ArrayList<Piece> starts,
                               ArrayList<Piece> pieces, ArrayList<Piece> updates)
     {
-        super.filterPieces(bangobj, starts, pieces, updates);
-
-        // note the locations of the tree beds
+        // collect and remove all the tree beds
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (p instanceof TreeBed) {
                 _trees.add((TreeBed)p);
+                iter.remove();
             }
         }
     }
 
+    @Override // documentation inherited
+    public void roundWillStart (BangObject bangobj)
+    {
+        // give the trees piece ids before we add any
+        for (TreeBed tree : _trees) {
+            tree.assignPieceId(bangobj);
+        }
+    }
+    
     /**
      * Returns the set of trees in use for this wave.
      */
@@ -115,6 +123,7 @@ public class TreeBedDelegate extends ScenarioDelegate
                 }
             }
         }
+        tree.init();
         _bangmgr.addPiece(tree);
     }
 

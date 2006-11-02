@@ -425,11 +425,7 @@ public class BangView extends BWindow
             _bangobj.maxPieceId = 0;
             ArrayList<Piece> plist = new ArrayList<Piece>();
             for (Piece piece : pieces) {
-                if (!piece.isValidScenario(_bangobj.scenario.getIdent())) {
-                    continue;
-                } else if (piece instanceof Marker && 
-                        (!_bangobj.scenario.isValidMarker((Marker)piece) ||
-                         !((Marker)piece).keepMarker())) {
+                if (piece.removeFromBoard(_bangobj)) {
                     continue;
                 }
                 piece = (Piece)piece.clone();

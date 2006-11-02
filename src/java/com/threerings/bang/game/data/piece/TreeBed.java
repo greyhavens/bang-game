@@ -44,6 +44,12 @@ public class TreeBed extends Prop
     }
 
     @Override // documentation inherited
+    public boolean removeFromBoard (BangObject bangobj)
+    {
+        return true; // the scenario adds them before each wave
+    }
+    
+    @Override // documentation inherited
     public void wasKilled (short tick)
     {
         // don't reset our lastActed

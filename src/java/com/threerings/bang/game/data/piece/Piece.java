@@ -223,6 +223,16 @@ public abstract class Piece
         return 1f;
     }
 
+    /**
+     * Returns true if this piece should be removed from the board when the
+     * board is downloaded or loaded from the cache (i.e., it's a marker or
+     * similar placeholder, or it's not used in the current game).
+     */
+    public boolean removeFromBoard (BangObject bangobj)
+    {
+        return !isValidScenario(bangobj.scenario.getIdent());
+    }
+    
     /** Returns true if this piece is valid for this scenario. */
     public boolean isValidScenario (String scenarioId)
     {

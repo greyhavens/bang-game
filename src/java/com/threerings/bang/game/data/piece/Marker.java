@@ -6,6 +6,7 @@ package com.threerings.bang.game.data.piece;
 import com.threerings.bang.game.client.sprite.MarkerSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.BangObject;
 
 /**
  * A marker piece class used for a variety of purposes.
@@ -109,20 +110,27 @@ public class Marker extends Piece
         return new MarkerSprite(_type);
     }
 
-    /**
-     * Returns true if we want to use the marker sprite in game.
-     */
-    public boolean addSprite ()
+    @Override // documentation inherited
+    public boolean removeFromBoard (BangObject bangobj)
     {
-        return false;
+        return super.removeFromBoard(bangobj) ||
+            !(bangobj.scenario.isValidMarker(this) && keepMarker());
     }
-
+    
     /**
      * Returns true if we want this marker in the pieces array.
      */
     public boolean keepMarker ()
     {
         return _type == IMPASS || addSprite();
+    }
+
+    /**
+     * Returns true if we want to use the marker sprite in game.
+     */
+    public boolean addSprite ()
+    {
+        return false;
     }
 
     @Override // documentation inherited
