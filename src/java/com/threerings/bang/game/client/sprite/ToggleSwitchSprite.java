@@ -38,7 +38,10 @@ public class ToggleSwitchSprite extends ActiveSprite
                 queueAction(action);
             }
             _state = state;
-            queueAction(_state.getStartAnimation());
+            action = _state.getStartAnimation();
+            if (action != null) {
+                queueAction(action);
+            }
         }
     }
 
@@ -56,20 +59,22 @@ public class ToggleSwitchSprite extends ActiveSprite
 
     protected static enum State
     {
-        TICK_0("charge_4", false), TICK_1("charge_3", false),
-        TICK_2("charge_2", false), TICK_3("charge_1", false),
-        TICK_4("charge_0", false),
-        SQUARE("square", true), CIRCLE("circle", true);
+        TICK_0("charge_4", true, false), TICK_1("charge_3", true, false),
+        TICK_2("charge_2", true, false), TICK_3("charge_1", true, false),
+        TICK_4("charge_0", false, false),
+        SQUARE("square", true, true), CIRCLE("circle", true, true);
 
-        State (String name, boolean offAnim)
+        State (String name, boolean onAnim, boolean offAnim)
         {
             _name = name;
+            _onAnim = onAnim;
             _offAnim = offAnim;
         }
 
         public String getStartAnimation ()
         {
-            return _name + (_offAnim ? "_active_start" : "_start");
+            return (_onAnim ? _name + (_offAnim ? "_active_start" : "_start") :
+                    null);
         }
 
         public String getIdleAnimation ()
@@ -83,7 +88,7 @@ public class ToggleSwitchSprite extends ActiveSprite
         }
 
         protected String _name;
-        protected boolean _offAnim;
+        protected boolean _offAnim, _onAnim;
     };
 
     protected State _state = State.SQUARE;
