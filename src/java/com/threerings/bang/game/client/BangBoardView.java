@@ -1117,7 +1117,7 @@ public class BangBoardView extends BoardView
         }
 
         // report that a piece was killed
-        _ctrl.postEvent(TutorialCodes.UNIT_KILLED);
+        _ctrl.postEvent(TutorialCodes.UNIT_KILLED + ":" + pieceId);
     }
 
     /** Handles a left mouse button click. */
