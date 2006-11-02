@@ -15,6 +15,7 @@ import com.threerings.io.Streamable;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.client.StatsView;
@@ -65,6 +66,21 @@ public abstract class ScenarioInfo
         }
         Collections.sort(scens);
         return scens;
+    }
+
+    /**
+     * Returns true if this player has played all of the scenarios in this town
+     * at least once (in a rated game).
+     */
+    public static boolean hasPlayedAllTownScenarios (PlayerObject user)
+    {
+        for (ScenarioInfo info : _scenarios.values()) {
+            if (info.getTownId().equals(user.townId) &&
+                user.getRating(info.getIdent()).experience == 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

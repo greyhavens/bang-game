@@ -18,7 +18,9 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.util.StateSaver;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.Criterion;
@@ -38,7 +40,7 @@ public class CriterionView extends BContainer
         MessageBundle msgs = _ctx.getMessageManager().getBundle(
             SaloonCodes.SALOON_MSGS);
 
-        TableLayout tlay = new TableLayout(2, 5, 25);
+        TableLayout tlay = new TableLayout(2, 3, 25);
         tlay.setHorizontalAlignment(TableLayout.CENTER);
         tlay.setVerticalAlignment(TableLayout.CENTER);
         tlay.setEqualRows(true);
@@ -81,6 +83,18 @@ public class CriterionView extends BContainer
             new StateSaver("saloon.tincans." + ii, _aiopps[ii]);
         }
         table.add(row);
+
+        _prev = new BCheckBox(msgs.get("m.allow_previous"));
+        _prev.setSelected(ScenarioInfo.hasPlayedAllTownScenarios(
+                              _ctx.getUserObject()));
+        new StateSaver("saloon.previous", _prev);
+
+        // only show the _prev checkbox if we're past Frontier Town because it
+        // doesn't have any effect in Frontier Town
+        if (!_ctx.getUserObject().townId.equals(BangCodes.FRONTIER_TOWN)) {
+            table.add(BangUI.createLabel(msgs, "m.prev_scens", "match_label"));
+            table.add(_prev);
+        }
 
         row = GroupLayout.makeHBox(GroupLayout.CENTER);
         row.add(_go = new BButton(msgs.get("m.go"), _golist, "match"));
@@ -126,6 +140,7 @@ public class CriterionView extends BContainer
             criterion.allowAIs = Criterion.compose(
                 _aiopps[0].isSelected(), _aiopps[1].isSelected(),
                 _aiopps[2].isSelected());
+            criterion.allowPreviousTowns = _prev.isSelected();
 
             // pass the buck onto the controller to do the rest
             _go.setEnabled(false);
@@ -140,6 +155,7 @@ public class CriterionView extends BContainer
     protected BCheckBox[] _players = new BCheckBox[GameCodes.MAX_PLAYERS-1];
     protected BCheckBox[] _aiopps = new BCheckBox[GameCodes.MAX_PLAYERS-1];
     protected BComboBox _ranked, _range;
+    protected BCheckBox _prev;
     protected BButton _go;
 
     protected static final String[] RANKED = { "ranked", "unranked", "both" };

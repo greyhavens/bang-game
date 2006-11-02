@@ -268,7 +268,7 @@ public class Match
         config.rated = (humans > 1) ? _criterion.getDesiredRankedness() : false;
         config.scenarios = ScenarioInfo.selectRandomIds(
             ServerConfig.townId, _criterion.getDesiredRounds(),
-            config.seats, lastScenIds, false);
+            config.seats, lastScenIds, _criterion.allowPreviousTowns);
 
         return config;
     }

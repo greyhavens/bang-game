@@ -61,6 +61,7 @@ public class MatchView extends BContainer
         main.add(_info = GroupLayout.makeVBox(GroupLayout.CENTER),
                  GroupLayout.FIXED);
         main.add(_right = GroupLayout.makeVBox(GroupLayout.CENTER));
+        ((GroupLayout)_info.getLayoutManager()).setGap(3);
         ((GroupLayout)_right.getLayoutManager()).setGap(0);
         main.setPreferredSize(new Dimension(395, 224));
         add(main, GroupLayout.FIXED);
@@ -71,6 +72,7 @@ public class MatchView extends BContainer
         _info.add(_ranked = new BLabel("", "match_label"));
         _info.add(_range = new BLabel("", "match_label"));
         _info.add(_opponents = new BLabel("", "match_label"));
+        _info.add(_prevscen = new BLabel("", "match_label"));
         _info.add(_starting = new BLabel("", "starting_label"));
 
         // add our leave button
@@ -182,6 +184,8 @@ public class MatchView extends BContainer
         _opponents.setText(_msgs.get("m.cr_aiopps", value));
         value = "m." + CriterionView.RANGE[_mobj.criterion.range];
         _range.setText(_msgs.get(value));
+        _prevscen.setText(_mobj.criterion.allowPreviousTowns ?
+                          _msgs.get("m.cr_allscens") : "");
     }
 
     protected void updateStarting ()
@@ -211,8 +215,8 @@ public class MatchView extends BContainer
     protected SafeSubscriber<MatchObject> _msub;
     protected MatchObject _mobj;
 
-    protected BLabel _players, _rounds, _ranked, _range, _opponents;
-    protected BLabel _starting;
+    protected BLabel _players, _rounds, _ranked, _range, _prevscen;
+    protected BLabel _opponents, _starting;
     protected BButton _bye;
 
     protected BContainer _left, _right, _info;

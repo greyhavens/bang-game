@@ -41,6 +41,9 @@ public class Criterion extends SimpleStreamableObject
     /** A bitmask indicating how many AIs to allow. */
     public int allowAIs;
 
+    /** Whether to allow previous towns' scenarios. */
+    public boolean allowPreviousTowns = true;
+
     /** Utility function for creating criterion instances. */
     public static int compose (boolean val1, boolean val2, boolean val3)
     {
@@ -70,7 +73,8 @@ public class Criterion extends SimpleStreamableObject
         return (rounds & other.rounds) != 0 &&
             (players & other.players) != 0 &&
             (ranked & other.ranked) != 0 &&
-            (allowAIs == other.allowAIs || (allowAIs & other.allowAIs) != 0);
+            (allowAIs == other.allowAIs || (allowAIs & other.allowAIs) != 0) &&
+            (allowPreviousTowns || !other.allowPreviousTowns);
     }
 
     /**
@@ -85,6 +89,7 @@ public class Criterion extends SimpleStreamableObject
         ranked &= other.ranked;
         range = Math.min(range, other.range);
         allowAIs &= other.allowAIs;
+        allowPreviousTowns &= other.allowPreviousTowns;
     }
 
     /**
