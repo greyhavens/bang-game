@@ -63,6 +63,16 @@ public class Tutorial extends Scenario
         _config = TutorialUtil.loadTutorial(
             BangServer.rsrcmgr, bconfig.scenarios[0]);
 
+        // make sure the player does not hose themself
+        registerDelegate(new RespawnDelegate(2, false) {
+            public void pieceWasKilled (
+                BangObject bangobj, Piece piece, int shooter) {
+                if (piece.owner == 0) {
+                    super.pieceWasKilled(bangobj, piece, shooter);
+                }
+            }
+        });
+
         // create the various delegates we might need
         if (_config.ident.equals("cattle_rustling")) {
             registerDelegate(new CattleDelegate());
@@ -182,7 +192,7 @@ public class Tutorial extends Scenario
         // hard code ticks at four seconds for tutorials
         return 4000L;
     }
-    
+
     @Override // documentation inherited
     protected short getBaseDuration ()
     {
@@ -246,7 +256,11 @@ public class Tutorial extends Scenario
             }
             piece.init();
             piece.setOwner(_bangobj, add.owner);
+            if (piece instanceof Unit) {
+                ((Unit)piece).originalOwner = add.owner;
+            }
             piece.lastActed = Short.MIN_VALUE;
+
             switch (add.location.length) {
             case 1:
                 Piece near = _bangobj.pieces.get(add.location[0]);
