@@ -374,7 +374,7 @@
   </target>
 
   <!-- helper target for client and devclient -->
-  <target name="baseclient" depends="dist,mdist">
+  <target name="baseclient">
     <!-- generate the all-in-wonder jar file -->
     <taskdef resource="proguard/ant/task.properties"
              classpath="${deploy.dir}/lib/proguard.jar"/>
