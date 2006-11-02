@@ -99,7 +99,7 @@ public class FirstBigShotView extends BDecoratedWindow
     public void actionPerformed (ActionEvent event)
     {
         String cmd = event.getAction();
-        if (cmd.equals("random")) {
+        if (cmd.equals("random") && _config != null) {
             _name.setText(_config.pickRandomName());
             
         } else if (cmd.equals("done")) {
