@@ -16,15 +16,19 @@ import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
+import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.server.persist.FolkRecord;
 import com.threerings.bang.server.persist.PlayerRecord;
+import com.threerings.bang.util.BangUtil;
 
 /**
  * Customizes the client resolver to use our {@link PlayerObject}.
@@ -88,6 +92,14 @@ public class BangClientResolver extends CrowdClientResolver
         // load up this player's items
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
         buser.inventory = new DSet<Item>(items.iterator());
+
+        // if we're giving out free access to ITP, give the user a temporary
+        // ITP ticket for this session (if they don't already have one)
+        if (RuntimeConfig.server.freeIndianPost &&
+            !buser.holdsTicket(BangCodes.INDIAN_POST)) {
+            int itpidx = BangUtil.getTownIndex(BangCodes.INDIAN_POST);
+            buser.addToInventory(new TrainTicket(buser.playerId, itpidx));
+        }
 
         // load up this player's persistent stats
         ArrayList<Stat> stats = BangServer.statrepo.loadStats(buser.playerId);

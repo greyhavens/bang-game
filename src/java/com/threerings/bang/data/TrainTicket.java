@@ -62,7 +62,8 @@ public class TrainTicket extends Item
     {
         String msg = MessageBundle.qualify(
             BangCodes.BANG_MSGS, "m." + getTownId());
-        msg = MessageBundle.compose("m.train_ticket", msg);
+        msg = MessageBundle.compose(
+            getItemId() == 0 ? "m.temporary_ticket" : "m.train_ticket", msg);
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }
 
