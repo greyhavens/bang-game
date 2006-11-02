@@ -119,6 +119,10 @@
     public *;
 }
 
+-keep public class com.threerings.bang.game.data.TutorialConfig** {
+    public *;
+}
+
 -keep public class com.threerings.jme.tools.xml.* {
     public *;
 }
