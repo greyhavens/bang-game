@@ -161,11 +161,14 @@ public class OOOAuthenticator extends Authenticator
 
         // make sure this player has access to this server's town
         int serverTownIdx = BangUtil.getTownIndex(ServerConfig.townId);
+        if (RuntimeConfig.server.freeIndianPost &&
+            serverTownIdx == BangUtil.getTownIndex(BangCodes.INDIAN_POST)) {
+            // free access
+            serverTownIdx = -1;
+        }
         if (serverTownIdx > 0) {
-            String defTownId = RuntimeConfig.server.freeIndianPost ?
-                BangCodes.INDIAN_POST : BangCodes.FRONTIER_TOWN;
             String townId = (prec == null || prec.townId == null) ?
-                defTownId : prec.townId;
+                BangCodes.FRONTIER_TOWN : prec.townId;
             if (BangUtil.getTownIndex(townId) < serverTownIdx) {
                 log.warning("Rejecting access to town server by " +
                             "non-ticket-holder [who=" + username +
