@@ -403,7 +403,7 @@ public abstract class Effect extends SimpleStreamableObject
         BangObject bangobj, Piece piece, Observer obs)
     {
         bangobj.removePieceDirect(piece);
-        if (piece instanceof Prop) {
+        if (piece.rebuildShadow()) {
             // removing props requires building the shadow from scratch
             bangobj.board.shadowPieces(bangobj.pieces.iterator(), piece.x,
                 piece.y, piece.getWidth(), piece.getLength());

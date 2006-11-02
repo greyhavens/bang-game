@@ -219,6 +219,12 @@ public class Prop extends BigPiece
         return false;
     }
 
+    @Override // documentation inherited
+    public boolean rebuildShadow ()
+    {
+        return true;
+    }
+
     /**
      * Returns true if it's possible to enter this piece from the direction.
      */

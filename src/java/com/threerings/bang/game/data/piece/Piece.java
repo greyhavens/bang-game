@@ -278,6 +278,15 @@ public abstract class Piece
     }
 
     /**
+     * Returns true if the board shadow should be regenerated on this piece's
+     * removal.
+     */
+    public boolean rebuildShadow ()
+    {
+        return false;
+    }
+
+    /**
      * Returns true if the specified target is in range of attack of this
      * piece.
      */

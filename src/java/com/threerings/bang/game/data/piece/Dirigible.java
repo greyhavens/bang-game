@@ -69,5 +69,11 @@ public class Dirigible extends Unit
         return false;
     }
 
+    @Override // documentation inherited
+    public boolean rebuildShadow ()
+    {
+        return true;
+    }
+
     protected transient Piece _deathTarget;
 }
