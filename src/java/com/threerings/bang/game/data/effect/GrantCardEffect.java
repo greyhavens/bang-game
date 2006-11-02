@@ -20,10 +20,10 @@ import static com.threerings.bang.Log.log;
  */
 public class GrantCardEffect extends BonusEffect
 {
-    /** The activation effect: flies the card up into the air and fades it
-     * out. */
-    public static final String ACTIVATED_CARD = "activated_card";
-    
+    /** Effect reported when a player activates a card bonus. */
+    public static final String ACTIVATED_CARD = "frontier_town/card";
+
+    /** The card to grant to the player. */
     public Card card;
 
     @Override // documentation inherited
@@ -76,7 +76,7 @@ public class GrantCardEffect extends BonusEffect
         addAndReport(bangobj, card, obs);
         return true;
     }
-    
+
     @Override // documentation inherited
     public String getDescription (BangObject bangobj, int pidx)
     {
@@ -94,7 +94,7 @@ public class GrantCardEffect extends BonusEffect
     {
         return ACTIVATED_CARD;
     }
-    
+
     /** The player receiving the card. */
     protected transient int _player;
 }
