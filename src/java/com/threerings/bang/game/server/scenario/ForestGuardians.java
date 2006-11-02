@@ -72,6 +72,14 @@ public class ForestGuardians extends Scenario
     }
 
     @Override // documentation inherited
+    public int modifyDamageDone (int pidx, int tidx, int ddone)
+    {
+        // points are granted for damaging the robots; subtracted for damaging
+        // your teammates
+        return (tidx == -1) ? ddone : (-3 * ddone / 2);
+    }
+
+    @Override // documentation inherited
     public void filterPieces (
         BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces,
         ArrayList<Piece> updates)
