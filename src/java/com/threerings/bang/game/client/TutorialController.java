@@ -124,13 +124,19 @@ public class TutorialController
         int count = getEventCount(event)+1;
         _events.put(event, count);
 
-        log.info("Received tutorial event: " + event + " (" + count + ").");
-
-        if (_pending != null && event.matches(_pending.getEvent()) &&
-            count >= _pending.getCount()) {
-            processedAction(((TutorialConfig.Action)_pending).index);
-            _pending = null;
+        if (_pending == null || !event.matches(_pending.getEvent()) ||
+            count < _pending.getCount()) {
+            log.info("Ignoring tutorial event: " + event + " (" + count + ").");
+            return;
         }
+        log.info("Matched tutorial event: " + event + " (" + count + ").");
+
+        // process the action
+        processedAction(((TutorialConfig.Action)_pending).index);
+        _pending = null;
+
+        // clear the pointer in case a previous action had it set
+        _view.view.clearPointer();
     }
 
     // documentation inherited from interface ActionListener
@@ -211,6 +217,7 @@ public class TutorialController
                 }
             }
             if (p != null) {
+                _view.view.activatePointer(p);
                 _view.view.centerCameraOnPiece(p);
             } else {
                 log.warning("Requested to center camera on unknown entity " +

@@ -645,6 +645,30 @@ public class BangBoardView extends BoardView
         });
     }
 
+    /**
+     * Places bouncing pointer geometry over the piece in question.
+     */
+    public void activatePointer (Piece piece)
+    {
+        PieceSprite psp = getPieceSprite(piece);
+        if (psp != null) {
+            _pointer.setLocalTranslation(new Vector3f(0, 0, psp.getHeight()));
+            psp.attachChild(_pointer);
+        } else {
+            log.info("Missing sprite for pointing [piece=" + piece + "].");
+        }
+    }
+
+    /**
+     * Clears any active highlight geometry.
+     */
+    public void clearPointer ()
+    {
+        if (_pointer.removeFromParent()) {
+            log.info("Cleared pointer.");
+        }
+    }
+
     @Override // documentation inherited
     public float getShadowIntensity ()
     {
@@ -723,7 +747,6 @@ public class BangBoardView extends BoardView
 
         // create our cursor
         _cursor = new Node("cursor");
-        // _cursor.setLocalScale(0.75f);
         _ctx.loadModel("bonuses", "frontier_town/bonus_point",
                        new ResultAttacher<Model>(_cursor));
         _cursor.addController(new Spinner(_cursor, FastMath.PI));
@@ -731,6 +754,16 @@ public class BangBoardView extends BoardView
         _cursor.setRenderState(RenderUtil.lequalZBuf);
         _cursor.setIsCollidable(false);
         _cursor.updateRenderState();
+
+        // create our pointing arrow
+        _pointer = new Node("pointer");
+        _ctx.loadModel("bonuses", "frontier_town/bonus_point",
+                       new ResultAttacher<Model>(_pointer));
+        _pointer.addController(new Spinner(_pointer, FastMath.PI));
+        _pointer.addController(new Bouncer(_pointer, TILE_SIZE, TILE_SIZE/4));
+        _pointer.setRenderState(RenderUtil.lequalZBuf);
+        _pointer.setIsCollidable(false);
+        _pointer.updateRenderState();
     }
 
     @Override // documentation inherited
@@ -2020,7 +2053,7 @@ public class BangBoardView extends BoardView
     protected BangController _ctrl;
     protected BangConfig _bconfig;
 
-    protected Node _cursor;
+    protected Node _cursor, _pointer;
     protected Unit _selection;
 
     /** This is disabled by the tutorial controller when the player is not
