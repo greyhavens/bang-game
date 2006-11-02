@@ -117,7 +117,7 @@ public class TreeBedSprite extends ActiveSprite
     @Override // documentation inherited
     protected String getHelpIdent (int pidx)
     {
-        return "tree_bed";
+        return "tree_bed" + _growth;
     }
 
     @Override // documentation inherited
