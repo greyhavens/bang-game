@@ -24,5 +24,5 @@ $MIRROR server.conf *.properties build.xml log/README \
 # mirror the server scripts
 echo "** Mirroring scripts..."
 $MIRROR `find bin -perm 0775 -a -type f` \
-    projects/tools/etc/build-support.xml \
-    projects/tools/bin/lfilter
+    projects/tools/etc/build-support.xml projects/tools/bin/lfilter \
+    projects/tools/bin/filter_interesting projects/tools/bin/sum_invokers
