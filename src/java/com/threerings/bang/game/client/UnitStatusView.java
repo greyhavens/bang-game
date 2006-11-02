@@ -78,17 +78,6 @@ public class UnitStatusView extends BWindow
         }
     }
 
-    @Override // documentation inherited
-    public BComponent getHitComponent (int mx, int my) {
-        BComponent hit = super.getHitComponent(mx, my);
-        // if we didn't find a hit and we're outside our normal width
-        // then let it pass through
-        if (hit == this && mx > _selected.getWidth()) {
-            return null;
-        }
-        return hit;
-    }
-
     /**
      * Called when a unit sprite is added to the game.
      */
@@ -138,6 +127,26 @@ public class UnitStatusView extends BWindow
             resort();
             reposition();
         }
+    }
+
+    /**
+     * Called when an order is reported as invalide by the server.
+     */
+    public void orderInvalidated (int unitId, int targetId)
+    {
+        // TODO: stick a ? icon next to the unit until that unit is next
+        // selected by the player
+    }
+
+    @Override // documentation inherited
+    public BComponent getHitComponent (int mx, int my) {
+        BComponent hit = super.getHitComponent(mx, my);
+        // if we didn't find a hit and we're outside our normal width
+        // then let it pass through
+        if (hit == this && mx > _selected.getWidth()) {
+            return null;
+        }
+        return hit;
     }
 
     protected void resort ()

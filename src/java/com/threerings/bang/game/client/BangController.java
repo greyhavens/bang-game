@@ -43,8 +43,6 @@ import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.util.BangContext;
 
-import com.threerings.bang.game.client.effect.IconViz;
-import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
@@ -126,30 +124,9 @@ public class BangController extends GameController
     // documentation inherited from interface BangReceiver
     public void orderInvalidated (int unitId, String reason)
     {
-        if (!reason.equals(GameCodes.ORDER_CLEARED) &&
-            !reason.equals(GameCodes.MOVER_NO_LONGER_VALID)) {
-            // TEMP: report the failure via chat feedback
-            Unit unit = (Unit)_bangobj.pieces.get(unitId);
-            if (unit != null) {
-                reason = MessageBundle.compose(
-                    "m.order_invalidated_unit",
-                    unit.getConfig().getName(), reason);
-
-                // show a question mark over the unit
-                IconViz iviz = new IconViz("textures/effects/invalidated.png");
-                iviz.init(_ctx, _view.view, unit, null);
-                PieceSprite sprite = _view.view.getPieceSprite(unit);
-                if (sprite != null) {
-                    iviz.display(sprite);
-                }
-            } else {
-                reason = MessageBundle.compose("m.order_invalidated", reason);
-            }
-            _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, reason);
-        }
-
-        // TODO: flash the unit in the unit status display
-        _view.view.clearAdvanceOrder(unitId);
+        // let various interface bits know about the invalidated order
+        _view.view.orderInvalidated(unitId, -1);
+        _view.ustatus.orderInvalidated(unitId, -1);
     }
 
     @Override // documentation inherited
@@ -424,19 +401,9 @@ public class BangController extends GameController
             }
 
             public void requestFailed (String reason) {
-                // TEMP: report the failure via chat feedback
-                reason = MessageBundle.compose(
-                    "m.order_failed_unit", unit.getConfig().getName(), reason);
-                _ctx.getChatDirector().displayFeedback(
-                    GameCodes.GAME_MSGS, reason);
-
-                // TODO: play a sound or highlight the piece that failed to
-                // move
-
-                // clear any pending shot indicator
-                if (targetId != -1) {
-                    _view.view.clearPendingShot(targetId);
-                }
+                // let various interface bits know about the invalidated order
+                _view.view.orderInvalidated(unit.pieceId, targetId);
+                _view.ustatus.orderInvalidated(unit.pieceId, targetId);
             }
         };
 

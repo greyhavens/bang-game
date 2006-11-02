@@ -79,6 +79,7 @@ import com.threerings.bang.util.ParticleUtil;
 import com.threerings.bang.util.RenderUtil;
 import com.threerings.bang.util.SoundUtil;
 
+import com.threerings.bang.game.client.effect.IconViz;
 import com.threerings.bang.game.client.sprite.ActiveSprite;
 import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.Bouncer;
@@ -542,6 +543,34 @@ public class BangBoardView extends BoardView
                 addWindInfluence(result);
             }
         });
+    }
+
+    /**
+     * Called when an advance order is reported as invalid by the server.
+     */
+    public void orderInvalidated (int unitId, int targetId)
+    {
+        // give some auditory feedback
+        _sounds.getSound(ORDER_INVALIDATED).play(true);
+
+        // clear their advance order icon
+        clearAdvanceOrder(unitId);
+
+        // show a question mark over the unit
+        Unit unit = (Unit)_bangobj.pieces.get(unitId);
+        if (unit != null) {
+            PieceSprite sprite = getPieceSprite(unit);
+            if (sprite != null) {
+                IconViz iviz = new IconViz("textures/effects/invalidated.png");
+                iviz.init(_ctx, this, unit, null);
+                iviz.display(sprite);
+            }
+        }
+
+        // clear any pending shot indicator
+        if (targetId != -1) {
+            clearPendingShot(targetId);
+        }
     }
 
     /**
@@ -2071,6 +2100,10 @@ public class BangBoardView extends BoardView
 
     /** The time it takes to fade in and out of high noon mode. */
     protected static final float NOON_FADE_DURATION = 1f;
+
+    /** The sound to play when a unit's order is invalidated. */
+    protected static final String ORDER_INVALIDATED =
+        "rsrc/sounds/effects/order_invalid.ogg";
 
     /** The sound to play when entering wendigo ambiance mode. */
     protected static final String WENDIGO_AMBIANCE_START =
