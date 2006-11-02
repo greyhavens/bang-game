@@ -26,6 +26,7 @@ import com.jme.scene.Spatial;
 import com.jme.scene.shape.Quad;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
+import com.jme.scene.state.TextureState;
 
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -101,7 +102,6 @@ import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
-import com.jme.scene.state.TextureState;
 
 /**
  * Displays the main game board.
