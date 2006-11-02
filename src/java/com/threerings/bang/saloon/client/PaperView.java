@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.net.URL;
 import javax.swing.text.html.HTMLDocument;
 
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import com.jmex.bui.BButton;
@@ -128,7 +129,7 @@ public class PaperView extends BContainer
 
         switch (_pageNo = pageNo) {
         case 0:
-            setContents(_news.getDocument());
+            setContents(_news.get(_ctx.getUserObject().townId).getDocument());
             break;
 
         case 1:
@@ -181,20 +182,24 @@ public class PaperView extends BContainer
 
     protected void refreshNews (boolean force)
     {
-        if (_news == null) {
+        String townId = _ctx.getUserObject().townId;
+        CachedDocument news = _news.get(townId);
+        if (news == null) {
             URL base = DeploymentConfig.getDocBaseURL();
-            String npath = _ctx.getUserObject().townId + NEWS_URL;
+            String npath = townId + NEWS_URL;
             try {
-                URL news = new URL(base, npath);
-                _news = new CachedDocument(news, NEWS_REFRESH_INTERVAL);
+                URL nurl = new URL(base, npath);
+                news = new CachedDocument(nurl, NEWS_REFRESH_INTERVAL);
+                _news.put(townId, news);
             } catch (Exception e) {
                 log.log(Level.WARNING, "Failed to create news URL " +
-                    "[base=" + base + ", path=" + npath + "].", e);
+                        "[base=" + base + ", path=" + npath + "].", e);
                 return;
             }
         }
-        if (!_news.refreshDocument(force, _newsup)) {
-            setContents(_news.getDocument());
+
+        if (!news.refreshDocument(force, _newsup)) {
+            setContents(news.getDocument());
         }
     }
 
@@ -262,7 +267,8 @@ public class PaperView extends BContainer
 
     protected TopScoreView _topscore;
 
-    protected static CachedDocument _news;
+    protected static HashMap<String,CachedDocument> _news =
+        new HashMap<String,CachedDocument>();
     protected static boolean _shownNews;
 
     protected static final long NEWS_REFRESH_INTERVAL = 60 * 60 * 1000L;
