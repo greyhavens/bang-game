@@ -69,98 +69,33 @@ public class WendigoDelegate extends CounterDelegate
         boolean horiz = bangobj.scenario.getIdent().equals(TutorialInfo.IDENT) ?
             true : (RandomUtil.getInt(2) == 0);
 
-        int num = (horiz ? playarea.height : playarea.width) / 2;
-        _wendigo = new ArrayList<Wendigo>(num);
         int off = 0;
         int length = 0;
+        int idx = 0;
         if (horiz) {
             off = playarea.y;
-            length = playarea.height - 1;
+            length = playarea.height;
         } else {
             off = playarea.x;
-            length = playarea.width - 1;
+            length = playarea.width;
         }
-
-        // pick the set of tiles to attack based on the number of units
-        // in the attack zone
-        int[] weights = new int[length];
-        Arrays.fill(weights, 1);
-        Piece[] pieces = bangobj.getPieceArray();
-        for (Piece p : pieces) {
-            if (p instanceof Unit && p.isAlive()) {
-                int coord = (horiz ? p.y : p.x) - off;
-                if (coord < length) {
-                    weights[coord]++;
-                }
-                if (coord - 1 >= 0) {
-                    weights[coord - 1]++;
-                }
-            }
-        }
-
-        // generate the wendigo spread out along the edge
-        for (int ii = 0; ii < num; ii++) {
-            int idx = (IntListUtil.sum(weights) == 0 ?
-                RandomUtil.getInt(length) :
-                RandomUtil.getWeightedIndex(weights));
-            weights[idx] = 0;
+        _wendigo = new ArrayList<Wendigo>(length/2);
+        
+        while (idx < length) {
             boolean side = RandomUtil.getInt(2) == 0;
-            int cidx = idx, ridx = idx, lidx = idx;
-            boolean leftside = false, rightside = false;
-            boolean arms = RandomUtil.getInt(3) != 0;
-            if (idx - 1 >= 0) {
-                if (arms && idx - 2 >= 0 && weights[idx - 2] > 0) {
-                    rightside = true;
-                    ridx = idx - 2;
-                }
-                weights[idx - 1] = 0;
+            int size = RandomUtil.getInt(3);
+            while (idx + size * 2 >= length) {
+                size--;
             }
-            if (idx + 1 < weights.length) {
-                if (arms && idx + 2 < weights.length && weights[idx + 2] > 0) {
-                    leftside = true;
-                    lidx = idx + 2;
-                }
-                weights[idx + 1] = 0;
-            }
-
-            if (rightside || leftside) {
-                num--;
-                if (leftside && rightside) {
-                    num--;
-                } else if (leftside) {
-                    ridx = idx;
-                    cidx++;
-                } else {
-                    lidx = cidx;
-                    cidx--;
-                }
-                num--;
-                weights[ridx] = 0;
-                if (ridx - 1 >= 0) {
-                    weights[idx - 1] = 0;
-                }
-                weights[lidx] = 0;
-                if (lidx + 1 < weights.length) {
-                    weights[lidx + 1] = 0;
-                }
-            }
-
-            _wendigo.add(createWendigo(bangobj, cidx + off, horiz, side,
+            _wendigo.add(createWendigo(bangobj, size + idx + off, horiz, side,
                                        playarea, false, tick));
-            if (leftside || rightside) {
-                _wendigo.add(createWendigo(bangobj, ridx + off, horiz, side,
+            if (size > 0) {
+                _wendigo.add(createWendigo(bangobj,idx + off, horiz, side,
                                            playarea, true, tick));
-                _wendigo.add(createWendigo(bangobj, lidx + off, horiz, side,
-                                           playarea, true, tick));
+                _wendigo.add(createWendigo(bangobj, size * 2 + idx + off, 
+                            horiz, side, playarea, true, tick));
             }
-
-            int sum = 0;
-            for (int weight : weights) {
-                sum += weight;
-            }
-            if (sum == 0) {
-                break;
-            }
+            idx += (size + 1) * 2;
         }
     }
 
