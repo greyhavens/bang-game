@@ -59,13 +59,14 @@ public class PlayCardEffect extends Effect
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         switch (card.getPlacementMode()) {
-          case VS_PIECE:
+        case VS_PIECE:
             Piece piece = bangobj.pieces.get((Integer)target);
-            if (!card.isValidPiece(bangobj, piece)) {
+            if (piece == null || !card.isValidPiece(bangobj, piece)) {
                 target = null;
             }
             break;
-          case VS_PLAYER:
+
+        case VS_PLAYER:
             if (!card.isValidPlayer(bangobj, (Integer)target)) {
                 target = null;
             }
