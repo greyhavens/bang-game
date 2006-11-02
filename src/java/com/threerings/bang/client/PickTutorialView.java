@@ -92,7 +92,7 @@ public class PickTutorialView extends BDecoratedWindow
         BContainer table = new BContainer(new TableLayout(2, 5, 15));
         add(table);
 
-        int unplayed = 0;
+        boolean unplayed = false, enabled = true;
         int townIdx = BangUtil.getTownIndex(self.townId);
         for (int ii = 0; ii < TutorialCodes.TUTORIALS[townIdx].length; ii++) {
             String tid = TutorialCodes.TUTORIALS[townIdx][ii];
@@ -104,7 +104,7 @@ public class PickTutorialView extends BDecoratedWindow
             } else {
                 icon = incomp;
                 btext = "m.tut_play";
-                unplayed++;
+                unplayed = true;
             }
 
             BLabel tlabel = new BLabel(
@@ -116,8 +116,10 @@ public class PickTutorialView extends BDecoratedWindow
             play.setStyleClass("alt_button");
             table.add(play);
 
-            if (unplayed > 1) {
-                tlabel.setEnabled(false);
+            if (unplayed) {
+                tlabel.setEnabled(enabled);
+                // everything after the first unplayed tutorial is greyed out
+                enabled = false;
             }
         }
 

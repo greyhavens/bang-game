@@ -4,6 +4,7 @@
 package com.threerings.bang.game.client;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
@@ -119,8 +120,14 @@ public class TutorialController
      */
     public void handleEvent (String event)
     {
-        log.fine("Received tutorial event: " + event + ".");
-        if (_pending != null && event.matches(_pending.getEvent())) {
+        // increment this event's counter
+        int count = getEventCount(event)+1;
+        _events.put(event, count);
+
+        log.info("Received tutorial event: " + event + " (" + count + ").");
+
+        if (_pending != null && event.matches(_pending.getEvent()) &&
+            count >= _pending.getCount()) {
             processedAction(((TutorialConfig.Action)_pending).index);
             _pending = null;
         }
@@ -236,8 +243,20 @@ public class TutorialController
         if (action instanceof TutorialConfig.WaitAction) {
             // wait for the specified event
             _pending = (TutorialConfig.WaitAction)action;
-            log.fine("Waiting [event=" + _pending.getEvent() +
+
+            log.info("Waiting [event=" + _pending.getEvent() +
                      ", action=" + _pending + "].");
+
+            // if an event's count is already satified, turn it into a "Click
+            // to continue..." event
+            if (_pending.getCount() > 0 &&
+                getEventCount(_pending.getEvent()) >= _pending.getCount()) {
+                log.info("Converting to TEXT_CLICKED....");
+                TutorialConfig.Wait wait = new TutorialConfig.Wait();
+                wait.event = TutorialCodes.TEXT_CLICKED;
+                wait.index = action.index;
+                _pending = wait;
+            }
 
             // only allow attacking for actions that allow it
             _view.view._attackEnabled = _pending.allowAttack();
@@ -281,6 +300,12 @@ public class TutorialController
         _bangobj.manager.invoke(TutorialCodes.ACTION_PROCESSED, index);
     }
 
+    protected int getEventCount (String event)
+    {
+        Integer count = _events.get(event);
+        return (count == null) ? 0 : count;
+    }
+
     protected MouseAdapter _clicklist = new MouseAdapter() {
         public void mousePressed (MouseEvent event) {
             if (_click.isEnabled()) {
@@ -311,6 +336,9 @@ public class TutorialController
 
     protected TutorialConfig _config;
     protected TutorialConfig.WaitAction _pending;
+
+    /** Counts up all events received during the tutorial. */
+    protected HashMap<String,Integer> _events = new HashMap<String,Integer>();
 
     protected ArrayList<TutorialConfig.Text> _history =
         new ArrayList<TutorialConfig.Text>();

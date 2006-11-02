@@ -18,12 +18,22 @@ public class TutorialConfig
     {
         public String getEvent ();
 
+        public int getCount ();
+
         public boolean allowAttack ();
     }
 
     public static class Action implements Serializable
     {
         public int index;
+
+        public int getCount () {
+            return -1;
+        }
+
+        public boolean allowAttack () {
+            return false;
+        }
 
         public String toString () {
             return StringUtil.shortClassName(this) +
@@ -45,10 +55,15 @@ public class TutorialConfig
         implements WaitAction
     {
         public String event;
+        public int count;
         public boolean allowAttack;
 
         public String getEvent () {
             return event;
+        }
+
+        public int getCount () {
+            return count;
         }
 
         public boolean allowAttack () {
@@ -70,10 +85,6 @@ public class TutorialConfig
         public String getEvent () {
             return what.equals("unit") ?
                 TutorialCodes.UNIT_ADDED : TutorialCodes.PIECE_ADDED;
-        }
-
-        public boolean allowAttack () {
-            return false;
         }
 
         private static final long serialVersionUID = 1;
