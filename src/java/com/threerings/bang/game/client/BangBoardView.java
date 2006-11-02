@@ -548,13 +548,23 @@ public class BangBoardView extends BoardView
     /**
      * Called when an advance order is reported as invalid by the server.
      */
-    public void orderInvalidated (int unitId, int targetId)
+    public void orderInvalidated (int unitId, int targetId, boolean alert)
     {
-        // give some auditory feedback
-        _sounds.getSound(ORDER_INVALIDATED).play(true);
-
         // clear their advance order icon
         clearAdvanceOrder(unitId);
+
+        // clear any pending shot indicator
+        if (targetId != -1) {
+            clearPendingShot(targetId);
+        }
+
+        // stop here if this is not an alert-worth cancelation
+        if (!alert) {
+            return;
+        }
+
+        // give some auditory feedback
+        _sounds.getSound(ORDER_INVALIDATED).play(true);
 
         // show a question mark over the unit
         Unit unit = (Unit)_bangobj.pieces.get(unitId);
@@ -565,11 +575,6 @@ public class BangBoardView extends BoardView
                 iviz.init(_ctx, this, unit, null);
                 iviz.display(sprite);
             }
-        }
-
-        // clear any pending shot indicator
-        if (targetId != -1) {
-            clearPendingShot(targetId);
         }
     }
 

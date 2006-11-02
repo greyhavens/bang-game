@@ -124,9 +124,7 @@ public class BangController extends GameController
     // documentation inherited from interface BangReceiver
     public void orderInvalidated (int unitId, String reason)
     {
-        // let various interface bits know about the invalidated order
-        _view.view.orderInvalidated(unitId, -1);
-        _view.ustatus.orderInvalidated(unitId, -1);
+        orderInvalidated(unitId, -1, reason);
     }
 
     @Override // documentation inherited
@@ -401,9 +399,8 @@ public class BangController extends GameController
             }
 
             public void requestFailed (String reason) {
-                // let various interface bits know about the invalidated order
-                _view.view.orderInvalidated(unit.pieceId, targetId);
-                _view.ustatus.orderInvalidated(unit.pieceId, targetId);
+                // report a failed order like an invalidated advance order
+                orderInvalidated(unit.pieceId, targetId, reason);
             }
         };
 
@@ -734,6 +731,19 @@ public class BangController extends GameController
 
             // add and immediately fade in and out a "GO!" marquee
             _view.view.fadeMarqueeInOut("m.round_start", 1f);
+        }
+    }
+
+    /**
+     * Reports an invalidated order via the appropriate interfaces.
+     */
+    protected void orderInvalidated (int unitId, int targetId, String reason)
+    {
+        boolean alert = !reason.equals(GameCodes.ORDER_CLEARED) &&
+            !reason.equals(GameCodes.MOVER_NO_LONGER_VALID);
+        _view.view.orderInvalidated(unitId, targetId, alert);
+        if (alert) {
+            _view.ustatus.orderInvalidated(unitId, targetId);
         }
     }
 
