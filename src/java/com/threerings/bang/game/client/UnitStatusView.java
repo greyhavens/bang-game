@@ -134,8 +134,12 @@ public class UnitStatusView extends BWindow
      */
     public void orderInvalidated (int unitId, int targetId)
     {
-        // TODO: stick a ? icon next to the unit until that unit is next
-        // selected by the player
+        for (UnitStatus status : _ustatuses) {
+            if (status.pieceId == unitId) {
+                status.label.orderInvalidated();
+                break;
+            }
+        }
     }
 
     @Override // documentation inherited
@@ -497,6 +501,10 @@ public class UnitStatusView extends BWindow
         public UnitLabel () {
             super("");
             setStyleClass("unit_status_label");
+            if (_invalidated == null) {
+                _invalidated = _ctx.getImageCache().getBImage(
+                        "ui/ustatus/aborted.png");
+            }
         }
 
         public void setUnitSprite (UnitSprite sprite) {
@@ -518,6 +526,10 @@ public class UnitStatusView extends BWindow
             return (Unit)_sprite.getPiece();
         }
 
+        public void orderInvalidated () {
+            _isInvalid = true;
+        }
+
         @Override // documentation inherited
         public Dimension computePreferredSize (int whint, int hhint)
         {
@@ -534,7 +546,11 @@ public class UnitStatusView extends BWindow
                 // and draw our icon at 50% alpha
                 _unit.setDefaultColor(ColorRGBA.white);
                 setAlpha(0.5f);
+                _isInvalid = false;
             } else {
+                if (_sprite.isSelected()) {
+                    _isInvalid = false;
+                }
                 if (unit.influence == null) {
                     setInfluence(null);
                 } else {
@@ -545,11 +561,13 @@ public class UnitStatusView extends BWindow
                     setInfluence(_ctx.getImageCache().getBImage(path));
                 }
                 // tint the unit icon red if it has a visible hindrance
+                /*
                 if (unit.hindrance == null || !unit.hindrance.isVisible()) {
                     _unit.setDefaultColor(ColorRGBA.white);
                 } else {
                     _unit.setDefaultColor(new ColorRGBA(1f, 0.5f, 0.5f, 0.8f));
                 }
+                */
             }
         }
 
@@ -568,6 +586,7 @@ public class UnitStatusView extends BWindow
             if (influence != null) {
                 influence.reference();
             }
+            _invalidated.reference();
         }
 
         @Override // documentation inherited
@@ -580,6 +599,7 @@ public class UnitStatusView extends BWindow
             if (influence != null) {
                 influence.release();
             }
+            _invalidated.release();
         }
 
         @Override // documentation inherited
@@ -590,6 +610,11 @@ public class UnitStatusView extends BWindow
             // render our influence icon if we have one
             if (influence != null) {
                 influence.render(renderer, getWidth()-19, getHeight()-19, 1f);
+            }
+            if (_isInvalid) {
+                _invalidated.render(renderer, 
+                        (getWidth() - _invalidated.getWidth())/2,
+                        (getHeight() - _invalidated.getHeight())/2, 1f);
             }
         }
 
@@ -620,7 +645,7 @@ public class UnitStatusView extends BWindow
         protected UnitSprite _sprite;
         protected BBackground _bground;
         protected BImage _unit;
-
+        protected boolean _isInvalid;
     }
 
     protected BangContext _ctx;
@@ -631,6 +656,7 @@ public class UnitStatusView extends BWindow
 
     protected static BImage _selected;
     protected static BImage[] _closeArrow;
+    protected static BImage _invalidated;
     protected static final Dimension LABEL_PREFERRED_SIZE = 
         new Dimension(PieceStatus.ICON_SIZE, PieceStatus.ICON_SIZE);
 }
