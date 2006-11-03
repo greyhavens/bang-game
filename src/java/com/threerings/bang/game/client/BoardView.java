@@ -765,7 +765,7 @@ public class BoardView extends BComponent
         long now = System.currentTimeMillis(), since;
         for (int ii = 0, ll = _ractions.size(); ii < ll; ii++) {
             BoardAction running = _ractions.get(ii);
-            if (running.start > 0L && (since = now - running.start) > 5000L) {
+            if (running.start > 0L && (since = now - running.start) > 8000L) {
                 log.warning("Board action stuck on the queue? " +
                             "[action=" + running +
                             ", since=" + since + "ms].");
