@@ -1,4 +1,4 @@
-513
+516
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := dogsoldier := 503
@@ -276,6 +276,7 @@ male/clothing_back := duster := 214
 male/clothing_back := fat_suspenders := 320
 male/clothing_back := fringe := 215
 male/clothing_back := ironplate_poncho := 256
+male/clothing_back := medallion_hunter := 514
 male/clothing_back := mink_shirt := 495
 male/clothing_back := overalls := 435
 male/clothing_back := overalls_wheat := 443
@@ -383,6 +384,7 @@ male/hair_middle := long_straight := 423
 male/hat := buffalo := 356
 male/hat := coonskin := 322
 male/hat := cowboy := 11
+male/hat := head_wrap := 515
 male/hat := native_topper := 442
 male/hat := revolutionary := 411
 male/hat := sombrero := 258
@@ -402,6 +404,7 @@ male/hat_back := feather_double := 45
 male/hat_back := feather_one := 294
 male/hat_back := feather_single := 46
 male/hat_back := feather_two := 299
+male/hat_back := head_wrap := 516
 male/hat_back := native_topper := 440
 male/hat_back := revolutionary := 413
 male/hat_back := sombrero := 260
