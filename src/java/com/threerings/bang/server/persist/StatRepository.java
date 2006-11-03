@@ -47,7 +47,8 @@ public class StatRepository extends SimpleRepository
          * supplied {@link Stat} instance as its contents will be overwritten
          * prior to each call to process.
          */
-        public void process (int playerId, Stat stat);
+        public void process (int playerId, String accountName,
+                             String handle, Stat stat);
     }
 
     /**
@@ -196,8 +197,10 @@ public class StatRepository extends SimpleRepository
         throws PersistenceException
     {
         final Stat stat = type.newStat();
-        final String query = "select PLAYER_ID, STAT_DATA " +
-            "from STATS where STAT_CODE = " + type.code();
+        final String query = "select STATS.PLAYER_ID, ACCOUNT_NAME, HANDLE, " +
+            "STAT_DATA from STATS, PLAYERS " +
+            "where PLAYERS.PLAYER_ID = STATS.PLAYER_ID " +
+            "and STAT_CODE = " + type.code();
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -206,8 +209,9 @@ public class StatRepository extends SimpleRepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        if (decodeStat(stat, (byte[])rs.getObject(2)) != null) {
-                            processor.process(rs.getInt(1), stat);
+                        if (decodeStat(stat, (byte[])rs.getObject(4)) != null) {
+                            processor.process(rs.getInt(1), rs.getString(2),
+                                              rs.getString(3), stat);
                         }
                     }
                 } finally {
