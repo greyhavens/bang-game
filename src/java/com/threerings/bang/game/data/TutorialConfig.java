@@ -83,7 +83,7 @@ public class TutorialConfig
         public int owner;
 
         public String getEvent () {
-            return what.equals("unit") ?
+            return (what.equals("unit") || what.equals("bigshot")) ?
                 TutorialCodes.UNIT_ADDED : TutorialCodes.PIECE_ADDED;
         }
 

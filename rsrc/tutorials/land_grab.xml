@@ -38,7 +38,7 @@
   <wait event="text_clicked"/>
 
   <!-- have them destroy the enemy homestead -->
-  <center_on what="piece" id="1002"/>
+  <center_on what="piece" id="1002" arrow="false"/>
   <text message="destroy_homestead" step="3"/>
   <wait event="unit_killed:.*" allowAttack="true"/>
 

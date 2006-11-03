@@ -212,12 +212,11 @@ public class Tutorial extends Scenario
                 BonusConfig bconfig = BonusConfig.getConfig(add.type);
                 piece = Bonus.createBonus(bconfig);
 
+            } else if (add.what.equals("cow")) {
+                piece = new Cow();
+
             } else if (add.what.equals("unit")) {
-                if (add.type.equals("cow")) {
-                    piece = new Cow();
-                } else {
-                    piece = Unit.getUnit(add.type);
-                }
+                piece = Unit.getUnit(add.type);
 
             } else if (add.what.equals("bigshot")) {
                 PlayerObject user = (PlayerObject)_bangmgr.getPlayer(0);

@@ -14,7 +14,7 @@
   <wait event="text_clicked"/>
 
   <!-- add a cow and explain those -->
-  <add_piece what="unit" id="1002" type="cow" location="18,14" owner="-1"/>
+  <add_piece what="cow" id="1002" location="18,14" owner="-1"/>
   <center_on what="piece" id="1002"/>
   <text message="cattle_intro" step="2"/>
   <wait event="effect:frontier_town/cow/branded"/>
@@ -31,7 +31,7 @@
   <wait event="text_clicked"/>
 
   <!-- have the AI rebrand the cattle, have the player rebrand it back -->
-  <center_on what="piece" id="1002"/>
+  <center_on what="piece" id="1002" arrow="false"/>
   <move_unit_and_wait id="1003" target="1002" 
         event="effect:frontier_town/cow/branded"/>
   <text message="cattle_rerebranding" step="2"/>
