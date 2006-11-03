@@ -27,7 +27,7 @@ import static com.threerings.bang.Log.log;
 public class HoldEffect extends BonusEffect
 {
     /** The identifier for the type of effect that we produce. */
-    public static final String PICKED_UP_BONUS = "picked_up_bonus";
+    public static final String PICKED_UP_BONUS = "frontier_town/bonus/pickedup";
 
     /** The identifier for the type of effect that we produce. */
     public static final String DROPPED_BONUS = "frontier_town/bonus/dropped";
