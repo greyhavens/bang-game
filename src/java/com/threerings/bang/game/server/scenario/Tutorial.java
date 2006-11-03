@@ -155,8 +155,13 @@ public class Tutorial extends Scenario
 
         // if we're ready to deploy the wendigo, do so
         if (_wendigoTick == tick) {
-            _wendel.deployWendigo(bangobj, tick);
-            _wendigoTick = -1;
+            if (_wendigoAttack) {
+                _wendel.deployWendigo(bangobj, tick);
+                _wendigoTick = -1;
+                _wendigoAttack = false;
+            } else {
+                _wendigoTick++;
+            }
         }
 
         // end the scenario if we've reached the last action
@@ -329,6 +334,9 @@ public class Tutorial extends Scenario
                 _wendel.prepareWendigo(_bangobj, _bangobj.tick);
                 _wendigoTick = _bangobj.tick + WendigoAttack.WENDIGO_WAIT;
 
+            } else if (type.equals("wendigo_attack")) {
+                _wendigoAttack = true;
+
             } else if (type.equals("reset_trees")) {
                 _treedel.resetTrees(_bangobj, 0);
             }
@@ -356,6 +364,7 @@ public class Tutorial extends Scenario
     // used for the Wengido Attack tutorial
     protected WendigoDelegate _wendel;
     protected int _wendigoTick = -1;
+    protected boolean _wendigoAttack = false;
 
     // used for the Forest Guardians tutorial
     protected TreeBedDelegate _treedel;
