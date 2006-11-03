@@ -48,6 +48,7 @@
   <text message="wendigo_nigh" step="2"/>
   <wait event="text_clicked"/>
   <text message="wendigo_nigh2" step="2"/>
+  <scenario_action type="wendigo_attack"/>
   <wait event="unit_killed:2000" count="1"/>
 
   <text message="wendigo_passed" step="2"/>
