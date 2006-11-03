@@ -189,7 +189,7 @@ public abstract class Effect extends SimpleStreamableObject
         boolean alive = target.isAlive();
         if (!alive) {
             target.wasKilled(bangobj.tick);
-            if (shooter != null) {
+            if (shooter != null && target.owner >= 0) {
                 shooter.didKill();
             }
             

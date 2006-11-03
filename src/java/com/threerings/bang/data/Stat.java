@@ -35,7 +35,7 @@ public abstract class Stat
         GAME_TIME(new IntStat()), // ranked games only
         CONSEC_WINS(new IntStat()), // ranked games only
         CONSEC_LOSSES(new IntStat()), // ranked games only
-        CONSEC_KILLS(new IntStat()), // ranked games only
+        CONSEC_KILLS(new IntStat()), // ranked games and player units only
         LATE_NIGHTS(new IntStat(), true, true),
         TUTORIALS_COMPLETED(new ByteStringSetStat(), true, true),
 

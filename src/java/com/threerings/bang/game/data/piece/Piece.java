@@ -141,7 +141,8 @@ public abstract class Piece
     }
 
     /**
-     * Called on a piece when it has killed another piece.
+     * Called on a piece when it has killed another player's piece (computer
+     * controlled units like logging robots do not count).
      */
     public void didKill ()
     {
