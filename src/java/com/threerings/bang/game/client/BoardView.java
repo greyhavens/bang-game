@@ -428,6 +428,25 @@ public class BoardView extends BComponent
     }
 
     /**
+     * Sets the color of the tile grid.
+     */
+    public void setGridColor (ColorRGBA color)
+    {
+        _gridColor.set(color);
+        if (_grid != null) {
+            _grid.getBatch(0).getDefaultColor().set(color);
+        }
+    }
+    
+    /**
+     * Retrieves the color of the tile grid.
+     */
+    public ColorRGBA getGridColor ()
+    {
+        return _gridColor;
+    }
+    
+    /**
      * Informs the board that a board element is currently resolving.
      */
     public void addResolving (Object resolver)
@@ -1031,6 +1050,7 @@ public class BoardView extends BComponent
     {
         if (_grid == null) {
             _grid = new GridNode(_board, _tnode);
+            _grid.getBatch(0).setDefaultColor(_gridColor);
         }
         _grid.updateVertices();
     }
@@ -2068,6 +2088,9 @@ public class BoardView extends BComponent
     /** The grid indicating where the tile boundaries lie. */
     protected GridNode _grid;
 
+    /** The color of the tile grid. */
+    protected ColorRGBA _gridColor = new ColorRGBA(0.5f, 0.5f, 0.5f, 0.4f);
+    
     /** Used to load all in-game sounds. */
     protected SoundGroup _sounds;
     

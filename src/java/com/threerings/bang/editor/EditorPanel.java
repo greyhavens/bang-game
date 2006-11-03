@@ -122,24 +122,6 @@ public class EditorPanel extends JPanel
         createMenuItem(file, msgs.get("m.menu_quit"), KeyEvent.VK_Q,
                        KeyEvent.VK_Q, EditorController.EXIT);
         
-//         // add a "load" button
-//         JButton load = new JButton(msgs.get("m.load_board"));
-//         load.setActionCommand(EditorController.LOAD_BOARD);
-//         load.addActionListener(ctrl);
-//         sidePanel.add(load, VGroupLayout.FIXED);
-
-//         // add a "save" button
-//         JButton save = new JButton(msgs.get("m.save_board"));
-//         save.setActionCommand(EditorController.SAVE_BOARD);
-//         save.addActionListener(ctrl);
-//         sidePanel.add(save, VGroupLayout.FIXED);
-
-//         // add a "back" button
-//         JButton back = new JButton(msgs.get("m.back_to_lobby"));
-//         back.setActionCommand(EditorController.BACK_TO_LOBBY);
-//         back.addActionListener(ctrl);
-//         sidePanel.add(back, VGroupLayout.FIXED);
-
         JMenu edit = new JMenu(msgs.get("m.menu_edit"));
         edit.setMnemonic(KeyEvent.VK_E);
         menubar.add(edit);
@@ -186,6 +168,10 @@ public class EditorPanel extends JPanel
         createCheckBoxMenuItem(view, msgs.get("m.menu_markers"),
             KeyEvent.VK_M, KeyEvent.VK_M, EditorController.TOGGLE_MARKERS,
             true);
+        
+        view.addSeparator();
+        createMenuItem(view, msgs.get("m.menu_grid_color"), -1, KeyEvent.VK_C,
+            EditorController.CHANGE_GRID_COLOR);
         
         view.addSeparator();
         recenter = createMenuItem(view, msgs.get("m.menu_recenter_camera"),

@@ -27,7 +27,6 @@ public class GridNode extends Line
         _tnode = tnode;
         _board = board;
 
-        setDefaultColor(new ColorRGBA(0.5f, 0.5f, 0.5f, 0.4f));
         setLightCombineMode(LightState.OFF);
         setRenderState(RenderUtil.blendAlpha);
         setRenderState(RenderUtil.overlayZBuf);
