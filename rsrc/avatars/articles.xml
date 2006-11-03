@@ -189,6 +189,12 @@
     <component cclass="male/clothing_front" name="storm_caller"/>
   </article>
 
+  <article name="male_medallion_hunter" townId="indian_post"
+           slot="clothing" scrip="1500" coins="1" qualifier="bigshot">
+    <component cclass="male/clothing_back" name="medallion_hunter"/>
+  </article>
+
+
 
   <!-- male familiars: frontier town -->
 
@@ -415,6 +421,14 @@
     <component cclass="male/hat" name="tlingit_headress"/>
     <component cclass="male/hat_back" name="tlingit_headress"/>
   </article>
+
+ <article name="male_head_wrap" townId="indian_post"
+           slot="hat" scrip="1000" coins="1"
+           colors="clothes_p">
+    <component cclass="male/hat" name="head_wrap"/>
+    <component cclass="male/hat_back" name="head_wrap"/>
+  </article>
+
 
 
   <!-- male jewelry: frontier town -->
