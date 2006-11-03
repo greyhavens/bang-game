@@ -1,0 +1,47 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="itp_bonus_test" board="Hard Luck Rock" players="2">
+  <show_view name="player_status"/>
+  <show_view name="unit_status"/>
+
+  <add_piece what="unit" id="1000" type="indian_post/dreamcatcher"
+     location="21,14" owner="0"/>
+  <add_piece what="unit" id="1001" type="indian_post/buffalo_rider"
+     location="21,15" owner="0"/>
+  <add_piece what="unit" id="1002" type="indian_post/dogsoldier"
+     location="21,16" owner="0"/>
+  <add_piece what="unit" id="1003" type="indian_post/thunderbird"
+     location="21,17" owner="0"/>
+
+  <add_piece what="bonus" type="indian_post/fetish_bear" location="22,14"/>
+  <add_piece what="bonus" type="indian_post/fetish_fox" location="22,15"/>
+  <add_piece what="bonus" type="indian_post/fetish_frog" location="22,16"/>
+  <add_piece what="bonus" type="indian_post/fetish_turtle" location="22,17"/>
+
+  <add_piece what="bonus" type="indian_post/firestarter" location="23,14"/>
+  <add_piece what="bonus" type="indian_post/forgiven" location="23,15"/>
+  <add_piece what="bonus" type="indian_post/snare" location="23,16"/>
+  <add_piece what="bonus" type="indian_post/spirit_walk" location="23,17"/>
+
+  <add_piece what="bonus" type="indian_post/talisman" location="24,14"/>
+  <add_piece what="bonus" type="indian_post/trap" location="24,15"/>
+  <add_piece what="bonus" type="indian_post/totem_small" location="24,16"/>
+  <add_piece what="bonus" type="indian_post/totem_medium" location="24,17"/>
+  <add_piece what="bonus" type="indian_post/totem_large" location="24,18"/>
+  <add_piece what="bonus" type="indian_post/totem_crown" location="24,19"/>
+
+  <add_piece what="unit" id="2001" type="indian_post/stormcaller"
+     location="25,14" owner="1"/>
+  <add_piece what="unit" id="2002" type="indian_post/tricksterraven"
+     location="25,15" owner="1"/>
+  <add_piece what="unit" id="2003" type="indian_post/revolutionary"
+     location="25,16" owner="1"/>
+  <add_piece what="unit" id="2004" type="indian_post/dreamcatcher"
+     location="25,17" owner="1"/>
+
+  <text message="start_test"/>
+  <wait event="text_clicked" allowAttack="true"/>
+  
+  <text message="end_test"/>
+  <wait event="text_clicked"/>
+</tutorial>
