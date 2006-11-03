@@ -168,7 +168,9 @@ public class PieceSprite extends Sprite
         createGeometry();
 
         // create any sounds associated with this sprite
-        createSounds(sounds);
+        if (sounds != null) {
+            createSounds(sounds);
+        }
     }
 
     /**
