@@ -10,14 +10,24 @@ $form.option("type", "$type.code()", "$type", "1")
 $form.submit("Go")
 </form>
 
-<ul>
-</ul>
-
-<p> Stats!:
-<ul>
-#foreach ($stat in $stats)
-<li>$stat</li>
+#if ($stats.size() > 0)
+#if ($pctiles)
+<p> <u>Percentiles:</u>
+<table style="border-collapse: collapse" cellpadding=4 border=1><tr>
+#foreach ($pctile in $pctiles)
+<td>$pctile.left</td>
 #end
-</ul>
+</tr><tr>
+#foreach ($pctile in $pctiles)
+<td>$pctile.right</td>
+#end
+</tr></table>
+#end
+
+<p> <u>Raw data:</u><br/>
+#foreach ($stat in $stats)
+$stat.handle ($stat.accountName): $stat<br/>
+#end
+#end
 
 #import("/footer.incl")

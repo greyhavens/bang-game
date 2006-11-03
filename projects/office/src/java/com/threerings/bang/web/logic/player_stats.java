@@ -7,11 +7,15 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 
 import com.samskivert.servlet.util.ParameterUtil;
-import com.samskivert.util.Tuple;
+import com.samskivert.util.ComparableArrayList;
+import com.samskivert.util.IntTuple;
 import com.samskivert.velocity.InvocationContext;
+
+import com.threerings.parlor.rating.util.Percentiler;
 
 import com.threerings.user.OOOUser;
 
+import com.threerings.bang.data.IntStat;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.server.persist.StatRepository;
 
@@ -33,17 +37,62 @@ public class player_stats extends AdminLogic
         Stat.Type type = Stat.getType(
             ParameterUtil.getIntParameter(
                 ctx.getRequest(), "type", 0, "error.invalid_type"));
-        if (type != null) {
-            final ArrayList<Tuple<Integer,String>> stats =
-                new ArrayList<Tuple<Integer,String>>();
-            StatRepository.Processor proc = new StatRepository.Processor() {
-                public void process (int playerId, Stat stat) {
-                    stats.add(new Tuple<Integer,String>(
-                                  playerId, stat.valueToString()));
+        if (type == null) {
+            return;
+        }
+
+        final ComparableArrayList<StatRecord> stats =
+            new ComparableArrayList<StatRecord>();
+        final Percentiler tiler = new Percentiler();
+        StatRepository.Processor proc = new StatRepository.Processor() {
+            public void process (int playerId, String accountName,
+                                 String handle, Stat stat) {
+                StatRecord record = new StatRecord();
+                record.playerId = playerId;
+                record.accountName = accountName;
+                record.handle = handle;
+                if (stat instanceof IntStat) {
+                    record.intValue = ((IntStat)stat).getValue();
+                    tiler.recordValue(record.intValue, false);
+                } else {
+                    record.stringValue = stat.valueToString();
                 }
-            };
-            app.getStatRepository().processStats(proc, type);
-            ctx.put("stats", stats);
+                stats.insertSorted(record);
+            }
+        };
+        app.getStatRepository().processStats(proc, type);
+        ctx.put("stats", stats);
+
+        tiler.recomputePercentiles();
+        if (tiler.getMaxScore() > 1) {
+            ArrayList<IntTuple> pctiles = new ArrayList<IntTuple>();
+            for (int pctile = 0; pctile <= 100; pctile += 10) {
+                pctiles.add(new IntTuple(pctile,
+                                         (int)tiler.getRequiredScore(pctile)));
+            }
+            ctx.put("pctiles", pctiles);
+        }
+    }
+
+    protected static class StatRecord implements Comparable<StatRecord>
+    {
+        public int playerId;
+        public String accountName;
+        public String handle;
+        public int intValue;
+        public String stringValue;
+
+        public String toString () {
+            return (stringValue == null) ?
+                String.valueOf(intValue) : stringValue;
+        }
+
+        public int compareTo (StatRecord other) {
+            if (stringValue == null) {
+                return other.intValue - intValue;
+            } else {
+                return stringValue.compareTo(other.stringValue);
+            }
         }
     }
 }
