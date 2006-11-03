@@ -126,20 +126,20 @@ public class CattleRustlingLogic extends AILogic
         Piece[] pieces, Unit unit, PointSet moves, Unit bshot, Point herd,
         Cow ccow, Piece ctarget, Piece tporter)
     {
-        if (bshot != null && moveUnit(pieces, unit, moves, 1, bshot.x,
-            bshot.y)) {
+        if (bshot != null && moveUnit(pieces, unit, moves, bshot.x,
+            bshot.y, 1)) {
             return;
         } else if (herd != null && (herd.x != unit.x || herd.y != unit.x) &&
-            moveUnit(pieces, unit, moves, 1, herd.x, herd.y)) {
+            moveUnit(pieces, unit, moves, herd.x, herd.y, 1)) {
             return;
         } else if (ccow != null &&
-            moveUnit(pieces, unit, moves, 1, ccow.x, ccow.y)) {
+            moveUnit(pieces, unit, moves, ccow.x, ccow.y, 1)) {
             return;
         } else if (ctarget != null &&
-            moveUnit(pieces, unit, moves, -1, ctarget.x, ctarget.y)) {
+            moveUnit(pieces, unit, moves, ctarget.x, ctarget.y, -1)) {
             return;
         } else if (tporter != null &&
-            moveUnit(pieces, unit, moves, 0, tporter.x, tporter.y)) {
+            moveUnit(pieces, unit, moves, tporter.x, tporter.y, 0)) {
             return;
         }
     }
