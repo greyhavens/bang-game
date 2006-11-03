@@ -19,7 +19,9 @@ import com.threerings.bang.data.StatSet;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ClearPieceEffect;
+import com.threerings.bang.game.data.effect.PuntEffect;
 import com.threerings.bang.game.data.effect.TreeBedEffect;
+import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
@@ -103,13 +105,18 @@ public class TreeBedDelegate extends ScenarioDelegate
     }
 
     /**
-     * Adds a tree (back) to the board, moving any unit occupying its space.
+     * Adds a tree (back) to the board, moving any unit or bonus occupying its
+     * space.
      */
     protected void addTree (BangObject bangobj, TreeBed tree)
     {
-        if (!bangobj.board.isOccupiable(tree.x, tree.y)) {
+        if (!bangobj.board.isOccupiable(tree.x, tree.y) ||
+            bangobj.board.containsBonus(tree.x, tree.y)) {
             for (Piece piece : bangobj.pieces) {
-                if (piece instanceof Unit && piece.intersects(tree)) {
+                if (!piece.intersects(tree)) {
+                    continue;
+                }
+                if (piece instanceof Unit) {
                     Point spot = bangobj.board.getOccupiableSpot(
                         tree.x, tree.y, 3);
                     if (spot != null) {
@@ -119,6 +126,12 @@ public class TreeBedDelegate extends ScenarioDelegate
                     } else {
                         log.warning("Unable to find spot to move unit " +
                             "[unit=" + piece + "].");
+                    }
+                } else if (piece instanceof Bonus) {
+                    PuntEffect effect = PuntEffect.puntBonus(
+                        bangobj, (Bonus)piece, -1);
+                    if (effect != null) {
+                        _bangmgr.deployEffect(-1, effect);
                     }
                 }
             }
