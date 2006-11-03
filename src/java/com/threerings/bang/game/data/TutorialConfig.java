@@ -94,6 +94,7 @@ public class TutorialConfig
     {
         public String what;
         public int id;
+        public boolean arrow = true;
 
         private static final long serialVersionUID = 1;
     }

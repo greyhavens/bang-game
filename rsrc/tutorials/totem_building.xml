@@ -83,7 +83,7 @@
   <text message="attacking2" step="3"/>
   <wait event="text_clicked"/>
 
-  <center_on what="piece" id="1000"/>
+  <center_on what="piece" id="1000" arrow="false"/>
   <text message="attack_totem" step="3"/>
   <wait event="effect:bang" allowAttack="true"/>
 

@@ -16,6 +16,7 @@
 
   <!-- cue the trees -->
   <scenario_action type="reset_trees"/>
+  <wait event="piece_added"/>
   <center_on what="special" id="1919"/>
   <text message="tree_bed" step="2"/>
   <wait event="text_clicked"/>
@@ -74,7 +75,7 @@
              location="21,20" owner="-1"/>
   <center_on what="piece" id="1010"/>
   <text message="fetishes4" step="6"/>
-  <wait event="effect:picked_up_bonus"/>
+  <wait event="effect:frontier_town/bonus/pickedup"/>
 
   <text message="fetishes5" step="6"/>
   <wait event="text_clicked"/>

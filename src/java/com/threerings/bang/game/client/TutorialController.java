@@ -217,7 +217,9 @@ public class TutorialController
                 }
             }
             if (p != null) {
-                _view.view.activatePointer(p);
+                if (((TutorialConfig.CenterOn)action).arrow) {
+                    _view.view.activatePointer(p);
+                }
                 _view.view.centerCameraOnPiece(p);
             } else {
                 log.warning("Requested to center camera on unknown entity " +

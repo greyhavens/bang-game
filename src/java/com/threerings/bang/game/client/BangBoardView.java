@@ -757,7 +757,7 @@ public class BangBoardView extends BoardView
 
         // create our pointing arrow
         _pointer = new Node("pointer");
-        _ctx.loadModel("bonuses", "frontier_town/bonus_point",
+        _ctx.loadModel("extras", "frontier_town/arrow",
                        new ResultAttacher<Model>(_pointer));
         _pointer.addController(new Spinner(_pointer, FastMath.PI));
         _pointer.addController(new Bouncer(_pointer, TILE_SIZE, TILE_SIZE/4));
