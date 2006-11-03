@@ -26,7 +26,7 @@ $form.submit("Go")
 
 <p> <u>Raw data:</u><br/>
 #foreach ($stat in $stats)
-$stat.handle ($stat.accountName): $stat<br/>
+$stat.handle (<a href="player.xhtml?who=$stat.accountName">$stat.accountName</a>): $stat<br/>
 #end
 #end
 

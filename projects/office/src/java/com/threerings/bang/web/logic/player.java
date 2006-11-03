@@ -3,8 +3,11 @@
 
 package com.threerings.bang.web.logic;
 
+import java.util.Comparator;
+
 import com.samskivert.servlet.util.FriendlyException;
 import com.samskivert.servlet.util.ParameterUtil;
+import com.samskivert.util.SortableArrayList;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
 import com.samskivert.velocity.InvocationContext;
@@ -45,8 +48,16 @@ public class player extends AdminLogic
         PlayerRecord player = app.getPlayerRepository().loadPlayer(who);
         if (player != null) {
             ctx.put("player", player);
-            ctx.put("stats", app.getStatRepository().loadStats(
-                        player.playerId));
+
+            // load up and sort their stats
+            SortableArrayList<Stat> stats = new SortableArrayList<Stat>();
+            stats.addAll(app.getStatRepository().loadStats(player.playerId));
+            stats.sort(new Comparator<Stat>() {
+                public int compare (Stat one, Stat two) {
+                    return one.getKey().compareTo(two.getKey());
+                }
+            });
+            ctx.put("stats", stats);
         }
     }
 }

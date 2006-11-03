@@ -31,7 +31,14 @@ public class player_stats extends AdminLogic
     public void invoke (OfficeApp app, InvocationContext ctx, OOOUser user)
         throws Exception
     {
-        ctx.put("types", EnumSet.allOf(Stat.Type.class));
+        ComparableArrayList<Stat.Type> types =
+            new ComparableArrayList<Stat.Type>();
+        for (Stat.Type type : Stat.Type.values()) {
+            if (type.isPersistent()) {
+                types.insertSorted(type);
+            }
+        }
+        ctx.put("types", types);
 
         // if they specified a type, look it up
         Stat.Type type = Stat.getType(

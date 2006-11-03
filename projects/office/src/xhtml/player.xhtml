@@ -78,12 +78,11 @@ $i18n.xlate("player.no_player_record")
 
 #if ($stats)
 <table cellpadding="10">
-<tr><th>$i18n.xlate("player.stats_header")</th>
-<tr><td style="border: 1px solid" valign="top">
+<tr><th colspan="2">$i18n.xlate("player.stats_header")</th>
 #foreach ($stat in $stats)
-$stat<br/>
+<tr><td style="border: 1px solid" valign="top">$stat.getKey()</td>
+    <td style="border: 1px solid" valign="top">$stat.valueToString()</td></tr>
 #end
-</td></tr>
 </table>
 #end
 
