@@ -116,6 +116,12 @@ public class BonusSprite extends ActiveSprite
         }
     }
 
+    @Override // documentation inherited
+    protected boolean animatedMove ()
+    {
+        return false;
+    }
+
     /** The spinner that rotates the bonus. */
     protected Spinner _spinner;
 

@@ -430,7 +430,7 @@ public class PieceSprite extends Sprite
 //             log.info("Moving " + _piece + " from +" +
 //                      _piece.x + "+" + _piece.y + " to +" + _px + "+" + _py);
             moveSprite(board);
-            if (!isMoving()) {
+            if (!isMoving() && animatedMove()) {
                 log.warning("Moved but am not moving?! " + _piece);
             }
         }
@@ -669,6 +669,14 @@ public class PieceSprite extends Sprite
     protected void moveSprite (BangBoard board)
     {
         setLocation(board, _piece.x, _piece.y);
+    }
+
+    /**
+     * Returns true if this sprite should have animated movement.
+     */
+    protected boolean animatedMove ()
+    {
+        return true;
     }
 
     /** Converts tile coordinates plus elevation into (3D) world
