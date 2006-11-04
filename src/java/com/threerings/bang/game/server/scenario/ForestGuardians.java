@@ -104,17 +104,6 @@ public class ForestGuardians extends Scenario
     {
         super.roundWillStart(bangobj, starts, purchases);
 
-        // place the four fetishes
-        Piece[] pieces = bangobj.getPieceArray();
-        placeBonus(bangobj, pieces,
-            Bonus.createBonus("indian_post/fetish_bear"), _fetishSpots);
-        placeBonus(bangobj, pieces,
-            Bonus.createBonus("indian_post/fetish_fox"), _fetishSpots);
-        placeBonus(bangobj, pieces,
-            Bonus.createBonus("indian_post/fetish_frog"), _fetishSpots);
-        placeBonus(bangobj, pieces,
-            Bonus.createBonus("indian_post/fetish_turtle"), _fetishSpots);
-
         // set the initial difficulty level based on the average player rating
         int nplayers = _bangmgr.getPlayerSlots(), trating = 0;
         for (int ii = 0; ii < nplayers; ii++) {
@@ -126,8 +115,19 @@ public class ForestGuardians extends Scenario
         _difficulty = (int)Math.max(0,
             Math.round(rratio * MAX_INITIAL_DIFFICULTY));
 
-        // remove all but a random subset of the tree beds
+        // add a random subset of the tree beds
         _treedel.resetTrees(bangobj, _difficulty);
+
+        // place the four fetishes
+        Piece[] pieces = bangobj.getPieceArray();
+        placeBonus(bangobj, pieces,
+            Bonus.createBonus("indian_post/fetish_bear"), _fetishSpots);
+        placeBonus(bangobj, pieces,
+            Bonus.createBonus("indian_post/fetish_fox"), _fetishSpots);
+        placeBonus(bangobj, pieces,
+            Bonus.createBonus("indian_post/fetish_frog"), _fetishSpots);
+        placeBonus(bangobj, pieces,
+            Bonus.createBonus("indian_post/fetish_turtle"), _fetishSpots);
 
         // start the first wave on the second tick
         _nextWaveTick = NEXT_WAVE_TICKS;

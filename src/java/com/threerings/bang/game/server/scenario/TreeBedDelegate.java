@@ -147,7 +147,7 @@ public class TreeBedDelegate extends ScenarioDelegate
     protected ArrayList<TreeBed> _ctrees = new ArrayList<TreeBed>();
 
     /** The maximum number of trees on the board. */
-    protected static final int MAX_TREES = 8;
+    protected static final int MAX_TREES = 6;
 
     /** The base number of tree beds to create per unit. */
     protected static final float BASE_TREE_RATIO = 1 / 3f;
