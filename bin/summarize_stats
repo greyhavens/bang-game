@@ -163,8 +163,11 @@ my $newmins = $newtime/60;
 print "Username    Sess.  Minutes /sess  Rounds  Earnings /round\n";
 printf("all %6d %6d  %7.0f    %2.0f  %6d  %8d\n",
        $ucount, $totsess, $totmins, $totmins/$totsess, $totrounds, $totearn);
-printf("noobs %4d %6d  %7.0f    %2.0f  %6d  %8d\n",
-       $ncount, $newsess, $newmins, $newmins/$newsess, $newrounds, $newearn);
+if ($newsess > 0) {
+    printf("noobs %4d %6d  %7.0f    %2.0f  %6d  %8d\n",
+           $ncount, $newsess, $newmins, $newmins/$newsess,
+           $newrounds, $newearn);
+}
 printf("all  (avg)    %2.1f  %7.0f           %2.1f  %8d   %3.0f\n",
        $totsess/$ucount, $totmins/$ucount, $totrounds/$ucount,
        $totearn/$ucount, $totearn/$totrounds);
