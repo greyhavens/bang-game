@@ -181,32 +181,38 @@ public class TerrainNode extends Node
         /** Whether or not the user *can* hover over it. */
         public boolean hoverable;
 
-        protected Highlight (int x, int y, boolean overPieces, boolean flatten)
+        /** A specified height for the highlight. */
+        public int minElev = Integer.MIN_VALUE;
+
+        protected Highlight (
+                int x, int y, boolean overPieces, boolean flatten, int minElev)
         {
             this((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE, TILE_SIZE,
-                TILE_SIZE, true, overPieces, flatten);
+                TILE_SIZE, true, overPieces, flatten, minElev);
         }
 
         protected Highlight (
                 int x, int y, boolean overPieces, boolean flatten, byte layer)
         {
             this((x + 0.5f) * TILE_SIZE, (y + 0.5f) * TILE_SIZE, TILE_SIZE,
-                TILE_SIZE, true, overPieces, flatten, layer);
+                TILE_SIZE, true, overPieces, flatten, layer, Integer.MIN_VALUE);
         }
 
         protected Highlight (float x, float y, float width, float height)
         {
-            this(x, y, width, height, false, false, false);
+            this(x, y, width, height, false, false, false, Integer.MIN_VALUE);
         }
 
         protected Highlight (float x, float y, float width, float height,
-            boolean onTile, boolean overPieces, boolean flatten)
+            boolean onTile, boolean overPieces, boolean flatten, int minElev)
         {
-            this(x, y, width, height, onTile, overPieces, flatten, (byte)2);
+            this(x, y, width, height, onTile, 
+                    overPieces, flatten, (byte)2, minElev);
         }
         
-        protected Highlight (float x, float y, float width, float height,
-            boolean onTile, boolean overPieces, boolean flatten, byte layer)
+        protected Highlight (
+                float x, float y, float width, float height, boolean onTile, 
+                boolean overPieces, boolean flatten, byte layer, int minElev)
         {
             super("highlight");
             this.x = x;
@@ -214,6 +220,7 @@ public class TerrainNode extends Node
             this.layer = layer;
             this.overPieces = overPieces;
             this.flatten = flatten;
+            this.minElev = minElev;
             _width = width;
             _height = height;
             _onTile = onTile;
@@ -354,8 +361,12 @@ public class TerrainNode extends Node
                     !_board.isTraversable(tx, ty));
             int belev = _board.getElevation(tx, ty);
             if (flat) {
+                if (minElev > Integer.MIN_VALUE) {
+                    belev = minElev;
+                }
                 int maxelev = _board.getMaxHeightfieldElevation(tx, ty);
-                height = (float)(Math.max(belev, maxelev) * _elevationScale);
+                height = (float)(Math.max(minElev, Math.max(belev, maxelev)) * 
+                        _elevationScale);
 
             } else if (_onTile && overPieces) {
                 int helev = _board.getHeightfieldElevation(tx, ty);
@@ -807,9 +818,15 @@ public class TerrainNode extends Node
     public Highlight createHighlight (
             int x, int y, boolean overPieces, boolean flatten)
     {
+        return createHighlight(x, y, overPieces, flatten, Integer.MIN_VALUE);
+    }
+
+    public Highlight createHighlight (
+            int x, int y, boolean overPieces, boolean flatten, int minElev)
+    {
         return new Highlight(
                 x, y, overPieces && Config.floatHighlights, 
-                flatten && Config.flattenHighlights);
+                flatten && Config.flattenHighlights, minElev);
     }
 
     /**
