@@ -171,9 +171,11 @@ if ($newsess > 0) {
 printf("all  (avg)    %2.1f  %7.0f           %2.1f  %8d   %3.0f\n",
        $totsess/$ucount, $totmins/$ucount, $totrounds/$ucount,
        $totearn/$ucount, $totearn/$totrounds);
-printf("noob (avg)    %2.1f  %7.0f           %2.1f  %8d   %3.0f\n",
-       $newsess/$ucount, $newmins/$ucount, $newrounds/$ucount,
-       $newearn/$ucount, $newearn/$newrounds);
+if ($newsess > 0) {
+    printf("noob (avg)    %2.1f  %7.0f           %2.1f  %8d   %3.0f\n",
+           $newsess/$ucount, $newmins/$ucount, $newrounds/$ucount,
+           $newearn/$ucount, $newearn/$newrounds);
+}
 print "\n";
 
 # top ten by earnings
