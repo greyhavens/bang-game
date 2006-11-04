@@ -20,6 +20,8 @@ import org.lwjgl.opengl.glu.GLU;
 import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 import com.jmex.bui.BWindow;
+import com.jmex.bui.event.BEvent;
+import com.jmex.bui.event.EventListener;
 
 import com.samskivert.servlet.user.Password;
 import com.samskivert.util.Config;
@@ -46,6 +48,8 @@ import com.threerings.presents.client.ClientObserver;
 
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.MuteDirector;
+import com.threerings.crowd.chat.data.ChatCodes;
+import com.threerings.crowd.client.BodyService;
 import com.threerings.crowd.client.PlaceView;
 
 import com.threerings.bang.avatar.client.CreateAvatarView;
@@ -295,6 +299,9 @@ public class BangClient extends BasicClient
             }
         };
         _ctx.getInterface().attachChild(fade);
+
+        // start our idle tracker
+        new IdleTracker().start();
     }
 
     /**
@@ -1041,6 +1048,56 @@ public class BangClient extends BasicClient
         return true;
     }
 
+    /** Tracks user idleness and lets the server know when we're idle and
+     * eventually logs us off. */
+    protected class IdleTracker extends Interval
+        implements EventListener
+    {
+        public IdleTracker () {
+            super(_ctx.getClient().getRunQueue());
+        }
+
+        public void start () {
+            _ctx.getRootNode().addGlobalEventListener(this);
+            _lastEventStamp = _ctx.getRootNode().getTickStamp();
+            schedule(10000L*, true);
+        }
+
+        public void expired () {
+            long idle = _ctx.getRootNode().getTickStamp() - _lastEventStamp;
+            if (!_isIdle && idle > ChatCodes.DEFAULT_IDLE_TIME) {
+                updateIdle(true);
+            }
+            if (idle > LOGOFF_DELAY) {
+                if (_ctx.getClient().isLoggedOn()) {
+                    _ctx.getApp().stop();
+                }
+            }
+        }
+
+        public void eventDispatched (BEvent event) {
+            if (event.getWhen() != 0L) {
+                _lastEventStamp = event.getWhen();
+            }
+            if (_isIdle) {
+                updateIdle(false);
+            }
+        }
+
+        protected void updateIdle (boolean isIdle) {
+            _isIdle = isIdle;
+            log.info("Setting idle " + isIdle + ".");
+            if (_ctx.getClient().isLoggedOn()) {
+                BodyService bsvc = (BodyService)
+                    _ctx.getClient().requireService(BodyService.class);
+                bsvc.setIdle(_ctx.getClient(), isIdle);
+            }
+        }
+
+        protected boolean _isIdle;
+        protected long _lastEventStamp;
+    }
+
     /** The context implementation. This provides access to all of the
      * objects and services that are needed by the operating client. */
     protected class BangContextImpl extends BasicContextImpl
@@ -1140,4 +1197,7 @@ public class BangClient extends BasicClient
     protected OggFileStream _mstream;
     protected boolean _playedIntro;
     protected boolean _viewTransition = false;
+
+    /** The time in milliseconds after which we log off an idle user. */
+    protected static final long LOGOFF_DELAY = 8L * 60L * 1000L;
 }
