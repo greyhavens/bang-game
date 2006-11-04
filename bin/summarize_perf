@@ -82,7 +82,7 @@ for ($ii = 0; $ii < @ufps; $ii++) {
     print DAT "$ii $fps\n";
 }
 close(DAT);
-open(PIPE, "|gnuplot -persist") or die "Can't open pipe to gnuplot: $!\n";
+open(PIPE, "|gnuplot") or die "Can't open pipe to gnuplot: $!\n";
 print PIPE "set grid\n";
 print PIPE "set xlabel 'FPS'\n";
 print PIPE "set ylabel 'Users'\n";
