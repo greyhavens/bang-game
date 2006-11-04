@@ -1060,7 +1060,7 @@ public class BangClient extends BasicClient
         public void start () {
             _ctx.getRootNode().addGlobalEventListener(this);
             _lastEventStamp = _ctx.getRootNode().getTickStamp();
-            schedule(10000L*, true);
+            schedule(10000L, true);
         }
 
         public void expired () {
@@ -1070,6 +1070,7 @@ public class BangClient extends BasicClient
             }
             if (idle > LOGOFF_DELAY) {
                 if (_ctx.getClient().isLoggedOn()) {
+                    log.info("Client idled out, exiting.");
                     _ctx.getApp().stop();
                 }
             }
