@@ -7,27 +7,27 @@
 <html>
 <head>
 <title>$i18n.xlate("header.combined_title", $i18n.xlate("app_name"), $title)</title>
-<link rel="stylesheet" type="text/css" href="/style.css">
-<link rel="SHORTCUT ICON" href="/favicon.ico">
+<link rel="stylesheet" type="text/css" href="http://www.banghowdy.com/style.css">
+<link rel="SHORTCUT ICON" href="http://www.banghowdy.com/favicon.ico">
 </head>
 
-<body background="/images/parchment.jpg">
+<body background="http://www.banghowdy.com/images/parchment.jpg">
   <map name="headmap">
-    <area shape="rect" coords="0,0,782,130" href="/" alt="Welcome">
-    <area shape="rect" coords="125,135,165,155" href="/faq.html" alt="FAQ">
+    <area shape="rect" coords="0,0,782,130" href="http://www.banghowdy.com/" alt="Welcome">
+    <area shape="rect" coords="125,135,165,155" href="http://www.banghowdy.com/faq.html" alt="FAQ">
     <area shape="rect" coords="210,135,310,155"
-          href="/screenshots/" alt="Screenshots">
+          href="http://www.banghowdy.com/screenshots/" alt="Screenshots">
     <area shape="rect" coords="360,135,420,155"
           href="http://forums.banghowdy.com/townhall/" alt="Forums">
-    <area shape="rect" coords="470,135,550,155" href="/download.html"
+    <area shape="rect" coords="470,135,550,155" href="http://www.banghowdy.com/download.html"
           alt="Download!">
-    <area shape="rect" coords="600,135,642,155" href="/news/" alt="Blog">
+    <area shape="rect" coords="600,135,642,155" href="http://www.banghowdy.com/news/" alt="Blog">
   </map>
   <div align="center">
   <table>
     <tr>
       <td>
-        <img src="/images/beta/header.jpg" usemap="#headmap" border=0/>
+        <img src="http://www.banghowdy.com/images/beta/header.jpg" usemap="#headmap" border=0/>
       </td>
     </tr>
   </table>
