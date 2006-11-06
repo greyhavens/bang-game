@@ -181,11 +181,15 @@ public class OOOAuthenticator extends Authenticator
 
         // check to see whether this account has been banned or if this is
         // a first time user logging in from a tainted machine
-        int vc = _authrep.validateUser(user, creds.ident, prec == null);
+        int vc = _authrep.validateUser(
+            OOOUser.BANGHOWDY_SITE_ID, user, creds.ident, prec == null);
         switch (vc) {
             // various error conditions
             case OOOUserRepository.ACCOUNT_BANNED:
                rdata.code = BANNED;
+               return;
+            case OOOUserRepository.DEADBEAT:
+               rdata.code = DEADBEAT;
                return;
             case OOOUserRepository.NEW_ACCOUNT_TAINTED:
                rdata.code = MACHINE_TAINTED;
