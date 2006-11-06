@@ -32,6 +32,7 @@ doc_base_url = http://www.banghowdy.com/
 bug_submit_url = http://www.banghowdy.com/hemiptera/submit.xhtml
 new_account_url = http://www.banghowdy.com/register/register.wm
 server_status_url = http://www.banghowdy.com/status.html
+billing_url = https://billing.banghowdy.com/billing/checkpw.wm?susername=USERNAME&spassword=PASSWORD&from=select_type.wm
 
 #
 # Specifies the locale for this deployment. This is used to ensure that the

@@ -16,6 +16,7 @@ import com.threerings.coin.data.CoinExOfferInfo;
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
 import com.threerings.bang.client.WalletLabel;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.bank.data.BankCodes;
@@ -40,11 +41,12 @@ public class BankView extends ShopView
         add(new BLabel(_msgs.get("m.name_" + townId), "shopkeep_name_label"),
             new Rectangle(12, 513, 155, 25));
 
-        _status = new BLabel("", "shop_status");
+        _status = new StatusLabel(ctx);
+        _status.setStyleClass("shop_status");
         add(_status, new Rectangle(265, 10, 500, 40));
         _status.setText(getShopTip());
 
-        add(new BuyCoinsView(ctx), new Rectangle(225, 540, 725, 86));
+        add(new BuyCoinsView(ctx, _status), new Rectangle(225, 540, 725, 86));
 
         add(_qsell = new QuickTransact(ctx, _status, false),
             new Rectangle(225, 463, 320, 30));
@@ -90,7 +92,7 @@ public class BankView extends ShopView
     {
     }
 
-    protected BLabel _status;
+    protected StatusLabel _status;
     protected QuickTransact _qbuy, _qsell;
     protected FullTransact _fbuy, _fsell;
 }

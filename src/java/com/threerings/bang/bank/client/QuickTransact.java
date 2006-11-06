@@ -19,6 +19,7 @@ import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.util.BangContext;
 
@@ -32,7 +33,7 @@ import com.threerings.bang.bank.data.BankObject;
 public class QuickTransact extends BContainer
     implements ActionListener, BankCodes
 {
-    public QuickTransact (BangContext ctx, BLabel status, boolean buying)
+    public QuickTransact (BangContext ctx, StatusLabel status, boolean buying)
     {
         super(GroupLayout.makeHStretch());
         _ctx = ctx;
@@ -78,10 +79,10 @@ public class QuickTransact extends BContainer
         BankService.ResultListener rl = new BankService.ResultListener() {
             public void requestProcessed (Object result) {
                 _coins.setText("");
-                _status.setText(_msgs.get("m.trans_completed"));
+                _status.setStatus(_msgs.get("m.trans_completed"), true);
             }
             public void requestFailed (String reason) {
-                _status.setText(_msgs.xlate(reason));
+                _status.setStatus(_msgs.xlate(reason), true);
             }
         };
         _bankobj.service.postOffer(
@@ -94,7 +95,7 @@ public class QuickTransact extends BContainer
         clearTrade();
 
         if (StringUtil.isBlank(_coins.getText())) {
-            _status.setText("");
+            _status.setStatus("", false);
             return;
         }
 
@@ -108,7 +109,7 @@ public class QuickTransact extends BContainer
             ConsolidatedOffer best = _buying ?
                 _bankobj.getBestSell() : _bankobj.getBestBuy();
             if (best == null) {
-                _status.setText(_msgs.get("m.no_offers"));
+                _status.setStatus(_msgs.get("m.no_offers"), false);
                 return;
             }
 
@@ -116,7 +117,7 @@ public class QuickTransact extends BContainer
             if (_ccount > best.volume) {
                 String msg = MessageBundle.tcompose(
                     "m.exceeds_best_offer", _msgs.get("m.coins", best.volume));
-                _status.setText(_msgs.xlate(msg));
+                _status.setStatus(_msgs.xlate(msg), false);
                 return;
             }
 
@@ -125,15 +126,15 @@ public class QuickTransact extends BContainer
 
             // make sure they have sufficient funds
             if (_buying && _ccount * best.price > _ctx.getUserObject().scrip) {
-                _status.setText(_msgs.get("m.insufficient_scrip"));
+                _status.setStatus(_msgs.get("m.insufficient_scrip"), false);
                 return;
             } else if (!_buying && _ccount > _ctx.getUserObject().coins) {
-                _status.setText(_msgs.get("m.insufficient_coins"));
+                _status.setStatus(_msgs.get("m.insufficient_coins"), false);
                 return;
             }
 
             _trade.setEnabled(true);
-            _status.setText("");
+            _status.setStatus("", false);
 
         } catch (Exception e) {
             // just leave the button disabled as they entered a bogus value
@@ -179,7 +180,7 @@ public class QuickTransact extends BContainer
     protected boolean _buying;
     protected int _ccount, _value;
 
-    protected BLabel _status;
+    protected StatusLabel _status;
     protected BTextField _coins;
     protected BLabel _scrip;
     protected BButton _trade;

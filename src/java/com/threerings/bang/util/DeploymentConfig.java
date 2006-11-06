@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 
+import com.threerings.bang.data.BangCredentials;
 import com.threerings.presents.client.Client;
 
 import static com.threerings.bang.Log.log;
@@ -98,10 +99,33 @@ public class DeploymentConfig
         return getURL("server_status_url");
     }
 
+    /**
+     * Returns the URL for the billing page.
+     */
+    public static URL getBillingURL (BangContext ctx)
+    {
+        return getCredentialedURL(ctx, "billing_url");
+    }
+
     /** Helper function for getting URL properties. */
     protected static URL getURL (String key)
     {
         String url = config.getValue(key, "not_specified");
+        try {
+            return new URL(url);
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to parse " + key + ": " + url, e);
+            return null;
+        }
+    }
+
+    protected static URL getCredentialedURL (BangContext ctx, String key)
+    {
+        BangCredentials creds = (BangCredentials)
+            ctx.getClient().getCredentials();
+        String url = config.getValue(key, "not_specified");
+        url = url.replace("USERNAME", creds.getUsername().toString());
+        url = url.replace("PASSWORD", creds.getPassword().toString());
         try {
             return new URL(url);
         } catch (Exception e) {

@@ -27,6 +27,7 @@ import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.coin.data.CoinExOfferInfo;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.util.BangContext;
@@ -43,7 +44,7 @@ import static com.threerings.bang.Log.log;
 public class FullTransact extends BContainer
     implements ActionListener, BankCodes
 {
-    public FullTransact (BangContext ctx, BLabel status, boolean buying)
+    public FullTransact (BangContext ctx, StatusLabel status, boolean buying)
     {
         super(new AbsoluteLayout());
         _ctx = ctx;
@@ -85,7 +86,7 @@ public class FullTransact extends BContainer
 
         add(new BLabel(_msgs.get("m.your_offers"), "bank_title"),
             new Point(0, 86));
-        _myoffers = new BContainer(new TableLayout(5, 3, 15));
+        _myoffers = new BContainer(new TableLayout(5, 3, 8));
         add(new BScrollPane(_myoffers), new Rectangle(12, 0, 310, 82));
     }
 
@@ -114,22 +115,22 @@ public class FullTransact extends BContainer
 
             // if we don't have sufficient funds, complain and stop
             if (_buying && _ccount * _price > _ctx.getUserObject().scrip) {
-                _status.setText(_msgs.get("m.insufficient_scrip"));
+                _status.setStatus(_msgs.get("m.insufficient_scrip"), true);
                 return;
             } else if (!_buying && _ccount > _ctx.getUserObject().coins) {
-                _status.setText(_msgs.get("m.insufficient_coins"));
+                _status.setStatus(_msgs.get("m.insufficient_coins"), true);
                 return;
             }
 
             BankService.ResultListener cl = new BankService.ResultListener() {
                 public void requestProcessed (Object result) {
-                    _status.setText(_msgs.get("m.offer_posted"));
+                    _status.setStatus(_msgs.get("m.offer_posted"), true);
                     _coins.setText("");
                     _scrip.setText("");
                     notePostedOffer((CoinExOfferInfo)result);
                 }
                 public void requestFailed (String reason) {
-                    _status.setText(_msgs.xlate(reason));
+                    _status.setStatus(_msgs.xlate(reason), true);
                 }
             };
             _bankobj.service.postOffer(
@@ -142,10 +143,10 @@ public class FullTransact extends BContainer
             BankService.ConfirmListener cl = new BankService.ConfirmListener() {
                 public void requestProcessed () {
                     clearPostedOffer(offer);
-                    _status.setText(_msgs.get("m.offer_canceled"));
+                    _status.setStatus(_msgs.get("m.offer_canceled"), true);
                 }
                 public void requestFailed (String reason) {
-                    _status.setText(_msgs.xlate(reason));
+                    _status.setStatus(_msgs.xlate(reason), true);
                 }
             };
             _bankobj.service.cancelOffer(_ctx.getClient(), offer.offerId, cl);
@@ -266,7 +267,7 @@ public class FullTransact extends BContainer
     protected BankObject _bankobj;
     protected boolean _buying;
 
-    protected BLabel _status;
+    protected StatusLabel _status;
     protected BTextField _coins, _scrip;
     protected int _ccount, _price;
     protected BButton _post;
