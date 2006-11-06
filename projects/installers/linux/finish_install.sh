@@ -25,11 +25,11 @@ while [ -z "$AGREED" ]; do
             AGREED=1
             ;;
         no | No | NO)
-            echo "If ye don't like the terms, we can't let ye sail.";
+            echo "Well pardner, if you don't like the terms, ya can't play.";
             exit 1;
             ;;
         *)
-            echo "Ye must type 'yes' or 'no' to answer the question."
+            echo "You must type 'yes' or 'no', pardner."
             ;;
     esac
 done
