@@ -62,10 +62,10 @@ done
 
 # ask them where they want to install the game
 DEFINSTALLDIR=$HOME/@client_ident@
-if [ "@client_ident@" == "client" ]; then
+if [ "@client_ident@" = "client" ]; then
     # make things pretty for the default installation
     DEFINSTALLDIR=$HOME/bang
-elif [ "@client_ident@" == "tclient" ]; then
+elif [ "@client_ident@" = "tclient" ]; then
     # make things pretty for the test installation
     DEFINSTALLDIR=$HOME/bang_test
 fi
