@@ -774,9 +774,8 @@ public class BangBoard extends SimpleStreamableObject
                             getWaterElevation(xx, yy);
                         int oldelev = unsignedToInt(_estate[idx]);
                         if (tileelev > oldelev) {
-                            if (pelev > 0) {
-                                _tstate[idx] = _btstate[idx] = 
-                                    (byte)Math.max(O_BRIDGE, _btstate[idx]);
+                            if (pelev > 0 && _btstate[idx] < 0) {
+                                _tstate[idx] = _btstate[idx] = O_BRIDGE;
                             }
                             _estate[idx] = (byte)tileelev;
                         }

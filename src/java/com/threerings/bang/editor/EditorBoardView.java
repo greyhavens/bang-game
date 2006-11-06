@@ -1002,11 +1002,25 @@ public class EditorBoardView extends BoardView
             1 + y2 - y1);
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
-                if (_showHighlights && !_board.isOccupiable(x, y)) {
+                if (_showHighlights) {
+                    boolean isBridge = _board.isBridge(x, y);
+                    if (_highlights[x][y] != null && 
+                            _highlights[x][y].flatten != isBridge) {
+                        if (_highlights[x][y].getParent() != null) {
+                            _hnode.detachChild(_highlights[x][y]);
+                        }
+                        _highlights[x][y] = null;
+                    }
                     if (_highlights[x][y] == null) {
                         _highlights[x][y] = _tnode.createHighlight(x, y,
-                            false);
+                            isBridge, isBridge);
+                    }
+                    if (!_board.isOccupiable(x, y)) {
                         _highlights[x][y].setDefaultColor(HIGHLIGHT_COLOR);
+                    } else if (_board.isBridge(x, y)) {
+                        _highlights[x][y].setDefaultColor(BRIDGE_COLOR);
+                    } else {
+                        _highlights[x][y].setDefaultColor(MOVE_COLOR);
                     }
                     _highlights[x][y].updateVertices();
                     if (_highlights[x][y].getParent() == null) {
@@ -1322,6 +1336,10 @@ public class EditorBoardView extends BoardView
     /** The color to use for highlights. */
     protected static final ColorRGBA HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0f, 0f, 0.25f);
+    protected static final ColorRGBA MOVE_COLOR =
+        new ColorRGBA(0f, 1f, 0f, 0.25f);
+    protected static final ColorRGBA BRIDGE_COLOR =
+        new ColorRGBA(0f, 0f, 1f, 0.25f);
 
     /** The color to use for crosslights. */
     protected static final ColorRGBA CROSS_COLOR =

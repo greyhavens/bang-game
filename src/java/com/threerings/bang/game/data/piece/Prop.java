@@ -142,6 +142,7 @@ public class Prop extends BigPiece
         scaley = oin.readShort();
         scalez = oin.readShort();
         recomputeScale();
+        recomputeBounds();
         if (isOwnerConfigurable()) {
             owner = oin.readInt();
         }
