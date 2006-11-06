@@ -19,7 +19,7 @@ AGREED=
 while [ -z "$AGREED" ]; do
     echo
     echo "Do you agree to the above license terms? [yes or no] "
-    read REPLY FOO
+    read REPLY IGNORED_EXTRA
     case $REPLY in
         yes | Yes | YES)
             AGREED=1
@@ -48,7 +48,7 @@ while [ -z "$JAVADIR" ]; do
     echo "Which Java Virtual Machine would you like to use?"
     echo "Note: the JVM must be version 1.5.0 or newer."
     echo -n "[$DEFJAVADIR] "
-    read
+    read REPLY
     if [ -z "$REPLY" ]; then
         REPLY=$DEFJAVADIR
     fi
@@ -74,7 +74,7 @@ while [ -z "$INSTALLDIR" ]; do
     echo
     echo "Where would you like to install @client_ident@?"
     echo -n "[$DEFINSTALLDIR] "
-    read
+    read REPLY
     if [ -z "$REPLY" ]; then
         REPLY=$DEFINSTALLDIR
     fi
