@@ -200,16 +200,19 @@ public class ForestGuardians extends Scenario
         }
 
         _payouts = new int[bangobj.players.length];
-        Arrays.fill(_payouts, 60 + (95 - 60) * treePoints / maxPoints);
+        Arrays.fill(_payouts, 
+                (maxPoints > 0 ? 60 + (95 - 60) * treePoints / maxPoints : 0));
 
         int[] points = bangobj.perRoundPoints[bangobj.roundId-1];
         int[] spoints = new ArrayIntSet(points).toIntArray();
         if (spoints.length >= 2) {
             for (int ii = 0; ii < _payouts.length; ii++) {
                 int ppoints = points[ii];
-                _payouts[ii] += PAYOUT_ADJUSTMENTS[spoints.length-2][
-                    IntListUtil.indexOf(spoints, ppoints)] /
-                    count(points, ppoints);
+                int pcount = count(points, ppoints);
+                if (pcount > 0) {
+                    _payouts[ii] += PAYOUT_ADJUSTMENTS[spoints.length-2][
+                        IntListUtil.indexOf(spoints, ppoints)] / pcount;
+                }
             }
         }
     }
