@@ -78,6 +78,11 @@ public class DamageEffect extends Effect
             deathEffect.apply(bangobj, obs);
         }
         Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null) {
+            log.warning("Missing piece for damage effect [id=" + 
+                    pieceId + "].");
+            return false;
+        }
         return damage(bangobj, obs, -1, null, piece, ndamage,
             ShotEffect.DAMAGED);
     }
