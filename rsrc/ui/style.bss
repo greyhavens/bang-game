@@ -844,6 +844,11 @@ poster_statement {
   font: "Dom Casual" plain 20;
 }
 
+poster_statement_field {
+  parent: "textfield";
+  font: "Dom Casual" plain 18;
+}
+
 poster_edit_popup {
   background: image "ui/window/background.png" framexy;
   padding: 8;
