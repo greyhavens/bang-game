@@ -543,8 +543,10 @@ public class BangManager extends GameManager
                 }
                 if (effect != null) {
                     deployEffect(target.owner, effect);
-                    _bangobj.stats[target.owner].incrementStat(
-                        Stat.Type.SHOTS_FIRED, 1);
+                    if (target.owner != -1) {
+                        _bangobj.stats[target.owner].incrementStat(
+                            Stat.Type.SHOTS_FIRED, 1);
+                    }
                 }
             }
 
