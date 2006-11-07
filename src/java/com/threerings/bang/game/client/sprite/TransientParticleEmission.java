@@ -4,13 +4,15 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 import java.util.Properties;
 
 import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
 
 import com.threerings.jme.model.Model;
 
@@ -49,22 +51,24 @@ public class TransientParticleEmission extends FrameEmission
         return tstore;
     }
     
-    // documentation inherited from interface Externalizable
-    public void writeExternal (ObjectOutput out)
+    @Override // documentation inherited
+    public void read (JMEImporter im)
         throws IOException
     {
-        super.writeExternal(out);
-        out.writeObject(_effect);
-        out.writeBoolean(_rotate);
+        super.read(im);
+        InputCapsule capsule = im.getCapsule(this);
+        _effect = capsule.readString("effect", null);
+        _rotate = capsule.readBoolean("rotate", false);
     }
     
-    // documentation inherited from interface Externalizable
-    public void readExternal (ObjectInput in)
-        throws IOException, ClassNotFoundException
+    @Override // documentation inherited
+    public void write (JMEExporter ex)
+        throws IOException
     {
-        super.readExternal(in);
-        _effect = (String)in.readObject();
-        _rotate = in.readBoolean();
+        super.write(ex);
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(_effect, "effect", null);
+        capsule.write(_rotate, "rotate", false);
     }
     
     // documentation inherited

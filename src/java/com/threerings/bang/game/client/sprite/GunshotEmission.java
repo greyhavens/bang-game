@@ -4,8 +4,6 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
@@ -27,6 +25,10 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 import com.jme.system.DisplaySystem;
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
 import com.jme.util.geom.BufferUtils;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleGeometry;
@@ -159,26 +161,28 @@ public class GunshotEmission extends FrameEmission
         return gstore;
     }
     
-    // documentation inherited from interface Externalizable
-    public void writeExternal (ObjectOutput out)
+    @Override // documentation inherited
+    public void read (JMEImporter im)
         throws IOException
     {
-        super.writeExternal(out);
-        out.writeFloat(_size);
-        out.writeInt(_trails.length);
-        out.writeFloat(_spread);
-        out.writeObject(_effect);
+        super.read(im);
+        InputCapsule capsule = im.getCapsule(this);
+        _size = capsule.readFloat("size", 1f);
+        _trails = new Trail[capsule.readInt("numTrails", 1)];
+        _spread = capsule.readFloat("spread", 0f);
+        _effect = capsule.readString("effect", null);
     }
     
-    // documentation inherited from interface Externalizable
-    public void readExternal (ObjectInput in)
-        throws IOException, ClassNotFoundException
+    @Override // documentation inherited
+    public void write (JMEExporter ex)
+        throws IOException
     {
-        super.readExternal(in);
-        _size = in.readFloat();
-        _trails = new Trail[in.readInt()];
-        _spread = in.readFloat();
-        _effect = (String)in.readObject();
+        super.write(ex);
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(_size, "size", 1f);
+        capsule.write(_trails.length, "numTrails", 1);
+        capsule.write(_spread, "spread", 0f);
+        capsule.write(_effect, "effect", null);
     }
     
     /**

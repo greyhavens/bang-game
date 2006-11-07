@@ -4,8 +4,6 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 import java.util.Properties;
 
@@ -17,6 +15,10 @@ import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.TextureState;
 import com.jme.renderer.ColorRGBA;
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
 import com.jmex.effects.particles.ParticleFactory;
 import com.jmex.effects.particles.ParticleMesh;
 
@@ -146,32 +148,34 @@ public class SmokePlumeEmission extends SpriteEmission
         return spstore;
     }
     
-    // documentation inherited from interface Externalizable
-    public void writeExternal (ObjectOutput out)
+    @Override // documentation inherited
+    public void read (JMEImporter im)
         throws IOException
     {
-        super.writeExternal(out);
-        out.writeObject(_startColor);
-        out.writeObject(_endColor);
-        out.writeFloat(_startSize);
-        out.writeFloat(_endSize);
-        out.writeInt(_releaseRate);
-        out.writeFloat(_velocity);
-        out.writeFloat(_lifetime);
+        super.read(im);
+        InputCapsule capsule = im.getCapsule(this);
+        _startColor = (ColorRGBA)capsule.readSavable("startColor", null);
+        _endColor = (ColorRGBA)capsule.readSavable("endColor", null);
+        _startSize = capsule.readFloat("startSize", 0f);
+        _endSize = capsule.readFloat("endSize", 0f);
+        _releaseRate = capsule.readInt("releaseRate", 0);
+        _velocity = capsule.readFloat("velocity", 0f);
+        _lifetime = capsule.readFloat("lifetime", 0f);
     }
     
-    // documentation inherited from interface Externalizable
-    public void readExternal (ObjectInput in)
-        throws IOException, ClassNotFoundException
+    @Override // documentation inherited
+    public void write (JMEExporter ex)
+        throws IOException
     {
-        super.readExternal(in);
-        _startColor = (ColorRGBA)in.readObject();
-        _endColor = (ColorRGBA)in.readObject();
-        _startSize = in.readFloat();
-        _endSize = in.readFloat();
-        _releaseRate = in.readInt();
-        _velocity = in.readFloat();
-        _lifetime = in.readFloat();
+        super.write(ex);
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(_startColor, "startColor", null);
+        capsule.write(_endColor, "endColor", null);
+        capsule.write(_startSize, "startSize", 0f);
+        capsule.write(_endSize, "endSize", 0f);
+        capsule.write(_releaseRate, "releaseRate", 0);
+        capsule.write(_velocity, "velocity", 0f);
+        capsule.write(_lifetime, "lifetime", 0f);
     }
     
     // documentation inherited

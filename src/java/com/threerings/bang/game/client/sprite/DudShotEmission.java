@@ -3,46 +3,40 @@
 
 package com.threerings.bang.game.client.sprite;
 
-import java.util.HashMap;
-import java.util.Properties;
-
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-
-import java.lang.ClassNotFoundException;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import com.jme.util.geom.BufferUtils;
+import java.util.HashMap;
+import java.util.Properties;
 
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
-
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
-
 import com.jme.scene.Controller;
 import com.jme.scene.SharedMesh;
 import com.jme.scene.Spatial;
 import com.jme.scene.TriMesh;
-
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
+import com.jme.util.export.Savable;
+import com.jme.util.geom.BufferUtils;
 
 import com.samskivert.util.StringUtil;
 
-import com.threerings.bang.util.RenderUtil;
-
 import com.threerings.jme.model.Model;
 import com.threerings.jme.model.TextureProvider;
-
 import com.threerings.jme.sprite.PathUtil;
 
+import com.threerings.bang.util.RenderUtil;
+
 import static com.threerings.bang.Log.log;
-import java.io.Serializable;
-import java.io.Externalizable;
 
 /**
  * A dud shot effect.
@@ -50,7 +44,7 @@ import java.io.Externalizable;
 public class DudShotEmission extends SpriteEmission
 {
     public static class EmissionData 
-        implements Externalizable
+        implements Savable
     {
         public int frame;
         public boolean continueForward;
@@ -61,24 +55,32 @@ public class DudShotEmission extends SpriteEmission
         {
         }
 
-        // documentation inherited from Externalizable
-        public void writeExternal (ObjectOutput out)
+        // documentation inherited
+        public Class getClassTag ()
+        {
+            return getClass();
+        }
+        
+        // documentation inherited
+        public void read (JMEImporter im)
             throws IOException
         {
-            out.writeInt(frame);
-            out.writeBoolean(continueForward);
-            out.writeBoolean(stop);
-            out.writeFloat(pause);
+            InputCapsule capsule = im.getCapsule(this);
+            frame = capsule.readInt("frame", 0);
+            continueForward = capsule.readBoolean("continueForward", false);
+            stop = capsule.readBoolean("stop", true);
+            pause = capsule.readFloat("pause", 1f);
         }
 
-        // documentation inherited from Externalizable
-        public void readExternal (ObjectInput in)
-            throws IOException, ClassNotFoundException
+        // documentation inherited
+        public void write (JMEExporter ex)
+            throws IOException
         {
-            frame = in.readInt();
-            continueForward = in.readBoolean();
-            stop = in.readBoolean();
-            pause = in.readFloat();
+            OutputCapsule capsule = ex.getCapsule(this);
+            capsule.write(frame, "frame", 0);
+            capsule.write(continueForward, "continueForward", false);
+            capsule.write(stop, "stop", true);
+            capsule.write(pause, "pause", 1f);
         }
     }
 
@@ -149,25 +151,33 @@ public class DudShotEmission extends SpriteEmission
     }
 
     @Override // documentation inherited
-    public void writeExternal (ObjectOutput out)
+    public void read (JMEImporter im)
         throws IOException
     {
-        super.writeExternal(out);
-        out.writeObject(_animData);
-        out.writeFloat(_size);
+        super.read(im);
+        InputCapsule capsule = im.getCapsule(this);
+        String[] keys = capsule.readStringArray("animDataKeys", null);
+        Savable[] values = capsule.readSavableArray("animDataValues", null);
+        _animData = new HashMap<String, EmissionData>();
+        for (int ii = 0; ii < keys.length; ii++) {
+            _animData.put(keys[ii], (EmissionData)values[ii]);
+        }
+        _size = capsule.readFloat("size", 1f);
     }
-
+    
     @Override // documentation inherited
-    public void readExternal (ObjectInput in)
-        throws IOException, ClassNotFoundException
+    public void write (JMEExporter ex)
+        throws IOException
     {
-        super.readExternal(in);
-        @SuppressWarnings("unchecked") HashMap<String,EmissionData> casted =
-            (HashMap<String,EmissionData>)in.readObject();
-        _animData = casted;
-        _size = in.readFloat();
+        super.write(ex);
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(_animData.keySet().toArray(
+            new String[_animData.size()]), "animDataKeys", null);
+        capsule.write(_animData.values().toArray(
+            new EmissionData[_animData.size()]), "animDataValues", null);
+        capsule.write(_size, "size", 1f);
     }
-
+    
     @Override // documentation inherited
     public void update (float time)
     {

@@ -12,6 +12,10 @@ import java.util.Properties;
 
 import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
 
 import com.samskivert.util.StringUtil;
 
@@ -56,22 +60,30 @@ public abstract class FrameEmission extends SpriteEmission
         return fstore;
     }
     
-    // documentation inherited from interface Externalizable
-    public void writeExternal (ObjectOutput out)
+    @Override // documentation inherited
+    public void read (JMEImporter im)
         throws IOException
     {
-        super.writeExternal(out);
-        out.writeObject(_animFrames);
+        super.read(im);
+        InputCapsule capsule = im.getCapsule(this);
+        String[] keys = capsule.readStringArray("animFramesKeys", null);
+        int[][] values = capsule.readIntArray2D("animFramesValues", null);
+        _animFrames = new HashMap<String, int[]>();
+        for (int ii = 0; ii < keys.length; ii++) {
+            _animFrames.put(keys[ii], values[ii]);
+        }
     }
     
-    // documentation inherited from interface Externalizable
-    public void readExternal (ObjectInput in)
-        throws IOException, ClassNotFoundException
+    @Override // documentation inherited
+    public void write (JMEExporter ex)
+        throws IOException
     {
-        super.readExternal(in);
-        @SuppressWarnings("unchecked") HashMap<String,int[]> casted =
-            (HashMap<String,int[]>)in.readObject();
-        _animFrames = casted;
+        super.write(ex);
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(_animFrames.keySet().toArray(
+            new String[_animFrames.size()]), "animFramesKeys", null);
+        capsule.write(_animFrames.values().toArray(
+            new int[_animFrames.size()][]), "animFramesValues", null);
     }
     
     // documentation inherited

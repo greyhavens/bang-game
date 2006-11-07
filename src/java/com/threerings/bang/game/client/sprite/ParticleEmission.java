@@ -4,8 +4,6 @@
 package com.threerings.bang.game.client.sprite;
 
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 import java.util.HashMap;
 import java.util.Properties;
@@ -16,6 +14,10 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Controller;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
 import com.jmex.effects.particles.ParticleGeometry;
 
 import com.threerings.jme.model.Model;
@@ -103,21 +105,23 @@ public class ParticleEmission extends SpriteEmission
     }
     
     @Override // documentation inherited
-    public void writeExternal (ObjectOutput out)
+    public void read (JMEImporter im)
         throws IOException
     {
-        super.writeExternal(out);
-        out.writeObject(_effect);
-        out.writeBoolean(_windInfluenced);
+        super.read(im);
+        InputCapsule capsule = im.getCapsule(this);
+        _effect = capsule.readString("effect", null);
+        _windInfluenced = capsule.readBoolean("windInfluenced", false);
     }
     
     @Override // documentation inherited
-    public void readExternal (ObjectInput in)
-        throws IOException, ClassNotFoundException
+    public void write (JMEExporter ex)
+        throws IOException
     {
-        super.readExternal(in);
-        _effect = (String)in.readObject();
-        _windInfluenced = in.readBoolean();
+        super.write(ex);
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(_effect, "effect", null);
+        capsule.write(_windInfluenced, "windInfluenced", false);
     }
     
     // documentation inherited

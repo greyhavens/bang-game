@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Properties;
 
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 
 import java.lang.ClassNotFoundException;
 
@@ -20,7 +18,10 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Controller;
 import com.jme.scene.Spatial;
 import com.jme.scene.state.TextureState;
-
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
 import com.jmex.effects.particles.ParticleMesh;
 
 import com.samskivert.util.StringUtil;
@@ -116,25 +117,38 @@ public class MisfireEmission extends SpriteEmission
     }
 
     @Override // documentation inherited
-    public void writeExternal (ObjectOutput out)
+    public void read (JMEImporter im)
         throws IOException
     {
-        super.writeExternal(out);
-        out.writeObject(_animShotFrame);
-        out.writeFloat(_size);
+        super.read(im);
+        InputCapsule capsule = im.getCapsule(this);
+        String[] keys = capsule.readStringArray("animShotFrameKeys", null);
+        int[] values = capsule.readIntArray("animShotFrameValues", null);
+        _animShotFrame = new HashMap<String, Integer>();
+        for (int ii = 0; ii < keys.length; ii++) {
+            _animShotFrame.put(keys[ii], values[ii]);
+        }
+        _size = capsule.readFloat("size", 1f);
     }
-
+    
     @Override // documentation inherited
-    public void readExternal (ObjectInput in)
-        throws IOException, ClassNotFoundException
+    public void write (JMEExporter ex)
+        throws IOException
     {
-        super.readExternal(in);
-        @SuppressWarnings("unchecked") HashMap<String,Integer> casted =
-            (HashMap<String,Integer>)in.readObject();
-        _animShotFrame = casted;
-        _size = in.readFloat();
+        super.write(ex);
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(_animShotFrame.keySet().toArray(
+            new String[_animShotFrame.size()]), "animShotFrameKeys", null);
+        Integer[] values = _animShotFrame.values().toArray(
+            new Integer[_animShotFrame.size()]);
+        int[] ivals = new int[values.length];
+        for (int ii = 0; ii < values.length; ii++) {
+            ivals[ii] = values[ii];
+        }
+        capsule.write(ivals, "animShotFrameValues", null);
+        capsule.write(_size, "size", 1f);
     }
-
+    
     // documentation inherited
     public void update (float time)
     {

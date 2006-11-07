@@ -122,8 +122,7 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
             key.type + "/model.dat");
         long start = PerfMonitor.getCurrentMicros();
         int size = (int)file.length();
-        Model model = Model.readFromFile(file, size >= MIN_MAP_SIZE &&
-            ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN);
+        Model model = Model.readFromFile(file);
         model.resolveTextures(new ModelTextureProvider(key, null));
         PerfMonitor.recordModelLoad(start, size);
         return model;
@@ -228,7 +227,4 @@ public class ModelCache extends PrototypeCache<ModelCache.ModelKey, Model>
             this.type = type;
         }
     }
-    
-    /** Models bigger than this have their buffers mapped into memory. */
-    protected static final int MIN_MAP_SIZE = 32768;
 }

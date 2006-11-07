@@ -81,7 +81,7 @@ public class UpdatePropHeightTask extends Task
         // load the model
         Model model;
         try {
-            model = Model.readFromFile(mfile, false);
+            model = Model.readFromFile(mfile);
         } catch (IOException e) {
             System.out.println("Error reading " + mfile + ": " + e);
             return;
