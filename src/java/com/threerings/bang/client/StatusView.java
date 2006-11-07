@@ -143,7 +143,7 @@ public class StatusView extends BWindow
         add(btn, new Point(40, 147));
 
         add(new PickLookView(ctx, false), new Point(10, 231));
-        add(new WalletLabel(ctx, true), new Rectangle(77, 63, 150, 40));
+        add(new WalletLabel(ctx, true), new Rectangle(77, 66, 150, 40));
         add(_tabinfo = new BLabel("", "status_tabinfo"),
             new Rectangle(290, 55, 453, 40));
 
