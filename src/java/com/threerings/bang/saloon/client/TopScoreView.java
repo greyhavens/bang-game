@@ -40,38 +40,51 @@ public class TopScoreView extends BContainer
         add(new BScrollPane(cont), BorderLayout.CENTER);
 
         for (TopRankedList list : salobj.topRanked) {
-            cont.add(new Spacer(10, 5));
-
-            BContainer row = new BContainer(
-                GroupLayout.makeHoriz(GroupLayout.CENTER));
-            ((GroupLayout)row.getLayoutManager()).setGap(25);
-            ((GroupLayout)row.getLayoutManager()).setOffAxisJustification(
-                GroupLayout.BOTTOM);
-            cont.add(row);
-
-            BContainer col = new BContainer(
-                GroupLayout.makeVert(GroupLayout.CENTER));
-            ((GroupLayout)col.getLayoutManager()).setGap(0);
-            row.add(col);
-
-            String cat = ctx.xlate(SaloonCodes.SALOON_MSGS, list.criterion);
-            col.add(new BLabel(cat, "top_score_category"));
-
-            AvatarView aview = new AvatarView(ctx, 4, false, true);
-            col.add(aview, GroupLayout.FIXED);
-            if (list.players.length > 0) {
-                aview.setHandle(list.players[0], "1. " + list.players[0]);
+            if (list.criterion.indexOf("m.scenario_oa") > -1) {
+                addScenario(cont, list);
+                break;
             }
-            if (list.topDogSnapshot != null) {
-                aview.setAvatar(list.topDogSnapshot);
+        }
+        for (TopRankedList list : salobj.topRanked) {
+            if (list.criterion.indexOf("m.scenario_oa") == -1) {
+                addScenario(cont, list);
             }
+        }
+    }
 
-            col = new BContainer(GroupLayout.makeVStretch());
-            ((GroupLayout)col.getLayoutManager()).setGap(0);
-            row.add(col);
-            for (int ii = 1; ii < list.players.length; ii++) {
-                col.add(new PlayerLabel(ii + 1, list.players[ii]));
-            }
+    protected void addScenario (BContainer cont, TopRankedList list)
+    {
+        cont.add(new Spacer(10, 5));
+
+        BContainer row = new BContainer(
+            GroupLayout.makeHoriz(GroupLayout.CENTER));
+        ((GroupLayout)row.getLayoutManager()).setGap(25);
+        ((GroupLayout)row.getLayoutManager()).setOffAxisJustification(
+            GroupLayout.BOTTOM);
+        cont.add(row);
+
+        BContainer col = new BContainer(
+            GroupLayout.makeVert(GroupLayout.CENTER));
+        ((GroupLayout)col.getLayoutManager()).setGap(0);
+        row.add(col);
+
+        String cat = _ctx.xlate(SaloonCodes.SALOON_MSGS, list.criterion);
+        col.add(new BLabel(cat, "top_score_category"));
+
+        AvatarView aview = new AvatarView(_ctx, 4, false, true);
+        col.add(aview, GroupLayout.FIXED);
+        if (list.players.length > 0) {
+            aview.setHandle(list.players[0], "1. " + list.players[0]);
+        }
+        if (list.topDogSnapshot != null) {
+            aview.setAvatar(list.topDogSnapshot);
+        }
+
+        col = new BContainer(GroupLayout.makeVStretch());
+        ((GroupLayout)col.getLayoutManager()).setGap(0);
+        row.add(col);
+        for (int ii = 1; ii < list.players.length; ii++) {
+            col.add(new PlayerLabel(ii + 1, list.players[ii]));
         }
     }
 
