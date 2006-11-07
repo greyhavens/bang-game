@@ -72,6 +72,7 @@ import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.AdjustTickEffect;
+import com.threerings.bang.game.data.effect.BonusEffect;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
@@ -667,6 +668,11 @@ public class BangManager extends GameManager
             // make sure the effect is still applicable
             if (!effect.isApplicable()) {
                 _damage.clear();
+                if (effect instanceof BonusEffect && 
+                        ((BonusEffect)effect).puntEffect != null) {
+                    actuallyDeployEffect(
+                            effector, ((BonusEffect)effect).puntEffect, false);
+                }
                 return false;
             }
         }

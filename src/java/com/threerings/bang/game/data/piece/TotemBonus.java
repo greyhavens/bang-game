@@ -9,6 +9,7 @@ import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TotemSprite;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.BonusEffect;
 import com.threerings.bang.game.data.effect.TotemEffect;
 
@@ -81,9 +82,9 @@ public class TotemBonus extends Bonus
     }
 
     @Override // documentation inherited
-    public BonusEffect affect (Piece piece)
+    public BonusEffect affect (BangObject bangobj, Piece piece)
     {
-        TotemEffect effect = (TotemEffect)super.affect(piece);
+        TotemEffect effect = (TotemEffect)super.affect(bangobj, piece);
         if (effect != null) {
             effect.type = _config.type;
         }

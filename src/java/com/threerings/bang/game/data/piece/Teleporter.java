@@ -38,7 +38,7 @@ public class Teleporter extends Prop
      * Called when a piece has landed on this teleporter and is teleporting
      * to a new location.
      */
-    public TeleportEffect affect (Piece piece)
+    public TeleportEffect affect (BangObject bangobj, Piece piece)
     {
         return new TeleportEffect(this, piece);
     }

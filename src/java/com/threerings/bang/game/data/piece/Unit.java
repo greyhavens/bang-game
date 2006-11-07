@@ -352,12 +352,12 @@ public class Unit extends Piece
                     effects.add(HoldEffect.dropBonus(
                             bangobj, this, -1, holding)); 
                 }
-                effects.add(bonus.affect(this));
+                effects.add(bonus.affect(bangobj, this));
             } else if (!bonus.getConfig().hidden) {
                 effects.add(PuntEffect.puntBonus(bangobj, bonus, pieceId));
             }
         } else if (other instanceof Teleporter) {
-            effects.add(((Teleporter)other).affect(this));
+            effects.add(((Teleporter)other).affect(bangobj, this));
         }
         return effects.toArray(new Effect[effects.size()]);
     }

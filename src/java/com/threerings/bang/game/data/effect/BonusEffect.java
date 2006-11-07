@@ -26,6 +26,9 @@ public abstract class BonusEffect extends Effect
     /** The id of the piece that activated the bonus. */
     public int pieceId = -1;
 
+    /** In case something goes wrong, we can always punt. */
+    public transient PuntEffect puntEffect;
+
     @Override // documentation inherited
     public void init (Piece piece)
     {

@@ -22,6 +22,7 @@ import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.effect.BonusEffect;
+import com.threerings.bang.game.data.effect.PuntEffect;
 
 import static com.threerings.bang.Log.log;
 
@@ -166,7 +167,7 @@ public class Bonus extends Piece
      * has on this piece or the entire board. Those effects will be
      * processed at the end of the tick.
      */
-    public BonusEffect affect (Piece piece)
+    public BonusEffect affect (BangObject bangobj, Piece piece)
     {
         // ground-only bonuses do not affect airborne units
         if (_config.groundOnly && piece.isAirborne()) {
@@ -177,6 +178,10 @@ public class Bonus extends Piece
                 _config.effectClass).newInstance();
             effect.bonusId = pieceId;
             effect.init(piece);
+            if (!_config.hidden) {
+                effect.puntEffect = 
+                    PuntEffect.puntBonus(bangobj, this, piece.pieceId);
+            }
             return effect;
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to instantiate effect class " +
