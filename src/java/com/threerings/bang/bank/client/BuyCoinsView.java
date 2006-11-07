@@ -91,5 +91,5 @@ public class BuyCoinsView extends BContainer
     protected StatusLabel _status;
     protected URL _shownURL;
 
-    protected static final int[] PACKAGES = { 12, 42, 400 };
+    protected static final int[] PACKAGES = { 12, 42, 90 };
 }
