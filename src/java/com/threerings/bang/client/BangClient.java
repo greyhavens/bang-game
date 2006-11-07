@@ -1066,7 +1066,7 @@ public class BangClient extends BasicClient
         public void expired () {
             long idle = _ctx.getRootNode().getTickStamp() - _lastEventStamp;
             if (!_isIdle && idle > ChatCodes.DEFAULT_IDLE_TIME) {
-                updateIdle(true);
+                updateIdle(true, idle);
             }
             if (idle > LOGOFF_DELAY) {
                 if (_ctx.getClient().isLoggedOn()) {
@@ -1077,17 +1077,16 @@ public class BangClient extends BasicClient
         }
 
         public void eventDispatched (BEvent event) {
-            if (event.getWhen() != 0L) {
-                _lastEventStamp = event.getWhen();
-            }
+            _lastEventStamp = (event.getWhen() != 0L) ?
+                event.getWhen() : _ctx.getRootNode().getTickStamp();
             if (_isIdle) {
-                updateIdle(false);
+                updateIdle(false, 0L);
             }
         }
 
-        protected void updateIdle (boolean isIdle) {
+        protected void updateIdle (boolean isIdle, long idleTime) {
             _isIdle = isIdle;
-            log.info("Setting idle " + isIdle + ".");
+            log.info("Setting idle " + isIdle + " [time=" + idleTime + "].");
             if (_ctx.getClient().isLoggedOn()) {
                 BodyService bsvc = (BodyService)
                     _ctx.getClient().requireService(BodyService.class);
