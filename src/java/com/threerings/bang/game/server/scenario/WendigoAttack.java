@@ -51,7 +51,7 @@ public class WendigoAttack extends Scenario
         registerDelegate(_wendel = new WendigoDelegate());
         // respawn in half the time as normal
         int rticks = RespawnDelegate.RESPAWN_TICKS/2;
-        registerDelegate(new RespawnDelegate(rticks, false) {
+        registerDelegate(_resdel = new RespawnDelegate(rticks, false) {
             public void pieceWasKilled (
                 BangObject bangobj, Piece piece, int shooter) {
                 int oldRT = _respawnTicks;
@@ -109,27 +109,27 @@ public class WendigoAttack extends Scenario
     @Override // documentation inherited
     public void tick (BangObject bangobj, short tick)
     {
-        super.tick(bangobj, tick);
-        if (tick < _nextWendigo) {
-            return;
-        }
-
         // if the wendigo are ready, we deploy 'em, otherwise we create them
         // which fades the board to let the players know they're coming
-        if (_wendel.wendigoReady()) {
-            _wendel.deployWendigo(bangobj, tick);
-            if (_nextWendigo + MAX_WENDIGO_TICKS + MIN_WENDIGO_TICKS + 
-                WENDIGO_WAIT * 2 < bangobj.duration) {
-                _nextWendigo += (short)RandomUtil.getInt(
-                    MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
-            } else {
-                _nextWendigo = (short)(bangobj.duration - WENDIGO_WAIT - 1);
-            }
+        if (tick>= _nextWendigo) {
+            if (_wendel.wendigoReady()) {
+                _wendel.deployWendigo(bangobj, tick);
+                if (_nextWendigo + MAX_WENDIGO_TICKS + MIN_WENDIGO_TICKS + 
+                    WENDIGO_WAIT * 2 < bangobj.duration) {
+                    _nextWendigo += (short)RandomUtil.getInt(
+                        MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
+                } else {
+                    _nextWendigo = (short)(bangobj.duration - WENDIGO_WAIT - 1);
+                }
+                _resdel.setRespawn(true);
 
-        } else {
-            _wendel.prepareWendigo(bangobj, tick);
-            _nextWendigo += WENDIGO_WAIT;
+            } else {
+                _wendel.prepareWendigo(bangobj, tick);
+                _nextWendigo += WENDIGO_WAIT;
+                _resdel.setRespawn(false);
+            }
         }
+        super.tick(bangobj, tick);
     }
 
     @Override // documentation inherited
@@ -180,6 +180,9 @@ public class WendigoAttack extends Scenario
 
     /** Handles the Wendigo and safe spots. */
     protected WendigoDelegate _wendel;
+
+    /** Handles respawning dead units. */
+    protected RespawnDelegate _resdel;
 
     /** The tick when the next wendigo will spawn. */
     protected short _nextWendigo;

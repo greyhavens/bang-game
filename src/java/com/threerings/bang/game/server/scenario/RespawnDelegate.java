@@ -52,6 +52,14 @@ public class RespawnDelegate extends ScenarioDelegate
             unit.setRespawnTick(tick);
         }
     }
+
+    /**
+     * Controls if units will respawn.
+     */
+    public void setRespawn (boolean respawn)
+    {
+        _respawn = respawn;
+    }
     
     @Override // from ScenarioDelegate
     public void roundWillStart (BangObject bangobj)
@@ -64,7 +72,7 @@ public class RespawnDelegate extends ScenarioDelegate
     public void tick (BangObject bangobj, short tick)
     {
         // respawn new pieces
-        while (_respawns.size() > 0) {
+        while (_respawn && _respawns.size() > 0) {
             if (_respawns.peek().getRespawnTick() > tick) {
                 break;
             }
@@ -163,6 +171,9 @@ public class RespawnDelegate extends ScenarioDelegate
 
     /** The number of ticks that must elapse before a unit is respawned. */
     protected int _respawnTicks = RESPAWN_TICKS;
+
+    /** Whether units will actually respawn. */
+    protected boolean _respawn = true;
 
     /** If we're giving out the free iron plates. */
     protected boolean _freeIronPlate;
