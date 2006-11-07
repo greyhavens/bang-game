@@ -319,6 +319,8 @@ public class WantedPosterView extends BContainer
         BLabel label = new BLabel(_poster.statement != null ?
                                   "\"" + _poster.statement + "\"" : "",
                                   "poster_statement");
+        label.setWrap(false);
+        label.setFit(true);
         box.add(label);
         return box;
     }
