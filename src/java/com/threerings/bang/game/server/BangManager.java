@@ -129,7 +129,9 @@ public class BangManager extends GameManager
         public Rating getRating (String scenario) {
             Rating rating = nratings.get(scenario);
             if (rating == null) {
-                rating = ratings.get(scenario);
+                if (ratings != null) {
+                    rating = ratings.get(scenario);
+                }
                 if (rating == null) {
                     rating = new Rating();
                     rating.scenario = scenario;
