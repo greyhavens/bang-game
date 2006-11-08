@@ -298,6 +298,11 @@ public class PlayerManager
             return;
         }
 
+        if (resp && player.pardners.size() >= MAX_PARDNERS) {
+            throw new InvocationException(MessageBundle.tcompose(
+                "e.too_many_pardners", String.valueOf(MAX_PARDNERS)));
+        }
+
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
                 if (resp) {

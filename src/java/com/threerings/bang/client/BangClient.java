@@ -371,9 +371,9 @@ public class BangClient extends BasicClient
         if (_suggestLowerDetail && displayLowerDetailSuggestion()) {
             return true;
         }
-        
+
         // if there are any pending pardner invitations, show those
-        if (_invites.size() > 0) {
+        if (_invites.size() > 0 && !_maxedPardners) {
             Tuple<Handle,String> invite = _invites.remove(0);
             displayPardnerInvite(invite.left, invite.right);
             return true;
@@ -383,6 +383,11 @@ public class BangClient extends BasicClient
         // fooling around
         if (_mview instanceof TownView) {
             ((TownView)_mview).setActive(true);
+        }
+
+        if (_maxedPardners) {
+            StatusView.showStatusTab(_ctx, StatusView.PARDNERS_TAB);
+            _maxedPardners = false;
         }
 
         return false;
@@ -875,7 +880,8 @@ public class BangClient extends BasicClient
         ParticlePool.warmup(_ctx);
     }
 
-    protected void displayPardnerInvite (final Handle handle, String message)
+    protected void displayPardnerInvite (
+            final Handle handle, final String message)
     {
         final ReportingListener rl =
             new ReportingListener(_ctx, BANG_MSGS, "e.response_failed");
@@ -889,15 +895,32 @@ public class BangClient extends BasicClient
             return;
         }
 
+        PlayerObject player = _ctx.getUserObject();
+        String desc, btn;
+        _maxedPardners = player.pardners.size() >= MAX_PARDNERS;
+        if (_maxedPardners) {
+            desc = MessageBundle.tcompose("m.pardner_invite_full", handle);
+            btn = "m.pardner_wait";
+        } else {
+            desc = MessageBundle.tcompose("m.pardner_invite_avail", handle);
+            btn = "m.pardner_accept";
+        }
+
         // otherwise display the invitation in a dialog
-        String text = MessageBundle.tcompose(
-            "m.pardner_invite", handle, message);
+        String text = MessageBundle.compose("m.pardner_invite", desc, 
+                MessageBundle.taint(handle), MessageBundle.taint(message));
         String[] buttons = {
-            "m.pardner_accept", "m.pardner_reject",
+            btn, "m.pardner_reject",
             MessageBundle.tcompose("m.pardner_ignore", handle) };
         OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
-                _psvc.respondToPardnerInvite(_client, handle, button == 0, rl);
+                if (_maxedPardners && button == 0) {
+                    _invites.add(0, new Tuple<Handle, String>(handle, message));
+                } else {
+                    _maxedPardners = false;
+                    _psvc.respondToPardnerInvite(
+                            _client, handle, button == 0, rl);
+                }
                 if (button == 2) { // ignore the pesky bugger
                     _ctx.getMuteDirector().setMuted(handle, true);
                 }
@@ -1193,6 +1216,7 @@ public class BangClient extends BasicClient
 
     protected ArrayList<Tuple<Handle,String>> _invites =
         new ArrayList<Tuple<Handle,String>>();
+    protected boolean _maxedPardners;
     protected boolean _suggestLowerDetail;
     
     protected String _playingMusic;
