@@ -46,15 +46,16 @@ import com.threerings.bang.game.client.TerrainNode;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.ModifiableDSet;
-import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.util.ArrayDiffUtil;
-import com.threerings.bang.server.persist.BoardRecord;
+import com.threerings.bang.game.util.BoardFile;
 
 import static com.threerings.bang.Log.log;
 
@@ -278,7 +279,7 @@ public class EditorController extends GameController
     public void handleLoadBoard (Object source)
     {
         if (_boardChooser == null) {
-            _boardChooser = new JFileChooser(_board.getParent());
+            _boardChooser = new JFileChooser(_target.getParent());
         }
         int rv = _boardChooser.showOpenDialog(_ctx.getFrame());
         if (rv != JFileChooser.APPROVE_OPTION) {
@@ -292,7 +293,7 @@ public class EditorController extends GameController
     public void handleSaveBoard (Object source)
     {
         if (_boardChooser == null) {
-            _boardChooser = new JFileChooser(_board.getParent());
+            _boardChooser = new JFileChooser(_target.getParent());
         }
         int rv = _boardChooser.showSaveDialog(_ctx.getFrame());
         if (rv != JFileChooser.APPROVE_OPTION) {
@@ -303,14 +304,15 @@ public class EditorController extends GameController
         pruneOrphanPieces();
 
         try {
-            File board = _boardChooser.getSelectedFile();
-            BoardRecord brec = new BoardRecord();
-            _panel.info.toBoard(brec);
-            brec.setData(_bangobj.board, _bangobj.getPieceArray());
-            brec.save(board);
-            _board = board;
-            _ctx.setWindowTitle(_board.toString());
-            _ctx.displayStatus(_msgs.get("m.saved", _board));
+            File target = _boardChooser.getSelectedFile();
+            BoardFile bfile = new BoardFile();
+            _panel.info.toBoard(bfile);
+            bfile.board = _bangobj.board;
+            bfile.pieces = _bangobj.getPieceArray();
+            BoardFile.saveTo(bfile, target);
+            _target = target;
+            _ctx.setWindowTitle(_target.toString());
+            _ctx.displayStatus(_msgs.get("m.saved", _target));
 
         } catch (IOException ioe) {
             _ctx.displayStatus(_msgs.get("m.save_error", ioe.getMessage()));
@@ -633,33 +635,31 @@ public class EditorController extends GameController
         _bangobj.addListener(_pclistener);
     }
 
-    protected void loadBoard (File board, boolean refresh)
+    protected void loadBoard (File target, boolean refresh)
     {
-        BoardRecord brec = new BoardRecord();
         try {
-            brec.load(board);
-            _bangobj.board = brec.getBoard();
-            Piece[] pieces = brec.getPieces();
+            BoardFile bfile = BoardFile.loadFrom(target);
+            _bangobj.board = bfile.board;
             // reassign piece ids
-            for (int ii = 0; ii < pieces.length; ii++) {
-                pieces[ii].pieceId = (ii+1);
+            for (int ii = 0; ii < bfile.pieces.length; ii++) {
+                bfile.pieces[ii].pieceId = (ii+1);
             }
-            _bangobj.maxPieceId = pieces.length;
-            _bangobj.setPieces(new ModifiableDSet<Piece>(pieces));
+            _bangobj.maxPieceId = bfile.pieces.length;
+            _bangobj.setPieces(new ModifiableDSet<Piece>(bfile.pieces));
 
             if (refresh) {
                 _panel.view.refreshBoard();
             }
 
-            _panel.info.fromBoard(brec);
+            _panel.info.fromBoard(bfile);
             updatePlayerCount();
-            _board = board;
+            _target = target;
             _viewScenId = null;
-            _ctx.setWindowTitle(_board.toString());
-            _ctx.displayStatus(_msgs.get("m.loaded", _board));
+            _ctx.setWindowTitle(_target.toString());
+            _ctx.displayStatus(_msgs.get("m.loaded", _target));
 
         } catch (IOException ioe) {
-            log.log(Level.WARNING, "Failed to load board " + brec + ".", ioe);
+            log.log(Level.WARNING, "Failed to load board " + target + ".", ioe);
             _ctx.displayStatus(_msgs.get("m.load_error", ioe.getMessage()));
         }
     }
@@ -669,7 +669,7 @@ public class EditorController extends GameController
      */
     protected void createImageChooser ()
     {
-        _imageChooser = new JFileChooser(_board.getParent());
+        _imageChooser = new JFileChooser(_target.getParent());
         _imageChooser.setFileFilter(new FileFilter() {
             public boolean accept (File f) {
                 if (f.isDirectory()) {
@@ -949,7 +949,7 @@ public class EditorController extends GameController
     protected BoardPropertiesDialog _boardProperties;
     
     /** A reference to the file associated with the board we're editing. */
-    protected File _board = new File("");
+    protected File _target = new File("");
 
     /** Store pieces that are currently hidden from view. */
     protected ArrayList<Piece> _hiddenPieces = new ArrayList<Piece>();

@@ -372,19 +372,11 @@ public class BangView extends BWindow
     {
         // if the board is cached, we can continue immediately; otherwise, we
         // must request the board from the server
-        BoardData board = _ctx.getBoardCache().loadBoard(_bangobj.boardName,
-            _bangobj.players.length, _bangobj.boardHash);
-        if (board != null) {
+        BoardData bdata = _ctx.getBoardCache().loadBoard(_bangobj.boardHash);
+        if (bdata != null) {
             log.info("Loaded board from cache [board=" + _bangobj.boardName +
                      ", pcount=" + _bangobj.players.length + "].");
-            try {
-                continuePreparingForRound(
-                    config, pidx, board.getBoard(), board.getPieces());
-            } catch (IOException ioe) {
-                log.log(Level.WARNING, "Failed to decode board " +
-                        board + ".", ioe);
-                // TODO: abandon ship!
-            }
+            continuePreparingForRound(config, pidx, bdata);
             return true;
         }
 
@@ -393,18 +385,16 @@ public class BangView extends BWindow
         _preparing = true;
         _bangobj.service.getBoard(
             _ctx.getClient(), new BangService.BoardListener() {
-            public void requestProcessed (BangBoard board, Piece[] pieces) {
+            public void requestProcessed (BoardData bdata) {
                 // save the board for future use and continue
-                _ctx.getBoardCache().saveBoard(_bangobj.boardName,
-                    _bangobj.players.length, _bangobj.boardHash,
-                    board, pieces);
-                continuePreparingForRound(config, pidx, board, pieces);
+                _ctx.getBoardCache().saveBoard(_bangobj.boardHash, bdata);
+                continuePreparingForRound(config, pidx, bdata);
                 _preparing = false;
                 setPhase(_pendingPhase);
             }
             public void requestFailed (String cause) {
-                _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS,
-                    cause);
+                _ctx.getChatDirector().displayFeedback(
+                    GameCodes.GAME_MSGS, cause);
             }
         });
         return false;
@@ -414,9 +404,9 @@ public class BangView extends BWindow
      * Continues preparing for the round once we've acquired the board data.
      */
     protected void continuePreparingForRound (
-        BangConfig config, int pidx, BangBoard board, Piece[] pieces)
+        BangConfig config, int pidx, BoardData bdata)
     {
-        _bangobj.board = (BangBoard)board.clone();
+        _bangobj.board = (BangBoard)bdata.board.clone();
         _bangobj.board.applyShadowPatch(_bangobj.scenario.getIdent());
 
         // if we arrived in the middle of the game, the pieces will already be
@@ -424,7 +414,7 @@ public class BangView extends BWindow
         if (_bangobj.state != BangObject.IN_PLAY) {
             _bangobj.maxPieceId = 0;
             ArrayList<Piece> plist = new ArrayList<Piece>();
-            for (Piece piece : pieces) {
+            for (Piece piece : bdata.pieces) {
                 if (piece.removeFromBoard(_bangobj)) {
                     continue;
                 }

@@ -26,7 +26,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
-import com.threerings.bang.server.persist.BoardRecord;
+import com.threerings.bang.game.util.BoardFile;
 import com.threerings.bang.util.BasicContext;
 
 /**
@@ -98,7 +98,7 @@ public class BoardInfo extends JPanel
      * Reads the supplied board's metadata and configures the UI
      * appropriately.
      */
-    public void fromBoard (BoardRecord board)
+    public void fromBoard (BoardFile board)
     {
         _name.setText(board.name);
         _props.setSelectedIndex(0);
@@ -109,7 +109,7 @@ public class BoardInfo extends JPanel
             _sboxes.get(scid).setSelected(false);
         }
         // then turn on the ones that are valid for this board
-        String[] scids = board.getScenarios();
+        String[] scids = board.scenarios;
         for (int ii = 0; ii < scids.length; ii++) {
             JCheckBox box = _sboxes.get(scids[ii]);
             if (box != null) {
@@ -122,12 +122,12 @@ public class BoardInfo extends JPanel
      * Configures the supplied board's metadata with the values from the
      * user interface.
      */
-    public void toBoard (BoardRecord board)
+    public void toBoard (BoardFile board)
     {
         board.name = _name.getText();
         board.players = _players;
         ArrayList<String> scenids = getSelectedScenarios();
-        board.setScenarios(scenids.toArray(new String[scenids.size()]));
+        board.scenarios = scenids.toArray(new String[scenids.size()]);
     }
 
     /**

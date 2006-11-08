@@ -156,6 +156,7 @@ public class BoardManager
             rll.add(listener);
             return;
         }
+
         final ResultListenerList<BoardRecord> list =
             new ResultListenerList<BoardRecord>();
         _boardDataListeners.put(brec, list);
@@ -164,12 +165,12 @@ public class BoardManager
             public boolean invoke () {
                 try {
                     _brepo.loadBoardData(brec);
-                    
                 } catch (PersistenceException pe) {
                     _error = pe;
                 }
                 return true;
             }
+
             public void handleResult () {
                 if (_error == null) {
                     list.requestCompleted(brec);
@@ -181,7 +182,7 @@ public class BoardManager
             protected Exception _error;
         });
     }
-    
+
     /** Used for our name to board mapping. */
     protected static class BoardMap extends HashMap<String,BoardRecord>
     {
@@ -197,7 +198,7 @@ public class BoardManager
 
     /** A mapping by board name, broken out by player count. */
     protected BoardMap[] _byname;
-    
+
     /** Maps board records to lists of {@link ResultListener}s waiting for the
      * invoker to load the record's board data from the database. */
     protected HashMap<BoardRecord, ResultListenerList<BoardRecord>>

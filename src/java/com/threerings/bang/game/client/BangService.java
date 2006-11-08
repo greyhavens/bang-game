@@ -6,8 +6,7 @@ package com.threerings.bang.game.client;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
-import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.BoardData;
 
 /**
  * Defines the requests that the client can make to the server.
@@ -20,7 +19,7 @@ public interface BangService extends InvocationService
         /**
          * A response to a {@link #getBoard} request.
          */
-        public void requestProcessed (BangBoard board, Piece[] pieces);
+        public void requestProcessed (BoardData bdata);
     }
     
     /**

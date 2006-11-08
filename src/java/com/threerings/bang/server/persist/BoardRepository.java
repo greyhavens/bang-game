@@ -141,6 +141,7 @@ public class BoardRepository extends JORARepository
         BoardRecord orecord = (BoardRecord)loadByExample(_btable, record, mask);
         if (orecord != null) {
             record.boardId = orecord.boardId;
+            record.plays = orecord.plays;
             update(_btable, record);
         } else {
             record.boardId = insert(_btable, record);

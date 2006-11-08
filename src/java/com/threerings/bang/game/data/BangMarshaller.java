@@ -4,8 +4,7 @@
 package com.threerings.bang.game.data;
 
 import com.threerings.bang.game.client.BangService;
-import com.threerings.bang.game.data.BangBoard;
-import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.BoardData;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -32,12 +31,12 @@ public class BangMarshaller extends InvocationMarshaller
         public static final int REQUEST_PROCESSED = 1;
 
         // from interface BoardMarshaller
-        public void requestProcessed (BangBoard arg1, Piece[] arg2)
+        public void requestProcessed (BoardData arg1)
         {
             _invId = null;
             omgr.postEvent(new InvocationResponseEvent(
                                callerOid, requestId, REQUEST_PROCESSED,
-                               new Object[] { arg1, arg2 }));
+                               new Object[] { arg1 }));
         }
 
         @Override // from InvocationMarshaller
@@ -46,7 +45,7 @@ public class BangMarshaller extends InvocationMarshaller
             switch (methodId) {
             case REQUEST_PROCESSED:
                 ((BoardListener)listener).requestProcessed(
-                    (BangBoard)args[0], (Piece[])args[1]);
+                    (BoardData)args[0]);
                 return;
 
             default:

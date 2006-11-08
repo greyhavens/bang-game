@@ -49,26 +49,29 @@ import com.samskivert.util.Invoker;
 import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.PanPath;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.util.MessageBundle;
+
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.Subscriber;
 import com.threerings.presents.util.SafeSubscriber;
-import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.TownObject;
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Viewpoint;
-import com.threerings.bang.server.persist.BoardRecord;
+import com.threerings.bang.game.util.BoardFile;
+
+import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.RenderUtil;
@@ -292,16 +295,16 @@ public class TownView extends BWindow
         public void loadBoard (String townId)
             throws IOException
         {
-            BoardRecord brec = new BoardRecord();
-            brec.load(_ctx.getResourceManager().getResourceFile(
-                          "menu/" + townId + "/town.board"));
+            BoardFile bfile = BoardFile.loadFrom(
+                _ctx.getResourceManager().getResourceFile(
+                    "menu/" + townId + "/town.board"));
             BangObject bangobj = new BangObject();
             // we only want to configure the board name the first time we're
             // shown as it will trigger a marquee being displayed with the town
             // name
-            bangobj.boardName = _presented.contains(townId) ? null : brec.name;
-            bangobj.board = brec.getBoard();
-            bangobj.pieces = new ModifiableDSet<Piece>(brec.getPieces());
+            bangobj.boardName = _presented.contains(townId) ? null : bfile.name;
+            bangobj.board = bfile.board;
+            bangobj.pieces = new ModifiableDSet<Piece>(bfile.pieces);
             prepareForRound(bangobj, null, 0);
         }
 

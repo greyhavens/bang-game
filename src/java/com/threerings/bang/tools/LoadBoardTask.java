@@ -17,6 +17,8 @@ import com.samskivert.io.PersistenceException;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.jdbc.StaticConnectionProvider;
 
+import com.threerings.bang.game.data.BoardData;
+import com.threerings.bang.game.util.BoardFile;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.server.persist.BoardRepository;
@@ -71,8 +73,8 @@ public class LoadBoardTask extends Task
             File fromDir = fs.getDir(getProject());
             String[] srcFiles = ds.getIncludedFiles();
             for (int ii = 0; ii < srcFiles.length; ii++) {
-                success &= loadBoard(new File(fromDir, srcFiles[ii]), loaded,
-                    files);
+                success &= loadBoard(
+                    new File(fromDir, srcFiles[ii]), loaded, files);
             }
         }
         System.out.println("Loaded " + loaded.size() + " boards.");
@@ -102,8 +104,7 @@ public class LoadBoardTask extends Task
         File source, ArrayIntSet loaded, HashMap<BoardName, File> files)
     {
         try {
-            BoardRecord brec = new BoardRecord();
-            brec.load(source);
+            BoardRecord brec = new BoardRecord(BoardFile.loadFrom(source));
             BoardName bname = new BoardName(brec.name, brec.players);
             File ofile = files.get(bname);
             if (ofile != null) {
@@ -113,12 +114,11 @@ public class LoadBoardTask extends Task
                     source + "].");
                 return true;
             }
-            brec.dataHash = brec.getDataHash();
             _brepo.storeBoard(brec);
             loaded.add(brec.boardId);
             files.put(bname, source);
             return true;
-                
+
         } catch (Exception e) {
             System.err.println("Failed to load board [source=" + source + "].");
             e.printStackTrace(System.err);
@@ -133,25 +133,22 @@ public class LoadBoardTask extends Task
     {
         public String name;
         public int players;
-        
-        public BoardName (String name, int players)
-        {
+
+        public BoardName (String name, int players) {
             this.name = name;
             this.players = players;
         }
-        
-        public int hashCode ()
-        {
+
+        public int hashCode () {
             return name.hashCode() + players;
         }
-        
-        public boolean equals (Object obj)
-        {
+
+        public boolean equals (Object obj) {
             BoardName oboard = (BoardName)obj;
             return name.equals(oboard.name) && players == oboard.players;
         }
     }
-    
+
     /** Contains our configuration. */
     protected File _home;
 
