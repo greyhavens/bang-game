@@ -5,8 +5,10 @@ package com.threerings.bang.game.data.piece;
 
 import java.io.IOException;
 
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.ViewpointSprite;
@@ -38,29 +40,31 @@ public class Viewpoint extends Piece
     }
     
     @Override // documentation inherited
-    public void persistTo (ObjectOutputStream oout, String[] scenIds)
+    public void read (JMEImporter im)
         throws IOException
     {
-        super.persistTo(oout, scenIds);
-        oout.writeUTF(name);
-        oout.writeByte(fx);
-        oout.writeByte(fy);
-        oout.writeByte(forient);
-        oout.writeShort(pitch);
-        oout.writeShort(elevation);
+        super.read(im);
+        InputCapsule capsule = im.getCapsule(this);
+        name = capsule.readString("name", null);
+        fx = capsule.readByte("fx", (byte)0);
+        fy = capsule.readByte("fy", (byte)0);
+        forient = capsule.readByte("forient", (byte)0);
+        pitch = capsule.readShort("pitch", (short)0);
+        elevation = capsule.readShort("elevation", (short)0);
     }
     
     @Override // documentation inherited
-    public void unpersistFrom (ObjectInputStream oin, String[] scenIds)
+    public void write (JMEExporter ex)
         throws IOException
     {
-        super.unpersistFrom(oin, scenIds);
-        name = oin.readUTF();
-        fx = oin.readByte();
-        fy = oin.readByte();
-        forient = oin.readByte();
-        pitch = oin.readShort();
-        elevation = oin.readShort();
+        super.write(ex);
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(name, "name", null);
+        capsule.write(fx, "fx", (byte)0);
+        capsule.write(fy, "fy", (byte)0);
+        capsule.write(forient, "forient", (byte)0);
+        capsule.write(pitch, "pitch", (short)0);
+        capsule.write(elevation, "elevation", (short)0);
     }
     
     @Override // documentation inherited

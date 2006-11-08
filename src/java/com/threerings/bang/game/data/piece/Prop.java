@@ -9,11 +9,14 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import com.jme.math.Vector3f;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
 
 import com.samskivert.util.StringUtil;
 
 import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
 
 import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -109,43 +112,45 @@ public class Prop extends BigPiece
     }
 
     @Override // documentation inherited
-    public void persistTo (ObjectOutputStream oout, String[] scenIds)
+    public void read (JMEImporter im)
         throws IOException
     {
-        super.persistTo(oout, scenIds);
-        oout.writeByte(fx);
-        oout.writeByte(fy);
-        oout.writeByte(forient);
-        oout.writeByte(felev);
-        oout.writeByte(pitch);
-        oout.writeByte(roll);
-        oout.writeShort(scalex);
-        oout.writeShort(scaley);
-        oout.writeShort(scalez);
+        super.read(im);
+        InputCapsule capsule = im.getCapsule(this);
         if (isOwnerConfigurable()) {
-            oout.writeInt(owner);
+            owner = capsule.readInt("owner", -1);
         }
+        fx = capsule.readByte("fx", (byte)0);
+        fy = capsule.readByte("fy", (byte)0);
+        forient = capsule.readByte("forient", (byte)0);
+        felev = capsule.readByte("felev", (byte)0);
+        pitch = capsule.readByte("pitch", (byte)0);
+        roll = capsule.readByte("roll", (byte)0);
+        scalex = capsule.readShort("scalex", (short)0);
+        scaley = capsule.readShort("scaley", (short)0);
+        scalez = capsule.readShort("scalez", (short)0);
+        init(PropConfig.getConfig(capsule.readString("type", null)));
     }
     
     @Override // documentation inherited
-    public void unpersistFrom (ObjectInputStream oin, String[] scenIds)
+    public void write (JMEExporter ex)
         throws IOException
     {
-        super.unpersistFrom(oin, scenIds);
-        fx = oin.readByte();
-        fy = oin.readByte();
-        forient = oin.readByte();
-        felev = oin.readByte();
-        pitch = oin.readByte();
-        roll = oin.readByte();
-        scalex = oin.readShort();
-        scaley = oin.readShort();
-        scalez = oin.readShort();
-        recomputeScale();
-        recomputeBounds();
+        super.write(ex);
+        OutputCapsule capsule = ex.getCapsule(this);
         if (isOwnerConfigurable()) {
-            owner = oin.readInt();
+            capsule.write(owner, "owner", -1);
         }
+        capsule.write(fx, "fx", (byte)0);
+        capsule.write(fy, "fy", (byte)0);
+        capsule.write(forient, "forient", (byte)0);
+        capsule.write(felev, "felev", (byte)0);
+        capsule.write(pitch, "pitch", (byte)0);
+        capsule.write(roll, "roll", (byte)0);
+        capsule.write(scalex, "scalex", (short)0);
+        capsule.write(scaley, "scaley", (short)0);
+        capsule.write(scalez, "scalez", (short)0);
+        capsule.write(_type, "type", null);
     }
     
     @Override // documentation inherited

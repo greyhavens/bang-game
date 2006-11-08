@@ -13,6 +13,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
+import com.jme.util.export.Savable;
+
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 import com.samskivert.util.IntListUtil;
@@ -45,7 +51,8 @@ import static com.threerings.bang.Log.log;
  * Describes the terrain of the game board.
  */
 public class BangBoard extends SimpleStreamableObject
-    implements AStarPathUtil.ExtendedTraversalPred, Cloneable, PieceCodes
+    implements AStarPathUtil.ExtendedTraversalPred, Cloneable, Savable,
+        PieceCodes
 {
     /** The basic traversal cost. */
     public static final int BASE_TRAVERSAL = 10;
@@ -1345,6 +1352,81 @@ public class BangBoard extends SimpleStreamableObject
         return "[" + _width + "x" + _height + "]";
     }
 
+    // documentation inherited from interface Savable
+    public Class getClassTag ()
+    {
+        return getClass();
+    }
+    
+    // documentation inherited from interface Savable
+    public void read (JMEImporter im)
+        throws IOException
+    {
+        InputCapsule capsule = im.getCapsule(this);
+        _width = capsule.readInt("width", 0);
+        _height = capsule.readInt("height", 0);
+        _heightfield = capsule.readByteArray("heightfield", null);
+        _elevationUnitsPerTile = capsule.readByte("elevationUnitsPerTile",
+            (byte)64);
+        _terrain = capsule.readByteArray("terrain", null);
+        _shadows = capsule.readByteArray("shadows", null);
+        _shadowIntensity = capsule.readFloat("shadowIntensity", 1f);
+        _waterLevel = capsule.readByte("waterLevel", (byte)-128);
+        _waterColor = capsule.readInt("waterColor", 0x003232);
+        _waterAmplitude = capsule.readFloat("waterAmplitude", 25f);
+        _lightAzimuths = capsule.readFloatArray("lightAzimuths", null);
+        _lightElevations = capsule.readFloatArray("lightElevations", null);
+        _lightDiffuseColors = capsule.readIntArray("lightDiffuseColors", null);
+        _lightAmbientColors = capsule.readIntArray("lightAmbientColors", null);
+        _skyHorizonColor = capsule.readInt("skyHorizonColor", 0xFFFFFF);
+        _skyOverheadColor = capsule.readInt("skyOverheadColor", 0x00FFFF);
+        _skyFalloff = capsule.readFloat("skyFalloff", 10f);
+        _windDirection = capsule.readFloat("windDirection", 0f);
+        _windSpeed = capsule.readFloat("windSpeed", 20f);
+        _fogColor = capsule.readInt("fogColor", 0xFFFFFF);
+        _fogDensity = capsule.readFloat("fogDensity", 0f);
+        String[] keys = capsule.readStringArray("patchMapKeys", null);
+        byte[][] values = capsule.readByteArray2D("patchMapValues", null);
+        _patchMap = new StreamableHashMap<String, byte[]>();
+        for (int ii = 0; ii < keys.length; ii++) {
+            _patchMap.put(keys[ii], values[ii]);
+        }
+        initTransientFields();
+    }
+    
+    // documentation inherited from interface Savable
+    public void write (JMEExporter ex)
+        throws IOException
+    {
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(_width, "width", 0);
+        capsule.write(_height, "height", 0);
+        capsule.write(_heightfield, "heightfield", null);
+        capsule.write(_elevationUnitsPerTile, "elevationUnitsPerTile",
+            (byte)64);
+        capsule.write(_terrain, "terrain", null);
+        capsule.write(_shadows, "shadows", null);
+        capsule.write(_shadowIntensity, "shadowIntensity", 1f);
+        capsule.write(_waterLevel, "waterLevel", (byte)-128);
+        capsule.write(_waterColor, "waterColor", 0x003232);
+        capsule.write(_waterAmplitude, "waterAmplitude", 25f);
+        capsule.write(_lightAzimuths, "lightAzimuths", null);
+        capsule.write(_lightElevations, "lightElevations", null);
+        capsule.write(_lightDiffuseColors, "lightDiffuseColors", null);
+        capsule.write(_lightAmbientColors, "lightAmbientColors", null);
+        capsule.write(_skyHorizonColor, "skyHorizonColor", 0xFFFFFF);
+        capsule.write(_skyOverheadColor, "skyOverheadColor", 0x00FFFF);
+        capsule.write(_skyFalloff, "skyFalloff", 10f);
+        capsule.write(_windDirection, "windDirection", 0f);
+        capsule.write(_windSpeed, "windSpeed", 20f);
+        capsule.write(_fogColor, "fogColor", 0xFFFFFF);
+        capsule.write(_fogDensity, "fogDensity", 0f);
+        capsule.write(_patchMap.keySet().toArray(new String[_patchMap.size()]),
+            "patchMapKeys", null);
+        capsule.write(_patchMap.values().toArray(new byte[_patchMap.size()][]),
+            "patchMapValues", null);
+    }
+    
     /**
      * Extends default behavior to initialize transient members.
      */

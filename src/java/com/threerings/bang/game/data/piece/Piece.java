@@ -9,11 +9,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.OutputCapsule;
+import com.jme.util.export.Savable;
+
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.StringUtil;
 
-import com.threerings.io.ObjectInputStream;
-import com.threerings.io.ObjectOutputStream;
 import com.threerings.io.Streamable;
 import com.threerings.media.util.AStarPathUtil;
 import com.threerings.util.MessageBundle;
@@ -36,7 +40,7 @@ import static com.threerings.bang.Log.log;
  * Does something extraordinary.
  */
 public abstract class Piece
-    implements Streamable, Cloneable, DSet.Entry, PieceCodes
+    implements Streamable, Cloneable, Savable, DSet.Entry, PieceCodes
 {
     /** Used by {@link #willShoot} */
     public static final Effect[] NO_EFFECTS = new Effect[0];
@@ -679,46 +683,34 @@ public abstract class Piece
         return false;
     }
     
-    /**
-     * Writes the persistent state of this piece to the specified stream.
-     *
-     * @param scenIds: A sorted array of scenario Ids
-     */
-    public void persistTo (ObjectOutputStream oout, String[] scenIds)
-        throws IOException
+    // documentation inherited from interface Savable
+    public Class getClassTag ()
     {
-        oout.writeInt(pieceId);
-        oout.writeShort(x);
-        oout.writeShort(y);
-        oout.writeShort(orientation);
-        if (scenId == null || scenIds == null) {
-            oout.writeShort(-1);
-        } else {
-            short idx = -1;
-            try {
-                idx = (short)Arrays.binarySearch(scenIds, scenId);
-            } finally {
-                oout.writeShort(idx);
-            }
-        }
+        return getClass();
     }
     
-    /**
-     * Reads the persistent state of this piece from the specified stream.
-     *
-     * @param scenIds: A sorted array of scenario Ids
-     */
-    public void unpersistFrom (ObjectInputStream oin, String[] scenIds)
+    // documentation inherited from interface Savable
+    public void read (JMEImporter im)
         throws IOException
     {
-        pieceId = oin.readInt();
-        short x = oin.readShort(), y = oin.readShort();
-        orientation = oin.readShort();
-        position(x, y);
-        short idx = oin.readShort();
-        if (scenIds != null && idx >= 0 && idx < scenIds.length) {
-            scenId = scenIds[idx];
-        }
+        InputCapsule capsule = im.getCapsule(this);
+        pieceId = capsule.readInt("pieceId", 0);
+        x = capsule.readShort("x", (short)0);
+        y = capsule.readShort("y", (short)0);
+        orientation = capsule.readShort("orientation", (short)0);
+        scenId = capsule.readString("scenId", null);
+    }
+    
+    // documentation inherited from interface Savable
+    public void write (JMEExporter ex)
+        throws IOException
+    {
+        OutputCapsule capsule = ex.getCapsule(this);
+        capsule.write(pieceId, "pieceId", 0);
+        capsule.write(x, "x", (short)0);
+        capsule.write(y, "y", (short)0);
+        capsule.write(orientation, "orientation", (short)0);
+        capsule.write(scenId, "scenId", null);
     }
     
     /**

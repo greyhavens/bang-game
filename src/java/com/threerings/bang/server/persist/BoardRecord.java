@@ -94,7 +94,6 @@ public class BoardRecord extends BoardData
     public void setScenarios (String[] scenids)
     {
         scenarios = StringUtil.join(scenids, ",");
-        init();
     }
      
     /**
@@ -142,7 +141,6 @@ public class BoardRecord extends BoardData
             log.warning("Invalid players property [prop=" + pstr + "].");
         }
         scenarios = props.getProperty("scenarios");
-        init();
         data = StringUtil.unhexlate(props.getProperty("data", ""));
         bin.close();
     }
@@ -154,35 +152,4 @@ public class BoardRecord extends BoardData
             ", data=" + super.toString() +
             ", hash=" + StringUtil.hexlate(dataHash) + "]";
     }
-
-    /**
-     * Initializes transient data.
-     */
-    public void init ()
-    {  
-        if (scenarios == null) {
-            _sortedScenIds = null;
-        } else {
-            _sortedScenIds = getScenarios(); 
-            Arrays.sort(_sortedScenIds);
-        }
-    }
-
-
-    @Override // documentation inherited
-    protected void writePiece (ObjectOutputStream oout, Piece piece)
-        throws IOException
-    {
-        super.writePiece(oout, piece, _sortedScenIds);
-    }
-
-    @Override // documentation inherited
-    protected Piece readPiece (ObjectInputStream oin)
-        throws IOException
-    {
-        return super.readPiece(oin, _sortedScenIds);
-    }
-
-    /** A sorted array of scenario ids. */
-    protected transient String[] _sortedScenIds;
 }

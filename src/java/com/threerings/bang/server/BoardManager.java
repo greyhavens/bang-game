@@ -60,7 +60,6 @@ public class BoardManager
 
             int pidx = record.players-2;
             String[] scenarios = StringUtil.split(record.scenarios, ",");
-            record.init();
             for (int ii = 0; ii < scenarios.length; ii++) {
                 BoardList[] lists = _byscenario.get(scenarios[ii]);
                 if (lists == null) {
