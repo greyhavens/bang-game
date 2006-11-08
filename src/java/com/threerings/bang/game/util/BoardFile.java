@@ -96,7 +96,7 @@ public class BoardFile
         name = capsule.readString("name", "");
         creator = capsule.readString("creator", "");
         scenarios = capsule.readStringArray("scenarios", DEF_SCENARIOS);
-        players = capsule.readInt("players", 0);
+        players = capsule.readInt("players", 2);
         board = (BangBoard)capsule.readSavable("board", null);
         pieces = ArrayUtil.copy(
             capsule.readSavableArray("pieces", null), new Piece[0]);
