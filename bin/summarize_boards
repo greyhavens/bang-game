@@ -6,46 +6,38 @@
 #
 # % ./bin/summarize_boards rsrc/boards/*/?/*.board > pages/boards.html
 
-@scens = [ "cj", "cr", "gr", "lg", # frontier town
-           "tb", "wa", "fg", # indian trading post
-         ]
-@colors = {
+scens = [ "cj", "cr", "gr", "lg", # frontier town
+          "tb", "wa", "fg", # indian trading post
+        ]
+colors = {
   "cj" => "#FFCC66", "cr" => "#FFCC66", "gr" => "#FFCC66", "lg" => "#FFCC66",
   "tb" => "#99CC66", "wa" => "#99CC66", "fg" => "#99CC66",
 }
 
-@boards = {}
-@scores = {}
-@scentots = {}
+boards = {}
+scores = {}
+scentots = {}
 
-ARGV.each do |file|
-  File.open(file, "r") do |fh|
-    fh.each_line do |line|
-      line.chomp!
-      case line
-        when /name=(.*)/
-          @name = $1
-        when /players=(\d+)/
-          @pcount = $1.to_i
-        when /scenarios=(.*)/
-          @bscens = $1.split(/,/)
-      end
-    end
-  end
-  @bscens.each do |scen|
-    # print "#{@name} #{scen} #{@pcount}\n"
-    @scentots[scen] = [0, 0, 0] if (@scentots[scen].nil?)
-    @scentots[scen][@pcount-2] += 1
-    @boards[@name] = {} if (@boards[@name].nil?)
-    if (@boards[@name][scen].nil?)
-      @boards[@name][scen] = []
-      if (@scores[@name].nil?)
-        @scores[@name] = (2 ** @scens.index(scen))
+$stdin.each_line do |line|
+  line.chomp!
+  bits = line.split("\t")
+  name = bits[0]
+  pcount = bits[1].to_i
+
+  bits[2].split(/,/).each do |scen|
+    # print "#{name} #{scen} #{pcount}\n"
+    scentots[scen] = [0, 0, 0] if (scentots[scen].nil?)
+    scentots[scen][pcount-2] += 1
+    boards[name] = {} if (boards[name].nil?)
+    if (boards[name][scen].nil?)
+      boards[name][scen] = []
+      if (scores[name].nil?)
+        scores[name] = (2 ** scens.index(scen))
       else
-        @scores[@name] += (2 ** @scens.index(scen))
+        scores[name] += (2 ** scens.index(scen))
       end
     end
-    @boards[@name][scen][@pcount-2] = 1
+    boards[name][scen][pcount-2] = 1
   end
 end
 
@@ -53,13 +45,13 @@ print "<html><head><title>Bang! Board Summary</title></head>\n"
 print "<body>\n"
 print "<table border=1 style='border-collapse: collapse'>\n"
 print "<tr><th style='border-right: 2px solid'>&nbsp;</th>"
-@scens.each do |scen|
+scens.each do |scen|
   print "<th colspan='3' style='border-right: 2px solid'>#{scen}</th>"
 end
 print "</tr>\n"
 
 print "<tr><th style='border-right: 2px solid'>Board</th>"
-@scens.each do |scen|
+scens.each do |scen|
   [0, 1, 2].each do |idx|
     border = (idx == 2) ? "style='border-right: 2px solid'" : ""
     print "<th width='25' #{border}>#{idx+2}</th>"
@@ -67,18 +59,18 @@ print "<tr><th style='border-right: 2px solid'>Board</th>"
 end
 print "</tr>\n"
 
-@boards.keys.sort { |aname, bname|
-  @scores[aname] - @scores[bname]
+boards.keys.sort { |aname, bname|
+  scores[aname] - scores[bname]
 }.each do |name|
-  schash = @boards[name]
+  schash = boards[name]
   print "<tr><td style='border-right: 2px solid'>#{name}</td>"
-  @scens.each do |scen|
+  scens.each do |scen|
     pcounts = schash[scen]
     if (pcounts.nil?)
       print "<td colspan='3' style='border-right: 2px solid'>&nbsp;</td>"
     else
       [0, 1, 2].each do |idx|
-        bgcolor = pcounts[idx].nil? ? "#CCCCCC" : @colors[scen]
+        bgcolor = pcounts[idx].nil? ? "#CCCCCC" : colors[scen]
         val = pcounts[idx].nil? ? "" : "&middot;"
         border = (idx == 2) ? "style='border-right: 2px solid'" : ""
         print "<td align='center' bgcolor='#{bgcolor}' #{border}>#{val}</td>"
@@ -88,11 +80,11 @@ print "</tr>\n"
   print "</tr>\n"
 end
 
-print "<tr><th style='border-right: 2px solid'>#{@boards.size}</th>"
-@scens.each do |scen|
+print "<tr><th style='border-right: 2px solid'>#{boards.size}</th>"
+scens.each do |scen|
   [0, 1, 2].each do |idx|
     border = (idx == 2) ? "style='border-right: 2px solid'" : ""
-    print "<th #{border}>#{@scentots[scen][idx]}</th>"
+    print "<th #{border}>#{scentots[scen][idx]}</th>"
   end
 end
 print "</tr>\n"
