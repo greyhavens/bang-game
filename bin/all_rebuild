@@ -114,7 +114,7 @@ if [ ! -z "$DEVCLIENT" ]; then
     # update our board summary table
     $ROOT/bin/bangtool com.threerings.bang.tools.DumpBoards \
         $ROOT/rsrc/boards/*/?/*.board | \
-        summarize_boards > $ROOT/pages/boards.html
+        $ROOT/bin/summarize_boards > $ROOT/pages/boards.html
 fi
 
 # build the particle system editor if requested
