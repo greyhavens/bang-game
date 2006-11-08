@@ -30,6 +30,13 @@ public class SafeMarker extends Marker
     }
 
     @Override // documentation inherited
+    public void init ()
+    {
+        super.init();
+        _on = (_type == SAFE);
+    }
+    
+    @Override // documentation inherited
     public int getGoalRadius (Piece mover)
     {
         return (_on) ? 0 : -1;
