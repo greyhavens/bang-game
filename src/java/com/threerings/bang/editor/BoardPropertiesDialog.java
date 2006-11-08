@@ -73,6 +73,9 @@ public class BoardPropertiesDialog extends JDialog
         _elevationScale.addChangeListener(this);
         center.add(epanel);
         
+        center.add(_gridColor = new ColorPanel(ctx, "m.grid_color"));
+        _gridColor.addChangeListener(this);
+        
         JPanel buttons = new JPanel();
         JButton dismiss = new JButton(_ctx.xlate("editor", "b.dismiss"));
         dismiss.addActionListener(new ActionListener() {
@@ -94,6 +97,7 @@ public class BoardPropertiesDialog extends JDialog
     {
         _dimensions.setValues(board.getWidth(), board.getHeight());
         _elevationScale.setValue(128 - board.getElevationUnitsPerTile());
+        _gridColor.setRGB(board.getGridColor());
     }
     
     // documentation inherited from interface ChangeListener
@@ -101,6 +105,9 @@ public class BoardPropertiesDialog extends JDialog
     {
         if (!isShowing()) {
             return; // invoked from fromBoard
+        } else if (e.getSource() == _gridColor) {
+            _panel.view.setGridColor(_gridColor.getRGB(), true);
+            return;
         }
         _panel.view.setElevationUnitsPerTile(128 - _elevationScale.getValue(),
             true);
@@ -120,4 +127,7 @@ public class BoardPropertiesDialog extends JDialog
     
     /** The elevation scale slider. */
     protected JSlider _elevationScale;
+    
+    /** The grid color panel. */
+    public ColorPanel _gridColor;
 }

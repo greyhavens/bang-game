@@ -112,6 +112,7 @@ public class BangBoard extends SimpleStreamableObject
         _windSpeed = 20f;
 
         _fogColor = 0xFFFFFF;
+        _gridColor = 0x808080;
         
         initTransientFields();
     }
@@ -532,6 +533,22 @@ public class BangBoard extends SimpleStreamableObject
     {
         _fogColor = color;
         _fogDensity = density;
+    }
+    
+    /**
+     * Returns the RGB color of the board grid.
+     */
+    public int getGridColor ()
+    {
+        return _gridColor;
+    }
+    
+    /**
+     * Sets the RGB color of the board grid.
+     */
+    public void setGridColor (int color)
+    {
+        _gridColor = color;
     }
     
     /**
@@ -1385,6 +1402,7 @@ public class BangBoard extends SimpleStreamableObject
         _windSpeed = capsule.readFloat("windSpeed", 20f);
         _fogColor = capsule.readInt("fogColor", 0xFFFFFF);
         _fogDensity = capsule.readFloat("fogDensity", 0f);
+        _gridColor = capsule.readInt("gridColor", 0x808080);
         String[] keys = capsule.readStringArray("patchMapKeys", null);
         byte[][] values = capsule.readByteArray2D("patchMapValues", null);
         _patchMap = new StreamableHashMap<String, byte[]>();
@@ -1421,6 +1439,7 @@ public class BangBoard extends SimpleStreamableObject
         capsule.write(_windSpeed, "windSpeed", 20f);
         capsule.write(_fogColor, "fogColor", 0xFFFFFF);
         capsule.write(_fogDensity, "fogDensity", 0f);
+        capsule.write(_gridColor, "gridColor", 0x808080);
         capsule.write(_patchMap.keySet().toArray(new String[_patchMap.size()]),
             "patchMapKeys", null);
         capsule.write(_patchMap.values().toArray(new byte[_patchMap.size()][]),
@@ -1719,6 +1738,9 @@ public class BangBoard extends SimpleStreamableObject
     /** The density of the board fog. */
     protected float _fogDensity;
 
+    /** The color of the board grid. */
+    protected int _gridColor;
+    
     /** The shadow patches for different prop configurations. */
     protected StreamableHashMap<String, byte[]> _patchMap;
     

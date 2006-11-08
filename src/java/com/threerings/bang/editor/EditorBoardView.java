@@ -778,6 +778,26 @@ public class EditorBoardView extends BoardView
     }
     
     /**
+     * Sets the board's grid color.
+     */
+    public void setGridColor (int color, boolean edit)
+    {
+        if (edit && color != _board.getGridColor()) {
+            new SwapEdit() {
+                public void swapSaved () {
+                    int color = _board.getGridColor();
+                    setGridColor(_color, false);
+                    _color = color;
+                }
+                protected int _color = _board.getGridColor();
+                
+            }.commit();
+        }
+        _board.setGridColor(color);
+        updateGrid();
+    }
+    
+    /**
      * Creates a fresh new board.
      */
     public void createNewBoard (int width, int height)

@@ -170,10 +170,6 @@ public class EditorPanel extends JPanel
             true);
         
         view.addSeparator();
-        createMenuItem(view, msgs.get("m.menu_grid_color"), -1, KeyEvent.VK_C,
-            EditorController.CHANGE_GRID_COLOR);
-        
-        view.addSeparator();
         recenter = createMenuItem(view, msgs.get("m.menu_recenter_camera"),
             KeyEvent.VK_R, KeyEvent.VK_R, EditorController.RECENTER_CAMERA);
     }
