@@ -54,7 +54,8 @@ public class Dirigible extends Unit
     {
         DamageEffect effect = null;
         if (_deathTarget != null) {
-            effect = new DamageEffect(_deathTarget, 25);
+            effect = new DamageEffect(
+                    _deathTarget, _deathTarget.adjustDefend(this, 25));
         }
         return effect;
     }
