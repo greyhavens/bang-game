@@ -210,6 +210,8 @@ public class BangClient extends BasicClient
                             GL11.glGetString(GL11.GL_EXTENSIONS));
         report.setAttribute("GLU Extensions",
                             GLU.gluGetString(GLU.GLU_EXTENSIONS));
+        report.setAttribute("Graphics Detail", 
+                BangPrefs.getDetailLevel().toString());
 
         // and send it along with our debug logs
         URL submitURL = DeploymentConfig.getBugSubmitURL();
