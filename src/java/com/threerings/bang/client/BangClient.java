@@ -1102,7 +1102,7 @@ public class BangClient extends BasicClient
         }
 
         public void eventDispatched (BEvent event) {
-            _lastEventStamp = (event.getWhen() != 0L) ?
+            _lastEventStamp = (event.getWhen() > 0L) ?
                 event.getWhen() : _ctx.getRootNode().getTickStamp();
             if (_isIdle) {
                 updateIdle(false, 0L);
