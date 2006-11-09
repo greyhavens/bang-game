@@ -882,6 +882,12 @@ folk_howto {
   padding: 7 20 0 0;
 }
 
+folk_howto_button {
+  background: image "ui/pstatus/folks/circle_normal.png" centerxy;
+  text-align: center;
+  vertical-align: center;
+}
+
 //
 // Town View styles
 
