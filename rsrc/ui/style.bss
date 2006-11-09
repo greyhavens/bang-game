@@ -877,6 +877,10 @@ folk_menu {
   parent: "popupmenu";
 }
 
+folk_howto {
+  font: "Helvetica" plain 14;
+  padding: 7 20 0 0;
+}
 
 //
 // Town View styles

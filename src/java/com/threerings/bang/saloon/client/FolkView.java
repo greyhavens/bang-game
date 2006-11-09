@@ -5,9 +5,12 @@ package com.threerings.bang.saloon.client;
 
 import java.util.HashMap;
 
+import com.jme.renderer.Renderer;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
@@ -23,6 +26,7 @@ import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.chat.client.PlaceChatView;
+import com.threerings.bang.client.bui.BangHTMLView;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
@@ -167,6 +171,43 @@ public class FolkView extends BContainer
                 insertCell(new FolkCell(_ctx, _chat, handle, false));
             }
         }
+
+        // if we added folks, great, we're done
+        if (_folkList.getComponentCount() > 0) {
+            return;
+        }
+
+        // if they have folks marked as friendly but none of them are around
+        // just say there's no friendly folks in the saloon
+        if (_user.friends.length > 0 || _user.foes.length > 0) {
+            String nomsg = _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.no_folks");
+            _folkList.add(new BLabel(nomsg));
+            return;
+        }
+
+        // otherwise give them a little howto on Friendly Folks
+        BLabel label = new BLabel(
+            _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.folks_howto"));
+        label.setStyleClass("folk_howto");
+        label.setIconTextGap(15);
+        final BImage ff = _ctx.loadImage("ui/pstatus/folks/ff.png");
+        BImage circle = _ctx.loadImage("ui/pstatus/folks/circle_normal.png");
+        label.setIcon(new ImageIcon(circle) {
+            public void wasAdded() {
+                super.wasAdded();
+                ff.reference();
+            }
+            public void wasRemoved() {
+                super.wasRemoved();
+                ff.release();
+            }
+            public void render (Renderer renderer, int x, int y, float alpha) {
+                super.render(renderer, x, y, alpha);
+                ff.render(renderer, x+(getWidth()-ff.getWidth())/2,
+                          y+(getHeight()-ff.getHeight())/2, alpha);
+            }
+        });
+        _folkList.add(label);
     }
 
     /**
