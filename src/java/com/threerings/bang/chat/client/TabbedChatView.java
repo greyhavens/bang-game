@@ -93,9 +93,13 @@ public class TabbedChatView extends BContainer
     // from interface ChatDisplay
     public void clear ()
     {
-        _pane.removeAllTabs();
-        _users.clear();
-        _input.setText("");
+        if (!_input.hasFocus() && !_send.hasFocus()) {
+            return;
+        }
+        ComicChatView tab = (ComicChatView)_pane.getSelectedTab();
+        if (tab != null) {
+            tab.clear();
+        }
     }
 
     // from interface ChatDisplay
