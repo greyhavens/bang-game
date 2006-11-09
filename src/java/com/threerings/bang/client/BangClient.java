@@ -910,7 +910,7 @@ public class BangClient extends BasicClient
             desc = MessageBundle.tcompose("m.pardner_invite_full", handle);
             btn = "m.pardner_wait";
         } else {
-            desc = MessageBundle.tcompose("m.pardner_invite_avail", handle);
+            desc = MessageBundle.tcompose("m.pardner_invite_available", handle);
             btn = "m.pardner_accept";
         }
 
