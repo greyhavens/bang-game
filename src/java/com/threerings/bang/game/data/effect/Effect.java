@@ -146,7 +146,10 @@ public abstract class Effect extends SimpleStreamableObject
     {
         // move the target to its new coordinates
         if (target instanceof Unit && (target.x != x || target.y != y)) {
+            int oldDamage = target.damage;
+            target.damage = newDamage;
             moveAndReport(bangobj, target, x, y, obs);
+            target.damage = oldDamage;
         }
 
         // damage the target if it's still alive

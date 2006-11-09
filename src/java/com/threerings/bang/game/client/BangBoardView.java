@@ -84,6 +84,7 @@ import com.threerings.bang.game.client.effect.IconViz;
 import com.threerings.bang.game.client.sprite.ActiveSprite;
 import com.threerings.bang.game.client.sprite.BonusSprite;
 import com.threerings.bang.game.client.sprite.Bouncer;
+import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.PropSprite;
 import com.threerings.bang.game.client.sprite.Spinner;
@@ -690,6 +691,15 @@ public class BangBoardView extends BoardView
             ((UnitSprite)sprite).setPidx(_pidx);
         }
         super.addSprite(sprite);
+    }
+
+    @Override // documentation inherited
+    public void removeSprite (Sprite sprite)
+    {
+        if (sprite instanceof MobileSprite) {
+            ((MobileSprite)sprite).checkMoveSound("removing sprite");
+        }
+        super.removeSprite(sprite);
     }
 
     /**

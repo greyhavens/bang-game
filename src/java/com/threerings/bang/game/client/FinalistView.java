@@ -189,7 +189,7 @@ public class FinalistView extends BContainer
     };
 
     protected static final Point[] FF_POS = {
-        new Point(244, 40),
-        new Point(113, 20),
+        new Point(244, 33),
+        new Point(113, 17),
     };
 }

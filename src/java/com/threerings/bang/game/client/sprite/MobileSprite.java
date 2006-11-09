@@ -244,8 +244,18 @@ public class MobileSprite extends ActiveSprite
     {
         super.updateWorldData(time);
 
-        if (!isMoving() && _moveSound != null && _moveSound.isPlaying()) {
-            log.warning("Move sound playing when not moving [piece=" + 
+        if (!isMoving()) {
+            checkMoveSound("not moving");
+        }
+    }
+
+    /**
+     * Called to ensure that the move sound has stopped playing.
+     */
+    public void checkMoveSound (String msg)
+    {
+        if (_moveSound != null && _moveSound.isPlaying()) {
+            log.warning("Move sound playing when " + msg + " [piece=" + 
                     _piece + "]");
             stopMoveSound();
         }
@@ -351,6 +361,7 @@ public class MobileSprite extends ActiveSprite
     protected void createSounds (SoundGroup sounds)
     {
         super.createSounds(sounds);
+        checkMoveSound("creating sounds");
 
         // load up our movement sounds
         String spath = "rsrc/" + getMoveSound();

@@ -97,7 +97,7 @@ public class CoopFinalistView extends BContainer
                     BangConfig config = (BangConfig)ctrl.getPlaceConfig();
                     if (config.ais[ii] == null) {
                         add(new FriendlyFolkButton(bctx, bangobj, ii),
-                                new Point(FF_OFFSET[ii] + ax, 48));
+                                new Point(FF_OFFSET[ii] + ax, 38));
                     }
                 }
             }
