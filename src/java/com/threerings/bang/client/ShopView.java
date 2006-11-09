@@ -4,10 +4,6 @@
 package com.threerings.bang.client;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
-
-import java.io.StringReader;
-import javax.swing.text.html.HTMLDocument;
 
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
@@ -19,9 +15,9 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.text.HTMLView;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
@@ -32,11 +28,9 @@ import com.threerings.util.MessageBundle;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.client.bui.BangHTMLView;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
-
-import static com.threerings.bang.Log.log;
-import com.jmex.bui.icon.BlankIcon;
 
 /**
  * Handles some shared stuff for our shop views (General Store, Bank, Barber,
@@ -67,18 +61,9 @@ public abstract class ShopView extends BWindow
             _intro.add(new BLabel(_msgs.get("m.intro_title"), "window_title"),
                        GroupLayout.FIXED);
 
-            // set up our HTML
-            HTMLView html = new HTMLView();
+            BangHTMLView html = new BangHTMLView();
             html.setStyleClass("intro_body");
-            HTMLDocument doc = new HTMLDocument(BangUI.css);
-            String text = _msgs.get("m.intro_text");
-            try {
-                html.getEditorKit().read(new StringReader(text), doc, 0);
-                html.setContents(doc);
-            } catch (Throwable t) {
-                log.log(Level.WARNING, "Failed to parse shop help " +
-                        "[contents=" + text + "].", t);
-            }
+            html.setContents(_msgs.get("m.intro_text"));
             _intro.add(html);
 
             BContainer btns = GroupLayout.makeHBox(GroupLayout.CENTER);

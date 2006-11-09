@@ -19,13 +19,13 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.text.HTMLView;
 
 import com.samskivert.util.ResultListener;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.chat.client.PlaceChatView;
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.BangHTMLView;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.CachedDocument;
 import com.threerings.bang.util.DeploymentConfig;
@@ -154,7 +154,7 @@ public class PaperView extends BContainer
     protected void setContents (String contents)
     {
         if (_contents == null) {
-            _contents = new HTMLView();
+            _contents = new BangHTMLView();
             _contents.setStyleClass("news_contents");
         }
         if (_contscroll == null) {
@@ -169,15 +169,7 @@ public class PaperView extends BContainer
         if (contents == null) {
             contents = _msgs.get(SaloonCodes.INTERNAL_ERROR);
         }
-        HTMLDocument doc = new HTMLDocument(BangUI.css);
-        doc.setBase(DeploymentConfig.getDocBaseURL());
-        try {
-            _contents.getEditorKit().read(new StringReader(contents), doc, 0);
-            _contents.setContents(doc);
-        } catch (Throwable t) {
-            log.log(Level.WARNING, "Failed to parse HTML " +
-                    "[contents=" + contents + "].", t);
-        }
+        _contents.setContents(DeploymentConfig.getDocBaseURL(), contents);
     }
 
     protected void refreshNews (boolean force)
@@ -259,7 +251,7 @@ public class PaperView extends BContainer
     protected BContainer _contcont;
     protected BToggleButton[] _navi;
 
-    protected HTMLView _contents;
+    protected BangHTMLView _contents;
     protected BScrollPane _contscroll;
 
     protected BContainer _folks;
