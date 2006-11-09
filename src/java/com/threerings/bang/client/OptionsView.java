@@ -38,6 +38,8 @@ import org.lwjgl.opengl.DisplayMode;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.crowd.chat.client.CurseFilter;
+
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.TabbedPane;
 import com.threerings.bang.data.BangCodes;
@@ -66,11 +68,14 @@ public class OptionsView extends BDecoratedWindow
         TabbedPane tabs = new TabbedPane(false);
         tabs.setPreferredSize(new Dimension(375, 275));
 
+        // create the General tab
         TableLayout layout = new TableLayout(2, 10, 10);
         layout.setHorizontalAlignment(TableLayout.CENTER);
         layout.setVerticalAlignment(TableLayout.CENTER);
         BContainer cont = new BContainer(layout);
         cont.setStyleClass("options_tab");
+        tabs.addTab(_msgs.get("t.general"), cont);
+
         cont.add(new BLabel(_msgs.get("m.video_mode"), "right_label"));
         cont.add(_modes = new BComboBox());
 
@@ -87,14 +92,41 @@ public class OptionsView extends BDecoratedWindow
         cont.add(new BLabel(_msgs.get("m.effects_vol"), "right_label"));
         cont.add(createSoundSlider(SoundType.EFFECTS));
 
-        tabs.addTab(_msgs.get("t.general"), cont);
-
-        // the mute director/list is only available after logging in
+        // create the Chat tab if we're logged on
         if (ctx.getMuteDirector() != null) {
-            cont = new BContainer(GroupLayout.makeVert(GroupLayout.STRETCH,
-                GroupLayout.CENTER, GroupLayout.CONSTRAIN));
+            cont = new BContainer(
+                GroupLayout.makeVert(GroupLayout.STRETCH, GroupLayout.CENTER,
+                                     GroupLayout.CONSTRAIN));
             ((GroupLayout)cont.getLayoutManager()).setGap(10);
             cont.setStyleClass("options_tab");
+            tabs.addTab(_msgs.get("t.chat"), cont);
+
+            BContainer top = new BContainer(layout);
+            cont.add(top, GroupLayout.FIXED);
+
+            top.add(new BLabel(_msgs.get("m.chat_mode"), "right_label"));
+            BComboBox chatmode = new BComboBox();
+            top.add(chatmode);
+            ComboItem selitem = null;
+            for (CurseFilter.Mode mode : CurseFilter.Mode.values()) {
+                String label = _msgs.get(
+                    "m.cfm_" + mode.toString().toLowerCase());
+                ComboItem item = new ComboItem(mode, label);
+                chatmode.addItem(item);
+                if (mode.equals(BangPrefs.getChatFilterMode())) {
+                    selitem = item;
+                }
+            }
+            chatmode.selectItem(selitem);
+            chatmode.addListener(new ActionListener() {
+                public void actionPerformed (ActionEvent event) {
+                    BComboBox chatmode = (BComboBox)event.getSource();
+                    ComboItem sel = (ComboItem)chatmode.getSelectedItem();
+                    BangPrefs.setChatFilterMode((CurseFilter.Mode)sel.value);
+                }
+            });
+
+            cont.add(new BLabel(_msgs.get("m.ignore_list")), GroupLayout.FIXED);
 
             BScrollPane sp = new BScrollPane(
                 _muted = new BList(ctx.getMuteDirector().getMuted()));
@@ -106,8 +138,6 @@ public class OptionsView extends BDecoratedWindow
             _remove = new BButton(_msgs.get("b.remove"), this, "remove");
             cont.add(_remove, GroupLayout.FIXED);
             _remove.setEnabled(false);
-
-            tabs.addTab(_msgs.get("t.mute_list"), cont);
         }
 
         add(tabs);
@@ -350,7 +380,6 @@ public class OptionsView extends BDecoratedWindow
         }
 
         _fullscreen.setText(_msgs.get("m.restart"));
-
         OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
                 if (button == OptionDialog.OK_BUTTON) {
@@ -370,6 +399,22 @@ public class OptionsView extends BDecoratedWindow
                  _mode.getFrequency() == mode.getFrequency()) &&
                 (_mode.getBitsPerPixel() == 0 ||
                  _mode.getBitsPerPixel() == mode.getBitsPerPixel()));
+    }
+
+    protected static class ComboItem
+    {
+        public Object value;
+
+        public ComboItem (Object value, String label) {
+            this.value = value;
+            _label = label;
+        }
+
+        public String toString () {
+            return _label;
+        }
+
+        protected String _label;
     }
 
     protected static class ModeItem implements Comparable

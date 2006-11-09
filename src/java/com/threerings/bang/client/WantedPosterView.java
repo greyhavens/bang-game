@@ -214,12 +214,12 @@ public class WantedPosterView extends BContainer
             box.add(new Spacer(1, 12));
             box.add(new Spacer(1, 12));
         }
+
         for (Map.Entry<String, Integer> row : _poster.rankings.entrySet()) {
             String scenarioId = row.getKey();
             if (ScenarioInfo.OVERALL_IDENT.equals(scenarioId)) {
                 continue;
             }
-            
             ScenarioInfo info = ScenarioInfo.getScenarioInfo(scenarioId);
             if (info == null) {
                 log.warning("Unknown scenario id [id=" + scenarioId + "]");
@@ -259,7 +259,6 @@ public class WantedPosterView extends BContainer
     {
         // overlay the avatar with the sepia at a low alpha level
         AvatarView avatar = new AvatarView(_ctx, 2, false, false) {
-            @Override // from BComponent
             protected void renderComponent (Renderer renderer) {
                 super.renderComponent(renderer);
                 _avatarSepia.render(renderer, 0, 0, _width, _height, 0.25f);
@@ -284,7 +283,6 @@ public class WantedPosterView extends BContainer
         };
         avatar.setStyleClass("poster_avatar");
         if (_poster.avatar != null) {
-            // TODO: should not happen, snapshots currently broken?
             avatar.setAvatar(_poster.avatar);
         }
         return avatar;
@@ -294,7 +292,6 @@ public class WantedPosterView extends BContainer
     {
         IconPalette palette = new IconPalette(
             null, PosterInfo.BADGES, 1, ItemIcon.ICON_SIZE, 0) {
-            @Override // from BComponent
             protected void renderComponent (Renderer renderer) {
                 super.renderComponent(renderer);
                 _badgeSepia.render(renderer, 0, 0, _width, _height, 0.25f);
@@ -316,9 +313,14 @@ public class WantedPosterView extends BContainer
         BContainer box = GroupLayout.makeVBox(GroupLayout.CENTER);
         box.setStyleClass("poster_statement_box");
 
-        BLabel label = new BLabel(_poster.statement != null ?
-                                  "\"" + _poster.statement + "\"" : "",
-                                  "poster_statement");
+        // run this player's statement through the chat filter
+        String filtered = "";
+        if (_poster.statement != null) {
+            filtered = "\"" + _ctx.getChatDirector().filter(
+                _poster.statement, null, false) + "\"";
+        }
+
+        BLabel label = new BLabel(filtered, "poster_statement");
         label.setWrap(false);
         label.setFit(true);
         box.add(label);
