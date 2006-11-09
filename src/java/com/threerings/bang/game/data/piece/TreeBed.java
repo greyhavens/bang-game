@@ -26,7 +26,7 @@ public class TreeBed extends Prop
 
     /** The damage levels at which the tree grows to new phases. */
     public static final int[] GROWTH_DAMAGE = { 66, 33, 0 };
-    
+
     /** The current growth phase of the tree, from 0 to FULLY_GROWN. */
     public byte growth;
 
@@ -34,7 +34,7 @@ public class TreeBed extends Prop
     {
         damage = 100;
     }
-    
+
     @Override // documentation inherited
     public void init ()
     {
@@ -48,25 +48,25 @@ public class TreeBed extends Prop
     {
         return true; // the scenario adds them before each wave
     }
-    
+
     @Override // documentation inherited
     public void wasKilled (short tick)
     {
         // don't reset our lastActed
     }
-    
+
     @Override // documentation inherited
     public int getGoalRadius (Piece mover)
     {
         return (mover.owner != -1 && isAlive() && damage > 0) ? +1 : -1;
     }
-    
+
     @Override // documentation inherited
     public boolean isAlive ()
     {
         return super.isAlive() || growth == 0;
     }
-    
+
     @Override // documentation inherited
     public boolean expireWreckage (short tick)
     {
@@ -99,7 +99,7 @@ public class TreeBed extends Prop
         int gdamage = GROWTH_DAMAGE[growth - 1];
         return (float)Math.max(0, (damage - gdamage)) / (100 - gdamage);
     }
-    
+
     @Override // documentation inherited
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
@@ -109,8 +109,7 @@ public class TreeBed extends Prop
             return null;
         }
 
-        // normal units cause the tree to grow; logging robots cause it to
-        // shrink
+        // normal units cause the tree to grow; except logging robots
         int dinc = 0, ddec = 0;
         boolean doubleGrowth = false;
         ArrayList<Piece> growers = new ArrayList<Piece>();
@@ -121,12 +120,12 @@ public class TreeBed extends Prop
                 if (FetishEffect.FROG_FETISH.equals(unit.holding)) {
                     doubleGrowth = true;
                 }
-                int pdamage = unit.getTreeProximityDamage();
-                if (pdamage > 0) {
+                // logging robots don't heal us
+                if (unit instanceof LoggingRobot) {
                     continue;
-                } else {
-                    ddec += pdamage;
                 }
+                // but everyone else does
+                ddec += TREE_PROXIMITY_HEALING;
                 growers.add(piece);
             }
         }
@@ -140,10 +139,14 @@ public class TreeBed extends Prop
             growers.toArray(new Piece[growers.size()]), tdamage));
         return effects;
     }
-    
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new TreeBedSprite();
     }
+
+    /** The base amount by which units next to trees decrease their damage and
+     * encourage them to grow. */
+    protected static final int TREE_PROXIMITY_HEALING = -7;
 }

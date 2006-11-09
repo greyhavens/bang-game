@@ -498,15 +498,6 @@ public class Unit extends Piece
             hindrance.adjustMaxFireDistance(distance);
     }
 
-    /**
-     * Returns the amount of damage caused to trees by the unit when it is
-     * next to them.
-     */
-    public int getTreeProximityDamage ()
-    {
-        return TREE_PROXIMITY_DAMAGE;
-    }
-
     @Override // documentation inherited
     public void wasAdded (BangObject bangobj)
     {
@@ -757,8 +748,4 @@ public class Unit extends Piece
 
     /** The height above props at which flyers fly (in tile lengths). */
     protected static final float FLYER_PROP_HEIGHT = 0.25f;
-
-    /** The base amount by which units next to trees decrease their damage and
-     * encourage them to grow. */
-    protected static final int TREE_PROXIMITY_DAMAGE = -7;
 }
