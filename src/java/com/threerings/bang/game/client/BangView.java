@@ -118,11 +118,13 @@ public class BangView extends BWindow
 
         switch (phase) {
         case PRE_SELECT_PHASE:
+            log.info("Starting Pre Select Phase");
             view.doPreSelectBoardTour();
             break;
 
         case BangObject.SELECT_PHASE:
             if (pidx != -1) {
+                log.info("Starting Select Phase");
                 setOverlay(new SelectionView(
                     _ctx, _ctrl, config, _bangobj, pidx));
                 // because we may be setting it after updating but before
@@ -133,6 +135,7 @@ public class BangView extends BWindow
 
         case BangObject.BUYING_PHASE:
             if (pidx != -1) {
+                log.info("Starting Buying Phase");
                 boolean hadFocus = chat.hasFocus();
                 ((SelectionView)_oview).setPickTeamMode(config);
                 if (hadFocus) {
@@ -142,6 +145,7 @@ public class BangView extends BWindow
             break;
 
         case BangObject.IN_PLAY:
+            log.info("Starting In Play Phase");
             if (config.practice) {
                 showPractice();
                 if (pidx != -1) {
@@ -159,6 +163,7 @@ public class BangView extends BWindow
             break;
 
         case BangObject.POST_ROUND:
+            log.info("Starting Post Round Phase");
             endRound();
             break;
         }
