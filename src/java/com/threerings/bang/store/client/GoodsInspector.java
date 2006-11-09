@@ -59,7 +59,9 @@ public class GoodsInspector extends BContainer
         add(_icon = new BLabel(""), new Rectangle(0, 0, 136, 156));
 
         add(_title = new BLabel("", "medium_title"),
-            new Rectangle(190, 115, 320, 40));
+            new Rectangle(190, 115, 300, 40));
+        _title.setWrap(false);
+        _title.setFit(true);
         add(_descrip = new BLabel("", "goods_descrip"),
             new Rectangle(190, 55, 400, 60));
     }
