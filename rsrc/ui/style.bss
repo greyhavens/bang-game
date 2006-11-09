@@ -1133,7 +1133,7 @@ tutorial_forward {
   background: image "ui/icons/right_arrow.png";
 }
 tutorial_forward:hover {
-  background: image "ui/icons/right_arrow.png";
+  background: image "ui/icons/right_arrow_hover.png";
 }
 tutorial_forward:down {
   background: image "ui/icons/right_arrow.png";
@@ -1146,7 +1146,7 @@ tutorial_back {
   background: image "ui/icons/left_arrow.png";
 }
 tutorial_back:hover {
-  background: image "ui/icons/left_arrow.png";
+  background: image "ui/icons/left_arrow_hover.png";
 }
 tutorial_back:down {
   background: image "ui/icons/left_arrow.png";
