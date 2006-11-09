@@ -15,6 +15,7 @@ import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
 
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.GL11;
 
 import com.jme.bounding.BoundingBox;
@@ -70,8 +71,9 @@ public class WaterNode extends Node
         setNormalsMode(NM_USE_PROVIDED);
         
         // use our fancy shaders if possible
-        _sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
-        if (_sstate.isSupported()) {
+        if (GLContext.getCapabilities().GL_ARB_vertex_shader &&
+            GLContext.getCapabilities().GL_ARB_fragment_shader) {
+            _sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
             if (_shaderId == -1) {
                 _sstate.load(
                     getClass().getResource("/rsrc/shaders/water.vert"),
@@ -81,10 +83,7 @@ public class WaterNode extends Node
                 _sstate.setProgramID(_shaderId);
             }
             setRenderState(_sstate);
-            return;
-            
-        } else {
-            _sstate = null;
+            return;   
         }
         
         // otherwise, use a combination of sphere map, lighting, and material

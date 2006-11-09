@@ -21,6 +21,7 @@ void main ()
     // blend the water and sky colors using the Fresnel reflectivity
     // (computed as an approximate) and add the specular highlight
     gl_FragColor =
-        mix(waterColor, skyOverheadColor, pow(dot(norm, eye) + 1, -8)) +
-        gl_LightSource[0].specular * pow(max(dot(norm, half), 0), 32);
+        mix(waterColor, skyOverheadColor,
+            pow(max(dot(norm, eye), 0) + 1, -8)) +
+            gl_LightSource[0].specular * pow(max(dot(norm, half), 0), 32);
 }
