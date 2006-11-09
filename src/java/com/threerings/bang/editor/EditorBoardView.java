@@ -1035,9 +1035,9 @@ public class EditorBoardView extends BoardView
                         _highlights[x][y] = _tnode.createHighlight(x, y,
                             isBridge, isBridge);
                     }
-                    if (!_board.isOccupiable(x, y)) {
+                    if (!_board.isTraversable(x, y)) {
                         _highlights[x][y].setDefaultColor(HIGHLIGHT_COLOR);
-                    } else if (_board.isBridge(x, y)) {
+                    } else if (isBridge) {
                         _highlights[x][y].setDefaultColor(BRIDGE_COLOR);
                     } else {
                         _highlights[x][y].setDefaultColor(MOVE_COLOR);
@@ -1055,9 +1055,17 @@ public class EditorBoardView extends BoardView
 
                 if (_showHighlights && 
                         _board.getPlayableArea().contains(x, y)) {
+                    boolean isBridge = _board.isBridge(x, y);
+                    if (_crosslights[x][y] != null && 
+                            _crosslights[x][y].highlight.flatten != isBridge) {
+                        if (_crosslights[x][y].getParent() != null) {
+                            _hnode.detachChild(_crosslights[x][y]);
+                        }
+                        _crosslights[x][y] = null;
+                    }
                     if (_crosslights[x][y] == null) {
                         _crosslights[x][y] = new CrossStatus(_ctx, 
-                                _tnode.createHighlight(x, y, false));
+                            _tnode.createHighlight(x, y, isBridge, isBridge));
                         _crosslights[x][y].setDefaultColor(CROSS_COLOR);
                     }
                     if (_crosslights[x][y].update(_bangobj.board, x, y) &&

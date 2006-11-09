@@ -29,13 +29,15 @@ import com.threerings.bang.util.RenderUtil;
 public class CrossStatus extends Node
     implements PieceCodes
 {
+    public TerrainNode.Highlight highlight;
+
     public CrossStatus (BasicContext ctx, TerrainNode.Highlight highlight)
     {
         super("cross_status");
         _ctx = ctx;
 
         loadTextures();
-        _highlight = highlight;
+        this.highlight = highlight;
 
         _info = new SharedMesh[DIRECTIONS.length];
         for (int ii = 0; ii < _info.length; ii++) {
@@ -71,7 +73,7 @@ public class CrossStatus extends Node
             }
         }
         if (update) {
-            _highlight.updateVertices();
+            highlight.updateVertices();
         }
         return update;
     }
@@ -116,9 +118,8 @@ public class CrossStatus extends Node
         return (TextureState)spatial.getRenderState(RenderState.RS_TEXTURE);
     }
 
-    BasicContext _ctx;
+    protected BasicContext _ctx;
     protected SharedMesh[] _info;
-    protected TerrainNode.Highlight _highlight;
 
     protected static TextureState _tempstate;
     protected static Texture[] _sidetexs;
