@@ -34,6 +34,7 @@ import com.jme.scene.TriMesh;
 import com.jme.scene.VBOInfo;
 import com.jme.scene.batch.TriangleBatch;
 import com.jme.scene.shape.Quad;
+import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.TextureState;
@@ -64,6 +65,30 @@ public class WaterNode extends Node
         
         setRenderState(RenderUtil.blendAlpha);
         setRenderState(RenderUtil.backCull);
+        
+        // we normalize things ourself
+        setNormalsMode(NM_USE_PROVIDED);
+        
+        // use our fancy shaders if possible
+        _sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
+        if (_sstate.isSupported()) {
+            if (_shaderId == -1) {
+                _sstate.load(
+                    getClass().getResource("/rsrc/shaders/water.vert"),
+                    getClass().getResource("/rsrc/shaders/water.frag"));
+                _shaderId = _sstate.getProgramID();
+            } else {
+                _sstate.setProgramID(_shaderId);
+            }
+            setRenderState(_sstate);
+            return;
+            
+        } else {
+            _sstate = null;
+        }
+        
+        // otherwise, use a combination of sphere map, lighting, and material
+        // that approximates the effect
         setRenderState(_smtstate = _ctx.getRenderer().createTextureState());
 
         // use the board's main light in a new state that enables specular
@@ -73,9 +98,6 @@ public class WaterNode extends Node
         lstate.setLocalViewer(true);
         lstate.setSeparateSpecular(true);
         setRenderState(lstate);
-        
-        // we normalize things ourself
-        setNormalsMode(NM_USE_PROVIDED);
         
         MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.getDiffuse().set(ColorRGBA.black);
@@ -112,7 +134,7 @@ public class WaterNode extends Node
         // refresh the sphere map and wave amplitudes if there are any
         // blocks visible
         if (_editorMode || _bcount > 0) {
-            refreshSphereMap();
+            refreshColors();
             if (_patches != null) {
                 refreshWaveAmplitudes();
             }
@@ -129,13 +151,26 @@ public class WaterNode extends Node
     
     /**
      * Creates and attaches the sphere map that blends the water and sky colors
-     * according to the Fresnel term.  This code is based on the RenderMan
-     * shader in Jerry Tessendorf's
+     * according to the Fresnel term, or sets those parameters in the shaders.
+     * This code and that of the shaders is based on the RenderMan shader in
+     * Jerry Tessendorf's
      * <a href="http://www.finelightvisualtechnology.com/docs/coursenotes2004.pdf">
      * Simulating Ocean Water</a>.
      */
-    public void refreshSphereMap ()
+    public void refreshColors ()
     {
+        ColorRGBA wcolor = RenderUtil.createColorRGBA(
+            _board.getWaterColor()),
+                scolor = RenderUtil.createColorRGBA(
+            _board.getSkyOverheadColor());
+        wcolor.a = WATER_ALPHA;
+        if (_sstate != null) {
+            _sstate.setUniform("waterColor",
+                wcolor.r, wcolor.g, wcolor.b, wcolor.a);
+            _sstate.setUniform("skyOverheadColor",
+                scolor.r, scolor.g, scolor.b, scolor.a);
+            return;
+        }
         if (_smtstate == null) {
             return;
         }
@@ -143,12 +178,7 @@ public class WaterNode extends Node
         
         ByteBuffer pbuf = ByteBuffer.allocateDirect(SPHERE_MAP_SIZE *
             SPHERE_MAP_SIZE * 4);
-        ColorRGBA wcolor = RenderUtil.createColorRGBA(
-            _board.getWaterColor()),
-                scolor = RenderUtil.createColorRGBA(
-            _board.getSkyOverheadColor()),
-                color = new ColorRGBA();
-        wcolor.a = WATER_ALPHA;
+        ColorRGBA color = new ColorRGBA();
         
         float x, y, d, thetai, thetat, reflectivity, fs, ts;
         int hsize = SPHERE_MAP_SIZE / 2;
@@ -359,7 +389,10 @@ public class WaterNode extends Node
     /** The array of surface blocks referring to instances of the patches. */
     protected SharedMesh[][] _blocks;
     
-    /** The sphere map texture state. */
+    /** The water shader state, if GLSL shading is supported. */
+    protected GLSLShaderObjectsState _sstate;
+    
+    /** The sphere map texture state, if GLSL shading is not supported. */
     protected TextureState _smtstate;
     
     /** The number of active blocks. */
@@ -386,6 +419,9 @@ public class WaterNode extends Node
     
     /** A tile-sized quad to share as a low resolution water surface. */
     protected static Quad _quad;
+    
+    /** The program id of the linked shader. */
+    protected static int _shaderId = -1;
     
     /** The size in samples of the wave map. */
     protected static final int WAVE_MAP_SIZE = 32;

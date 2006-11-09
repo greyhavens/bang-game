@@ -621,7 +621,7 @@ public class EditorBoardView extends BoardView
         int oocolor = _board.getSkyOverheadColor();
         _board.setSkyParams(horizonColor, overheadColor, falloff);
         if (oocolor != overheadColor) {
-            _wnode.refreshSphereMap();
+            _wnode.refreshColors();
         }
         _snode.refreshGradient();
         refreshBackgroundColor();
@@ -673,7 +673,7 @@ public class EditorBoardView extends BoardView
         float oamplitude = _board.getWaterAmplitude();
         _board.setWaterParams((byte)level, color, amplitude);
         if (ocolor != color) {
-            _wnode.refreshSphereMap();
+            _wnode.refreshColors();
         }
         if (oamplitude != amplitude) {
             _wnode.refreshWaveAmplitudes();
