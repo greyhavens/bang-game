@@ -160,11 +160,13 @@ public class UnitSprite extends MobileSprite
     /**
      * Returns the source node whose location should be used as the starting
      * point of ballistic shots, or <code>null</code> if a source was not
-     * configured.
+     * configured or is outside of the view frustum.
      */
     public Spatial getBallisticShotSource ()
     {
-        return _ballisticShotSource;
+        return (_ballisticShotSource != null &&
+            !RenderUtil.isOutsideFrustum(_ballisticShotSource)) ?
+                _ballisticShotSource : null;
     }
 
     // documentation inherited from Targetable

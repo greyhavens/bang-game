@@ -37,6 +37,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector2f;
 import com.jme.math.Vector3f;
+import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
@@ -491,6 +492,21 @@ public class RenderUtil
         }
     }
 
+    /**
+     * Determines whether the given object or any of its ancestors were
+     * determined to be outside of the view frustum.
+     */
+    public static boolean isOutsideFrustum (Spatial spatial)
+    {
+        for (; spatial != null; spatial = spatial.getParent()) {
+            if (spatial.getLastFrustumIntersection() ==
+                    Camera.OUTSIDE_FRUSTUM) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /**
      * Creates a JME {@link ColorRGBA} object with alpha equal to one from a
      * packed RGB value.

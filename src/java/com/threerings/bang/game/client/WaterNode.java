@@ -145,7 +145,9 @@ public class WaterNode extends Node
      */
     public void cleanup ()
     {
-        _smtstate.deleteAll();
+        if (_smtstate != null) {
+            _smtstate.deleteAll();
+        }
     }
     
     /**
