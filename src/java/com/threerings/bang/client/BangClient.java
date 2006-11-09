@@ -47,6 +47,7 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientObserver;
 
 import com.threerings.crowd.chat.client.ChatDirector;
+import com.threerings.crowd.chat.client.CurseFilter;
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.client.BodyService;
@@ -874,6 +875,13 @@ public class BangClient extends BasicClient
 
         // create our custom directors
         _chatdir = new BangChatDirector(_ctx);
+        String curse = _ctx.xlate(BangCodes.CHAT_MSGS, "x.cursewords");
+        String stop = _ctx.xlate(BangCodes.CHAT_MSGS, "x.stopwords");
+        _chatdir.addChatFilter(new CurseFilter(curse, stop) {
+            public CurseFilter.Mode getFilterMode () {
+                return BangPrefs.getChatFilterMode();
+            }
+        });
         _bcache = new BoardCache();
 
         // warm up the particle pool

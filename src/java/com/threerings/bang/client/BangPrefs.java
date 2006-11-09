@@ -12,6 +12,8 @@ import com.jme.system.PropertiesIO;
 
 import com.samskivert.util.Config;
 
+import com.threerings.crowd.chat.client.CurseFilter;
+
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
@@ -191,6 +193,23 @@ public class BangPrefs
     public static void updateEffectsVolume (int volume)
     {
         config.setValue("effects_volume", volume);
+    }
+
+    /**
+     * Returns the current chat filter mode.
+     */
+    public static CurseFilter.Mode getChatFilterMode ()
+    {
+        String dmode = CurseFilter.Mode.VERNACULAR.toString();
+        return CurseFilter.Mode.valueOf(config.getValue("filter_mode", dmode));
+    }
+
+    /**
+     * Configures the current chat filter mode.
+     */
+    public static void setChatFilterMode (CurseFilter.Mode mode)
+    {
+        config.setValue("filter_mode", mode.toString());
     }
 
     /**
