@@ -1063,6 +1063,12 @@ pick_message {
   vertical-align: center;
 }
 
+pick_type {
+  font: "Helvetica" bold 15;
+  color: #4C2602;
+  text-align: center;
+}
+
 pick_tip {
   font: "Helvetica" plain 15;
   color: #4C2602;

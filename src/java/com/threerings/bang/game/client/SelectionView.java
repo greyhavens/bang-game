@@ -78,7 +78,7 @@ public class SelectionView extends SteelWindow
         _side = GroupLayout.makeVBox(GroupLayout.TOP);
         _side.add(_uname = new BLabel("", "pick_unit_name"));
         _side.add(_uview = new UnitView(ctx, true));
-        _side.add(_utype = new BLabel("", "pick_tip"));
+        _side.add(_utype = new BLabel("", "pick_type"));
         _contents.add(_side, BorderLayout.WEST);
 
         _center = new BContainer(new BorderLayout(0, 5));
