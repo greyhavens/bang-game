@@ -41,6 +41,28 @@ public class BangConfig extends GameConfig
         protected float _adjustment;
     };
 
+    /** Used to adjust the speed of the ticks. */
+    public static enum Speed {
+        /** 70% of the inter-tick time of a normal game. */
+        FAST(0.7f),
+
+        /** The standard speed. */
+        NORMAL(1f),
+
+        /** 150% of the inter-tick time of a normal game. */
+        SLOW(1.5f);
+
+        public float getAdjustment () {
+            return _adjustment;
+        }
+
+        Speed (float adjustment) {
+            _adjustment = adjustment;
+        }
+
+        protected float _adjustment;
+    };
+
     /** The number of people playing the game. */
     public int seats = 2;
 
@@ -50,6 +72,9 @@ public class BangConfig extends GameConfig
 
     /** Whether or not to play a quick, normal or long game. */
     public Duration duration = Duration.NORMAL;
+
+    /** Whether or not to play a fast, normal or slow game. */
+    public Speed speed = Speed.NORMAL;
 
     /** The desired scenarios for each round (implies the number of rounds). */
     public String[] scenarios;

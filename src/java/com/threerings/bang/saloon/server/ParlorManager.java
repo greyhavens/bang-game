@@ -370,6 +370,8 @@ public class ParlorManager extends PlaceManager
         config.players = new Handle[config.seats];
         config.lastBoardIds = new int[config.seats];
         config.teamSize = _parobj.game.teamSize;
+        config.duration = _parobj.game.duration;
+        config.speed = _parobj.game.speed;
         config.scenarios = new String[_parobj.game.rounds];
 
         // back parlor games are never rated

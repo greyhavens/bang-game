@@ -2720,8 +2720,10 @@ public class BangManager extends GameManager
             _bangobj.tick((short)nextTick);
 
             // queue up the next tick
-            long tickTime = _scenario.getTickTime(_bconfig, _bangobj) +
-                _extraTickTime;
+            long tickTime = (long)Math.round(
+                _scenario.getTickTime(_bconfig, _bangobj) *
+                _bconfig.speed.getAdjustment());
+            tickTime += _extraTickTime;
             _ticker.schedule(tickTime);
             _nextTickTime = System.currentTimeMillis() + tickTime;
         }
