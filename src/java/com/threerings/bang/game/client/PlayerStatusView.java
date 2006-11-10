@@ -89,8 +89,7 @@ public class PlayerStatusView extends BContainer
             _ctx.getUserObject().getVisibleName());
         _player = new BLabel(_bangobj.players[_pidx].toString(),
                              "player_status" + _pidx);
-        _player.setWrap(false);
-        _player.setFit(true);
+        _player.setFit(BLabel.Fit.SCALE);
         String hmsg = "m.help_" + (_pidx == selfidx ? "you" : "they");
         _player.setTooltipText(ctx.xlate(GameCodes.GAME_MSGS, hmsg));
         add(_player, NAME_RECT);
@@ -122,7 +121,7 @@ public class PlayerStatusView extends BContainer
                 }
             }
         });
-        
+
         updateAvatar();
         updateStatus();
         checkPlayerHere();
@@ -193,7 +192,9 @@ public class PlayerStatusView extends BContainer
     {
         int cidx = -1;
         for (int ii = 0; ii < _cards.length; ii++) {
-            if (_cards[ii] == null) {
+            if (_cards[ii] == null ||
+                // replace any "fake" cards we added after team selection
+                _cards[ii].getAction().equals("0")) {
                 cidx = ii;
                 break;
             }
@@ -210,7 +211,7 @@ public class PlayerStatusView extends BContainer
                 DROP_PLAY_DURATION);
         }
     }
-    
+
     // documentation inherited from interface SetListener
     public void entryUpdated (EntryUpdatedEvent event)
     {
@@ -258,7 +259,7 @@ public class PlayerStatusView extends BContainer
             }
         }
     }
-    
+
     /**
      * Performs the card action for the card at this index.
      */
@@ -316,7 +317,7 @@ public class PlayerStatusView extends BContainer
             protected float _elapsed;
         });
     }
-    
+
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -463,16 +464,16 @@ public class PlayerStatusView extends BContainer
     /** The height from which to drop added cards into the hand (also the
      * height to which to fly played cards). */
     protected static final int DROP_PLAY_HEIGHT = 100;
-    
+
     /** The duration of the drop into the hand or the flight onto the board. */
     protected static final float DROP_PLAY_DURATION = 0.25f;
-    
+
     /** The delay before dropped cards fall out of the hand. */
     protected static final float FALL_DELAY = BangView.CARD_FALL_DURATION;
-    
+
     /** The depth to which cards fall when removed from the hand. */
     protected static final int FALL_DEPTH = -50;
-    
+
     /** The duration of the fall of cards from the hand. */
     protected static final float FALL_DURATION = 0.125f;
 }
