@@ -54,6 +54,49 @@ import static com.threerings.bang.Log.log;
 public class OptionsView extends BDecoratedWindow
     implements ActionListener
 {
+    /** The types of sound that can be configured. */
+    public static enum SoundType { MUSIC, EFFECTS };
+
+    /**
+     * Creates a slider for adjusting the specified sound type.
+     */
+    public static BContainer createSoundSlider (
+        final BangContext ctx, final SoundType type)
+    {
+        int value = 0;
+        switch (type) {
+        case MUSIC: value = BangPrefs.getMusicVolume(); break;
+        case EFFECTS: value = BangPrefs.getEffectsVolume(); break;
+        }
+
+        // create our slider and label display
+        BSlider slider = new BSlider(BSlider.HORIZONTAL, 0, 100, value);
+        final BLabel vallbl = new BLabel(slider.getModel().getValue() + "%");
+        vallbl.setPreferredSize(new Dimension(50, 10));
+        slider.getModel().addChangeListener(new ChangeListener() {
+            public void stateChanged (ChangeEvent event) {
+                BoundedRangeModel model = (BoundedRangeModel)event.getSource();
+                switch (type) {
+                case MUSIC:
+                    BangPrefs.updateMusicVolume(model.getValue());
+                    ctx.getBangClient().setMusicVolume(model.getValue());
+                    break;
+                case EFFECTS:
+                    BangPrefs.updateEffectsVolume(model.getValue());
+                    ctx.getSoundManager().setBaseGain(model.getValue()/100f);
+                    break;
+                }
+                vallbl.setText(model.getValue() + "%");
+            }
+        });
+
+        // create a wrapper to hold them both
+        BContainer wrapper = new BContainer(GroupLayout.makeHStretch());
+        wrapper.add(slider);
+        wrapper.add(vallbl, GroupLayout.FIXED);
+        return wrapper;
+    }
+
     public OptionsView (BangContext ctx, BWindow parent)
     {
         super(ctx.getStyleSheet(), ctx.xlate(BangCodes.OPTS_MSGS, "m.title"));
@@ -88,9 +131,9 @@ public class OptionsView extends BDecoratedWindow
         cont.add(createDetailSlider());
 
         cont.add(new BLabel(_msgs.get("m.music_vol"), "right_label"));
-        cont.add(createSoundSlider(SoundType.MUSIC));
+        cont.add(createSoundSlider(_ctx, SoundType.MUSIC));
         cont.add(new BLabel(_msgs.get("m.effects_vol"), "right_label"));
-        cont.add(createSoundSlider(SoundType.EFFECTS));
+        cont.add(createSoundSlider(_ctx, SoundType.EFFECTS));
 
         // create the Chat tab if we're logged on
         if (ctx.getMuteDirector() != null) {
@@ -176,42 +219,6 @@ public class OptionsView extends BDecoratedWindow
         Dimension d = super.computePreferredSize(whint, hhint);
         d.width = Math.max(d.width, 350);
         return d;
-    }
-
-    protected BContainer createSoundSlider (final SoundType type)
-    {
-        int value = 0;
-        switch (type) {
-        case MUSIC: value = BangPrefs.getMusicVolume(); break;
-        case EFFECTS: value = BangPrefs.getEffectsVolume(); break;
-        }
-
-        // create our slider and label display
-        BSlider slider = new BSlider(BSlider.HORIZONTAL, 0, 100, value);
-        final BLabel vallbl = new BLabel(slider.getModel().getValue() + "%");
-        vallbl.setPreferredSize(new Dimension(50, 10));
-        slider.getModel().addChangeListener(new ChangeListener() {
-            public void stateChanged (ChangeEvent event) {
-                BoundedRangeModel model = (BoundedRangeModel)event.getSource();
-                switch (type) {
-                case MUSIC:
-                    BangPrefs.updateMusicVolume(model.getValue());
-                    _ctx.getBangClient().setMusicVolume(model.getValue());
-                    break;
-                case EFFECTS:
-                    BangPrefs.updateEffectsVolume(model.getValue());
-                    _ctx.getSoundManager().setBaseGain(model.getValue()/100f);
-                    break;
-                }
-                vallbl.setText(model.getValue() + "%");
-            }
-        });
-
-        // create a wrapper to hold them both
-        BContainer wrapper = new BContainer(GroupLayout.makeHStretch());
-        wrapper.add(slider);
-        wrapper.add(vallbl, GroupLayout.FIXED);
-        return wrapper;
     }
 
     protected BContainer createDetailSlider ()
@@ -448,6 +455,4 @@ public class OptionsView extends BDecoratedWindow
 
     protected BList _muted;
     protected BButton _remove;
-
-    protected static enum SoundType { MUSIC, EFFECTS };
 }

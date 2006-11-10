@@ -7,13 +7,18 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.OptionsView;
+import com.threerings.bang.client.bui.TabbedPane;
 import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
@@ -34,10 +39,35 @@ public class InGameOptionsView extends BDecoratedWindow
         _ctx = ctx;
         _bangobj = bangobj;
 
-        MessageBundle msgs = ctx.getMessageManager().getBundle("options");
+        MessageBundle msgs = ctx.getMessageManager().getBundle(
+            BangCodes.OPTS_MSGS);
         add(_title = new BLabel("", "window_title"), GroupLayout.FIXED);
 
-        add(new BLabel(msgs.get("m.game_key_help")), GroupLayout.FIXED);
+        TabbedPane tabs = new TabbedPane(false);
+        tabs.setPreferredSize(new Dimension(375, 275));
+        add(tabs, GroupLayout.FIXED);
+
+        // create the Help tab
+        BContainer cont = GroupLayout.makeHBox(GroupLayout.CENTER);
+        cont.setStyleClass("options_tab");
+        cont.add(new BLabel(msgs.get("m.game_key_help")));
+        tabs.addTab(msgs.get("t.help"), cont);
+
+        // create the General tab
+        TableLayout layout = new TableLayout(2, 10, 10);
+        layout.setHorizontalAlignment(TableLayout.CENTER);
+        layout.setVerticalAlignment(TableLayout.CENTER);
+        cont = new BContainer(layout);
+        cont.setStyleClass("options_tab");
+
+        cont.add(new BLabel(msgs.get("m.music_vol"), "right_label"));
+        cont.add(OptionsView.createSoundSlider(
+                     ctx, OptionsView.SoundType.MUSIC));
+        cont.add(new BLabel(msgs.get("m.effects_vol"), "right_label"));
+        cont.add(OptionsView.createSoundSlider(
+                     ctx, OptionsView.SoundType.EFFECTS));
+
+        tabs.addTab(msgs.get("t.general"), cont);
 
         BContainer box = GroupLayout.makeHBox(GroupLayout.CENTER);
         String from = bangobj.priorLocation.ident;
