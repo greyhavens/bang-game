@@ -189,8 +189,7 @@ public class WantedPosterView extends BContainer
         box.setStyleClass("poster_handle_box");
 
         BLabel handle = new BLabel(_poster.handle.toString(), "poster_handle");
-        handle.setWrap(false);
-        handle.setFit(true);
+        handle.setFit(BLabel.Fit.SCALE);
         box.add(handle);
 
         // TODO: disabled until there are actually gangs
@@ -321,8 +320,7 @@ public class WantedPosterView extends BContainer
         }
 
         BLabel label = new BLabel(filtered, "poster_statement");
-        label.setWrap(false);
-        label.setFit(true);
+        label.setFit(BLabel.Fit.SCALE);
         box.add(label);
         return box;
     }

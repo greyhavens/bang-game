@@ -99,8 +99,7 @@ public class FinalistView extends BContainer
         // create a label for their name
         String sclass = "endgame_player_" + (winner ? "big" : "small");
         BLabel handle = new BLabel(name.toString(), sclass);
-        handle.setWrap(false);
-        handle.setFit(true);
+        handle.setFit(BLabel.Fit.SCALE);
         add(handle, NAME_RECTS[winner ? 0 : 1]);
         if (ctx instanceof BangContext) {
             BangContext bctx = (BangContext)ctx;

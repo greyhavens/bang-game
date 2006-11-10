@@ -203,14 +203,12 @@ public class ParlorList extends BContainer
                 SaloonCodes.SALOON_MSGS);
             String lbl = msgs.get("m.parlor_name", info.creator);
             _name = new BLabel(lbl, "parlor_label");
-            _name.setWrap(false);
-            _name.setFit(true);
+            _name.setFit(BLabel.Fit.SCALE);
             _pards = new BLabel("");
             _lock = new BLabel("");
             _occs = new BLabel("");
             _enter = new BButton(msgs.get("m.enter"), ParlorList.this, "enter");
             _enter.setStyleClass("alt_button");
-            _enter.setWrap(false);
             update(info);
         }
 

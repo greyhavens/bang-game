@@ -4,6 +4,8 @@
 package com.threerings.bang.client.bui;
 
 import com.jme.renderer.Renderer;
+
+import com.jmex.bui.BLabel;
 import com.jmex.bui.Label;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Insets;
@@ -35,8 +37,7 @@ public class PaletteIcon extends SelectableIcon
     /** Sets the text style to non-wrapping and fitted. */
     public void setFitted (boolean fit)
     {
-        _text.setWrap(!fit);
-        _text.setFit(fit);
+        _text.setFit(fit ? BLabel.Fit.SCALE : BLabel.Fit.WRAP);
     }
 
     public Dimension getPreferredSize (int whint, int hhint)
