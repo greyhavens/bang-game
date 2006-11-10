@@ -206,9 +206,7 @@ public class Bonus extends Piece
     @Override // documentation inherited
     public int getGoalRadius (Piece mover)
     {
-        return (_config.hidden || (_config.holdable &&
-            mover instanceof Unit && ((Unit)mover).holding != null)) ?
-                -1 : 0;
+        return (_config.hidden ? -1 : 0);
     }
     
     @Override // documentation inherited
