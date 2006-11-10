@@ -237,7 +237,7 @@ public class BangUI
                     "[path=" + path + "].", e);
             return;
         }
-        configCursor(image, 0, image.getHeight() - 1);
+        configCursor(image, 0, 0);
     }
 
     /**
@@ -255,12 +255,14 @@ public class BangUI
         }
         data.flip();
         try {
-            Mouse.create();
-            Mouse.setNativeCursor(new Cursor(ww, hh, hx, hy, 1, data, null));
+            if (!Mouse.isCreated()) {
+                Mouse.create();
+            }
+            Mouse.setNativeCursor(new Cursor(
+                        ww, hh, hx, hh - hy - 1, 1, data, null));
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to set cursor.", e);
         }
-        log.info("Max cursor size: " + Cursor.getMaxCursorSize());
     }
 
     /**

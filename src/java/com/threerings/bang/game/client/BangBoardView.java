@@ -103,6 +103,13 @@ import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
+import java.awt.image.Raster;
+import java.awt.image.IndexColorModel;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import com.threerings.bang.client.util.ImageCache;
+import com.samskivert.util.IntListUtil;
+import com.threerings.bang.client.BangUI;
 
 /**
  * Displays the main game board.
@@ -137,6 +144,7 @@ public class BangBoardView extends BoardView
         // set up the display of our card attack set
         _card = card;
         updatePlacingCard(_mouse.x, _mouse.y);
+        createCardCursor(card);
         _ctx.getChatDirector().displayFeedback(
                 "cards", "m.placement_" + _card.getPlacementMode().name());
         log.info("Placing " + _card);
@@ -155,6 +163,7 @@ public class BangBoardView extends BoardView
      */
     public boolean clearPlacingCard ()
     {
+        BangUI.configDefaultCursor();
         if (_card == null) {
             return false;
         }
@@ -1963,6 +1972,62 @@ public class BangBoardView extends BoardView
         if (action.moveIds.length > 0 && action instanceof EffectHandler) {
             _pmoves.add((EffectHandler)action);
         }
+    }
+
+    /**
+     * Creates a moe cursor with a card icon.
+     */
+    protected void createCardCursor (Card card)
+    {
+        BufferedImage merge = ImageCache.createCompatibleImage(32, 32, true);
+        BufferedImage cursor = _ctx.getImageCache().getBufferedImage(
+                "ui/cursor.png");
+        BufferedImage icon = _ctx.getImageCache().getBufferedImage(
+                card.getIconPath("icon"));
+        Graphics2D g = merge.createGraphics();
+
+        // we're going to shove the icon into the bottom right corner removing
+        // any transparent pixels
+        IndexColorModel cm = (IndexColorModel)icon.getColorModel();
+        int transparent = cm.getTransparentPixel();
+        Raster raster = icon.getRaster();
+        int ww = icon.getWidth(), hh = icon.getHeight();
+        int[] pixels = new int[hh];
+        int xx = ww - 1;
+CROP_WIDTH:
+        for (; xx >= 0; xx--) {
+            raster.getPixels(xx, 0, 1, hh, pixels);
+            for (int ii = 0; ii < pixels.length; ii++) {
+                if (pixels[ii] != transparent) {
+                    xx++;
+                    break CROP_WIDTH;
+                }
+            }
+        }
+        int yy = hh - 1;
+        pixels = new int[ww];
+CROP_HEIGHT:
+        for (; yy >= 0; yy--) {
+            raster.getPixels(0, yy, ww, 1, pixels);
+            for (int ii = 0; ii < pixels.length; ii++) {
+                if (pixels[ii] != transparent) {
+                    yy++;
+                    break CROP_HEIGHT;
+                }
+            }
+        }
+        int ix = 0, iy = 0;
+        if (xx >= 32) {
+            ix = xx - 32;
+        }
+        if (yy >= 32) {
+            iy = yy - 32;
+        }
+        g.drawImage(icon.getSubimage(ix, iy, 
+                    Math.min(32, xx - ix), Math.min(32, yy - iy)),
+                null, Math.max(0, 31 - xx - ix), Math.max(0, 31 - yy - iy));
+        g.drawImage(cursor, null, 0, 0);
+        BangUI.configCursor(merge, 0, 0);
     }
 
     /** Used to visualize advance orders. */

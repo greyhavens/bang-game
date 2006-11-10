@@ -161,6 +161,9 @@ public class BangApp extends JmeApp
         // speed up key input
         _input.setActionSpeed(150f);
 
+        // set up our application cursor
+        BangUI.configDefaultCursor();
+
         return true;
     }
 
