@@ -1038,6 +1038,9 @@ pick_subtitle {
   font: "Dom Casual" plain 19;
   padding: 0 0 0 15;
 }
+pick_subtitle:disabled {
+  color: #FFFFFF44;
+}
 
 pick_unit_name {
   font: "Dom Casual" plain 20;
@@ -1052,6 +1055,18 @@ pick_team_choice {
   background: image "ui/pregame/unit_bg.png" centerxy;
   text-align: center;
   color: #442801;
+}
+
+pick_message {
+  parent: "label";
+  text-align: center;
+  vertical-align: center;
+}
+
+pick_tip {
+  font: "Helvetica" plain 15;
+  color: #4C2602;
+  text-align: center;
 }
 
 card_icon {
