@@ -542,20 +542,17 @@ public class BangController extends GameController
         if (state == BangObject.SELECT_PHASE ||
             state == BangObject.PRE_TUTORIAL ||
             state == BangObject.PRE_PRACTICE) {
+            // when our inter-round fade is complete we'll start the next round
             _startRoundMultex.satisfied(Multex.CONDITION_ONE);
-            return true;
 
-// TODO: why did we do this?
-//         } else if (state == BangObject.BUYING_PHASE) {
-//             // If we're still showing the stats (ie. watching the game),
-//             // force them to move on since the next round will be starting
-//             // shortly
-//             if (_statsView != null) {
-//                 _ctx.getBangClient().clearPopup(_statsView, true);
-//                 statsDismissed();
-//             }
-//             _view.setPhase(state);
-//             return true;
+            // if we're a watcher, we may not yet have dismissed our stats
+            // view, but since things are starting we need to forcibly do that
+            // for them because otherwise badness will ensue
+            if (_statsView != null) {
+                _ctx.getBangClient().clearPopup(_statsView, true);
+                statsDismissed();
+            }
+            return true;
 
         } else if (state == BangObject.POST_ROUND) {
             // let the view know that this round is over
@@ -677,6 +674,7 @@ public class BangController extends GameController
     {
         _postRoundMultex.satisfied(Multex.CONDITION_ONE);
     }
+
     /**
      * Called by the board view after it has faded out the board at the end of
      * a round.
