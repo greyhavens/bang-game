@@ -122,6 +122,9 @@ public class CardPalette extends IconPalette
             if (item instanceof CardItem) {
                 CardItem citem = (CardItem)item;
                 Card card = Card.getCard(citem.getType());
+                if (card == null) {
+                    continue;
+                }
                 // update the count based on the reserved cards
                 for (Card reserved : reservedCards) {
                     if (card.getType().equals(reserved.getType())) {
