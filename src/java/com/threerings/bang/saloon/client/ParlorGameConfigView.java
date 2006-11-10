@@ -393,6 +393,11 @@ public class ParlorGameConfigView extends BContainer
             return super.dispatchEvent(event);
         }
 
+        @Override
+        public String getTooltipText () {
+            return _msgs.get("m.slot_tip" + _state);
+        }
+
         protected ImageIcon[] _icons;
         protected int _state;
     }
