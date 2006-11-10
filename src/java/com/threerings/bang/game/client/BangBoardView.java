@@ -1980,10 +1980,10 @@ public class BangBoardView extends BoardView
     protected void createCardCursor (Card card)
     {
         BufferedImage merge = ImageCache.createCompatibleImage(32, 32, true);
-        BufferedImage cursor = _ctx.getImageCache().getBufferedImage(
-                "ui/cursor.png");
-        BufferedImage icon = _ctx.getImageCache().getBufferedImage(
-                card.getIconPath("icon"));
+        BufferedImage cursor =
+            _ctx.getImageCache().getBufferedImage("ui/cursor.png");
+        BufferedImage icon =
+            _ctx.getImageCache().getBufferedImage(card.getIconPath("icon"));
         Graphics2D g = merge.createGraphics();
 
         // we're going to shove the icon into the bottom right corner removing
@@ -1992,9 +1992,10 @@ public class BangBoardView extends BoardView
         int transparent = cm.getTransparentPixel();
         Raster raster = icon.getRaster();
         int ww = icon.getWidth(), hh = icon.getHeight();
-        int[] pixels = new int[hh];
+
         int xx = ww - 1;
-CROP_WIDTH:
+        int[] pixels = new int[hh];
+      CROP_WIDTH:
         for (; xx >= 0; xx--) {
             raster.getPixels(xx, 0, 1, hh, pixels);
             for (int ii = 0; ii < pixels.length; ii++) {
@@ -2004,9 +2005,10 @@ CROP_WIDTH:
                 }
             }
         }
+
         int yy = hh - 1;
         pixels = new int[ww];
-CROP_HEIGHT:
+      CROP_HEIGHT:
         for (; yy >= 0; yy--) {
             raster.getPixels(0, yy, ww, 1, pixels);
             for (int ii = 0; ii < pixels.length; ii++) {
@@ -2016,6 +2018,7 @@ CROP_HEIGHT:
                 }
             }
         }
+
         int ix = 0, iy = 0;
         if (xx >= 32) {
             ix = xx - 32;
@@ -2023,9 +2026,9 @@ CROP_HEIGHT:
         if (yy >= 32) {
             iy = yy - 32;
         }
-        g.drawImage(icon.getSubimage(ix, iy, 
-                    Math.min(32, xx - ix), Math.min(32, yy - iy)),
-                null, Math.max(0, 31 - xx - ix), Math.max(0, 31 - yy - iy));
+        g.drawImage(icon.getSubimage(
+                        ix, iy, Math.min(32, xx - ix), Math.min(32, yy - iy)),
+                    null, Math.max(0, 31 - xx - ix), Math.max(0, 31 - yy - iy));
         g.drawImage(cursor, null, 0, 0);
         BangUI.configCursor(merge, 0, 0);
     }
