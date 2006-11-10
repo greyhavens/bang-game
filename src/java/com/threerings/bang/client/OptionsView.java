@@ -107,11 +107,11 @@ public class OptionsView extends BDecoratedWindow
             top.add(new BLabel(_msgs.get("m.chat_mode"), "right_label"));
             BComboBox chatmode = new BComboBox();
             top.add(chatmode);
-            ComboItem selitem = null;
+            BComboBox.Item selitem = null;
             for (CurseFilter.Mode mode : CurseFilter.Mode.values()) {
                 String label = _msgs.get(
                     "m.cfm_" + mode.toString().toLowerCase());
-                ComboItem item = new ComboItem(mode, label);
+                BComboBox.Item item = new BComboBox.Item(mode, label);
                 chatmode.addItem(item);
                 if (mode.equals(BangPrefs.getChatFilterMode())) {
                     selitem = item;
@@ -121,8 +121,8 @@ public class OptionsView extends BDecoratedWindow
             chatmode.addListener(new ActionListener() {
                 public void actionPerformed (ActionEvent event) {
                     BComboBox chatmode = (BComboBox)event.getSource();
-                    ComboItem sel = (ComboItem)chatmode.getSelectedItem();
-                    BangPrefs.setChatFilterMode((CurseFilter.Mode)sel.value);
+                    BangPrefs.setChatFilterMode(
+                        (CurseFilter.Mode)chatmode.getSelectedValue());
                 }
             });
 
@@ -399,22 +399,6 @@ public class OptionsView extends BDecoratedWindow
                  _mode.getFrequency() == mode.getFrequency()) &&
                 (_mode.getBitsPerPixel() == 0 ||
                  _mode.getBitsPerPixel() == mode.getBitsPerPixel()));
-    }
-
-    protected static class ComboItem
-    {
-        public Object value;
-
-        public ComboItem (Object value, String label) {
-            this.value = value;
-            _label = label;
-        }
-
-        public String toString () {
-            return _label;
-        }
-
-        protected String _label;
     }
 
     protected static class ModeItem implements Comparable
