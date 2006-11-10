@@ -127,10 +127,12 @@ public class StatsView extends SteelWindow
     {
         String action = event.getAction();
         if (action.equals("results")) {
+            _closeBtn.setEnabled(false);
             _bctx.getBangClient().clearPopup(this, true);
             _bctx.getBangClient().displayPopup(
                     new GameOverView(_bctx, _ctrl, _bobj), true);
         } else if (action.equals("next_round")) {
+            _closeBtn.setEnabled(false);
             _bctx.getBangClient().clearPopup(this, true);
             _ctrl.statsDismissed();
         } else if (action.equals("forward")) {
