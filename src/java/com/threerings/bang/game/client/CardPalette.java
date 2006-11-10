@@ -132,8 +132,7 @@ public class CardPalette extends IconPalette
                         citem.playCard();
                     }
                 }
-                if (card != null && card.isPlayable(_bangobj) &&
-                    citem.getQuantity() > 0) {
+                if (card.isPlayable(_bangobj) && citem.getQuantity() > 0) {
                     carditems.add(citem);
                 }
             }
