@@ -102,9 +102,8 @@ public abstract class Scenario
 
     /**
      * Determines the next phase of the game. Normally a game transitions from
-     * {@link BangObject#SELECT_PHASE} to {@link BangObject#BUYING_PHASE} to
-     * {@link BangObject#IN_PLAY}, but the tutorial scenario skips some of
-     * those phases.
+     * {@link BangObject#SELECT_PHASE} to {@link BangObject#IN_PLAY}, but the
+     * tutorial scenario skips some of those phases.
      */
     public void startNextPhase (BangObject bangobj)
     {
@@ -115,10 +114,6 @@ public abstract class Scenario
             break;
 
         case BangObject.SELECT_PHASE:
-            _bangmgr.startPhase(BangObject.BUYING_PHASE);
-            break;
-
-        case BangObject.BUYING_PHASE:
             _bangmgr.startPhase(BangObject.IN_PLAY);
             break;
 

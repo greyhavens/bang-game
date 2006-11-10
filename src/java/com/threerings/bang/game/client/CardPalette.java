@@ -40,34 +40,41 @@ import com.threerings.bang.game.data.card.Card;
  */
 public class CardPalette extends IconPalette
 {
-    public CardPalette (BangContext ctx, BangController ctrl,
-                        BangObject bangobj, BLabel[] selcards)
+    public CardPalette (BangContext ctx, BangObject bangobj)
     {
-        super(null, 4, 1, ItemIcon.ICON_SIZE, GameCodes.MAX_CARDS);
+        super(null, 4, 2, ItemIcon.ICON_SIZE, GameCodes.MAX_CARDS);
         setPaintBorder(true);
 
         _ctx = ctx;
         _bangobj = bangobj;
-        _selcards = selcards;
         _selfIdx = bangobj.getPlayerIndex(
             _ctx.getUserObject().getVisibleName());
         _small = BangPrefs.getCardPaletteSize();
         if (_cardBG == null) {
             _cardBG = new ImageIcon(_ctx.loadImage("ui/pregame/card_bg.png"));
-            _foundBG = new ImageBackground(ImageBackground.CENTER_XY, 
-                    _ctx.loadImage("ui/pstatus/card_found_up.png"));
+            _foundBG = new ImageBackground(
+                ImageBackground.CENTER_XY, 
+                _ctx.loadImage("ui/pstatus/card_found_up.png"));
         }
 
         BContainer selectable = new BContainer(GroupLayout.makeHStretch());
-        selectable.add(_smallView = new BCheckBox(_ctx.xlate(
-                GameCodes.GAME_MSGS, "m.small_card_view")), GroupLayout.FIXED);
+        String msg = _ctx.xlate(GameCodes.GAME_MSGS, "m.small_card_view");
+        selectable.add(_smallView = new BCheckBox(msg), GroupLayout.FIXED);
         _smallView.addListener(_smallListener);
         _smallView.setSelected(_small);
         selectable.add(new Spacer(1, 1));
         remove(_bcont);
         selectable.add(_bcont, GroupLayout.FIXED);
         add(selectable, BorderLayout.SOUTH);
+
+        // switch to the appropriate small or large view to start
         changeView();
+    }
+
+    public CardItem getSelectedCard (int index)
+    {
+        ItemIcon icon = (ItemIcon)getSelectedIcon(index);
+        return icon == null ? null : (CardItem)icon.getItem();
     }
 
     @Override // documentation inherited
@@ -80,84 +87,34 @@ public class CardPalette extends IconPalette
         }
     }
 
-    public CardItem getSelectedCard (int index)
-    {
-        ItemIcon icon = (ItemIcon)getSelectedIcon(index);
-        return icon == null ? null : (CardItem)icon.getItem();
-    }
-
-    protected void iconUpdated (SelectableIcon icon, boolean selected)
-    {
-        super.iconUpdated(icon, selected);
-
-        // stop updating once we've been "disabled"
-        if (_selectable > 0) {
-            updateSelections();
-        }
-    }
-
-    protected void updateSelections ()
-    {
-        // start with the cards already in the game object
-        int iconidx = 0;
-        for (Card card : _bangobj.cards) {
-            if (card.owner != _selfIdx) {
-                continue;
-            }
-            if (card.found) {
-                _selcards[iconidx].setBackground(BComponent.DEFAULT, _foundBG);
-                _selcards[iconidx].setBackground(BComponent.HOVER, null);
-            }
-            _selcards[iconidx++].setIcon(makeIcon(card));
-        }
-
-        // now add selected cards (iterate over _icons rather that _selections
-        // so that we match the visual order of the selected icons)
-        for (SelectableIcon icon : _icons) {
-            if (!icon.isSelected()) {
-                continue;
-            }
-            CardItem card = (CardItem)((ItemIcon)icon).getItem();
-            _selcards[iconidx++].setIcon(makeIcon(card.getCard()));
-        }
-
-        // finally clear out the remaining icons
-        for (int ii = iconidx; ii < _selcards.length; ii++) {
-            _selcards[ii].setIcon(_cardBG);
-        }
-    }
-
-    protected ImageIcon makeIcon (Card card)
-    {
-        return new ImageIcon(_ctx.loadImage(card.getIconPath("icon")));
-    }
-
     /**
-     * Updated the size of the palette based on the checkbox value.
+     * Updates the size of the palette based on the checkbox value.
      */
     protected void changeView ()
     {
         _small = _smallView.isSelected();
         BangPrefs.updateCardPaletteSize(_small);
-        ArrayList<SelectableIcon> selected = 
+        ArrayList<SelectableIcon> selected =
             new ArrayList<SelectableIcon>(_selections);
         clear();
         _iicont.remove(_icont);
         if (_small) {
-            init(16, 3, ItemIcon.SMALL_ICON_SIZE);
+            init(16, 6, ItemIcon.SMALL_ICON_SIZE);
         } else {
-            init(4, 1, ItemIcon.ICON_SIZE);
+            init(4, 2, ItemIcon.ICON_SIZE);
         }
         setPaintBackground(true);
         _iicont.add(_icont);
+
+        // find cards held over from last round; we could try to do some of
+        // this once instead of every time we switch modes, but it would make
+        // things more complicated and this isn't very expensive
         PlayerObject user = _ctx.getUserObject();
         ArrayList<CardItem> carditems = new ArrayList<CardItem>();
-
-        // find cards held over from last round
-        ArrayList<Card> _reservedCards = new ArrayList<Card>();
+        ArrayList<Card> reservedCards = new ArrayList<Card>();
         for (Card card : _bangobj.cards) {
             if (card.owner == _selfIdx && card.found == false) {
-                _reservedCards.add(card);
+                reservedCards.add(card);
             }
         }
 
@@ -165,8 +122,8 @@ public class CardPalette extends IconPalette
             if (item instanceof CardItem) {
                 CardItem citem = (CardItem)item;
                 Card card = Card.getCard(citem.getType());
-                // Update the count based on the reserved cards
-                for (Card reserved : _reservedCards) {
+                // update the count based on the reserved cards
+                for (Card reserved : reservedCards) {
                     if (card.getType().equals(reserved.getType())) {
                         citem = (CardItem)citem.clone();
                         citem.playCard();
@@ -178,11 +135,13 @@ public class CardPalette extends IconPalette
                 }
             }
         }
+
         Collections.sort(carditems, new Comparator<CardItem>() {
             public int compare (CardItem c1, CardItem c2) {
                 return c1.getType().compareTo(c2.getType());
             }
         });
+
         for (CardItem citem : carditems) {
             ItemIcon iicon = new ItemIcon(_ctx, citem, _small);
             if (_small) {
@@ -203,8 +162,6 @@ public class CardPalette extends IconPalette
         // to be played
         _selectable -= _bangobj.countPlayerCards(
             _bangobj.getPlayerIndex(user.getVisibleName()));
-
-        updateSelections();
     }
 
     protected ActionListener _smallListener = new ActionListener() {
@@ -218,9 +175,10 @@ public class CardPalette extends IconPalette
     protected BangContext _ctx;
     protected BangObject _bangobj;
     protected int _selfIdx;
-    protected BLabel[] _selcards;
+
     protected BCheckBox _smallView;
     protected boolean _small;
+
     protected static ImageIcon _cardBG;
     protected static ImageBackground _foundBG;
 }

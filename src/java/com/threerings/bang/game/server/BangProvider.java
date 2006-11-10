@@ -45,12 +45,7 @@ public interface BangProvider extends InvocationProvider
     public void reportPerformance (ClientObject caller, String arg1, String arg2, int[] arg3);
 
     /**
-     * Handles a {@link BangService#selectStarters} request.
-     */
-    public void selectStarters (ClientObject caller, int arg1, int[] arg2);
-
-    /**
      * Handles a {@link BangService#selectTeam} request.
      */
-    public void selectTeam (ClientObject caller, String[] arg1);
+    public void selectTeam (ClientObject caller, int arg1, String[] arg2, int[] arg3);
 }

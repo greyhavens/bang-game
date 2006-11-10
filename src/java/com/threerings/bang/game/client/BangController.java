@@ -545,16 +545,17 @@ public class BangController extends GameController
             _startRoundMultex.satisfied(Multex.CONDITION_ONE);
             return true;
 
-        } else if (state == BangObject.BUYING_PHASE) {
-            // If we're still showing the stats (ie. watching the game),
-            // force them to move on since the next round will be starting
-            // shortly
-            if (_statsView != null) {
-                _ctx.getBangClient().clearPopup(_statsView, true);
-                statsDismissed();
-            }
-            _view.setPhase(state);
-            return true;
+// TODO: why did we do this?
+//         } else if (state == BangObject.BUYING_PHASE) {
+//             // If we're still showing the stats (ie. watching the game),
+//             // force them to move on since the next round will be starting
+//             // shortly
+//             if (_statsView != null) {
+//                 _ctx.getBangClient().clearPopup(_statsView, true);
+//                 statsDismissed();
+//             }
+//             _view.setPhase(state);
+//             return true;
 
         } else if (state == BangObject.POST_ROUND) {
             // let the view know that this round is over

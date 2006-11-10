@@ -42,7 +42,6 @@ public class Practice extends Scenario
           case BangObject.POST_ROUND:
           case BangObject.PRE_GAME:
           case BangObject.SELECT_PHASE:
-          case BangObject.BUYING_PHASE:
             _bangmgr.startPhase(BangObject.PRE_PRACTICE);
             break;
 

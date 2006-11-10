@@ -116,25 +116,14 @@ public class BangMarshaller extends InvocationMarshaller
         });
     }
 
-    /** The method id used to dispatch {@link #selectStarters} requests. */
-    public static final int SELECT_STARTERS = 6;
-
-    // from interface BangService
-    public void selectStarters (Client arg1, int arg2, int[] arg3)
-    {
-        sendRequest(arg1, SELECT_STARTERS, new Object[] {
-            Integer.valueOf(arg2), arg3
-        });
-    }
-
     /** The method id used to dispatch {@link #selectTeam} requests. */
-    public static final int SELECT_TEAM = 7;
+    public static final int SELECT_TEAM = 6;
 
     // from interface BangService
-    public void selectTeam (Client arg1, String[] arg2)
+    public void selectTeam (Client arg1, int arg2, String[] arg3, int[] arg4)
     {
         sendRequest(arg1, SELECT_TEAM, new Object[] {
-            arg2
+            Integer.valueOf(arg2), arg3, arg4
         });
     }
 }

@@ -74,17 +74,10 @@ public class BangDispatcher extends InvocationDispatcher
             );
             return;
 
-        case BangMarshaller.SELECT_STARTERS:
-            ((BangProvider)provider).selectStarters(
-                source,
-                ((Integer)args[0]).intValue(), (int[])args[1]
-            );
-            return;
-
         case BangMarshaller.SELECT_TEAM:
             ((BangProvider)provider).selectTeam(
                 source,
-                (String[])args[0]
+                ((Integer)args[0]).intValue(), (String[])args[1], (int[])args[2]
             );
             return;
 

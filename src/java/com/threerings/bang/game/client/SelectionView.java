@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
@@ -28,13 +29,16 @@ import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.card.Card;
 
 import com.threerings.bang.ranch.client.UnitIcon;
 import com.threerings.bang.ranch.client.UnitPalette;
 import com.threerings.bang.ranch.client.UnitView;
 
 import com.threerings.bang.data.Badge;
+import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
@@ -48,13 +52,14 @@ import static com.threerings.bang.Log.log;
 public class SelectionView extends SteelWindow
     implements ActionListener
 {
-    public SelectionView (BangContext ctx, BangController ctrl,
-                          BangConfig config, BangObject bangobj, int pidx)
+    public SelectionView (
+        BangContext ctx, BangView view, BangConfig config,
+        BangObject bangobj, int pidx)
     {
         super(ctx, "");
 
         _ctx = ctx;
-        _ctrl = ctrl;
+        _view = view;
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         _bangobj = bangobj;
         _pidx = pidx;
@@ -73,70 +78,143 @@ public class SelectionView extends SteelWindow
         _side = GroupLayout.makeVBox(GroupLayout.TOP);
         _side.add(_uname = new BLabel("", "pick_unit_name"));
         _side.add(_uview = new UnitView(ctx, true));
+        _side.add(_utype = new BLabel("", "pick_tip"));
         _contents.add(_side, BorderLayout.WEST);
 
-        _center = GroupLayout.makeVBox(GroupLayout.TOP);
-        ((GroupLayout)_center.getLayoutManager()).setOffAxisJustification(
-            GroupLayout.LEFT);
+        _center = new BContainer(new BorderLayout(0, 5));
         _contents.add(_center, BorderLayout.CENTER);
+
+        // count up their cards and big shots
+        int bscount = 0, cardcount = 0;
+        for (Item item : _ctx.getUserObject().inventory) {
+            if (item instanceof BigShotItem) {
+                _bigShotId = item.getItemId();
+                bscount++;
+            } else if (item instanceof CardItem) {
+                CardItem citem = (CardItem)item;
+                if (citem.getQuantity() > 0 &&
+                    Card.getCard(citem.getType()).isPlayable(_bangobj)) {
+                    cardcount++;
+                }
+            }
+        }
+
+        // add the steps across the top
+        BContainer steps = GroupLayout.makeHBox(GroupLayout.CENTER);
+        steps.add(new BLabel(_msgs.get("m.select_your"), "pick_subtitle"));
+        _steps = new BLabel[STEPS.length];
+        for (int ii = 0; ii < STEPS.length; ii++) {
+            _steps[ii] = new BLabel(
+                _msgs.get("m.select_" + STEPS[ii]), "pick_subtitle");
+            // don't add the labels for steps we're going to skip
+            if ((ii == BIGSHOT && bscount <= 1) ||
+                (ii == CARDS && cardcount == 0)) {
+                continue;
+            }
+            steps.add(_steps[ii]);
+        }
+        _center.add(steps, BorderLayout.NORTH);
+
+        // and a tip along the bottom
+        _center.add(_tip = new BLabel("", "pick_tip"), BorderLayout.SOUTH);
 
         // we need to create _ready here because code below is going to trigger
         // a call to updateBigShot()
-        _buttons.add(_ready = new BButton(
-                         _msgs.get("m.ready"), this, "pick_bigshot"));
-
-        // add the mini-cards display to the side
-        BContainer cards = GroupLayout.makeHBox(GroupLayout.CENTER);
-        for (int ii = 0; ii < _cardsels.length; ii++) {
-            cards.add(_cardsels[ii] = new BLabel("", "card_icon"));
-        }
-        _side.add(cards);
+        _buttons.add(_ready = new BButton(_msgs.get("m.next"),
+                                          this, "picked_bigshot"));
 
         // create the big shot selection display
-        _center.add(new BLabel(_msgs.get("m.select_bigshot"), "pick_subtitle"));
-        _units = new UnitPalette(_ctx, _enabler, 4, 1);
+        _units = new UnitPalette(_ctx, _enabler, 4, 2);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
         _units.setUser(_ctx.getUserObject(), true);
         _units.selectFirstIcon();
-        _center.add(_units);
 
-        // create the card selection display
-        _center.add(new BLabel(_msgs.get("m.select_cards"), "pick_subtitle"));
-        _center.add(_cards = new CardPalette(_ctx, _ctrl, bangobj, _cardsels));
-        _cards.setStyleClass("pick_palette");
+        // if they have no big shots, skip that selection mode
+        if (bscount > 1) {
+            setStep(BIGSHOT, _units);
+            updateBigShot();
+        } else {
+            setPickTeamMode();
+        }
+    }
 
-        updateBigShot();
+    // documentation inherited from interface ActionListener
+    public void actionPerformed (ActionEvent e)
+    {
+        String cmd = e.getAction();
+        if (cmd.equals("picked_bigshot")) {
+            UnitIcon icon = _units.getSelectedUnit();
+            if (icon == null) {
+                return;
+            }
+            _bigShotId = icon.getItemId();
+            setPickTeamMode();
+
+        } else if (cmd.equals("picked_team")) {
+            // convert our team selection into an array
+            ArrayList<String> units = new ArrayList<String>();
+            for (int ii = 0; ii < _tconfigs.length; ii++) {
+                if (_tconfigs[ii] != null) {
+                    units.add(_tconfigs[ii].type);
+                }
+            }
+            _tunits = units.toArray(new String[units.size()]);
+
+            // if they have playable cards, let them pick some
+            if (_steps[CARDS].isAdded()) {
+                setPickCardsMode();
+            } else {
+                sendTeamSelection(new int[0]);
+            }
+
+        } else if (cmd.equals("picked_cards")) {
+            // determine which cards are selected
+            ArrayIntSet cardIds = new ArrayIntSet();
+            for (int ii = 0; ii < GameCodes.MAX_CARDS; ii++) {
+                CardItem item = _cards.getSelectedCard(ii);
+                if (item != null) {
+                    cardIds.add(item.getItemId());
+                    // preload the card selection into our status view
+                    _view.pstatus[_pidx].cardAdded(
+                        Card.getCard(item.getType()), true);
+                }
+            }
+            sendTeamSelection(cardIds.toIntArray());
+        }
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+
+        _units.shutdown();
     }
 
     /**
      * Switches to the mode where we pick our teams.
      */
-    public void setPickTeamMode (BangConfig config)
+    protected void setPickTeamMode ()
     {
-        // remove the BigShot UI bits
-        while (_side.getComponentCount() > 2) {
-            _side.remove(_side.getComponent(2));
+        // remove the previous UI bits
+        while (_side.getComponentCount() > 3) {
+            _side.remove(_side.getComponent(3));
         }
-        _center.removeAll();
-        _waiting = false;
 
         // add a label for each selectable unit
-        int teamSize = _bangobj.scenario.getTeamSize(config);
-        _team = new BLabel[teamSize];
+        _team = new BLabel[_tconfigs.length];
         for (int ii = 0; ii < _team.length; ii++) {
             _side.add(_team[ii] = new BLabel("", "pick_team_choice"));
         }
 
         // create the big shot selection display
-        _center.add(new BLabel(_msgs.get("m.pv_assemble"), "pick_subtitle"));
         _units.shutdown();
         _units = new UnitPalette(_ctx, _teamins, 4, 2);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
-        _units.setSelectable(teamSize);
+        _units.setSelectable(_team.length);
         _units.selectFirstIcon();
-        _center.add(_units);
 
         // determine which units are available for selection
         ArrayList<UnitConfig> units = new ArrayList<UnitConfig>();
@@ -161,88 +239,43 @@ public class SelectionView extends SteelWindow
         });
         _units.setUnits(units.toArray(new UnitConfig[units.size()]), true);
 
-        _ready.setAction("pick_team");
+        _ready.setAction("picked_team");
+        _ready.setText(_msgs.get("m.ready"));
+        _ready.setEnabled(false);
+        setStep(TEAM, _units);
+    }
+
+    /**
+     * Switches to the mode where we pick our cards.
+     */
+    protected void setPickCardsMode ()
+    {
+        _ready.setAction("picked_cards");
+        _cards = new CardPalette(_ctx, _bangobj);
+        _cards.setStyleClass("pick_palette");
+        setStep(CARDS, _cards);
+    }
+
+    protected void sendTeamSelection (int[] cards)
+    {
+        // don't allow anything to change while we're waiting
         _ready.setEnabled(false);
 
-        // we need to stay in the exact same location because changing the
-        // BGeomView that displays the Big Shot causes the camera to wig out
-        Rectangle obounds = getBounds();
-        pack();
-        setLocation(_x + (obounds.width - _width),
-                    _y + (obounds.height - _height));
-    }
+        // submit our selection to the server
+        _bangobj.service.selectTeam(
+            _ctx.getClient(), _bigShotId, _tunits, cards);
 
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent e)
-    {
-        String cmd = e.getAction();
-        if (cmd.equals("pick_bigshot")) {
-            UnitIcon icon = _units.getSelectedUnit();
-            if (icon == null) {
-                return;
-            }
-
-            // don't allow double clickage
-            _ready.setEnabled(false);
-            _waiting = true;
-
-            // determine which cards are selected
-            ArrayIntSet cardIds = new ArrayIntSet();
-            for (int ii = 0; ii < GameCodes.MAX_CARDS; ii++) {
-                CardItem item = _cards.getSelectedCard(ii);
-                if (item != null) {
-                    cardIds.add(item.getItemId());
-                }
-            }
-
-            // clear out and disable the palettes
-            _units.setSelectable(0);
-            _cards.setSelectable(0);
-
-            int bigShotId = icon.getItemId();
-            _bangobj.service.selectStarters(
-                _ctx.getClient(), bigShotId, cardIds.toIntArray());
-
-        } else if (cmd.equals("pick_team")) {
-            // don't allow double clickage
-            _ready.setEnabled(false);
-            _waiting = true;
-
-            // disable the team selection palette
-            _units.setSelectable(0);
-
-            ArrayList<String> units = new ArrayList<String>();
-            for (int ii = 0; ii < _tconfigs.length; ii++) {
-                if (_tconfigs[ii] != null) {
-                    units.add(_tconfigs[ii].type);
-                }
-            }
-            String[] uvec = units.toArray(new String[units.size()]);
-            _bangobj.service.selectTeam(_ctx.getClient(), uvec);
-        }
-    }
-
-    @Override // documentation inherited
-    protected void wasRemoved ()
-    {
-        super.wasRemoved();
-
-        _units.shutdown();
+        // get ourselves out of the way
+        _view.clearOverlay();
     }
 
     protected void updateBigShot ()
     {
-        if (!_waiting) {
-            _ready.setEnabled(_units.getSelectedUnit() != null);
-        }
+        _ready.setEnabled(_units.getSelectedUnit() != null);
     }
 
     protected void updateTeam ()
     {
-        if (_waiting) {
-            return;
-        }
-
         int uidx = 0, selected = 0, enabled = 0;
         SelectableIcon[] icons = _units.getIcons();
         for (int ii = 0; ii < icons.length; ii++) {
@@ -266,11 +299,29 @@ public class SelectionView extends SteelWindow
         _ready.setEnabled(selected == _team.length || selected == enabled);
     }
 
+    protected void setStep (int step, BComponent content)
+    {
+        for (int ii = 0; ii < _steps.length; ii++) {
+            _steps[ii].setEnabled(ii == step);
+        }
+        _tip.setText(_msgs.get("m.select_tip" + step));
+
+        if (_stepcont != null) {
+            _center.remove(_stepcont);
+        }
+        _stepcont = content;
+        if (_stepcont != null) {
+            _center.add(_stepcont, BorderLayout.CENTER);
+        }
+    }
+
     protected IconPalette.Inspector _enabler = new IconPalette.Inspector() {
         public void iconUpdated (SelectableIcon icon, boolean selected) {
             if (selected) {
                 _uname.setText(icon.getText());
-                _uview.setUnit(((UnitIcon)icon).getUnit());
+                UnitConfig conf = ((UnitIcon)icon).getUnit();
+                _uview.setUnit(conf);
+                _utype.setText(_ctx.xlate(GameCodes.GAME_MSGS, conf.getName()));
             }
             updateBigShot();
         }
@@ -283,22 +334,30 @@ public class SelectionView extends SteelWindow
     };
 
     protected BangContext _ctx;
-    protected BangController _ctrl;
+    protected BangView _view;
     protected MessageBundle _msgs;
     protected BangObject _bangobj;
     protected int _pidx;
 
     protected BContainer _side, _center;
-    protected BLabel _uname;
+    protected BComponent _stepcont;
+    protected BLabel[] _steps;
+    protected BLabel _uname, _utype, _tip;
+
     protected UnitView _uview;
     protected UnitPalette _units;
-
     protected CardPalette _cards;
-    protected BLabel[] _cardsels = new BLabel[GameCodes.MAX_CARDS];
 
     protected BLabel[] _team;
     protected UnitConfig[] _tconfigs;
 
-    protected boolean _waiting;
     protected BButton _ready;
+
+    protected int _bigShotId;
+    protected String[] _tunits;
+
+    protected static final String[] STEPS = { "bigshot", "team", "cards" };
+    protected static final int BIGSHOT = 0;
+    protected static final int TEAM = 1;
+    protected static final int CARDS = 2;
 }

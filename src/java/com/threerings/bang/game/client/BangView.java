@@ -125,22 +125,11 @@ public class BangView extends BWindow
         case BangObject.SELECT_PHASE:
             if (pidx != -1) {
                 log.info("Starting Select Phase");
-                setOverlay(new SelectionView(
-                    _ctx, _ctrl, config, _bangobj, pidx));
+                setOverlay(
+                    new SelectionView(_ctx, this, config, _bangobj, pidx));
                 // because we may be setting it after updating but before
                 // rendering, we need make sure it's valid
                 _oview.validate();
-            }
-            break;
-
-        case BangObject.BUYING_PHASE:
-            if (pidx != -1) {
-                log.info("Starting Buying Phase");
-                boolean hadFocus = chat.hasFocus();
-                ((SelectionView)_oview).setPickTeamMode(config);
-                if (hadFocus) {
-                    chat.requestFocus(); // preserve chat focus
-                }
             }
             break;
 

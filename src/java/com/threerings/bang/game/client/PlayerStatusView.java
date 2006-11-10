@@ -100,8 +100,7 @@ public class PlayerStatusView extends BContainer
         add(_points, CASH_LOC);
         add(_ranklbl = new BLabel(createRankIcon(-2)) {
             public String getTooltipText () {
-                String hmsg = (_bangobj.state == BangObject.SELECT_PHASE ||
-                               _bangobj.state == BangObject.BUYING_PHASE) ?
+                String hmsg = (_bangobj.state == BangObject.SELECT_PHASE) ?
                     "pre_round_rank" : "rank";
                 return _ctx.xlate(GameCodes.GAME_MSGS, "m.help_" + hmsg);
             }
@@ -401,7 +400,6 @@ public class PlayerStatusView extends BContainer
     {
         switch (_bangobj.state) {
         case BangObject.SELECT_PHASE:
-        case BangObject.BUYING_PHASE:
             setRank(_bangobj.playerStatus[_pidx] ==
                     BangObject.PLAYER_IN_PLAY ? -1 : -2);
             break;

@@ -195,14 +195,11 @@ public class BangObject extends GameObject
     /** A {@link #state} constant indicating the pre-game selection phase. */
     public static final int SELECT_PHASE = 5;
 
-    /** A {@link #state} constant indicating the pre-game buying phase. */
-    public static final int BUYING_PHASE = 6;
-
     /** A {@link #state} constant indicating the post-round phase. */
-    public static final int POST_ROUND = 7;
+    public static final int POST_ROUND = 6;
 
     /** A {@link #state} constant used by the practice scenario. */
-    public static final int PRE_PRACTICE = 8;
+    public static final int PRE_PRACTICE = 7;
 
     /** A {@link #playerStatus} constant used before the game starts. */
     public static final int PLAYER_PREPARING = 2;
@@ -667,8 +664,8 @@ public class BangObject extends GameObject
     @Override // documentation inherited
     public boolean isInPlay ()
     {
-        return (state == BUYING_PHASE || state == SELECT_PHASE ||
-                state == IN_PLAY || state == POST_ROUND);
+        return (state == SELECT_PHASE || state == IN_PLAY ||
+                state == POST_ROUND);
     }
 
     /**

@@ -21,22 +21,17 @@ public interface BangService extends InvocationService
          */
         public void requestProcessed (BoardData bdata);
     }
-    
+
     /**
      * Requests a copy of the board data.
      */
     public void getBoard (Client client, BoardListener listener);
-    
-    /**
-     * Used to select a player's big shot and starting hand in the
-     * pre-game phase.
-     */
-    public void selectStarters (Client client, int bigShotId, int[] cardIds);
 
     /**
-     * Used to select the rest of a player's team in the pre-game phase.
+     * Used to configure a player's team during the pre-game phase.
      */
-    public void selectTeam (Client client, String[] units);
+    public void selectTeam (Client client, int bigShotId, String[] units,
+                            int[] cardIds);
 
     /**
      * Issues an order to a particular unit to do some combination of moving

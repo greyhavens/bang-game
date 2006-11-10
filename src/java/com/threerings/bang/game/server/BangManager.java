@@ -27,6 +27,7 @@ import com.samskivert.util.IntListUtil;
 import com.samskivert.util.IntSet;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.Multex;
 import com.samskivert.util.RandomUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
@@ -256,20 +257,20 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void selectStarters (
-        ClientObject caller, int bigShotId, int[] cardIds)
+    public void selectTeam (
+        ClientObject caller, int bigShotId, String[] units, int[] cardIds)
     {
         PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
         if (pidx == -1) {
-            log.warning("Request to select starters by non-player " +
+            log.warning("Request to select team by non-player " +
                         "[who=" + user.who() + "].");
             return;
         }
 
         // make sure we haven't already done this
         if (_bangobj.bigShots[pidx] != null) {
-            log.info("Rejecting repeat starter selection " +
+            log.info("Rejecting repeat team selection " +
                      "[who=" + user.who() + "].");
             return;
         }
@@ -307,21 +308,9 @@ public class BangManager extends GameManager
                 _scards.put(cards[ii].cardId, new StartingCard(pidx, item));
             }
         }
-        BigShotItem unit = (BigShotItem)user.inventory.get(bigShotId);
-        selectStarters(pidx, unit, cards);
-    }
 
-    // documentation inherited from interface BangProvider
-    public void selectTeam (ClientObject caller, String[] units)
-    {
-        PlayerObject user = (PlayerObject)caller;
-        int pidx = getPlayerIndex(user.getVisibleName());
-        if (pidx == -1) {
-            log.warning("Request to purchase units by non-player " +
-                        "[who=" + user.who() + "].");
-            return;
-        }
-        selectTeam(pidx, units, user);
+        BigShotItem bsunit = (BigShotItem)user.inventory.get(bigShotId);
+        selectTeam(user, pidx, bsunit, units, cards);
     }
 
     // documentation inherited from interface BangProvider
@@ -725,19 +714,8 @@ public class BangManager extends GameManager
 
         case BangObject.SELECT_PHASE:
             resetPreparingStatus(false);
-            if (!_notingPlayedCards) {
-                startSelectPhase();
-            } else {
-                _notingPlayedCards = false;
-            }
-            break;
-
-        case BangObject.BUYING_PHASE:
-            resetPreparingStatus(false);
-            _bangobj.setState(BangObject.BUYING_PHASE);
-//             log.info("Starting buying phase timer.");
-//             _preGameTimer.state = BangObject.BUYING_PHASE;
-//             _preGameTimer.schedule(15000L);
+            // we may have to wait until we've noted the played cards
+            _startRoundMultex.satisfied(Multex.CONDITION_ONE);
             break;
 
         case BangObject.IN_PLAY:
@@ -809,6 +787,10 @@ public class BangManager extends GameManager
 
         // note the time at which we started
         _startStamp = System.currentTimeMillis();
+
+        // there are not saved cards to note before the first round, so start
+        // with that condition already satisfied
+        _startRoundMultex.satisfied(Multex.CONDITION_TWO);
 
         BoardRecord[] boards = null;
         // load up the named board if one was named
@@ -945,21 +927,12 @@ public class BangManager extends GameManager
         // we do some custom additional stuff
         switch (state) {
         case BangObject.SELECT_PHASE:
-            // select big shots for our AIs
+            // select big shots, team and cards for our AIs
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 if (isAI(ii)) {
-                    selectStarters(ii, _aiLogic[ii].getBigShotType(),
-                        _aiLogic[ii].getCardTypes());
-                }
-            }
-            break;
-
-        case BangObject.BUYING_PHASE:
-            // make purchases for our AIs
-            for (int ii = 0; ii < getPlayerSlots(); ii++) {
-                if (isAI(ii)) {
-                    selectTeam(ii, _aiLogic[ii].getUnitTypes(
-                        getTeamSize()), null);
+                    selectTeam(ii, _aiLogic[ii].getBigShotType(),
+                               _aiLogic[ii].getUnitTypes(getTeamSize()),
+                               _aiLogic[ii].getCardTypes());
                 }
             }
             break;
@@ -1172,10 +1145,10 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Selects the starting configuration for an AI player.
+     * Selects the starting team and configuration for an AI player.
      */
-    protected void selectStarters (
-        int pidx, String bigShotType, String[] cardTypes)
+    protected void selectTeam (
+        int pidx, String bigShotType, String[] units, String[] cardTypes)
     {
         Card[] cards = null;
         if (cardTypes != null) {
@@ -1186,13 +1159,14 @@ public class BangManager extends GameManager
                 cards[ii].found = false;
             }
         }
-        selectStarters(pidx, new BigShotItem(-1, bigShotType), cards);
+        selectTeam(null, pidx, new BigShotItem(-1, bigShotType), units, cards);
     }
 
     /**
-     * Selects the starting configuration for this player.
+     * Selects the starting team and configuration for this player.
      */
-    protected void selectStarters (int pidx, BigShotItem item, Card[] cards)
+    protected void selectTeam (PlayerObject user, int pidx, BigShotItem item,
+                               String[] utypes, Card[] cards)
     {
         try {
             _bangobj.startTransaction();
@@ -1220,6 +1194,34 @@ public class BangManager extends GameManager
             unit.originalOwner = pidx;
             _bangobj.setBigShotsAt(unit, pidx);
 
+            // create an array of units from the requested types (limiting to
+            // the team size in case they try to get sneaky)
+            Unit[] units = new Unit[getTeamSize()];
+            for (int ii = 0, ll = Math.min(units.length, utypes.length);
+                 ii < ll; ii++) {
+                units[ii] = Unit.getUnit(utypes[ii]);
+            }
+
+            // if this is a human player, make sure they didn't request units
+            // to which they don't have access
+            if (user != null) {
+                for (int ii = 0; ii < units.length; ii++) {
+                    UnitConfig config = units[ii].getConfig();
+                    if (config.scripCost < 0 || !config.hasAccess(user)) {
+                        log.warning("Player requested to purchase illegal " +
+                                    "unit [who=" + user.who() +
+                                    ", unit=" + config.type + "].");
+                        units[ii] = null;
+                    }
+                }
+
+                // TODO: make sure they didn't request more than their allowed
+                // number of each unit (currently one)
+            }
+
+            // initialize and prepare the units
+            initAndPrepareUnits(units, pidx);
+
             // note that they're done with this phase
             _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
 
@@ -1232,68 +1234,15 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Configures the specified player's purchases for this round and starts
-     * the game if they are the last to configure.
-     */
-    protected void selectTeam (int pidx, String[] types, PlayerObject user)
-    {
-        // make sure they haven't already purchased units
-        for (Piece piece : _purchases.values()) {
-            if (piece.owner == pidx) {
-                log.warning("Rejecting repeat purchase request " +
-                            "[who=" + _bangobj.players[pidx] + "].");
-                return;
-            }
-        }
-
-        // make sure they didn't request too many pieces
-        if (types.length > getTeamSize()) {
-            log.warning("Rejecting bogus team request " +
-                        "[who=" + _bangobj.players[pidx] +
-                        ", types=" + StringUtil.toString(types) +
-                        ", teamSize=" + getTeamSize() + "].");
-            return;
-        }
-
-        // create an array of units from the requested types
-        Unit[] units = new Unit[types.length];
-        for (int ii = 0; ii < units.length; ii++) {
-            units[ii] = Unit.getUnit(types[ii]);
-        }
-
-        // if this is a human player, make sure they didn't request units to
-        // which they don't have access
-        if (user != null) {
-            for (int ii = 0; ii < units.length; ii++) {
-                UnitConfig config = units[ii].getConfig();
-                if (config.scripCost < 0 || !config.hasAccess(user)) {
-                    log.warning("Player requested to purchase illegal unit " +
-                                "[who=" + user.who() +
-                                ", unit=" + config.type + "].");
-                    return;
-                }
-            }
-
-            // TODO: make sure they didn't request more than their allowed
-            // number of each unit (currently one)
-        }
-
-        // initialize and prepare the units
-        initAndPrepareUnits(units, pidx);
-
-        // note that this player is ready and potentially fire away
-        _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
-        checkStartNextPhase();
-    }
-
-    /**
      * Utility method to initialize and prepare the units for a player.
      */
     public void initAndPrepareUnits (Unit[] units, int pidx)
     {
         for (int ii = 0; ii < units.length; ii++) {
-            initAndPrepareUnit(units[ii], pidx);
-            _purchases.add(units[ii]);
+            if (units[ii] != null) {
+                initAndPrepareUnit(units[ii], pidx);
+                _purchases.add(units[ii]);
+            }
         }
     }
 
@@ -1324,32 +1273,35 @@ public class BangManager extends GameManager
      */
     protected void checkStartNextPhase ()
     {
-        // if all players are AIs, wait for playerReady signal before starting
-        if (_bconfig.allPlayersAIs() &&
-            _bangobj.state == BangObject.SELECT_PHASE) {
+        // if we're not in the select phase, we don't do nothin'
+        if (_bangobj.state != BangObject.SELECT_PHASE) {
             return;
         }
-        if (_bangobj.state == BangObject.SELECT_PHASE ||
-            _bangobj.state == BangObject.BUYING_PHASE) {
-            for (int ii = 0; ii < _bangobj.playerStatus.length; ii++) {
-                // if anyone is still preparing, we're not ready
-                if (_bangobj.isActivePlayer(ii) &&
-                    _bangobj.playerStatus[ii] == BangObject.PLAYER_PREPARING) {
-                    return;
-                }
-            }
-            // now add the cards to the BangObject
-            _bangobj.startTransaction();
-            try {
-                for (Card card : _cardSet) {
-                    _bangobj.addToCards(card);
-                }
-            } finally {
-                _bangobj.commitTransaction();
-            }
-            _cardSet.clear();
-            _scenario.startNextPhase(_bangobj);
+
+        // if all players are AIs, wait for playerReady signal before starting
+        if (_bconfig.allPlayersAIs()) {
+            return;
         }
+
+        // if anyone is still preparing, we're not ready
+        for (int ii = 0; ii < _bangobj.playerStatus.length; ii++) {
+            if (_bangobj.isActivePlayer(ii) &&
+                _bangobj.playerStatus[ii] == BangObject.PLAYER_PREPARING) {
+                return;
+            }
+        }
+
+        // we are ready; add the cards to the BangObject and move on
+        _bangobj.startTransaction();
+        try {
+            for (Card card : _cardSet) {
+                _bangobj.addToCards(card);
+            }
+        } finally {
+            _bangobj.commitTransaction();
+        }
+        _cardSet.clear();
+        _scenario.startNextPhase(_bangobj);
     }
 
     @Override // documentation inherited
@@ -1895,9 +1847,9 @@ public class BangManager extends GameManager
     }
 
     /**
-     * During the {@link BangObject#SELECT_PHASE} and {@link
-     * BangObject#BUYING_PHASE} we set a timer that resigns any player that
-     * does not make their selection or purchase within the alotted time frame.
+     * During the {@link BangObject#SELECT_PHASE} we set a timer that resigns
+     * any player that does not make their selection or purchase within the
+     * alotted time frame.
      */
     protected void preGameTimerExpired (int targetState)
     {
@@ -2526,11 +2478,11 @@ public class BangManager extends GameManager
                                 "[item=" + scard.item + "]", pe);
                     }
                 }
-                _notingPlayedCards = true;
                 return true;
             }
 
             public void handleResult () {
+                // update the player's in-memory inventory
                 for (StartingCard scard : updates) {
                     PlayerObject user = (PlayerObject)getPlayer(scard.pidx);
                     if (user != null) {
@@ -2543,15 +2495,9 @@ public class BangManager extends GameManager
                         user.removeFromInventory(scard.item.getKey());
                     }
                 }
-                // We've completed, allow the select phase to start
-                if (_notingPlayedCards) {
-                    _notingPlayedCards = false;
 
-                // if we've already tried to start the select phase then
-                // better get it going
-                } else {
-                    startSelectPhase();
-                }
+                // let the next round start if so desired
+                _startRoundMultex.satisfied(Multex.CONDITION_TWO);
             }
         });
     }
@@ -2905,6 +2851,13 @@ public class BangManager extends GameManager
         }
     };
 
+    /** Used to coordinate the starting of a round. */
+    protected Multex _startRoundMultex = new Multex(new Runnable() {
+        public void run () {
+            startSelectPhase();
+        }
+    }, 2);
+
     /** A casted reference to our game configuration. */
     protected BangConfig _bconfig;
 
@@ -2968,9 +2921,6 @@ public class BangManager extends GameManager
 
     /** Marks a piece currently in a move from moveUnit. */
     protected Piece _onTheMove;
-
-    /** Set to true when we're in the process of noting played cards. */
-    protected boolean _notingPlayedCards;
 
     /** A list of effects to do after the shooting has stopped. */
     protected ArrayList<Effect> _postShotEffects = new ArrayList<Effect>();

@@ -103,15 +103,7 @@ public class Tutorial extends Scenario
         switch (bangobj.state) {
         case BangObject.POST_ROUND:
         case BangObject.PRE_GAME:
-            // TODO: allow some tutorials to have select and buying phases
-            // bangobj.setState(BangObject.SELECT_PHASE);
-            // break;
-
         case BangObject.SELECT_PHASE:
-            // bangobj.setState(BangObject.BUYING_PHASE);
-            // break;
-
-        case BangObject.BUYING_PHASE:
             _bangmgr.startPhase(BangObject.PRE_TUTORIAL);
             break;
 
