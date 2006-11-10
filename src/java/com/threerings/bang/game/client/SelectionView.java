@@ -75,10 +75,18 @@ public class SelectionView extends SteelWindow
         // set up our main structural bits
         _contents.setLayoutManager(new BorderLayout(25, 15));
 
-        _side = GroupLayout.makeVBox(GroupLayout.TOP);
+        _side = new BContainer(GroupLayout.makeVert(GroupLayout.TOP)) {
+            protected Dimension computePreferredSize (int whint, int hhint) {
+                Dimension d = super.computePreferredSize(whint, hhint);
+                // be no wider than our unit view
+                d.width = _uview.getPreferredSize(whint, hhint).width;
+                return d;
+            }
+        };
         _side.add(_uname = new BLabel("", "pick_unit_name"));
+        _uname.setFit(BLabel.Fit.SCALE);
         _side.add(_uview = new UnitView(ctx, true));
-        _side.add(_utype = new BLabel("", "pick_type"));
+        _side.add(_utype = new BLabel(""));
         _contents.add(_side, BorderLayout.WEST);
 
         _center = new BContainer(new BorderLayout(0, 5));

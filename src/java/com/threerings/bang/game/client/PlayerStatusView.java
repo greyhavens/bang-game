@@ -192,9 +192,14 @@ public class PlayerStatusView extends BContainer
     {
         int cidx = -1;
         for (int ii = 0; ii < _cards.length; ii++) {
-            if (_cards[ii] == null ||
-                // replace any "fake" cards we added after team selection
-                _cards[ii].getAction().equals("0")) {
+            if (_cards[ii] == null) {
+                cidx = ii;
+                break;
+            }
+            // if this is not a fake card, replace an older fake card with a
+            // real card that arrived when the round actually started
+            if (card.cardId != 0 && _cards[ii].getAction().equals("0")) {
+                remove(_cards[ii]);
                 cidx = ii;
                 break;
             }
