@@ -22,9 +22,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import org.lwjgl.input.Cursor;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.WaveData;
@@ -214,6 +217,50 @@ public class BangUI
         // create the sound group for our UI sounds
         _sgroup = _ctx.getSoundManager().createGroup(
             BangUI.clipprov, UI_SOURCE_COUNT);
+    }
+
+    /**
+     * Configures the default cursor.
+     */
+    public static void configDefaultCursor ()
+    {
+        String path = "rsrc/ui/cursor.png";
+        BufferedImage image;
+        try {
+            // getdown has already unpacked our resources, so we can load
+            // these images straight from the filesystem (this method may get
+            // called before the resource manager and image cache are set
+            // up, otherwise we'd use them)
+            image = ImageIO.read(BangUtil.getResourceFile(path));
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to load cursor " +
+                    "[path=" + path + "].", e);
+            return;
+        }
+        configCursor(image, 0, image.getHeight() - 1);
+    }
+
+    /**
+     * Configures our application mouse cursor.
+     */
+    public static void configCursor (BufferedImage image, int hx, int hy)
+    {
+        int ww = image.getWidth();
+        int hh = image.getHeight();
+        IntBuffer data = ByteBuffer.allocateDirect(ww*hh*4).asIntBuffer();
+        for (int yy = hh - 1; yy >= 0; yy--) {
+            for (int xx = 0; xx < ww; xx++) {
+                data.put(image.getRGB(xx, yy));
+            }
+        }
+        data.flip();
+        try {
+            Mouse.create();
+            Mouse.setNativeCursor(new Cursor(ww, hh, hx, hy, 1, data, null));
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to set cursor.", e);
+        }
+        log.info("Max cursor size: " + Cursor.getMaxCursorSize());
     }
 
     /**
