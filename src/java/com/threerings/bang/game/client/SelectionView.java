@@ -83,10 +83,18 @@ public class SelectionView extends SteelWindow
                 return d;
             }
         };
+
+        // add the bigshot info
         _side.add(_uname = new BLabel("", "pick_unit_name"));
         _uname.setFit(BLabel.Fit.SCALE);
         _side.add(_uview = new UnitView(ctx, true));
-        _side.add(_utype = new BLabel(""));
+        _side.add(_utype = new BLabel("", "pick_team_choice"));
+
+        // add a label for each selectable unit
+        _team = new BLabel[_tconfigs.length];
+        for (int ii = 0; ii < _team.length; ii++) {
+            _side.add(_team[ii] = new BLabel("", "pick_team_choice"));
+        }
         _contents.add(_side, BorderLayout.WEST);
 
         _center = new BContainer(new BorderLayout(0, 5));
@@ -206,19 +214,10 @@ public class SelectionView extends SteelWindow
      */
     protected void setPickTeamMode ()
     {
-        // remove the previous UI bits
-        while (_side.getComponentCount() > 3) {
-            _side.remove(_side.getComponent(3));
-        }
-
-        // add a label for each selectable unit
-        _team = new BLabel[_tconfigs.length];
-        for (int ii = 0; ii < _team.length; ii++) {
-            _side.add(_team[ii] = new BLabel("", "pick_team_choice"));
-        }
-
-        // create the big shot selection display
+        // shutdown the bigshot selection palette
         _units.shutdown();
+
+        // create the normal unit selection display
         _units = new UnitPalette(_ctx, _teamins, 4, 2);
         _units.setPaintBorder(true);
         _units.setStyleClass("pick_palette");
