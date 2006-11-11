@@ -923,7 +923,8 @@ public class BangBoardView extends BoardView
 
             // update tile highlights for card placement
             if (_card != null &&
-                _card.getPlacementMode() == Card.PlacementMode.VS_PIECE) {
+                (_card.getPlacementMode() == Card.PlacementMode.VS_PIECE ||
+                 _card.getPlacementMode() == Card.PlacementMode.VS_PLAYER)) {
                 if (hover instanceof PieceSprite) {
                     Piece piece = ((PieceSprite)hover).getPiece();
                     clearHighlights();
@@ -1204,11 +1205,17 @@ public class BangBoardView extends BoardView
                 break;
 
             case VS_PIECE:
+            case VS_PLAYER:
                 if (_hover != null && _hover instanceof PieceSprite) {
                     Piece p = ((PieceSprite)_hover).getPiece();
                     if (_card.isValidPiece(_bangobj, p)) {
                         log.info("Activating " + _card);
-                        target = new Integer(p.pieceId);
+                        if (_card.getPlacementMode() == 
+                                Card.PlacementMode.VS_PIECE) {
+                            target = new Integer(p.pieceId);
+                        } else {
+                            target = new Integer(p.owner);
+                        }
                     }
                 }
                 break;
@@ -1720,6 +1727,7 @@ public class BangBoardView extends BoardView
             break;
 
           case VS_PIECE:
+          case VS_PLAYER:
             // if we're hovering over a piece it will get set properly in
             // hoverSpriteChanged()
             if (_hover == null) {
