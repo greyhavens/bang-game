@@ -13,6 +13,7 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BTextField;
@@ -20,7 +21,7 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
-import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.icon.SubimageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
@@ -64,8 +65,7 @@ public class ParlorGameConfigView extends BContainer
 
         BContainer main = new BContainer(
             GroupLayout.makeHoriz(GroupLayout.NONE, GroupLayout.CENTER,
-                                  GroupLayout.CONSTRAIN));
-        ((GroupLayout)main.getLayoutManager()).setGap(25);
+                                  GroupLayout.CONSTRAIN).setGap(25));
         add(main, BorderLayout.CENTER);
 
         // create our various combo boxen
@@ -73,23 +73,26 @@ public class ParlorGameConfigView extends BContainer
         main.add(combos);
 
         // load our slot icons
-        _psicons = new ImageIcon[] {
-            new ImageIcon(_ctx.loadImage("ui/saloon/pardners_only.png")),
-            new ImageIcon(_ctx.loadImage("ui/saloon/anyone.png")),
-            new ImageIcon(_ctx.loadImage("ui/saloon/locked.png"))
+        BImage icons = _ctx.loadImage("ui/saloon/player_types.png");
+        int width = icons.getWidth()/3, height = icons.getHeight();
+        _psicons = new SubimageIcon[] {
+            new SubimageIcon(icons, 0, 0, width, height),
+            new SubimageIcon(icons, width, 0, width, height),
+            new SubimageIcon(icons, 2*width, 0, width, height),
         };
 
         // number of players
         combos.add(BangUI.createLabel(_msgs, "m.par_players", "match_label"));
-        BContainer pslots = GroupLayout.makeHBox(GroupLayout.CENTER);
+        BContainer pslots = new BContainer(
+            GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(2));
         _slots = new PlayerSlotButton[GameCodes.MAX_PLAYERS];
         for (int ii = 0; ii < _slots.length; ii++) {
             int opt = (ii > 0) ? ((ii > 1) ? 3 : 2) : 1;
             pslots.add(_slots[ii] = new PlayerSlotButton(opt));
         }
         combos.add(pslots);
-        setSlotStates(BangPrefs.config.getValue("parlor.players", 2),
-                      BangPrefs.config.getValue("parlor.tincans", 1));
+        setSlotTypes(BangPrefs.config.getValue("parlor.players", 2),
+                     BangPrefs.config.getValue("parlor.tincans", 1));
 
         // rounds of play
         combos.add(BangUI.createLabel(_msgs, "m.rounds", "match_label"));
@@ -241,7 +244,7 @@ public class ParlorGameConfigView extends BContainer
         if (_parobj.game != null) {
             _rounds.selectItem(Integer.valueOf(_parobj.game.rounds));
             _units.selectItem(Integer.valueOf(_parobj.game.teamSize));
-            setSlotStates(_parobj.game.players, _parobj.game.tinCans);
+            setSlotTypes(_parobj.game.players, _parobj.game.tinCans);
             HashSet<String> set = new HashSet<String>();
             CollectionUtil.addAll(set, _parobj.game.scenarios);
             for (int ii = 0; ii < _scenIds.length; ii++) {
@@ -335,15 +338,15 @@ public class ParlorGameConfigView extends BContainer
         return items.toArray(new Integer[items.size()]);
     }
 
-    protected void setSlotStates (int players, int tinCans)
+    protected void setSlotTypes (int players, int tinCans)
     {
         for (int ii = 0; ii < _slots.length; ii++) {
             if (players > ii) {
-                _slots[ii].setState(HUMAN);
+                _slots[ii].setType(HUMAN);
             } else if (players + tinCans > ii) {
-                _slots[ii].setState(TINCAN);
+                _slots[ii].setType(TINCAN);
             } else {
-                _slots[ii].setState(NONE);
+                _slots[ii].setType(NONE);
             }
         }
     }
@@ -352,7 +355,7 @@ public class ParlorGameConfigView extends BContainer
     {
         int count = 0;
         for (int ii = 0; ii < _slots.length; ii++) {
-            if (_slots[ii].getState() == type) {
+            if (_slots[ii].getType() == type) {
                 count++;
             }
         }
@@ -363,18 +366,25 @@ public class ParlorGameConfigView extends BContainer
     {
         public PlayerSlotButton (int choices) {
             super((String)null);
-            _icons = new ImageIcon[choices];
+            setStyleClass("n_state_button");
+            _icons = new SubimageIcon[choices];
             System.arraycopy(_psicons, 0, _icons, 0, choices);
-            setIcon(_icons[_state]);
+            setIcon(_icons[_type]);
+            if (choices == 1) {
+                setEnabled(false);
+            }
         }
 
-        public int getState () {
-            return _state;
+        public int getType () {
+            return _type;
         }
 
-        public void setState (int state) {
-            if (_state != state) {
-                setIcon(_icons[_state = state]);
+        public void setType (int type) {
+            if (_type != type) {
+                setIcon(_icons[_type = type]);
+            }
+            if (isAdded()) {
+                getWindow().getRootNode().tipTextChanged(this);
             }
         }
 
@@ -383,8 +393,8 @@ public class ParlorGameConfigView extends BContainer
             if (isEnabled() && event instanceof MouseEvent) {
                 MouseEvent mev = (MouseEvent)event;
                 if (mev.getType() == MouseEvent.MOUSE_PRESSED) {
-                    // toggle to the next state
-                    setState((_state + 1) % _icons.length);
+                    // toggle to the next type
+                    setType((_type + 1) % _icons.length);
                     return true;
                 } else {
                     return super.dispatchEvent(event);
@@ -395,11 +405,11 @@ public class ParlorGameConfigView extends BContainer
 
         @Override
         public String getTooltipText () {
-            return _msgs.get("m.slot_tip" + _state);
+            return _msgs.get("m.slot_tip" + _type);
         }
 
-        protected ImageIcon[] _icons;
-        protected int _state;
+        protected SubimageIcon[] _icons;
+        protected int _type;
     }
 
     protected BangContext _ctx;
@@ -410,7 +420,7 @@ public class ParlorGameConfigView extends BContainer
     protected BComboBox _rounds, _units;
     protected BComboBox _duration, _speed;
 
-    protected ImageIcon[] _psicons;
+    protected SubimageIcon[] _psicons;
     protected PlayerSlotButton[] _slots;
 
     protected String[] _scenIds;

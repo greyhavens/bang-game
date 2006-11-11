@@ -222,6 +222,16 @@ invisibutton:down {
 invisibutton:selected {
 }
 
+n_state_button {
+  text-align: center;
+  vertical-align: center;
+  background: image "ui/buttons/n_state_normal.png" framexy;
+}
+
+n_state_button:hover {
+  background: image "ui/buttons/n_state_hover.png" framexy;
+}
+
 tabbedpane {
   background: image "ui/window/border_ornate.png" framexy;
 }
