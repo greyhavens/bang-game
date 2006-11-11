@@ -16,6 +16,9 @@ public interface GameCodes extends InvocationCodes
     /** The message bundle identifier for our translation messages. */
     public static final String GAME_MSGS = "game";
 
+    /** The number of milliseconds allowed to make a team selection. */
+    public static final long SELECT_TIMEOUT = 60 * 1000L;
+
     /** A response code for {@link BangService#move}. */
     public static final Integer EXECUTED_ORDER = 0;
 

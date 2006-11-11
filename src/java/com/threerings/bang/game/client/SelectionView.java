@@ -12,6 +12,7 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.BorderLayout;
@@ -21,6 +22,7 @@ import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.CollectionUtil;
+import com.samskivert.util.Interval;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.bui.IconPalette;
@@ -116,9 +118,12 @@ public class SelectionView extends SteelWindow
             }
         }
 
-        // add the steps across the top
-        BContainer steps = GroupLayout.makeHBox(GroupLayout.CENTER);
-        steps.add(new BLabel(_msgs.get("m.select_your"), "pick_subtitle"));
+        // this goes above whatever we're selecting
+        BContainer steps = new BContainer(GroupLayout.makeHStretch());
+        steps.add(new BLabel(_msgs.get("m.select_your")), GroupLayout.FIXED);
+        _center.add(steps, BorderLayout.NORTH);
+
+        // add the steps of the selection process
         _steps = new BLabel[STEPS.length];
         for (int ii = 0; ii < STEPS.length; ii++) {
             _steps[ii] = new BLabel(
@@ -128,9 +133,17 @@ public class SelectionView extends SteelWindow
                 (ii == CARDS && cardcount == 0)) {
                 continue;
             }
-            steps.add(_steps[ii]);
+            steps.add(_steps[ii], GroupLayout.FIXED);
         }
-        _center.add(steps, BorderLayout.NORTH);
+
+        // add something to absorb all space in the middle
+        steps.add(new Spacer(1, 1));
+
+        // add a timer on the right
+        steps.add(new BLabel(_msgs.get("m.timeout")), GroupLayout.FIXED);
+        steps.add(_timer = new BLabel("", "pick_subtitle"),
+                  GroupLayout.FIXED);
+        _timer.setPreferredSize(new Dimension(75, 20));
 
         // and a tip along the bottom
         _center.add(_tip = new BLabel("", "pick_tip"), BorderLayout.SOUTH);
@@ -154,6 +167,16 @@ public class SelectionView extends SteelWindow
         } else {
             setPickTeamMode();
         }
+
+        // start our countdown timer
+        _countdown = new Interval(_ctx.getApp()) {
+            public void expired () {
+                updateTimer(System.currentTimeMillis() - _start);
+            }
+            protected long _start = System.currentTimeMillis();
+        };
+        _countdown.schedule(1000L, true);
+        updateTimer(0L);
     }
 
     // documentation inherited from interface ActionListener
@@ -169,15 +192,6 @@ public class SelectionView extends SteelWindow
             setPickTeamMode();
 
         } else if (cmd.equals("picked_team")) {
-            // convert our team selection into an array
-            ArrayList<String> units = new ArrayList<String>();
-            for (int ii = 0; ii < _tconfigs.length; ii++) {
-                if (_tconfigs[ii] != null) {
-                    units.add(_tconfigs[ii].type);
-                }
-            }
-            _tunits = units.toArray(new String[units.size()]);
-
             // if they have playable cards, let them pick some
             if (_steps[CARDS].isAdded()) {
                 setPickCardsMode();
@@ -186,18 +200,7 @@ public class SelectionView extends SteelWindow
             }
 
         } else if (cmd.equals("picked_cards")) {
-            // determine which cards are selected
-            ArrayIntSet cardIds = new ArrayIntSet();
-            for (int ii = 0; ii < GameCodes.MAX_CARDS; ii++) {
-                CardItem item = _cards.getSelectedCard(ii);
-                if (item != null) {
-                    cardIds.add(item.getItemId());
-                    // preload the card selection into our status view
-                    _view.pstatus[_pidx].cardAdded(
-                        Card.getCard(item.getType()), true);
-                }
-            }
-            sendTeamSelection(cardIds.toIntArray());
+            sendTeamSelection(getCardIds());
         }
     }
 
@@ -264,17 +267,44 @@ public class SelectionView extends SteelWindow
         setStep(CARDS, _cards);
     }
 
+    protected int[] getCardIds ()
+    {
+        ArrayIntSet cardIds = new ArrayIntSet();
+        for (int ii = 0; ii < GameCodes.MAX_CARDS; ii++) {
+            CardItem item = _cards.getSelectedCard(ii);
+            if (item != null) {
+                cardIds.add(item.getItemId());
+                // preload the card selection into our status view
+                _view.pstatus[_pidx].cardAdded(
+                    Card.getCard(item.getType()), true);
+            }
+        }
+        return cardIds.toIntArray();
+    }
+
     protected void sendTeamSelection (int[] cards)
     {
         // don't allow anything to change while we're waiting
         _ready.setEnabled(false);
 
+        // convert our team selection into an array
+        ArrayList<String> units = new ArrayList<String>();
+        for (int ii = 0; ii < _tconfigs.length; ii++) {
+            if (_tconfigs[ii] != null) {
+                units.add(_tconfigs[ii].type);
+            }
+        }
+
         // submit our selection to the server
         _bangobj.service.selectTeam(
-            _ctx.getClient(), _bigShotId, _tunits, cards);
+            _ctx.getClient(), _bigShotId,
+            units.toArray(new String[units.size()]), cards);
 
         // get ourselves out of the way
         _view.clearOverlay();
+
+        // cancel our countdown timer
+        _countdown.cancel();
     }
 
     protected void updateBigShot ()
@@ -323,6 +353,40 @@ public class SelectionView extends SteelWindow
         }
     }
 
+    protected void updateTimer (long elapsed)
+    {
+        long remain = Math.max(GameCodes.SELECT_TIMEOUT-elapsed, 0) / 1000;
+        _timer.setText("0:" + ((remain < 10) ? "0" : "") + remain);
+
+        if (remain == 0) {
+            _countdown.cancel();
+
+            // if we're in pick cards mode, just send them into the game
+            if (_cards != null) {
+                sendTeamSelection(getCardIds());
+
+            // if we've picked our big shot and selected our team but just
+            // haven't clicked Ready, call that good as well
+            } else if (_bigShotId > 0 && _ready.isEnabled()) {
+                sendTeamSelection(new int[0]);
+
+            // otherwise resign them and return from whence they came
+            } else {
+                _view.clearOverlay();
+                _ctx.getLocationDirector().moveTo(
+                    _bangobj.priorLocation.placeOid);
+                // wait five seconds for them to get back to whether they came
+                // and then send them a chat message explaining what happened
+                new Interval(_ctx.getApp()) {
+                    public void expired () {
+                        _ctx.getChatDirector().displayInfo(
+                            GameCodes.GAME_MSGS, "m.select_resigned");
+                    }
+                }.schedule(5000L);
+            }
+        }
+    }
+
     protected IconPalette.Inspector _enabler = new IconPalette.Inspector() {
         public void iconUpdated (SelectableIcon icon, boolean selected) {
             if (selected) {
@@ -346,8 +410,10 @@ public class SelectionView extends SteelWindow
     protected MessageBundle _msgs;
     protected BangObject _bangobj;
     protected int _pidx;
+    protected Interval _countdown;
 
     protected BContainer _side, _center;
+    protected BLabel _timer;
     protected BComponent _stepcont;
     protected BLabel[] _steps;
     protected BLabel _uname, _utype, _tip;
@@ -362,7 +428,6 @@ public class SelectionView extends SteelWindow
     protected BButton _ready;
 
     protected int _bigShotId;
-    protected String[] _tunits;
 
     protected static final String[] STEPS = { "bigshot", "team", "cards" };
     protected static final int BIGSHOT = 0;
