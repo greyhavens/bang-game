@@ -121,7 +121,8 @@ public class WendigoLogic extends AILogic
             return;
 
         // if there's a talisman within reach, grab it
-        } else if (talisman != null && moves.contains(talisman.x, talisman.y)) {
+        } else if (!holdingTalisman && talisman != null && 
+                    moves.contains(talisman.x, talisman.y)) {
             executeOrder(unit, talisman.x, talisman.y, getBestTarget(
                 pieces, unit, talisman.x, talisman.y, TARGET_EVALUATOR));
             return;
