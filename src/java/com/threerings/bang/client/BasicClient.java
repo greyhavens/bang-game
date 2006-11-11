@@ -105,6 +105,7 @@ public class BasicClient
 
         // create and start invoker
         _invoker = new Invoker("invoker", rqueue);
+        _invoker.setLongThresholds(INVOKER_THRESHOLD);
         _invoker.start();
         
         // create the directors/managers/etc. provided by the context
@@ -384,4 +385,7 @@ public class BasicClient
     /** The prefix prepended to localization bundle names before looking
      * them up in the classpath. */
     protected static final String MESSAGE_MANAGER_PREFIX = "rsrc.i18n";
+
+    /** The length of time before an invoker unit has run long. */
+    protected static final long INVOKER_THRESHOLD = 10000L;
 }
