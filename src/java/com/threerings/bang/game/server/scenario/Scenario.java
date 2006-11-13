@@ -519,14 +519,20 @@ public abstract class Scenario
     }
 
     /**
-     * Drops a bonus at the specified location.
+     * Drops a bonus as close to the specified location that it can find.
      */
     protected Bonus dropBonus (
         BangObject bangobj, String bonusName, int x, int y)
     {
         Bonus drop = Bonus.createBonus(BonusConfig.getConfig(bonusName));
+        Point spot = bangobj.board.getOccupiableSpot(x, y, 0, 3, null);
+        if (spot == null) {
+            log.info("Unable to drop bonus for lack of spot [x=" + x + 
+                    ", y=" + y + "].");
+            return null;
+        }
         drop.assignPieceId(bangobj);
-        drop.position(x, y);
+        drop.position(spot.x, spot.y);
         _bangmgr.addPiece(drop);
         return drop;
     }
