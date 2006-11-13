@@ -1,0 +1,124 @@
+/* -------------------------------------------------
+   CONTENT
+------------------------------------------------- */
+
+#Index {
+    background-image: url("/images/index/index_bkg.png");
+	position: relative;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding:0px;
+	width: 800px;
+	height: 565px;
+}
+
+/* -------------------------------------------------
+   LINKS
+------------------------------------------------- */
+#linkplayB a {
+  	position: absolute;
+ 	width: 266px;
+  	height: 80px;
+  	top: 294px;
+  	left: 129px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  	
+  }
+
+#linkplayB a i { 
+	visibility: hidden; 
+}
+
+a#btnplayB:hover { 
+	background-image: url("/images/index/playnow.png"); 
+	border: none;
+}
+
+#linkdl a {
+  	position: absolute;
+ 	width: 90px;
+  	height: 16px;
+  	top: 381px;
+  	left: 162px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linkdl a i { 
+	visibility: hidden; 
+}
+
+a#btndl:hover { 
+	background-image: url("/images/index/download.png"); 
+	border: none;
+}
+
+#linkblog a {
+  	position: absolute;
+ 	width: 120px;
+  	height: 22px;
+  	top: 472px;
+  	left: 214px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none; 
+  	overflow: hidden;
+  	
+  }
+
+#linkblog a i { 
+	visibility: hidden; 
+}
+
+a#btnblog:hover { 
+	background-image: url("/images/index/blog.png"); 
+	border: none;
+}
+
+#linkfrontier a {
+  	position: absolute;
+ 	width: 195px;
+  	height: 131px;
+  	top: 76px;
+  	left: 557px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linkfrontier a i { 
+	visibility: hidden; 
+}
+
+a#btnfrontier:hover { 
+	background-image: url("/images/index/frontier.png"); 
+	border: none;
+}
+
+#linkitp a {
+  	position: absolute;
+ 	width: 195px;
+  	height: 130px;
+  	top: 258px;
+  	left: 557px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linkitp a i { 
+	visibility: hidden; 
+}
+
+a#btnitp:hover { 
+	background-image: url("/images/index/itp.png"); 
+	border: none;
+}

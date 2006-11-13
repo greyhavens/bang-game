@@ -1,7 +1,8 @@
 body {
+  background-image: url('/images/parchment.png');
   font-family: Times New Roman, Times, serif;
   font-size: 14px;
-  margin: 5px;
+  text-align: center;
 }
 
 td {
@@ -9,6 +10,16 @@ td {
   font-size: 14px;
 }
 
+
+#BangHowdy {
+  width: 782px;
+  margin: 0px auto;
+  text-align: center;
+}
+
+/* -------------------------------------------------
+   FONTS
+------------------------------------------------- */
 .fancy {
   font-family: Times New Roman, Times, serif;
   font-size: 36px;
@@ -37,7 +48,202 @@ li {
   margin-bottom: 10px
 }
 
-/* for register/register.wm */
+
+
+
+/* -------------------------------------------------
+   HEADER
+------------------------------------------------- */
+
+#Header {
+    background-image: url("/images/header/header.png");
+	position: relative;
+	top: 0px;
+	left: 0px;
+	margin-bottom: 5px;
+	padding: 0px;
+	width: 810px;
+	height: 159px;
+	overflow: hidden;
+}
+
+#linkbang a {
+  	position: absolute;
+ 	width: 225px;
+  	height: 110px;
+  	top: 10px;
+  	left: 290px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linkbang a i { 
+	visibility: hidden; 
+}
+
+#linkplay a {
+  	position: absolute;
+ 	width: 47px;
+  	height: 19px;
+  	top: 134px;
+  	left: 139px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linkplay a i { 
+	visibility: hidden; 
+}
+
+a#btnplay:hover { 
+	background-image: url("/images/header/play.png"); 
+	border: none;
+}
+
+#linkscreen a {
+  	position: absolute;
+ 	width: 103px;
+  	height: 19px;
+  	top: 134px;
+  	left: 236px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linkscreen a i { 
+	visibility: hidden; 
+}
+
+a#btnscreen:hover { 
+	background-image: url("/images/header/screen.png"); 
+	border: none;
+}
+
+#linkforum a {
+  	position: absolute;
+ 	width: 61px;
+  	height: 19px;
+  	top: 134px;
+  	left: 389px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linkforum a i { 
+	visibility: hidden; 
+}
+
+a#btnforum:hover { 
+	background-image: url("/images/header/forum.png"); 
+	border: none;
+}
+
+#linkaccount a {
+  	position: absolute;
+ 	width: 68px;
+  	height: 19px;
+  	top: 134px;
+  	left: 499px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linkaccount a i { 
+	visibility: hidden; 
+}
+
+a#btnaccount:hover { 
+	background-image: url("/images/header/account.png"); 
+	border: none;
+}
+
+#linknews a {
+  	position: absolute;
+ 	width: 41px;
+  	height: 19px;
+  	top: 134px;
+  	left: 617px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linknews a i { 
+	visibility: hidden; 
+}
+
+a#btnnews:hover { 
+	background-image: url("/images/header/news.png"); 
+	border: none;
+}
+
+/* -------------------------------------------------
+   CONTENT
+------------------------------------------------- */
+
+#Content {
+    position: relative;
+	top: 0px;
+	margin: 0px;
+	padding:0px;
+	width: 800px;
+}
+
+/* -------------------------------------------------
+   FOOTER
+------------------------------------------------- */
+
+#Divide {
+    background-image: url("/images/footer/footer.gif");
+	position: relative;
+	top: 0px;
+	right: 0px;
+	margin: 0px;
+	padding:0px;
+	width: 810px;
+	height: 33px;
+}
+
+#linklogo a {
+  	position: absolute;
+ 	width: 70px;
+  	height: 30px;
+  	top: 0px;
+  	left: 355px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linklogo a i { 
+	visibility: hidden; 
+}
+
+#Footer {
+    position: relative;
+	top: 0px;
+	right: 0px;
+	margin: 0px;
+	padding-top: 5px;
+	width: 810px;
+}
+
+
+/* -------------------------------------------------
+   For register/register.wm 
+------------------------------------------------- */
 h3 {
    margin-bottom: 0px
 }

@@ -1,0 +1,150 @@
+/* -------------------------------------------------
+   CONTENT
+------------------------------------------------- */
+
+#Launch {
+    background-image: url("/images/launch/launch_bkg.png");
+	position: relative;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding:0px;
+	width: 810px;
+	height: 460px;
+}
+
+#LaunchPanel {
+    position: relative;
+	top: 46px;
+	left: 22px;
+	margin: 0px;
+	padding:0px;
+	width: 490px;
+	height: 364px;
+}
+
+#NoJava {
+    background-image: url("/images/launch/launch_panel.png");
+    position: absolute;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding:0px;
+	width: 490px;
+	height: 364px;
+	z-index: 2;
+}
+
+/* -------------------------------------------------
+   LINKS
+------------------------------------------------- */
+#linkjava a {
+  	position: absolute;
+ 	width: 118px;
+  	height: 14px;
+  	top: 232px;
+  	left: 340px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;	
+  	z-index: 3;
+	
+  }
+
+#linkjava a i { 
+	visibility: hidden; 
+}
+
+a#btnjava:hover { 
+	background-image: url("/images/launch/java.png"); 
+	border: none;
+}
+
+#linkdl a {
+  	position: absolute;
+ 	width: 201px;
+  	height: 14px;
+  	top: 282px;
+  	left: 65px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  	z-index: 3;
+  }
+
+#linkdl a i { 
+	visibility: hidden; 
+}
+
+a#btndl:hover { 
+	background-image: url("/images/launch/download.png"); 
+	border: none;
+}
+
+#linkaccountB a {
+  	position: absolute;
+ 	width: 172px;
+  	height: 23px;
+  	top: 66px;
+  	left: 567px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  	
+  }
+
+#linkaccountB a i { 
+	visibility: hidden; 
+}
+
+a#btnaccountB:hover { 
+	background-image: url("/images/launch/account.png"); 
+	border: none;
+}
+
+#linkscreenB a {
+  	position: absolute;
+ 	width: 198px;
+  	height: 24px;
+  	top: 141px;
+  	left: 567px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  	
+  }
+
+#linkscreenB a i { 
+	visibility: hidden; 
+}
+
+a#btnscreenB:hover { 
+	background-image: url("/images/launch/screenB.png"); 
+	border: none;
+}
+
+#linkdlB a {
+  	position: absolute;
+ 	width: 68px;
+  	height: 20px;
+  	top: 224px;
+  	left: 552px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linkdlB a i { 
+	visibility: hidden; 
+}
+
+a#btndlB:hover { 
+	background-image: url("/images/launch/downloadB.png"); 
+	border: none;
+}
+
