@@ -429,6 +429,21 @@
     <component cclass="male/hat_back" name="head_wrap"/>
   </article>
 
+ <article name="male_battered" townId="indian_post"
+           slot="hat" scrip="1500" coins="1"
+           colors="clothes_p,clothes_s,clothes_t">
+    <component cclass="male/hat" name="battered"/>
+    <component cclass="male/hat_back" name="battered"/>
+  </article>
+
+ <article name="male_battered_fox_skull" townId="indian_post"
+           slot="hat" scrip="2000" coins="2"
+           colors="clothes_p,clothes_s">
+    <component cclass="male/hat" name="battered_fox_skull"/>
+    <component cclass="male/hat_back" name="battered_fox_skull"/>
+  </article>
+
+
 
 
   <!-- male jewelry: frontier town -->
