@@ -30,6 +30,10 @@ public class TreeBed extends Prop
     /** The current growth phase of the tree, from 0 to FULLY_GROWN. */
     public byte growth;
 
+    /** A value computed in the piece tick on the server that represents the
+     * vulnerability of this tree to logging robots. */
+    public transient int vulnerability;
+    
     public TreeBed ()
     {
         damage = 100;
@@ -109,13 +113,24 @@ public class TreeBed extends Prop
             return null;
         }
 
+        // start the vulnerability off at the damage level
+        // (except for sprouts, which are invulnerable)
+        vulnerability = (growth == 0) ? 0 : damage/5;
+        
         // normal units cause the tree to grow; except logging robots
         int dinc = 0, ddec = 0;
         boolean doubleGrowth = false;
         ArrayList<Piece> growers = new ArrayList<Piece>();
         for (Piece piece : pieces) {
-            if (piece instanceof Unit && getDistance(piece) == 1 &&
-                piece.isAlive()) {
+            if(!(piece instanceof Unit && piece.isAlive())) {
+                continue;
+            }
+            int dist = getDistance(piece);
+            if (growth > 0) {
+                vulnerability += Math.max(0, 6 - dist) *
+                    (piece instanceof LoggingRobot ? +1 : -1);
+            }
+            if (dist == 1) {
                 Unit unit = (Unit)piece;
                 if (FetishEffect.FROG_FETISH.equals(unit.holding)) {
                     doubleGrowth = true;

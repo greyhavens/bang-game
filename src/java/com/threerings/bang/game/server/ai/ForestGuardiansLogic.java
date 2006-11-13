@@ -6,6 +6,7 @@ package com.threerings.bang.game.server.ai;
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.piece.LoggingRobot;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.TreeBed;
@@ -37,65 +38,59 @@ public class ForestGuardiansLogic extends AILogic
     protected void moveUnit (
         Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
     {
-        // search for closest growing tree, closest logging robot
-        TreeBed ctree = null;
-        Piece cbot = null, tporter = null;
-        for (Piece piece : pieces) {
-            if (piece instanceof TreeBed) {
-                TreeBed tree = (TreeBed)piece;
-                if (tree.isAlive() && tree.damage != 0 &&
-                    (ctree == null || unit.getDistance(tree) <
-                        unit.getDistance(ctree))) {
-                    ctree = tree;
-                }
-            } else if (piece instanceof Unit && piece.owner == -1 &&
-                piece.isAlive() && (cbot == null || unit.getDistance(piece) <
-                    unit.getDistance(cbot))) {
-                cbot = piece;
-                
-            } else if (piece instanceof Teleporter && (tporter == null ||
-                unit.getDistance(piece) < unit.getDistance(tporter))) {
-                tporter = piece;
-            }
-        }
-        
-        // if there's a tree that needs growing, go to it
-        if (ctree != null && moveUnit(pieces, unit, moves, ctree.x, ctree.y, 1,
-                TARGET_EVALUATOR)) {
-            return;
-        
-        // if there's a logging robot in range, shoot it
-        } else if (cbot != null && attacks.contains(cbot.x, cbot.y)) {
-            executeOrder(unit, Short.MAX_VALUE, 0, cbot);
-        
-        // if there's a logging robot at all, move towards it
-        } else if (cbot != null && moveUnit(pieces, unit, moves, cbot.x,
-            cbot.y, -1, TARGET_EVALUATOR)) {
-            return;
-        
-        // if there's a teleporter, try that
-        } else if (tporter != null && moveUnit(pieces, unit, moves, tporter.x,
-            tporter.y, 0, TARGET_EVALUATOR)) {
-            return;
-        }
+        moveUnit(pieces, unit, moves, OBJECTIVE_EVALUATOR, TARGET_EVALUATOR);
     }
     
     /** Prefers air units (because they're immune to the logging robots'
-     * melee attack), higher fire distance, greater damage. */
+     * melee attack), higher fire distance, greater damage; avoids using
+     * the stormcaller. */
     protected static final UnitConfigEvaluator UNIT_EVALUATOR =
         new UnitConfigEvaluator() {
         public int getWeight (UnitConfig config) {
+            if (config.type.equals("indian_post/stormcaller")) {
+                return 10;
+            }
             return (config.mode == UnitConfig.Mode.AIR ? 100 : 0) +
                 config.maxFireDistance*10 + config.damage;
         }
     };
     
-    /** Only targets logging robots.  Prefers ones with more damage. */
+    /** Seeks out trees and logging robots, using teleporters as a last
+     * resort. */
+    protected static final ObjectiveEvaluator OBJECTIVE_EVALUATOR =
+        new ObjectiveEvaluator() {
+        public int getWeight (Unit unit, Piece obj) {
+            if (obj instanceof TreeBed && obj.isAlive() && obj.damage != 0) {
+                TreeBed bed = (TreeBed)obj;
+                return 200 + bed.vulnerability - unit.getDistance(bed);
+            } else if (obj instanceof LoggingRobot && obj.isAlive()) {
+                LoggingRobot bot = (LoggingRobot)obj;
+                return 200 + (bot.isSuper() ? 2 : 0) - unit.getDistance(bot);
+            } else if (obj instanceof Teleporter) {
+                return 100 - unit.getDistance(obj);
+            } else {
+                return 0;
+            }
+        }
+        public int getDistance (Unit unit, Piece obj) {
+            if (obj instanceof TreeBed) {
+                return 1;
+            } else if (obj instanceof Teleporter) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+    };
+    
+    /** Prefers stronger logging robots with more damage. */
     protected static final TargetEvaluator TARGET_EVALUATOR =
         new TargetEvaluator() {
         public int getWeight (BangObject bangobj, Unit unit, Piece target, 
                 int dist, PointSet preferredMoves) {
-            return (target.owner == -1) ? (1 + target.damage) : -1;
+            return (target instanceof LoggingRobot &&
+                ((LoggingRobot)target).isSuper() ? 100 : 0) +
+                    (1 + target.damage);
         }
     };
 }

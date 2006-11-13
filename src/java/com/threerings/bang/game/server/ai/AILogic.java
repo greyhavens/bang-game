@@ -5,6 +5,9 @@ package com.threerings.bang.game.server.ai;
 
 import java.awt.Point;
 
+import java.util.ArrayList;
+
+import com.samskivert.util.QuickSort;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.presents.server.InvocationException;
@@ -110,6 +113,39 @@ public abstract class AILogic extends PieceLogic
             weights[idx] = 0;
         }
         return types;
+    }
+
+    /**
+     * Attempts to move the unit towards a reachable objective and fire off
+     * a shot at the best target.
+     *
+     * @return true if we successfully moved, false if there were no suitable
+     * objectives
+     */
+    protected boolean moveUnit (
+        Piece[] pieces, final Unit unit, PointSet moves,
+        final ObjectiveEvaluator oeval, TargetEvaluator teval)
+    {
+        // gather the objectives of interest
+        ArrayList<Objective> objectives = new ArrayList<Objective>();
+        for (Piece piece : pieces) {
+            int weight = oeval.getWeight(unit, piece);
+            if (weight > 0) {
+                objectives.add(new Objective(piece, weight));
+            }
+        }
+        
+        // sort them by decreasing weight
+        QuickSort.rsort(objectives);
+        
+        // run through them until we find one we can actually reach
+        for (Objective obj : objectives) {
+            if (moveUnit(pieces, unit, moves, obj.piece.x, obj.piece.y,
+                    oeval.getDistance(unit, obj.piece), teval)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
@@ -248,12 +284,43 @@ public abstract class AILogic extends PieceLogic
         public int getWeight (UnitConfig config);
     }
     
+    /** Used to rank potential objectives. */
+    protected interface ObjectiveEvaluator
+    {
+        /** Returns the weight of the specified objective for the given
+         * unit. */
+        public int getWeight (Unit unit, Piece obj);
+        
+        /** Returns the desired distance from the objective (0 for on it,
+         * 1 for next to it, -1 for in target range). */
+        public int getDistance (Unit unit, Piece obj);
+    }
+    
     /** Used to rank potential targets. */
     protected interface TargetEvaluator
     {
         /** Returns the weight of the specified target for the given unit. */
         public int getWeight (BangObject bangobj, Unit unit, Piece target, 
                 int dist, PointSet preferredMoves);
+    }
+    
+    /** Holds a piece objective and its weight. */
+    protected static class Objective
+        implements Comparable<Objective>
+    {
+        public Piece piece;
+        public int weight;
+        
+        public Objective (Piece piece, int weight)
+        {
+            this.piece = piece;
+            this.weight = weight;
+        }
+        
+        public int compareTo (Objective obj)
+        {
+            return this.weight - obj.weight;
+        }
     }
     
     /** The index of the AI player. */
