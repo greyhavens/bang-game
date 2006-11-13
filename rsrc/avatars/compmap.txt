@@ -1,4 +1,4 @@
-516
+520
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := dogsoldier := 503
@@ -381,6 +381,8 @@ male/hair_middle := braids := 127
 male/hair_middle := fro := 128
 male/hair_middle := long_messy := 129
 male/hair_middle := long_straight := 423
+male/hat := battered := 517
+male/hat := battered_fox_skull := 518
 male/hat := buffalo := 356
 male/hat := coonskin := 322
 male/hat := cowboy := 11
@@ -397,6 +399,8 @@ male/hat := trickster_raven := 412
 male/hat := war_bonnet := 297
 male/hat := widebrim := 44
 male/hat := wolf_mask := 298
+male/hat_back := battered := 519
+male/hat_back := battered_fox_skull := 520
 male/hat_back := buffalo := 357
 male/hat_back := coonskin := 323
 male/hat_back := cowboy := 12
