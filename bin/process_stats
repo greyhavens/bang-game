@@ -30,7 +30,7 @@ while (<CONF>) {
         $sconf{$1} = $2;
     }
 }
-my $admin_email = $sconf{"LOG_EMAIL"};
+my $stats_email = $sconf{"STATS_EMAIL"};
 
 # if they specified a date, use it
 my $year = shift;
@@ -135,7 +135,7 @@ if ($dry_run) {
 if (!$dry_run) {
     my $host = `hostname`;
     chomp($host);
-    send_mail($admin_email, $admin_email,
+    send_mail($stats_email, $stats_email,
               "$host: Bang nightly stats", "/tmp/bangstats.tmp");
     unlink("/tmp/bangstats.tmp");
 }

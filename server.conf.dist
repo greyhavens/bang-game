@@ -16,6 +16,7 @@ DBPORT=3306
 # General configurations
 BANG_USER=bang
 LOG_EMAIL=bang-logs@DOMAIN
+STATS_EMAIL=bang-stats@DOMAIN
 LOGLEVEL=info
 
 # The user as which we run Jetty
