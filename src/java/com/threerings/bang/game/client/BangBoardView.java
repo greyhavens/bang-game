@@ -1151,12 +1151,11 @@ public class BangBoardView extends BoardView
     /** Called by the {@link EffectHandler} when a piece was killed. */
     protected void pieceWasKilled (int pieceId)
     {
-        // sanity check
+        // Some effects are valid after a unit is killed, others are not,
+        // let's make a note when this happens but it's no longer insane
         if (_pendmap.get(pieceId) > 0) {
-            log.warning("Piece with pending actions killed [id=" + pieceId +
+            log.info("Piece with pending actions killed [id=" + pieceId +
                         ", pendcount=" + _pendmap.get(pieceId) + "].");
-            Thread.dumpStack();
-            _pendmap.put(pieceId, 0);
         }
 
         // clear out any advance order for this piece
