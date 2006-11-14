@@ -545,14 +545,24 @@ public class BangController extends GameController
             // when our inter-round fade is complete we'll start the next round
             _startRoundMultex.satisfied(Multex.CONDITION_ONE);
 
+            // if we're a watcher and the stats view is showing, we have to
+            // start the inter round board fade immediately because the game
+            // will not wait for the watcher before starting the next round
+            if (_pidx == -1 && _statsView != null) {
+                _view.view.doInterRoundBoardFade();
+            }
+            return true;
+
+        } else if (state == BangObject.IN_PLAY) {
             // if we're a watcher, we may not yet have dismissed our stats
             // view, but since things are starting we need to forcibly do that
-            // for them because otherwise badness will ensue
+            // for them to ensure that it's gone before the end of this round
             if (_statsView != null) {
                 _ctx.getBangClient().clearPopup(_statsView, true);
                 statsDismissed();
             }
-            return true;
+            // we need to let the standard in-play processing happen as well
+            return super.stateDidChange(state);
 
         } else if (state == BangObject.POST_ROUND) {
             // let the view know that this round is over
@@ -752,7 +762,13 @@ public class BangController extends GameController
     protected void statsDismissed ()
     {
         _statsView = null;
-        _view.view.doInterRoundBoardFade();
+
+        // for players, we wait for the stats to be dismissed before fading the
+        // current board out and switching to the new board; for watchers we do
+        // that immediately at the end of the round
+        if (_pidx != -1) {
+            _view.view.doInterRoundBoardFade();
+        }
     }
 
     /**
