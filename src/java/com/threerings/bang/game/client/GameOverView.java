@@ -284,8 +284,13 @@ public class GameOverView extends SteelWindow
 
         // add some buttons at the bottom
         _buttons.add(new BButton(msgs.get("m.view_stats"), this, "stats"));
+        // if we have no award, we were a watcher, watchers don't get to go
+        // directly back to parlors because they may not have come from there
         String from = _bobj.priorLocation.ident;
-        _buttons.add(new BButton(msgs.get("m.to_" + from), this, "to_" + from));
+        if (award != null || !"parlor".equals(from)) {
+            _buttons.add(new BButton(msgs.get("m.to_" + from), this,
+                                     "to_" + from));
+        }
         _buttons.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
     }
 
