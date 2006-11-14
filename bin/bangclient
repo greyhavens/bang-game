@@ -47,12 +47,6 @@ while [ ! -z "$1" ]; do
             fi
             ;;
 
-        -yjp)
-            export LD_LIBRARY_PATH=$HOME/lib/yjp-5.5.2/bin/linux-x86-32
-            JARGS="-agentlib:yjpagent $JARGS"
-            JARGS="-Dprofiling=true $JARGS"
-            ;;
-
         -D*)
             JARGS="$JARGS '$1'"
             ;;
