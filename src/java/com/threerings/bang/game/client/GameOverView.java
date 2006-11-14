@@ -58,12 +58,12 @@ public class GameOverView extends SteelWindow
                 "ui/postgame/" + info.getIdent() + "_on.png");
         BufferedImage off = ctx.getImageCache().getBufferedImage(
                 "ui/postgame/" + info.getIdent() + "_off.png");
-        int width = (int)(on.getWidth() * (small ? 0.5 : 1)), 
+        int width = (int)(on.getWidth() * (small ? 0.5 : 1)),
             height = (int)(on.getHeight() * (small ? 0.5 : 1));
         BufferedImage bar = ctx.getImageCache().createCompatibleImage(
                 width, height, true);
         Graphics2D g = bar.createGraphics();
-        AffineTransformOp halfOp = (small ? 
+        AffineTransformOp halfOp = (small ?
                 new AffineTransformOp(
                     AffineTransform.getScaleInstance(0.5, 0.5),
                     AffineTransformOp.TYPE_BILINEAR) :
@@ -71,7 +71,7 @@ public class GameOverView extends SteelWindow
         g.drawImage(off, halfOp, 0, 0);
         int onWidth = rank * on.getWidth() / 100;
         if (onWidth > 0 && onWidth <= on.getWidth()) {
-            g.drawImage(on.getSubimage(0, 0, rank * on.getWidth() / 100, 
+            g.drawImage(on.getSubimage(0, 0, rank * on.getWidth() / 100,
                                        on.getHeight()), halfOp, 0, 0);
         }
         return new BLabel(new ImageIcon(new BImage(bar)));
@@ -108,7 +108,7 @@ public class GameOverView extends SteelWindow
         _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
 
         // display the players' avatars in rank order
-        if (bangobj.roundId == 1 && 
+        if (bangobj.roundId == 1 &&
                 bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP) {
             BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
             _contents.add(row);
@@ -119,6 +119,7 @@ public class GameOverView extends SteelWindow
                     _cueidx = award.rank;
                 }
             }
+
         } else {
             _contents.add(new Spacer(1, -50)); // kids, don't try this at home
             GroupLayout gl = GroupLayout.makeHoriz(GroupLayout.CENTER);
@@ -146,7 +147,6 @@ public class GameOverView extends SteelWindow
                 } else {
                     losers.add(view);
                 }
-                    
             }
 
             // Display a summary of your round ranks for a multi-round game
@@ -158,12 +158,13 @@ public class GameOverView extends SteelWindow
                 } else {
                     bconfig = (BangConfig)ctrl.getPlaceConfig();
                 }
+
                 BContainer ranks = new BContainer(new TableLayout(3, 2, 5));
                 for (int ii = 0; ii < bangobj.perRoundRanks.length; ii++) {
                     ranks.add(new BLabel(msgs.get(
                         "m.endgame_round", "" + (ii + 1)), "endgame_round"));
                     String scid = bconfig.scenarios[ii];
-                    ranks.add(new BLabel(msgs.get("m.scenario_" + scid), 
+                    ranks.add(new BLabel(msgs.get("m.scenario_" + scid),
                                "endgame_desc"));
                     ScenarioInfo info = ScenarioInfo.getScenarioInfo(scid);
                     int rank = bangobj.perRoundRanks[ii][pidx];
@@ -172,12 +173,12 @@ public class GameOverView extends SteelWindow
                         ranks.add(createCoopIcon(_ctx, info, rank, true));
                     } else {
                         ranks.add(new BLabel(msgs.get("m.endgame_place",
-                            msgs.get("m.endgame_rank" + rank)), 
+                            msgs.get("m.endgame_rank" + rank)),
                                     "endgame_desc"));
                     }
-                                    
                 }
-                ranks.add(new BLabel(msgs.get("m.endgame_overall"), 
+
+                ranks.add(new BLabel(msgs.get("m.endgame_overall"),
                             "endgame_round"));
                 ranks.add(new Spacer(1, 30));
                 ranks.add(new BLabel(msgs.get("m.endgame_place",
@@ -284,10 +285,10 @@ public class GameOverView extends SteelWindow
 
         // add some buttons at the bottom
         _buttons.add(new BButton(msgs.get("m.view_stats"), this, "stats"));
-        // if we have no award, we were a watcher, watchers don't get to go
-        // directly back to parlors because they may not have come from there
+        // watchers don't get to go back to parlors because they may not have
+        // come from there and may not have been invited
         String from = _bobj.priorLocation.ident;
-        if (award != null || !"parlor".equals(from)) {
+        if (pidx >= -1 || !"parlor".equals(from)) {
             _buttons.add(new BButton(msgs.get("m.to_" + from), this,
                                      "to_" + from));
         }
