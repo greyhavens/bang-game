@@ -151,6 +151,7 @@ public class Unit extends Piece
     {
         Unit dup = getUnit(unitType);
         dup.setOwner(bangobj, owner);
+        dup.team = team;
         dup.lastActed = lastActed;
         dup.damage = damage;
         dup.assignPieceId(bangobj);

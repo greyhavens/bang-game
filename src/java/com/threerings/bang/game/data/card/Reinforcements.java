@@ -26,7 +26,8 @@ public class Reinforcements extends Card
     @Override // documentation inherited
     public boolean isValidPiece (BangObject bangobj, Piece target)
     {
-        return (target instanceof Unit && target.isAlive());
+        return (target instanceof Unit && target.isAlive() &&
+                target.owner != -1);
     }
 
     @Override // documentation inherited

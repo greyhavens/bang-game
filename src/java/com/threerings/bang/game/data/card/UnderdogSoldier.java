@@ -8,6 +8,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.AddUnderdogSoldierEffect;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 /**
  * A card that adds a computer controlled underdog soldier to the board.
@@ -42,6 +43,13 @@ public class UnderdogSoldier extends Card
     public int getWeight ()
     {
         return 15;
+    }
+
+    @Override // documentation inherited
+    public boolean isPlayable (BangObject bangobj)
+    {
+        return super.isPlayable(bangobj) &&
+            bangobj.scenario.getTeams() != ScenarioInfo.Teams.COOP;
     }
 
     @Override // documentation inherited
