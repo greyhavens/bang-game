@@ -340,6 +340,10 @@ public class ParlorGameConfigView extends BContainer
 
     protected void setSlotTypes (int players, int tinCans)
     {
+        // make sure these values are sane
+        players = Math.max(1, players);
+        tinCans = Math.max(0, tinCans);
+
         for (int ii = 0; ii < _slots.length; ii++) {
             if (players > ii) {
                 _slots[ii].setType(HUMAN);
