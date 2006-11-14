@@ -199,6 +199,12 @@ public class FolkView extends BContainer
      */
     protected void insertCell (FolkCell cell)
     {
+        // clear out the "no one's here" or "howto" display if necessary
+        if (_folkList.getComponentCount() > 0 &&
+            !(_folkList.getComponent(0) instanceof FolkCell)) {
+            _folkList.remove(0);
+        }
+
         FolkCell oldCell = _folks.put(cell._handle, cell);
         if (oldCell != null) {
             _folkList.remove(oldCell);
