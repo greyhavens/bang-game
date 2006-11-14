@@ -39,7 +39,7 @@ public class SaloonView extends ShopView
         add(new WalletLabel(ctx, true), new Rectangle(25, 40, 150, 40));
         add(createHelpButton(), new Point(800, 25));
         add(new TownButton(ctx), new Point(870, 25));
-        add(_paper = new PaperView(ctx), new Rectangle(542, 68, 465, 576));
+        add(_paper = new PaperView(ctx), new Rectangle(542, 64, 465, 580));
 
         add(_parlist = new ParlorList(ctx), PARLIST_RECT);
 
