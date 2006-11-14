@@ -1650,6 +1650,9 @@ public class BangManager extends GameManager
         }
         if (updates.size() > 0 || removals.size() > 0) {
             notePlayedCards(updates, removals);
+        } else {
+            // we have no played cards to note, so there's no need to wait
+            _startRoundMultex.satisfied(Multex.CONDITION_TWO);
         }
 
         // maybe start the next round
