@@ -367,7 +367,7 @@ public class SelectionView extends SteelWindow
 
             // if we've picked our big shot and selected our team but just
             // haven't clicked Ready, call that good as well
-            } else if (_bigShotId > 0 && _ready.isEnabled()) {
+            } else if (_tconfigs[0] != null && _ready.isEnabled()) {
                 sendTeamSelection(new int[0]);
 
             // otherwise resign them and return from whence they came
