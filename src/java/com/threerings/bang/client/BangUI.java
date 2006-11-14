@@ -4,6 +4,7 @@
 package com.threerings.bang.client;
 
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
@@ -225,7 +226,8 @@ public class BangUI
     public static void configDefaultCursor ()
     {
         String path = "rsrc/ui/cursor.png";
-        BufferedImage image;
+        BufferedImage image, 
+                      cursor = ImageCache.createCompatibleImage(32, 32, true);
         try {
             // getdown has already unpacked our resources, so we can load
             // these images straight from the filesystem (this method may get
@@ -237,7 +239,9 @@ public class BangUI
                     "[path=" + path + "].", e);
             return;
         }
-        configCursor(image, 0, 0);
+        Graphics2D g = cursor.createGraphics();
+        g.drawImage(image, null, 0, 0);
+        configCursor(cursor, 0, 0);
     }
 
     /**
