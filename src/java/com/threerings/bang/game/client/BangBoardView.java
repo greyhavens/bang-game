@@ -2039,6 +2039,7 @@ public class BangBoardView extends BoardView
                     null, Math.max(0, 31 - xx - ix), Math.max(0, 31 - yy - iy));
         g.drawImage(cursor, null, 0, 0);
         BangUI.configCursor(merge, 0, 0);
+        g.dispose();
     }
 
     /** Used to visualize advance orders. */

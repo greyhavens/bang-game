@@ -242,6 +242,7 @@ public class BangUI
         Graphics2D g = cursor.createGraphics();
         g.drawImage(image, null, 0, 0);
         configCursor(cursor, 0, 0);
+        g.dispose();
     }
 
     /**
