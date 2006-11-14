@@ -47,3 +47,8 @@ client_ident = client
 client_title = Bang! Howdy
 editor_title = Bang! Howdy Editor
 viewer_title = Bang! Howdy Model Viewer
+
+#
+# The directory where we find our signing certificate
+
+cert_dir = /export/threerings
