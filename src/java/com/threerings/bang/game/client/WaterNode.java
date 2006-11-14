@@ -9,6 +9,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -75,9 +78,17 @@ public class WaterNode extends Node
             GLContext.getCapabilities().GL_ARB_fragment_shader) {
             _sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
             if (_shaderId == -1) {
-                _sstate.load(
-                    getClass().getResource("/rsrc/shaders/water.vert"),
-                    getClass().getResource("/rsrc/shaders/water.frag"));
+                URL vurl = null, furl = null;
+                try {
+                    vurl = _ctx.getResourceManager().getResourceFile(
+                        "shaders/water.vert").toURL();
+                    furl = _ctx.getResourceManager().getResourceFile(
+                        "shaders/water.frag").toURL();
+                } catch (MalformedURLException mue) {
+                    log.warning("Couldn't form shader URL [error=" + mue +
+                        "].");
+                }
+                _sstate.load(vurl, furl);
                 _shaderId = _sstate.getProgramID();
             } else {
                 _sstate.setProgramID(_shaderId);
