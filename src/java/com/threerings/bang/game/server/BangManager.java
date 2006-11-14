@@ -1207,7 +1207,8 @@ public class BangManager extends GameManager
             if (user != null) {
                 for (int ii = 0; ii < units.length; ii++) {
                     UnitConfig config = units[ii].getConfig();
-                    if (config.scripCost < 0 || !config.hasAccess(user)) {
+                    if (config != null &&
+                        (config.scripCost < 0 || !config.hasAccess(user))) {
                         log.warning("Player requested to purchase illegal " +
                                     "unit [who=" + user.who() +
                                     ", unit=" + config.type + "].");
