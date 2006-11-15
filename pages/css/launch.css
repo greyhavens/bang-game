@@ -14,7 +14,7 @@
 }
 
 #LaunchPanel {
-    position: relative;
+    position: absolute;
 	top: 46px;
 	left: 22px;
 	margin: 0px;
