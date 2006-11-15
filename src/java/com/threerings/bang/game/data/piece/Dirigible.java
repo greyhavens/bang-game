@@ -3,15 +3,13 @@
 
 package com.threerings.bang.game.data.piece;
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Random;
 
-import java.awt.Point;
-
 import com.threerings.bang.game.data.BangObject;
-
-import com.threerings.bang.game.data.effect.DamageEffect;
+import com.threerings.bang.game.data.effect.CrashEffect;
 import com.threerings.bang.game.data.effect.Effect;
-import java.util.ArrayList;
 
 /**
  * Handles some special behavior needed for the Dirigible.
@@ -52,10 +50,10 @@ public class Dirigible extends Unit
     @Override // documentation inherited
     public Effect didDie (BangObject bangobj)
     {
-        DamageEffect effect = null;
+        CrashEffect effect = null;
         if (_deathTarget != null) {
-            effect = new DamageEffect(
-                    _deathTarget, _deathTarget.adjustDefend(this, 25));
+            effect = new CrashEffect(
+                    _deathTarget, _deathTarget.adjustDefend(this, 25), pieceId);
         }
         return effect;
     }
