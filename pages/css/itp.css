@@ -1,0 +1,29 @@
+/* -------------------------------------------------
+   CONTENT
+------------------------------------------------- */
+
+#AboutITP {
+    background-image: url("/images/town/itp/about_itp.png");
+	position: relative;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding:0px;
+	width: 810px;
+	height: 399px;
+}
+
+#ContentITP {
+    position: absolute;
+	top: 110px;
+	left: 210px;
+	margin: 0px;
+	padding: 0px;
+	width: 400px;
+	text-align: left;
+}
+
+
+
+
+

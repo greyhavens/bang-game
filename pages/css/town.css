@@ -1,0 +1,68 @@
+/* -------------------------------------------------
+   CONTENT
+------------------------------------------------- */
+
+#TownNav {
+    background-image: url("/images/town/navbar.png");
+	position: relative;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding:0px;
+	width: 810px;
+	height: 63px;
+}
+
+/* -------------------------------------------------
+   LINKS
+------------------------------------------------- */
+#linkfrontier a {
+  	position: absolute;
+ 	width: 143px;
+  	height: 47px;
+  	top: 6px;
+  	left: 81px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  	
+  }
+
+#linkfrontier a i { 
+	visibility: hidden; 
+}
+
+a#btnfrontier:hover { 
+	background-image: url("/images/town/nav_frontier.png"); 
+	border: none;
+}
+
+#linkitp a {
+  	position: absolute;
+ 	width: 192px;
+  	height: 47px;
+  	top: 6px;
+  	left: 299px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  }
+
+#linkitp a i { 
+	visibility: hidden; 
+}
+
+a#btnitp:hover { 
+	background-image: url("/images/town/nav_itp.png"); 
+	border: none;
+}
+
+
+
+
+
+
+
+
