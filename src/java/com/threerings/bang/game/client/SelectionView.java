@@ -96,6 +96,10 @@ public class SelectionView extends SteelWindow
         _team = new BLabel[_tconfigs.length];
         for (int ii = 0; ii < _team.length; ii++) {
             _side.add(_team[ii] = new BLabel("", "pick_team_choice"));
+            // ghost these out until we get to team selection mode so that we
+            // do not give the false impression that one can select multiple
+            // bigshots
+            _team[ii].setAlpha(0.3f);
         }
         _contents.add(_side, BorderLayout.WEST);
 
@@ -226,6 +230,11 @@ public class SelectionView extends SteelWindow
         _units.setStyleClass("pick_palette");
         _units.setSelectable(_team.length);
         _units.selectFirstIcon();
+
+        // unghost the team selection UI
+        for (BLabel team : _team) {
+            team.setAlpha(1f);
+        }
 
         // determine which units are available for selection
         ArrayList<UnitConfig> units = new ArrayList<UnitConfig>();
