@@ -319,29 +319,17 @@ public class BangObject extends GameObject
     {
         return new Iterator<Piece>() {
             public boolean hasNext () {
-                if (_idx < props.length) {
-                    return true;
-                }
-                if (_it == null) {
-                    _it = pieces.iterator();
-                }
-                return _it.hasNext();
+                return (_idx < props.length || _it.hasNext());
             }
             public Piece next () {
-                if (_idx < props.length) {
-                    return props[_idx++];
-                }
-                if (_it == null) {
-                    _it = pieces.iterator();
-                }
-                return _it.next();
+                return (_idx < props.length) ? props[_idx++] : _it.next();
             }
             public void remove () {
                 throw new UnsupportedOperationException("Prop/piece " +
                     "iterator does not support remove method.");
             }
             protected int _idx = 0;
-            protected Iterator<Piece> _it;
+            protected Iterator<Piece> _it = pieces.iterator();
         };
     }
     
