@@ -278,6 +278,7 @@ public class Match
      */
     protected void rebuildCriterion ()
     {
+        Criterion oldCriterion = _criterion;
         _criterion = null;
         for (int ii = 0; ii < _playerCriterions.length; ii++) {
             if (_playerCriterions[ii] != null) {
@@ -287,6 +288,9 @@ public class Match
                     _criterion.merge(_playerCriterions[ii]);
                 }
             }
+        }
+        if (_criterion == null) {
+            _criterion = oldCriterion;
         }
     }
 
