@@ -1,7 +1,7 @@
 <!--#set var="title" value="Launch"-->
 <!--#include file="incl/metatop_incl.html"-->
 <link rel="stylesheet" type="text/css" href="/css/launch.css" />
-
+<link rel="stylesheet" type="text/css" href="/css/feature.css" />
 <!--<script type="text/javascript" src="/js/detectjava.js"></script>
 <script type="text/vbscript" src="/js/detectjava.vbs"></script>
 <script type="text/javascript">
@@ -29,7 +29,7 @@
         <!--#include file="incl/launch_open.html"-->
         <!--NO JAVA MSG-->   
         <div id="NoJava">    </div>
-        <div id="linkjava"><a href="http://www.java.com" id="btnjava">
+        <div id="linkjava"><a href="http://www.java.com" id="btnjava" onclick="this.target='_blank';">
             <i>Java Website</i></a>
         </div>
         <div id="linkdl"><a href="/download.html" id="btndl">
@@ -41,10 +41,10 @@
    
    
    
-    <div id="linkaccountB"><a href="#accountB" id="btnaccountB">
+    <div id="linkaccountB"><a href="#newaccount" id="btnaccountB">
             <i>Make a new account</i></a>
     </div>
-    <div id="linkscreenB"><a href="/screenshots/" id="btnscreenB">
+    <div id="linkscreenB"><a href="/screenshots/" id="btnscreenB" onclick="this.target='_blank';">
             <i>Screenshots</i></a>
     </div>
     <div id="linkdlB"><a href="/download.html" id="btndlB">
@@ -53,6 +53,15 @@
 
 
 </div>
+
+<!--ACCOUNT CREATION-->
+<div id="FeatureTop"></div>
+<div id="FeatureMid">
+    <a id="newaccount"></a>
+    <img src="/images/launch/header_newaccount.gif" alt="Create a New Account"/><br/><br/>
+    <div id="ContentMid"><!--#include virtual="/incl/create_account.html"--></div>
+</div>
+<div id="FeatureBot"></div>
 
 <!--#include file="incl/footer_incl.html"-->
 

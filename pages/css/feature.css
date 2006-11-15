@@ -1,0 +1,47 @@
+/* -------------------------------------------------
+   FEATURES
+   Currently used for Download and Town pages
+------------------------------------------------- */
+
+#FeatureTop {
+    background-image: url("/images/general/feature_top.png");
+	position: relative;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding:0px;
+	width: 810px;
+	height: 28px;
+}
+
+#FeatureMid {  /* Expanding height for changing content */
+    background-image: url("/images/general/feature_mid.png");
+	position: relative;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding:0px;
+	width: 810px;
+	text-align: center;
+}
+
+#ContentMid { /* Table of featured content/units/games */
+    position: relative;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding-left: 50px;
+	width: 710px;
+	text-align: left;
+}
+
+#FeatureBot {
+    background-image: url("/images/general/feature_bot.png");
+	position: relative;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding:0px;
+	width: 810px;
+	height: 28px;
+}

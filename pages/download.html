@@ -1,110 +1,60 @@
 <!--#set var="title" value="Download"-->
-<!--#include file="meta_incl.html"-->
-<!--#include file="header_incl.html"-->
+<!--#include virtual="/incl/metatop_incl.html"-->
+<link rel="stylesheet" type="text/css" href="/css/feature.css" />
+<!--#include virtual="/incl/metabot_incl.html"-->
+<!--#include virtual="/incl/header_incl.html"-->
 
-<h2 align="center">Step 1: Download and Install the Client</h2>
+<div id="FeatureTop"></div>
+<div id="FeatureMid">
+<div id="ContentMid">
 
-<table width="780" align="center">
-<tr><td width="260" class="small" valign="top">
-<a href="/client/bang-install.exe"><img border=0 src="/images/beta/btn_windows.gif" alt="Windows Download"/></a>
-<p>System Requirements:</p>
-<ul>
-<li>1Ghz Processor</li>
-<li>512MB of RAM</li>
-<li>64MB Video Card</li>
-<li>OpenGL 1.2 Compliant Video Drivers</li>
-</ul>
-</td>
+<table width="100%" align="center">
+    <tr><td colspan="3" align="center"><h2>Step 1: Download and Install the Client</h2></td></tr>
+     <tr><td width="260" class="small" valign="top">
+        <a href="/client/bang-install.exe"><img border="0" src="/images/beta/btn_windows.gif" 
+        alt="Windows Download"/></a>
+        <p>System Requirements:</p>
+        <ul><li>1Ghz Processor</li>
+            <li>512MB of RAM</li>
+            <li>64MB Video Card</li>
+            <li>OpenGL 1.2 Compliant Video Drivers</li>
+        </ul>
+        </td>
 
-<td width="260" class="small" valign="top">
-<a href="/client/bang-install.dmg"><img border=0 src="/images/beta/btn_mac.gif"
-alt="Mac OS X Download"/></a>
-<p>System Requirements:</p>
-<ul>
-<li>Mac OS X 10.4 or newer</li>
-<li>1Ghz Processor</li>
-<li>512MB of RAM</li>
-<li><a href="http://developer.apple.com/java/download/" target="_blank">J2SE
-5.0 Release 4 installed</a></li>
-</ul>
-</td>
+        <td width="260" class="small" valign="top">
+        <a href="/client/bang-install.dmg"><img border="0" src="/images/beta/btn_mac.gif"
+        alt="Mac OS X Download"/></a>
+        <p>System Requirements:</p>
+        <ul><li>Mac OS X 10.4 or newer</li>
+            <li>1Ghz Processor</li>
+            <li>512MB of RAM</li>
+            <li><a href="http://developer.apple.com/java/download/" target="_blank">J2SE
+        5.0 Release 4 installed</a></li>
+        </ul>
+        </td>
 
-<td width="260" class="small" valign="top">
-<a href="/client/bang-install.bin"><img border=0 src="/images/beta/btn_linux.gif"
-alt="Linux Download"/></a>
-<p>System Requirements:</p>
-<ul>
-<li>1Ghz Processor</li>
-<li>512MB of RAM</li>
-<li>64MB Video Card</li>
-<li>OpenGL 1.2 Compliant Video Drivers</li>
-<li><a href="http://www.java.com/" target="_blank">Java 1.5 installed</a></li>
-</ul>
-</td>
-
-</td></tr>
+        <td width="260" class="small" valign="top">
+        <a href="/client/bang-install.bin"><img border="0" src="/images/beta/btn_linux.gif"
+        alt="Linux Download"/></a>
+        <p>System Requirements:</p>
+        <ul><li>1Ghz Processor</li>
+            <li>512MB of RAM</li>
+            <li>64MB Video Card</li>
+            <li>OpenGL 1.2 Compliant Video Drivers</li>
+            <li><a href="http://www.java.com/" target="_blank">Java 1.5 installed</a></li>
+        </ul>
+        </td>
+    </tr>
 </table>
 
 <h2 align="center">Step 2: Create an Account</h2>
-<p>If you already have an account for <b>Puzzle Pirates</b> you can use that
-one. Otherwise you'll need to create an account here:</p>
-
-<table cellpadding="4" cellspacing="0" border="0" align="center">
-  <form method="POST" action="/register/register.wm">
-    <input type="hidden" name="action" value="register">
-    <input type="hidden" name="from" value="">
-
-  <tr><td colspan="2">
-      <span class="sans">Username:</span><br>
-      <input type="text" name="username" value="" maxlength='12'></td>
-  </tr>
-
-  <tr><td colspan="2" class="small">
-      Usernames must be between 3 and 12 characters, and must consist only of
-      letters, numbers, and '_'.</td></tr>
-
-  <tr><td><span class="sans">A secret password</span><br>
-      <input type="password" name="password" maxlength='12'></td>
-
-  <td><span class="sans">Confirm password</span><br>
-      <input type="password" name="pw_confirm" maxlength='12'></td></tr>
-
-  <tr><td colspan="2" class="small">
-      Passwords must be between 4 and 12 characters, and must consist only of
-      letters and numbers.</td></tr>
-
-  <tr><td><span class="sans">Email address</span><br>
-      <input type="text" name="email" maxlength='128' size='30'></td>
-
-  <td><span class="sans">Confirm email</span><br>
-      <input type="text" name="email_confirm" maxlength='128' size='30'></td></tr>
-
-  <tr><td colspan="2" class="small">
-      We will never give your email address out to anyone nor email except relating to the game. See our <a target="_blank" href="http://www.threerings.net/about/privacy.html">privacy policy</a> for more information</td></tr>
-
-  <tr><td><span class="sans">Year of birth:</span><br>
-      <input type="text" name="byear" size='4' maxlength='4'></td>
-
-      <td><span class="sans">Gender:</span><br>
-      <input type="radio" name="gender" value="1">Lass
-      <input type="radio" name="gender" value="2">Lad
-      </td></tr>
-  </tr>
-
-  <tr><td colspan="2" class="small">
-      Enter your full year of birth, like 1978. We are required by law to
-      verify that you are old enough to play online multiplayer
-      games.</td></tr>
-  </td></tr>
-
-  <tr><td colspan="2" align="center">
-  <input type="submit" name="submitBtn" value="Let's go!"></td></tr>
-
-  </form>
-</table>
+<!--#include virtual="/incl/create_account.html"-->
 
 <h2 align="center">Step 3: Play the Game!</h2>
-<p align="center">Double click on the Bang! Howdy icon on your desktop to
-launch the game.</p>
+<center>Double click on the Bang! Howdy icon on your desktop to
+launch the game.</center>
 
-<!--#include file="footer_incl.html"-->
+</div>
+</div>
+<div id="FeatureBot"></div>
+<!--#include virtual="/incl/footer_incl.html"-->
