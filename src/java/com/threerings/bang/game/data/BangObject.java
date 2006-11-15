@@ -23,6 +23,7 @@ import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Hindrance;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.Track;
 import com.threerings.bang.game.data.piece.Unit;
@@ -210,6 +211,10 @@ public class BangObject extends GameObject
     /** Contains the representation of the game board. */
     public transient BangBoard board;
 
+    /** Contains the non-interactive props on the game board within games
+     * (but not in the editor or the town view). */
+    public transient Prop[] props = new Prop[0];
+    
     /** Contains statistics on the game, updated every time any change is
      * made to pertinent game state. */
     public transient GameData gdata = new GameData();
@@ -308,6 +313,38 @@ public class BangObject extends GameObject
     /** Used to report cash and badges awarded at the end of the game. */
     public Award[] awards;
 
+    /** Returns an iterator over all the {@link #props} and all the
+     * {@link #pieces}. */
+    public Iterator<Piece> getPropPieceIterator ()
+    {
+        return new Iterator<Piece>() {
+            public boolean hasNext () {
+                if (_idx < props.length) {
+                    return true;
+                }
+                if (_it == null) {
+                    _it = pieces.iterator();
+                }
+                return _it.hasNext();
+            }
+            public Piece next () {
+                if (_idx < props.length) {
+                    return props[_idx++];
+                }
+                if (_it == null) {
+                    _it = pieces.iterator();
+                }
+                return _it.next();
+            }
+            public void remove () {
+                throw new UnsupportedOperationException("Prop/piece " +
+                    "iterator does not support remove method.");
+            }
+            protected int _idx = 0;
+            protected Iterator<Piece> _it;
+        };
+    }
+    
     /** Returns the {@link #pieces} set as an array to allow for
      * simultaneous iteration and removal. */
     public Piece[] getPieceArray ()

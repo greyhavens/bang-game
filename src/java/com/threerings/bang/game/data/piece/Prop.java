@@ -209,6 +209,17 @@ public class Prop extends BigPiece
     }
     
     /**
+     * Determines whether this prop performs a function in the game beyond
+     * simply contributing to the board's passability and height maps.
+     * If not, the piece can be omitted from the distributed piece set.
+     */
+    public boolean isInteractive ()
+    {
+        // derived classes are assumed to be interactive
+        return getClass() != Prop.class;
+    }
+    
+    /**
      * Determines whether this prop is passable: that is, whether units can
      * occupy its location.
      */

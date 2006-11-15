@@ -403,21 +403,29 @@ public class BangView extends BWindow
         _bangobj.board = (BangBoard)bdata.board.clone();
         _bangobj.board.applyShadowPatch(_bangobj.scenario.getIdent());
 
+        // load the static props and assign piece ids
+        _bangobj.maxPieceId = 0;
+        ArrayList<Prop> props = new ArrayList<Prop>();
+        ArrayList<Piece> pieces = new ArrayList<Piece>();
+        for (Piece piece : bdata.pieces) {
+            if (piece.removeFromBoard(_bangobj)) {
+                continue;
+            }
+            piece = (Piece)piece.clone();
+            piece.assignPieceId(_bangobj);
+            piece.init();
+            if (piece instanceof Prop && !((Prop)piece).isInteractive()) {
+                props.add((Prop)piece);
+            } else if (_bangobj.state != BangObject.IN_PLAY) {
+                pieces.add(piece);
+            }
+        }
+        _bangobj.props = props.toArray(new Prop[props.size()]);
+        
         // if we arrived in the middle of the game, the pieces will already be
         // configured; otherwise start with the ones provided by the board
         if (_bangobj.state != BangObject.IN_PLAY) {
-            _bangobj.maxPieceId = 0;
-            ArrayList<Piece> plist = new ArrayList<Piece>();
-            for (Piece piece : bdata.pieces) {
-                if (piece.removeFromBoard(_bangobj)) {
-                    continue;
-                }
-                piece = (Piece)piece.clone();
-                piece.assignPieceId(_bangobj);
-                piece.init();
-                plist.add(piece);
-            }
-            _bangobj.pieces = new ModifiableDSet<Piece>(plist.iterator());
+            _bangobj.pieces = new ModifiableDSet<Piece>(pieces.iterator());
             for (Piece update : _bangobj.boardUpdates) {
                 _bangobj.pieces.updateDirect(update);
             }

@@ -86,6 +86,7 @@ import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.BigPiece;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Unit;
 
 import com.threerings.bang.game.client.BangService;
@@ -1098,7 +1099,9 @@ public class BangManager extends GameManager
         _scenario.filterPieces(_bangobj, _starts, pieces, updates);
         _bangobj.setBoardUpdates(updates.toArray(new Piece[updates.size()]));
 
-        // remove any remaining marker pieces and assign piece ids
+        // remove any remaining marker pieces and assign piece ids; separate
+        // non-interactive props from other pieces
+        ArrayList<Prop> props = new ArrayList<Prop>();
         _bangobj.maxPieceId = 0;
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
@@ -1108,11 +1111,16 @@ public class BangManager extends GameManager
             }
             p.assignPieceId(_bangobj);
             p.init();
+            if (p instanceof Prop && !((Prop)p).isInteractive()) {
+                iter.remove();
+                props.add((Prop)p);
+            }
         }
 
         // configure the game object and board with the pieces
+        _bangobj.props = props.toArray(new Prop[props.size()]);
         _bangobj.pieces = new ModifiableDSet<Piece>(pieces.iterator());
-        _bangobj.board.shadowPieces(pieces.iterator());
+        _bangobj.board.shadowPieces(_bangobj.getPropPieceIterator());
 
         // clear out the selected big shots array
         _bangobj.setBigShots(new Unit[getPlayerSlots()]);

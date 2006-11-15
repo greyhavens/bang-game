@@ -343,7 +343,7 @@ public class BoardView extends BComponent
 
         // start afresh
         _board = _bangobj.board;
-        _board.shadowPieces(_bangobj.pieces.iterator());
+        _board.shadowPieces(_bangobj.getPropPieceIterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
 
         // create a marquee with our board name if we've got one
@@ -374,7 +374,9 @@ public class BoardView extends BComponent
         }
 
         // create sprites for all of the board pieces
-        for (Piece piece : _bangobj.pieces) {
+        for (Iterator<Piece> it = _bangobj.getPropPieceIterator();
+                it.hasNext(); ) {
+            Piece piece = it.next();
             if (shouldShowStarter(piece)) {
                 createPieceSprite(piece, _bangobj.tick);
             }
