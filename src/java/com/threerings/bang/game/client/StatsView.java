@@ -428,6 +428,7 @@ public class StatsView extends SteelWindow
     protected void wasAdded ()
     {
         super.wasAdded();
+        _closeBtn.setEnabled(true);
         if (_startAnimationWhenAdded) {
             _startAnimationWhenAdded = false;
             startObjectiveAnimation();
@@ -442,6 +443,7 @@ public class StatsView extends SteelWindow
         // Add an interval to have the icons appear in sequence after
         // a short delay
         _showing = 0;
+        _closeBtn.setEnabled(false);
         Interval showObjectives = new Interval(_ctx.getApp()) {
             public void expired () {
                 if (!showObjectiveLabels(_showing)) {
