@@ -9,7 +9,6 @@
   <property name="src.dir"      value="src/java"/>
   <property name="deploy.dir"   value="dist"/>
   <property name="app.name"     value="bang"/>
-  <property name="javadoc.dir"  value="${deploy.dir}/docs"/>
   <property name="savedoc.dir"  value="docs"/>
   <property name="nartool.path"   value="projects/narya/bin"/>
 
@@ -55,6 +54,39 @@
     <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
     <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
   </path>
+
+  <!-- prepares the application directories -->
+  <target name="prepare" depends="copydistlibs,copydistprops,lists">
+    <mkdir dir="${deploy.dir}"/>
+    <mkdir dir="${deploy.dir}/docs"/>
+    <mkdir dir="${deploy.dir}/lib"/>
+    <mkdir dir="${deploy.dir}/classes"/>
+    <mkdir dir="${deploy.dir}/classes/rsrc"/>
+    <copy todir="${deploy.dir}/classes/rsrc">
+      <fileset dir="rsrc">
+       <include name="**/*"/>
+       <exclude name="units/**"/>
+       <exclude name="props/**"/>
+       <exclude name="effects/**"/>
+       <exclude name="extras/**"/>
+       <exclude name="bonuses/**"/>
+       <exclude name="boards/**"/>
+       <exclude name="avatars/**"/>
+       <exclude name="goods/**"/>
+       <exclude name="sounds/**"/>
+       <exclude name="tutorials/**/*.xml"/>
+       <exclude name="config/**/*.xml"/>
+       <exclude name="**/*.properties"/>
+       <exclude name="**/*.bss"/>
+       <exclude name="**/*.css"/>
+       <exclude name="**/*.txt"/>
+       <exclude name="**/*.jar"/>
+       <exclude name="**/*.dat"/>
+       <exclude name="**/*.wav"/>
+       <exclude name="**/source/**"/>
+      </fileset>
+    </copy>
+  </target>
 
   <!-- generates additional methods for distributed object classes -->
   <target name="gendobj" depends="prepare">
@@ -109,46 +141,6 @@
       <fileset dir="src/java" includes="**/*Receiver.java"
         excludes="**/InvocationReceiver.java"/>
     </receiver>
-  </target>
-
-  <!-- prepares the application directories -->
-  <target name="prepare" depends="copydistlibs,copydistprops,lists">
-    <mkdir dir="${deploy.dir}"/>
-    <mkdir dir="${deploy.dir}/classes"/>
-    <mkdir dir="${deploy.dir}/classes/rsrc"/>
-    <mkdir dir="${javadoc.dir}"/>
-    <copy todir="${deploy.dir}/classes/rsrc">
-      <fileset dir="rsrc">
-       <include name="**/*"/>
-       <exclude name="units/**"/>
-       <exclude name="props/**"/>
-       <exclude name="effects/**"/>
-       <exclude name="extras/**"/>
-       <exclude name="bonuses/**"/>
-       <exclude name="boards/**"/>
-       <exclude name="avatars/**"/>
-       <exclude name="goods/**"/>
-       <exclude name="sounds/**"/>
-       <exclude name="tutorials/**/*.xml"/>
-       <exclude name="config/**/*.xml"/>
-       <exclude name="**/*.properties"/>
-       <exclude name="**/*.bss"/>
-       <exclude name="**/*.css"/>
-       <exclude name="**/*.txt"/>
-       <exclude name="**/*.jar"/>
-       <exclude name="**/*.dat"/>
-       <exclude name="**/*.wav"/>
-       <exclude name="**/source/**"/>
-      </fileset>
-    </copy>
-    <!-- copy native libraries into dist/lib -->
-    <mkdir dir="${deploy.dir}/lib"/>
-    <copy todir="${deploy.dir}/lib">
-      <fileset dir="projects/narya/dist/lib" includes="**/libsignal.so"/>
-      <fileset dir="lib/" includes="**/*.so"/>
-      <fileset dir="lib/" includes="**/*.jnilib"/>
-      <fileset dir="lib/" includes="**/*.dylib"/>
-    </copy>
   </target>
 
   <!-- encodes our sounds to ogg and enumerates them into a master list -->
@@ -338,7 +330,15 @@
       <compilerarg value="-Xlint:-serial"/>
     </javac>
   </target>
-  <target name="compile" depends="prepare,qcompile"/>
+  <target name="compile" depends="prepare,qcompile">
+    <!-- copy native libraries into dist/lib -->
+    <copy todir="${deploy.dir}/lib">
+      <fileset dir="projects/narya/dist/lib" includes="**/libsignal.so"/>
+      <fileset dir="lib/" includes="**/*.so"/>
+      <fileset dir="lib/" includes="**/*.jnilib"/>
+      <fileset dir="lib/" includes="**/*.dylib"/>
+    </copy>
+  </target>
 
   <!-- build the javadoc documentation -->
   <target name="javadoc" depends="prepare">
@@ -348,7 +348,7 @@
              windowtitle="Bang! Howdy API"
              doctitle="Bang! Howdy API"
              bottom="Copyright &#169; 2006 ${copy.holder}. All Rights Reserved."
-             destdir="${javadoc.dir}"
+             destdir="${deploy.dir}/docs"
              additionalparam="-breakiterator">
       <classpath refid="classpath"/>
       <link href="http://build.earth.threerings.net/docs/java/java1.5/"/>
@@ -360,7 +360,7 @@
   <target name="savedoc" depends="javadoc">
     <delete dir="${savedoc.dir}/api"/>
     <copy todir="${savedoc.dir}/api">
-      <fileset dir="${javadoc.dir}" includes="**/*"/>
+      <fileset dir="${deploy.dir}/docs" includes="**/*"/>
     </copy>
   </target>
 
@@ -560,7 +560,7 @@
   </target>
 
   <!-- rebuilds all subprojects and the whole top-level distribution -->
-  <target name="distall" depends="distjme,distprojects,dist,mdist"/>
+  <target name="distall" depends="prepare,distjme,distprojects,dist,mdist"/>
 
   <!-- fully cleans out the installed application and all subprojects -->
   <target name="cleanall" depends="distclean,cleanjme,cleanprojects"/>
