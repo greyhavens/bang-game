@@ -198,6 +198,7 @@ public class RatingRepository extends SimpleRepository
                 String query = "select RATINGS.PLAYER_ID, HANDLE " +
                     "from RATINGS, PLAYERS " +
                     "where RATINGS.SCENARIO = ? " +
+                    "and LAST_PLAYED > " + STALE_DATE + " " +
                     "and RATINGS.PLAYER_ID = PLAYERS.PLAYER_ID " +
                     "order by RATING desc limit " + count;
                 PreparedStatement stmt = conn.prepareStatement(query);
@@ -306,10 +307,10 @@ public class RatingRepository extends SimpleRepository
             public Void invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
+                String query = "select RATING from RATINGS " +
+                    "where SCENARIO = ? and LAST_PLAYED > " + STALE_DATE;
                 PreparedStatement stmt = null;
                 try {
-                    String query =
-                        "select RATING from RATINGS where SCENARIO = ?";
                     stmt = conn.prepareStatement(query);
                     stmt.setString(1, scenario);
                     ResultSet rs = stmt.executeQuery();
@@ -498,6 +499,7 @@ public class RatingRepository extends SimpleRepository
             "SCENARIO VARCHAR(2) NOT NULL",
             "RATING SMALLINT NOT NULL",
             "EXPERIENCE INTEGER NOT NULL",
+            "LAST_PLAYED TIMESTAMP NOT NULL",
             "PRIMARY KEY (PLAYER_ID, SCENARIO)",
         }, "");
         JDBCUtil.createTableIfMissing(conn, "RANKS", new String[] {
@@ -512,6 +514,17 @@ public class RatingRepository extends SimpleRepository
             "DATA BLOB NOT NULL",
             "PRIMARY KEY (SCENARIO, PLAYERS)",
         }, "");
+
+        // TEMP: add our LAST_PLAYED column
+        if (!JDBCUtil.tableContainsColumn(conn, "RATINGS", "LAST_PLAYED")) {
+            JDBCUtil.addColumn(
+                conn, "RATINGS", "LAST_PLAYED", "TIMESTAMP NOT NULL", null);
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("update RATINGS set LAST_PLAYED = " +
+                               "DATE_SUB(NOW(), INTERVAL 1 WEEK");
+            stmt.close();
+        }
+        // END TEMP
     }
 
     /** Extends {@link RankLevels} with data collected using calculations */
@@ -631,6 +644,11 @@ public class RatingRepository extends SimpleRepository
      * The percentage of users that must have a lower rating than you
      * in order for you to be a part of a given rank.
      */
-    protected static final int[] RANK_PERCENTAGES =
-        { 50, 65, 75, 85, 90, 95, 99 };
+    protected static final int[] RANK_PERCENTAGES = {
+        50, 65, 75, 85, 90, 95, 99 };
+
+    /** The cutoff after which a rating is considered stale and no longer
+     * considered when calculating standings or for top scores. */
+    protected static final String STALE_DATE =
+        "DATE_SUB(NOW(), INTERVAL 2 WEEK)";
 }
