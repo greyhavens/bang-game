@@ -1,10 +1,10 @@
 /DirectionalLight.java/1.8/Wed May 17 18:19:56 2006//
 /PointLight.java/1.6/Wed May 17 18:19:56 2006//
-/SimpleLightNode.java/1.8/Wed May 17 18:19:56 2006//
 /SpotLight.java/1.10/Wed May 17 18:19:56 2006//
 /Light.java/1.14/Mon Jun  5 17:35:21 2006//
-/LightManagement.java/1.5/Tue Jul 25 21:51:19 2006//
 /LightNode.java/1.10/Tue Jul 25 21:51:19 2006//
 /LightStateController.java/1.3/Tue Jul 25 21:51:19 2006//
-/LightControllerManager.java/1.7/Mon Oct 16 17:18:58 2006//
+/LightControllerManager.java/1.8/Thu Nov 16 19:54:17 2006//
+/LightManagement.java/1.6/Thu Nov 16 19:54:17 2006//
+/SimpleLightNode.java/1.9/Thu Nov 16 19:54:17 2006//
 D

@@ -1,16 +1,16 @@
 D/spring////
 /Line.java/1.8/Mon Jun  5 17:35:21 2006//
 /TransformMatrix.java/1.14/Mon Jun  5 17:35:21 2006//
-/TransformQuaternion.java/1.5/Mon Jun  5 17:35:21 2006//
 /Bessel.java/1.5/Wed Jun 21 21:49:28 2006//
 /Rectangle.java/1.9/Wed Jun 21 21:49:29 2006//
 /Triangle.java/1.14/Mon Jun 26 18:13:01 2006//
-/Vector2f.java/1.23/Tue Jul 25 21:51:19 2006//
-/FastMath.java/1.37/Thu Sep  7 17:40:37 2006//
 /Ray.java/1.22/Result of merge//
-/Vector3f.java/1.47/Thu Sep  7 17:40:37 2006//
-/Matrix3f.java/1.42/Mon Oct 16 17:18:58 2006//
-/Matrix4f.java/1.28/Mon Oct 16 17:18:58 2006//
 /Ring.java/1.2/Mon Oct 16 17:18:59 2006//
 /Plane.java/1.13/Mon Oct 16 17:26:27 2006//
-/Quaternion.java/1.55/Thu Oct 19 00:44:04 2006//
+/FastMath.java/1.38/Thu Nov 16 19:54:17 2006//
+/Matrix3f.java/1.43/Thu Nov 16 19:54:17 2006//
+/Matrix4f.java/1.29/Thu Nov 16 19:54:17 2006//
+/Quaternion.java/1.57/Thu Nov 16 19:54:17 2006//
+/TransformQuaternion.java/1.6/Thu Nov 16 19:54:18 2006//
+/Vector2f.java/1.24/Thu Nov 16 19:54:18 2006//
+/Vector3f.java/1.48/Thu Nov 16 19:54:18 2006//

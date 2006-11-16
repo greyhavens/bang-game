@@ -32,6 +32,7 @@
 
 package jmetest.input;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
@@ -42,7 +43,11 @@ import com.jme.app.SimpleGame;
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
 import com.jme.input.ChaseCamera;
+import com.jme.input.InputSystem;
 import com.jme.input.ThirdPersonHandler;
+import com.jme.input.joystick.Joystick;
+import com.jme.input.joystick.JoystickInput;
+import com.jme.input.thirdperson.ThirdPersonJoystickPlugin;
 import com.jme.light.DirectionalLight;
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
@@ -63,7 +68,7 @@ import com.jmex.terrain.util.ProceduralTextureGenerator;
  * <code>TestThirdPersonController</code>
  * 
  * @author Joshua Slack
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.18 $
  */
 public class TestThirdPersonController extends SimpleGame {
 
@@ -79,6 +84,11 @@ public class TestThirdPersonController extends SimpleGame {
      * @param args
      */
     public static void main(String[] args) {
+        try {
+            JoystickInput.setProvider(InputSystem.INPUT_SYSTEM_LWJGL);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         LoggingSystem.getLogger().setLevel(java.util.logging.Level.OFF);
         TestThirdPersonController app = new TestThirdPersonController();
         app.setDialogBehaviour(ALWAYS_SHOW_PROPS_DIALOG);
@@ -97,6 +107,7 @@ public class TestThirdPersonController extends SimpleGame {
         setupTerrain();
         setupChaseCamera();
         setupInput();
+        setupJoystick();
     }
     
     protected void simpleUpdate() {
@@ -234,5 +245,15 @@ public class TestThirdPersonController extends SimpleGame {
         handlerProps.put(ThirdPersonHandler.PROP_CAMERAALIGNEDMOVE, "true");
         input = new ThirdPersonHandler(m_character, cam, handlerProps);
         input.setActionSpeed(100f);
+    }
+    
+    private void setupJoystick() {
+        ArrayList<Joystick> joys = JoystickInput.get().findJoysticksByAxis("X Axis", "Y Axis", "Z Axis", "Z Rotation");
+        Joystick joy = joys.size() >= 1 ? joys.get(0) : null;
+        if (joy != null) {
+            ThirdPersonJoystickPlugin plugin = new ThirdPersonJoystickPlugin(joy, joy.findAxis("X Axis"), joy.findAxis("Y Axis"), joy.findAxis("Z Axis"), joy.findAxis("Z Rotation"));
+            ((ThirdPersonHandler)input).setJoystickPlugin(plugin);
+            chaser.getMouseLook().setJoystickPlugin(plugin);
+        }
     }
 }

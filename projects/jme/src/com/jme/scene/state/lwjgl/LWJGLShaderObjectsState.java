@@ -42,33 +42,34 @@ import java.nio.ShortBuffer;
 import java.util.logging.Level;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.ARBBufferObject;
 import org.lwjgl.opengl.ARBFragmentShader;
 import org.lwjgl.opengl.ARBShaderObjects;
-import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.ARBVertexProgram;
 import org.lwjgl.opengl.ARBVertexShader;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 
+import com.jme.renderer.RenderContext;
 import com.jme.scene.state.GLSLShaderObjectsState;
+import com.jme.scene.state.lwjgl.records.ShaderObjectsStateRecord;
+import com.jme.scene.state.lwjgl.records.StateRecord;
+import com.jme.system.DisplaySystem;
 import com.jme.util.LoggingSystem;
 import com.jme.util.ShaderAttribute;
 import com.jme.util.ShaderUniform;
-import com.jme.util.WeakIdentityCache;
 
 /**
  * Implementation of the GL_ARB_shader_objects extension.
  * 
  * @author Thomas Hourdel
- * @author Joshua Slack (attributes)
+ * @author Joshua Slack (attributes and StateRecord)
  */
 public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
 
     private static final long serialVersionUID = 1L;
-    
-    private static WeakIdentityCache vboMap = new WeakIdentityCache();
-    
+
+    /** OpenGL id for this program. * */
+    private int programID = -1;
+
     /**
      * Determines if the current OpenGL context supports the
      * GL_ARB_shader_objects extension.
@@ -227,6 +228,7 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
         }
 
         ARBShaderObjects.glLinkProgramARB(programID);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -270,278 +272,220 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
      */
     public void apply() {
         if (isSupported()) {
-            if (isEnabled()) {
-                if (programID != -1) {
-                    // Apply the shader...
-                    ARBShaderObjects.glUseProgramObjectARB(programID);
-                    
-                    // Assign attribs...
-                    if (!attribs.isEmpty()) {
-                        boolean vboCapable = GLContext.getCapabilities().
-                            GL_ARB_vertex_buffer_object;
-                        for (int x = attribs.size(); --x >= 0; ) {
-                            ShaderAttribute attVar = attribs.get(x);
-                            if (vboCapable && attVar.useVBO &&
-                                (attVar.vboID > 0 || attVar.data != null)) {
-                                assignVBOAttrib(attVar);
-                                continue;
-                            } else if (vboCapable && attVar.data != null) {
-                                ARBBufferObject.glBindBufferARB(
-                                    ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, 0);
+        	//ask for the current state record
+            RenderContext context = DisplaySystem.getDisplaySystem()
+                    .getCurrentContext();
+            ShaderObjectsStateRecord record = (ShaderObjectsStateRecord) context
+                    .getStateRecord(RS_GLSL_SHADER_OBJECTS);
+            context.currentStates[RS_GLSL_SHADER_OBJECTS] = this;
+
+            if (record.getReference() != this) {
+            	record.setReference(this);
+                if (isEnabled()) { 
+                	if (programID != -1) {
+                        // Apply the shader...
+                        ARBShaderObjects.glUseProgramObjectARB(programID);
+                        
+                        // Assign attribs...
+                        if (!attribs.isEmpty()) {
+                            for (int x = attribs.size(); --x >= 0; ) {
+                                ShaderAttribute attVar = attribs.get(x);
+                                switch (attVar.type) {
+                                case ShaderAttribute.SU_SHORT:
+                                    ARBVertexProgram.glVertexAttrib1sARB(
+                                            attVar.attributeID,
+                                            attVar.s1);
+                                    break;
+                                case ShaderAttribute.SU_SHORT2:
+                                    ARBVertexProgram.glVertexAttrib2sARB(
+                                            attVar.attributeID,
+                                            attVar.s1, attVar.s2);
+                                    break;
+                                case ShaderAttribute.SU_SHORT3:
+                                    ARBVertexProgram.glVertexAttrib3sARB(
+                                            attVar.attributeID,
+                                            attVar.s1, attVar.s2,
+                                            attVar.s3);
+                                    break;
+                                case ShaderAttribute.SU_SHORT4:
+                                    ARBVertexProgram.glVertexAttrib4sARB(
+                                            attVar.attributeID,
+                                            attVar.s1, attVar.s2,
+                                            attVar.s3, attVar.s4);
+                                    break;
+                                case ShaderAttribute.SU_FLOAT:
+                                    ARBVertexProgram.glVertexAttrib1fARB(
+                                            attVar.attributeID,
+                                            attVar.f1);
+                                    break;
+                                case ShaderAttribute.SU_FLOAT2:
+                                    ARBVertexProgram.glVertexAttrib2fARB(
+                                            attVar.attributeID,
+                                            attVar.f1, attVar.f2);
+                                    break;
+                                case ShaderAttribute.SU_FLOAT3:
+                                    ARBVertexProgram.glVertexAttrib3fARB(
+                                            attVar.attributeID,
+                                            attVar.f1, attVar.f2,
+                                            attVar.f3);
+                                    break;
+                                case ShaderAttribute.SU_FLOAT4:
+                                    ARBVertexProgram.glVertexAttrib4fARB(
+                                            attVar.attributeID,
+                                            attVar.f1, attVar.f2,
+                                            attVar.f3, attVar.f4);
+                                    break;
+                                case ShaderAttribute.SU_NORMALIZED_UBYTE4:
+                                    ARBVertexProgram.glVertexAttrib4NubARB(
+                                            attVar.attributeID,
+                                            attVar.b1, attVar.b2,
+                                            attVar.b3, attVar.b4);
+                                    break;
+                                case ShaderAttribute.SU_POINTER_FLOAT:
+                                    ARBVertexProgram.glVertexAttribPointerARB(
+                                            attVar.attributeID,
+                                            attVar.size,
+                                            attVar.normalized,
+                                            attVar.stride,
+                                            (FloatBuffer)attVar.data);
+                                    ARBVertexProgram.glEnableVertexAttribArrayARB(attVar.attributeID);
+                                    break;
+                                case ShaderAttribute.SU_POINTER_BYTE:
+                                    ARBVertexProgram.glVertexAttribPointerARB(
+                                            attVar.attributeID,
+                                            attVar.size,
+                                            attVar.unsigned,
+                                            attVar.normalized,
+                                            attVar.stride,
+                                            (ByteBuffer)attVar.data);
+                                    ARBVertexProgram.glEnableVertexAttribArrayARB(attVar.attributeID);
+                                    break;
+                                case ShaderAttribute.SU_POINTER_INT:
+                                    ARBVertexProgram.glVertexAttribPointerARB(
+                                            attVar.attributeID,
+                                            attVar.size,
+                                            attVar.unsigned,
+                                            attVar.normalized,
+                                            attVar.stride,
+                                            (IntBuffer)attVar.data);
+                                    ARBVertexProgram.glEnableVertexAttribArrayARB(attVar.attributeID);
+                                    break;
+                                case ShaderAttribute.SU_POINTER_SHORT:
+                                    ARBVertexProgram.glVertexAttribPointerARB(
+                                            attVar.attributeID,
+                                            attVar.size,
+                                            attVar.unsigned,
+                                            attVar.normalized,
+                                            attVar.stride,
+                                            (ShortBuffer)attVar.data);
+                                    ARBVertexProgram.glEnableVertexAttribArrayARB(attVar.attributeID);
+                                    break;
+                                default: // Should never happen.
+                                    break;
+                                }
                             }
-                            switch (attVar.type) {
-                            case ShaderAttribute.SU_SHORT:
-                                ARBVertexProgram.glVertexAttrib1sARB(
-                                        attVar.attributeID,
-                                        attVar.s1);
-                                break;
-                            case ShaderAttribute.SU_SHORT2:
-                                ARBVertexProgram.glVertexAttrib2sARB(
-                                        attVar.attributeID,
-                                        attVar.s1, attVar.s2);
-                                break;
-                            case ShaderAttribute.SU_SHORT3:
-                                ARBVertexProgram.glVertexAttrib3sARB(
-                                        attVar.attributeID,
-                                        attVar.s1, attVar.s2,
-                                        attVar.s3);
-                                break;
-                            case ShaderAttribute.SU_SHORT4:
-                                ARBVertexProgram.glVertexAttrib4sARB(
-                                        attVar.attributeID,
-                                        attVar.s1, attVar.s2,
-                                        attVar.s3, attVar.s4);
-                                break;
-                            case ShaderAttribute.SU_FLOAT:
-                                ARBVertexProgram.glVertexAttrib1fARB(
-                                        attVar.attributeID,
-                                        attVar.f1);
-                                break;
-                            case ShaderAttribute.SU_FLOAT2:
-                                ARBVertexProgram.glVertexAttrib2fARB(
-                                        attVar.attributeID,
-                                        attVar.f1, attVar.f2);
-                                break;
-                            case ShaderAttribute.SU_FLOAT3:
-                                ARBVertexProgram.glVertexAttrib3fARB(
-                                        attVar.attributeID,
-                                        attVar.f1, attVar.f2,
-                                        attVar.f3);
-                                break;
-                            case ShaderAttribute.SU_FLOAT4:
-                                ARBVertexProgram.glVertexAttrib4fARB(
-                                        attVar.attributeID,
-                                        attVar.f1, attVar.f2,
-                                        attVar.f3, attVar.f4);
-                                break;
-                            case ShaderAttribute.SU_NORMALIZED_UBYTE4:
-                                ARBVertexProgram.glVertexAttrib4NubARB(
-                                        attVar.attributeID,
-                                        attVar.b1, attVar.b2,
-                                        attVar.b3, attVar.b4);
-                                break;
-                            case ShaderAttribute.SU_POINTER_FLOAT:
-                                ARBVertexProgram.glVertexAttribPointerARB(
-                                        attVar.attributeID,
-                                        attVar.size,
-                                        attVar.normalized,
-                                        attVar.stride,
-                                        (FloatBuffer)attVar.data);
-                                ARBVertexProgram.glEnableVertexAttribArrayARB(attVar.attributeID);
-                                break;
-                            case ShaderAttribute.SU_POINTER_BYTE:
-                                ARBVertexProgram.glVertexAttribPointerARB(
-                                        attVar.attributeID,
-                                        attVar.size,
-                                        attVar.unsigned,
-                                        attVar.normalized,
-                                        attVar.stride,
-                                        (ByteBuffer)attVar.data);
-                                ARBVertexProgram.glEnableVertexAttribArrayARB(attVar.attributeID);
-                                break;
-                            case ShaderAttribute.SU_POINTER_INT:
-                                ARBVertexProgram.glVertexAttribPointerARB(
-                                        attVar.attributeID,
-                                        attVar.size,
-                                        attVar.unsigned,
-                                        attVar.normalized,
-                                        attVar.stride,
-                                        (IntBuffer)attVar.data);
-                                ARBVertexProgram.glEnableVertexAttribArrayARB(attVar.attributeID);
-                                break;
-                            case ShaderAttribute.SU_POINTER_SHORT:
-                                ARBVertexProgram.glVertexAttribPointerARB(
-                                        attVar.attributeID,
-                                        attVar.size,
-                                        attVar.unsigned,
-                                        attVar.normalized,
-                                        attVar.stride,
-                                        (ShortBuffer)attVar.data);
-                                ARBVertexProgram.glEnableVertexAttribArrayARB(attVar.attributeID);
-                                break;
-                            default: // Should never happen.
-                                break;
+                        }
+                        
+                        // Assign uniforms...
+                        if (!uniforms.isEmpty()) {
+                            for (int x = uniforms.size(); --x >= 0; ) {
+                                ShaderUniform uniformVar = uniforms.get(x);
+                                switch (uniformVar.type) {
+                                case ShaderUniform.SU_INT:
+                                    ARBShaderObjects.glUniform1iARB(
+                                            getUniLoc(uniformVar),
+                                            uniformVar.vint[0]);
+                                    break;
+                                case ShaderUniform.SU_INT2:
+                                    ARBShaderObjects.glUniform2iARB(
+                                            getUniLoc(uniformVar),
+                                            uniformVar.vint[0], uniformVar.vint[1]);
+                                    break;
+                                case ShaderUniform.SU_INT3:
+                                    ARBShaderObjects.glUniform3iARB(
+                                            getUniLoc(uniformVar),
+                                            uniformVar.vint[0], uniformVar.vint[1],
+                                            uniformVar.vint[2]);
+                                    break;
+                                case ShaderUniform.SU_INT4:
+                                    ARBShaderObjects.glUniform4iARB(
+                                            getUniLoc(uniformVar),
+    
+                                            uniformVar.vint[0], uniformVar.vint[1],
+                                            uniformVar.vint[2], uniformVar.vint[3]);
+                                    break;
+                                case ShaderUniform.SU_FLOAT:
+                                    ARBShaderObjects.glUniform1fARB(
+                                            getUniLoc(uniformVar),
+                                            uniformVar.vfloat[0]);
+                                    break;
+                                case ShaderUniform.SU_FLOAT2:
+                                    ARBShaderObjects.glUniform2fARB(
+                                            getUniLoc(uniformVar),
+                                            uniformVar.vfloat[0],
+                                            uniformVar.vfloat[1]);
+                                    break;
+                                case ShaderUniform.SU_FLOAT3:
+                                    ARBShaderObjects.glUniform3fARB(
+                                            getUniLoc(uniformVar),
+                                            uniformVar.vfloat[0],
+                                            uniformVar.vfloat[1],
+                                            uniformVar.vfloat[2]);
+                                    break;
+                                case ShaderUniform.SU_FLOAT4:
+                                    ARBShaderObjects.glUniform4fARB(
+                                            getUniLoc(uniformVar),
+                                            uniformVar.vfloat[0],
+                                            uniformVar.vfloat[1],
+                                            uniformVar.vfloat[2],
+                                            uniformVar.vfloat[3]);
+                                    break;
+                                case ShaderUniform.SU_MATRIX2:
+                                    if (uniformVar.matrixBuffer == null)
+                                        uniformVar.matrixBuffer = org.lwjgl.BufferUtils.createFloatBuffer(4);
+                                    uniformVar.matrixBuffer.clear();
+                                    uniformVar.matrixBuffer.put(uniformVar.matrix2f);
+                                    uniformVar.matrixBuffer.rewind();
+                                    ARBShaderObjects.glUniformMatrix2ARB(
+                                            getUniLoc(uniformVar),
+                                            uniformVar.transpose, uniformVar.matrixBuffer);
+                                    break;
+                                case ShaderUniform.SU_MATRIX3:
+                                    if (uniformVar.matrixBuffer == null)
+                                        uniformVar.matrixBuffer = uniformVar.matrix3f.toFloatBuffer();
+                                    else 
+                                        uniformVar.matrix3f.fillFloatBuffer(uniformVar.matrixBuffer);
+                                    ARBShaderObjects.glUniformMatrix3ARB(
+                                            getUniLoc(uniformVar),
+                                            uniformVar.transpose,
+                                            uniformVar.matrixBuffer);
+                                    break;
+                                case ShaderUniform.SU_MATRIX4:
+                                    if (uniformVar.matrixBuffer == null)
+                                        uniformVar.matrixBuffer = uniformVar.matrix4f.toFloatBuffer();
+                                    else 
+                                        uniformVar.matrix4f.fillFloatBuffer(uniformVar.matrixBuffer);
+                                    ARBShaderObjects.glUniformMatrix4ARB(
+                                            getUniLoc(uniformVar),
+                                            uniformVar.transpose,
+                                            uniformVar.matrixBuffer);
+                                    break;
+                                default: // Should never happen.
+                                    break;
+                                }
                             }
                         }
                     }
-                    
-                    // Assign uniforms...
-                    if (!uniforms.isEmpty()) {
-                        for (int x = uniforms.size(); --x >= 0; ) {
-                            ShaderUniform uniformVar = uniforms.get(x);
-                            switch (uniformVar.type) {
-                            case ShaderUniform.SU_INT:
-                                ARBShaderObjects.glUniform1iARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.vint[0]);
-                                break;
-                            case ShaderUniform.SU_INT2:
-                                ARBShaderObjects.glUniform2iARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.vint[0], uniformVar.vint[1]);
-                                break;
-                            case ShaderUniform.SU_INT3:
-                                ARBShaderObjects.glUniform3iARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.vint[0], uniformVar.vint[1],
-                                        uniformVar.vint[2]);
-                                break;
-                            case ShaderUniform.SU_INT4:
-                                ARBShaderObjects.glUniform4iARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.vint[0], uniformVar.vint[1],
-                                        uniformVar.vint[2], uniformVar.vint[3]);
-                                break;
-                            case ShaderUniform.SU_FLOAT:
-                                ARBShaderObjects.glUniform1fARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.vfloat[0]);
-                                break;
-                            case ShaderUniform.SU_FLOAT2:
-                                ARBShaderObjects.glUniform2fARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.vfloat[0],
-                                        uniformVar.vfloat[1]);
-                                break;
-                            case ShaderUniform.SU_FLOAT3:
-                                ARBShaderObjects.glUniform3fARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.vfloat[0],
-                                        uniformVar.vfloat[1],
-                                        uniformVar.vfloat[2]);
-                                break;
-                            case ShaderUniform.SU_FLOAT4:
-                                ARBShaderObjects.glUniform4fARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.vfloat[0],
-                                        uniformVar.vfloat[1],
-                                        uniformVar.vfloat[2],
-                                        uniformVar.vfloat[3]);
-                                break;
-                            case ShaderUniform.SU_MATRIX2:
-                                if (uniformVar.matrixBuffer == null)
-                                    uniformVar.matrixBuffer = org.lwjgl.BufferUtils.createFloatBuffer(4);
-                                uniformVar.matrixBuffer.clear();
-                                uniformVar.matrixBuffer.put(uniformVar.matrix2f);
-                                uniformVar.matrixBuffer.rewind();
-                                ARBShaderObjects.glUniformMatrix2ARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.transpose, uniformVar.matrixBuffer);
-                                break;
-                            case ShaderUniform.SU_MATRIX3:
-                                if (uniformVar.matrixBuffer == null)
-                                    uniformVar.matrixBuffer = uniformVar.matrix3f.toFloatBuffer();
-                                else 
-                                    uniformVar.matrix3f.fillFloatBuffer(uniformVar.matrixBuffer);
-                                ARBShaderObjects.glUniformMatrix3ARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.transpose,
-                                        uniformVar.matrixBuffer);
-                                break;
-                            case ShaderUniform.SU_MATRIX4:
-                                if (uniformVar.matrixBuffer == null)
-                                    uniformVar.matrixBuffer = uniformVar.matrix4f.toFloatBuffer();
-                                else 
-                                    uniformVar.matrix4f.fillFloatBuffer(uniformVar.matrixBuffer);
-                                ARBShaderObjects.glUniformMatrix4ARB(
-                                        getUniLoc(uniformVar),
-                                        uniformVar.transpose,
-                                        uniformVar.matrixBuffer);
-                                break;
-                            default: // Should never happen.
-                                break;
-                            }
-                        }
-                    }
+                } else {
+                    ARBShaderObjects.glUseProgramObjectARB(0);
                 }
-            } else {
-                ARBShaderObjects.glUseProgramObjectARB(0);
             }
         }
     }
-    
-    private void assignVBOAttrib(ShaderAttribute attVar) {
-        if (attVar.vboID <= 0) {
-            Object vboid;
-			if ((vboid = vboMap.get(attVar.data)) != null) {
-				attVar.vboID = ((Integer) vboid).intValue();
-			} else {            	
-                attVar.data.rewind();
-                IntBuffer buf = BufferUtils.createIntBuffer(1);
-                ARBBufferObject.glGenBuffersARB(buf);
-                attVar.vboID = buf.get(0);
-                vboMap.put(attVar.data, attVar.vboID);
-                
-                ARBBufferObject.glBindBufferARB(
-                        ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, attVar.vboID);
-                if (attVar.data instanceof FloatBuffer) {
-                    ARBBufferObject.glBufferDataARB(
-                        ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB,
-                        (FloatBuffer)attVar.data,
-                        ARBBufferObject.GL_STATIC_DRAW_ARB);
-                } else if (attVar.data instanceof ByteBuffer) {
-                    ARBBufferObject.glBufferDataARB(
-                        ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB,
-                        (ByteBuffer)attVar.data,
-                        ARBBufferObject.GL_STATIC_DRAW_ARB);
-                } else if (attVar.data instanceof IntBuffer) {
-                    ARBBufferObject.glBufferDataARB(
-                        ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB,
-                        (IntBuffer)attVar.data,
-                        ARBBufferObject.GL_STATIC_DRAW_ARB);
-                } else if (attVar.data instanceof ShortBuffer) {
-                    ARBBufferObject.glBufferDataARB(
-                        ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB,
-                        (ShortBuffer)attVar.data,
-                        ARBBufferObject.GL_STATIC_DRAW_ARB);
-                }
-			}
-        }
-        
-        ARBBufferObject.glBindBufferARB(
-            ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, attVar.vboID);
-        ARBVertexProgram.glVertexAttribPointerARB(
-            attVar.attributeID,
-            attVar.size,
-            getGLType(attVar),
-            attVar.normalized,
-            attVar.stride,
-            0);
-        ARBVertexProgram.glEnableVertexAttribArrayARB(attVar.attributeID);
-    }
-    
-    private int getGLType (ShaderAttribute attVar) {
-        switch (attVar.type) {
-            case ShaderAttribute.SU_POINTER_FLOAT:
-                return GL11.GL_FLOAT;
-            case ShaderAttribute.SU_POINTER_BYTE:
-                return attVar.unsigned ? GL11.GL_UNSIGNED_BYTE : GL11.GL_BYTE;
-            case ShaderAttribute.SU_POINTER_INT:
-                return attVar.unsigned ? GL11.GL_UNSIGNED_INT : GL11.GL_INT;
-            case ShaderAttribute.SU_POINTER_SHORT:
-                return attVar.unsigned ? GL11.GL_UNSIGNED_SHORT : GL11.GL_SHORT;
-            default: // Should never happen.
-                return 0;
-        }
+
+
+    @Override
+    public StateRecord createStateRecord() {
+    	return new ShaderObjectsStateRecord();
     }
 }

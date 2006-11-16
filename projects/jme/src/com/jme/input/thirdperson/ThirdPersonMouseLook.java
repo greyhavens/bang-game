@@ -99,7 +99,8 @@ public class ThirdPersonMouseLook extends MouseInputAction {
     protected Vector3f rightTemp = new Vector3f();
     protected Quaternion rotTemp = new Quaternion();
     protected Vector3f worldUpVec = new Vector3f(ChaseCamera.DEFAULT_WORLDUPVECTOR);
-
+    protected ThirdPersonJoystickPlugin plugin = null;
+    
     /**
      * Constructor creates a new <code>MouseLook</code> object. It takes the
      * mouse, camera and speed of the looking.
@@ -181,6 +182,8 @@ public class ThirdPersonMouseLook extends MouseInputAction {
             }
         } else camera.setLooking(false);
 
+        updateFromJoystick(time);
+        
         int wdelta = MouseInput.get().getWheelDelta();
         if (wdelta != 0) {
             float amount = .01f * -wdelta;
@@ -190,6 +193,23 @@ public class ThirdPersonMouseLook extends MouseInputAction {
 
         if (updated)
             camera.getCamera().onFrameChange();
+    }
+
+    protected void updateFromJoystick(float time) {
+        //XXX: Get the evil constants out of this method...
+        if (plugin != null) {
+            float xAmnt = plugin.getJoystick().getAxisValue(plugin.getRotateAxis());
+            float yAmnt = plugin.getJoystick().getAxisValue(plugin.getAscentAxis());
+            
+            if (xAmnt != 0) {
+                rotateRight(xAmnt*.02f, time);
+                updated = true;
+            }
+            if (!lockAscent && yAmnt != 0) {
+                rotateUp(-yAmnt*.02f);
+                updated = true;
+            }
+        }
     }
 
     /**
@@ -546,5 +566,19 @@ public class ThirdPersonMouseLook extends MouseInputAction {
      */
     public void setWorldUpVec(Vector3f worldUpVec) {
         this.worldUpVec.set(worldUpVec);
+    }
+
+    /**
+     * @return Returns the joystick plugin or null if not set.
+     */
+    public ThirdPersonJoystickPlugin getJoystickPlugin() {
+        return plugin;
+    }
+
+    /**
+     * @param joystick The joystick plugin to set.
+     */
+    public void setJoystickPlugin(ThirdPersonJoystickPlugin joystick) {
+        this.plugin = joystick;
     }
 }

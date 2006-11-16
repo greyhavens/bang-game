@@ -1,33 +1,24 @@
 /*
- * Copyright (c) 2003-2006 jMonkeyEngine
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * * Redistributions of source code must retain the above copyright
- *   notice, this list of conditions and the following disclaimer.
- *
- * * Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
- *   documentation and/or other materials provided with the distribution.
- *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
- *   without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * Copyright (c) 2003-2006 jMonkeyEngine All rights reserved. Redistribution and
+ * use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met: * Redistributions of source
+ * code must retain the above copyright notice, this list of conditions and the
+ * following disclaimer. * Redistributions in binary form must reproduce the
+ * above copyright notice, this list of conditions and the following disclaimer
+ * in the documentation and/or other materials provided with the distribution. *
+ * Neither the name of 'jMonkeyEngine' nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without
+ * specific prior written permission. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT
+ * HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+ * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+ * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 package jmetest.effects;
@@ -126,7 +117,7 @@ import com.jmex.effects.particles.SwarmInfluence;
  * @author Joshua Slack
  * @author Andrzej Kapolka - additions for multiple layers, save/load from jme
  *         format
- * @version $Id: RenParticleEditor.java,v 1.36 2006/08/05 20:47:41 renanse Exp $
+ * @version $Id: RenParticleEditor.java,v 1.37 2006/11/16 19:59:29 nca Exp $
  */
 
 public class RenParticleEditor extends JFrame {
@@ -136,7 +127,8 @@ public class RenParticleEditor extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private static final String[] EXAMPLE_NAMES = { "Fire", "Fountain", "Lava",
-            "Smoke", "Jet", "Snow", "Rain", "Explosion", "Ground Fog", "Fireflies" };
+            "Smoke", "Jet", "Snow", "Rain", "Explosion", "Ground Fog",
+            "Fireflies" };
     int width = 640, height = 480;
 
     MyImplementor impl;
@@ -526,7 +518,7 @@ public class RenParticleEditor extends JFrame {
         prefs.put("particle_dir", file.getParent().toString());
         try {
             setLocationOverride(file.getParentFile());
-            Spatial obj = (Spatial)BinaryImporter.getInstance().load(file);
+            Spatial obj = (Spatial) BinaryImporter.getInstance().load(file);
             if (obj instanceof Node) {
                 Node node = (Node) obj;
                 for (int ii = node.getQuantity() - 1; ii >= 0; ii--) {
@@ -573,7 +565,7 @@ public class RenParticleEditor extends JFrame {
         prefs.put("particle_dir", file.getParent());
         try {
             setLocationOverride(file.getParentFile());
-            Spatial obj = (Spatial)BinaryImporter.getInstance().load(file);
+            Spatial obj = (Spatial) BinaryImporter.getInstance().load(file);
             int lidx = particleNode.getQuantity();
             if (obj instanceof Node) {
                 Node node = (Node) obj;
@@ -612,6 +604,14 @@ public class RenParticleEditor extends JFrame {
 
     private void setLocationOverride(final File parent) {
         TextureKey.setLocationOverride(new TextureKey.LocationOverride() {
+            public URL getLocation(String file) throws MalformedURLException {
+                return new URL(parent.toURL(), file);
+            }
+        });
+    }
+
+    private void setLocationOverride(final File parent) {
+        TextureKey.setLocationOverride(new TextureKey.LocationOverride() {
             public URL getLocation(String file)
                 throws MalformedURLException {
                 return new URL(parent.toURL(), file);
@@ -641,6 +641,56 @@ public class RenParticleEditor extends JFrame {
                     + "': " + e, "File Error", JOptionPane.ERROR_MESSAGE);
         }
         setTexturePathsRelative(particleNode, file.getParentFile(), false);
+    }
+
+    private void setTexturePathsRelative(Spatial spatial, File parent,
+            boolean relative) {
+        TextureState tstate = (TextureState) spatial
+                .getRenderState(RenderState.RS_TEXTURE);
+        if (tstate != null) {
+            Texture tex = tstate.getTexture();
+            if (tex != null
+                    && tex.getTextureKey() != null
+                    && "file".equals(tex.getTextureKey().getLocation()
+                            .getProtocol())) {
+                String tfile = tex.getTextureKey().getLocation().getFile();
+                try {
+                    if (relative) {
+                        String path = relativize(new File(tfile), parent)
+                                .replace(File.separatorChar, '/');
+                        tex.getTextureKey()
+                                .setLocation(new URL("file:" + path));
+                    } else {
+                        tex.getTextureKey().setLocation(
+                                new File(parent, tfile).getCanonicalFile()
+                                        .toURL());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (spatial instanceof Node) {
+            Node node = (Node) spatial;
+            for (int ii = 0, nn = node.getQuantity(); ii < nn; ii++) {
+                setTexturePathsRelative(node.getChild(ii), parent, relative);
+            }
+        }
+    }
+
+    private String relativize(File absolute, File parent) {
+        String abspath = absolute.toString();
+        StringBuffer path = new StringBuffer();
+        while (!abspath.startsWith(parent.toString())) {
+            path.append("..").append(File.separatorChar);
+            if ((parent = parent.getParentFile()) == null) {
+                return abspath; // different roots
+            }
+        }
+        String pstr = parent.toString();
+        path.append(abspath.substring(pstr.length()
+                + (pstr.endsWith(File.separator) ? 0 : 1)));
+        return path.toString();
     }
 
     private void setTexturePathsRelative (
@@ -701,7 +751,8 @@ public class RenParticleEditor extends JFrame {
                     return null;
                 }
             };
-            GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).enqueue(exe);
+            GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER)
+                    .enqueue(exe);
         }
     }
 
@@ -950,18 +1001,19 @@ public class RenParticleEditor extends JFrame {
             particleGeom.setEndSize(1.5f);
             particleGeom.setOriginOffset(new Vector3f(0, 0, 0));
             particleGeom.setInitialVelocity(.05f);
-            particleGeom.setMinimumLifeTime( 5000f);
+            particleGeom.setMinimumLifeTime(5000f);
             particleGeom.setMaximumLifeTime(15000f);
             particleGeom.setStartColor(new ColorRGBA(1, 0, 0, 1));
             particleGeom.setEndColor(new ColorRGBA(0, 1, 0, 1));
             particleGeom.setMaximumAngle(FastMath.PI);
             particleGeom.getParticleController().setControlFlow(false);
             particleGeom.getParticleController().setSpeed(0.75f);
-            SwarmInfluence swarm = new SwarmInfluence(new Vector3f(0,0,0), .001f);
+            SwarmInfluence swarm = new SwarmInfluence(new Vector3f(0, 0, 0),
+                    .001f);
             swarm.setMaxSpeed(.2f);
             swarm.setSpeedBump(0.025f);
             swarm.setTurnSpeed(FastMath.DEG_TO_RAD * 360);
-            particleGeom.addInfluence(swarm);            
+            particleGeom.addInfluence(swarm);
         }
 
         particleGeom.warmUp(120);
@@ -1100,7 +1152,8 @@ public class RenParticleEditor extends JFrame {
                     return null;
                 }
             };
-            GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).enqueue(exe);
+            GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER)
+                    .enqueue(exe);
         }
 
         public void mouseMoved(MouseEvent arg0) {
@@ -1119,7 +1172,8 @@ public class RenParticleEditor extends JFrame {
                     return null;
                 }
             };
-            GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).enqueue(exe);
+            GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER)
+                    .enqueue(exe);
         }
 
         public void recenterCamera() {
@@ -1133,7 +1187,8 @@ public class RenParticleEditor extends JFrame {
                     return null;
                 }
             };
-            GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).enqueue(exe);
+            GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER)
+                    .enqueue(exe);
         }
 
         private void rotateCamera(Vector3f axis, float amount) {
@@ -1188,7 +1243,8 @@ public class RenParticleEditor extends JFrame {
                         return null;
                     }
                 };
-                GameTaskQueueManager.getManager().getQueue(GameTaskQueue.RENDER).enqueue(exe);
+                GameTaskQueueManager.getManager()
+                        .getQueue(GameTaskQueue.RENDER).enqueue(exe);
             }
         }
     }

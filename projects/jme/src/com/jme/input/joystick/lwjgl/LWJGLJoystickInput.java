@@ -125,4 +125,31 @@ public class LWJGLJoystickInput extends JoystickInput {
         Controllers.destroy();
     }
 
+    @Override
+    public ArrayList<Joystick> findJoysticksByAxis(String... axis) {
+        ArrayList<Joystick> rVal = new ArrayList<Joystick>();
+        for (int i = 0; i < getJoystickCount(); i++) {
+            Joystick test = getJoystick(i);
+            boolean add = true;
+            for (String aName : axis) {
+                int aIndex = test.findAxis(aName); 
+                if (aIndex == -1) {
+                    add = false;
+                    break;
+                }
+                
+                try {
+                    test.getAxisValue(aIndex);
+                } catch (Exception e) {
+                    add = false;
+                    break;
+                }
+            }
+            if (add)
+                rVal.add(test);
+        }
+            
+        return rVal;
+    }
+
 }

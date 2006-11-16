@@ -109,6 +109,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vint[0] = value;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -126,6 +127,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vfloat[0] = value;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -146,6 +148,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vint[1] = value2;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -166,6 +169,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vfloat[1] = value2;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -189,6 +193,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vint[2] = value3;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -212,6 +217,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vfloat[2] = value3;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -239,6 +245,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vint[3] = value4;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -266,6 +273,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.vfloat[3] = value4;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -288,6 +296,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.transpose = transpose;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -307,6 +316,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.transpose = transpose;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -326,6 +336,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.transpose = transpose;
         if (object.uniformID == -1)
             uniforms.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -354,6 +365,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.s1 = value;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -370,6 +382,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.f1 = value;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -389,6 +402,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.s2 = value2;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -408,6 +422,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.f2 = value2;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -430,6 +445,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.s3 = value3;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -452,6 +468,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.f3 = value3;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -478,6 +495,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.s4 = value4;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -504,6 +522,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.f4 = value4;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -529,6 +548,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.b4 = value4;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -547,6 +567,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.bufferType = ShaderAttribute.SB_FLOAT;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -566,6 +587,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.bufferType = ShaderAttribute.SB_BYTE;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -585,6 +607,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.bufferType = ShaderAttribute.SB_INT;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**
@@ -604,6 +627,7 @@ public abstract class GLSLShaderObjectsState extends RenderState {
         object.bufferType = ShaderAttribute.SB_SHORT;
         if (object.attributeID == -1)
             attribs.add(object);
+        setNeedsRefresh(true);
     }
 
     /**

@@ -1,0 +1,23 @@
+/AlphaStateRecord.java/1.1/Thu Nov 16 19:20:47 2006//
+/AttributeStateRecord.java/1.1/Thu Nov 16 19:20:45 2006//
+/ClipStateRecord.java/1.1/Thu Nov 16 19:20:46 2006//
+/ColorMaskStateRecord.java/1.1/Thu Nov 16 19:20:46 2006//
+/CullStateRecord.java/1.1/Thu Nov 16 19:20:43 2006//
+/DitherStateRecord.java/1.1/Thu Nov 16 19:20:46 2006//
+/FogStateRecord.java/1.1/Thu Nov 16 19:20:44 2006//
+/FragmentProgramStateRecord.java/1.1/Thu Nov 16 19:20:44 2006//
+/LightRecord.java/1.1/Thu Nov 16 19:20:44 2006//
+/LightStateRecord.java/1.1/Thu Nov 16 19:20:45 2006//
+/LineRecord.java/1.1/Thu Nov 16 19:20:46 2006//
+/MaterialStateRecord.java/1.1/Thu Nov 16 19:20:44 2006//
+/ShadeStateRecord.java/1.1/Thu Nov 16 19:20:45 2006//
+/ShaderObjectsStateRecord.java/1.1/Thu Nov 16 19:20:45 2006//
+/StateRecord.java/1.1/Thu Nov 16 19:20:47 2006//
+/StencilStateRecord.java/1.1/Thu Nov 16 19:20:44 2006//
+/TextureRecord.java/1.1/Thu Nov 16 19:20:45 2006//
+/TextureStateRecord.java/1.1/Thu Nov 16 19:20:44 2006//
+/TextureUnitRecord.java/1.1/Thu Nov 16 19:20:43 2006//
+/VertexProgramStateRecord.java/1.1/Thu Nov 16 19:20:46 2006//
+/WireframeStateRecord.java/1.1/Thu Nov 16 19:20:46 2006//
+/ZBufferStateRecord.java/1.1/Thu Nov 16 19:20:43 2006//
+D
