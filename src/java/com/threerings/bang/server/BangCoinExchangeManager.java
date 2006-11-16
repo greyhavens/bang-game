@@ -56,7 +56,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     public BangCoinExchangeManager (ConnectionProvider conprov)
         throws PersistenceException
     {
-        super(conprov);
+        super(conprov, ServerConfig.nodename);
     }
 
     /**
