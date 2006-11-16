@@ -189,7 +189,7 @@ public class BangClient extends CrowdClient
                 updatedWanted = true;
             }
             // END TEMP
-            
+
             // if our wanted poster look changed, generate a new snapshot
             if (updatedWanted || changed[Look.Pose.WANTED_POSTER.ordinal()]) {
                 Look look = user.getLook(Look.Pose.WANTED_POSTER);
