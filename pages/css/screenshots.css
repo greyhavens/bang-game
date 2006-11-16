@@ -30,7 +30,7 @@
   	padding: 0px;
   	text-decoration: none;
   	overflow: hidden;
-  	
+  	z-index: 3;
   }
 
 #linkfrontier a i { 
@@ -53,6 +53,7 @@ a#btnfrontier:hover {
   	padding: 0px;
   	text-decoration: none;
   	overflow: hidden;
+  	z-index: 3;
   }
 
 #linkitp a i { 

@@ -1,0 +1,25 @@
+/* -------------------------------------------------
+   CONTENT
+------------------------------------------------- */
+
+#Chosen {
+  	position: absolute;
+ 	background-image: url("/images/screenshots/nav_itp.png"); 
+ 	width: 179px;
+  	height: 36px;
+  	top: 47px;
+  	left: 300px;
+  	margin: 0px;
+  	padding: 0px;
+  	text-decoration: none;
+  	overflow: hidden;
+  	z-index: 2;
+  }
+
+
+
+
+
+
+
+
