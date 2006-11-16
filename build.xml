@@ -13,10 +13,9 @@
   <property name="nartool.path"   value="projects/narya/bin"/>
 
   <!-- define our subprojects and include the standard build system -->
-  <property name="projects.root" value="."/>
   <property name="projects"
             value="samskivert,jme-bui,narya,nenya,vilya,threerings"/>
-  <import file="${projects.root}/projects/tools/etc/build-support.xml"/>
+  <import file="projects/tools/etc/build-support.xml"/>
 
   <!-- declare the properties files. -->
   <property name="props.list"
@@ -24,22 +23,22 @@
   <property name="optprops.list"  value="build.properties"/>
 
   <!-- declare the libraries needed by the Bang runtime -->
-  <fileset dir="${projects.root}" id="dist.libs">
-    <include name="${libs.dir}/ant.jar"/>
-    <include name="${libs.dir}/ant-nodeps.jar"/>
-    <include name="${libs.dir}/ant-contrib.jar"/>
-    <include name="${libs.dir}/commons-beanutils.jar"/>
-    <include name="${libs.dir}/commons-collections.jar"/>
-    <include name="${libs.dir}/commons-digester.jar"/>
-    <include name="${libs.dir}/commons-io.jar"/>
-    <include name="${libs.dir}/commons-lang.jar"/>
-    <include name="${libs.dir}/commons-logging.jar"/>
-    <include name="${libs.dir}/getdown.jar"/>
-    <include name="${libs.dir}/junit-3.7.jar"/>
-    <include name="${libs.dir}/mysql-connector-java-3.1.12-bin.jar"/>
-    <include name="${libs.dir}/proguard.jar"/>
-    <include name="${libs.dir}/servlet-2.3.jar"/>
-    <include name="${libs.dir}/velocity-1.5-dev.jar"/>
+  <fileset dir="." id="dist.libs">
+    <include name="${extlib.dir}/ant.jar"/>
+    <include name="${extlib.dir}/ant-nodeps.jar"/>
+    <include name="${extlib.dir}/ant-contrib.jar"/>
+    <include name="${extlib.dir}/commons-beanutils.jar"/>
+    <include name="${extlib.dir}/commons-collections.jar"/>
+    <include name="${extlib.dir}/commons-digester.jar"/>
+    <include name="${extlib.dir}/commons-io.jar"/>
+    <include name="${extlib.dir}/commons-lang.jar"/>
+    <include name="${extlib.dir}/commons-logging.jar"/>
+    <include name="${extlib.dir}/getdown.jar"/>
+    <include name="${extlib.dir}/junit-3.7.jar"/>
+    <include name="${extlib.dir}/mysql-connector-java-3.1.12-bin.jar"/>
+    <include name="${extlib.dir}/proguard.jar"/>
+    <include name="${extlib.dir}/servlet-2.3.jar"/>
+    <include name="${extlib.dir}/velocity-1.5-dev.jar"/>
     <include name="${project.dir}/narya/dist/narya-tools.jar"/>
     <include name="lib/lwjgl.jar"/>
     <include name="lib/lwjgl_util.jar"/>
