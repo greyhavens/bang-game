@@ -275,17 +275,6 @@ public class PardnerRepository extends SimpleRepository
             "UNIQUE (PLAYER_ID1, PLAYER_ID2)",
             "INDEX (PLAYER_ID2)",
         }, "");
-
-        // TEMP: transition to our new style
-        if (JDBCUtil.tableContainsColumn(conn, "PARDNERS", "ACTIVE")) {
-            // delete all pending requests, sorry pardners
-            update("delete from PARDNERS where ACTIVE = 0");
-            // now drop ACTIVE and add MESSAGE
-            JDBCUtil.dropColumn(conn, "PARDNERS", "ACTIVE");
-            JDBCUtil.addColumn(
-                conn, "PARDNERS", "MESSAGE", "VARCHAR(255)", null);
-        }
-        // END TEMP
     }
 
     /** Used by {@link #getPardnerRecords}. */
