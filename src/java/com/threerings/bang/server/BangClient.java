@@ -181,6 +181,15 @@ public class BangClient extends CrowdClient
                 user.playerId, user.poses, changed,
                 (int)Math.round(_connectTime / 60f));
 
+            // TEMP: remove after a while; this generates snapshots for
+            // curmudgeonly old users that predated the snapshot system and
+            // have not made a single change to their avatar in the intervening
+            // four months
+            if (BangServer.lookrepo.loadSnapshot(user.playerId) == null) {
+                updatedWanted = true;
+            }
+            // END TEMP
+            
             // if our wanted poster look changed, generate a new snapshot
             if (updatedWanted || changed[Look.Pose.WANTED_POSTER.ordinal()]) {
                 Look look = user.getLook(Look.Pose.WANTED_POSTER);
