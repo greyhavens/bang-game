@@ -25,6 +25,8 @@ import com.jme.renderer.Renderer;
 
 import static com.threerings.bang.Log.log;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.Badge;
@@ -314,7 +316,7 @@ public class WantedPosterView extends BContainer
 
         // run this player's statement through the chat filter
         String filtered = "";
-        if (_poster.statement != null) {
+        if (!StringUtil.isBlank(_poster.statement)) {
             filtered = "\"" + _ctx.getChatDirector().filter(
                 _poster.statement, null, false) + "\"";
         }
