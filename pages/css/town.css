@@ -10,7 +10,7 @@
 	margin: 0px;
 	padding:0px;
 	width: 810px;
-	height: 63px;
+	height: 50px;
 }
 
 /* -------------------------------------------------
@@ -18,15 +18,15 @@
 ------------------------------------------------- */
 #linkfrontier a {
   	position: absolute;
- 	width: 143px;
-  	height: 47px;
+ 	width: 140px;
+  	height: 33px;
   	top: 6px;
-  	left: 81px;
+  	left: 64px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
   	overflow: hidden;
-  	
+  	z-index: 3;
   }
 
 #linkfrontier a i { 
@@ -36,18 +36,20 @@
 a#btnfrontier:hover { 
 	background-image: url("/images/town/nav_frontier.png"); 
 	border: none;
+	z-index: 3;
 }
 
 #linkitp a {
   	position: absolute;
- 	width: 192px;
-  	height: 47px;
+ 	width: 178px;
+  	height: 33px;
   	top: 6px;
-  	left: 299px;
+  	left: 306px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
   	overflow: hidden;
+  	z-index: 3;
   }
 
 #linkitp a i { 
@@ -57,6 +59,7 @@ a#btnfrontier:hover {
 a#btnitp:hover { 
 	background-image: url("/images/town/nav_itp.png"); 
 	border: none;
+	z-index: 3;
 }
 
 
