@@ -1,0 +1,135 @@
+/*
+ * Copyright (c) 2003-2006 jMonkeyEngine
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
+ *   may be used to endorse or promote products derived from this software 
+ *   without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+package com.jmex.awt.swingui;
+
+import java.awt.*;
+import java.util.concurrent.*;
+
+import com.jme.input.*;
+import com.jme.renderer.*;
+import com.jme.scene.*;
+import com.jme.scene.state.*;
+import com.jme.system.*;
+import com.jme.util.*;
+import com.jmex.game.state.*;
+
+/**
+ * @author Matthew D. Hicks
+ */
+public class JMEDesktopState extends GameState {
+	private boolean variableDesktopSize;
+	private Node guiNode;
+	private InputHandler guiInput;
+	private JMEDesktop desktop;
+	private Node rootNode;
+	
+	public JMEDesktopState() {
+		this(false);
+	}
+	
+	public JMEDesktopState(boolean variableDesktopSize) {
+		init();
+		this.variableDesktopSize = variableDesktopSize;
+	}
+	
+	private void init() {
+		guiNode = new Node("GUI");
+		guiNode.setCullMode(Spatial.CULL_NEVER);
+        guiNode.setLightCombineMode(LightState.OFF);
+        
+        rootNode = new Node("RootNode");
+        
+        guiInput = new InputHandler();
+        guiInput.setEnabled(true);
+        
+        Future<JMEDesktop> future = GameTaskQueueManager.getManager().update(new Callable<JMEDesktop>() {
+			public JMEDesktop call() throws Exception {
+				if (variableDesktopSize) {
+					return new JMEDesktop("Desktop", DisplaySystem.getDisplaySystem().getWidth(), DisplaySystem.getDisplaySystem().getHeight(), guiInput);
+				} else {
+					return new JMEDesktop("Desktop", 800, 600, guiInput);
+				}
+			}
+        });
+        try {
+	        desktop = future.get();
+	        desktop.getJDesktop().setName("Desktop");
+	        desktop.getJDesktop().setBackground(new Color(0.0f, 0.0f, 0.0f, 0.0f));
+	        desktop.getJDesktop().setOpaque(true);
+	        guiNode.attachChild(desktop);
+	        guiNode.getLocalTranslation().set(DisplaySystem.getDisplaySystem().getWidth() / 2, DisplaySystem.getDisplaySystem().getHeight() / 2, 0.0f);
+	        guiNode.getLocalScale().set(1.0f, 1.0f, 1.0f);
+	        guiNode.updateRenderState();
+	        guiNode.updateGeometricState(0.0f, true);
+	        guiNode.setRenderQueueMode(Renderer.QUEUE_ORTHO);
+	        guiNode.updateGeometricState(0.0f, true);
+	        guiNode.updateRenderState();
+        } catch(InterruptedException exc) {
+        	exc.printStackTrace();
+        } catch(ExecutionException exc) {
+        	exc.printStackTrace();
+        }
+        
+        buildUI();
+	}
+	
+	protected void buildUI() {
+	}
+	
+	public void update(float tpf) {
+		guiInput.update(tpf);
+		
+		guiNode.updateGeometricState(tpf, true);
+		rootNode.updateGeometricState(tpf, true);
+	}
+	
+	public void render(float tpf) {
+		DisplaySystem.getDisplaySystem().getRenderer().draw(guiNode);
+		DisplaySystem.getDisplaySystem().getRenderer().draw(rootNode);
+	}
+	
+	public void cleanup() {
+		desktop.dispose();
+	}
+	
+	public Node getRootNode() {
+		return rootNode;
+	}
+	
+	public JMEDesktop getDesktop() {
+		return desktop;
+	}
+	
+	public InputHandler getInputHandler() {
+		return guiInput;
+	}
+}

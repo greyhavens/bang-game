@@ -1,0 +1,10 @@
+Apr 3, 2006 3:03:22 PM com.jme.app.BaseGame start
+INFO: Application started.
+Apr 3, 2006 3:03:22 PM com.jme.system.PropertiesIO <init>
+INFO: PropertiesIO created
+Apr 3, 2006 3:03:22 PM com.jme.system.PropertiesIO load
+INFO: Read properties
+Apr 3, 2006 3:03:22 PM com.jme.app.BaseSimpleGame cleanup
+INFO: Cleaning up resources.
+Apr 3, 2006 3:03:22 PM com.jme.app.BaseGame start
+INFO: Application ending.
