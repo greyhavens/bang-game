@@ -85,7 +85,8 @@ public abstract class ComicChatView
      */
     public void appendSent (String msg)
     {
-        appendSpoken(_ctx.getUserObject().handle, msg);
+        appendSpoken(_ctx.getUserObject().handle, 
+                _ctx.getChatDirector().filter(msg, null, false));
     }
 
     /**
