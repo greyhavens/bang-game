@@ -12,9 +12,11 @@ import org.lwjgl.opengl.GL11;
 import com.jme.image.Texture;
 import com.jme.renderer.Camera;
 import com.jme.renderer.ColorRGBA;
+import com.jme.renderer.RenderContext;
 import com.jme.renderer.Renderer;
 import com.jme.renderer.TextureRenderer;
 import com.jme.scene.Spatial;
+import com.jme.system.DisplaySystem;
 import com.jme.util.geom.BufferUtils;
 
 /**
@@ -202,8 +204,7 @@ public class BackTextureRenderer
         parentRenderer.reinit(_width, _height);
 
         // Clear the states.
-        Renderer.clearCurrentStates();
-        Renderer.applyDefaultStates();
+        applyDefaultStates();
 
         // do rtt scene render
         parentRenderer.setBackgroundColor(_bgcolor);
@@ -227,8 +228,24 @@ public class BackTextureRenderer
         // Clear the states again since we will be moving back to the old
         // location and don't want the states bleeding over causing things
         // *not* to be set when they should be.
-        Renderer.clearCurrentStates();
-        Renderer.applyDefaultStates();
+        applyDefaultStates();
+    }
+    
+    /**
+     * Reverts to the default states.
+     */
+    protected static void applyDefaultStates ()
+    {
+        RenderContext ctx =
+            DisplaySystem.getDisplaySystem().getCurrentContext();
+        for (int ii = 0; ii < Renderer.defaultStateList.length; ii++) {
+            if (Renderer.defaultStateList[ii] != null &&
+                Renderer.defaultStateList[ii] !=
+                    ctx.getCurrentState(ii)) {
+                Renderer.defaultStateList[ii].apply();
+            }
+        }
+        ctx.clearCurrentStates();
     }
     
     /**

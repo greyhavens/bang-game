@@ -352,7 +352,6 @@ public class RenderUtil
     public static Texture createTexture (Image image)
     {
         Texture texture = new Texture();
-        texture.setCorrection(Texture.CM_PERSPECTIVE);
         texture.setFilter(Texture.FM_LINEAR);
         texture.setMipmapState(Texture.MM_LINEAR_LINEAR);
         texture.setWrap(Texture.WM_WRAP_S_WRAP_T);
