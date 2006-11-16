@@ -521,7 +521,7 @@ public class RatingRepository extends SimpleRepository
                 conn, "RATINGS", "LAST_PLAYED", "TIMESTAMP NOT NULL", null);
             Statement stmt = conn.createStatement();
             stmt.executeUpdate("update RATINGS set LAST_PLAYED = " +
-                               "DATE_SUB(NOW(), INTERVAL 1 WEEK");
+                               "DATE_SUB(NOW(), INTERVAL 1 WEEK)");
             stmt.close();
         }
         // END TEMP
