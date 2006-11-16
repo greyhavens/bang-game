@@ -45,14 +45,6 @@
     <include name="${project.dir}/narya/dist/narya-tools.jar"/>
     <include name="lib/lwjgl.jar"/>
     <include name="lib/lwjgl_util.jar"/>
-    <include name="lib/jme.jar"/>
-    <include name="lib/jme-awt.jar"/>
-    <include name="lib/jme-effects.jar"/>
-    <include name="lib/jme-gamestates.jar"/>
-    <include name="lib/jme-model.jar"/>
-    <include name="lib/jme-scene.jar"/>
-    <include name="lib/jme-sound.jar"/>
-    <include name="lib/jme-terrain.jar"/>
     <include name="lib/jorbis-0.0.12.jar"/>
     <include name="lib/jogg-0.0.5.jar"/>
     <include name="lib/hemiptera.jar"/>
@@ -544,10 +536,34 @@
     </jar>
   </target>
 
+  <!-- cleans JME which doesn't fit into our standard scheme -->
+  <target name="cleanjme">
+    <echo>Building in jme...</echo>
+    <ant dir="${project.dir}/jme" target="clean" inheritAll="false"/>
+  </target>
+
+  <!-- rebuilds JME which doesn't fit into our standard scheme -->
+  <target name="distjme">
+    <echo>Building in jme...</echo>
+    <ant dir="${project.dir}/jme" target="dist-all" inheritAll="false"/>
+    <copy todir="${deploy.dir}/lib">
+      <fileset dir="${project.dir}/jme/target">
+        <include name="jme.jar"/>
+        <include name="jme-awt.jar"/>
+        <include name="jme-effects.jar"/>
+        <include name="jme-gamestates.jar"/>
+        <include name="jme-model.jar"/>
+        <include name="jme-scene.jar"/>
+        <include name="jme-sound.jar"/>
+        <include name="jme-terrain.jar"/>
+      </fileset>
+    </copy>
+  </target>
+
   <!-- rebuilds all subprojects and the whole top-level distribution -->
-  <target name="distall" depends="distprojects,dist,mdist"/>
+  <target name="distall" depends="distjme,distprojects,dist,mdist"/>
 
   <!-- fully cleans out the installed application and all subprojects -->
-  <target name="cleanall" depends="distclean,cleanprojects"/>
+  <target name="cleanall" depends="distclean,cleanjme,cleanprojects"/>
 
 </project>
