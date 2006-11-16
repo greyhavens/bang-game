@@ -16,12 +16,13 @@ varying vec3 normal, eyeVector;
 void main ()
 {
     vec3 norm = normalize(normal), eye = normalize(eyeVector),
-        halfVec = normalize(gl_LightSource[0].position + eye);
+        halfVec = normalize(gl_LightSource[0].position.xyz + eye);
     
     // blend the water and sky colors using the Fresnel reflectivity
     // (computed as an approximate) and add the specular highlight
     gl_FragColor =
         mix(waterColor, skyOverheadColor,
-            pow(max(dot(norm, eye), 0) + 1, -8)) +
-            gl_LightSource[0].specular * pow(max(dot(norm, halfVec), 0), 32);
+            pow(max(dot(norm, eye), 0.0) + 1.0, -8.0)) +
+            gl_LightSource[0].specular *
+                pow(max(dot(norm, halfVec), 0.0), 32.0);
 }
