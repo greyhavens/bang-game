@@ -31,6 +31,7 @@ import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.ResultListener;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.UserMessage;
@@ -85,8 +86,10 @@ public abstract class ComicChatView
      */
     public void appendSent (String msg)
     {
-        appendSpoken(_ctx.getUserObject().handle, 
-                _ctx.getChatDirector().filter(msg, null, false));
+        String filtered = _ctx.getChatDirector().filter(msg, null, true);
+        if (!StringUtil.isBlank(filtered)) {
+            appendSpoken(_ctx.getUserObject().handle, filtered);
+        }
     }
 
     /**
