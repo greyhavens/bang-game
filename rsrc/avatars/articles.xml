@@ -438,7 +438,7 @@
 
  <article name="male_battered_fox_skull" townId="indian_post"
            slot="hat" scrip="2000" coins="2"
-           colors="clothes_p,clothes_s">
+           colors="clothes_p,clothes_t">
     <component cclass="male/hat" name="battered_fox_skull"/>
     <component cclass="male/hat_back" name="battered_fox_skull"/>
   </article>
