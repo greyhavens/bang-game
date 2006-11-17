@@ -32,6 +32,18 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>tokens</code> field. */
     public static final String TOKENS = "tokens";
 
+    /** The field name of the <code>gangId</code> field. */
+    public static final String GANG_ID = "gangId";
+
+    /** The field name of the <code>gangOid</code> field. */
+    public static final String GANG_OID = "gangOid";
+
+    /** The field name of the <code>gangRank</code> field. */
+    public static final String GANG_RANK = "gangRank";
+
+    /** The field name of the <code>joinedGang</code> field. */
+    public static final String JOINED_GANG = "joinedGang";
+
     /** The field name of the <code>inventory</code> field. */
     public static final String INVENTORY = "inventory";
 
@@ -84,6 +96,18 @@ public class PlayerObject extends BodyObject
     /** Indicates which access control tokens are held by this user. */
     public BangTokenRing tokens;
 
+    /** The id of the user's gang, if any. */
+    public int gangId;
+    
+    /** The oid of the gang dobj. */
+    public int gangOid;
+    
+    /** The user's rank in the gang. */
+    public byte gangRank;
+    
+    /** The date upon which the user joined the gang. */
+    public long joinedGang;
+    
     /** Contains all items held by this user. */
     public DSet<Item> inventory;
 
@@ -354,6 +378,70 @@ public class PlayerObject extends BodyObject
         requestAttributeChange(
             TOKENS, value, ovalue);
         this.tokens = value;
+    }
+
+    /**
+     * Requests that the <code>gangId</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setGangId (int value)
+    {
+        int ovalue = this.gangId;
+        requestAttributeChange(
+            GANG_ID, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.gangId = value;
+    }
+
+    /**
+     * Requests that the <code>gangOid</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setGangOid (int value)
+    {
+        int ovalue = this.gangOid;
+        requestAttributeChange(
+            GANG_OID, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.gangOid = value;
+    }
+
+    /**
+     * Requests that the <code>gangRank</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setGangRank (byte value)
+    {
+        byte ovalue = this.gangRank;
+        requestAttributeChange(
+            GANG_RANK, Byte.valueOf(value), Byte.valueOf(ovalue));
+        this.gangRank = value;
+    }
+
+    /**
+     * Requests that the <code>joinedGang</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setJoinedGang (long value)
+    {
+        long ovalue = this.joinedGang;
+        requestAttributeChange(
+            JOINED_GANG, Long.valueOf(value), Long.valueOf(ovalue));
+        this.joinedGang = value;
     }
 
     /**

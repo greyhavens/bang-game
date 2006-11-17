@@ -40,6 +40,15 @@ public class PlayerRecord
     /** The avatar look selected by this player for their wanted poster. */
     public String wantedLook;
 
+    /** The id of the player's gang, if any. */
+    public int gangId;
+    
+    /** The player's rank in their gang. */
+    public byte gangRank;
+    
+    /** The time at which the player joined or created their gang. */
+    public Date joinedGang;
+    
     /** The id of the furthest town to which this player has access. */
     public String townId;
 

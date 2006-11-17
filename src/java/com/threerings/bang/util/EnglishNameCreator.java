@@ -42,6 +42,12 @@ public class EnglishNameCreator extends NameCreator
         return isMale ? MALE_SUFF_TABLE : FEMALE_SUFF_TABLE;
     }
 
+    @Override // documentation inherited
+    public HashSet<String> getGangSuffixes ()
+    {
+        return GANG_SUFF_TABLE;
+    }
+    
     protected static HashSet<String> MALE_PREF_TABLE = new HashSet<String>();
     protected static HashSet<String> MALE_ROOT_TABLE = new HashSet<String>();
     protected static HashSet<String> MALE_SUFF_TABLE = new HashSet<String>();
@@ -52,6 +58,8 @@ public class EnglishNameCreator extends NameCreator
 
     protected static HashSet<String> AI_PREF_TABLE = new HashSet<String>();
     protected static HashSet<String> BSHOT_PREF_TABLE = new HashSet<String>();
+    
+    protected static HashSet<String> GANG_SUFF_TABLE = new HashSet<String>();
     
     protected static final String[] SHARED_PREFIXES = {
         "Anasazi",
@@ -255,6 +263,16 @@ public class EnglishNameCreator extends NameCreator
         "Oakley",
     };
 
+    protected static final String[] GANG_SUFFIXES = {
+        "Gang",
+        "Crew",
+        "Posse",
+        "Clan",
+        "Boys",
+        "Girls",
+        "Congregation",
+    };
+    
     static {
         CollectionUtil.addAll(MALE_PREF_TABLE, SHARED_PREFIXES);
         CollectionUtil.addAll(MALE_PREF_TABLE, MALE_PREFIXES);
@@ -272,5 +290,7 @@ public class EnglishNameCreator extends NameCreator
 
         CollectionUtil.addAll(AI_PREF_TABLE, AI_PREFIXES);
         CollectionUtil.addAll(BSHOT_PREF_TABLE, BIG_SHOT_PREFIXES);
+        
+        CollectionUtil.addAll(GANG_SUFF_TABLE, GANG_SUFFIXES);
     }
 }

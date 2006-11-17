@@ -52,6 +52,9 @@ import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
 import com.threerings.bang.chat.server.BangChatProvider;
+import com.threerings.bang.gang.data.HideoutConfig;
+import com.threerings.bang.gang.server.GangManager;
+import com.threerings.bang.gang.server.HideoutManager;
 import com.threerings.bang.ranch.data.RanchConfig;
 import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.saloon.data.SaloonConfig;
@@ -107,6 +110,9 @@ public class BangServer extends CrowdServer
     /** Manages global player related bits. */
     public static PlayerManager playmgr;
 
+    /** Manages gangs. */
+    public static GangManager gangmgr;
+    
     /** Manages rating bits. */
     public static RatingManager ratingmgr;
     
@@ -153,6 +159,9 @@ public class BangServer extends CrowdServer
     /** Manages the Train Station and inter-town travel. */
     public static StationManager stationmgr;
 
+    /** Manages the Hideout and gang management. */
+    public static HideoutManager hideoutmgr;
+    
     /** Manages our selection of game boards. */
     public static BoardManager boardmgr = new BoardManager();
 
@@ -200,6 +209,7 @@ public class BangServer extends CrowdServer
 
         // create our various supporting managers
         playmgr = new PlayerManager();
+        gangmgr = new GangManager();
         ratingmgr = new RatingManager();
         coinmgr = new BangCoinManager(conprov, actionrepo);
         coinexmgr = new BangCoinExchangeManager(conprov);
@@ -280,6 +290,7 @@ public class BangServer extends CrowdServer
         parmgr.init(invmgr, plreg);
         boardmgr.init(conprov);
         playmgr.init(conprov);
+        gangmgr.init(conprov);
         ratingmgr.init(conprov);
         coinexmgr.init();
         adminmgr.init(this);
@@ -296,7 +307,8 @@ public class BangServer extends CrowdServer
         ranchmgr = (RanchManager)plreg.createPlace(new RanchConfig());
         barbermgr = (BarberManager)plreg.createPlace(new BarberConfig());
         stationmgr = (StationManager)plreg.createPlace(new StationConfig());
-
+        hideoutmgr = (HideoutManager)plreg.createPlace(new HideoutConfig());
+        
         // create the town object and an interval to keep it up-to-date
         townobj = omgr.registerObject(new TownObject());
         createTownObjectUpdateInterval();

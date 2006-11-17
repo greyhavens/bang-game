@@ -30,4 +30,8 @@ public abstract class NameCreator
     /** Returns a set of suffixes that can be appended to a root to make a
      * cowboy name. For example: Billy "the Kid", Paul "Regret", etc. */
     public abstract HashSet<String> getHandleSuffixes (boolean isMale);
+    
+    /** Returns a set of suffixes that can be appended to a root to make a
+     * gang name. For example: The Dalton "Gang", The Hatfield "Clan", etc. */
+    public abstract HashSet<String> getGangSuffixes ();
 }

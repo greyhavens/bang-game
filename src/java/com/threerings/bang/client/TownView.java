@@ -248,6 +248,8 @@ public class TownView extends BWindow
             _bctx.getLocationDirector().moveTo(bbd.barberOid);
         } else if ("station".equals(command)) {
             _bctx.getLocationDirector().moveTo(bbd.stationOid);
+        } else if ("hideout".equals(command)) {
+            _bctx.getLocationDirector().moveTo(bbd.hideoutOid);
         } else {
             log.warning("Got unknown town view command " + command + ".");
             return;

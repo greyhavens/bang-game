@@ -89,6 +89,13 @@ public class BangClientResolver extends CrowdClientResolver
         buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
             player.accountName);
 
+        // load up this player's gang information
+        buser.gangId = player.gangId;
+        buser.gangRank = player.gangRank;
+        if (buser.gangId > 0) {
+            buser.joinedGang = player.joinedGang.getTime();
+        }
+        
         // load up this player's items
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
         buser.inventory = new DSet<Item>(items.iterator());

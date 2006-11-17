@@ -302,6 +302,9 @@ public class PlayerRepository extends JORARepository
             "LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "VICTORY_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "WANTED_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
+            "GANG_ID INTEGER NOT NULL",
+            "GANG_RANK TINYINT NOT NULL,",
+            "JOINED_GANG DATETIME NOT NULL",
             "TOWN_ID VARCHAR(64) NOT NULL",
             "CREATED DATETIME NOT NULL",
             "SESSIONS INTEGER NOT NULL",
@@ -319,6 +322,17 @@ public class PlayerRepository extends JORARepository
             "KEY (PLAYER_ID)",
             "UNIQUE (PLAYER_ID, TARGET_ID)",
         }, "");
+    
+        // TEMP: add gang fields
+        if (!JDBCUtil.tableContainsColumn(conn, "PLAYERS", "GANG_ID")) {
+            JDBCUtil.addColumn(conn, "PLAYERS",
+                "GANG_ID", "INTEGER NOT NULL", "WANTED_LOOK");
+            JDBCUtil.addColumn(conn, "PLAYERS",
+                "GANG_RANK", "TINYINT NOT NULL", "GANG_ID");
+            JDBCUtil.addColumn(conn, "PLAYERS",
+                "JOINED_GANG", "DATETIME", "GANG_RANK");
+        }
+        // END TEMP
     }
 
     @Override // documentation inherited
