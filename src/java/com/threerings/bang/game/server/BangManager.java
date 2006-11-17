@@ -2095,7 +2095,7 @@ public class BangManager extends GameManager
     protected void reportInvalidOrder (AdvanceOrder order, String reason)
     {
         PlayerObject user = (PlayerObject)getPlayer(order.unit.owner);
-        if (user != null) {
+        if (user != null && user.status != OccupantInfo.DISCONNECTED) {
 //             log.info("Advance order failed [order=" + order +
 //                      ", who=" + user.who() + "].");
             BangSender.orderInvalidated(user, order.unit.pieceId, reason);
