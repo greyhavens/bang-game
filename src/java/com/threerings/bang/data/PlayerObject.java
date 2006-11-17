@@ -11,6 +11,7 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.crowd.data.BodyObject;
 import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.avatar.data.Look;
 
@@ -268,7 +269,7 @@ public class PlayerObject extends BodyObject
     }
 
     @Override // documentation inherited
-    public OccupantInfo createOccupantInfo ()
+    public OccupantInfo createOccupantInfo (PlaceObject plobj)
     {
         return new BangOccupantInfo(this);
     }
