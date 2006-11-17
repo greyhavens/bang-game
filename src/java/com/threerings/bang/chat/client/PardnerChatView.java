@@ -3,6 +3,8 @@
 
 package com.threerings.bang.chat.client;
 
+import java.util.Map;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
@@ -11,8 +13,14 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.threerings.crowd.chat.data.ChatCodes;
+import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.chat.data.SystemMessage;
+
+import com.threerings.bang.chat.data.PlayerMessage;
 import com.threerings.bang.chat.client.TabbedChatView.UserTab;
 
+import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.MainView;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
@@ -63,6 +71,64 @@ public class PardnerChatView extends BDecoratedWindow
         return _tabView.openUserTab(pardner, entry.avatar, grabFocus) != null;
     }
 
+    /**
+     * Ensure that a given user tab exists, possibly creating it.
+     *
+     * @param focus if true the user's tab will be made visible and the chat
+     * input field will be focused. If false, the tab will be added if it does
+     * not exist but will not be made current, nor will focus be moved to the
+     * input field.
+     */
+    public UserTab openUserTab (Handle handle, int[] avatar, boolean focus)
+    {
+        return _tabView.openUserTab(handle, avatar, focus);
+    }
+
+    /**
+     * Register a PlaceChatView that will display the user tabs.
+     */
+    public void registerPlaceChatView (PlaceChatView placeChat)
+    {
+        if (_placeChat != null) {
+            log.warning("Cannot register, already have a PlaceChatView " +
+                    "[_placeChat=" + _placeChat + "].");
+            return;
+        }
+
+        _placeChat = placeChat;
+        _tabView.giveUserTabs();
+    }
+
+    /**
+     * Unregister a PlaceChatView that was displaying the user tabs.
+     */
+    public void unregisterPlaceChatView (PlaceChatView placeChat)
+    {
+        if (_placeChat != placeChat) {
+            log.warning("Attempt to unregister invalid PlaceChatView " +
+                    "[_placeChat=" + _placeChat + ", placeChat=" + placeChat +
+                    "].");
+            return;
+        }
+
+        _tabView.getUserTabs();
+        _placeChat = null;
+    }
+
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _tabView.giveUserTabs();
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        _tabView.getUserTabs();
+        super.wasAdded();
+    }
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent ae)
     {
@@ -84,12 +150,115 @@ public class PardnerChatView extends BDecoratedWindow
         }
 
         @Override // from TabbedChatView
+        public boolean displayMessage (
+                ChatMessage msg, boolean alreadyDisplayed)
+        {
+            if (alreadyDisplayed) {
+                return false;
+            }
+
+            // we handle player-to-player chat
+            if (msg instanceof PlayerMessage &&
+                ChatCodes.USER_CHAT_TYPE.equals(msg.localtype)) {
+                PlayerMessage pmsg = (PlayerMessage)msg;
+                Handle handle = (Handle)pmsg.speaker;
+                UserTab tab = openUserTab(handle, pmsg.avatar, false);
+                if (tab == null) {
+                    return false;
+                }
+                if (isAdded() || _placeChat == null) {
+                    if (tab != _pane.getSelectedTab()) {
+                        _pane.getTabButton(tab).setIcon(_alert);
+                    }
+                } else if (_placeChat != null) {
+                    if (tab != _placeChat._pane.getSelectedTab()) {
+                        _placeChat._pane.getTabButton(tab).setIcon(_alert);
+                    }
+                }
+                tab.appendReceived(pmsg);
+                return true;
+            }
+
+            return super.displayMessage(msg, alreadyDisplayed);
+        }
+
+        /**
+         * Ensure that a given user tab exists, possibly creating it.
+         *
+         * @param focus if true the user's tab will be made visible and the 
+         * chat input field will be focused. If false, the tab will be added if
+         * it does not exist but will not be made current, nor will focus be 
+         * moved to the input field.
+         */
+        public UserTab openUserTab (Handle handle, int[] avatar, boolean focus)
+        {
+            UserTab tab = _users.get(handle);
+            if (tab == null) {
+                tab = new UserTab(_ctx, handle, avatar);
+                if (isAdded() || _placeChat == null) {
+                    _pane.addTab(handle.toString(), tab, true);
+                } else {
+                    _placeChat.addUserTab(handle.toString(), tab, focus);
+                }
+                _users.put(handle, tab);
+            }
+
+            // this has to be called when the tab is already added
+            if (!isAdded()) {
+                if (!displayTabs() && _placeChat == null) {
+                    return null;
+                }
+                // if the interface was totally hidden, go ahead and select our
+                // tab because they obviously weren't attending to the current 
+                // tab
+                _pane.selectTab(tab);
+            } else if (focus && isAdded() && _placeChat == null) {
+                _pane.selectTab(tab);
+                _input.requestFocus();
+            }
+            return tab;
+        }
+
+        /**
+         * Moves user chat tabs to a registered PlaceChatView.
+         */
+        public void giveUserTabs ()
+        {
+            if (isAdded() || _placeChat == null) {
+                return;
+            }
+            for (Map.Entry<Handle,UserTab> entry : _users.entrySet()) {
+                _pane.removeTab(entry.getValue());
+                _placeChat.addUserTab(
+                        entry.getKey().toString(), entry.getValue(), false);
+            }
+        }
+
+        /**
+         * Retrieves user chat tabs from a registered PlaceChatView.
+         */
+        public void getUserTabs ()
+        {
+            if (_placeChat == null) {
+                return;
+            }
+            for (Map.Entry<Handle,UserTab> entry : _users.entrySet()) {
+                _placeChat.removeUserTab(entry.getValue());
+                _pane.addTab(
+                        entry.getKey().toString(), entry.getValue(), false);
+            }
+        }
+
+        @Override // from TabbedChatView
         protected boolean displayTabs ()
         {
             if (isAdded()) {
                 return true;
             }
-            if (!_ctx.getBangClient().canDisplayPopup(MainView.Type.CHAT)) {
+
+            BangClient client = _ctx.getBangClient();
+            if (!client.canDisplayPopup(MainView.Type.CHAT) ||
+                    (_placeChat != null && !client.hasPopups())) {
                 return false;
             }
             _ctx.getBangClient().displayPopup(PardnerChatView.this, false);
@@ -108,4 +277,5 @@ public class PardnerChatView extends BDecoratedWindow
     protected BangContext _ctx;
     protected PardnerChatTabs _tabView;
     protected BButton _mute, _close, _resume;
+    protected PlaceChatView _placeChat;
 }

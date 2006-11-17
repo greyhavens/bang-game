@@ -405,6 +405,14 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Returns true if there are popups showing.
+     */
+    public boolean hasPopups ()
+    {
+        return _popups.size() > 0;
+    }
+
+    /**
      * Determines whether we can display a pop-up at the moment.
      */
     public boolean canDisplayPopup (MainView.Type type)
@@ -422,9 +430,11 @@ public class BangClient extends BasicClient
 
         // don't allow FKEY or STATUS popups if we have other popups showing
         if ((type == MainView.Type.FKEY || type == MainView.Type.STATUS) &&
-            _popups.size() > 0) {
+            hasPopups()) {
             return false;
         }
+
+        // don't show the pardner chat view if 
 
         // otherwise ask the view what they think about it
         if (_mview instanceof MainView) {

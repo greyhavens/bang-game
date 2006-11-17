@@ -21,7 +21,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.crowd.data.OccupantInfo;
 
-import com.threerings.bang.chat.client.PlaceChatView;
+import com.threerings.bang.chat.client.PardnerChatView;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.InvitePardnerDialog;
 import com.threerings.bang.client.PlayerService;
@@ -43,14 +43,13 @@ import static com.threerings.bang.Log.log;
 public class FolkCell extends BContainer
     implements Comparable<FolkCell>
 {
-    public FolkCell (BangContext ctx, PlaceChatView chat, Handle handle,
-                     boolean isPardner)
+    public FolkCell (BangContext ctx, Handle handle, boolean isPardner)
     {
         super(GroupLayout.makeHoriz(GroupLayout.LEFT));
         setPreferredSize(new Dimension(200, 18));
 
         _ctx = ctx;
-        _chat = chat;
+        _chat = _ctx.getBangClient().getPardnerChatView();
         _handle = handle;
         _isPardner = isPardner;
 
@@ -221,7 +220,7 @@ public class FolkCell extends BContainer
     protected BangContext _ctx;
 
     /** The chat view we use to chat with our folk. */
-    protected PlaceChatView _chat;
+    protected PardnerChatView _chat;
 
     /** The handle of the player this cell represents */
     protected Handle _handle;

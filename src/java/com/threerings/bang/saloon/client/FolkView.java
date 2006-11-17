@@ -23,7 +23,6 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
-import com.threerings.bang.chat.client.PlaceChatView;
 import com.threerings.bang.client.bui.BangHTMLView;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
@@ -41,13 +40,12 @@ import static com.threerings.bang.Log.log;
 public class FolkView extends BContainer
     implements SetListener, AttributeChangeListener, ElementUpdateListener
 {
-    public FolkView (BangContext ctx, SaloonObject salobj, PlaceChatView chat)
+    public FolkView (BangContext ctx, SaloonObject salobj)
     {
         super(new BorderLayout());
 
         _ctx = ctx;
         _salobj = salobj;
-        _chat = chat;
         _user = ctx.getUserObject();
 
         TableLayout listLayout = new TableLayout(2, 2, 10);
@@ -68,7 +66,7 @@ public class FolkView extends BContainer
             PardnerEntry entry = (PardnerEntry) eae.getEntry();
             // if our new pardner is here with us, add to display
             if (_salobj.getOccupantInfo((Handle) entry.getKey()) != null) {
-                insertCell(new FolkCell(_ctx, _chat, entry.handle, true));
+                insertCell(new FolkCell(_ctx, entry.handle, true));
             }
 
         } else if (SaloonObject.OCCUPANT_INFO.equals(eae.getName())) {
@@ -77,7 +75,7 @@ public class FolkView extends BContainer
             boolean pard = _user.pardners.containsKey(info.username);
             if (pard || _user.isFriend(info.playerId)) {
                 Handle handle = (Handle)info.username;
-                insertCell(new FolkCell(_ctx, _chat, handle, pard));
+                insertCell(new FolkCell(_ctx, handle, pard));
             }
         }
     }
@@ -158,7 +156,7 @@ public class FolkView extends BContainer
         for (PardnerEntry entry : _user.pardners) {
             // list any pardner who is in our saloon
             if (_salobj.getOccupantInfo(entry.handle) != null) {
-                insertCell(new FolkCell(_ctx, _chat, entry.handle, true));
+                insertCell(new FolkCell(_ctx, entry.handle, true));
             }
         }
         for (OccupantInfo info : _salobj.occupantInfo) {
@@ -166,7 +164,7 @@ public class FolkView extends BContainer
             if (_user.isFriend(((BangOccupantInfo) info).playerId) &&
                 !_folks.containsKey(info.username)) {
                 Handle handle = (Handle)info.username;
-                insertCell(new FolkCell(_ctx, _chat, handle, false));
+                insertCell(new FolkCell(_ctx, handle, false));
             }
         }
 
@@ -229,9 +227,6 @@ public class FolkView extends BContainer
 
     /** A reference to our context */
     protected BangContext _ctx;
-
-    /** The chat view in which we display chat with folks */
-    protected PlaceChatView _chat;
 
     /** A reference to the saloon we're in */
     protected SaloonObject _salobj;

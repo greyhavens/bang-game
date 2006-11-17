@@ -55,9 +55,10 @@ public class TabbedChatView extends BContainer
         _ctx.getChatDirector().pushChatDisplay(this);
 
         add(_pane = new TabbedPane(true) {
-            protected void tabWasRemoved (BComponent tab) {
-                Handle tabOwner = ((UserTab) tab)._user;
-                _users.remove(tabOwner);
+            protected void tabWasRemoved (BComponent tab, boolean btnClose) {
+                if (btnClose) {
+                    ((UserTab)tab).wasClosed();
+                }
                 if (getTabCount() == 0) {
                     lastTabClosed();
                 }
@@ -105,30 +106,11 @@ public class TabbedChatView extends BContainer
     // from interface ChatDisplay
     public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
-        // if the message was already displayed, we don't do anything
-        if (alreadyDisplayed) {
-            return false;
-        }
-
-        // we handle player-to-player chat
-        if (msg instanceof PlayerMessage &&
-            ChatCodes.USER_CHAT_TYPE.equals(msg.localtype)) {
-            PlayerMessage pmsg = (PlayerMessage)msg;
-            Handle handle = (Handle)pmsg.speaker;
-            UserTab tab = openUserTab(handle, pmsg.avatar, false);
-            if (tab == null) {
-                return false;
-            }
-            if (tab != _pane.getSelectedTab()) {
-                _pane.getTabButton(tab).setIcon(_alert);
-            }
-            tab.appendReceived(pmsg);
-            return true;
-
-        } else if (msg instanceof SystemMessage && SystemMessage.FEEDBACK ==
-                   ((SystemMessage)msg).attentionLevel) {
-            // we also have to handle feedback messages because that's how tell
-            // failures are reported
+        if (msg instanceof SystemMessage &&
+                    SystemMessage.FEEDBACK ==
+                        ((SystemMessage)msg).attentionLevel) {
+            // we also have to handle feedback messages because that's 
+            // how tell failures are reported
             UserTab tab = (UserTab)_pane.getSelectedTab();
             if (tab != null) {
                 tab.appendSystem(msg);
@@ -160,40 +142,6 @@ public class TabbedChatView extends BContainer
                 ((UserTab)_pane.getSelectedTab()).requestTell(msg);
             }
         }
-    }
-
-    /**
-     * Ensure that a given user tab exists, possibly creating it.
-     *
-     * @param focus if true the user's tab will be made visible and the chat
-     * input field will be focused. If false, the tab will be added if it does
-     * not exist but will not be made current, nor will focus be moved to the
-     * input field.
-     */
-    public UserTab openUserTab (Handle handle, int[] avatar, boolean focus)
-    {
-        UserTab tab = _users.get(handle);
-        if (tab == null) {
-            tab = new UserTab(_ctx, handle, avatar);
-            _pane.addTab(handle.toString(), tab, true);
-            _users.put(handle, tab);
-        }
-
-        // this has to be called when the tab is already added
-        if (!isAdded()) {
-            if (!displayTabs()) {
-                return null;
-            }
-            // if the interface was totally hidden, go ahead and select our tab
-            // because they obviously weren't attending to the current tab
-            _pane.selectTab(tab);
-        }
-
-        if (focus) {
-            _pane.selectTab(tab);
-            _input.requestFocus();
-        }
-        return tab;
     }
 
     /**
@@ -250,6 +198,14 @@ public class TabbedChatView extends BContainer
         {
             _pane.removeTab(this);
             _ctx.getMuteDirector().setMuted(_user, true);
+        }
+
+        /**
+         * Called when the tab was closed so it can remove itself.
+         */
+        public void wasClosed ()
+        {
+            _users.remove(_user);
         }
 
         @Override // documentation inherited

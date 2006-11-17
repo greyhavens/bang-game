@@ -29,6 +29,8 @@ import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Extends the {@link TabbedChatView} and adds a tab for speaking on the
  * current PlaceObject chat channel.
@@ -86,6 +88,27 @@ public class PlaceChatView extends TabbedChatView
     public void displayInfo (String bundle, String msg)
     {
         _ctx.getChatDirector().displayInfo(bundle, msg, PLACE_CHAT_VIEW_TYPE);
+    }
+
+    /**
+     * Adds a usertab to the pane.
+     */
+    public void addUserTab (String handle, UserTab tab, boolean focus)
+    {
+        _pane.addTab(handle, tab, true);
+
+        if (focus) {
+            _pane.selectTab(tab);
+            _input.requestFocus();
+        }
+    }
+
+    /**
+     * Removes a usertab from the pane.
+     */
+    public void removeUserTab (UserTab tab)
+    {
+        _pane.removeTab(tab);
     }
 
     // documentation inherited from interface ChatDisplay
@@ -150,6 +173,13 @@ public class PlaceChatView extends TabbedChatView
     }
 
     @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        _ctx.getBangClient().getPardnerChatView().registerPlaceChatView(this);
+        super.wasAdded();
+    }
+
+    @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
@@ -157,6 +187,7 @@ public class PlaceChatView extends TabbedChatView
         // save halted message for the game
         ((BangChatDirector)_ctx.getChatDirector()).setHaltedMessage(
             _input.getText());
+        _ctx.getBangClient().getPardnerChatView().unregisterPlaceChatView(this);
     }
 
     protected SpeakService _spsvc;
