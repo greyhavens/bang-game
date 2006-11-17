@@ -42,7 +42,8 @@ public class BuffaloRiderPath extends MoveUnitPath
     {
         super.update(time);
         // Have the shot go off once we start the ramming animation 
-        if (_handler != null && _elapsed > _times[1]) {
+        if (_handler != null && 
+                (_elapsed > _times[1] || _current >= _durations.length)) {
             _handler.fireShot();
             _handler = null;
         }
