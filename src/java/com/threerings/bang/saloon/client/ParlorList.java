@@ -96,8 +96,8 @@ public class ParlorList extends BContainer
                 new CreateParlorDialog(_ctx, _salobj), true);
 
         } else if ("enter".equals(event.getAction())) {
-            final ParlorInfo info = (ParlorInfo)
-                ((BButton)event.getSource()).getProperty("info");
+            final BButton btn = (BButton)event.getSource();
+            final ParlorInfo info = (ParlorInfo)btn.getProperty("info");
             if (!_ctx.getUserObject().tokens.isAdmin() &&
                 !_ctx.getUserObject().handle.equals(info.creator) &&
                 info.passwordProtected) {
@@ -183,6 +183,11 @@ public class ParlorList extends BContainer
 
     protected void joinParlor (Handle owner, String password)
     {
+        // if the saloon object is null, we're on our way out and should
+        // not try joining another parlor
+        if (_salobj == null) {
+            return;
+        }
         _salobj.service.joinParlor(_ctx.getClient(), owner, password,
                                    new SaloonService.ResultListener() {
             public void requestProcessed (Object result) {
