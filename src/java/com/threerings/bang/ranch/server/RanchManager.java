@@ -122,8 +122,9 @@ public class RanchManager extends PlaceManager
                 "m.bigshot_purchase", UnitConfig.getName(_unit.getType()));
         }
 
-        protected void persistentAction () throws PersistenceException {
+        protected String persistentAction () throws PersistenceException {
             BangServer.itemrepo.insertItem(_unit);
+            return null;
         }
         protected void rollbackPersistentAction () throws PersistenceException {
             BangServer.itemrepo.deleteItem(_unit, "recruit_rollback");
@@ -133,8 +134,8 @@ public class RanchManager extends PlaceManager
             _user.addToInventory(_unit);
             _listener.requestProcessed(_unit);
         }
-        protected void actionFailed () {
-            _listener.requestFailed(INTERNAL_ERROR);
+        protected void actionFailed (String cause) {
+            _listener.requestFailed(cause);
         }
 
         protected BigShotItem _unit;

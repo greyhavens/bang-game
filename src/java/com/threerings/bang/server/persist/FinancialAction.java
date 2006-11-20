@@ -53,7 +53,7 @@ public abstract class FinancialAction extends Invoker.Unit
                     _user.username.toString(), _coinCost);
                 if (_coinres == -1) {
                     log.warning("Failed to reserve coins " + this + ".");
-                    fail();
+                    fail(BangCodes.INSUFFICIENT_FUNDS);
                     return true;
                 }
             }
@@ -65,7 +65,11 @@ public abstract class FinancialAction extends Invoker.Unit
             }
 
             // then do our persistent business
-            persistentAction();
+            String errmsg = persistentAction();
+            if (errmsg != null) {
+                fail(errmsg);
+                return true;
+            }
             _actionTaken = true;
 
             if (_coinCost > 0) {
@@ -74,14 +78,14 @@ public abstract class FinancialAction extends Invoker.Unit
                         _coinres, getCoinType(), getCoinDescrip())) {
                     log.warning("Failed to spend coin reservation " + this +
                                 " [resid=" + _coinres + "].");
-                    fail();
+                    fail(BangCodes.INTERNAL_ERROR);
                     return true;
                 }
             }
 
         } catch (Exception e) {
             log.log(Level.WARNING, "Financial action failed " + this, e);
-            fail();
+            fail(BangCodes.INTERNAL_ERROR);
         }
 
         return true;
@@ -90,11 +94,11 @@ public abstract class FinancialAction extends Invoker.Unit
     @Override // documentation inherited
     public void handleResult ()
     {
-        if (_failed) {
+        if (_failmsg != null) {
             // return the scrip and coins to the user
             _user.setScrip(_user.scrip + _scripCost);
             _user.setCoins(_user.coins + _coinCost);
-            actionFailed();
+            actionFailed(_failmsg);
         } else {
             actionCompleted();
         }
@@ -137,10 +141,16 @@ public abstract class FinancialAction extends Invoker.Unit
     /**
      * Here derived classes can take any persistent action needed knowing that
      * necessary coins have been reserved and necessary scrip has been spent.
+     *
+     * @return null if the action was taken, a translatable error string if the
+     * action could not be taken for whatever reason (any action taken in this
+     * method must be rolled back before returning as {@link
+     * #rollbackPersistentAction} will <em>not</em> be called).
      */
-    protected void persistentAction ()
+    protected String persistentAction ()
         throws PersistenceException
     {
+        return null;
     }
 
     /**
@@ -170,8 +180,11 @@ public abstract class FinancialAction extends Invoker.Unit
      * <p><em>Note:</em> the user's scrip and coins will have been returned (in
      * their user object and in the database) by the time this method is
      * called.
+     *
+     * @param cause either {@link BangCodes#INTERNAL_ERROR} or the message from an {@link
+     * InvocationException} that was thrown during the processing of the action.
      */
-    protected void actionFailed ()
+    protected void actionFailed (String cause)
     {
     }
 
@@ -179,9 +192,9 @@ public abstract class FinancialAction extends Invoker.Unit
      * Called if something goes wrong during any step of this financial
      * action. Everything that completed successfully will be rolled back.
      */
-    protected void fail ()
+    protected void fail (String failureMessage)
     {
-        _failed = true;
+        _failmsg = failureMessage;
 
         // roll everything back that needs it
         if (_coinres != -1) {
@@ -223,6 +236,7 @@ public abstract class FinancialAction extends Invoker.Unit
 
     protected PlayerObject _user;
     protected int _scripCost, _coinCost;
-    protected boolean _scripSpent, _actionTaken, _failed;
+    protected boolean _scripSpent, _actionTaken;
+    protected String _failmsg;
     protected int _coinres = -1;
 }

@@ -55,7 +55,7 @@ public class CardTripletProvider extends Provider
     }
 
     @Override // documentation inherited
-    protected void persistentAction ()
+    protected String persistentAction ()
         throws PersistenceException
     {
         // insert or update the card item
@@ -64,6 +64,7 @@ public class CardTripletProvider extends Provider
         } else {
             BangServer.itemrepo.updateItem(_item);
         }
+        return null;
     }
 
     @Override // documentation inherited

@@ -106,10 +106,11 @@ public class StationManager extends PlaceManager
                 "m.ticket_purchase", _ticket.getTownId());
         }
 
-        protected void persistentAction () throws PersistenceException {
+        protected String persistentAction () throws PersistenceException {
             BangServer.playrepo.grantTownAccess(
                 _user.playerId, _ticket.getTownId());
             BangServer.itemrepo.insertItem(_ticket);
+            return null;
         }
         protected void rollbackPersistentAction () throws PersistenceException {
             String oldTownId = BangCodes.TOWN_IDS[_ticket.getTownIndex()-1];
@@ -123,8 +124,8 @@ public class StationManager extends PlaceManager
             _user.addToInventory(_ticket);
             _listener.requestProcessed();
         }
-        protected void actionFailed () {
-            _listener.requestFailed(INTERNAL_ERROR);
+        protected void actionFailed (String cause) {
+            _listener.requestFailed(cause);
         }
 
         protected TrainTicket _ticket;

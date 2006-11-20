@@ -25,10 +25,11 @@ public abstract class ItemProvider extends Provider
     }
 
     @Override // documentation inherited
-    protected void persistentAction ()
+    protected String persistentAction ()
         throws PersistenceException
     {
         BangServer.itemrepo.insertItem(_item);
+        return null;
     }
 
     @Override // documentation inherited

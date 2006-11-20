@@ -417,8 +417,9 @@ public class BarberManager extends PlaceManager
             return MessageBundle.compose("m.look_purchase", _look.name);
         }
 
-        protected void persistentAction () throws PersistenceException {
+        protected String persistentAction () throws PersistenceException {
             BangServer.lookrepo.insertLook(_user.playerId, _look);
+            return null;
         }
         protected void rollbackPersistentAction () throws PersistenceException {
             BangServer.lookrepo.deleteLook(_user.playerId, _look.name);
@@ -428,9 +429,9 @@ public class BarberManager extends PlaceManager
             _user.setPosesAt(_look.name, Look.Pose.DEFAULT.ordinal());
             _listener.requestProcessed();
         }
-        protected void actionFailed () {
+        protected void actionFailed (String cause) {
             _user.removeFromLooks(_look.getKey());
-            _listener.requestFailed(INTERNAL_ERROR);
+            _listener.requestFailed(cause);
         }
 
         protected Look _look;
@@ -457,9 +458,10 @@ public class BarberManager extends PlaceManager
             return MessageBundle.compose("m.handle_change", _ohandle, _handle);
         }
 
-        protected void persistentAction () throws PersistenceException {
-            BangServer.playrepo.configurePlayer(
-                _user.playerId, _handle, _user.isMale);
+        protected String persistentAction () throws PersistenceException {
+            return BangServer.playrepo.configurePlayer(
+                _user.playerId, _handle, _user.isMale) ?
+                null : AvatarCodes.ERR_DUP_HANDLE;
         }
         protected void rollbackPersistentAction () throws PersistenceException {
             BangServer.playrepo.configurePlayer(
@@ -470,8 +472,8 @@ public class BarberManager extends PlaceManager
             _user.setHandle(_handle);
             _listener.requestProcessed();
         }
-        protected void actionFailed () {
-            _listener.requestFailed(INTERNAL_ERROR);
+        protected void actionFailed (String cause) {
+            _listener.requestFailed(cause);
         }
 
         protected Handle _ohandle, _handle;

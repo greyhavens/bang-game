@@ -64,7 +64,7 @@ public class CardPackProvider extends Provider
     }
 
     @Override // documentation inherited
-    protected void persistentAction ()
+    protected String persistentAction ()
         throws PersistenceException
     {
         // insert or update the various items
@@ -75,6 +75,7 @@ public class CardPackProvider extends Provider
                 BangServer.itemrepo.updateItem(item);
             }
         }
+        return null;
     }
 
     @Override // documentation inherited

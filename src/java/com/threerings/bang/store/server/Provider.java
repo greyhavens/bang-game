@@ -71,9 +71,9 @@ public abstract class Provider extends FinancialAction
     }
 
     @Override // documentation inherited
-    protected void actionFailed ()
+    protected void actionFailed (String cause)
     {
-        _listener.requestFailed(InvocationCodes.INTERNAL_ERROR);
+        _listener.requestFailed(cause);
     }
 
     protected Good _good;
