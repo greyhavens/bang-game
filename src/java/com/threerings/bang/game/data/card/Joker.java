@@ -5,8 +5,10 @@ package com.threerings.bang.game.data.card;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BonusConfig;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 /**
  * The Joker: players put it on the board, where it looks like a card bonus.
@@ -50,5 +52,12 @@ public class Joker extends AddPieceCard
     {
         return Bonus.createBonus(
             BonusConfig.getConfig("frontier_town/joker"));
+    }
+
+    @Override // documentation inherited
+    public boolean isPlayable (BangObject bangobj)
+    {
+        return super.isPlayable(bangobj) &&
+            bangobj.scenario.getTeams() != ScenarioInfo.Teams.COOP;
     }
 }

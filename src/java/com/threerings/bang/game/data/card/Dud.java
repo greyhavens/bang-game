@@ -11,6 +11,7 @@ import com.threerings.bang.game.data.effect.Effect;
 
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 
 /**
  * A card that allows the player to cause a unit's next shot to have no effect.
@@ -60,5 +61,12 @@ public class Dud extends Card
         DudEffect effect = new DudEffect();
         effect.pieceId = (Integer)target;
         return effect;
+    }
+
+    @Override // documentation inherited
+    public boolean isPlayable (BangObject bangobj)
+    {
+        return super.isPlayable(bangobj) &&
+            bangobj.scenario.getIdent() != ForestGuardiansInfo.IDENT;
     }
 }
