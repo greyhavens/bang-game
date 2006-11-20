@@ -214,6 +214,7 @@ public class SelectionView extends SteelWindow
         super.wasRemoved();
 
         _units.shutdown();
+        _countdown.cancel();
     }
 
     /**
