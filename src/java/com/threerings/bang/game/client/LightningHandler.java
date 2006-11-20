@@ -39,7 +39,7 @@ public class LightningHandler extends EffectHandler
                 }
             }
             protected byte _level;
-        }.schedule(CHAIN_DELAY);
+        }.schedule(CHAIN_DELAY, true);
         _applying = false;
         return !isCompleted();
     }

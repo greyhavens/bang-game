@@ -31,10 +31,10 @@ public class LightningEffect extends Effect
 {
     public static class ChainDamage extends SimpleStreamableObject
     {
-        int pieceId;
-        int newDamage;
-        byte step;
-        Effect deathEffect;
+        public int pieceId;
+        public int newDamage;
+        public byte step;
+        public Effect deathEffect;
 
         public ChainDamage (int pieceId, int newDamage, byte step)
         {
@@ -65,9 +65,8 @@ public class LightningEffect extends Effect
         for (Piece p: bangobj.pieces) {
             if (p.isTargetable() && p.isAlive()) {
                 if (p.pieceId == pieceId) {
-                    if (damagePiece(bangobj, damaged, p, 0, dammap)) {
-                        points.add(new Point(p.x, p.y));
-                    }
+                    damagePiece(bangobj, damaged, p, 0, dammap);
+                    points.add(new Point(p.x, p.y));
                 } else {
                     targetPieces.add(p);
                 }
@@ -82,9 +81,8 @@ public class LightningEffect extends Effect
                     iter.hasNext(); ) {
                 Piece p = iter.next();
                 if (p.getDistance(pt.x, pt.y) == 1) {
-                    if (damagePiece(bangobj, damaged, p, step, dammap)) {
-                        points.add(new Point(p.x, p.y));
-                    }
+                    damagePiece(bangobj, damaged, p, step, dammap);
+                    points.add(new Point(p.x, p.y));
                     iter.remove();
                 }
             }
@@ -93,7 +91,7 @@ public class LightningEffect extends Effect
                 size = (byte)points.size();
             }
         }
-        chain = damaged.toArray(new ChainDamage[0]);
+        chain = damaged.toArray(new ChainDamage[damaged.size()]);
     }
 
     @Override // documentation inherited
@@ -165,36 +163,47 @@ public class LightningEffect extends Effect
     }
 
     @Override // documentation inherited
-    public int getBaseDamage (Piece piece)
-    {
-        if (piece instanceof Unit && 
-                ((Unit)piece).getConfig().make == UnitConfig.Make.STEAM) {
-            return STEAM_DAMAGE;
-        }
-        return BASE_DAMAGE;
-    }
-
-    @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
         return new LightningHandler();
+    }
+
+    @Override // documentation inherited
+    public int getBaseDamage (Piece piece)
+    {
+        for (ChainDamage cd : chain) {
+            if (cd.pieceId == piece.pieceId) {
+                return calculateDamage(cd.step);
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Helper function that returns the amount of damage for this step.
+     */
+    protected int calculateDamage (int step)
+    {
+        int damage = BASE_DAMAGE;
+        for (int ii = 0; ii < step; ii++) {
+            damage *= DAMAGE_SCALE;
+        }
+        return damage;
     }
 
     /**
      * Helper function that calculates the damage to a piece and handles
      * any pesky dying issues.
      */
-    protected boolean damagePiece (
+    protected void damagePiece (
             BangObject bangobj, ArrayList<ChainDamage> damaged, 
             Piece p, int step, IntIntMap dammap)
     {
-        boolean chain = false;
-        int damage = getBaseDamage(p);
-        chain = (damage == STEAM_DAMAGE);
+        int damage = calculateDamage(step);
         damage += p.damage;
-        damage = Math.min(damage, 100 - p.damage);
-        dammap.increment(p.owner, damage);
-        ChainDamage cd = new ChainDamage(p.pieceId, damage, (byte)0);
+        damage = Math.min(damage, 100);
+        dammap.increment(p.owner, damage - p.damage);
+        ChainDamage cd = new ChainDamage(p.pieceId, damage, (byte)step);
         if (damage == 100) {
             cd.deathEffect = p.willDie(bangobj, -1);
             if (cd.deathEffect != null) {
@@ -202,10 +211,9 @@ public class LightningEffect extends Effect
             }
         }
         damaged.add(cd);
-        return chain;
     }
 
     /** Damage values for the different units. */
     protected static final int BASE_DAMAGE = 40;
-    protected static final int STEAM_DAMAGE = 10;
+    protected static final float DAMAGE_SCALE = 0.7f;
 }
