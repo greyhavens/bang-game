@@ -348,11 +348,13 @@ public class SaloonManager extends PlaceManager
     protected void clearMatch (Match match)
     {
         int moid = match.matchobj.getOid();
+        if (_matches.remove(moid) == null) {
+            return; // don't doubly clear a match
+        }
         if (match.matchobj.speakService != null) {
             BangServer.invmgr.clearDispatcher(match.matchobj.speakService);
         }
         BangServer.omgr.destroyObject(moid);
-        _matches.remove(moid);
         BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
     }
 
