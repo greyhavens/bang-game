@@ -442,6 +442,14 @@ public class PieceSprite extends Sprite
     }
 
     /**
+     * Set the sprite to fast animation mode.
+     */
+    public void fastAnimations (boolean fast)
+    {
+        _fastAnimation = fast;
+    }
+
+    /**
      * Called when a damage indicator is added.  Returns the offset for
      * the indicator.
      */
@@ -678,7 +686,7 @@ public class PieceSprite extends Sprite
      */
     protected boolean animatedMove ()
     {
-        return true;
+        return !_fastAnimation;
     }
 
     /** Converts tile coordinates plus elevation into (3D) world
@@ -812,6 +820,9 @@ public class PieceSprite extends Sprite
     protected float _angle;
     protected Quaternion _camrot = new Quaternion();
     protected Vector3f _camtrans = new Vector3f();
+
+    /** Perform fast versions of animations. */
+    protected boolean _fastAnimation;
 
     /** When activated, causes all pieces to warp instead of smoothly
      * follow a path. */

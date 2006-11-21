@@ -450,7 +450,7 @@ public class MobileSprite extends ActiveSprite
             // only create a path if we're moving along the ground, if this is
             // solely an elevation move (which happens at the start of the
             // game), we just blip to our new location
-            if (_px != _piece.x || _py != _piece.y) {
+            if ((_px != _piece.x || _py != _piece.y) && !_fastAnimation) {
                 path = createPath(board);
             }
             if (path != null) {

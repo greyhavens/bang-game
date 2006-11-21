@@ -356,8 +356,13 @@ public class EffectHandler extends BoardView.BoardAction
         // let the board view know that this piece is on the move
         _view.pieceDidMove(piece);
 
+        if (_bangobj.tick - _tick >= FAST_TICK_DELTA) {
+            sprite.fastAnimations(true);
+        }
+
         // and do the actual move
         if (!sprite.updatePosition(_bangobj.board)) {
+            sprite.fastAnimations(false);
             return;
         }
 
@@ -366,10 +371,12 @@ public class EffectHandler extends BoardView.BoardAction
         sprite.addObserver(new PathObserver() {
             public void pathCancelled (Sprite sprite, Path path) {
                 sprite.removeObserver(this);
+                ((PieceSprite)sprite).fastAnimations(false);
                 maybeComplete(penderId);
             }
             public void pathCompleted (Sprite sprite, Path path) {
                 sprite.removeObserver(this);
+                ((PieceSprite)sprite).fastAnimations(false);
                 maybeComplete(penderId);
             }
         });
@@ -857,6 +864,10 @@ public class EffectHandler extends BoardView.BoardAction
 
     /** The last piece to drop a bonus. */
     protected Piece _dropper;
+
+    /** The difference between the effect tick and the current tick which
+     * causes fast versions of effects. */
+    protected static final int FAST_TICK_DELTA = 2;
 
     /** The duration of particle effects activated on top of the camera. */
     protected static final float CAMERA_EFFECT_DURATION = 2f;

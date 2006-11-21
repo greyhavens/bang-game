@@ -46,6 +46,16 @@ public class BuffaloRiderSprite extends UnitSprite
     }
     
     @Override // documentation inherited
+    public boolean updatePosition (BangBoard board)
+    {
+        if (_fastAnimation && _effectHandler != null) {
+            ((MoveShootHandler)_effectHandler).fireShot();
+            _effectHandler = null;
+        }
+        return super.updatePosition(board);
+    }
+
+    @Override // documentation inherited
     protected Path createPath (BangBoard board)
     {
         Path path = super.createPath(board);

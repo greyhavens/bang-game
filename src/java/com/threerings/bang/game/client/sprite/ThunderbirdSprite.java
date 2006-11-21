@@ -34,6 +34,10 @@ public class ThunderbirdSprite extends UnitSprite
     {
         if (_effectHandler == null) {
             return super.updatePosition(board);
+        } else if (_fastAnimation) {
+            ((MoveShootHandler)_effectHandler).fireShot();
+            _effectHandler = null;
+            return super.updatePosition(board);
         }
 
         // we might move but end up in the same spot
@@ -44,7 +48,7 @@ public class ThunderbirdSprite extends UnitSprite
     @Override // documentation inherited
     protected void moveSprite (BangBoard board)
     {
-        if (_effectHandler == null) {
+        if (_effectHandler == null || _fastAnimation) {
             super.moveSprite(board);
         }
 
