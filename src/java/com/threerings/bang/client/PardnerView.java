@@ -131,6 +131,7 @@ public class PardnerView extends IconPalette
         } else if (src == _watch) {
             PardnerIcon icon = (PardnerIcon)getSelectedIcon();
             if (icon.entry.gameOid > 0) {
+                _watch.setEnabled(false);
                 _ctx.getLocationDirector().moveTo(icon.entry.gameOid);
             }
 
