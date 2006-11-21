@@ -163,7 +163,8 @@ public class WendigoLogic extends AILogic
             return;
 
         // otherwise, move towards nearest free talisman
-        } else if (moveUnit(pieces, unit, moves, talisman, 0)) {
+        } else if (!holdingTalisman && 
+                moveUnit(pieces, unit, moves, talisman, 0)) {
             return;
 
         // or nearest talisman holding target

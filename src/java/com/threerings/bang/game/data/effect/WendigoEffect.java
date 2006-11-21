@@ -29,7 +29,7 @@ import com.threerings.io.SimpleStreamableObject;
 import static com.threerings.bang.Log.log;
 
 /**
- * Represents the effect of a Wendigo decimating a second of the board.
+ * Represents the effect of a Wendigo decimating the board.
  */
 public class WendigoEffect extends Effect
     implements PieceCodes
@@ -171,16 +171,8 @@ public class WendigoEffect extends Effect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        _colMap = new HashIntMap<Collision>();
-        for (Movement m : moves) {
-            Piece w = bangobj.pieces.get(m.pieceId);
-            if (w == null) {
-                continue;
-            }
-
-            createCollisions(bangobj, dammap, w);
-        }
-        collisions = _colMap.values().toArray(new Collision[0]);
+        Piece w = bangobj.pieces.get(moves[0].pieceId);
+        createCollisions(bangobj, dammap, w);
     }
 
     @Override // documentation inherited
@@ -244,41 +236,32 @@ public class WendigoEffect extends Effect
     protected void createCollisions (
         BangObject bangobj, IntIntMap dammap, Piece w)
     {
+        ArrayList<Collision> colList = new ArrayList<Collision>();
         boolean horiz = (w.orientation == EAST ||
                 w.orientation == WEST);
         int idx = (horiz ? w.y : w.x);
         int step = (horiz ? w.x : w.y);
         for (Piece p : bangobj.pieces) {
             if (p instanceof Unit && p.isAlive()) {
-                int pidx = (horiz ? p.y : p.x);
-                if (idx == pidx || idx + 1 == pidx) {
-                    Unit unit = (Unit)p.clone();
-                    int dist = Math.abs(step - (horiz ? unit.x : unit.y));
-                    Collision col = _colMap.get(unit.pieceId);
-                    if (col != null && col.step <= dist) {
-                        continue;
+                Unit unit = (Unit)p.clone();
+                int dist = Math.abs(step - (horiz ? unit.x : unit.y));
+                boolean safe = (safeSpots != null &&
+                                safeSpots.contains(unit.x, unit.y));
+                boolean talisman =
+                    TalismanEffect.TALISMAN_BONUS.equals(unit.holding);
+                Effect deffect = null;
+                if (!(safe || talisman)) {
+                    dammap.increment(unit.owner, 100 - unit.damage);
+                    deffect = unit.willDie(bangobj, -1);
+                    if (deffect != null) {
+                        deffect.prepare(bangobj, dammap);
                     }
-                    boolean safe = (safeSpots != null &&
-                                    safeSpots.contains(unit.x, unit.y));
-                    boolean talisman =
-                        TalismanEffect.TALISMAN_BONUS.equals(unit.holding);
-                    Effect deffect = null;
-                    if (!(safe || talisman)) {
-                        dammap.increment(unit.owner, 100 - unit.damage);
-                        deffect = unit.willDie(bangobj, -1);
-                        if (deffect != null) {
-                            deffect.prepare(bangobj, dammap);
-                        }
-                        unit.damage = 100;
-                    }
-                    col = new Collision(dist, unit.pieceId, safe, talisman,
-                        deffect);
-                    _colMap.put(unit.pieceId, col);
+                    unit.damage = 100;
                 }
+                colList.add(new Collision(
+                            dist, unit.pieceId, safe, talisman, deffect));
             }
         }
+        collisions = colList.toArray(new Collision[colList.size()]);
     }
-
-    /** Mapping of target piece Ids to collision records. */
-    protected transient HashIntMap<Collision> _colMap;
 }

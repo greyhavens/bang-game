@@ -71,7 +71,6 @@ public class WendigoDelegate extends CounterDelegate
 
         int off = 0;
         int length = 0;
-        int idx = 0;
         if (horiz) {
             off = playarea.y;
             length = playarea.height;
@@ -79,23 +78,18 @@ public class WendigoDelegate extends CounterDelegate
             off = playarea.x;
             length = playarea.width;
         }
-        _wendigo = new ArrayList<Wendigo>(length/2);
+        int idx = length / 2 - 1;
+        _wendigo = new ArrayList<Wendigo>(3);
         
-        while (idx < length) {
-            boolean side = RandomUtil.getInt(2) == 0;
-            int size = RandomUtil.getInt(3);
-            while (idx + size * 2 >= length) {
-                size--;
-            }
-            _wendigo.add(createWendigo(bangobj, size + idx + off, horiz, side,
-                                       playarea, false, tick));
-            if (size > 0) {
-                _wendigo.add(createWendigo(bangobj,idx + off, horiz, side,
-                                           playarea, true, tick));
-                _wendigo.add(createWendigo(bangobj, size * 2 + idx + off, 
-                            horiz, side, playarea, true, tick));
-            }
-            idx += (size + 1) * 2;
+        boolean side = RandomUtil.getInt(2) == 0;
+        int size = Math.min(length / 4, 3);
+        _wendigo.add(createWendigo(bangobj, idx + off, horiz, side,
+                                   playarea, false, tick));
+        if (size > 0) {
+            _wendigo.add(createWendigo(bangobj,idx + off - size, horiz, side,
+                                       playarea, true, tick));
+            _wendigo.add(createWendigo(bangobj, idx + off + size, 
+                        horiz, side, playarea, true, tick));
         }
     }
 
