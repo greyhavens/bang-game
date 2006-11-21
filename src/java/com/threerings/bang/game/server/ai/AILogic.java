@@ -162,12 +162,23 @@ public abstract class AILogic extends PieceLogic
         Piece[] pieces, Unit unit, PointSet moves, int dx, int dy, int tdist,
         TargetEvaluator evaluator)
     {
-        Point dest = getClosestPoint(unit, moves, dx, dy, tdist);
+        Point dest = null;
+        Piece target = null;
+        // let the units with 0 fire distnace handle their own attack movement
+        if (tdist == -1 && unit.getMaxFireDistance() == 0) {
+            target = getBestTarget(pieces, unit, dx, dy, evaluator);
+            dest = unit.computeShotLocation(_bangobj.board, target, moves,
+                    false, new PointSet());
+        } else {
+            dest = getClosestPoint(unit, moves, dx, dy, tdist);
+        }
         if (dest == null) {
             return false;
         }
-        executeOrder(unit, dest.x, dest.y, getBestTarget(pieces, unit, dest.x,
-            dest.y, evaluator));
+        if (target == null) {
+            target = getBestTarget(pieces, unit, dest.x, dest.y, evaluator);
+        }
+        executeOrder(unit, dest.x, dest.y, target);
         return true;
     }
 
