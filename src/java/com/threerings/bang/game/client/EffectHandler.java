@@ -357,6 +357,9 @@ public class EffectHandler extends BoardView.BoardAction
         _view.pieceDidMove(piece);
 
         if (_bangobj.tick - _tick >= FAST_TICK_DELTA) {
+            log.info("Performing fast animations [effect=" + _effect +
+                    ", tick=" + _tick + ", bangobj.tick=" + _bangobj.tick + 
+                    "].");
             sprite.fastAnimations(true);
         }
 
