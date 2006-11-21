@@ -127,7 +127,9 @@ public class FullTransact extends BContainer
                     _status.setStatus(_msgs.get("m.offer_posted"), true);
                     _coins.setText("");
                     _scrip.setText("");
-                    notePostedOffer((CoinExOfferInfo)result);
+                    if (result != null) {
+                        notePostedOffer((CoinExOfferInfo)result);
+                    }
                 }
                 public void requestFailed (String reason) {
                     _status.setStatus(_msgs.xlate(reason), true);
