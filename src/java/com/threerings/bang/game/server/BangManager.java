@@ -1609,7 +1609,7 @@ public class BangManager extends GameManager
                     ii, _bangobj.perRoundPoints[_activeRoundId][ii],
                     _rounds[_activeRoundId].stats[ii].getIntStat(
                         Stat.Type.UNITS_KILLED),
-                    (isActivePlayer(ii) ? 1 : 0));
+                    (_bangobj.isActivePlayer(ii) ? 1 : 0));
             }
             // we'll allow ties in the per round rankings
             Arrays.sort(ranks);
@@ -1848,7 +1848,7 @@ public class BangManager extends GameManager
                 }
             }
             _ranks[ii] = new RankRecord(ii, points[ii], kills,
-                    (isActivePlayer(ii) ? 1 : 0));
+                    (_bangobj.isActivePlayer(ii) ? 1 : 0));
         }
 
         // first shuffle, then sort so that ties are resolved randomly
