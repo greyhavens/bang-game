@@ -3,6 +3,7 @@ body {
   font-family: Times New Roman, Times, serif;
   font-size: 14px;
   text-align: center;
+  margin-top: 0px;
 }
 
 img {
@@ -32,6 +33,11 @@ td {
 .small {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 10px;
+}
+
+a.small, a.small:link, a.small:visited, a.small:hover, a.small:active {
+   text-decoration: underline;
+   color: #054e81;
 }
 
 a {
@@ -67,7 +73,7 @@ li {
 	margin-bottom: 5px;
 	padding: 0px;
 	width: 810px;
-	height: 159px;
+	height: 184px;
 	overflow: hidden;
 }
 
@@ -75,8 +81,8 @@ li {
   	position: absolute;
  	width: 225px;
   	height: 110px;
-  	top: 10px;
-  	left: 290px;
+  	top: 5px;
+  	left: 30px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -89,10 +95,10 @@ li {
 
 #linkplay a {
   	position: absolute;
- 	width: 47px;
-  	height: 19px;
-  	top: 134px;
-  	left: 139px;
+ 	width: 53px;
+  	height: 16px;
+  	top: 161px;
+  	left: 140px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -110,10 +116,10 @@ a#btnplay:hover {
 
 #linkscreen a {
   	position: absolute;
- 	width: 103px;
-  	height: 19px;
-  	top: 134px;
-  	left: 236px;
+ 	width: 102px;
+  	height: 16px;
+  	top: 161px;
+  	left: 239px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -131,10 +137,10 @@ a#btnscreen:hover {
 
 #linkforum a {
   	position: absolute;
- 	width: 61px;
-  	height: 19px;
-  	top: 134px;
-  	left: 389px;
+ 	width: 58px;
+  	height: 16px;
+  	top: 161px;
+  	left: 390px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -153,9 +159,9 @@ a#btnforum:hover {
 #linkaccount a {
   	position: absolute;
  	width: 68px;
-  	height: 19px;
-  	top: 134px;
-  	left: 499px;
+  	height: 16px;
+  	top: 161px;
+  	left: 497px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -173,10 +179,10 @@ a#btnaccount:hover {
 
 #linknews a {
   	position: absolute;
- 	width: 41px;
-  	height: 19px;
-  	top: 134px;
-  	left: 617px;
+ 	width: 39px;
+  	height: 16px;
+  	top: 161px;
+  	left: 620px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -209,14 +215,14 @@ a#btnnews:hover {
 ------------------------------------------------- */
 
 #Divide {
-    background-image: url("/images/footer/footer.gif");
+    background-image: url("/images/footer/footer.png");
 	position: relative;
 	top: 0px;
 	right: 0px;
 	margin: 0px;
 	padding:0px;
 	width: 810px;
-	height: 33px;
+	height: 32px;
 }
 
 #linklogo a {

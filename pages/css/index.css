@@ -18,10 +18,10 @@
 ------------------------------------------------- */
 #linkplayB a {
   	position: absolute;
- 	width: 266px;
-  	height: 80px;
-  	top: 294px;
-  	left: 129px;
+ 	width: 275px;
+  	height: 89px;
+  	top: 284px;
+  	left: 119px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -40,10 +40,10 @@ a#btnplayB:hover {
 
 #linkdl a {
   	position: absolute;
- 	width: 90px;
-  	height: 16px;
-  	top: 381px;
-  	left: 162px;
+ 	width: 107px;
+  	height: 23px;
+  	top: 377px;
+  	left: 151px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -61,9 +61,9 @@ a#btndl:hover {
 
 #linkblog a {
   	position: absolute;
- 	width: 120px;
-  	height: 22px;
-  	top: 472px;
+ 	width: 131px;
+  	height: 24px;
+  	top: 469px;
   	left: 214px;
   	margin: 0px;
   	padding: 0px;
@@ -83,10 +83,10 @@ a#btnblog:hover {
 
 #linkfrontier a {
   	position: absolute;
- 	width: 195px;
-  	height: 131px;
-  	top: 76px;
-  	left: 557px;
+ 	width: 196px;
+  	height: 134px;
+  	top: 73px;
+  	left: 553px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -104,10 +104,10 @@ a#btnfrontier:hover {
 
 #linkitp a {
   	position: absolute;
- 	width: 195px;
-  	height: 130px;
-  	top: 258px;
-  	left: 557px;
+ 	width: 196px;
+  	height: 133px;
+  	top: 256px;
+  	left: 553px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
