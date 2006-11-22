@@ -1223,6 +1223,16 @@ public class BangBoard extends SimpleStreamableObject
     }
 
     /**
+     * Returns true if the specified coordinate is unoccupied or occupied by
+     * a teammate and is traversable.
+     */
+    public boolean isWalkable (int x, int y, int team)
+    {
+        return isTraversable(x, y) && 
+            (isOccupiable(x, y) || _tstate[y*_width+x] == team);
+    }
+
+    /**
      * Returns true if the specified coordinate is traversable.
      */
     public boolean isTraversable (int x, int y)
