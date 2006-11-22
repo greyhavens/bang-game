@@ -51,7 +51,7 @@ function printThumbNav() {
         }
     }
     document.write ('</td><td align="right">');
-    document.write('<a href="?' + nextPage + '@' + pages + '">Next</a>');
+    document.write('<a href="?' + nextPage + ',' + pages + '">Next</a>');
     document.write ('</td></tr></table>');
 }
 
@@ -89,7 +89,7 @@ function buildGallery() {
 // Layout the specific screenshot
 
 function screenshot(number) {
-	document.write('<a href="index2.html?'+ImgLibrary+','+number+','+screenshotsTotal+'"><img src="' + ImgLibrary + 'thumbs/' + number +'.png" border="0"></a>');
+	document.write('<a href="'+myImgPage+'?'+ImgLibrary+','+number+','+screenshotsTotal+'"><img src="' + ImgLibrary + 'thumbs/' + number +'.png" border="0"></a>');
 }
 
 
