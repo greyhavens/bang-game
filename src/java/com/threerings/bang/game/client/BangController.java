@@ -318,7 +318,8 @@ public class BangController extends GameController
      */
     public void handleSelectNextUnit (Object source)
     {
-        if (_pidx == -1 || _bangobj == null || !_bangobj.isInteractivePlay()) {
+        if (_bangobj == null || !_bangobj.isActivePlayer(_pidx) || 
+                !_bangobj.isInteractivePlay()) {
             return;
         }
 
@@ -548,7 +549,8 @@ public class BangController extends GameController
             // if we're a watcher and the stats view is showing, we have to
             // start the inter round board fade immediately because the game
             // will not wait for the watcher before starting the next round
-            if (_pidx == -1 && _statsView != null) {
+            if ((_bangobj == null || !_bangobj.isActivePlayer(_pidx)) && 
+                    _statsView != null) {
                 _view.view.doInterRoundBoardFade();
             }
             return true;
@@ -733,7 +735,7 @@ public class BangController extends GameController
         ((GameInputHandler)_ctx.getInputHandler()).rollCamera(FastMath.PI);
 
         // if we're one of the players
-        if (_pidx != -1 || _config.allPlayersAIs()) {
+        if (_bangobj.isActivePlayer(_pidx) || _config.allPlayersAIs()) {
             // let the game manager know that our units are in place and we're
             // fully ready to go
             playerReady();
@@ -766,7 +768,7 @@ public class BangController extends GameController
         // for players, we wait for the stats to be dismissed before fading the
         // current board out and switching to the new board; for watchers we do
         // that immediately at the end of the round
-        if (_pidx != -1) {
+        if (_bangobj != null && _bangobj.isActivePlayer(_pidx)) {
             _view.view.doInterRoundBoardFade();
         }
     }

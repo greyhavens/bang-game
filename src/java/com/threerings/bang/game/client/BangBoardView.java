@@ -907,7 +907,7 @@ public class BangBoardView extends BoardView
 
         super.hoverSpritesChanged(hover, thover);
 
-        if (_pidx != -1) {
+        if (_bangobj.isActivePlayer(_pidx)) {
 
             // if we're hovering over a unit we can click, mark it as such
             if (hover instanceof UnitSprite) {
@@ -1176,7 +1176,8 @@ public class BangBoardView extends BoardView
     protected void handleLeftPress (int mx, int my)
     {
         // nothing doing if the game is not in play or we're not a player
-        if (_pidx == -1 || _bangobj == null || !_bangobj.isInteractivePlay()) {
+        if (_bangobj == null || !_bangobj.isActivePlayer(_pidx)
+                || !_bangobj.isInteractivePlay()) {
             return;
         }
 
@@ -1487,7 +1488,8 @@ public class BangBoardView extends BoardView
     protected void handleRightPress (int mx, int my)
     {
         // nothing doing if the game is not in play
-        if (_bangobj == null || !_bangobj.isInteractivePlay() || _pidx == -1) {
+        if (_bangobj == null || !_bangobj.isActivePlayer(_pidx) || 
+                !_bangobj.isInteractivePlay()) {
             return;
         }
 

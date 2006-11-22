@@ -322,6 +322,12 @@ public class BangManager extends GameManager
         PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
 
+        if (!_bangobj.isActivePlayer(pidx)) {
+            log.warning("Rejecting order from inactive player [pidx=" 
+                    + pidx + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
         Piece piece = _bangobj.pieces.get(pieceId);
         if (piece == null || piece.owner != pidx) {
             // the unit probably died or was hijacked
@@ -379,8 +385,9 @@ public class BangManager extends GameManager
     {
         PlayerObject user = (PlayerObject)caller;
         Card card = _bangobj.cards.get(cardId);
-        if (card == null ||
-            card.owner != getPlayerIndex(user.getVisibleName())) {
+        int pidx = getPlayerIndex(user.getVisibleName());
+        if (card == null || card.owner != pidx || 
+                !_bangobj.isActivePlayer(pidx)) {
             log.warning("Rejecting invalid card request [who=" + user.who() +
                         ", sid=" + cardId + ", card=" + card + "].");
             throw new InvocationException(INTERNAL_ERROR);
@@ -437,17 +444,21 @@ public class BangManager extends GameManager
         // proceed
         if (_bconfig.allPlayersAIs()) {
             playersAllHere();
-        } else {
-            super.playerReady(caller);
         }
+
+        PlayerObject user = (PlayerObject)caller;
+        int pidx = _bangobj.getPlayerIndex(user.handle);
+
+        // If we're not an active player, then stop here.
+        if (!_bangobj.isActivePlayer(pidx)) {
+            return;
+        }
+
+        super.playerReady(caller);
 
         // if we're in play, we need to note that this player is ready to go
         if (_bangobj.state == BangObject.IN_PLAY) {
-            PlayerObject user = (PlayerObject)caller;
-            int pidx = _bangobj.getPlayerIndex(user.handle);
-            if (pidx != -1) {
-                _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
-            }
+            _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
         }
     }
 

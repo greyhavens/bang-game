@@ -123,7 +123,7 @@ public class BangView extends BWindow
             break;
 
         case BangObject.SELECT_PHASE:
-            if (pidx != -1) {
+            if (_bangobj.isActivePlayer(pidx)) {
                 log.info("Starting Select Phase");
                 setOverlay(
                     new SelectionView(_ctx, this, config, _bangobj, pidx));
@@ -137,12 +137,12 @@ public class BangView extends BWindow
             log.info("Starting In Play Phase");
             if (config.practice) {
                 showPractice();
-                if (pidx != -1) {
+                if (_bangobj.isActivePlayer(pidx)) {
                     showUnitStatus();
                 }
             } else if (!config.tutorial) {
                 showRoundTimer();
-                if (pidx != -1) {
+                if (_bangobj.isActivePlayer(pidx)) {
                     showUnitStatus();
                 }
             }
