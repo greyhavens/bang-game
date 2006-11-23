@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import java.util.ArrayList;
+
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
@@ -20,6 +22,13 @@ import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Table;
 
 import com.samskivert.util.StringUtil;
+
+import com.threerings.presents.dobj.DSet;
+
+import com.threerings.bang.data.Handle;
+
+import com.threerings.bang.gang.data.GangMemberEntry;
+import com.threerings.bang.gang.data.GangObject;
 
 import static com.threerings.bang.Log.*;
 
@@ -58,6 +67,9 @@ public class GangRepository extends JORARepository
         /** The encoded outfit. */
         public byte[] outfit;
         
+        /** The members of the gang. */
+        public transient ArrayList<GangMemberEntry> members;
+        
         /** Used when creating new gangs. */
         public GangRecord (String name)
         {
@@ -75,6 +87,28 @@ public class GangRepository extends JORARepository
         {
         }
         
+        /** Creates and populates (but does not register) a distributed object
+         * using the information in this record. */
+        public GangObject createGangObject ()
+        {
+            GangObject gang = new GangObject();
+            gang.gangId = gangId;
+            gang.name = getName();
+            gang.founded = founded.getTime();
+            gang.scrip = scrip;
+            gang.coins = coins;
+            if (members != null) {
+                gang.members = new DSet<GangMemberEntry>(members.iterator());
+            }
+            return gang;
+        }
+        
+        /** Returns the gang name as a {@link Handle}. */
+        public Handle getName ()
+        {
+            return new Handle(name);
+        }
+    
         /** Returns a string representation of this instance. */
         public String toString ()
         {
@@ -101,11 +135,19 @@ public class GangRepository extends JORARepository
     /**
      * Loads up the gang record associated with the specified id.
      * Returns null if no matching record could be found.
+     *
+     * @param members if true, load the member entries as well and store
+     * them in the record
      */
-    public GangRecord loadGang (int gangId)
+    public GangRecord loadGang (int gangId, boolean members)
         throws PersistenceException
     {
-        return loadByExample(_gtable, new GangRecord(gangId), _byIdMask);
+        GangRecord grec = loadByExample(
+            _gtable, new GangRecord(gangId), _byIdMask);
+        if (grec != null && members) {
+            grec.members = loadGangMembers(gangId);
+        }
+        return grec;
     }
     
     /**
@@ -122,6 +164,57 @@ public class GangRepository extends JORARepository
         gang.gangId = insert(_gtable, gang);
     }
     
+    /**
+     * Adds or removes cash to/from the gang's coffers.
+     */
+    public void addToCoffers (int gangId, int scrip, int coins)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANGS set SCRIP = SCRIP + " + scrip +
+                      ", COINS = COINS + " + coins + " where GANG_ID = " +
+                      gangId, 1);
+    }
+    
+    /**
+     * Deletes a gang from the repository.
+     */
+    public void deleteGang (int gangId)
+        throws PersistenceException
+    {
+        delete(_gtable, new GangRecord(gangId));
+    }
+    
+    /**
+     * Loads the entries for all members of the specified gang.
+     */
+    protected ArrayList<GangMemberEntry> loadGangMembers (int gangId)
+        throws PersistenceException
+    {
+        final ArrayList<GangMemberEntry> list = new ArrayList<GangMemberEntry>();
+        final String query = "select PLAYER_ID, HANDLE, GANG_RANK, " +
+            "JOINED_GANG, LAST_SESSION from PLAYERS where GANG_ID = " + gangId;
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        list.add(new GangMemberEntry(
+                            rs.getInt(1), new Handle(rs.getString(2)),
+                            rs.getByte(3), rs.getDate(4), rs.getDate(5)));
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+        return list;
+    }
+    
     @Override // documentation inherited
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
@@ -132,11 +225,20 @@ public class GangRepository extends JORARepository
             "FOUNDED DATETIME NOT NULL",
             "SCRIP INTEGER NOT NULL",
             "COINS INTEGER NOT NULL",
-            "BRAND BLOB NOT NULL",
-            "OUTFIT BLOB NOT NULL",
+            "BRAND BLOB",
+            "OUTFIT BLOB",
             "PRIMARY KEY (GANG_ID)",
             "UNIQUE (NAME)",
         }, "");
+        
+        // TEMP: change brand/outfit column types
+        if (!JDBCUtil.isColumnNullable(conn, "GANGS", "BRAND")) {
+            JDBCUtil.changeColumn(conn, "GANGS",
+                "BRAND", "BRAND BLOB");
+            JDBCUtil.changeColumn(conn, "GANGS",
+                "OUTFIT", "OUTFIT BLOB");
+        }
+        // END TEMP
     }
     
     @Override // documentation inherited

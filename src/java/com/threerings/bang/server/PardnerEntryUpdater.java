@@ -1,0 +1,203 @@
+//
+// $Id$
+
+package com.threerings.bang.server;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import com.threerings.presents.dobj.AttributeChangeListener;
+import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.dobj.DSet;
+import com.threerings.presents.dobj.ElementUpdateListener;
+import com.threerings.presents.dobj.ElementUpdatedEvent;
+import com.threerings.presents.dobj.EntryAddedEvent;
+import com.threerings.presents.dobj.EntryRemovedEvent;
+import com.threerings.presents.dobj.EntryUpdatedEvent;
+import com.threerings.presents.dobj.ObjectDeathListener;
+import com.threerings.presents.dobj.ObjectDestroyedEvent;
+import com.threerings.presents.dobj.SetAdapter;
+
+import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.saloon.data.SaloonObject;
+
+import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.PardnerEntry;
+import com.threerings.bang.data.PlayerObject;
+
+/**
+ * Listens to users with pardners, updating their pardner list entries.
+ */
+public class PardnerEntryUpdater extends SetAdapter
+    implements AttributeChangeListener, ObjectDeathListener,
+               ElementUpdateListener
+{
+    /** The up-to-date entry for the player. */
+    public PardnerEntry entry;
+
+    /**
+     * Creates a new updater for the given player object and adds it as a
+     * listener.
+     */
+    public PardnerEntryUpdater (PlayerObject player)
+    {
+        this(player, null);
+    }
+
+    /**
+     * Creates a new updater for the given player object.
+     *
+     * @param updaters if non-null, the updater will be added to the mapping
+     * and removed when it stops listening to the player object
+     */
+    public PardnerEntryUpdater (
+        PlayerObject player, HashMap<Handle, PardnerEntryUpdater> updaters)
+    {
+        _player = player;
+        _player.addListener(this);
+        if (updaters != null) {
+            (_updaters = updaters).put(player.handle, this);
+        }
+        
+        entry = createPardnerEntry(player);
+        updateAvatar();
+        updateStatus();
+    }
+    
+    // documentation inherited from interface AttributeChangeListener
+    public void attributeChanged (AttributeChangedEvent ace)
+    {
+        if (ace.getName().equals(PlayerObject.LOCATION)) {
+            updateStatus();
+            updateEntries();
+        }
+    }
+
+    // documentation inherited from interface ElementUpdateListener
+    public void elementUpdated (ElementUpdatedEvent eue)
+    {
+        // if they select a new default look, update their avatar
+        if (eue.getName().equals(PlayerObject.POSES) &&
+            eue.getIndex() == Look.Pose.DEFAULT.ordinal()) {
+            updateAvatar();
+            updateEntries();
+        }
+    }
+
+    @Override // documentation inherited
+    public void entryUpdated (EntryUpdatedEvent eue)
+    {
+        // if the current look is updated, update their avatar
+        String name = eue.getName();
+        if (name.equals(PlayerObject.LOOKS)) {
+            Look look = (Look)eue.getEntry();
+            if (look.name.equals(_player.getLook(Look.Pose.DEFAULT))) {
+                updateAvatar();
+                updateEntries();
+            }
+        } else if (name.equals(PlayerObject.PARDNERS) && shouldRemove()) {
+            remove();
+        }
+    }
+
+    @Override // documentation inherited
+    public void entryRemoved (EntryRemovedEvent ere)
+    {
+        // if the last pardner is removed, clear out the updater
+        if (ere.getName().equals(PlayerObject.PARDNERS) && shouldRemove()) {
+            remove();
+        }
+    }
+
+    // documentation inherited from interface ObjectDeathListener
+    public void objectDestroyed (ObjectDestroyedEvent ode)
+    {
+        updateStatus();
+        updateEntries();
+        remove();
+    }
+
+    /**
+     * Updates the {@link DSet}s that contain this entry.
+     */
+    public void updateEntries ()
+    {
+        for (Iterator it = _player.pardners.iterator(); it.hasNext(); ) {
+            PlayerObject pardner = (PlayerObject)BangServer.lookupBody(
+                ((PardnerEntry)it.next()).handle);
+            if (pardner != null) {
+                pardner.updatePardners(entry);
+            }
+        }
+    }
+
+    /**
+     * Creates the entry object.
+     */
+    protected PardnerEntry createPardnerEntry (PlayerObject player)
+    {
+        return new PardnerEntry(player.handle);
+    }
+    
+    /**
+     * Checks whether this updater should be removed in response to a change
+     * in the dobj state.
+     */
+    protected boolean shouldRemove ()
+    {
+        // clear the updater when the last pardner is removed
+        return (_player.getOnlinePardnerCount() == 0);
+    }
+    
+    /**
+     * Removes this updater from the map to which it was added and stops
+     * listening to the player object.
+     */
+    protected void remove ()
+    {
+        _player.removeListener(this);
+        if (_updaters != null) {
+            _updaters.remove(_player.handle);
+        }
+    }
+
+    /**
+     * Updates the entry avatar in response to a change in the player object.
+     */
+    protected void updateAvatar ()
+    {
+        Look look = _player.getLook(Look.Pose.DEFAULT);
+        if (look != null) {
+            entry.avatar = look.getAvatar(_player);
+        }
+    }
+
+    /**
+     * Updates the entry status in response to a change in the player object.
+     */
+    protected void updateStatus ()
+    {
+        if (!_player.isActive()) {
+            entry.status = PardnerEntry.OFFLINE;
+            entry.avatar = null;
+            entry.setLastSession(new Date());
+            return;
+        }
+        entry.gameOid = 0;
+        DObject plobj = BangServer.omgr.getObject(_player.location);
+        if (plobj instanceof BangObject) {
+            entry.status = PardnerEntry.IN_GAME;
+            entry.gameOid = plobj.getOid();
+        } else if (plobj instanceof SaloonObject) {
+            entry.status = PardnerEntry.IN_SALOON;
+        } else {
+            entry.status = PardnerEntry.ONLINE;
+        }
+    }
+
+    protected PlayerObject _player;
+    protected HashMap<Handle, PardnerEntryUpdater> _updaters;
+}

@@ -53,6 +53,35 @@ public class BarberManager extends PlaceManager
     implements BarberCodes, BarberProvider, AvatarProvider
 {
     /**
+     * Validates a handle requested by the given user, throwing an exception if
+     * the handle is invalid.  This is used both for player handles and gang
+     * name roots.
+     */
+    public static void validateHandle (PlayerObject user, Handle handle)
+        throws InvocationException
+    {
+        // this should be prevented by the client
+        if (!NameFactory.getValidator().isValidHandle(handle)) {
+            log.warning("User tried to use invalid handle [who=" + user.who() +
+                        ", handle=" + handle + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // prevent the use of reserved names by non-admins
+        if (!user.tokens.isAdmin() &&
+            NameFactory.getValidator().isReservedHandle(handle)) {
+            throw new InvocationException(MessageBundle.qualify(
+                AvatarCodes.AVATAR_MSGS, AvatarCodes.ERR_RESERVED_HANDLE));
+        }
+
+        // discourage the kiddies from being obviously vulgar
+        if (NameFactory.getValidator().isVulgarHandle(handle)) {
+            throw new InvocationException(MessageBundle.qualify(
+                AvatarCodes.AVATAR_MSGS, AvatarCodes.ERR_VULGAR_HANDLE));
+        }
+    }
+
+    /**
      * Returns an avatar snapshot for the specified player. If they are online,
      * it will be obtained from their loaded player object (and returned
      * immediately), otherwise it will be loaded from the database (and require
@@ -368,28 +397,6 @@ public class BarberManager extends PlaceManager
         _bobj = (BarberObject)_plobj;
         _bobj.setService((BarberMarshaller)BangServer.invmgr.registerDispatcher(
                              new BarberDispatcher(this), false));
-    }
-
-    protected void validateHandle (PlayerObject user, Handle handle)
-        throws InvocationException
-    {
-        // this should be prevented by the client
-        if (!NameFactory.getValidator().isValidHandle(handle)) {
-            log.warning("User tried to use invalid handle [who=" + user.who() +
-                        ", handle=" + handle + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
-
-        // prevent the use of reserved names by non-admins
-        if (!user.tokens.isAdmin() &&
-            NameFactory.getValidator().isReservedHandle(handle)) {
-            throw new InvocationException(AvatarCodes.ERR_RESERVED_HANDLE);
-        }
-
-        // discourage the kiddies from being obviously vulgar
-        if (NameFactory.getValidator().isVulgarHandle(handle)) {
-            throw new InvocationException(AvatarCodes.ERR_VULGAR_HANDLE);
-        }
     }
 
     /** Used to purchase a new avatar look. */

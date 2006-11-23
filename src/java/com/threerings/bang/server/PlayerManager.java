@@ -197,7 +197,7 @@ public class PlayerManager
 
         player.pardners = new DSet<PardnerEntry>(pardners.iterator());
         if (player.getOnlinePardnerCount() > 0) {
-            new PardnerEntryUpdater(player).updatePardnerEntries();
+            new PardnerEntryUpdater(player, _updaters).updateEntries();
         }
 
         // send invitations as soon as the receiver is registered
@@ -787,7 +787,7 @@ public class PlayerManager
         }
         PlayerObject player = (PlayerObject)BangServer.lookupBody(handle);
         if (player != null) {
-            return (new PardnerEntryUpdater(player)).entry;
+            return new PardnerEntryUpdater(player, _updaters).entry;
         } else {
             return new PardnerEntry(handle, lastSession);
         }
@@ -910,125 +910,6 @@ public class PlayerManager
             invitee.removeListener(this);
             _invites.remove(key);
         }
-    }
-
-    /** Listens to users with pardners, updating their pardner list entries. */
-    protected class PardnerEntryUpdater extends SetAdapter
-        implements AttributeChangeListener, ObjectDeathListener,
-                   ElementUpdateListener
-    {
-        /** The up-to-date entry for the player. */
-        public PardnerEntry entry;
-
-        public PardnerEntryUpdater (PlayerObject player)
-        {
-            _player = player;
-            _player.addListener(this);
-            _updaters.put(player.handle, this);
-
-            entry = new PardnerEntry(player.handle);
-            updateAvatar();
-            updateStatus();
-        }
-
-        public void attributeChanged (AttributeChangedEvent ace)
-        {
-            if (ace.getName().equals(PlayerObject.LOCATION)) {
-                updateStatus();
-                updatePardnerEntries();
-            }
-        }
-
-        public void elementUpdated (ElementUpdatedEvent eue)
-        {
-            // if they select a new default look, update their avatar
-            if (eue.getName().equals(PlayerObject.POSES) &&
-                eue.getIndex() == Look.Pose.DEFAULT.ordinal()) {
-                updateAvatar();
-                updatePardnerEntries();
-            }
-        }
-
-        public void entryUpdated (EntryUpdatedEvent eue)
-        {
-            // if the current look is updated, update their avatar
-            String name = eue.getName();
-            if (name.equals(PlayerObject.LOOKS)) {
-                Look look = (Look)eue.getEntry();
-                if (look.name.equals(_player.getLook(Look.Pose.DEFAULT))) {
-                    updateAvatar();
-                    updatePardnerEntries();
-                }
-
-            } else if (name.equals(PlayerObject.PARDNERS) &&
-                _player.getOnlinePardnerCount() == 0) {
-                remove();
-            }
-        }
-
-        public void entryRemoved (EntryRemovedEvent ere)
-        {
-            // if the last pardner is removed, clear out the updater
-            if (ere.getName().equals(PlayerObject.PARDNERS) &&
-                _player.getOnlinePardnerCount() == 0) {
-                remove();
-            }
-        }
-
-        public void objectDestroyed (ObjectDestroyedEvent ode)
-        {
-            updateStatus();
-            updatePardnerEntries();
-            remove();
-        }
-
-        public void updatePardnerEntries ()
-        {
-            for (Iterator it = _player.pardners.iterator(); it.hasNext(); ) {
-                PlayerObject pardner = (PlayerObject)BangServer.lookupBody(
-                    ((PardnerEntry)it.next()).handle);
-                if (pardner != null) {
-                    pardner.updatePardners(entry);
-                }
-            }
-        }
-
-        protected void remove ()
-        {
-            _player.removeListener(this);
-            _updaters.remove(_player.handle);
-        }
-
-        protected void updateAvatar ()
-        {
-            Look look = _player.getLook(Look.Pose.DEFAULT);
-            if (look != null) {
-                entry.avatar = look.getAvatar(_player);
-            }
-        }
-
-        protected void updateStatus ()
-        {
-            if (!_player.isActive()) {
-                entry.status = PardnerEntry.OFFLINE;
-                entry.avatar = null;
-                entry.setLastSession(new Date());
-                return;
-            }
-            entry.gameOid = 0;
-            DObject plobj = BangServer.omgr.getObject(_player.location);
-            if (plobj instanceof BangObject) {
-                entry.status = PardnerEntry.IN_GAME;
-                entry.gameOid = plobj.getOid();
-            } else if (plobj instanceof SaloonObject) {
-                entry.status = PardnerEntry.IN_SALOON;
-            } else {
-                entry.status = PardnerEntry.ONLINE;
-            }
-        }
-
-        protected PlayerObject _player;
-        protected PardnerEntry _entry;
     }
 
     /** The number of milliseconds after which we reload rank levels from DB */

@@ -5,6 +5,7 @@ package com.threerings.bang.server.persist;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -70,7 +71,6 @@ public class PlayerRepository extends JORARepository
                     JDBCUtil.escape(handle.toString()));
     }
 
-
     /**
      * Insert a new player record into the repository and assigns them a unique
      * player id in the process. The {@link PlayerRecord#created} field will be
@@ -128,6 +128,37 @@ public class PlayerRepository extends JORARepository
         });
     }
 
+    /**
+     * Changes the gang affiliation of the specified player.
+     *
+     * @param gangId the id of the player's gang, or 0 for none
+     * @param rank the player's rank in the gang
+     * @param joined the time at which the player joined the gang
+     */
+    public void updatePlayerGang (
+        int playerId, int gangId, byte rank, long joined)
+        throws PersistenceException
+    {
+        StringBuffer update = new StringBuffer(
+            "update PLAYERS set GANG_ID = " + gangId);
+        if (gangId > 0) {
+            update.append(", GANG_RANK = " + rank + ", JOINED_GANG = '" +
+                new Timestamp(joined) + "'");
+        }
+        update.append(" where PLAYER_ID = " + playerId);
+        checkedUpdate(update.toString(), 1);
+    }
+    
+    /**
+     * Sets a player's gang rank.
+     */
+    public void updateGangRank (int playerId, byte rank)
+        throws PersistenceException
+    {
+        checkedUpdate("update PLAYERS set GANG_RANK = " + rank +
+                      " where PLAYER_ID = " + playerId, 1);
+    }
+    
     /**
      * Deletes the specified player from the repository.
      */
@@ -304,7 +335,7 @@ public class PlayerRepository extends JORARepository
             "WANTED_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "GANG_ID INTEGER NOT NULL",
             "GANG_RANK TINYINT NOT NULL,",
-            "JOINED_GANG DATETIME NOT NULL",
+            "JOINED_GANG DATETIME",
             "TOWN_ID VARCHAR(64) NOT NULL",
             "CREATED DATETIME NOT NULL",
             "SESSIONS INTEGER NOT NULL",

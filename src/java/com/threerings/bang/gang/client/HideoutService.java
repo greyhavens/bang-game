@@ -6,8 +6,7 @@ package com.threerings.bang.gang.client;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
-import com.threerings.util.Name;
-
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.NameCreator;
 
 /**
@@ -24,7 +23,7 @@ public interface HideoutService extends InvocationService
      * suffixes from the {@link NameCreator}
      */
     public void formGang (
-        Client client, Name root, String suffix, ConfirmListener listener);
+        Client client, Handle root, String suffix, ConfirmListener listener);
     
     /**
      * Requests to leave the current gang.
@@ -36,4 +35,16 @@ public interface HideoutService extends InvocationService
      */
     public void addToCoffers (
         Client client, int scrip, int coins, ConfirmListener listener);
+    
+    /**
+     * Requests to expel a member from the gang.
+     */
+    public void expelMember (
+        Client client, Handle handle, ConfirmListener listener);
+    
+    /**
+     * Requests to promote or demote a gang member.
+     */
+    public void changeMemberRank (
+        Client client, Handle handle, byte rank, ConfirmListener listener);
 }

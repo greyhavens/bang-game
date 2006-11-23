@@ -3,12 +3,12 @@
 
 package com.threerings.bang.gang.data;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.dobj.InvocationResponseEvent;
-import com.threerings.util.Name;
 
 /**
  * Provides the implementation of the {@link HideoutService} interface
@@ -33,11 +33,37 @@ public class HideoutMarshaller extends InvocationMarshaller
         });
     }
 
-    /** The method id used to dispatch {@link #formGang} requests. */
-    public static final int FORM_GANG = 2;
+    /** The method id used to dispatch {@link #changeMemberRank} requests. */
+    public static final int CHANGE_MEMBER_RANK = 2;
 
     // from interface HideoutService
-    public void formGang (Client arg1, Name arg2, String arg3, InvocationService.ConfirmListener arg4)
+    public void changeMemberRank (Client arg1, Handle arg2, byte arg3, InvocationService.ConfirmListener arg4)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(arg1, CHANGE_MEMBER_RANK, new Object[] {
+            arg2, Byte.valueOf(arg3), listener4
+        });
+    }
+
+    /** The method id used to dispatch {@link #expelMember} requests. */
+    public static final int EXPEL_MEMBER = 3;
+
+    // from interface HideoutService
+    public void expelMember (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, EXPEL_MEMBER, new Object[] {
+            arg2, listener3
+        });
+    }
+
+    /** The method id used to dispatch {@link #formGang} requests. */
+    public static final int FORM_GANG = 4;
+
+    // from interface HideoutService
+    public void formGang (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
     {
         InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
         listener4.listener = arg4;
@@ -47,7 +73,7 @@ public class HideoutMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #leaveGang} requests. */
-    public static final int LEAVE_GANG = 3;
+    public static final int LEAVE_GANG = 5;
 
     // from interface HideoutService
     public void leaveGang (Client arg1, InvocationService.ConfirmListener arg2)

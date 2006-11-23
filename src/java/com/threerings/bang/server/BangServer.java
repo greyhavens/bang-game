@@ -118,7 +118,7 @@ public class BangServer extends CrowdServer
     
     /** Manages the persistent repository of player data. */
     public static PlayerRepository playrepo;
-
+    
     /** Manages the persistent repository of items. */
     public static ItemRepository itemrepo;
 

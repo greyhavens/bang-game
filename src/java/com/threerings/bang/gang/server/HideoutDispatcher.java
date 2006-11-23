@@ -3,6 +3,7 @@
 
 package com.threerings.bang.gang.server;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.bang.gang.data.HideoutMarshaller;
 import com.threerings.presents.client.Client;
@@ -11,7 +12,6 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
 import com.threerings.presents.server.InvocationException;
-import com.threerings.util.Name;
 
 /**
  * Dispatches requests to the {@link HideoutProvider}.
@@ -46,10 +46,24 @@ public class HideoutDispatcher extends InvocationDispatcher
             );
             return;
 
+        case HideoutMarshaller.CHANGE_MEMBER_RANK:
+            ((HideoutProvider)provider).changeMemberRank(
+                source,
+                (Handle)args[0], ((Byte)args[1]).byteValue(), (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
+        case HideoutMarshaller.EXPEL_MEMBER:
+            ((HideoutProvider)provider).expelMember(
+                source,
+                (Handle)args[0], (InvocationService.ConfirmListener)args[1]
+            );
+            return;
+
         case HideoutMarshaller.FORM_GANG:
             ((HideoutProvider)provider).formGang(
                 source,
-                (Name)args[0], (String)args[1], (InvocationService.ConfirmListener)args[2]
+                (Handle)args[0], (String)args[1], (InvocationService.ConfirmListener)args[2]
             );
             return;
 

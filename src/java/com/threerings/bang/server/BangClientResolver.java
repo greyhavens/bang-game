@@ -52,7 +52,7 @@ public class BangClientResolver extends CrowdClientResolver
     {
         return new PlayerObject();
     }
-
+    
     // documentation inherited
     protected void resolveClientData (ClientObject clobj)
         throws Exception
@@ -89,13 +89,6 @@ public class BangClientResolver extends CrowdClientResolver
         buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
             player.accountName);
 
-        // load up this player's gang information
-        buser.gangId = player.gangId;
-        buser.gangRank = player.gangRank;
-        if (buser.gangId > 0) {
-            buser.joinedGang = player.joinedGang.getTime();
-        }
-        
         // load up this player's items
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
         buser.inventory = new DSet<Item>(items.iterator());
@@ -131,6 +124,12 @@ public class BangClientResolver extends CrowdClientResolver
         // load up this player's pardners
         BangServer.playmgr.loadPardners(buser);
 
+        // load up this player's gang information
+        if ((buser.gangId = player.gangId) > 0) {
+            buser.gangRank = player.gangRank;
+            buser.joinedGang = player.joinedGang.getTime();
+        }
+        
         // load this player's friends and foes
         ArrayList<FolkRecord> folks =
             BangServer.playrepo.loadOpinions(buser.playerId);
@@ -143,7 +142,7 @@ public class BangClientResolver extends CrowdClientResolver
         buser.friends = friends.toIntArray();
         buser.foes = foes.toIntArray();
     }
-
+    
     protected static HashMap<String,PlayerRecord> _pstash =
         new HashMap<String,PlayerRecord>();
 }

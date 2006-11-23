@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ObjectUtil;
+import com.samskivert.util.ResultListener;
 
 import com.threerings.crowd.server.CrowdClient;
 import com.threerings.presents.net.BootstrapData;
@@ -94,6 +95,11 @@ public class BangClient extends CrowdClient
         // configure the player in the town for this server
         user.townId = ServerConfig.townId;
 
+        // resolve the player's gang object asynchronously
+        if (user.gangId > 0) {
+            BangServer.gangmgr.resolveGangObject(user);
+        }
+        
         // make a note of their current avatar poses for later comparison and
         // potential updating
         _startPoses = (String[])user.poses.clone();
@@ -145,7 +151,7 @@ public class BangClient extends CrowdClient
         });
     }
 
-    /**
+    /**import com.samskivert.util.ResultListener;
      * This method is called on the invoker thread and writes to the
      * database any necessary information at the end of a player's
      * session.
