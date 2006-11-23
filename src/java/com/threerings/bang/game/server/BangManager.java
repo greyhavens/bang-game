@@ -2532,7 +2532,7 @@ public class BangManager extends GameManager
     {
         int humanCount = 0;
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (isActivePlayer(ii) && !isAI(ii)) {
+            if (_bangobj.isActivePlayer(ii) && !isAI(ii)) {
                 humanCount++;
             }
         }
