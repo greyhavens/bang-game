@@ -1,0 +1,11 @@
+# bang-server.dwb vi:ts=4:sw=4:expandtab:
+# Bang Server Dweeb Configuration File
+
+<Package>
+    Name        bang-server
+    Version     @VERSION@
+    Maintainer  Bang Developers <bang-dev@threerings.net>
+    Section     servers
+    Architecture    all
+    Description Rumble in the Wild West.
+</Package>

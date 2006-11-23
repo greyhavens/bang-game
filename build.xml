@@ -22,6 +22,9 @@
             value="server.properties,deployment.properties"/>
   <property name="optprops.list"  value="build.properties"/>
 
+  <!-- declare the files from bin needed in the package -->
+  <property name="bin.list"  value="bangjava,bangserver,bangtool,jetty,mysql,process_stats,roll_logs,runbang,summarize_perf,summarize_stats"/>
+
   <!-- declare the libraries needed by the Bang runtime -->
   <fileset dir="." id="dist.libs">
     <include name="${extlib.dir}/ant.jar"/>
