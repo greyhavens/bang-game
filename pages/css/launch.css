@@ -10,7 +10,7 @@
 	margin: 0px;
 	padding:0px;
 	width: 810px;
-	height: 460px;
+	height: 452px;
 }
 
 #LaunchPanel {
@@ -27,11 +27,11 @@
     background-image: url("/images/launch/launch_panel.png");
     position: absolute;
 	top: 0px;
-	left: 0px;
+	left: 10px;
 	margin: 0px;
 	padding:0px;
-	width: 490px;
-	height: 364px;
+	width: 475px;
+	height: 339px;
 	z-index: 2;
 }
 
@@ -42,8 +42,8 @@
   	position: absolute;
  	width: 118px;
   	height: 14px;
-  	top: 232px;
-  	left: 340px;
+  	top: 228px;
+  	left: 344px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -65,8 +65,8 @@ a#btnjava:hover {
   	position: absolute;
  	width: 201px;
   	height: 14px;
-  	top: 282px;
-  	left: 65px;
+  	top: 278px;
+  	left: 69px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -85,10 +85,10 @@ a#btndl:hover {
 
 #linkaccountB a {
   	position: absolute;
- 	width: 172px;
+ 	width: 174px;
   	height: 23px;
   	top: 66px;
-  	left: 567px;
+  	left: 568px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -107,10 +107,10 @@ a#btnaccountB:hover {
 
 #linkscreenB a {
   	position: absolute;
- 	width: 198px;
+ 	width: 201px;
   	height: 24px;
-  	top: 141px;
-  	left: 567px;
+  	top: 140px;
+  	left: 568px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -129,9 +129,9 @@ a#btnscreenB:hover {
 
 #linkdlB a {
   	position: absolute;
- 	width: 68px;
-  	height: 20px;
-  	top: 224px;
+ 	width: 93px;
+  	height: 28px;
+  	top: 221px;
   	left: 552px;
   	margin: 0px;
   	padding: 0px;
