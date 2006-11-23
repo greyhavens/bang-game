@@ -128,7 +128,7 @@ public class HideoutView extends ShopView
     /**
      * Called when a tab is selected.
      */
-    protected void selectTab (int tidx)// documentation inherited from interface PlaceView
+    protected void selectTab (int tidx)
     {
         BContainer tab;
         if (tidx == 0) {
