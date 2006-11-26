@@ -47,6 +47,7 @@ import com.jmex.bui.text.BTextFactory;
 
 import com.jmex.sound.openAL.objects.util.OggInputStream;
 
+import com.threerings.jme.util.ImageCache;
 import com.threerings.openal.Clip;
 import com.threerings.openal.ClipProvider;
 import com.threerings.openal.Sound;
@@ -54,7 +55,6 @@ import com.threerings.openal.SoundGroup;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.UnitConfig;
@@ -218,6 +218,12 @@ public class BangUI
         // create the sound group for our UI sounds
         _sgroup = _ctx.getSoundManager().createGroup(
             BangUI.clipprov, UI_SOURCE_COUNT);
+
+        // preload our feedback sounds
+        for (FeedbackSound ident : FeedbackSound.values()) {
+            _sgroup.preloadClip(
+                "sounds/feedback/" + ident.toString().toLowerCase() + ".ogg");
+        }
     }
 
     /**

@@ -4,7 +4,11 @@
 package com.threerings.bang.game.client;
 
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
+import java.awt.image.Raster;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +64,7 @@ import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Path;
 import com.threerings.jme.sprite.PathObserver;
 import com.threerings.jme.sprite.Sprite;
+import com.threerings.jme.util.ImageCache;
 import com.threerings.jme.util.LinearTimeFunction;
 import com.threerings.jme.util.TimeFunction;
 
@@ -69,6 +74,7 @@ import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
 import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.Config;
 import com.threerings.bang.client.bui.WindowFader;
 import com.threerings.bang.client.util.ResultAttacher;
@@ -103,13 +109,6 @@ import com.threerings.bang.game.util.PointSet;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
-import java.awt.image.Raster;
-import java.awt.image.IndexColorModel;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import com.threerings.bang.client.util.ImageCache;
-import com.samskivert.util.IntListUtil;
-import com.threerings.bang.client.BangUI;
 
 /**
  * Displays the main game board.

@@ -17,6 +17,7 @@ import com.threerings.cast.CharacterManager;
 import com.threerings.jme.JmeApp;
 import com.threerings.jme.JmeContext;
 import com.threerings.jme.model.Model;
+import com.threerings.jme.util.ImageCache;
 import com.threerings.media.image.ImageManager;
 import com.threerings.openal.SoundManager;
 import com.threerings.resource.ResourceManager;
@@ -25,7 +26,6 @@ import com.threerings.util.MessageManager;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.GlobalKeyManager;
-import com.threerings.bang.client.util.ImageCache;
 import com.threerings.bang.client.util.ModelCache;
 import com.threerings.bang.client.util.ParticleCache;
 import com.threerings.bang.client.util.TextureCache;
