@@ -110,9 +110,8 @@ public class BangClient extends CrowdClient
         super.sessionWillResume();
 
         // generate an audit log entry
-        BangServer.generalLog(
-            "session_resume " + ((PlayerObject)_clobj).username +
-            " ip:" + getInetAddress());
+        BangServer.generalLog("session_resume " + ((PlayerObject)_clobj).username +
+                              " ip:" + getInetAddress());
     }
 
     @Override // documentation inherited
@@ -130,8 +129,7 @@ public class BangClient extends CrowdClient
         recordEndedSession();
 
         // generate an audit log recording this session
-        BangServer.generalLog(
-            "session_end " + user.username + " ctime:" + _connectTime);
+        BangServer.generalLog("session_end " + user.username + " ctime:" + _connectTime);
     }
 
     /**
@@ -180,17 +178,14 @@ public class BangClient extends CrowdClient
             // poses
             boolean[] changed = new boolean[_startPoses.length];
             for (int ii = 0; ii < changed.length; ii++) {
-                changed[ii] = !ObjectUtil.equals(
-                    _startPoses[ii], user.poses[ii]);
+                changed[ii] = !ObjectUtil.equals(_startPoses[ii], user.poses[ii]);
             }
             BangServer.playrepo.noteSessionEnded(
-                user.playerId, user.poses, changed,
-                (int)Math.round(_connectTime / 60f));
+                user.playerId, user.poses, changed, (int)Math.round(_connectTime / 60f));
 
-            // TEMP: remove after a while; this generates snapshots for
-            // curmudgeonly old users that predated the snapshot system and
-            // have not made a single change to their avatar in the intervening
-            // four months
+            // TEMP: remove after a while; this generates snapshots for curmudgeonly old users that
+            // predated the snapshot system and have not made a single change to their avatar in
+            // the intervening four months
             if (BangServer.lookrepo.loadSnapshot(user.playerId) == null) {
                 updatedWanted = true;
             }
@@ -199,13 +194,13 @@ public class BangClient extends CrowdClient
             // if our wanted poster look changed, generate a new snapshot
             if (updatedWanted || changed[Look.Pose.WANTED_POSTER.ordinal()]) {
                 Look look = user.getLook(Look.Pose.WANTED_POSTER);
-                BangServer.lookrepo.updateSnapshot(
-                    user.playerId, look.getAvatar(user));
+                if (look != null) {
+                    BangServer.lookrepo.updateSnapshot(user.playerId, look.getAvatar(user));
+                }
             }
 
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to note ended session " +
-                    "[user=" + user.who() + "].", e);
+            log.log(Level.WARNING, "Failed to note ended session [user=" + user.who() + "].", e);
         }
     }
 
