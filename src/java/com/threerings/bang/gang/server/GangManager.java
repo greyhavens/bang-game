@@ -81,14 +81,14 @@ public class GangManager
         GangObject gangobj;
         synchronized (_gangs) {
             if ((gangobj = _gangs.get(gangId)) != null) {
-                gangobj.refCount++;
+                gangobj.resolving++;
                 return;
             }
         }
         
         // if not, we must load it
         gangobj = _gangrepo.loadGang(gangId, true).createGangObject();
-        gangobj.refCount++;
+        gangobj.resolving++;
         _gangs.put(gangId, gangobj);
     }
     
@@ -100,7 +100,7 @@ public class GangManager
     public void resolveGangObject (PlayerObject user)
     {
         GangObject gangobj = getGangObject(user.gangId);
-        gangobj.refCount--;
+        gangobj.resolving--;
         new GangMemberEntryUpdater(user, gangobj).updateEntries();
         user.gangOid = gangobj.getOid();
     }
@@ -112,7 +112,7 @@ public class GangManager
     public void releaseGangObject (int gangId)
     {
         GangObject gangobj = _gangs.get(gangId);
-        gangobj.refCount--;
+        gangobj.resolving--;
         maybeDestroyGangObject(gangobj);
     }
     
@@ -211,7 +211,7 @@ public class GangManager
                 log.info("Added to gang coffers [who=" + user.who() +
                     ", gangId=" + user.gangId + ", scrip=" + scrip +
                     ", coins=" + coins + "].");
-                GangObject gangobj = _gangs.get(user.gangId);
+                GangObject gangobj = getGangObject(user.gangId);
                 if (gangobj == null) {
                     return; // adder bailed
                 }
@@ -241,7 +241,7 @@ public class GangManager
         final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
-        GangObject gangobj = _gangs.get(gangId);
+        GangObject gangobj = getGangObject(gangId);
         if (gangobj == null) {
             log.warning("Missing gang object for removal [gangId=" +
                 gangId + ", playerId=" + playerId + ", handle=" +
@@ -267,7 +267,7 @@ public class GangManager
                 // the order is important here; the updater will remove itself
                 // when the gang id is cleared and destroy the gang object if
                 // there are no more members online
-                GangObject gangobj = _gangs.get(gangId);
+                GangObject gangobj = getGangObject(gangId);
                 if (gangobj != null) {
                     gangobj.removeFromMembers(handle);    
                 }
@@ -309,7 +309,7 @@ public class GangManager
                 if (plobj != null) {
                     plobj.setGangRank(rank);
                 }
-                GangObject gangobj = _gangs.get(gangId);
+                GangObject gangobj = getGangObject(gangId);
                 if (gangobj != null) {
                     GangMemberEntry entry = gangobj.members.get(handle);
                     entry.rank = rank;

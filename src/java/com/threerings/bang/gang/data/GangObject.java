@@ -63,7 +63,7 @@ public class GangObject extends DObject
 
     /** On the server, the number of outstanding references to this object
      * by clients in the process of resolution. */
-    public transient int refCount;
+    public transient int resolving;
     
     /**
      * Determines whether this object can be destroyed (i.e., whether it is
@@ -72,7 +72,7 @@ public class GangObject extends DObject
      */
     public boolean canBeDestroyed ()
     {
-        return (isActive() && refCount == 0 && getOnlineMemberCount() == 0);
+        return (isActive() && resolving == 0 && getOnlineMemberCount() == 0);
     }
     
     /**
