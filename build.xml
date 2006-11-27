@@ -568,4 +568,21 @@
   <!-- fully cleans out the installed application and all subprojects -->
   <target name="cleanall" depends="distclean,cleanjme,cleanprojects"/>
 
+  <!-- install project specific server code into ${destroot} -->
+  <target name="install-server-extra">
+    <copy todir="${destroot.app}/rsrc">
+      <fileset dir="rsrc">
+        <include name="**/*.jar"/>
+        <include name="**/*.board"/>
+      </fileset>
+    </copy>
+    <copy file="${tools.dir}/etc/build-support.xml" todir="${destroot.app}/${tools.dir}/etc"/>
+    <antcall target="copywithperms">
+      <param name="copy.perms" value="755"/>
+      <param name="copy.src"   value="${tools.dir}/bin"/>
+      <param name="copy.list"  value="lfilter,filter_interesting,sum_invokers"/>
+      <param name="copy.dest"  value="${destroot.app}/${tools.dir}/bin"/>
+    </antcall>
+  </target>
+
 </project>
