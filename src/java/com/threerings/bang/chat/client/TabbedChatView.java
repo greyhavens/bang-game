@@ -106,9 +106,9 @@ public class TabbedChatView extends BContainer
     // from interface ChatDisplay
     public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
-        if (msg instanceof SystemMessage &&
-                    SystemMessage.FEEDBACK ==
-                        ((SystemMessage)msg).attentionLevel) {
+        if (isAdded() && // don't intercept feedback if we're not showing
+            msg instanceof SystemMessage &&
+            SystemMessage.FEEDBACK == ((SystemMessage)msg).attentionLevel) {
             // we also have to handle feedback messages because that's 
             // how tell failures are reported
             UserTab tab = (UserTab)_pane.getSelectedTab();
