@@ -7,10 +7,10 @@ import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
 
+import com.samskivert.util.Collections;
 import com.samskivert.util.HashIntMap;
+import com.samskivert.util.IntMap;
 import com.samskivert.util.Invoker;
-import com.samskivert.util.ResultListener;
-import com.samskivert.util.ResultListenerList;
 
 import com.threerings.util.MessageBundle;
 
@@ -69,79 +69,53 @@ public class GangManager
     }
     
     /**
-     * Asynchronously resolves the gang object for the specified user.
+     * Ensures that the gang data for the identified gang is loaded from the
+     * database.  This is called on the invoker thread when resolving clients,
+     * and should be followed by a call to {@link #resolveGangObject} or
+     * {@link #releaseGangObject} on the omgr thread.
      */
-    public void resolveGangObject (final PlayerObject user)
+    public void stashGangObject (int gangId)
+        throws PersistenceException
     {
-        // first check loaded gangs
-        GangObject gangobj = _gangs.get(user.gangId);
-        if (gangobj != null) {
-            new GangMemberEntryUpdater(user, gangobj).updateEntries();
-            user.setGangOid(gangobj.getOid());
-            return;
+        // first, determine if the object is already loaded
+        GangObject gangobj;
+        synchronized (_gangs) {
+            if ((gangobj = _gangs.get(gangId)) != null) {
+                gangobj.refCount++;
+                return;
+            }
         }
         
-        // create the listener to set the field
-        ResultListener<GangObject> listener =
-            new ResultListener<GangObject>() {
-            public void requestCompleted (GangObject result) {
-                if (user.isActive()) {
-                    new GangMemberEntryUpdater(user, result).updateEntries();
-                    user.setGangOid(result.getOid());
-                }
-            }
-            public void requestFailed (Exception cause) {
-                // this will be reported once by the list listener
-            }
-        };
-        
-        // then check the wait list
-        ResultListenerList<GangObject> rll = _waiters.get(user.gangId);
-        if (rll != null) {
-            rll.add(listener);
-            return;
-        }
-        
-        // then go to the database
-        final ResultListenerList<GangObject> list =
-            new ResultListenerList<GangObject>() {
-            public void requestCompleted (GangObject result) {
-                super.requestCompleted(result);
-                if (result.getOnlineMemberCount() == 0) {
-                    // they all left before we could resolve the object!
-                    destroyGangObject(result);
-                }
-            }
-            public void requestFailed (Exception cause) {
-                super.requestFailed(cause);
-                log.warning("Failed to load gang data [gangId=" +
-                    user.gangId + ", cause=" + cause + "].");
-            }
-        };
-        list.add(listener);
-        _waiters.put(user.gangId, list);
-        BangServer.invoker.postUnit(new Invoker.Unit() {
-            public boolean invoke () {
-                try {
-                    _grec = _gangrepo.loadGang(user.gangId, true);
-                } catch (PersistenceException pe) {
-                    _cause = pe;
-                }
-                return true;
-            }
-            public void handleResult () {
-                _waiters.remove(user.gangId);
-                if (_cause != null) {
-                    list.requestFailed(_cause);
-                } else {
-                    list.requestCompleted(createGangObject(_grec));
-                }
-            }
-            protected GangRecord _grec;
-            protected Exception _cause;
-        });
+        // if not, we must load it
+        gangobj = _gangrepo.loadGang(gangId, true).createGangObject();
+        gangobj.refCount++;
+        _gangs.put(gangId, gangobj);
     }
-
+    
+    /**
+     * Fetches the gang object referenced earlier on the invoker thread by
+     * {@link #stashGangObject}, registering it if necessary.  Called when
+     * the player client is successfully resolved.
+     */
+    public void resolveGangObject (PlayerObject user)
+    {
+        GangObject gangobj = getGangObject(user.gangId);
+        gangobj.refCount--;
+        new GangMemberEntryUpdater(user, gangobj).updateEntries();
+        user.gangOid = gangobj.getOid();
+    }
+    
+    /**
+     * Releases the reference created earlier by {@link #stashGangObject}.
+     * Called when an error occurs in client resolution.
+     */ 
+    public void releaseGangObject (int gangId)
+    {
+        GangObject gangobj = _gangs.get(gangId);
+        gangobj.refCount--;
+        maybeDestroyGangObject(gangobj);
+    }
+    
     /**
      * Processes a request to form a gang.  It is assumed that the player does
      * not already belong to a gang and that the provided name is valid.
@@ -181,12 +155,14 @@ public class GangManager
                 if (!user.isActive()) {
                     return; // he bailed; no point in continuing
                 }
+                GangObject gangobj = _grec.createGangObject();
+                _gangs.put(_grec.gangId, gangobj);
+                initGangObject(gangobj);
                 try {
                     user.startTransaction();
                     user.setGangId(_grec.gangId);
                     user.setGangRank(LEADER_RANK);
                     user.setJoinedGang(_joined);
-                    GangObject gangobj = createGangObject(_grec);
                     gangobj.addToMembers(
                         new GangMemberEntryUpdater(user, gangobj).gmentry);
                     user.setGangOid(gangobj.getOid());
@@ -354,27 +330,42 @@ public class GangManager
     }
     
     /**
-     * Creates, registers, and maps a new gang object using the information
-     * contained in the given record.
+     * Retrieves the identified gang object, initializing it if necessary.
      */
-    protected GangObject createGangObject (GangRecord grec)
+    protected GangObject getGangObject (int gangId)
     {
-        GangObject gangobj = grec.createGangObject();
-        gangobj.speakService =
-            (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
-                new SpeakDispatcher(new SpeakProvider(gangobj, this)), false);
-        _gangs.put(gangobj.gangId, BangServer.omgr.registerObject(gangobj));
-        log.info("Created gang object [gangId=" + gangobj.gangId +
-            ", name=" + gangobj.name + "].");
+        GangObject gangobj = _gangs.get(gangId);
+        if (gangobj != null && !gangobj.isActive()) {
+            initGangObject(gangobj);
+        }
         return gangobj;
     }
     
     /**
-     * Unmaps and destroys the given gang object.
+     * Initializes and registers a previously created and mapped gang object.
      */
-    protected void destroyGangObject (GangObject gangobj)
+    protected void initGangObject (GangObject gangobj)
     {
-        _gangs.remove(gangobj.gangId);
+        gangobj.speakService =
+            (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
+                new SpeakDispatcher(new SpeakProvider(gangobj, this)), false);
+        BangServer.omgr.registerObject(gangobj);
+        log.info("Initialized gang object [gangId=" + gangobj.gangId +
+            ", name=" + gangobj.name + "].");
+    }
+    
+    /**
+     * Unmaps and destroys the given gang object if there are no more members
+     * online or in the process of resolution.
+     */
+    protected void maybeDestroyGangObject (GangObject gangobj)
+    {
+        synchronized (_gangs) {
+            if (!gangobj.canBeDestroyed()) {
+                return;
+            }
+            _gangs.remove(gangobj.gangId);
+        }
         BangServer.invmgr.clearDispatcher(gangobj.speakService);
         gangobj.destroy();
         log.info("Destroyed gang object [gangId=" + gangobj.gangId +
@@ -428,9 +419,7 @@ public class GangManager
         {
             // when the last member logs off, remove the dobj
             super.remove();
-            if (_gangobj.getOnlineMemberCount() == 0) {
-                destroyGangObject(_gangobj);
-            }
+            maybeDestroyGangObject(_gangobj);
         }
         
         /** The gang object to update when the entry changes. */
@@ -441,9 +430,6 @@ public class GangManager
     protected GangRepository _gangrepo;
     
     /** Maps gang ids to currently loaded gang objects. */
-    protected HashIntMap<GangObject> _gangs = new HashIntMap<GangObject>();
-    
-    /** Maps gang ids to listener lists for gang objects being loaded. */
-    protected HashIntMap<ResultListenerList<GangObject>> _waiters =
-        new HashIntMap<ResultListenerList<GangObject>>();
+    protected IntMap<GangObject> _gangs =
+        Collections.synchronizedIntMap(new HashIntMap<GangObject>());
 }

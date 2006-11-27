@@ -61,6 +61,20 @@ public class GangObject extends DObject
     /** Contains a {@link GangMemberInfo} for each member of this gang. */
     public DSet<GangMemberEntry> members = new DSet<GangMemberEntry>();
 
+    /** On the server, the number of outstanding references to this object
+     * by clients in the process of resolution. */
+    public transient int refCount;
+    
+    /**
+     * Determines whether this object can be destroyed (i.e., whether it is
+     * active and there are no gang members online or in the process of
+     * resolution).
+     */
+    public boolean canBeDestroyed ()
+    {
+        return (isActive() && refCount == 0 && getOnlineMemberCount() == 0);
+    }
+    
     /**
      * Returns the number of gang members currently online.  When there are no
      * more online members, the gang object is destroyed.

@@ -128,6 +128,7 @@ public class BangClientResolver extends CrowdClientResolver
         if ((buser.gangId = player.gangId) > 0) {
             buser.gangRank = player.gangRank;
             buser.joinedGang = player.joinedGang.getTime();
+            BangServer.gangmgr.stashGangObject(buser.gangId);
         }
         
         // load this player's friends and foes
@@ -141,6 +142,28 @@ public class BangClientResolver extends CrowdClientResolver
         // toIntArray() returns a sorted array
         buser.friends = friends.toIntArray();
         buser.foes = foes.toIntArray();
+    }
+    
+    @Override // documentation inherited
+    protected void finishResolution (ClientObject clobj)
+    {
+        // get the gang object previously stashed away
+        super.finishResolution(clobj);
+        PlayerObject buser = (PlayerObject)clobj;
+        if (buser.gangId > 0) {
+            BangServer.gangmgr.resolveGangObject(buser);
+        }
+    }
+    
+    @Override // documentation inherited
+    protected void reportFailure (Exception cause)
+    {
+        // release the reference to the gang object
+        super.reportFailure(cause);
+        PlayerObject buser = (PlayerObject)_clobj;
+        if (buser.gangId > 0) {
+            BangServer.gangmgr.releaseGangObject(buser.gangId);
+        }
     }
     
     protected static HashMap<String,PlayerRecord> _pstash =

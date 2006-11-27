@@ -158,7 +158,7 @@ public class HideoutView extends ShopView
         // if the user is not in a gang, make sure that we are not subscribed
         // to one and show the form gang panel
         PlayerObject player = _ctx.getUserObject();
-        if (player.gangId <= 0) {
+        if (player.gangOid <= 0) {
             unsubscribeFromGang();
             _gtab.add(createFormGangPanel(), new Point(100, 100));
             return;
@@ -168,7 +168,8 @@ public class HideoutView extends ShopView
         // must be loaded from the database) and then the gang object itself
         _gtab.add(new BLabel(_msgs.get("m.loading_gang")),
             new Point(100, 100));
-        (_gangsub = new GangSubscriber(new Subscriber<GangObject>() {
+        (_gangsub = new SafeSubscriber<GangObject>(
+            player.gangOid, new Subscriber<GangObject>() {
             public void objectAvailable (GangObject gangobj) {
                 _gangobj = gangobj;
                 _gangobj.addListener(_ganglist);
@@ -179,7 +180,7 @@ public class HideoutView extends ShopView
                     ", cause=" + cause + "].");
                 _status.setStatus(_msgs.get("m.internal_error"), true);
             }
-        })).subscribe();
+        })).subscribe(_ctx.getDObjectManager());
     }
     
     /**
@@ -334,86 +335,24 @@ public class HideoutView extends ShopView
     }
     
     /**
+     * Unsubscribes from the gang object and stops listening.
+     */
+    protected void unsubscribeFromGang ()
+    {
+        if (_gangsub != null) {
+            _gangsub.unsubscribe(_ctx.getDObjectManager());
+            _gangsub = null;
+            _gangobj = null;
+        }
+    }
+    
+    /**
      * Parses the specified string as an integer, allowing the empty
      * string to represent zero.
      */
     protected static int parseInt (String text)
     {
         return (text.length() == 0) ? 0 : Integer.parseInt(text);
-    }
-    
-    /**
-     * Unsubscribes from the gang object and stops listening.
-     */
-    protected void unsubscribeFromGang ()
-    {
-        if (_gangsub != null) {
-            _gangsub.unsubscribe();
-            _gangsub = null;
-            _gangobj = null;
-        }
-    }
-    
-    /** Waits for the gang object oid to appear and subscribes to it. */
-    protected class GangSubscriber
-        implements AttributeChangeListener
-    {
-        public GangSubscriber (Subscriber<GangObject> subscriber)
-        {
-            _subscriber = subscriber;
-        }
-        
-        /**
-         * Subscribes safely to the gang object.
-         */
-        public void subscribe ()
-        {
-            PlayerObject user = _ctx.getUserObject();
-            if (user.gangOid > 0) {
-                subscribe(user.gangOid);
-            } else {
-                user.addListener(this);
-            }
-        }
-        
-        /**
-         * Unsubscribes safely from the gang object.
-         */
-        public void unsubscribe ()
-        {
-            if (_safesub != null) {
-                _safesub.unsubscribe(_ctx.getDObjectManager());
-            } else {
-                _ctx.getUserObject().removeListener(this);
-            }
-        }
-        
-        // documentation inherited from interface AttributeChangeListener
-        public void attributeChanged (AttributeChangedEvent event)
-        {
-            if (event.getName().equals(PlayerObject.GANG_OID)) {
-                int oid = event.getIntValue();
-                if (oid > 0) {
-                    _ctx.getUserObject().removeListener(this);
-                    subscribe(oid);
-                }
-            }
-        }
-        
-        /**
-         * Subscribes through the safe subscriber.
-         */
-        protected void subscribe (int oid)
-        {
-            _safesub = new SafeSubscriber<GangObject>(oid, _subscriber);
-            _safesub.subscribe(_ctx.getDObjectManager());
-        }
-        
-        /** The target subscriber. */
-        protected Subscriber<GangObject> _subscriber;
-        
-        /** The safe subscriber used to subscribe to the object. */
-        protected SafeSubscriber<GangObject> _safesub;
     }
     
     /** Listens to changes in the gang object. */
@@ -438,7 +377,7 @@ public class HideoutView extends ShopView
     protected BContainer _gtab, _mtab, _stab;
     protected StatusLabel _status;
     
-    protected GangSubscriber _gangsub;
+    protected SafeSubscriber<GangObject> _gangsub;
     protected GangListener _ganglist = new GangListener();
     
     protected MoneyLabel _coffers;
@@ -447,7 +386,7 @@ public class HideoutView extends ShopView
     protected AttributeChangeListener _gtupdater =
         new AttributeChangeListener() {
         public void attributeChanged (AttributeChangedEvent event) {
-            if (event.getName().equals(PlayerObject.GANG_ID)) {
+            if (event.getName().equals(PlayerObject.GANG_OID)) {
                 _tabs.selectTab(0); // always go back to the first tab
                 updateGangTab();
             }

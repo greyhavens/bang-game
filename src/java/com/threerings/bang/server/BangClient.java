@@ -94,11 +94,6 @@ public class BangClient extends CrowdClient
         // configure the player in the town for this server
         user.townId = ServerConfig.townId;
 
-        // resolve the player's gang object asynchronously
-        if (user.gangId > 0) {
-            BangServer.gangmgr.resolveGangObject(user);
-        }
-        
         // make a note of their current avatar poses for later comparison and
         // potential updating
         _startPoses = (String[])user.poses.clone();
