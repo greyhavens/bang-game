@@ -576,6 +576,9 @@
         <include name="**/*.board"/>
       </fileset>
     </copy>
+    <copy file="log/README" todir="${destroot.app}/log"/>
+    <copy file="build.xml" todir="${destroot.app}"/>
+    <copy file="rsrc/config/resource/manager.properties" todir="${destroot.app}/rsrc/config/resource/"/>
     <copy file="${tools.dir}/etc/build-support.xml" todir="${destroot.app}/${tools.dir}/etc"/>
     <antcall target="copywithperms">
       <param name="copy.perms" value="755"/>
