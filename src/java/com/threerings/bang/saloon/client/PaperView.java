@@ -37,8 +37,7 @@ import com.threerings.bang.saloon.data.TopRankedList;
 import static com.threerings.bang.Log.log;
 
 /**
- * Contains the various Saloon information displays: news, friendly folks, top
- * scores.
+ * Contains the various Saloon information displays: news, friendly folks, top scores.
  */
 public class PaperView extends BContainer
 {
@@ -65,12 +64,12 @@ public class PaperView extends BContainer
         _folks = new BContainer(GroupLayout.makeVStretch());
         _folks.add(_chat = new PaperChatView(_ctx, "m.saloon_chat"));
 
-        // when the news is loaded; it will display the news tab, but we need
-        // to hand set the proper navigation button to selected
+        // when the news is loaded; it will display the news tab, but we need to hand set the
+        // proper navigation button to selected
         _navi[0].setSelected(true);
 
-        // any time after the first that we enter the saloon during a session,
-        // start on the friendly folks page
+        // any time after the first that we enter the saloon during a session, start on the
+        // friendly folks page
         if (_shownNews) {
             displayPage(1);
         } else {
@@ -129,7 +128,12 @@ public class PaperView extends BContainer
 
         switch (_pageNo = pageNo) {
         case 0:
-            setContents(_news.get(_ctx.getUserObject().townId).getDocument());
+            CachedDocument news = _news.get(_ctx.getUserObject().townId);
+            if (news == null) {
+                refreshNews(false);
+            } else {
+                setContents(news.getDocument());
+            }
             break;
 
         case 1:
@@ -184,8 +188,8 @@ public class PaperView extends BContainer
                 news = new CachedDocument(nurl, NEWS_REFRESH_INTERVAL);
                 _news.put(townId, news);
             } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to create news URL " +
-                        "[base=" + base + ", path=" + npath + "].", e);
+                log.log(Level.WARNING, "Failed to create news URL [base=" + base +
+                        ", path=" + npath + "].", e);
                 return;
             }
         }
@@ -259,8 +263,7 @@ public class PaperView extends BContainer
 
     protected TopScoreView _topscore;
 
-    protected static HashMap<String,CachedDocument> _news =
-        new HashMap<String,CachedDocument>();
+    protected static HashMap<String,CachedDocument> _news = new HashMap<String,CachedDocument>();
     protected static boolean _shownNews;
 
     protected static final long NEWS_REFRESH_INTERVAL = 60 * 60 * 1000L;
