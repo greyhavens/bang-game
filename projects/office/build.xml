@@ -1,66 +1,40 @@
 <!-- project build configuration -->
 <project name="Sheriff's Office web application" default="all" basedir=".">
 
-  <!-- load up our configuration information -->
-  <property file="build.properties"/>
+  <!-- the base directory from which we get our bundles and jar files -->
   <property name="base.dir" value="../.."/>
-  <property file="${base.dir}/server.properties"/>
+  <property name="libs.dir" value="${base.dir}/dist/lib"/>
 
-  <!-- the web application name and derived parameters -->
-  <property name="app.name"       value="office"/>
-  <property name="deploy.dir"     value="${base.dir}/pages/${app.name}"/>
-  <property name="webapp_dir"     value="${base.dir}/webapps"/>
-  <property name="dist.war"       value="${webapp_dir}/${app.name}.war"/>
+  <!-- the web application name and properties file -->
+  <property name="app.name"        value="office"/>
+  <property name="properties.file" value="server.properties"/>
 
-  <!-- declare our classpath -->
-  <path id="classpath">
-    <pathelement location="${deploy.dir}/WEB-INF/classes"/>
-    <fileset dir="${base.dir}/lib" includes="**/*.jar"/>
-    <fileset dir="${base.dir}/dist" includes="**/*.jar"/>
-  </path>
+  <!-- import the generic webapp build file and library dependencies -->
+  <import file="${base.dir}/projects/tools/etc/webapps-build.xml"/>
+  <import file="libs-incl.xml"/>
 
   <!-- prepares the application directories -->
   <target name="prepare">
-    <mkdir dir="${deploy.dir}"/>
-    <copy todir="${deploy.dir}">
+    <mkdir dir="${build.dir}"/>
+    <copy todir="${build.dir}">
       <fileset dir="src/xhtml"/>
     </copy>
-    <mkdir dir="${deploy.dir}/WEB-INF"/>
-    <copy file="etc/web.xml" tofile="${deploy.dir}/WEB-INF/web.xml"/>
-    <copy todir="${deploy.dir}/WEB-INF/classes">
+    <mkdir dir="${build.dir}/WEB-INF"/>
+    <copy file="etc/web.xml" tofile="${build.dir}/WEB-INF/web.xml"/>
+    <copy todir="${build.dir}/WEB-INF/classes">
       <fileset dir="etc" includes="**/*.properties"/>
-      <fileset dir="${base.dir}" includes="server.properties"/>
+      <fileset dir="${base.dir}" includes="${properties.file}"/>
     </copy>
-    <mkdir dir="${deploy.dir}/WEB-INF/classes"/>
-    <mkdir dir="${deploy.dir}/WEB-INF/lib"/>
-    <!-- copy the library jar files -->
-    <copy todir="${deploy.dir}/WEB-INF/lib">
-      <fileset dir="${base.dir}/lib" includesfile="lib/WEBAPP_LIBS"/>
-      <fileset dir="${base.dir}/dist" includesfile="lib/WEBAPP_LIBS"/>
+    <copy todir="${deploy.dir}/lib" flatten="true">
+      <fileset refid="${app.name}.libs"/>
     </copy>
-  </target>
-
-  <!-- build the java class files -->
-  <target name="compile" depends="prepare">
-    <javac srcdir="src" destdir="${deploy.dir}/WEB-INF/classes"
-           debug="on" optimize="${build.optimize}">
-      <classpath refid="classpath"/>
-    </javac>
-    <copy todir="${deploy.dir}/WEB-INF/classes">
-      <fileset dir="src" includes="**/*.properties"/>
+    <!-- we also need bang-code.jar which doesn't fit into our libs.dir scheme -->
+    <copy todir="${deploy.dir}/lib" flatten="true">
+      <fileset dir="${base.dir}" id="office.libs">
+        <include name="dist/bang-code.jar"/>
+      </fileset>
     </copy>
-  </target>
-
-  <!-- cleans out the build directory -->
-  <target name="clean">
-    <delete dir="${deploy.dir}"/>
-  </target>
-
-  <!-- the default target is to rebuild everything -->
-  <target name="all" depends="prepare,compile"/>
-
-  <!-- builds our distribution files (war and jar) -->
-  <target name="dist" depends="all">
-    <jar destfile="${dist.war}" basedir="${deploy.dir}"/>
+    <mkdir dir="${build.dir}/WEB-INF/classes"/>
+    <mkdir dir="${build.dir}/WEB-INF/lib"/>
   </target>
 </project>
