@@ -1,0 +1,11 @@
+#
+# $Id: $
+#
+MAILTO=bang-logs@threerings.net
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/sbin:/usr/local/bin
+
+# process stats
+0 1 * * * @PREFIX@/bin/process_stats frontier_town
+
+# bang logs rolling 
+5 0 * * * @PREFIX@/bin/roll_logs
