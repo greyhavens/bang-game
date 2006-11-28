@@ -190,8 +190,8 @@ public class WendigoHandler extends EffectHandler
                     float alpha = Math.min(1f, _elapsed / SHARD_RISE_DURATION);
                     mstate.getDiffuse().a = alpha;
                     getLocalTranslation().set(0f, 0f, TILE_SIZE * (alpha - 1));
-                    getLocalRotation().fromAngleNormalAxis(FastMath.PI * alpha,
-                        Vector3f.UNIT_Z);
+                    getLocalRotation().fromAngleNormalAxis(
+                        FastMath.TWO_PI * alpha, Vector3f.UNIT_Z);
                 }
                 protected float _elapsed;
             });
