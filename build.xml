@@ -22,7 +22,9 @@
   <property name="optprops.list"  value="build.properties"/>
 
   <!-- declare the files from bin needed in the package -->
-  <property name="bin.list"  value="bangjava,bangserver,bangtool,jetty,mysql,process_stats,roll_logs,runbang,summarize_perf,summarize_stats"/>
+  <property name="bin.list1"  value="bangjava,bangserver,bangtool,jetty,mysql,process_stats"/>
+  <property name="bin.list2"  value="roll_logs,runbang,summarize_perf,summarize_stats"/>
+  <property name="bin.list"  value="${bin.list1},${bin.list2}"/>
 
   <!-- this project has pages/ that need packaging -->
   <property name="package.pages" value="true"/>
