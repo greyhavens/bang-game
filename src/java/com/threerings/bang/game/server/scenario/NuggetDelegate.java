@@ -31,10 +31,7 @@ public class NuggetDelegate extends CounterDelegate
     {
         // increment each players' nugget related stats
         for (Counter counter : _counters) {
-            if (counter.count > 0) {
-                bangobj.stats[counter.owner].incrementStat(
-                    Stat.Type.NUGGETS_CLAIMED, counter.count);
-            }
+            bangobj.stats[counter.owner].incrementStat(Stat.Type.NUGGETS_CLAIMED, counter.count);
         }
     }
 
@@ -71,23 +68,20 @@ public class NuggetDelegate extends CounterDelegate
 
         // deposit or withdraw a nugget as appropriate
         NuggetEffect effect = null;
-        if (counter.owner == unit.owner && 
-                NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
+        if (counter.owner == unit.owner && NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
             effect = new NuggetEffect();
             effect.dropping = true;
 
         } else if (counter.owner == unit.owner &&
-            FoolsNuggetEffect.FOOLS_NUGGET_BONUS.equals(unit.holding)) {
+                   FoolsNuggetEffect.FOOLS_NUGGET_BONUS.equals(unit.holding)) {
             effect = new FoolsNuggetEffect();
             effect.dropping = true;
-            
-        } else if (_allowClaimWithdrawal && counter.owner != unit.owner &&
-                   counter.count > 0 && 
+
+        } else if (_allowClaimWithdrawal && counter.owner != unit.owner && counter.count > 0 &&
                    unit.canActivateBonus(bangobj, _nuggetBonus) &&
                    !NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
             if (unit.holding != null) {
-                HoldEffect dropEffect = HoldEffect.dropBonus(
-                        bangobj, unit, -1, unit.holding);
+                HoldEffect dropEffect = HoldEffect.dropBonus(bangobj, unit, -1, unit.holding);
                 _bangmgr.deployEffect(unit.owner, dropEffect);
             }
             effect = new NuggetEffect();
@@ -104,7 +98,7 @@ public class NuggetDelegate extends CounterDelegate
     protected boolean _allowClaimWithdrawal;
     protected int _startingCount;
 
-    /** A prototype nugget bonus used to ensure that pieces can hold it. */ 
+    /** A prototype nugget bonus used to ensure that pieces can hold it. */
     protected Bonus _nuggetBonus =
         Bonus.createBonus(BonusConfig.getConfig(NuggetEffect.NUGGET_BONUS));
 }
