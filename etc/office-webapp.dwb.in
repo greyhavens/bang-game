@@ -1,0 +1,11 @@
+# office-webapp.dwb vi:ts=4:sw=4:expandtab:
+# Bang Office Webapp Dweeb Configuration File
+
+<Package>
+    Name        office-webapp
+    Version     @VERSION@
+    Maintainer  Bang <bang-dev@threerings.net>
+    Section     webapps
+    Architecture    all
+    Description Sheriff's Office web application
+</Package>
