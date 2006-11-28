@@ -1,0 +1,65 @@
+Last Hurrah
+
+Howdy pardners! I've got a few bits to jaw at ya, and some details on a bug fix
+patch that we put up today. Firstly the patch notes:
+
+<ul>
+<li> If your computer gets too far behind in animating the moves (which happens
+on computers with less powerful graphics accelerators), the game will stop
+doing animations for a bit and just jump pieces into place to help you catch
+up. </li>
+
+<li> We changed a few of the <span class="highlight">Badges</span>, mostly name
+changes and image tweaks. </li>
+
+<li> We modified the <span class="highlight">Pardner Chat</span> tabs so that
+they'll maintain the history of your chat with yer pardner seamlessly if you
+move between the Saloon and other places where the tabs are shown in a popup
+window. </li>
+
+<li> We added fancy new visual effects to <span class="highlight">Wendigo
+Attack</span> and dropped the number of Wendigo that are shown during an attack
+to one to hopefully make things work better for computers with less powerful
+graphics accelerators. </li>
+
+<li> We now ignore players that have not played a scenario in the last two
+weeks when computing the <span class="highlight">Top Ranked</span> lists. You
+got to keep playin' to hold onto yer title. </li>
+
+<li> We fixed a bunch of bugs: the coloring of the <span
+class="highlight">Battered Fox Skull Hat</span>, a problem with changing your
+Handle, a problem with the <span class="highlight">Thunderbird AI</span>, a
+problem with matchmaking with "Include previous towns" checked, a problem with
+the <span class="highlight">Lightning Card</span> and various others that would
+require a heap o' technical jargon to explain. </li>
+
+</ul>
+</p>
+
+<p> The next thing I want to jabber about is the end of Beta. We're going to be
+declaring Beta to be ended this <span class="highlight">Friday, December 1st at
+High Noon (Pacific Standard Time)</span>. </p>
+
+<p> What does this mean exactly? Well the main thing is that players are no
+longer going to get a free ride to the <span class="highlight">Indian Trading
+Post</span>. They'll have to buy a ticket. But it also means that we're going
+to be givin' out our <span class="highlight">Beta Tester Rewards</span>, which
+I reckon yer all going to enjoy. You'll be gettin':</p>
+
+<ul>
+<li> One free ticket to <span class="highlight">Indian Trading Post</span>. </li>
+<li> One official <span class="highlight">Beta Tester Badge</span>. </li>
+</ul>
+
+<p> One thing to note is that everyone who registered and logged on during the
+Beta will receive the <span class="highlight">Beta Tester Badge</span>, but
+only those players that played at least <span class="highlight">20 Ranked
+Games</span> will receive the free ticket to <span class="highlight">Indian
+Trading Post</span>. We reckon that ya aught to have done yer job if yer gonna
+get paid fer it. </p>
+
+<p> So if ya got friends that ya think might like <span class="highlight">Bang!
+Howdy</span>, tell 'em to get their hide on over here and sign up fer the Beta
+because it's their last chance to get a free ticket to ITP. </p>
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
