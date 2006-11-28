@@ -94,6 +94,11 @@ public class PlayerPopupMenu extends BPopupMenu
         BMenuItem item;
         addMenuItem(item = new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
 
+        // if we're an admin, add a link to their admin account page
+        if (_ctx.getUserObject().tokens.isAdmin()) {
+            addMenuItem(new BMenuItem(msgs.get("m.pm_view_account"), "view_account"));
+        }
+
         // stop here if this is us
         if (self.handle.equals(handle)) {
             return;
@@ -110,11 +115,6 @@ public class PlayerPopupMenu extends BPopupMenu
         // add an item for inviting them to be our pardner
         if (!_ctx.getUserObject().pardners.containsKey(handle)) {
             addMenuItem(new BMenuItem(msgs.get("m.pm_invite_pardner"), "invite_pardner"));
-        }
-
-        // if we're an admin, add a link to their admin account page
-        if (_ctx.getUserObject().tokens.isAdmin()) {
-            addMenuItem(new BMenuItem(msgs.get("m.pm_view_account"), "view_account"));
         }
     }
 
