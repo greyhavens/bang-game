@@ -705,6 +705,7 @@ public class BangManager extends GameManager
 
         default:
             log.warning("Unable to start next phase [game=" + where() + ", state=" + state + "].");
+            Thread.dumpStack();
             break;
         }
     }
