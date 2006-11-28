@@ -41,7 +41,7 @@ function printThumbNav() {
             if (x == currentPage) {
                 document.write("<font color = #330000><b>");
             }
-            document.write(x);
+            document.write("Page " + x);
             if (x == currentPage) {
                 document.write("</b></font>");
             }
