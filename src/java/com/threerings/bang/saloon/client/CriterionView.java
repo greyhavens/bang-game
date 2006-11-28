@@ -140,7 +140,8 @@ public class CriterionView extends BContainer
             criterion.allowAIs = Criterion.compose(
                 _aiopps[0].isSelected(), _aiopps[1].isSelected(),
                 _aiopps[2].isSelected());
-            criterion.allowPreviousTowns = _prev.isSelected();
+            criterion.allowPreviousTowns =
+                _prev.isAdded() ? _prev.isSelected() : true;
 
             // pass the buck onto the controller to do the rest
             _go.setEnabled(false);
