@@ -14,6 +14,7 @@ import com.samskivert.velocity.InvocationContext;
 
 import com.threerings.user.OOOUser;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.server.persist.StatRepository;
@@ -29,23 +30,37 @@ public class player extends AdminLogic
     public void invoke (OfficeApp app, InvocationContext ctx, OOOUser user)
         throws Exception
     {
-        String who = ParameterUtil.getParameter(ctx.getRequest(), "who", false);
+        PlayerRecord player = null;
+        OOOUser target;
+
+        String who;
+        String handle = ParameterUtil.getParameter(ctx.getRequest(), "handle", false);
+        if (!StringUtil.isBlank(handle)) {
+            // load up their player record by handle
+            player = app.getPlayerRepository().loadByHandle(new Handle(handle));
+            // and load their user record from that
+            who = (player == null) ? null : player.accountName;
+        } else {
+            who = ParameterUtil.getParameter(ctx.getRequest(), "who", false);
+        }
+
         if (StringUtil.isBlank(who)) {
             return;
         }
+        target = (OOOUser)app.getUserManager().getRepository().loadUser(who);
 
         // load up their OOO user record
-        OOOUser target = (OOOUser)
-            app.getUserManager().getRepository().loadUser(who);
-        ctx.put("target", target);
         if (target == null) {
             throw new FriendlyException("error.no_such_player");
         }
-        ctx.put("affiliate",
-                app.getSiteIdentifier().getSiteString(target.siteId));
+        ctx.put("target", target);
+        ctx.put("affiliate", app.getSiteIdentifier().getSiteString(target.siteId));
 
-        // load up their Bang! player record
-        PlayerRecord player = app.getPlayerRepository().loadPlayer(who);
+        // load up their Bang! player record if we haven't already
+        if (player == null) {
+            player = app.getPlayerRepository().loadPlayer(who);
+        }
+
         if (player != null) {
             ctx.put("player", player);
 
