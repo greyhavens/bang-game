@@ -265,7 +265,7 @@ public abstract class Stat
     public abstract String valueToString ();
 
     // documentation inherited from DSet.Entry
-    public Comparable getKey ()
+    public String getKey ()
     {
         return _type.name();
     }
