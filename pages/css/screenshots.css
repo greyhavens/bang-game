@@ -10,7 +10,7 @@
 	margin: 0px;
 	padding:0px;
 	width: 810px;
-	height: 96px;
+	height: 89px;
 }
 
 #Screens {
@@ -22,10 +22,10 @@
 ------------------------------------------------- */
 #linkfrontier a {
   	position: absolute;
- 	width: 142px;
+ 	width: 139px;
   	height: 36px;
   	top: 47px;
-  	left: 58px;
+  	left: 59px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -45,10 +45,10 @@ a#btnfrontier:hover {
 
 #linkitp a {
   	position: absolute;
- 	width: 179px;
+ 	width: 178px;
   	height: 36px;
   	top: 47px;
-  	left: 300px;
+  	left: 301px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;

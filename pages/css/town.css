@@ -10,7 +10,7 @@
 	margin: 0px;
 	padding:0px;
 	width: 810px;
-	height: 50px;
+	height: 49px;
 }
 
 /* -------------------------------------------------
@@ -18,10 +18,10 @@
 ------------------------------------------------- */
 #linkfrontier a {
   	position: absolute;
- 	width: 140px;
-  	height: 33px;
-  	top: 6px;
-  	left: 64px;
+ 	width: 141px;
+  	height: 35px;
+  	top: 7px;
+  	left: 65px;
   	margin: 0px;
   	padding: 0px;
   	text-decoration: none;
@@ -41,9 +41,9 @@ a#btnfrontier:hover {
 
 #linkitp a {
   	position: absolute;
- 	width: 178px;
-  	height: 33px;
-  	top: 6px;
+ 	width: 179px;
+  	height: 35px;
+  	top: 7px;
   	left: 306px;
   	margin: 0px;
   	padding: 0px;
