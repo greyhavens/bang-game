@@ -13,13 +13,12 @@
   <property name="nartool.path"   value="projects/narya/bin"/>
 
   <!-- define our subprojects and include the standard build system -->
-  <property name="projects"
-            value="samskivert,jme-bui,narya,nenya,vilya,threerings"/>
+  <property name="projects" value="samskivert,jme-bui,narya,nenya,vilya,threerings"/>
+  <property name="webapps" value="office"/>
   <import file="projects/tools/etc/build-support.xml"/>
 
   <!-- declare the properties files. -->
-  <property name="props.list"
-            value="server.properties,deployment.properties"/>
+  <property name="props.list" value="server.properties,deployment.properties"/>
   <property name="optprops.list"  value="build.properties"/>
 
   <!-- declare the files from bin needed in the package -->
@@ -96,9 +95,8 @@
 
   <!-- generates additional methods for distributed object classes -->
   <target name="gendobj" depends="prepare">
-    <taskdef name="dobj"
-             classname="com.threerings.presents.tools.GenDObjectTask"
-             classpathref="classpath"/>
+    <taskdef name="dobj" classpathref="classpath"
+             classname="com.threerings.presents.tools.GenDObjectTask"/>
     <!-- make sure the dobject class files are all compiled -->
     <javac srcdir="src/java" destdir="${deploy.dir}/classes"
            debug="on" optimize="${build.optimize}" deprecation="on">
@@ -114,9 +112,8 @@
   <!-- generates marshaller and dispatcher classes for all invocation -->
   <!-- service declarations -->
   <target name="genservice" depends="prepare">
-    <taskdef name="service"
-             classname="com.threerings.presents.tools.GenServiceTask"
-             classpathref="classpath"/>
+    <taskdef name="service" classpathref="classpath"
+             classname="com.threerings.presents.tools.GenServiceTask"/>
     <!-- make sure the service class files are all compiled -->
     <javac srcdir="src/java" destdir="${deploy.dir}/classes"
            debug="on" optimize="${build.optimize}" deprecation="on">
@@ -132,9 +129,8 @@
   <!-- generates sender and decoder classes for all invocation -->
   <!-- receiver declarations -->
   <target name="genreceiver" depends="prepare">
-    <taskdef name="receiver"
-             classname="com.threerings.presents.tools.GenReceiverTask"
-             classpathref="classpath"/>
+    <taskdef name="receiver" classpathref="classpath"
+             classname="com.threerings.presents.tools.GenReceiverTask"/>
     <!-- make sure the receiver class files are all compiled -->
     <javac srcdir="src/java" destdir="${deploy.dir}/classes"
            debug="on" optimize="${build.optimize}" deprecation="on">
@@ -144,8 +140,7 @@
     </javac>
     <!-- now generate the associated files -->
     <receiver header="lib/SOURCE_HEADER" classpathref="classpath">
-      <fileset dir="src/java" includes="**/*Receiver.java"
-        excludes="**/InvocationReceiver.java"/>
+      <fileset dir="src/java" includes="**/*Receiver.java" excludes="**/InvocationReceiver.java"/>
     </receiver>
   </target>
 
@@ -256,9 +251,8 @@
 
   <!-- loads our boards into the database -->
   <target name="boards">
-    <taskdef name="loadboard"
-      classname="com.threerings.bang.tools.LoadBoardTask"
-      classpathref="classpath"/>
+    <taskdef name="loadboard" classpathref="classpath"
+             classname="com.threerings.bang.tools.LoadBoardTask"/>
     <loadboard home=".">
       <fileset dir="rsrc/boards" includes="**/*.board"/>
     </loadboard>
@@ -267,7 +261,7 @@
   <!-- compiles our tutorial XML definitions -->
   <target name="tutorials">
     <taskdef name="confcomp" classpathref="classpath"
-      classname="com.threerings.tools.CompiledConfigTask"/>
+             classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp parser="com.threerings.bang.game.tools.xml.TutorialConfigParser">
       <fileset dir="rsrc/tutorials" includes="**/*.xml"/>
     </confcomp>
@@ -278,33 +272,33 @@
     <taskdef name="confcomp" classpathref="classpath"
       classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp parser="com.threerings.media.image.tools.xml.ColorPositoryParser"
-      configdef="rsrc/config/media/colordefs.xml"/>
+              configdef="rsrc/config/media/colordefs.xml"/>
   </target>
 
   <!-- creates the serialized article and aspect catalogs -->
   <target name="catalogs">
     <taskdef name="confcomp" classpathref="classpath"
-      classname="com.threerings.tools.CompiledConfigTask"/>
+             classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp configdef="rsrc/avatars/articles.xml"
-      parser="com.threerings.bang.avatar.tools.xml.ArticleCatalogParser"/>
+              parser="com.threerings.bang.avatar.tools.xml.ArticleCatalogParser"/>
     <confcomp configdef="rsrc/avatars/aspects.xml"
-      parser="com.threerings.bang.avatar.tools.xml.AspectCatalogParser"/>
+              parser="com.threerings.bang.avatar.tools.xml.AspectCatalogParser"/>
   </target>
 
   <!-- builds the avatar component bundles -->
   <target name="avatars" depends="catalogs">
     <taskdef name="metabundle" classpathref="classpath"
-      classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
+             classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
     <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
-      classdef="${basedir}/rsrc/avatars/classes.xml"
-      target="rsrc/avatars/metadata.jar"/>
+                classdef="${basedir}/rsrc/avatars/classes.xml"
+                target="rsrc/avatars/metadata.jar"/>
     <ant target="bundles" dir="rsrc/avatars" antfile="build.xml"/>
   </target>
 
   <!-- run the unit tests -->
   <target name="tests" depends="compile" description="Runs unit tests.">
     <taskdef name="unit" classpathref="classpath"
-      classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
+             classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
     <unit printsummary="no" haltonfailure="yes" fork="true">
       <classpath refid="classpath"/>
       <formatter type="brief" usefile="false"/>
@@ -373,8 +367,7 @@
   <!-- helper target for client and devclient -->
   <target name="baseclient">
     <!-- generate the all-in-wonder jar file -->
-    <taskdef resource="proguard/ant/task.properties"
-             classpath="${deploy.dir}/lib/proguard.jar"/>
+    <taskdef resource="proguard/ant/task.properties" classpath="${deploy.dir}/lib/proguard.jar"/>
     <proguard configuration="etc/bang-client.pro"/>
 
     <!-- create our directories if necessary -->
@@ -430,8 +423,7 @@
     </copy>
 
     <!-- generate the getdown digest file -->
-    <taskdef name="digest"
-      classname="com.threerings.getdown.tools.DigesterTask">
+    <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask">
      <classpath>
        <pathelement path="${deploy.dir}/lib/samskivert.jar"/>
        <pathelement path="${deploy.dir}/lib/getdown.jar"/>
@@ -461,8 +453,7 @@
 
   <!-- builds the production client getdown distribution -->
   <target name="client">
-    <exec executable="bin/getversion" outputproperty="latest_version"
-          failonerror="true">
+    <exec executable="bin/getversion" outputproperty="latest_version" failonerror="true">
       <arg line="client"/>
       <arg line="${root_url}"/>
     </exec>
@@ -478,8 +469,7 @@
     <antcall target="baseclient">
       <param name="client" value="client"/>
       <param name="client_dir" value="${web_dir}/client/${version}"/>
-      <param name="appbase_line"
-             value="appbase = ${root_url}/client/%VERSION%"/>
+      <param name="appbase_line" value="appbase = ${root_url}/client/%VERSION%"/>
       <param name="version_line" value="version = ${version}"/>
     </antcall>
     <delete file="etc/bang-client.pro"/>
@@ -493,8 +483,7 @@
 
   <!-- builds the distribution jar files -->
   <target name="dist" depends="prepare,compile">
-    <jar file="${deploy.dir}/bang-code.jar"
-         basedir="${deploy.dir}/classes" includes="com/**"/>
+    <jar file="${deploy.dir}/bang-code.jar" basedir="${deploy.dir}/classes" includes="com/**"/>
   </target>
 
   <!-- builds the avatar, media and sounds jar files -->
@@ -566,7 +555,7 @@
   </target>
 
   <!-- rebuilds all subprojects and the whole top-level distribution -->
-  <target name="distall" depends="prepare,distjme,distprojects,dist,mdist"/>
+  <target name="distall" depends="prepare,distjme,distprojects,dist,webapps,mdist"/>
 
   <!-- fully cleans out the installed application and all subprojects -->
   <target name="cleanall" depends="distclean,cleanjme,cleanprojects"/>
@@ -581,7 +570,8 @@
     </copy>
     <copy file="log/README" todir="${destroot.app}/log"/>
     <copy file="build.xml" todir="${destroot.app}"/>
-    <copy file="rsrc/config/resource/manager.properties" todir="${destroot.app}/rsrc/config/resource/"/>
+    <copy file="rsrc/config/resource/manager.properties"
+          todir="${destroot.app}/rsrc/config/resource/"/>
     <copy file="${tools.dir}/etc/build-support.xml" todir="${destroot.app}/${tools.dir}/etc"/>
     <antcall target="copywithperms">
       <param name="copy.perms" value="755"/>
