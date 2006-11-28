@@ -201,8 +201,7 @@ public class BangManager extends GameManager
      */
     public void setPriorLocation (String ident, int placeOid)
     {
-        _bangobj.setPriorLocation(
-            new BangObject.PriorLocation(ident, placeOid));
+        _bangobj.setPriorLocation(new BangObject.PriorLocation(ident, placeOid));
     }
 
     /**
@@ -233,18 +232,15 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void getBoard (
-        ClientObject caller, BangService.BoardListener listener)
+    public void getBoard (ClientObject caller, BangService.BoardListener listener)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
         if (!_bangobj.occupants.contains(user.getOid())) {
-            log.warning("Rejecting request for board by non-occupant " +
-                        "[who=" + user.who() + "].");
+            log.warning("Rejecting request for board by non-occupant [who=" + user.who() + "].");
             throw new InvocationException(INTERNAL_ERROR);
         } else if (_bangobj.board == null) {
-            log.warning("Rejecting request for non-existent board " +
-                        "[who=" + user.who() + "].");
+            log.warning("Rejecting request for non-existent board [who=" + user.who() + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
 
@@ -258,21 +254,18 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void selectTeam (
-        ClientObject caller, int bigShotId, String[] units, int[] cardIds)
+    public void selectTeam (ClientObject caller, int bigShotId, String[] units, int[] cardIds)
     {
         PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
         if (pidx == -1) {
-            log.warning("Request to select team by non-player " +
-                        "[who=" + user.who() + "].");
+            log.warning("Request to select team by non-player [who=" + user.who() + "].");
             return;
         }
 
         // make sure we haven't already done this
         if (_bangobj.bigShots[pidx] != null) {
-            log.info("Rejecting repeat team selection " +
-                     "[who=" + user.who() + "].");
+            log.info("Rejecting repeat team selection [who=" + user.who() + "].");
             return;
         }
 
@@ -289,7 +282,7 @@ public class BangManager extends GameManager
                 int held = 0;
                 for (Card heldCard : _bangobj.cards) {
                     if (heldCard.owner == pidx && !heldCard.found &&
-                            heldCard.getType().equals(item.getType())) {
+                        heldCard.getType().equals(item.getType())) {
                         held++;
                     }
                 }
@@ -300,7 +293,7 @@ public class BangManager extends GameManager
                 Card card = item.getCard();
                 if (!card.isPlayable(_bangobj)) {
                     log.warning("Rejecting request to use nonplayable card " +
-                        "[who=" + user.who() + ", card=" + card + "].");
+                                "[who=" + user.who() + ", card=" + card + "].");
                     continue;
                 }
                 cards[ii] = card;
@@ -393,8 +386,8 @@ public class BangManager extends GameManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // this is a little fiddly; we want to prepare the effect and make sure
-        // it's applicable before removing the card
+        // this is a little fiddly; we want to prepare the effect and make sure it's applicable
+        // before removing the card
         Effect effect = card.activate(_bangobj, target);
         if (effect == null) {
             throw new InvocationException(CARD_UNPLAYABLE);
@@ -405,8 +398,7 @@ public class BangManager extends GameManager
             throw new InvocationException(CARD_UNPLAYABLE);
         }
 
-        // play the played-card effect immediately before the card's actual
-        // effect
+        // play the played-card effect immediately before the card's actual effect
         log.info("Playing card: " + card);
         if (!deployEffect(card.owner, new PlayCardEffect(card, target))) {
             throw new InvocationException(CARD_UNPLAYABLE);
@@ -427,14 +419,12 @@ public class BangManager extends GameManager
     }
 
     // documentation inherited from interface BangProvider
-    public void reportPerformance (ClientObject caller, String board,
-                                   String driver, int[] perfhisto)
+    public void reportPerformance (
+        ClientObject caller, String board, String driver, int[] perfhisto)
     {
-        // log this!
         PlayerObject user = (PlayerObject)caller;
-        BangServer.perfLog(
-            "client_perf u:" + user.username + " b:" + board + " d:" + driver +
-            " h:" + StringUtil.toString(perfhisto));
+        BangServer.perfLog("client_perf u:" + user.username + " b:" + board + " d:" + driver +
+                           " h:" + StringUtil.toString(perfhisto));
     }
 
     @Override // documentation inherited
@@ -463,21 +453,18 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Attempts to move the specified unit to the specified coordinates and
-     * optionally fire upon the specified target.
+     * Attempts to move the specified unit to the specified coordinates and optionally fire upon
+     * the specified target.
      *
      * @param unit the unit to be moved.
-     * @param x the x coordinate to which to move or {@link Short#MAX_VALUE} if
-     * the unit should be moved to the closest valid firing position to the
-     * target.
-     * @param y the y coordinate to which to move, this is ignored if {@link
-     * Short#MAX_VALUE} is supplied for x.
+     * @param x the x coordinate to which to move or {@link Short#MAX_VALUE} if the unit should be
+     * moved to the closest valid firing position to the target.
+     * @param y the y coordinate to which to move, this is ignored if {@link Short#MAX_VALUE} is
+     * supplied for x.
      * @param targetId the (optional) target to shoot after moving.
-     * @param recheckOrders whether or not to recheck other advance orders
-     * after executing this order.
+     * @param recheckOrders whether or not to recheck other advance orders after executing.
      */
-    public void executeOrder (
-        Unit unit, int x, int y, int targetId, boolean recheckOrders)
+    public void executeOrder (Unit unit, int x, int y, int targetId, boolean recheckOrders)
         throws InvocationException
     {
         try {
@@ -520,14 +507,11 @@ public class BangManager extends GameManager
 
                     // apply the shot effect
                     if (!deployEffect(unit.owner, effect)) {
-                        log.warning("Failed to deploy shot effect " +
-                                    "[unit=" + unit +
-                                    ", move=" + x + "/" + y +
-                                    ", target=" + target +
+                        log.warning("Failed to deploy shot effect [unit=" + unit +
+                                    ", move=" + x + "/" + y + ", target=" + target +
                                     ", dam1=" + dam1 + ", dam2=" + dam2+ "].");
                     } else if (unit.owner != -1) {
-                        _bangobj.stats[unit.owner].incrementStat(
-                            Stat.Type.SHOTS_FIRED, 1);
+                        _bangobj.stats[unit.owner].incrementStat(Stat.Type.SHOTS_FIRED, 1);
                     }
                 } else {
                     effect = ((MoveShootEffect)meffect).shotEffect;
@@ -535,8 +519,7 @@ public class BangManager extends GameManager
                 _shooters.add(unit.pieceId);
 
                 // effect any collateral damage
-                Effect[] ceffects = unit.collateralDamage(
-                    _bangobj, target, effect.newDamage);
+                Effect[] ceffects = unit.collateralDamage(_bangobj, target, effect.newDamage);
                 int ccount = (ceffects == null) ? 0 : ceffects.length;
                 for (int ii = 0; ii < ccount; ii++) {
                     deployEffect(unit.owner, ceffects[ii]);
@@ -544,14 +527,12 @@ public class BangManager extends GameManager
 
                 // allow the target to return fire on certain shots
                 if (!(effect instanceof ProximityShotEffect)) {
-                    effect = target.returnFire(
-                            _bangobj, unit, effect.newDamage);
+                    effect = target.returnFire(_bangobj, unit, effect.newDamage);
                 }
                 if (effect != null) {
                     deployEffect(target.owner, effect);
                     if (target.owner != -1) {
-                        _bangobj.stats[target.owner].incrementStat(
-                            Stat.Type.SHOTS_FIRED, 1);
+                        _bangobj.stats[target.owner].incrementStat(Stat.Type.SHOTS_FIRED, 1);
                     }
                 }
             }
@@ -577,8 +558,7 @@ public class BangManager extends GameManager
             _bangobj.commitTransaction();
         }
 
-        // finally, validate all of our advance orders and make sure none of
-        // them have become invalid
+        // finally, validate all of our advance orders and make sure none of them became invalid
         if (recheckOrders) {
             validateOrders();
         }
@@ -596,8 +576,8 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Adds a piece to the board by deploying an {@link AddPieceEffect}.  The
-     * piece should already have a valid piece id.
+     * Adds a piece to the board by deploying an {@link AddPieceEffect}.  The piece should already
+     * have a valid piece id.
      */
     public void addPiece (Piece piece)
     {
@@ -605,11 +585,10 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Adds a piece to the board by deploying an {@link AddPieceEffect}.  The
-     * piece should already have a valid piece id.
+     * Adds a piece to the board by deploying an {@link AddPieceEffect}.  The piece should already
+     * have a valid piece id.
      *
-     * @param effect the effect to report on the piece after addition, or
-     * <code>null</code> for none
+     * @param effect the effect to report on the piece after addition, or <code>null</code>.
      */
     public void addPiece (Piece piece, String effect)
     {
@@ -617,11 +596,10 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Prepares an effect and posts it to the game object, recording damage
-     * done in the process.
+     * Prepares an effect and posts it to the game object, recording damage done in the process.
      *
-     * @return true if the effect was deployed, false if the effect was either
-     * not applicable or failed to apply.
+     * @return true if the effect was deployed, false if the effect was either not applicable or
+     * failed to apply.
      */
     public boolean deployEffect (int effector, Effect effect)
     {
@@ -629,47 +607,41 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Prepares an effect and posts it to the game object, recording damage
-     * done in the process. Will also process any other effects that got
-     * queued for immediate deployment.
+     * Prepares an effect and posts it to the game object, recording damage done in the
+     * process. Will also process any other effects that got queued for immediate deployment.
      *
-     * @param prepared if true, the effect has already been prepared and
-     * determined to be applicable
-     * @return true if the effect was deployed, false if the effect was either
-     * not applicable or failed to apply.
+     * @param prepared if true, the effect has already been prepared and determined to be
+     * applicable
+     * @return true if the effect was deployed, false if the effect was either not applicable or
+     * failed to apply.
      */
     public boolean deployEffect (int effector, Effect effect, boolean prepared)
     {
         boolean ret = actuallyDeployEffect(effector, effect, prepared);
         while (!_deployQueue.isEmpty()) {
             Deployable deploy = _deployQueue.removeFirst();
-            actuallyDeployEffect(
-                    deploy.effector, deploy.effect, deploy.prepared);
+            actuallyDeployEffect(deploy.effector, deploy.effect, deploy.prepared);
         }
         return ret;
     }
 
     /**
-     * Queues an effect for deployment after the current effect finishes
-     * being applied.
+     * Queues an effect for deployment after the current effect finishes being applied.
      */
-    public void queueDeployEffect (
-            int effector, Effect effect, boolean prepared)
+    public void queueDeployEffect (int effector, Effect effect, boolean prepared)
     {
         _deployQueue.add(new Deployable(effector, effect, prepared));
     }
 
     /**
-     * Prepares an effect and posts it to the game object, recording damage
-     * done in the process.
+     * Prepares an effect and posts it to the game object, recording damage done in the process.
      *
-     * @param prepared if true, the effect has already been prepared and
-     * determined to be applicable
-     * @return true if the effect was deployed, false if the effect was either
-     * not applicable or failed to apply.
+     * @param prepared if true, the effect has already been prepared and determined to be
+     * applicable.
+     * @return true if the effect was deployed, false if the effect was either not applicable or
+     * failed to apply.
      */
-    protected boolean actuallyDeployEffect (
-            int effector, Effect effect, boolean prepared)
+    protected boolean actuallyDeployEffect (int effector, Effect effect, boolean prepared)
     {
         if (!prepared) {
             // prepare the effect
@@ -678,10 +650,8 @@ public class BangManager extends GameManager
             // make sure the effect is still applicable
             if (!effect.isApplicable()) {
                 _damage.clear();
-                if (effect instanceof BonusEffect && 
-                        ((BonusEffect)effect).puntEffect != null) {
-                    actuallyDeployEffect(
-                            effector, ((BonusEffect)effect).puntEffect, false);
+                if (effect instanceof BonusEffect && ((BonusEffect)effect).puntEffect != null) {
+                    actuallyDeployEffect(effector, ((BonusEffect)effect).puntEffect, false);
                 }
                 return false;
             }
@@ -735,8 +705,7 @@ public class BangManager extends GameManager
             break;
 
         default:
-            log.warning("Unable to start next phase [game=" + where() +
-                        ", state=" + state + "].");
+            log.warning("Unable to start next phase [game=" + where() + ", state=" + state + "].");
             break;
         }
     }
@@ -759,10 +728,8 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     public String where ()
     {
-        return (_bangobj == null) ? super.where() :
-            "[" + super.where() + ", board=" +
-                _bangobj.boardName + ", pcount=" +
-                _bangobj.players.length + "]";
+        return (_bangobj == null) ? super.where() : "[" + super.where() + ", board=" +
+            _bangobj.boardName + ", pcount=" + _bangobj.players.length + "]";
     }
 
     @Override // documentation inherited
@@ -779,9 +746,8 @@ public class BangManager extends GameManager
 
         // set up the bang object
         _bangobj = (BangObject)_gameobj;
-        _bangobj.setService(
-            (BangMarshaller)PresentsServer.invmgr.registerDispatcher(
-                new BangDispatcher(this), false));
+        _bangobj.setService((BangMarshaller)PresentsServer.invmgr.registerDispatcher(
+                                new BangDispatcher(this), false));
         _bangobj.addListener(_ticklst);
         _bconfig = (BangConfig)_gameconfig;
 
@@ -800,35 +766,31 @@ public class BangManager extends GameManager
         // note the time at which we started
         _startStamp = System.currentTimeMillis();
 
-        // there are not saved cards to note before the first round, so start
-        // with that condition already satisfied
+        // there are not saved cards to note before the first round, so start with that condition
+        // already satisfied
         _startRoundMultex.satisfied(Multex.CONDITION_TWO);
 
         BoardRecord[] boards = null;
         // load up the named board if one was named
         if (!StringUtil.isBlank(_bconfig.board)) {
-            BoardRecord brec = BangServer.boardmgr.getBoard(
-                _bconfig.players.length, _bconfig.board);
+            BoardRecord brec =
+                BangServer.boardmgr.getBoard(_bconfig.players.length, _bconfig.board);
             if (brec != null) {
                 boards = new BoardRecord[_bconfig.scenarios.length];
                 Arrays.fill(boards, brec);
             } else {
-                log.warning("Failed to locate '" + _bconfig.board + "' " +
-                            "[where=" + where() + "].");
-                String msg = MessageBundle.tcompose(
-                    "m.no_such_board", _bconfig.board);
+                log.warning("Failed to locate '" + _bconfig.board + "' [where=" + where() + "].");
+                String msg = MessageBundle.tcompose("m.no_such_board", _bconfig.board);
                 SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
             }
 
         } else if (_bconfig.bdata != null) {
             try {
-                BoardRecord brec = new BoardRecord(
-                    BoardFile.loadFrom(_bconfig.bdata));
+                BoardRecord brec = new BoardRecord(BoardFile.loadFrom(_bconfig.bdata));
                 boards = new BoardRecord[_bconfig.scenarios.length];
                 Arrays.fill(boards, brec);
             } catch (Exception e) {
-                String msg = MessageBundle.tcompose(
-                    "m.board_load_failed", e.getMessage());
+                String msg = MessageBundle.tcompose("m.board_load_failed", e.getMessage());
                 SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
                 log.log(Level.WARNING, "Failed to load board from data.", e);
             }
@@ -836,8 +798,8 @@ public class BangManager extends GameManager
 
         // if no boards were specified otherwise, pick them randomly
         if (boards == null) {
-            boards = BangServer.boardmgr.selectBoards(_bconfig.players.length,
-                    _bconfig.scenarios, _bconfig.lastBoardIds);
+            boards = BangServer.boardmgr.selectBoards(
+                _bconfig.players.length, _bconfig.scenarios, _bconfig.lastBoardIds);
         }
 
         // set up our round records
@@ -879,11 +841,9 @@ public class BangManager extends GameManager
     {
         switch (_bangobj.state) {
         case BangObject.PRE_GAME:
-            // create our player records now that we know everyone's in the
-            // room and ready to go
+            // create our player records now that we know everyone's in the room and ready to go
             _precords = new PlayerRecord[getPlayerSlots()];
-            BangObject.PlayerInfo[] pinfo =
-                new BangObject.PlayerInfo[getPlayerSlots()];
+            BangObject.PlayerInfo[] pinfo = new BangObject.PlayerInfo[getPlayerSlots()];
             for (int ii = 0; ii < _precords.length; ii++) {
                 PlayerRecord prec = (_precords[ii] = new PlayerRecord());
                 prec.finishedTick = new int[_bconfig.getRounds()];
@@ -925,8 +885,7 @@ public class BangManager extends GameManager
 
         default:
             log.warning("playersAllHere() called during invalid phase! " +
-                        "[where=" + where() +
-                        ", state=" + _bangobj.state + "].");
+                        "[where=" + where() + ", state=" + _bangobj.state + "].");
             break;
         }
     }
@@ -974,8 +933,7 @@ public class BangManager extends GameManager
         // make sure we have a board at all
         final BoardRecord brec = _rounds[_activeRoundId].board;
         if (brec == null) {
-            log.warning("Missing board, cannot start round " +
-                        "[where=" + where() + "].");
+            log.warning("Missing board, cannot start round [where=" + where() + "].");
             cancelGame();
             return;
         }
@@ -997,8 +955,8 @@ public class BangManager extends GameManager
                 }
             }
             public void requestFailed (Exception cause) {
-                log.log(Level.WARNING, "Failed to load or decode board data " +
-                        "[brec=" + brec + "].", cause);
+                log.log(Level.WARNING, "Failed to load or decode board data [brec=" + brec + "].",
+                        cause);
                 cancelGame();
             }
         });
@@ -1014,29 +972,25 @@ public class BangManager extends GameManager
         if (_bconfig.tutorial) {
             _bangobj.setScenario(new TutorialInfo());
             _scenario = new Tutorial();
-            // we reuse the playerIsReady() mechanism to wait for the player to
-            // be ready to start the tutorial; normally they'd select their
-            // bigshot, but that doesn't happen in a tutorial
+            // we reuse the playerIsReady() mechanism to wait for the player to be ready to start
+            // the tutorial; normally they'd select their team etc., but not in a tutorial
             resetPlayerOids();
 
         } else if (_bconfig.practice) {
             _bangobj.setScenario(new PracticeInfo(ServerConfig.townId));
             _scenario = new Practice();
-            // we reuse the playerIsReady() mechanism to wait for the player to
-            // be ready to start the practice; normally they'd select their
-            // bigshot, but that doesn't happen in a practice session
+            // we reuse the playerIsReady() mechanism to wait for the player to be ready to start
+            // the practice; normally they'd select their team etc., but not in practice
             resetPlayerOids();
 
         } else {
-            ScenarioInfo info = ScenarioInfo.getScenarioInfo(
-                _bconfig.scenarios[_activeRoundId]);
+            ScenarioInfo info = ScenarioInfo.getScenarioInfo(_bconfig.scenarios[_activeRoundId]);
             _bangobj.setScenario(info);
             String sclass = info.getScenarioClass();
             try {
                 _scenario = (Scenario)Class.forName(sclass).newInstance();
             } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to instantiate scenario class " +
-                        "[class=" + sclass + "].", e);
+                log.log(Level.WARNING, "Failed to instantiate scenario class: " + sclass, e);
                 // TODO: cancel the game or something
                 return;
             }
@@ -1047,9 +1001,8 @@ public class BangManager extends GameManager
         round.scenario = _scenario;
 
         // create the logic for our ai players, if any
-        int aicount = (_AIs == null) ? 0 : _AIs.length;
-        _aiLogic = new AILogic[aicount];
-        for (int ii = 0; ii < aicount; ii++) {
+        _aiLogic = new AILogic[(_AIs == null) ? 0 : _AIs.length];
+        for (int ii = 0; ii < _aiLogic.length; ii++) {
             if (_AIs[ii] != null) {
                 _aiLogic[ii] = _scenario.createAILogic(_AIs[ii]);
                 _aiLogic[ii].init(this, ii);
@@ -1061,8 +1014,7 @@ public class BangManager extends GameManager
         _bangobj.setBoardName(round.board.name);
         _bangobj.setBoardHash(round.board.dataHash);
 
-        // clone the pieces we get from the board record as we may modify them
-        // during the course of the game
+        // clone the pieces we get from the board as we may modify them during the game
         ArrayList<Piece> pieces = new ArrayList<Piece>();
         for (Piece p : round.bdata.pieces) {
             // sanity check our pieces
@@ -1100,8 +1052,7 @@ public class BangManager extends GameManager
         _bangobj.startPositions = new StreamablePoint[_starts.size()];
         for (int ii = 0, nn = _starts.size(); ii < nn; ii++) {
             Piece start = _starts.get(ii);
-            _bangobj.startPositions[ii] =
-                new StreamablePoint(start.x, start.y);
+            _bangobj.startPositions[ii] = new StreamablePoint(start.x, start.y);
         }
         _bangobj.setStartPositions(_bangobj.startPositions);
 
@@ -1110,8 +1061,8 @@ public class BangManager extends GameManager
         _scenario.filterPieces(_bangobj, _starts, pieces, updates);
         _bangobj.setBoardUpdates(updates.toArray(new Piece[updates.size()]));
 
-        // remove any remaining marker pieces and assign piece ids; separate
-        // non-interactive props from other pieces
+        // remove any remaining marker pieces and assign piece ids; separate non-interactive props
+        // from other pieces
         ArrayList<Prop> props = new ArrayList<Prop>();
         _bangobj.maxPieceId = 0;
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
@@ -1136,8 +1087,8 @@ public class BangManager extends GameManager
         // clear out the selected big shots array
         _bangobj.setBigShots(new Unit[getPlayerSlots()]);
 
-        // configure anyone who is not in the game room as resigned for this
-        // round; this is be preserved through calls to resetPreparingStatus
+        // configure anyone who is not in the game room as resigned for this round; this is be
+        // preserved through calls to resetPreparingStatus
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (isAI(ii)) {
                 continue;
@@ -1166,8 +1117,7 @@ public class BangManager extends GameManager
     /**
      * Selects the starting team and configuration for an AI player.
      */
-    protected void selectTeam (
-        int pidx, String bigShotType, String[] units, String[] cardTypes)
+    protected void selectTeam (int pidx, String bigShotType, String[] units, String[] cardTypes)
     {
         Card[] cards = null;
         if (cardTypes != null) {
@@ -1199,8 +1149,7 @@ public class BangManager extends GameManager
                 }
             }
 
-            // if they failed to select a big shot (or are an AI) give
-            // them a default
+            // if they failed to select a big shot (or are an AI) give them a default
             if (item == null) {
                 item = new BigShotItem(-1, "tactician");
             }
@@ -1213,30 +1162,29 @@ public class BangManager extends GameManager
             unit.originalOwner = pidx;
             _bangobj.setBigShotsAt(unit, pidx);
 
-            // create an array of units from the requested types (limiting to
-            // the team size in case they try to get sneaky)
+            // create an array of units from the requested types (limiting to the team size in case
+            // they try to get sneaky)
             Unit[] units = new Unit[getTeamSize()];
             for (int ii = 0, ll = Math.min(units.length, utypes.length);
                  ii < ll; ii++) {
                 units[ii] = Unit.getUnit(utypes[ii]);
             }
 
-            // if this is a human player, make sure they didn't request units
-            // to which they don't have access
+            // if this is a human player, make sure they didn't request units to which they don't
+            // have access
             if (user != null) {
                 for (int ii = 0; ii < units.length; ii++) {
                     UnitConfig config = units[ii].getConfig();
                     if (config != null &&
                         (config.scripCost < 0 || !config.hasAccess(user))) {
-                        log.warning("Player requested to purchase illegal " +
-                                    "unit [who=" + user.who() +
+                        log.warning("Player requested to purchase illegal unit [who=" + user.who() +
                                     ", unit=" + config.type + "].");
                         units[ii] = null;
                     }
                 }
 
-                // TODO: make sure they didn't request more than their allowed
-                // number of each unit (currently one)
+                // TODO: make sure they didn't request more than their allowed number of each unit
+                // (currently one)
             }
 
             // initialize and prepare the units
@@ -1271,10 +1219,10 @@ public class BangManager extends GameManager
      */
     public void initAndPrepareUnit (Unit unit, int pidx)
     {
-            unit.assignPieceId(_bangobj);
-            unit.init();
-            unit.setOwner(_bangobj, pidx);
-            unit.originalOwner = pidx;
+        unit.assignPieceId(_bangobj);
+        unit.init();
+        unit.setOwner(_bangobj, pidx);
+        unit.originalOwner = pidx;
     }
 
     /**
@@ -1286,10 +1234,9 @@ public class BangManager extends GameManager
     }
 
     /**
-     * This is called when a player takes an action that might result in the
-     * current phase ending an the next phase starting, or when a player is
-     * removed from the game (in which case the next phase might need to be
-     * started because we were waiting on that player).
+     * This is called when a player takes an action that might result in the current phase ending
+     * an the next phase starting, or when a player is removed from the game (in which case the
+     * next phase might need to be started because we were waiting on that player).
      */
     protected void checkStartNextPhase ()
     {
@@ -1358,8 +1305,7 @@ public class BangManager extends GameManager
 
                 // configure the duration of the round
                 int duration = _scenario.getDuration(_bconfig, _bangobj);
-                // when testing multiple rounds it is useful to end games very
-                // quickly, so let's facilitate that
+                // when testing multiple rounds it is useful to end games very quickly
                 if (System.getProperty("quicktest") != null) {
                     duration /= 10;
                 }
@@ -1371,12 +1317,9 @@ public class BangManager extends GameManager
 
             } catch (InvocationException ie) {
                 log.warning("Scenario initialization failed [game=" + where() +
-                    ", scen=" + _scenario +
-                    ", error=" + ie.getMessage() + "].");
-                SpeakProvider.sendAttention(
-                    _bangobj, GAME_MSGS, ie.getMessage());
-                // TODO: cancel the round (or let the scenario cancel it
-                // on the first tick?)
+                            ", scen=" + _scenario + ", error=" + ie.getMessage() + "].");
+                SpeakProvider.sendAttention(_bangobj, GAME_MSGS, ie.getMessage());
+                // TODO: cancel the round (or let the scenario cancel it on the first tick?)
             }
 
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
@@ -1385,8 +1328,8 @@ public class BangManager extends GameManager
                     continue;
                 }
 
-                // note that this player is participating in this round by
-                // changing their perRoundPoints from -1 to zero
+                // note that this player is participating in this round by changing their
+                // perRoundPoints from -1 to zero
                 _bangobj.perRoundPoints[_activeRoundId][ii] = 0;
 
                 // first filter out this player's pieces
@@ -1399,8 +1342,8 @@ public class BangManager extends GameManager
 
                 // now position each of them
                 Piece p = _starts.get(ii);
-                ArrayList<Point> spots = _bangobj.board.getOccupiableSpots(
-                    ppieces.size(), p.x, p.y, 4);
+                ArrayList<Point> spots =
+                    _bangobj.board.getOccupiableSpots(ppieces.size(), p.x, p.y, 4);
                 while (spots.size() > 0 && ppieces.size() > 0) {
                     Point spot = spots.remove(0);
                     Piece piece = ppieces.remove(0);
@@ -1413,15 +1356,13 @@ public class BangManager extends GameManager
             _bangobj.commitTransaction();
         }
 
-        // we reuse the playerIsReady() mechanism to wait for the players to
-        // all report that they're fully ready to go (they need to resolve
-        // their unit models)
+        // we reuse the playerIsReady() mechanism to wait for the players to all report that
+        // they're fully ready to go (they need to resolve their unit models)
         resetPlayerOids();
     }
 
     /**
-     * Checks whether the player in question should have any of their
-     * time-related stats adjusted.
+     * Checks whether the player in question should have any of their time-related stats adjusted.
      */
     protected void checkTimeStats (long gameStart, PlayerObject user)
     {
@@ -1430,21 +1371,18 @@ public class BangManager extends GameManager
         if (client == null) {
             return;
         }
-        Calendar cal = Calendar.getInstance(
-            client.getTimeZone(), Locale.getDefault());
+        Calendar cal = Calendar.getInstance(client.getTimeZone(), Locale.getDefault());
         cal.setTimeInMillis(gameStart);
 
         // check for high noon
-        if (cal.get(Calendar.HOUR_OF_DAY) == 12 &&
-            cal.get(Calendar.MINUTE) == 0 &&
+        if (cal.get(Calendar.HOUR_OF_DAY) == 12 && cal.get(Calendar.MINUTE) == 0 &&
             cal.get(Calendar.SECOND) == 0) {
             user.stats.incrementStat(Stat.Type.MYSTERY_ONE, 1);
         }
 
         // check for christmas morning
         if (cal.get(Calendar.MONTH) == Calendar.DECEMBER &&
-            cal.get(Calendar.DATE) == 25 &&
-            cal.get(Calendar.HOUR_OF_DAY) < 8) {
+            cal.get(Calendar.DATE) == 25 && cal.get(Calendar.HOUR_OF_DAY) < 8) {
             user.stats.incrementStat(Stat.Type.MYSTERY_TWO, 1);
         }
 
@@ -1456,18 +1394,15 @@ public class BangManager extends GameManager
      */
     protected void tick (short tick)
     {
-        log.fine("Ticking [tick=" + tick +
-                 ", pcount=" + _bangobj.pieces.size() + "].");
-
-        Piece[] pieces = _bangobj.getPieceArray();
+        log.fine("Ticking [tick=" + tick + ", pcount=" + _bangobj.pieces.size() + "].");
 
         // allow pieces to tick down and possibly die
+        Piece[] pieces = _bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
             Piece p = pieces[ii];
             if (!p.isAlive()) {
                 if (p.expireWreckage(tick)) {
-                    log.fine("Expiring wreckage " + p.pieceId +
-                             " l:" + p.lastActed + " t:" + tick);
+                    log.fine("Expiring wreckage " + p.pieceId + " l:" + p.lastActed + " t:" + tick);
                     _bangobj.removeFromPieces(p.getKey());
                     _bangobj.board.clearShadow(p);
                 }
@@ -1491,19 +1426,17 @@ public class BangManager extends GameManager
             }
         }
 
-        // Clear the set of shooters for this tick
+        // clear the set of shooters for this tick
         _shooters.clear();
 
-        // execute any advance orders; we have to operate on a snapshot of the
-        // array because the execution of one order may cause other advance
-        // orders to be cancelled and removed
+        // execute any advance orders; we have to operate on a snapshot of the array because the
+        // execution of one order may cause other advance orders to be cancelled and removed
         int executed = 0;
         AdvanceOrder[] aos = _orders.toArray(new AdvanceOrder[_orders.size()]);
         for (AdvanceOrder order : aos) {
             if (order.unit.ticksUntilMovable(tick) <= 0) {
                 try {
-                    executeOrder(order.unit, order.x, order.y,
-                                 order.targetId, false);
+                    executeOrder(order.unit, order.x, order.y, order.targetId, false);
                     executed++;
                 } catch (InvocationException ie) {
                     reportInvalidOrder(order, ie.getMessage());
@@ -1570,8 +1503,7 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Called when a round (or the whole game) ends, possibly starts up the
-     * next one.
+     * Called when a round (or the whole game) ends, possibly starts up the next one.
      */
     protected void roundDidEnd (boolean startNext)
     {
@@ -1581,7 +1513,7 @@ public class BangManager extends GameManager
                 recordConsecKills(piece);
             }
         }
-        
+
         // broadcast our updated statistics
         _bangobj.setStats(_bangobj.stats);
 
@@ -1595,8 +1527,7 @@ public class BangManager extends GameManager
                     try {
                         user.startTransaction();
                         user.setLastScenId(_bconfig.scenarios[_activeRoundId]);
-                        user.setLastBoardId(
-                                _rounds[_activeRoundId].board.boardId);
+                        user.setLastBoardId(_rounds[_activeRoundId].board.boardId);
                     } finally {
                         user.commitTransaction();
                     }
@@ -1607,22 +1538,17 @@ public class BangManager extends GameManager
             for (int ii = 0; ii < ranks.length; ii++) {
                 ranks[ii] = new RankRecord(
                     ii, _bangobj.perRoundPoints[_activeRoundId][ii],
-                    _rounds[_activeRoundId].stats[ii].getIntStat(
-                        Stat.Type.UNITS_KILLED),
+                    _rounds[_activeRoundId].stats[ii].getIntStat(Stat.Type.UNITS_KILLED),
                     (_bangobj.isActivePlayer(ii) ? 1 : 0));
             }
             // we'll allow ties in the per round rankings
             Arrays.sort(ranks);
             short rank = 0;
-            boolean coop = (_bangobj.scenario.getTeams() ==
-                    ScenarioInfo.Teams.COOP);
+            boolean coop = (_bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP);
             if (coop) {
-                int avgscore = (IntListUtil.sum(_bangobj.points) /
-                        _bangobj.points.length);
-                rank = (short)(BangObject.COOP_RANK +
-                    BangServer.ratingmgr.getPercentile(
-                        _bangobj.scenario.getIdent(), ranks.length,
-                        avgscore, false));
+                int avgscore = (IntListUtil.sum(_bangobj.points) / _bangobj.points.length);
+                rank = (short)(BangObject.COOP_RANK + BangServer.ratingmgr.getPercentile(
+                                   _bangobj.scenario.getIdent(), ranks.length, avgscore, false));
             }
             int high = _bangobj.points[ranks[0].pidx];
             for (int ii = 0; ii < ranks.length; ii++) {
@@ -1637,8 +1563,7 @@ public class BangManager extends GameManager
             }
         }
 
-        // record for all players still in the game that they "used" their
-        // units during this round
+        // record for all players still in the game that they "used" their units during this round
         noteUnitsUsed(_purchases, Stat.Type.UNITS_USED, -1);
 
         // also keep track of all big shot units used during the game
@@ -1679,21 +1604,20 @@ public class BangManager extends GameManager
             startRound();
         }
     }
-    
+
     /**
-     * Records and clears out the consecutive kill count of the specified
-     * piece, if it is a player-owned unit.
+     * Records and clears out the consecutive kill count of the specified piece, if it is a
+     * player-owned unit.
      */
     protected void recordConsecKills (Piece piece)
     {
         if (piece.owner != -1 && piece instanceof Unit) {
             Unit unit = (Unit)piece;
-            _bangobj.stats[piece.owner].maxStat(Stat.Type.CONSEC_KILLS,
-                unit.consecKills);
+            _bangobj.stats[piece.owner].maxStat(Stat.Type.CONSEC_KILLS,unit.consecKills);
             unit.consecKills = 0;
         }
     }
-    
+
     @Override // documentation inherited
     protected void gameWasCancelled ()
     {
@@ -1711,15 +1635,14 @@ public class BangManager extends GameManager
         // do the normal round ending stuff as well
         roundDidEnd(false);
 
-        // if this was a tutorial practice session, and we played at least half
-        // of it, mark the practice tutorial as completed
+        // if this was a tutorial practice session, and we played at least half of it, mark the
+        // practice tutorial as completed
         if (_bangobj.priorLocation.ident.equals("tutorial") &&
             _bangobj.tick > _bangobj.duration/2) {
             PlayerObject user = (PlayerObject)getPlayer(0);
             if (user != null) {
-                user.stats.addToSetStat(
-                    Stat.Type.TUTORIALS_COMPLETED,
-                    TutorialCodes.PRACTICE_PREFIX + _bconfig.scenarios[0]);
+                user.stats.addToSetStat(Stat.Type.TUTORIALS_COMPLETED,
+                                        TutorialCodes.PRACTICE_PREFIX + _bconfig.scenarios[0]);
             }
         }
 
@@ -1727,8 +1650,7 @@ public class BangManager extends GameManager
         int gameSecs = (int)(System.currentTimeMillis() - _startStamp) / 1000;
 
         // update ratings if appropriate
-        if (_bconfig.rated &&
-            !_bconfig.scenarios[0].equals(TutorialInfo.IDENT) &&
+        if (_bconfig.rated && !_bconfig.scenarios[0].equals(TutorialInfo.IDENT) &&
             gameSecs >= MIN_RATED_DURATION) {
             // update each player's per-scenario ratings
             for (int ii = 0; ii < _bconfig.scenarios.length; ii++) {
@@ -1737,8 +1659,7 @@ public class BangManager extends GameManager
             }
 
             // update each player's overall rating
-            computeRatings(ScenarioInfo.OVERALL_IDENT,
-                           _bangobj.getFilteredPoints());
+            computeRatings(ScenarioInfo.OVERALL_IDENT, _bangobj.getFilteredPoints());
         }
 
         // these will track awarded cash and badges
@@ -1774,30 +1695,26 @@ public class BangManager extends GameManager
             // compute this player's "take home" cash
             if (prec.playerId > 0 && _scenario.shouldPayEarnings(prec.user)) {
                 // scale the earnings based on the scenario duration
-                award.cashEarned = (int)Math.ceil(computeEarnings(ii) *
-                    _bconfig.duration.getAdjustment());
+                award.cashEarned = (int)Math.ceil(
+                    computeEarnings(ii) * _bconfig.duration.getAdjustment());
             }
 
-            // if this was a rated (matched) game, persist various stats and
-            // potentially award a badge
+            // if this was a rated game, persist various stats and potentially award a badge
             if (_bconfig.rated) {
                 try {
                     recordStats(prec.user, ii, award, gameSecs/60);
                 } catch (Throwable t) {
-                    log.log(Level.WARNING, "Failed to record stats " +
-                            "[who=" + _bangobj.players[ii] + ", idx=" + ii +
-                            ", award=" + award + "].", t);
+                    log.log(Level.WARNING, "Failed to record stats [who=" + _bangobj.players[ii] +
+                            ", idx=" + ii + ", award=" + award + "].", t);
                 }
 
             } else if (prec.user.isActive()) {
                 // we only track one stat for unranked games, the number played
-                prec.user.stats.incrementStat(
-                    Stat.Type.UNRANKED_GAMES_PLAYED, 1);
+                prec.user.stats.incrementStat(Stat.Type.UNRANKED_GAMES_PLAYED, 1);
             }
         }
 
-        // broadcast the per-round earnings which will be displayed on one
-        // stats panel
+        // broadcast the per-round earnings which will be displayed on one stats panel
         _bangobj.setPerRoundPoints(_bangobj.perRoundPoints);
         _bangobj.setPerRoundRanks(_bangobj.perRoundRanks);
 
@@ -1817,8 +1734,7 @@ public class BangManager extends GameManager
     {
         super.playerGameDidEnd(pidx);
 
-        // if we haven't just lost our last human player, check to see if we
-        // should start the next phase
+        // if we haven't just lost our last human player, check if we should start the next phase
         if (getActiveHumanCount() > 0) {
             checkStartNextPhase();
         }
@@ -1828,36 +1744,34 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected boolean shouldEndGame ()
     {
-        return _bangobj.isInPlay() && (getActiveHumanCount() == 0 ||
-                                       _gameobj.getActivePlayerCount() == 1);
+        return _bangobj.isInPlay() &&
+            (getActiveHumanCount() == 0 || _gameobj.getActivePlayerCount() == 1);
     }
 
     @Override // documentation inherited
     protected void assignWinners (boolean[] winners)
     {
-        // compute the final ranking of each player, resolving ties using kill
-        // count, then a random ordering
+        // compute the final ranking of each player, resolving ties using kill count, then a random
+        // ordering
         int[] points = _bangobj.getFilteredPoints();
         _ranks = new RankRecord[points.length];
         for (int ii = 0; ii < _ranks.length; ii++) {
             int kills = 0;
             for (int rr = 0; rr < _rounds.length; rr++) {
                 if (_rounds[rr].stats != null) {
-                    kills += _rounds[rr].stats[ii].getIntStat(
-                        Stat.Type.UNITS_KILLED);
+                    kills += _rounds[rr].stats[ii].getIntStat(Stat.Type.UNITS_KILLED);
                 }
             }
-            _ranks[ii] = new RankRecord(ii, points[ii], kills,
-                    (_bangobj.isActivePlayer(ii) ? 1 : 0));
+            _ranks[ii] = new RankRecord(
+                ii, points[ii], kills, (_bangobj.isActivePlayer(ii) ? 1 : 0));
         }
 
         // first shuffle, then sort so that ties are resolved randomly
         ArrayUtil.shuffle(_ranks);
         Arrays.sort(_ranks);
 
-        // now ensure that each player has at least one more point than the
-        // player ranked immediately below them to communicate any last ditch
-        // tie resolution to the players
+        // now ensure that each player has at least one more point than the player ranked
+        // immediately below them to communicate any last ditch tie resolution to the players
         for (int ii = _ranks.length-2; ii >= 0; ii--) {
             int highidx = _ranks[ii].pidx, lowidx = _ranks[ii+1].pidx;
             if (_bangobj.points[highidx] <= _bangobj.points[lowidx]) {
@@ -1870,15 +1784,14 @@ public class BangManager extends GameManager
     }
 
     /**
-     * During the {@link BangObject#SELECT_PHASE} we set a timer that resigns
-     * any player that does not make their selection or purchase within the
-     * alotted time frame.
+     * During the {@link BangObject#SELECT_PHASE} we set a timer that resigns any player that does
+     * not make their selection or purchase within the alotted time frame.
      */
     protected void preGameTimerExpired (int targetState)
     {
         if (_bangobj.state != targetState) {
-            // we may have expired at *just* the right time to miss the last
-            // player's submission in which case we need do nothing
+            // we may have expired at *just* the right time to miss the last player's submission in
+            // which case we need do nothing
             return;
         }
 
@@ -1886,17 +1799,16 @@ public class BangManager extends GameManager
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (!isAI(ii) &&
                 _bangobj.playerStatus[ii] == BangObject.PLAYER_PREPARING) {
-                log.info("Player failed to make a selection in time " +
-                         "[game=" + where() + ", state=" + targetState +
-                         ", who=" + _bangobj.players[ii] + "].");
+                log.info("Player failed to make a selection in time [game=" + where() +
+                         ", state=" + targetState + ", who=" + _bangobj.players[ii] + "].");
                 endPlayerGame(ii);
             }
         }
     }
 
     /**
-     * Attempts to move the specified piece to the specified coordinates.
-     * Various checks are made to ensure that it is a legal move.
+     * Attempts to move the specified piece to the specified coordinates.  Various checks are made
+     * to ensure that it is a legal move.
      *
      * @return the cloned and moved piece if the piece was moved.
      */
@@ -1917,9 +1829,8 @@ public class BangManager extends GameManager
             Point spot = unit.computeShotLocation(
                 _bangobj.board, target, _moves, false);
             if (spot == null) {
-//                 log.info("Unable to find place from which to shoot. " +
-//                     "[piece=" + unit + ", target=" + target +
-//                     ", moves=" + _moves + "].");
+//                 log.info("Unable to find place from which to shoot. [piece=" + unit +
+//                          ", target=" + target + ", moves=" + _moves + "].");
                 throw new InvocationException(TARGET_UNREACHABLE);
             }
             x = spot.x;
@@ -1934,17 +1845,16 @@ public class BangManager extends GameManager
         // make sure we are alive, and are ready to move
         int steps = unit.getDistance(x, y);
         if (!unit.isAlive() || unit.ticksUntilMovable(_bangobj.tick) > 0) {
-            log.info("Unit no longer movable [unit=" + unit +
-                ", alive=" + unit.isAlive() +
-                ", mticks=" + unit.ticksUntilMovable(_bangobj.tick) + "].");
+            log.info("Unit no longer movable [unit=" + unit + ", alive=" + unit.isAlive() +
+                     ", mticks=" + unit.ticksUntilMovable(_bangobj.tick) + "].");
             throw new InvocationException(MOVER_NO_LONGER_VALID);
         }
 
         // validate that the move is still legal
         if (!_moves.contains(x, y) && x != unit.x && y != unit.y) {
-//             log.info("Unit requested invalid move [unit=" + unit +
-//                      ", x=" + x + ", y=" + y + ", moves=" + _moves + "].");
-                throw new InvocationException(MOVE_BLOCKED);
+//             log.info("Unit requested invalid move [unit=" + unit + ", x=" + x + ", y=" + y +
+//                      ", moves=" + _moves + "].");
+            throw new InvocationException(MOVE_BLOCKED);
         }
 
         // clone and move the unit
@@ -1952,8 +1862,7 @@ public class BangManager extends GameManager
         munit.position(x, y);
         munit.lastActed = _bangobj.tick;
 
-        // ensure that we don't land on any piece that prevents us from
-        // overlapping
+        // ensure that we don't land on any piece that prevents us from overlapping
         boolean bridge = _bangobj.board.isBridge(x, y);
         ArrayList<Piece> lappers = _bangobj.getOverlappers(munit);
         if (lappers != null) {
@@ -1962,15 +1871,14 @@ public class BangManager extends GameManager
                     continue;
                 }
                 if (lapper.preventsOverlap(munit) && lapper != unit) {
-//                    log.info("Cannot overlap on move [unit=" + unit +
-//                            ", x=" + x + ", y=" + y + "].");
+//                     log.info("Cannot overlap on move [unit=" + unit +
+//                              ", x=" + x + ", y=" + y + "].");
                     throw new InvocationException(MOVE_BLOCKED);
                 }
             }
         }
 
-        // make sure we can still reach and shoot any potential target before
-        // we go ahead with our move
+        // make sure we can still reach and shoot our target before we go ahead with our move
         checkTarget(unit, target, x, y);
 
         // update our board shadow
@@ -1979,17 +1887,15 @@ public class BangManager extends GameManager
 
         // record the move to this player's statistics
         if (unit.owner != -1) {
-            _bangobj.stats[unit.owner].incrementStat(
-                Stat.Type.DISTANCE_MOVED, steps);
+            _bangobj.stats[unit.owner].incrementStat(Stat.Type.DISTANCE_MOVED, steps);
         }
 
         // dispatch a move effect to actually move the unit
         MoveEffect meffect = unit.generateMoveEffect(_bangobj, x, y, target);
         _onTheMove = unit;
-        if (deployEffect(unit.owner, meffect) &&
-                meffect instanceof MoveShootEffect && unit.owner != -1) {
-            _bangobj.stats[unit.owner].incrementStat(
-                Stat.Type.SHOTS_FIRED, 1);
+        if (deployEffect(unit.owner, meffect) && meffect instanceof MoveShootEffect &&
+            unit.owner != -1) {
+            _bangobj.stats[unit.owner].incrementStat(Stat.Type.SHOTS_FIRED, 1);
         }
         _onTheMove = null;
 
@@ -1999,21 +1905,18 @@ public class BangManager extends GameManager
             deployEffect(-1, peffect);
         }
 
-        // Effects that resulted because of the move might prevent us from
-        // shooting our target
+        // effects that resulted because of the move might prevent us from shooting our target
         if (!(meffect instanceof MoveShootEffect)) {
             checkTarget(unit, target, unit.x, unit.y);
         }
-
 
         return meffect;
     }
 
     /**
-     * Checks that the specified unit can reach and shoot the specified
-     * target. Throws an invocation exception if that is no longer the case
-     * (ie. the target moved out of range or died). Target may be null in which
-     * case this method does nothing.
+     * Checks that the specified unit can reach and shoot the specified target. Throws an
+     * invocation exception if that is no longer the case (ie. the target moved out of range or
+     * died). Target may be null in which case this method does nothing.
      */
     protected void checkTarget (Piece shooter, Piece target, int x, int y)
         throws InvocationException
@@ -2025,30 +1928,25 @@ public class BangManager extends GameManager
         // make sure the target is still valid
         if (!shooter.validTarget(_bangobj, target, false)) {
             // target already dead or something
-//             log.info("Target no longer valid [shooter=" + shooter +
-//                      ", target=" + target + "].");
+//             log.info("Target no longer valid [shooter=" + shooter + ", target=" + target + "].");
             throw new InvocationException(TARGET_NO_LONGER_VALID);
         }
 
         // make sure the target is still reachable
         if (!shooter.targetInRange(x, y, target.x, target.y) ||
-            !shooter.checkLineOfSight(
-                _bangobj.board, x, y, target)) {
-//             log.info("Target no longer reachable " +
-//                      "[shooter=" + shooter +
+            !shooter.checkLineOfSight(_bangobj.board, x, y, target)) {
+//             log.info("Target no longer reachable [shooter=" + shooter +
 //                      ", target=" + target + "].");
             throw new InvocationException(TARGET_UNREACHABLE);
         }
     }
 
     /**
-     * Scans the list of advance orders and clears any that have become
-     * invalid.
+     * Scans the list of advance orders and clears any that have become invalid.
      */
     protected void validateOrders ()
     {
-        for (Iterator<AdvanceOrder> iter = _orders.iterator();
-             iter.hasNext(); ) {
+        for (Iterator<AdvanceOrder> iter = _orders.iterator(); iter.hasNext(); ) {
             AdvanceOrder order = iter.next();
             String cause = order.checkValid();
             if (cause != null) {
@@ -2059,9 +1957,8 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Immediately executes any pending order for the specified unit. This
-     * should be called when a unit becomes ready out of the normal tick
-     * sequence, like via a Giddy Up card.
+     * Immediately executes any pending order for the specified unit. This should be called when a
+     * unit becomes ready out of the normal tick sequence, like via a Giddy Up card.
      */
     protected void executeOrders (int unitId)
     {
@@ -2075,8 +1972,7 @@ public class BangManager extends GameManager
         if (order != null) {
             log.info("Immediately executing order " + order + ".");
             try {
-                executeOrder(
-                    order.unit, order.x, order.y, order.targetId, true);
+                executeOrder(order.unit, order.x, order.y, order.targetId, true);
             } catch (InvocationException ie) {
                 reportInvalidOrder(order, ie.getMessage());
             }
@@ -2107,8 +2003,7 @@ public class BangManager extends GameManager
     {
         PlayerObject user = (PlayerObject)getPlayer(order.unit.owner);
         if (user != null && user.status != OccupantInfo.DISCONNECTED) {
-//             log.info("Advance order failed [order=" + order +
-//                      ", who=" + user.who() + "].");
+//             log.info("Advance order failed [order=" + order + ", who=" + user.who() + "].");
             BangSender.orderInvalidated(user, order.unit.pieceId, reason);
 //         } else {
 //             log.info("Advance order failed [order=" + order + "].");
@@ -2146,9 +2041,8 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Computes the take-home cash for the specified player index. This is
-     * based on their final rank, their purse, the number of rounds played and
-     * the number of players.
+     * Computes the take-home cash for the specified player index. This is based on their final
+     * rank, their purse, the number of rounds played and the number of players.
      */
     protected int computeEarnings (int pidx)
     {
@@ -2159,10 +2053,8 @@ public class BangManager extends GameManager
 
         int earnings = 0;
         for (int rr = 0; rr < _bconfig.getRounds(); rr++) {
-            // if the round was not played to at least half it's desired
-            // duration, skip it
-            if (_rounds[rr].duration == 0 ||
-                    _rounds[rr].lastTick < _rounds[rr].duration/2) {
+            // if the round was not played to at least half it's desired duration, skip it
+            if (_rounds[rr].duration == 0 || _rounds[rr].lastTick < _rounds[rr].duration/2) {
                 continue;
             }
             earnings += _rounds[rr].scenario.computeEarnings(
@@ -2174,19 +2066,19 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Computes updated ratings for the specified scenario, using the supplied
-     * scores and stores them in the appropriate {@link PlayerRecord}.
+     * Computes updated ratings for the specified scenario, using the supplied scores and stores
+     * them in the appropriate {@link PlayerRecord}.
      */
     protected void computeRatings (String scenario, int[] scores)
     {
         // compute the average score for coop scenarios
         boolean coop = (!scenario.equals(ScenarioInfo.OVERALL_IDENT) &&
-            ScenarioInfo.getScenarioInfo(scenario).getTeams() ==
-                ScenarioInfo.Teams.COOP);
+                        ScenarioInfo.getScenarioInfo(scenario).getTeams() ==
+                        ScenarioInfo.Teams.COOP);
         int avgscore = coop ? (IntListUtil.sum(scores) / scores.length) : 0;
 
-        // filter AIs from the scores; the ratings computations below will
-        // ignore players whose score is set to zero
+        // filter AIs from the scores; the ratings computations below will ignore players whose
+        // score is set to zero
         scores = scores.clone();
         for (int ii = 0; ii < scores.length; ii++) {
             if (isAI(ii)) {
@@ -2201,17 +2093,16 @@ public class BangManager extends GameManager
         }
 
         // now compute the adjusted ratings
-        int pctile = coop ? BangServer.ratingmgr.getPercentile(
-            scenario, ratings.length, avgscore, true) : 0;
+        int pctile = coop ?
+            BangServer.ratingmgr.getPercentile(scenario, ratings.length, avgscore, true) : 0;
         int[] nratings = new int[ratings.length];
         for (int pidx = 0; pidx < ratings.length; pidx++) {
-            nratings[pidx] = coop ?
-                Rating.computeCoopRating(pctile, ratings, pidx) :
+            nratings[pidx] = coop ? Rating.computeCoopRating(pctile, ratings, pidx) :
                 Rating.computeRating(scores, ratings, pidx);
         }
 
-        // finally store the adjusted ratings back in the ratings objects and
-        // record the increased experience
+        // finally store the adjusted ratings back in the ratings objects and record the increased
+        // experience
         for (int pidx = 0; pidx < ratings.length; pidx++) {
             // skip this rating if we weren't able to compute a value
             if (nratings[pidx] < 0) {
@@ -2224,22 +2115,20 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Records game stats to the player's persistent stats and potentially
-     * awards them a badge. This is only called for rated (matched) games.
+     * Records game stats to the player's persistent stats and potentially awards them a
+     * badge. This is only called for rated (matched) games.
      */
-    protected void recordStats (
-        final PlayerObject user, int pidx, Award award, int gameMins)
+    protected void recordStats (final PlayerObject user, int pidx, Award award, int gameMins)
     {
         // if this player has logged off...
         if (!user.isActive()) {
-            // ...we won't update any of their cumulative stats, but we need to
-            // wipe their consecutive wins stat
+            // ...we won't update any of their cumulative stats, but we need to wipe their
+            // consecutive wins stat
             BangServer.invoker.postUnit(new Invoker.Unit() {
                 public boolean invoke () {
                     Stat stat = Stat.Type.CONSEC_WINS.newStat();
                     stat.setModified(true);
-                    BangServer.statrepo.writeModified(
-                        user.playerId, new Stat[] { stat });
+                    BangServer.statrepo.writeModified(user.playerId, new Stat[] { stat });
                     return false;
                 }
             });
@@ -2281,8 +2170,8 @@ public class BangManager extends GameManager
                 // accumulate stats tracked during this round
                 for (int ss = 0; ss < ACCUM_STATS.length; ss++) {
                     Stat.Type type = ACCUM_STATS[ss];
-                    // we don't subtract accumulating stats if the player
-                    // "accumulated" negative points in the game
+                    // we don't subtract accumulating stats if the player "accumulated" negative
+                    // points in the game
                     int value = _rounds[rr].stats[pidx].getIntStat(type);
                     if (value > 0) {
                         user.stats.incrementStat(type, value);
@@ -2290,8 +2179,7 @@ public class BangManager extends GameManager
                 }
 
                 // check to see if any "max" stat was exceeded in this round
-                user.stats.maxStat(Stat.Type.HIGHEST_POINTS,
-                                   _bangobj.perRoundPoints[rr][pidx]);
+                user.stats.maxStat(Stat.Type.HIGHEST_POINTS, _bangobj.perRoundPoints[rr][pidx]);
                 for (int ss = 0; ss < MAX_STATS.length; ss += 2) {
                     int v = _rounds[rr].stats[pidx].getIntStat(MAX_STATS[ss+1]);
                     user.stats.maxStat(MAX_STATS[ss], v);
@@ -2299,8 +2187,7 @@ public class BangManager extends GameManager
             }
 
             // note their cash earned
-            user.stats.incrementStat(
-                Stat.Type.CASH_EARNED, award.cashEarned);
+            user.stats.incrementStat(Stat.Type.CASH_EARNED, award.cashEarned);
 
             // allow the scenario to record statistics as well
             _scenario.recordStats(_bangobj, gameMins, pidx, user);
@@ -2358,8 +2245,7 @@ public class BangManager extends GameManager
                     buf.append("(tin_can)");
                     continue;
                 }
-                if (_precords == null || _precords[ii] == null ||
-                    _precords[ii].user == null) {
+                if (_precords == null || _precords[ii] == null || _precords[ii].user == null) {
                     buf.append("(never_arrived)");
                     continue;
                 }
@@ -2367,8 +2253,7 @@ public class BangManager extends GameManager
 
                 // note players that left the game early
                 if (!_bangobj.isActivePlayer(ii)) {
-                    PlayerObject pobj = BangServer.lookupPlayer(
-                        _precords[ii].user.handle);
+                    PlayerObject pobj = BangServer.lookupPlayer(_precords[ii].user.handle);
                     if (pobj == null) {
                         buf.append("*"); // no longer online
                     } else if (pobj.status == OccupantInfo.DISCONNECTED) {
@@ -2391,9 +2276,8 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Persists the supplied cash and badges and sticks them into the
-     * distributed objects of the appropriate players. Also updates the
-     * players' ratings if appropriate.
+     * Persists the supplied cash and badges and sticks them into the distributed objects of the
+     * appropriate players. Also updates the players' ratings if appropriate.
      */
     protected void postGamePersist (final Award[] awards)
     {
@@ -2409,11 +2293,9 @@ public class BangManager extends GameManager
                     // grant them their case
                     if (award.cashEarned > 0) {
                         try {
-                            BangServer.playrepo.grantScrip(
-                                prec.playerId, award.cashEarned);
+                            BangServer.playrepo.grantScrip(prec.playerId, award.cashEarned);
                         } catch (PersistenceException pe) {
-                            log.log(Level.WARNING, "Failed to award scrip to " +
-                                    "player [who=" + prec.playerId +
+                            log.log(Level.WARNING, "Failed to award scrip [who=" + prec.playerId +
                                     ", scrip=" + award.cashEarned + "]", pe);
                         }
                     }
@@ -2423,23 +2305,19 @@ public class BangManager extends GameManager
                         try {
                             BangServer.itemrepo.insertItem(award.badge);
                         } catch (PersistenceException pe) {
-                            log.log(Level.WARNING, "Failed to store badge " +
-                                    award.badge, pe);
+                            log.log(Level.WARNING, "Failed to store badge " + award.badge, pe);
                         }
                     }
 
                     // update their ratings
                     if (prec.nratings.size() > 0) {
-                        ArrayList<Rating> ratings =
-                            new ArrayList<Rating>(prec.nratings.values());
+                        ArrayList<Rating> ratings = new ArrayList<Rating>(prec.nratings.values());
                         try {
-                            BangServer.ratingrepo.updateRatings(
-                                prec.playerId, ratings);
+                            BangServer.ratingrepo.updateRatings(prec.playerId, ratings);
                         } catch (PersistenceException pe) {
-                            log.log(Level.WARNING,
-                                    "Failed to persist ratings " +
-                                    "[pid=" + prec.playerId + ", ratings=" +
-                                    StringUtil.toString(ratings) + "]", pe);
+                            log.log(Level.WARNING, "Failed to persist ratings " +
+                                    "[pid=" + prec.playerId +
+                                    ", ratings=" + StringUtil.toString(ratings) + "]", pe);
                         }
                     }
                 }
@@ -2451,8 +2329,7 @@ public class BangManager extends GameManager
                     int pidx = awards[ii].pidx;
                     PlayerObject player = _precords[pidx].user;
                     if (player == null || !player.isActive()) {
-                        // no need to update their player distributed object if
-                        // they've already logged off
+                        // no need to update their player object if they've already logged off
                         continue;
                     }
                     if (awards[ii].cashEarned > 0) {
@@ -2474,8 +2351,8 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Flushes any updated card items to the database and effects any removals
-     * due to the last card being played from a player's inventory.
+     * Flushes any updated card items to the database and effects any removals due to the last card
+     * being played from a player's inventory.
      */
     protected void notePlayedCards (final ArrayList<StartingCard> updates,
                                     final ArrayList<StartingCard> removals)
@@ -2494,8 +2371,7 @@ public class BangManager extends GameManager
                 }
                 for (StartingCard scard : removals) {
                     try {
-                        BangServer.itemrepo.deleteItem(
-                            scard.item, "played_last_card");
+                        BangServer.itemrepo.deleteItem(scard.item, "played_last_card");
                     } catch (PersistenceException pe) {
                         log.log(Level.WARNING, "Failed to delete played card " +
                                 "[item=" + scard.item + "]", pe);
@@ -2540,9 +2416,9 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Resets all player status to preparing. We do this element by element
-     * rather than setting one array because there is the chance that
-     * unprocessed element sets in the queue will overwrite what we set.
+     * Resets all player status to preparing. We do this element by element rather than setting one
+     * array because there is the chance that unprocessed element sets in the queue will overwrite
+     * what we set.
      */
     protected void resetPreparingStatus (boolean aisAreReady)
     {
@@ -2570,9 +2446,8 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Resets the player oid of all active players so that they can report in
-     * once again that they are ready and we can trigger on {@link
-     * #playersAllHere} for different phases of the game.
+     * Resets the player oid of all active players so that they can report in once again that they
+     * are ready and we can trigger on {@link #playersAllHere} for different phases of the game.
      */
     protected void resetPlayerOids ()
     {
@@ -2627,9 +2502,8 @@ public class BangManager extends GameManager
             // make sure this unit is still in play
             Unit aunit = (Unit)obj;
             if (aunit == null || !aunit.isAlive()) {
-                log.info("Advance order no longer valid [order=" + this +
-                    ", unit=" + (aunit == null ? "null" :
-                        (aunit + " (" + aunit.isAlive() + ")")) + "].");
+                log.info("Advance order no longer valid [order=" + this + ", unit=" +
+                         (aunit == null ? "null" : (aunit + " (" + aunit.isAlive() + ")")) + "].");
                 return MOVER_NO_LONGER_VALID;
             }
 
@@ -2647,19 +2521,17 @@ public class BangManager extends GameManager
             _attacks.clear();
             unit.computeMoves(_bangobj.board, _moves, null);
 
-            // if no specific location was specified, make sure we can still
-            // determine a location from which to fire
+            // if no specific location was specified, make sure we can still determine a location
+            // from which to fire
             if (x == Short.MAX_VALUE) {
                 if (target == null) { // sanity check
                     return TARGET_NO_LONGER_VALID;
                 }
-                return (unit.computeShotLocation(
-                            _bangobj.board, target, _moves, true) == null) ?
+                return (unit.computeShotLocation(_bangobj.board, target, _moves, true) == null) ?
                     TARGET_UNREACHABLE : null;
             }
 
-            // if a specific location was specified, make sure we can
-            // still reach it
+            // if a specific location was specified, make sure we can still reach it
             if (!_moves.contains(x, y)) {
                 return MOVE_BLOCKED;
             }
@@ -2669,8 +2541,8 @@ public class BangManager extends GameManager
                 return null;
             }
 
-            // we are doing a move and shoot, so make sure we can still hit the
-            // target from our desired move location
+            // we are doing a move and shoot, so make sure we can still hit the target from our
+            // desired move location
             if (!unit.targetInRange(x, y, target.x, target.y) ||
                 !unit.checkLineOfSight(_bangobj.board, x, y, target)) {
                 return TARGET_UNREACHABLE;
@@ -2684,8 +2556,8 @@ public class BangManager extends GameManager
         }
     }
 
-    /** Used to track cards from a player's inventory and whether or not they
-     * are actually used during a game. */
+    /** Used to track cards from a player's inventory and whether or not they are actually used
+     * during a game. */
     protected static class StartingCard
     {
         public int pidx;
@@ -2731,8 +2603,7 @@ public class BangManager extends GameManager
     /** Triggers our board tick once every N seconds. */
     protected Interval _ticker = _ticker = new Interval(PresentsServer.omgr) {
         public void expired () {
-            // cope if the game has been ended and destroyed since we were
-            // queued up for execution
+            // cope if the game has been ended and destroyed since we were queued up for execution
             if (!_bangobj.isActive() || _bangobj.state != BangObject.IN_PLAY) {
                 return;
             }
@@ -2743,9 +2614,8 @@ public class BangManager extends GameManager
             _bangobj.tick((short)nextTick);
 
             // queue up the next tick
-            long tickTime = (long)Math.round(
-                _scenario.getTickTime(_bconfig, _bangobj) *
-                _bconfig.speed.getAdjustment());
+            long tickTime = (long)Math.round(_scenario.getTickTime(_bconfig, _bangobj) *
+                                             _bconfig.speed.getAdjustment());
             tickTime += _extraTickTime;
             _ticker.schedule(tickTime);
             _nextTickTime = System.currentTimeMillis() + tickTime;
@@ -2758,13 +2628,12 @@ public class BangManager extends GameManager
             String pieceLogic = piece.getLogic();
             if (pieceLogic != null) {
                 try {
-                    PieceLogic plogic =
-                        (PieceLogic)Class.forName(pieceLogic).newInstance();
+                    PieceLogic plogic = (PieceLogic)Class.forName(pieceLogic).newInstance();
                     plogic.init(BangManager.this, piece);
                     _pLogics.put(piece.pieceId, plogic);
                 } catch (Exception e) {
                     log.log(Level.WARNING, "Failed to create piece logic " +
-                        "[piece=" + piece + ", class=" + pieceLogic + "].", e);
+                            "[piece=" + piece + ", class=" + pieceLogic + "].", e);
                 }
             }
         }
@@ -2772,12 +2641,11 @@ public class BangManager extends GameManager
         public void pieceAffected (Piece piece, String effect) {
             if (effect.equals(AdjustTickEffect.GIDDY_UPPED) &&
                 piece.ticksUntilMovable(_bangobj.tick) == 0) {
-                // if a piece was giddy upped into readiness, immediately
-                // execute any advance order it has registered
+                // if a piece was giddy upped into readiness, immediately execute any advance order
+                // it has registered
                 executeOrders(piece.pieceId);
             } else if (HoldEffect.isDroppedEffect(effect)) {
-                // if a piece dropped its held bonus, cancel any advance order
-                // it has registered
+                // if a piece dropped its held bonus, cancel any advance order it has registered
                 clearOrders(piece.pieceId, true);
             }
             _scenario.pieceAffected(piece, effect);
@@ -2787,10 +2655,7 @@ public class BangManager extends GameManager
         }
 
         public void pieceMoved (Piece piece) {
-            // let the scenario know that the unit moved
-            _scenario.pieceMoved(_bangobj, piece);
-
-            // interact with any pieces occupying our target space
+            // first, interact with any pieces occupying our target space
             ArrayList<Piece> lappers = _bangobj.getOverlappers(piece);
             if (lappers != null) {
                 for (Piece lapper : lappers) {
@@ -2799,33 +2664,31 @@ public class BangManager extends GameManager
                         for (Effect effect : effects) {
                             if (effect == null) {
                                 continue;
-                            } else if (_onTheMove == piece &&
-                                    effect instanceof TeleportEffect) {
+                            } else if (_onTheMove == piece && effect instanceof TeleportEffect) {
                                 _postShotEffects.add(effect);
                                 continue;
                             } else {
                                 queueDeployEffect(piece.owner, effect, false);
                             }
-                            // small hackery: note that this player collected
-                            // a bonus
+                            // small hackery: note that this player collected a bonus
                             if (effect instanceof HoldEffect &&
-                                ((HoldEffect)effect).dropping == false &&
-                                lapper instanceof Bonus &&
-                                !((Bonus)lapper).isScenarioBonus() &&
-                                piece.owner != -1) {
+                                ((HoldEffect)effect).dropping == false && lapper instanceof Bonus &&
+                                !((Bonus)lapper).isScenarioBonus() && piece.owner != -1) {
                                 _bangobj.stats[piece.owner].incrementStat(
                                     Stat.Type.BONUSES_COLLECTED, 1);
                             }
                         }
-
                     }
                 }
             }
 
+            // then, let the scenario know that the unit moved which may result in nuggets being
+            // stolen, cattle rustled, etc.
+            _scenario.pieceMoved(_bangobj, piece);
         }
 
         public void pieceKilled (Piece piece, int shooter) {
-            // Queue a post death effect
+            // queue a post death effect
             Effect effect = piece.didDie(_bangobj);
             if (effect != null) {
                 queueDeployEffect(piece.owner, effect, false);
@@ -2834,8 +2697,7 @@ public class BangManager extends GameManager
             // let the scenario know that the piece was killed
             _scenario.pieceWasKilled(_bangobj, piece, shooter);
 
-            // if this is a unit and owned by a player, update their
-            // consecutive kills
+            // if this is a unit and owned by a player, update their consecutive kills
             recordConsecKills(piece);
         }
 
@@ -2853,8 +2715,8 @@ public class BangManager extends GameManager
         }
 
         public void tickDelayed (long extraTime) {
-            // if we are currently processing a tick, add to the extra tick
-            // time; otherwise, postpone the next tick
+            // if we are currently processing a tick, add to the extra tick time; otherwise,
+            // postpone the next tick
             long now = System.currentTimeMillis();
             if (now >= _nextTickTime) {
                 _extraTickTime = Math.max(_extraTickTime, extraTime);
@@ -2916,12 +2778,10 @@ public class BangManager extends GameManager
     /** Used to record damage done during an attack. */
     protected IntIntMap _damage = new IntIntMap();
 
-    /** Used to compute a piece's potential moves or attacks when
-     * validating a move request. */
+    /** Used to compute a piece's potential moves or attacks when validating a move request. */
     protected PointSet _moves = new PointSet(), _attacks = new PointSet();
 
-    /** Used to resign players if they do not make a selection during the
-     * pre-game phase. */
+    /** Used to resign players if they do not make a selection during the pre-game phase. */
     protected PreGameTimer _preGameTimer = new PreGameTimer();
 
     /** Used to track the locations where players can start. */
@@ -2936,12 +2796,10 @@ public class BangManager extends GameManager
     /** The time for which the next tick is scheduled. */
     protected long _nextTickTime;
 
-    /** The extra time to take for the current tick to allow extended effects
-     * to complete. */
+    /** The extra time to take for the current tick to allow extended effects to complete. */
     protected long _extraTickTime;
 
-    /** Store the round id here since the BangObject doesn't track it the
-     * way we want it in some cases. */
+    /** Store the round id here as the BangObject doesn't track it the way we want. */
     protected int _activeRoundId;
 
     /** Marks a piece currently in a move from moveUnit. */
@@ -2951,8 +2809,7 @@ public class BangManager extends GameManager
     protected ArrayList<Effect> _postShotEffects = new ArrayList<Effect>();
 
     /** A queue of effects to be deployed. */
-    protected LinkedList<Deployable> _deployQueue =
-        new LinkedList<Deployable>();
+    protected LinkedList<Deployable> _deployQueue = new LinkedList<Deployable>();
 
     /** A set of units which shot this tick. */
     protected ArrayIntSet _shooters = new ArrayIntSet();
@@ -2969,8 +2826,7 @@ public class BangManager extends GameManager
     /** If a game is shorter than this (in minutes) some stats don't count. */
     protected static final int MIN_STATS_DURATION = 2;
 
-    /** Stats that we accumulate at the end of the game into the player's
-     * persistent stats. */
+    /** Stats that we accumulate at the end of the game into the player's persistent stats. */
     protected static final Stat.Type[] ACCUM_STATS = {
         Stat.Type.UNITS_KILLED,
         Stat.Type.UNITS_LOST,
@@ -2981,8 +2837,7 @@ public class BangManager extends GameManager
         Stat.Type.DISTANCE_MOVED,
     };
 
-    /** Stats that we max() at the end of the game into the player's persistent
-     * stats. */
+    /** Stats that we max() at the end of the game into the player's persistent stats. */
     protected static final Stat.Type[] MAX_STATS = {
         Stat.Type.MOST_KILLS, Stat.Type.UNITS_KILLED,
         Stat.Type.CONSEC_KILLS, Stat.Type.CONSEC_KILLS,
