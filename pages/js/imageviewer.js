@@ -31,7 +31,8 @@ function printThumbNav() {
         var nextPage = parseInt(queryCurrentPage) + 1;
     }
     document.write ('<table width="700px" border="0"><tr><td>');
-    document.write('<a href="?' + prevPage + ',' + pages + '">Prev</a>');
+    //document.write('<a href="?' + prevPage + ',' + pages + '">Prev</a>');
+    document.write('<a href="?' + prevPage + ',' + pages + '"><img src="/images/screenshots/back.gif"></a>');
     document.write ('</td><td align="center">');
     if (pages != 1) {
         for (x = 1; x<=pages; x++) {
@@ -51,7 +52,8 @@ function printThumbNav() {
         }
     }
     document.write ('</td><td align="right">');
-    document.write('<a href="?' + nextPage + ',' + pages + '">Next</a>');
+    //document.write('<a href="?' + nextPage + ',' + pages + '">Next</a>');
+    document.write('<a href="?' + nextPage + ',' + pages + '"><img src="/images/screenshots/next.gif"></a>');
     document.write ('</td></tr></table>');
 }
 
@@ -89,7 +91,7 @@ function buildGallery() {
 // Layout the specific screenshot
 
 function screenshot(number) {
-	document.write('<a href="'+myImgPage+'?'+ImgLibrary+','+number+','+screenshotsTotal+'"><img src="' + ImgLibrary + 'thumbs/' + number +'.png" border="0"></a>');
+	document.write('<a href="'+myImgPage+'?'+ImgLibrary+','+number+','+screenshotsTotal+'"><img src="' + ImgLibrary + 'thumbs/' + number +'.png" border="0" class="thumb"></a>');
 }
 
 
