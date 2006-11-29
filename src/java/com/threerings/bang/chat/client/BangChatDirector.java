@@ -17,6 +17,7 @@ import com.threerings.presents.dobj.MessageEvent;
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.SpeakService;
 import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangCodes;
@@ -121,9 +122,18 @@ public class BangChatDirector extends ChatDirector
         // because we only want to make noise when a message comes in over the
         // network not when things like tell feedback are dispatched locally
         if (CHAT_NOTIFICATION.equals(event.getName())) {
-            // for now all incoming chat messages have the same sound; maybe
-            // we'll want special sounds for special messages later
-            BangUI.play(BangUI.FeedbackSound.CHAT_RECEIVE);
+            ChatMessage msg = (ChatMessage)event.getArgs()[0];
+            Name speaker = null;
+            if (msg instanceof UserMessage) {
+                speaker = ((UserMessage)msg).speaker;
+            }
+
+            // don't play sounds from muted speakers
+            if (speaker == null || !_ctx.getMuteDirector().isMuted(speaker)) {
+                // for now all incoming chat messages have the same sound; maybe
+                // we'll want special sounds for special messages later
+                BangUI.play(BangUI.FeedbackSound.CHAT_RECEIVE);
+            }
         }
         super.messageReceived(event);
     }
