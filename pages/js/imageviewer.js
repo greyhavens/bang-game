@@ -31,8 +31,12 @@ function printThumbNav() {
         var nextPage = parseInt(queryCurrentPage) + 1;
     }
     document.write ('<table width="700px" border="0"><tr><td>');
-    //document.write('<a href="?' + prevPage + ',' + pages + '">Prev</a>');
-    document.write('<a href="?' + prevPage + ',' + pages + '"><img src="/images/screenshots/back.gif"></a>');
+    // If you are already on the first page, you don't need a back button
+    if (currentPage == "1") {
+        document.write('<img src="/images/screenshots/backx.gif">');
+    } else {
+        document.write('<a href="?' + prevPage + ',' + pages + '"><img src="/images/screenshots/back.gif"></a>');    
+    }
     document.write ('</td><td align="center">');
     if (pages != 1) {
         for (x = 1; x<=pages; x++) {
@@ -52,8 +56,12 @@ function printThumbNav() {
         }
     }
     document.write ('</td><td align="right">');
-    //document.write('<a href="?' + nextPage + ',' + pages + '">Next</a>');
-    document.write('<a href="?' + nextPage + ',' + pages + '"><img src="/images/screenshots/next.gif"></a>');
+    // If you are already on the last page, you don't need a next button
+    if (queryCurrentPage == pages) {
+        document.write('<img src="/images/screenshots/nextx.gif">');
+    } else {
+        document.write('<a href="?' + nextPage + ',' + pages + '"><img src="/images/screenshots/next.gif"></a>');
+    }
     document.write ('</td></tr></table>');
 }
 
