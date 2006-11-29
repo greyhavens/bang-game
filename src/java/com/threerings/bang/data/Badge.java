@@ -583,6 +583,11 @@ public class Badge extends Item
                 return user.stats.getIntStat(Stat.Type.MYSTERY_TWO) >= 1;
             }
         },
+        BETA_TESTER {
+            public boolean qualifies (PlayerObject user) {
+                return user.playerId <= BETA_BADGE_CUTOFF;
+            }
+        },
         NIGHT_OWL {
             public boolean qualifies (PlayerObject user) {
                 return user.stats.getIntStat(Stat.Type.LATE_NIGHTS) >= 5000;
@@ -708,8 +713,8 @@ public class Badge extends Item
         Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,
 
         // general non-series (wacky) badges
-        Type.IRON_HORSE, Type.SAINT_NICK, Type.NIGHT_OWL,
-        Type.HIGH_NOON, Type.NEW_SHERRIF_IN_TOWN,
+        Type.IRON_HORSE, Type.SAINT_NICK, Type.BETA_TESTER,
+        Type.NIGHT_OWL, Type.HIGH_NOON, Type.NEW_SHERRIF_IN_TOWN,
     };
 
     /**
@@ -1025,4 +1030,7 @@ public class Badge extends Item
     /** Used by unit usage badges. */
     protected static final EnumSet<UnitConfig.Rank> ALL_UNITS =
         EnumSet.of(UnitConfig.Rank.BIGSHOT, UnitConfig.Rank.NORMAL);
+
+    /** The last player id to be considered a beta tester. TODO: update at end of beta. */
+    protected static final int BETA_BADGE_CUTOFF = 21;
 }
