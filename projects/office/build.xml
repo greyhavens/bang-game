@@ -23,7 +23,7 @@
     <copy file="etc/web.xml" tofile="${build.dir}/WEB-INF/web.xml"/>
     <copy todir="${build.dir}/WEB-INF/classes">
       <fileset dir="etc" includes="**/*.properties"/>
-      <fileset dir="${base.dir}" includes="${properties.file}"/>
+      <fileset dir="${base.dir}/${deploy.dir}" includes="${properties.file}"/>
     </copy>
     <copy todir="${deploy.dir}/lib" flatten="true">
       <fileset refid="${app.name}.libs"/>
