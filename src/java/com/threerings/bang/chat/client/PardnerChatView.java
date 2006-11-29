@@ -246,6 +246,7 @@ public class PardnerChatView extends BDecoratedWindow
                 _placeChat.removeUserTab(entry.getValue());
                 _pane.addTab(
                         entry.getKey().toString(), entry.getValue(), false);
+                entry.getValue().setTabbedPane(_pane);
             }
         }
 

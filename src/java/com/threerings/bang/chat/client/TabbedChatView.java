@@ -196,7 +196,7 @@ public class TabbedChatView extends BContainer
          */
         public void mute ()
         {
-            _pane.removeTab(this);
+            _myPane.removeTab(this);
             _ctx.getMuteDirector().setMuted(_user, true);
         }
 
@@ -208,13 +208,21 @@ public class TabbedChatView extends BContainer
             _users.remove(_user);
         }
 
+        /**
+         * Called to set the tabbed pane this tab is in.
+         */
+        public void setTabbedPane (TabbedPane pane)
+        {
+            _myPane = pane;
+        }
+
         @Override // documentation inherited
         protected void wasAdded ()
         {
             super.wasAdded();
 
             // clear the alert icon, if present
-            BButton btn = _pane.getTabButton(this);
+            BButton btn = _myPane.getTabButton(this);
             if (btn != null) {
                 btn.setIcon(null);
             }
@@ -241,6 +249,7 @@ public class TabbedChatView extends BContainer
 
         protected Handle _user;
         protected int[] _avatar;
+        protected TabbedPane _myPane;
     }
 
     protected BangContext _ctx;

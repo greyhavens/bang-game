@@ -96,6 +96,7 @@ public class PlaceChatView extends TabbedChatView
     public void addUserTab (String handle, UserTab tab, boolean focus)
     {
         _pane.addTab(handle, tab, true);
+        tab.setTabbedPane(_pane);
 
         if (focus) {
             _pane.selectTab(tab);
