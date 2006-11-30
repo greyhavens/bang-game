@@ -137,9 +137,9 @@ public class StatusView extends BWindow
         add(_handle = new BLabel("", "status_handle"),
             new Rectangle(40, 590, 195, 33));
         _handle.setFit(BLabel.Fit.SCALE);
-        BButton btn = new BButton(_msgs.get("m.status_poster"), this, "poster");
-        btn.setStyleClass("big_button");
-        add(btn, new Point(40, 147));
+        _posterBtn = new BButton(_msgs.get("m.status_poster"), this, "poster");
+        _posterBtn.setStyleClass("big_button");
+        add(_posterBtn, new Point(40, 147));
 
         add(new PickLookView(ctx, false), new Point(10, 231));
         add(new WalletLabel(ctx, true), new Rectangle(77, 66, 150, 40));
@@ -178,6 +178,7 @@ public class StatusView extends BWindow
         } else if (cmd.equals("poster")) {
             WantedPosterView.displayWantedPoster(
                 _ctx, _ctx.getUserObject().handle);
+            _posterBtn.setEnabled(false);
         }
     }
 
@@ -203,6 +204,13 @@ public class StatusView extends BWindow
         super.wasAdded();
         // our handle can be changed, so set it every time
         _handle.setText(_ctx.getUserObject().handle.toString());
+    }
+
+    @Override // documentation inherited
+    protected void gotFocus ()
+    {
+        super.gotFocus();
+        _posterBtn.setEnabled(true);
     }
 
     protected void selectTab (int tabidx)
@@ -263,6 +271,7 @@ public class StatusView extends BWindow
     protected HackyTabs _tabs;
     protected BComponent _tab;
     protected BLabel _tabinfo, _handle;
+    protected BButton _posterBtn;
 
     protected InventoryPalette _items, _badges, _duds;
     protected UnitPalette _bigshots;
