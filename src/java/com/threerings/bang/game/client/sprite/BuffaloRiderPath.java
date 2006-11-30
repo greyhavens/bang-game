@@ -46,6 +46,7 @@ public class BuffaloRiderPath extends MoveUnitPath
                 (_elapsed > _times[1] || _current >= _durations.length)) {
             _handler.fireShot();
             _handler = null;
+            ((UnitSprite)_sprite).setShootHandler(null);
         }
     }
 

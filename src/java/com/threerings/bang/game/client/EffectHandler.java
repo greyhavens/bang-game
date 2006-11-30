@@ -369,8 +369,7 @@ public class EffectHandler extends BoardView.BoardAction
             return;
         }
 
-        final int penderId = ++_nextPenderId;
-        _penders.add(penderId);
+        final int penderId = notePender();
         sprite.addObserver(new PathObserver() {
             public void pathCancelled (Sprite sprite, Path path) {
                 sprite.removeObserver(this);

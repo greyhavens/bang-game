@@ -21,6 +21,8 @@ import com.threerings.bang.game.data.piece.Piece;
 
 import com.threerings.jme.sprite.Path;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Sprite for the Buffalo Rider unit.
  */
@@ -56,6 +58,18 @@ public class BuffaloRiderSprite extends UnitSprite
     }
 
     @Override // documentation inherited
+    public void pathCompleted ()
+    {
+        super.pathCompleted();
+        if (_effectHandler != null) {
+            log.warning("Buffalo Rider completed attack path without firing " +
+                    "[effectHandler=" + _effectHandler + "].");
+            ((MoveShootHandler)_effectHandler).fireShot();
+            _effectHandler = null;
+        }
+    }
+
+    @Override // documentation inherited
     protected Path createPath (BangBoard board)
     {
         Path path = super.createPath(board);
@@ -83,7 +97,6 @@ public class BuffaloRiderSprite extends UnitSprite
     {
         if (_effectHandler != null) {
             MoveShootHandler handler = (MoveShootHandler)_effectHandler;
-            _effectHandler = null;
             durations[durations.length - 1] = 0f;
             return new BuffaloRiderPath(
                     this, coords, durations, _moveType, action, handler);
