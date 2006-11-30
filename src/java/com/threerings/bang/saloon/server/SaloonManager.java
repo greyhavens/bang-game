@@ -117,15 +117,7 @@ public class SaloonManager extends PlaceManager
         Match match = _matches.get(matchOid);
         if (match != null) {
             clearPlayerFromMatch(match, caller.getOid());
-
-            // if the match is queued to be started and is no longer ready,
-            // cancel its starter interval
-            if (match.checkReady() == Match.Readiness.NOT_READY &&
-                match.starter != null) {
-                match.starter.cancel();
-                match.starter = null;
-                match.matchobj.setStarting(false);
-            }
+            checkReadiness(match);
         }
     }
 
@@ -292,6 +284,15 @@ public class SaloonManager extends PlaceManager
         case START_NOW:
             startMatch(match);
             break;
+
+        case NOT_READY:
+            // if the match is queued to be started and is no longer ready,
+            // cancel its starter interval
+            if (match.starter != null) {
+                match.starter.cancel();
+                match.starter = null;
+                match.matchobj.setStarting(false);
+            }
         }
     }
 
