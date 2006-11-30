@@ -14,6 +14,7 @@ import com.threerings.crowd.data.OccupantInfo;
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.gang.data.GangCodes;
 
 /**
  * Extends the {@link BodyObject} with custom bits needed by Bang!.
@@ -71,6 +72,9 @@ public class PlayerObject extends BodyObject
 
     /** The field name of the <code>pardners</code> field. */
     public static final String PARDNERS = "pardners";
+
+    /** The field name of the <code>notifications</code> field. */
+    public static final String NOTIFICATIONS = "notifications";
 
     /** The field name of the <code>friends</code> field. */
     public static final String FRIENDS = "friends";
@@ -136,6 +140,9 @@ public class PlayerObject extends BodyObject
     /** {@link PardnerEntry}s for each of the player's pardners. */
     public DSet<PardnerEntry> pardners;
 
+    /** The set of notifications pending response (pardner requests, etc.) */
+    public DSet<Notification> notifications;
+    
     /** The player ids of this player's friendly folks, sorted. */
     public int[] friends;
 
@@ -262,6 +269,14 @@ public class PlayerObject extends BodyObject
         return Arrays.binarySearch(foes, playerId) >= 0;
     }
 
+    /**
+     * Returns true if the player is in a gang and can recruit other members.
+     */
+    public boolean canRecruit ()
+    {
+        return gangId > 0 && gangRank >= GangCodes.RECRUITER_RANK;
+    }
+    
     @Override // documentation inherited
     public BangTokenRing getTokens ()
     {
@@ -764,6 +779,54 @@ public class PlayerObject extends BodyObject
         @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.PardnerEntry> clone =
             (value == null) ? null : value.typedClone();
         this.pardners = clone;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>notifications</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToNotifications (Notification elem)
+    {
+        requestEntryAdd(NOTIFICATIONS, notifications, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>notifications</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromNotifications (Comparable key)
+    {
+        requestEntryRemove(NOTIFICATIONS, notifications, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>notifications</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateNotifications (Notification elem)
+    {
+        requestEntryUpdate(NOTIFICATIONS, notifications, elem);
+    }
+
+    /**
+     * Requests that the <code>notifications</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setNotifications (DSet<com.threerings.bang.data.Notification> value)
+    {
+        requestAttributeChange(NOTIFICATIONS, value, this.notifications);
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.Notification> clone =
+            (value == null) ? null : value.typedClone();
+        this.notifications = clone;
     }
 
     /**

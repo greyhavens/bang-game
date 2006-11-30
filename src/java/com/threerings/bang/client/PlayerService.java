@@ -37,11 +37,11 @@ public interface PlayerService extends InvocationService
         Client client, Handle handle, String message, ConfirmListener listener);
 
     /**
-     * Respond to another cowpoke's invitation to be pardners.
+     * Responds to one of our pending notifications.
      */
-    public void respondToPardnerInvite (
-        Client client, Handle inviter, boolean resp, ConfirmListener listener);
-
+    public void respondToNotification (
+        Client client, Comparable key, int resp, ConfirmListener listener);
+    
     /**
      * Remove one of our pardners from our pardner list.
      */

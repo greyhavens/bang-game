@@ -21,6 +21,7 @@ import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.Stat;
@@ -120,7 +121,10 @@ public class BangClientResolver extends CrowdClientResolver
         buser.poses[Look.Pose.DEFAULT.ordinal()] = player.look;
         buser.poses[Look.Pose.VICTORY.ordinal()] = player.victoryLook;
         buser.poses[Look.Pose.WANTED_POSTER.ordinal()] = player.wantedLook;
-
+        
+        // initialize the set of notifications
+        buser.notifications = new DSet<Notification>();
+        
         // load up this player's pardners
         BangServer.playmgr.loadPardners(buser);
 
@@ -129,6 +133,8 @@ public class BangClientResolver extends CrowdClientResolver
             buser.gangRank = player.gangRank;
             buser.joinedGang = player.joinedGang.getTime();
             BangServer.gangmgr.stashGangObject(buser.gangId);
+        } else {
+            BangServer.gangmgr.loadGangInvites(buser);
         }
         
         // load this player's friends and foes

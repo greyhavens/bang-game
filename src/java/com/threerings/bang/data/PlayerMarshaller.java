@@ -125,16 +125,16 @@ public class PlayerMarshaller extends InvocationMarshaller
         });
     }
 
-    /** The method id used to dispatch {@link #respondToPardnerInvite} requests. */
-    public static final int RESPOND_TO_PARDNER_INVITE = 9;
+    /** The method id used to dispatch {@link #respondToNotification} requests. */
+    public static final int RESPOND_TO_NOTIFICATION = 9;
 
     // from interface PlayerService
-    public void respondToPardnerInvite (Client arg1, Handle arg2, boolean arg3, InvocationService.ConfirmListener arg4)
+    public void respondToNotification (Client arg1, Comparable arg2, int arg3, InvocationService.ConfirmListener arg4)
     {
         InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
         listener4.listener = arg4;
-        sendRequest(arg1, RESPOND_TO_PARDNER_INVITE, new Object[] {
-            arg2, Boolean.valueOf(arg3), listener4
+        sendRequest(arg1, RESPOND_TO_NOTIFICATION, new Object[] {
+            arg2, Integer.valueOf(arg3), listener4
         });
     }
 

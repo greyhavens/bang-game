@@ -23,9 +23,12 @@ import com.samskivert.jdbc.jora.Table;
 
 import com.samskivert.util.StringUtil;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
@@ -117,6 +120,31 @@ public class GangRepository extends JORARepository
         }
     }
 
+    /** Contains information loaded from the database about a gang invitation. */
+    public static class InviteRecord
+    {
+        /** The name of the player extending the invitation. */
+        public Handle inviter;
+
+        /** The id of the gang to which the player has been invited. */
+        public int gangId;
+        
+        /** The name of the gang to which the player has been invited. */
+        public Handle name;
+        
+        /** The text of the invitation. */
+        public String message;
+        
+        /** Creates a new invitation. */
+        public InviteRecord (Handle inviter, int gangId, Handle name, String message)
+        {
+            this.inviter = inviter;
+            this.gangId = gangId;
+            this.name = name;
+            this.message = message;
+        }
+    }
+    
     /**
      * Constructs a new gang repository with the specified connection
      * provider.
@@ -215,6 +243,111 @@ public class GangRepository extends JORARepository
         return list;
     }
     
+    /**
+     * Get a list of {@link InviteRecord}s representing all invitations stored
+     * for the specified player.
+     */
+    public ArrayList<InviteRecord> getInviteRecords (int playerId)
+        throws PersistenceException
+    {
+        final ArrayList<InviteRecord> list = new ArrayList<InviteRecord>();
+        final String query = "select HANDLE, GANG_INVITES.GANG_ID, NAME, MESSAGE from " +
+            "GANG_INVITES, PLAYERS, GANGS where GANG_INVITES.INVITER_ID = PLAYERS.PLAYER_ID " +
+            "and GANG_INVITES.GANG_ID = GANGS.GANG_ID and GANG_INVITES.PLAYER_ID = " + playerId;
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        list.add(new InviteRecord(
+                                     new Handle(rs.getString(1)),
+                                     rs.getInt(2),
+                                     new Handle(rs.getString(3)),
+                                     rs.getString(4)));
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+        return list;
+    }
+    
+    /**
+     * Adds an invitation for a player to join a gang.
+     *
+     * @return null if the invitation was successfully added, otherwise a
+     * translatable error message indicating what went wrong.
+     */
+    public String insertInvite (
+        final int inviterId, final int gangId, final Handle handle,
+        final String message)
+        throws PersistenceException
+    {
+        return executeUpdate(new Operation<String>() {
+            public String invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    // look up the player id and current gang
+                    ResultSet rs = stmt.executeQuery("select PLAYER_ID, GANG_ID from PLAYERS " +
+                        "where HANDLE = " + JDBCUtil.escape(handle.toString()));
+                    if (!rs.next()) {
+                        return MessageBundle.tcompose("e.no_such_player", handle);
+                    }
+                    if (rs.getInt(2) > 0) {
+                        return MessageBundle.tcompose("e.already_member_other", handle);
+                    }
+                    int playerId = rs.getInt(1);
+                    
+                    // now update the pardner relation between these two
+                    String query = "insert ignore into GANG_INVITES set " +
+                        "INVITER_ID = " + inviterId + ", GANG_ID = " + gangId +
+                        ", PLAYER_ID = " + playerId + ", MESSAGE = " +
+                        JDBCUtil.escape(message);
+                    if (stmt.executeUpdate(query) < 1) {
+                        return MessageBundle.tcompose(
+                            "e.already_invited", handle);
+                    }
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+
+                return null;
+            }
+        });
+    }
+    
+    /**
+     * Removes an invitation from the database.
+     */
+    public void deleteInvite (final int gangId, final int playerId)
+        throws PersistenceException
+    {
+        executeUpdate(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    stmt.executeUpdate("delete from GANG_INVITES where " +
+                        "GANG_ID = " + gangId + " and PLAYER_ID = " +
+                        playerId);
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
+    }
+    
     @Override // documentation inherited
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
@@ -239,6 +372,15 @@ public class GangRepository extends JORARepository
                 "OUTFIT", "OUTFIT BLOB");
         }
         // END TEMP
+        
+        JDBCUtil.createTableIfMissing(conn, "GANG_INVITES", new String[] {
+            "INVITER_ID INTEGER NOT NULL",
+            "GANG_ID INTEGER NOT NULL",
+            "PLAYER_ID INTEGER NOT NULL",
+            "MESSAGE VARCHAR(255) NOT NULL",
+            "UNIQUE (GANG_ID, PLAYER_ID)",
+            "INDEX (PLAYER_ID)",
+        }, "");
     }
     
     @Override // documentation inherited

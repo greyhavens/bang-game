@@ -34,4 +34,7 @@ public interface GangCodes extends InvocationCodes
 
     /** The cost of a forming a gang in coins. */
     public static final int FORM_GANG_COIN_COST = 5;
+    
+    /** The maximum number of members that a gang can have. */
+    public static final int MAX_MEMBERS = 100;
 }

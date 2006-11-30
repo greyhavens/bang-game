@@ -1,7 +1,7 @@
 //
 // $Id$
 
-package com.threerings.bang.client;
+package com.threerings.bang.gang.client;
 
 import com.jmex.bui.text.LengthLimitedDocument;
 
@@ -9,21 +9,22 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
-import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.gang.data.GangCodes;
+
 /**
  * Displays a dialog allowing a player to confirm their desire to invite a
- * pardner and specify an invitation message.
+ * gang member and specify an invitation message.
  */
-public class InvitePardnerDialog extends RequestDialog
+public class InviteMemberDialog extends RequestDialog
 {
-    public InvitePardnerDialog (
+    public InviteMemberDialog (
         BangContext ctx, StatusLabel status, Handle handle)
     {
-        super(ctx, BangCodes.BANG_MSGS, "m.confirm_invite", "m.invite", "m.cancel",
-            MessageBundle.tcompose("m.pardner_invited", handle), status);
+        super(ctx, GangCodes.GANG_MSGS, "m.confirm_invite", "m.invite", "m.cancel",
+            MessageBundle.tcompose("m.member_invited", handle), status);
         _handle = handle;
 
         setRequiresString(300, "");
@@ -34,8 +35,8 @@ public class InvitePardnerDialog extends RequestDialog
     // documentation inherited
     protected void fireRequest (Object result)
     {
-        PlayerService psvc = (PlayerService)_ctx.getClient().requireService(PlayerService.class);
-        psvc.invitePardner(_ctx.getClient(), _handle, (String)result, this);
+        GangService gsvc = (GangService)_ctx.getClient().requireService(GangService.class);
+        gsvc.inviteMember(_ctx.getClient(), _handle, (String)result, this);
     }
     
     protected Handle _handle;

@@ -20,6 +20,8 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.gang.client.InviteMemberDialog;
+
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
@@ -116,6 +118,11 @@ public class PlayerPopupMenu extends BPopupMenu
         if (!_ctx.getUserObject().pardners.containsKey(handle)) {
             addMenuItem(new BMenuItem(msgs.get("m.pm_invite_pardner"), "invite_pardner"));
         }
+        
+        // add an item for inviting them to join our gang
+        if (_ctx.getUserObject().canRecruit()) {
+            addMenuItem(new BMenuItem(msgs.get("m.pm_invite_member"), "invite_member"));
+        }
     }
 
     // from interface ActionListener
@@ -131,6 +138,10 @@ public class PlayerPopupMenu extends BPopupMenu
             _ctx.getBangClient().displayPopup(
                 new InvitePardnerDialog(_ctx, null, _handle), true, 400);
 
+        } else if ("invite_member".equals(event.getAction())) {
+            _ctx.getBangClient().displayPopup(
+                new InviteMemberDialog(_ctx, null, _handle), true, 400);
+                
         } else if ("view_poster".equals(event.getAction())) {
             WantedPosterView.displayWantedPoster(_ctx, _handle);
 

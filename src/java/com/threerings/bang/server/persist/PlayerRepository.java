@@ -5,9 +5,10 @@ package com.threerings.bang.server.persist;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import com.samskivert.io.PersistenceException;
@@ -18,6 +19,8 @@ import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.JORARepository;
 import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Table;
+
+import com.threerings.util.Name;
 
 import com.threerings.bang.avatar.data.Look;
 
@@ -296,6 +299,24 @@ public class PlayerRepository extends JORARepository
         }
     }
 
+    /**
+     * Returns the player id corresponding to the given handle, or -1
+     * if no such player exists.
+     */
+    public int getPlayerId (Statement stmt, Name handle)
+        throws SQLException, PersistenceException
+    {
+        int playerId = -1;
+        ResultSet rs = stmt.executeQuery(
+            "select PLAYER_ID from PLAYERS where HANDLE = " +
+            JDBCUtil.escape(handle.toString()));
+        while (rs.next()) {
+            playerId = rs.getInt(1);
+        }
+        rs.close();
+        return playerId;
+    }
+    
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
     protected void updateScrip (String where, int amount, String type)
         throws PersistenceException

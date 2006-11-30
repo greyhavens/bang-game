@@ -20,6 +20,7 @@ import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.ListUtil;
 import com.threerings.util.StreamableHashMap;
 
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -62,15 +63,16 @@ import com.threerings.bang.game.data.scenario.PracticeInfo;
 import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.TutorialUtil;
 
-import com.threerings.bang.client.PlayerDecoder;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.data.Rating;
+import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PardnerEntry;
+import com.threerings.bang.data.PardnerInvite;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
+import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.server.persist.FolkRecord;
@@ -162,8 +164,7 @@ public class PlayerManager
     public void loadPardners (final PlayerObject player)
         throws PersistenceException
     {
-        // set list of active pardners in dset, collect list of inviters
-        ArrayList<PardnerEntry> pardners = new ArrayList<PardnerEntry>();
+        // load the pardner records
         ArrayList<PardnerRepository.PardnerRecord> records =
             _pardrepo.getPardnerRecords(player.playerId);
 
@@ -183,38 +184,21 @@ public class PlayerManager
         }
         // END TEMP
 
-        final ArrayList<PardnerRepository.PardnerRecord> inviters =
-            new ArrayList<PardnerRepository.PardnerRecord>();
-        for (int ii = 0, nn = records.size(); ii < nn; ii++) {
-            PardnerRepository.PardnerRecord record = records.get(ii);
+        // collect active players, send invitations
+        ArrayList<PardnerEntry> pardners = new ArrayList<PardnerEntry>();
+        for (PardnerRepository.PardnerRecord record : records) {
             if (record.isActive()) {
-                pardners.add(
-                    getPardnerEntry(record.handle, record.lastSession));
+                pardners.add(getPardnerEntry(record.handle, record.lastSession));
             } else {
-                inviters.add(record);
+                sendPardnerInvite(player, record.handle, record.message, record.lastSession);
             }
         }
 
+        // set pardners and add an updater for this player
         player.pardners = new DSet<PardnerEntry>(pardners.iterator());
         if (player.getOnlinePardnerCount() > 0) {
             new PardnerEntryUpdater(player, _updaters).updateEntries();
         }
-
-        // send invitations as soon as the receiver is registered
-        player.addListener(new SetAdapter() {
-            public void entryAdded (EntryAddedEvent eae) {
-                if (!eae.getName().equals(PlayerObject.RECEIVERS) ||
-                    !eae.getEntry().getKey().equals(
-                        PlayerDecoder.RECEIVER_CODE)) {
-                    return;
-                }
-                for (PardnerRepository.PardnerRecord inviter : inviters) {
-                    sendPardnerInvite(player, inviter.handle, inviter.message,
-                        inviter.lastSession, true);
-                }
-                player.removeListener(this);
-            }
-        });
     }
 
     // documentation inherited from interface PlayerProvider
@@ -237,37 +221,22 @@ public class PlayerManager
                 "e.too_many_pardners", String.valueOf(MAX_PARDNERS)));
         }
 
-        // if the proposed pardner has already issued an invite, accept it
-        InviteKey ikey = new InviteKey(inviter.playerId, handle);
-        if (_invites.containsKey(ikey)) {
-            respondToPardnerInvite(caller, handle, true, listener);
-            return;
-        }
-
-        // if the invitee is online, send the invite directly; if not, store
-        // the invite in the db
-        PlayerObject invitee = (PlayerObject)BangServer.lookupBody(handle);
-        if (invitee != null) {
-            String error = sendPardnerInvite(invitee, inviter.handle,
-                message, new Date(), false);
-            if (error == null) {
-                listener.requestProcessed();
-            } else {
-                listener.requestFailed(error);
-            }
-            return;
-        }
+        // store the invite in the db and send it
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
                 _error = _pardrepo.addPardners(
                     inviter.playerId, handle, message);
             }
             public void handleSuccess () {
-                if (_error == null) {
-                    listener.requestProcessed();
-                } else {
+                if (_error != null) {
                     listener.requestFailed(_error);
+                    return;
                 }
+                PlayerObject invitee = (PlayerObject)BangServer.lookupBody(handle);
+                if (invitee != null) {
+                    sendPardnerInvite(invitee, inviter.handle, message, new Date());
+                }
+                listener.requestProcessed();
             }
             public String getFailureMessage () {
                 return "Failed to invite pardner [who=" + inviter.who() +
@@ -278,58 +247,39 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void respondToPardnerInvite (ClientObject caller,
-        final Handle inviter, final boolean resp,
+    public void respondToNotification (
+        ClientObject caller, final Comparable key, int resp,
         final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure the invite exists
+        // make sure the notification exists
         final PlayerObject player = (PlayerObject)caller;
-        final Invite invite = _invites.get(
-            new InviteKey(player.playerId, inviter));
-        if (invite == null) {
+        Notification notification = player.notifications.get(key);
+        if (notification == null) {
+            log.warning("Missing notification for response [who=" +
+                player.who() + ", key=" + key + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-
-        // if we're rejecting a non-db invite, there's no need to update the
-        // db; otherwise, we must add, update, or remove pardners
-        if (!resp && !invite.fromdb) {
-            invite.reject(listener);
-            return;
+        
+        // make sure the response is valid
+        if (resp >= notification.getResponses().length) {
+            log.warning("Received invalid response for notification [who=" + player.who() +
+                ", notification=" + notification + ", response=" + resp + "].");
+            throw new InvocationException(INTERNAL_ERROR);
         }
-
-        if (resp && player.pardners.size() >= MAX_PARDNERS) {
-            throw new InvocationException(MessageBundle.tcompose(
-                "e.too_many_pardners", String.valueOf(MAX_PARDNERS)));
-        }
-
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
-            public void invokePersistent () throws PersistenceException {
-                if (resp) {
-                    if (invite.fromdb) {
-                        _pardrepo.updatePardners(player.playerId, inviter);
-                    } else {
-                        _pardrepo.addPardners(player.playerId, inviter, null);
-                    }
-                } else {
-                    _pardrepo.removePardners(player.playerId, inviter);
-                }
+        
+        // transfer control to the handler, removing the notification on success
+        notification.handler.handleResponse(resp, new PlayerService.ConfirmListener() {
+            public void requestProcessed () {
+                player.removeFromNotifications(key);
+                listener.requestProcessed();
             }
-            public void handleSuccess () {
-                if (resp) {
-                    invite.accept(listener);
-                } else {
-                    invite.reject(listener);
-                }
+            public void requestFailed (String cause) {
+                listener.requestFailed(cause);
             }
-            public String getFailureMessage () {
-                return "Failed to respond to invite [who=" + player.who() +
-                    ", inviter=" + inviter + ", resp=" + resp + "]";
-            }
-            protected String _error;
         });
     }
-
+    
     // documentation inherited from interface PlayerProvider
     public void removePardner (ClientObject caller, final Handle pardner,
         final PlayerService.ConfirmListener listener)
@@ -795,123 +745,75 @@ public class PlayerManager
 
     /**
      * Sends a pardner invite to the specified player from the named inviter.
-     *
-     * @param fromdb if false, the invitation comes directly from an online
-     * player; if true, the invitation comes from a stored entry in the
-     * database
-     * @return null if the invitation was sent successfully, otherwise a
-     * translatable error message indicating what went wrong
      */
-    protected String sendPardnerInvite (PlayerObject invitee, Handle inviter,
-        String message, Date lastSession, boolean fromdb)
+    protected void sendPardnerInvite (
+        final PlayerObject user, final Handle inviter, String message, final Date lastSession)
     {
-        InviteKey key = new InviteKey(invitee.playerId, inviter);
-        if (_invites.containsKey(key)) {
-            return MessageBundle.tcompose("e.already_invited", invitee.handle);
-        }
-        PlayerSender.sendPardnerInvite(invitee, inviter, message);
-        new Invite(key, lastSession, invitee, fromdb).add();
-        return null;
-    }
-
-    /** Pairs inviter and invitee identification for use as a map key. */
-    protected static class InviteKey
-    {
-        /** The player id of the invitee. */
-        public int playerId;
-
-        /** The name of the inviter. */
-        public Handle inviter;
-
-        public InviteKey (int playerId, Handle inviter)
-        {
-            this.playerId = playerId;
-            this.inviter = inviter;
-        }
-
-        public boolean equals (Object other)
-        {
-            InviteKey okey = (InviteKey)other;
-            return okey.playerId == playerId && okey.inviter.equals(inviter);
-        }
-
-        public int hashCode ()
-        {
-            return playerId + inviter.hashCode();
-        }
-    }
-
-    /** Represents a standing invitation. */
-    protected class Invite
-        implements ObjectDeathListener
-    {
-        /** The key of this invitation. */
-        public InviteKey key;
-
-        /** The time at which the inviter was last on. */
-        public Date lastSession;
-
-        /** The invitee player object. */
-        public PlayerObject invitee;
-
-        /** Whether or not this invitation originated from the database. */
-        public boolean fromdb;
-
-        public Invite (InviteKey key, Date lastSession, PlayerObject invitee,
-            boolean fromdb)
-        {
-            this.key = key;
-            this.lastSession = lastSession;
-            this.invitee = invitee;
-            this.fromdb = fromdb;
-        }
-
-        public void add ()
-        {
-            invitee.addListener(this);
-            _invites.put(key, this);
-        }
-
-        public void accept (PlayerService.ConfirmListener listener)
-        {
-            invitee.addToPardners(getPardnerEntry(key.inviter, lastSession));
-            PlayerObject invobj =
-                (PlayerObject)BangServer.lookupBody(key.inviter);
-            if (invobj != null) {
-                invobj.addToPardners(getPardnerEntry(invitee.handle, null));
-                SpeakProvider.sendInfo(invobj, BANG_MSGS,
-                    MessageBundle.tcompose("m.pardner_accepted",
-                        invitee.handle));
+        user.addToNotifications(new PardnerInvite(inviter, message,
+            new PardnerInvite.ResponseHandler() {
+            public void handleResponse (int resp, InvocationService.ConfirmListener listener) {
+                handleInviteResponse(
+                    user, inviter, lastSession, (resp == PardnerInvite.ACCEPT), listener);
             }
-            remove();
+        }));
+    }
+
+    /**
+     * Processes the response to a pardner invitation.
+     */
+    protected void handleInviteResponse (
+        final PlayerObject user, final Handle inviter, final Date lastSession,
+        final boolean accept, final InvocationService.ConfirmListener listener)
+    {
+        // update the database
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                if (accept) {
+                    _pardrepo.updatePardners(user.playerId, inviter);
+                } else {
+                    _pardrepo.removePardners(user.playerId, inviter);
+                }
+            }
+            public void handleSuccess () {
+                handleInviteSuccess(user, inviter, lastSession, accept, listener);
+            }
+            public String getFailureMessage () {
+                return "Failed to respond to pardner invite [who=" + user.who() +
+                    ", inviter=" + inviter + ", accept=" + accept + "]";
+            }
+        });
+    }
+    
+    /**
+     * Handles the omgr portion of the invite processing, once the persistent
+     * part has successfully completed.
+     */
+    protected void handleInviteSuccess (
+        PlayerObject user, Handle inviter, Date lastSession, boolean accept,
+        InvocationService.ConfirmListener listener)
+    {
+        // if the inviter is online, update and send a notification
+        PlayerObject invobj = (PlayerObject)BangServer.lookupBody(inviter);
+        if (invobj != null) {
+            if (accept) {
+                invobj.addToPardners(getPardnerEntry(user.handle, null));
+            }
+            SpeakProvider.sendInfo(invobj, BANG_MSGS,
+                MessageBundle.tcompose(
+                    accept ? "m.pardner_accepted" : "m.pardner_rejected",
+                    user.handle));
+        }
+        
+        // update the invitee
+        if (user.isActive()) {
+            if (accept) {
+                user.addToPardners(getPardnerEntry(inviter, lastSession));
+            }
             listener.requestProcessed();
         }
-
-        public void reject (PlayerService.ConfirmListener listener)
-        {
-            PlayerObject invobj =
-                (PlayerObject)BangServer.lookupBody(key.inviter);
-            if (invobj != null) {
-                SpeakProvider.sendInfo(invobj, BANG_MSGS,
-                    MessageBundle.tcompose("m.pardner_rejected",
-                        invitee.handle));
-            }
-            remove();
-            listener.requestProcessed();
-        }
-
-        public void objectDestroyed (ObjectDestroyedEvent ode)
-        {
-            remove();
-        }
-
-        protected void remove ()
-        {
-            invitee.removeListener(this);
-            _invites.remove(key);
-        }
     }
-
+    
     /** The number of milliseconds after which we reload rank levels from DB */
     protected static final long RANK_RELOAD_TIMEOUT = (3600 * 1000);
 
@@ -935,10 +837,6 @@ public class PlayerManager
     protected HashMap<Handle,PardnerEntryUpdater> _updaters =
         new HashMap<Handle,PardnerEntryUpdater>();
 
-    /** The currently standing pardner invitations. */
-    protected HashMap<InviteKey, Invite> _invites =
-        new HashMap<InviteKey, Invite>();
-
     /** A light-weight cache of soft {@link PosterInfo} references. */
     protected Map<Handle, SoftReference<PosterInfo>> _posterCache =
         new HashMap<Handle, SoftReference<PosterInfo>>();
@@ -949,6 +847,5 @@ public class PlayerManager
 
     /** When we should next reload our rank levels */
     protected long _nextRankReload;
-
 }
 

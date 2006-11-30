@@ -66,9 +66,9 @@ public interface PlayerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
-     * Handles a {@link PlayerService#respondToPardnerInvite} request.
+     * Handles a {@link PlayerService#respondToNotification} request.
      */
-    public void respondToPardnerInvite (ClientObject caller, Handle arg1, boolean arg2, InvocationService.ConfirmListener arg3)
+    public void respondToNotification (ClientObject caller, Comparable arg1, int arg2, InvocationService.ConfirmListener arg3)
         throws InvocationException;
 
     /**

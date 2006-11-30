@@ -23,6 +23,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.server.BangServer;
 
 import static com.threerings.bang.Log.*;
 
@@ -139,7 +140,8 @@ public class PardnerRepository extends SimpleRepository
                 Statement stmt = conn.createStatement();
                 try {
                     // first look up the playerId for handle2
-                    int playerId2 = getPlayerId(stmt, handle2);
+                    int playerId2 = BangServer.playrepo.getPlayerId(
+                        stmt, handle2);
                     if (playerId2 == -1) {
                         return MessageBundle.tcompose(
                             "e.no_such_player", handle2);
@@ -178,7 +180,8 @@ public class PardnerRepository extends SimpleRepository
                 Statement stmt = conn.createStatement();
                 try {
                     // first look up the playerId for handle2
-                    int playerId2 = getPlayerId(stmt, handle2);
+                    int playerId2 = BangServer.playrepo.getPlayerId(
+                        stmt, handle2);
                     if (playerId2 == -1) {
                         log.warning("Failed to update pardners " +
                                     "[pid=" + playerId1 +
@@ -214,7 +217,8 @@ public class PardnerRepository extends SimpleRepository
                 Statement stmt = conn.createStatement();
                 try {
                     // first look up the playerId for handle2
-                    int playerId2 = getPlayerId(stmt, handle2);
+                    int playerId2 = BangServer.playrepo.getPlayerId(
+                        stmt, handle2);
                     if (playerId2 == -1) {
                         log.warning("Failed to delete pardners [pid=" +
                             playerId1 + ", pardner=" + handle2 + "]. " +
@@ -233,24 +237,6 @@ public class PardnerRepository extends SimpleRepository
                 return null;
             }
         });
-    }
-
-    /**
-     * Returns the player id corresponding to the given handle, or -1
-     * if no such player exists.
-     */
-    protected int getPlayerId (Statement stmt, Name handle)
-        throws SQLException, PersistenceException
-    {
-        int playerId = -1;
-        ResultSet rs = stmt.executeQuery(
-            "select PLAYER_ID from PLAYERS where HANDLE = " +
-            JDBCUtil.escape(handle.toString()));
-        while (rs.next()) {
-            playerId = rs.getInt(1);
-        }
-        rs.close();
-        return playerId;
     }
 
     /**

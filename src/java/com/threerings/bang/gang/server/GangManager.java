@@ -3,6 +3,9 @@
 
 package com.threerings.bang.gang.server;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
@@ -18,6 +21,8 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.dobj.EntryAddedEvent;
+import com.threerings.presents.dobj.SetAdapter;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
@@ -36,10 +41,12 @@ import com.threerings.bang.server.persist.FinancialAction;
 
 import com.threerings.bang.gang.client.GangService;
 import com.threerings.bang.gang.data.GangCodes;
+import com.threerings.bang.gang.data.GangInvite;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.server.persist.GangRepository;
 import com.threerings.bang.gang.server.persist.GangRepository.GangRecord;
+import com.threerings.bang.gang.server.persist.GangRepository.InviteRecord;
 
 import static com.threerings.bang.Log.*;
 
@@ -62,10 +69,59 @@ public class GangManager
     }
 
     // documentation inherited from GangProvider
-    public void inviteMember (ClientObject caller,
-        Handle handle, String message, GangService.ConfirmListener listener)
+    public void inviteMember (
+        ClientObject caller, final Handle handle, final String message,
+        final GangService.ConfirmListener listener)
         throws InvocationException
     {
+        // make sure they're in a gang
+        final PlayerObject player = (PlayerObject)caller;
+        if (player.gangId <= 0) {
+            log.warning("Player not in gang [who=" + player.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        
+        // and that they can recruit new members
+        if (player.gangRank < RECRUITER_RANK) {
+            log.warning("Player not qualified to recruit members [who=" +
+                player.who() + ", rank=" + player.gangRank + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        
+        // make sure it's not the player himself, that it's not already
+        // a member, and that the player is under the limit
+        if (player.handle.equals(handle)) {
+            throw new InvocationException("e.invite_self");   
+        }
+        final GangObject gangobj = getGangObject(player.gangId);
+        if (gangobj.members.containsKey(handle)) {
+            throw new InvocationException(MessageBundle.tcompose(
+                "e.already_member_this", handle));
+                
+        } else if (gangobj.members.size() >= MAX_MEMBERS) {
+            throw new InvocationException(MessageBundle.tcompose(
+                "e.too_many_members", String.valueOf(MAX_MEMBERS)));
+        }
+        
+        // store the invitation in the database
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                _error = _gangrepo.insertInvite(player.playerId, player.gangId, handle, message);
+            }
+            public void handleSuccess () {
+                if (_error != null) {
+                    listener.requestFailed(_error);
+                    return;
+                }
+                PlayerObject invitee = (PlayerObject)BangServer.lookupBody(handle);
+                if (invitee != null) {
+                    sendGangInvite(invitee, player.handle, player.gangId, gangobj.name, message);
+                }
+                listener.requestProcessed();
+            }
+            protected String _error;
+        });
     }
     
     /**
@@ -90,6 +146,19 @@ public class GangManager
         gangobj = _gangrepo.loadGang(gangId, true).createGangObject();
         gangobj.resolving++;
         _gangs.put(gangId, gangobj);
+    }
+    
+    /**
+     * Loads the user's gang invitations, if any, on the invoker thread.
+     */
+    public void loadGangInvites (PlayerObject user)
+        throws PersistenceException
+    {
+        ArrayList<InviteRecord> records =
+            _gangrepo.getInviteRecords(user.playerId);
+        for (InviteRecord record : records) {
+            sendGangInvite(user, record.inviter, record.gangId, record.name, record.message);
+        }
     }
     
     /**
@@ -327,6 +396,100 @@ public class GangManager
         GangObject gangobj = (GangObject)speakObj;
         PlayerObject user = (PlayerObject)speaker;
         return gangobj.members.containsKey(user.handle);
+    }
+    
+    /**
+     * Sends an invitation to join a gang.
+     */
+    protected void sendGangInvite (
+        final PlayerObject user, final Handle inviter, final int gangId,
+        final Handle name, String message)
+    {
+        user.addToNotifications(new GangInvite(inviter, name, message,
+            new GangInvite.ResponseHandler() {
+            public void handleResponse (int resp, InvocationService.ConfirmListener listener) {
+                handleInviteResponse(
+                    user, inviter, gangId, name, (resp == GangInvite.ACCEPT), listener);
+            }
+        }));
+    }
+    
+    /**
+     * Processes the response to a gang invitation.
+     */
+    protected void handleInviteResponse (
+        final PlayerObject user, final Handle inviter, final int gangId, final Handle name,
+        final boolean accept, final InvocationService.ConfirmListener listener)
+    {
+        // update the database
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                _gangrepo.deleteInvite(gangId, user.playerId);
+                if (accept) {
+                    // stash the gang object before we add the player to ensure that the
+                    // dset does not contain an entry for the new member
+                    stashGangObject(gangId);
+                    BangServer.playrepo.updatePlayerGang(
+                        user.playerId, gangId, MEMBER_RANK,
+                        _joined = System.currentTimeMillis());
+                }
+            }
+            public void handleSuccess () {
+                handleInviteSuccess(
+                    user, inviter, gangId, name, accept, new Date(_joined), listener);
+            }
+            public String getFailureMessage () {
+                return "Failed to respond to gang invite [who=" + user.who() +
+                    ", gangId=" + gangId + ", accept=" + accept + "]";
+            }
+            protected long _joined;
+        });
+    }
+    
+    /**
+     * Handles the omgr portion of the invite processing, once the persistent
+     * part has successfully completed.
+     */
+    protected void handleInviteSuccess (
+        PlayerObject user, Handle inviter, int gangId, Handle name, boolean accept,
+        Date joined, InvocationService.ConfirmListener listener)
+    {
+        PlayerObject invobj = (PlayerObject)BangServer.lookupBody(inviter);
+        if (invobj != null) {
+            SpeakProvider.sendInfo(invobj, GANG_MSGS,
+                MessageBundle.tcompose(
+                    accept ? "m.member_accepted" : "m.member_rejected",
+                    user.handle, name));
+        }
+        
+        if (!accept) { // nothing to do
+            listener.requestProcessed();
+            return;
+            
+        } else if (!user.isActive()) { // add offline entry
+            releaseGangObject(gangId);
+            GangObject gangobj = _gangs.get(gangId);
+            if (gangobj != null) {
+                gangobj.addToMembers(new GangMemberEntry(
+                    user.playerId, user.handle, MEMBER_RANK, joined, joined));
+            }
+            return;
+        }
+        GangObject gangobj = getGangObject(gangId);
+        gangobj.resolving--;
+        try {
+            user.startTransaction();
+            user.setGangId(gangId);
+            user.setGangRank(MEMBER_RANK);
+            user.setJoinedGang(joined.getTime());
+            gangobj.addToMembers(
+                new GangMemberEntryUpdater(user, gangobj).gmentry);
+            user.setGangOid(gangobj.getOid());
+        } finally {
+            user.commitTransaction();
+        }
+        listener.requestProcessed();
     }
     
     /**

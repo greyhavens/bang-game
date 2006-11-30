@@ -96,10 +96,10 @@ public class PlayerDispatcher extends InvocationDispatcher
             );
             return;
 
-        case PlayerMarshaller.RESPOND_TO_PARDNER_INVITE:
-            ((PlayerProvider)provider).respondToPardnerInvite(
+        case PlayerMarshaller.RESPOND_TO_NOTIFICATION:
+            ((PlayerProvider)provider).respondToNotification(
                 source,
-                (Handle)args[0], ((Boolean)args[1]).booleanValue(), (InvocationService.ConfirmListener)args[2]
+                (Comparable)args[0], ((Integer)args[1]).intValue(), (InvocationService.ConfirmListener)args[2]
             );
             return;
 

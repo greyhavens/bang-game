@@ -177,7 +177,7 @@ public class TownView extends BWindow
     {
         switch (type) {
         case STATUS:
-        case PARDNER_INVITE:
+        case NOTIFICATION:
         case FKEY:
             return _active;
 

@@ -24,6 +24,7 @@ import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.EventListener;
 
 import com.samskivert.servlet.user.Password;
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Config;
 import com.samskivert.util.Interval;
 import com.samskivert.util.ResultListener;
@@ -45,6 +46,8 @@ import com.threerings.openal.OggFileStream;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientObserver;
+import com.threerings.presents.dobj.EntryAddedEvent;
+import com.threerings.presents.dobj.SetAdapter;
 
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.CurseFilter;
@@ -74,6 +77,7 @@ import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
@@ -85,7 +89,7 @@ import static com.threerings.bang.Log.log;
  * all of the necessary configuration and getting the client bootstrapped.
  */
 public class BangClient extends BasicClient
-    implements ClientObserver, PlayerReceiver, BangCodes
+    implements ClientObserver, BangCodes
 {
     /** A marker interface for non-clearable popups. */
     public static interface NonClearablePopup
@@ -270,10 +274,6 @@ public class BangClient extends BasicClient
         // listen for logon
         _client.addClientObserver(this);
 
-        // register as receiver for player notifications
-        _client.getInvocationDirector().registerReceiver(
-            new PlayerDecoder(this));
-
         // create the pardner chat view, which will listen for tells from
         // pardners and pop up when possible
         _pcview = new PardnerChatView(_ctx);
@@ -339,7 +339,7 @@ public class BangClient extends BasicClient
 
     /**
      * Potentially shows the next phase of the client introduction or tutorial
-     * or displays pending pardner invites. Basically anything that should be
+     * or displays pending notifications. Basically anything that should be
      * popped up once a player is in the town view and ready to go is shown.
      * This is called after first logging on and then at the completion of each
      * phase of the intro and tutorial.
@@ -373,22 +373,18 @@ public class BangClient extends BasicClient
             return true;
         }
 
-        // if there are any pending pardner invitations, show those
-        if (_invites.size() > 0 && !_maxedPardners) {
-            Tuple<Handle,String> invite = _invites.remove(0);
-            displayPardnerInvite(invite.left, invite.right);
-            return true;
+        // if there are any pending notifications, show the first one
+        for (Notification notification : user.notifications) {
+            if (!notification.responded) {
+                displayNotification(notification);
+                return true;
+            }
         }
 
         // if the main view is the town view, activate it because we're done
         // fooling around
         if (_mview instanceof TownView) {
             ((TownView)_mview).setActive(true);
-        }
-
-        if (_maxedPardners) {
-            StatusView.showStatusTab(_ctx, StatusView.PARDNERS_TAB);
-            _maxedPardners = false;
         }
 
         return false;
@@ -433,8 +429,6 @@ public class BangClient extends BasicClient
             hasPopups()) {
             return false;
         }
-
-        // don't show the pardner chat view if 
 
         // otherwise ask the view what they think about it
         if (_mview instanceof MainView) {
@@ -746,6 +740,9 @@ public class BangClient extends BasicClient
         // register our status view key bindings
         StatusView.bindKeys(_ctx);
 
+        // listen for notifications to pop up
+        client.getClientObject().addListener(_nlistener);
+        
         // developers can jump right into a tutorial or game
         if (!StringUtil.isBlank(System.getProperty("test"))) {
             startTestGame(false);
@@ -825,10 +822,12 @@ public class BangClient extends BasicClient
         // clear our status view key bindings
         StatusView.clearKeys(_ctx);
 
+        // stop listening to the client object
+        client.getClientObject().removeListener(_nlistener);
+        
         if (_pendingTownId == null) {
             // shut her right on down
             _ctx.getApp().stop();
-
         }
     }
 
@@ -844,18 +843,6 @@ public class BangClient extends BasicClient
                             " but we're already logged on!?");
             }
             _pendingTownId = null;
-        }
-    }
-
-    // documentation inherited from interface PlayerReceiver
-    public void receivedPardnerInvite (Handle handle, String message)
-    {
-        if (canDisplayPopup(MainView.Type.PARDNER_INVITE)) {
-            displayPardnerInvite(handle, message);
-        } else {
-            // stick it on a list and we'll show the invite next the we're in
-            // the town view
-            _invites.add(new Tuple<Handle,String>(handle, message));
         }
     }
 
@@ -901,57 +888,49 @@ public class BangClient extends BasicClient
         ParticlePool.warmup(_ctx);
     }
 
-    protected void displayPardnerInvite (
-            final Handle handle, final String message)
+    protected void displayNotification (final Notification notification)
     {
         final ReportingListener rl =
             new ReportingListener(_ctx, BANG_MSGS, "e.response_failed");
-
-        // if this person is on our mute list, auto-reject it
-        if (_ctx.getMuteDirector().isMuted(handle)) {
-            log.info("Auto-rejecting pardner invite [who=" + handle + "].");
-            _psvc.respondToPardnerInvite(_client, handle, false, rl);
-            // loop back to checkShowIntro in case there are more invites
+            
+        // if it comes from a person on our mute list, auto-reject it
+        final Handle source = notification.getSource();
+        if (source != null && _ctx.getMuteDirector().isMuted(source)) {
+            log.info("Auto-rejecting notification [who=" + source + ", notification=" +
+                notification + "].");
+            _psvc.respondToNotification(
+                _client, notification.getKey(), notification.getRejectIndex(), rl);
+            // flag this notification as answered and loop back to checkShowIntro
+            // in case there are more
+            notification.responded = true;
             checkShowIntro();
             return;
         }
-
-        PlayerObject player = _ctx.getUserObject();
-        String desc, btn;
-        _maxedPardners = player.pardners.size() >= MAX_PARDNERS;
-        if (_maxedPardners) {
-            desc = MessageBundle.tcompose("m.pardner_invite_full", handle);
-            btn = "m.pardner_wait";
-        } else {
-            desc = MessageBundle.tcompose("m.pardner_invite_available", handle);
-            btn = "m.pardner_accept";
+        
+        // append the mute button if it comes from a person
+        String[] buttons = notification.getResponses();
+        if (source != null) {
+            buttons = ArrayUtil.append(buttons, MessageBundle.qualify(
+                BANG_MSGS, MessageBundle.tcompose("m.notification_ignore", source)));
         }
-
-        // otherwise display the invitation in a dialog
-        String text = MessageBundle.compose("m.pardner_invite", desc, 
-                MessageBundle.taint(handle), MessageBundle.taint(message));
-        String[] buttons = {
-            btn, "m.pardner_reject",
-            MessageBundle.tcompose("m.pardner_ignore", handle) };
-        OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
+        
+        OptionDialog.showConfirmDialog(
+            _ctx, notification.getBundle(), notification.getText(), buttons,
+            new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
-                if (_maxedPardners && button == 0) {
-                    _invites.add(0, new Tuple<Handle, String>(handle, message));
-                } else {
-                    _maxedPardners = false;
-                    _psvc.respondToPardnerInvite(
-                            _client, handle, button == 0, rl);
+                if (button >= notification.getResponses().length) { // ignore the pesky bugger
+                    _ctx.getMuteDirector().setMuted(source, true);
+                    button = notification.getRejectIndex();
                 }
-                if (button == 2) { // ignore the pesky bugger
-                    _ctx.getMuteDirector().setMuted(handle, true);
-                }
-                // loop back to checkShowIntro in case there are more invites
+                _psvc.respondToNotification(_client, notification.getKey(), button, rl);
+                // flag this notification as answered and loop back to checkShowIntro
+                // in case there are more
+                notification.responded = true;
                 checkShowIntro();
             }
-        };
-        OptionDialog.showConfirmDialog(_ctx, BANG_MSGS, text, buttons, rr);
+        });
     }
-
+    
     protected boolean displayLowerDetailSuggestion ()
     {
         _suggestLowerDetail = false;
@@ -1224,6 +1203,15 @@ public class BangClient extends BasicClient
     protected Config _config = new Config("bang");
     protected String _pendingTownId;
 
+    protected SetAdapter _nlistener = new SetAdapter() {
+        public void entryAdded (EntryAddedEvent event) {
+            if (event.getName().equals(PlayerObject.NOTIFICATIONS) &&
+                canDisplayPopup(MainView.Type.NOTIFICATION)) {
+                displayNotification((Notification)event.getEntry());
+            }
+        }
+    };
+    
     protected BangChatDirector _chatdir;
     protected BoardCache _bcache;
     protected MuteDirector _mutedir;
@@ -1235,9 +1223,6 @@ public class BangClient extends BasicClient
     protected SystemChatView _scview;
     protected StatusView _status;
 
-    protected ArrayList<Tuple<Handle,String>> _invites =
-        new ArrayList<Tuple<Handle,String>>();
-    protected boolean _maxedPardners;
     protected boolean _suggestLowerDetail;
     
     protected String _playingMusic;
