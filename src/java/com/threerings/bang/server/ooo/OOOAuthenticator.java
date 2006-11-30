@@ -21,7 +21,6 @@ import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.net.AuthResponse;
 import com.threerings.presents.net.AuthResponseData;
 
-import com.threerings.presents.server.Authenticator;
 import com.threerings.presents.server.net.AuthingConnection;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
@@ -30,6 +29,7 @@ import com.threerings.bang.data.BangAuthResponseData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
 import com.threerings.bang.data.BangTokenRing;
+import com.threerings.bang.server.BangAuthenticator;
 import com.threerings.bang.server.BangClientResolver;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
@@ -43,15 +43,14 @@ import static com.threerings.bang.data.BangAuthCodes.*;
 /**
  * Delegates authentication to the OOO user manager.
  */
-public class OOOAuthenticator extends Authenticator
+public class OOOAuthenticator extends BangAuthenticator
 {
     public OOOAuthenticator ()
     {
         try {
             // we get our user manager configuration from the ocean config
-            _usermgr = new OOOUserManager(
-                ServerConfig.config.getSubProperties("oooauth"),
-                BangServer.conprov);
+            _usermgr = new OOOUserManager(ServerConfig.config.getSubProperties("oooauth"),
+                                          BangServer.conprov);
             _authrep = (OOOUserRepository)_usermgr.getRepository();
         } catch (PersistenceException pe) {
             log.log(Level.WARNING, "Failed to initialize OOO authenticator. " +
@@ -59,15 +58,22 @@ public class OOOAuthenticator extends Authenticator
         }
     }
 
-    @Override
+    // from abstract BangAuthenticator
+    public void setAccountIsActive (String username, boolean isActive)
+        throws PersistenceException
+    {
+        // pass the word on to the user repository
+        _authrep.updateUserIsActive(username, OOOUser.IS_ACTIVE_BANG_PLAYER, isActive);
+    }
+
+    @Override // from Authenticator
     protected AuthResponseData createResponseData ()
     {
         return new BangAuthResponseData();
     }
 
     // from abstract Authenticator
-    protected void processAuthentication (
-            AuthingConnection conn, AuthResponse rsp)
+    protected void processAuthentication (AuthingConnection conn, AuthResponse rsp)
         throws PersistenceException
     {
         AuthRequest req = conn.getAuthRequest();

@@ -37,9 +37,9 @@ import com.threerings.bang.util.BangUtil;
 public class BangClientResolver extends CrowdClientResolver
 {
     /**
-     * This is called earlier in the authentication process where we have to
-     * load an account's player record, so we stash it here to avoid loading it
-     * again when the time comes to resolve their data.
+     * This is called earlier in the authentication process where we have to load an account's
+     * player record, so we stash it here to avoid loading it again when the time comes to resolve
+     * their data.
      */
     public static void stashPlayer (PlayerRecord player)
     {
@@ -53,7 +53,7 @@ public class BangClientResolver extends CrowdClientResolver
     {
         return new PlayerObject();
     }
-    
+
     // documentation inherited
     protected void resolveClientData (ClientObject clobj)
         throws Exception
@@ -78,6 +78,8 @@ public class BangClientResolver extends CrowdClientResolver
             // it's their first time, how nice
             player = new PlayerRecord(username);
             BangServer.playrepo.insertPlayer(player);
+            BangAuthenticator auther = (BangAuthenticator)BangServer.conmgr.getAuthenticator();
+            auther.setAccountIsActive(username, true);
             BangServer.generalLog("first_timer " + username);
         }
 
@@ -87,15 +89,14 @@ public class BangClientResolver extends CrowdClientResolver
         }
         buser.isMale = player.isSet(PlayerRecord.IS_MALE_FLAG);
         buser.scrip = player.scrip;
-        buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
-            player.accountName);
+        buser.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(player.accountName);
 
         // load up this player's items
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
         buser.inventory = new DSet<Item>(items.iterator());
 
-        // if we're giving out free access to ITP, give the user a temporary
-        // ITP ticket for this session (if they don't already have one)
+        // if we're giving out free access to ITP, give the user a temporary ITP ticket for this
+        // session (if they don't already have one)
         if (RuntimeConfig.server.freeIndianPost &&
             !buser.holdsTicket(BangCodes.INDIAN_POST)) {
             int itpidx = BangUtil.getTownIndex(BangCodes.INDIAN_POST);
@@ -108,13 +109,11 @@ public class BangClientResolver extends CrowdClientResolver
         buser.stats.setContainer(buser);
 
         // load up this player's ratings
-        ArrayList<Rating> ratings =
-            BangServer.ratingrepo.loadRatings(buser.playerId);
+        ArrayList<Rating> ratings = BangServer.ratingrepo.loadRatings(buser.playerId);
         buser.ratings = new DSet<Rating>(ratings.iterator());
 
         // load up this player's avatar looks
-        buser.looks = new DSet<Look>(
-            BangServer.lookrepo.loadLooks(player.playerId).iterator());
+        buser.looks = new DSet<Look>(BangServer.lookrepo.loadLooks(player.playerId).iterator());
 
         // configure their chosen poses
         buser.poses = new String[Look.POSE_COUNT];
@@ -136,10 +135,9 @@ public class BangClientResolver extends CrowdClientResolver
         } else {
             BangServer.gangmgr.loadGangInvites(buser);
         }
-        
+
         // load this player's friends and foes
-        ArrayList<FolkRecord> folks =
-            BangServer.playrepo.loadOpinions(buser.playerId);
+        ArrayList<FolkRecord> folks = BangServer.playrepo.loadOpinions(buser.playerId);
         ArrayIntSet friends = new ArrayIntSet(), foes = new ArrayIntSet();
         for (FolkRecord folk : folks) {
             (folk.opinion == FolkRecord.FRIEND ? friends : foes).add(
@@ -149,7 +147,7 @@ public class BangClientResolver extends CrowdClientResolver
         buser.friends = friends.toIntArray();
         buser.foes = foes.toIntArray();
     }
-    
+
     @Override // documentation inherited
     protected void finishResolution (ClientObject clobj)
     {
@@ -160,7 +158,7 @@ public class BangClientResolver extends CrowdClientResolver
             BangServer.gangmgr.resolveGangObject(buser);
         }
     }
-    
+
     @Override // documentation inherited
     protected void reportFailure (Exception cause)
     {
@@ -171,7 +169,6 @@ public class BangClientResolver extends CrowdClientResolver
             BangServer.gangmgr.releaseGangObject(buser.gangId);
         }
     }
-    
-    protected static HashMap<String,PlayerRecord> _pstash =
-        new HashMap<String,PlayerRecord>();
+
+    protected static HashMap<String,PlayerRecord> _pstash = new HashMap<String,PlayerRecord>();
 }
