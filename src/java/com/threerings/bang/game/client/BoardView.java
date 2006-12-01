@@ -668,6 +668,7 @@ public class BoardView extends BComponent
             Spatial highlight = ((PieceSprite)sprite).getHighlight();
             if (highlight != null) {
                 _pnode.attachChild(highlight);
+                highlight.updateRenderState();
                 _plights.put(highlight, sprite);
             }
         }

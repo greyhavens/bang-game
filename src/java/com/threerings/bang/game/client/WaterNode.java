@@ -75,7 +75,8 @@ public class WaterNode extends Node
         
         // use our fancy shaders if possible
         if (GLContext.getCapabilities().GL_ARB_vertex_shader &&
-            GLContext.getCapabilities().GL_ARB_fragment_shader) {
+            GLContext.getCapabilities().GL_ARB_fragment_shader &&
+            BangPrefs.isHighDetail()) {
             _sstate = _ctx.getRenderer().createGLSLShaderObjectsState();
             if (_shaderId == -1) {
                 URL vurl = null, furl = null;

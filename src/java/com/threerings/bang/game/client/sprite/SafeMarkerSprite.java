@@ -5,6 +5,7 @@ package com.threerings.bang.game.client.sprite;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Texture;
+import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.math.Quaternion;
 import com.jme.renderer.ColorRGBA;
@@ -45,49 +46,45 @@ public class SafeMarkerSprite extends MarkerSprite
     {
         super.init(ctx, view, board, sounds, piece, tick);
         int type = ((Marker)_piece).getType();
+        boolean emissive = (TextureState.getNumberOfFixedUnits() >= 2);
         TextureState[] texstates = _highlightStates.get(type);
         if (texstates == null) {
-            texstates = new TextureState[
-                DIRECTIONS.length * HIGHLIGHT_TEXS.length / 2];
-            Texture[] ntex = new Texture[HIGHLIGHT_TEXS.length],
-                      rtex = new Texture[HIGHLIGHT_TEXS.length];
+            texstates = new TextureState[DIRECTIONS.length * HIGHLIGHT_TEXS.length];
             for (int ii = 0; ii < HIGHLIGHT_TEXS.length; ii++) {
-                int idx = ii / 2 * DIRECTIONS.length;
-                TextureState tstate = RenderUtil.createTextureState(ctx,
-                        (String)SPRITES[type*2+1] +
-                        HIGHLIGHT_TEXS[ii] + ".png");
-                ntex[ii] = tstate.getTexture();
-                if (ii % 2 == 0) {
-                    texstates[idx] = DisplaySystem.getDisplaySystem().
-                        getRenderer().createTextureState();
-                    ntex[ii].setApply(Texture.AM_BLEND);
-                    ntex[ii].setBlendColor(ColorRGBA.white);
+                String root = (String)SPRITES[type*2+1];
+                Texture btex = ctx.getTextureCache().getTexture(
+                    root + HIGHLIGHT_TEXS[ii] + ".png");
+                int idx = ii * DIRECTIONS.length;
+                texstates[idx] = ctx.getRenderer().createTextureState();
+                if (emissive) {
+                    Texture etex = ctx.getTextureCache().getTexture(
+                        root + EMISSIVE_TEXS[ii] + ".png");
+                    etex.setApply(Texture.AM_BLEND);
+                    etex.setBlendColor(ColorRGBA.white);
+                    texstates[idx].setTexture(etex, 0);
+                    texstates[idx].setTexture(btex, 1);
+                } else {
+                    texstates[idx].setTexture(btex);
                 }
-                //texstates[idx].setTexture(ntex[ii], ii % 2);
-                texstates[idx] = tstate;
+                texstates[idx].load(); // load before cloning
             }
-            Vector3f up = new Vector3f(0f, 0f, 1f);
-            // create the 4 rotations of the texture
+            
+            // create the three other rotations of the texture
             for (int ii = 1; ii < DIRECTIONS.length; ii++) {
-                for (int jj = 0; jj < ntex.length; jj++) {
-                    rtex[jj] = ntex[jj].createSimpleClone();
-                    Quaternion rot = new Quaternion();
-                    rtex[jj].setRotation(rot.fromAngleNormalAxis(
-                                (float)(ii * Math.PI / 2), up));
-                    int idx = jj / 2 * DIRECTIONS.length + ii;
-                    if (jj % 2 == 0) {
-                        texstates[idx] = DisplaySystem.getDisplaySystem().
-                            getRenderer().createTextureState();
-                    }
-                    texstates[idx].setTexture(rtex[jj], jj % 2);
+                for (int jj = 0; jj < HIGHLIGHT_TEXS.length; jj++) {
+                    int idx = jj * DIRECTIONS.length + ii;
+                    texstates[idx] = createRotatedState(
+                        texstates[jj * DIRECTIONS.length], ii * FastMath.HALF_PI);
                 }
             }
             _highlightStates.put(type, texstates);
         }
         _tlight = view.getTerrainNode().createHighlight(
                 piece.x, piece.y, false, (byte)1);
-        _tlight.setLightCombineMode(LightState.OFF);
-        _tlight.setTextureBuffer(0, _tlight.getTextureBuffer(0, 0), 1);
+        if (emissive) {
+            _tlight.setLightCombineMode(LightState.REPLACE);
+            _tlight.setTextureBuffer(0, _tlight.getTextureBuffer(0, 0), 1);
+        }
         setOrientation(piece.orientation);
         attachHighlight(_tlight);
     }
@@ -120,10 +117,29 @@ public class SafeMarkerSprite extends MarkerSprite
         }
     }
 
+    /**
+     * Creates and returns a rotated "clone" of the given texture state.
+     */
+    protected TextureState createRotatedState (TextureState ostate, float angle)
+    {
+        TextureState nstate = _ctx.getRenderer().createTextureState();
+        for (int ii = 0, nn = ostate.getNumberOfSetTextures(); ii < nn; ii++) {
+            Texture ntex = ostate.getTexture(ii).createSimpleClone();
+            Quaternion rot = new Quaternion();
+            ntex.setRotation(new Quaternion().fromAngleNormalAxis(angle, Vector3f.UNIT_Z));
+            nstate.setTexture(ntex, ii);
+        }
+        return nstate;
+    }
+    
     protected static final String[] HIGHLIGHT_TEXS = {
-        "_on_emis", "_on", "_off_emis", "_off"
+        "_on", "_off"
     };
 
+    protected static final String[] EMISSIVE_TEXS = {
+        "_on_emis", "_off_emis"
+    };
+    
     protected static HashIntMap<TextureState[]> _highlightStates =
         new HashIntMap<TextureState[]>();
 }

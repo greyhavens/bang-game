@@ -144,7 +144,7 @@ public class TreeBedSprite extends ActiveSprite
             String troot = _type + "/" + _name + "/alpha";
             if (TextureState.getNumberOfFixedUnits() >= 2) {
                 Texture etex = _ctx.getTextureCache().getTexture(
-                troot + "_emissive.png");
+                    troot + "_emissive.png");
                 etex.setApply(Texture.AM_BLEND);
                 etex.setBlendColor(ColorRGBA.white);
                 _btstate = _ctx.getRenderer().createTextureState();
