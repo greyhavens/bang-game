@@ -75,8 +75,8 @@ public class MoveShootHandler extends EffectHandler
         
         _applying = true;
         apply(_shot);
-        maybeComplete(_shotPender);
         _applying = false;
+        maybeComplete(_shotPender);
     }
 
     @Override // documentation inherited
