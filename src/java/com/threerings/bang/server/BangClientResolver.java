@@ -80,8 +80,7 @@ public class BangClientResolver extends CrowdClientResolver
             // it's their first time, how nice
             player = new PlayerRecord(username);
             BangServer.playrepo.insertPlayer(player);
-            BangAuthenticator auther = (BangAuthenticator)BangServer.conmgr.getAuthenticator();
-            auther.setAccountIsActive(username, true);
+            BangServer.author.setAccountIsActive(username, true);
             BangServer.generalLog("first_timer " + username);
         }
 

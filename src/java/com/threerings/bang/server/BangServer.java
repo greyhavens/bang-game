@@ -98,6 +98,9 @@ public class BangServer extends CrowdServer
     /** Handles the heavy lifting relating to avatar looks and articles. */
     public static AvatarLogic alogic;
 
+    /** A reference to the authenticator in use by the server. */
+    public static BangAuthenticator author;
+
     /** Communicates with the other servers in our cluster. */
     public static BangPeerManager peermgr;
 
@@ -428,12 +431,12 @@ public class BangServer extends CrowdServer
     @Override // documentation inherited
     protected Authenticator createAuthenticator ()
     {
-        // set up our authenticator
-        Authenticator auth = ServerConfig.getAuthenticator();
-        if (auth != null) {
-            return auth;
+        // set up our authenticator (and keep a reference to it)
+        author = ServerConfig.getAuthenticator();
+        if (author == null) {
+            throw new RuntimeException("Unable to create authenticator. We're doomed!");
         }
-        return super.createAuthenticator();
+        return author;
     }
 
     @Override // documentation inherited
