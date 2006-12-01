@@ -31,6 +31,8 @@ import com.threerings.bang.server.persist.FolkRecord;
 import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.util.BangUtil;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * Customizes the client resolver to use our {@link PlayerObject}.
  */
@@ -95,18 +97,31 @@ public class BangClientResolver extends CrowdClientResolver
         ArrayList<Item> items = BangServer.itemrepo.loadItems(buser.playerId);
         buser.inventory = new DSet<Item>(items.iterator());
 
-        // if we're giving out free access to ITP, give the user a temporary ITP ticket for this
-        // session (if they don't already have one)
-        if (RuntimeConfig.server.freeIndianPost &&
-            !buser.holdsTicket(BangCodes.INDIAN_POST)) {
-            int itpidx = BangUtil.getTownIndex(BangCodes.INDIAN_POST);
-            buser.addToInventory(new TrainTicket(buser.playerId, itpidx));
-        }
-
         // load up this player's persistent stats
         ArrayList<Stat> stats = BangServer.statrepo.loadStats(buser.playerId);
         buser.stats = new StatSet(stats.iterator());
         buser.stats.setContainer(buser);
+
+        // if this player started playing before the end of beta and they've played 20 ranked
+        // games, give them a free permanent ticket to ITP
+        int itpidx = BangUtil.getTownIndex(BangCodes.INDIAN_POST);
+        if (buser.playerId < BangCodes.BETA_PLAYER_CUTOFF &&
+            buser.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= FREE_ITP_GP_REQUIREMENT &&
+            !buser.holdsTicket(BangCodes.INDIAN_POST)) {
+            log.info("Granting free ITP ticket to beta player [who=" + username +
+                     ", handle=" + buser.handle + ", pid=" + buser.playerId +
+                     ", games=" + buser.stats.getIntStat(Stat.Type.GAMES_PLAYED) + "].");
+            TrainTicket ticket = new TrainTicket(buser.playerId, itpidx);
+            BangServer.itemrepo.insertItem(ticket);
+            buser.addToInventory(ticket);
+        }
+
+        // if we're giving out free access to ITP, give the user a temporary ITP ticket for this
+        // session (if they don't already have one)
+        if (RuntimeConfig.server.freeIndianPost &&
+            !buser.holdsTicket(BangCodes.INDIAN_POST)) {
+            buser.addToInventory(new TrainTicket(buser.playerId, itpidx));
+        }
 
         // load up this player's ratings
         ArrayList<Rating> ratings = BangServer.ratingrepo.loadRatings(buser.playerId);
@@ -171,4 +186,7 @@ public class BangClientResolver extends CrowdClientResolver
     }
 
     protected static HashMap<String,PlayerRecord> _pstash = new HashMap<String,PlayerRecord>();
+
+    /** The number of rated games a player has to have played to get a free ticket to ITP. */
+    protected static final int FREE_ITP_GP_REQUIREMENT = 20;
 }

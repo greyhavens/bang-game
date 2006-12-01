@@ -58,17 +58,15 @@ public class LogonView extends BWindow
     implements ActionListener, BasicClient.InitObserver
 {
     /**
-     * Converts an arbitrary exception into a translatable error string (which
-     * should be looked up in the {@link BangAuthCodes#AUTH_MSGS} bundle). If
-     * the exception indicates that the client is out of date, the process of
-     * updating the client <em>will be started</em>; the client will exit a few
-     * seconds later, so be sure to display the returned error message.
+     * Converts an arbitrary exception into a translatable error string (which should be looked up
+     * in the {@link BangAuthCodes#AUTH_MSGS} bundle). If the exception indicates that the client
+     * is out of date, the process of updating the client <em>will be started</em>; the client will
+     * exit a few seconds later, so be sure to display the returned error message.
      *
-     * <p> An additional boolean paramater will be returned indicating whether
-     * or not the returned error message is indicative of a connection failure,
-     * in which case the caller may wish to direct the user to the server
-     * status page so they can find out if we are in the middle of a sceduled
-     * downtime.
+     * <p> An additional boolean paramater will be returned indicating whether or not the returned
+     * error message is indicative of a connection failure, in which case the caller may wish to
+     * direct the user to the server status page so they can find out if we are in the middle of a
+     * sceduled downtime.
      */
     public static Tuple<String,Boolean> decodeLogonException (
         BangContext ctx, Exception cause)
@@ -77,16 +75,15 @@ public class LogonView extends BWindow
         boolean connectionFailure = false;
 
         if (cause instanceof LogonException) {
-            // if the failure is due to a need for a client update, check for
-            // that and take the appropriate action
+            // if the failure is due to a need for a client update, check for that and take the
+            // appropriate action
             if (BangClient.checkForUpgrade(ctx, msg)) {
-                // mogrify the logon failed message to let the client know that
-                // we're going to automatically restart
+                // mogrify the logon failed message to let the client know that we're going to
+                // automatically restart
                 msg = "m.version_mismatch_auto";
             }
 
-            // change the new account button to server status for certain
-            // response codes
+            // change the new account button to server status for certain response codes
             if (msg.equals(BangAuthCodes.UNDER_MAINTENANCE)) {
                 connectionFailure = true;
             }
@@ -97,9 +94,8 @@ public class LogonView extends BWindow
 
             } else if (cause instanceof IOException) {
                 String cmsg = cause.getMessage();
-                // foolery to detect a problem where Windows Connection Sharing
-                // will allow a connection to complete and then disconnect it
-                // after the first normal packet is sent
+                // detect a problem where Windows Connection Sharing will allow a connection to
+                // complete and then disconnect it after the first normal packet is sent
                 if (cmsg != null && cmsg.indexOf("forcibly closed") != -1) {
                     msg = "m.failed_to_connect";
                 } else {
@@ -120,8 +116,7 @@ public class LogonView extends BWindow
     public LogonView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), GroupLayout.makeVert(GroupLayout.TOP));
-        ((GroupLayout)getLayoutManager()).setOffAxisJustification(
-            GroupLayout.RIGHT);
+        ((GroupLayout)getLayoutManager()).setOffAxisJustification(GroupLayout.RIGHT);
         setStyleClass("logon_view");
 
         _ctx = ctx;
@@ -129,12 +124,10 @@ public class LogonView extends BWindow
 
         _msgs = ctx.getMessageManager().getBundle(BangAuthCodes.AUTH_MSGS);
         BContainer row = GroupLayout.makeHBox(GroupLayout.LEFT);
-        ((GroupLayout)row.getLayoutManager()).setOffAxisJustification(
-            GroupLayout.BOTTOM);
+        ((GroupLayout)row.getLayoutManager()).setOffAxisJustification(GroupLayout.BOTTOM);
         BContainer grid = new BContainer(new TableLayout(2, 5, 5));
         grid.add(new BLabel(_msgs.get("m.username"), "logon_label"));
-        grid.add(_username = new BTextField(
-                     BangPrefs.config.getValue("username", "")));
+        grid.add(_username = new BTextField(BangPrefs.config.getValue("username", "")));
         _username.setPreferredWidth(150);
         grid.add(new BLabel(_msgs.get("m.password"), "logon_label"));
         grid.add(_password = new BPasswordField());
@@ -145,25 +138,22 @@ public class LogonView extends BWindow
         row.add(col);
         col.add(_logon = new BButton(_msgs.get("m.logon"), this, "logon"));
         _logon.setStyleClass("big_button");
-        // use a special sound effect for logon which is the ricochet that we
-        // also use for window open
+        // use a special sound effect for logon (the ricochet that we also use for window open)
         _logon.setProperty("feedback_sound", BangUI.FeedbackSound.WINDOW_OPEN);
-        col.add(_action =
-                new BButton(_msgs.get("m.new_account"), this, "new_account"));
+        col.add(_action = new BButton(_msgs.get("m.new_account"), this, "new_account"));
         _action.setStyleClass("logon_new");
         add(row);
 
-        // disable the logon button until a password is entered (and until
-        // we're initialized)
+        // disable the logon button until a password is entered (and until we're initialized)
         new EnablingValidator(_password, _logon) {
             protected boolean checkEnabled (String text) {
                 return super.checkEnabled(text) && _initialized;
             }
         };
 
-        // TODO: pick from the town they most recently logged into
+        // pick a unit from the town they most recently logged into
         UnitConfig[] units = UnitConfig.getTownUnits(
-            BangCodes.FRONTIER_TOWN,
+            BangPrefs.getLastTownId(_username.getText()),
             EnumSet.of(UnitConfig.Rank.BIGSHOT, UnitConfig.Rank.NORMAL));
         if (units.length > 0) {
             _unitIcon = BangUI.getUnitIcon(RandomUtil.pickRandom(units));
@@ -185,8 +175,7 @@ public class LogonView extends BWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        if (event.getSource() == _password ||
-            "logon".equals(event.getAction())) {
+        if (event.getSource() == _password || "logon".equals(event.getAction())) {
             if (!_initialized) {
                 log.warning("Not finished initializing. Hang tight.");
                 return;
@@ -196,8 +185,7 @@ public class LogonView extends BWindow
             String password = _password.getText();
             _status.setStatus(_msgs.get("m.logging_on"), false);
 
-            // configure the client to connect to the town lobby server that
-            // this player last accessed
+            // try to connect to the town lobby server that this player last accessed
             String townId = BangPrefs.getLastTownId(username);
             // but make sure this town has been activated on this client
             if (!BangClient.isTownActive(townId)) {
@@ -209,24 +197,20 @@ public class LogonView extends BWindow
 
             // configure the client with the supplied credentials
             _ctx.getClient().setCredentials(
-                _ctx.getBangClient().createCredentials(
-                    new Name(username), password));
+                _ctx.getBangClient().createCredentials(new Name(username), password));
 
             // now we can log on
             _ctx.getClient().logon();
 
         } else if ("options".equals(event.getAction())) {
-            _ctx.getBangClient().displayPopup(
-                new OptionsView(_ctx, this), true);
+            _ctx.getBangClient().displayPopup(new OptionsView(_ctx, this), true);
 
         } else if ("server_status".equals(event.getAction())) {
-            BrowserUtil.browseURL(
-                _shownURL = DeploymentConfig.getServerStatusURL(), _browlist);
+            BrowserUtil.browseURL(_shownURL = DeploymentConfig.getServerStatusURL(), _browlist);
             _status.setStatus(_msgs.get("m.server_status_launched"), false);
 
         } else if ("new_account".equals(event.getAction())) {
-            BrowserUtil.browseURL(
-                _shownURL = DeploymentConfig.getNewAccountURL(), _browlist);
+            BrowserUtil.browseURL(_shownURL = DeploymentConfig.getNewAccountURL(), _browlist);
             _status.setStatus(_msgs.get("m.new_account_launched"), false);
 
         } else if ("exit".equals(event.getAction())) {
@@ -244,8 +228,7 @@ public class LogonView extends BWindow
             _logon.setEnabled(!StringUtil.isBlank(_password.getText()));
             _initialized = true;
 
-            // if we already have credentials (set on the command line during
-            // testing), auto-logon
+            // if we already have credentials (set on the command line during testing), auto-logon
             if (_ctx.getClient().getCredentials() != null) {
                 _ctx.getClient().logon();
             }
@@ -307,6 +290,12 @@ public class LogonView extends BWindow
                 switchToServerStatus();
             }
             _status.setStatus(_msgs.xlate(msg.left), true);
+
+            // if we got a NO_TICKET message, reset our last town id just to be sure
+            if (cause.getMessage() != null &&
+                cause.getMessage().indexOf(BangAuthCodes.NO_TICKET) != -1) {
+                BangPrefs.setLastTownId(_username.getText(), BangCodes.FRONTIER_TOWN);
+            }
         }
     };
 
@@ -314,8 +303,7 @@ public class LogonView extends BWindow
         public void requestCompleted (Object result) {
         }
         public void requestFailed (Exception cause) {
-            _status.setStatus(_msgs.get("m.browser_launch_failed",
-                                        _shownURL.toString()), true);
+            _status.setStatus(_msgs.get("m.browser_launch_failed", _shownURL.toString()), true);
         }
     };
 

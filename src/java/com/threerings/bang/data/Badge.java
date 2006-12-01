@@ -199,8 +199,7 @@ public class Badge extends Item
         },
         DISTANCE_MOVED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >=
-                    500000;
+                return user.stats.getIntStat(Stat.Type.DISTANCE_MOVED) >= 500000;
             }
         },
 
@@ -296,8 +295,7 @@ public class Badge extends Item
         },
         NUGGETS_CLAIMED_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >=
-                    10000;
+                return user.stats.getIntStat(Stat.Type.NUGGETS_CLAIMED) >= 10000;
             }
         },
         NUGGETS_CLAIMED_5 {
@@ -417,32 +415,27 @@ public class Badge extends Item
         // wendigo survival badges
         WENDIGO_SURVIVALS_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(
-                    Stat.Type.WENDIGO_SURVIVALS) >= 30;
+                return user.stats.getIntStat(Stat.Type.WENDIGO_SURVIVALS) >= 30;
             }
         },
         WENDIGO_SURVIVALS_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(
-                    Stat.Type.WENDIGO_SURVIVALS) >= 500;
+                return user.stats.getIntStat(Stat.Type.WENDIGO_SURVIVALS) >= 500;
             }
         },
         WENDIGO_SURVIVALS_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(
-                    Stat.Type.WENDIGO_SURVIVALS) >= 5000;
+                return user.stats.getIntStat(Stat.Type.WENDIGO_SURVIVALS) >= 5000;
             }
         },
         WENDIGO_SURVIVALS_4 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(
-                        Stat.Type.TALISMAN_SPOT_SURVIVALS) >= 100;
+                return user.stats.getIntStat(Stat.Type.TALISMAN_SPOT_SURVIVALS) >= 100;
             }
         },
         WENDIGO_SURVIVALS_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(
-                        Stat.Type.WHOLE_TEAM_SURVIVALS) >= 50;
+                return user.stats.getIntStat(Stat.Type.WHOLE_TEAM_SURVIVALS) >= 50;
             }
         },
 
@@ -464,9 +457,8 @@ public class Badge extends Item
         },
         FT_BIGSHOT_USER {
             public boolean qualifies (PlayerObject user) {
-                return checkUnitUsage(
-                    user.stats, Stat.Type.BIGSHOT_WINS,
-                    BangCodes.FRONTIER_TOWN, BIGSHOT_UNITS, 10);
+                return checkUnitUsage(user.stats, Stat.Type.BIGSHOT_WINS,
+                                      BangCodes.FRONTIER_TOWN, BIGSHOT_UNITS, 10);
             }
         },
         FT_ALLUNIT_USER {
@@ -484,14 +476,12 @@ public class Badge extends Item
         },
         TRICKSTER_RAVEN_USER {
             public boolean qualifies (PlayerObject user) {
-                return checkBigShotUsage(
-                    user.stats, "indian_post/tricksterraven");
+                return checkBigShotUsage(user.stats, "indian_post/tricksterraven");
             }
         },
         REVOLUTIONARY_USER {
             public boolean qualifies (PlayerObject user) {
-                return checkBigShotUsage(
-                    user.stats, "indian_post/revolutionary");
+                return checkBigShotUsage(user.stats, "indian_post/revolutionary");
             }
         },
         ITP_BIGSHOT_USER {
@@ -574,8 +564,7 @@ public class Badge extends Item
         // wacky badges
         IRON_HORSE {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(
-                    Stat.Type.SESSION_GAMES_PLAYED) >= 25;
+                return user.stats.getIntStat(Stat.Type.SESSION_GAMES_PLAYED) >= 25;
             }
         },
         SAINT_NICK {
@@ -585,7 +574,7 @@ public class Badge extends Item
         },
         BETA_TESTER {
             public boolean qualifies (PlayerObject user) {
-                return user.playerId <= BETA_BADGE_CUTOFF;
+                return user.playerId <= BangCodes.BETA_PLAYER_CUTOFF;
             }
         },
         NIGHT_OWL {
@@ -634,9 +623,8 @@ public class Badge extends Item
                 _codeToType = new HashIntMap<Type>();
             }
             if (_codeToType.containsKey(_code)) {
-                log.warning("Badge type collision! " + this + " and " +
-                            _codeToType.get(_code) + " both map to '" +
-                            _code + "'.");
+                log.warning("Badge type collision! " + this + " and " + _codeToType.get(_code) +
+                            " both map to '" + _code + "'.");
             } else {
                 _codeToType.put(_code, this);
             }
@@ -667,8 +655,8 @@ public class Badge extends Item
         Type.CARDS_PLAYED_1, Type.CARDS_PLAYED_2, Type.CARDS_PLAYED_3,
         null, null,
 
-        Type.BONUSES_COLLECTED_1, Type.BONUSES_COLLECTED_2,
-        Type.BONUSES_COLLECTED_3, null, null,
+        Type.BONUSES_COLLECTED_1, Type.BONUSES_COLLECTED_2, Type.BONUSES_COLLECTED_3,
+        null, null,
 
         Type.CASH_EARNED_1, Type.CASH_EARNED_2, Type.CASH_EARNED_3,
         Type.GAMES_HOSTED_1, Type.GAMES_HOSTED_2,
@@ -701,20 +689,21 @@ public class Badge extends Item
         Type.TREES_SAVED_1, Type.TREES_SAVED_2, Type.TREES_SAVED_3,
         Type.TREES_SAVED_4, Type.TREES_SAVED_5,
 
-        Type.WENDIGO_SURVIVALS_1, Type.WENDIGO_SURVIVALS_2,
-        Type.WENDIGO_SURVIVALS_3, Type.WENDIGO_SURVIVALS_4,
-        Type.WENDIGO_SURVIVALS_5,
+        Type.WENDIGO_SURVIVALS_1, Type.WENDIGO_SURVIVALS_2, Type.WENDIGO_SURVIVALS_3,
+        Type.WENDIGO_SURVIVALS_4, Type.WENDIGO_SURVIVALS_5,
 
         Type.STORM_CALLER_USER, Type.TRICKSTER_RAVEN_USER,
         Type.REVOLUTIONARY_USER, Type.ITP_BIGSHOT_USER, Type.ITP_ALLUNIT_USER,
 
         // you suck badges
-        Type.UNITS_LOST_1, Type.UNITS_LOST_2, null,
-        Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,
+        Type.UNITS_LOST_1, Type.UNITS_LOST_2, null, Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,
 
         // general non-series (wacky) badges
         Type.IRON_HORSE, Type.SAINT_NICK, Type.BETA_TESTER,
         Type.NIGHT_OWL, Type.HIGH_NOON, Type.NEW_SHERRIF_IN_TOWN,
+
+        // more wacky badges
+        Type.BETA_TESTER, null, null, null, null,
     };
 
     /**
@@ -856,8 +845,7 @@ public class Badge extends Item
         if (reward == null) {
             msg = MessageBundle.compose("m.badge_icon_nil", getType().key());
         } else {
-            msg = MessageBundle.compose(
-                "m.badge_icon", getType().key(), reward);
+            msg = MessageBundle.compose("m.badge_icon", getType().key(), reward);
         }
         return MessageBundle.qualify(BangCodes.BADGE_MSGS, msg);
     }
@@ -876,8 +864,7 @@ public class Badge extends Item
         if (_silhouette) {
             bimage = ctx.getImageCache().getSilhouetteBImage(iconPath, true);
             if (bimage == null) {
-                bimage = ctx.getImageCache().getSilhouetteBImage(
-                    "badges/noimage.png", true);
+                bimage = ctx.getImageCache().getSilhouetteBImage("badges/noimage.png", true);
             }
         } else {
             bimage = ctx.getImageCache().getBImage(iconPath, true);
@@ -907,8 +894,7 @@ public class Badge extends Item
     {
         String old = _rewards.put(type, message);
         if (old != null) {
-            log.warning("Badge registered for duplicate rewards " +
-                        "[type=" + type + ", old=" + old +
+            log.warning("Badge registered for duplicate rewards [type=" + type + ", old=" + old +
                         ", new=" + message + "].");
         }
     }
@@ -917,14 +903,12 @@ public class Badge extends Item
     protected static int getTotemsStacked (StatSet stats)
     {
         return stats.getIntStat(Stat.Type.TOTEMS_SMALL) +
-            stats.getIntStat(Stat.Type.TOTEMS_MEDIUM) +
-            stats.getIntStat(Stat.Type.TOTEMS_LARGE);
+            stats.getIntStat(Stat.Type.TOTEMS_MEDIUM) + stats.getIntStat(Stat.Type.TOTEMS_LARGE);
     }
 
     /** Used by unit usage badges. */
     protected static boolean checkUnitUsage (
-        StatSet stats, Stat.Type stat,
-        String townId, EnumSet<UnitConfig.Rank> which, int usages)
+        StatSet stats, Stat.Type stat, String townId, EnumSet<UnitConfig.Rank> which, int usages)
     {
         for (UnitConfig cfg : UnitConfig.getTownUnits(townId, which)) {
             if (stats.getMapValue(stat, cfg.type) < usages) {
@@ -968,8 +952,7 @@ public class Badge extends Item
         msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_orange");
         registerReward(Type.CASH_EARNED_1, MessageBundle.compose(key, msg));
         msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_purple");
-        registerReward(Type.BONUSES_COLLECTED_2,
-                       MessageBundle.compose(key, msg));
+        registerReward(Type.BONUSES_COLLECTED_2, MessageBundle.compose(key, msg));
         msg = MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, "m.col_red");
         registerReward(Type.UNITS_KILLED_3, MessageBundle.compose(key, msg));
 
@@ -999,8 +982,7 @@ public class Badge extends Item
             if (qual == null) {
                 continue;
             }
-            msg = MessageBundle.qualify(
-                BangCodes.CARDS_MSGS, "m." + card.getType());
+            msg = MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + card.getType());
             registerReward(qual, MessageBundle.compose(key, msg));
         }
     }
@@ -1030,7 +1012,4 @@ public class Badge extends Item
     /** Used by unit usage badges. */
     protected static final EnumSet<UnitConfig.Rank> ALL_UNITS =
         EnumSet.of(UnitConfig.Rank.BIGSHOT, UnitConfig.Rank.NORMAL);
-
-    /** The last player id to be considered a beta tester. TODO: update at end of beta. */
-    protected static final int BETA_BADGE_CUTOFF = 21;
 }
