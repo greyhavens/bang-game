@@ -113,7 +113,13 @@ public class BangClientResolver extends CrowdClientResolver
                      ", games=" + buser.stats.getIntStat(Stat.Type.GAMES_PLAYED) + "].");
             TrainTicket ticket = new TrainTicket(buser.playerId, itpidx);
             BangServer.itemrepo.insertItem(ticket);
+            BangServer.playrepo.grantTownAccess(buser.playerId, ticket.getTownId());
             buser.addToInventory(ticket);
+
+        // fix bug with ticket granting
+        } else if (buser.holdsTicket(BangCodes.INDIAN_POST) &&
+                   player.townId.equals(BangCodes.FRONTIER_TOWN)) {
+            BangServer.playrepo.grantTownAccess(buser.playerId, BangCodes.INDIAN_POST);
         }
 
         // if we're giving out free access to ITP, give the user a temporary ITP ticket for this
