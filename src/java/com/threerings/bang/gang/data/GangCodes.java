@@ -27,7 +27,7 @@ public interface GangCodes extends InvocationCodes
     
     /** Gang rank string translations. */
     public static final String[] XLATE_RANKS = {
-        "member", "recruiter", "leader" };
+        "m.member", "m.recruiter", "m.leader" };
     
     /** The cost of forming a gang in scrip. */
     public static final int FORM_GANG_SCRIP_COST = 2500;

@@ -161,6 +161,7 @@ public class HideoutView extends ShopView
         if (player.gangOid <= 0) {
             unsubscribeFromGang();
             _gtab.add(createFormGangPanel(), new Point(100, 100));
+            _mtab = null;
             return;
         }
         
@@ -331,6 +332,7 @@ public class HideoutView extends ShopView
     protected BContainer createMemberTab ()
     {
         BContainer mtab = new BContainer(new AbsoluteLayout());
+        mtab.add(new MemberView(_ctx, _hideoutobj, _gangobj), new Point(0, 0));
         return mtab;
     }
     
@@ -387,7 +389,8 @@ public class HideoutView extends ShopView
         new AttributeChangeListener() {
         public void attributeChanged (AttributeChangedEvent event) {
             if (event.getName().equals(PlayerObject.GANG_OID)) {
-                _tabs.selectTab(0); // always go back to the first tab
+                // always go back to the first tab
+                _tabs.selectTab(0); 
                 updateGangTab();
             }
         }

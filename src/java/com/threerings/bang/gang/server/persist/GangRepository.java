@@ -231,7 +231,7 @@ public class GangRepository extends JORARepository
                     while (rs.next()) {
                         list.add(new GangMemberEntry(
                             rs.getInt(1), new Handle(rs.getString(2)),
-                            rs.getByte(3), rs.getDate(4), rs.getDate(5)));
+                            rs.getByte(3), rs.getTimestamp(4), rs.getDate(5)));
                     }
                     return null;
 
@@ -306,7 +306,7 @@ public class GangRepository extends JORARepository
                     }
                     int playerId = rs.getInt(1);
                     
-                    // now update the pardner relation between these two
+                    // attempt to insert the invitation
                     String query = "insert ignore into GANG_INVITES set " +
                         "INVITER_ID = " + inviterId + ", GANG_ID = " + gangId +
                         ", PLAYER_ID = " + playerId + ", MESSAGE = " +

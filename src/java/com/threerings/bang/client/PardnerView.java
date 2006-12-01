@@ -35,6 +35,8 @@ import com.jmex.bui.util.Insets;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.presents.client.InvocationService;
+import com.threerings.presents.dobj.DObject;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -47,6 +49,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.OptionDialog;
+import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangCodes;
@@ -59,7 +62,7 @@ import com.threerings.bang.util.BangContext;
  * Displays a player's pardners.
  */
 public class PardnerView extends IconPalette
-    implements ActionListener, SetListener, BangCodes
+    implements ActionListener, BangCodes
 {
     public PardnerView (BangContext ctx)
     {
@@ -79,27 +82,25 @@ public class PardnerView extends IconPalette
         ccont.add(new Spacer(1, 2));
 
         // then add chat and remove buttons
-        BContainer bcont = new BContainer(GroupLayout.makeHoriz(
-            GroupLayout.CENTER));
+        BContainer bcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
         bcont.add(_chat = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_chat"),
             this, "chat"));
         bcont.add(_watch = new BButton(_ctx.xlate(BANG_MSGS,
             "m.pardner_watch"), this, "watch"));
-        bcont.add(_remove = new BButton(_ctx.xlate(BANG_MSGS,
-            "m.pardner_remove"), this, "remove"));
+        addPardnerButtons(bcont);
         ccont.add(bcont);
         ccont.add(new Spacer(1, 13));
 
         // then controls for adding a new pardner
         layout = GroupLayout.makeHoriz(GroupLayout.CENTER);
         layout.setGap(10);
-        bcont = new BContainer(layout);
-        bcont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));
-        bcont.add(_name = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH));
+        _acont = new BContainer(layout);
+        _acont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));
+        _acont.add(_name = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH));
         _name.setPreferredWidth(324);
-        bcont.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
+        _acont.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
             "m.pardner_submit"), this, "submit"));
-        ccont.add(bcont);
+        ccont.add(_acont);
         ccont.add(new Spacer(1, 12));
         add(ccont, BorderLayout.CENTER);
 
@@ -118,7 +119,7 @@ public class PardnerView extends IconPalette
 
         } else if (src == _remove) {
             final PardnerIcon icon = (PardnerIcon)getSelectedIcon();
-            OptionDialog.showConfirmDialog(_ctx, BANG_MSGS,
+            OptionDialog.showConfirmDialog(_ctx, getBundle(),
                 MessageBundle.tcompose("m.confirm_remove", icon.entry.handle),
                 new OptionDialog.ResponseReceiver() {
                     public void resultPosted (int button, Object result) {
@@ -135,41 +136,41 @@ public class PardnerView extends IconPalette
                 _ctx.getLocationDirector().moveTo(icon.entry.gameOid);
             }
 
-        } else { // src == _name || src == _submit
+        } else if (src == _name || src == _submit) {
             if (_submit.isEnabled()) {
-                InvitePardnerDialog popup = new InvitePardnerDialog(
-                    _ctx, _status, new Handle(_name.getText()));
-                _ctx.getBangClient().displayPopup(popup, true, 400);
+                _ctx.getBangClient().displayPopup(
+                    createInviteDialog(new Handle(_name.getText())), true, 400);
                 _name.setText("");
             }
         }
     }
 
-    // documentation inherited from interface SetListener
-    public void entryAdded (EntryAddedEvent eae)
+    /**
+     * Returns the name of the message bundle to use for messages
+     * whose keys are common between classes but whose values differ.
+     */
+    protected String getBundle ()
     {
-        if (PlayerObject.PARDNERS.equals(eae.getName())) {
-            new PardnerIcon((PardnerEntry)eae.getEntry()).insert();
-        }
+        return BANG_MSGS;
     }
-
-    // documentation inherited from interface SetListener
-    public void entryRemoved (EntryRemovedEvent ere)
+    
+    /**
+     * Adds any additional buttons after the "chat" and "watch" buttons.
+     */
+    protected void addPardnerButtons (BContainer bcont)
     {
-        if (PlayerObject.PARDNERS.equals(ere.getName())) {
-            _picons.get(ere.getKey()).remove();
-        }
+        bcont.add(_remove = new BButton(_ctx.xlate(BANG_MSGS,
+            "m.pardner_remove"), this, "remove"));
     }
-
-    // documentation inherited from interface SetListener
-    public void entryUpdated (EntryUpdatedEvent eue)
+    
+    /**
+     * Creates and returns an invite dialog for the identified player.
+     */
+    protected RequestDialog createInviteDialog (Handle handle)
     {
-        if (PlayerObject.PARDNERS.equals(eue.getName())) {
-            PardnerEntry entry = (PardnerEntry)eue.getEntry();
-            _picons.get(entry.getKey()).update(entry);
-        }
+        return new InvitePardnerDialog(_ctx, _status, handle);
     }
-
+    
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -178,9 +179,8 @@ public class PardnerView extends IconPalette
         // clear out and refresh our list of pardners
         clear();
         _picons.clear();
-        PlayerObject user = _ctx.getUserObject();
-        for (PardnerEntry entry : user.pardners) {
-            new PardnerIcon(entry).insert();
+        for (PardnerEntry entry : getPardnerEntries()) {
+            createPardnerIcon(entry).insert();
         }
 
         // these start out as disabled/empty
@@ -191,26 +191,66 @@ public class PardnerView extends IconPalette
         _name.setText("");
 
         // register as a listener for changes to the pardner list
-        user.addListener(this);
+        getPardnerObject().addListener(_plist);
     }
 
+    /**
+     * Returns a reference to the object that contains the pardner set.
+     */
+    protected DObject getPardnerObject ()
+    {
+        return _ctx.getUserObject();
+    }
+    
+    /**
+     * Returns the name of the pardner set field.
+     */
+    protected String getPardnerField ()
+    {
+        return PlayerObject.PARDNERS;
+    }
+    
+    /**
+     * Returns a reference to the complete set of pardner entries.
+     */
+    protected DSet<? extends PardnerEntry> getPardnerEntries ()
+    {
+        return _ctx.getUserObject().pardners;
+    }
+    
+    /**
+     * Creates and returns an icon for the specified entry.
+     */
+    protected PardnerIcon createPardnerIcon (PardnerEntry entry)
+    {
+        return new PardnerIcon(entry);
+    }
+    
     @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        _ctx.getUserObject().removeListener(this);
+        getPardnerObject().removeListener(_plist);
     }
 
     @Override // documentation inherited
     protected void iconSelected (SelectableIcon icon)
     {
         super.iconSelected(icon);
-        PardnerEntry entry = ((PardnerIcon)icon).entry;
+        updateSelectionControls(((PardnerIcon)icon).entry);
+    }
+
+    /**
+     * Updates the enabled state of the controls in response in a change to the
+     * selection.
+     */
+    protected void updateSelectionControls (PardnerEntry entry)
+    {
         _chat.setEnabled(entry.isAvailable());
         _watch.setEnabled(entry.gameOid > 0);
         _remove.setEnabled(true);
     }
-
+    
     @Override // documentation inherited
     protected void iconDeselected (SelectableIcon icon)
     {
@@ -446,10 +486,35 @@ public class PardnerView extends IconPalette
 
     protected BangContext _ctx;
     protected PlayerService _psvc;
+    protected BContainer _acont;
     protected BButton _chat, _remove, _submit, _watch;
     protected BTextField _name;
     protected StatusLabel _status;
 
+    /** Listens to the object containing the pardner set. */
+    protected SetListener _plist = new SetListener() {
+        public void entryAdded (EntryAddedEvent eae) {
+            if (getPardnerField().equals(eae.getName())) {
+                createPardnerIcon((PardnerEntry)eae.getEntry()).insert();
+            }
+        }
+        public void entryRemoved (EntryRemovedEvent ere) {
+            if (getPardnerField().equals(ere.getName())) {
+                _picons.get(ere.getKey()).remove();
+            }
+        }
+        public void entryUpdated (EntryUpdatedEvent eue) {
+            if (getPardnerField().equals(eue.getName())) {
+                PardnerEntry entry = (PardnerEntry)eue.getEntry();
+                PardnerIcon icon = _picons.get(entry.getKey());
+                icon.update(entry);
+                if (_selections.contains(icon)) {
+                    updateSelectionControls(entry);
+                }
+            }
+        }
+    };
+    
     protected HashMap<Comparable, PardnerIcon> _picons =
         new HashMap<Comparable, PardnerIcon>();
 

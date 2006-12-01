@@ -74,17 +74,12 @@ public class GangManager
         final GangService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure they're in a gang
+        // make sure they're in a gang and can recruit
         final PlayerObject player = (PlayerObject)caller;
-        if (player.gangId <= 0) {
-            log.warning("Player not in gang [who=" + player.who() + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
-        
-        // and that they can recruit new members
-        if (player.gangRank < RECRUITER_RANK) {
-            log.warning("Player not qualified to recruit members [who=" +
-                player.who() + ", rank=" + player.gangRank + "].");
+        if (!player.canRecruit()) {
+            log.warning("Player not qualified to recruit gang members [who=" +
+                player.who() + ", gangId=" + player.gangId + ", rank=" +
+                player.gangRank + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
         

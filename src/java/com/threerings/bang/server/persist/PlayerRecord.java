@@ -4,6 +4,7 @@
 package com.threerings.bang.server.persist;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import com.samskivert.util.StringUtil;
 
@@ -47,7 +48,7 @@ public class PlayerRecord
     public byte gangRank;
     
     /** The time at which the player joined or created their gang. */
-    public Date joinedGang;
+    public Timestamp joinedGang;
     
     /** The id of the furthest town to which this player has access. */
     public String townId;
