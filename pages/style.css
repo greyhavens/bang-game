@@ -71,135 +71,135 @@ li {
 
 #Header {
     background-image: url("/images/header/header.png");
-	position: relative;
-	top: 0px;
-	left: 0px;
-	margin-bottom: 5px;
-	padding: 0px;
-	width: 810px;
-	height: 184px;
-	overflow: hidden;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    margin-bottom: 5px;
+    padding: 0px;
+    width: 810px;
+    height: 184px;
+    overflow: hidden;
 }
 
 #linkbang a {
-  	position: absolute;
- 	width: 225px;
-  	height: 110px;
-  	top: 5px;
-  	left: 30px;
-  	margin: 0px;
-  	padding: 0px;
-  	text-decoration: none;
-  	overflow: hidden;
+    position: absolute;
+    width: 225px;
+    height: 110px;
+    top: 5px;
+    left: 30px;
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    overflow: hidden;
   }
 
 #linkbang a i { 
-	visibility: hidden; 
+    visibility: hidden; 
 }
 
 #linkplay a {
-  	position: absolute;
- 	width: 53px;
-  	height: 16px;
-  	top: 161px;
-  	left: 140px;
-  	margin: 0px;
-  	padding: 0px;
-  	text-decoration: none;
-  	overflow: hidden;
+    position: absolute;
+    width: 53px;
+    height: 16px;
+    top: 161px;
+    left: 140px;
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    overflow: hidden;
   }
 
 #linkplay a i { 
-	visibility: hidden; 
+    visibility: hidden; 
 }
 
 a#btnplay:hover { 
-	background-image: url("/images/header/play.png"); 
-	border: none;
+    background-image: url("/images/header/play.png"); 
+    border: none;
 }
 
 #linkscreen a {
-  	position: absolute;
- 	width: 102px;
-  	height: 16px;
-  	top: 161px;
-  	left: 239px;
-  	margin: 0px;
-  	padding: 0px;
-  	text-decoration: none;
-  	overflow: hidden;
+    position: absolute;
+    width: 102px;
+    height: 16px;
+    top: 161px;
+    left: 239px;
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    overflow: hidden;
   }
 
 #linkscreen a i { 
-	visibility: hidden; 
+    visibility: hidden; 
 }
 
 a#btnscreen:hover { 
-	background-image: url("/images/header/screen.png"); 
-	border: none;
+    background-image: url("/images/header/screen.png"); 
+    border: none;
 }
 
 #linkforum a {
-  	position: absolute;
- 	width: 58px;
-  	height: 16px;
-  	top: 161px;
-  	left: 390px;
-  	margin: 0px;
-  	padding: 0px;
-  	text-decoration: none;
-  	overflow: hidden;
+    position: absolute;
+    width: 58px;
+    height: 16px;
+    top: 161px;
+    left: 390px;
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    overflow: hidden;
   }
 
 #linkforum a i { 
-	visibility: hidden; 
+    visibility: hidden; 
 }
 
 a#btnforum:hover { 
-	background-image: url("/images/header/forum.png"); 
-	border: none;
+    background-image: url("/images/header/forum.png"); 
+    border: none;
 }
 
 #linkaccount a {
-  	position: absolute;
- 	width: 68px;
-  	height: 16px;
-  	top: 161px;
-  	left: 497px;
-  	margin: 0px;
-  	padding: 0px;
-  	text-decoration: none;
-  	overflow: hidden;
+    position: absolute;
+    width: 68px;
+    height: 16px;
+    top: 161px;
+    left: 497px;
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    overflow: hidden;
   }
 
 #linkaccount a i { 
-	visibility: hidden; 
+    visibility: hidden; 
 }
 
 a#btnaccount:hover { 
-	background-image: url("/images/header/account.png"); 
-	border: none;
+    background-image: url("/images/header/account.png"); 
+    border: none;
 }
 
 #linknews a {
-  	position: absolute;
- 	width: 39px;
-  	height: 16px;
-  	top: 161px;
-  	left: 620px;
-  	margin: 0px;
-  	padding: 0px;
-  	text-decoration: none;
-  	overflow: hidden;
+    position: absolute;
+    width: 39px;
+    height: 16px;
+    top: 161px;
+    left: 620px;
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    overflow: hidden;
   }
 
 #linknews a i { 
-	visibility: hidden; 
+    visibility: hidden; 
 }
 
 a#btnnews:hover { 
-	background-image: url("/images/header/news.png"); 
-	border: none;
+    background-image: url("/images/header/news.png"); 
+    border: none;
 }
 
 /* -------------------------------------------------
@@ -208,10 +208,11 @@ a#btnnews:hover {
 
 #Content {
     position: relative;
-	top: 0px;
-	margin: 0px;
-	padding:0px;
-	width: 800px;
+    top: 0px;
+    margin: 0px;
+    padding:0px;
+    width: 800px;
+    text-align: left;
 }
 
 /* -------------------------------------------------
@@ -220,38 +221,38 @@ a#btnnews:hover {
 
 #Divide {
     background-image: url("/images/footer/footer.png");
-	position: relative;
-	top: 0px;
-	right: 0px;
-	margin: 0px;
-	padding:0px;
-	width: 810px;
-	height: 32px;
+    position: relative;
+    top: 0px;
+    right: 0px;
+    margin: 0px;
+    padding:0px;
+    width: 810px;
+    height: 32px;
 }
 
 #linklogo a {
-  	position: absolute;
- 	width: 70px;
-  	height: 30px;
-  	top: 0px;
-  	left: 355px;
-  	margin: 0px;
-  	padding: 0px;
-  	text-decoration: none;
-  	overflow: hidden;
+    position: absolute;
+    width: 70px;
+    height: 30px;
+    top: 0px;
+    left: 355px;
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    overflow: hidden;
   }
 
 #linklogo a i { 
-	visibility: hidden; 
+    visibility: hidden; 
 }
 
 #Footer {
     position: relative;
-	top: 0px;
-	right: 0px;
-	margin: 0px;
-	padding-top: 5px;
-	width: 810px;
+    top: 0px;
+    right: 0px;
+    margin: 0px;
+    padding-top: 5px;
+    width: 810px;
 }
 
 
