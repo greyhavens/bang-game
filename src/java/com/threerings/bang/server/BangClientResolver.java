@@ -141,10 +141,10 @@ public class BangClientResolver extends CrowdClientResolver
         buser.poses[Look.Pose.DEFAULT.ordinal()] = player.look;
         buser.poses[Look.Pose.VICTORY.ordinal()] = player.victoryLook;
         buser.poses[Look.Pose.WANTED_POSTER.ordinal()] = player.wantedLook;
-        
+
         // initialize the set of notifications
         buser.notifications = new DSet<Notification>();
-        
+
         // load up this player's pardners
         BangServer.playmgr.loadPardners(buser);
 
