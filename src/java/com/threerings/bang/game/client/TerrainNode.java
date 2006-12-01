@@ -337,6 +337,20 @@ public class TerrainNode extends Node
         }
         
         /**
+         * Sets whether this highlight has normals.
+         */
+        public void setHasNormals (boolean normals)
+        {
+            if (normals && getNormalBuffer(0) == null) {
+                setNormalBuffer(0, BufferUtils.createFloatBuffer(
+                    _vwidth * _vheight * 3));
+                updateVertices();
+            } else {
+                setNormalBuffer(0, null);
+            }
+        }
+        
+        /**
          * Updates the vertices of the highlight to reflect a change in
          * position or in the underlying terrain.
          */
@@ -346,7 +360,8 @@ public class TerrainNode extends Node
                 return;
             }
 
-            FloatBuffer vbuf = getVertexBuffer(0);
+            FloatBuffer vbuf = getVertexBuffer(0),
+                nbuf = getNormalBuffer(0);
             IntBuffer ibuf = getIndexBuffer(0);
             ibuf.rewind();
             
@@ -382,6 +397,17 @@ public class TerrainNode extends Node
             Vector3f vertex = new Vector3f();
             for (int sy = sy0, sy1 = sy0 + _vheight, idx = 0; sy < sy1; sy++) {
                 for (int sx = sx0, sx1 = sx0 + _vwidth; sx < sx1; sx++) {
+                    // set the normal if required
+                    if (nbuf != null) {
+                        if (flat) {
+                            BufferUtils.setInBuffer(Vector3f.UNIT_Z, nbuf, idx);
+                        } else {
+                            getHeightfieldNormal(sx, sy, vertex);
+                            BufferUtils.setInBuffer(vertex, nbuf, idx);
+                        }
+                    }
+                    
+                    // set the vertex
                     getHeightfieldVertex(sx, sy, vertex);
                     if (flat) {
                         vertex.z = height;

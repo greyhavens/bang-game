@@ -84,6 +84,7 @@ public class SafeMarkerSprite extends MarkerSprite
         if (emissive) {
             _tlight.setLightCombineMode(LightState.REPLACE);
             _tlight.setTextureBuffer(0, _tlight.getTextureBuffer(0, 0), 1);
+            _tlight.setHasNormals(true);
         }
         setOrientation(piece.orientation);
         attachHighlight(_tlight);
