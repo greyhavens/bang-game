@@ -69,7 +69,7 @@ if (screenshotsTotal >= 3) {
 printGalleryNav();
 
 // Layout Current image requested so if you click on it, it'll go to the next one
-document.write ('<a href="'+sPath+'?'+imgDir+','+screenshotPrevious+','+screenshotsTotal+'"><img src = "'+ imgDir + screenshotCurrent +'.png" border="0" name="Screenshots" class="thumb" alt="Click to view next image"></a>');
+document.write ('<a href="'+sPath+'?'+imgDir+','+screenshotPrevious+','+screenshotsTotal+',#pics"><img src = "'+ imgDir + screenshotCurrent +'.png" border="0" name="Screenshots" class="thumb" alt="Click to view next image"></a>');
 
 // Layout the nav
 printGalleryNav();
@@ -82,5 +82,6 @@ printGalleryNav();
     </div>
 </div>
 <div id="FeatureBot"></div>
-
+<a id="pics" name="pics"></a>
 <!--#include virtual="/incl/footer_incl.html"-->
+
