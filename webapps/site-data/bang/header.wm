@@ -37,14 +37,15 @@
  
     <div id="Content">
 
+<p/>
 #if ($error)
-<p>
 <table cellpadding="6" cellspacing="0" border="0" width="100%">
 <tr><td><font color="#FF0000">$error</font></td></tr>
 </table>
 #elseif ($status)
-<p>
+<p/>
 <table cellpadding="6" cellspacing="0" border="0" width="100%">
 <tr><td><font color="#0066FF">$i18n.xlate($status)</font></td></tr>
 </table>
+<p/>
 #end
