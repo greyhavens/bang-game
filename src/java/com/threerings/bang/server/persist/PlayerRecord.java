@@ -3,7 +3,7 @@
 
 package com.threerings.bang.server.persist;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.sql.Timestamp;
 
 import com.samskivert.util.StringUtil;
@@ -43,19 +43,19 @@ public class PlayerRecord
 
     /** The id of the player's gang, if any. */
     public int gangId;
-    
+
     /** The player's rank in their gang. */
     public byte gangRank;
-    
+
     /** The time at which the player joined or created their gang. */
     public Timestamp joinedGang;
-    
+
     /** The id of the furthest town to which this player has access. */
     public String townId;
 
     /** The time at which this player was created (when they first starting
      * playing  this particular game). */
-    public Date created;
+    public Timestamp created;
 
     /** The number of sessions this player has played. */
     public int sessions;
@@ -64,7 +64,7 @@ public class PlayerRecord
     public int sessionMinutes;
 
     /** The time at which the player ended their last session. */
-    public Date lastSession;
+    public Timestamp lastSession;
 
     /** Various one bit data (gender, etc.). */
     public int flags;
@@ -95,7 +95,7 @@ public class PlayerRecord
     {
         return new Handle(handle);
     }
-    
+
     /** Generates a string representation of this instance. */
     public String toString ()
     {

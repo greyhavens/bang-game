@@ -9,7 +9,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import com.samskivert.io.PersistenceException;
 
@@ -33,16 +36,14 @@ import static com.threerings.bang.Log.log;
  */
 public class PlayerRepository extends JORARepository
 {
-    /** The database identifier used when establishing a database
-     * connection. This value being <code>playerdb</code>. */
+    /** The database identifier used when establishing a database connection. This value being
+     * <code>playerdb</code>. */
     public static final String PLAYER_DB_IDENT = "playerdb";
 
     /**
-     * Constructs a new player repository with the specified connection
-     * provider.
+     * Constructs a new player repository with the specified connection provider.
      *
-     * @param conprov the connection provider via which we will obtain our
-     * database connection.
+     * @param conprov the connection provider via which we will obtain our database connection.
      */
     public PlayerRepository (ConnectionProvider conprov)
         throws PersistenceException
@@ -53,37 +54,72 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Loads up the player record associated with the specified account.
-     * Returns null if no matching record could be found.
+     * Loads up the player record associated with the specified account.  Returns null if no
+     * matching record could be found.
      */
     public PlayerRecord loadPlayer (String accountName)
         throws PersistenceException
     {
-        return loadByExample(
-            _ptable, new PlayerRecord(accountName), _byNameMask);
+        return loadByExample(_ptable, new PlayerRecord(accountName), _byNameMask);
     }
 
     /**
-     * Loads up the player record associated with the specified handle.
-     * Returns null if no matching record could be found.
+     * Loads up the player record associated with the specified handle.  Returns null if no
+     * matching record could be found.
      */
     public PlayerRecord loadByHandle (Handle handle)
         throws PersistenceException
     {
-        return load(_ptable, "where HANDLE = " +
-                    JDBCUtil.escape(handle.toString()));
+        return load(_ptable, "where HANDLE = " + JDBCUtil.escape(handle.toString()));
     }
 
     /**
-     * Insert a new player record into the repository and assigns them a unique
-     * player id in the process. The {@link PlayerRecord#created} field will be
-     * filled in by this method if it is not already.
+     * Looks up the handles for all of the supplied accounts. This is used by our glue code in the
+     * Underwire support system.
+     */
+    public HashMap<String,String> resolveHandles (HashSet<String> accounts)
+        throws PersistenceException
+    {
+        final StringBuilder query = new StringBuilder(
+            "select ACCOUNT_NAME, HANDLE from PLAYERS where ACCOUNT_NAME in (");
+        int idx = 0;
+        for (String account : accounts) {
+            if (idx++ > 0) {
+                query.append(",");
+            }
+            query.append(JDBCUtil.escape(account));
+        }
+        query.append(")");
+
+        final HashMap<String,String> mapping = new HashMap<String,String>();
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query.toString());
+                    while (rs.next()) {
+                        mapping.put(rs.getString(1), rs.getString(2));
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
+        return mapping;
+    }
+
+    /**
+     * Insert a new player record into the repository and assigns them a unique player id in the
+     * process. The {@link PlayerRecord#created} field will be filled in by this method if it is
+     * not already.
      */
     public void insertPlayer (final PlayerRecord player)
         throws PersistenceException
     {
         if (player.created == null) {
-            player.created = new Date(System.currentTimeMillis());
+            player.created = new Timestamp(System.currentTimeMillis());
             player.lastSession = player.created;
         }
         player.playerId = insert(_ptable, player);
@@ -151,7 +187,7 @@ public class PlayerRepository extends JORARepository
         update.append(" where PLAYER_ID = " + playerId);
         checkedUpdate(update.toString(), 1);
     }
-    
+
     /**
      * Sets a player's gang rank.
      */
@@ -161,7 +197,7 @@ public class PlayerRepository extends JORARepository
         checkedUpdate("update PLAYERS set GANG_RANK = " + rank +
                       " where PLAYER_ID = " + playerId, 1);
     }
-    
+
     /**
      * Deletes the specified player from the repository.
      */
@@ -316,7 +352,7 @@ public class PlayerRepository extends JORARepository
         rs.close();
         return playerId;
     }
-    
+
     /** Helper function for {@link #spendScrip} and {@link #grantScrip}. */
     protected void updateScrip (String where, int amount, String type)
         throws PersistenceException
@@ -374,15 +410,12 @@ public class PlayerRepository extends JORARepository
             "KEY (PLAYER_ID)",
             "UNIQUE (PLAYER_ID, TARGET_ID)",
         }, "");
-    
+
         // TEMP: add gang fields
         if (!JDBCUtil.tableContainsColumn(conn, "PLAYERS", "GANG_ID")) {
-            JDBCUtil.addColumn(conn, "PLAYERS",
-                "GANG_ID", "INTEGER NOT NULL", "WANTED_LOOK");
-            JDBCUtil.addColumn(conn, "PLAYERS",
-                "GANG_RANK", "TINYINT NOT NULL", "GANG_ID");
-            JDBCUtil.addColumn(conn, "PLAYERS",
-                "JOINED_GANG", "DATETIME", "GANG_RANK");
+            JDBCUtil.addColumn(conn, "PLAYERS", "GANG_ID", "INTEGER NOT NULL", "WANTED_LOOK");
+            JDBCUtil.addColumn(conn, "PLAYERS", "GANG_RANK", "TINYINT NOT NULL", "GANG_ID");
+            JDBCUtil.addColumn(conn, "PLAYERS", "JOINED_GANG", "DATETIME", "GANG_RANK");
         }
         // END TEMP
     }
