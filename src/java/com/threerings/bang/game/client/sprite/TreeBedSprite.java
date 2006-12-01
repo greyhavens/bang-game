@@ -142,20 +142,24 @@ public class TreeBedSprite extends ActiveSprite
         }
         if (_btstate == null) {
             String troot = _type + "/" + _name + "/alpha";
-            Texture etex = _ctx.getTextureCache().getTexture(
+            if (TextureState.getNumberOfFixedUnits() >= 2) {
+                Texture etex = _ctx.getTextureCache().getTexture(
                 troot + "_emissive.png");
-            etex.setApply(Texture.AM_BLEND);
-            etex.setBlendColor(ColorRGBA.white);
-            _btstate = _ctx.getRenderer().createTextureState();
-            _btstate.setTexture(etex, 0);
-            _btstate.setTexture(
-                _ctx.getTextureCache().getTexture(troot + ".png"), 1);
-            _mtstate = _ctx.getRenderer().createTextureState();
-            _mtstate.setTexture(etex, 0);
-            _mtstate.setTexture(
-                _ctx.getTextureCache().getTexture(troot + "_max.png"), 1);
-            _dtstate = RenderUtil.createTextureState(_ctx,
-                troot + "_dead.png");
+                etex.setApply(Texture.AM_BLEND);
+                etex.setBlendColor(ColorRGBA.white);
+                _btstate = _ctx.getRenderer().createTextureState();
+                _btstate.setTexture(etex, 0);
+                _btstate.setTexture(
+                    _ctx.getTextureCache().getTexture(troot + ".png"), 1);
+                _mtstate = _ctx.getRenderer().createTextureState();
+                _mtstate.setTexture(etex, 0);
+                _mtstate.setTexture(
+                    _ctx.getTextureCache().getTexture(troot + "_max.png"), 1);
+            } else {
+                _btstate = RenderUtil.createTextureState(_ctx, troot + ".png");
+                _mtstate = RenderUtil.createTextureState(_ctx, troot + "_max.png");
+            }
+            _dtstate = RenderUtil.createTextureState(_ctx, troot + "_dead.png");
         }
         _ptstate = _btstate;
         _ststate = null;
