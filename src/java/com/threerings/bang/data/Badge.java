@@ -699,7 +699,7 @@ public class Badge extends Item
         Type.UNITS_LOST_1, Type.UNITS_LOST_2, null, Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,
 
         // general non-series (wacky) badges
-        Type.IRON_HORSE, Type.SAINT_NICK, Type.BETA_TESTER,
+        Type.IRON_HORSE, Type.SAINT_NICK,
         Type.NIGHT_OWL, Type.HIGH_NOON, Type.NEW_SHERRIF_IN_TOWN,
 
         // more wacky badges
