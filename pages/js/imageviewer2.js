@@ -11,7 +11,6 @@ var query = window.location.search.substring(1);
 	var imgDir = pair[0];
 	var screenshotCurrent = pair[1];
 	var screenshotsTotal = pair[2];
-	var anchor = pair[3];
 
 var screenshotNext = eval(screenshotCurrent) + 1;
 var screenshotPrevious = screenshotCurrent - 1;
@@ -151,7 +150,7 @@ function nextPicture(){
 function printGalleryNav() {	
     document.write ('<table width="700px" border="0"><tr><td width="150px">');
     // Back button to go to the previous graphic
-    document.write ('<a href="'+sPath+'?'+imgDir+','+screenshotNext+','+screenshotsTotal+',#pics"><img src = "/images/screenshots/back.gif" border="0" name="SlideShow" alt="Click on image to view next entry"></a>');
+    document.write ('<a href="'+sPath+'?'+imgDir+','+screenshotNext+','+screenshotsTotal+'"><img src = "/images/screenshots/back.gif" border="0" name="SlideShow" alt="Click on image to view next entry"></a>');
     //document.write ('<a href="'+sPath+'?'+imgDir+','+screenshotNext+','+screenshotsTotal+'">Previous</a>');
     document.write ('</td><td align="center" >');
     // Tell the user which image they are on, and how many photos in the full collection
@@ -161,7 +160,7 @@ function printGalleryNav() {
     document.write ('<a href = "'+ upURL +'">Back to Thumbnail Gallery</a></span>');
     document.write ('</td><td align="right" width="150px">');
     // Next button to go to the next graphic
-    document.write ('<a href="'+sPath+'?'+imgDir+','+screenshotPrevious+','+screenshotsTotal+',#pics"><img src = "/images/screenshots/next.gif" border="0" name="SlideShow" alt="Click on image to view next entry"></a>');
+    document.write ('<a href="'+sPath+'?'+imgDir+','+screenshotPrevious+','+screenshotsTotal+'"><img src = "/images/screenshots/next.gif" border="0" name="SlideShow" alt="Click on image to view next entry"></a>');
     //document.write ('<a href="'+sPath+'?'+imgDir+','+screenshotPrevious+','+screenshotsTotal+'">Next</a>');
     document.write ('</td></tr></table>');
 }
