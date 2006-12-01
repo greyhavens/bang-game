@@ -118,7 +118,7 @@ public class BangClientResolver extends CrowdClientResolver
 
         // fix bug with ticket granting
         } else if (buser.holdsTicket(BangCodes.INDIAN_POST) &&
-                   player.townId.equals(BangCodes.FRONTIER_TOWN)) {
+                   ((player.townId == null) || player.townId.equals(BangCodes.FRONTIER_TOWN))) {
             BangServer.playrepo.grantTownAccess(buser.playerId, BangCodes.INDIAN_POST);
         }
 
