@@ -1,21 +1,18 @@
-<br><br>
-</td></tr>
-</table>
+</div>
 
-  <table>
-    <tr>
-      <td align="center"><a href="http://www.threerings.net/">
-        <img border="0" src="/images/beta/footer.gif"
-         alt="Three Rings Logo"/></a></td>
-    </tr>
+<div id="Divide">
+    <div id="linklogo"><a href="http://www.threerings.net/" id="btnlogo">
+            <i>Three Rings</i></a>
+    </div>
+</div>
+<div id="Footer" class="small">
+    Bang! Howdy&trade; &copy;
+    <a href="http://www.threerings.net/" class="small">Three Rings Design, Inc.</a>
+    2005-2006. All rights reserved.
+    <a href="http://www.threerings.net/about/privacy.html" class="small">Privacy</a>
+</div>
 
-    <tr>
-      <td align="center" class="small">Bang! Howdy&trade; &copy;
-      <a href="http://www.threerings.net/">Three Rings Design, Inc.</a>
-      2005-2006. All rights reserved.
-      <a href="http://www.threerings.net/about/privacy.html">Privacy</a></td>
-    </tr>
-  </table>
-  </div>
+</div>
+  
 </body>
 </html>

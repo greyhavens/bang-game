@@ -3,6 +3,7 @@
 ## These colors are used for common UI elements
 #set ($tcolor = "#99CCFF")
 #set ($scolor = "#CCCCCC")
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -10,30 +11,31 @@
 <link rel="stylesheet" type="text/css" href="/style.css">
 <link rel="SHORTCUT ICON" href="/favicon.ico">
 </head>
+<body>
 
-<body background="/images/parchment.jpg">
-  <map name="headmap">
-    <area shape="rect" coords="0,0,782,130" href="/" alt="Welcome">
-    <area shape="rect" coords="125,135,165,155" href="/faq.html" alt="FAQ">
-    <area shape="rect" coords="210,135,310,155"
-          href="/screenshots/" alt="Screenshots">
-    <area shape="rect" coords="360,135,420,155"
-          href="http://forums.banghowdy.com/townhall/" alt="Forums">
-    <area shape="rect" coords="470,135,550,155" href="/download.html"
-          alt="Download!">
-    <area shape="rect" coords="600,135,642,155" href="/news/" alt="Blog">
-  </map>
-  <div align="center">
-  <table>
-    <tr>
-      <td>
-        <img src="/images/beta/header.jpg" usemap="#headmap" border=0/>
-      </td>
-    </tr>
-  </table>
-
-<table width="780">
-<tr><td valign="top" height="100%" style="padding-left: 15px; padding-top: 15px">
+<div id="BangHowdy">
+    <div id="Header">
+         <div id="linkbang"><a href="/" id="btnbang">
+            <i>Bang Howdy</i></a>
+    </div>
+         <div id="linkplay"><a href="/launch.html" id="btnplay">
+            <i>Play</i></a>
+         </div>
+         <div id="linkscreen"><a href="/screenshots/" id="btnscreen">
+            <i>Screenshots</i></a>
+         </div>
+         <div id="linkforum"><a href="http://forums.banghowdy.com/townhall/" id="btnforum">
+            <i>Forums</i></a>
+         </div>
+         <div id="linkaccount"><a href="/register/" id="btnaccount">
+            <i>Download</i></a>
+         </div>
+         <div id="linknews"><a href="/news/" id="btnnews">
+            <i>Blog</i></a>
+         </div>
+    </div>
+ 
+    <div id="Content">
 
 #if ($error)
 <p>
