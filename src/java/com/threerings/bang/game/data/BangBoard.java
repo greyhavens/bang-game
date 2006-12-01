@@ -1194,7 +1194,8 @@ public class BangBoard extends SimpleStreamableObject
         if (Math.abs(sx - dx) + Math.abs(sy - dy) > 1) {
             return false;
         }
-        if ((isBridge(sx, sy) || isBridge(dx, dy)) && 
+        if (((isBridge(sx, sy) && !isTargetable(dx, dy)) || 
+             (isBridge(dx, dy) && !isTargetable(sx, sy))) && 
                 Math.abs(getElevation(sx, sy) - getElevation(dx, dy)) >
                 MAX_OCCUPIABLE_HEIGHT_DELTA) {
             return false;
@@ -1253,6 +1254,17 @@ public class BangBoard extends SimpleStreamableObject
             return false;
         }
         return (_btstate[y*_width+x] == O_BRIDGE);
+    }
+
+    /**
+     * Returns true if the specified coordinate has a targetable prop.
+     */
+    public boolean isTargetable (int x, int y)
+    {
+        if (!_playarea.contains(x, y)) {
+            return false;
+        }
+        return (_tstate[y*_width+x] & TARGETABLE_FLAG) == 0;
     }
 
     /**
