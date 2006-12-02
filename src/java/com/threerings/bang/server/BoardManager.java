@@ -3,6 +3,7 @@
 
 package com.threerings.bang.server;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,8 +42,7 @@ public class BoardManager
             _byname[ii] = new BoardMap();
         }
 
-        // we'll use this later to filter out boards that are not allowed in
-        // this town
+        // we'll use this later to filter out boards that are not allowed in this town
         int townIndex = BangUtil.getTownIndex(ServerConfig.townId);
 
         // load up and map all of our boards by scenario and player count
@@ -63,9 +63,7 @@ public class BoardManager
             for (int ii = 0; ii < scenarios.length; ii++) {
                 BoardList[] lists = _byscenario.get(scenarios[ii]);
                 if (lists == null) {
-                    _byscenario.put(
-                        scenarios[ii],
-                        lists = new BoardList[GameCodes.MAX_PLAYERS-1]);
+                    _byscenario.put(scenarios[ii], lists = new BoardList[GameCodes.MAX_PLAYERS-1]);
                 }
                 if (lists[pidx] == null) {
                     lists[pidx] = new BoardList();
@@ -77,11 +75,10 @@ public class BoardManager
     }
 
     /**
-     * Randomly selects a set of boards for play given the required number
-     * of players and the specified sequence of scenarios.
+     * Randomly selects a set of boards for play given the required number of players and the
+     * specified sequence of scenarios.
      */
-    public BoardRecord[] selectBoards (
-            int players, String[] scenarios, int[] prevBoardIds)
+    public BoardRecord[] selectBoards (int players, String[] scenarios, int[] prevBoardIds)
     {
         ArrayIntSet prevIds = new ArrayIntSet(prevBoardIds);
         BoardRecord[] choices = new BoardRecord[scenarios.length];
@@ -90,26 +87,22 @@ public class BoardManager
                 continue;
             }
 
-            // select the set of boards that work for this scenario and this
-            // number of players; then shuffle that list
+            // select the set of boards that work for this scenario and this number of players;
+            // then shuffle that list
             String scenario = scenarios[ii];
             BoardList[] candvec = _byscenario.get(scenario);
-            BoardList candidates =
-                (candvec == null) ? null : candvec[players-2];
+            BoardList candidates = (candvec == null) ? null : candvec[players-2];
             if (candidates == null) {
                 log.warning("Aiya! Missing boards [players=" + players +
                             ", scenario=" + scenario + "].");
                 continue;
             }
 
-            // we're going to remove previously played boards, so we can't do
-            // that to the canonical list
+            // we'll remove previously played boards, so we can't do that to the canonical list
             candidates = (BoardList)candidates.clone();
 
-            // remove boards in our previous board list unless it is the last
-            // board available
-            for (Iterator<BoardRecord> iter = candidates.iterator();
-                 iter.hasNext(); ) {
+            // remove boards in our previous board list unless it is the last board available
+            for (Iterator<BoardRecord> iter = candidates.iterator(); iter.hasNext(); ) {
                 if (candidates.size() <= 1) {
                     break;
                 }
@@ -120,8 +113,8 @@ public class BoardManager
             }
             Collections.shuffle(candidates);
 
-            // now fill in all instances of this scenario with (non-duplicate)
-            // selections from the shuffled list
+            // now fill in all instances of this scenario with (non-duplicate) selections from the
+            // shuffled list
             int bidx = 0;
             for (int bb = ii; bb < scenarios.length; bb++) {
                 if (scenarios[bb].equals(scenario)) {
@@ -133,8 +126,8 @@ public class BoardManager
     }
 
     /**
-     * Returns the version of the specified named board appropriate for the
-     * specified number of players, or null if no such board exists.
+     * Returns the version of the specified named board appropriate for the specified number of
+     * players, or null if no such board exists.
      */
     public BoardRecord getBoard (int pcount, String name)
     {
@@ -142,23 +135,28 @@ public class BoardManager
     }
 
     /**
-     * Loads the board data for the specified board, notifying the given result
-     * listener when finished.
+     * Returns the set of all boards with the specified player count.
      */
-    public void loadBoardData (
-        final BoardRecord brec, ResultListener<BoardRecord> listener)
+    public Collection<BoardRecord> getBoards (int pcount)
     {
-        // if there's already a list of listeners waiting for the data, put the
-        // listener on it and return; otherwise, create and map the list and
-        // post an invoker to load the data
+        return _byname[pcount-2].values();
+    }
+
+    /**
+     * Loads the board data for the specified board, notifying the given result listener when
+     * finished.
+     */
+    public void loadBoardData (final BoardRecord brec, ResultListener<BoardRecord> listener)
+    {
+        // if there's already a list of listeners waiting for the data, put the listener on it and
+        // return; otherwise, create and map the list and post an invoker to load the data
         ResultListenerList<BoardRecord> rll = _boardDataListeners.get(brec);
         if (rll != null) {
             rll.add(listener);
             return;
         }
 
-        final ResultListenerList<BoardRecord> list =
-            new ResultListenerList<BoardRecord>();
+        final ResultListenerList<BoardRecord> list = new ResultListenerList<BoardRecord>();
         _boardDataListeners.put(brec, list);
         list.add(listener);
         BangServer.invoker.postUnit(new Invoker.Unit() {
@@ -191,17 +189,15 @@ public class BoardManager
     /** Provides access to the board database. */
     protected BoardRepository _brepo;
 
-    /** A mapping from scenario name to a list of boards playable with
-     * that scenario (which are broken out by player count). */
-    protected HashMap<String,BoardList[]> _byscenario =
-        new HashMap<String,BoardList[]>();
+    /** A mapping from scenario name to a list of boards playable with that scenario (which are
+     * broken out by player count). */
+    protected HashMap<String,BoardList[]> _byscenario = new HashMap<String,BoardList[]>();
 
     /** A mapping by board name, broken out by player count. */
     protected BoardMap[] _byname;
 
-    /** Maps board records to lists of {@link ResultListener}s waiting for the
-     * invoker to load the record's board data from the database. */
-    protected HashMap<BoardRecord, ResultListenerList<BoardRecord>>
-        _boardDataListeners =
+    /** Maps board records to lists of {@link ResultListener}s waiting for the invoker to load the
+     * record's board data from the database. */
+    protected HashMap<BoardRecord, ResultListenerList<BoardRecord>> _boardDataListeners =
         new HashMap<BoardRecord, ResultListenerList<BoardRecord>>();
 }

@@ -144,15 +144,13 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Creates the auxiliary resource bundle activation file for the specified
-     * town and runs Getdown to download that town's resources, exiting the
-     * application after a short delay.
+     * Creates the auxiliary resource bundle activation file for the specified town and runs
+     * Getdown to download that town's resources, exiting the application after a short delay.
      *
-     * @return true if the process is started, false if the town is already
-     * activated.
+     * @return true if the process is started, false if the town is already activated.
      *
-     * @exception IOException thrown if the town activation file could not be
-     * created for some reason.
+     * @exception IOException thrown if the town activation file could not be created for some
+     * reason.
      */
     public static boolean activateTown (BangContext ctx, String townId)
         throws IOException
@@ -164,20 +162,19 @@ public class BangClient extends BasicClient
         }
         afile.createNewFile();
 
-        // note that we want to go straight to the train station next time we
-        // log on to make it a little easier to do the first time download
+        // note that we want to go straight to the train station next time we log on to make it a
+        // little easier to do the first time download
         File mfile = new File(localDataDir("go_station.dat"));
         if (!mfile.exists()) {
             try {
                 mfile.createNewFile();
             } catch (IOException ioe) {
-                log.log(Level.WARNING,
-                    "Failed to create marker file '" + mfile + "'.", ioe);
+                log.log(Level.WARNING, "Failed to create marker file '" + mfile + "'.", ioe);
             }
         }
 
-        // relaunch getdown (communicating failure with an exception because
-        // returning false means we're already activated)
+        // relaunch getdown (communicating failure with an exception because returning false means
+        // we're already activated)
         if (!relaunchGetdown(ctx, 500L)) {
             throw new IOException("m.getdown_relaunch_failed");
         }
@@ -215,7 +212,7 @@ public class BangClient extends BasicClient
                             GL11.glGetString(GL11.GL_EXTENSIONS));
         report.setAttribute("GLU Extensions",
                             GLU.gluGetString(GLU.GLU_EXTENSIONS));
-        report.setAttribute("Graphics Detail", 
+        report.setAttribute("Graphics Detail",
                 BangPrefs.getDetailLevel().toString());
 
         // and send it along with our debug logs
@@ -230,22 +227,19 @@ public class BangClient extends BasicClient
                            BangClient.localDataDir("bang.log")};
         ResultListener rl = new ResultListener() {
             public void requestCompleted (Object result) {
-                ctx.getChatDirector().displayFeedback(
-                    BANG_MSGS, "m.bug_submit_completed");
+                ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_completed");
                 if (exitAfterSubmit) {
                     ctx.getApp().stop();
                 }
             }
             public void requestFailed (Exception cause) {
                 log.log(Level.WARNING, "Bug submission failed.", cause);
-                ctx.getChatDirector().displayFeedback(
-                    BANG_MSGS, "m.bug_submit_failed");
+                ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_failed");
             }
         };
         SendReportUtil.submitReportAsync(
             submitURL, report, files, ctx.getClient().getRunQueue(), rl);
-        ctx.getChatDirector().displayFeedback(
-            BANG_MSGS, "m.bug_submit_started");
+        ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_started");
     }
 
     /**
@@ -742,7 +736,7 @@ public class BangClient extends BasicClient
 
         // listen for notifications to pop up
         client.getClientObject().addListener(_nlistener);
-        
+
         // developers can jump right into a tutorial or game
         if (!StringUtil.isBlank(System.getProperty("test"))) {
             startTestGame(false);
@@ -752,49 +746,28 @@ public class BangClient extends BasicClient
             return;
         }
 
-        // check for a marker file indicating that we should go straight to the
-        // train station when we first start up which we do to smooth out the
-        // process of first downloading a new town's media
+        // check for a marker file indicating that we should go straight to the train station when
+        // we first start up which we do to smooth out the process of first downloading a new
+        // town's media
         String where = null;
         File mfile = new File(localDataDir("go_station.dat"));
         if (mfile.exists()) {
             mfile.delete();
             where = "station";
-        }
-
-        // next check for a "go" parameter
-        if (where == null) {
+        } else {
+            // check for a "go" parameter used by developers to go right to a shop
             where = System.getProperty("go");
         }
 
-        // finally go somewhere if we were asked to do so
-        BangBootstrapData bbd = (BangBootstrapData)
-            _ctx.getClient().getBootstrapData();
-        if ("ranch".equals(where)) {
-            _ctx.getLocationDirector().moveTo(bbd.ranchOid);
-            return;
-        } else if ("bank".equals(where)) {
-            _ctx.getLocationDirector().moveTo(bbd.bankOid);
-            return;
-        } else if ("store".equals(where)) {
-            _ctx.getLocationDirector().moveTo(bbd.storeOid);
-            return;
-        } else if ("saloon".equals(where)) {
-            _ctx.getLocationDirector().moveTo(bbd.saloonOid);
-            return;
-        } else if ("barber".equals(where)) {
-            _ctx.getLocationDirector().moveTo(bbd.barberOid);
-            return;
-        } else if ("station".equals(where)) {
-            _ctx.getLocationDirector().moveTo(bbd.stationOid);
-            return;
-        } else if ("hideout".equals(where)) {
-            _ctx.getLocationDirector().moveTo(bbd.hideoutOid);
+        // go somewhere if we were asked to do so
+        int shopOid = ((BangBootstrapData)_ctx.getClient().getBootstrapData()).getPlaceOid(where);
+        if (shopOid != -1) {
+            _ctx.getLocationDirector().moveTo(shopOid);
             return;
         }
 
-        // show the town view to start, this will call checkShowIntro() once
-        // the town view has "presented" the first town
+        // show the town view to start, this will call checkShowIntro() once the town view has
+        // "presented" the first town
         showTownView();
     }
 
@@ -824,7 +797,7 @@ public class BangClient extends BasicClient
 
         // stop listening to the client object
         client.getClientObject().removeListener(_nlistener);
-        
+
         if (_pendingTownId == null) {
             // shut her right on down
             _ctx.getApp().stop();
@@ -858,7 +831,7 @@ public class BangClient extends BasicClient
             _suggestLowerDetail = true;
         }
     }
-    
+
     protected Handle[] createHandles (String[] strings)
     {
         Handle[] handles = new Handle[strings.length];
@@ -892,7 +865,7 @@ public class BangClient extends BasicClient
     {
         final ReportingListener rl =
             new ReportingListener(_ctx, BANG_MSGS, "e.response_failed");
-            
+
         // if it comes from a person on our mute list, auto-reject it
         final Handle source = notification.getSource();
         if (source != null && _ctx.getMuteDirector().isMuted(source)) {
@@ -906,14 +879,14 @@ public class BangClient extends BasicClient
             checkShowIntro();
             return;
         }
-        
+
         // append the mute button if it comes from a person
         String[] buttons = notification.getResponses();
         if (source != null) {
             buttons = ArrayUtil.append(buttons, MessageBundle.qualify(
                 BANG_MSGS, MessageBundle.tcompose("m.notification_ignore", source)));
         }
-        
+
         OptionDialog.showConfirmDialog(
             _ctx, notification.getBundle(), notification.getText(), buttons,
             new OptionDialog.ResponseReceiver() {
@@ -930,7 +903,7 @@ public class BangClient extends BasicClient
             }
         });
     }
-    
+
     protected boolean displayLowerDetailSuggestion ()
     {
         _suggestLowerDetail = false;
@@ -959,7 +932,7 @@ public class BangClient extends BasicClient
             rr);
         return true;
     }
-    
+
     protected void setMainView (final BWindow view)
     {
         // if the new view is a game view, fade out the current music as we
@@ -1211,7 +1184,7 @@ public class BangClient extends BasicClient
             }
         }
     };
-    
+
     protected BangChatDirector _chatdir;
     protected BoardCache _bcache;
     protected MuteDirector _mutedir;
@@ -1224,7 +1197,7 @@ public class BangClient extends BasicClient
     protected StatusView _status;
 
     protected boolean _suggestLowerDetail;
-    
+
     protected String _playingMusic;
     protected OggFileStream _mstream;
     protected boolean _playedIntro;

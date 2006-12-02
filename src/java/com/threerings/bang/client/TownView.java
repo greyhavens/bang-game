@@ -232,24 +232,12 @@ public class TownView extends BWindow
 
     protected void fireCommand (String command)
     {
-        BangBootstrapData bbd = (BangBootstrapData)
-            _bctx.getClient().getBootstrapData();
+        BangBootstrapData bbd = (BangBootstrapData)_bctx.getClient().getBootstrapData();
+        int placeOid;
         if ("logoff".equals(command)) {
             _bctx.getApp().stop();
-        } else if ("ranch".equals(command)) {
-            _bctx.getLocationDirector().moveTo(bbd.ranchOid);
-        } else if ("bank".equals(command)) {
-            _bctx.getLocationDirector().moveTo(bbd.bankOid);
-        } else if ("store".equals(command)) {
-            _bctx.getLocationDirector().moveTo(bbd.storeOid);
-        } else if ("saloon".equals(command)) {
-            _bctx.getLocationDirector().moveTo(bbd.saloonOid);
-        } else if ("barber".equals(command)) {
-            _bctx.getLocationDirector().moveTo(bbd.barberOid);
-        } else if ("station".equals(command)) {
-            _bctx.getLocationDirector().moveTo(bbd.stationOid);
-        } else if ("hideout".equals(command)) {
-            _bctx.getLocationDirector().moveTo(bbd.hideoutOid);
+        } else if ((placeOid = bbd.getPlaceOid(command)) != -1) {
+            _bctx.getLocationDirector().moveTo(placeOid);
         } else {
             log.warning("Got unknown town view command " + command + ".");
             return;

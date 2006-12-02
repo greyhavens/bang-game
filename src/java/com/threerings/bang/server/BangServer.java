@@ -51,6 +51,8 @@ import com.threerings.bang.admin.server.BangAdminManager;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
+import com.threerings.bang.bounty.data.OfficeConfig;
+import com.threerings.bang.bounty.server.OfficeManager;
 import com.threerings.bang.chat.server.BangChatProvider;
 import com.threerings.bang.gang.data.HideoutConfig;
 import com.threerings.bang.gang.server.GangManager;
@@ -115,13 +117,13 @@ public class BangServer extends CrowdServer
 
     /** Manages gangs. */
     public static GangManager gangmgr;
-    
+
     /** Manages rating bits. */
     public static RatingManager ratingmgr;
-    
+
     /** Manages the persistent repository of player data. */
     public static PlayerRepository playrepo;
-    
+
     /** Manages the persistent repository of items. */
     public static ItemRepository itemrepo;
 
@@ -162,9 +164,12 @@ public class BangServer extends CrowdServer
     /** Manages the Train Station and inter-town travel. */
     public static StationManager stationmgr;
 
-    /** Manages the Hideout and gang management. */
+    /** Manages the Hideout and Gangs. */
     public static HideoutManager hideoutmgr;
-    
+
+    /** Manages the Sheriff's Office and Bounties. */
+    public static OfficeManager officemgr;
+
     /** Manages our selection of game boards. */
     public static BoardManager boardmgr = new BoardManager();
 
@@ -175,7 +180,7 @@ public class BangServer extends CrowdServer
     public void init ()
         throws Exception
     {
-        // create out database connection provider 
+        // create out database connection provider
         // this must be done before calling super.init()
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
 
@@ -218,7 +223,7 @@ public class BangServer extends CrowdServer
         coinexmgr = new BangCoinExchangeManager(conprov);
         actionmgr = new AccountActionManager(omgr, actionrepo);
         adminmgr = new BangAdminManager();
-        
+
         // if we have a shared secret, assume we're running in a cluster
         String node = System.getProperty("node");
         if (node != null && ServerConfig.sharedSecret != null) {
@@ -258,7 +263,7 @@ public class BangServer extends CrowdServer
 
         // shut down the rating manager
         ratingmgr.shutdown();
-        
+
         // close our audit logs
         _glog.close();
         _ilog.close();
@@ -311,7 +316,8 @@ public class BangServer extends CrowdServer
         barbermgr = (BarberManager)plreg.createPlace(new BarberConfig());
         stationmgr = (StationManager)plreg.createPlace(new StationConfig());
         hideoutmgr = (HideoutManager)plreg.createPlace(new HideoutConfig());
-        
+        officemgr = (OfficeManager)plreg.createPlace(new OfficeConfig());
+
         // create the town object and an interval to keep it up-to-date
         townobj = omgr.registerObject(new TownObject());
         createTownObjectUpdateInterval();
@@ -335,7 +341,7 @@ public class BangServer extends CrowdServer
             }
         }.schedule(30000L, true);
     }
-    
+
     /**
      * Returns the player object for the specified user if they are online
      * currently, null otherwise. This should only be called from the dobjmgr

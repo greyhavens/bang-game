@@ -61,6 +61,7 @@ public class BangClient extends CrowdClient
         bbd.barberOid = BangServer.barbermgr.getPlaceObject().getOid();
         bbd.stationOid = BangServer.stationmgr.getPlaceObject().getOid();
         bbd.hideoutOid = BangServer.hideoutmgr.getPlaceObject().getOid();
+        bbd.officeOid = BangServer.officemgr.getPlaceObject().getOid();
     }
 
     @Override // documentation inherited
