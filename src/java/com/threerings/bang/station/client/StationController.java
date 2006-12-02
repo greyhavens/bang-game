@@ -35,8 +35,7 @@ import com.threerings.bang.station.data.StationCodes;
 public class StationController extends PlaceController
     implements ActionListener
 {
-    /** The prefix for commands requesting that we take the train to a new
-     * town. */
+    /** The prefix for commands requesting that we take the train to a new town. */
     public static final String TAKE_TRAIN = "take_train:";
 
     // documentation inherited from interface ActionListener
@@ -68,8 +67,7 @@ public class StationController extends PlaceController
 
     protected void takeTrain (final String townId)
     {
-        _view.status.setStatus(
-            StationCodes.STATION_MSGS, "m.taking_train", false);
+        _view.status.setStatus(StationCodes.STATION_MSGS, "m.taking_train", false);
         connectToTown(townId, _ctx.getUserObject().townId);
     }
 
@@ -78,8 +76,7 @@ public class StationController extends PlaceController
         // add a temporary client observer to handle logon failure
         ClientAdapter obs = new ClientAdapter() {
             public void clientDidLogon (Client client) {
-                BangPrefs.setLastTownId(
-                    _ctx.getUserObject().username.toString(), townId);
+                BangPrefs.setLastTownId(_ctx.getUserObject().username.toString(), townId);
                 _ctx.getClient().removeClientObserver(this);
             }
             public void clientFailedToLogon (Client client, Exception cause) {
@@ -91,15 +88,13 @@ public class StationController extends PlaceController
         _ctx.getBangClient().switchToTown(townId);
     }
 
-    protected void recoverFromFailure (
-        String townId, final String oldTownId, Exception cause)
+    protected void recoverFromFailure (String townId, final String oldTownId, Exception cause)
     {
         Tuple<String,Boolean> msg = LogonView.decodeLogonException(_ctx, cause);
 
         // if we failed to connect, try going back to our old town
         if (msg.right && !townId.equals(oldTownId)) {
-            _view.status.setStatus(
-                StationCodes.STATION_MSGS, "m.failed_to_connect", true);
+            _view.status.setStatus(StationCodes.STATION_MSGS, "m.failed_to_connect", true);
             // give 'em two seconds to read the message, then go back
             new Interval(_ctx.getApp()) {
                 public void expired () {
@@ -108,8 +103,7 @@ public class StationController extends PlaceController
             }.schedule(2000L);
 
         } else {
-            _view.status.setStatus(
-                BangAuthCodes.AUTH_MSGS, msg.left, true);
+            _view.status.setStatus(BangAuthCodes.AUTH_MSGS, msg.left, true);
         }
     }
 
@@ -132,8 +126,7 @@ public class StationController extends PlaceController
                         msg = MessageBundle.taint(msg);
                     }
                     msg = MessageBundle.compose("m.activation_failed", msg);
-                    _view.status.setStatus(
-                        StationCodes.STATION_MSGS, msg, true);
+                    _view.status.setStatus(StationCodes.STATION_MSGS, msg, true);
                 }
             }
         };
