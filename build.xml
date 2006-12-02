@@ -485,7 +485,11 @@
 
   <!-- builds the distribution jar files -->
   <target name="dist" depends="prepare,compile">
+    <!-- create the main jar file with all the code and fiddly bits -->
     <jar file="${deploy.dir}/bang-code.jar" basedir="${deploy.dir}/classes" includes="com/**"/>
+    <!-- create a jar file for use by the Underwire support system -->
+    <jar file="${deploy.dir}/bang-support.jar" basedir="${deploy.dir}/classes"
+         includes="com/threerings/bang/server/persist/**"/>
   </target>
 
   <!-- builds the avatar, media and sounds jar files -->
