@@ -3,11 +3,10 @@
 
 package com.threerings.bang.bounty.client;
 
+import com.jmex.bui.BButton;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
-
-import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
@@ -22,7 +21,7 @@ import com.threerings.bang.bounty.data.OfficeCodes;
  */
 public class OfficeView extends ShopView
 {
-    public OfficeView (BangContext ctx)
+    public OfficeView (BangContext ctx, OfficeController ctrl)
     {
         super(ctx, OfficeCodes.OFFICE_MSGS);
 
@@ -40,14 +39,11 @@ public class OfficeView extends ShopView
         add(_status = new StatusLabel(ctx), new Rectangle(250, 10, 520, 50));
         _status.setStyleClass("shop_status");
 
+        // for now display the test bounty game interface
+        add(new BButton(_msgs.get("m.bounty_test"), ctrl, "bounty_test"), new Point(380, 292));
+
         // start with a random shop tip
         _status.setStatus(getShopTip(), false);
-    }
-
-    @Override // documentation inherited
-    public void willEnterPlace (PlaceObject plobj)
-    {
-        super.willEnterPlace(plobj);
     }
 
     protected StatusLabel _status;

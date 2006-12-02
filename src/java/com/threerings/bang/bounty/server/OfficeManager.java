@@ -59,7 +59,7 @@ public class OfficeManager extends PlaceManager
 
         // publish all known boards as board info records
         ArrayList<BoardInfo> infos = new ArrayList<BoardInfo>();
-        for (int pp = 2; pp < GameCodes.MAX_PLAYERS; pp++) {
+        for (int pp = 2; pp <= GameCodes.MAX_PLAYERS; pp++) {
             for (BoardRecord brec : BangServer.boardmgr.getBoards(pp)) {
                 BoardInfo info = new BoardInfo();
                 info.name = brec.name;

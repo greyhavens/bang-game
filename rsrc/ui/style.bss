@@ -274,6 +274,10 @@ combobox:down {
   background: image "ui/combobox/hover.png" framexy;
 }
 
+combobox:disabled {
+  color: #999999;
+}
+
 textfield {
   color: #524129;
   font: "Dom Casual" plain 20;
