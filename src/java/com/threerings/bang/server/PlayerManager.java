@@ -770,18 +770,25 @@ public class PlayerManager
             public void invokePersistent ()
                 throws PersistenceException {
                 if (accept) {
-                    _pardrepo.updatePardners(user.playerId, inviter);
+                    _error = _pardrepo.updatePardners(
+                        user.playerId, inviter, _full = new boolean[2]);
                 } else {
                     _pardrepo.removePardners(user.playerId, inviter);
                 }
             }
             public void handleSuccess () {
-                handleInviteSuccess(user, inviter, lastSession, accept, listener);
+                if (_error != null) {
+                    listener.requestFailed(_error);
+                } else {
+                    handleInviteSuccess(user, inviter, lastSession, accept, _full, listener);
+                }
             }
             public String getFailureMessage () {
                 return "Failed to respond to pardner invite [who=" + user.who() +
                     ", inviter=" + inviter + ", accept=" + accept + "]";
             }
+            protected boolean[] _full;
+            protected String _error;
         });
     }
     
@@ -791,13 +798,16 @@ public class PlayerManager
      */
     protected void handleInviteSuccess (
         PlayerObject user, Handle inviter, Date lastSession, boolean accept,
-        InvocationService.ConfirmListener listener)
+        boolean[] full, InvocationService.ConfirmListener listener)
     {
         // if the inviter is online, update and send a notification
         PlayerObject invobj = (PlayerObject)BangServer.lookupBody(inviter);
         if (invobj != null) {
             if (accept) {
                 invobj.addToPardners(getPardnerEntry(user.handle, null));
+                if (full[1]) {
+                    clearPardnerInvites(invobj);
+                }
             }
             SpeakProvider.sendInfo(invobj, BANG_MSGS,
                 MessageBundle.tcompose(
@@ -809,8 +819,34 @@ public class PlayerManager
         if (user.isActive()) {
             if (accept) {
                 user.addToPardners(getPardnerEntry(inviter, lastSession));
+                if (full[0]) {
+                    clearPardnerInvites(user);
+                }
             }
             listener.requestProcessed();
+        }
+    }
+    
+    /**
+     * Clears out all of the player's pardner invites.  Ideally, this would also
+     * clear out any pardner invites that the player had sent, but that would be
+     * much more difficult.
+     */
+    protected void clearPardnerInvites (PlayerObject player)
+    {
+        ArrayList<Comparable> keys = new ArrayList<Comparable>();
+        for (Notification notification : player.notifications) {
+            if (notification instanceof PardnerInvite) {
+                keys.add(notification.getKey());
+            }
+        }
+        try {
+            player.startTransaction();
+            for (Comparable key : keys) {
+                player.removeFromNotifications(key);
+            }
+        } finally {
+            player.commitTransaction();
         }
     }
     

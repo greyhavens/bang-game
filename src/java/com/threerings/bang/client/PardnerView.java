@@ -66,6 +66,11 @@ public class PardnerView extends IconPalette
 {
     public PardnerView (BangContext ctx)
     {
+        this(ctx, null);
+    }
+    
+    public PardnerView (BangContext ctx, StatusLabel status)
+    {
         super(null, 4, 2, ICON_SIZE, 1);
         setStyleClass("pardner_view");
         _ctx = ctx;
@@ -77,9 +82,13 @@ public class PardnerView extends IconPalette
             GroupLayout.BOTTOM, GroupLayout.STRETCH);
         layout.setGap(0);
         BContainer ccont = new BContainer(layout);
-        ccont.add(_status = new StatusLabel(_ctx));
-        _status.setStyleClass("pardner_status");
-        ccont.add(new Spacer(1, 2));
+        if (status == null) {
+            ccont.add(_status = new StatusLabel(_ctx));
+            _status.setStyleClass("pardner_status");
+            ccont.add(new Spacer(1, 2));
+        } else {
+            _status = status;
+        }
 
         // then add chat and remove buttons
         BContainer bcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
@@ -95,7 +104,7 @@ public class PardnerView extends IconPalette
         layout = GroupLayout.makeHoriz(GroupLayout.CENTER);
         layout.setGap(10);
         _acont = new BContainer(layout);
-        _acont.add(new BLabel(_ctx.xlate(BANG_MSGS, "m.pardner_add")));
+        _acont.add(new BLabel(_ctx.xlate(BANG_MSGS, getAddLabelMessage())));
         _acont.add(_name = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH));
         _name.setPreferredWidth(324);
         _acont.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
@@ -119,8 +128,8 @@ public class PardnerView extends IconPalette
 
         } else if (src == _remove) {
             final PardnerIcon icon = (PardnerIcon)getSelectedIcon();
-            OptionDialog.showConfirmDialog(_ctx, getBundle(),
-                MessageBundle.tcompose("m.confirm_remove", icon.entry.handle),
+            OptionDialog.showConfirmDialog(_ctx, BANG_MSGS,
+                MessageBundle.tcompose(getConfirmRemoveMessage(), icon.entry.handle),
                 new OptionDialog.ResponseReceiver() {
                     public void resultPosted (int button, Object result) {
                         if (button == OptionDialog.OK_BUTTON) {
@@ -146,12 +155,21 @@ public class PardnerView extends IconPalette
     }
 
     /**
-     * Returns the name of the message bundle to use for messages
-     * whose keys are common between classes but whose values differ.
+     * Returns the translatable message to display on the label preceding the
+     * add field (which will be resolved against the bang bundle).
      */
-    protected String getBundle ()
+    protected String getAddLabelMessage ()
     {
-        return BANG_MSGS;
+        return "m.pardner_add";
+    }
+    
+    /**
+     * Returns the translatable message to display on the confirmation dialog
+     * for removing a pardner (which will be resolved against the bang bundle).
+     */
+    protected String getConfirmRemoveMessage ()
+    {
+        return "m.confirm_remove"; 
     }
     
     /**

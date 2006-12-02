@@ -33,6 +33,7 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
@@ -420,8 +421,8 @@ public class GangManager
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent ()
                 throws PersistenceException {
-                _gangrepo.deleteInvite(gangId, user.playerId);
-                if (accept) {
+                _error = _gangrepo.deleteInvite(gangId, user.playerId, accept);
+                if (_error == null && accept) {
                     // stash the gang object before we add the player to ensure that the
                     // dset does not contain an entry for the new member
                     stashGangObject(gangId);
@@ -431,14 +432,19 @@ public class GangManager
                 }
             }
             public void handleSuccess () {
-                handleInviteSuccess(
-                    user, inviter, gangId, name, accept, new Date(_joined), listener);
+                if (_error != null) {
+                    listener.requestFailed(_error);
+                } else {
+                    handleInviteSuccess(
+                        user, inviter, gangId, name, accept, new Date(_joined), listener);
+                }
             }
             public String getFailureMessage () {
                 return "Failed to respond to gang invite [who=" + user.who() +
                     ", gangId=" + gangId + ", accept=" + accept + "]";
             }
             protected long _joined;
+            protected String _error;
         });
     }
     
@@ -473,6 +479,15 @@ public class GangManager
         }
         GangObject gangobj = getGangObject(gangId);
         gangobj.resolving--;
+        ArrayList<Comparable> keys = new ArrayList<Comparable>();
+        for (Notification notification : user.notifications) {
+            // we want to remove all gang invites *except* for the one we're
+            // answering, because that one will be removed by the caller
+            if (notification instanceof GangInvite &&
+                !((GangInvite)notification).gang.equals(name)) {
+                keys.add(notification.getKey());
+            }
+        }
         try {
             user.startTransaction();
             user.setGangId(gangId);
@@ -481,6 +496,9 @@ public class GangManager
             gangobj.addToMembers(
                 new GangMemberEntryUpdater(user, gangobj).gmentry);
             user.setGangOid(gangobj.getOid());
+            for (Comparable key : keys) {
+                user.removeFromNotifications(key);
+            }
         } finally {
             user.commitTransaction();
         }

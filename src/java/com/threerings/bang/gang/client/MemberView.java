@@ -18,6 +18,7 @@ import com.threerings.bang.client.PardnerView;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
@@ -35,9 +36,10 @@ import com.threerings.bang.gang.data.HideoutObject;
 public class MemberView extends PardnerView
     implements GangCodes, HideoutCodes
 {
-    public MemberView (BangContext ctx, HideoutObject hideoutobj, GangObject gangobj)
+    public MemberView (
+        BangContext ctx, StatusLabel status, HideoutObject hideoutobj, GangObject gangobj)
     {
-        super(ctx);
+        super(ctx, status);
         _hideoutobj = hideoutobj;
         _gangobj = gangobj;
     }
@@ -74,9 +76,15 @@ public class MemberView extends PardnerView
     }
     
     @Override // documentation inherited
-    protected String getBundle ()
+    protected String getAddLabelMessage ()
     {
-        return HIDEOUT_MSGS;
+        return MessageBundle.qualify(HIDEOUT_MSGS, "m.member_add");
+    }
+    
+    @Override // documentation inherited
+    protected String getConfirmRemoveMessage ()
+    {
+        return MessageBundle.qualify(HIDEOUT_MSGS, "m.confirm_remove"); 
     }
     
     @Override // documentation inherited

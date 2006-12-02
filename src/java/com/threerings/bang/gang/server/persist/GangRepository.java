@@ -30,6 +30,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.server.BangServer;
 
+import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 
@@ -326,20 +327,37 @@ public class GangRepository extends JORARepository
     }
     
     /**
-     * Removes an invitation from the database.
+     * Processes and removes an invitation from the database.
+     *
+     * @return <code>null</code> if the operation succeeded, otherwise an error message
+     * indicating what went wrong.
      */
-    public void deleteInvite (final int gangId, final int playerId)
+    public String deleteInvite (final int gangId, final int playerId, final boolean accepted)
         throws PersistenceException
     {
-        executeUpdate(new Operation<Object>() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
+        return executeUpdate(new Operation<String>() {
+            public String invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
                 Statement stmt = conn.createStatement();
                 try {
-                    stmt.executeUpdate("delete from GANG_INVITES where " +
-                        "GANG_ID = " + gangId + " and PLAYER_ID = " +
-                        playerId);
+                    int rows = stmt.executeUpdate("delete from GANG_INVITES where " +
+                        "GANG_ID = " + gangId + " and PLAYER_ID = " + playerId);
+                    if (!accepted) {
+                        // it's fine to "reject" deleted invites
+                        return null;
+                        
+                    } else if (rows < 1) {
+                        return "e.invite_removed";
+                    }
+                    
+                    // if the gang is going to be full, remove all pending invites
+                    ResultSet rs = stmt.executeQuery(
+                        "select count(*) from PLAYERS where GANG_ID = " + gangId);
+                    if (rs.next() && rs.getInt(1) >= GangCodes.MAX_MEMBERS - 1) {
+                        stmt.executeUpdate("delete from GANG_INVITES where GANG_ID = " + gangId);
+                    }
+                    
                 } finally {
                     JDBCUtil.close(stmt);
                 }

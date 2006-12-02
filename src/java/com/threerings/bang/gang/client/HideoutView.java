@@ -332,7 +332,7 @@ public class HideoutView extends ShopView
     protected BContainer createMemberTab ()
     {
         BContainer mtab = new BContainer(new AbsoluteLayout());
-        mtab.add(new MemberView(_ctx, _hideoutobj, _gangobj), new Point(0, 0));
+        mtab.add(new MemberView(_ctx, _status, _hideoutobj, _gangobj), new Point(0, 0));
         return mtab;
     }
     

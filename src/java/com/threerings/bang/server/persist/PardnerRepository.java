@@ -22,6 +22,7 @@ import com.samskivert.jdbc.SimpleRepository;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.server.BangServer;
 
@@ -119,12 +120,11 @@ public class PardnerRepository extends SimpleRepository
     }
 
     /**
-     * Adds a pardnership relation to the database.
+     * Adds a pardnership invitation to the database.
      *
      * @param playerId1 the id of the inviter.
      * @param handle2 the handle of the invitee.
-     * @param message null if the pardnership is active, an invitation message
-     * if not.
+     * @param message the invitation message.
      *
      * @return null if the invitation was successfully added, otherwise a
      * translatable error message indicating what went wrong.
@@ -147,6 +147,12 @@ public class PardnerRepository extends SimpleRepository
                             "e.no_such_player", handle2);
                     }
 
+                    // make sure they're not at their limit
+                    if (getPardnerCount(stmt, playerId2) >= BangCodes.MAX_PARDNERS) {
+                        return MessageBundle.tcompose("e.too_many_pardners_them",
+                            String.valueOf(BangCodes.MAX_PARDNERS));
+                    }
+                    
                     // now update the pardner relation between these two
                     String query = "insert ignore into PARDNERS set " +
                         "PLAYER_ID1 = " + playerId1 +
@@ -165,16 +171,23 @@ public class PardnerRepository extends SimpleRepository
             }
         });
     }
-
+    
     /**
      * Confirms the status of the identified pardnership where the playerId for
      * one is known and only the name for the other is known.
+     *
+     * @param full for each of the two players, if their pardner list has become
+     * full with this new pardnership, the corresponding entry in this array will
+     * be set to <code>true</code>.
+     *
+     * @return <code>null</code> for success, otherwise a translatable error
+     * message indicating what went wrong.
      */
-    public void updatePardners (final int playerId1, final Name handle2)
+    public String updatePardners (final int playerId1, final Name handle2, final boolean[] full)
         throws PersistenceException
     {
-        executeUpdate(new Operation<Object>() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
+        return executeUpdate(new Operation<String>() {
+            public String invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
                 Statement stmt = conn.createStatement();
@@ -187,13 +200,26 @@ public class PardnerRepository extends SimpleRepository
                                     "[pid=" + playerId1 +
                                     ", pardner=" + handle2 + "]. " +
                                     handle2 + " no longer exists.");
-                        return null;
+                        return "e.player_deleted";
                     }
 
                     // now update the pardner relation between these two
-                    stmt.executeUpdate("update PARDNERS set MESSAGE = NULL" +
-                                       createWhereClause(playerId1, playerId2));
+                    if (stmt.executeUpdate("update PARDNERS set MESSAGE = NULL" +
+                           createWhereClause(playerId1, playerId2)) < 1) {
+                        return "e.invite_removed";
+                    }
 
+                    // if either player has reached the pardner limit, we must
+                    // delete their pending invitations
+                    if (getPardnerCount(stmt, playerId1) >= BangCodes.MAX_PARDNERS) {
+                        full[0] = true;
+                        deleteInvites(stmt, playerId1);
+                    }
+                    if (getPardnerCount(stmt, playerId2) >= BangCodes.MAX_PARDNERS) {
+                        full[1] = true;
+                        deleteInvites(stmt, playerId2);
+                    }
+                    
                 } finally {
                     JDBCUtil.close(stmt);
                 }
@@ -239,6 +265,28 @@ public class PardnerRepository extends SimpleRepository
         });
     }
 
+    /**
+     * Returns the number of active pardnerships to which the specified player
+     * belongs.
+     */
+    protected int getPardnerCount (Statement stmt, int playerId)
+        throws SQLException
+    {
+        ResultSet rs = stmt.executeQuery("select count(*) from PARDNERS where (PLAYER_ID1 = " +
+            playerId + " or PLAYER_ID2 = " + playerId + ") and MESSAGE is NULL");
+        return (rs.next() ? rs.getInt(1) : 0);
+    }
+    
+    /**
+     * Deletes all invites involving the specified player.
+     */
+    protected void deleteInvites (Statement stmt, int playerId)
+        throws SQLException
+    {
+        stmt.executeUpdate("delete from PARDNERS where (PLAYER_ID1 = " + playerId +
+            " or PLAYER_ID2 = " + playerId + ") and MESSAGE is not NULL");
+    }
+    
     /**
      * Creates a 'where' clause that matches the two given player ids in either
      * order.
