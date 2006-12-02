@@ -391,7 +391,7 @@ public class PlayerRepository extends JORARepository
             "VICTORY_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "WANTED_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "GANG_ID INTEGER NOT NULL",
-            "GANG_RANK TINYINT NOT NULL,",
+            "GANG_RANK TINYINT NOT NULL",
             "JOINED_GANG DATETIME",
             "TOWN_ID VARCHAR(64) NOT NULL",
             "CREATED DATETIME NOT NULL",
