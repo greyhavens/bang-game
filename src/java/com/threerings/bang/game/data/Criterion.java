@@ -1,15 +1,14 @@
 //
 // $Id$
 
-package com.threerings.bang.bounty.data;
+package com.threerings.bang.game.data;
 
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.data.PlayerObject;
 
 /**
- * Defines a particular criterion for "winning" a bounty game.
+ * Defines a particular additional criterion for "winning" a bounty game.
  */
 public abstract class Criterion extends SimpleStreamableObject
 {

@@ -45,9 +45,9 @@ public class ForestGuardiansInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public int getTeamSize (BangConfig config)
+    public int getTeamSize (BangConfig config, int pidx)
     {
-        return Math.min(config.teamSize, 2);
+        return Math.min(super.getTeamSize(config, pidx), 2);
     }
 
     @Override // from ScenarioInfo

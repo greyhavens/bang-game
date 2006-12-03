@@ -4,9 +4,10 @@
 package com.threerings.bang.bounty.server;
 
 import com.threerings.bang.bounty.client.OfficeService;
-import com.threerings.bang.bounty.data.BountyGameConfig;
 import com.threerings.bang.bounty.data.OfficeMarshaller;
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
@@ -38,10 +39,17 @@ public class OfficeDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case OfficeMarshaller.PLAY_BOUNTY_GAME:
+            ((OfficeProvider)provider).playBountyGame(
+                source,
+                (String)args[0], (InvocationService.InvocationListener)args[1]
+            );
+            return;
+
         case OfficeMarshaller.TEST_BOUNTY_GAME:
             ((OfficeProvider)provider).testBountyGame(
                 source,
-                (BountyGameConfig)args[0]
+                (BangConfig)args[0], (InvocationService.InvocationListener)args[1]
             );
             return;
 

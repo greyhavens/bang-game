@@ -6,6 +6,7 @@ package com.threerings.bang.bounty.data;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.Criterion;
 
 /**
  * Requires that a particular integer stat be less than, greater than or equal to a value.

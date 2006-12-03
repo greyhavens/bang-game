@@ -990,12 +990,11 @@ public class BangBoardView extends BoardView
             bview.ustatus.unitAdded(sprite);
         }
 
-        // if we've not yet started the game, place the unit at the corner of
-        // the board nearest to the player's start position because we're going
-        // to run them to the player's starting location once their animations
-        // are resolved.  if the unit is respawning, queue up the respawn
-        // action
-        if (!_bconfig.tutorial && _bangobj.tick < 0) {
+        // if we've not yet started the game, place the unit at the corner of the board nearest to
+        // the player's start position because we're going to run them to the player's starting
+        // location once their animations are resolved.  if the unit is respawning, queue up the
+        // respawn action
+        if (_bconfig.type != BangConfig.Type.TUTORIAL && _bangobj.tick < 0) {
             Point corner = getStartCorner(piece);
             sprite.setLocation(_board, corner.x, corner.y);
         }

@@ -36,26 +36,6 @@ public class Practice extends Scenario
     }
 
     @Override // documentation inherited
-    public void startNextPhase (BangObject bangobj)
-    {
-        switch (bangobj.state) {
-          case BangObject.POST_ROUND:
-          case BangObject.PRE_GAME:
-          case BangObject.SELECT_PHASE:
-            _bangmgr.startPhase(BangObject.PRE_PRACTICE);
-            break;
-
-          case BangObject.PRE_PRACTICE:
-            _bangmgr.startPhase(BangObject.IN_PLAY);
-            break;
-
-          default:
-            super.startNextPhase(bangobj);
-            break;
-        }
-    }
-
-    @Override // documentation inherited
     public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
                                 PieceSet purchases)
         throws InvocationException

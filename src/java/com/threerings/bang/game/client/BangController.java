@@ -137,13 +137,13 @@ public class BangController extends GameController
         log.info("Entered game " + config + ".");
 
         // if this is a tutorial game, create our tutorial controller
-        if (_config.tutorial) {
+        if (_config.type == BangConfig.Type.TUTORIAL) {
             _tutcont = new TutorialController();
             _tutcont.init(_ctx, _config, _view);
         }
 
-        // we start the new round after the player has dismissed the previous
-        // round's stats dialogue and the game is reported as ready to go
+        // we start the new round after the player has dismissed the previous round's stats
+        // dialogue and the game is reported as ready to go
         _startRoundMultex = new Multex(new Runnable() {
             public void run () {
                 roundDidStart();
@@ -514,7 +514,7 @@ public class BangController extends GameController
         // once the awards are set, we can display the end of game view
         if (event.getName().equals(BangObject.STATS) &&
             // we handle things specially in the tutorial and practice
-            !_config.tutorial && !_config.practice) {
+            _config.type != BangConfig.Type.TUTORIAL && _config.type != BangConfig.Type.PRACTICE) {
             storeStats();
         }
     }
@@ -523,8 +523,8 @@ public class BangController extends GameController
     {
         // keep the stats for this round around for later
         _statMap.put(_bangobj.roundId, _bangobj.stats);
-        // create our stats view now that we have our stats; we'll hold off
-        // on showing it until both post-round conditions have been met
+        // create our stats view now that we have our stats; we'll hold off on showing it until
+        // both post-round conditions have been met
         _statsView = _bangobj.scenario.getStatsView(_ctx);
         _statsView.init(BangController.this, _bangobj, true);
         _postRoundMultex.satisfied(Multex.CONDITION_TWO);
@@ -541,24 +541,22 @@ public class BangController extends GameController
     protected boolean stateDidChange (int state)
     {
         if (state == BangObject.SELECT_PHASE ||
-            state == BangObject.PRE_TUTORIAL ||
-            state == BangObject.PRE_PRACTICE) {
+            state == BangObject.SKIP_SELECT_PHASE) {
             // when our inter-round fade is complete we'll start the next round
             _startRoundMultex.satisfied(Multex.CONDITION_ONE);
 
-            // if we're a watcher and the stats view is showing, we have to
-            // start the inter round board fade immediately because the game
-            // will not wait for the watcher before starting the next round
-            if ((_bangobj == null || !_bangobj.isActivePlayer(_pidx)) && 
-                    _statsView != null) {
+            // if we're a watcher and the stats view is showing, we have to start the inter round
+            // board fade immediately because the game will not wait for the watcher before
+            // starting the next round
+            if ((_bangobj == null || !_bangobj.isActivePlayer(_pidx)) && _statsView != null) {
                 _view.view.doInterRoundBoardFade();
             }
             return true;
 
         } else if (state == BangObject.IN_PLAY) {
-            // if we're a watcher, we may not yet have dismissed our stats
-            // view, but since things are starting we need to forcibly do that
-            // for them to ensure that it's gone before the end of this round
+            // if we're a watcher, we may not yet have dismissed our stats view, but since things
+            // are starting we need to forcibly do that for them to ensure that it's gone before
+            // the end of this round
             if (_statsView != null) {
                 _ctx.getBangClient().clearPopup(_statsView, true);
                 statsDismissed();
@@ -662,14 +660,14 @@ public class BangController extends GameController
         if (_bangobj == null) {
             return;
         }
-        if (!_config.tutorial) {
+        if (_config.type != BangConfig.Type.TUTORIAL) {
             // display the player status displays
             _view.showPlayerStatus();
         }
 
-        if (_config.tutorial || _config.practice || _config.allPlayersAIs()) {
-            // we re-use the playerReady mechanism to communicate that we're
-            // ready for our tutorial/practice/test game
+        if (_config.type != BangConfig.Type.TUTORIAL || _config.allPlayersAIs()) {
+            // we re-use the playerReady mechanism to communicate that we're ready for our
+            // tutorial/practice/bounty/test game
             playerReady();
 
         } else if (_bangobj.state == BangObject.SELECT_PHASE) {
@@ -688,8 +686,7 @@ public class BangController extends GameController
     }
 
     /**
-     * Called by the board view after it has faded out the board at the end of
-     * a round.
+     * Called by the board view after it has faded out the board at the end of a round.
      */
     protected void interRoundFadeComplete ()
     {
@@ -705,17 +702,15 @@ public class BangController extends GameController
         // potentially display the post-game stats
         _postRoundMultex.satisfied(Multex.CONDITION_ONE);
 
-        if (_config.practice) {
-            BangBootstrapData bbd = (BangBootstrapData)
-                _ctx.getClient().getBootstrapData();
+        if (_config.type == BangConfig.Type.PRACTICE) {
+            BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
             _ctx.getLocationDirector().moveTo(bbd.ranchOid);
         }
     }
 
     /**
-     * Called by the board view after it has faded in the board and resolved
-     * all of the unit animations to let us know that we're fully operational
-     * and ready to play.
+     * Called by the board view after it has faded in the board and resolved all of the unit
+     * animations to let us know that we're fully operational and ready to play.
      */
     protected void readyForRound ()
     {
@@ -727,8 +722,7 @@ public class BangController extends GameController
         // reenable the camera controls now that we're fully operational
         _ctx.getInputHandler().setEnabled(true);
 
-        // do a full GC before we sweep the camera up to tidy up after all the
-        // unit model loading
+        // do a full GC before we sweep the camera up to tidy up after all the unit model loading
         System.gc();
 
         // zoom the camera to the center level
@@ -736,8 +730,7 @@ public class BangController extends GameController
 
         // if we're one of the players
         if (_bangobj.isActivePlayer(_pidx) || _config.allPlayersAIs()) {
-            // let the game manager know that our units are in place and we're
-            // fully ready to go
+            // let the game manager know that our units are in place and we're fully ready to go
             playerReady();
 
             // add and immediately fade in and out a "GO!" marquee
@@ -765,22 +758,21 @@ public class BangController extends GameController
     {
         _statsView = null;
 
-        // for players, we wait for the stats to be dismissed before fading the
-        // current board out and switching to the new board; for watchers we do
-        // that immediately at the end of the round
+        // for players, wait for the stats to be dismissed before fading the current board out and
+        // switching to the new board; for watchers, do so immediately at the end of the round
         if (_bangobj != null && _bangobj.isActivePlayer(_pidx)) {
             _view.view.doInterRoundBoardFade();
         }
     }
 
     /**
-     * Called whenever anything changes that might result in a change to the
-     * relative ranking of the player.
+     * Called whenever anything changes that might result in a change to the relative ranking of
+     * the player.
      */
     protected void updateRank ()
     {
-        // don't update our rank until after the first tick, by which time
-        // everyone will have loaded their units and we might have some points
+        // don't update our rank until after the first tick, by which time everyone will have
+        // loaded their units and we might have some points
         if (_bangobj.points == null || _bangobj.tick < 1) {
             return;
         }
@@ -810,10 +802,9 @@ public class BangController extends GameController
             if (event.getName().equals(BangObject.TICK)) {
                 updateRank();
 
-                // display a marquee when the round is 12 ticks from ending
-                // (but not for objectiveless scenarios like the tutorial)
-                if (_bangobj.scenario != null &&
-                    _bangobj.scenario.getObjectives() != null &&
+                // display a marquee when the round is 12 ticks from ending (but not for
+                // objectiveless scenarios like the tutorial)
+                if (_bangobj.scenario != null && _bangobj.scenario.getObjectives() != null &&
                     _bangobj.lastTick - _bangobj.tick == ALMOST_OVER_TICKS) {
                     _view.view.fadeMarqueeInOut("m.round_will_end", 1f);
                     _view.getTimer().setEndState(true);
@@ -859,8 +850,7 @@ public class BangController extends GameController
     /** Used to start the new round after two conditions have been met. */
     protected Multex _startRoundMultex;
 
-    /** Used to show the stats once we've faded in our Round/Game Over
-     * marquee and the stats have arrived. */
+    /** Used to show the stats once we've faded in our marquee and the stats have arrived. */
     protected Multex _postRoundMultex;
 
     /** The last scenario played. */
@@ -869,8 +859,7 @@ public class BangController extends GameController
     /** The units we cycle through when we press tab. */
     protected ArrayList<Unit> _selections = new ArrayList<Unit>();
 
-    /** The unit id of the unit most recently selected via {@link
-     * #handleSelectNextUnit}. */
+    /** The unit id of the unit most recently selected via {@link #handleSelectNextUnit}. */
     protected int _lastSelection = -1;
 
     /** Listens for game state changes that might indicate rank changes. */
@@ -903,7 +892,7 @@ public class BangController extends GameController
         }
     };
 
-    /** The number of ticks before the end of the game on which we show a
-     * marquee warning the player that the round is almost over. */
+    /** The number of ticks before the end of the game on which we show a marquee warning the
+     * player that the round is almost over. */
     protected static final int ALMOST_OVER_TICKS = 12;
 }

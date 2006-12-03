@@ -41,12 +41,11 @@ public abstract class ScenarioInfo
     public enum Teams { INDIVIDUAL, COOP, TEAM2V2, TEAM3V1 };
 
     /**
-     * Returns the set of scenarios available in the specified town. Feel free
-     * to bend, fold or mutilate the returned list.
+     * Returns the set of scenarios available in the specified town. Feel free to bend, fold or
+     * mutilate the returned list.
      *
-     * @param includePrior if true all scenarios up to and including the
-     * specified town will be returned, if false only scenarios introduced in
-     * the specified town will be returned.
+     * @param includePrior if true all scenarios up to and including the specified town will be
+     * returned, if false only scenarios introduced in the specified town will be returned.
      */
     public static ArrayList<ScenarioInfo> getScenarios (
         String townId, boolean includePrior)
@@ -69,8 +68,8 @@ public abstract class ScenarioInfo
     }
 
     /**
-     * Returns true if this player has played all of the scenarios in this town
-     * at least once (in a rated game).
+     * Returns true if this player has played all of the scenarios in this town at least once (in a
+     * rated game).
      */
     public static boolean hasPlayedAllTownScenarios (PlayerObject user)
     {
@@ -86,9 +85,8 @@ public abstract class ScenarioInfo
     /**
      * Returns an array of all scenario ids available in the supplied town.
      *
-     * @param includePrior if true all scenarios up to and including the
-     * specified town will be returned, if false only scenarios introduced in
-     * the specified town will be returned.
+     * @param includePrior if true all scenarios up to and including the specified town will be
+     * returned, if false only scenarios introduced in the specified town will be returned.
      */
     public static String[] getScenarioIds (String townId, boolean includePrior)
     {
@@ -103,12 +101,12 @@ public abstract class ScenarioInfo
     /**
      * Selects a random set of scenario ids matching the specified criterion.
      *
-     * @param includePrior if true scenarios for towns previous to the supplied
-     * town will be included in the selection.
-     * @param prevScids a list of scenario ids the players have played recently.
-     * Used to weight the likelyhood of a scenario being chosen.
+     * @param includePrior if true scenarios for towns previous to the supplied town will be
+     * included in the selection.
+     * @param prevScids a list of scenario ids the players have played recently.  Used to weight
+     * the likelyhood of a scenario being chosen.
      */
-    public static String[] selectRandomIds (String townId, int count, 
+    public static String[] selectRandomIds (String townId, int count,
             int players, String[] prevScids, boolean includePrior)
     {
         ArrayList<ScenarioInfo> scens = getScenarios(townId, includePrior);
@@ -219,12 +217,12 @@ public abstract class ScenarioInfo
     }
 
     /**
-     * Returns the number of units (aside from the big shot) that players will
-     * use, taking into account the desired size in the configuration.
+     * Returns the number of units (aside from the big shot) that players will use, taking into
+     * account the desired size in the configuration.
      */
-    public int getTeamSize (BangConfig config)
+    public int getTeamSize (BangConfig config, int pidx)
     {
-        return config.teamSize;
+        return config.getTeamSize(pidx);
     }
 
     /**
@@ -233,14 +231,13 @@ public abstract class ScenarioInfo
     public abstract Stat.Type[] getObjectives ();
 
     /**
-     * Returns for each objective the number of points earned for each time
-     * the objective is reached.
+     * Returns for each objective the number of points earned for each time the objective is
+     * reached.
      */
     public abstract int[] getPointsPerObjectives ();
 
     /**
-     * Returns a code used in translation keys to describe the primary
-     * objective.
+     * Returns a code used in translation keys to describe the primary objective.
      */
     public String getObjectiveCode ()
     {
@@ -248,8 +245,8 @@ public abstract class ScenarioInfo
     }
 
     /**
-     * Returns the stat associated with our secondary objective or null if this
-     * scenario has no secondary objective.
+     * Returns the stat associated with our secondary objective or null if this scenario has no
+     * secondary objective.
      */
     public Stat.Type getSecondaryObjective ()
     {
@@ -272,8 +269,7 @@ public abstract class ScenarioInfo
     }
 
     /**
-     * Returns true if the shooter at the supplied location should be able to
-     * shoot their target.
+     * Returns true if the shooter at the supplied location should be able to shoot their target.
      */
     public boolean validShot (Unit shooter, PointSet moves, Piece target)
     {
@@ -289,8 +285,8 @@ public abstract class ScenarioInfo
     }
 
     /**
-     * Returns true if the scenario has enemies that are of human make. Meaning
-     * either it is not coop or it is coop but versus human units.
+     * Returns true if the scenario has enemies that are of human make. Meaning either it is not
+     * coop or it is coop but versus human units.
      */
     public boolean hasEnemies (UnitConfig.Make make)
     {
@@ -306,11 +302,10 @@ public abstract class ScenarioInfo
     }
 
     /**
-     * Given a piece and its set of potential moves, determines which of those
-     * moves help achieve the scenario's goals.
+     * Given a piece and its set of potential moves, determines which of those moves help achieve
+     * the scenario's goals.
      */
-    public void getMovementGoals (
-        BangObject bangobj, Piece mover, PointSet moves, PointSet goals)
+    public void getMovementGoals (BangObject bangobj, Piece mover, PointSet moves, PointSet goals)
     {
         for (Piece piece : bangobj.pieces) {
             int radius = getGoalRadius(mover, piece);
@@ -326,29 +321,28 @@ public abstract class ScenarioInfo
             boolean fblock = piece.getFenceBlocksGoal();
             for (int dir : Piece.DIRECTIONS) {
                 int x = piece.x + Piece.DX[dir], y = piece.y + Piece.DY[dir];
-                if (moves.contains(x, y) && (!fblock ||
-                        bangobj.board.canCross(x, y, piece.x, piece.y))) {
+                if (moves.contains(x, y) &&
+                    (!fblock || bangobj.board.canCross(x, y, piece.x, piece.y))) {
                     goals.add(x, y);
                 }
             }
         }
     }
-    
+
     /**
-     * Determines whether the specified moving piece will help achieve the
-     * scenario's goals by moving onto or next to the specified target.
+     * Determines whether the specified moving piece will help achieve the scenario's goals by
+     * moving onto or next to the specified target.
      *
-     * @return -1 for no relevance, 0 if the mover scores by landing on the
-     * target, or +1 if the mover scores by landing next to the target
+     * @return -1 for no relevance, 0 if the mover scores by landing on the target, or +1 if the
+     * mover scores by landing next to the target
      */
     protected int getGoalRadius (Piece mover, Piece target)
     {
         return target.getGoalRadius(mover);
     }
-    
+
     /**
-     * Returns the path to sound clips that should be preloaded when playing
-     * this scenario.
+     * Returns the path to sound clips that should be preloaded when playing this scenario.
      */
     public String[] getPreLoadClips ()
     {
@@ -356,8 +350,7 @@ public abstract class ScenarioInfo
     }
 
     /**
-     * Returns the StatsView used by the client to display the post-game
-     * scenario stats.
+     * Returns the StatsView used by the client to display the post-game scenario stats.
      */
     public StatsView getStatsView (BasicContext ctx)
     {
@@ -384,8 +377,7 @@ public abstract class ScenarioInfo
     public int compareTo (ScenarioInfo oinfo)
     {
         int tidx = getTownIndex(), otidx = oinfo.getTownIndex();
-        return (tidx != otidx) ? tidx - otidx :
-            getIdent().compareTo(oinfo.getIdent());
+        return (tidx != otidx) ? tidx - otidx : getIdent().compareTo(oinfo.getIdent());
     }
 
     /**
@@ -396,13 +388,12 @@ public abstract class ScenarioInfo
         _scenarios.put(info.getIdent(), info);
     }
 
-    /** Used to cache our town index so we don't have to look it up all the
-     * damned time. Yay for premature optimization. */
+    /** Used to cache our town index so we don't have to look it up all the damned time. Yay for
+     * premature optimization. */
     protected transient int _townIndex = -1;
 
     /** Maps scenario ids to scenario info instances. */
-    protected static HashMap<String,ScenarioInfo> _scenarios =
-        new HashMap<String,ScenarioInfo>();
+    protected static HashMap<String,ScenarioInfo> _scenarios = new HashMap<String,ScenarioInfo>();
 
     /** The default set of clips to preload: none. */
     protected static final String[] PRELOAD_CLIPS = {};

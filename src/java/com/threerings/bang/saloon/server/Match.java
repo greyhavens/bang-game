@@ -52,8 +52,8 @@ public class Match
     }
 
     /**
-     * Configures this match with its distributed object (called by the saloon
-     * manager once the match object is created).
+     * Configures this match with its distributed object (called by the saloon manager once the
+     * match object is created).
      */
     public void setObject (MatchObject matchobj)
     {
@@ -67,10 +67,9 @@ public class Match
     }
 
     /**
-     * Checks to see if the specified player can be joined into this
-     * pending match. If so, all the necessary internal state is updated
-     * and we return true, otherwise we return false and the internal state
-     * remains unchanged.
+     * Checks to see if the specified player can be joined into this pending match. If so, all the
+     * necessary internal state is updated and we return true, otherwise we return false and the
+     * internal state remains unchanged.
      */
     public boolean join (PlayerObject player, Criterion criterion)
     {
@@ -86,17 +85,15 @@ public class Match
         
         // make sure we're not a foe of theirs and none of them one of ours
         for (int i = 0; i < players.length; i ++) {
-            if (players[i] != null &&
-                    (players[i].isFoe(player.playerId) ||
-                     player.isFoe(players[i].playerId))) {
+            if (players[i] != null && (players[i].isFoe(player.playerId) ||
+                                       player.isFoe(players[i].playerId))) {
                 return false;
             }
         }
         
-        // now make sure the joining player satisfies our rating range
-        // requirements: the joiner must fall within our desired range of
-        // the average rating and the min and max rating must fall within
-        // the joiner's criterion-specified range
+        // now make sure the joining player satisfies our rating range requirements: the joiner
+        // must fall within our desired range of the average rating and the min and max rating must
+        // fall within the joiner's criterion-specified range
 
         // TODO
 
@@ -152,8 +149,8 @@ public class Match
     /**
      * Removes the specified player from the match.
      *
-     * @return true if the player was located and removed, false if they were
-     * not participating in this match.
+     * @return true if the player was located and removed, false if they were not participating in
+     * this match.
      */
     public boolean remove (int playerOid)
     {
@@ -165,9 +162,7 @@ public class Match
                 try {
                     matchobj.startTransaction();
                     matchobj.setPlayerOidsAt(0, ii);
-
-                    // recreate the criterion now that this player is gone
-                    rebuildCriterion();
+                    rebuildCriterion(); // recreate the criterion now that this player is gone
                     matchobj.setCriterion(_criterion);
                 } finally {
                     matchobj.commitTransaction();
@@ -210,16 +205,15 @@ public class Match
     }
 
     /**
-     * Returns the duration we should wait for more opponents to arrive before
-     * we go ahead and start the game with whoever is already here.
+     * Returns the duration we should wait for more opponents to arrive before we go ahead and
+     * start the game with whoever is already here.
      */
     public long getWaitForOpponentsDelay ()
     {
-        // if there are at least two players, just wait ten seconds; otherwise
-        // wait ten seconds for every empty seat
+        // if there are at least two players, just wait ten seconds; otherwise wait ten seconds for
+        // every empty seat
         int humans = getPlayerCount();
-        return ((humans > 1) ? 1 : 
-                _criterion.getDesiredPlayers() - humans) * BASE_WAIT;
+        return ((humans > 1) ? 1 : _criterion.getDesiredPlayers() - humans) * BASE_WAIT;
     }
 
     /**
@@ -228,9 +222,9 @@ public class Match
     public BangConfig createConfig ()
     {
         BangConfig config = new BangConfig();
-        config.seats = getPlayerCount() + _criterion.getAllowedAIs();
-        config.seats = Math.min(GameCodes.MAX_PLAYERS, config.seats);
-        config.players = new Name[config.seats];
+        int pcount = Math.min(GameCodes.MAX_PLAYERS, getPlayerCount() + _criterion.getAllowedAIs());
+        config.init(pcount, TEAM_SIZES[pcount-2]);
+        config.players = new Name[pcount];
 
         // add our human players
         int idx = 0, humans = 0;
@@ -242,7 +236,7 @@ public class Match
         }
 
         // add our ais (if any)
-        config.ais = new BangAI[config.seats];
+        config.ais = new BangAI[pcount];
         HashSet<String> names = new HashSet<String>();
         for (int ii = idx; ii < config.ais.length; ii++) {
             // TODO: sort out personality and skill
@@ -262,13 +256,11 @@ public class Match
             }
         }
 
-        // configure our other bits
-        config.teamSize = TEAM_SIZES[config.seats-2];
         // only games versus at least one other human are rated
         config.rated = (humans > 1) ? _criterion.getDesiredRankedness() : false;
         config.scenarios = ScenarioInfo.selectRandomIds(
-            ServerConfig.townId, _criterion.getDesiredRounds(),
-            config.seats, lastScenIds, _criterion.allowPreviousTowns);
+            ServerConfig.townId, _criterion.getDesiredRounds(), pcount, lastScenIds,
+            _criterion.allowPreviousTowns);
 
         return config;
     }

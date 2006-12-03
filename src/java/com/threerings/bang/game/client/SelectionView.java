@@ -48,15 +48,14 @@ import com.threerings.bang.util.BangContext;
 import static com.threerings.bang.Log.log;
 
 /**
- * Displays an interface for selecting a big shot and a starting hand of
- * cards from a player's inventory.
+ * Displays an interface for selecting a big shot and a starting hand of cards from a player's
+ * inventory.
  */
 public class SelectionView extends SteelWindow
     implements ActionListener
 {
-    public SelectionView (
-        BangContext ctx, BangView view, BangConfig config,
-        BangObject bangobj, int pidx)
+    public SelectionView (BangContext ctx, BangView view, BangConfig config,
+                          BangObject bangobj, int pidx)
     {
         super(ctx, "");
 
@@ -65,7 +64,7 @@ public class SelectionView extends SteelWindow
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         _bangobj = bangobj;
         _pidx = pidx;
-        _tconfigs = new UnitConfig[bangobj.scenario.getTeamSize(config)];
+        _tconfigs = new UnitConfig[bangobj.scenario.getTeamSize(config, pidx)];
 
         BContainer header = GroupLayout.makeHBox(GroupLayout.CENTER);
         String msg = MessageBundle.compose(

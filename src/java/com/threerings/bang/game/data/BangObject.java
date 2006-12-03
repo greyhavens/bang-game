@@ -102,7 +102,7 @@ public class BangObject extends GameObject
     /** Used to keep track of where players were before the game. */
     public static class PriorLocation implements Streamable
     {
-        /** Either "saloon", "ranch", "parlor" or "tutorial". */
+        /** Either "saloon", "ranch", "parlor", "office" or "tutorial". */
         public String ident;
 
         /** If ident is "parlor" the room oid of the parlor otherwise zero. */
@@ -190,17 +190,14 @@ public class BangObject extends GameObject
     public static final String AWARDS = "awards";
     // AUTO-GENERATED: FIELDS END
 
-    /** A {@link #state} constant used by the tutorial scenario. */
-    public static final int PRE_TUTORIAL = 4;
-
     /** A {@link #state} constant indicating the pre-game selection phase. */
-    public static final int SELECT_PHASE = 5;
+    public static final int SELECT_PHASE = 4;
+
+    /** A {@link #state} constant used in tutorial, practice or bounty modes. */
+    public static final int SKIP_SELECT_PHASE = 5;
 
     /** A {@link #state} constant indicating the post-round phase. */
     public static final int POST_ROUND = 6;
-
-    /** A {@link #state} constant used by the practice scenario. */
-    public static final int PRE_PRACTICE = 7;
 
     /** A {@link #playerStatus} constant used before the game starts. */
     public static final int PLAYER_PREPARING = 2;

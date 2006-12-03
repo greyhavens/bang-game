@@ -101,30 +101,6 @@ public abstract class Scenario
     }
 
     /**
-     * Determines the next phase of the game. Normally a game transitions from
-     * {@link BangObject#SELECT_PHASE} to {@link BangObject#IN_PLAY}, but the
-     * tutorial scenario skips some of those phases.
-     */
-    public void startNextPhase (BangObject bangobj)
-    {
-        switch (bangobj.state) {
-        case BangObject.POST_ROUND:
-        case BangObject.PRE_GAME:
-            _bangmgr.startPhase(BangObject.SELECT_PHASE);
-            break;
-
-        case BangObject.SELECT_PHASE:
-            _bangmgr.startPhase(BangObject.IN_PLAY);
-            break;
-
-        default:
-            log.warning("Unable to start next phase [game=" + bangobj.which() +
-                        ", state=" + bangobj.state + "].");
-            break;
-        }
-    }
-
-    /**
      * Returns the maximum duration of this scenario in ticks.
      */
     public short getDuration (BangConfig bconfig, BangObject bangobj)

@@ -366,10 +366,9 @@ public class ParlorManager extends PlaceManager
         BangConfig config = new BangConfig();
 
         // we can use these values directly as we sanity checked them earlier
-        config.seats = _parobj.game.players + _parobj.game.tinCans;
-        config.players = new Handle[config.seats];
-        config.lastBoardIds = new int[config.seats];
-        config.teamSize = _parobj.game.teamSize;
+        config.init(_parobj.game.players + _parobj.game.tinCans, _parobj.game.teamSize);
+        config.players = new Handle[config.teams.size()];
+        config.lastBoardIds = new int[config.players.length];
         config.duration = _parobj.game.duration;
         config.speed = _parobj.game.speed;
         config.scenarios = new String[_parobj.game.rounds];
@@ -398,7 +397,7 @@ public class ParlorManager extends PlaceManager
         }
 
         // add our ais (if any)
-        config.ais = new BangAI[config.seats];
+        config.ais = new BangAI[config.players.length];
         HashSet<String> names = new HashSet<String>();
         for (int ii = _parobj.playerOids.length; ii < config.ais.length; ii++) {
             // TODO: sort out personality and skill

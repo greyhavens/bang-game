@@ -135,16 +135,22 @@ public class BangView extends BWindow
 
         case BangObject.IN_PLAY:
             log.info("Starting In Play Phase");
-            if (config.practice) {
+            switch (config.type) {
+            case PRACTICE:
                 showPractice();
                 if (_bangobj.isActivePlayer(pidx)) {
                     showUnitStatus();
                 }
-            } else if (!config.tutorial) {
+                break;
+            case TUTORIAL:
+                // show nothing
+                break;
+            default:
                 showRoundTimer();
                 if (_bangobj.isActivePlayer(pidx)) {
                     showUnitStatus();
                 }
+                break;
             }
             clearOverlay();
             view.startRound();
@@ -322,10 +328,10 @@ public class BangView extends BWindow
     {
         super.wasAdded();
 
-        // go ahead and add the chat view now, other views will be added after
-        // we do the board tour and unit selection
+        // go ahead and add the chat view now, other views will be added after we do the board tour
+        // and unit selection
         BangConfig config = (BangConfig)_ctrl.getPlaceConfig();
-        if (!config.tutorial) {
+        if (config.type != BangConfig.Type.TUTORIAL) {
             showChat();
         }
 

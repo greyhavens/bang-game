@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import com.threerings.io.SimpleStreamableObject;
 
+import com.threerings.bang.game.data.BangConfig;
+
 /**
  * Describes the configuration of a particular bounty.
  */
@@ -22,7 +24,7 @@ public class BountyConfig extends SimpleStreamableObject
     public int coinCost;
 
     /** The configuration of the individual bounty games. */
-    public ArrayList<BountyGameConfig> games = new ArrayList<BountyGameConfig>();
+    public ArrayList<BangConfig> games = new ArrayList<BangConfig>();
 
     /** Whether or not the bounty games must be played in order. */
     public boolean inOrder;

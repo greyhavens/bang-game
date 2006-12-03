@@ -4,16 +4,22 @@
 package com.threerings.bang.bounty.client;
 
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 
-import com.threerings.bang.bounty.data.BountyGameConfig;
+import com.threerings.bang.game.data.BangConfig;
 
 /**
  * Defines the client side of the Sheriff's Office services.
  */
-public interface OfficeService
+public interface OfficeService extends InvocationService
 {
     /**
-     * A service used by developers when creating and testing bounty games.
+     * Requests to play the specified bounty game.
      */
-    public void testBountyGame (Client client, BountyGameConfig config);
+    public void playBountyGame (Client client, String ident, InvocationListener listener);
+
+    /**
+     * Requests to test the sepecified bounty game configuration. Only available to admins.
+     */
+    public void testBountyGame (Client client, BangConfig config, InvocationListener listener);
 }

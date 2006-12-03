@@ -260,14 +260,14 @@ public class PlayerManager
                 player.who() + ", key=" + key + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
+
         // make sure the response is valid
         if (resp >= notification.getResponses().length) {
             log.warning("Received invalid response for notification [who=" + player.who() +
                 ", notification=" + notification + ", response=" + resp + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
+
         // transfer control to the handler, removing the notification on success
         notification.handler.handleResponse(resp, new PlayerService.ConfirmListener() {
             public void requestProcessed () {
@@ -279,7 +279,7 @@ public class PlayerManager
             }
         });
     }
-    
+
     // documentation inherited from interface PlayerProvider
     public void removePardner (ClientObject caller, final Handle pardner,
         final PlayerService.ConfirmListener listener)
@@ -343,32 +343,28 @@ public class PlayerManager
         config.players = new Name[2];
         config.ais = new BangAI[2];
 
-        // if this is a "practice versus the computer" tutorial, start up a
-        // special two player game in lieu of a proper tutorial
+        // if this is a "practice versus the computer" tutorial, start up a special two player game
+        // in lieu of a proper tutorial
         if (tutId.startsWith(TutorialCodes.PRACTICE_PREFIX)) {
-            String scenId =
-                tutId.substring(TutorialCodes.PRACTICE_PREFIX.length());
+            String scenId = tutId.substring(TutorialCodes.PRACTICE_PREFIX.length());
+            config.init(2, 2);
             config.scenarios = new String[] { scenId };
-            config.teamSize = 2;
             config.duration = BangConfig.Duration.PRACTICE;
 
         } else {
             // otherwise load up the tutorial configuration and use that to
             // configure the tutorial game
-            TutorialConfig tconfig =
-                TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutId);
+            TutorialConfig tconfig = TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutId);
             config.scenarios = new String[] { tconfig.ident };
-            config.tutorial = true;
+            config.type = BangConfig.Type.TUTORIAL;
             config.board = tconfig.board;
         }
 
-        playComputer(player, config, false,
-            new BangObject.PriorLocation("tutorial", 0));
+        playComputer(player, config, false, new BangObject.PriorLocation("tutorial", 0));
     }
 
     // documentation inherited from interface PlayerProvider
-    public void playPractice (
-        ClientObject caller, String unit, PlayerService.InvocationListener il)
+    public void playPractice (ClientObject caller, String unit, PlayerService.InvocationListener il)
         throws InvocationException
     {
         PlayerObject player = (PlayerObject)caller;
@@ -381,21 +377,19 @@ public class PlayerManager
         // create a game configuration
         BangConfig config = new BangConfig();
         config.rated = false;
+        config.type = BangConfig.Type.PRACTICE;
         config.players = new Name[2];
         config.ais = new BangAI[2];
+        config.init(2, 2);
         config.scenarios = new String[] { unit };
         config.board = PracticeInfo.getBoardName(ServerConfig.townId);
-        config.practice = true;
-        config.teamSize = 2;
-        playComputer(player, config, false,
-            new BangObject.PriorLocation("ranch",
-                BangServer.ranchmgr.getPlaceObject().getOid()));
+        playComputer(player, config, false, new BangObject.PriorLocation(
+                         "ranch", BangServer.ranchmgr.getPlaceObject().getOid()));
     }
 
     // documentation inherited from interface PlayerProvider
-    public void playComputer (
-        ClientObject caller, int players, String[] scenarios, String board,
-        boolean autoplay, PlayerService.InvocationListener listener)
+    public void playComputer (ClientObject caller, int players, String[] scenarios, String board,
+                              boolean autoplay, PlayerService.InvocationListener listener)
         throws InvocationException
     {
         PlayerObject player = (PlayerObject)caller;
@@ -430,17 +424,15 @@ public class PlayerManager
         }
 
         playComputer(player, players, scenarios, board, autoplay,
-                     new BangObject.PriorLocation("saloon",
-                         BangServer.saloonmgr.getPlaceObject().getOid()));
+                     new BangObject.PriorLocation(
+                         "saloon", BangServer.saloonmgr.getPlaceObject().getOid()));
     }
 
     /**
-     * Helper function for playing games. Assumes all parameters have been
-     * checked for validity.
+     * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
-    protected void playComputer (
-        PlayerObject player, int players, String[] scenarios, String board,
-        boolean autoplay, BangObject.PriorLocation priorLocation)
+    protected void playComputer (PlayerObject player, int players, String[] scenarios, String board,
+                                 boolean autoplay, BangObject.PriorLocation priorLocation)
         throws InvocationException
     {
         // create a game configuration from that
@@ -448,19 +440,17 @@ public class PlayerManager
         config.rated = false;
         config.players = new Name[players];
         config.ais = new BangAI[players];
-        config.teamSize = Match.TEAM_SIZES[players-2];
+        config.init(players, Match.TEAM_SIZES[players-2]);
         config.scenarios = scenarios;
         config.board = board;
         playComputer(player, config, autoplay, priorLocation);
     }
 
     /**
-     * Helper function for playing games. Assumes all parameters have been
-     * checked for validity.
+     * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
-    protected void playComputer (
-        PlayerObject player, BangConfig config, boolean autoplay,
-        BangObject.PriorLocation priorLocation)
+    protected void playComputer (PlayerObject player, BangConfig config, boolean autoplay,
+                                 BangObject.PriorLocation priorLocation)
         throws InvocationException
     {
         HashSet<String> names = new HashSet<String>();
@@ -498,9 +488,8 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
-    public void getPosterInfo (
-        ClientObject caller, final Handle handle,
-        final PlayerService.ResultListener listener)
+    public void getPosterInfo (ClientObject caller, final Handle handle,
+                               final PlayerService.ResultListener listener)
         throws InvocationException
     {
         // first, see if we need to refresh ranks from repository
@@ -544,8 +533,7 @@ public class PlayerManager
                 // first map handle to player id
                 PlayerRecord player = _playrepo.loadByHandle(handle);
                 if (player == null) {
-                    throw new PersistenceException(
-                        "Unknown player [handle=" + handle + "]");
+                    throw new PersistenceException("Unknown player [handle=" + handle + "]");
                 }
 
                 // then fetch the poster record
@@ -553,8 +541,7 @@ public class PlayerManager
                 if (poster != null) {
                     info.statement = poster.statement;
                     info.badgeIds = new int[] {
-                        poster.badge1, poster.badge2,
-                        poster.badge3, poster.badge4,
+                        poster.badge1, poster.badge2, poster.badge3, poster.badge4,
                     };
 
                 } else {
@@ -565,29 +552,25 @@ public class PlayerManager
                 // for offline players, get look snapshot from repository
                 if (posterPlayer == null) {
                     info.avatar = _lookrepo.loadSnapshot(player.playerId);
-                    info.rankings = buildRankings(
-                        _raterepo.loadRatings(player.playerId));
+                    info.rankings = buildRankings(_raterepo.loadRatings(player.playerId));
                 }
             }
 
             public void handleSuccess() {
-                // cache the result
+                // cache the result and return it
                 _posterCache.put(handle, new SoftReference<PosterInfo>(info));
-                // and return it
                 listener.requestProcessed(info);
             }
 
             public String getFailureMessage() {
-                return "Failed to build wanted poster data [handle=" + handle
-                    + "]";
+                return "Failed to build wanted poster data [handle=" + handle + "]";
             }
         });
     }
 
     // from interface PlayerProvider
-    public void updatePosterInfo (
-        ClientObject caller, int playerId, String statement, int[] badgeIds,
-        final PlayerService.ConfirmListener cl)
+    public void updatePosterInfo (ClientObject caller, int playerId, String statement,
+                                  int[] badgeIds, final PlayerService.ConfirmListener cl)
         throws InvocationException
     {
         final PlayerObject user = (PlayerObject)caller;
@@ -610,8 +593,7 @@ public class PlayerManager
                 cl.requestProcessed();
             }
             public String getFailureMessage() {
-                return "Failed to store wanted poster record [poster = "
-                    + poster + "]";
+                return "Failed to store wanted poster record [poster = " + poster + "]";
             }
         });
     }
@@ -630,22 +612,18 @@ public class PlayerManager
         if (note == PlayerService.FOLK_IS_FRIEND && ixFriend < 0) {
             opinion = FolkRecord.FRIEND;
             nfriends = ArrayUtil.insert(user.friends, folkId, -1*(1+ixFriend));
-            nfoes = (ixFoe >= 0) ?
-                ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
+            nfoes = (ixFoe >= 0) ? ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
 
         } else if (note == PlayerService.FOLK_IS_FOE && ixFoe < 0) {
             opinion = FolkRecord.FOE;
-            nfriends = (ixFriend >= 0) ?
-                ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
+            nfriends = (ixFriend >= 0) ? ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
             nfoes = ArrayUtil.insert(user.foes, folkId, -1*(1+ixFoe));
 
         } else if (note == PlayerService.FOLK_NEUTRAL &&
             (ixFoe >= 0 || ixFriend >= 0)) {
             opinion = FolkRecord.NO_OPINION;
-            nfriends = (ixFriend >= 0) ?
-                ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
-            nfoes = (ixFoe >= 0) ?
-                    ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
+            nfriends = (ixFriend >= 0) ? ArrayUtil.splice(user.friends, ixFriend, 1) : user.friends;
+            nfoes = (ixFoe >= 0) ? ArrayUtil.splice(user.foes, ixFoe, 1) : user.foes;
 
         } else {
             cl.requestProcessed(); // NOOP!
@@ -667,17 +645,15 @@ public class PlayerManager
                 ((PlayerService.ConfirmListener)_listener).requestProcessed();
             }
             public String getFailureMessage() {
-                return "Failed to register opinion [who=" + user.who() +
-                    ", folk=" + folkId + "]";
+                return "Failed to register opinion [who=" + user.who() + ", folk=" + folkId + "]";
             }
         });
     }
 
     /**
-     * If it's been more than a certain amount of time since the last time
-     * we refresh the rank levels from the database, go out and fetch them
-     * as soon as possible. As this is an asynchronous operation, we can't
-     * easily sneak one in before the poster request.
+     * If it's been more than a certain amount of time since the last time we refresh the rank
+     * levels from the database, go out and fetch them as soon as possible. As this is an
+     * asynchronous operation, we can't easily sneak one in before the poster request.
      */
     protected void maybeScheduleRankReload ()
     {
@@ -689,16 +665,14 @@ public class PlayerManager
 
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke()  {
-                Map<String, RankLevels> newMap =
-                    new HashMap<String, RankLevels>();
+                Map<String, RankLevels> newMap = new HashMap<String, RankLevels>();
                 try {
                     for (RankLevels levels : _raterepo.loadRanks()) {
                         newMap.put(levels.scenario, levels);
                     }
                     _rankLevels = newMap;
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING,
-                        "Failure while reloading rank data", pe);
+                    log.log(Level.WARNING, "Failure while reloading rank data", pe);
                 }
                 return false;
             }
@@ -706,28 +680,25 @@ public class PlayerManager
     }
 
     /**
-     * Converts a players {@link Rating}s records into ranking levels for
-     * inclusion in their poster info.
+     * Converts a players {@link Rating}s records into ranking levels for inclusion in their poster
+     * info.
      */
     protected StreamableHashMap<String, Integer> buildRankings (
         Iterable<Rating> ratings)
     {
-        StreamableHashMap<String, Integer> map =
-            new StreamableHashMap<String,Integer>();
+        StreamableHashMap<String, Integer> map = new StreamableHashMap<String,Integer>();
         for (Rating rating : ratings) {
             RankLevels levels = _rankLevels.get(rating.scenario);
-            map.put(rating.scenario,
-                (levels == null) ? 0 : levels.getRank(rating.rating));
+            map.put(rating.scenario, (levels == null) ? 0 : levels.getRank(rating.rating));
         }
         return map;
     }
 
     /**
-     * Creates (if the pardner is offline) or retrieves (if the pardner is
-     * online) the up-to-date {@link PardnerEntry} for the named pardner.
-     * If the pardner is online and no {@link PardnerEntryUpdater} exists
-     * for the pardner, one will be created, mapped, and used to keep the
-     * {@link PardnerEntry} up-to-date.
+     * Creates (if the pardner is offline) or retrieves (if the pardner is online) the up-to-date
+     * {@link PardnerEntry} for the named pardner.  If the pardner is online and no {@link
+     * PardnerEntryUpdater} exists for the pardner, one will be created, mapped, and used to keep
+     * the {@link PardnerEntry} up-to-date.
      */
     protected PardnerEntry getPardnerEntry (Handle handle, Date lastSession)
     {
@@ -749,8 +720,8 @@ public class PlayerManager
     protected void sendPardnerInvite (
         final PlayerObject user, final Handle inviter, String message, final Date lastSession)
     {
-        user.addToNotifications(new PardnerInvite(inviter, message,
-            new PardnerInvite.ResponseHandler() {
+        user.addToNotifications(
+            new PardnerInvite(inviter, message, new PardnerInvite.ResponseHandler() {
             public void handleResponse (int resp, InvocationService.ConfirmListener listener) {
                 handleInviteResponse(
                     user, inviter, lastSession, (resp == PardnerInvite.ACCEPT), listener);
@@ -791,10 +762,10 @@ public class PlayerManager
             protected String _error;
         });
     }
-    
+
     /**
-     * Handles the omgr portion of the invite processing, once the persistent
-     * part has successfully completed.
+     * Handles the omgr portion of the invite processing, once the persistent part has successfully
+     * completed.
      */
     protected void handleInviteSuccess (
         PlayerObject user, Handle inviter, Date lastSession, boolean accept,
@@ -809,12 +780,10 @@ public class PlayerManager
                     clearPardnerInvites(invobj);
                 }
             }
-            SpeakProvider.sendInfo(invobj, BANG_MSGS,
-                MessageBundle.tcompose(
-                    accept ? "m.pardner_accepted" : "m.pardner_rejected",
-                    user.handle));
+            String msg = accept ? "m.pardner_accepted" : "m.pardner_rejected";
+            SpeakProvider.sendInfo(invobj, BANG_MSGS, MessageBundle.tcompose(msg, user.handle));
         }
-        
+
         // update the invitee
         if (user.isActive()) {
             if (accept) {
@@ -826,11 +795,10 @@ public class PlayerManager
             listener.requestProcessed();
         }
     }
-    
+
     /**
-     * Clears out all of the player's pardner invites.  Ideally, this would also
-     * clear out any pardner invites that the player had sent, but that would be
-     * much more difficult.
+     * Clears out all of the player's pardner invites.  Ideally, this would also clear out any
+     * pardner invites that the player had sent, but that would be much more difficult.
      */
     protected void clearPardnerInvites (PlayerObject player)
     {
@@ -849,7 +817,7 @@ public class PlayerManager
             player.commitTransaction();
         }
     }
-    
+
     /** The number of milliseconds after which we reload rank levels from DB */
     protected static final long RANK_RELOAD_TIMEOUT = (3600 * 1000);
 
@@ -878,8 +846,7 @@ public class PlayerManager
         new HashMap<Handle, SoftReference<PosterInfo>>();
 
     /** A map of scenario ID's to rank levels, reloaded every so often */
-    protected Map<String, RankLevels> _rankLevels =
-        new HashMap<String, RankLevels>();
+    protected Map<String, RankLevels> _rankLevels = new HashMap<String, RankLevels>();
 
     /** When we should next reload our rank levels */
     protected long _nextRankReload;

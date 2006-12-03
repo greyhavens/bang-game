@@ -17,13 +17,16 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.client.util.StateSaver;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
-import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
+
+import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 import com.threerings.bang.bounty.data.BoardInfo;
 import com.threerings.bang.bounty.data.OfficeCodes;
@@ -100,13 +103,13 @@ public class BountyGameEditor extends BDecoratedWindow
         for (int ii = 0; ii < _punits.length; ii++) {
             _punits[ii].setItems(ii == 0 ? _bsunits : _units);
             _punits[ii].selectItem(0);
-            new StateSaver("bounty.punits" + ii, _opponents);
+            new StateSaver("bounty.punits" + ii, _punits[ii]);
         }
         for (int oo = 0; oo < _oppunits.length; oo++) {
             for (int ii = 0; ii < _oppunits[oo].length; ii++) {
                 _oppunits[oo][ii].setItems(ii == 0 ? _bsunits : _units);
                 _oppunits[oo][ii].selectItem(0);
-                new StateSaver("bounty.oppunits" + oo + "." + ii, _opponents);
+                new StateSaver("bounty.oppunits" + oo + "." + ii, _oppunits[oo][ii]);
             }
         }
 
@@ -120,7 +123,10 @@ public class BountyGameEditor extends BDecoratedWindow
     public void actionPerformed (ActionEvent event)
     {
         if ("run_game".equals(event.getAction())) {
-            // TODO
+            _offobj.service.testBountyGame(_ctx.getClient(), createConfig(),
+                                           new ReportingListener(_ctx, OfficeCodes.OFFICE_MSGS,
+                                                                 "m.test_bounty_game_failed"));
+            _ctx.getBangClient().clearPopup(this, true);
 
         } else if ("dismiss".equals(event.getAction())) {
             _ctx.getBangClient().clearPopup(this, true);
@@ -142,8 +148,8 @@ public class BountyGameEditor extends BDecoratedWindow
     protected void refigure ()
     {
         Integer pcount = (Integer)_opponents.getSelectedItem();
-        BComboBox.Item scitem = (BComboBox.Item)_scenario.getSelectedItem();
-        if (pcount == null || scitem == null) {
+        String scenario = (String)_scenario.getSelectedValue();
+        if (pcount == null || scenario == null) {
             return;
         }
         int players = pcount + 1;
@@ -152,7 +158,7 @@ public class BountyGameEditor extends BDecoratedWindow
         BoardInfo oinfo = (BoardInfo)_board.getSelectedItem();
         _board.clearItems();
         for (BoardInfo info : _offobj.boards) {
-            if (info.matches(players, (String)scitem.value)) {
+            if (info.matches(players, scenario)) {
                 _board.addItem(info);
                 if (oinfo != null && info.name.equals(oinfo.name)) {
                     _board.selectItem(_board.getItemCount()-1);
@@ -169,6 +175,40 @@ public class BountyGameEditor extends BDecoratedWindow
                 _oppunits[oo][ii].setEnabled(pcount > oo);
             }
         }
+    }
+
+    protected BangConfig createConfig ()
+    {
+        BangConfig config = new BangConfig();
+        config.scenarios = new String[] { (String)_scenario.getSelectedValue() };
+        config.board = ((BoardInfo)_board.getSelectedItem()).name;
+
+        BangConfig.Player player = new BangConfig.Player();
+        player.bigShot = (String)_punits[0].getSelectedValue();
+        player.team = getTeam(_punits);
+        config.teams.add(player);
+
+        for (int ii = 0, ll = (Integer)_opponents.getSelectedItem(); ii < ll; ii++) {
+            BangConfig.Player opponent = new BangConfig.Player();
+            opponent.bigShot = (String)_oppunits[ii][0].getSelectedValue();
+            opponent.team = getTeam(_oppunits[ii]);
+            config.teams.add(opponent);
+        }
+
+        // TODO: criterion
+        return config;
+    }
+
+    protected String[] getTeam (BComboBox[] units)
+    {
+        ArrayList<String> team = new ArrayList<String>();
+        for (int ii = 1; ii < units.length; ii++) {
+            String unit = (String)units[ii].getSelectedValue();
+            if (unit != null) {
+                team.add(unit);
+            }
+        }
+        return team.toArray(new String[team.size()]);
     }
 
     protected ActionListener _refigger = new ActionListener() {

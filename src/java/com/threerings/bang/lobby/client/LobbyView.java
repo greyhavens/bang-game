@@ -106,10 +106,9 @@ public class LobbyView extends BWindow
         blist.add(_tsize);
 
         // configure the controls with the defaults
-        BangConfig defconf = new BangConfig();
-        _seats.selectItem(Integer.valueOf(defconf.seats));
+        _seats.selectItem(Integer.valueOf(2));
         _rounds.selectItem(Integer.valueOf(3));
-        _tsize.selectItem(Integer.valueOf(defconf.teamSize));
+        _tsize.selectItem(DEFAULT_TEAM_SIZE_INDEX);
         _scenarios.selectItem(0);
 
         _create = new BButton(msgs.get("m.create"), "create");
@@ -255,7 +254,7 @@ public class LobbyView extends BWindow
             config.ais = new GameAI[1];
             config.ais[0] = new GameAI(0, 50);
         }
-        config.seats = tconfig.desiredPlayerCount;
+        config.init(tconfig.desiredPlayerCount, (Integer)_tsize.getSelectedItem());
         config.scenarios = new String[(Integer)_rounds.getSelectedItem()];
         String id = ((ScenarioLabel)_scenarios.getSelectedItem()).id;
         for (int ii = 0; ii < config.scenarios.length; ii++) {
@@ -265,7 +264,6 @@ public class LobbyView extends BWindow
                 config.scenarios[ii] = id;
             }
         }
-        config.teamSize = (Integer)_tsize.getSelectedItem();
 
         // if they specified the name of a board file, try using that
         String bname = _board.getText();

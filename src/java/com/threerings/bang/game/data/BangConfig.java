@@ -3,9 +3,12 @@
 
 package com.threerings.bang.game.data;
 
+import java.util.ArrayList;
+
 import com.samskivert.util.ListUtil;
 
 import com.threerings.crowd.client.PlaceController;
+import com.threerings.io.SimpleStreamableObject;
 import com.threerings.parlor.game.client.GameConfigurator;
 import com.threerings.parlor.game.data.GameConfig;
 
@@ -16,6 +19,21 @@ import com.threerings.bang.game.client.BangController;
  */
 public class BangConfig extends GameConfig
 {
+    /** Represents a particular player's team configuration. */
+    public static class Player extends SimpleStreamableObject
+    {
+        /** The Big Shot unit to be used by this player (or null if they won't use one). */
+        public String bigShot;
+
+        /** The units be used by this player. */
+        public String[] team;
+    }
+
+    /** Indicates the type of game being played. */
+    public static enum Type {
+        TUTORIAL, PRACTICE, SALOON, BOUNTY
+    };
+
     /** Used to adjust the duration of the rounds. */
     public static enum Duration {
         /** Used for practice tutorials. Super ultra short. */
@@ -63,12 +81,8 @@ public class BangConfig extends GameConfig
         protected float _adjustment;
     };
 
-    /** The number of people playing the game. */
-    public int seats = 2;
-
-    /** The base size of each player's team (not including their Big Shot; may
-     * be modified by scenario). */
-    public int teamSize = 4;
+    /** The configuration of each player's team in the game. */
+    public ArrayList<Player> teams = new ArrayList<Player>();
 
     /** Whether or not to play a quick, normal or long game. */
     public Duration duration = Duration.NORMAL;
@@ -79,16 +93,10 @@ public class BangConfig extends GameConfig
     /** The desired scenarios for each round (implies the number of rounds). */
     public String[] scenarios;
 
-    /** If true, the scenario will be interpreted as a tutorial identifier and
-     * a tutorial game will be created. */
-    public boolean tutorial = false;
+    /** The type of game being played. */
+    public Type type = Type.SALOON;
 
-    /** If true, the scenario will be interpreted as a practice sessions and
-     * a practice game will be created. */
-    public boolean practice = false;
-
-    /** Specifies the exact name of the board to be used instead of choosing
-     * randomly. This is used when testing. */
+    /** Specifies the exact name of the board to be used instead of choosing randomly. */
     public String board;
 
     /** Used when testing with a specific board. */
@@ -96,6 +104,32 @@ public class BangConfig extends GameConfig
 
     /** The previously played boards for each player. */
     public int[] lastBoardIds = new int[0];
+
+    /** Any additional criterion to be met in addition to winning the game (currently used only for
+     * bounty games). */
+    public ArrayList<Criterion> criterion = new ArrayList<Criterion>();
+
+    /**
+     * Used to configure a number of blank seats with the specified team size for non-preconfigured
+     * games.
+     */
+    public void init (int players, int teamSize)
+    {
+        teams.clear();
+        for (int ii = 0; ii < players; ii++) {
+            Player player = new Player();
+            player.team = new String[teamSize];
+            teams.add(player);
+        }
+    }
+
+    /**
+     * Returns the team size for the specified player.
+     */
+    public int getTeamSize (int pidx)
+    {
+        return teams.get(pidx).team.length;
+    }
 
     /** Returns the desired number of rounds. */
     public int getRounds ()
@@ -108,7 +142,7 @@ public class BangConfig extends GameConfig
     {
         return (ais != null && ListUtil.indexOfNull(ais) == -1);
     }
-    
+
     /** Helper for {@link #toString}. */
     public String bdataToString ()
     {
