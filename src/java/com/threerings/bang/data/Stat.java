@@ -62,37 +62,38 @@ public abstract class Stat
 
         CATTLE_RUSTLED(new IntStat(), true),
         BRAND_POINTS(new IntStat(), true),
-        
+
         NUGGETS_CLAIMED(new IntStat(), true),
-        
+
         STEADS_CLAIMED(new IntStat(), true),
         STEADS_DESTROYED(new IntStat(), true),
         STEAD_POINTS(new IntStat(), true),
-        
+
         TOTEMS_SMALL(new IntStat(), true),
         TOTEMS_MEDIUM(new IntStat(), true),
         TOTEMS_LARGE(new IntStat(), true),
         TOTEMS_CROWN(new IntStat(), true),
         TOTEM_POINTS(new IntStat(), true),
-        
+
         WENDIGO_SURVIVALS(new IntStat(), true),
         TALISMAN_POINTS(new IntStat(), true),
         TALISMAN_SPOT_SURVIVALS(new IntStat(), true),
         WHOLE_TEAM_SURVIVALS(new IntStat(), true),
-        
+
         TREES_SAPLING(new IntStat(), true),
         TREES_MATURE(new IntStat(), true),
         TREES_ELDER(new IntStat(), true),
         TREE_POINTS(new IntStat(), true),
+        WAVE_SCORES(new IntArrayStat(), false),
         WAVE_POINTS(new IntStat(), true),
         HARD_ROBOT_KILLS(new IntStat(), true),
-        
+
         // stats derived from in-game statistics
         HIGHEST_POINTS(new IntStat(), false),
         MOST_KILLS(new IntStat(), false),
         PERFECT_WAVES(new IntStat(), true),
         HIGHEST_SAWS(new IntStat(), false),
-        
+
         // stats accumulated outside a game
         CHAT_SENT(new IntStat(), false),
         CHAT_RECEIVED(new IntStat(), false),

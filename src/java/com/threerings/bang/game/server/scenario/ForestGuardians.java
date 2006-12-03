@@ -193,6 +193,14 @@ public class ForestGuardians extends Scenario
             }
         }
 
+// TODO: do we want to report a performance for the last wave? even if they grew no trees?
+
+//         int perf = (total > 0 ? RobotWaveEffect.getPerformance(living, total) :
+//                     RobotWaveEffect.MAX_PERFORMANCE);
+//         for (StatSet stats : bangobj.stats) {
+//             stats.appendStat(Stat.Type.WAVE_SCORES, perf);
+//         }
+
         _payouts = new int[bangobj.players.length];
         Arrays.fill(_payouts, 
                 (maxPoints > 0 ? 60 + (95 - 60) * treePoints / maxPoints : 0));
@@ -284,6 +292,7 @@ public class ForestGuardians extends Scenario
             ForestGuardiansInfo.GROWTH_POINTS[TreeBed.FULLY_GROWN - 1] * grown);
         for (int ii = 0; ii < bangobj.stats.length; ii++) {
             bangobj.stats[ii].incrementStat(Stat.Type.TREES_ELDER, grown);
+            bangobj.stats[ii].appendStat(Stat.Type.WAVE_SCORES, perf);
             if (perf == RobotWaveEffect.MAX_PERFORMANCE) {
                 bangobj.stats[ii].incrementStat(Stat.Type.PERFECT_WAVES, 1);
             }
