@@ -38,46 +38,35 @@ public class StatsDisplay extends BDecoratedWindow
         int pidx, String title)
     {
         super(ctx.getStyleSheet(), null);
+        setLayoutManager(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
+                                              GroupLayout.STRETCH));
 
         _ctx = ctx;
         _ctrl = ctrl;
 
-        MessageBundle msgs = ctx.getMessageManager().getBundle(
-            GameCodes.GAME_MSGS);
-
-        setLayoutManager(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                              GroupLayout.STRETCH));
-
+        MessageBundle msgs = ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         add(new BLabel(title, "dialog_title"));
         add(new Spacer(10, 20));
 
-        BContainer bits = new BContainer(
-            new TableLayout(bangobj.players.length + 1, 5, 25));
+        BContainer bits = new BContainer(new TableLayout(bangobj.players.length + 1, 5, 25));
         bits.add(new BLabel(""));
         for (int pp = 0; pp < bangobj.players.length; pp++) {
-            bits.add(
-                new BLabel(bangobj.players[pp].toString(), "stats_header"));
+            bits.add(new BLabel(bangobj.players[pp].toString(), "stats_header"));
         }
 
         // enumerate all the stat types accumulated during the game
         HashSet<Stat.Type> types = new HashSet<Stat.Type>();
         for (int ii = 0; ii < bangobj.stats.length; ii++) {
-            for (Iterator iter = bangobj.stats[ii].iterator();
-                 iter.hasNext(); ) {
+            for (Iterator iter = bangobj.stats[ii].iterator(); iter.hasNext(); ) {
                 types.add(((Stat)iter.next()).getType());
             }
         }
 
-        // TODO: define some sort of "section" for different stats;
-        // display them according to section; perhaps sort them within
-        // each section
-
         for (Stat.Type type : types) {
-            bits.add(new BLabel(_ctx.xlate(BangCodes.STATS_MSGS, type.key())));
+            bits.add(new BLabel(_ctx.xlate(BangCodes.STATS_MSGS, type.key()) + ":"));
             for (int pp = 0; pp < bangobj.stats.length; pp++) {
                 Stat pstat = bangobj.stats[pp].get(type.name());
-                bits.add(new BLabel(pstat == null ? "" :
-                                    pstat.valueToString(), "right_label"));
+                bits.add(new BLabel(pstat == null ? "" : pstat.valueToString(), "right_label"));
             }
         }
         add(bits);
@@ -86,8 +75,7 @@ public class StatsDisplay extends BDecoratedWindow
         if (bangobj.awards != null && pidx >= 0) {
             add(new Spacer(10, 20));
             BContainer awards = new BContainer(
-                GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                     GroupLayout.STRETCH));
+                GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH));
 
             BContainer hbox = GroupLayout.makeHBox(GroupLayout.LEFT);
             hbox.add(new BLabel(msgs.get("m.stats_cash"), "stats_info"));
@@ -99,8 +87,7 @@ public class StatsDisplay extends BDecoratedWindow
             awards.add(hbox);
 
             if (bangobj.awards[pidx].badge != null) {
-                awards.add(
-                    new BLabel(msgs.get("m.stats_badges"), "stats_info"));
+                awards.add(new BLabel(msgs.get("m.stats_badges"), "stats_info"));
                 hbox = GroupLayout.makeHBox(GroupLayout.LEFT);
                 hbox.add(new ItemIcon(_ctx, bangobj.awards[pidx].badge));
                 awards.add(hbox);

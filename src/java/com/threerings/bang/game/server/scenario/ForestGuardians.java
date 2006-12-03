@@ -193,12 +193,6 @@ public class ForestGuardians extends Scenario
             }
         }
 
-        int perf = (total > 0 ? RobotWaveEffect.getPerformance(living, total) :
-                    RobotWaveEffect.MAX_PERFORMANCE);
-        for (StatSet stats : bangobj.stats) {
-            stats.appendStat(Stat.Type.WAVE_SCORES, perf);
-        }
-
         _payouts = new int[bangobj.players.length];
         Arrays.fill(_payouts, 
                 (maxPoints > 0 ? 60 + (95 - 60) * treePoints / maxPoints : 0));
@@ -226,24 +220,13 @@ public class ForestGuardians extends Scenario
         // record the number of trees they grew
         for (int ii = 0; ii < ForestGuardiansInfo.GROWTH_STATS.length; ii++) {
             Stat.Type stat = ForestGuardiansInfo.GROWTH_STATS[ii];
-            int grown = bangobj.stats[pidx].getIntStat(stat);
-            if (grown > 0) {
-                user.stats.incrementStat(stat, grown);
-            }
+            user.stats.incrementStat(stat, bangobj.stats[pidx].getIntStat(stat));
         }
 
-        // and the number of super robots killed
-        int kills = bangobj.stats[pidx].getIntStat(Stat.Type.HARD_ROBOT_KILLS);
-        if (kills > 0) {
-            user.stats.incrementStat(Stat.Type.HARD_ROBOT_KILLS, kills);
-        }
-
-        // and the number of perfect waves
-        int waves = count(
-            bangobj.stats[pidx].getIntArrayStat(Stat.Type.WAVE_SCORES),
-            RobotWaveEffect.MAX_PERFORMANCE);
-        if (waves > 0) {
-            user.stats.incrementStat(Stat.Type.PERFECT_WAVES, waves);
+        // record other accumulating stats
+        for (int ii = 0; ii < ACCUM_STATS.length; ii++) {
+            user.stats.incrementStat(
+                ACCUM_STATS[ii], bangobj.stats[pidx].getIntStat(ACCUM_STATS[ii]));
         }
 
         // and the highest difficulty level reached
@@ -301,7 +284,9 @@ public class ForestGuardians extends Scenario
             ForestGuardiansInfo.GROWTH_POINTS[TreeBed.FULLY_GROWN - 1] * grown);
         for (int ii = 0; ii < bangobj.stats.length; ii++) {
             bangobj.stats[ii].incrementStat(Stat.Type.TREES_ELDER, grown);
-            bangobj.stats[ii].appendStat(Stat.Type.WAVE_SCORES, perf);
+            if (perf == RobotWaveEffect.MAX_PERFORMANCE) {
+                bangobj.stats[ii].incrementStat(Stat.Type.PERFECT_WAVES, 1);
+            }
             bangobj.stats[ii].incrementStat(Stat.Type.WAVE_POINTS, points);
             bangobj.grantPoints(ii, points);
         }
@@ -399,4 +384,7 @@ public class ForestGuardians extends Scenario
     /** Payout adjustments for rankings in 2/3/4 player games. */
     protected static final int[][] PAYOUT_ADJUSTMENTS = {
         { -10, +10 }, { -10, 0, +10 }, { -10, -5, +5, +10 } };
+
+    protected static final Stat.Type[] ACCUM_STATS = {
+        Stat.Type.HARD_ROBOT_KILLS, Stat.Type.PERFECT_WAVES };
 }

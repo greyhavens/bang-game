@@ -69,6 +69,7 @@ import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.data.Criterion;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
@@ -82,8 +83,8 @@ import com.threerings.bang.game.data.effect.PlayCardEffect;
 import com.threerings.bang.game.data.effect.ProximityShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.effect.TeleportEffect;
-import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.BigPiece;
+import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Marker;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Prop;
@@ -1679,15 +1680,30 @@ public class BangManager extends GameManager
         // do the normal round ending stuff as well
         roundDidEnd(false);
 
-        // if this was a tutorial practice session, and we played at least half of it, mark the
-        // practice tutorial as completed
-        if (_bangobj.priorLocation.ident.equals("tutorial") &&
-            _bangobj.tick > _bangobj.duration/2) {
-            PlayerObject user = (PlayerObject)getPlayer(0);
-            if (user != null) {
+        PlayerObject user = (PlayerObject)getPlayer(0);
+        if (user != null) {
+            // if this was a tutorial practice session, and we played at least half of it, mark the
+            // practice tutorial as completed
+            if (_bangobj.priorLocation.ident.equals("tutorial") &&
+                _bangobj.tick > _bangobj.duration/2) {
                 user.stats.addToSetStat(Stat.Type.TUTORIALS_COMPLETED,
                                         TutorialCodes.PRACTICE_PREFIX + _bconfig.scenarios[0]);
             }
+
+            // TEMP: if this game had bounty criterion report whether they were met (by player
+            // zero, who is the human player in a bounty game)
+            int failed = 0;
+            for (Criterion criterion : _bconfig.criterion) {
+                String msg = criterion.isMet(_bangobj, user);
+                if (msg != null) {
+                    failed++;
+                    SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
+                }
+            }
+            if (failed == 0) {
+                SpeakProvider.sendAttention(_bangobj, GAME_MSGS, "m.all_criterion_met");
+            }
+            // END TEMP
         }
 
         // note the duration of the game (in minutes and seconds)

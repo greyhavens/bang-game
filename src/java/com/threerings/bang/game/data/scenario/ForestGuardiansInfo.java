@@ -26,8 +26,7 @@ public class ForestGuardiansInfo extends ScenarioInfo
 
     /** Stat types for each level of growth (minus one). */
     public static final Stat.Type[] GROWTH_STATS = {
-        Stat.Type.TREES_SAPLING, Stat.Type.TREES_MATURE,
-        Stat.Type.TREES_ELDER };
+        Stat.Type.TREES_SAPLING, Stat.Type.TREES_MATURE, Stat.Type.TREES_ELDER };
 
     /** Points awarded for living trees at the end of each wave. */
     public static final int[] GROWTH_POINTS = { 1, 3, 5 };

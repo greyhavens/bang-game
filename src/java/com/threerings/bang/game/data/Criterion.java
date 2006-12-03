@@ -13,7 +13,7 @@ import com.threerings.bang.data.PlayerObject;
 public abstract class Criterion extends SimpleStreamableObject
 {
     /**
-     * Returns true if this criteron is met, false if not.
+     * Returns null if this criteron is met, a string explaining how it was missed if not.
      */
-    public abstract boolean isMet (BangObject bangobj, PlayerObject player);
+    public abstract String isMet (BangObject bangobj, PlayerObject player);
 }

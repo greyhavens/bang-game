@@ -40,8 +40,7 @@ public class PlayerStatsView extends BContainer
                 continue;
             }
             String key = stats[ii].getType().key();
-            add(new BLabel(hidden ? key :
-                           _ctx.xlate(BangCodes.STATS_MSGS, key)));
+            add(new BLabel(hidden ? key : _ctx.xlate(BangCodes.STATS_MSGS, key)));
             add(new BLabel(stats[ii].valueToString()));
         }
     }

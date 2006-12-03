@@ -69,38 +69,28 @@ public abstract class CriterionEditor extends BContainer
 
     protected abstract void createInterface ();
 
-    protected static String toLabel (String code)
-    {
-        StringBuilder label = new StringBuilder();
-        boolean capnext = true;
-        for (int ii = 0, ll = code.length(); ii < ll; ii++) {
-            char c = code.charAt(ii);
-            if (c == '_') {
-                label.append(" ");
-                capnext = true;
-            } else {
-                label.append(capnext ? c : Character.toLowerCase(c));
-                capnext = false;
-            }
-        }
-        return label.toString();
-    }
-
     protected static class IntStatEditor extends CriterionEditor
     {
         public Criterion getCriterion () {
             IntStatCriterion crit = new IntStatCriterion();
             crit.stat = (Stat.Type)_stat.getSelectedValue();
-            crit.condition = (IntStatCriterion.Condition)_condition.getSelectedValue();
+            crit.condition = (IntStatCriterion.Condition)_condition.getSelectedItem();
             crit.value = Integer.parseInt(_value.getText());
             return crit;
         }
 
         protected void createInterface () {
+            if (_intstats.size() == 0) {
+                for (Stat.Type stat : Stat.Type.values()) {
+                    if (stat.isBounty() && stat.newStat() instanceof IntStat) {
+                        _intstats.add(new BComboBox.Item(stat, _msgs.xlate(stat.key())));
+                    }
+                }
+            }
             add(_stat = new BComboBox(_intstats));
             _stat.selectItem(0);
             new StateSaver("bounty.intstat_type", _stat);
-            add(_condition = new BComboBox(_conditions));
+            add(_condition = new BComboBox(IntStatCriterion.Condition.values()));
             _condition.selectItem(0);
             new StateSaver("bounty.intstat_cond", _condition);
             add(_value = new BTextField());
@@ -111,18 +101,6 @@ public abstract class CriterionEditor extends BContainer
         protected BTextField _value;
 
         protected static ArrayList<BComboBox.Item> _intstats = new ArrayList<BComboBox.Item>();
-        protected static ArrayList<BComboBox.Item> _conditions = new ArrayList<BComboBox.Item>();
-
-        static {
-            for (Stat.Type stat : Stat.Type.values()) {
-                if (stat.newStat() instanceof IntStat) {
-                    _intstats.add(new BComboBox.Item(stat, toLabel(stat.toString())));
-                }
-            }
-            for (IntStatCriterion.Condition cond : IntStatCriterion.Condition.values()) {
-                _conditions.add(new BComboBox.Item(cond, toLabel(cond.toString())));
-            }
-        }
     }
 
     protected BangContext _ctx;
