@@ -64,6 +64,27 @@ public class BountyGameEditor extends BDecoratedWindow
                 row.add(_oppunits[oo][ii] = new BComboBox());
             }
         }
+
+        ArrayList<BComboBox.Item> types = new ArrayList<BComboBox.Item>();
+        for (CriterionEditor.Type type : CriterionEditor.Type.values()) {
+            String msg = "m.type_" + type.toString().toLowerCase();
+            types.add(new BComboBox.Item(type, _msgs.get(msg)));
+        }
+        row = addRow(cpanel, "m.add_criterion");
+        row.add(_ctype = new BComboBox(types));
+        row.add(new BButton(_msgs.get("m.add"), new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                CriterionEditor.Type type = (CriterionEditor.Type)_ctype.getSelectedValue();
+                _criterion.add(CriterionEditor.createEditor(_ctx, type));
+                BountyGameEditor.this.pack();
+                BountyGameEditor.this.center();
+            }
+        }, "add_crit"));
+
+        // add a panel that will contain our criterion
+        cpanel.add(new BLabel(""));
+        cpanel.add(_criterion = new BContainer(GroupLayout.makeVStretch()));
+        ((GroupLayout)_criterion.getLayoutManager()).setPolicy(GroupLayout.NONE);
         add(cpanel);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -88,6 +109,8 @@ public class BountyGameEditor extends BDecoratedWindow
         }
 
         // configure our various drop downs
+        _ctype.selectItem(0);
+        new StateSaver("bounty.crit_type", _ctype);
         _opponents.selectItem(0);
         new StateSaver("bounty.opponents", _opponents);
 
@@ -123,10 +146,14 @@ public class BountyGameEditor extends BDecoratedWindow
     public void actionPerformed (ActionEvent event)
     {
         if ("run_game".equals(event.getAction())) {
-            _offobj.service.testBountyGame(_ctx.getClient(), createConfig(),
-                                           new ReportingListener(_ctx, OfficeCodes.OFFICE_MSGS,
-                                                                 "m.test_bounty_game_failed"));
-            _ctx.getBangClient().clearPopup(this, true);
+            ReportingListener rl = new ReportingListener(
+                _ctx, OfficeCodes.OFFICE_MSGS, "m.test_bounty_game_failed");
+            try {
+                _offobj.service.testBountyGame(_ctx.getClient(), createConfig(), rl);
+                _ctx.getBangClient().clearPopup(this, true);
+            } catch (Exception e) {
+                rl.requestFailed(MessageBundle.taint(e.getMessage()));
+            }
 
         } else if ("dismiss".equals(event.getAction())) {
             _ctx.getBangClient().clearPopup(this, true);
@@ -195,7 +222,10 @@ public class BountyGameEditor extends BDecoratedWindow
             config.teams.add(opponent);
         }
 
-        // TODO: criterion
+        for (int ii = 0; ii < _criterion.getComponentCount(); ii++) {
+            config.criterion.add(((CriterionEditor)_criterion.getComponent(ii)).getCriterion());
+        }
+
         return config;
     }
 
@@ -226,6 +256,9 @@ public class BountyGameEditor extends BDecoratedWindow
     protected BComboBox _board;
     protected BComboBox[] _punits;
     protected BComboBox[][] _oppunits;
+
+    protected BComboBox _ctype;
+    protected BContainer _criterion;
 
     protected ArrayList<BComboBox.Item> _bsunits, _units;
 

@@ -28,6 +28,12 @@ public class IntStatCriterion extends Criterion
     // from Criterion
     public boolean isMet (BangObject bangobj, PlayerObject player)
     {
-        return false;
+        int pidx = bangobj.getPlayerIndex(player.handle);
+        switch (condition) {
+        case LESS_THAN: return bangobj.stats[pidx].getIntStat(stat) < value;
+        case EQUAL_TO: return bangobj.stats[pidx].getIntStat(stat) == value;
+        case MORE_THAN: return bangobj.stats[pidx].getIntStat(stat) > value;
+        default: return false;
+        }
     }
 }
