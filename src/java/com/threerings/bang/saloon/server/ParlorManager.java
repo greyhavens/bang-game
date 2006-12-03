@@ -368,32 +368,24 @@ public class ParlorManager extends PlaceManager
         // we can use these values directly as we sanity checked them earlier
         config.init(_parobj.game.players + _parobj.game.tinCans, _parobj.game.teamSize);
         config.players = new Handle[config.teams.size()];
-        config.lastBoardIds = new int[config.players.length];
         config.duration = _parobj.game.duration;
         config.speed = _parobj.game.speed;
-        config.scenarios = new String[_parobj.game.rounds];
+        config.rated = false; // back parlor games are never rated
 
-        // back parlor games are never rated
-        config.rated = false;
-
-        // select our scenarios
-        for (int ii = 0; ii < config.scenarios.length; ii++) {
-            config.scenarios[ii] =
-                RandomUtil.pickRandom(_parobj.game.scenarios);
+        // configure our rounds
+        for (int ii = 0; ii < _parobj.game.rounds; ii++) {
+            config.addRound(RandomUtil.pickRandom(_parobj.game.scenarios), null, _bdata);
         }
 
         // fill in the human players
         for (int ii = 0; ii < _parobj.playerOids.length; ii++) {
-            PlayerObject user = (PlayerObject)
-                BangServer.omgr.getObject(_parobj.playerOids[ii]);
+            PlayerObject user = (PlayerObject)BangServer.omgr.getObject(_parobj.playerOids[ii]);
             if (user == null) {
-                log.warning("Zoiks! Missing player for parlor match " +
-                            "[game=" + _parobj.game +
+                log.warning("Zoiks! Missing player for parlor match [game=" + _parobj.game +
                             ", oid=" + _parobj.playerOids[ii] + "].");
                 return; // abandon ship
             }
             config.players[ii] = user.handle;
-            config.lastBoardIds[ii] = user.lastBoardId;
         }
 
         // add our ais (if any)
@@ -405,9 +397,6 @@ public class ParlorManager extends PlaceManager
             config.ais[ii] = ai;
             config.players[ii] = ai.handle;
         }
-
-        // if we're using a custom board, get that in there
-        config.bdata = _bdata;
 
         try {
             BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);

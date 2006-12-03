@@ -247,20 +247,22 @@ public class Match
 
         idx = 0;
         String[] lastScenIds = new String[humans];
-        config.lastBoardIds = new int[humans];
         for (int ii = 0; ii < players.length; ii++) {
             if (players[ii] != null) {
                 lastScenIds[idx] = players[ii].lastScenId;
-                config.lastBoardIds[idx] = players[ii].lastBoardId;
                 idx++;
             }
         }
 
         // only games versus at least one other human are rated
         config.rated = (humans > 1) ? _criterion.getDesiredRankedness() : false;
-        config.scenarios = ScenarioInfo.selectRandomIds(
-            ServerConfig.townId, _criterion.getDesiredRounds(), pcount, lastScenIds,
-            _criterion.allowPreviousTowns);
+
+        // configure our rounds
+        for (String scenId : ScenarioInfo.selectRandomIds(
+                 ServerConfig.townId, _criterion.getDesiredRounds(), pcount, lastScenIds,
+                 _criterion.allowPreviousTowns)) {
+            config.addRound(scenId, null, null);
+        }
 
         return config;
     }

@@ -348,16 +348,15 @@ public class PlayerManager
         if (tutId.startsWith(TutorialCodes.PRACTICE_PREFIX)) {
             String scenId = tutId.substring(TutorialCodes.PRACTICE_PREFIX.length());
             config.init(2, 2);
-            config.scenarios = new String[] { scenId };
+            config.addRound(scenId, null, null);
             config.duration = BangConfig.Duration.PRACTICE;
 
         } else {
             // otherwise load up the tutorial configuration and use that to
             // configure the tutorial game
             TutorialConfig tconfig = TutorialUtil.loadTutorial(BangServer.rsrcmgr, tutId);
-            config.scenarios = new String[] { tconfig.ident };
+            config.addRound(tconfig.ident, tconfig.board, null);
             config.type = BangConfig.Type.TUTORIAL;
-            config.board = tconfig.board;
         }
 
         playComputer(player, config, false, new BangObject.PriorLocation("tutorial", 0));
@@ -381,8 +380,7 @@ public class PlayerManager
         config.players = new Name[2];
         config.ais = new BangAI[2];
         config.init(2, 2);
-        config.scenarios = new String[] { unit };
-        config.board = PracticeInfo.getBoardName(ServerConfig.townId);
+        config.addRound(unit, PracticeInfo.getBoardName(ServerConfig.townId), null);
         playComputer(player, config, false, new BangObject.PriorLocation(
                          "ranch", BangServer.ranchmgr.getPlaceObject().getOid()));
     }
@@ -441,8 +439,9 @@ public class PlayerManager
         config.players = new Name[players];
         config.ais = new BangAI[players];
         config.init(players, Match.TEAM_SIZES[players-2]);
-        config.scenarios = scenarios;
-        config.board = board;
+        for (String scenId : scenarios) {
+            config.addRound(scenId, board, null);
+        }
         playComputer(player, config, autoplay, priorLocation);
     }
 

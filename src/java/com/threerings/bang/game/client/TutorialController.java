@@ -55,19 +55,16 @@ public class TutorialController
         _view = view;
 
         // load up the tutorial configuration
-        _config = TutorialUtil.loadTutorial(
-            ctx.getResourceManager(), config.scenarios[0]);
-        _msgs = _ctx.getMessageManager().getBundle(
-            "tutorials." + _config.ident);
+        _config = TutorialUtil.loadTutorial(ctx.getResourceManager(), config.getScenario(0));
+        _msgs = _ctx.getMessageManager().getBundle("tutorials." + _config.ident);
         _gmsgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
         // create and add the window in which we'll display info text
         _view.tutwin = new BDecoratedWindow(_ctx.getStyleSheet(), null) {
             public BComponent getHitComponent (int mx, int my) {
                 BComponent comp = super.getHitComponent(mx, my);
-                return (comp == _back || comp == _forward ||
-                    _pending == null || TutorialCodes.TEXT_CLICKED.equals(
-                        _pending.getEvent())) ? comp : null;
+                return (comp == _back || comp == _forward || _pending == null ||
+                        TutorialCodes.TEXT_CLICKED.equals(_pending.getEvent())) ? comp : null;
             }
             protected void renderBackground (Renderer renderer) {
                 getBackground().render(renderer, 0, 0, _width, _height, 0.5f);
@@ -78,8 +75,7 @@ public class TutorialController
         _view.tutwin.setLayoutManager(new BorderLayout(5, 15));
 
         BContainer north = new BContainer(
-            GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER,
-                                  GroupLayout.CONSTRAIN));
+            GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.CONSTRAIN));
         _view.tutwin.add(north, BorderLayout.NORTH);
         _back = new BButton("", this, "back");
         _back.setStyleClass("tutorial_back");
@@ -93,8 +89,7 @@ public class TutorialController
         _forward.setEnabled(false);
         north.add(_forward, GroupLayout.FIXED);
 
-        _view.tutwin.add(_info = new BLabel("", "tutorial_text"),
-                         BorderLayout.CENTER);
+        _view.tutwin.add(_info = new BLabel("", "tutorial_text"), BorderLayout.CENTER);
 
         BContainer south = new BContainer(GroupLayout.makeHStretch());
         _view.tutwin.add(south, BorderLayout.SOUTH);
@@ -114,9 +109,9 @@ public class TutorialController
     }
 
     /**
-     * Called by the controller when some user interface event has taken place
-     * (unit selected, unit deselected, etc.) or from our event handler when an
-     * eventful game object event has arrived (unit moved, etc.).
+     * Called by the controller when some user interface event has taken place (unit selected, unit
+     * deselected, etc.) or from our event handler when an eventful game object event has arrived
+     * (unit moved, etc.).
      */
     public void handleEvent (String event)
     {
@@ -206,11 +201,9 @@ public class TutorialController
             } else if (what.equals("special")) {
                 // locate the specified special piece
                 for (Piece cp : _bangobj.pieces) {
-                    if (((cp instanceof Counter ||
-                          cp instanceof Homestead) && cp.owner == id) ||
+                    if (((cp instanceof Counter || cp instanceof Homestead) && cp.owner == id) ||
                         (cp instanceof Prop && // extends Prop but is not Prop
-                         !cp.getClass().equals(Prop.class) &&
-                         (cp.x * 100 + cp.y == id))) {
+                         !cp.getClass().equals(Prop.class) && (cp.x * 100 + cp.y == id))) {
                         p = cp;
                         break;
                     }
@@ -222,8 +215,8 @@ public class TutorialController
                 }
                 _view.view.centerCameraOnPiece(p);
             } else {
-                log.warning("Requested to center camera on unknown entity " +
-                            "[what=" + what + ", id=" + id + "].");
+                log.warning("Requested to center camera on unknown entity [what=" + what +
+                            ", id=" + id + "].");
             }
 
         } else if (action instanceof TutorialConfig.MoveUnit) {
@@ -253,8 +246,7 @@ public class TutorialController
             // wait for the specified event
             _pending = (TutorialConfig.WaitAction)action;
 
-            log.info("Waiting [event=" + _pending.getEvent() +
-                     ", action=" + _pending + "].");
+            log.info("Waiting [event=" + _pending.getEvent() + ", action=" + _pending + "].");
 
             // if an event's count is already satified, turn it into a "Click
             // to continue..." event
@@ -349,7 +341,6 @@ public class TutorialController
     /** Counts up all events received during the tutorial. */
     protected HashMap<String,Integer> _events = new HashMap<String,Integer>();
 
-    protected ArrayList<TutorialConfig.Text> _history =
-        new ArrayList<TutorialConfig.Text>();
+    protected ArrayList<TutorialConfig.Text> _history = new ArrayList<TutorialConfig.Text>();
     protected int _hidx = -1;
 }

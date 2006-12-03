@@ -60,8 +60,7 @@ public class Tutorial extends Scenario
     {
         // load up the tutorial configuraton
         BangConfig bconfig = (BangConfig)bangmgr.getConfig();
-        _config = TutorialUtil.loadTutorial(
-            BangServer.rsrcmgr, bconfig.scenarios[0]);
+        _config = TutorialUtil.loadTutorial(BangServer.rsrcmgr, bconfig.getScenario(0));
 
         // make sure the player does not hose themself
         registerDelegate(new RespawnDelegate(2, false) {

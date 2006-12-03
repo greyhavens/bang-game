@@ -46,7 +46,7 @@ public class Practice extends Scenario
         BangConfig bconfig = (BangConfig)_bangmgr.getConfig();
         Unit[] units = new Unit[NUM_UNITS];
         for (int ii = 0; ii < units.length; ii++) {
-            units[ii] = Unit.getUnit(bconfig.scenarios[0]);
+            units[ii] = Unit.getUnit(bconfig.getScenario(0));
         }
         
         for (int ii = 0; ii < bangobj.players.length; ii++) {

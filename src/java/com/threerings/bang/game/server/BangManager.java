@@ -97,7 +97,6 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BoardData;
 import com.threerings.bang.game.data.ModifiableDSet;
 import com.threerings.bang.game.data.TutorialCodes;
-import com.threerings.bang.game.util.BoardFile;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
@@ -768,7 +767,6 @@ public class BangManager extends GameManager
                 info.players--;
             }
         }
-        info.scenarios = _bconfig.scenarios;
         BangServer.adminmgr.statobj.addToGames(info);
 
         // note the time at which we started
@@ -778,37 +776,16 @@ public class BangManager extends GameManager
         // already satisfied
         _startRoundMultex.satisfied(Multex.CONDITION_TWO);
 
-        BoardRecord[] boards = null;
-        // load up the named board if one was named
-        if (!StringUtil.isBlank(_bconfig.board)) {
-            BoardRecord brec =
-                BangServer.boardmgr.getBoard(_bconfig.players.length, _bconfig.board);
-            if (brec != null) {
-                boards = new BoardRecord[_bconfig.scenarios.length];
-                Arrays.fill(boards, brec);
-            } else {
-                log.warning("Failed to locate '" + _bconfig.board + "' [where=" + where() + "].");
-                String msg = MessageBundle.tcompose("m.no_such_board", _bconfig.board);
-                SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
-            }
-
-        } else if (_bconfig.bdata != null) {
-            try {
-                BoardRecord brec = new BoardRecord(BoardFile.loadFrom(_bconfig.bdata));
-                boards = new BoardRecord[_bconfig.scenarios.length];
-                Arrays.fill(boards, brec);
-            } catch (Exception e) {
-                String msg = MessageBundle.tcompose("m.board_load_failed", e.getMessage());
-                SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
-                log.log(Level.WARNING, "Failed to load board from data.", e);
+        // ask the board manager to select or load up our boards
+        ArrayIntSet prevIds = new ArrayIntSet();
+        for (int ii = 0; ii < getPlayerCount(); ii++) {
+            PlayerObject user = (PlayerObject)getPlayer(ii);
+            if (user != null) {
+                prevIds.add(user.lastBoardId);
             }
         }
-
-        // if no boards were specified otherwise, pick them randomly
-        if (boards == null) {
-            boards = BangServer.boardmgr.selectBoards(
-                _bconfig.players.length, _bconfig.scenarios, _bconfig.lastBoardIds);
-        }
+        BoardRecord[] boards = BangServer.boardmgr.selectBoards(
+            _bconfig.players.length, _bconfig.rounds, prevIds);
 
         // set up our round records
         _rounds = new RoundRecord[_bconfig.getRounds()];
@@ -823,8 +800,8 @@ public class BangManager extends GameManager
         // create our per-player arrays
         int slots = getPlayerSlots();
         _bangobj.points = new int[slots];
-        _bangobj.perRoundPoints = new int[_bconfig.scenarios.length][slots];
-        _bangobj.perRoundRanks = new short[_bconfig.scenarios.length][slots];
+        _bangobj.perRoundPoints = new int[_bconfig.getRounds()][slots];
+        _bangobj.perRoundRanks = new short[_bconfig.getRounds()][slots];
         for (int ii = 0; ii < _bangobj.perRoundPoints.length; ii++) {
             Arrays.fill(_bangobj.perRoundPoints[ii], -1);
         }
@@ -1003,7 +980,7 @@ public class BangManager extends GameManager
             break;
 
         default:
-            ScenarioInfo info = ScenarioInfo.getScenarioInfo(_bconfig.scenarios[_activeRoundId]);
+            ScenarioInfo info = ScenarioInfo.getScenarioInfo(_bconfig.getScenario(_activeRoundId));
             _bangobj.setScenario(info);
             String sclass = info.getScenarioClass();
             try {
@@ -1570,7 +1547,7 @@ public class BangManager extends GameManager
                 if (user != null) {
                     try {
                         user.startTransaction();
-                        user.setLastScenId(_bconfig.scenarios[_activeRoundId]);
+                        user.setLastScenId(_bconfig.getScenario(_activeRoundId));
                         user.setLastBoardId(_rounds[_activeRoundId].board.boardId);
                     } finally {
                         user.commitTransaction();
@@ -1687,7 +1664,7 @@ public class BangManager extends GameManager
             if (_bangobj.priorLocation.ident.equals("tutorial") &&
                 _bangobj.tick > _bangobj.duration/2) {
                 user.stats.addToSetStat(Stat.Type.TUTORIALS_COMPLETED,
-                                        TutorialCodes.PRACTICE_PREFIX + _bconfig.scenarios[0]);
+                                        TutorialCodes.PRACTICE_PREFIX + _bconfig.getScenario(0));
             }
 
             // TEMP: if this game had bounty criterion report whether they were met (by player
@@ -1710,12 +1687,11 @@ public class BangManager extends GameManager
         int gameSecs = (int)(System.currentTimeMillis() - _startStamp) / 1000;
 
         // update ratings if appropriate
-        if (_bconfig.rated && !_bconfig.scenarios[0].equals(TutorialInfo.IDENT) &&
+        if (_bconfig.rated && !_bconfig.getScenario(0).equals(TutorialInfo.IDENT) &&
             gameSecs >= MIN_RATED_DURATION) {
             // update each player's per-scenario ratings
-            for (int ii = 0; ii < _bconfig.scenarios.length; ii++) {
-                String scenario = _bconfig.scenarios[ii];
-                computeRatings(scenario, _bangobj.perRoundPoints[ii]);
+            for (int ii = 0; ii < _bconfig.getRounds(); ii++) {
+                computeRatings(_bconfig.getScenario(ii), _bangobj.perRoundPoints[ii]);
             }
 
             // update each player's overall rating
@@ -2290,7 +2266,13 @@ public class BangManager extends GameManager
         try {
             StringBuffer buf = new StringBuffer((awards == null) ? "game_cancelled" : "game_ended");
             buf.append(" t:").append(gameSecs);
-            buf.append(" s:").append(StringUtil.join(_bconfig.scenarios, ","));
+            buf.append(" s:");
+            for (int ii = 0; ii < _bconfig.rounds.size(); ii++) {
+                if (ii > 0) {
+                    buf.append(",");
+                }
+                buf.append(_bconfig.getScenario(ii));
+            }
             buf.append(" ts:").append(getTeamSize());
             buf.append(" r:").append(_bconfig.rated);
             buf.append(" ");

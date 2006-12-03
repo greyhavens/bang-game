@@ -22,9 +22,6 @@ public class StatusObject extends DObject
         /** The number of human players in the game. */
         public int players;
 
-        /** The scenarios to be used in the game. */
-        public String[] scenarios;
-
         // documentation inherited from interface DSet.Entry
         public Comparable getKey () {
             return gameOid;

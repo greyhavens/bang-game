@@ -55,19 +55,16 @@ public class GameOverView extends SteelWindow
             BasicContext ctx, ScenarioInfo info, int rank, boolean small)
     {
         BufferedImage on = ctx.getImageCache().getBufferedImage(
-                "ui/postgame/" + info.getIdent() + "_on.png");
+            "ui/postgame/" + info.getIdent() + "_on.png");
         BufferedImage off = ctx.getImageCache().getBufferedImage(
-                "ui/postgame/" + info.getIdent() + "_off.png");
+            "ui/postgame/" + info.getIdent() + "_off.png");
         int width = (int)(on.getWidth() * (small ? 0.5 : 1)),
             height = (int)(on.getHeight() * (small ? 0.5 : 1));
-        BufferedImage bar = ctx.getImageCache().createCompatibleImage(
-                width, height, true);
+        BufferedImage bar = ctx.getImageCache().createCompatibleImage(width, height, true);
         Graphics2D g = bar.createGraphics();
-        AffineTransformOp halfOp = (small ?
-                new AffineTransformOp(
-                    AffineTransform.getScaleInstance(0.5, 0.5),
-                    AffineTransformOp.TYPE_BILINEAR) :
-                null);
+        AffineTransformOp halfOp = (small ? new AffineTransformOp(
+                                        AffineTransform.getScaleInstance(0.5, 0.5),
+                                        AffineTransformOp.TYPE_BILINEAR) : null);
         g.drawImage(off, halfOp, 0, 0);
         int onWidth = rank * on.getWidth() / 100;
         if (onWidth > 0 && onWidth <= on.getWidth()) {
@@ -80,8 +77,7 @@ public class GameOverView extends SteelWindow
     /**
      * The constructor used by the actual game.
      */
-    public GameOverView (BangContext ctx, BangController ctrl,
-                         BangObject bangobj)
+    public GameOverView (BangContext ctx, BangController ctrl, BangObject bangobj)
     {
         this(ctx, ctrl, bangobj, ctx.getUserObject());
         _bctx = ctx;
@@ -90,8 +86,8 @@ public class GameOverView extends SteelWindow
     /**
      * The constructor used by the test harness.
      */
-    public GameOverView (BasicContext ctx, BangController ctrl,
-                         BangObject bangobj, PlayerObject user)
+    public GameOverView (BasicContext ctx, BangController ctrl, BangObject bangobj,
+                         PlayerObject user)
     {
         super(ctx, ctx.xlate(GameCodes.GAME_MSGS, "m.endgame_title"));
         setLayer(1);
@@ -100,16 +96,14 @@ public class GameOverView extends SteelWindow
         _ctrl = ctrl;
         _bobj = bangobj;
 
-        MessageBundle msgs = ctx.getMessageManager().getBundle(
-            GameCodes.GAME_MSGS);
+        MessageBundle msgs = ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         int pidx = bangobj.getPlayerIndex(user.getVisibleName());
         Award award = null;
 
         _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.TOP));
 
         // display the players' avatars in rank order
-        if (bangobj.roundId == 1 &&
-                bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP) {
+        if (bangobj.roundId == 1 && bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP) {
             BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
             _contents.add(row);
             row.add(new CoopFinalistView(ctx, bangobj, ctrl));
@@ -135,8 +129,8 @@ public class GameOverView extends SteelWindow
                     award = bangobj.awards[ii];
                     _cueidx = award.rank;
                 }
-                FinalistView view = new FinalistView(
-                        ctx, bangobj, ctrl, apidx, bangobj.awards[ii].rank);
+                FinalistView view =
+                    new FinalistView(ctx, bangobj, ctrl, apidx, bangobj.awards[ii].rank);
                 if (ii == 0) {
                     who.add(view);
                     who.add(split);
@@ -149,40 +143,39 @@ public class GameOverView extends SteelWindow
                 }
             }
 
-            // Display a summary of your round ranks for a multi-round game
+            // display a summary of your round ranks for a multi-round game
             if (bangobj.roundId > 1 && pidx > -1) {
                 BangConfig bconfig;
-                if (ctrl == null) {
+                if (ctrl == null) { // for testing
                     bconfig = new BangConfig();
-                    bconfig.scenarios = new String[] { "tb", "wa", "fg" };
+                    bconfig.addRound("tb", null, null);
+                    bconfig.addRound("wa", null, null);
+                    bconfig.addRound("fg", null, null);
                 } else {
                     bconfig = (BangConfig)ctrl.getPlaceConfig();
                 }
 
                 BContainer ranks = new BContainer(new TableLayout(3, 2, 5));
                 for (int ii = 0; ii < bangobj.perRoundRanks.length; ii++) {
-                    ranks.add(new BLabel(msgs.get(
-                        "m.endgame_round", "" + (ii + 1)), "endgame_round"));
-                    String scid = bconfig.scenarios[ii];
-                    ranks.add(new BLabel(msgs.get("m.scenario_" + scid),
-                               "endgame_desc"));
+                    String msg = msgs.get("m.endgame_round", "" + (ii + 1));
+                    ranks.add(new BLabel(msg, "endgame_round"));
+                    String scid = bconfig.getScenario(ii);
+                    ranks.add(new BLabel(msgs.get("m.scenario_" + scid), "endgame_desc"));
                     ScenarioInfo info = ScenarioInfo.getScenarioInfo(scid);
                     int rank = bangobj.perRoundRanks[ii][pidx];
                     if (info.getTeams() == ScenarioInfo.Teams.COOP) {
                         rank -= BangObject.COOP_RANK;
                         ranks.add(createCoopIcon(_ctx, info, rank, true));
                     } else {
-                        ranks.add(new BLabel(msgs.get("m.endgame_place",
-                            msgs.get("m.endgame_rank" + rank)),
-                                    "endgame_desc"));
+                        msg = msgs.get("m.endgame_place", msgs.get("m.endgame_rank" + rank));
+                        ranks.add(new BLabel(msg, "endgame_desc"));
                     }
                 }
 
-                ranks.add(new BLabel(msgs.get("m.endgame_overall"),
-                            "endgame_round"));
+                ranks.add(new BLabel(msgs.get("m.endgame_overall"), "endgame_round"));
                 ranks.add(new Spacer(1, 30));
-                ranks.add(new BLabel(msgs.get("m.endgame_place",
-                    msgs.get("m.endgame_rank" + _cueidx)), "endgame_desc"));
+                String msg = msgs.get("m.endgame_place", msgs.get("m.endgame_rank" + _cueidx));
+                ranks.add(new BLabel(msg, "endgame_desc"));
                 split.add(ranks);
             }
             _contents.add(who);
@@ -192,8 +185,7 @@ public class GameOverView extends SteelWindow
         if (award != null) {
             BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
             ((GroupLayout)row.getLayoutManager()).setGap(25);
-            ((GroupLayout)row.getLayoutManager()).setOffAxisPolicy(
-                GroupLayout.STRETCH);
+            ((GroupLayout)row.getLayoutManager()).setOffAxisPolicy(GroupLayout.STRETCH);
             _contents.add(row);
 
             BContainer econt = new BContainer(new BorderLayout(0, 15));
@@ -210,8 +202,7 @@ public class GameOverView extends SteelWindow
             vbox.add(rrow);
             econt.add(vbox, BorderLayout.CENTER);
 
-            rrow.add(new BLabel(msgs.get("m.endgame_reward", rankstr),
-                                "endgame_smallheader"));
+            rrow.add(new BLabel(msgs.get("m.endgame_reward", rankstr), "endgame_smallheader"));
             rrow.add(new Spacer(1, 1));
 
             Purse purse = user.getPurse();
@@ -223,16 +214,13 @@ public class GameOverView extends SteelWindow
             rrow.add(new BLabel(txt, "endgame_smallheader"));
 
             rrow.add(new Spacer(1, 1));
-            rrow.add(new BLabel(msgs.get("m.endgame_total"),
-                                "endgame_smallheader"));
+            rrow.add(new BLabel(msgs.get("m.endgame_total"), "endgame_smallheader"));
             rrow.add(new Spacer(30, 1));
-            rrow.add(new BLabel(msgs.get("m.endgame_have"),
-                                "endgame_header"));
+            rrow.add(new BLabel(msgs.get("m.endgame_have"), "endgame_header"));
 
             NumberFormat cfmt = NumberFormat.getInstance();
             BLabel label;
-            txt = cfmt.format(Math.round(award.cashEarned /
-                                         purse.getPurseBonus()));
+            txt = cfmt.format(Math.round(award.cashEarned / purse.getPurseBonus()));
             rrow.add(label = new BLabel(txt, "endgame_smallcash"));
             label.setIcon(BangUI.scripIcon);
             label.setIconTextGap(3);
@@ -245,8 +233,7 @@ public class GameOverView extends SteelWindow
             if (purse.getTownIndex() == 0) { // no purse
                 label.setIcon(new BlankIcon(64, 64));
             } else {
-                BufferedImage pimg = ctx.getImageCache().getBufferedImage(
-                    purse.getIconPath());
+                BufferedImage pimg = ctx.getImageCache().getBufferedImage(purse.getIconPath());
                 BImage scaled = new BImage(
                     pimg.getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH));
                 label.setIcon(new ImageIcon(scaled));
@@ -263,8 +250,7 @@ public class GameOverView extends SteelWindow
 
             label = new BLabel(cfmt.format(user.scrip), "endgame_cash");
             label.setIconTextGap(6);
-            label.setIcon(new ImageIcon(
-                              ctx.loadImage("ui/icons/big_scrip.png")));
+            label.setIcon(new ImageIcon(ctx.loadImage("ui/icons/big_scrip.png")));
             rrow.add(label);
 
             if (award.badge != null) {
@@ -276,8 +262,7 @@ public class GameOverView extends SteelWindow
                 String reward = award.badge.getReward();
                 if (reward != null) {
                     txt = _ctx.xlate(BangCodes.BADGE_MSGS, reward);
-                    bcont.add(new BLabel(txt, "endgame_reward"),
-                              BorderLayout.SOUTH);
+                    bcont.add(new BLabel(txt, "endgame_reward"), BorderLayout.SOUTH);
                 }
                 row.add(bcont);
             }
@@ -285,12 +270,11 @@ public class GameOverView extends SteelWindow
 
         // add some buttons at the bottom
         _buttons.add(new BButton(msgs.get("m.view_stats"), this, "stats"));
-        // watchers don't get to go back to parlors because they may not have
-        // come from there and may not have been invited
+        // watchers don't get to go back to parlors because they may not have come from there and
+        // may not have been invited
         String from = _bobj.priorLocation.ident;
         if (pidx >= -1 || !"parlor".equals(from)) {
-            _buttons.add(new BButton(msgs.get("m.to_" + from), this,
-                                     "to_" + from));
+            _buttons.add(new BButton(msgs.get("m.to_" + from), this, "to_" + from));
         }
         _buttons.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
     }
@@ -308,12 +292,10 @@ public class GameOverView extends SteelWindow
             } else if (action.equals("to_tutorial")) {
                 // display the pick tutorial view in "finished tutorial" mode
                 _bctx.getBangClient().displayPopup(
-                    new PickTutorialView(
-                        _bctx, PickTutorialView.Mode.COMPLETED), true);
+                    new PickTutorialView(_bctx, PickTutorialView.Mode.COMPLETED), true);
 
             } else {
-                _bctx.getLocationDirector().moveTo(
-                    _bobj.priorLocation.placeOid);
+                _bctx.getLocationDirector().moveTo(_bobj.priorLocation.placeOid);
             }
 
         } else if (action.equals("stats")) {
@@ -329,8 +311,7 @@ public class GameOverView extends SteelWindow
 
         // cue up our end of game riff
         if (_ctx instanceof BangContext) {
-            _bctx.getBangClient().queueMusic(
-                "frontier_town/post_game" + _cueidx, false, 2f);
+            _bctx.getBangClient().queueMusic("frontier_town/post_game" + _cueidx, false, 2f);
         }
     }
 

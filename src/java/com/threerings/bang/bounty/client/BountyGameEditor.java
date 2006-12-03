@@ -4,6 +4,7 @@
 package com.threerings.bang.bounty.client;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComboBox;
@@ -31,6 +32,8 @@ import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.bounty.data.BoardInfo;
 import com.threerings.bang.bounty.data.OfficeCodes;
 import com.threerings.bang.bounty.data.OfficeObject;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Allows bounty games to be configured and tested.
@@ -89,6 +92,7 @@ public class BountyGameEditor extends BDecoratedWindow
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         buttons.add(new BButton(_msgs.get("m.run_game"), this, "run_game"));
+        buttons.add(new BButton(_msgs.get("m.save_game"), this, "save_game"));
         buttons.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
         add(buttons);
 
@@ -155,6 +159,9 @@ public class BountyGameEditor extends BDecoratedWindow
                 rl.requestFailed(MessageBundle.taint(e.getMessage()));
             }
 
+        } else if ("save_game".equals(event.getAction())) {
+            // TODO
+
         } else if ("dismiss".equals(event.getAction())) {
             _ctx.getBangClient().clearPopup(this, true);
         }
@@ -207,19 +214,12 @@ public class BountyGameEditor extends BDecoratedWindow
     protected BangConfig createConfig ()
     {
         BangConfig config = new BangConfig();
-        config.scenarios = new String[] { (String)_scenario.getSelectedValue() };
-        config.board = ((BoardInfo)_board.getSelectedItem()).name;
+        config.addRound((String)_scenario.getSelectedValue(),
+                        ((BoardInfo)_board.getSelectedItem()).name, null);
 
-        BangConfig.Player player = new BangConfig.Player();
-        player.bigShot = (String)_punits[0].getSelectedValue();
-        player.team = getTeam(_punits);
-        config.teams.add(player);
-
+        config.addPlayer((String)_punits[0].getSelectedValue(), getTeam(_punits));
         for (int ii = 0, ll = (Integer)_opponents.getSelectedItem(); ii < ll; ii++) {
-            BangConfig.Player opponent = new BangConfig.Player();
-            opponent.bigShot = (String)_oppunits[ii][0].getSelectedValue();
-            opponent.team = getTeam(_oppunits[ii]);
-            config.teams.add(opponent);
+            config.addPlayer((String)_oppunits[ii][0].getSelectedValue(), getTeam(_oppunits[ii]));
         }
 
         for (int ii = 0; ii < _criterion.getComponentCount(); ii++) {

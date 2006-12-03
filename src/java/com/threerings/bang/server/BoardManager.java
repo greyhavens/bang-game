@@ -3,10 +3,12 @@
 
 package com.threerings.bang.server;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
@@ -17,7 +19,10 @@ import com.samskivert.util.ResultListener;
 import com.samskivert.util.ResultListenerList;
 import com.samskivert.util.StringUtil;
 
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.util.BoardFile;
+
 import com.threerings.bang.server.persist.BoardRecord;
 import com.threerings.bang.server.persist.BoardRepository.BoardList;
 import com.threerings.bang.server.persist.BoardRepository;
@@ -78,18 +83,39 @@ public class BoardManager
      * Randomly selects a set of boards for play given the required number of players and the
      * specified sequence of scenarios.
      */
-    public BoardRecord[] selectBoards (int players, String[] scenarios, int[] prevBoardIds)
+    public BoardRecord[] selectBoards (
+        int players, ArrayList<BangConfig.Round> rounds, ArrayIntSet prevIds)
     {
-        ArrayIntSet prevIds = new ArrayIntSet(prevBoardIds);
-        BoardRecord[] choices = new BoardRecord[scenarios.length];
-        for (int ii = 0; ii < scenarios.length; ii++) {
+        BoardRecord[] choices = new BoardRecord[rounds.size()];
+        for (int ii = 0; ii < choices.length; ii++) {
+            BangConfig.Round round = rounds.get(ii);
+
+            // if we already selected a choice when picking for an earlier round, skip it
             if (choices[ii] != null) {
                 continue;
             }
 
-            // select the set of boards that work for this scenario and this number of players;
-            // then shuffle that list
-            String scenario = scenarios[ii];
+            // if this round has board data provided, unserialize it
+            if (round.bdata != null) {
+                try {
+                    choices[ii] = new BoardRecord(BoardFile.loadFrom(round.bdata));
+                    continue;
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "Failed to load board data [round=" + round + "].", e);
+                }
+            }
+
+            // if this round has a board speciifed, load it
+            if (round.board != null) {
+                choices[ii] = getBoard(players, round.board);
+                if (choices[ii] != null) {
+                    continue;
+                }
+            }
+
+            // otherwise, select the set of boards that work for this scenario and this number of
+            // players; then shuffle that list
+            String scenario = round.scenario;
             BoardList[] candvec = _byscenario.get(scenario);
             BoardList candidates = (candvec == null) ? null : candvec[players-2];
             if (candidates == null) {
@@ -114,10 +140,11 @@ public class BoardManager
             Collections.shuffle(candidates);
 
             // now fill in all instances of this scenario with (non-duplicate) selections from the
-            // shuffled list
+            // shuffled list for rounds that also require a randomly selected board
             int bidx = 0;
-            for (int bb = ii; bb < scenarios.length; bb++) {
-                if (scenarios[bb].equals(scenario)) {
+            for (int bb = ii; bb < rounds.size(); bb++) {
+                BangConfig.Round fr = rounds.get(bb);
+                if (fr.board == null && fr.bdata == null && fr.scenario.equals(scenario)) {
                     choices[bb] = candidates.get(bidx++ % candidates.size());
                 }
             }

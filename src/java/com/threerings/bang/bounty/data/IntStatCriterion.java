@@ -3,10 +3,18 @@
 
 package com.threerings.bang.bounty.data;
 
+import java.io.IOException;
+
+import com.jme.util.export.InputCapsule;
+import com.jme.util.export.JMEExporter;
+import com.jme.util.export.JMEImporter;
+import com.jme.util.export.OutputCapsule;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Criterion;
 
@@ -53,6 +61,37 @@ public class IntStatCriterion extends Criterion
                                            stat.key(), MessageBundle.taint(String.valueOf(value)),
                                            MessageBundle.taint(String.valueOf(actual)));
         return MessageBundle.qualify(OfficeCodes.OFFICE_MSGS, msg);
+    }
+
+    // from interface Savable
+    public void write (JMEExporter ex) throws IOException
+    {
+        OutputCapsule out = ex.getCapsule(this);
+        out.write(stat.toString(), "stat", null);
+        out.write(condition.toString(), "condition", null);
+        out.write(value, "value", 0);
+    }
+
+    // from interface Savable
+    public void read (JMEImporter im) throws IOException
+    {
+        InputCapsule in = im.getCapsule(this);
+        stat = Stat.Type.valueOf(in.readString("stat", null));
+        condition = Condition.valueOf(in.readString("condition", null));
+        value = in.readInt("value", 0);
+    }
+
+    // from interface Savable
+    public Class getClassTag ()
+    {
+        return getClass();
+    }
+
+    @Override // from Object
+    public boolean equals (Object other)
+    {
+        IntStatCriterion ocrit = (IntStatCriterion)other;
+        return stat == ocrit.stat && condition == ocrit.condition && value == ocrit.value;
     }
 
     @Override // from Object

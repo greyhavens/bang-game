@@ -255,42 +255,38 @@ public class LobbyView extends BWindow
             config.ais[0] = new GameAI(0, 50);
         }
         config.init(tconfig.desiredPlayerCount, (Integer)_tsize.getSelectedItem());
-        config.scenarios = new String[(Integer)_rounds.getSelectedItem()];
-        String id = ((ScenarioLabel)_scenarios.getSelectedItem()).id;
-        for (int ii = 0; ii < config.scenarios.length; ii++) {
-            if (id.equals("random")) {
-                config.scenarios[ii] = RandomUtil.pickRandom(_lobobj.scenarios);
-            } else {
-                config.scenarios[ii] = id;
-            }
-        }
 
         // if they specified the name of a board file, try using that
         String bname = _board.getText();
+        byte[] bdata = null;
         if (bname.endsWith(".board")) {
             String error = null;
             File board = new File(
-                BangClient.localDataDir(
-                    "rsrc" + File.separator + "boards" + File.separator +
-                    String.valueOf(tconfig.desiredPlayerCount)), bname);
+                BangClient.localDataDir("rsrc" + File.separator + "boards" + File.separator +
+                                        String.valueOf(tconfig.desiredPlayerCount)), bname);
             if (!board.exists()) {
                 error = "File not found.";
             }
             try {
-                config.bdata = IOUtils.toByteArray(new FileInputStream(board));
+                bdata = IOUtils.toByteArray(new FileInputStream(board));
             } catch (Exception e) {
                 error = e.getMessage();
             }
             if (error != null) {
-                String msg = MessageBundle.tcompose(
-                    "m.board_load_failed", board.getPath(), error);
+                String msg = MessageBundle.tcompose("m.board_load_failed", board.getPath(), error);
                 _ctx.getChatDirector().displayFeedback("lobby", msg);
                 return;
             }
 
-        } else if (!StringUtil.isBlank(bname)) {
-            // or maybe they just specified the name of a board
-            config.board = bname;
+        } else if (StringUtil.isBlank(bname)) {
+            bname = null;
+        }
+
+        // now configure the rounds
+        String id = ((ScenarioLabel)_scenarios.getSelectedItem()).id;
+        for (int ii = 0; ii < (Integer)_rounds.getSelectedItem(); ii++) {
+            String scen = id.equals("random") ? RandomUtil.pickRandom(_lobobj.scenarios) : id;
+            config.addRound(scen, bname, bdata);
         }
 
         _tbldtr.createTable(tconfig, config);
