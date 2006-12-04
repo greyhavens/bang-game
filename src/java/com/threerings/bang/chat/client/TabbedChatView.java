@@ -196,7 +196,9 @@ public class TabbedChatView extends BContainer
          */
         public void mute ()
         {
-            _myPane.removeTab(this);
+            if (_myPane != null) {
+                _myPane.removeTab(this);
+            }
             _ctx.getMuteDirector().setMuted(_user, true);
         }
 
@@ -222,7 +224,9 @@ public class TabbedChatView extends BContainer
             super.wasAdded();
 
             // clear the alert icon, if present
-            BButton btn = _myPane.getTabButton(this);
+            if (_myPane != null) {
+                BButton btn = _myPane.getTabButton(this);
+            }
             if (btn != null) {
                 btn.setIcon(null);
             }
