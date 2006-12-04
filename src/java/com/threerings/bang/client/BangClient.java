@@ -796,7 +796,9 @@ public class BangClient extends BasicClient
         StatusView.clearKeys(_ctx);
 
         // stop listening to the client object
-        client.getClientObject().removeListener(_nlistener);
+        if (client.getClientObject() != null) {
+            client.getClientObject().removeListener(_nlistener);
+        }
 
         if (_pendingTownId == null) {
             // shut her right on down
