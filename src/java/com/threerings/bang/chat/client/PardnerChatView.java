@@ -197,6 +197,7 @@ public class PardnerChatView extends BDecoratedWindow
                 tab = new UserTab(_ctx, handle, avatar);
                 if (isAdded() || _placeChat == null) {
                     _pane.addTab(handle.toString(), tab, true);
+                    tab.setTabbedPane(_pane);
                 } else {
                     _placeChat.addUserTab(handle.toString(), tab, focus);
                 }
