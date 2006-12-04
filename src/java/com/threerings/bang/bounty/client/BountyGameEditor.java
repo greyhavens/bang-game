@@ -3,8 +3,12 @@
 
 package com.threerings.bang.bounty.client;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Level;
+
+import com.jme.util.export.binary.BinaryExporter;
+import com.jme.util.export.binary.BinaryImporter;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComboBox;
@@ -18,6 +22,8 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.bui.OptionDialog;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.client.util.StateSaver;
 import com.threerings.bang.data.BangCodes;
@@ -26,6 +32,7 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.Criterion;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
@@ -90,8 +97,13 @@ public class BountyGameEditor extends BDecoratedWindow
         ((GroupLayout)_criterion.getLayoutManager()).setPolicy(GroupLayout.NONE);
         add(cpanel);
 
+        // add a status label
+        add(_status = new StatusLabel(_ctx));
+
+        // add some control buttons
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         buttons.add(new BButton(_msgs.get("m.run_game"), this, "run_game"));
+        buttons.add(new BButton(_msgs.get("m.load_game"), this, "load_game"));
         buttons.add(new BButton(_msgs.get("m.save_game"), this, "save_game"));
         buttons.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
         add(buttons);
@@ -151,16 +163,40 @@ public class BountyGameEditor extends BDecoratedWindow
     {
         if ("run_game".equals(event.getAction())) {
             ReportingListener rl = new ReportingListener(
-                _ctx, OfficeCodes.OFFICE_MSGS, "m.test_bounty_game_failed");
+                _ctx, OfficeCodes.OFFICE_MSGS, "m.test_game_failed");
             try {
                 _offobj.service.testBountyGame(_ctx.getClient(), createConfig(), rl);
                 _ctx.getBangClient().clearPopup(this, true);
             } catch (Exception e) {
-                rl.requestFailed(MessageBundle.taint(e.getMessage()));
+                String msg = MessageBundle.tcompose("m.test_game_failed", e.getMessage());
+                _status.setStatus(OfficeCodes.OFFICE_MSGS, msg, true);
             }
 
         } else if ("save_game".equals(event.getAction())) {
-            // TODO
+            OptionDialog.ResponseReceiver receiver = new OptionDialog.ResponseReceiver() {
+                public void resultPosted (int button, Object result) {
+                    if (button != OptionDialog.OK_BUTTON) {
+                        return;
+                    }
+                    saveGameConfig((String)result);
+                }
+            };
+            OptionDialog.showStringDialog(
+                _ctx, OfficeCodes.OFFICE_MSGS, "m.save_name",
+                new String[] { "m.save_game", "m.cancel" }, 400, "", receiver);
+
+        } else if ("load_game".equals(event.getAction())) {
+            OptionDialog.ResponseReceiver receiver = new OptionDialog.ResponseReceiver() {
+                public void resultPosted (int button, Object result) {
+                    if (button != OptionDialog.OK_BUTTON) {
+                        return;
+                    }
+                    loadGameConfig((String)result);
+                }
+            };
+            OptionDialog.showStringDialog(
+                _ctx, OfficeCodes.OFFICE_MSGS, "m.load_name",
+                new String[] { "m.load_game", "m.cancel" }, 400, "", receiver);
 
         } else if ("dismiss".equals(event.getAction())) {
             _ctx.getBangClient().clearPopup(this, true);
@@ -181,12 +217,12 @@ public class BountyGameEditor extends BDecoratedWindow
      */
     protected void refigure ()
     {
-        Integer pcount = (Integer)_opponents.getSelectedItem();
+        Integer oppcount = (Integer)_opponents.getSelectedItem();
         String scenario = (String)_scenario.getSelectedValue();
-        if (pcount == null || scenario == null) {
+        if (oppcount == null || scenario == null) {
             return;
         }
-        int players = pcount + 1;
+        int players = oppcount + 1;
 
         // if we had a board selected, try to preserve it
         BoardInfo oinfo = (BoardInfo)_board.getSelectedItem();
@@ -204,11 +240,7 @@ public class BountyGameEditor extends BDecoratedWindow
         }
 
         // enable or disable the opponent unit selection grid
-        for (int oo = 0; oo < _oppunits.length; oo++) {
-            for (int ii = 0; ii < _oppunits[oo].length; ii++) {
-                _oppunits[oo][ii].setEnabled(pcount > oo);
-            }
-        }
+        enableUnitGrid(oppcount);
     }
 
     protected BangConfig createConfig ()
@@ -229,6 +261,50 @@ public class BountyGameEditor extends BDecoratedWindow
         return config;
     }
 
+    protected void displayConfig (BangConfig config)
+    {
+        _scenario.selectValue(config.rounds.get(0).scenario);
+        _opponents.selectItem(Integer.valueOf(config.teams.size()-1));
+
+        // locate and select the correct board
+        for (int ii = 0; ii < _board.getItemCount(); ii++) {
+            BoardInfo info = (BoardInfo)_board.getItem(ii);
+            if (info.name.equals(config.rounds.get(0).board)) {
+                _board.selectItem(ii);
+                break;
+            }
+        }
+
+        // configure the units
+        for (int pidx = 0; pidx < config.teams.size(); pidx++) {
+            BangConfig.Player player = config.teams.get(pidx);
+            BComboBox[] units = (pidx == 0) ? _punits : _oppunits[pidx-1];
+            units[0].selectValue(player.bigShot);
+            for (int uu = 1; uu < units.length; uu++) {
+                units[uu].selectValue((player.team != null && player.team.length > (uu-1)) ?
+                                      player.team[uu-1] : null);
+            }
+        }
+        enableUnitGrid(config.teams.size()-1);
+
+        _criterion.removeAll();
+        for (Criterion crit : config.criterion) {
+            _criterion.add(CriterionEditor.createEditor(_ctx, crit));
+        }
+
+        BountyGameEditor.this.pack();
+        BountyGameEditor.this.center();
+    }
+
+    protected void enableUnitGrid (int oppcount)
+    {
+        for (int oo = 0; oo < _oppunits.length; oo++) {
+            for (int ii = 0; ii < _oppunits[oo].length; ii++) {
+                _oppunits[oo][ii].setEnabled(oppcount > oo);
+            }
+        }
+    }
+
     protected String[] getTeam (BComboBox[] units)
     {
         ArrayList<String> team = new ArrayList<String>();
@@ -241,6 +317,45 @@ public class BountyGameEditor extends BDecoratedWindow
         return team.toArray(new String[team.size()]);
     }
 
+    protected void loadGameConfig (String filename)
+    {
+        try {
+            File file = getFile(filename);
+            displayConfig((BangConfig)BinaryImporter.getInstance().load(file));
+            _status.setStatus(OfficeCodes.OFFICE_MSGS,
+                              MessageBundle.tcompose("m.loaded_game", file), false);
+
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to load bounty game.", e);
+            _status.setStatus(OfficeCodes.OFFICE_MSGS,
+                              MessageBundle.tcompose("m.load_game_failed", e.getMessage()), true);
+        }
+    }
+
+    protected void saveGameConfig (String filename)
+    {
+        try {
+            File file = getFile(filename);
+            BinaryExporter.getInstance().save(createConfig(), file);
+            _status.setStatus(OfficeCodes.OFFICE_MSGS,
+                              MessageBundle.tcompose("m.saved_game", file), false);
+
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to save bounty game.", e);
+            _status.setStatus(OfficeCodes.OFFICE_MSGS,
+                              MessageBundle.tcompose("m.save_game_failed", e.getMessage()), true);
+        }
+    }
+
+    protected File getFile (String filename)
+    {
+        if (!filename.endsWith(".dat")) {
+            filename = filename + ".dat";
+        }
+        return new File(System.getProperty("user.home") + File.separator +
+                        "Desktop" + File.separator + filename);
+    }
+
     protected ActionListener _refigger = new ActionListener() {
         public void actionPerformed (ActionEvent event) {
             refigure();
@@ -250,6 +365,7 @@ public class BountyGameEditor extends BDecoratedWindow
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected OfficeObject _offobj;
+    protected StatusLabel _status;
 
     protected BComboBox _opponents;
     protected BComboBox _scenario;

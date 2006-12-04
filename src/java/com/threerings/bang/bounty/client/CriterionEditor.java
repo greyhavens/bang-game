@@ -43,10 +43,28 @@ public abstract class CriterionEditor extends BContainer
         return editor;
     }
 
+    public static CriterionEditor createEditor (BangContext ctx, Criterion criterion)
+    {
+        CriterionEditor editor;
+        if (criterion instanceof IntStatCriterion) {
+            editor = new IntStatEditor();
+        } else {
+            throw new IllegalArgumentException("Unknown criterion " + criterion + ".");
+        }
+        editor.init(ctx);
+        editor.setCriterion(criterion);
+        return editor;
+    }
+
     /**
      * Returns the criterion currently configured in this editor.
      */
     public abstract Criterion getCriterion ();
+
+    /**
+     * Configures this editor based on the contents of the supplied criterion.
+     */
+    public abstract void setCriterion (Criterion criterion);
 
     protected CriterionEditor ()
     {
@@ -77,6 +95,13 @@ public abstract class CriterionEditor extends BContainer
             crit.condition = (IntStatCriterion.Condition)_condition.getSelectedItem();
             crit.value = Integer.parseInt(_value.getText());
             return crit;
+        }
+
+        public void setCriterion (Criterion criterion) {
+            IntStatCriterion crit = (IntStatCriterion)criterion;
+            _stat.selectValue(crit.stat);
+            _condition.selectItem(crit.condition);
+            _value.setText(String.valueOf(crit.value));
         }
 
         protected void createInterface () {
