@@ -107,20 +107,13 @@ public class TownView extends BWindow
             ClassLoader loader = getClass().getClassLoader();
             props.load(loader.getResourceAsStream(mpath));
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to load menu properties " +
-                    "[path=" + mpath + "].", e);
+            log.log(Level.WARNING, "Failed to load menu properties [path=" + mpath + "].", e);
         }
 
-        BangBootstrapData bbd = (BangBootstrapData)
-            _bctx.getClient().getBootstrapData();
+        // register the commands for our various shops
         Enumeration iter = props.propertyNames();
         while (iter.hasMoreElements()) {
             String command = (String)iter.nextElement();
-            // temporary sneakiness to disable the train station for
-            // non-insiders on the public server
-            if (command.equals("station") && bbd.stationOid == 0) {
-                continue;
-            }
             _commands.put(props.getProperty(command), command);
         }
 
@@ -129,7 +122,7 @@ public class TownView extends BWindow
 
         // create our overlay menu buttons
         GroupLayout gl = GroupLayout.makeHoriz(
-                GroupLayout.STRETCH, GroupLayout.LEFT, GroupLayout.NONE);
+            GroupLayout.STRETCH, GroupLayout.LEFT, GroupLayout.NONE);
         gl.setGap(0);
         gl.setOffAxisJustification(GroupLayout.BOTTOM);
         add(_menu = new BContainer(gl) {
@@ -143,9 +136,8 @@ public class TownView extends BWindow
             }
         });
         _menu.setStyleClass("town_menubar");
-        gl = GroupLayout.makeHoriz(GroupLayout.LEFT);
-        gl.setGap(0);
-        BContainer left = new BContainer(gl);
+
+        BContainer left = new BContainer(GroupLayout.makeHoriz(GroupLayout.LEFT).setGap(0));
         _menu.add(left, GroupLayout.FIXED);
         BButton button = new BButton(new BlankIcon(142, 33), this, "tutorials");
         button.setStyleClass("tutorials_button");
@@ -160,12 +152,23 @@ public class TownView extends BWindow
         button = new BButton(new BlankIcon(128, 30), this, "exit");
         button.setStyleClass("exit_button");
         _menu.add(button, GroupLayout.FIXED);
+
+        // if we're an admin add some temporary buttons
+        if (ctx.getUserObject().tokens.isAdmin()) {
+            add(_admin = GroupLayout.makeHBox(GroupLayout.CENTER));
+            ActionListener fire = new ActionListener() {
+                public void actionPerformed (ActionEvent event) {
+                    fireCommand(event.getAction());
+                }
+            };
+            _admin.add(new BButton("Sheriff's Office", fire, "office"));
+            _admin.add(new BButton("Hideout", fire, "hideout"));
+        }
     }
 
     /**
-     * Makes the town view responsive to user input or not. It may start out
-     * unresponsive when we're showing the create avatar or first time tutorial
-     * dialogs.
+     * Makes the town view responsive to user input or not. It may start out unresponsive when
+     * we're showing the create avatar or first time tutorial dialogs.
      */
     public void setActive (boolean active)
     {
@@ -201,8 +204,7 @@ public class TownView extends BWindow
             _bctx.getApp().stop();
 
         } else if ("tutorials".equals(cmd)) {
-            _bctx.getBangClient().getPopupManager().showPopup(
-                FKeyPopups.Type.TUTORIALS);
+            _bctx.getBangClient().getPopupManager().showPopup(FKeyPopups.Type.TUTORIALS);
 
         } else if ("saddlebag".equals(cmd)) {
             StatusView.showStatusTab(_bctx, StatusView.ITEMS_TAB);
@@ -259,8 +261,7 @@ public class TownView extends BWindow
                 public void mousePressed (MouseEvent me) {
                     if (_hsprite != null) {
                         enterBuilding(((Prop)_hsprite.getPiece()).getType());
-                        // clear out the hover sprite so that we don't booch it
-                        // if we double click
+                        // clear out the hover sprite so that we don't booch it if we double click
                         hoverSpritesChanged(null, null);
                     } else if (_ctx.getCameraHandler().cameraIsMoving()) {
                         _ctx.getCameraHandler().skipPath();
@@ -273,25 +274,21 @@ public class TownView extends BWindow
             _hstate.getDiffuse().set(ColorRGBA.white);
             _hstate.getEmissive().set(ColorRGBA.white);
 
-            BangBootstrapData bbd =
-                (BangBootstrapData)_bctx.getClient().getBootstrapData();
+            BangBootstrapData bbd = (BangBootstrapData)_bctx.getClient().getBootstrapData();
             _safesub = new SafeSubscriber<TownObject>(bbd.townOid, this);
         }
 
         /**
-         * Attempts to load the town menu board from the specified resource
-         * path.
+         * Attempts to load the town menu board from the specified resource path.
          */
         public void loadBoard (String townId)
             throws IOException
         {
             BoardFile bfile = BoardFile.loadFrom(
-                _ctx.getResourceManager().getResourceFile(
-                    "menu/" + townId + "/town.board"));
+                _ctx.getResourceManager().getResourceFile("menu/" + townId + "/town.board"));
             BangObject bangobj = new BangObject();
-            // we only want to configure the board name the first time we're
-            // shown as it will trigger a marquee being displayed with the town
-            // name
+            // we only want to configure the board name the first time we're shown as it will
+            // trigger a marquee being displayed with the town name
             bangobj.boardName = _presented.contains(townId) ? null : bfile.name;
             bangobj.board = bfile.board;
             bangobj.pieces = new ModifiableDSet<Piece>(bfile.pieces);
@@ -303,8 +300,8 @@ public class TownView extends BWindow
         {
             super.refreshBoard();
 
-            // if this is the first time this town is being shown, do our
-            // aerial sweep, otherwise just go right to the main view
+            // if this is the first time this town is being shown, do our aerial sweep, otherwise
+            // just go right to the main view
             String townId = _bctx.getUserObject().townId;
             String view = _presented.contains(townId) ? "main" : "aerial";
             _presented.add(townId);
@@ -341,7 +338,7 @@ public class TownView extends BWindow
         public void requestFailed (int oid, ObjectAccessException cause)
         {
             log.warning("Failed to subscribe to town object! [oid=" + oid +
-                ", cause=" + cause + "].");
+                        ", cause=" + cause + "].");
         }
 
         // from interface AttributeChangeListener
@@ -393,10 +390,8 @@ public class TownView extends BWindow
         @Override // documentation inherited
         protected boolean shouldShowStarter (Piece piece)
         {
-            String type = (piece instanceof Prop) ?
-                ((Prop)piece).getType() : "";
-            return super.shouldShowStarter(piece) ||
-                _commands.containsKey(type) ||
+            String type = (piece instanceof Prop) ? ((Prop)piece).getType() : "";
+            return super.shouldShowStarter(piece) || _commands.containsKey(type) ||
                 type.indexOf("pop_sign") != -1;
         }
 
@@ -417,24 +412,22 @@ public class TownView extends BWindow
         {
             super.fadeInComplete();
 
-            if (_vpsprite != null &&
-                !((Viewpoint)_vpsprite.getPiece()).name.equals("main")) {
-                // clear out any hover sprite that was established in the
-                // moment before we start our cinematic entrance
+            if (_vpsprite != null && !((Viewpoint)_vpsprite.getPiece()).name.equals("main")) {
+                // clear out any hover sprite that was established in the moment before we start
+                // our cinematic entrance
                 hoverSpritesChanged(null, null);
                 // sweep the camera from the aerial viewpoint to the main
                 moveToViewpoint("main", 4f);
 
-                // wait until we've finished animating the camera and then
-                // check to see if we should display a tutorial or intro
-                _ctx.getCameraHandler().addCameraObserver(
-                    new CameraPath.Observer() {
-                        public boolean pathCompleted (CameraPath path) {
-                            finishedIntroPan();
-                            hoverSpritesChanged(_hover, _thover);
-                            return false; // removes our observer
-                        }
-                    });
+                // wait until we've finished animating the camera and then check to see if we
+                // should display a tutorial or intro
+                _ctx.getCameraHandler().addCameraObserver(new CameraPath.Observer() {
+                    public boolean pathCompleted (CameraPath path) {
+                        finishedIntroPan();
+                        hoverSpritesChanged(_hover, _thover);
+                        return false; // removes our observer
+                    }
+                });
 
             } else {
                 finishedIntroPan();
@@ -461,8 +454,7 @@ public class TownView extends BWindow
             _hsprite = null;
 
             // if we're not yet enabled or the camera is moving, no hovering
-            if (!_active || _ctx.getCameraHandler().cameraIsMoving() ||
-                hover == null) {
+            if (!_active || _ctx.getCameraHandler().cameraIsMoving() || hover == null) {
                 _tip.setText(_msgs.get("m.tip_select"));
                 return;
             }
@@ -498,11 +490,9 @@ public class TownView extends BWindow
                 return;
             }
 
-            // wait until we've finished animating the camera before we fire
-            // the associated command otherwise things are jerky as it tries to
-            // load up the UI while we're moving
-            _ctx.getCameraHandler().addCameraObserver(
-                new CameraPath.Observer() {
+            // wait until we've finished animating the camera before we fire the associated command
+            // otherwise things are jerky as it tries to load up the UI while we're moving
+            _ctx.getCameraHandler().addCameraObserver(new CameraPath.Observer() {
                 public boolean pathCompleted (CameraPath path) {
                     BangUI.playShopEntry(_bctx.getUserObject().townId, cmd);
                     fireCommand(cmd);
@@ -511,8 +501,7 @@ public class TownView extends BWindow
             });
         }
 
-        protected boolean moveToViewpoint (
-            String view, float duration)
+        protected boolean moveToViewpoint (String view, float duration)
         {
             Viewpoint piece = getViewpoint(view);
             if (piece == null) {
@@ -520,10 +509,8 @@ public class TownView extends BWindow
             }
             ViewpointSprite sprite = (ViewpointSprite)getPieceSprite(piece);
             _ctx.getCameraHandler().moveCamera(
-                new PanPath(_ctx.getCameraHandler(),
-                            sprite.getLocalTranslation(),
-                            sprite.getViewRotation(),
-                            duration));
+                new PanPath(_ctx.getCameraHandler(), sprite.getLocalTranslation(),
+                            sprite.getViewRotation(), duration));
             return true;
         }
 
@@ -535,11 +522,9 @@ public class TownView extends BWindow
                     return true;
                 }
                 public void handleResult () {
-                    // delete the old texture using a dummy state now that
-                    // we're in the main thread
+                    // delete the old texture using a dummy state now that we're in the main thread
                     if (_oldTextureId > 0) {
-                        TextureState tstate =
-                            _ctx.getRenderer().createTextureState();
+                        TextureState tstate = _ctx.getRenderer().createTextureState();
                         Texture tex = new Texture();
                         tex.setTextureId(_oldTextureId);
                         tstate.setTexture(tex);
@@ -554,20 +539,17 @@ public class TownView extends BWindow
         protected int updatePopulationSignTexture (int pop)
         {
             // get a reference to the buffered sign image
-            String townId = _bctx.getUserObject().townId,
-                path = "props/" + townId + "/structures/pop_sign_" + townId +
-                "/sign.png";
+            String townId = _bctx.getUserObject().townId;
+            String path = "props/" + townId + "/structures/pop_sign_" + townId + "/sign.png";
             BufferedImage bimg = _ctx.getImageCache().getBufferedImage(path);
             if (bimg == null) {
-                log.warning("Couldn't find population sign image [path=" +
-                    path + "].");
+                log.warning("Couldn't find population sign image [path=" + path + "].");
                 return 0;
             }
 
             // write population into image
             int width = bimg.getWidth(), height = bimg.getHeight();
-            BufferedImage img = new BufferedImage(
-                width, height, BufferedImage.TYPE_INT_RGB);
+            BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             Graphics2D gfx = img.createGraphics();
             gfx.drawImage(bimg, 0, 0, null);
             gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -575,13 +557,11 @@ public class TownView extends BWindow
             gfx.setColor(TOWN_COLORS[BangUtil.getTownIndex(townId)]);
             gfx.setFont(new Font("Dom Casual", Font.PLAIN, 40));
             String pstr = Integer.toString(pop);
-            gfx.drawString(
-                pstr, (width - gfx.getFontMetrics().stringWidth(pstr)) / 2,
-                height - 32);
+            gfx.drawString(pstr, (width - gfx.getFontMetrics().stringWidth(pstr)) / 2, height - 32);
             gfx.dispose();
 
-            // get a reference to the population sign texture (and keep it
-            // around, so it doesn't disappear from the cache) and update
+            // get a reference to the population sign texture (and keep it around, so it doesn't
+            // disappear from the cache) and update
             if (_poptex == null) {
                 _poptex = _ctx.getTextureCache().getTexture(path);
             }
@@ -606,14 +586,18 @@ public class TownView extends BWindow
     /** Used to layout our overlapping town menu components. */
     protected class TownLayout extends BLayoutManager
     {
-        public Dimension computePreferredSize (
-            BContainer target, int whint, int hhint) {
+        public Dimension computePreferredSize (BContainer target, int whint, int hhint) {
             return _bview.getPreferredSize(whint, hhint);
         }
         public void layoutContainer (BContainer target) {
             // the town view takes up the whole window
             Rectangle bounds = target.getBounds();
             _bview.setBounds(0, 0, bounds.width, bounds.height);
+            // and the extra buttons in the top-left
+            if (_admin != null) {
+                Dimension aps = _admin.getPreferredSize(bounds.width, -1);
+                _admin.setBounds(5, bounds.height-aps.height-5, aps.width, aps.height);
+            }
             // then the menu bar is overlayed at the bottom
             Dimension mps = _menu.getPreferredSize(bounds.width, -1);
             _menu.setBounds(0, 0, bounds.width, mps.height);
@@ -625,12 +609,11 @@ public class TownView extends BWindow
     protected boolean _active;
 
     protected TownBoardView _bview;
-    protected BContainer _menu;
+    protected BContainer _menu, _admin;
     protected BLabel _tip;
-    
+
     /** Maps prop types to commands. */
-    protected HashMap<String, String> _commands =
-        new HashMap<String, String>();
+    protected HashMap<String, String> _commands = new HashMap<String, String>();
 
     /** Used to ensure that we only "present" each town once per session. */
     protected static HashSet<String> _presented = new HashSet<String>();
