@@ -17,6 +17,7 @@ import com.threerings.jme.model.Model;
 import com.threerings.jme.model.ModelMesh;
 import com.threerings.jme.util.SpatialVisitor;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
 import com.threerings.bang.util.RenderUtil;
 
@@ -123,7 +124,8 @@ public class TreeBedSprite extends ActiveSprite
     @Override // documentation inherited
     protected String[] getIdleAnimations ()
     {
-        return _dead ? null : new String[] { "idle_stage" + _growth };
+        return (BangPrefs.isMediumDetail() && !_dead) ?
+            new String[] { "idle_stage" + _growth } : null;
     }
 
     @Override // documentation inherited

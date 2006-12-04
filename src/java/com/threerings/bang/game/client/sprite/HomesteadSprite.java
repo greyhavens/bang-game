@@ -5,6 +5,8 @@ package com.threerings.bang.game.client.sprite;
 
 import com.jme.math.FastMath;
 
+import com.threerings.bang.client.BangPrefs;
+
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Homestead;
@@ -105,7 +107,8 @@ public class HomesteadSprite extends ActiveSprite
     @Override // documentation inherited
     protected String[] getIdleAnimations ()
     {
-        return new String[] { (_powner == -1 ? "un" : "") + "claimed_idle" };
+        return BangPrefs.isMediumDetail() ?
+            new String[] { (_powner == -1 ? "un" : "") + "claimed_idle" } : null;
     }
 
     protected PieceTarget _target;

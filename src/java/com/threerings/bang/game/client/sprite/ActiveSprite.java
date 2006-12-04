@@ -21,6 +21,7 @@ import com.threerings.jme.sprite.LinePath;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.jme.sprite.SpriteObserver;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.util.RenderUtil;
 
 import com.threerings.bang.game.data.piece.Piece;
@@ -419,7 +420,7 @@ public class ActiveSprite extends PieceSprite
      */
     protected String[] getIdleAnimations ()
     {
-        return _ianims;
+        return BangPrefs.isMediumDetail() ? _ianims : null;
     }
     
     /** Used to dispatch {@link ActionObserver#actionCompleted}. */
