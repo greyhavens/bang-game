@@ -111,6 +111,20 @@ public class OptionDialog extends BDecoratedWindow
         ctx.getBangClient().displayPopup(dialog, true, 400);
     }
 
+    // documentation inherited from interface ActionListener
+    public void actionPerformed (ActionEvent event)
+    {
+        _ctx.getBangClient().clearPopup(this, false);
+        String value = (_input == null) ? null : _input.getText();
+        int button;
+        if (event.getSource() == _input) {
+            button = 0;
+        } else {
+            button = ListUtil.indexOf(_buttons, event.getSource());
+        }
+        _receiver.resultPosted(button, value);
+    }
+
     protected OptionDialog (BangContext ctx, String bundle, String text,
         String[] buttons, ResponseReceiver receiver)
     {
@@ -141,18 +155,14 @@ public class OptionDialog extends BDecoratedWindow
         _input.requestFocus();
     }
 
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
+    @Override // from BComponent
+    protected void wasAdded ()
     {
-        _ctx.getBangClient().clearPopup(this, false);
-        String value = (_input == null) ? null : _input.getText();
-        int button;
-        if (event.getSource() == _input) {
-            button = 0;
-        } else {
-            button = ListUtil.indexOf(_buttons, event.getSource());
+        super.wasAdded();
+
+        if (_input != null && _input.isShowing()) {
+            _input.requestFocus();
         }
-        _receiver.resultPosted(button, value);
     }
 
     protected BangContext _ctx;
