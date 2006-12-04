@@ -3,9 +3,11 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 
 import com.threerings.jme.sprite.Path;
+import com.threerings.jme.sprite.PathUtil;
 
 import com.threerings.media.image.Colorization;
 
@@ -14,6 +16,8 @@ import com.threerings.bang.client.Config;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Train;
+
+import static com.threerings.bang.client.BangMetrics.*;
 
 /**
  * Displays a train piece.
@@ -43,13 +47,40 @@ public class TrainSprite extends MobileSprite
         
         // unless we're the last car on the train, proceed immediately to the
         // next car's update so that all cars move simultaneously
-        return train.isLast();
+        return train.isLast() && isMoving();
     }
     
     @Override // documentation inherited
     protected void createDustManager ()
     {
         // trains do not kick up dust
+    }
+
+    @Override // documentation inherited
+    protected void moveSprite (BangBoard board)
+    {
+        if (!_fastAnimation) {
+            super.moveSprite(board);
+            return;
+        }
+
+        // Special handling for fast animated trains
+        if (!isMoving()) {
+            Train train = (Train)_piece;
+            boolean last = (_lastLastX != Train.UNSET);
+            setLocation(board, train.x, train.y);
+
+            // figure out the proper rotation
+            Vector3f temp = new Vector3f();
+            Vector3f first = new Vector3f(train.lastX, train.lastY, 0f);
+            Vector3f second = (train.nextX != Train.UNSET ?
+                        new Vector3f(train.nextX, train.nextY, 0f) :
+                        new Vector3f(train.x, train.y, 0f));
+            second.subtract(first, temp);
+            Quaternion rotate = new Quaternion();
+            PathUtil.computeRotation(UP, FORWARD, temp, rotate);
+            setLocalRotation(rotate);
+        }
     }
     
     @Override // documentation inherited

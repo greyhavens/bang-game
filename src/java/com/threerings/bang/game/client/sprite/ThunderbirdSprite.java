@@ -50,6 +50,7 @@ public class ThunderbirdSprite extends UnitSprite
     {
         if (_effectHandler == null || _fastAnimation) {
             super.moveSprite(board);
+            return;
         }
 
         // We want to be able to generate return paths
