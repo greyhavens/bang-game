@@ -226,9 +226,9 @@ public class TabbedChatView extends BContainer
             // clear the alert icon, if present
             if (_myPane != null) {
                 BButton btn = _myPane.getTabButton(this);
-            }
-            if (btn != null) {
-                btn.setIcon(null);
+                if (btn != null) {
+                    btn.setIcon(null);
+                }
             }
         }
 
