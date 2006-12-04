@@ -58,7 +58,7 @@ public class index extends AdminLogic
 
             // see if it's in the last week
             if (now - entry.left.getTime() < ONE_WEEK_MILLIS) {
-                map.put(entry.left.toString(), entry.right);
+                map.put(entry.left + " day", entry.right);
             }
 
             // see if it's in the last month
