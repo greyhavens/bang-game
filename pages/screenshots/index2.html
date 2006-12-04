@@ -24,55 +24,14 @@
 //Change this to the orginal thumbnail gallery fo the specific gallery
 var upURL = "index.html";
 
-var Pic = new Array();
-var counterCheck = 0;
-var check = new Array();
-var checkTotal = 1;
-for (counterCheck = 0; counterCheck < screenshotsTotal; counterCheck++) {
-	check[counterCheck] = 1;
-}
-
-check[screenshotCurrent-1] = 0;
-
-if (screenshotsTotal >= 3) {
-	check[screenshotPrevious-1] = 0;
-	check[screenshotNext-1] = 0;
-	checkTotal = 3;
-} else if (screenshotsTotal == 2) {
-	check[0] = 0;
-	check[1] = 0;
-	checkTotal = 2;
-}
-	
-var t;
-var j = 0;
-var p = Pic.length;
-
-var preLoad = new Array();
-
-if (screenshotsTotal >= 3) {
-	for (i = 0; i < p; i++){
-	   preLoad[i] = new Image();
-	   preLoad[i].src = Pic[i];
-	}
-} else if (screenshotsTotal == 1){
-	   preLoad[0] = new Image();
-	   preLoad[0].src = Pic[0];
-} else if (screenshotsTotal == 2){
-	   preLoad[0] = new Image();
-	   preLoad[0].src = Pic[0];
-	   preLoad[1] = new Image();
-	   preLoad[1].src = Pic[1];
-}
-
 // Layout the nav
-printGalleryNav();
+printGalleryNavTop();
 
 // Layout Current image requested so if you click on it, it'll go to the next one
-document.write ('<a href="'+sPath+'?'+imgDir+','+screenshotPrevious+','+screenshotsTotal+',#pics"><img src = "'+ imgDir + screenshotCurrent +'.png" border="0" name="Screenshots" class="thumb" alt="Click to view next image"></a>');
+document.write ('<a href="" onClick="return nextImage();"><img src = "'+ imgDir + screenshotCurrent +'.png" border="0" name="screenshot" class="thumb" alt="Click to view next image"></a>');
 
 // Layout the nav
-printGalleryNav();
+printGalleryNavBottom();
 
 //]]>
 </script>
