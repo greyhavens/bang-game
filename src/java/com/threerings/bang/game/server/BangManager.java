@@ -855,6 +855,9 @@ public class BangManager extends GameManager
             break;
 
         case BangObject.SELECT_PHASE:
+            checkStartNextPhase();
+            break;
+
         case BangObject.SKIP_SELECT_PHASE:
             startNextPhase();
             break;
