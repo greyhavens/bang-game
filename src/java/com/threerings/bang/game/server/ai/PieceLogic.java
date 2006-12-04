@@ -107,12 +107,29 @@ public abstract class PieceLogic
     protected Point getClosestPoint (
         Unit unit, PointSet moves, int dx, int dy, int tdist)
     {
+        return getClosestPoint(unit, moves, dx, dy, tdist, false);
+    }
+
+    /**
+     * Gets the closest point to the provided destination that the unit can
+     * reach in one move (or <code>null</code> if the destination is
+     * unreachable).
+     *
+     * @param tdist the desired distance to the target: 0 to land on the
+     * target, 1 to land next to the target, or, as a special case, -1 to
+     * land within the unit's firing range
+     * @param mustMove force the unit to move even if they're standing on
+     * the closest point already
+     */
+    protected Point getClosestPoint (
+        Unit unit, PointSet moves, int dx, int dy, int tdist, boolean mustMove)
+    {
         int mindist = (tdist < 0) ? unit.getMinFireDistance() : 0,
             maxdist = (tdist < 0) ? unit.getMaxFireDistance() : tdist;
         
         // find out if we're already there
         int dist = Piece.getDistance(unit.x, unit.y, dx, dy);
-        if (dist >= mindist && dist <= maxdist) {
+        if (!mustMove && dist >= mindist && dist <= maxdist) {
             return new Point(unit.x, unit.y);
         }
         

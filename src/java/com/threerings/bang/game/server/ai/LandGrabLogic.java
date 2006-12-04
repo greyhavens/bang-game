@@ -98,8 +98,14 @@ public class LandGrabLogic extends AILogic
         // find the best thing to shoot in the general direction of the
         // objective homestead
         if (ostead != null) {
+            boolean mustMove = false;
+            if (isBShot && ostead.owner < 0 && 
+                    unit.getDistance(ostead.x, ostead.y) == 1) {
+                moves.remove(unit.x, unit.y);
+                mustMove = true;
+            }
             Point mv = getClosestPoint(unit, moves, ostead.x, ostead.y,
-                (ostead.owner < 0) ? 1 : -1);
+                (ostead.owner < 0) ? 1 : -1, mustMove);
             if (mv != null) {
                 if (isBShot && ostead.owner < 0 && 
                         ostead.getDistance(mv.x, mv.y) == 1) {
