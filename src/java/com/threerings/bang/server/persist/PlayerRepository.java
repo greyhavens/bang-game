@@ -128,8 +128,8 @@ public class PlayerRepository extends JORARepository
     /**
      * Configures a player's handle, and gender.
      *
-     * @return true if the player was properly configured, false if the
-     * requested handle is a duplicate of an existing handle.
+     * @return true if the player was properly configured, false if the requested handle is a
+     * duplicate of an existing handle.
      */
     public boolean configurePlayer (int playerId, Handle handle, boolean isMale)
         throws PersistenceException
@@ -137,8 +137,7 @@ public class PlayerRepository extends JORARepository
         String gensql = isMale ? ("| " + PlayerRecord.IS_MALE_FLAG) :
             ("& " + ~PlayerRecord.IS_MALE_FLAG);
         final String query = "update PLAYERS set FLAGS = FLAGS " + gensql +
-            ", HANDLE = " + JDBCUtil.escape(handle.toString()) +
-            " where PLAYER_ID = " + playerId;
+            ", HANDLE = " + JDBCUtil.escape(handle.toString()) + " where PLAYER_ID = " + playerId;
         return executeUpdate(new Operation<Boolean>() {
             public Boolean invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -170,19 +169,17 @@ public class PlayerRepository extends JORARepository
     /**
      * Changes the gang affiliation of the specified player.
      *
-     * @param gangId the id of the player's gang, or 0 for none
-     * @param rank the player's rank in the gang
-     * @param joined the time at which the player joined the gang
+     * @param gangId the id of the player's gang, or 0 for none.
+     * @param rank the player's rank in the gang.
+     * @param joined the time at which the player joined the gang.
      */
-    public void updatePlayerGang (
-        int playerId, int gangId, byte rank, long joined)
+    public void updatePlayerGang (int playerId, int gangId, byte rank, long joined)
         throws PersistenceException
     {
-        StringBuffer update = new StringBuffer(
-            "update PLAYERS set GANG_ID = " + gangId);
+        StringBuffer update = new StringBuffer("update PLAYERS set GANG_ID = " + gangId);
         if (gangId > 0) {
-            update.append(", GANG_RANK = " + rank + ", JOINED_GANG = '" +
-                new Timestamp(joined) + "'");
+            update.append(", GANG_RANK = " + rank +
+                          ", JOINED_GANG = '" + new Timestamp(joined) + "'");
         }
         update.append(" where PLAYER_ID = " + playerId);
         checkedUpdate(update.toString(), 1);
@@ -208,8 +205,7 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Deducts the specified amount of scrip from the specified player's
-     * account.
+     * Deducts the specified amount of scrip from the specified player's account.
      */
     public void spendScrip (int playerId, int amount)
         throws PersistenceException
@@ -218,8 +214,7 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Adds the specified amount of scrip to the specified player's
-     * account.
+     * Adds the specified amount of scrip to the specified player's account.
      */
     public void grantScrip (int playerId, int amount)
         throws PersistenceException
@@ -228,19 +223,18 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * <em>Do not use this method!</em> It exists only because we must work
-     * with the coin system which tracks players by name rather than id.
+     * <em>Do not use this method!</em> It exists only because we must work with the coin system
+     * which tracks players by name rather than id.
      */
     public void grantScrip (String accountName, int amount)
         throws PersistenceException
     {
-        updateScrip("ACCOUNT_NAME = " + JDBCUtil.escape(accountName),
-                    amount, "grant");
+        updateScrip("ACCOUNT_NAME = " + JDBCUtil.escape(accountName), amount, "grant");
     }
 
     /**
-     * Updates the specified player's record to reflect that they now have
-     * access to the specified town (and all towns up to that point).
+     * Updates the specified player's record to reflect that they now have access to the specified
+     * town (and all towns up to that point).
      */
     public void grantTownAccess (int playerId, String townId)
         throws PersistenceException
@@ -250,10 +244,9 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Mimics the disabling of deleted players by renaming them to an
-     * invalid value that we do in our user management system. This is
-     * triggered by us receiving a player action indicating that the
-     * player was deleted.
+     * Mimics the disabling of deleted players by renaming them to an invalid value that we do in
+     * our user management system. This is triggered by us receiving a player action indicating
+     * that the player was deleted.
      */
     public void disablePlayer (String accountName, String disabledName)
         throws PersistenceException
@@ -273,20 +266,18 @@ public class PlayerRepository extends JORARepository
             break;
 
         default:
-            log.warning("Attempt to disable player account resulted in " +
-                        "weirdness [aname=" + accountName +
-                        ", dname=" + disabledName + ", mods=" + mods + "].");
+            log.warning("Attempt to disable player account resulted in weirdness " +
+                        "[aname=" + accountName + ", dname=" + disabledName +
+                        ", mods=" + mods + "].");
             break;
         }
     }
 
     /**
-     * Note that a user's session has ended: increment their sessions, add in
-     * the number of minutes spent online, set their last session time to now
-     * and update any changed poses.
+     * Note that a user's session has ended: increment their sessions, add in the number of minutes
+     * spent online, set their last session time to now and update any changed poses.
      */
-    public void noteSessionEnded (int playerId, String[] poses,
-                                  boolean[] changed, int minutes)
+    public void noteSessionEnded (int playerId, String[] poses, boolean[] changed, int minutes)
         throws PersistenceException
     {
         StringBuffer update = new StringBuffer();
@@ -314,12 +305,11 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Registers an opinion of one player about another (friend or foe) or
-     * clears out any registered opinion.
+     * Registers an opinion of one player about another (friend or foe) or clears out any
+     * registered opinion.
      *
-     * @param opinion one of {@link FolkRecord#FRIEND} or {@link
-     * FolkRecord#FOE} or {@link FolkRecord#NO_OPINION} if the opinion record
-     * is to be cleared.
+     * @param opinion one of {@link FolkRecord#FRIEND} or {@link FolkRecord#FOE} or {@link
+     * FolkRecord#NO_OPINION} if the opinion record is to be cleared.
      */
     public void registerOpinion (int playerId, int targetId, byte opinion)
         throws PersistenceException
@@ -336,16 +326,14 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Returns the player id corresponding to the given handle, or -1
-     * if no such player exists.
+     * Returns the player id corresponding to the given handle, or -1 if no such player exists.
      */
     public int getPlayerId (Statement stmt, Name handle)
         throws SQLException, PersistenceException
     {
         int playerId = -1;
         ResultSet rs = stmt.executeQuery(
-            "select PLAYER_ID from PLAYERS where HANDLE = " +
-            JDBCUtil.escape(handle.toString()));
+            "select PLAYER_ID from PLAYERS where HANDLE = " + JDBCUtil.escape(handle.toString()));
         while (rs.next()) {
             playerId = rs.getInt(1);
         }
@@ -364,17 +352,15 @@ public class PlayerRepository extends JORARepository
         }
 
         String action = type.equals("grant") ? "+" : "-";
-        String query = "update PLAYERS set SCRIP = SCRIP " + action + " " +
-            amount + " where " + where;
+        String query = "update PLAYERS set SCRIP = SCRIP " + action + " " + amount +
+            " where " + where;
         int mods = update(query);
         if (mods == 0) {
-            throw new PersistenceException(
-                "Scrip " + type + " modified zero rows [where=" + where +
-                ", amount=" + amount + "]");
+            throw new PersistenceException("Scrip " + type + " modified zero rows [where=" + where +
+                                           ", amount=" + amount + "]");
         } else if (mods > 1) {
-            log.warning("Scrip " + type + " modified multiple rows " +
-                        "[where=" + where + ", amount=" + amount +
-                        ", mods=" + mods + "].");
+            log.warning("Scrip " + type + " modified multiple rows [where=" + where +
+                        ", amount=" + amount + ", mods=" + mods + "].");
         }
     }
 
@@ -423,11 +409,9 @@ public class PlayerRepository extends JORARepository
     @Override // documentation inherited
     protected void createTables ()
     {
-	_ptable = new Table<PlayerRecord>(
-            PlayerRecord.class, "PLAYERS", "PLAYER_ID", true);
-	_ftable = new Table<FolkRecord>(
-            FolkRecord.class, "FOLKS", new String[] {
-                "PLAYER_ID", "TARGET_ID" }, true);
+	_ptable = new Table<PlayerRecord>(PlayerRecord.class, "PLAYERS", "PLAYER_ID", true);
+	_ftable = new Table<FolkRecord>(FolkRecord.class, "FOLKS", new String[] {
+            "PLAYER_ID", "TARGET_ID" }, true);
     }
 
     protected Table<PlayerRecord> _ptable;
