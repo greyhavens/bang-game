@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.samskivert.util.Tuple;
 import com.samskivert.velocity.InvocationContext;
 
 import com.threerings.user.OOOUser;
@@ -27,7 +26,9 @@ public class index extends AdminLogic
         throws Exception
     {
         regenerateReports(app);
-        ctx.put("sessions", _lastSessionSummary);
+        ctx.put("sessbyday", _lastSessionsByDay);
+        ctx.put("sessbyweek", _lastSessionsByWeek);
+        ctx.put("sessbymonth", _lastSessionsByMonth);
     }
 
     protected synchronized void regenerateReports (OfficeApp app)
@@ -50,15 +51,18 @@ public class index extends AdminLogic
 
         // obtain our per-day summary and consolidate it such that this week is accumulated daily,
         // the previous three accumulated weekly and the rest accumulated monthly
-        TreeMap<String,Integer> map = new TreeMap<String,Integer>(Collections.reverseOrder());
-        for (Tuple<Date,Integer> entry : app.getPlayerRepository().summarizeLastSessions()) {
-            cal.setTime(entry.left);
+        _lastSessionsByDay = new TreeMap<Date,Integer>(Collections.reverseOrder());
+        _lastSessionsByWeek = new TreeMap<Date,Integer>(Collections.reverseOrder());
+        _lastSessionsByMonth = new TreeMap<Date,Integer>(Collections.reverseOrder());
+        for (Map.Entry<Date,Integer> entry :
+                 app.getPlayerRepository().summarizeLastSessions().entrySet()) {
+            cal.setTime(entry.getKey());
             int week = cal.get(Calendar.WEEK_OF_YEAR);
             int year = cal.get(Calendar.YEAR);
 
             // see if it's in the last week
-            if (now - entry.left.getTime() < ONE_WEEK_MILLIS) {
-                map.put(entry.left + " day", entry.right);
+            if (now - entry.getKey().getTime() < ONE_WEEK_MILLIS) {
+                _lastSessionsByDay.put(entry.getKey(), entry.getValue());
             }
 
             // see if it's in the last month
@@ -70,32 +74,28 @@ public class index extends AdminLogic
                 }
             }
             if (thisMonth) {
-                String byweek = toWeek(entry.left);
-                Integer ovalue = map.get(byweek);
-                map.put(byweek, (ovalue == null) ? entry.right : (entry.right + ovalue));
+                Date wkey = toWeek(entry.getKey());
+                Integer ovalue = _lastSessionsByWeek.get(wkey);
+                int nvalue = (ovalue == null) ? entry.getValue() : (entry.getValue() + ovalue);
+                _lastSessionsByWeek.put(wkey, nvalue);
             }
 
             // also accumulate monthly
-            String bymonth = toMonth(entry.left);
-            Integer ovalue = map.get(bymonth);
-            map.put(bymonth, (ovalue == null) ? entry.right : (entry.right + ovalue));
-        }
-
-        // convert the map to a list of tuples
-        _lastSessionSummary = new ArrayList<Tuple<String,Integer>>();
-        for (Map.Entry<String,Integer> entry : map.entrySet()) {
-            _lastSessionSummary.add(new Tuple<String,Integer>(entry.getKey(), entry.getValue()));
+            Date mkey = toMonth(entry.getKey());
+            Integer ovalue = _lastSessionsByMonth.get(mkey);
+            int nvalue = (ovalue == null) ? entry.getValue() : (entry.getValue() + ovalue);
+            _lastSessionsByMonth.put(mkey, nvalue);
         }
     }
 
-    protected String toWeek (Date date)
+    protected Date toWeek (Date date)
     {
-        return convert(date, Calendar.DAY_OF_WEEK, Calendar.MONDAY) + " week";
+        return convert(date, Calendar.DAY_OF_WEEK, Calendar.MONDAY);
     }
 
-    protected String toMonth (Date date)
+    protected Date toMonth (Date date)
     {
-        return convert(date, Calendar.DAY_OF_MONTH, 1) + " month";
+        return convert(date, Calendar.DAY_OF_MONTH, 1);
     }
 
     protected Date convert (Date date, int period, int value)
@@ -107,7 +107,9 @@ public class index extends AdminLogic
     }
 
     protected static long _lastReportGen;
-    protected static ArrayList<Tuple<String,Integer>> _lastSessionSummary;
+    protected static Map<Date,Integer> _lastSessionsByDay;
+    protected static Map<Date,Integer> _lastSessionsByWeek;
+    protected static Map<Date,Integer> _lastSessionsByMonth;
 
     protected static final long REPORT_REGEN_INTERVAL = 60 * 1000L;
     protected static final long ONE_WEEK_MILLIS = 7 * 24 * 60 * 60 * 1000L;

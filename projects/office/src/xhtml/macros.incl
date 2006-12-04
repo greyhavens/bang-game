@@ -1,0 +1,13 @@
+##
+## Macros used by the Office webapp
+
+#macro(last_session $header $sessions)
+  <tr><th colspan="2">$i18n.xlate("index.$header")</th></tr>
+  <tr><td>$i18n.xlate("index.period")</td><td>$i18n.xlate("index.players")</td></tr>
+  #set ($total = 0)
+  #foreach ($row in $sessions.entrySet())
+    <tr><td>$row.key</td><td>$row.value</td></tr>
+    #set ($total = $total + $row.value)
+  #end
+  <tr><td>$i18n.xlate("index.total")</td><td>$total</td></tr>
+#end

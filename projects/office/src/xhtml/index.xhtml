@@ -12,10 +12,9 @@ $i18n.xlate("index.last_session_summary")
 
 <p/>
 <table cellpadding=2 cellspacing=2 border=1 style="border-collapse: collapse">
-<tr><td>$i18n.xlate("index.period")</td><td>$i18n.xlate("index.players")</td></tr>
-#foreach ($row in $sessions)
-<tr><td>$row.left</td><td>$row.right</td></tr>
-#end
+#last_session("byday" $sessbyday)
+#last_session("byweek" $sessbyweek)
+#last_session("bymonth" $sessbymonth)
 </table>
 
 #import("/footer.incl")

@@ -10,12 +10,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
-import com.samskivert.util.Tuple;
 
 /**
  * Extends the {@link PlayerRepository} and provides methods for obtaining statistics that are only
@@ -37,10 +37,10 @@ public class PlayerStatRepository extends PlayerRepository
      * players whose last session falls on that date. The first element of the list will be today's
      * date and it will proceed backward in time from there.
      */
-    public ArrayList<Tuple<Date,Integer>> summarizeLastSessions ()
+    public TreeMap<Date,Integer> summarizeLastSessions ()
         throws PersistenceException
     {
-        final ArrayList<Tuple<Date,Integer>> summary = new ArrayList<Tuple<Date,Integer>>();
+        final TreeMap<Date,Integer> summary = new TreeMap<Date,Integer>();
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException {
@@ -50,7 +50,7 @@ public class PlayerStatRepository extends PlayerRepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        summary.add(new Tuple<Date,Integer>(rs.getDate(1), rs.getInt(2)));
+                        summary.put(rs.getDate(1), rs.getInt(2));
                     }
                 } finally {
                     JDBCUtil.close(stmt);
