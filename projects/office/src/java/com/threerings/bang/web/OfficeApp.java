@@ -25,7 +25,7 @@ import com.samskivert.velocity.Logic;
 import com.threerings.user.OOOUserManager;
 
 import com.threerings.bang.server.ServerConfig;
-import com.threerings.bang.server.persist.PlayerRepository;
+import com.threerings.bang.server.persist.PlayerStatRepository;
 import com.threerings.bang.server.persist.StatRepository;
 
 import static com.threerings.bang.Log.log;
@@ -46,7 +46,7 @@ public class OfficeApp extends Application
     /**
      * Returns a reference to the player repository.
      */
-    public PlayerRepository getPlayerRepository ()
+    public PlayerStatRepository getPlayerRepository ()
     {
         return _playrepo;
     }
@@ -74,7 +74,7 @@ public class OfficeApp extends Application
                 ServerConfig.config.getSubProperties("oooauth"), _conprov);
 
             // create our repositories
-            _playrepo = new PlayerRepository(_conprov);
+            _playrepo = new PlayerStatRepository(_conprov);
             _statrepo = new StatRepository(_conprov);
 
 	    log.info("Sheriff's Office initialized.");
@@ -127,6 +127,6 @@ public class OfficeApp extends Application
     protected ConnectionProvider _conprov;
     protected OOOUserManager _usermgr;
 
-    protected PlayerRepository _playrepo;
+    protected PlayerStatRepository _playrepo;
     protected StatRepository _statrepo;
 }
