@@ -642,12 +642,11 @@ public class BangController extends GameController
     {
         super.gameWasCancelled();
 
-        // if the game was cancelled there were errors on the server and we are
-        // probably in a weird state, so just go back to town
+        // if the game was cancelled there were errors on the server and we are probably in a weird
+        // state, so just go back to town
         if (_ctx.getLocationDirector().leavePlace()) {
             _ctx.getBangClient().showTownView();
-            _ctx.getChatDirector().displayFeedback(
-                GameCodes.GAME_MSGS, "m.game_cancelled");
+            _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, "m.game_cancelled");
         }
     }
 
@@ -665,9 +664,9 @@ public class BangController extends GameController
             _view.showPlayerStatus();
         }
 
-        if (_config.type != BangConfig.Type.TUTORIAL || _config.allPlayersAIs()) {
-            // we re-use the playerReady mechanism to communicate that we're ready for our
-            // tutorial/practice/bounty/test game
+        if (_config.type != BangConfig.Type.SALOON || _config.allPlayersAIs()) {
+            // we re-use the playerReady mechanism to communicate that we're ready for our all
+            // non-saloon games
             playerReady();
 
         } else if (_bangobj.state == BangObject.SELECT_PHASE) {
@@ -677,8 +676,7 @@ public class BangController extends GameController
     }
 
     /**
-     * Called by the board view after it has faded in the inter round
-     * marquee.
+     * Called by the board view after it has faded in the inter round marquee.
      */
     protected void interRoundMarqueeFadeComplete ()
     {
