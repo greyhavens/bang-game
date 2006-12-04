@@ -50,54 +50,52 @@ public class index extends AdminLogic
 
         // obtain our per-day summary and consolidate it such that this week is accumulated daily,
         // the previous three accumulated weekly and the rest accumulated monthly
-        TreeMap<Date,Integer> map = new TreeMap<Date,Integer>(Collections.reverseOrder());
+        TreeMap<String,Integer> map = new TreeMap<String,Integer>(Collections.reverseOrder());
         for (Tuple<Date,Integer> entry : app.getPlayerRepository().summarizeLastSessions()) {
             cal.setTime(entry.left);
             int week = cal.get(Calendar.WEEK_OF_YEAR);
             int year = cal.get(Calendar.YEAR);
 
             // see if it's in the last week
-            if (week == weeks[0] && year == years[0]) {
-                map.put(entry.left, entry.right);
-                continue;
+            if (now - entry.left.getTime() < ONE_WEEK_MILLIS) {
+                map.put(entry.left.toString(), entry.right);
             }
 
             // see if it's in the last month
             boolean thisMonth = false;
-            for (int ii = 1; ii < weeks.length; ii++) {
+            for (int ii = 0; ii < weeks.length; ii++) {
                 if (weeks[ii] == week && years[ii] == year) {
                     thisMonth = true;
                     break;
                 }
             }
             if (thisMonth) {
-                Date byweek = toWeek(entry.left);
+                String byweek = toWeek(entry.left);
                 Integer ovalue = map.get(byweek);
                 map.put(byweek, (ovalue == null) ? entry.right : (entry.right + ovalue));
-                continue;
             }
 
-            // otherwise accumulate monthly
-            Date bymonth = toMonth(entry.left);
+            // also accumulate monthly
+            String bymonth = toMonth(entry.left);
             Integer ovalue = map.get(bymonth);
             map.put(bymonth, (ovalue == null) ? entry.right : (entry.right + ovalue));
         }
 
         // convert the map to a list of tuples
-        _lastSessionSummary = new ArrayList<Tuple<Date,Integer>>();
-        for (Map.Entry<Date,Integer> entries : map.entrySet()) {
-            _lastSessionSummary.add(new Tuple<Date,Integer>(entries.getKey(), entries.getValue()));
+        _lastSessionSummary = new ArrayList<Tuple<String,Integer>>();
+        for (Map.Entry<String,Integer> entry : map.entrySet()) {
+            _lastSessionSummary.add(new Tuple<String,Integer>(entry.getKey(), entry.getValue()));
         }
     }
 
-    protected Date toWeek (Date date)
+    protected String toWeek (Date date)
     {
-        return convert(date, Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        return convert(date, Calendar.DAY_OF_WEEK, Calendar.MONDAY) + " week";
     }
 
-    protected Date toMonth (Date date)
+    protected String toMonth (Date date)
     {
-        return convert(date, Calendar.DAY_OF_MONTH, 1);
+        return convert(date, Calendar.DAY_OF_MONTH, 1) + " month";
     }
 
     protected Date convert (Date date, int period, int value)
@@ -109,7 +107,8 @@ public class index extends AdminLogic
     }
 
     protected static long _lastReportGen;
-    protected static ArrayList<Tuple<Date,Integer>> _lastSessionSummary;
+    protected static ArrayList<Tuple<String,Integer>> _lastSessionSummary;
 
     protected static final long REPORT_REGEN_INTERVAL = 60 * 1000L;
+    protected static final long ONE_WEEK_MILLIS = 7 * 24 * 60 * 60 * 1000L;
 }
