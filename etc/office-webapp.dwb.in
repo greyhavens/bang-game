@@ -8,4 +8,13 @@
     Section     webapps
     Architecture    all
     Description Sheriff's Office web application
+
+    # log/ and run/ need special permissions
+    <Permissions>
+        Path        @PREFIX@/log
+        Path        @PREFIX@/run
+        User        @APPNAME@
+        Group       @APPNAME@
+        Recursive   yes
+    </Permissions>
 </Package>
