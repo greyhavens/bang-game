@@ -798,10 +798,12 @@ public class BangBoard extends SimpleStreamableObject
                             getWaterElevation(xx, yy);
                         int oldelev = unsignedToInt(_estate[idx]);
                         if (tileelev > oldelev) {
-                            if (pelev > 0 && _btstate[idx] < 0) {
-                                _tstate[idx] = _btstate[idx] = O_BRIDGE;
+                            if (pelev > 0) {
+                                if (_btstate[idx] < 0) {
+                                    _tstate[idx] = _btstate[idx] = O_BRIDGE;
+                                }
+                                _estate[idx] = (byte)tileelev;
                             }
-                            _estate[idx] = (byte)tileelev;
                         }
                         if (p.shadowBonus() && _tstate[idx] >= O_BRIDGE) {
                             _tstate[idx] = O_BONUS;
