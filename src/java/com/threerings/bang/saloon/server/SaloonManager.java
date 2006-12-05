@@ -50,6 +50,7 @@ import com.threerings.bang.saloon.data.ParlorObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonMarshaller;
 import com.threerings.bang.saloon.data.SaloonObject;
+import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.saloon.data.TopRankedList;
 
 import static com.threerings.bang.Log.log;
@@ -60,6 +61,50 @@ import static com.threerings.bang.Log.log;
 public class SaloonManager extends PlaceManager
     implements SaloonCodes, SaloonProvider
 {
+    /**
+     * Refreshes the top-ranked lists for all scenarios (plus the overall rankings)
+     * in the specified object.
+     *
+     * @param where a where clause for the database query, or <code>null</code> for none
+     * @param count the number of entries desired in each list
+     */
+    public static void refreshTopRanked (
+        final TopRankObject rankobj, final String where, final int count)
+    {
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                ArrayList<String> scens = new ArrayList<String>();
+                CollectionUtil.addAll(
+                    scens, ScenarioInfo.getScenarioIds(
+                        ServerConfig.townId, false));
+                scens.add(0, ScenarioInfo.OVERALL_IDENT);
+
+                try {
+                    _lists = BangServer.ratingrepo.loadTopRanked(
+                        scens.toArray(new String[scens.size()]), where, count);
+                    return true;
+
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Failed to load top-ranked " +
+                            "players.", pe);
+                    return false;
+                }
+            }
+
+            public void handleResult () {
+                // make sure we weren't shutdown while we were off invoking
+                if (!((DObject)rankobj).isActive()) {
+                    return;
+                }
+                for (TopRankedList list : _lists) {
+                    commitTopRanked(rankobj, list);
+                }
+            }
+
+            protected ArrayList<TopRankedList> _lists;
+        });
+    }
+
     // documentation inherited from interface SaloonProvider
     public void findMatch (ClientObject caller, Criterion criterion,
                           final SaloonService.ResultListener listener)
@@ -202,7 +247,7 @@ public class SaloonManager extends PlaceManager
         // start up our top-ranked list refresher interval
         _rankval = new Interval(BangServer.omgr) {
             public void expired () {
-                refreshTopRanked();
+                refreshTopRanked(_salobj, null, TOP_RANKED_LIST_SIZE);
             }
         };
         _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
@@ -372,44 +417,7 @@ public class SaloonManager extends PlaceManager
         _salobj.removeFromParlors(creator);
     }
 
-    protected void refreshTopRanked ()
-    {
-        BangServer.invoker.postUnit(new Invoker.Unit() {
-            public boolean invoke () {
-                ArrayList<String> scens = new ArrayList<String>();
-                CollectionUtil.addAll(
-                    scens, ScenarioInfo.getScenarioIds(
-                        ServerConfig.townId, false));
-                scens.add(0, ScenarioInfo.OVERALL_IDENT);
-
-                try {
-                    _lists = BangServer.ratingrepo.loadTopRanked(
-                        scens.toArray(new String[scens.size()]),
-                        TOP_RANKED_LIST_SIZE);
-                    return true;
-
-                } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to load top-ranked " +
-                            "players.", pe);
-                    return false;
-                }
-            }
-
-            public void handleResult () {
-                // make sure we weren't shutdown while we were off invoking
-                if (_salobj == null) {
-                    return;
-                }
-                for (TopRankedList list : _lists) {
-                    commitTopRanked(list);
-                }
-            }
-
-            protected ArrayList<TopRankedList> _lists;
-        });
-    }
-
-    protected void commitTopRanked (final TopRankedList list)
+    protected static void commitTopRanked (final TopRankObject rankobj, final TopRankedList list)
     {
         list.criterion = MessageBundle.qualify(
             GameCodes.GAME_MSGS, "m.scenario_" + list.criterion);
@@ -428,10 +436,10 @@ public class SaloonManager extends PlaceManager
                 commitList();
             }
             protected void commitList () {
-                if (_salobj.topRanked.containsKey(list.criterion)) {
-                    _salobj.updateTopRanked(list);
+                if (rankobj.getTopRanked().containsKey(list.criterion)) {
+                    rankobj.updateTopRanked(list);
                 } else {
-                    _salobj.addToTopRanked(list);
+                    rankobj.addToTopRanked(list);
                 }
             }
         });

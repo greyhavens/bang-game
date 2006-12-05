@@ -50,6 +50,8 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.NameFactory;
 import com.threerings.bang.util.NameValidator;
 
+import com.threerings.bang.saloon.client.TopScoreView;
+
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
@@ -133,11 +135,16 @@ public class HideoutView extends ShopView
         BContainer tab;
         if (tidx == 0) {
             tab = _gtab;
-        } else { // tidx == 1
+        } else if (tidx == 1) {
             if (_mtab == null) {
-                _mtab = createMemberTab();        
+                _mtab = new MemberView(_ctx, _status, _hideoutobj, _gangobj);
             }
             tab = _mtab;
+        } else { // tidx == 2
+            if (_rtab == null) {
+                _rtab = new TopScoreView(_ctx, _gangobj);
+            }
+            tab = _rtab;
         }
         if (_stab != tab) {
             if (_stab != null) {
@@ -327,16 +334,6 @@ public class HideoutView extends ShopView
     }
     
     /**
-     * Creates the tab displaying all of the gang members.
-     */
-    protected BContainer createMemberTab ()
-    {
-        BContainer mtab = new BContainer(new AbsoluteLayout());
-        mtab.add(new MemberView(_ctx, _status, _hideoutobj, _gangobj), new Point(0, 0));
-        return mtab;
-    }
-    
-    /**
      * Unsubscribes from the gang object and stops listening.
      */
     protected void unsubscribeFromGang ()
@@ -376,7 +373,7 @@ public class HideoutView extends ShopView
     protected GangObject _gangobj;
     
     protected HackyTabs _tabs;
-    protected BContainer _gtab, _mtab, _stab;
+    protected BContainer _gtab, _mtab, _rtab, _stab;
     protected StatusLabel _status;
     
     protected SafeSubscriber<GangObject> _gangsub;
@@ -396,9 +393,9 @@ public class HideoutView extends ShopView
         }
     };
     
-    protected static final String[] TABS = { "gang", "members" };
+    protected static final String[] TABS = { "gang", "members", "rankings" };
     protected static final Rectangle TABS_RECT = new Rectangle(
-        166, 585, 15+2*140, 66);
+        166, 585, 15+3*140, 66);
     protected static final Rectangle TAB_RECT = new Rectangle(
         188, 83, 800, 503);
 }

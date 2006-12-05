@@ -17,15 +17,15 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.saloon.data.SaloonCodes;
-import com.threerings.bang.saloon.data.SaloonObject;
+import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.saloon.data.TopRankedList;
 
 /**
- * Displays top scorers in the Saloon.
+ * Displays top scorers in the Saloon or elsewhere.
  */
 public class TopScoreView extends BContainer
 {
-    public TopScoreView (BangContext ctx, SaloonObject salobj)
+    public TopScoreView (BangContext ctx, TopRankObject rankobj)
     {
         super(new BorderLayout());
         setStyleClass("top_score_view");
@@ -39,13 +39,13 @@ public class TopScoreView extends BContainer
                                  GroupLayout.STRETCH));;
         add(new BScrollPane(cont), BorderLayout.CENTER);
 
-        for (TopRankedList list : salobj.topRanked) {
+        for (TopRankedList list : rankobj.getTopRanked()) {
             if (list.criterion.indexOf("m.scenario_oa") > -1) {
                 addScenario(cont, list);
                 break;
             }
         }
-        for (TopRankedList list : salobj.topRanked) {
+        for (TopRankedList list : rankobj.getTopRanked()) {
             if (list.criterion.indexOf("m.scenario_oa") == -1) {
                 addScenario(cont, list);
             }

@@ -11,6 +11,7 @@ import com.threerings.crowd.data.PlaceObject;
  * Contains distributed data for the Saloon.
  */
 public class SaloonObject extends PlaceObject
+    implements TopRankObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>service</code> field. */
@@ -32,6 +33,12 @@ public class SaloonObject extends PlaceObject
     /** Contains info on the top-ranked players by various criterion. */
     public DSet<TopRankedList> topRanked = new DSet<TopRankedList>();
 
+    // documentation inherited from interface TopRankObject
+    public DSet<TopRankedList> getTopRanked ()
+    {
+        return topRanked;
+    }
+    
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>service</code> field be set to the

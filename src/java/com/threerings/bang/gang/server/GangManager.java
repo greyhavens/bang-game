@@ -13,6 +13,7 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.Collections;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntMap;
+import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 
 import com.threerings.util.MessageBundle;
@@ -39,6 +40,8 @@ import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.PardnerEntryUpdater;
 import com.threerings.bang.server.persist.FinancialAction;
+
+import com.threerings.bang.saloon.server.SaloonManager;
 
 import com.threerings.bang.gang.client.GangService;
 import com.threerings.bang.gang.data.GangCodes;
@@ -562,11 +565,17 @@ public class GangManager
     /**
      * Initializes and registers a previously created and mapped gang object.
      */
-    protected void initGangObject (GangObject gangobj)
+    protected void initGangObject (final GangObject gangobj)
     {
         gangobj.speakService =
             (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
                 new SpeakDispatcher(new SpeakProvider(gangobj, this)), false);
+        (gangobj.rankval = new Interval(BangServer.omgr) {
+            public void expired () {
+                SaloonManager.refreshTopRanked(
+                    gangobj, "GANG_ID = " + gangobj.gangId, TOP_RANKED_LIST_SIZE);
+            }
+        }).schedule(1000L, RANK_REFRESH_INTERVAL);
         BangServer.omgr.registerObject(gangobj);
         log.info("Initialized gang object [gangId=" + gangobj.gangId +
             ", name=" + gangobj.name + "].");
@@ -585,6 +594,7 @@ public class GangManager
             _gangs.remove(gangobj.gangId);
         }
         BangServer.invmgr.clearDispatcher(gangobj.speakService);
+        gangobj.rankval.cancel();
         gangobj.destroy();
         log.info("Destroyed gang object [gangId=" + gangobj.gangId +
             ", name=" + gangobj.name + "].");
@@ -650,4 +660,10 @@ public class GangManager
     /** Maps gang ids to currently loaded gang objects. */
     protected IntMap<GangObject> _gangs =
         Collections.synchronizedIntMap(new HashIntMap<GangObject>());
+    
+    /** The frequency with which we update the top-ranked member lists. */
+    protected static final long RANK_REFRESH_INTERVAL = 60 * 60 * 1000L;
+
+    /** The size of the top-ranked member lists. */
+    protected static final int TOP_RANKED_LIST_SIZE = 10;
 }

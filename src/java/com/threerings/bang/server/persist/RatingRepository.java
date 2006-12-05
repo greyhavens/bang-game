@@ -185,9 +185,11 @@ public class RatingRepository extends SimpleRepository
 
     /**
      * Loads the top-ranked players in each of the supplied scenario types.
+     *
+     * @param where an additional condition (e.g., "GANG_ID = 32"), or <code>null</code> for none
      */
     public ArrayList<TopRankedList> loadTopRanked (
-        final String[] scenarios, final int count)
+        final String[] scenarios, final String where, final int count)
         throws PersistenceException
     {
         final ArrayList<TopRankedList> lists = new ArrayList<TopRankedList>();
@@ -198,6 +200,7 @@ public class RatingRepository extends SimpleRepository
                 String query = "select RATINGS.PLAYER_ID, HANDLE " +
                     "from RATINGS, PLAYERS " +
                     "where RATINGS.SCENARIO = ? " +
+                    (where == null ? "" : ("and " + where + " ")) +
                     "and LAST_PLAYED > " + STALE_DATE + " " +
                     "and RATINGS.PLAYER_ID = PLAYERS.PLAYER_ID " +
                     "order by RATING desc limit " + count;

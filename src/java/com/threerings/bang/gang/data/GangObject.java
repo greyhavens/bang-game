@@ -3,6 +3,8 @@
 
 package com.threerings.bang.gang.data;
 
+import com.samskivert.util.Interval;
+
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
@@ -10,12 +12,14 @@ import com.threerings.crowd.chat.data.SpeakMarshaller;
 import com.threerings.crowd.chat.data.SpeakObject;
 
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.saloon.data.TopRankObject;
+import com.threerings.bang.saloon.data.TopRankedList;
 
 /**
  * Contains data concerning a single gang.
  */
 public class GangObject extends DObject
-    implements SpeakObject
+    implements SpeakObject, TopRankObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>speakService</code> field. */
@@ -38,6 +42,9 @@ public class GangObject extends DObject
 
     /** The field name of the <code>members</code> field. */
     public static final String MEMBERS = "members";
+
+    /** The field name of the <code>topRanked</code> field. */
+    public static final String TOP_RANKED = "topRanked";
     // AUTO-GENERATED: FIELDS END
 
     /** Used for chatting among the gang members. */
@@ -61,9 +68,16 @@ public class GangObject extends DObject
     /** Contains a {@link GangMemberInfo} for each member of this gang. */
     public DSet<GangMemberEntry> members = new DSet<GangMemberEntry>();
 
+    /** Contains info on the top-ranked members by various criterion. */
+    public DSet<TopRankedList> topRanked = new DSet<TopRankedList>();
+    
     /** On the server, the number of outstanding references to this object
      * by clients in the process of resolution. */
     public transient int resolving;
+    
+    /** On the server, the interval that refreshes the list of top-ranked
+     * members. */
+    public transient Interval rankval;
     
     /**
      * Determines whether this object can be destroyed (i.e., whether it is
@@ -99,6 +113,12 @@ public class GangObject extends DObject
                 op.apply(entry.handle);
             }
         }
+    }
+    
+    // documentation inherited from interface TopRankObject
+    public DSet<TopRankedList> getTopRanked ()
+    {
+        return topRanked;
     }
     
     // AUTO-GENERATED: METHODS START
@@ -244,6 +264,54 @@ public class GangObject extends DObject
         @SuppressWarnings("unchecked") DSet<com.threerings.bang.gang.data.GangMemberEntry> clone =
             (value == null) ? null : value.typedClone();
         this.members = clone;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>topRanked</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToTopRanked (TopRankedList elem)
+    {
+        requestEntryAdd(TOP_RANKED, topRanked, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>topRanked</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromTopRanked (Comparable key)
+    {
+        requestEntryRemove(TOP_RANKED, topRanked, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>topRanked</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateTopRanked (TopRankedList elem)
+    {
+        requestEntryUpdate(TOP_RANKED, topRanked, elem);
+    }
+
+    /**
+     * Requests that the <code>topRanked</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setTopRanked (DSet<com.threerings.bang.saloon.data.TopRankedList> value)
+    {
+        requestAttributeChange(TOP_RANKED, value, this.topRanked);
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.saloon.data.TopRankedList> clone =
+            (value == null) ? null : value.typedClone();
+        this.topRanked = clone;
     }
     // AUTO-GENERATED: METHODS END
 }
