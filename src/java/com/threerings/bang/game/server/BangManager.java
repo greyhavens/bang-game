@@ -1748,8 +1748,10 @@ public class BangManager extends GameManager
                 }
 
             } else if (prec.user.isActive()) {
-                // we only track one stat for unranked games, the number played
+                // we only track a couple of stats for unranked games: the number played
                 prec.user.stats.incrementStat(Stat.Type.UNRANKED_GAMES_PLAYED, 1);
+                // the amount of cash earned
+                prec.user.stats.incrementStat(Stat.Type.CASH_EARNED, award.cashEarned);
             }
         }
 
