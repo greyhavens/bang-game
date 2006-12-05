@@ -80,21 +80,8 @@ public class TrapEffect extends BonusEffect
 
         // remove the bonus
         super.apply(bangobj, obs);
-
-        Piece piece = bangobj.pieces.get(pieceId);
-        if (piece == null) {
-            log.warning("Missing target for trap effect " +
-                        "[id=" + pieceId + "].");
-            return false;
-        }
-
-        if (deathEffect != null) {
-            deathEffect.apply(bangobj, obs);
-        }
-        damage(bangobj, obs, causer, null, piece, newDamage,
-            ShotEffect.DAMAGED);
-
-        return true;
+        
+        return trapPiece(bangobj, obs, causer);
     }
 
     @Override // documentation inherited
@@ -125,6 +112,27 @@ public class TrapEffect extends BonusEffect
     protected int getBonusPoints ()
     {
         return 0; // maybe we should give negative points?
+    }
+
+    /**
+     * Damage the target piece and handle any death effects.
+     */
+    protected boolean trapPiece (BangObject bangobj, Observer obs, int causer)
+    {
+        Piece piece = bangobj.pieces.get(pieceId);
+        if (piece == null) {
+            log.warning("Missing target for trap effect " +
+                        "[id=" + pieceId + "].");
+            return false;
+        }
+
+        if (deathEffect != null) {
+            deathEffect.apply(bangobj, obs);
+        }
+        damage(bangobj, obs, causer, null, piece, newDamage,
+            ShotEffect.DAMAGED);
+
+        return true;
     }
 
     /**

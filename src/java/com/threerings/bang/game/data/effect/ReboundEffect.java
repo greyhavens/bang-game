@@ -55,8 +55,12 @@ public class ReboundEffect extends TrapEffect
         // it will be biased towards the edges
         int dist = RandomUtil.getInt(MAX_REBOUND_DISTANCE + 1,
             MIN_REBOUND_DISTANCE - 1);
-        Point pt = bangobj.board.getOccupiableSpot(target.x, target.y, dist,
-            dist + 3, null);
+        Point pt = null;
+        while (pt == null && dist > 0) {
+            pt = bangobj.board.getOccupiableSpot(target.x, target.y, dist,
+                dist + 3, null);
+            dist--;
+        }
         if (pt == null) {
             log.warning("Couldn't find occupiable spot for rebound effect " +
                 "[x=" + target.x + ", y=" + target.y + ", dist=" + dist +
@@ -70,22 +74,6 @@ public class ReboundEffect extends TrapEffect
     }
 
     @Override // documentation inherited
-    public boolean apply (BangObject bangobj, Observer obs)
-    {
-        // move the piece
-        Piece target = bangobj.pieces.get(pieceId);
-        if (target == null) {
-            log.warning("Missing target for rebound effect " +
-                "[id=" + pieceId + "].");
-            return false;            
-        }
-        moveAndReport(bangobj, target, x, y, obs);
-        
-        // then remove the bonus and damage the piece
-        return super.apply(bangobj, obs);
-    }
-    
-    @Override // documentation inherited
     public int getBaseDamage (Piece piece)
     {
         // logging robots are built to stand being dropped from the sky
@@ -97,6 +85,23 @@ public class ReboundEffect extends TrapEffect
     {
         return new ReboundHandler();
     }
+
+    @Override // documentation inherited
+    public boolean trapPiece (BangObject bangobj, Observer obs, int causer)
+    {
+        // move the piece
+        Piece target = bangobj.pieces.get(pieceId);
+        if (target == null) {
+            log.warning("Missing target for rebound effect " +
+                "[id=" + pieceId + "].");
+            return false;            
+        }
+        moveAndReport(bangobj, target, x, y, obs);
+        
+        // then damage the piece
+        return super.trapPiece(bangobj, obs, causer);
+    }
+    
     
     /** The minimum distance away to send sprung pieces. */
     protected static final int MIN_REBOUND_DISTANCE = 5;
