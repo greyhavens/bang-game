@@ -317,39 +317,38 @@ public class GangManager
         // determine whether to delete the gang
         final boolean delete = (gangobj.members.size() == 1);
         
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
-            public void invokePersistent ()
-                throws PersistenceException {
-                BangServer.playrepo.updatePlayerGang(playerId, 0, (byte)0, 0L);
-                if (delete) {
-                    _gangrepo.deleteGang(gangId);
+        // gangs cannot be left without a leader; if we are removing the last
+        // leader, we must promote the most senior non-leader
+        GangMemberEntry removal = gangobj.members.get(handle);
+        if (removal.rank == LEADER_RANK && !delete) {
+            boolean leaderless = true;
+            GangMemberEntry senior = null;
+            for (GangMemberEntry member : gangobj.members) {
+                if (member == removal) {
+                    continue;
+                } else if (member.rank == LEADER_RANK) {
+                    leaderless = false;
+                    break;
+                } else if (senior == null || member.joined < senior.joined) {
+                    senior = member;
                 }
             }
-            public void handleSuccess () {
-                log.info("Removed member from gang [gangId=" + gangId +
-                    ", playerId=" + playerId + ", handle=" + handle +
-                    ", delete=" + delete + "].");
-                // the order is important here; the updater will remove itself
-                // when the gang id is cleared and destroy the gang object if
-                // there are no more members online
-                GangObject gangobj = getGangObject(gangId);
-                if (gangobj != null) {
-                    gangobj.removeFromMembers(handle);    
-                }
-                PlayerObject plobj =
-                    (PlayerObject)BangServer.lookupBody(handle);
-                if (plobj != null) {
-                    try {
-                        plobj.startTransaction();
-                        plobj.setGangId(0);
-                        plobj.setGangOid(0);
-                    } finally {
-                        plobj.commitTransaction();
-                    }
-                } 
-                listener.requestProcessed();
-            } 
-        });
+            if (leaderless) {
+                changeMemberRank(gangId, senior.playerId, senior.handle, LEADER_RANK,
+                    new InvocationService.ConfirmListener() {
+                        public void requestProcessed () {
+                            continueRemovingFromGang(gangId, playerId, handle, false, listener);
+                        }
+                        public void requestFailed (String cause) {
+                            listener.requestFailed(cause);
+                        }
+                    });
+                return;
+            }
+        }
+        
+        // continue the process
+        continueRemovingFromGang(gangId, playerId, handle, delete, listener);
     }
     
     /**
@@ -503,6 +502,49 @@ public class GangManager
             user.commitTransaction();
         }
         listener.requestProcessed();
+    }
+    
+    /**
+     * Continues the process of removing a member from a gang, perhaps after having promoted
+     * a player to avoid leaving a gang leaderless.
+     */
+    protected void continueRemovingFromGang (
+        final int gangId, final int playerId, final Handle handle,
+        final boolean delete, final InvocationService.ConfirmListener listener)
+    {
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                BangServer.playrepo.updatePlayerGang(playerId, 0, (byte)0, 0L);
+                if (delete) {
+                    _gangrepo.deleteGang(gangId);
+                }
+            }
+            public void handleSuccess () {
+                log.info("Removed member from gang [gangId=" + gangId +
+                    ", playerId=" + playerId + ", handle=" + handle +
+                    ", delete=" + delete + "].");
+                // the order is important here; the updater will remove itself
+                // when the gang id is cleared and destroy the gang object if
+                // there are no more members online
+                GangObject gangobj = getGangObject(gangId);
+                if (gangobj != null) {
+                    gangobj.removeFromMembers(handle);    
+                }
+                PlayerObject plobj =
+                    (PlayerObject)BangServer.lookupBody(handle);
+                if (plobj != null) {
+                    try {
+                        plobj.startTransaction();
+                        plobj.setGangId(0);
+                        plobj.setGangOid(0);
+                    } finally {
+                        plobj.commitTransaction();
+                    }
+                } 
+                listener.requestProcessed();
+            } 
+        });
     }
     
     /**

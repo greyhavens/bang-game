@@ -18,6 +18,7 @@ import com.threerings.bang.avatar.server.BarberManager;
 
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.bang.gang.data.GangMemberEntry;
+import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutMarshaller;
@@ -29,7 +30,7 @@ import static com.threerings.bang.Log.log;
  * Provides hideout-related services.
  */
 public class HideoutManager extends PlaceManager
-    implements HideoutCodes, HideoutProvider
+    implements GangCodes, HideoutCodes, HideoutProvider
 {
     // documentation inherited from interface HideoutProvider
     public void formGang (
@@ -80,10 +81,10 @@ public class HideoutManager extends PlaceManager
         final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure they're in a gang
-        final PlayerObject user = (PlayerObject)caller;
-        verifyInGang(user);
-        
+        // make sure they can contribute
+        PlayerObject user = (PlayerObject)caller;
+        verifyCanContribute(user);
+
         // make sure the amounts are positive and that at least one is nonzero
         if (scrip < 0 || coins < 0 || scrip + coins == 0) {
             log.warning("Player tried to donate invalid amounts [who=" +
@@ -133,8 +134,7 @@ public class HideoutManager extends PlaceManager
      * @return the gang member's entry in the distributed object's member list,
      * if the check succeeded
      */
-    protected GangMemberEntry verifyCanChange (
-        PlayerObject user, Handle handle)
+    protected GangMemberEntry verifyCanChange (PlayerObject user, Handle handle)
         throws InvocationException
     {
         // first things first
@@ -166,6 +166,41 @@ public class HideoutManager extends PlaceManager
         
         // return the entry for the next step
         return entry;
+    }
+    
+    /**
+     * Verifies that the specified user can contribute to his gang's coffers,
+     * throwing an exception if not.
+     */
+    protected void verifyCanContribute (PlayerObject user)
+        throws InvocationException
+    {
+        // first things first
+        verifyInGang(user);
+        
+        // if they've passed the donation delay, they're fine
+        if ((System.currentTimeMillis() - user.joinedGang) >= DONATION_DELAY) {
+            return;
+        }
+        
+        // non-leaders cannot donate yet
+        if (user.gangRank < LEADER_RANK) {
+            throw new InvocationException("e.too_soon");
+        }
+        
+        // get the gang object and throw an exception if the user is not the most senior
+        GangObject gangobj = (GangObject)BangServer.omgr.getObject(user.gangOid);
+        if (gangobj == null) {
+            log.warning("Gang object is null [who=" + user.who() +
+                ", gangId=" + user.gangId + ", gangOid = " +
+                user.gangOid + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        for (GangMemberEntry entry : gangobj.members) {
+            if (entry.joined < user.joinedGang) {
+                throw new InvocationException("e.too_soon");
+            }
+        }
     }
     
     /**
@@ -207,4 +242,8 @@ public class HideoutManager extends PlaceManager
     }
 
     protected HideoutObject _hobj;
+    
+    /** The amount of time that must elapse before members (other than the most senior leader) can
+     * contribute to the gang's coffers. */
+    protected static final long DONATION_DELAY = 7L * 24 * 60 * 60 * 1000;
 }

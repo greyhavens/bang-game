@@ -404,8 +404,7 @@ public class GangRepository extends JORARepository
     @Override // documentation inherited
     protected void createTables ()
     {
-	    _gtable = new Table<GangRecord>(GangRecord.class,
-	        "GANGS", "GANG_ID", true);
+	    _gtable = new Table<GangRecord>(GangRecord.class, "GANGS", "GANG_ID", true);
     }
     
     protected Table<GangRecord> _gtable;
