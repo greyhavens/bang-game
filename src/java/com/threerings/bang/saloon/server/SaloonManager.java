@@ -62,8 +62,8 @@ public class SaloonManager extends PlaceManager
     implements SaloonCodes, SaloonProvider
 {
     /**
-     * Refreshes the top-ranked lists for all scenarios (plus the overall rankings)
-     * in the specified object.
+     * Refreshes the top-ranked lists for all scenarios (plus the overall rankings) in the
+     * specified object.
      *
      * @param where a where clause for the database query, or <code>null</code> for none
      * @param count the number of entries desired in each list
@@ -75,8 +75,7 @@ public class SaloonManager extends PlaceManager
             public boolean invoke () {
                 ArrayList<String> scens = new ArrayList<String>();
                 CollectionUtil.addAll(
-                    scens, ScenarioInfo.getScenarioIds(
-                        ServerConfig.townId, false));
+                    scens, ScenarioInfo.getScenarioIds(ServerConfig.townId, false));
                 scens.add(0, ScenarioInfo.OVERALL_IDENT);
 
                 try {
@@ -85,8 +84,7 @@ public class SaloonManager extends PlaceManager
                     return true;
 
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to load top-ranked " +
-                            "players.", pe);
+                    log.log(Level.WARNING, "Failed to load top-ranked players.", pe);
                     return false;
                 }
             }
@@ -117,8 +115,8 @@ public class SaloonManager extends PlaceManager
             throw new InvocationException(NEW_GAMES_DISABLED);
         }
 
-        // sanity check the criterion, force at least 2 players, 1 round, and
-        // match zero AIs if nothing was selected
+        // sanity check the criterion, force at least 2 players, 1 round, and match zero AIs if
+        // nothing was selected
         if (criterion.players == 0) {
             criterion.players = 1;
         }
@@ -148,8 +146,7 @@ public class SaloonManager extends PlaceManager
         match.setObject(BangServer.omgr.registerObject(new MatchObject()));
         match.matchobj.setSpeakService((SpeakMarshaller)
             BangServer.invmgr.registerDispatcher(
-                new SpeakDispatcher(new SpeakProvider(match.matchobj, null)),
-                false));
+                new SpeakDispatcher(new SpeakProvider(match.matchobj, null)), false));
         _matches.put(match.matchobj.getOid(), match);
         BangServer.adminmgr.statobj.setPendingMatches(_matches.size());
         listener.requestProcessed(match.matchobj.getOid());
@@ -167,9 +164,8 @@ public class SaloonManager extends PlaceManager
     }
 
     // documentation inherited from interface SaloonProvider
-    public void createParlor (
-        ClientObject caller, boolean pardnersOnly, final String password,
-        final SaloonService.ResultListener rl)
+    public void createParlor (ClientObject caller, boolean pardnersOnly, final String password,
+                              final SaloonService.ResultListener rl)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
@@ -186,8 +182,7 @@ public class SaloonManager extends PlaceManager
         info.passwordProtected = !StringUtil.isBlank(password);
 
         try {
-            ParlorManager parmgr = (ParlorManager)
-                BangServer.plreg.createPlace(new ParlorConfig());
+            ParlorManager parmgr = (ParlorManager)BangServer.plreg.createPlace(new ParlorConfig());
             ParlorObject parobj = (ParlorObject)parmgr.getPlaceObject();
             parmgr.init(SaloonManager.this, info, password);
             _parlors.put(info.creator, parmgr);
@@ -201,8 +196,8 @@ public class SaloonManager extends PlaceManager
     }
 
     // documentation inherited from interface SaloonProvider
-    public void joinParlor (ClientObject caller, Handle creator,
-                            String password, SaloonService.ResultListener rl)
+    public void joinParlor (ClientObject caller, Handle creator, String password,
+                            SaloonService.ResultListener rl)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
@@ -241,8 +236,7 @@ public class SaloonManager extends PlaceManager
         // register our invocation service
         _salobj = (SaloonObject)_plobj;
         _salobj.setService((SaloonMarshaller)
-                           BangServer.invmgr.registerDispatcher(
-                               new SaloonDispatcher(this), false));
+                           BangServer.invmgr.registerDispatcher(new SaloonDispatcher(this), false));
 
         // start up our top-ranked list refresher interval
         _rankval = new Interval(BangServer.omgr) {
@@ -308,9 +302,9 @@ public class SaloonManager extends PlaceManager
         // check to see if this match is ready to go
         switch (match.checkReady()) {
         case COULD_START:
-            // the match may already be queued up for an eventual start, but we
-            // just added a player, so let's reset the timer (we may end up in
-            // the game faster if two players join in rapid succession)
+            // the match may already be queued up for an eventual start, but we just added a
+            // player, so let's reset the timer (we may end up in the game faster if two players
+            // join in rapid succession)
             if (match.starter != null) {
                 match.starter.cancel();
             }
@@ -331,48 +325,40 @@ public class SaloonManager extends PlaceManager
             break;
 
         case NOT_READY:
-            // if the match is queued to be started and is no longer ready,
-            // cancel its starter interval
-            if (match.starter != null) {
-                match.starter.cancel();
-                match.starter = null;
-                match.matchobj.setStarting(false);
-            }
+            // if the match is queued to be started and is no longer ready, cancel its starter
+            match.setStarting(false);
         }
     }
 
     /**
-     * Called when a match should be started. Marks the match as such and waits
-     * a few second before actually starting the match to give participants a
-     * chance to see who the last joiner was and potentially balk.
+     * Called when a match should be started. Marks the match as such and waits a few second before
+     * actually starting the match to give participants a chance to see who the last joiner was and
+     * potentially balk.
      */
     protected void startMatch (final Match match)
     {
-        // cancel any "could_start" starter as we will replace it with a
-        // "starting" starter
+        // cancel any "could_start" starter as we will replace it with a "starting" starter
         if (match.starter != null) {
             match.starter.cancel();
         }
-        match.matchobj.setStarting(true);
+
+        match.setStarting(true);
         match.starter = new Interval(BangServer.omgr) {
             public void expired () {
-                // make sure the match is still ready (this shouldn't happen as
-                // we cancel matches that become non-ready, but there are edge
-                // cases where we might not get canceled in time)
+                // make sure the match is still ready (this shouldn't happen as we cancel matches
+                // that become non-ready, but there are cases where we might not get canceled
+                // in time)
                 if (match.checkReady() == Match.Readiness.NOT_READY) {
-                    match.starter = null;
-                    match.matchobj.setStarting(false);
+                    match.setStarting(false);
                     return;
                 }
                 // go like the wind!
                 BangConfig config = match.createConfig();
                 try {
-                    BangManager mgr = (BangManager)
-                        BangServer.plreg.createPlace(config);
+                    BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
                     mgr.setPriorLocation("saloon", _salobj.getOid());
                 } catch (Exception e) {
-                    log.log(Level.WARNING, "Choked creating game " +
-                            "[config=" + config + "].", e);
+                    log.log(Level.WARNING, "Choked creating game " + config + ".", e);
                 }
                 clearMatch(match);
             }
@@ -419,10 +405,9 @@ public class SaloonManager extends PlaceManager
 
     protected static void commitTopRanked (final TopRankObject rankobj, final TopRankedList list)
     {
-        list.criterion = MessageBundle.qualify(
-            GameCodes.GAME_MSGS, "m.scenario_" + list.criterion);
-        int topRankId = (list.playerIds == null ||
-                         list.playerIds.length == 0) ? 0 : list.playerIds[0];
+        list.criterion = MessageBundle.qualify(GameCodes.GAME_MSGS, "m.scenario_" + list.criterion);
+        int topRankId = (list.playerIds == null || list.playerIds.length == 0) ?
+            0 : list.playerIds[0];
         BangServer.barbermgr.getSnapshot(
             topRankId, new ResultListener<int[]>() {
             public void requestCompleted (int[] snapshot) {
@@ -430,8 +415,8 @@ public class SaloonManager extends PlaceManager
                 commitList();
             }
             public void requestFailed (Exception cause) {
-                log.log(Level.WARNING, "Failed to obtain top-ranked player " +
-                        "snapshot [list=" + list + "].", cause);
+                log.log(Level.WARNING, "Failed to obtain top-ranked player snapshot " +
+                        "[list=" + list + "].", cause);
                 // ah well, we'll have no avatar
                 commitList();
             }
@@ -448,9 +433,7 @@ public class SaloonManager extends PlaceManager
     protected SaloonObject _salobj;
     protected HashMap<Integer,Match> _matches = new HashMap<Integer,Match>();
     protected Interval _rankval;
-
-    protected HashMap<Handle,ParlorManager> _parlors =
-        new HashMap<Handle,ParlorManager>();
+    protected HashMap<Handle,ParlorManager> _parlors = new HashMap<Handle,ParlorManager>();
 
     /** The delay between reporting that we're going to start a match and the
      * time that we actually start it. */

@@ -67,6 +67,25 @@ public class Match
     }
 
     /**
+     * Marks this match as starting or not in its match distributed object. If a match is set as
+     * not starting, its {@link #starter} interval will be cancelled and cleared out if it exists.
+     */
+    public void setStarting (boolean starting)
+    {
+        // because we have intervals flying around all over the place, it is possible that they
+        // might decide to mark a match as starting or not after it has been destroyed
+        if (matchobj != null && matchobj.isActive()) {
+            matchobj.setStarting(starting);
+        }
+
+        // cancel our starter interval if we're switching to non-starting state
+        if (!starting && starter != null) {
+            starter.cancel();
+            starter = null;
+        }
+    }
+
+    /**
      * Checks to see if the specified player can be joined into this pending match. If so, all the
      * necessary internal state is updated and we return true, otherwise we return false and the
      * internal state remains unchanged.
@@ -193,7 +212,10 @@ public class Match
     public Readiness checkReady ()
     {
         int count = getPlayerCount();
-        if (_criterion == null) {
+        if (matchobj == null || !matchobj.isActive()) {
+            // if our match object has gone away; we will never again be ready
+            return Readiness.NOT_READY;
+        } else if (_criterion == null) {
             return Readiness.NOT_READY;
         } else if (count == _criterion.getDesiredPlayers()) {
             return Readiness.START_NOW;
