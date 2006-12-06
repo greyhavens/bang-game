@@ -62,13 +62,9 @@ public class PardnerChatView extends BDecoratedWindow
      * @return true if we managed to display the view, false if we can't
      * at the moment
      */
-    public boolean display (Handle pardner, boolean grabFocus)
+    public boolean display (Handle pardner, int[] avatar, boolean grabFocus)
     {
-        PardnerEntry entry = _ctx.getUserObject().pardners.get(pardner);
-        if (entry == null) {
-            return false;
-        }
-        return _tabView.openUserTab(pardner, entry.avatar, grabFocus) != null;
+        return _tabView.openUserTab(pardner, avatar, grabFocus) != null;
     }
 
     /**
