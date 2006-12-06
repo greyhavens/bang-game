@@ -326,6 +326,10 @@ public class BangManager extends GameManager
                        BangService.ResultListener listener)
         throws InvocationException
     {
+        if (_bangobj.state != BangObject.IN_PLAY) {
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
         PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
 
@@ -389,6 +393,10 @@ public class BangManager extends GameManager
                           BangService.ConfirmListener listener)
         throws InvocationException
     {
+        if (_bangobj.state != BangObject.IN_PLAY) {
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
         PlayerObject user = (PlayerObject)caller;
         Card card = _bangobj.cards.get(cardId);
         int pidx = getPlayerIndex(user.getVisibleName());
