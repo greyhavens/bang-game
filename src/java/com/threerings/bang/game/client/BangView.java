@@ -14,6 +14,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Controller;
 
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.icon.ImageIcon;
@@ -107,6 +108,10 @@ public class BangView extends BWindow
         BangConfig config = (BangConfig)_ctrl.getPlaceConfig();
         BodyObject me = (BodyObject)_ctx.getClient().getClientObject();
         int pidx = _bangobj.getPlayerIndex(me.getVisibleName());
+
+        if (_oview == _connecting) {
+            clearOverlay();
+        }
 
         // we call this at the beginning of each phase because the scenario
         // might decide to skip the selection or buying phase, so we need to
@@ -333,10 +338,13 @@ public class BangView extends BWindow
         if (config.type != BangConfig.Type.TUTORIAL) {
             showChat();
         }
+        log.info("BangView wasAdded");
 
         // finally if we were waiting to start things up, get going
         if (_pendingPhase != -1) {
             setPhase(_pendingPhase);
+        } else if (config.type == BangConfig.Type.SALOON) {
+            showConnectingWindow();
         }
     }
 
@@ -360,6 +368,16 @@ public class BangView extends BWindow
     public RoundTimerView getTimer ()
     {
         return _timer;
+    }
+
+    /**
+     * Displays a connecting window while we wait for all players to arrive.
+     */
+    protected void showConnectingWindow ()
+    {
+        _connecting = new BDecoratedWindow(_ctx.getStyleSheet(), null);
+        _connecting.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, "m.pre_game")));
+        setOverlay(_connecting);
     }
 
     /**
@@ -615,6 +633,9 @@ public class BangView extends BWindow
 
     /** Any window currently overlayed on the board. */
     protected BWindow _oview;
+
+    /** The Connecting window. */
+    protected BDecoratedWindow _connecting;
 
     /** Keeps track of whether we've prepared or are preparing for the current
      * round. */

@@ -325,6 +325,13 @@ public class BoardView extends BComponent
      */
     public void prepareForRound (BangObject bangobj, BangConfig cfg, int pidx)
     {
+        if (_fadein != null) {
+            // add our own blackness that we'll fade in when we're ready; we don't
+            // attach the main scene graph until we're ready to fade in to avoid
+            // consuming CPU while we're loading and decoding models
+            _ctx.getInterface().attachChild(_fadein);
+        }
+
         // add the listener that will react to pertinent events
         _bangobj = bangobj;
         _bangobj.addListener(_blistener);
@@ -929,10 +936,6 @@ public class BoardView extends BComponent
     {
         super.wasAdded();
 
-        // add our own blackness that we'll fade in when we're ready; we don't
-        // attach the main scene graph until we're ready to fade in to avoid
-        // consuming CPU while we're loading and decoding models
-        _ctx.getInterface().attachChild(_fadein);
     }
 
     @Override // documentation inherited
