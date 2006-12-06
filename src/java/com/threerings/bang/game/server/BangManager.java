@@ -464,6 +464,14 @@ public class BangManager extends GameManager
         }
     }
 
+    @Override // documentation inherited
+    public boolean playerIsReady (int pidx)
+    {
+        // inactive players are also considered ready
+        return super.playerIsReady(pidx) || (_bangobj.playerStatus != null && 
+                _bangobj.playerStatus[pidx] == BangObject.PLAYER_LEFT_GAME);
+    }
+
     /**
      * Attempts to move the specified unit to the specified coordinates and optionally fire upon
      * the specified target.
