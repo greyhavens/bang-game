@@ -202,6 +202,22 @@ a#btnnews:hover {
     border: none;
 }
 
+#linkthreerings a {
+    position: absolute;
+    width: 75px;
+    height: 35px;
+    top: 115px;
+    left: 720px;
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+#linkthreerings a i { 
+    visibility: hidden; 
+}
+
 /* -------------------------------------------------
    CONTENT
 ------------------------------------------------- */
@@ -235,7 +251,7 @@ a#btnnews:hover {
     width: 70px;
     height: 30px;
     top: 0px;
-    left: 355px;
+    left: 370px;
     margin: 0px;
     padding: 0px;
     text-decoration: none;
