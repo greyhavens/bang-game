@@ -1672,16 +1672,18 @@ public class BangManager extends GameManager
 
             // TEMP: if this game had bounty criterion report whether they were met (by player
             // zero, who is the human player in a bounty game)
-            int failed = 0;
-            for (Criterion criterion : _bconfig.criterion) {
-                String msg = criterion.isMet(_bangobj, user);
-                if (msg != null) {
-                    failed++;
-                    SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
+            if (_bconfig.type == BangConfig.Type.BOUNTY) {
+                int failed = 0;
+                for (Criterion criterion : _bconfig.criterion) {
+                    String msg = criterion.isMet(_bangobj, user);
+                    if (msg != null) {
+                        failed++;
+                        SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
+                    }
                 }
-            }
-            if (failed == 0) {
-                SpeakProvider.sendAttention(_bangobj, GAME_MSGS, "m.all_criterion_met");
+                if (failed == 0) {
+                    SpeakProvider.sendAttention(_bangobj, GAME_MSGS, "m.all_criterion_met");
+                }
             }
             // END TEMP
         }
