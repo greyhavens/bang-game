@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.samskivert.io.PersistenceException;
 
@@ -33,6 +34,7 @@ import com.threerings.bang.server.BangServer;
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
+import com.threerings.bang.gang.data.HistoryEntry;
 
 import static com.threerings.bang.Log.*;
 
@@ -211,6 +213,10 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         delete(_gtable, new GangRecord(gangId));
+        
+        // delete all of the gang's invites and history entries
+        update("delete from GANG_INVITES where GANG_ID = " + gangId);
+        update("delete from GANG_HISTORY where GANG_ID = " + gangId);
     }
     
     /**
@@ -366,6 +372,79 @@ public class GangRepository extends JORARepository
         });
     }
     
+    /**
+     * Inserts a new historical entry into the database.
+     *
+     * @return the unique id assigned to the entry, which can be used to delete it.
+     */
+    public int insertHistoryEntry (final int gangId, final String description)
+        throws PersistenceException
+    {
+        final String query = "insert into GANG_HISTORY set GANG_ID = " + gangId +
+            ", DESCRIPTION = " + JDBCUtil.escape(description);
+        return executeUpdate(new Operation<Integer>() {
+            public Integer invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    if (stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS) < 1) {
+                        log.warning("Couldn't insert history entry [gangId=" + gangId +
+                            ", description=" + description + "].");
+                        return -1;
+                    }
+                    ResultSet rs = stmt.getGeneratedKeys();
+                    return (rs.next() ? rs.getInt(1) : -1);
+                    
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+    }
+    
+    /**
+     * Deletes a historical entry from the database.
+     */
+    public void deleteHistoryEntry (final int entryId)
+        throws PersistenceException
+    {
+        checkedUpdate("delete from GANG_HISTORY where ENTRY_ID = " + entryId, 1);
+    }
+    
+    /**
+     * Loads a batch of historical entries from the database.
+     *
+     * @param offset the offset from the end (e.g., 0 to retrieve the last <code>count</code>
+     * entries, <code>count</code> to retrieve the next-to-last <code>count</code>)
+     */
+    public ArrayList<HistoryEntry> loadHistoryEntries (int gangId, int offset, int count)
+        throws PersistenceException
+    {
+        final ArrayList<HistoryEntry> list = new ArrayList<HistoryEntry>();
+        final String query = "select RECORDED, DESCRIPTION from GANG_HISTORY where GANG_ID = " +
+            gangId + " order by ENTRY_ID desc limit " + offset + ", " + count;
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        list.add(new HistoryEntry(rs.getTimestamp(1), rs.getString(2)));
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+        Collections.reverse(list); // return to chronological order
+        return list;
+    }
+    
     @Override // documentation inherited
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
@@ -398,6 +477,15 @@ public class GangRepository extends JORARepository
             "MESSAGE VARCHAR(255) NOT NULL",
             "UNIQUE (GANG_ID, PLAYER_ID)",
             "INDEX (PLAYER_ID)",
+        }, "");
+        
+        JDBCUtil.createTableIfMissing(conn, "GANG_HISTORY", new String[] {
+            "ENTRY_ID INTEGER NOT NULL AUTO_INCREMENT",
+            "GANG_ID INTEGER NOT NULL",
+            "RECORDED TIMESTAMP NOT NULL",
+            "DESCRIPTION TEXT NOT NULL",
+            "PRIMARY KEY (ENTRY_ID)",
+            "INDEX (GANG_ID)",
         }, "");
     }
     

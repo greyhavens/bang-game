@@ -140,11 +140,16 @@ public class HideoutView extends ShopView
                 _mtab = new MemberView(_ctx, _status, _hideoutobj, _gangobj);
             }
             tab = _mtab;
-        } else { // tidx == 2
+        } else if (tidx == 2) {
             if (_rtab == null) {
                 _rtab = new TopScoreView(_ctx, _gangobj);
             }
             tab = _rtab;
+        } else { // tidx == 3
+            if (_htab == null) {
+                _htab = new HistoryView(_ctx, _status, _hideoutobj);
+            }
+            tab = _htab;
         }
         if (_stab != tab) {
             if (_stab != null) {
@@ -373,7 +378,7 @@ public class HideoutView extends ShopView
     protected GangObject _gangobj;
     
     protected HackyTabs _tabs;
-    protected BContainer _gtab, _mtab, _rtab, _stab;
+    protected BContainer _gtab, _mtab, _rtab, _htab, _stab;
     protected StatusLabel _status;
     
     protected SafeSubscriber<GangObject> _gangsub;
@@ -393,9 +398,9 @@ public class HideoutView extends ShopView
         }
     };
     
-    protected static final String[] TABS = { "gang", "members", "rankings" };
+    protected static final String[] TABS = { "gang", "members", "rankings", "history" };
     protected static final Rectangle TABS_RECT = new Rectangle(
-        166, 585, 15+3*140, 66);
+        166, 585, 15+4*140, 66);
     protected static final Rectangle TAB_RECT = new Rectangle(
         188, 83, 800, 503);
 }

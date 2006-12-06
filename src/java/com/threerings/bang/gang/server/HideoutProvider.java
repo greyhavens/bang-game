@@ -41,6 +41,12 @@ public interface HideoutProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link HideoutService#getHistoryEntries} request.
+     */
+    public void getHistoryEntries (ClientObject caller, int arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link HideoutService#leaveGang} request.
      */
     public void leaveGang (ClientObject caller, InvocationService.ConfirmListener arg1)

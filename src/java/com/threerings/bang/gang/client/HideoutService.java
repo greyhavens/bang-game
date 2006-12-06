@@ -9,6 +9,8 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.NameCreator;
 
+import com.threerings.bang.gang.data.HistoryEntry;
+
 /**
  * Provides hideout-related functionality.
  */
@@ -47,4 +49,12 @@ public interface HideoutService extends InvocationService
      */
     public void changeMemberRank (
         Client client, Handle handle, byte rank, ConfirmListener listener);
+
+    /**
+     * Downloads part of the gang's history.
+     *
+     * @param offset the offset at which to start
+     * @param listener a listener to notify with the array of {@link HistoryEntry}s
+     */    
+    public void getHistoryEntries (Client client, int offset, ResultListener listener);
 }

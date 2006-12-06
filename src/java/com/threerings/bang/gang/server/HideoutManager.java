@@ -72,7 +72,7 @@ public class HideoutManager extends PlaceManager
         
         // remove them
         BangServer.gangmgr.removeFromGang(
-            user.gangId, user.playerId, user.handle, listener);
+            user.gangId, user.playerId, user.handle, null, listener);
     }
 
     // documentation inherited from interface HideoutProvider
@@ -108,7 +108,7 @@ public class HideoutManager extends PlaceManager
         
         // remove them
         BangServer.gangmgr.removeFromGang(
-            user.gangId, entry.playerId, handle, listener);
+            user.gangId, entry.playerId, handle, user.handle, listener);
     }
     
     // documentation inherited from interface HideoutProvider
@@ -121,9 +121,36 @@ public class HideoutManager extends PlaceManager
         PlayerObject user = (PlayerObject)caller;
         GangMemberEntry entry = verifyCanChange(user, handle);
         
+        // make sure it's a valid rank
+        if (rank < 0 || rank >= RANK_COUNT || rank == entry.rank) {
+            log.warning("Tried to change member to invalid rank [who=" + user.who() +
+                ", entry=" + entry + ", rank=" + rank + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        
         // change it
         BangServer.gangmgr.changeMemberRank(
-            user.gangId, entry.playerId, entry.handle, rank, listener);
+            user.gangId, entry.playerId, entry.handle, user.handle, entry.rank, rank, listener);
+    }
+    
+    // documentation inherited from interface HideoutProvider
+    public void getHistoryEntries (
+        ClientObject caller, int offset, HideoutService.ResultListener listener)
+        throws InvocationException
+    {
+        // make sure they're in a gang
+        PlayerObject user = (PlayerObject)caller;
+        verifyInGang(user);
+        
+        // make sure the offset is valid
+        if (offset < 0) {
+            log.warning("Invalid history entry offset [who=" + user.who() + ", offset=" + offset +
+                "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        
+        // fetch the entries from the database
+        BangServer.gangmgr.getHistoryEntries(user.gangId, offset, HISTORY_PAGE_ENTRIES, listener);
     }
     
     /**

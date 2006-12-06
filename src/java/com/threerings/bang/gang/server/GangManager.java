@@ -48,6 +48,7 @@ import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangInvite;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
+import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.server.persist.GangRepository;
 import com.threerings.bang.gang.server.persist.GangRepository.GangRecord;
 import com.threerings.bang.gang.server.persist.GangRepository.InviteRecord;
@@ -107,6 +108,10 @@ public class GangManager
             public void invokePersistent ()
                 throws PersistenceException {
                 _error = _gangrepo.insertInvite(player.playerId, player.gangId, handle, message);
+                if (_error == null) {
+                    _gangrepo.insertHistoryEntry(player.gangId,
+                        MessageBundle.tcompose("m.invited_entry", player.handle, handle));
+                }
             }
             public void handleSuccess () {
                 if (_error != null) {
@@ -206,6 +211,8 @@ public class GangManager
                     BangServer.playrepo.updatePlayerGang(user.playerId,
                         _grec.gangId, LEADER_RANK,
                         _joined = System.currentTimeMillis());
+                    _gangrepo.insertHistoryEntry(_grec.gangId,
+                        MessageBundle.tcompose("m.founded_entry", user.handle));
                     return null;
                 } catch (PersistenceException e) {
                     return INTERNAL_ERROR;
@@ -213,6 +220,7 @@ public class GangManager
             }
             protected void rollbackPersistentAction ()
                 throws PersistenceException {
+                // deleting the gang also deletes its history
                 _gangrepo.deleteGang(_grec.gangId);
                 BangServer.playrepo.updatePlayerGang(
                     user.playerId, 0, (byte)0, 0L);
@@ -266,6 +274,11 @@ public class GangManager
             protected String persistentAction () {
                 try {
                     _gangrepo.addToCoffers(user.gangId, scrip, coins);
+                    _entryId = _gangrepo.insertHistoryEntry(user.gangId,
+                        MessageBundle.compose(
+                            "m.donation_entry",
+                            MessageBundle.taint(user.handle),
+                            getMoneyDesc(scrip, coins)));
                     return null;   
                 } catch (PersistenceException e) {
                     return INTERNAL_ERROR;
@@ -274,6 +287,9 @@ public class GangManager
             protected void rollbackPersistentAction ()
                 throws PersistenceException {
                 _gangrepo.addToCoffers(user.gangId, -scrip, -coins);
+                if (_entryId > 0) {
+                    _gangrepo.deleteHistoryEntry(_entryId);
+                }
             }
             protected void actionCompleted () {
                 log.info("Added to gang coffers [who=" + user.who() +
@@ -295,6 +311,7 @@ public class GangManager
             protected void actionFailed () {
                 listener.requestFailed(INTERNAL_ERROR);
             }
+            protected int _entryId;
         }.start();
     }
     
@@ -303,10 +320,13 @@ public class GangManager
      * is assumed to describe a member of the specified gang.  At least one
      * member of the gang must be online.  When the last member is removed, the
      * gang itself is deleted.
+     *
+     * @param remover the leader responsible for kicking the member out, or
+     * <code>null</code> if the member left voluntarily
      */
     public void removeFromGang (
         final int gangId, final int playerId, final Handle handle,
-        final InvocationService.ConfirmListener listener)
+        final Handle remover, final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
         GangObject gangobj = getGangObject(gangId);
@@ -323,7 +343,7 @@ public class GangManager
         // gangs cannot be left without a leader; if we are removing the last
         // leader, we must promote the most senior non-leader
         GangMemberEntry removal = gangobj.members.get(handle);
-        if (removal.rank == LEADER_RANK && !delete) {
+        if (removal.rank == LEADER_RANK && remover == null && !delete) {
             boolean leaderless = true;
             GangMemberEntry senior = null;
             for (GangMemberEntry member : gangobj.members) {
@@ -337,10 +357,12 @@ public class GangManager
                 }
             }
             if (leaderless) {
-                changeMemberRank(gangId, senior.playerId, senior.handle, LEADER_RANK,
+                changeMemberRank(
+                    gangId, senior.playerId, senior.handle, null, senior.rank, LEADER_RANK,
                     new InvocationService.ConfirmListener() {
                         public void requestProcessed () {
-                            continueRemovingFromGang(gangId, playerId, handle, false, listener);
+                            continueRemovingFromGang(
+                                gangId, playerId, handle, null, false, listener);
                         }
                         public void requestFailed (String cause) {
                             listener.requestFailed(cause);
@@ -351,39 +373,69 @@ public class GangManager
         }
         
         // continue the process
-        continueRemovingFromGang(gangId, playerId, handle, delete, listener);
+        continueRemovingFromGang(gangId, playerId, handle, remover, delete, listener);
     }
     
     /**
      * Processes a request to change a member's rank.  The entry provided is
      * assumed to describe a member of the specified gang.
+     *
+     * @param changer the leader responsible for changing the member's rank, or <code>null</code>
+     * if the rank was changed by default
      */
     public void changeMemberRank (
-        final int gangId, final int playerId, final Handle handle,
-        final byte rank, final InvocationService.ConfirmListener listener)
+        final int gangId, final int playerId, final Handle handle, final Handle changer,
+        final byte orank, final byte nrank, final InvocationService.ConfirmListener listener)
     {
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent ()
                 throws PersistenceException {
-                BangServer.playrepo.updateGangRank(playerId, rank);
+                BangServer.playrepo.updateGangRank(playerId, nrank);
+                _gangrepo.insertHistoryEntry(gangId, (changer == null) ?
+                    MessageBundle.tcompose("m.auto_promotion_entry", handle) :
+                    MessageBundle.compose(
+                        (orank < nrank) ? "m.promotion_entry" : "m.demotion_entry",
+                        MessageBundle.taint(changer),
+                        MessageBundle.taint(handle),
+                        MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[nrank])));
             }
             public void handleSuccess () {
                 log.info("Changed member rank [gangId=" + gangId +
                     ", playerId=" + playerId + ", handle=" + handle +
-                    ", rank=" + rank + "].");
+                    ", rank=" + nrank + "].");
                 PlayerObject plobj =
                     (PlayerObject)BangServer.lookupBody(handle);
                 if (plobj != null) {
-                    plobj.setGangRank(rank);
+                    plobj.setGangRank(nrank);
                 }
                 GangObject gangobj = getGangObject(gangId);
                 if (gangobj != null) {
                     GangMemberEntry entry = gangobj.members.get(handle);
-                    entry.rank = rank;
+                    entry.rank = nrank;
                     gangobj.updateMembers(entry);
                 }
                 listener.requestProcessed();
             } 
+        });
+    }
+    
+    /**
+     * Fetches a batch of history entries for the specified gang at the requested offset.
+     */
+    public void getHistoryEntries (
+        final int gangId, final int offset, final int count,
+        final InvocationService.ResultListener listener)
+    {
+         BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                _entries = _gangrepo.loadHistoryEntries(gangId, offset, count);
+            }
+            public void handleSuccess () {
+                listener.requestProcessed(
+                    _entries.toArray(new HistoryEntry[_entries.size()]));
+            }
+            protected ArrayList<HistoryEntry> _entries;
         });
     }
     
@@ -394,6 +446,28 @@ public class GangManager
         GangObject gangobj = (GangObject)speakObj;
         PlayerObject user = (PlayerObject)speaker;
         return gangobj.members.containsKey(user.handle);
+    }
+    
+    /**
+     * Returns a translatable string describing the identified amounts (at least one of which must
+     * be nonzero).
+     */
+    protected String getMoneyDesc (int scrip, int coins)
+    {
+        String sdesc = null, cdesc = null;
+        if (scrip > 0) {
+            sdesc = MessageBundle.tcompose("m.scrip", String.valueOf(scrip));
+            if (coins == 0) {
+                return sdesc;
+            }
+        }
+        if (coins > 0) {
+            cdesc = MessageBundle.tcompose("m.coins", coins);
+            if (scrip == 0) {
+                return cdesc;
+            }
+        }
+        return MessageBundle.compose("m.times_2", cdesc, sdesc);
     }
     
     /**
@@ -431,6 +505,8 @@ public class GangManager
                     BangServer.playrepo.updatePlayerGang(
                         user.playerId, gangId, MEMBER_RANK,
                         _joined = System.currentTimeMillis());
+                    _gangrepo.insertHistoryEntry(gangId,
+                        MessageBundle.tcompose("m.joined_entry", user.handle));
                 }
             }
             public void handleSuccess () {
@@ -512,7 +588,7 @@ public class GangManager
      * a player to avoid leaving a gang leaderless.
      */
     protected void continueRemovingFromGang (
-        final int gangId, final int playerId, final Handle handle,
+        final int gangId, final int playerId, final Handle handle, final Handle remover,
         final boolean delete, final InvocationService.ConfirmListener listener)
     {
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
@@ -521,6 +597,10 @@ public class GangManager
                 BangServer.playrepo.updatePlayerGang(playerId, 0, (byte)0, 0L);
                 if (delete) {
                     _gangrepo.deleteGang(gangId);
+                } else {
+                    _gangrepo.insertHistoryEntry(gangId, (remover == null) ?
+                        MessageBundle.tcompose("m.left_entry", handle) :
+                        MessageBundle.tcompose("m.expelled_entry", remover, handle));
                 }
             }
             public void handleSuccess () {

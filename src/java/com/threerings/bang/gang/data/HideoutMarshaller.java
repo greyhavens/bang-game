@@ -72,8 +72,21 @@ public class HideoutMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #getHistoryEntries} requests. */
+    public static final int GET_HISTORY_ENTRIES = 5;
+
+    // from interface HideoutService
+    public void getHistoryEntries (Client arg1, int arg2, InvocationService.ResultListener arg3)
+    {
+        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, GET_HISTORY_ENTRIES, new Object[] {
+            Integer.valueOf(arg2), listener3
+        });
+    }
+
     /** The method id used to dispatch {@link #leaveGang} requests. */
-    public static final int LEAVE_GANG = 5;
+    public static final int LEAVE_GANG = 6;
 
     // from interface HideoutService
     public void leaveGang (Client arg1, InvocationService.ConfirmListener arg2)
