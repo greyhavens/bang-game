@@ -338,7 +338,6 @@ public class BangView extends BWindow
         if (config.type != BangConfig.Type.TUTORIAL) {
             showChat();
         }
-        log.info("BangView wasAdded");
 
         // finally if we were waiting to start things up, get going
         if (_pendingPhase != -1) {
