@@ -1266,7 +1266,8 @@ public class BangBoard extends SimpleStreamableObject
         if (!_playarea.contains(x, y)) {
             return false;
         }
-        return (_tstate[y*_width+x] & TARGETABLE_FLAG) == 0;
+        byte tstate = _tstate[y*_width+x];
+        return tstate <= O_PROP && (_tstate[y*_width+x] & TARGETABLE_FLAG) == 0;
     }
 
     /**
