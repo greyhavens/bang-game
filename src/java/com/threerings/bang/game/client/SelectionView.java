@@ -306,8 +306,7 @@ public class SelectionView extends SteelWindow
 
         // submit our selection to the server
         _bangobj.service.selectTeam(
-            _ctx.getClient(), _bigShotId,
-            units.toArray(new String[units.size()]), cards);
+            _ctx.getClient(), _bigShotId, units.toArray(new String[units.size()]), cards);
 
         // get ourselves out of the way
         _view.clearOverlay();

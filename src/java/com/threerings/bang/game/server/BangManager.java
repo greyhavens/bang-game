@@ -124,6 +124,7 @@ public class BangManager extends GameManager
         public int playerId;
         public Purse purse;
         public int[] finishedTick;
+        public int readyState;
 
         public DSet<Rating> ratings;
         public HashMap<String,Rating> nratings = new HashMap<String,Rating>();
@@ -319,6 +320,10 @@ public class BangManager extends GameManager
             bsunit = new BigShotItem(-1, "frontier_town/tactician");
         }
         selectTeam(user, pidx, bsunit, units, cards);
+
+        // selecting a team implicitly reports one as ready for SELECT_PHASE (or rather its
+        // completion)
+        playerReadyFor(user, BangObject.SELECT_PHASE);
     }
 
     // documentation inherited from interface BangProvider
@@ -333,7 +338,7 @@ public class BangManager extends GameManager
         PlayerObject user = (PlayerObject)caller;
         int pidx = getPlayerIndex(user.getVisibleName());
 
-        if (!_bangobj.isActivePlayer(pidx)) {
+        if (!isActivePlayer(pidx)) {
             log.warning("Rejecting order from inactive player [pidx=" + pidx + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
@@ -400,7 +405,7 @@ public class BangManager extends GameManager
         PlayerObject user = (PlayerObject)caller;
         Card card = _bangobj.cards.get(cardId);
         int pidx = getPlayerIndex(user.getVisibleName());
-        if (card == null || card.owner != pidx || !_bangobj.isActivePlayer(pidx)) {
+        if (card == null || card.owner != pidx || !isActivePlayer(pidx)) {
             log.warning("Rejecting invalid card request [who=" + user.who() + ", sid=" + cardId +
                         ", card=" + card + "].");
             throw new InvocationException(INTERNAL_ERROR);
@@ -447,37 +452,36 @@ public class BangManager extends GameManager
                            " h:" + StringUtil.toString(perfhisto));
     }
 
-    @Override // documentation inherited
-    public void playerReady (BodyObject caller)
+    /**
+     * Called by the client when the player has completed some phase of the client initialization
+     * and is ready to move to the next phase.
+     */
+    public void playerReadyFor (BodyObject caller, int state)
     {
-        // if all players are AIs, the human observer determines when to
-        // proceed
-        if (_bconfig.allPlayersAIs()) {
-            playersAllHere();
-        }
-
         PlayerObject user = (PlayerObject)caller;
         int pidx = _bangobj.getPlayerIndex(user.handle);
 
-        // If we're not an active player, then stop here.
-        if (!_bangobj.isActivePlayer(pidx)) {
+        // if they're not an active player, ignore them
+        if (!isActivePlayer(pidx)) {
             return;
         }
 
-        super.playerReady(caller);
+        // note their readiness state
+        _precords[pidx].readyState = state;
 
-        // if we're in play, we need to note that this player is ready to go
-        if (_bangobj.state == BangObject.IN_PLAY) {
-            _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
-        }
+        // now check to see if we should proceed
+        checkStartNextPhase();
     }
 
     @Override // documentation inherited
-    public boolean playerIsReady (int pidx)
+    public void playerReady (BodyObject caller)
     {
-        // inactive players are also considered ready
-        return super.playerIsReady(pidx) || (_bangobj.playerStatus != null && 
-                _bangobj.playerStatus[pidx] == BangObject.PLAYER_LEFT_GAME);
+        // if all players are AIs, the human observer determines when to proceed
+        if (_bconfig.allPlayersAIs()) {
+            playersAllHere();
+        } else {
+            super.playerReady(caller);
+        }
     }
 
     /**
@@ -712,12 +716,10 @@ public class BangManager extends GameManager
 
         switch (state) {
         case BangObject.SKIP_SELECT_PHASE:
-            resetPreparingStatus(true);
             _bangobj.setState(BangObject.SKIP_SELECT_PHASE);
             break;
 
         case BangObject.SELECT_PHASE:
-            resetPreparingStatus(false);
             // we may have to wait until we've noted the played cards
             _startRoundMultex.satisfied(Multex.CONDITION_ONE);
             break;
@@ -741,7 +743,7 @@ public class BangManager extends GameManager
         // if an active player disconnected, boot them from the game
         int pidx = getPlayerIndex(occInfo.username);
         if (pidx != -1 && occInfo.status == OccupantInfo.DISCONNECTED &&
-            _bangobj.isInPlay() && _bangobj.isActivePlayer(pidx)) {
+            _bangobj.isInPlay() && isActivePlayer(pidx)) {
             log.info("Booting disconnected player [game=" + where() +
                      ", who=" + occInfo.username + "].");
             endPlayerGame(pidx);
@@ -825,7 +827,6 @@ public class BangManager extends GameManager
         for (int ii = 0; ii < slots; ii++) {
             _bangobj.pdata[ii] = new BangObject.PlayerData();
         }
-        resetPreparingStatus(false);
     }
 
     @Override // documentation inherited
@@ -840,56 +841,41 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void playersAllHere ()
     {
-        switch (_bangobj.state) {
-        case BangObject.PRE_GAME:
-            // create our player records now that we know everyone's in the room and ready to go
-            _precords = new PlayerRecord[getPlayerSlots()];
-            BangObject.PlayerInfo[] pinfo = new BangObject.PlayerInfo[getPlayerSlots()];
-            for (int ii = 0; ii < _precords.length; ii++) {
-                PlayerRecord prec = (_precords[ii] = new PlayerRecord());
-                prec.finishedTick = new int[_bconfig.getRounds()];
-                pinfo[ii] = new BangObject.PlayerInfo();
-                if (isAI(ii)) {
-                    prec.playerId = -1;
-                    prec.ratings = new DSet<Rating>();
-                    pinfo[ii].avatar = ((BangAI)_AIs[ii]).avatar;
-                } else if (isActivePlayer(ii)) {
-                    prec.user = (PlayerObject)getPlayer(ii);
-                    prec.playerId = prec.user.playerId;
-                    prec.purse = prec.user.getPurse();
-                    prec.ratings = prec.user.ratings;
-                    pinfo[ii].playerId = prec.user.playerId;
-                    Look look = prec.user.getLook(Look.Pose.DEFAULT);
-                    if (look != null) {
-                        pinfo[ii].avatar = look.getAvatar(prec.user);
-                    }
+        // if a player's client was crazy slow, they may have shown up and reported readiness after
+        // the game already resigned them, in which case we may get an additional call to
+        // playersAllHere() after the first one, we can just ignore it as the poor bastard will
+        // just have to watch the game play out without him
+        if (_precords != null) {
+            return;
+        }
+
+        // create our player records now that we know everyone's in the room and ready to go
+        _precords = new PlayerRecord[getPlayerSlots()];
+        BangObject.PlayerInfo[] pinfo = new BangObject.PlayerInfo[getPlayerSlots()];
+        for (int ii = 0; ii < _precords.length; ii++) {
+            PlayerRecord prec = (_precords[ii] = new PlayerRecord());
+            prec.finishedTick = new int[_bconfig.getRounds()];
+            pinfo[ii] = new BangObject.PlayerInfo();
+            if (isAI(ii)) {
+                prec.playerId = -1;
+                prec.ratings = new DSet<Rating>();
+                pinfo[ii].avatar = ((BangAI)_AIs[ii]).avatar;
+            } else if (isActivePlayer(ii)) {
+                prec.user = (PlayerObject)getPlayer(ii);
+                prec.playerId = prec.user.playerId;
+                prec.purse = prec.user.getPurse();
+                prec.ratings = prec.user.ratings;
+                pinfo[ii].playerId = prec.user.playerId;
+                Look look = prec.user.getLook(Look.Pose.DEFAULT);
+                if (look != null) {
+                    pinfo[ii].avatar = look.getAvatar(prec.user);
                 }
             }
-            _bangobj.setPlayerInfo(pinfo);
-            // when the players all arrive, go into the buying phase
-            startRound();
-            break;
-
-        case BangObject.SELECT_PHASE:
-            checkStartNextPhase();
-            break;
-
-        case BangObject.SKIP_SELECT_PHASE:
-            startNextPhase();
-            break;
-
-        case BangObject.IN_PLAY:
-            // queue up the first board tick
-            _ticker.schedule(_scenario.getTickTime(_bconfig, _bangobj), false);
-            // let the players know we're ready to go with the first tick
-            _bangobj.tick((short)0);
-            break;
-
-        default:
-            log.warning("playersAllHere() called during invalid phase! " +
-                        "[where=" + where() + ", state=" + _bangobj.state + "].");
-            break;
         }
+        _bangobj.setPlayerInfo(pinfo);
+
+        // when the players all arrive, go into the first game phase
+        startRound();
     }
 
     @Override // documentation inherited
@@ -985,17 +971,11 @@ public class BangManager extends GameManager
         case TUTORIAL:
             _bangobj.setScenario(new TutorialInfo());
             _scenario = new Tutorial();
-            // we reuse the playerIsReady() mechanism to wait for the player to be ready to start
-            // the tutorial; normally they'd select their team etc., but not in a tutorial
-            resetPlayerOids();
             break;
 
         case PRACTICE:
             _bangobj.setScenario(new PracticeInfo(ServerConfig.townId));
             _scenario = new Practice();
-            // we reuse the playerIsReady() mechanism to wait for the player to be ready to start
-            // the practice; normally they'd select their team etc., but not in practice
-            resetPlayerOids();
             break;
 
         default:
@@ -1102,8 +1082,7 @@ public class BangManager extends GameManager
         // clear out the selected big shots array
         _bangobj.setBigShots(new Unit[getPlayerSlots()]);
 
-        // configure anyone who is not in the game room as resigned for this round; this is be
-        // preserved through calls to resetPreparingStatus
+        // configure anyone who is not in the game room as resigned for this round
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (isAI(ii)) {
                 continue;
@@ -1115,7 +1094,25 @@ public class BangManager extends GameManager
         }
 
         // transition to the pre-game selection phase
-        startNextPhase();
+        if (_bconfig.type == BangConfig.Type.SALOON) {
+            startPhase(BangObject.SELECT_PHASE);
+        } else {
+            startPhase(BangObject.SKIP_SELECT_PHASE);
+        }
+    }
+
+    /**
+     * Returns true if all active human players have reported as ready for the specified phase.
+     */
+    protected boolean allPlayersReadyFor (int phase)
+    {
+        for (int ii = 0; ii < _precords.length; ii++) {
+            if (!isAI(ii) && isActivePlayer(ii) && _precords[ii].readyState < phase) {
+                log.fine(getPlayer(ii) + " (" + ii + ") not ready for " + phase + ". Waiting.");
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -1202,15 +1199,9 @@ public class BangManager extends GameManager
             // initialize and prepare the units
             initAndPrepareUnits(units, pidx);
 
-            // note that they're done with this phase
-            _bangobj.setPlayerStatusAt(BangObject.PLAYER_IN_PLAY, pidx);
-
         } finally {
             _bangobj.commitTransaction();
         }
-
-        // if everyone has selected their starters, move to the next phase
-        checkStartNextPhase();
     }
 
     /**
@@ -1246,66 +1237,47 @@ public class BangManager extends GameManager
     }
 
     /**
-     * This is called when a player takes an action that might result in the current phase ending
-     * an the next phase starting, or when a player is removed from the game (in which case the
-     * next phase might need to be started because we were waiting on that player).
+     * This is called when a player reports themselves as ready for a phase, or when a player is
+     * removed from the game (in which case the next phase might need to be started because we were
+     * waiting on that player).
      */
     protected void checkStartNextPhase ()
     {
-        // if we're not in the select phase, we don't do nothin'
-        if (_bangobj.state != BangObject.SELECT_PHASE) {
+        // if anyone has not yet reported readiness for this phase, we're not ready
+        if (!allPlayersReadyFor(_bangobj.state)) {
             return;
         }
 
-        // if all players are AIs, wait for playerReady signal before starting
-        if (_bconfig.allPlayersAIs()) {
-            return;
-        }
-
-        // if anyone is still preparing, we're not ready
-        for (int ii = 0; ii < _bangobj.playerStatus.length; ii++) {
-            if (_bangobj.isActivePlayer(ii) &&
-                _bangobj.playerStatus[ii] == BangObject.PLAYER_PREPARING) {
-                return;
-            }
-        }
-
-        // we are ready; add the cards to the BangObject and move on
-        _bangobj.startTransaction();
-        try {
-            for (Card card : _cardSet) {
-                _bangobj.addToCards(card);
-            }
-        } finally {
-            _bangobj.commitTransaction();
-        }
-        _cardSet.clear();
-        startNextPhase();
-    }
-
-    /**
-     * Determines the next phase of the game.
-     */
-    protected void startNextPhase ()
-    {
+        log.fine("Starting next phase [cur=" + _bangobj.state + "].");
         switch (_bangobj.state) {
-        case BangObject.POST_ROUND:
-        case BangObject.PRE_GAME:
-            if (_bconfig.type == BangConfig.Type.SALOON) {
-                startPhase(BangObject.SELECT_PHASE);
-            } else {
-                startPhase(BangObject.SKIP_SELECT_PHASE);
+        case BangObject.SELECT_PHASE:
+            // add everyone's selected cards to the BangObject
+            _bangobj.startTransaction();
+            try {
+                for (Card card : _cardSet) {
+                    _bangobj.addToCards(card);
+                }
+            } finally {
+                _bangobj.commitTransaction();
             }
+            _cardSet.clear();
+            startPhase(BangObject.IN_PLAY);
             break;
 
-        case BangObject.SELECT_PHASE:
         case BangObject.SKIP_SELECT_PHASE:
             startPhase(BangObject.IN_PLAY);
             break;
 
+        case BangObject.IN_PLAY:
+            // queue up the first board tick
+            _ticker.schedule(_scenario.getTickTime(_bconfig, _bangobj), false);
+            // let the players know we're ready to go with the first tick
+            _bangobj.tick((short)0);
+            break;
+
         default:
-            log.warning("Unable to start next phase [game=" + _bangobj.which() +
-                        ", state=" + _bangobj.state + "].");
+            log.warning("checkStartNextPhase() called during invalid phase! " +
+                        "[where=" + where() + ", state=" + _bangobj.state + "].");
             break;
         }
     }
@@ -1317,7 +1289,7 @@ public class BangManager extends GameManager
 
         // add the selected big shots to the purchases
         for (int ii = 0; ii < _bangobj.bigShots.length; ii++) {
-            if (_bangobj.isActivePlayer(ii) && _bangobj.bigShots[ii] != null) {
+            if (isActivePlayer(ii) && _bangobj.bigShots[ii] != null) {
                 _purchases.add(_bangobj.bigShots[ii]);
             }
         }
@@ -1334,9 +1306,6 @@ public class BangManager extends GameManager
         // now place and add the player pieces
         try {
             _bangobj.startTransaction();
-
-            // override the player status set in super.gameWillStart()
-            resetPreparingStatus(true);
 
             try {
                 // let the scenario know that we're about to start the round
@@ -1363,7 +1332,7 @@ public class BangManager extends GameManager
 
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 // skip players that have abandoned ship
-                if (!_bangobj.isActivePlayer(ii)) {
+                if (!isActivePlayer(ii)) {
                     continue;
                 }
 
@@ -1394,10 +1363,6 @@ public class BangManager extends GameManager
         } finally {
             _bangobj.commitTransaction();
         }
-
-        // we reuse the playerIsReady() mechanism to wait for the players to all report that
-        // they're fully ready to go (they need to resolve their unit models)
-        resetPlayerOids();
     }
 
     /**
@@ -1460,7 +1425,7 @@ public class BangManager extends GameManager
         // note that all active players completed this tick
         _rounds[_activeRoundId].lastTick = tick;
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (_bangobj.isActivePlayer(ii)) {
+            if (isActivePlayer(ii)) {
                 _precords[ii].finishedTick[_activeRoundId] = tick;
             }
         }
@@ -1580,7 +1545,7 @@ public class BangManager extends GameManager
                 ranks[ii] = new RankRecord(
                     ii, _bangobj.perRoundPoints[_activeRoundId][ii],
                     _rounds[_activeRoundId].stats[ii].getIntStat(Stat.Type.UNITS_KILLED),
-                    (_bangobj.isActivePlayer(ii) ? 1 : 0));
+                    (isActivePlayer(ii) ? 1 : 0));
             }
 
             // we'll allow ties in the per round rankings
@@ -1821,8 +1786,7 @@ public class BangManager extends GameManager
                     kills += _rounds[rr].stats[ii].getIntStat(Stat.Type.UNITS_KILLED);
                 }
             }
-            _ranks[ii] = new RankRecord(
-                ii, points[ii], kills, (_bangobj.isActivePlayer(ii) ? 1 : 0));
+            _ranks[ii] = new RankRecord(ii, points[ii], kills, (isActivePlayer(ii) ? 1 : 0));
         }
 
         // first shuffle, then sort so that ties are resolved randomly
@@ -1854,10 +1818,9 @@ public class BangManager extends GameManager
             return;
         }
 
-        // resign anyone that is still "preparing"
+        // resign anyone that has not selected a team
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (!isAI(ii) &&
-                _bangobj.playerStatus[ii] == BangObject.PLAYER_PREPARING) {
+            if (!isAI(ii) && _precords[ii].readyState == BangObject.SELECT_PHASE) {
                 log.info("Player failed to make a selection in time [game=" + where() +
                          ", state=" + targetState + ", who=" + _bangobj.players[ii] + "].");
                 endPlayerGame(ii);
@@ -2265,16 +2228,13 @@ public class BangManager extends GameManager
     protected void noteUnitsUsed (PieceSet units, Stat.Type stat, int pidx)
     {
         for (Piece piece : units.values()) {
-            if (!(piece instanceof Unit) || piece.owner < 0 ||
+            if (!(piece instanceof Unit) || (piece.owner < 0) ||
                 (pidx != -1 && piece.owner != pidx)) {
                 continue;
             }
-            int ploid = _playerOids[piece.owner];
-            if (ploid <= 0 || !_bangobj.isActivePlayer(piece.owner)) {
-                continue;
-            }
-            PlayerObject user = (PlayerObject)BangServer.omgr.getObject(ploid);
-            if (user == null) {
+            PlayerObject user;
+            if (!isActivePlayer(piece.owner) ||
+                (user = (PlayerObject)getPlayer(piece.owner)) == null) {
                 continue;
             }
             user.stats.incrementMapStat(stat, ((Unit)piece).getType(), 1);
@@ -2316,7 +2276,7 @@ public class BangManager extends GameManager
                 buf.append(_precords[ii].user.username);
 
                 // note players that left the game early
-                if (!_bangobj.isActivePlayer(ii)) {
+                if (!isActivePlayer(ii)) {
                     PlayerObject pobj = BangServer.lookupPlayer(_precords[ii].user.handle);
                     if (pobj == null) {
                         buf.append("*"); // no longer online
@@ -2472,54 +2432,11 @@ public class BangManager extends GameManager
     {
         int humanCount = 0;
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (_bangobj.isActivePlayer(ii) && !isAI(ii)) {
+            if (isActivePlayer(ii) && !isAI(ii)) {
                 humanCount++;
             }
         }
         return humanCount;
-    }
-
-    /**
-     * Resets all player status to preparing. We do this element by element rather than setting one
-     * array because there is the chance that unprocessed element sets in the queue will overwrite
-     * what we set.
-     */
-    protected void resetPreparingStatus (boolean aisAreReady)
-    {
-        boolean dotrans = !_bangobj.inTransaction();
-        if (dotrans) {
-            _bangobj.startTransaction();
-        }
-        try {
-            for (int ii = 0; ii < getPlayerSlots(); ii++) {
-                int status = BangObject.PLAYER_PREPARING;
-                if (isAI(ii) && aisAreReady) {
-                    status = BangObject.PLAYER_IN_PLAY;
-                }
-                // don't override the status of players that have left the game
-                if (_bangobj.playerStatus[ii] == BangObject.PLAYER_LEFT_GAME) {
-                    status = BangObject.PLAYER_LEFT_GAME;
-                }
-                _bangobj.setPlayerStatusAt(status, ii);
-            }
-        } finally {
-            if (dotrans) {
-                _bangobj.commitTransaction();
-            }
-        }
-    }
-
-    /**
-     * Resets the player oid of all active players so that they can report in once again that they
-     * are ready and we can trigger on {@link #playersAllHere} for different phases of the game.
-     */
-    protected void resetPlayerOids ()
-    {
-        for (int ii = 0; ii < _playerOids.length; ii++) {
-            if (isActivePlayer(ii)) {
-                _playerOids[ii] = 0;
-            }
-        }
     }
 
     /** Indicates that we're testing and to do wacky stuff. */

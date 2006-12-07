@@ -199,9 +199,6 @@ public class BangObject extends GameObject
     /** A {@link #state} constant indicating the post-round phase. */
     public static final int POST_ROUND = 6;
 
-    /** A {@link #playerStatus} constant used before the game starts. */
-    public static final int PLAYER_PREPARING = 2;
-
     /** An offset for {@link #perRoundRank} for coop ranks. */
     public static final short COOP_RANK = 100;
 
@@ -718,13 +715,6 @@ public class BangObject extends GameObject
             setDebugPieces(clone);
         }
         setTick(tick);
-    }
-
-    @Override // documentation inherited
-    protected boolean isActivePlayerStatus (int playerStatus)
-    {
-        return super.isActivePlayerStatus(playerStatus) ||
-            (playerStatus == PLAYER_PREPARING);
     }
 
     // AUTO-GENERATED: METHODS START

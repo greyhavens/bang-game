@@ -203,13 +203,11 @@ public class BangController extends GameController
             }
         }
 
-        // if we're just observing an auto-play game, let the manager know
-        // we're ready
+        // if we're just observing an auto-play game, let the manager know we're ready
         if (_config.allPlayersAIs()) {
             _ctx.getClient().getRunQueue().postRunnable(new Runnable() {
                 public void run () {
-                    // finally let the game manager know that we're ready
-                    // to roll
+                    // finally let the game manager know that we're ready to roll
                     playerReady();
                 }
             });
@@ -665,9 +663,8 @@ public class BangController extends GameController
         }
 
         if (_config.type != BangConfig.Type.SALOON || _config.allPlayersAIs()) {
-            // we re-use the playerReady mechanism to communicate that we're ready for our all
-            // non-saloon games
-            playerReady();
+            // since we're not selecting anything, let the server know that we're ready
+            playerReadyFor(BangObject.SKIP_SELECT_PHASE);
 
         } else if (_bangobj.state == BangObject.SELECT_PHASE) {
             // display the selection dialog
@@ -729,7 +726,7 @@ public class BangController extends GameController
         // if we're one of the players
         if (_bangobj.isActivePlayer(_pidx) || _config.allPlayersAIs()) {
             // let the game manager know that our units are in place and we're fully ready to go
-            playerReady();
+            playerReadyFor(BangObject.IN_PLAY);
 
             // add and immediately fade in and out a "GO!" marquee
             _view.view.fadeMarqueeInOut("m.round_start", 1f);
@@ -791,6 +788,14 @@ public class BangController extends GameController
                 }
             }
         }
+    }
+
+    /**
+     * Reports to the server that we're ready for the specified round phase.
+     */
+    protected void playerReadyFor (int phase)
+    {
+        _bangobj.manager.invoke("playerReadyFor", phase);
     }
 
     /** Listens for game state changes and calls {@link #updateRank}. */
