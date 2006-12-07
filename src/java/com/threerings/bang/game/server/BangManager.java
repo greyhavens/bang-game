@@ -76,6 +76,7 @@ import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.AdjustTickEffect;
 import com.threerings.bang.game.data.effect.BonusEffect;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.FailedShotEffect;
 import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.MoveEffect;
 import com.threerings.bang.game.data.effect.MoveShootEffect;
@@ -550,21 +551,23 @@ public class BangManager extends GameManager
                 }
                 _shooters.add(unit.pieceId);
 
-                // effect any collateral damage
-                Effect[] ceffects = unit.collateralDamage(_bangobj, target, effect.newDamage);
-                int ccount = (ceffects == null) ? 0 : ceffects.length;
-                for (int ii = 0; ii < ccount; ii++) {
-                    deployEffect(unit.owner, ceffects[ii]);
-                }
+                if (!(effect instanceof FailedShotEffect)) {
+                    // effect any collateral damage
+                    Effect[] ceffects = unit.collateralDamage(_bangobj, target, effect.newDamage);
+                    int ccount = (ceffects == null) ? 0 : ceffects.length;
+                    for (int ii = 0; ii < ccount; ii++) {
+                        deployEffect(unit.owner, ceffects[ii]);
+                    }
 
-                // allow the target to return fire on certain shots
-                if (!(effect instanceof ProximityShotEffect)) {
-                    effect = target.returnFire(_bangobj, unit, effect.newDamage);
-                }
-                if (effect != null) {
-                    deployEffect(target.owner, effect);
-                    if (target.owner != -1) {
-                        _bangobj.stats[target.owner].incrementStat(Stat.Type.SHOTS_FIRED, 1);
+                    // allow the target to return fire on certain shots
+                    if (!(effect instanceof ProximityShotEffect)) {
+                        effect = target.returnFire(_bangobj, unit, effect.newDamage);
+                    }
+                    if (effect != null) {
+                        deployEffect(target.owner, effect);
+                        if (target.owner != -1) {
+                            _bangobj.stats[target.owner].incrementStat(Stat.Type.SHOTS_FIRED, 1);
+                        }
                     }
                 }
             }
