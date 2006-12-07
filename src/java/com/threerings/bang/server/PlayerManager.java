@@ -342,12 +342,12 @@ public class PlayerManager
         config.rated = false;
         config.players = new Name[2];
         config.ais = new BangAI[2];
+        config.init(2, 2);
 
         // if this is a "practice versus the computer" tutorial, start up a special two player game
         // in lieu of a proper tutorial
         if (tutId.startsWith(TutorialCodes.PRACTICE_PREFIX)) {
             String scenId = tutId.substring(TutorialCodes.PRACTICE_PREFIX.length());
-            config.init(2, 2);
             config.addRound(scenId, null, null);
             config.duration = BangConfig.Duration.PRACTICE;
 
