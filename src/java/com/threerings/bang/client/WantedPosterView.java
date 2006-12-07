@@ -5,6 +5,8 @@ package com.threerings.bang.client;
 
 import java.util.Map;
 
+import com.jme.renderer.Renderer;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
@@ -21,23 +23,25 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
-import com.jme.renderer.Renderer;
-
-import static com.threerings.bang.Log.log;
 
 import com.samskivert.util.StringUtil;
 
+import com.threerings.presents.client.InvocationService;
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.gang.data.GangCodes;
+
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PosterInfo;
-import com.threerings.bang.game.data.GameCodes;
-import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.util.BangContext;
 
-import com.threerings.presents.client.InvocationService;
+import static com.threerings.bang.Log.log;
 
 /**
  * Display a player's wanted poster.
@@ -194,10 +198,16 @@ public class WantedPosterView extends BContainer
         handle.setFit(BLabel.Fit.SCALE);
         box.add(handle);
 
-        // TODO: disabled until there are actually gangs
-        String gang = " "; // = "Member of the \"DALTON GANG\"";
-        box.add(new BLabel(gang, "poster_gang"));
-
+        if (_poster.gang != null) {
+            String gang = _ctx.xlate(BangCodes.BANG_MSGS,
+                MessageBundle.compose(
+                    "m.poster_gang",
+                    MessageBundle.qualify(
+                        GangCodes.GANG_MSGS, GangCodes.XLATE_RANKS[_poster.rank]),
+                    MessageBundle.taint(_poster.gang)));
+            box.add(new BLabel(gang, "poster_gang"));
+        }
+        
         return box;
     }
 

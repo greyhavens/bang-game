@@ -47,6 +47,8 @@ import com.threerings.util.Name;
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.server.persist.LookRepository;
+import com.threerings.bang.gang.data.GangCodes;
+import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.ranch.data.RanchCodes;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
@@ -517,6 +519,11 @@ public class PlayerManager
             if (look != null) {
                 info.avatar = look.getAvatar(posterPlayer);
             }
+            if (posterPlayer.gangOid > 0) {
+                GangObject gangobj = (GangObject)BangServer.omgr.getObject(posterPlayer.gangOid);
+                info.gang = gangobj.name;
+                info.rank = getPosterRank(posterPlayer.gangRank);
+            }
             info.rankings = buildRankings(posterPlayer.ratings);
         }
 
@@ -552,6 +559,10 @@ public class PlayerManager
                 if (posterPlayer == null) {
                     info.avatar = _lookrepo.loadSnapshot(player.playerId);
                     info.rankings = buildRankings(_raterepo.loadRatings(player.playerId));
+                    if (player.gangId > 0) {
+                        info.gang = BangServer.gangmgr.getGangName(player.gangId);
+                        info.rank = getPosterRank(player.gangRank);
+                    }
                 }
             }
 
@@ -817,6 +828,14 @@ public class PlayerManager
         }
     }
 
+    /**
+     * Converts an actual rank to a rank appropriate for display on a poster.
+     */
+    protected static byte getPosterRank (byte rank)
+    {
+        return (rank == GangCodes.RECRUITER_RANK) ? GangCodes.MEMBER_RANK : rank;
+    }
+    
     /** The number of milliseconds after which we reload rank levels from DB */
     protected static final long RANK_RELOAD_TIMEOUT = (3600 * 1000);
 

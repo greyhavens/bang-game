@@ -153,6 +153,24 @@ public class GangManager
     }
     
     /**
+     * Returns the name of the specified gang.  This is run from the invoker thread.
+     */
+    public Handle getGangName (int gangId)
+        throws PersistenceException
+    {
+        // first try the loaded gangs
+        synchronized (_gangs) {
+            GangObject gangobj = _gangs.get(gangId);
+            if (gangobj != null) {
+                return gangobj.name;
+            }
+        }
+        
+        // then hit the database
+        return _gangrepo.loadGang(gangId, false).getName();
+    }
+    
+    /**
      * Loads the user's gang invitations, if any, on the invoker thread.
      */
     public void loadGangInvites (PlayerObject user)
