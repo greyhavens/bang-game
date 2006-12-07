@@ -4,7 +4,7 @@
 package com.threerings.bang.gang.server.persist;
 
 import java.sql.Connection;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -59,8 +59,11 @@ public class GangRepository extends JORARepository
         public String name;
 
         /** The date upon which the gang was founded. */
-        public Date founded;
+        public Timestamp founded;
 
+        /** The gang's accumulated notoriety points. */
+        public int notoriety;
+        
         /** The amount of scrip in the gang's coffers. */
         public int scrip;
         
@@ -123,6 +126,44 @@ public class GangRepository extends JORARepository
         }
     }
 
+    /** Contains information loaded from the database about a gang member. */
+    public static class MemberRecord
+    {
+        /** The member's player id. */
+        public int playerId;
+        
+        /** The id of the gang to which the player belongs. */
+        public int gangId;
+        
+        /** The player's rank in the gang. */
+        public byte rank;
+        
+        /** The time at which the player joined the gang. */
+        public Timestamp joined;
+        
+        /** The player's total contribution to the gang's notoriety. */
+        public int notoriety;
+        
+        /** Used when adding new members. */
+        public MemberRecord (int playerId, int gangId, byte rank)
+        {
+            this.playerId = playerId;
+            this.gangId = gangId;
+            this.rank = rank;
+        }
+
+        /** Used when forming queries. */
+        public MemberRecord (int playerId)
+        {
+            this.playerId = playerId;
+        }
+        
+        /** Used when loading records from the database. */
+        public MemberRecord ()
+        {
+        }
+    }
+    
     /** Contains information loaded from the database about a gang invitation. */
     public static class InviteRecord
     {
@@ -148,6 +189,35 @@ public class GangRepository extends JORARepository
         }
     }
     
+    /** Contains information loaded from the database about a historical event. */
+    public static class HistoryRecord
+    {
+        /** The entry's unique identifier. */
+        public int entryId;
+        
+        /** The gang to which the entry refers. */
+        public int gangId;
+        
+        /** The time at which the event was recorded. */
+        public Timestamp recorded;
+        
+        /** The event description. */
+        public String description;
+        
+        /** Used when adding new events. */
+        public HistoryRecord (int gangId, String description)
+        {
+            this.gangId = gangId;
+            this.description = description;
+        }
+
+        /** Used when forming queries. */
+        public HistoryRecord (int entryId)
+        {
+            this.entryId = entryId;
+        }
+    }
+    
     /**
      * Constructs a new gang repository with the specified connection
      * provider.
@@ -159,8 +229,10 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         super(conprov, GANG_DB_IDENT);
-        _byIdMask = _gtable.getFieldMask();
-        _byIdMask.setModified("gangId");
+        _gangIdMask = _gtable.getFieldMask();
+        _gangIdMask.setModified("gangId");
+        _playerIdMask = _mtable.getFieldMask();
+        _playerIdMask.setModified("playerId");
     }
     
     /**
@@ -174,7 +246,7 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         GangRecord grec = loadByExample(
-            _gtable, new GangRecord(gangId), _byIdMask);
+            _gtable, new GangRecord(gangId), _gangIdMask);
         if (grec != null && members) {
             grec.members = loadGangMembers(gangId);
         }
@@ -190,7 +262,7 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         if (gang.founded == null) {
-            gang.founded = new Date(System.currentTimeMillis());
+            gang.founded = new Timestamp(System.currentTimeMillis());
         }
         gang.gangId = insert(_gtable, gang);
     }
@@ -207,6 +279,18 @@ public class GangRepository extends JORARepository
     }
     
     /**
+     * Adds notoriety points to the gang and user records.
+     */
+    public void addNotoriety (int gangId, int playerId, int points)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANGS set NOTORIETY = NOTORIETY + " + points +
+                      " where GANG_ID = " + gangId, 1);
+        checkedUpdate("update GANG_MEMBERS set NOTORIETY = NOTORIETY + " + points +
+                      " where PLAYER_ID = " + playerId, 1);
+    }
+    
+    /**
      * Deletes a gang from the repository.
      */
     public void deleteGang (int gangId)
@@ -220,34 +304,47 @@ public class GangRepository extends JORARepository
     }
     
     /**
-     * Loads the entries for all members of the specified gang.
+     * Loads the membership record for the specified player.
+     *
+     * @return the loaded record, or <code>null</code> if the user does not
+     * belong to a gang.
      */
-    protected ArrayList<GangMemberEntry> loadGangMembers (int gangId)
+    public MemberRecord loadMember (int playerId)
         throws PersistenceException
     {
-        final ArrayList<GangMemberEntry> list = new ArrayList<GangMemberEntry>();
-        final String query = "select PLAYER_ID, HANDLE, GANG_RANK, " +
-            "JOINED_GANG, LAST_SESSION from PLAYERS where GANG_ID = " + gangId;
-        execute(new Operation<Object>() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
-                throws SQLException, PersistenceException
-            {
-                Statement stmt = conn.createStatement();
-                try {
-                    ResultSet rs = stmt.executeQuery(query);
-                    while (rs.next()) {
-                        list.add(new GangMemberEntry(
-                            rs.getInt(1), new Handle(rs.getString(2)),
-                            rs.getByte(3), rs.getTimestamp(4), rs.getDate(5)));
-                    }
-                    return null;
-
-                } finally {
-                    JDBCUtil.close(stmt);
-                }
-            }
-        });
-        return list;
+        return loadByExample(_mtable, new MemberRecord(playerId), _playerIdMask);
+    }
+    
+    /**
+     * Inserts a new membership record.  The {@link MemberRecord#joined} field will be
+     * filled in by this method if it is not already.
+     */
+    public void insertMember (MemberRecord member)
+        throws PersistenceException
+    {
+        if (member.joined == null) {
+            member.joined = new Timestamp(System.currentTimeMillis());
+        }
+        insert(_mtable, member);
+    }
+    
+    /** 
+     * Deletes the specified user's membership record.
+     */
+    public void deleteMember (int playerId)
+        throws PersistenceException
+    {
+        delete(_mtable, new MemberRecord(playerId));
+    }
+    
+    /**
+     * Changes the specified user's rank.
+     */
+    public void updateRank (int playerId, byte rank)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANG_MEMBERS set RANK = " + rank +
+                      " where PLAYER_ID = " + playerId, 1);
     }
     
     /**
@@ -302,16 +399,18 @@ public class GangRepository extends JORARepository
             {
                 Statement stmt = conn.createStatement();
                 try {
-                    // look up the player id and current gang
-                    ResultSet rs = stmt.executeQuery("select PLAYER_ID, GANG_ID from PLAYERS " +
-                        "where HANDLE = " + JDBCUtil.escape(handle.toString()));
-                    if (!rs.next()) {
+                    // first look up the playerId
+                    int playerId = BangServer.playrepo.getPlayerId(stmt, handle);
+                    if (playerId == -1) {
                         return MessageBundle.tcompose("e.no_such_player", handle);
                     }
-                    if (rs.getInt(2) > 0) {
+                    
+                    // then the current gang
+                    ResultSet rs = stmt.executeQuery("select GANG_ID from GANG_MEMBERS " +
+                        "where PLAYER_ID = " + playerId);
+                    if (rs.next()) {
                         return MessageBundle.tcompose("e.already_member_other", handle);
                     }
-                    int playerId = rs.getInt(1);
                     
                     // attempt to insert the invitation
                     String query = "insert ignore into GANG_INVITES set " +
@@ -359,7 +458,7 @@ public class GangRepository extends JORARepository
                     
                     // if the gang is going to be full, remove all pending invites
                     ResultSet rs = stmt.executeQuery(
-                        "select count(*) from PLAYERS where GANG_ID = " + gangId);
+                        "select count(*) from GANG_MEMBERS where GANG_ID = " + gangId);
                     if (rs.next() && rs.getInt(1) >= GangCodes.MAX_MEMBERS - 1) {
                         stmt.executeUpdate("delete from GANG_INVITES where GANG_ID = " + gangId);
                     }
@@ -377,30 +476,10 @@ public class GangRepository extends JORARepository
      *
      * @return the unique id assigned to the entry, which can be used to delete it.
      */
-    public int insertHistoryEntry (final int gangId, final String description)
+    public int insertHistoryEntry (int gangId, String description)
         throws PersistenceException
     {
-        final String query = "insert into GANG_HISTORY set GANG_ID = " + gangId +
-            ", DESCRIPTION = " + JDBCUtil.escape(description);
-        return executeUpdate(new Operation<Integer>() {
-            public Integer invoke (Connection conn, DatabaseLiaison liaison)
-                throws SQLException, PersistenceException
-            {
-                Statement stmt = conn.createStatement();
-                try {
-                    if (stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS) < 1) {
-                        log.warning("Couldn't insert history entry [gangId=" + gangId +
-                            ", description=" + description + "].");
-                        return -1;
-                    }
-                    ResultSet rs = stmt.getGeneratedKeys();
-                    return (rs.next() ? rs.getInt(1) : -1);
-                    
-                } finally {
-                    JDBCUtil.close(stmt);
-                }
-            }
-        });
+        return insert(_htable, new HistoryRecord(gangId, description));
     }
     
     /**
@@ -409,7 +488,7 @@ public class GangRepository extends JORARepository
     public void deleteHistoryEntry (final int entryId)
         throws PersistenceException
     {
-        checkedUpdate("delete from GANG_HISTORY where ENTRY_ID = " + entryId, 1);
+        delete(_htable, new HistoryRecord(entryId));
     }
     
     /**
@@ -445,6 +524,38 @@ public class GangRepository extends JORARepository
         return list;
     }
     
+    /**
+     * Loads the entries for all members of the specified gang.
+     */
+    protected ArrayList<GangMemberEntry> loadGangMembers (int gangId)
+        throws PersistenceException
+    {
+        final ArrayList<GangMemberEntry> list = new ArrayList<GangMemberEntry>();
+        final String query = "select GANG_MEMBERS.PLAYER_ID, HANDLE, RANK, " +
+            "JOINED, LAST_SESSION from GANG_MEMBERS, PLAYERS where " +
+            "GANG_MEMBERS.PLAYER_ID = PLAYERS.PLAYER_ID and GANG_ID = " + gangId;
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        list.add(new GangMemberEntry(
+                            rs.getInt(1), new Handle(rs.getString(2)),
+                            rs.getByte(3), rs.getTimestamp(4), rs.getTimestamp(5)));
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+        return list;
+    }
+    
     @Override // documentation inherited
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
@@ -453,6 +564,7 @@ public class GangRepository extends JORARepository
             "GANG_ID INTEGER NOT NULL AUTO_INCREMENT",
             "NAME VARCHAR(64) NOT NULL",
             "FOUNDED DATETIME NOT NULL",
+            "NOTORIETY INTEGER NOT NULL",
             "SCRIP INTEGER NOT NULL",
             "COINS INTEGER NOT NULL",
             "BRAND BLOB",
@@ -469,6 +581,20 @@ public class GangRepository extends JORARepository
                 "OUTFIT", "OUTFIT BLOB");
         }
         // END TEMP
+        
+        // TEMP: add the notoriety column
+        JDBCUtil.addColumn(conn, "GANGS", "NOTORIETY", "INTEGER NOT NULL", "FOUNDED");
+        // END TEMP
+        
+        JDBCUtil.createTableIfMissing(conn, "GANG_MEMBERS", new String[] {
+            "PLAYER_ID INTEGER NOT NULL",
+            "GANG_ID INTEGER NOT NULL",
+            "RANK TINYINT NOT NULL",
+            "JOINED DATETIME NOT NULL",
+            "NOTORIETY INTEGER NOT NULL",
+            "PRIMARY KEY (PLAYER_ID)",
+            "INDEX (GANG_ID)",
+        }, "");
         
         JDBCUtil.createTableIfMissing(conn, "GANG_INVITES", new String[] {
             "INVITER_ID INTEGER NOT NULL",
@@ -493,8 +619,12 @@ public class GangRepository extends JORARepository
     protected void createTables ()
     {
 	    _gtable = new Table<GangRecord>(GangRecord.class, "GANGS", "GANG_ID", true);
+	    _mtable = new Table<MemberRecord>(MemberRecord.class, "GANG_MEMBERS", "PLAYER_ID", true);
+	    _htable = new Table<HistoryRecord>(HistoryRecord.class, "GANG_HISTORY", "ENTRY_ID", true);
     }
     
     protected Table<GangRecord> _gtable;
-    protected FieldMask _byIdMask;
+    protected Table<MemberRecord> _mtable;
+    protected Table<HistoryRecord> _htable;
+    protected FieldMask _gangIdMask, _playerIdMask;
 }

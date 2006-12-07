@@ -122,7 +122,7 @@ public class BangManager extends GameManager
      * the player logs off in the middle of the game. */
     public static class PlayerRecord
     {
-        public int playerId;
+        public int playerId, gangId;
         public Purse purse;
         public int[] finishedTick;
         public int readyState;
@@ -866,6 +866,7 @@ public class BangManager extends GameManager
             } else if (isActivePlayer(ii)) {
                 prec.user = (PlayerObject)getPlayer(ii);
                 prec.playerId = prec.user.playerId;
+                prec.gangId = prec.user.gangId;
                 prec.purse = prec.user.getPurse();
                 prec.ratings = prec.user.ratings;
                 pinfo[ii].playerId = prec.user.playerId;
@@ -2317,7 +2318,7 @@ public class BangManager extends GameManager
                         continue; // skip AIs
                     }
 
-                    // grant them their case
+                    // grant them their cash
                     if (award.cashEarned > 0) {
                         try {
                             BangServer.playrepo.grantScrip(prec.playerId, award.cashEarned);
@@ -2327,6 +2328,19 @@ public class BangManager extends GameManager
                         }
                     }
 
+                    // grant them notoriety for their gang (same as scrip earned, for now)
+                    int notoriety = award.cashEarned;
+                    if (prec.gangId > 0 && notoriety > 0) {
+                        try {
+                            BangServer.gangrepo.addNotoriety(
+                                prec.gangId, prec.playerId, notoriety);
+                        } catch (PersistenceException pe) {
+                            log.log(Level.WARNING, "Failed to grant notoriety [playerId=" +
+                                prec.playerId + ", gangId=" + prec.gangId + ", notoriety=" +
+                                notoriety + "].", pe);
+                        }
+                    }
+                    
                     // grant them their badge
                     if (award.badge != null) {
                         try {

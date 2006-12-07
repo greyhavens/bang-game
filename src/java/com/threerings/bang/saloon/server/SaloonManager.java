@@ -65,11 +65,13 @@ public class SaloonManager extends PlaceManager
      * Refreshes the top-ranked lists for all scenarios (plus the overall rankings) in the
      * specified object.
      *
-     * @param where a where clause for the database query, or <code>null</code> for none
+     * @param join an additional table to join, or <code>null</code> for none
+     * @param where additions to the where clause for the database query, or <code>null</code> for
+     * none
      * @param count the number of entries desired in each list
      */
     public static void refreshTopRanked (
-        final TopRankObject rankobj, final String where, final int count)
+        final TopRankObject rankobj, final String join, final String where, final int count)
     {
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
@@ -80,7 +82,7 @@ public class SaloonManager extends PlaceManager
 
                 try {
                     _lists = BangServer.ratingrepo.loadTopRanked(
-                        scens.toArray(new String[scens.size()]), where, count);
+                        scens.toArray(new String[scens.size()]), join, where, count);
                     return true;
 
                 } catch (PersistenceException pe) {
@@ -241,7 +243,7 @@ public class SaloonManager extends PlaceManager
         // start up our top-ranked list refresher interval
         _rankval = new Interval(BangServer.omgr) {
             public void expired () {
-                refreshTopRanked(_salobj, null, TOP_RANKED_LIST_SIZE);
+                refreshTopRanked(_salobj, null, null, TOP_RANKED_LIST_SIZE);
             }
         };
         _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);

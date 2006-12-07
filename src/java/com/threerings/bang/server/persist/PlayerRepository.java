@@ -167,35 +167,6 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
-     * Changes the gang affiliation of the specified player.
-     *
-     * @param gangId the id of the player's gang, or 0 for none.
-     * @param rank the player's rank in the gang.
-     * @param joined the time at which the player joined the gang.
-     */
-    public void updatePlayerGang (int playerId, int gangId, byte rank, long joined)
-        throws PersistenceException
-    {
-        StringBuffer update = new StringBuffer("update PLAYERS set GANG_ID = " + gangId);
-        if (gangId > 0) {
-            update.append(", GANG_RANK = " + rank +
-                          ", JOINED_GANG = '" + new Timestamp(joined) + "'");
-        }
-        update.append(" where PLAYER_ID = " + playerId);
-        checkedUpdate(update.toString(), 1);
-    }
-
-    /**
-     * Sets a player's gang rank.
-     */
-    public void updateGangRank (int playerId, byte rank)
-        throws PersistenceException
-    {
-        checkedUpdate("update PLAYERS set GANG_RANK = " + rank +
-                      " where PLAYER_ID = " + playerId, 1);
-    }
-
-    /**
      * Deletes the specified player from the repository.
      */
     public void deletePlayer (PlayerRecord player)
@@ -376,9 +347,6 @@ public class PlayerRepository extends JORARepository
             "LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "VICTORY_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "WANTED_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
-            "GANG_ID INTEGER NOT NULL",
-            "GANG_RANK TINYINT NOT NULL",
-            "JOINED_GANG DATETIME",
             "TOWN_ID VARCHAR(64) NOT NULL",
             "CREATED DATETIME NOT NULL",
             "SESSIONS INTEGER NOT NULL",
@@ -397,12 +365,10 @@ public class PlayerRepository extends JORARepository
             "UNIQUE (PLAYER_ID, TARGET_ID)",
         }, "");
 
-        // TEMP: add gang fields
-        if (!JDBCUtil.tableContainsColumn(conn, "PLAYERS", "GANG_ID")) {
-            JDBCUtil.addColumn(conn, "PLAYERS", "GANG_ID", "INTEGER NOT NULL", "WANTED_LOOK");
-            JDBCUtil.addColumn(conn, "PLAYERS", "GANG_RANK", "TINYINT NOT NULL", "GANG_ID");
-            JDBCUtil.addColumn(conn, "PLAYERS", "JOINED_GANG", "DATETIME", "GANG_RANK");
-        }
+        // TEMP: remove gang fields
+        JDBCUtil.dropColumn(conn, "PLAYERS", "GANG_ID");
+        JDBCUtil.dropColumn(conn, "PLAYERS", "GANG_RANK");
+        JDBCUtil.dropColumn(conn, "PLAYERS", "JOINED_GANG");
         // END TEMP
     }
 

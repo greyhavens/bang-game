@@ -148,14 +148,8 @@ public class BangClientResolver extends CrowdClientResolver
         BangServer.playmgr.loadPardners(buser);
 
         // load up this player's gang information
-        if ((buser.gangId = player.gangId) > 0) {
-            buser.gangRank = player.gangRank;
-            buser.joinedGang = player.joinedGang.getTime();
-            BangServer.gangmgr.stashGangObject(buser.gangId);
-        } else {
-            BangServer.gangmgr.loadGangInvites(buser);
-        }
-
+        BangServer.gangmgr.loadGangData(buser);
+        
         // load this player's friends and foes
         ArrayList<FolkRecord> folks = BangServer.playrepo.loadOpinions(buser.playerId);
         ArrayIntSet friends = new ArrayIntSet(), foes = new ArrayIntSet();

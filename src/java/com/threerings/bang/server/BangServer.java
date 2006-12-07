@@ -57,6 +57,7 @@ import com.threerings.bang.chat.server.BangChatProvider;
 import com.threerings.bang.gang.data.HideoutConfig;
 import com.threerings.bang.gang.server.GangManager;
 import com.threerings.bang.gang.server.HideoutManager;
+import com.threerings.bang.gang.server.persist.GangRepository;
 import com.threerings.bang.ranch.data.RanchConfig;
 import com.threerings.bang.ranch.server.RanchManager;
 import com.threerings.bang.saloon.data.SaloonConfig;
@@ -124,6 +125,9 @@ public class BangServer extends CrowdServer
     /** Manages the persistent repository of player data. */
     public static PlayerRepository playrepo;
 
+    /** Manages the persistent repository of gang data. */
+    public static GangRepository gangrepo;
+    
     /** Manages the persistent repository of items. */
     public static ItemRepository itemrepo;
 
@@ -208,6 +212,7 @@ public class BangServer extends CrowdServer
 
         // create our repositories
         playrepo = new PlayerRepository(conprov);
+        gangrepo = new GangRepository(conprov);
         itemrepo = new ItemRepository(conprov);
         statrepo = new StatRepository(conprov);
         ratingrepo = new RatingRepository(conprov);

@@ -37,9 +37,11 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.PardnerEntryUpdater;
 import com.threerings.bang.server.persist.FinancialAction;
+import com.threerings.bang.server.persist.PlayerRecord;
 
 import com.threerings.bang.saloon.server.SaloonManager;
 
@@ -52,6 +54,7 @@ import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.server.persist.GangRepository;
 import com.threerings.bang.gang.server.persist.GangRepository.GangRecord;
 import com.threerings.bang.gang.server.persist.GangRepository.InviteRecord;
+import com.threerings.bang.gang.server.persist.GangRepository.MemberRecord;
 
 import static com.threerings.bang.Log.*;
 
@@ -129,57 +132,21 @@ public class GangManager
     }
     
     /**
-     * Ensures that the gang data for the identified gang is loaded from the
-     * database.  This is called on the invoker thread when resolving clients,
-     * and should be followed by a call to {@link #resolveGangObject} or
+     * Loads the specified player's gang information.  This is called on the invoker thread when
+     * resolving clients, and should be followed by a call to {@link #resolveGangObject} or
      * {@link #releaseGangObject} on the omgr thread.
      */
-    public void stashGangObject (int gangId)
+    public void loadGangData (PlayerObject player)
         throws PersistenceException
     {
-        // first, determine if the object is already loaded
-        GangObject gangobj;
-        synchronized (_gangs) {
-            if ((gangobj = _gangs.get(gangId)) != null) {
-                gangobj.resolving++;
-                return;
-            }
-        }
-        
-        // if not, we must load it
-        gangobj = _gangrepo.loadGang(gangId, true).createGangObject();
-        gangobj.resolving++;
-        _gangs.put(gangId, gangobj);
-    }
-    
-    /**
-     * Returns the name of the specified gang.  This is run from the invoker thread.
-     */
-    public Handle getGangName (int gangId)
-        throws PersistenceException
-    {
-        // first try the loaded gangs
-        synchronized (_gangs) {
-            GangObject gangobj = _gangs.get(gangId);
-            if (gangobj != null) {
-                return gangobj.name;
-            }
-        }
-        
-        // then hit the database
-        return _gangrepo.loadGang(gangId, false).getName();
-    }
-    
-    /**
-     * Loads the user's gang invitations, if any, on the invoker thread.
-     */
-    public void loadGangInvites (PlayerObject user)
-        throws PersistenceException
-    {
-        ArrayList<InviteRecord> records =
-            _gangrepo.getInviteRecords(user.playerId);
-        for (InviteRecord record : records) {
-            sendGangInvite(user, record.inviter, record.gangId, record.name, record.message);
+        MemberRecord mrec = _gangrepo.loadMember(player.playerId);
+        if (mrec != null) {
+            player.gangId = mrec.gangId;
+            player.gangRank = mrec.rank;
+            player.joinedGang = mrec.joined.getTime();
+            stashGangObject(player.gangId);
+        } else {
+            loadGangInvites(player);
         }
     }
     
@@ -208,6 +175,55 @@ public class GangManager
     }
     
     /**
+     * Populates the gang-related poster fields for an online player.
+     */
+    public void populatePosterInfo (PosterInfo info, PlayerObject player)
+    {
+        if (player.gangOid <= 0) {
+            return;
+        }
+        GangObject gangobj = (GangObject)BangServer.omgr.getObject(player.gangOid);
+        if (gangobj == null) {
+            log.warning("Missing gang object for player [who=" + player.who() +
+                ", oid=" + player.gangOid + "].");
+            return;
+        }
+        info.gang = gangobj.name;
+        info.rank = getPosterRank(player.gangRank);
+    }
+    
+    /**
+     * Populates the gang-related poster fields for an offline player (from the invoker thread).
+     */
+    public void populatePosterInfo (PosterInfo info, PlayerRecord player)
+        throws PersistenceException
+    {
+        MemberRecord mrec = _gangrepo.loadMember(player.playerId);
+        if (mrec != null) {
+            info.gang = _gangrepo.loadGang(mrec.gangId, false).getName();
+            info.rank = getPosterRank(mrec.rank);
+        }
+    }
+    
+    /**
+     * Returns the name of the specified gang.  This is run from the invoker thread.
+     */
+    public Handle getGangName (int gangId)
+        throws PersistenceException
+    {
+        // first try the loaded gangs
+        synchronized (_gangs) {
+            GangObject gangobj = _gangs.get(gangId);
+            if (gangobj != null) {
+                return gangobj.name;
+            }
+        }
+        
+        // then hit the database
+        return _gangrepo.loadGang(gangId, false).getName();
+    }
+    
+    /**
      * Processes a request to form a gang.  It is assumed that the player does
      * not already belong to a gang and that the provided name is valid.
      */
@@ -226,9 +242,8 @@ public class GangManager
             protected String persistentAction () {
                 try {
                     _gangrepo.insertGang(_grec);
-                    BangServer.playrepo.updatePlayerGang(user.playerId,
-                        _grec.gangId, LEADER_RANK,
-                        _joined = System.currentTimeMillis());
+                    _gangrepo.insertMember(
+                        _mrec = new MemberRecord(user.playerId, _grec.gangId, LEADER_RANK));
                     _gangrepo.insertHistoryEntry(_grec.gangId,
                         MessageBundle.tcompose("m.founded_entry", user.handle));
                     return null;
@@ -240,8 +255,7 @@ public class GangManager
                 throws PersistenceException {
                 // deleting the gang also deletes its history
                 _gangrepo.deleteGang(_grec.gangId);
-                BangServer.playrepo.updatePlayerGang(
-                    user.playerId, 0, (byte)0, 0L);
+                _gangrepo.deleteMember(user.playerId);
             }
             protected void actionCompleted () {
                 log.info("Formed new gang [who=" + user.who() + ", name=" +
@@ -256,7 +270,7 @@ public class GangManager
                     user.startTransaction();
                     user.setGangId(_grec.gangId);
                     user.setGangRank(LEADER_RANK);
-                    user.setJoinedGang(_joined);
+                    user.setJoinedGang(_mrec.joined.getTime());
                     gangobj.addToMembers(
                         new GangMemberEntryUpdater(user, gangobj).gmentry);
                     user.setGangOid(gangobj.getOid());
@@ -269,7 +283,7 @@ public class GangManager
                 listener.requestFailed(INTERNAL_ERROR);
             }
             protected GangRecord _grec = new GangRecord(name.toString());
-            protected long _joined;
+            protected MemberRecord _mrec;
         }.start();
     }
     
@@ -408,7 +422,7 @@ public class GangManager
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent ()
                 throws PersistenceException {
-                BangServer.playrepo.updateGangRank(playerId, nrank);
+                _gangrepo.updateRank(playerId, nrank);
                 _gangrepo.insertHistoryEntry(gangId, (changer == null) ?
                     MessageBundle.tcompose("m.auto_promotion_entry", handle) :
                     MessageBundle.compose(
@@ -489,6 +503,41 @@ public class GangManager
     }
     
     /**
+     * Ensures that the gang data for the identified gang is loaded from the
+     * database.  
+     */
+    protected void stashGangObject (int gangId)
+        throws PersistenceException
+    {
+        // first, determine if the object is already loaded
+        GangObject gangobj;
+        synchronized (_gangs) {
+            if ((gangobj = _gangs.get(gangId)) != null) {
+                gangobj.resolving++;
+                return;
+            }
+        }
+        
+        // if not, we must load it
+        gangobj = _gangrepo.loadGang(gangId, true).createGangObject();
+        gangobj.resolving++;
+        _gangs.put(gangId, gangobj);
+    }
+    
+    /**
+     * Loads the user's gang invitations, if any, on the invoker thread.
+     */
+    protected void loadGangInvites (PlayerObject user)
+        throws PersistenceException
+    {
+        ArrayList<InviteRecord> records =
+            _gangrepo.getInviteRecords(user.playerId);
+        for (InviteRecord record : records) {
+            sendGangInvite(user, record.inviter, record.gangId, record.name, record.message);
+        }
+    }
+    
+    /**
      * Sends an invitation to join a gang.
      */
     protected void sendGangInvite (
@@ -520,9 +569,8 @@ public class GangManager
                     // stash the gang object before we add the player to ensure that the
                     // dset does not contain an entry for the new member
                     stashGangObject(gangId);
-                    BangServer.playrepo.updatePlayerGang(
-                        user.playerId, gangId, MEMBER_RANK,
-                        _joined = System.currentTimeMillis());
+                    _gangrepo.insertMember(
+                        _mrec = new MemberRecord(user.playerId, gangId, MEMBER_RANK));
                     _gangrepo.insertHistoryEntry(gangId,
                         MessageBundle.tcompose("m.joined_entry", user.handle));
                 }
@@ -531,15 +579,14 @@ public class GangManager
                 if (_error != null) {
                     listener.requestFailed(_error);
                 } else {
-                    handleInviteSuccess(
-                        user, inviter, gangId, name, accept, new Date(_joined), listener);
+                    handleInviteSuccess(user, inviter, gangId, name, accept, _mrec, listener);
                 }
             }
             public String getFailureMessage () {
                 return "Failed to respond to gang invite [who=" + user.who() +
                     ", gangId=" + gangId + ", accept=" + accept + "]";
             }
-            protected long _joined;
+            protected MemberRecord _mrec;
             protected String _error;
         });
     }
@@ -550,7 +597,7 @@ public class GangManager
      */
     protected void handleInviteSuccess (
         PlayerObject user, Handle inviter, int gangId, Handle name, boolean accept,
-        Date joined, InvocationService.ConfirmListener listener)
+        MemberRecord mrec, InvocationService.ConfirmListener listener)
     {
         PlayerObject invobj = (PlayerObject)BangServer.lookupBody(inviter);
         if (invobj != null) {
@@ -569,7 +616,7 @@ public class GangManager
             GangObject gangobj = _gangs.get(gangId);
             if (gangobj != null) {
                 gangobj.addToMembers(new GangMemberEntry(
-                    user.playerId, user.handle, MEMBER_RANK, joined, joined));
+                    user.playerId, user.handle, MEMBER_RANK, mrec.joined, mrec.joined));
             }
             return;
         }
@@ -588,7 +635,7 @@ public class GangManager
             user.startTransaction();
             user.setGangId(gangId);
             user.setGangRank(MEMBER_RANK);
-            user.setJoinedGang(joined.getTime());
+            user.setJoinedGang(mrec.joined.getTime());
             gangobj.addToMembers(
                 new GangMemberEntryUpdater(user, gangobj).gmentry);
             user.setGangOid(gangobj.getOid());
@@ -612,7 +659,7 @@ public class GangManager
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent ()
                 throws PersistenceException {
-                BangServer.playrepo.updatePlayerGang(playerId, 0, (byte)0, 0L);
+                _gangrepo.deleteMember(playerId);
                 if (delete) {
                     _gangrepo.deleteGang(gangId);
                 } else {
@@ -671,7 +718,10 @@ public class GangManager
         (gangobj.rankval = new Interval(BangServer.omgr) {
             public void expired () {
                 SaloonManager.refreshTopRanked(
-                    gangobj, "GANG_ID = " + gangobj.gangId, TOP_RANKED_LIST_SIZE);
+                    gangobj,
+                    "GANG_MEMBERS",
+                    "RATINGS.PLAYER_ID = GANG_MEMBERS.PLAYER_ID and GANG_ID = " + gangobj.gangId,
+                    TOP_RANKED_LIST_SIZE);
             }
         }).schedule(1000L, RANK_REFRESH_INTERVAL);
         BangServer.omgr.registerObject(gangobj);
@@ -696,6 +746,14 @@ public class GangManager
         gangobj.destroy();
         log.info("Destroyed gang object [gangId=" + gangobj.gangId +
             ", name=" + gangobj.name + "].");
+    }
+    
+    /**
+     * Converts an actual rank to a rank appropriate for display on a poster.
+     */
+    protected static byte getPosterRank (byte rank)
+    {
+        return (rank == RECRUITER_RANK) ? MEMBER_RANK : rank;
     }
     
     /** Updates gang member set entries as the player objects change. */
