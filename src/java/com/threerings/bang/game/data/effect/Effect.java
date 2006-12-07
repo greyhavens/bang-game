@@ -394,10 +394,11 @@ public abstract class Effect extends SimpleStreamableObject
     protected static void addAndReport (
         BangObject bangobj, Piece piece, Observer obs)
     {
-        bangobj.addPieceDirect((Piece)piece.clone());
-        piece.wasAdded(bangobj);
+        Piece added = (Piece)piece.clone();
+        bangobj.addPieceDirect(added);
+        added.wasAdded(bangobj);
         if (obs != null) {
-            obs.pieceAdded(piece);
+            obs.pieceAdded(added);
         }
     }
 
