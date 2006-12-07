@@ -349,12 +349,7 @@ public class HideoutView extends ShopView
      */
     protected BContainer createChatPanel ()
     {
-        PlaceChatView pcview = new PlaceChatView(_ctx, _msgs.get("m.hideout_chat")) {
-            protected int[] getSpeakerAvatar (Handle speaker) {
-                GangMemberEntry entry = _gangobj.members.get(speaker);
-                return (entry == null) ? null : entry.avatar;
-            }
-        };
+        PlaceChatView pcview = new PlaceChatView(_ctx, _msgs.get("m.hideout_chat"));
         pcview.setSpeakService(_gangobj.speakService);
         return pcview;
     }
