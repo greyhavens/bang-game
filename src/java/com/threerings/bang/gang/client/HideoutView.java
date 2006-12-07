@@ -22,6 +22,7 @@ import com.jmex.bui.util.Rectangle;
 import com.samskivert.util.QuickSort;
 import com.samskivert.util.RandomUtil;
 
+import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
@@ -50,12 +51,14 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.NameFactory;
 import com.threerings.bang.util.NameValidator;
 
+import com.threerings.bang.chat.client.PlaceChatView;
 import com.threerings.bang.saloon.client.TopScoreView;
 
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutObject;
+import com.threerings.bang.gang.data.GangMemberEntry;
 
 import static com.threerings.bang.Log.log;
 
@@ -186,6 +189,7 @@ public class HideoutView extends ShopView
             public void objectAvailable (GangObject gangobj) {
                 _gangobj = gangobj;
                 _gangobj.addListener(_ganglist);
+                _ctx.getChatDirector().addAuxiliarySource(_gangobj, ChatCodes.PLACE_CHAT_TYPE);
                 continueUpdatingGangTab();        
             }
             public void requestFailed (int oid, ObjectAccessException cause) {
@@ -203,8 +207,9 @@ public class HideoutView extends ShopView
     protected void continueUpdatingGangTab ()
     {
         _gtab.removeAll();
-        _gtab.add(createLeaveGangButton(), new Point(100, 100));
-        _gtab.add(createDonatePanel(), new Point(200, 200));
+        _gtab.add(createLeaveGangButton(), new Point(0, 50));
+        _gtab.add(createDonatePanel(), new Point(0, 100));
+        _gtab.add(createChatPanel(), new Point(400, 50));
     }
     
     /**
@@ -339,6 +344,22 @@ public class HideoutView extends ShopView
     }
     
     /**
+     * Creates a panel in which gang members in the hideout can chat with
+     * each other.
+     */
+    protected BContainer createChatPanel ()
+    {
+        PlaceChatView pcview = new PlaceChatView(_ctx, _msgs.get("m.hideout_chat")) {
+            protected int[] getSpeakerAvatar (Handle speaker) {
+                GangMemberEntry entry = _gangobj.members.get(speaker);
+                return (entry == null) ? null : entry.avatar;
+            }
+        };
+        pcview.setSpeakService(_gangobj.speakService);
+        return pcview;
+    }
+    
+    /**
      * Unsubscribes from the gang object and stops listening.
      */
     protected void unsubscribeFromGang ()
@@ -346,6 +367,9 @@ public class HideoutView extends ShopView
         if (_gangsub != null) {
             _gangsub.unsubscribe(_ctx.getDObjectManager());
             _gangsub = null;
+        }
+        if (_gangobj != null) {
+            _ctx.getChatDirector().removeAuxiliarySource(_gangobj);
             _gangobj = null;
         }
     }

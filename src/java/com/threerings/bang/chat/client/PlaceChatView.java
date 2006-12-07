@@ -48,9 +48,7 @@ public class PlaceChatView extends TabbedChatView
 
         _pchat = new ComicChatView(ctx, _tabSize, true) {
             protected int[] getSpeakerAvatar (Handle speaker) {
-                BangOccupantInfo boi = (BangOccupantInfo)
-                    _ctx.getOccupantDirector().getOccupantInfo(speaker);
-                return boi == null ? null : boi.avatar;
+                return PlaceChatView.this.getSpeakerAvatar(speaker);
             }
         };
         _pane.addTab(title, _pchat);
@@ -173,6 +171,16 @@ public class PlaceChatView extends TabbedChatView
         }
     }
 
+    /**
+     * Returns the avatar representing the specified speaker.
+     */
+    protected int[] getSpeakerAvatar (Handle speaker)
+    {
+        BangOccupantInfo boi =
+            (BangOccupantInfo)_ctx.getOccupantDirector().getOccupantInfo(speaker);
+        return (boi == null) ? null : boi.avatar;
+    }
+    
     @Override // documentation inherited
     protected void wasAdded ()
     {
