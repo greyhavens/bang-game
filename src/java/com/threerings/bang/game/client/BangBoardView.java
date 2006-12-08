@@ -1354,7 +1354,7 @@ public class BangBoardView extends BoardView
 
         // maybe we're clicking a second time on our desired move location
         if (_action != null && tx == _action[1] && ty == _action[2]) {
-            if (_attackSet.size() > 0) {
+            if (_attackSet.size() > 0 && !_shiftDown) {
                 // select a random target and request to shoot it
                 int idx = RandomUtil.getInt(_attackSet.size());
                 Piece target = _bangobj.getTarget(
