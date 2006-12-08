@@ -412,6 +412,13 @@ public class ActiveSprite extends PieceSprite
             _nextIdle -= time;
             _model.fastForwardAnimation(time);
         }
+        
+        // if we are in low detail mode, stop the idle animation at the first frame
+        if (!BangPrefs.isMediumDetail() && _idle != null) {
+            _model.updateGeometricState(0f, false);
+            _model.stopAnimation();
+            _nextIdle = Float.MAX_VALUE;
+        }
     }
     
     /**
@@ -420,7 +427,7 @@ public class ActiveSprite extends PieceSprite
      */
     protected String[] getIdleAnimations ()
     {
-        return BangPrefs.isMediumDetail() ? _ianims : null;
+        return _ianims;
     }
     
     /** Used to dispatch {@link ActionObserver#actionCompleted}. */
