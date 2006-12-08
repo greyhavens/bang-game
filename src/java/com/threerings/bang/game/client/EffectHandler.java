@@ -737,7 +737,7 @@ public class EffectHandler extends BoardView.BoardAction
                     if (piece instanceof LoggingRobot) {
                         ((UnitSprite)sprite).queueAction("unfolding");
                     } else {
-                        pieceAffected(piece, ShotEffect.DAMAGED);
+                        pieceDropped(piece);
                     }
                 } else {
                     bounceSprite(_sprite, TILE_SIZE / 4);
@@ -750,6 +750,14 @@ public class EffectHandler extends BoardView.BoardAction
             sprite.getModelNode().startAnimation("unfolding");
             sprite.getModelNode().pauseAnimation(true);
         }
+    }
+
+    /**
+     * Called when a piece has been dropped.
+     */
+    protected void pieceDropped (Piece piece)
+    {
+        // nothing doing
     }
     
     /**

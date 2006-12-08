@@ -46,12 +46,9 @@ public class ReboundHandler extends EffectHandler
     }
     
     @Override // documentation inherited
-    public void pieceAffected (Piece piece, String effect)
+    public void pieceDropped (Piece piece)
     {
-        // postpone the damage effect until landing
-        if (!effect.equals(ShotEffect.DAMAGED) || _dropped) {
-            super.pieceAffected(piece, effect);
-        }
+        ((ReboundEffect)_effect).finishTrapPiece(_bangobj, this);
     }
     
     /**
@@ -70,9 +67,5 @@ public class ReboundHandler extends EffectHandler
             piece.computeElevation(_bangobj.board, piece.x, piece.y));
         sprite.setOrientation(piece.orientation);
         dropPiece(piece);
-        _dropped = true;
     }
-    
-    /** Set when the piece has been dropped from the sky. */
-    protected boolean _dropped;
 }

@@ -98,10 +98,24 @@ public class ReboundEffect extends TrapEffect
         }
         moveAndReport(bangobj, target, x, y, obs);
         
-        // then damage the piece
-        return super.trapPiece(bangobj, obs, causer);
+        // if on the server proceed immediately
+        if (bangobj.getManager().isManager(bangobj)) {
+            return super.trapPiece(bangobj, obs, causer);
+        }
+        _causer = causer;
+        return true;
+    }
+
+    /**
+     * Called by the effect handler to finish applying the effect after the
+     * spring animation has completed.
+     */
+    public void finishTrapPiece (BangObject bangobj, Observer obs)
+    {
+        super.trapPiece(bangobj, obs, _causer);
     }
     
+    protected transient int _causer;
     
     /** The minimum distance away to send sprung pieces. */
     protected static final int MIN_REBOUND_DISTANCE = 5;
