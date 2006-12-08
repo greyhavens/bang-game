@@ -58,6 +58,9 @@ public class NuggetDelegate extends CounterDelegate
         Counter counter = null;
         for (Counter c : _counters) {
             if (c.getDistance(unit) <= 1) {
+                if (!_allowClaimWithdrawal && c.owner != unit.owner) {
+                    continue;
+                }
                 counter = c;
                 break;
             }
