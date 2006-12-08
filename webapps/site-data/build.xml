@@ -1,9 +1,0 @@
-<?xml version="1.0" standalone="yes"?>
-<project name="site-data" default="all" basedir=".">
-  <property file="../../server.properties"/>
-  <target name="all">
-    <jar destfile="${webapp_dir}/site-data/bang.jar">
-      <fileset dir="bang" includes="*.*"/>
-    </jar>
-  </target>
-</project>
