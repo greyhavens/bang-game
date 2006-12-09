@@ -233,30 +233,29 @@ public class Badge extends Item
         // bonuses collected badges
         BONUSES_COLLECTED_1 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(
-                    Stat.Type.BONUSES_COLLECTED) >= 100;
+                return user.stats.getIntStat(Stat.Type.BONUSES_COLLECTED) >= 100;
             }
         },
         BONUSES_COLLECTED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(
-                    Stat.Type.BONUSES_COLLECTED) >= 1000;
+                return user.stats.getIntStat(Stat.Type.BONUSES_COLLECTED) >= 1000;
             }
         },
         BONUSES_COLLECTED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(
-                    Stat.Type.BONUSES_COLLECTED) >= 10000;
+                return user.stats.getIntStat(Stat.Type.BONUSES_COLLECTED) >= 10000;
             }
         },
         BONUSES_COLLECTED_4 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: 6+ bonuses collected in a round?
+                return false; // TODO: uncomment when we see how HIGHEST_BONUSES shapes up
+                // return user.stats.getIntStat(Stat.Type.MOST_BONUSES) >= 6;
             }
         },
         BONUSES_COLLECTED_5 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: 10+ bonuses collected in a round?
+                return false; // TODO: uncomment when we see how HIGHEST_BONUSES shapes up
+                // return user.stats.getIntStat(Stat.Type.MOST_BONUSES) >= 10;
             }
         },
 
@@ -641,22 +640,22 @@ public class Badge extends Item
         Type.GAMES_PLAYED_4, Type.GAMES_PLAYED_5,
 
         Type.UNITS_KILLED_1, Type.UNITS_KILLED_2, Type.UNITS_KILLED_3,
-        null, null,
+        Type.UNITS_KILLED_4, Type.UNITS_KILLED_5,
 
         Type.HIGHEST_POINTS_1, Type.HIGHEST_POINTS_2,
         Type.CONSEC_KILLS_1, Type.CONSEC_KILLS_2, Type.CONSEC_KILLS_3,
 
         Type.CONSEC_WINS_1, Type.CONSEC_WINS_2, Type.CONSEC_WINS_3,
-        null, null,
+        Type.CONSEC_WINS_4, Type.CONSEC_WINS_5,
 
         Type.SHOTS_FIRED_1, Type.SHOTS_FIRED_2,
         Type.DISTANCE_MOVED_1, Type.DISTANCE_MOVED_2, Type.DISTANCE_MOVED_3,
 
         Type.CARDS_PLAYED_1, Type.CARDS_PLAYED_2, Type.CARDS_PLAYED_3,
-        null, null,
+        Type.CARDS_PLAYED_4, Type.CARDS_PLAYED_5,
 
         Type.BONUSES_COLLECTED_1, Type.BONUSES_COLLECTED_2, Type.BONUSES_COLLECTED_3,
-        null, null,
+        Type.BONUSES_COLLECTED_4, Type.BONUSES_COLLECTED_5,
 
         Type.CASH_EARNED_1, Type.CASH_EARNED_2, Type.CASH_EARNED_3,
         Type.GAMES_HOSTED_1, Type.GAMES_HOSTED_2,

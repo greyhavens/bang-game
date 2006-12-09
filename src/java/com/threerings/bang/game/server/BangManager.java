@@ -2849,5 +2849,6 @@ public class BangManager extends GameManager
     protected static final Stat.Type[] MAX_STATS = {
         Stat.Type.MOST_KILLS, Stat.Type.UNITS_KILLED,
         Stat.Type.CONSEC_KILLS, Stat.Type.CONSEC_KILLS,
+        Stat.Type.MOST_BONUSES, Stat.Type.BONUSES_COLLECTED,
     };
 }

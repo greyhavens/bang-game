@@ -91,6 +91,7 @@ public abstract class Stat
         // stats derived from in-game statistics
         HIGHEST_POINTS(new IntStat(), false),
         MOST_KILLS(new IntStat(), false),
+        MOST_BONUSES(new IntStat(), false),
         PERFECT_WAVES(new IntStat(), true),
         HIGHEST_SAWS(new IntStat(), false),
 
