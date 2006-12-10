@@ -121,7 +121,7 @@ public class GangManager
                     listener.requestFailed(_error);
                     return;
                 }
-                PlayerObject invitee = (PlayerObject)BangServer.lookupBody(handle);
+                PlayerObject invitee = BangServer.lookupPlayer(handle);
                 if (invitee != null) {
                     sendGangInvite(invitee, player.handle, player.gangId, gangobj.name, message);
                 }
@@ -435,8 +435,7 @@ public class GangManager
                 log.info("Changed member rank [gangId=" + gangId +
                     ", playerId=" + playerId + ", handle=" + handle +
                     ", rank=" + nrank + "].");
-                PlayerObject plobj =
-                    (PlayerObject)BangServer.lookupBody(handle);
+                PlayerObject plobj = BangServer.lookupPlayer(handle);
                 if (plobj != null) {
                     plobj.setGangRank(nrank);
                 }
@@ -599,7 +598,7 @@ public class GangManager
         PlayerObject user, Handle inviter, int gangId, Handle name, boolean accept,
         MemberRecord mrec, InvocationService.ConfirmListener listener)
     {
-        PlayerObject invobj = (PlayerObject)BangServer.lookupBody(inviter);
+        PlayerObject invobj = BangServer.lookupPlayer(inviter);
         if (invobj != null) {
             SpeakProvider.sendInfo(invobj, GANG_MSGS,
                 MessageBundle.tcompose(
@@ -679,8 +678,7 @@ public class GangManager
                 if (gangobj != null) {
                     gangobj.removeFromMembers(handle);    
                 }
-                PlayerObject plobj =
-                    (PlayerObject)BangServer.lookupBody(handle);
+                PlayerObject plobj = BangServer.lookupPlayer(handle);
                 if (plobj != null) {
                     try {
                         plobj.startTransaction();

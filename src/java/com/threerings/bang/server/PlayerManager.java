@@ -237,7 +237,7 @@ public class PlayerManager
                     listener.requestFailed(_error);
                     return;
                 }
-                PlayerObject invitee = (PlayerObject)BangServer.lookupBody(handle);
+                PlayerObject invitee = BangServer.lookupPlayer(handle);
                 if (invitee != null) {
                     sendPardnerInvite(invitee, inviter.handle, message, new Date());
                 }
@@ -286,13 +286,13 @@ public class PlayerManager
     }
 
     // documentation inherited from interface PlayerProvider
-    public void removePardner (ClientObject caller, final Handle pardner,
-        final PlayerService.ConfirmListener listener)
+    public void removePardner (ClientObject caller, final Handle handle,
+                               final PlayerService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure the pardner entry is present
         final PlayerObject player = (PlayerObject)caller;
-        PardnerEntry entry = (PardnerEntry)player.pardners.get(pardner);
+        PardnerEntry entry = (PardnerEntry)player.pardners.get(handle);
         if (entry == null) {
             throw new InvocationException(INTERNAL_ERROR);
         }
@@ -300,30 +300,28 @@ public class PlayerManager
         // remove from database and notify affected party on success
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
-                _pardrepo.removePardners(player.playerId, pardner);
+                _pardrepo.removePardners(player.playerId, handle);
             }
             public void handleSuccess () {
-                player.removeFromPardners(pardner);
-                PlayerObject pardobj =
-                    (PlayerObject)BangServer.lookupBody(pardner);
+                player.removeFromPardners(handle);
+                PlayerObject pardobj = BangServer.lookupPlayer(handle);
                 if (pardobj != null) {
                     pardobj.removeFromPardners(player.handle);
-                    SpeakProvider.sendInfo(pardobj, BANG_MSGS,
-                        MessageBundle.tcompose("m.pardner_ended",
-                            player.handle));
+                    String msg = MessageBundle.tcompose("m.pardner_ended", player.handle);
+                    SpeakProvider.sendInfo(pardobj, BANG_MSGS, msg);
                 }
                 listener.requestProcessed();
             }
             public String getFailureMessage () {
                 return "Failed to remove pardner [who=" + player.who() +
-                    ", pardner=" + pardner + "]";
+                    ", pardner=" + handle + "]";
             }
         });
     }
 
     // documentation inherited from interface PlayerProvider
-    public void playTutorial (
-        ClientObject caller, String tutId, PlayerService.InvocationListener il)
+    public void playTutorial (ClientObject caller, String tutId,
+                              PlayerService.InvocationListener il)
         throws InvocationException
     {
         PlayerObject player = (PlayerObject)caller;
@@ -712,7 +710,7 @@ public class PlayerManager
         if (updater != null) {
             return updater.entry;
         }
-        PlayerObject player = (PlayerObject)BangServer.lookupBody(handle);
+        PlayerObject player = BangServer.lookupPlayer(handle);
         if (player != null) {
             _updaters.put(handle, updater = new PardnerEntryUpdater(player));
             return updater.entry;
@@ -787,7 +785,7 @@ public class PlayerManager
         boolean[] full, InvocationService.ConfirmListener listener)
     {
         // if the inviter is online, update and send a notification
-        PlayerObject invobj = (PlayerObject)BangServer.lookupBody(inviter);
+        PlayerObject invobj = BangServer.lookupPlayer(inviter);
         if (invobj != null) {
             if (accept) {
                 invobj.addToPardners(getPardnerEntry(user.handle, null));
