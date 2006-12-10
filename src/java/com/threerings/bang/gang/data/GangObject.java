@@ -3,8 +3,6 @@
 
 package com.threerings.bang.gang.data;
 
-import com.samskivert.util.Interval;
-
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
@@ -70,24 +68,6 @@ public class GangObject extends DObject
 
     /** Contains info on the top-ranked members by various criterion. */
     public DSet<TopRankedList> topRanked = new DSet<TopRankedList>();
-    
-    /** On the server, the number of outstanding references to this object
-     * by clients in the process of resolution. */
-    public transient int resolving;
-    
-    /** On the server, the interval that refreshes the list of top-ranked
-     * members. */
-    public transient Interval rankval;
-    
-    /**
-     * Determines whether this object can be destroyed (i.e., whether it is
-     * active and there are no gang members online or in the process of
-     * resolution).
-     */
-    public boolean canBeDestroyed ()
-    {
-        return (isActive() && resolving == 0 && getOnlineMemberCount() == 0);
-    }
     
     /**
      * Returns the number of gang members currently online.  When there are no

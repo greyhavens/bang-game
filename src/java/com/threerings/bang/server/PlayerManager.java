@@ -78,13 +78,14 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.server.persist.FolkRecord;
+import com.threerings.bang.server.persist.PardnerRecord;
 import com.threerings.bang.server.persist.PardnerRepository;
-import com.threerings.bang.server.persist.PosterRepository;
-import com.threerings.bang.server.persist.PosterRecord;
-import com.threerings.bang.server.persist.PlayerRepository;
-import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.server.persist.PlayerRecord;
+import com.threerings.bang.server.persist.PlayerRepository;
+import com.threerings.bang.server.persist.PosterRecord;
+import com.threerings.bang.server.persist.PosterRepository;
 import com.threerings.bang.server.persist.RatingRepository.RankLevels;
+import com.threerings.bang.server.persist.RatingRepository;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
@@ -170,14 +171,13 @@ public class PlayerManager
      * Populates the identified player's set of pardners, performing any notifications and updates
      * that were being held until the player logged on.
      */
-    public void initPardners (PlayerObject player,
-                              ArrayList<PardnerRepository.PardnerRecord> records)
+    public void initPardners (PlayerObject player, ArrayList<PardnerRecord> records)
     {
         // TEMP: sanity check since I've seen duplicates
         HashSet<Handle> temp = new HashSet<Handle>();
-        Iterator<PardnerRepository.PardnerRecord> iter = records.iterator();
+        Iterator<PardnerRecord> iter = records.iterator();
         while (iter.hasNext()) {
-            PardnerRepository.PardnerRecord record = iter.next();
+            PardnerRecord record = iter.next();
             if (temp.contains(record.handle)) {
                 log.warning("Player has duplicate pardner record [pid=" + player.playerId +
                             ", record=" + record + "].");
@@ -190,7 +190,7 @@ public class PlayerManager
 
         // collect active players, send invitations
         ArrayList<PardnerEntry> pardners = new ArrayList<PardnerEntry>();
-        for (PardnerRepository.PardnerRecord record : records) {
+        for (PardnerRecord record : records) {
             if (record.isActive()) {
                 pardners.add(getPardnerEntry(record.handle, record.lastSession));
             } else {

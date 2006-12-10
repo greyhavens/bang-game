@@ -16,6 +16,12 @@ import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.gang.server.persist.GangInviteRecord;
+import com.threerings.bang.gang.server.persist.GangMemberRecord;
+import com.threerings.bang.server.persist.FolkRecord;
+import com.threerings.bang.server.persist.PardnerRecord;
+import com.threerings.bang.server.persist.PlayerRecord;
+
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.data.BangCodes;
@@ -27,9 +33,6 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.data.TrainTicket;
-import com.threerings.bang.server.persist.FolkRecord;
-import com.threerings.bang.server.persist.PardnerRepository;
-import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
@@ -149,7 +152,13 @@ public class BangClientResolver extends CrowdClientResolver
         _precords = BangServer.playmgr.getPardnerRepository().getPardnerRecords(player.playerId);
 
         // load up this player's gang information
-        BangServer.gangmgr.loadGangData(buser);
+        _grecord = BangServer.gangmgr.getGangRepository().loadMember(player.playerId);
+        if (_grecord == null) {
+            _ginvites = BangServer.gangmgr.getGangRepository().getInviteRecords(player.playerId);
+        } else {
+            // make sure this gang's data is loaded from the database
+            BangServer.gangmgr.resolveGang(_grecord.gangId);
+        }
 
         // load this player's friends and foes
         ArrayList<FolkRecord> folks = BangServer.playrepo.loadOpinions(buser.playerId);
@@ -165,7 +174,6 @@ public class BangClientResolver extends CrowdClientResolver
     @Override // documentation inherited
     protected void finishResolution (ClientObject clobj)
     {
-        // get the gang object previously stashed away
         super.finishResolution(clobj);
         PlayerObject buser = (PlayerObject)clobj;
 
@@ -173,25 +181,31 @@ public class BangClientResolver extends CrowdClientResolver
         BangServer.playmgr.initPardners(buser, _precords);
 
         // initialize our gang information
-        if (buser.gangId > 0) {
-            BangServer.gangmgr.resolveGangObject(buser);
-        }
+        BangServer.gangmgr.initPlayer(buser, _grecord, _ginvites);
     }
 
     @Override // documentation inherited
     protected void reportFailure (Exception cause)
     {
-        // release the reference to the gang object
         super.reportFailure(cause);
+
+        // let the gang manager know we're not going to finish our gang resolution
         PlayerObject buser = (PlayerObject)_clobj;
         if (buser.gangId > 0) {
-            BangServer.gangmgr.releaseGangObject(buser.gangId);
+            BangServer.gangmgr.releaseGang(buser.gangId);
         }
     }
 
     /** A temporary handle on this player's pardner records. */
-    protected ArrayList<PardnerRepository.PardnerRecord> _precords;
+    protected ArrayList<PardnerRecord> _precords;
 
+    /** A temporary handle on this player's gang membership information (or null). */
+    protected GangMemberRecord _grecord;
+
+    /** A temporary list of this player's gang invitations (or null). */
+    protected ArrayList<GangInviteRecord> _ginvites;
+
+    /** Used to temporarily store player records during resolution. */
     protected static HashMap<String,PlayerRecord> _pstash = new HashMap<String,PlayerRecord>();
 
     /** The number of rated games a player has to have played to get a free ticket to ITP. */
