@@ -114,6 +114,14 @@ public class PlayerManager
         maybeScheduleRankReload();
     }
 
+    /**
+     * Returns the pardner repository.
+     */
+    public PardnerRepository getPardnerRepository ()
+    {
+        return _pardrepo;
+    }
+
     // documentation inherited from interface PlayerProvider
     public void pickFirstBigShot (ClientObject caller, String type, Name name,
                                   final PlayerService.ConfirmListener listener)
@@ -159,25 +167,19 @@ public class PlayerManager
     }
 
     /**
-     * Populates the identified player's set of pardners, performing any
-     * notifications and updates that were being held until the player
-     * logged on.  This is run on the invoker thread.
+     * Populates the identified player's set of pardners, performing any notifications and updates
+     * that were being held until the player logged on.
      */
-    public void loadPardners (final PlayerObject player)
-        throws PersistenceException
+    public void initPardners (PlayerObject player,
+                              ArrayList<PardnerRepository.PardnerRecord> records)
     {
-        // load the pardner records
-        ArrayList<PardnerRepository.PardnerRecord> records =
-            _pardrepo.getPardnerRecords(player.playerId);
-
         // TEMP: sanity check since I've seen duplicates
         HashSet<Handle> temp = new HashSet<Handle>();
         Iterator<PardnerRepository.PardnerRecord> iter = records.iterator();
         while (iter.hasNext()) {
             PardnerRepository.PardnerRecord record = iter.next();
             if (temp.contains(record.handle)) {
-                log.warning("Player has duplicate pardner record "  +
-                            "[pid=" + player.playerId +
+                log.warning("Player has duplicate pardner record [pid=" + player.playerId +
                             ", record=" + record + "].");
                 iter.remove();
             } else {
@@ -197,9 +199,11 @@ public class PlayerManager
         }
 
         // set pardners and add an updater for this player
-        player.pardners = new DSet<PardnerEntry>(pardners.iterator());
+        player.setPardners(new DSet<PardnerEntry>(pardners.iterator()));
         if (player.getOnlinePardnerCount() > 0) {
-            new PardnerEntryUpdater(player, _updaters).updateEntries();
+            PardnerEntryUpdater updater = new PardnerEntryUpdater(player);
+            _updaters.put(player.handle, updater);
+            updater.updateEntries();
         }
     }
 
@@ -226,8 +230,7 @@ public class PlayerManager
         // store the invite in the db and send it
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
-                _error = _pardrepo.addPardners(
-                    inviter.playerId, handle, message);
+                _error = _pardrepo.addPardners(inviter.playerId, handle, message);
             }
             public void handleSuccess () {
                 if (_error != null) {
@@ -711,10 +714,19 @@ public class PlayerManager
         }
         PlayerObject player = (PlayerObject)BangServer.lookupBody(handle);
         if (player != null) {
-            return new PardnerEntryUpdater(player, _updaters).entry;
+            _updaters.put(handle, updater = new PardnerEntryUpdater(player));
+            return updater.entry;
         } else {
             return new PardnerEntry(handle, lastSession);
         }
+    }
+
+    /**
+     * Called by the {@link PardnerEntryUpdater} when its player logs off.
+     */
+    protected void clearPardnerEntryUpdater (Handle handle)
+    {
+        _updaters.remove(handle);
     }
 
     /**

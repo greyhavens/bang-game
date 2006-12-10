@@ -28,6 +28,7 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.server.persist.FolkRecord;
+import com.threerings.bang.server.persist.PardnerRepository;
 import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.util.BangUtil;
 
@@ -145,17 +146,16 @@ public class BangClientResolver extends CrowdClientResolver
         buser.notifications = new DSet<Notification>();
 
         // load up this player's pardners
-        BangServer.playmgr.loadPardners(buser);
+        _precords = BangServer.playmgr.getPardnerRepository().getPardnerRecords(player.playerId);
 
         // load up this player's gang information
         BangServer.gangmgr.loadGangData(buser);
-        
+
         // load this player's friends and foes
         ArrayList<FolkRecord> folks = BangServer.playrepo.loadOpinions(buser.playerId);
         ArrayIntSet friends = new ArrayIntSet(), foes = new ArrayIntSet();
         for (FolkRecord folk : folks) {
-            (folk.opinion == FolkRecord.FRIEND ? friends : foes).add(
-                folk.targetId);
+            (folk.opinion == FolkRecord.FRIEND ? friends : foes).add(folk.targetId);
         }
         // toIntArray() returns a sorted array
         buser.friends = friends.toIntArray();
@@ -168,6 +168,11 @@ public class BangClientResolver extends CrowdClientResolver
         // get the gang object previously stashed away
         super.finishResolution(clobj);
         PlayerObject buser = (PlayerObject)clobj;
+
+        // initialize our pardner information
+        BangServer.playmgr.initPardners(buser, _precords);
+
+        // initialize our gang information
         if (buser.gangId > 0) {
             BangServer.gangmgr.resolveGangObject(buser);
         }
@@ -183,6 +188,9 @@ public class BangClientResolver extends CrowdClientResolver
             BangServer.gangmgr.releaseGangObject(buser.gangId);
         }
     }
+
+    /** A temporary handle on this player's pardner records. */
+    protected ArrayList<PardnerRepository.PardnerRecord> _precords;
 
     protected static HashMap<String,PlayerRecord> _pstash = new HashMap<String,PlayerRecord>();
 

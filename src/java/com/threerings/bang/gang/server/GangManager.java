@@ -799,10 +799,9 @@ public class GangManager
         }
         
         @Override // documentation inherited
-        protected void remove ()
+        protected void unmap ()
         {
             // when the last member logs off, remove the dobj
-            super.remove();
             maybeDestroyGangObject(_gangobj);
         }
         
