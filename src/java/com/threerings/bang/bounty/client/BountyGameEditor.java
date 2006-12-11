@@ -31,6 +31,8 @@ import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 
+import com.threerings.bang.saloon.data.SaloonCodes;
+
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.Criterion;
 import com.threerings.bang.game.data.GameCodes;
@@ -58,18 +60,25 @@ public class BountyGameEditor extends BDecoratedWindow
         _offobj = offobj;
 
         // create our configuration interface
-        BContainer cpanel = new BContainer(new TableLayout(2, 5, 5));
+        BContainer cpanel = new BContainer(new TableLayout(6, 5, 5));
         addRow(cpanel, "m.opponents").add(_opponents = new BComboBox(OPPONENTS));
         addRow(cpanel, "m.scenario").add(_scenario = new BComboBox());
         addRow(cpanel, "m.board").add(_board = new BComboBox());
-        BContainer row = addRow(cpanel, "m.player_units");
+
+        addRow(cpanel, "m.duration").add(_duration = new BComboBox());
+        addRow(cpanel, "m.speed").add(_speed = new BComboBox());
+
+        add(cpanel);
+
+        BContainer ppanel = new BContainer(new TableLayout(2, 5, 5));
+        BContainer row = addRow(ppanel, "m.player_units");
         _punits = new BComboBox[MAX_BOUNTY_UNITS];
         for (int ii = 0; ii < _punits.length; ii++) {
             row.add(_punits[ii] = new BComboBox());
         }
         _oppunits = new BComboBox[OPPONENTS.length][MAX_BOUNTY_UNITS];
         for (int oo = 0; oo < _oppunits.length; oo++) {
-            row = addRow(cpanel, "m.opp_units");
+            row = addRow(ppanel, "m.opp_units");
             for (int ii = 0; ii < _oppunits[oo].length; ii++) {
                 row.add(_oppunits[oo][ii] = new BComboBox());
             }
@@ -80,7 +89,7 @@ public class BountyGameEditor extends BDecoratedWindow
             String msg = "m.type_" + type.toString().toLowerCase();
             types.add(new BComboBox.Item(type, _msgs.get(msg)));
         }
-        row = addRow(cpanel, "m.add_criterion");
+        row = addRow(ppanel, "m.add_criterion");
         row.add(_ctype = new BComboBox(types));
         row.add(new BButton(_msgs.get("m.add"), new ActionListener() {
             public void actionPerformed (ActionEvent event) {
@@ -92,10 +101,10 @@ public class BountyGameEditor extends BDecoratedWindow
         }, "add_crit"));
 
         // add a panel that will contain our criterion
-        cpanel.add(new BLabel(""));
-        cpanel.add(_criterion = new BContainer(GroupLayout.makeVStretch()));
+        ppanel.add(new BLabel(""));
+        ppanel.add(_criterion = new BContainer(GroupLayout.makeVStretch()));
         ((GroupLayout)_criterion.getLayoutManager()).setPolicy(GroupLayout.NONE);
-        add(cpanel);
+        add(ppanel);
 
         // add a status label
         add(_status = new StatusLabel(_ctx));
@@ -138,6 +147,28 @@ public class BountyGameEditor extends BDecoratedWindow
         _scenario.setItems(scens);
         _scenario.selectItem(0);
         new StateSaver("bounty.scenario", _scenario);
+
+        _duration.setItems(new BComboBox.Item[] {
+            new BComboBox.Item(BangConfig.Duration.QUICK,
+                               _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.dur_quick")),
+            new BComboBox.Item(BangConfig.Duration.NORMAL,
+                               _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.dur_normal")),
+            new BComboBox.Item(BangConfig.Duration.LONG,
+                               _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.dur_long"))
+        });
+        _duration.selectItem(1);
+        new StateSaver("bounty.duration", _duration);
+
+        _speed.setItems(new BComboBox.Item[] {
+            new BComboBox.Item(BangConfig.Speed.FAST,
+                               _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.sp_fast")),
+            new BComboBox.Item(BangConfig.Speed.NORMAL,
+                               _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.sp_normal")),
+            new BComboBox.Item(BangConfig.Speed.SLOW,
+                               _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.sp_slow"))
+        });
+        _speed.selectItem(1);
+        new StateSaver("bounty.speed", _speed);
 
         for (int ii = 0; ii < _punits.length; ii++) {
             _punits[ii].setItems(ii == 0 ? _bsunits : _units);
@@ -205,7 +236,7 @@ public class BountyGameEditor extends BDecoratedWindow
 
     protected BContainer addRow (BContainer box, String label)
     {
-        box.add(new BLabel(_msgs.get(label)));
+        box.add(new BLabel(_msgs.get(label), "table_label"));
         BContainer row = GroupLayout.makeHBox(GroupLayout.LEFT);
         box.add(row);
         return row;
@@ -246,6 +277,8 @@ public class BountyGameEditor extends BDecoratedWindow
     protected BangConfig createConfig ()
     {
         BangConfig config = new BangConfig();
+        config.duration = (BangConfig.Duration)_duration.getSelectedValue();
+        config.speed = (BangConfig.Speed)_speed.getSelectedValue();
         config.addRound((String)_scenario.getSelectedValue(),
                         ((BoardInfo)_board.getSelectedItem()).name, null);
 
@@ -265,6 +298,8 @@ public class BountyGameEditor extends BDecoratedWindow
     {
         _scenario.selectValue(config.rounds.get(0).scenario);
         _opponents.selectItem(Integer.valueOf(config.teams.size()-1));
+        _duration.selectValue(config.duration);
+        _speed.selectValue(config.speed);
 
         // locate and select the correct board
         for (int ii = 0; ii < _board.getItemCount(); ii++) {
@@ -367,9 +402,8 @@ public class BountyGameEditor extends BDecoratedWindow
     protected OfficeObject _offobj;
     protected StatusLabel _status;
 
-    protected BComboBox _opponents;
-    protected BComboBox _scenario;
-    protected BComboBox _board;
+    protected BComboBox _opponents, _scenario, _board;
+    protected BComboBox _duration, _speed;
     protected BComboBox[] _punits;
     protected BComboBox[][] _oppunits;
 
