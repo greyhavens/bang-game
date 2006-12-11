@@ -181,7 +181,7 @@ public class PlayerManager
             public Iterable<PardnerEntry> getEntries () {
                 return player.pardners;
             }
-            public PardnerEntry getEntry (Comparable key) {
+            public PardnerEntry getEntry (Handle key) {
                 return player.pardners.get(key);
             }
             public void updateEntry (PardnerEntry entry) {

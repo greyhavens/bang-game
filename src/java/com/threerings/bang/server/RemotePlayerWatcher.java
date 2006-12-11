@@ -33,7 +33,7 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
 
         public Iterable<T> getEntries ();
 
-        public T getEntry (Comparable key);
+        public T getEntry (Handle key);
 
         public void updateEntry (T entry);
     }
