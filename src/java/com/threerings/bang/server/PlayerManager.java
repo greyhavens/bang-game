@@ -187,6 +187,9 @@ public class PlayerManager
             public void updateEntry (PardnerEntry entry) {
                 player.updatePardners(entry);
             }
+            public String toString () {
+                return player.who();
+            }
         });
     }
 
