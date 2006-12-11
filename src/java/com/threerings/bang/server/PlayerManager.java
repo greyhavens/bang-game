@@ -25,19 +25,11 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.EntryAddedEvent;
-import com.threerings.presents.dobj.EntryRemovedEvent;
-import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.ObjectDeathListener;
-import com.threerings.presents.dobj.ObjectDestroyedEvent;
-import com.threerings.presents.dobj.SetAdapter;
-import com.threerings.presents.dobj.SetListener;
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.chat.server.SpeakProvider;
-
 import com.threerings.parlor.server.ParlorSender;
 
 import com.threerings.util.MessageBundle;
@@ -94,7 +86,7 @@ import static com.threerings.bang.Log.log;
  * Handles general player business, implements {@link PlayerProvider}.
  */
 public class PlayerManager
-    implements PlayerProvider, BangCodes, BangPeerManager.RemotePlayerObserver
+    implements PlayerProvider, BangCodes
 {
     /**
      * Initializes the player manager, and registers its invocation service.
@@ -111,8 +103,23 @@ public class PlayerManager
         // register ourselves as the provider of the (bootstrap) PlayerService
         BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), true);
 
-        // register ourselves as a remote player observer
-        BangServer.peermgr.addPlayerObserver(this);
+        // register our remote player observer
+        _pardwatcher = new RemotePlayerWatcher<PardnerEntry>() {
+            protected String getSetName () {
+                return PlayerObject.PARDNERS;
+            }
+            protected void updateEntry (BangClientInfo info, int townIndex, PardnerEntry entry) {
+                if (townIndex >= 0) {
+                    entry.setOnline(townIndex);
+                    entry.avatar = info.avatar;
+                } else {
+                    entry.status = PardnerEntry.OFFLINE;
+                    entry.avatar = null;
+                }
+                entry.gameOid = 0;
+            }
+        };
+        BangServer.peermgr.addPlayerObserver(_pardwatcher);
 
         // do an initial read of rank data
         maybeScheduleRankReload();
@@ -130,7 +137,7 @@ public class PlayerManager
      * Populates the identified player's set of pardners, performing any notifications and updates
      * that were being held until the player logged on.
      */
-    public void initPardners (PlayerObject player, ArrayList<PardnerRecord> records)
+    public void initPardners (final PlayerObject player, ArrayList<PardnerRecord> records)
     {
         // TEMP: sanity check since I've seen duplicates
         HashSet<Handle> temp = new HashSet<Handle>();
@@ -167,7 +174,20 @@ public class PlayerManager
 
         // finally add a mapper that will keep their pardner set mapped so that we can efficiently
         // handle remote pardner logon/logoff
-        player.addListener(new PardnerMapper(player));
+        _pardwatcher.registerListener(new RemotePlayerWatcher.Container<PardnerEntry>() {
+            public DObject getObject () {
+                return player;
+            }
+            public Iterable<PardnerEntry> getEntries () {
+                return player.pardners;
+            }
+            public PardnerEntry getEntry (Comparable key) {
+                return player.pardners.get(key);
+            }
+            public void updateEntry (PardnerEntry entry) {
+                player.updatePardners(entry);
+            }
+        });
     }
 
     // documentation inherited from interface PlayerProvider
@@ -599,49 +619,6 @@ public class PlayerManager
         });
     }
 
-    // from interface BangPeerManager.RemotePlayerObserver
-    public void remotePlayerLoggedOn (int townIndex, BangClientInfo info)
-    {
-        updateRemotePardner(info, townIndex, "on");
-    }
-
-    // from interface BangPeerManager.RemotePlayerObserver
-    public void remotePlayerLoggedOff (int townIndex, BangClientInfo info)
-    {
-        updateRemotePardner(info, -1, "off");
-    }
-
-    /**
-     * Called when a player logs onto or off of a remote server. Updates that player's pardner
-     * entry for any player online on this server that has the remote player as a pardner.
-     */
-    protected void updateRemotePardner (BangClientInfo info, int townIndex, String where)
-    {
-        Handle handle = (Handle)info.visibleName;
-        ArrayList<PlayerObject> pardners = _pardmap.get(handle);
-        if (pardners == null) {
-            return;
-        }
-
-        for (PlayerObject plobj : pardners) {
-            PardnerEntry entry = plobj.pardners.get(handle);
-            if (entry == null) {
-                log.warning("Player registered as pardner but missing entry [who=" + plobj.who() +
-                            ", pards=" + plobj.pardners + ", pard=" + handle + "] ("+ where + ").");
-                continue; // weirdness?
-            }
-            if (townIndex >= 0) {
-                entry.setOnline(townIndex);
-                entry.avatar = info.avatar;
-            } else {
-                entry.status = PardnerEntry.OFFLINE;
-                entry.avatar = null;
-            }
-            entry.gameOid = 0;
-            plobj.updatePardners(entry);
-        }            
-    }
-
     /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
@@ -892,62 +869,6 @@ public class PlayerManager
         }
     }
 
-    /** Used to keep the {@link #_pardmap} mapping up to date. */
-    protected class PardnerMapper
-        implements SetListener, ObjectDeathListener
-    {
-        public PardnerMapper (PlayerObject player) {
-            _player = player;
-            for (PardnerEntry entry : _player.pardners) {
-                mapPardner(entry);
-            }
-        }
-
-        public void entryAdded (EntryAddedEvent event) {
-            if (event.getName().equals(PlayerObject.PARDNERS)) {
-                mapPardner((PardnerEntry)event.getEntry());
-            }
-        }
-        public void entryUpdated (EntryUpdatedEvent event) {
-            // nothing doing
-        }
-        public void entryRemoved (EntryRemovedEvent event) {
-            if (event.getName().equals(PlayerObject.PARDNERS)) {
-                clearPardner((PardnerEntry)event.getOldEntry());
-            }
-        }
-
-        public void objectDestroyed (ObjectDestroyedEvent event) {
-            for (PardnerEntry entry : _player.pardners) {
-                clearPardner(entry);
-            }
-        }
-
-        protected void mapPardner (PardnerEntry entry) {
-            ArrayList<PlayerObject> list = _pardmap.get(entry.handle);
-            if (list == null) {
-                _pardmap.put(entry.handle, list = new ArrayList<PlayerObject>());
-            }
-            if (list.remove(_player)) { // sanity check
-                log.warning("Found stale player/pardner mapping [pardner=" + entry.handle +
-                            ", player=" + _player.who() + "].");
-            }
-            list.add(_player);
-        }
-        protected void clearPardner (PardnerEntry entry) {
-            ArrayList<PlayerObject> list = _pardmap.get(entry.handle);
-            if (list == null) { // sanity check
-                log.warning("Missing list when clearing player/pardner mapping " +
-                            "[pardner=" + entry.handle + ", player=" + _player.who() + "].");
-            } else if (!list.remove(_player)) { // remove and sanity check
-                log.warning("Missing player when clearing player/pardner mapping " +
-                            "[pardner=" + entry.handle + ", player=" + _player.who() + "].");
-            }
-        }
-
-        protected PlayerObject _player;
-    }
-
     /** The number of milliseconds after which we reload rank levels from DB */
     protected static final long RANK_RELOAD_TIMEOUT = (3600 * 1000);
 
@@ -971,9 +892,8 @@ public class PlayerManager
     protected HashMap<Handle, PardnerEntryUpdater> _updaters =
         new HashMap<Handle, PardnerEntryUpdater>();
 
-    /** Maps a handle to a list of all resolved player objects that contain it as a pardner. */
-    protected HashMap<Handle, ArrayList<PlayerObject>> _pardmap =
-        new HashMap<Handle, ArrayList<PlayerObject>>();
+    /** Keeps our {@link PardnerEntry}s up to date for remote players. */
+    protected RemotePlayerWatcher<PardnerEntry> _pardwatcher;
 
     /** A light-weight cache of soft {@link PosterInfo} references. */
     protected Map<Handle, SoftReference<PosterInfo>> _posterCache =
