@@ -47,9 +47,6 @@ public class BoardManager
             _byname[ii] = new BoardMap();
         }
 
-        // we'll use this later to filter out boards that are not allowed in this town
-        int townIndex = BangUtil.getTownIndex(ServerConfig.townId);
-
         // load up and map all of our boards by scenario and player count
         for (BoardRecord record : _brepo.loadBoards()) {
             // sanity check boards as creators are known to fuck up
@@ -59,7 +56,7 @@ public class BoardManager
             }
 
             // if this board uses scenarios from a later town, skip it
-            if (record.getMinimumTownIndex() > townIndex) {
+            if (record.getMinimumTownIndex() > ServerConfig.townIndex) {
                 continue;
             }
 

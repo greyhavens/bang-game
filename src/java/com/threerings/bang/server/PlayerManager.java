@@ -15,25 +15,24 @@ import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
-import com.samskivert.util.Invoker;
 import com.samskivert.util.ArrayUtil;
+import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
+import com.samskivert.util.Tuple;
 import com.threerings.util.StreamableHashMap;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.dobj.AttributeChangeListener;
-import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.ElementUpdateListener;
-import com.threerings.presents.dobj.ElementUpdatedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.ObjectDeathListener;
 import com.threerings.presents.dobj.ObjectDestroyedEvent;
 import com.threerings.presents.dobj.SetAdapter;
+import com.threerings.presents.dobj.SetListener;
+import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
@@ -66,6 +65,7 @@ import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.PlayerService;
+import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Handle;
@@ -94,7 +94,7 @@ import static com.threerings.bang.Log.log;
  * Handles general player business, implements {@link PlayerProvider}.
  */
 public class PlayerManager
-    implements PlayerProvider, BangCodes
+    implements PlayerProvider, BangCodes, BangPeerManager.RemotePlayerObserver
 {
     /**
      * Initializes the player manager, and registers its invocation service.
@@ -111,6 +111,9 @@ public class PlayerManager
         // register ourselves as the provider of the (bootstrap) PlayerService
         BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), true);
 
+        // register ourselves as a remote player observer
+        BangServer.peermgr.addPlayerObserver(this);
+
         // do an initial read of rank data
         maybeScheduleRankReload();
     }
@@ -121,6 +124,50 @@ public class PlayerManager
     public PardnerRepository getPardnerRepository ()
     {
         return _pardrepo;
+    }
+
+    /**
+     * Populates the identified player's set of pardners, performing any notifications and updates
+     * that were being held until the player logged on.
+     */
+    public void initPardners (PlayerObject player, ArrayList<PardnerRecord> records)
+    {
+        // TEMP: sanity check since I've seen duplicates
+        HashSet<Handle> temp = new HashSet<Handle>();
+        Iterator<PardnerRecord> iter = records.iterator();
+        while (iter.hasNext()) {
+            PardnerRecord record = iter.next();
+            if (temp.contains(record.handle)) {
+                log.warning("Player has duplicate pardner record [pid=" + player.playerId +
+                            ", record=" + record + "].");
+                iter.remove();
+            } else {
+                temp.add(record.handle);
+            }
+        }
+        // END TEMP
+
+        // collect active players, send invitations
+        ArrayList<PardnerEntry> pardners = new ArrayList<PardnerEntry>();
+        for (PardnerRecord record : records) {
+            if (record.isActive()) {
+                pardners.add(getPardnerEntry(record.handle, record.lastSession));
+            } else {
+                sendPardnerInvite(player, record.handle, record.message, record.lastSession);
+            }
+        }
+
+        // set pardners and add an updater for this player
+        player.setPardners(new DSet<PardnerEntry>(pardners.iterator()));
+        if (player.getOnlinePardnerCount() > 0) {
+            PardnerEntryUpdater updater = new PardnerEntryUpdater(player);
+            _updaters.put(player.handle, updater);
+            updater.updateEntries();
+        }
+
+        // finally add a mapper that will keep their pardner set mapped so that we can efficiently
+        // handle remote pardner logon/logoff
+        player.addListener(new PardnerMapper(player));
     }
 
     // documentation inherited from interface PlayerProvider
@@ -165,46 +212,6 @@ public class PlayerManager
                     "[who=" + user.who() + ", item=" + bsitem + "]";
             }
         });
-    }
-
-    /**
-     * Populates the identified player's set of pardners, performing any notifications and updates
-     * that were being held until the player logged on.
-     */
-    public void initPardners (PlayerObject player, ArrayList<PardnerRecord> records)
-    {
-        // TEMP: sanity check since I've seen duplicates
-        HashSet<Handle> temp = new HashSet<Handle>();
-        Iterator<PardnerRecord> iter = records.iterator();
-        while (iter.hasNext()) {
-            PardnerRecord record = iter.next();
-            if (temp.contains(record.handle)) {
-                log.warning("Player has duplicate pardner record [pid=" + player.playerId +
-                            ", record=" + record + "].");
-                iter.remove();
-            } else {
-                temp.add(record.handle);
-            }
-        }
-        // END TEMP
-
-        // collect active players, send invitations
-        ArrayList<PardnerEntry> pardners = new ArrayList<PardnerEntry>();
-        for (PardnerRecord record : records) {
-            if (record.isActive()) {
-                pardners.add(getPardnerEntry(record.handle, record.lastSession));
-            } else {
-                sendPardnerInvite(player, record.handle, record.message, record.lastSession);
-            }
-        }
-
-        // set pardners and add an updater for this player
-        player.setPardners(new DSet<PardnerEntry>(pardners.iterator()));
-        if (player.getOnlinePardnerCount() > 0) {
-            PardnerEntryUpdater updater = new PardnerEntryUpdater(player);
-            _updaters.put(player.handle, updater);
-            updater.updateEntries();
-        }
     }
 
     // documentation inherited from interface PlayerProvider
@@ -332,8 +339,7 @@ public class PlayerManager
         }
 
         // make sure the tutorial is valid for this town
-        int townIdx = BangUtil.getTownIndex(player.townId);
-        int tutIdx = ListUtil.indexOf(TutorialCodes.TUTORIALS[townIdx], tutId);
+        int tutIdx = ListUtil.indexOf(TutorialCodes.TUTORIALS[ServerConfig.townIndex], tutId);
         if (!player.tokens.isAdmin() && // allow admin to play test tutorials
             tutIdx == -1) {
             log.warning("Player req'd invalid tutorial [who=" + player.who() +
@@ -406,10 +412,9 @@ public class PlayerManager
         }
 
         // make sure the scenario types are valid for this town
-        int townIdx = BangUtil.getTownIndex(player.townId);
         for (String scenId : scenarios) {
             ScenarioInfo info = ScenarioInfo.getScenarioInfo(scenId);
-            if (info == null || info.getTownIndex() > townIdx) {
+            if (info == null || info.getTownIndex() > ServerConfig.townIndex) {
                 log.warning("Requested to play invalid scenario " +
                             "[who=" + player.who() + ", scid=" + scenId + "].");
                 throw new InvocationException(INTERNAL_ERROR);
@@ -427,66 +432,6 @@ public class PlayerManager
         playComputer(player, players, scenarios, board, autoplay,
                      new BangObject.PriorLocation(
                          "saloon", BangServer.saloonmgr.getPlaceObject().getOid()));
-    }
-
-    /**
-     * Helper function for playing games. Assumes all parameters have been checked for validity.
-     */
-    protected void playComputer (PlayerObject player, int players, String[] scenarios, String board,
-                                 boolean autoplay, BangObject.PriorLocation priorLocation)
-        throws InvocationException
-    {
-        // create a game configuration from that
-        BangConfig config = new BangConfig();
-        config.rated = false;
-        config.players = new Name[players];
-        config.ais = new BangAI[players];
-        config.init(players, Match.TEAM_SIZES[players-2]);
-        for (String scenId : scenarios) {
-            config.addRound(scenId, board, null);
-        }
-        playComputer(player, config, autoplay, priorLocation);
-    }
-
-    /**
-     * Helper function for playing games. Assumes all parameters have been checked for validity.
-     */
-    protected void playComputer (PlayerObject player, BangConfig config, boolean autoplay,
-                                 BangObject.PriorLocation priorLocation)
-        throws InvocationException
-    {
-        HashSet<String> names = new HashSet<String>();
-        names.add(player.getVisibleName().toString());
-
-        // configure our AIs and the player names array
-        if (!autoplay) {
-            config.players[0] = player.getVisibleName();
-        }
-        for (int ii = autoplay ? 0 : 1; ii < config.players.length; ii++) {
-            BangAI ai = BangAI.createAI(1, 50, names);
-            config.players[ii] = ai.handle;
-            config.ais[ii] = ai;
-        }
-
-        try {
-            BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
-            BangObject bangobj = (BangObject)mgr.getPlaceObject();
-
-            // configure a prior location if one was provided
-            if (priorLocation != null) {
-                bangobj.setPriorLocation(priorLocation);
-            }
-
-            // if this is an autoplay game, fake a game ready notification
-            if (autoplay) {
-                ParlorSender.gameIsReady(player, bangobj.getOid());
-            }
-
-        } catch (InstantiationException ie) {
-            log.log(Level.WARNING, "Error instantiating game " +
-                    "[for=" + player.who() + ", config=" + config + "].", ie);
-            throw new InvocationException(INTERNAL_ERROR);
-        }
     }
 
     // from interface PlayerProvider
@@ -655,6 +600,105 @@ public class PlayerManager
     }
 
     /**
+     * Helper function for playing games. Assumes all parameters have been checked for validity.
+     */
+    protected void playComputer (PlayerObject player, int players, String[] scenarios, String board,
+                                 boolean autoplay, BangObject.PriorLocation priorLocation)
+        throws InvocationException
+    {
+        // create a game configuration from that
+        BangConfig config = new BangConfig();
+        config.rated = false;
+        config.players = new Name[players];
+        config.ais = new BangAI[players];
+        config.init(players, Match.TEAM_SIZES[players-2]);
+        for (String scenId : scenarios) {
+            config.addRound(scenId, board, null);
+        }
+        playComputer(player, config, autoplay, priorLocation);
+    }
+
+    // from interface BangPeerManager.RemotePlayerObserver
+    public void remotePlayerLoggedOn (int townIndex, BangClientInfo info)
+    {
+        updateRemotePardner(info, townIndex, "on");
+    }
+
+    // from interface BangPeerManager.RemotePlayerObserver
+    public void remotePlayerLoggedOff (int townIndex, BangClientInfo info)
+    {
+        updateRemotePardner(info, -1, "off");
+    }
+
+    protected void updateRemotePardner (BangClientInfo info, int townIndex, String where)
+    {
+        Handle handle = (Handle)info.visibleName;
+        ArrayList<PlayerObject> pardners = _pardmap.get(handle);
+        if (pardners == null) {
+            return;
+        }
+
+        for (PlayerObject plobj : pardners) {
+            PardnerEntry entry = plobj.pardners.get(handle);
+            if (entry == null) {
+                log.warning("Player registered as pardner but missing entry [who=" + plobj.who() +
+                            ", pards=" + plobj.pardners + ", pard=" + handle + "] ("+ where + ").");
+                continue; // weirdness?
+            }
+            if (townIndex >= 0) {
+                entry.setOnline(townIndex);
+                entry.avatar = info.avatar;
+            } else {
+                entry.status = PardnerEntry.OFFLINE;
+                entry.avatar = null;
+            }
+            entry.gameOid = 0;
+            plobj.updatePardners(entry);
+        }            
+    }
+
+    /**
+     * Helper function for playing games. Assumes all parameters have been checked for validity.
+     */
+    protected void playComputer (PlayerObject player, BangConfig config, boolean autoplay,
+                                 BangObject.PriorLocation priorLocation)
+        throws InvocationException
+    {
+        HashSet<String> names = new HashSet<String>();
+        names.add(player.getVisibleName().toString());
+
+        // configure our AIs and the player names array
+        if (!autoplay) {
+            config.players[0] = player.getVisibleName();
+        }
+        for (int ii = autoplay ? 0 : 1; ii < config.players.length; ii++) {
+            BangAI ai = BangAI.createAI(1, 50, names);
+            config.players[ii] = ai.handle;
+            config.ais[ii] = ai;
+        }
+
+        try {
+            BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
+            BangObject bangobj = (BangObject)mgr.getPlaceObject();
+
+            // configure a prior location if one was provided
+            if (priorLocation != null) {
+                bangobj.setPriorLocation(priorLocation);
+            }
+
+            // if this is an autoplay game, fake a game ready notification
+            if (autoplay) {
+                ParlorSender.gameIsReady(player, bangobj.getOid());
+            }
+
+        } catch (InstantiationException ie) {
+            log.log(Level.WARNING, "Error instantiating game " +
+                    "[for=" + player.who() + ", config=" + config + "].", ie);
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+    }
+
+    /**
      * If it's been more than a certain amount of time since the last time we refresh the rank
      * levels from the database, go out and fetch them as soon as possible. As this is an
      * asynchronous operation, we can't easily sneak one in before the poster request.
@@ -706,17 +750,30 @@ public class PlayerManager
      */
     protected PardnerEntry getPardnerEntry (Handle handle, Date lastSession)
     {
+        // see if we've already got an updater for this player
         PardnerEntryUpdater updater = _updaters.get(handle);
         if (updater != null) {
             return updater.entry;
         }
+
+        // check whether the player is online on this server
         PlayerObject player = BangServer.lookupPlayer(handle);
         if (player != null) {
             _updaters.put(handle, updater = new PardnerEntryUpdater(player));
             return updater.entry;
-        } else {
-            return new PardnerEntry(handle, lastSession);
         }
+
+        // check whether the player is online on another server
+        Tuple<BangClientInfo,Integer> remote = BangServer.peermgr.locateRemotePlayer(handle);
+        if (remote != null) {
+            PardnerEntry entry = new PardnerEntry(handle);
+            entry.setOnline(remote.right);
+            entry.avatar = remote.left.avatar;
+            return entry;
+        }
+
+        // otherwise they're offline
+        return new PardnerEntry(handle, lastSession);
     }
 
     /**
@@ -831,6 +888,62 @@ public class PlayerManager
         }
     }
 
+    /** Used to keep the {@link #_pardmap} mapping up to date. */
+    protected class PardnerMapper
+        implements SetListener, ObjectDeathListener
+    {
+        public PardnerMapper (PlayerObject player) {
+            _player = player;
+            for (PardnerEntry entry : _player.pardners) {
+                mapPardner(entry);
+            }
+        }
+
+        public void entryAdded (EntryAddedEvent event) {
+            if (event.getName().equals(PlayerObject.PARDNERS)) {
+                mapPardner((PardnerEntry)event.getEntry());
+            }
+        }
+        public void entryUpdated (EntryUpdatedEvent event) {
+            // nothing doing
+        }
+        public void entryRemoved (EntryRemovedEvent event) {
+            if (event.getName().equals(PlayerObject.PARDNERS)) {
+                clearPardner((PardnerEntry)event.getOldEntry());
+            }
+        }
+
+        public void objectDestroyed (ObjectDestroyedEvent event) {
+            for (PardnerEntry entry : _player.pardners) {
+                clearPardner(entry);
+            }
+        }
+
+        protected void mapPardner (PardnerEntry entry) {
+            ArrayList<PlayerObject> list = _pardmap.get(entry.handle);
+            if (list == null) {
+                _pardmap.put(entry.handle, list = new ArrayList<PlayerObject>());
+            }
+            if (list.remove(_player)) { // sanity check
+                log.warning("Found stale player/pardner mapping [pardner=" + entry.handle +
+                            ", player=" + _player.who() + "].");
+            }
+            list.add(_player);
+        }
+        protected void clearPardner (PardnerEntry entry) {
+            ArrayList<PlayerObject> list = _pardmap.get(entry.handle);
+            if (list == null) { // sanity check
+                log.warning("Missing list when clearing player/pardner mapping " +
+                            "[pardner=" + entry.handle + ", player=" + _player.who() + "].");
+            } else if (!list.remove(_player)) { // remove and sanity check
+                log.warning("Missing player when clearing player/pardner mapping " +
+                            "[pardner=" + entry.handle + ", player=" + _player.who() + "].");
+            }
+        }
+
+        protected PlayerObject _player;
+    }
+
     /** The number of milliseconds after which we reload rank levels from DB */
     protected static final long RANK_RELOAD_TIMEOUT = (3600 * 1000);
 
@@ -849,10 +962,14 @@ public class PlayerManager
     /** Provides access to the player database. */
     protected PlayerRepository _playrepo;
 
-    /** Maps the names of users to updaters responsible for keeping their
-     * {@link PardnerEntry}s up-to-date. */
-    protected HashMap<Handle,PardnerEntryUpdater> _updaters =
-        new HashMap<Handle,PardnerEntryUpdater>();
+    /** Maps the names of users to updaters responsible for keeping their {@link PardnerEntry}s
+     * up-to-date. */
+    protected HashMap<Handle, PardnerEntryUpdater> _updaters =
+        new HashMap<Handle, PardnerEntryUpdater>();
+
+    /** Maps a handle to a list of all resolved player objects that contain it as a pardner. */
+    protected HashMap<Handle, ArrayList<PlayerObject>> _pardmap =
+        new HashMap<Handle, ArrayList<PlayerObject>>();
 
     /** A light-weight cache of soft {@link PosterInfo} references. */
     protected Map<Handle, SoftReference<PosterInfo>> _posterCache =

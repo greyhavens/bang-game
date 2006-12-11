@@ -68,14 +68,13 @@ public class PardnerView extends IconPalette
     {
         this(ctx, null);
     }
-    
+
     public PardnerView (BangContext ctx, StatusLabel status)
     {
         super(null, 4, 2, ICON_SIZE, 1);
         setStyleClass("pardner_view");
         _ctx = ctx;
-        _psvc = (PlayerService)ctx.getClient().requireService(
-            PlayerService.class);
+        _psvc = (PlayerService)ctx.getClient().requireService(PlayerService.class);
 
         // add a status view below the pardner grid
         GroupLayout layout = GroupLayout.makeVert(GroupLayout.NONE,
@@ -92,10 +91,8 @@ public class PardnerView extends IconPalette
 
         // then add chat and remove buttons
         BContainer bcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
-        bcont.add(_chat = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_chat"),
-            this, "chat"));
-        bcont.add(_watch = new BButton(_ctx.xlate(BANG_MSGS,
-            "m.pardner_watch"), this, "watch"));
+        bcont.add(_chat = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_chat"), this, "chat"));
+        bcont.add(_watch = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_watch"), this, "watch"));
         addPardnerButtons(bcont);
         ccont.add(bcont);
         ccont.add(new Spacer(1, 13));
@@ -107,8 +104,8 @@ public class PardnerView extends IconPalette
         _acont.add(new BLabel(_ctx.xlate(BANG_MSGS, getAddLabelMessage())));
         _acont.add(_name = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH));
         _name.setPreferredWidth(324);
-        _acont.add(_submit = new BButton(_ctx.xlate(BANG_MSGS,
-            "m.pardner_submit"), this, "submit"));
+        _submit = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_submit"), this, "submit");
+        _acont.add(_submit);
         ccont.add(_acont);
         ccont.add(new Spacer(1, 12));
         add(ccont, BorderLayout.CENTER);
@@ -162,25 +159,24 @@ public class PardnerView extends IconPalette
     {
         return "m.pardner_add";
     }
-    
+
     /**
      * Returns the translatable message to display on the confirmation dialog
      * for removing a pardner (which will be resolved against the bang bundle).
      */
     protected String getConfirmRemoveMessage ()
     {
-        return "m.confirm_remove"; 
+        return "m.confirm_remove";
     }
-    
+
     /**
      * Adds any additional buttons after the "chat" and "watch" buttons.
      */
     protected void addPardnerButtons (BContainer bcont)
     {
-        bcont.add(_remove = new BButton(_ctx.xlate(BANG_MSGS,
-            "m.pardner_remove"), this, "remove"));
+        bcont.add(_remove = new BButton(_ctx.xlate(BANG_MSGS, "m.pardner_remove"), this, "remove"));
     }
-    
+
     /**
      * Creates and returns an invite dialog for the identified player.
      */
@@ -188,7 +184,7 @@ public class PardnerView extends IconPalette
     {
         return new InvitePardnerDialog(_ctx, _status, handle);
     }
-    
+
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -219,7 +215,7 @@ public class PardnerView extends IconPalette
     {
         return _ctx.getUserObject();
     }
-    
+
     /**
      * Returns the name of the pardner set field.
      */
@@ -227,7 +223,7 @@ public class PardnerView extends IconPalette
     {
         return PlayerObject.PARDNERS;
     }
-    
+
     /**
      * Returns a reference to the complete set of pardner entries.
      */
@@ -235,7 +231,7 @@ public class PardnerView extends IconPalette
     {
         return _ctx.getUserObject().pardners;
     }
-    
+
     /**
      * Creates and returns an icon for the specified entry.
      */
@@ -243,7 +239,7 @@ public class PardnerView extends IconPalette
     {
         return new PardnerIcon(entry);
     }
-    
+
     @Override // documentation inherited
     protected void wasRemoved ()
     {
@@ -259,8 +255,7 @@ public class PardnerView extends IconPalette
     }
 
     /**
-     * Updates the enabled state of the controls in response in a change to the
-     * selection.
+     * Updates the enabled state of the controls in response in a change to the selection.
      */
     protected void updateSelectionControls (PardnerEntry entry)
     {
@@ -268,7 +263,7 @@ public class PardnerView extends IconPalette
         _watch.setEnabled(entry.gameOid > 0);
         _remove.setEnabled(true);
     }
-    
+
     @Override // documentation inherited
     protected void iconDeselected (SelectableIcon icon)
     {
@@ -279,21 +274,20 @@ public class PardnerView extends IconPalette
     }
 
     /**
-     * Requests that the named pardner be removed after having verified that
-     * that's what the user really wants.
+     * Requests that the named pardner be removed after having verified that that's what the user
+     * really wants.
      */
     protected void removePardner (final Handle handle)
     {
-        _psvc.removePardner(_ctx.getClient(), handle,
-            new PlayerService.ConfirmListener() {
-                public void requestProcessed () {
-                    _status.setStatus(BANG_MSGS, MessageBundle.tcompose(
-                        "m.pardner_removed", handle), false);
-                }
-                public void requestFailed (String cause) {
-                    _status.setStatus(BANG_MSGS, cause, true);
-                }
-            });
+        _psvc.removePardner(_ctx.getClient(), handle, new PlayerService.ConfirmListener() {
+            public void requestProcessed () {
+                _status.setStatus(
+                    BANG_MSGS, MessageBundle.tcompose("m.pardner_removed", handle), false);
+            }
+            public void requestFailed (String cause) {
+                _status.setStatus(BANG_MSGS, cause, true);
+            }
+        });
     }
 
     /** Displays a single pardner. */
@@ -305,10 +299,8 @@ public class PardnerView extends IconPalette
         {
             this.entry = entry;
             setStyleClass("pardner_icon");
-
-            _handle = _ctx.getStyleSheet().getTextFactory(this,
-                null).createText(entry.handle.toString(),
-                    _ctx.getStyleSheet().getColor(this, null));
+            _handle = _ctx.getStyleSheet().getTextFactory(this, null).createText(
+                entry.handle.toString(), _ctx.getStyleSheet().getColor(this, null));
         }
 
         public void insert ()
@@ -348,8 +340,8 @@ public class PardnerView extends IconPalette
         {
             super.layout();
 
-            // the not online icon is a different size from an actual avatar
-            // icon so we have to adjust the insets
+            // the not online icon is a different size from an actual avatar icon so we have to
+            // adjust the insets
             int offtop = (entry.avatar == null) ? 20 : 5;
             _label.layout(new Insets(25, offtop, 25, 31));
         }
@@ -368,11 +360,9 @@ public class PardnerView extends IconPalette
                 h = size.height * (_width - 29) / size.width;
                 w = _width - 29;
             }
-            _handle.render(renderer, (_width - w) / 2,
-                _last == null ? 16 : 24, w, h, _alpha);
+            _handle.render(renderer, (_width - w) / 2, _last == null ? 16 : 24, w, h, _alpha);
             if (_last != null) {
-                _last.render(renderer, (_width - _last.getSize().width) / 2,
-                    12, _alpha);
+                _last.render(renderer, (_width - _last.getSize().width) / 2, 12, _alpha);
             }
         }
 
@@ -402,14 +392,12 @@ public class PardnerView extends IconPalette
         protected void updateAvatar ()
         {
             // start with the silhouette image
-            setIcon(new ImageIcon(
-                        _ctx.loadImage("ui/pardners/silhouette.png")));
+            setIcon(new ImageIcon(_ctx.loadImage("ui/pardners/silhouette.png")));
 
             // then load our avatar image asynchronously if we have one
             if (entry.avatar != null) {
                 int w = AVATAR_SIZE.width, h = AVATAR_SIZE.height;
-                AvatarView.getImage(_ctx, entry.avatar, w, h, false,
-                                    new ResultListener<BImage>() {
+                AvatarView.getImage(_ctx, entry.avatar, w, h, false, new ResultListener<BImage>() {
                     public void requestCompleted (BImage image) {
                         setIcon(new ImageIcon(image));
                     }
@@ -423,19 +411,18 @@ public class PardnerView extends IconPalette
         protected void updateStatus ()
         {
             // update the location icon
-            ImageIcon location = null;
-            if (entry.status == PardnerEntry.IN_GAME ||
-                entry.status == PardnerEntry.IN_SALOON) {
-                String path = "ui/pardners/in_" +
-                    (entry.status == PardnerEntry.IN_GAME ? "game" : "saloon") +
-                    ".png";
-                location = new ImageIcon(_ctx.loadImage(path));
+            String locpath = null;
+            if (entry.status == PardnerEntry.IN_GAME || entry.status == PardnerEntry.IN_SALOON) {
+                String where = entry.status == PardnerEntry.IN_GAME ? "game" : "saloon";
+                locpath = "ui/pardners/in_" + where + ".png";
+            } else if (entry.getTownIndex() != -1) {
+                locpath = "ui/pardners/" + BangCodes.TOWN_IDS[entry.getTownIndex()] + ".png";
             }
-            setLocation(location);
+            setLocation(locpath == null ? null : new ImageIcon(_ctx.loadImage(locpath)));
 
             // and the scroll icon
-            String path = "ui/frames/" + (entry.status == PardnerEntry.OFFLINE ?
-                                          "tall_" : "") + "small_scroll.png";
+            String path = "ui/frames/" +
+                (entry.status == PardnerEntry.OFFLINE ? "tall_" : "") + "small_scroll.png";
             setScroll(new ImageIcon(_ctx.loadImage(path)));
 
             // and the last session date
@@ -444,10 +431,8 @@ public class PardnerView extends IconPalette
                 String msg = LAST_SESSION_FORMAT.format(entry.getLastSession());
                 msg = MessageBundle.tcompose("m.pardner_last_session", msg);
                 msg = _ctx.xlate(BANG_MSGS, msg);
-                last = _ctx.getStyleSheet().getTextFactory(
-                    this, "last_session").createText(
-                        msg, _ctx.getStyleSheet().getColor(
-                            this, "last_session"));
+                last = _ctx.getStyleSheet().getTextFactory(this, "last_session").createText(
+                    msg, _ctx.getStyleSheet().getColor(this, "last_session"));
             }
             setLastSeen(last);
         }
@@ -532,7 +517,7 @@ public class PardnerView extends IconPalette
             }
         }
     };
-    
+
     protected HashMap<Comparable, PardnerIcon> _picons =
         new HashMap<Comparable, PardnerIcon>();
 

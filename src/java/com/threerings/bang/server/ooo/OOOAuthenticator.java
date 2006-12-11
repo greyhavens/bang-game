@@ -166,7 +166,7 @@ public class OOOAuthenticator extends BangAuthenticator
         PlayerRecord prec = BangServer.playrepo.loadPlayer(username);
 
         // make sure this player has access to this server's town
-        int serverTownIdx = BangUtil.getTownIndex(ServerConfig.townId);
+        int serverTownIdx = ServerConfig.townIndex;
         if (RuntimeConfig.server.freeIndianPost &&
             serverTownIdx == BangUtil.getTownIndex(BangCodes.INDIAN_POST)) {
             // free access

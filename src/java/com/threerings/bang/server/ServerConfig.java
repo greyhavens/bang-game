@@ -15,6 +15,7 @@ import com.threerings.presents.client.Client;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.server.BangAuthenticator;
+import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
 
@@ -38,6 +39,9 @@ public class ServerConfig
 
     /** The id of the town this server is handling. */
     public static String townId;
+
+    /** The index of the town this server is handling. */
+    public static int townIndex;
 
     /** Eventually we'll have servers for the "town" and servers for games
      * started from that town. For now all servers are town servers and games
@@ -127,8 +131,8 @@ public class ServerConfig
 
         // fill in our node-specific properties
         publicHostname = config.getValue(nodename + ".server_host", hostname);
-        townId = config.getValue(
-            nodename + ".town_id", BangCodes.FRONTIER_TOWN);
+        townId = config.getValue(nodename + ".town_id", BangCodes.FRONTIER_TOWN);
+        townIndex = BangUtil.getTownIndex(townId);
     }
 
     static {

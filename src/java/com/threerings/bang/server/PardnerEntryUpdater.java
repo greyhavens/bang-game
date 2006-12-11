@@ -174,7 +174,7 @@ public class PardnerEntryUpdater extends SetAdapter
             } else if (plobj instanceof SaloonObject) {
                 entry.status = PardnerEntry.IN_SALOON;
             } else {
-                entry.status = PardnerEntry.ONLINE;
+                entry.setOnline(ServerConfig.townIndex);
             }
 
         } else {

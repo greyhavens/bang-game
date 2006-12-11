@@ -1,3 +1,4 @@
+
 //
 // $Id$
 
@@ -66,6 +67,22 @@ public class PardnerEntry
     }
 
     /**
+     * Configures this player as online in the specified town.
+     */
+    public void setOnline (int townIndex)
+    {
+        status = (byte)((townIndex * 10) + ONLINE);
+    }
+
+    /**
+     * Returns the town index in which this player is online, -1 if they are not online.
+     */
+    public int getTownIndex ()
+    {
+        return (status % 10 == ONLINE) ? (status/10) : -1;
+    }
+
+    /**
      * Determines whether this pardner is online.
      */
     public boolean isOnline ()
@@ -87,8 +104,7 @@ public class PardnerEntry
      */
     public Date getLastSession ()
     {
-        return new Date(_lastSessionEpoch +
-            _lastSession * MILLISECONDS_PER_DAY);
+        return new Date(_lastSessionEpoch + _lastSession * MILLISECONDS_PER_DAY);
     }
 
     /**
@@ -96,8 +112,7 @@ public class PardnerEntry
      */
     public void setLastSession (Date lastSession)
     {
-        _lastSession = (short)((lastSession.getTime() - _lastSessionEpoch) /
-            MILLISECONDS_PER_DAY);
+        _lastSession = (short)((lastSession.getTime() - _lastSessionEpoch) / MILLISECONDS_PER_DAY);
     }
 
     // documentation inherited from interface DSet.Entry
@@ -109,8 +124,7 @@ public class PardnerEntry
     // documentation inherited from interface Comparable
     public int compareTo (Object other)
     {
-        // sort online pardners above offline ones and available ones above
-        // unavailable ones
+        // sort online pardners above offline ones and available ones above unavailable ones
         PardnerEntry oentry = (PardnerEntry)other;
         if (isOnline() != oentry.isOnline()) {
             return isOnline() ? -1 : +1;
@@ -123,8 +137,8 @@ public class PardnerEntry
         }
     }
 
-    /** For offline pardners, the date when the pardner last logged on, stored
-     * as the number of days since midnight, 1/1/05 GMT. */
+    /** For offline pardners, the date when the pardner last logged on, stored as the number of
+     * days since midnight, 1/1/05 GMT. */
     protected short _lastSession;
 
     /** The time from which last session times are measured. */
