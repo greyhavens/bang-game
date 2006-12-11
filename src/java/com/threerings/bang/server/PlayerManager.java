@@ -599,25 +599,6 @@ public class PlayerManager
         });
     }
 
-    /**
-     * Helper function for playing games. Assumes all parameters have been checked for validity.
-     */
-    protected void playComputer (PlayerObject player, int players, String[] scenarios, String board,
-                                 boolean autoplay, BangObject.PriorLocation priorLocation)
-        throws InvocationException
-    {
-        // create a game configuration from that
-        BangConfig config = new BangConfig();
-        config.rated = false;
-        config.players = new Name[players];
-        config.ais = new BangAI[players];
-        config.init(players, Match.TEAM_SIZES[players-2]);
-        for (String scenId : scenarios) {
-            config.addRound(scenId, board, null);
-        }
-        playComputer(player, config, autoplay, priorLocation);
-    }
-
     // from interface BangPeerManager.RemotePlayerObserver
     public void remotePlayerLoggedOn (int townIndex, BangClientInfo info)
     {
@@ -630,6 +611,10 @@ public class PlayerManager
         updateRemotePardner(info, -1, "off");
     }
 
+    /**
+     * Called when a player logs onto or off of a remote server. Updates that player's pardner
+     * entry for any player online on this server that has the remote player as a pardner.
+     */
     protected void updateRemotePardner (BangClientInfo info, int townIndex, String where)
     {
         Handle handle = (Handle)info.visibleName;
@@ -655,6 +640,25 @@ public class PlayerManager
             entry.gameOid = 0;
             plobj.updatePardners(entry);
         }            
+    }
+
+    /**
+     * Helper function for playing games. Assumes all parameters have been checked for validity.
+     */
+    protected void playComputer (PlayerObject player, int players, String[] scenarios, String board,
+                                 boolean autoplay, BangObject.PriorLocation priorLocation)
+        throws InvocationException
+    {
+        // create a game configuration from that
+        BangConfig config = new BangConfig();
+        config.rated = false;
+        config.players = new Name[players];
+        config.ais = new BangAI[players];
+        config.init(players, Match.TEAM_SIZES[players-2]);
+        for (String scenId : scenarios) {
+            config.addRound(scenId, board, null);
+        }
+        playComputer(player, config, autoplay, priorLocation);
     }
 
     /**
