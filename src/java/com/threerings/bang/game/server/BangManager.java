@@ -1664,6 +1664,9 @@ public class BangManager extends GameManager
                     if (msg != null) {
                         failed++;
                         SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
+                    } else {
+                        SpeakProvider.sendAttention(
+                            _bangobj, GAME_MSGS, criterion.reportMet(_bangobj, user));
                     }
                 }
                 if (failed == 0) {

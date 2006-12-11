@@ -38,29 +38,13 @@ public class IntStatCriterion extends Criterion
     // from Criterion
     public String isMet (BangObject bangobj, PlayerObject player)
     {
-        int pidx = bangobj.getPlayerIndex(player.handle);
-        int actual = bangobj.stats[pidx].getIntStat(stat);
-        switch (condition) {
-        case LESS_THAN:
-            if (actual < value) {
-                return null;
-            }
-            break;
-        case EQUAL_TO:
-            if (actual == value) {
-                return null;
-            }
-            break;
-        case AT_LEAST:
-            if (actual >= value) {
-                return null;
-            }
-            break;
-        }
-        String msg = MessageBundle.compose("m." + condition.toString().toLowerCase() + "_failed",
-                                           stat.key(), MessageBundle.taint(String.valueOf(value)),
-                                           MessageBundle.taint(String.valueOf(actual)));
-        return MessageBundle.qualify(OfficeCodes.OFFICE_MSGS, msg);
+        return createMessage(bangobj, player, "failed");
+    }
+
+    // from Criterion
+    public String reportMet (BangObject bangobj, PlayerObject player)
+    {
+        return createMessage(bangobj, player, "met");
     }
 
     // from interface Savable
@@ -98,5 +82,32 @@ public class IntStatCriterion extends Criterion
     public String toString ()
     {
         return stat + " " + condition + " " + value;
+    }
+
+    protected String createMessage (BangObject bangobj, PlayerObject player, String type)
+    {
+        int pidx = bangobj.getPlayerIndex(player.handle);
+        int actual = bangobj.stats[pidx].getIntStat(stat);
+        switch (condition) {
+        case LESS_THAN:
+            if (actual < value) {
+                return null;
+            }
+            break;
+        case EQUAL_TO:
+            if (actual == value) {
+                return null;
+            }
+            break;
+        case AT_LEAST:
+            if (actual >= value) {
+                return null;
+            }
+            break;
+        }
+        String msg = MessageBundle.compose("m." + condition.toString().toLowerCase() + "_" + type,
+                                           stat.key(), MessageBundle.taint(String.valueOf(value)),
+                                           MessageBundle.taint(String.valueOf(actual)));
+        return MessageBundle.qualify(OfficeCodes.OFFICE_MSGS, msg);
     }
 }
