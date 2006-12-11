@@ -15,9 +15,12 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.admin.server.RuntimeConfig;
 
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.MatchObject;
+
+import static com.threerings.bang.Log.log;
 
 /**
  * Contains information about a pending match-up.
@@ -113,8 +116,28 @@ public class Match
         // now make sure the joining player satisfies our rating range requirements: the joiner
         // must fall within our desired range of the average rating and the min and max rating must
         // fall within the joiner's criterion-specified range
+        Rating prating = player.getRating(ScenarioInfo.OVERALL_IDENT);
+        if (criterion.range < Criterion.OPEN) {
+            int range = (criterion.range == Criterion.TIGHT ? 
+                    RuntimeConfig.server.nearRankRange : RuntimeConfig.server.looseRankRange);
+            for (int ii = 0; ii < players.length; ii++) {
+                if (players[ii] == null) {
+                    continue;
+                }
+                Rating rating = players[ii].getRating(ScenarioInfo.OVERALL_IDENT);
+                if (Math.abs(rating.rating - prating.rating) > range) {
+                    return false;
+                }
+            }
+        }
 
-        // TODO
+        if (_criterion.range < Criterion.OPEN) {
+            int range = (_criterion.range == Criterion.TIGHT ? 
+                    RuntimeConfig.server.nearRankRange : RuntimeConfig.server.looseRankRange);
+            if (Math.abs(_avgRating - prating.rating) > range) {
+                return false;
+            }
+        }
 
         try {
             // add the player and update the criterion in one event
@@ -147,20 +170,7 @@ public class Match
             matchobj.commitTransaction();
         }
 
-        // recompute our rating info
-        _avgRating = 0;
-        int count = 0;
-        for (int ii = 0; ii < players.length; ii++) {
-            if (players[ii] == null) {
-                continue;
-            }
-            Rating rating = players[ii].getRating(ScenarioInfo.OVERALL_IDENT);
-            _minRating = Math.min(_minRating, rating.rating);
-            _maxRating = Math.max(_maxRating, rating.rating);
-            _avgRating += rating.rating;
-            count++;
-        }
-        _avgRating /= count;
+        recomputeRating();
 
         return true;
     }
@@ -186,6 +196,7 @@ public class Match
                 } finally {
                     matchobj.commitTransaction();
                 }
+                recomputeRating();
                 return true;
             }
         }
@@ -309,6 +320,30 @@ public class Match
             _criterion = oldCriterion;
         }
     }
+
+    /**
+     * Recomputes the average rating for this match.
+     */
+    protected void recomputeRating ()
+    {
+        // recompute our rating info
+        _avgRating = 0;
+        int count = 0;
+        for (int ii = 0; ii < players.length; ii++) {
+            if (players[ii] == null) {
+                continue;
+            }
+            Rating rating = players[ii].getRating(ScenarioInfo.OVERALL_IDENT);
+            _minRating = Math.min(_minRating, rating.rating);
+            _maxRating = Math.max(_maxRating, rating.rating);
+            _avgRating += rating.rating;
+            count++;
+        }
+        if (count > 0) {
+            _avgRating /= count;
+        }
+    }
+
 
     protected Criterion _criterion;
     protected Criterion[] _playerCriterions;
