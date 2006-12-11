@@ -119,7 +119,9 @@ public class PlayerManager
                 entry.gameOid = 0;
             }
         };
-        BangServer.peermgr.addPlayerObserver(_pardwatcher);
+        if (BangServer.peermgr != null) {
+            BangServer.peermgr.addPlayerObserver(_pardwatcher);
+        }
 
         // do an initial read of rank data
         maybeScheduleRankReload();
@@ -748,7 +750,10 @@ public class PlayerManager
         }
 
         // check whether the player is online on another server
-        Tuple<BangClientInfo,Integer> remote = BangServer.peermgr.locateRemotePlayer(handle);
+        Tuple<BangClientInfo,Integer> remote = null;
+        if (BangServer.peermgr != null) {
+            remote = BangServer.peermgr.locateRemotePlayer(handle);
+        }
         if (remote != null) {
             PardnerEntry entry = new PardnerEntry(handle);
             entry.setOnline(remote.right);
