@@ -358,6 +358,16 @@ public abstract class ScenarioInfo
     }
 
     /**
+     * Returns true if this is an evenly matched player versus player (competitive) game rather
+     * than one where players cooperate or play in some imbalanced arrangement. There are certain
+     * stats that we only track for the evenly matched case.
+     */
+    public boolean isCompetitive ()
+    {
+        return getTeams() == Teams.INDIVIDUAL; // TODO: TEAM2V2?
+    }
+
+    /**
      * Returns the type of teaming in this scenario.
      */
     public Teams getTeams ()

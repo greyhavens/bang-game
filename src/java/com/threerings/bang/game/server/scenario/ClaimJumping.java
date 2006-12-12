@@ -151,11 +151,11 @@ public class ClaimJumping extends Scenario
     {
         super.recordStats(bangobj, gameTime, pidx, user);
 
-        // record the number of nuggets they claimed
-        int nuggets = bangobj.stats[pidx].getIntStat(Stat.Type.NUGGETS_CLAIMED);
-        if (nuggets > 0) {
-            user.stats.incrementStat(Stat.Type.NUGGETS_CLAIMED, nuggets);
-        }
+        // record the number of nuggets they claimed and update their max claimed
+        user.stats.incrementStat(
+            Stat.Type.NUGGETS_CLAIMED, bangobj.stats[pidx].getIntStat(Stat.Type.NUGGETS_CLAIMED));
+        user.stats.maxStat(
+            Stat.Type.MOST_NUGGETS, bangobj.stats[pidx].getIntStat(Stat.Type.MOST_NUGGETS));
     }
 
     /** Indicates the tick on which we will end the game. */

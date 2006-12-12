@@ -994,7 +994,7 @@ public class BangManager extends GameManager
                 return;
             }
         }
-        _scenario.init(this);
+        _scenario.init(this, _bangobj.scenario);
 
         RoundRecord round = _rounds[_activeRoundId];
         round.scenario = _scenario;
@@ -2197,8 +2197,13 @@ public class BangManager extends GameManager
                 }
 
                 // accumulate stats tracked during this round
+                boolean competitive = _rounds[rr].scenario.getInfo().isCompetitive();
                 for (int ss = 0; ss < ACCUM_STATS.length; ss++) {
                     Stat.Type type = ACCUM_STATS[ss];
+                    // only track competitive stats for competitive rounds
+                    if (type.isCompetitiveOnly() && !competitive) {
+                        continue;
+                    }
                     // we don't subtract accumulating stats if the player "accumulated" negative
                     // points in the game
                     int value = _rounds[rr].stats[pidx].getIntStat(type);
@@ -2210,7 +2215,12 @@ public class BangManager extends GameManager
                 // check to see if any "max" stat was exceeded in this round
                 user.stats.maxStat(Stat.Type.HIGHEST_POINTS, _bangobj.perRoundPoints[rr][pidx]);
                 for (int ss = 0; ss < MAX_STATS.length; ss += 2) {
-                    int v = _rounds[rr].stats[pidx].getIntStat(MAX_STATS[ss+1]);
+                    Stat.Type type = MAX_STATS[ss+1];
+                    // only track competitive stats for competitive rounds
+                    if (type.isCompetitiveOnly() && !competitive) {
+                        continue;
+                    }
+                    int v = _rounds[rr].stats[pidx].getIntStat(type);
                     user.stats.maxStat(MAX_STATS[ss], v);
                 }
             }

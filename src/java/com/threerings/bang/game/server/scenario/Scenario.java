@@ -36,6 +36,8 @@ import com.threerings.bang.game.server.ai.RandomLogic;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
 
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -46,14 +48,23 @@ public abstract class Scenario
     /**
      * Called to initialize a scenario when it is created.
      */
-    public void init (BangManager bangmgr)
+    public void init (BangManager bangmgr, ScenarioInfo info)
     {
+        _info = info;
         _bangmgr = bangmgr;
 
         // initialize our delegates
         for (ScenarioDelegate delegate : _delegates) {
             delegate.init(_bangmgr, this);
         }
+    }
+
+    /**
+     * Returns the {@link ScenarioInfo} record associated with this scenario.
+     */
+    public ScenarioInfo getInfo ()
+    {
+        return _info;
     }
 
     /**
@@ -595,6 +606,9 @@ public abstract class Scenario
         }
         return idx;
     }
+
+    /** Our metadata. */
+    protected ScenarioInfo _info;
 
     /** The Bang game manager. */
     protected BangManager _bangmgr;

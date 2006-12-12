@@ -29,9 +29,10 @@ public class NuggetDelegate extends CounterDelegate
     @Override // documentation inherited
     public void roundDidEnd (BangObject bangobj)
     {
-        // increment each players' nugget related stats
+        // note each players' nugget related stats
         for (Counter counter : _counters) {
             bangobj.stats[counter.owner].incrementStat(Stat.Type.NUGGETS_CLAIMED, counter.count);
+            bangobj.stats[counter.owner].maxStat(Stat.Type.MOST_NUGGETS, counter.count);
         }
     }
 

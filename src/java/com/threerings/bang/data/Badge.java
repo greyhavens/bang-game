@@ -55,14 +55,12 @@ public class Badge extends Item
         },
         GAMES_PLAYED_4 {
             public boolean qualifies (PlayerObject user) {
-                return false;
-                // return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 2000;
+                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 2000;
             }
         },
         GAMES_PLAYED_5 {
             public boolean qualifies (PlayerObject user) {
-                return false;
-                // return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
+                return user.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= 5000;
             }
         },
 
@@ -79,17 +77,21 @@ public class Badge extends Item
         },
         UNITS_KILLED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 5000;
+                return user.stats.getIntStat(Stat.Type.UNITS_KILLED) >= 500;
             }
         },
         UNITS_KILLED_4 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: kill ratio > 1 && UK2?
+                float killRatio = user.stats.getIntStat(Stat.Type.UNITS_KILLED) /
+                    Math.max(1f, user.stats.getIntStat(Stat.Type.UNITS_LOST));
+                return UNITS_KILLED_2.qualifies(user) && (killRatio >= 1.7f);
             }
         },
         UNITS_KILLED_5 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: kill ratio > 2 && UK3?
+                float killRatio = user.stats.getIntStat(Stat.Type.UNITS_KILLED) /
+                    Math.max(1f, user.stats.getIntStat(Stat.Type.UNITS_LOST));
+                return UNITS_KILLED_3.qualifies(user) && (killRatio >= 1.5f);
             }
         },
 
@@ -140,12 +142,16 @@ public class Badge extends Item
         },
         CONSEC_WINS_4 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: win ratio > 1 && CW1?
+                int wins = user.stats.getIntStat(Stat.Type.GAMES_WON);
+                int losses = Math.max(user.stats.getIntStat(Stat.Type.GAMES_PLAYED) - wins, 1);
+                return CONSEC_WINS_2.qualifies(user) && ((wins / (float)losses) >= 2f);
             }
         },
         CONSEC_WINS_5 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: win ratio > 3 && CW3?
+                int wins = user.stats.getIntStat(Stat.Type.GAMES_WON);
+                int losses = Math.max(user.stats.getIntStat(Stat.Type.GAMES_PLAYED) - wins, 1);
+                return CONSEC_WINS_3.qualifies(user) && ((wins / (float)losses) >= 3f);
             }
         },
 
@@ -221,12 +227,12 @@ public class Badge extends Item
         },
         CARDS_PLAYED_4 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: 30 wins with 0 cards brought in?
+                return user.stats.getIntStat(Stat.Type.BLUFF_CARD_WINS) >= 30;
             }
         },
         CARDS_PLAYED_5 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: 100 wins with < 2 cards brought in?
+                return user.stats.getIntStat(Stat.Type.PACK_CARD_WINS) >= 250;
             }
         },
 
@@ -248,13 +254,13 @@ public class Badge extends Item
         },
         BONUSES_COLLECTED_4 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: uncomment when we see how HIGHEST_BONUSES shapes up
+                return false; // TODO: uncomment when we see how MOST_BONUSES shapes up
                 // return user.stats.getIntStat(Stat.Type.MOST_BONUSES) >= 6;
             }
         },
         BONUSES_COLLECTED_5 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: uncomment when we see how HIGHEST_BONUSES shapes up
+                return false; // TODO: uncomment when we see how MOST_BONUSES shapes up
                 // return user.stats.getIntStat(Stat.Type.MOST_BONUSES) >= 10;
             }
         },
@@ -299,7 +305,7 @@ public class Badge extends Item
         },
         NUGGETS_CLAIMED_5 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: 10 nuggets in a round
+                return user.stats.getIntStat(Stat.Type.MOST_NUGGETS) >= 10;
             }
         },
 
@@ -326,7 +332,7 @@ public class Badge extends Item
         },
         CATTLE_RUSTLED_5 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: all cattle branded at same time
+                return user.stats.getIntStat(Stat.Type.MOST_CATTLE) >= 9;
             }
         },
 

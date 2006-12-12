@@ -31,80 +31,86 @@ public abstract class Stat
     public static enum Type
     {
         // general statistics
-        GAMES_PLAYED(new IntStat(), false), // ranked games only
-        UNRANKED_GAMES_PLAYED(new IntStat(), false),
-        GAMES_WON(new IntStat(), false), // ranked games only
-        GAME_TIME(new IntStat(), false), // ranked games only
-        CONSEC_WINS(new IntStat(), false), // ranked games only
-        CONSEC_LOSSES(new IntStat(), false), // ranked games only
-        CONSEC_KILLS(new IntStat(), true), // ranked games and player units only
-        LATE_NIGHTS(new IntStat(), false, true, true),
-        TUTORIALS_COMPLETED(new ByteStringSetStat(), false, true, true),
+        GAMES_PLAYED(new IntStat(), false, false),
+        UNRANKED_GAMES_PLAYED(new IntStat(), false, false),
+        GAMES_WON(new IntStat(), false, false),
+        GAME_TIME(new IntStat(), false, false),
+        CONSEC_WINS(new IntStat(), false, false),
+        CONSEC_LOSSES(new IntStat(), false, false),
+        CONSEC_KILLS(new IntStat(), true, true),
+        LATE_NIGHTS(new IntStat(), false, false, true, true),
+        TUTORIALS_COMPLETED(new ByteStringSetStat(), false, false, true, true),
 
         // transient (per-session) statistics
-        SESSION_GAMES_PLAYED(new IntStat(), false, false, true),
+        SESSION_GAMES_PLAYED(new IntStat(), false, false, false, true),
 
-        // stats accumulated during a game
-        DAMAGE_DEALT(new IntStat(), true),
-        BONUS_POINTS(new IntStat(), true),
+        // stats accumulated during a game (not persisted)
+        DAMAGE_DEALT(new IntStat(), true, false, false, false),
+        BONUS_POINTS(new IntStat(), true, false, false, false),
+        PACK_CARDS_PLAYED(new IntStat(), true, true, false, false),
 
-        // stats accumulated during a game and persisted
-        UNITS_KILLED(new IntStat(), true),
-        UNITS_LOST(new IntStat(), true),
-        BONUSES_COLLECTED(new IntStat(), true),
-        CARDS_PLAYED(new IntStat(), true),
-        POINTS_EARNED(new IntStat(), true),
-        CASH_EARNED(new IntStat(), false),
-        DISTANCE_MOVED(new IntStat(), true),
-        SHOTS_FIRED(new IntStat(), true),
-        UNITS_USED(new ByteByteStringMapStat(), false, true, true),
-        BIGSHOT_WINS(new ByteByteStringMapStat(), false, true, true),
+        // stats accumulated during a game (persisted)
+        UNITS_KILLED(new IntStat(), true, true),
+        UNITS_LOST(new IntStat(), true, true),
+        BONUSES_COLLECTED(new IntStat(), true, false),
+        CARDS_PLAYED(new IntStat(), true, false),
+        POINTS_EARNED(new IntStat(), true, false),
+        CASH_EARNED(new IntStat(), false, false),
+        DISTANCE_MOVED(new IntStat(), true, false),
+        SHOTS_FIRED(new IntStat(), true, false),
+        UNITS_USED(new ByteByteStringMapStat(), false, false, true, true),
+        BIGSHOT_WINS(new ByteByteStringMapStat(), false, false, true, true),
 
-        CATTLE_RUSTLED(new IntStat(), true),
-        BRAND_POINTS(new IntStat(), true),
+        PACK_CARD_WINS(new IntStat(), true, true), // brought cards into game and won
+        BLUFF_CARD_WINS(new IntStat(), true, true), // brought 3 cards into game, played none, won
 
-        NUGGETS_CLAIMED(new IntStat(), true),
+        CATTLE_RUSTLED(new IntStat(), true, false),
+        BRAND_POINTS(new IntStat(), true, false),
+        MOST_CATTLE(new IntStat(), true, false), // most cattle branded any time during round
 
-        STEADS_CLAIMED(new IntStat(), true),
-        STEADS_DESTROYED(new IntStat(), true),
-        STEAD_POINTS(new IntStat(), true),
+        NUGGETS_CLAIMED(new IntStat(), true, false),
+        MOST_NUGGETS(new IntStat(), true, false), // most nuggets claimed at end of round
 
-        TOTEMS_SMALL(new IntStat(), true),
-        TOTEMS_MEDIUM(new IntStat(), true),
-        TOTEMS_LARGE(new IntStat(), true),
-        TOTEMS_CROWN(new IntStat(), true),
-        TOTEM_POINTS(new IntStat(), true),
+        STEADS_CLAIMED(new IntStat(), true, false),
+        STEADS_DESTROYED(new IntStat(), true, false),
+        STEAD_POINTS(new IntStat(), true, false),
 
-        WENDIGO_SURVIVALS(new IntStat(), true),
-        TALISMAN_POINTS(new IntStat(), true),
-        TALISMAN_SPOT_SURVIVALS(new IntStat(), true),
-        WHOLE_TEAM_SURVIVALS(new IntStat(), true),
+        TOTEMS_SMALL(new IntStat(), true, false),
+        TOTEMS_MEDIUM(new IntStat(), true, false),
+        TOTEMS_LARGE(new IntStat(), true, false),
+        TOTEMS_CROWN(new IntStat(), true, false),
+        TOTEM_POINTS(new IntStat(), true, false),
 
-        TREES_SAPLING(new IntStat(), true),
-        TREES_MATURE(new IntStat(), true),
-        TREES_ELDER(new IntStat(), true),
-        TREE_POINTS(new IntStat(), true),
-        WAVE_SCORES(new IntArrayStat(), false),
-        WAVE_POINTS(new IntStat(), true),
-        HARD_ROBOT_KILLS(new IntStat(), true),
+        WENDIGO_SURVIVALS(new IntStat(), true, false),
+        TALISMAN_POINTS(new IntStat(), true, false),
+        TALISMAN_SPOT_SURVIVALS(new IntStat(), true, false),
+        WHOLE_TEAM_SURVIVALS(new IntStat(), true, false),
+
+        TREES_SAPLING(new IntStat(), true, false),
+        TREES_MATURE(new IntStat(), true, false),
+        TREES_ELDER(new IntStat(), true, false),
+        TREE_POINTS(new IntStat(), true, false),
+        WAVE_SCORES(new IntArrayStat(), false, false),
+        WAVE_POINTS(new IntStat(), true, false),
+        HARD_ROBOT_KILLS(new IntStat(), true, false),
 
         // stats derived from in-game statistics
-        HIGHEST_POINTS(new IntStat(), false),
-        MOST_KILLS(new IntStat(), false),
-        MOST_BONUSES(new IntStat(), false),
-        PERFECT_WAVES(new IntStat(), true),
-        HIGHEST_SAWS(new IntStat(), false),
+        HIGHEST_POINTS(new IntStat(), false, true),
+        MOST_KILLS(new IntStat(), false, true),
+        MOST_BONUSES(new IntStat(), false, false),
+        PERFECT_WAVES(new IntStat(), true, false),
+        HIGHEST_SAWS(new IntStat(), false, false),
 
         // stats accumulated outside a game
-        CHAT_SENT(new IntStat(), false),
-        CHAT_RECEIVED(new IntStat(), false),
-        GAMES_HOSTED(new IntStat(), false),
+        CHAT_SENT(new IntStat(), false, false),
+        CHAT_RECEIVED(new IntStat(), false, false),
+        GAMES_HOSTED(new IntStat(), false, false),
 
         // stats that are meant to by mysterious
-        MYSTERY_ONE(new IntStat(), false, false, true), // high noon game
-        MYSTERY_TWO(new IntStat(), false, false, true), // christmas morning game
+        MYSTERY_ONE(new IntStat(), false, false, false, true), // high noon logon
+        MYSTERY_TWO(new IntStat(), false, false, false, true), // christmas morning game
 
-        UNUSED(new IntStat(), false);
+        UNUSED(new IntStat(), false, false);
 
         /** Returns a new blank stat instance of the specified type. */
         public Stat newStat ()
@@ -129,6 +135,12 @@ public abstract class Stat
             return _bounty;
         }
 
+        /** Returns true if this stat should only be tracked in non-coop games. */
+        public boolean isCompetitiveOnly ()
+        {
+            return _competitiveOnly;
+        }
+
         /** Returns true if this stat is persisted between sessions. */
         public boolean isPersistent ()
         {
@@ -142,12 +154,13 @@ public abstract class Stat
         }
 
         // most stats are persistent and not hidden
-        Type (Stat prototype, boolean bounty) {
-            this(prototype, bounty, true, false);
+        Type (Stat prototype, boolean bounty, boolean compOnly) {
+            this(prototype, bounty, compOnly, true, false);
         }
 
-        Type (Stat prototype, boolean bounty, boolean persist, boolean hidden) {
+        Type (Stat prototype, boolean bounty, boolean compOnly, boolean persist, boolean hidden) {
             _bounty = bounty;
+            _competitiveOnly = compOnly;
             _persist = persist;
             _hidden = hidden;
 
@@ -169,7 +182,7 @@ public abstract class Stat
 
         protected Stat _prototype;
         protected int _code;
-        protected boolean _bounty, _persist, _hidden;
+        protected boolean _bounty, _competitiveOnly, _persist, _hidden;
     };
 
     /** Provides auxilliary information to statistics during the persisting

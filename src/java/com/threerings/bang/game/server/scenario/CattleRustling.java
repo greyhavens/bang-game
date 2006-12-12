@@ -143,10 +143,11 @@ public class CattleRustling extends Scenario
         Piece[] pieces = bangobj.getPieceArray();
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
-                bangobj.stats[pieces[ii].owner].incrementStat(
-                    Stat.Type.CATTLE_RUSTLED, 1);
+                bangobj.stats[pieces[ii].owner].incrementStat(Stat.Type.CATTLE_RUSTLED, 1);
             }
         }
+
+        // TODO: update MOST_CATTLE during the round as cattle change hands
     }
 
     @Override // documentation inherited
@@ -155,11 +156,11 @@ public class CattleRustling extends Scenario
     {
         super.recordStats(bangobj, gameTime, pidx, user);
 
-        // record the number of cattle they rustled
-        int rustled = bangobj.stats[pidx].getIntStat(Stat.Type.CATTLE_RUSTLED);
-        if (rustled > 0) {
-            user.stats.incrementStat(Stat.Type.CATTLE_RUSTLED, rustled);
-        }
+        // record their cattle related stats
+        user.stats.incrementStat(
+            Stat.Type.CATTLE_RUSTLED, bangobj.stats[pidx].getIntStat(Stat.Type.CATTLE_RUSTLED));
+        user.stats.maxStat(
+            Stat.Type.MOST_CATTLE, bangobj.stats[pidx].getIntStat(Stat.Type.MOST_CATTLE));
     }
 
     @Override // documentation inherited
