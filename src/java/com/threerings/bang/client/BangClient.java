@@ -800,7 +800,7 @@ public class BangClient extends BasicClient
             client.getClientObject().removeListener(_nlistener);
         }
 
-        if (_pendingTownId == null) {
+        if (_pendingTownId == null && !_idledOut) {
             // shut her right on down
             _ctx.getApp().stop();
         }
@@ -819,6 +819,28 @@ public class BangClient extends BasicClient
             }
             _pendingTownId = null;
         }
+    }
+
+    /**
+     * Called when the client idle's out.
+     */
+    public void clientDidIdleOut ()
+    {
+        // stop the music
+        if (_mstream != null) {
+            _mstream.fadeOut(0.5f, true);
+            _mstream = null;
+        }
+        _idledOut = true;
+        log.info("Client idled out.");
+
+        // Clear out all the windows and just show the Idled out window
+        _ctx.getRootNode().removeAllWindows();
+        _ctx.getClient().logoff(false);
+        _mview = new IdleView(_ctx);
+        _ctx.getRootNode().addWindow(_mview);
+        _mview.pack();
+        _mview.center();
     }
 
     /**
@@ -1070,8 +1092,8 @@ public class BangClient extends BasicClient
             }
             if (idle > LOGOFF_DELAY) {
                 if (_ctx.getClient().isLoggedOn()) {
-                    log.info("Client idled out, exiting.");
-                    _ctx.getApp().stop();
+                    cancel();
+                    clientDidIdleOut();
                 }
             }
         }
@@ -1177,6 +1199,7 @@ public class BangClient extends BasicClient
     protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
     protected String _pendingTownId;
+    protected boolean _idledOut;
 
     protected SetAdapter _nlistener = new SetAdapter() {
         public void entryAdded (EntryAddedEvent event) {

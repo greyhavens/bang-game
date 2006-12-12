@@ -31,6 +31,7 @@ import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.RecentList;
 import com.samskivert.util.RepeatRecordFilter;
 import com.samskivert.util.StringUtil;
+import com.samskivert.util.SystemInfo;
 
 import com.threerings.util.MessageManager;
 import com.threerings.util.Name;
@@ -142,6 +143,13 @@ public class BangApp extends JmeApp
     @Override // documentation inherited
     public boolean init ()
     {
+        try {
+            checkJavaVersion();
+        } catch (Throwable t) {
+            reportInitFailure(t);
+            return false;
+        }
+
         if (!super.init()) {
             return false;
         }
@@ -241,6 +249,32 @@ public class BangApp extends JmeApp
     protected void initLighting ()
     {
         // handle lights in board view
+    }
+
+    /**
+     * Checks that we are running on at least the 1.5.0_06 JVM.
+     *
+     * @throws Exception if the version is invalid 
+     */
+    protected void checkJavaVersion ()
+        throws Exception
+    {
+        SystemInfo sysinfo = new SystemInfo();
+        int[] minVersion = new int[] {1, 5, 0, 6};
+        String[] jVersion = sysinfo.javaVersion.split("[._]");
+        String errmsg = "You are running java version " + sysinfo.javaVersion + 
+            ", but we require at least version 1.5.0_06";
+        for (int ii = 0, ll = Math.min(minVersion.length, jVersion.length); ii < ll; ii++) {
+            int diff = minVersion[ii] - Integer.valueOf(jVersion[ii]);
+            if (diff < 0) {
+                return;
+            } else if (diff > 0) {
+                throw new Exception(errmsg);
+            }
+        }
+        if (jVersion.length != minVersion.length) {
+            throw new Exception(errmsg);
+        }
     }
 
     @Override // documentation inherited
