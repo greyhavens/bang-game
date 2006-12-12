@@ -57,9 +57,16 @@ public class LandGrab extends Scenario
                 steads[stead.owner]++;
             }
         }
+        int loneClaimerIdx = -1;
         for (int ii = 0; ii < steads.length; ii++) {
-            bangobj.stats[ii].incrementStat(
-                Stat.Type.STEADS_CLAIMED, steads[ii]);
+            bangobj.stats[ii].incrementStat(Stat.Type.STEADS_CLAIMED, steads[ii]);
+            // check to see if one player alone holds all claimed claims
+            if (steads[ii] > 0) {
+                loneClaimerIdx = (loneClaimerIdx == -1) ? ii : -2;
+            }
+        }
+        if (loneClaimerIdx >= 0) {
+            bangobj.stats[loneClaimerIdx].incrementStat(Stat.Type.LONE_CLAIMER, 1);
         }
     }
 
@@ -69,15 +76,9 @@ public class LandGrab extends Scenario
     {
         super.recordStats(bangobj, gameTime, pidx, user);
 
-        // persist the number of homesteads they claimed and destroyed
-        int claimed = bangobj.stats[pidx].getIntStat(Stat.Type.STEADS_CLAIMED),
-            destroyed = bangobj.stats[pidx].getIntStat(
-                Stat.Type.STEADS_DESTROYED);
-        if (claimed > 0) {
-            user.stats.incrementStat(Stat.Type.STEADS_CLAIMED, claimed);
-        }
-        if (destroyed > 0) {
-            user.stats.incrementStat(Stat.Type.STEADS_DESTROYED, destroyed);
+        // persist their various homestead related stats
+        for (Stat.Type stat : ACCUM_STATS) {
+            user.stats.incrementStat(stat, bangobj.stats[pidx].getIntStat(stat));
         }
     }
 
@@ -90,4 +91,9 @@ public class LandGrab extends Scenario
 
     /** Handles the behavior of our homesteads. */
     protected HomesteadDelegate _homedel;
+
+    /** Stats we accumulate from the in-game versions to the player's object. */
+    protected static final Stat.Type[] ACCUM_STATS = {
+        Stat.Type.STEADS_CLAIMED, Stat.Type.STEADS_DESTROYED, Stat.Type.LONE_CLAIMER
+    };
 }
