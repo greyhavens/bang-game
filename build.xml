@@ -566,6 +566,14 @@
   <!-- fully cleans out the installed application and all subprojects -->
   <target name="cleanall" depends="distclean,cleanjme,cleanprojects"/>
 
+  <!-- prepare ${destroot} for all the packages being built -->
+  <target name="preppkg">
+    <antcall target="prepare-server"/>
+    <antcall target="prepare-server-extra"/>
+    <antcall target="prepare-webapps"/>
+    <antcall target="prepare-pages"/>
+  </target>
+
   <!-- install project specific server code into ${destroot.server} -->
   <target name="prepare-server-extra">
     <copy todir="${destroot.server}/rsrc">
