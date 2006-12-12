@@ -74,7 +74,7 @@ public abstract class Stat
         STEADS_CLAIMED(new MaxIntStat(), true, false),
         STEADS_DESTROYED(new MaxIntStat(), true, false),
         STEAD_POINTS(new MaxIntStat(), true, false),
-        LONE_CLAIMER(new IntStat(), true, false), // all claimed steads are yours
+        LONE_STEADER(new IntStat(), true, false), // all claimed steads are yours
 
         TOTEMS_SMALL(new MaxIntStat(), true, false),
         TOTEMS_MEDIUM(new MaxIntStat(), true, false),

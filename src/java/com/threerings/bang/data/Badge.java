@@ -359,7 +359,7 @@ public class Badge extends Item
         },
         STEADS_CLAIMED_3 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.LONE_CLAIMER) >= 20;
+                return user.stats.getIntStat(Stat.Type.LONE_STEADER) >= 20;
             }
         },
 

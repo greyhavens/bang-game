@@ -66,7 +66,7 @@ public class LandGrab extends Scenario
             }
         }
         if (loneClaimerIdx >= 0) {
-            bangobj.stats[loneClaimerIdx].incrementStat(Stat.Type.LONE_CLAIMER, 1);
+            bangobj.stats[loneClaimerIdx].incrementStat(Stat.Type.LONE_STEADER, 1);
         }
     }
 
@@ -94,6 +94,6 @@ public class LandGrab extends Scenario
 
     /** Stats we accumulate from the in-game versions to the player's object. */
     protected static final Stat.Type[] ACCUM_STATS = {
-        Stat.Type.STEADS_CLAIMED, Stat.Type.STEADS_DESTROYED, Stat.Type.LONE_CLAIMER
+        Stat.Type.STEADS_CLAIMED, Stat.Type.STEADS_DESTROYED, Stat.Type.LONE_STEADER
     };
 }
