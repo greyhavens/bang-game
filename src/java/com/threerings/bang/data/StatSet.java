@@ -148,6 +148,16 @@ public final class StatSet extends DSet<Stat>
     }
 
     /**
+     * Returns the maximum value by which the specified integer statistic has ever been
+     * incremented.
+     */
+    public int getMaxIntStat (Stat.Type type)
+    {
+        MaxIntStat stat = (MaxIntStat)get(type.name());
+        return (stat == null) ? 0 : stat.getMaxValue();
+    }
+
+    /**
      * Returns the current value of the specified integer array statistic.
      */
     public int[] getIntArrayStat (Stat.Type type)

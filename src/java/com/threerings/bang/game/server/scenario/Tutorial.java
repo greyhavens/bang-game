@@ -32,6 +32,7 @@ import com.threerings.bang.game.data.piece.Cow;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.PieceSet;
 import com.threerings.bang.game.util.PointSet;
@@ -56,7 +57,7 @@ public class Tutorial extends Scenario
     }
 
     @Override // documentation inherited
-    public void init (BangManager bangmgr)
+    public void init (BangManager bangmgr, ScenarioInfo info)
     {
         // load up the tutorial configuraton
         BangConfig bconfig = (BangConfig)bangmgr.getConfig();
@@ -93,7 +94,7 @@ public class Tutorial extends Scenario
         }
 
         // now that our delegates are registered we can call super.init
-        super.init(bangmgr);
+        super.init(bangmgr, info);
     }
 
     @Override // documentation inherited

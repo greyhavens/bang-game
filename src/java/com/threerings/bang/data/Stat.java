@@ -34,10 +34,10 @@ public abstract class Stat
         GAMES_PLAYED(new IntStat(), false, false),
         UNRANKED_GAMES_PLAYED(new IntStat(), false, false),
         GAMES_WON(new IntStat(), false, false),
-        GAME_TIME(new IntStat(), false, false),
+        GAME_TIME(new MaxIntStat(), false, false),
         CONSEC_WINS(new IntStat(), false, false),
         CONSEC_LOSSES(new IntStat(), false, false),
-        CONSEC_KILLS(new IntStat(), true, true),
+        CONSEC_KILLS(new IntStat(), true, true), // most consec kills by one unit in one round
         LATE_NIGHTS(new IntStat(), false, false, true, true),
         TUTORIALS_COMPLETED(new ByteStringSetStat(), false, false, true, true),
 
@@ -45,59 +45,55 @@ public abstract class Stat
         SESSION_GAMES_PLAYED(new IntStat(), false, false, false, true),
 
         // stats accumulated during a game (not persisted)
-        DAMAGE_DEALT(new IntStat(), true, false, false, false),
-        BONUS_POINTS(new IntStat(), true, false, false, false),
+        DAMAGE_DEALT(new MaxIntStat(), true, false, false, false),
+        BONUS_POINTS(new MaxIntStat(), true, false, false, false),
         PACK_CARDS_PLAYED(new IntStat(), true, true, false, false),
 
         // stats accumulated during a game (persisted)
-        UNITS_KILLED(new IntStat(), true, true),
-        UNITS_LOST(new IntStat(), true, true),
-        BONUSES_COLLECTED(new IntStat(), true, false),
-        CARDS_PLAYED(new IntStat(), true, false),
-        POINTS_EARNED(new IntStat(), true, false),
-        CASH_EARNED(new IntStat(), false, false),
-        DISTANCE_MOVED(new IntStat(), true, false),
-        SHOTS_FIRED(new IntStat(), true, false),
+        UNITS_KILLED(new MaxIntStat(), true, true),
+        UNITS_LOST(new MaxIntStat(), true, true),
+        BONUSES_COLLECTED(new MaxIntStat(), true, false),
+        CARDS_PLAYED(new MaxIntStat(), true, false),
+        POINTS_EARNED(new IntStat(), true, false), // accumulated for whole game
+        HIGHEST_POINTS(new IntStat(), false, true), // max points in single round
+        CASH_EARNED(new MaxIntStat(), false, false),
+        DISTANCE_MOVED(new MaxIntStat(), true, false),
+        SHOTS_FIRED(new MaxIntStat(), true, false),
         UNITS_USED(new ByteByteStringMapStat(), false, false, true, true),
         BIGSHOT_WINS(new ByteByteStringMapStat(), false, false, true, true),
 
         PACK_CARD_WINS(new IntStat(), true, true), // brought cards into game and won
         BLUFF_CARD_WINS(new IntStat(), true, true), // brought 3 cards into game, played none, won
 
-        CATTLE_RUSTLED(new IntStat(), true, false),
-        BRAND_POINTS(new IntStat(), true, false),
+        CATTLE_RUSTLED(new MaxIntStat(), true, false),
+        BRAND_POINTS(new MaxIntStat(), true, false),
         MOST_CATTLE(new IntStat(), true, false), // most cattle branded any time during round
 
-        NUGGETS_CLAIMED(new IntStat(), true, false),
-        MOST_NUGGETS(new IntStat(), true, false), // most nuggets claimed at end of round
+        NUGGETS_CLAIMED(new MaxIntStat(), true, false),
 
-        STEADS_CLAIMED(new IntStat(), true, false),
-        STEADS_DESTROYED(new IntStat(), true, false),
-        STEAD_POINTS(new IntStat(), true, false),
+        STEADS_CLAIMED(new MaxIntStat(), true, false),
+        STEADS_DESTROYED(new MaxIntStat(), true, false),
+        STEAD_POINTS(new MaxIntStat(), true, false),
+        LONE_CLAIMER(new IntStat(), true, false), // all claimed steads are yours
 
-        TOTEMS_SMALL(new IntStat(), true, false),
-        TOTEMS_MEDIUM(new IntStat(), true, false),
-        TOTEMS_LARGE(new IntStat(), true, false),
-        TOTEMS_CROWN(new IntStat(), true, false),
-        TOTEM_POINTS(new IntStat(), true, false),
+        TOTEMS_SMALL(new MaxIntStat(), true, false),
+        TOTEMS_MEDIUM(new MaxIntStat(), true, false),
+        TOTEMS_LARGE(new MaxIntStat(), true, false),
+        TOTEMS_CROWN(new MaxIntStat(), true, false),
+        TOTEM_POINTS(new MaxIntStat(), true, false),
 
-        WENDIGO_SURVIVALS(new IntStat(), true, false),
-        TALISMAN_POINTS(new IntStat(), true, false),
-        TALISMAN_SPOT_SURVIVALS(new IntStat(), true, false),
+        WENDIGO_SURVIVALS(new MaxIntStat(), true, false),
+        TALISMAN_POINTS(new MaxIntStat(), true, false),
+        TALISMAN_SPOT_SURVIVALS(new MaxIntStat(), true, false),
         WHOLE_TEAM_SURVIVALS(new IntStat(), true, false),
 
-        TREES_SAPLING(new IntStat(), true, false),
-        TREES_MATURE(new IntStat(), true, false),
-        TREES_ELDER(new IntStat(), true, false),
-        TREE_POINTS(new IntStat(), true, false),
+        TREES_SAPLING(new MaxIntStat(), true, false),
+        TREES_MATURE(new MaxIntStat(), true, false),
+        TREES_ELDER(new MaxIntStat(), true, false),
+        TREE_POINTS(new MaxIntStat(), true, false),
         WAVE_SCORES(new IntArrayStat(), false, false),
-        WAVE_POINTS(new IntStat(), true, false),
-        HARD_ROBOT_KILLS(new IntStat(), true, false),
-
-        // stats derived from in-game statistics
-        HIGHEST_POINTS(new IntStat(), false, true),
-        MOST_KILLS(new IntStat(), false, true),
-        MOST_BONUSES(new IntStat(), false, false),
+        WAVE_POINTS(new MaxIntStat(), true, false),
+        HARD_ROBOT_KILLS(new MaxIntStat(), true, false),
         PERFECT_WAVES(new IntStat(), true, false),
         HIGHEST_SAWS(new IntStat(), false, false),
 

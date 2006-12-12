@@ -305,7 +305,7 @@ public class Badge extends Item
         },
         NUGGETS_CLAIMED_5 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.MOST_NUGGETS) >= 10;
+                return user.stats.getMaxIntStat(Stat.Type.NUGGETS_CLAIMED) >= 10;
             }
         },
 
@@ -344,22 +344,22 @@ public class Badge extends Item
         },
         STEADS_CLAIMED_2 {
             public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.STEADS_CLAIMED) >= 50;
-            }
-        },
-        STEADS_CLAIMED_3 {
-            public boolean qualifies (PlayerObject user) {
-                return user.stats.getIntStat(Stat.Type.STEADS_CLAIMED) >= 500;
+                return user.stats.getIntStat(Stat.Type.STEADS_CLAIMED) >= 100;
             }
         },
         STEADS_DESTROYED_1 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: STEADS_DESTROYED >= 10
+                return user.stats.getIntStat(Stat.Type.STEADS_DESTROYED) >= 10;
             }
         },
         STEADS_DESTROYED_2 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: STEADS_DESTROYED >= 50
+                return user.stats.getIntStat(Stat.Type.STEADS_DESTROYED) >= 100;
+            }
+        },
+        STEADS_CLAIMED_3 {
+            public boolean qualifies (PlayerObject user) {
+                return user.stats.getIntStat(Stat.Type.LONE_CLAIMER) >= 20;
             }
         },
 
@@ -393,7 +393,7 @@ public class Badge extends Item
         // trees saved badges
         TREES_SAVED_1 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: five perfect waves
+                return user.stats.getIntStat(Stat.Type.PERFECT_WAVES) >= 5;
             }
         },
         TREES_SAVED_2 {
@@ -408,12 +408,13 @@ public class Badge extends Item
         },
         TREES_SAVED_4 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: player kills N hard robots in one round
+                return false; // TODO: uncomment when we see how MOST_HARD_ROBOT_KILLS shapes up
+                // return user.stats.getMaxIntStat(Stat.Type.HARD_ROBOT_KILLS) >= N;
             }
         },
         TREES_SAVED_5 {
             public boolean qualifies (PlayerObject user) {
-                return false; // TODO: complete a wave at 10 saws difficulty
+                return user.stats.getIntStat(Stat.Type.HIGHEST_SAWS) >= 10;
             }
         },
 
@@ -681,8 +682,8 @@ public class Badge extends Item
         Type.CATTLE_RUSTLED_1, Type.CATTLE_RUSTLED_2, Type.CATTLE_RUSTLED_3,
         Type.CATTLE_RUSTLED_4, Type.CATTLE_RUSTLED_5,
 
-        Type.STEADS_CLAIMED_1, Type.STEADS_CLAIMED_2, Type.STEADS_CLAIMED_3,
-        Type.STEADS_DESTROYED_1, Type.STEADS_DESTROYED_2,
+        Type.STEADS_CLAIMED_1, Type.STEADS_CLAIMED_2,
+        Type.STEADS_DESTROYED_1, Type.STEADS_DESTROYED_2, Type.STEADS_CLAIMED_3,
 
         Type.CAVALRY_USER, Type.TACTICIAN_USER, Type.CODGER_USER,
         Type.FT_BIGSHOT_USER, Type.FT_ALLUNIT_USER,
