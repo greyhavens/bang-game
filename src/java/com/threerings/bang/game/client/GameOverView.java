@@ -270,8 +270,12 @@ public class GameOverView extends SteelWindow
 
         // add some buttons at the bottom
         _buttons.add(new BButton(msgs.get("m.view_stats"), this, "stats"));
-        if (_bctx != null) {
-            String from = _bctx.getBangClient().getPriorLocationIdent();
+        if (_ctx instanceof BangContext) {
+            String from = ((BangContext)_ctx).getBangClient().getPriorLocationIdent();
+            BangConfig config = (BangConfig)ctrl.getPlaceConfig();
+            if (config.duration == BangConfig.Duration.PRACTICE) {
+                from = "tutorial";
+            }
             _buttons.add(new BButton(msgs.get("m.to_" + from), this, "to_" + from));
         }
         _buttons.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
