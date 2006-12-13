@@ -48,20 +48,21 @@ public class Engineer extends AreaCard
     @Override // documentation inherited
     public boolean isValidLocation (BangObject bangobj, int tx, int ty)
     {
-        // find the engine and piece of track and make sure the engine
-        // can reach the destination
-        Train engine = null;
-        Track track = null;
+        // make sure an engine can reach the destination
+        Track track = bangobj.getTracks().get(Piece.coord(tx, ty));
+        if (track == null) {
+            return false;
+        }
         for (Piece piece : bangobj.pieces) {
-            if (piece instanceof Train &&
-                ((Train)piece).type == Train.ENGINE) {
-                engine = (Train)piece;
-            } else if (piece instanceof Track && piece.intersects(tx, ty)) {
-                track = (Track)piece;
+            if (!(piece instanceof Train)) {
+                continue;
+            }
+            Train train = (Train)piece;
+            if (train.type == Train.ENGINE && train.findPath(bangobj, track) != null) {
+                return true;
             }
         }
-        return (engine == null || track == null) ?
-            false : (engine.findPath(bangobj, track) != null);
+        return false;
     }
 
     @Override // documentation inherited

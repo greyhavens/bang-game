@@ -41,6 +41,9 @@ public class Track extends Piece
     /** The type of this track (singleton, terminal, etc.) */
     public byte type;
     
+    /** Identifies the connected group to which this piece of track belongs. */
+    public transient int group;
+    
     /** Used on the server to record when this track was visited in a depth-first search. */
     public transient int visited;
     

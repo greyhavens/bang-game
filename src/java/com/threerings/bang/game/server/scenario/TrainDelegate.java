@@ -41,7 +41,7 @@ public class TrainDelegate extends ScenarioDelegate
             if (track.type != Track.TERMINAL || track.visited != 0) {
                 continue;
             }
-            tgroups.add(new TrackGroup(bangobj, track));
+            tgroups.add(new TrackGroup(bangobj, tgroups.size(), track));
         }
         _tgroups = tgroups.toArray(new TrackGroup[tgroups.size()]);
     }
@@ -118,12 +118,16 @@ public class TrainDelegate extends ScenarioDelegate
      * can have without running into their own tails.
      *
      * @param terminals any terminals encountered in the search will be added to this list
+     * @param group all pieces of track encountered will be marked with this group id
      */
     protected static int getMaxTrainLength (
-        BangObject bangobj, Track track, ArrayList<Track> terminals, int step)
+        BangObject bangobj, Track track, ArrayList<Track> terminals, int group, int step)
     {
-        if (track.type == Track.TERMINAL && track.visited == 0) {
-            terminals.add(track);
+        if (track.visited == 0) { // first time encountered
+            track.group = group;
+            if (track.type == Track.TERMINAL) {
+                terminals.add(track);
+            }
         }
         track.visited = step;
         int maxlen = MAX_MAX_TRAIN_LENGTH;
@@ -133,7 +137,7 @@ public class TrainDelegate extends ScenarioDelegate
             }
             maxlen = Math.min(maxlen, (adj.visited > 0) ?
                 step - adj.visited :
-                getMaxTrainLength(bangobj, adj, terminals, step + 1));
+                getMaxTrainLength(bangobj, adj, terminals, group, step + 1));
         }
         track.visited = -1;
         return maxlen;
@@ -145,10 +149,11 @@ public class TrainDelegate extends ScenarioDelegate
         /**
          * Initializes the group using a single starting terminal.
          */
-        public TrackGroup (BangObject bangobj, Track terminal)
+        public TrackGroup (BangObject bangobj, int idx, Track terminal)
         {
+            _idx = idx;
             ArrayList<Track> terminals = new ArrayList<Track>();
-            _maxTrainLength = getMaxTrainLength(bangobj, terminal, terminals, 1);
+            _maxTrainLength = getMaxTrainLength(bangobj, terminal, terminals, idx, 1);
             _terminals = terminals.toArray(new Track[terminals.size()]);
         }
         
@@ -165,8 +170,9 @@ public class TrainDelegate extends ScenarioDelegate
                 return;
             }
             
-            // advance the train one tile at a time
-            for (int ii = 0; ii < _speed && !_trains.isEmpty(); ii++) {
+            // advance the train by a random number of tiles
+            int tiles = RandomUtil.getInt(MAX_TRAIN_TILES+1, MIN_TRAIN_TILES-1);
+            for (int ii = 0; ii < tiles && !_trains.isEmpty(); ii++) {
                 advanceTrain(bangobj);
             }
         }
@@ -188,11 +194,11 @@ public class TrainDelegate extends ScenarioDelegate
             train.type = Train.ENGINE;
             train.nextX = (short)(train.x + PieceCodes.DX[train.orientation]);
             train.nextY = (short)(train.y + PieceCodes.DY[train.orientation]);
+            train.group = _idx;
             _bangmgr.addPiece(train);
             _trains.add((Train)bangobj.pieces.get(train.pieceId));
             
-            // choose a random speed and length
-            _speed = RandomUtil.getInt(MAX_TRAIN_SPEED+1, MIN_TRAIN_SPEED-1);
+            // choose a random length
             _uncreated = RandomUtil.getInt(_maxTrainLength, MIN_TRAIN_LENGTH-2);
         }
         
@@ -222,6 +228,7 @@ public class TrainDelegate extends ScenarioDelegate
                 ntail.orientation = last.orientation;
                 ntail.type = (_uncreated == 0) ? Train.CABOOSE :
                     Train.CAR_TYPES[RandomUtil.getInt(Train.CAR_TYPES.length)];
+                ntail.group = _idx;
                 effect.ntail = ntail;
             }
             
@@ -262,12 +269,12 @@ public class TrainDelegate extends ScenarioDelegate
             // if the train is following a non-empty path, keep following it;
             // if it's empty, release the train from control
             if (first.path != null) {
+                Point pt = first.path.remove(0);
                 if (first.path.isEmpty()) {
-                    _bangmgr.deployEffect(-1, new ControlTrainEffect());    
-                } else {
-                    Point pt = first.path.remove(0);
-                    return new TrainEffect(_trains, pt.x, pt.y, blocker, push);
+                    _bangmgr.deployEffect(-1, new ControlTrainEffect(first.group));
+                    first.path = null;
                 }
+                return new TrainEffect(_trains, pt.x, pt.y, blocker, push);
             }
             
             // find the adjacent pieces of track, excluding the one behind, and
@@ -300,6 +307,9 @@ public class TrainDelegate extends ScenarioDelegate
             }
         }
     
+        /** The group's index in the array. */
+        protected int _idx;
+        
         /** The terminals in the group. */
         protected Track[] _terminals;
         
@@ -308,9 +318,6 @@ public class TrainDelegate extends ScenarioDelegate
         
         /** The currently active trains in this group. */
         protected ArrayList<Train> _trains = new ArrayList<Train>();
-        
-        /** The speed at which the trains in this group are traveling. */
-        protected int _speed;
         
         /** The number of trains remaining to create in this group. */
         protected int _uncreated;
@@ -321,7 +328,7 @@ public class TrainDelegate extends ScenarioDelegate
     
     /** The average number of ticks to let pass before we create a train when
      * there is no train on a particular group of tracks. */
-    protected static final int AVG_SPAWN_TICKS = 3;
+    protected static final int AVG_SPAWN_TICKS = 2;
 
     /** The minimum train length (including engine and caboose). */
     protected static final int MIN_TRAIN_LENGTH = 2;
@@ -329,9 +336,9 @@ public class TrainDelegate extends ScenarioDelegate
     /** The maximum train length, ignoring limitations imposed by track loops. */
     protected static final int MAX_MAX_TRAIN_LENGTH = 8;
     
-    /** The minimum speed at which trains travel (tiles per tick). */
-    protected static final int MIN_TRAIN_SPEED = 1;
+    /** The minimum number of tiles to move per tick. */
+    protected static final int MIN_TRAIN_TILES = 1;
     
-    /** The maximum train speed. */
-    protected static final int MAX_TRAIN_SPEED = 2;
+    /** The maximum number of tiles to move per tick. */
+    protected static final int MAX_TRAIN_TILES = 4;
 }
