@@ -26,9 +26,6 @@
   <property name="bin.list2"  value="roll_logs,runbang,summarize_perf,summarize_stats"/>
   <property name="bin.list"  value="${bin.list1},${bin.list2}"/>
 
-  <!-- this project has pages/ that need packaging -->
-  <property name="package.pages" value="true"/>
-
   <!-- declare the libraries needed by the Bang runtime -->
   <fileset dir="." id="dist.libs">
     <include name="${extlib.dir}/ant.jar"/>
