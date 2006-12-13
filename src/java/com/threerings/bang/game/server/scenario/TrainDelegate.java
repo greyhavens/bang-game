@@ -15,8 +15,9 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.ControlTrainEffect;
-import com.threerings.bang.game.data.effect.MoveEffect;
+import com.threerings.bang.game.data.effect.PuntEffect;
 import com.threerings.bang.game.data.effect.TrainEffect;
+import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Track;
@@ -266,6 +267,20 @@ public class TrainDelegate extends ScenarioDelegate
                 return null;
             }
 
+            // if the next position contains a bonus, we need to punt it out of the way
+            if (bangobj.board.containsBonus(first.nextX, first.nextY)) {
+                for (Piece piece : bangobj.pieces) {
+                    if (piece instanceof Bonus && piece.intersects(first.nextX, first.nextY)) {
+                        Bonus bonus = (Bonus)piece;
+                        if (!bonus.getConfig().hidden) {
+                            _bangmgr.deployEffect(
+                                -1, PuntEffect.puntBonus(bangobj, bonus, first.pieceId));
+                        }
+                        break;
+                    }
+                }
+            }
+            
             // if the train is following a non-empty path, keep following it;
             // if it's empty, release the train from control
             if (first.path != null) {

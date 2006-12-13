@@ -549,14 +549,6 @@ public class MobileSprite extends ActiveSprite
     }
 
     /**
-     * Sets the orientation to the one stored in the piece.
-     */
-    protected void reorient ()
-    {
-        setOrientation(_piece.orientation);
-    }
-
-    /**
      * Updates the position of the highlight.
      */
     protected void updateHighlight ()

@@ -45,9 +45,7 @@ public class TrainSprite extends MobileSprite
         _lastLastX = train.lastX;
         _lastLastY = train.lastY;
         
-        // unless we're the last car on the train, proceed immediately to the
-        // next car's update so that all cars move simultaneously
-        return train.isLast() && isMoving();
+        return isMoving();
     }
     
     @Override // documentation inherited
@@ -105,12 +103,6 @@ public class TrainSprite extends MobileSprite
         return new TrainPath(coords, durations, last);
     }
 
-    @Override // documentation inherited
-    protected void reorient ()
-    {
-        // don't do it; whatever the path left us at is good
-    }
-
     /** A special path class for trains that incorporates the previous and next
      * positions. */
     protected class TrainPath extends MoveUnitPath
@@ -126,15 +118,16 @@ public class TrainSprite extends MobileSprite
         @Override // documentation inherited
         public void update (float time)
         {
-            // bail out (without changing the position) after the first
-            // leg
+            // bail out after the first leg
             float naccum = _accum + time;
+            boolean completed = false;
             if (naccum > _durations[_current]) {
+                time += (_durations[_current] - naccum);
+                completed = true;
+            }
+            super.update(time);
+            if (completed) {
                 _sprite.pathCompleted();
-                return;
-
-            } else {
-                super.update(time);
             }
         }
     }

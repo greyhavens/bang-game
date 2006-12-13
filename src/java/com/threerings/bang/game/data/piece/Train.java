@@ -15,6 +15,7 @@ import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TrainSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Bonus;
 
 /**
@@ -107,6 +108,13 @@ public class Train extends Piece
     }
 
     @Override // documentation inherited
+    public Effect[] maybeInteract (BangObject bangobj, Piece other)
+    {
+        // don't punt bonuses here; we'll do it in the TrainDelegate
+        return NO_EFFECTS;
+    }
+    
+    @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new TrainSprite(type);
@@ -130,14 +138,6 @@ public class Train extends Piece
         return changed;
     }
 
-    /**
-     * Determines whether this is the last train in the sequence.
-     */
-    public boolean isLast ()
-    {
-        return type == CABOOSE || lastX == UNSET;
-    }
-    
     @Override // documentation inherited
     public String toString ()
     {
