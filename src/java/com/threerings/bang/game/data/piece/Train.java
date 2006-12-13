@@ -90,14 +90,6 @@ public class Train extends Piece
         return path;
     }
     
-    /**
-     * Returns the encoded coordinate for the location behind the train.
-     */
-    public int getCoordBehind ()
-    {
-        return coord(x + REV_X_MAP[orientation], y + REV_Y_MAP[orientation]);
-    }
-    
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {

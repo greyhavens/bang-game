@@ -3,6 +3,11 @@
 
 package com.threerings.bang.game.data.effect;
 
+import java.awt.Point;
+import java.awt.Rectangle;
+
+import java.util.ArrayList;
+
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.IntIntMap;
 
@@ -10,21 +15,34 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Train;
 import com.threerings.bang.game.client.EffectHandler;
 import com.threerings.bang.game.client.CollisionHandler;
 
 import static com.threerings.bang.Log.log;
 
 /**
- * Communicates that a unit was hit by a train.
+ * Communicates that a train moved, and possibly hit a unit.
  */
 public class TrainEffect extends Effect
 {
+    /** The ids of the train pieces. */
+    public int[] pieceIds;
+    
+    /** The new location of the head of the train. */
+    public short nx, ny;
+    
+    /** The old location of the tail of the train. */
+    public short ox, oy;
+    
+    /** A new car to add at the end of the train, or <code>null</code> for none. */
+    public Train ntail;
+    
     /** The piece id of the target. */
     public int targetId;
 
     /** The x and y coordinates to which the target was pushed. */
-    public short x, y;
+    public short pushX, pushY;
     
     /** The target's death effect, if it died. */
     public Effect deathEffect;
@@ -35,25 +53,49 @@ public class TrainEffect extends Effect
     }
     
     /**
-     * Constructor used when creating a new train effect.
-     *
-     * @param x the x coordinate to which the piece was pushed
-     * @param y the y coordinate to which the piece was pushed
+     * Constructor used when moving a train without a collision.
      */
-    public TrainEffect (Piece target, int x, int y)
+    public TrainEffect (ArrayList<Train> pieces, int nx, int ny)
     {
-        targetId = target.pieceId;
-        this.x = (short)x;
-        this.y = (short)y;
+        this(pieces, nx, ny, null, null);
+    }
+    
+    /**
+     * Constructor used when moving a train and colliding with a unit.
+     */
+    public TrainEffect (
+        ArrayList<Train> pieces, int nx, int ny, Piece target, Point push)
+    {
+        pieceIds = new int[pieces.size()];
+        for (int ii = 0; ii < pieceIds.length; ii++) {
+            pieceIds[ii] = pieces.get(ii).pieceId;
+        }
+        this.nx = (short)nx;
+        this.ny = (short)ny;
+        if (target != null) {
+            targetId = target.pieceId;
+            this.pushX = (short)push.x;
+            this.pushY = (short)push.y;
+        }
     }
 
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
-        if (deathEffect == null) {
-            return new int[] { targetId };
+        if (targetId > 0) {
+            if (deathEffect == null) {
+                return ArrayUtil.append(pieceIds, targetId);
+            } else {
+                int[] deathIds = deathEffect.getAffectedPieces();
+                int[] ids = new int[pieceIds.length + 1 + deathIds.length];
+                System.arraycopy(pieceIds, 0, ids, 0, pieceIds.length);
+                System.arraycopy(deathIds, 0, ids, pieceIds.length, deathIds.length);
+                ids[pieceIds.length + deathIds.length] = targetId;
+                return ids;
+            }
+        } else {
+            return pieceIds;
         }
-        return ArrayUtil.append(deathEffect.getAffectedPieces(), targetId);
     }
 
     @Override // documentation inherited
@@ -63,8 +105,21 @@ public class TrainEffect extends Effect
     }
     
     @Override // documentation inherited
+    public Rectangle[] getBounds (BangObject bangobj)
+    {
+        Rectangle[] rects = new Rectangle[] {
+            new Rectangle(ox, oy, 1, 1), new Rectangle(nx, ny, 1, 1)
+        };
+        if (targetId > 0) {
+            rects = ArrayUtil.append(rects, new Rectangle(pushX, pushY));
+        }
+        return rects;
+    }
+    
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
+        // prepare the target and its death effect
         Piece target = bangobj.pieces.get(targetId);
         if (target != null) {
             int damage = Math.min(100, target.damage + COLLISION_DAMAGE);
@@ -75,33 +130,77 @@ public class TrainEffect extends Effect
                     deathEffect.prepare(bangobj, dammap);
                 }
             }
+        }
+        
+        // find the current location of the last piece
+        Train last = (Train)bangobj.pieces.get(pieceIds[pieceIds.length - 1]);
+        if (last != null) {
+            ox = last.x;
+            oy = last.y;
         } else {
-            log.warning("Train effect missing target [id=" + targetId + "].");
+            log.warning("Missing last train piece [pieceId=" +
+                pieceIds[pieceIds.length - 1] + "].");
         }
     }
     
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
-        if (deathEffect != null) {
-            deathEffect.apply(bangobj, obs);
+        // handle the collision, if any
+        if (targetId > 0) {
+            if (deathEffect != null) {
+                deathEffect.apply(bangobj, obs);
+            }
+            Piece target = bangobj.pieces.get(targetId);
+            _wasAlive = (target != null) && target.isAlive();
+            collide(bangobj, obs, -1, -1, targetId, COLLISION_DAMAGE, pushX, pushY,
+                    ShotEffect.DAMAGED);
         }
-        Piece target = bangobj.pieces.get(targetId);
-        _wasAlive = (target != null) && target.isAlive();
-        return collide(bangobj, obs, -1, -1, targetId, COLLISION_DAMAGE,
-                       x, y, ShotEffect.DAMAGED);
+        
+        // move the first train, if it has anywhere to go
+        Train first = (Train)bangobj.pieces.get(pieceIds[0]);
+        if (first == null) {
+            log.warning("Missing first train piece [pieceId=" + pieceIds[0] + "].");
+            return false;
+        }
+        if (nx == Train.UNSET) {
+            removeAndReport(bangobj, first, obs);
+            first.position(Train.UNSET, Train.UNSET); // suck the rest in 
+        } else if (first.nextX == nx && first.nextY == ny) {
+            return true; // not going anywhere
+        } else {
+            moveAndReport(bangobj, first, nx, ny, obs, true);
+        }
+        
+        // the rest of the train simply follows the first
+        Train last = first;
+        for (int ii = 1; ii < pieceIds.length; ii++) {
+            Train train = (Train)bangobj.pieces.get(pieceIds[ii]);
+            if (train == null) {
+                log.warning("Missing train piece [pieceId=" + pieceIds[ii] + "].");
+                return false;
+            }
+            moveAndReport(bangobj, train, last.x, last.y, obs, true);
+            last = train;
+        }
+        
+        // add the new tail piece, if there is one
+        if (ntail != null) {
+            addAndReport(bangobj, ntail, obs);
+        }
+        return true;
     }
 
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
-        return new CollisionHandler(COLLISION_DAMAGE);
+        return (targetId > 0) ? new CollisionHandler(COLLISION_DAMAGE) : new EffectHandler();
     }
     
     @Override // documentation inherited
     public int getBaseDamage (Piece piece)
     {
-        return COLLISION_DAMAGE;
+        return (targetId > 0) ? COLLISION_DAMAGE : 0;
     }
     
     @Override // documentation inherited

@@ -758,6 +758,9 @@ public class BangBoard extends SimpleStreamableObject
      */
     public void clearShadow (Piece piece)
     {
+        if (!_playarea.contains(piece.x, piece.y)) {
+            return;
+        }
         int pos = _width*piece.y+piece.x;
         if (piece instanceof Bonus && _tstate[pos] >= 0) {
             // we may clear a bonus after a piece has moved into place to pick
