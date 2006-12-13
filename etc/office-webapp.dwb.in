@@ -10,8 +10,8 @@
     Description Sheriff's Office web application
     # Maintainer Scripts
     # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
-    PreInstall      @SCRIPTPATH@/webapp-preinst
-    PostInstall     @SCRIPTPATH@/webapp-postinst
+    PreInstall      @SCRIPTPATH@/office-webapp-preinst
+    PostInstall     @SCRIPTPATH@/office-webapp-postinst
     # PreUninstall    path/to/preuninstall/script
     # PostUninstall   @SCRIPTPATH@/webapp-postrm
 

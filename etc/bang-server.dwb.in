@@ -10,8 +10,8 @@
     Description Rumble in the Wild West.
     # Maintainer Scripts
     # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
-    PreInstall      @SCRIPTPATH@/server-preinst
-    PostInstall     @SCRIPTPATH@/server-postinst
+    PreInstall      @SCRIPTPATH@/bang-server-preinst
+    PostInstall     @SCRIPTPATH@/bang-server-postinst
     # PreUninstall    path/to/preuninstall/script
-    PostUninstall   @SCRIPTPATH@/server-postrm
+    PostUninstall   @SCRIPTPATH@/bang-server-postrm
 </Package>
