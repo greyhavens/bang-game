@@ -357,8 +357,7 @@ public class SaloonManager extends PlaceManager
                 // go like the wind!
                 BangConfig config = match.createConfig();
                 try {
-                    BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
-                    mgr.setPriorLocation("saloon", _salobj.getOid());
+                    BangServer.plreg.createPlace(config);
                 } catch (Exception e) {
                     log.log(Level.WARNING, "Choked creating game " + config + ".", e);
                 }

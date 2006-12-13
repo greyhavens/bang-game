@@ -199,14 +199,6 @@ public class BangManager extends GameManager
     }
 
     /**
-     * Configures the prior location of the players in this game.
-     */
-    public void setPriorLocation (String ident, int placeOid)
-    {
-        _bangobj.setPriorLocation(new BangObject.PriorLocation(ident, placeOid));
-    }
-
-    /**
      * For game types that don't have variable sized teams, this returns the team size in effect
      * for all players. If you know what player you care about, use {@link #getTeamSize(int)}.
      */
@@ -1188,6 +1180,9 @@ public class BangManager extends GameManager
             // units to which they don't have access
             if (user != null && _bconfig.type == BangConfig.Type.SALOON) {
                 for (int ii = 0; ii < units.length; ii++) {
+                    if (units[ii] == null) {
+                        continue;
+                    }
                     UnitConfig config = units[ii].getConfig();
                     if (config != null && (config.scripCost < 0 || !config.hasAccess(user))) {
                         log.warning("Player requested to purchase illegal unit [who=" + user.who() +
@@ -1649,7 +1644,7 @@ public class BangManager extends GameManager
         if (user != null) {
             // if this was a tutorial practice session, and we played at least half of it, mark the
             // practice tutorial as completed
-            if (_bangobj.priorLocation.ident.equals("tutorial") &&
+            if (_bconfig.duration == BangConfig.Duration.PRACTICE &&
                 _bangobj.tick > _bangobj.duration/2) {
                 user.stats.addToSetStat(Stat.Type.TUTORIALS_COMPLETED,
                                         TutorialCodes.PRACTICE_PREFIX + _bconfig.getScenario(0));

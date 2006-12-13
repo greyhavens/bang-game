@@ -19,6 +19,7 @@ import com.threerings.bang.client.OptionsView;
 import com.threerings.bang.client.bui.TabbedPane;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
@@ -29,7 +30,7 @@ import com.threerings.bang.util.BangContext;
 public class InGameOptionsView extends BDecoratedWindow
     implements ActionListener
 {
-    public InGameOptionsView (BangContext ctx, BangObject bangobj)
+    public InGameOptionsView (BangContext ctx, BangObject bangobj, BangConfig config)
     {
         super(ctx.getStyleSheet(), null);
         setLayer(2);
@@ -70,9 +71,11 @@ public class InGameOptionsView extends BDecoratedWindow
         tabs.addTab(msgs.get("t.general"), cont);
 
         BContainer box = GroupLayout.makeHBox(GroupLayout.CENTER);
-        String from = bangobj.priorLocation.ident;
-        if (!"tutorial".equals(from)) {
-            box.add(new BButton(msgs.get("m.to_" + from), this, "to_prior"));
+        if (config.type != BangConfig.Type.TUTORIAL && 
+                config.duration != BangConfig.Duration.PRACTICE) {
+            box.add(new BButton(
+                        msgs.get("m.to_" + _ctx.getBangClient().getPriorLocationIdent()),
+                        this, "to_prior"));
         }
         box.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
         box.add(new BButton(msgs.get("m.resume"), this, "dismiss"));
@@ -90,7 +93,10 @@ public class InGameOptionsView extends BDecoratedWindow
             }
 
         } else if ("to_prior".equals(action)) {
-            _ctx.getLocationDirector().moveTo(_bangobj.priorLocation.placeOid);
+            if (_ctx.getLocationDirector().moveTo(
+                        _ctx.getBangClient().getPriorLocationOid())) {
+                _ctx.getBangClient().clearPopup(this, true);
+            }
 
         } else if ("dismiss".equals(action)) {
             _ctx.getBangClient().clearPopup(this, true);

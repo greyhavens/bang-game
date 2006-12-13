@@ -270,10 +270,8 @@ public class GameOverView extends SteelWindow
 
         // add some buttons at the bottom
         _buttons.add(new BButton(msgs.get("m.view_stats"), this, "stats"));
-        // watchers don't get to go back to parlors because they may not have come from there and
-        // may not have been invited
-        String from = _bobj.priorLocation.ident;
-        if (pidx >= -1 || !"parlor".equals(from)) {
+        if (_bctx != null) {
+            String from = _bctx.getBangClient().getPriorLocationIdent();
             _buttons.add(new BButton(msgs.get("m.to_" + from), this, "to_" + from));
         }
         _buttons.add(new BButton(msgs.get("m.to_town"), this, "to_town"));
@@ -295,7 +293,7 @@ public class GameOverView extends SteelWindow
                     new PickTutorialView(_bctx, PickTutorialView.Mode.COMPLETED), true);
 
             } else {
-                _bctx.getLocationDirector().moveTo(_bobj.priorLocation.placeOid);
+                _bctx.getLocationDirector().moveTo(_bctx.getBangClient().getPriorLocationOid());
             }
 
         } else if (action.equals("stats")) {

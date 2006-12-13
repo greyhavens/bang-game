@@ -18,6 +18,7 @@ import com.jme.scene.state.RenderState;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Interval;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.Path;
@@ -482,7 +483,7 @@ public class EffectHandler extends BoardView.BoardAction
     {
         effect.apply(_bangobj, this);
         String desc = effect.getDescription(_bangobj, _pidx);
-        if (desc != null) {
+        if (!StringUtil.isBlank(desc)) {
             _ctx.getChatDirector().displayInfo(GameCodes.GAME_MSGS, desc);
         }
     }

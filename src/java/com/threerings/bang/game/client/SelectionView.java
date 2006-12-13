@@ -381,8 +381,7 @@ public class SelectionView extends SteelWindow
             // otherwise resign them and return from whence they came
             } else {
                 _view.clearOverlay();
-                _ctx.getLocationDirector().moveTo(
-                    _bangobj.priorLocation.placeOid);
+                _ctx.getLocationDirector().moveTo(_ctx.getBangClient().getPriorLocationOid());
                 // wait five seconds for them to get back to whether they came
                 // and then send them a chat message explaining what happened
                 new Interval(_ctx.getApp()) {

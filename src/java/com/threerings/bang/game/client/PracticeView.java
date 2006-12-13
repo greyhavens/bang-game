@@ -38,7 +38,7 @@ public class PracticeView extends BWindow
     {
         String action = event.getAction();
         if ("end_practice".equals(action)) {
-            _ctx.getLocationDirector().moveTo(_bangobj.priorLocation.placeOid);
+            _ctx.getLocationDirector().moveTo(_ctx.getBangClient().getPriorLocationOid());
         }
     }
 

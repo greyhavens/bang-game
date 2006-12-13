@@ -72,8 +72,7 @@ public class OfficeManager extends PlaceManager
         }
 
         try {
-            BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
-            mgr.setPriorLocation("office", _offobj.getOid());
+            BangServer.plreg.createPlace(config);
 
         } catch (InstantiationException ie) {
             log.log(Level.WARNING, "Error instantiating bounty game [for=" + player.who() +

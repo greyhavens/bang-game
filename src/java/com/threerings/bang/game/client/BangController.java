@@ -260,7 +260,7 @@ public class BangController extends GameController
             return;
         }
         if (_options == null) {
-            _options = new InGameOptionsView(_ctx, _bangobj);
+            _options = new InGameOptionsView(_ctx, _bangobj, _config);
         }
         if (_options.isAdded()) {
             _ctx.getBangClient().clearPopup(_options, true);

@@ -403,7 +403,6 @@ public class ParlorManager extends PlaceManager
             PlaceObject gameobj = mgr.getPlaceObject();
             _activeGames.add(gameobj.getOid());
             gameobj.addListener(_gameOverListener);
-            mgr.setPriorLocation("parlor", _parobj.getOid());
         } catch (Exception e) {
             log.log(Level.WARNING, "Choked creating game " + config + ".", e);
         }

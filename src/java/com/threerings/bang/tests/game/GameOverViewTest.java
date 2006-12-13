@@ -69,7 +69,6 @@ public class GameOverViewTest extends TestApp
             { 155, 155, 155, 155 }
         };
         bangobj.state = BangObject.GAME_OVER;
-        bangobj.priorLocation = new BangObject.PriorLocation("saloon", 0);
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
             bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;

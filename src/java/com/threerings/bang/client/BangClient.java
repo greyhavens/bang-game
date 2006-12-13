@@ -54,10 +54,13 @@ import com.threerings.crowd.chat.client.CurseFilter;
 import com.threerings.crowd.chat.client.MuteDirector;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.client.BodyService;
+import com.threerings.crowd.client.LocationAdapter;
 import com.threerings.crowd.client.PlaceView;
+import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.ranch.client.FirstBigShotView;
+import com.threerings.bang.ranch.data.RanchObject;
 
 import com.threerings.bang.chat.client.BangChatDirector;
 import com.threerings.bang.chat.client.PardnerChatView;
@@ -65,7 +68,13 @@ import com.threerings.bang.chat.client.SystemChatView;
 
 import com.threerings.bang.game.client.BangView;
 import com.threerings.bang.game.client.effect.ParticlePool;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
+
+import com.threerings.bang.bounty.data.OfficeObject;
+import com.threerings.bang.gang.data.HideoutObject;
+import com.threerings.bang.saloon.data.ParlorObject;
+import com.threerings.bang.saloon.data.SaloonObject;
 
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.util.BoardCache;
@@ -329,6 +338,22 @@ public class BangClient extends BasicClient
             _status = new StatusView(_ctx);
         }
         return _status;
+    }
+
+    /**
+     * Returns the prior location identifier.
+     */
+    public String getPriorLocationIdent ()
+    {
+        return _priorLocationIdent;
+    }
+
+    /**
+     * Returns the prior location oid.
+     */
+    public int getPriorLocationOid ()
+    {
+        return _priorLocationOid;
     }
 
     /**
@@ -737,6 +762,12 @@ public class BangClient extends BasicClient
         // listen for notifications to pop up
         client.getClientObject().addListener(_nlistener);
 
+        // listen to location changes so we know where we're coming from
+        BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
+        _ctx.getLocationDirector().addLocationObserver(_priorLocationObserver);
+        _priorLocationIdent = "saloon";
+        _priorLocationOid = bbd.saloonOid;
+
         // developers can jump right into a tutorial or game
         if (!StringUtil.isBlank(System.getProperty("test"))) {
             startTestGame(false);
@@ -760,7 +791,7 @@ public class BangClient extends BasicClient
         }
 
         // go somewhere if we were asked to do so
-        int shopOid = ((BangBootstrapData)_ctx.getClient().getBootstrapData()).getPlaceOid(where);
+        int shopOid = bbd.getPlaceOid(where);
         if (shopOid != -1) {
             _ctx.getLocationDirector().moveTo(shopOid);
             return;
@@ -1181,6 +1212,34 @@ public class BangClient extends BasicClient
         }
     }
 
+    protected LocationAdapter _priorLocationObserver =
+        new LocationAdapter() {
+        public void locationDidChange (PlaceObject place) {
+            if (place instanceof SaloonObject) {
+                _priorLocationIdent = "saloon";
+            } else if (place instanceof ParlorObject) {
+                _priorLocationIdent = "parlor";
+            } else if (place instanceof OfficeObject) {
+                _priorLocationIdent = "office";
+            } else if (place instanceof RanchObject) {
+                _priorLocationIdent = "ranch";
+            } else if (place instanceof HideoutObject) {
+                _priorLocationIdent = "hideout";
+            } else if (place instanceof BangObject) {
+                return;
+            } else {
+                _priorLocationIdent = null;
+            }
+            if (_priorLocationIdent != null) {
+                _priorLocationOid = place.getOid();
+            } else {
+                _priorLocationIdent = "saloon";
+                _priorLocationOid = 
+                    ((BangBootstrapData)_ctx.getClient().getBootstrapData()).saloonOid;
+            }
+        }
+    };
+
     protected GlobalKeyManager.Command _clearPopup =
         new GlobalKeyManager.Command() {
         public void invoke (int keyCode, int modifiers) {
@@ -1227,6 +1286,8 @@ public class BangClient extends BasicClient
     protected OggFileStream _mstream;
     protected boolean _playedIntro;
     protected boolean _viewTransition = false;
+    protected String _priorLocationIdent;
+    protected int _priorLocationOid;
 
     /** The time in milliseconds after which we log off an idle user. */
     protected static final long LOGOFF_DELAY = 8L * 60L * 1000L;

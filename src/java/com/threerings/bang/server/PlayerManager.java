@@ -393,7 +393,7 @@ public class PlayerManager
             config.type = BangConfig.Type.TUTORIAL;
         }
 
-        playComputer(player, config, false, new BangObject.PriorLocation("tutorial", 0));
+        playComputer(player, config, false);
     }
 
     // documentation inherited from interface PlayerProvider
@@ -415,8 +415,7 @@ public class PlayerManager
         config.ais = new BangAI[2];
         config.init(2, 2);
         config.addRound(unit, PracticeInfo.getBoardName(ServerConfig.townId), null);
-        playComputer(player, config, false, new BangObject.PriorLocation(
-                         "ranch", BangServer.ranchmgr.getPlaceObject().getOid()));
+        playComputer(player, config, false);
     }
 
     // documentation inherited from interface PlayerProvider
@@ -454,9 +453,7 @@ public class PlayerManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        playComputer(player, players, scenarios, board, autoplay,
-                     new BangObject.PriorLocation(
-                         "saloon", BangServer.saloonmgr.getPlaceObject().getOid()));
+        playComputer(player, players, scenarios, board, autoplay);
     }
 
     // from interface PlayerProvider
@@ -627,8 +624,8 @@ public class PlayerManager
     /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
-    protected void playComputer (PlayerObject player, int players, String[] scenarios, String board,
-                                 boolean autoplay, BangObject.PriorLocation priorLocation)
+    protected void playComputer (
+            PlayerObject player, int players, String[] scenarios, String board, boolean autoplay)
         throws InvocationException
     {
         // create a game configuration from that
@@ -640,14 +637,13 @@ public class PlayerManager
         for (String scenId : scenarios) {
             config.addRound(scenId, board, null);
         }
-        playComputer(player, config, autoplay, priorLocation);
+        playComputer(player, config, autoplay);
     }
 
     /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
-    protected void playComputer (PlayerObject player, BangConfig config, boolean autoplay,
-                                 BangObject.PriorLocation priorLocation)
+    protected void playComputer (PlayerObject player, BangConfig config, boolean autoplay)
         throws InvocationException
     {
         HashSet<String> names = new HashSet<String>();
@@ -666,11 +662,6 @@ public class PlayerManager
         try {
             BangManager mgr = (BangManager)BangServer.plreg.createPlace(config);
             BangObject bangobj = (BangObject)mgr.getPlaceObject();
-
-            // configure a prior location if one was provided
-            if (priorLocation != null) {
-                bangobj.setPriorLocation(priorLocation);
-            }
 
             // if this is an autoplay game, fake a game ready notification
             if (autoplay) {

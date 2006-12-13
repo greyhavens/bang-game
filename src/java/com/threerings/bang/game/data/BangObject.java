@@ -99,32 +99,9 @@ public class BangObject extends GameObject
         public int[] avatar;
     }
 
-    /** Used to keep track of where players were before the game. */
-    public static class PriorLocation implements Streamable
-    {
-        /** Either "saloon", "ranch", "parlor", "office" or "tutorial". */
-        public String ident;
-
-        /** If ident is "parlor" the room oid of the parlor otherwise zero. */
-        public int placeOid;
-
-        /** Default constructor used for unserialization. */
-        public PriorLocation () {
-        }
-
-        /** Creates a prior location representing an actual location. */
-        public PriorLocation (String ident, int placeOid) {
-            this.ident = ident;
-            this.placeOid = placeOid;
-        }
-    }
-
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>playerInfo</code> field. */
     public static final String PLAYER_INFO = "playerInfo";
-
-    /** The field name of the <code>priorLocation</code> field. */
-    public static final String PRIOR_LOCATION = "priorLocation";
 
     /** The field name of the <code>stats</code> field. */
     public static final String STATS = "stats";
@@ -230,10 +207,6 @@ public class BangObject extends GameObject
      * We need these in case the player leaves early and so that we can provide
      * fake info for AIs. */
     public PlayerInfo[] playerInfo;
-
-    /** Contains the prior location of the players in this game. Defaults to
-     * the saloon. */
-    public PriorLocation priorLocation;
 
     /** This value is set at the end of every round, to inform the players
      * of various interesting statistics. */
@@ -749,22 +722,6 @@ public class BangObject extends GameObject
         requestElementUpdate(
             PLAYER_INFO, index, value, ovalue);
         this.playerInfo[index] = value;
-    }
-
-    /**
-     * Requests that the <code>priorLocation</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setPriorLocation (BangObject.PriorLocation value)
-    {
-        BangObject.PriorLocation ovalue = this.priorLocation;
-        requestAttributeChange(
-            PRIOR_LOCATION, value, ovalue);
-        this.priorLocation = value;
     }
 
     /**
