@@ -19,6 +19,9 @@ LOG_EMAIL=bang-logs@DOMAIN
 STATS_EMAIL=bang-stats@DOMAIN
 LOGLEVEL=info
 
+# The node name for this server instance. frontier_town, indian_post etc.
+NODE=frontier_town
+
 # The user as which we run Jetty
 JETTY_USER=bang
 
