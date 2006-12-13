@@ -27,30 +27,29 @@
   <property name="bin.list"  value="${bin.list1},${bin.list2}"/>
 
   <!-- declare the libraries needed by the Bang runtime -->
-  <fileset dir="." id="dist.libs">
-    <include name="${extlib.dir}/ant.jar"/>
-    <include name="${extlib.dir}/ant-nodeps.jar"/>
-    <include name="${extlib.dir}/ant-contrib.jar"/>
-    <include name="${extlib.dir}/commons-beanutils.jar"/>
-    <include name="${extlib.dir}/commons-collections.jar"/>
-    <include name="${extlib.dir}/commons-digester.jar"/>
-    <include name="${extlib.dir}/commons-io.jar"/>
-    <include name="${extlib.dir}/commons-lang.jar"/>
-    <include name="${extlib.dir}/commons-logging.jar"/>
-    <include name="${extlib.dir}/getdown.jar"/>
-    <include name="${extlib.dir}/junit-3.7.jar"/>
-    <include name="${extlib.dir}/mysql-connector-java-3.1.12-bin.jar"/>
-    <include name="${extlib.dir}/proguard.jar"/>
-    <include name="${extlib.dir}/servlet-2.3.jar"/>
-    <include name="${extlib.dir}/velocity-1.5-dev.jar"/>
-    <include name="${extlib.dir}/mail.jar"/>
-    <include name="${project.dir}/narya/dist/narya-tools.jar"/>
-    <include name="lib/lwjgl.jar"/>
-    <include name="lib/lwjgl_util.jar"/>
-    <include name="lib/jorbis-0.0.12.jar"/>
-    <include name="lib/jogg-0.0.5.jar"/>
-    <include name="lib/hemiptera.jar"/>
-  </fileset>
+  <filelist dir="." id="dist.libs">
+    <file name="${extlib.dir}/ant.jar"/>
+    <file name="${extlib.dir}/ant-nodeps.jar"/>
+    <file name="${extlib.dir}/ant-contrib.jar"/>
+    <file name="${extlib.dir}/commons-beanutils.jar"/>
+    <file name="${extlib.dir}/commons-collections.jar"/>
+    <file name="${extlib.dir}/commons-digester.jar"/>
+    <file name="${extlib.dir}/commons-io.jar"/>
+    <file name="${extlib.dir}/commons-lang.jar"/>
+    <file name="${extlib.dir}/commons-logging.jar"/>
+    <file name="${extlib.dir}/getdown.jar"/>
+    <file name="${extlib.dir}/junit-3.7.jar"/>
+    <file name="${extlib.dir}/mysql-connector-java-3.1.12-bin.jar"/>
+    <file name="${extlib.dir}/proguard.jar"/>
+    <file name="${extlib.dir}/servlet-2.3.jar"/>
+    <file name="${extlib.dir}/velocity-1.5-dev.jar"/>
+    <file name="${extlib.dir}/mail.jar"/>
+    <file name="lib/lwjgl.jar"/>
+    <file name="lib/lwjgl_util.jar"/>
+    <file name="lib/jorbis-0.0.12.jar"/>
+    <file name="lib/jogg-0.0.5.jar"/>
+    <file name="lib/hemiptera.jar"/>
+  </filelist>
 
   <!-- declare our classpath -->
   <path id="classpath">
