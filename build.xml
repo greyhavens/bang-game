@@ -568,30 +568,30 @@
 
   <!-- prepare ${destroot} for all the packages being built -->
   <target name="preppkg">
-    <antcall target="prepare-server"/>
+    <antcallback target="prepare-server" return="pkg.base"/>
     <antcall target="prepare-server-extra"/>
     <antcall target="prepare-webapps"/>
     <antcall target="prepare-pages"/>
   </target>
 
-  <!-- install project specific server code into ${destroot.server} -->
+  <!-- install project specific server code into ${pkg.base} -->
   <target name="prepare-server-extra">
-    <copy todir="${destroot.server}/rsrc">
+    <copy todir="${pkg.base}/rsrc">
       <fileset dir="rsrc">
         <include name="**/*.jar"/>
         <include name="**/*.board"/>
       </fileset>
     </copy>
-    <copy file="log/README" todir="${destroot.server}/log"/>
-    <copy file="build.xml" todir="${destroot.server}"/>
+    <copy file="log/README" todir="${pkg.base}/log"/>
+    <copy file="build.xml" todir="${pkg.base}"/>
     <copy file="rsrc/config/resource/manager.properties"
-          todir="${destroot.server}/rsrc/config/resource/"/>
-    <copy file="${tools.dir}/etc/build-support.xml" todir="${destroot.server}/${tools.dir}/etc"/>
+          todir="${pkg.base}/rsrc/config/resource/"/>
+    <copy file="${tools.dir}/etc/build-support.xml" todir="${pkg.base}/${tools.dir}/etc"/>
     <antcall target="copywithperms">
       <param name="copy.perms" value="755"/>
       <param name="copy.src"   value="${tools.dir}/bin"/>
       <param name="copy.list"  value="lfilter,filter_interesting,sum_invokers"/>
-      <param name="copy.dest"  value="${destroot.server}/${tools.dir}/bin"/>
+      <param name="copy.dest"  value="${pkg.base}/${tools.dir}/bin"/>
     </antcall>
   </target>
 
