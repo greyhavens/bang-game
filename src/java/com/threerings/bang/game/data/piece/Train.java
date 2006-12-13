@@ -54,7 +54,7 @@ public class Train extends Piece
     public short nextX, nextY;
 
     /** The connected track group on which this train lies. */
-    public transient int group;
+    public int group;
     
     /** The path being followed by the train, if any. */
     public transient List<Point> path;
