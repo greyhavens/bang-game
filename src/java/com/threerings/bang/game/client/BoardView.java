@@ -348,6 +348,9 @@ public class BoardView extends BComponent
         // remove any old sprites
         removePieceSprites();
 
+        // reset the sound effects
+        _sounds.reclaimAll();
+
         // start afresh
         _board = _bangobj.board;
         _board.shadowPieces(_bangobj.getPropPieceIterator());
