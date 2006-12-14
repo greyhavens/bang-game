@@ -16,6 +16,11 @@ fi
 # Read in our configuration
 . $BANG_HOME/server.conf
 
+# Override NODE if passed on the command line
+if [ ! -z "$2" ]; then
+    NODE=$2
+fi
+
 DAEMON=$BANG_HOME/bin/bangrespawn
 PIDFILE=/var/run/bang-$NODE.pid
 LOGFILE=/tmp/bang-$NODE.log
