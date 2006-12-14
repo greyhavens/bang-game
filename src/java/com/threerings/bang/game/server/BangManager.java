@@ -454,8 +454,14 @@ public class BangManager extends GameManager
         PlayerObject user = (PlayerObject)caller;
         int pidx = _bangobj.getPlayerIndex(user.handle);
 
+        // if this is an all ai game, just do whatever the player is ready for
+        if (_bconfig.allPlayersAIs()) {
+            _bangobj.state = state;
+            checkStartNextPhase();
+            return;
+
         // if they're not an active player, ignore them
-        if (!isActivePlayer(pidx)) {
+        } else if (!isActivePlayer(pidx)) {
             return;
         }
 
