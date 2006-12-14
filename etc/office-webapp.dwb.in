@@ -12,7 +12,7 @@
     # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
     PreInstall      @SCRIPTPATH@/office-webapp-preinst
     PostInstall     @SCRIPTPATH@/office-webapp-postinst
-    # PreUninstall    path/to/preuninstall/script
+    PreUninstall    @SCRIPTPATH@/office-webapp-prerm
     # PostUninstall   @SCRIPTPATH@/webapp-postrm
 
     # log/ and run/ need special permissions
