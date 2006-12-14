@@ -23,6 +23,12 @@ public class GangRecord
     /** The date upon which the gang was founded. */
     public Timestamp founded;
 
+    /** The gang's statement. */
+    public String statement;
+    
+    /** The gang's home page. */
+    public String url;
+    
     /** The gang's accumulated notoriety points. */
     public int notoriety;
 
@@ -45,6 +51,7 @@ public class GangRecord
     public GangRecord (String name)
     {
         this.name = name;
+        members = new ArrayList<GangMemberEntry>();
     }
 
     /** Used when forming queries. */

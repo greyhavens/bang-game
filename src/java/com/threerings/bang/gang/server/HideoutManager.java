@@ -3,7 +3,12 @@
 
 package com.threerings.bang.gang.server;
 
+import java.util.ArrayList;
+
+import com.samskivert.util.ResultListener;
+
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
@@ -19,6 +24,7 @@ import com.threerings.bang.avatar.server.BarberManager;
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangCodes;
+import com.threerings.bang.gang.data.GangEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutMarshaller;
@@ -58,7 +64,17 @@ public class HideoutManager extends PlaceManager
         
         // form the name and start up the financial action
         BangServer.gangmgr.formGang(
-            user, new Handle(root + " " + suffix), listener);
+            user, new Handle(root + " " + suffix), new ResultListener<GangEntry>() {
+                public void requestCompleted (GangEntry result) {
+                    _hobj.addToGangs(result);
+                    listener.requestProcessed();
+                }
+                public void requestFailed (Exception cause) {
+                    log.warning("Failed to create new gang [who=" + user.who() + ", error=" +
+                        cause + "].");
+                    listener.requestFailed(INTERNAL_ERROR);
+                }
+            });
     }
 
     // documentation inherited from interface HideoutProvider
@@ -266,6 +282,16 @@ public class HideoutManager extends PlaceManager
         _hobj.setService(
             (HideoutMarshaller)BangServer.invmgr.registerDispatcher(
                 new HideoutDispatcher(this), false));
+    
+        // load up the gangs for the directory
+        BangServer.gangmgr.loadGangs(new ResultListener<ArrayList<GangEntry>>() {
+            public void requestCompleted (ArrayList<GangEntry> result) {
+                _hobj.setGangs(new DSet<GangEntry>(result.iterator()));
+            }
+            public void requestFailed (Exception cause) {
+                log.warning("Failed to load gang list [error=" + cause + "].");
+            }
+        });
     }
 
     protected HideoutObject _hobj;

@@ -32,11 +32,20 @@ public class GangObject extends DObject
     /** The field name of the <code>founded</code> field. */
     public static final String FOUNDED = "founded";
 
+    /** The field name of the <code>statement</code> field. */
+    public static final String STATEMENT = "statement";
+
+    /** The field name of the <code>url</code> field. */
+    public static final String URL = "url";
+
     /** The field name of the <code>scrip</code> field. */
     public static final String SCRIP = "scrip";
 
     /** The field name of the <code>coins</code> field. */
     public static final String COINS = "coins";
+
+    /** The field name of the <code>notoriety</code> field. */
+    public static final String NOTORIETY = "notoriety";
 
     /** The field name of the <code>members</code> field. */
     public static final String MEMBERS = "members";
@@ -57,11 +66,20 @@ public class GangObject extends DObject
     /** The day on which this gang was founded. */
     public long founded;
     
+    /** The gang's statement. */
+    public String statement;
+    
+    /** The gang's URL. */
+    public String url;
+    
     /** The amount of scrip in the gang's coffers. */
     public int scrip;
     
     /** The number of coins in the gang's coffers. */
     public int coins;
+    
+    /** The gang's total notoriety. */
+    public int notoriety;
     
     /** Contains a {@link GangMemberInfo} for each member of this gang. */
     public DSet<GangMemberEntry> members = new DSet<GangMemberEntry>();
@@ -69,30 +87,10 @@ public class GangObject extends DObject
     /** Contains info on the top-ranked members by various criterion. */
     public DSet<TopRankedList> topRanked = new DSet<TopRankedList>();
     
-    /**
-     * Returns the number of gang members currently online.  When there are no
-     * more online members, the gang object is destroyed.
-     */
-    public int getOnlineMemberCount ()
-    {
-        int count = 0;
-        for (GangMemberEntry entry : members) {
-            if (entry.isOnline()) {
-                count++;
-            }
-        }
-        return count;
-    }
-    
     // documentation inherited from interface SpeakObject
     public void applyToListeners (ListenerOp op)
     {
-        // TODO: perhaps limit this to members in the hideout?
-        for (GangMemberEntry entry : members) {
-            if (entry.isOnline()) {
-                op.apply(entry.handle);
-            }
-        }
+        // no-op
     }
     
     // documentation inherited from interface TopRankObject
@@ -167,6 +165,38 @@ public class GangObject extends DObject
     }
 
     /**
+     * Requests that the <code>statement</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setStatement (String value)
+    {
+        String ovalue = this.statement;
+        requestAttributeChange(
+            STATEMENT, value, ovalue);
+        this.statement = value;
+    }
+
+    /**
+     * Requests that the <code>url</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setUrl (String value)
+    {
+        String ovalue = this.url;
+        requestAttributeChange(
+            URL, value, ovalue);
+        this.url = value;
+    }
+
+    /**
      * Requests that the <code>scrip</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
@@ -196,6 +226,22 @@ public class GangObject extends DObject
         requestAttributeChange(
             COINS, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.coins = value;
+    }
+
+    /**
+     * Requests that the <code>notoriety</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setNotoriety (int value)
+    {
+        int ovalue = this.notoriety;
+        requestAttributeChange(
+            NOTORIETY, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.notoriety = value;
     }
 
     /**

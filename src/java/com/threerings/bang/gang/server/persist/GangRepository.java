@@ -32,6 +32,7 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.server.BangServer;
 
 import com.threerings.bang.gang.data.GangCodes;
+import com.threerings.bang.gang.data.GangEntry;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HistoryEntry;
@@ -64,6 +65,34 @@ public class GangRepository extends JORARepository
         _playerIdMask.setModified("playerId");
     }
 
+    /**
+     * Loads directory entries for all active gangs.
+     */
+    public ArrayList<GangEntry> loadGangs ()
+        throws PersistenceException
+    {
+        final ArrayList<GangEntry> list = new ArrayList<GangEntry>();
+        final String query = "select NAME from GANGS";
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        list.add(new GangEntry(new Handle(rs.getString(1))));
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+        return list;
+    }
+    
     /**
      * Loads up the gang record associated with the specified id.  Returns null if no matching
      * record could be found.
@@ -350,8 +379,8 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         final ArrayList<GangMemberEntry> list = new ArrayList<GangMemberEntry>();
-        final String query = "select GANG_MEMBERS.PLAYER_ID, HANDLE, RANK, " +
-            "JOINED, LAST_SESSION from GANG_MEMBERS, PLAYERS " +
+        final String query = "select HANDLE, GANG_MEMBERS.PLAYER_ID, RANK, " +
+            "JOINED, NOTORIETY from GANG_MEMBERS, PLAYERS " +
             "where GANG_MEMBERS.PLAYER_ID = PLAYERS.PLAYER_ID and GANG_ID = " + gangId;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
@@ -362,8 +391,8 @@ public class GangRepository extends JORARepository
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
                         list.add(new GangMemberEntry(
-                            rs.getInt(1), new Handle(rs.getString(2)),
-                            rs.getByte(3), rs.getTimestamp(4), rs.getTimestamp(5)));
+                            new Handle(rs.getString(1)), rs.getInt(2),
+                            rs.getByte(3), rs.getTimestamp(4), rs.getInt(5)));
                     }
                     return null;
 
@@ -383,6 +412,8 @@ public class GangRepository extends JORARepository
             "GANG_ID INTEGER NOT NULL AUTO_INCREMENT",
             "NAME VARCHAR(64) NOT NULL",
             "FOUNDED DATETIME NOT NULL",
+            "STATEMENT TEXT NOT NULL",
+            "URL VARCHAR(255) NOT NULL",
             "NOTORIETY INTEGER NOT NULL",
             "SCRIP INTEGER NOT NULL",
             "COINS INTEGER NOT NULL",
@@ -392,17 +423,9 @@ public class GangRepository extends JORARepository
             "UNIQUE (NAME)",
         }, "");
 
-        // TEMP: change brand/outfit column types
-        if (!JDBCUtil.isColumnNullable(conn, "GANGS", "BRAND")) {
-            JDBCUtil.changeColumn(conn, "GANGS",
-                "BRAND", "BRAND BLOB");
-            JDBCUtil.changeColumn(conn, "GANGS",
-                "OUTFIT", "OUTFIT BLOB");
-        }
-        // END TEMP
-
-        // TEMP: add the notoriety column
-        JDBCUtil.addColumn(conn, "GANGS", "NOTORIETY", "INTEGER NOT NULL", "FOUNDED");
+        // TEMP: add the statement and url columns
+        JDBCUtil.addColumn(conn, "GANGS", "STATEMENT", "TEXT NOT NULL", "FOUNDED");
+        JDBCUtil.addColumn(conn, "GANGS", "URL", "VARCHAR(255) NOT NULL", "STATEMENT");
         // END TEMP
 
         JDBCUtil.createTableIfMissing(conn, "GANG_MEMBERS", new String[] {

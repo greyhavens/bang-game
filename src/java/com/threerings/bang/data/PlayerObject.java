@@ -46,6 +46,9 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>joinedGang</code> field. */
     public static final String JOINED_GANG = "joinedGang";
 
+    /** The field name of the <code>gangNotoriety</code> field. */
+    public static final String GANG_NOTORIETY = "gangNotoriety";
+
     /** The field name of the <code>inventory</code> field. */
     public static final String INVENTORY = "inventory";
 
@@ -112,6 +115,9 @@ public class PlayerObject extends BodyObject
     
     /** The date upon which the user joined the gang. */
     public long joinedGang;
+    
+    /** The amount of notoriety that the user has gained for his gang. */
+    public int gangNotoriety;
     
     /** Contains all items held by this user. */
     public DSet<Item> inventory;
@@ -458,6 +464,22 @@ public class PlayerObject extends BodyObject
         requestAttributeChange(
             JOINED_GANG, Long.valueOf(value), Long.valueOf(ovalue));
         this.joinedGang = value;
+    }
+
+    /**
+     * Requests that the <code>gangNotoriety</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setGangNotoriety (int value)
+    {
+        int ovalue = this.gangNotoriety;
+        requestAttributeChange(
+            GANG_NOTORIETY, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.gangNotoriety = value;
     }
 
     /**
