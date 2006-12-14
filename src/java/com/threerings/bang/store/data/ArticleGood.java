@@ -43,8 +43,7 @@ public class ArticleGood extends Good
         // make sure the gender matches
         boolean isMale = (_type.indexOf("female") == -1);
         return user.isMale == isMale && 
-            (_qualifier == null || 
-             (user.tokens.isAdmin() && !"ai".equals(_qualifier)));
+            (_qualifier == null || (user.tokens.isSupport() && !"ai".equals(_qualifier)));
     }
 
     @Override // documentation inherited

@@ -40,6 +40,7 @@ import com.threerings.bang.chat.client.BangChatDirector;
 import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.BangTokenRing;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.crowd.chat.data.ChatCodes;
@@ -58,15 +59,15 @@ public class FKeyPopups
 {
     /** Enumerates the various types of popups we know about. */
     public static enum Type {
-        HELP(KeyInput.KEY_F1, 0, false, true),
-        TUTORIALS(KeyInput.KEY_T, 0, false, true),
-        REPORT_BUG(KeyInput.KEY_F2, 0, false, false),
-        CLIENT_LOG(KeyInput.KEY_F3, InputEvent.SHIFT_DOWN_MASK, false, false),
-        CHAT_HISTORY(KeyInput.KEY_F3, 0, false, false),
-        SERVER_STATUS(KeyInput.KEY_F4, 0, true, false),
-        SERVER_CONFIG(KeyInput.KEY_F5, 0, true, false),
-        CLIENT_CONFIG(KeyInput.KEY_F6, CTRL_SHIFT, false, false),
-        SCREEN_SHOT(KeyInput.KEY_F12, 0, false, false);
+        HELP(KeyInput.KEY_F1, 0, 0, true),
+        TUTORIALS(KeyInput.KEY_T, 0, 0, true),
+        REPORT_BUG(KeyInput.KEY_F2, 0, 0, false),
+        CLIENT_LOG(KeyInput.KEY_F3, InputEvent.SHIFT_DOWN_MASK, 0, false),
+        CHAT_HISTORY(KeyInput.KEY_F3, 0, 0, false),
+        SERVER_STATUS(KeyInput.KEY_F4, 0, BangTokenRing.SUPPORT, false),
+        SERVER_CONFIG(KeyInput.KEY_F5, 0, BangTokenRing.ADMIN, false),
+        CLIENT_CONFIG(KeyInput.KEY_F6, CTRL_SHIFT, 0, false),
+        SCREEN_SHOT(KeyInput.KEY_F12, 0, 0, false);
 
         public int keyCode () {
             return _keyCode;
@@ -76,24 +77,24 @@ public class FKeyPopups
             return _modifiers;
         }
 
-        public boolean requiresAdmin () {
-            return _requiresAdmin;
+        public int requiredToken () {
+            return _requiredToken;
         }
 
         public boolean checkCanDisplay () {
             return _checkCanDisplay;
         }
 
-        Type (int keyCode, int modifiers, boolean requiresAdmin,
+        Type (int keyCode, int modifiers, int requiredToken,
               boolean checkCanDisplay) {
             _keyCode = keyCode;
             _modifiers = modifiers;
-            _requiresAdmin = requiresAdmin;
+            _requiredToken = requiredToken;
             _checkCanDisplay = checkCanDisplay;
         }
 
-        protected int _keyCode, _modifiers;
-        protected boolean _requiresAdmin, _checkCanDisplay;
+        protected int _keyCode, _modifiers, _requiredToken;
+        protected boolean _checkCanDisplay;
     };
 
     /**
@@ -134,9 +135,9 @@ public class FKeyPopups
         }
 
         // if this popup requires admin privileges, make sure we've got 'em
-        boolean isAdmin = (_ctx.getUserObject() != null) &&
-            _ctx.getUserObject().tokens.isAdmin();
-        if (type.requiresAdmin() && !isAdmin) {
+        if (type.requiredToken() != 0 &&
+            (_ctx.getUserObject() == null ||
+             !_ctx.getUserObject().tokens.holdsToken(type.requiredToken()))) {
             return;
         }
 

@@ -70,9 +70,8 @@ public class ParlorManager extends PlaceManager
     public void ratifyEntry (PlayerObject user, String password)
         throws InvocationException
     {
-        // if this player is the creator, or an admin, let 'em in regardless
-        if (user.handle.equals(_parobj.info.creator) ||
-            user.tokens.isAdmin()) {
+        // if this player is the creator, or an admin/support, let 'em in regardless
+        if (user.handle.equals(_parobj.info.creator) || user.tokens.isSupport()) {
             return;
         }
 

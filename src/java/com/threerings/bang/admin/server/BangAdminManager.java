@@ -54,8 +54,8 @@ public class BangAdminManager
     public void scheduleReboot (ClientObject caller, int minutes)
     {
         PlayerObject user = (PlayerObject)caller;
-        if (!user.tokens.isAdmin()) {
-            log.warning("Got reboot schedule request from non-admin " +
+        if (!user.tokens.isSupport()) {
+            log.warning("Got reboot schedule request from non-admin/support " +
                         "[who=" + user.who() + "].");
             return;
         }

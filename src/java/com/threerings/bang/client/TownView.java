@@ -154,7 +154,7 @@ public class TownView extends BWindow
         _menu.add(button, GroupLayout.FIXED);
 
         // if we're an admin add some temporary buttons
-        if (ctx.getUserObject().tokens.isAdmin()) {
+        if (ctx.getUserObject().tokens.isSupport()) {
             add(_admin = GroupLayout.makeHBox(GroupLayout.CENTER));
             ActionListener fire = new ActionListener() {
                 public void actionPerformed (ActionEvent event) {

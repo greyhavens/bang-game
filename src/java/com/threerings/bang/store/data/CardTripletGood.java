@@ -57,10 +57,9 @@ public class CardTripletGood extends Good
     @Override // documentation inherited
     public boolean isAvailable (PlayerObject user)
     {
-        // if this card pack has a badge qualifier, make sure the user holds
-        // that badge (and allow admins access to everything)
-        return _qualifier == null || user.tokens.isAdmin() ||
-            user.holdsBadge(_qualifier);
+        // if this card pack has a badge qualifier, make sure the user holds that badge (and allow
+        // admins/support access to everything)
+        return _qualifier == null || user.tokens.isSupport() || user.holdsBadge(_qualifier);
     }
 
     @Override // documentation inherited

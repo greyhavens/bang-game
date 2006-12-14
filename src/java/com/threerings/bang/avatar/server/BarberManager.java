@@ -68,7 +68,7 @@ public class BarberManager extends PlaceManager
         }
 
         // prevent the use of reserved names by non-admins
-        if (!user.tokens.isAdmin() &&
+        if (!user.tokens.isSupport() &&
             NameFactory.getValidator().isReservedHandle(handle)) {
             throw new InvocationException(MessageBundle.qualify(
                 AvatarCodes.AVATAR_MSGS, AvatarCodes.ERR_RESERVED_HANDLE));

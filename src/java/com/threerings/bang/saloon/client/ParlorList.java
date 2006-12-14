@@ -98,7 +98,7 @@ public class ParlorList extends BContainer
         } else if ("enter".equals(event.getAction())) {
             final BButton btn = (BButton)event.getSource();
             final ParlorInfo info = (ParlorInfo)btn.getProperty("info");
-            if (!_ctx.getUserObject().tokens.isAdmin() &&
+            if (!_ctx.getUserObject().tokens.isSupport() &&
                 !_ctx.getUserObject().handle.equals(info.creator) &&
                 info.passwordProtected) {
                 // ask for a password, then join

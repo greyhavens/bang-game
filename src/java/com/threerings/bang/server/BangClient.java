@@ -50,7 +50,7 @@ public class BangClient extends CrowdClient
 
         // fill in the oids of important places
         BangBootstrapData bbd = (BangBootstrapData)data;
-        if (((PlayerObject)_clobj).tokens.isAdmin()) {
+        if (((PlayerObject)_clobj).tokens.isSupport()) {
             bbd.statusOid = BangServer.adminmgr.statobj.getOid();
         }
         bbd.townOid = BangServer.townobj.getOid();

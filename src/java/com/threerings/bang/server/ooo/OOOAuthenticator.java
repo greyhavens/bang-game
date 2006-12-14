@@ -228,6 +228,11 @@ public class OOOAuthenticator extends BangAuthenticator
         int tokens = 0;
         if (user.holdsToken(OOOUser.ADMIN)) {
             tokens |= BangTokenRing.ADMIN;
+            tokens |= BangTokenRing.SUPPORT;
+            tokens |= BangTokenRing.INSIDER;
+        }
+        if (user.holdsToken(OOOUser.SUPPORT)) {
+            tokens |= BangTokenRing.SUPPORT;
             tokens |= BangTokenRing.INSIDER;
         }
         if (user.holdsToken(OOOUser.INSIDER)) {

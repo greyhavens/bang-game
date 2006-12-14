@@ -53,7 +53,7 @@ public class OfficeManager extends PlaceManager
         throws InvocationException
     {
         PlayerObject player = (PlayerObject)caller;
-        if (!player.tokens.isAdmin()) {
+        if (!player.tokens.isSupport()) {
             throw new InvocationException(ACCESS_DENIED);
         }
 

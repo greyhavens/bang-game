@@ -96,8 +96,8 @@ public class PlayerPopupMenu extends BPopupMenu
         BMenuItem item;
         addMenuItem(item = new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
 
-        // if we're an admin, add a link to their admin account page
-        if (_ctx.getUserObject().tokens.isAdmin()) {
+        // if we're an admin/support, add a link to their admin account page
+        if (_ctx.getUserObject().tokens.isSupport()) {
             addMenuItem(new BMenuItem(msgs.get("m.pm_view_account"), "view_account"));
         }
 
