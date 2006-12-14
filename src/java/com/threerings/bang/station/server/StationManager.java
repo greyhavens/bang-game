@@ -92,7 +92,9 @@ public class StationManager extends PlaceManager
     protected static final class BuyTicketAction extends FinancialAction
     {
         public BuyTicketAction (PlayerObject user, TrainTicket ticket,
-                                StationService.ConfirmListener listener) {
+                                StationService.ConfirmListener listener) 
+            throws InvocationException
+        {
             super(user, ticket.getScripCost(), ticket.getCoinCost());
             _ticket = ticket;
             _listener = listener;

@@ -108,6 +108,7 @@ public class RanchManager extends PlaceManager
         public RecruitBigShotAction (
             PlayerObject user, UnitConfig config, BigShotItem unit,
             RanchService.ResultListener listener)
+            throws InvocationException
         {
             super(user, config.scripCost, config.coinCost);
             _unit = unit;
