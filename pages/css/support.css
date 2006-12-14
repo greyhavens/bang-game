@@ -13,6 +13,10 @@ td {
   font-size: 16px;
 }
 
+/* ---------------------------------------------------
+  USER PAGE (index.html)
+---------------------------------------------------- */
+
 .dialogBox {
   border: none;
   background: none;
@@ -98,4 +102,16 @@ td {
   width: 600px;
   text-align: left;
   padding: 5px;
+}
+
+/* ---------------------------------------------------
+  ADMIN PAGE (admin.html)
+---------------------------------------------------- */
+
+.eventsPanel {
+  width: 780px;
+}
+
+.eventsTable {
+  width: 100%;
 }
