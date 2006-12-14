@@ -3,10 +3,13 @@
 
 package com.threerings.bang.server.persist;
 
+import java.util.HashSet;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Invoker;
+
+import com.threerings.util.Name;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -102,6 +105,8 @@ public abstract class FinancialAction extends Invoker.Unit
         } else {
             actionCompleted();
         }
+        // now it's safe for this user to start another financial action
+        _userLock.remove(_user.username);
     }
 
     /** Returns a string representation of this instance. */
@@ -113,7 +118,11 @@ public abstract class FinancialAction extends Invoker.Unit
     }
 
     protected FinancialAction (PlayerObject user, int scripCost, int coinCost)
+        throws InvocationException
     {
+        if (!_userLock.add(user.username)) {
+            throw new InvocationException(BangCodes.BANG_MSGS, "e.processing_purchase");
+        }
         _user = user;
         // admins and support get everything for free because they're cool like that
         _scripCost = user.tokens.isSupport() ? 0 : scripCost;
@@ -239,4 +248,6 @@ public abstract class FinancialAction extends Invoker.Unit
     protected boolean _scripSpent, _actionTaken;
     protected String _failmsg;
     protected int _coinres = -1;
+
+    protected static HashSet<Name> _userLock = new HashSet<Name>();
 }
