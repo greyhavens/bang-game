@@ -557,7 +557,7 @@
   </target>
 
   <!-- rebuilds all subprojects and the whole top-level distribution -->
-  <target name="distall" depends="prepare,distjme,distprojects,dist,webapps,mdist"/>
+  <target name="distall" depends="prepare,distjme,distprojects,dist,distwebapps,mdist"/>
 
   <!-- cleans out the application and all subprojects -->
   <target name="cleanall" depends="cleanprojects,cleanwebapps,clean"/>
