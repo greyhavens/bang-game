@@ -4,6 +4,7 @@
 package com.threerings.bang.game.data.effect;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import java.util.HashSet;
 import java.util.logging.Level;
@@ -112,6 +113,15 @@ public class HoldEffect extends BonusEffect
     }
 
     @Override // documentation inherited
+    public Rectangle[] getBounds (BangObject bangobj)
+    {
+        if (dropping && drop != null && drop.x != -1) {
+            return new Rectangle[] { new Rectangle(drop.x, drop.y, 1, 1) };
+        }
+        return null;
+    }
+
+    @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         if (!dropping) {
@@ -130,7 +140,7 @@ public class HoldEffect extends BonusEffect
             super.prepare(bangobj, dammap);
 
         } else if (drop != null) {
-            Point spot = bangobj.board.getOccupiableSpot(drop.x,drop.y, 3);
+            Point spot = drop.getDropLocation(bangobj);
             if (spot == null) {
                 drop.position(-1, -1);
             } else {

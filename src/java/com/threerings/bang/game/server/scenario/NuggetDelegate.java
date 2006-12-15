@@ -12,6 +12,7 @@ import com.threerings.bang.game.data.effect.HoldEffect;
 import com.threerings.bang.game.data.effect.NuggetEffect;
 import com.threerings.bang.game.data.piece.Bonus;
 import com.threerings.bang.game.data.piece.Counter;
+import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.NuggetScenarioInfo;
 
@@ -48,11 +49,21 @@ public class NuggetDelegate extends CounterDelegate
     }
 
     @Override // documentation inherited
+    public void pieceAffected (Piece piece, String effect)
+    {
+        if (NuggetEffect.PICKED_UP_NUGGET.equals(effect)) {
+            _picker = piece;
+        }
+    }
+
+    @Override // documentation inherited
     protected void checkAdjustedCounter (BangObject bangobj, Unit unit)
     {
         if (_counters == null || _counters.size() == 0) {
             return;
         }
+
+        boolean justPickedUp = (_picker != null && _picker.pieceId == unit.pieceId);
 
         // if this unit landed next to one of the counters, do some stuff
         Counter counter = null;
@@ -71,11 +82,12 @@ public class NuggetDelegate extends CounterDelegate
 
         // deposit or withdraw a nugget as appropriate
         NuggetEffect effect = null;
-        if (counter.owner == unit.owner && NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
+        if (!justPickedUp && counter.owner == unit.owner && 
+                NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
             effect = new NuggetEffect();
             effect.dropping = true;
 
-        } else if (counter.owner == unit.owner &&
+        } else if (!justPickedUp && counter.owner == unit.owner &&
                    FoolsNuggetEffect.FOOLS_NUGGET_BONUS.equals(unit.holding)) {
             effect = new FoolsNuggetEffect();
             effect.dropping = true;
@@ -100,6 +112,7 @@ public class NuggetDelegate extends CounterDelegate
 
     protected boolean _allowClaimWithdrawal;
     protected int _startingCount;
+    protected Piece _picker;
 
     /** A prototype nugget bonus used to ensure that pieces can hold it. */
     protected Bonus _nuggetBonus =

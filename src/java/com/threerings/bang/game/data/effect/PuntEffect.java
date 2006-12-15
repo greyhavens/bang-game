@@ -23,7 +23,7 @@ public class PuntEffect extends MoveEffect
     public static PuntEffect puntBonus (
             BangObject bangobj, Bonus bonus, int causerId)
     {
-        Point spot = bangobj.board.getOccupiableSpot(bonus.x, bonus.y, 3);
+        Point spot = bonus.getDropLocation(bangobj);
         if (spot == null) {
             log.warning("Unable to find spot to punt bonus " +
                     "[bonus=" + bonus + "].");

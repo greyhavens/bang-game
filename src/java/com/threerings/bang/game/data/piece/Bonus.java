@@ -215,6 +215,14 @@ public class Bonus extends Piece
         return new BonusSprite(_config.type);
     }
 
+    /**
+     * Returns a valid location to drop/punt this bonus.
+     */
+    public Point getDropLocation (BangObject bangobj)
+    {
+        return bangobj.board.getOccupiableSpot(x, y, 3);
+    }
+
     @Override // documentation inherited
     public String toString ()
     {
