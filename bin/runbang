@@ -13,13 +13,6 @@ BANG_USER=www-data
 TOOLS_HOME=$BANG_HOME/projects/tools
 HOSTNAME=`hostname`
 
-# Make sure our nodename was properly specified
-NODE=$1
-if [ -z "$NODE" ]; then
-    echo "Usage: $0 nodename"
-    exit 255
-fi
-
 LOGFILE=$BANG_HOME/log/stdout-$NODE.log
 LOG_EMAIL=nightly-logs@threerings.net
 LOGLEVEL=info
@@ -30,6 +23,15 @@ if [ -f $BANG_HOME/server.conf ]; then
     . $BANG_HOME/server.conf
 else
     echo "Can't load $BANG_HOME/server.conf; can't run server."
+    exit 255
+fi
+
+# Make sure our nodename was properly specified (we have to do this after
+# reading server.conf because now server.conf contains a default NODE
+# specification)
+NODE=$1
+if [ -z "$NODE" ]; then
+    echo "Usage: $0 nodename"
     exit 255
 fi
 
