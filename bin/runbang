@@ -13,7 +13,6 @@ BANG_USER=www-data
 TOOLS_HOME=$BANG_HOME/projects/tools
 HOSTNAME=`hostname`
 
-LOGFILE=$BANG_HOME/log/stdout-$NODE.log
 LOG_EMAIL=nightly-logs@threerings.net
 LOGLEVEL=info
 SERVER_MEMORY=384M
@@ -34,6 +33,7 @@ if [ -z "$NODE" ]; then
     echo "Usage: $0 nodename"
     exit 255
 fi
+LOGFILE=$BANG_HOME/log/stdout-$NODE.log
 
 # Make sure we're running as the correct user
 WHOAMI=`whoami`
