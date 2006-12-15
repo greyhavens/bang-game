@@ -559,8 +559,11 @@
   <!-- rebuilds all subprojects and the whole top-level distribution -->
   <target name="distall" depends="prepare,distjme,distprojects,dist,webapps,mdist"/>
 
-  <!-- fully cleans out the installed application and all subprojects -->
-  <target name="cleanall" depends="distclean,cleanjme,cleanprojects"/>
+  <!-- cleans out the application and all subprojects -->
+  <target name="cleanall" depends="cleanprojects,cleanwebapps,clean"/>
+
+  <!-- fully cleans out the application and all subprojects -->
+  <target name="distcleanall" depends="distcleanprojects,distcleanwebapps,cleanjme,distclean"/>
 
   <!-- prepare ${destroot} for all the packages being built -->
   <target name="preppkg">
