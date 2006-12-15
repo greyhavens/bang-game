@@ -132,9 +132,7 @@ public class StatsView extends SteelWindow
             _bctx.getBangClient().displayPopup(
                     new GameOverView(_bctx, _ctrl, _bobj), true);
         } else if (action.equals("next_round")) {
-            _closeBtn.setEnabled(false);
-            _bctx.getBangClient().clearPopup(this, true);
-            _ctrl.statsDismissed();
+            startNextRound();
         } else if (action.equals("forward")) {
             showPage(++_page);
         } else if (action.equals("back")) {
@@ -435,6 +433,15 @@ public class StatsView extends SteelWindow
         }
     }
 
+    @Override // documentation inherited
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        if (_countdown != null) {
+            _countdown.cancel();
+        }
+    }
+
     /**
      * Called to animate the objective icons.
      */
@@ -581,6 +588,7 @@ public class StatsView extends SteelWindow
                         BangUI.play(BangUI.FeedbackSound.CHAT_SEND);
                         _forward.setEnabled(true);
                         _closeBtn.setEnabled(true);
+                        startCountdown();
                     }
                 }
             };
@@ -588,8 +596,10 @@ public class StatsView extends SteelWindow
         } else {
             _forward.setEnabled(true);
             _closeBtn.setEnabled(true);
+            startCountdown();
         }
     }
+
     /**
      * Shows the detailed stats view.
      */
@@ -783,6 +793,32 @@ public class StatsView extends SteelWindow
         return aview;
     }
 
+    /**
+     * Starts the auto advance to next round countdown.
+     */
+    protected void startCountdown ()
+    {
+        // no need to countdown if we've already started or the game is over
+        if (_bobj.state == BangObject.GAME_OVER || _countdown != null) {
+            return;
+        }
+
+        // start our countdown timer
+        _countdown = new Interval(_ctx.getApp()) {
+            public void expired () {
+                startNextRound();
+            }
+        };
+        _countdown.schedule(GameCodes.STATS_TIMEOUT, false);
+    }
+
+    protected void startNextRound ()
+    {
+        _closeBtn.setEnabled(false);
+        _bctx.getBangClient().clearPopup(this, true);
+        _ctrl.statsDismissed();
+    }
+
     /** Reference to our various game objects. */
     protected BasicContext _ctx;
     protected BangContext _bctx;
@@ -818,6 +854,9 @@ public class StatsView extends SteelWindow
 
     /** Which page is currently displayed.*/
     protected int _page = 0;
+
+    /** Interval that will auto advance the next round. */
+    protected Interval _countdown;
 
     /** Set to true if we animate when the window is added to the hierarchy. */
     protected boolean _startAnimationWhenAdded = false;

@@ -19,6 +19,9 @@ public interface GameCodes extends InvocationCodes
     /** The number of milliseconds allowed to make a team selection. */
     public static final long SELECT_TIMEOUT = 60 * 1000L;
 
+    /** The number of milliseconds allowed to view stats between rounds. */
+    public static final long STATS_TIMEOUT = 30 * 1000L;
+
     /** A response code for {@link BangService#move}. */
     public static final Integer EXECUTED_ORDER = 0;
 
