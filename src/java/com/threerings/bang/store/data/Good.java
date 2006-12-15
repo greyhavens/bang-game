@@ -3,6 +3,7 @@
 
 package com.threerings.bang.store.data;
 
+import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.util.MessageBundle;
 
