@@ -31,13 +31,13 @@ public class ArticleGood extends Good
     {
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public String getIconPath ()
     {
         return Article.getIconPath(_type);
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public boolean isAvailable (PlayerObject user)
     {
         // make sure the gender matches
@@ -46,16 +46,22 @@ public class ArticleGood extends Good
             (_qualifier == null || (user.tokens.isSupport() && !"ai".equals(_qualifier)));
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public String getName ()
     {
         return Article.getName(_type);
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public String getTip ()
     {
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.article_tip");
+    }
+
+    @Override // from Good
+    public int getCoinType ()
+    {
+        return CoinTransaction.DUDS_PURCHASE;
     }
 
     protected String _qualifier;

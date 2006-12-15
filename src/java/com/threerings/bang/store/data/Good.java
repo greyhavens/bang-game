@@ -85,6 +85,14 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
+     * Returns the coin transaction type to use when tracking the purchase of this good.
+     */
+    public int getCoinType ()
+    {
+        return CoinTransaction.GOOD_PURCHASE;
+    }
+
+    /**
      * Indicates that this good is available to the specified user.
      */
     public abstract boolean isAvailable (PlayerObject user);

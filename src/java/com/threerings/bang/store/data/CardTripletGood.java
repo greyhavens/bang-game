@@ -40,21 +40,21 @@ public class CardTripletGood extends Good
     }
 
     /**
-     * Sets the quantity of this good.  This is used on a client side for
-     * displaying how many of this good is owned by the player.
+     * Sets the quantity of this good.  This is used on a client side for displaying how many of
+     * this good is owned by the player.
      */
     public void setQuantity (int quantity)
     {
         _quantity = quantity;
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public String getIconPath ()
     {
         return Card.newCard(_cardType).getIconPath("card_pack");
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public boolean isAvailable (PlayerObject user)
     {
         // if this card pack has a badge qualifier, make sure the user holds that badge (and allow
@@ -62,32 +62,34 @@ public class CardTripletGood extends Good
         return _qualifier == null || user.tokens.isSupport() || user.holdsBadge(_qualifier);
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public String getName ()
     {
         return MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + _cardType);
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public String getTip ()
     {
-        String msg = MessageBundle.qualify(
-            BangCodes.CARDS_MSGS, "m." + _cardType);
+        String msg = MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + _cardType);
         msg = MessageBundle.compose("m.card_trip_tip", msg);
         msg = MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
-        msg = MessageBundle.compose(
-            "m.card_tip_cont", msg, "m." + _cardType + "_tip");
+        msg = MessageBundle.compose("m.card_tip_cont", msg, "m." + _cardType + "_tip");
         return MessageBundle.qualify(BangCodes.CARDS_MSGS, msg);
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public String getToolTip ()
     {
         String msg = getTip();
-        msg = MessageBundle.compose(
-                "m.card_tool_tip", msg, MessageBundle.taint("" + _quantity));
+        msg = MessageBundle.compose("m.card_tool_tip", msg, MessageBundle.taint("" + _quantity));
         return MessageBundle.qualify(BangCodes.CARDS_MSGS, msg);
-        
+    }
+
+    @Override // from Good
+    public int getCoinType ()
+    {
+        return CoinTransaction.CARD_PURCHASE;
     }
 
     protected String _cardType;

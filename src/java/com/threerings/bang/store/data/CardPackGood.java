@@ -39,25 +39,30 @@ public class CardPackGood extends Good
         return _size;
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public String getIconPath ()
     {
         return "goods/cards/" + _type + ".png";
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public boolean isAvailable (PlayerObject user)
     {
         // anyone can buy a pack of cards
         return true;
     }
 
-    @Override // documentation inherited
+    @Override // from Good
     public String getTip ()
     {
-        String msg = MessageBundle.tcompose(
-            "m.card_tip", String.valueOf(_size));
+        String msg = MessageBundle.tcompose("m.card_tip", String.valueOf(_size));
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+    }
+
+    @Override // from Good
+    public int getCoinType ()
+    {
+        return CoinTransaction.CARD_PURCHASE;
     }
 
     protected int _size;

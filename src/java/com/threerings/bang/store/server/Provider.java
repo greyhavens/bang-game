@@ -56,7 +56,7 @@ public abstract class Provider extends FinancialAction
 
     @Override // documentation inherited
     protected int getCoinType () {
-        return CoinTransaction.GOOD_PURCHASE;
+        return _good.getCoinType();
     }
 
     @Override // documentation inherited
