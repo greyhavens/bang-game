@@ -120,13 +120,21 @@ public class BangApp extends JmeApp
         // configure our debug log
         configureLog("bang.log");
 
-        // this is a hack, but we can't set our translated title until we've
-        // create our client and message manager and whatnot; but I'll be
-        // damned if we're going to have it say "Game" for even half a second
-        Display.setTitle("Bang! Howdy");
+        try {
+            // this is a hack, but we can't set our translated title until we've
+            // create our client and message manager and whatnot; but I'll be
+            // damned if we're going to have it say "Game" for even half a second
+            Display.setTitle("Bang! Howdy");
 
-        // set up our application icons
-        BangUI.configIcons();
+            // set up our application icons
+            BangUI.configIcons();
+
+        } catch (Throwable T) {
+            // we need to catch any errors thrown by LWJGL here because we're not yet in the
+            // standard JmeApp init process which will do that for us automagically
+            reportInitFailure(t);
+            return;
+        }
 
         // default to connecting to the frontier town server
         String username = (args.length > 0) ? args[0] : null;
