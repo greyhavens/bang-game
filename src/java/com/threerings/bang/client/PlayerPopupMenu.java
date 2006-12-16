@@ -20,11 +20,13 @@ import com.samskivert.util.ResultListener;
 import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.gang.client.InviteMemberDialog;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
@@ -106,22 +108,33 @@ public class PlayerPopupMenu extends BPopupMenu
             return;
         }
 
+        // if they're our pardner, add some pardner-specific items
+        PardnerEntry entry = _ctx.getUserObject().pardners.get(handle);
+        if (entry != null) {
+            if (entry.isAvailable()) {
+                addMenuItem(new BMenuItem(msgs.get("m.pm_chat_pardner"), "chat_pardner"));
+            }
+            if (entry.gameOid > 0) {
+                addMenuItem(new BMenuItem(msgs.get("m.pm_watch_pardner"), "watch_pardner"));
+            }
+            addMenuItem(new BMenuItem(msgs.get("m.pm_remove_pardner"), "remove_pardner"));
+
+        } else {
+            // otherwise add an item for inviting them to be our pardner
+            addMenuItem(new BMenuItem(msgs.get("m.pm_invite_pardner"), "invite_pardner"));
+        }
+
+        // add an item for inviting them to join our gang
+        if (_ctx.getUserObject().canRecruit()) {
+            addMenuItem(new BMenuItem(msgs.get("m.pm_invite_member"), "invite_member"));
+        }
+
         // add an item for muting/unmuting (always allow unmuting, only allow muting if the caller
         // indicates that we're in a context where it is appropriate)
         boolean muted = _ctx.getMuteDirector().isMuted(handle);
         if (muted || allowMute) {
             String mute = muted ? "unmute" : "mute";
             addMenuItem(new BMenuItem(msgs.get("m.pm_" + mute), mute));
-        }
-
-        // add an item for inviting them to be our pardner
-        if (!_ctx.getUserObject().pardners.containsKey(handle)) {
-            addMenuItem(new BMenuItem(msgs.get("m.pm_invite_pardner"), "invite_pardner"));
-        }
-        
-        // add an item for inviting them to join our gang
-        if (_ctx.getUserObject().canRecruit()) {
-            addMenuItem(new BMenuItem(msgs.get("m.pm_invite_member"), "invite_member"));
         }
     }
 
@@ -134,6 +147,29 @@ public class PlayerPopupMenu extends BPopupMenu
         } else if ("unmute".equals(event.getAction())) {
             _ctx.getMuteDirector().setMuted(_handle, false);
 
+        } else if ("chat_pardner".equals(event.getAction())) {
+            PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);
+            if (entry != null) {
+                _ctx.getBangClient().getPardnerChatView().display(entry.handle, entry.avatar, true);
+            }
+
+        } else if ("watch_pardner".equals(event.getAction())) {
+            PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);
+            if (entry != null && entry.gameOid > 0) {
+                _ctx.getLocationDirector().moveTo(entry.gameOid);
+            }
+
+        } else if ("remove_pardner".equals(event.getAction())) {
+            String msg = MessageBundle.tcompose("m.confirm_remove", _handle);
+            OptionDialog.showConfirmDialog(
+                _ctx, BangCodes.BANG_MSGS, msg, new OptionDialog.ResponseReceiver() {
+                public void resultPosted (int button, Object result) {
+                    if (button == OptionDialog.OK_BUTTON) {
+                        removePardner();
+                    }
+                }
+            });
+
         } else if ("invite_pardner".equals(event.getAction())) {
             _ctx.getBangClient().displayPopup(
                 new InvitePardnerDialog(_ctx, null, _handle), true, 400);
@@ -141,7 +177,7 @@ public class PlayerPopupMenu extends BPopupMenu
         } else if ("invite_member".equals(event.getAction())) {
             _ctx.getBangClient().displayPopup(
                 new InviteMemberDialog(_ctx, null, _handle), true, 400);
-                
+
         } else if ("view_poster".equals(event.getAction())) {
             WantedPosterView.displayWantedPoster(_ctx, _handle);
 
@@ -163,6 +199,20 @@ public class PlayerPopupMenu extends BPopupMenu
                 listener.requestFailed(e);
             }
         }
+    }
+
+    protected void removePardner ()
+    {
+        PlayerService psvc = ((PlayerService)_ctx.getClient().requireService(PlayerService.class));
+        psvc.removePardner(_ctx.getClient(), _handle, new PlayerService.ConfirmListener() {
+            public void requestProcessed () {
+                String msg = MessageBundle.tcompose("m.pardner_removed", _handle);
+                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
+            }
+            public void requestFailed (String cause) {
+                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, cause);
+            }
+        });
     }
 
     protected BangContext _ctx;
