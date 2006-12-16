@@ -205,6 +205,9 @@ public class PardnerChatView extends BDecoratedWindow
                     // if the interface was totally hidden, go ahead and select our tab because
                     // they obviously weren't attending to the current tab
                     _pane.selectTab(tab);
+                    if (focus) {
+                        _input.requestFocus();
+                    }
                 }
 
             } else if (focus) {
