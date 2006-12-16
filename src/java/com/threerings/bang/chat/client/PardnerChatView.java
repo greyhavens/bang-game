@@ -56,11 +56,9 @@ public class PardnerChatView extends BDecoratedWindow
     }
 
     /**
-     * Displays the chat view, if possible, with a tab for talking to the
-     * named pardner.
+     * Displays the chat view, if possible, with a tab for talking to the named pardner.
      *
-     * @return true if we managed to display the view, false if we can't
-     * at the moment
+     * @return true if we managed to display the view, false if we can't at the moment
      */
     public boolean display (Handle pardner, int[] avatar, boolean grabFocus)
     {
@@ -70,10 +68,9 @@ public class PardnerChatView extends BDecoratedWindow
     /**
      * Ensure that a given user tab exists, possibly creating it.
      *
-     * @param focus if true the user's tab will be made visible and the chat
-     * input field will be focused. If false, the tab will be added if it does
-     * not exist but will not be made current, nor will focus be moved to the
-     * input field.
+     * @param focus if true the user's tab will be made visible and the chat input field will be
+     * focused. If false, the tab will be added if it does not exist but will not be made current,
+     * nor will focus be moved to the input field.
      */
     public UserTab openUserTab (Handle handle, int[] avatar, boolean focus)
     {
@@ -101,9 +98,8 @@ public class PardnerChatView extends BDecoratedWindow
     public void unregisterPlaceChatView (PlaceChatView placeChat)
     {
         if (_placeChat != placeChat) {
-            log.warning("Attempt to unregister invalid PlaceChatView " +
-                    "[_placeChat=" + _placeChat + ", placeChat=" + placeChat +
-                    "].");
+            log.warning("Attempt to unregister invalid PlaceChatView [_placeChat=" + _placeChat +
+                        ", placeChat=" + placeChat + "].");
             return;
         }
 
@@ -146,8 +142,7 @@ public class PardnerChatView extends BDecoratedWindow
         }
 
         @Override // from TabbedChatView
-        public boolean displayMessage (
-                ChatMessage msg, boolean alreadyDisplayed)
+        public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
         {
             if (alreadyDisplayed) {
                 return false;
@@ -181,10 +176,9 @@ public class PardnerChatView extends BDecoratedWindow
         /**
          * Ensure that a given user tab exists, possibly creating it.
          *
-         * @param focus if true the user's tab will be made visible and the 
-         * chat input field will be focused. If false, the tab will be added if
-         * it does not exist but will not be made current, nor will focus be 
-         * moved to the input field.
+         * @param focus if true the user's tab will be made visible and the chat input field will
+         * be focused. If false, the tab will be added if it does not exist but will not be made
+         * current, nor will focus be moved to the input field.
          */
         public UserTab openUserTab (Handle handle, int[] avatar, boolean focus)
         {
@@ -200,19 +194,24 @@ public class PardnerChatView extends BDecoratedWindow
                 _users.put(handle, tab);
             }
 
-            // this has to be called when the tab is already added
-            if (!isAdded()) {
-                if (!displayTabs() && _placeChat == null) {
-                    return null;
+            // if we are delegating to a place chat, do that now
+            if (_placeChat != null) {
+                if (focus) {
+                    _placeChat.showUserTab(tab);
                 }
-                // if the interface was totally hidden, go ahead and select our
-                // tab because they obviously weren't attending to the current 
-                // tab
-                _pane.selectTab(tab);
-            } else if (focus && isAdded() && _placeChat == null) {
+
+            } else if (!isAdded()) {
+                if (displayTabs()) {
+                    // if the interface was totally hidden, go ahead and select our tab because
+                    // they obviously weren't attending to the current tab
+                    _pane.selectTab(tab);
+                }
+
+            } else if (focus) {
                 _pane.selectTab(tab);
                 _input.requestFocus();
             }
+
             return tab;
         }
 
@@ -226,8 +225,7 @@ public class PardnerChatView extends BDecoratedWindow
             }
             for (Map.Entry<Handle,UserTab> entry : _users.entrySet()) {
                 _pane.removeTab(entry.getValue());
-                _placeChat.addUserTab(
-                        entry.getKey().toString(), entry.getValue(), false);
+                _placeChat.addUserTab(entry.getKey().toString(), entry.getValue(), false);
             }
         }
 
@@ -241,8 +239,7 @@ public class PardnerChatView extends BDecoratedWindow
             }
             for (Map.Entry<Handle,UserTab> entry : _users.entrySet()) {
                 _placeChat.removeUserTab(entry.getValue());
-                _pane.addTab(
-                        entry.getKey().toString(), entry.getValue(), false);
+                _pane.addTab(entry.getKey().toString(), entry.getValue(), false);
                 entry.getValue().setTabbedPane(_pane);
             }
         }
@@ -256,7 +253,7 @@ public class PardnerChatView extends BDecoratedWindow
 
             BangClient client = _ctx.getBangClient();
             if (!client.canDisplayPopup(MainView.Type.CHAT) ||
-                    (_placeChat != null && !client.hasPopups())) {
+                (_placeChat != null && !client.hasPopups())) {
                 return false;
             }
             _ctx.getBangClient().displayPopup(PardnerChatView.this, false);
