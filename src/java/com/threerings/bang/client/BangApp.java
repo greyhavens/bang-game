@@ -129,7 +129,7 @@ public class BangApp extends JmeApp
             // set up our application icons
             BangUI.configIcons();
 
-        } catch (Throwable T) {
+        } catch (Throwable t) {
             // we need to catch any errors thrown by LWJGL here because we're not yet in the
             // standard JmeApp init process which will do that for us automagically
             reportInitFailure(t);
