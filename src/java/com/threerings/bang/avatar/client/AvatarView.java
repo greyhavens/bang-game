@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
-import java.lang.ref.WeakReference;
+import java.lang.ref.SoftReference;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -137,7 +137,7 @@ public class AvatarView extends BLabel
     {
         // first check the cache
         final AvatarKey key = new AvatarKey(avatar);
-        WeakReference<BufferedImage> iref = _icache.get(key);
+        SoftReference<BufferedImage> iref = _icache.get(key);
         BufferedImage image;
         if (iref != null && (image = iref.get()) != null) {
             receiver.requestCompleted(image);
@@ -175,7 +175,7 @@ public class AvatarView extends BLabel
                 } finally {
                     gfx.dispose();
                 }
-                _icache.put(key, new WeakReference<BufferedImage>(_image));
+                _icache.put(key, new SoftReference<BufferedImage>(_image));
                 return true;
             }
 
@@ -432,6 +432,6 @@ public class AvatarView extends BLabel
     protected static Vector2f _tcoord = new Vector2f();
 
     /** The avatar image cache. */
-    protected static HashMap<AvatarKey, WeakReference<BufferedImage>> _icache =
-        new HashMap<AvatarKey, WeakReference<BufferedImage>>();
+    protected static HashMap<AvatarKey, SoftReference<BufferedImage>> _icache =
+        new HashMap<AvatarKey, SoftReference<BufferedImage>>();
 }
