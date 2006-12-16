@@ -43,22 +43,20 @@ public class OptionDialog extends BDecoratedWindow
     }
 
     /**
-     * Shows a confirmation dialog with the given text and the standard OK and
-     * cancel buttons.
+     * Shows a confirmation dialog with the given text and the standard OK and cancel buttons.
      *
      * @param bundle the bundle to to use in translating the text
      * @param text the text to display in the center of the dialog
      * @param receiver a receiver to notify with the result
      */
-    public static void showConfirmDialog (BangContext ctx, String bundle,
-        String text, ResponseReceiver receiver)
+    public static void showConfirmDialog (BangContext ctx, String bundle, String text,
+                                          ResponseReceiver receiver)
     {
         showConfirmDialog(ctx, bundle, text, "m.ok", "m.cancel", receiver);
     }
 
     /**
-     * Shows a confirmation dialog with the given text and two buttons with the
-     * provided labels.
+     * Shows a confirmation dialog with the given text and two buttons with the provided labels.
      *
      * @param bundle the bundle to to use in translating the text
      * @param text the text to display in the center of the dialog
@@ -66,33 +64,30 @@ public class OptionDialog extends BDecoratedWindow
      * @param cancel the label for the second (Cancel) button
      * @param receiver a receiver to notify with the result
      */
-    public static void showConfirmDialog (BangContext ctx, String bundle,
-        String text, String ok, String cancel, ResponseReceiver receiver)
+    public static void showConfirmDialog (BangContext ctx, String bundle, String text,
+                                          String ok, String cancel, ResponseReceiver receiver)
     {
-        showConfirmDialog(ctx, bundle, text, new String[] { ok, cancel },
-            receiver);
+        showConfirmDialog(ctx, bundle, text, new String[] { ok, cancel }, receiver);
     }
 
     /**
-     * Shows a confirmation dialog with the given text and buttons with the
-     * provided labels.
+     * Shows a confirmation dialog with the given text and buttons with the provided labels.
      *
      * @param bundle the bundle to to use in translating the text
      * @param text the text to display in the center of the dialog
      * @param buttons the labels for the buttons in the dialog
      * @param receiver a receiver to notify with the result
      */
-    public static void showConfirmDialog (BangContext ctx, String bundle,
-        String text, String[] buttons, ResponseReceiver receiver)
+    public static void showConfirmDialog (BangContext ctx, String bundle, String text,
+                                          String[] buttons, ResponseReceiver receiver)
     {
-        OptionDialog dialog =
-            new OptionDialog(ctx, bundle, text, buttons, receiver);
+        OptionDialog dialog = new OptionDialog(ctx, bundle, text, buttons, receiver);
         ctx.getBangClient().displayPopup(dialog, true, 400);
     }
 
     /**
-     * Shows a dialog that displays the given text and buttons with the
-     * provided labels and requests a string input.
+     * Shows a dialog that displays the given text and buttons with the provided labels and
+     * requests a string input.
      *
      * @param bundle the bundle to to use in translating the text
      * @param text the text to display in the center of the dialog
@@ -105,8 +100,7 @@ public class OptionDialog extends BDecoratedWindow
         BangContext ctx, String bundle, String text, String[] buttons,
         int width, String defaultValue, ResponseReceiver receiver)
     {
-        OptionDialog dialog =
-            new OptionDialog(ctx, bundle, text, buttons, receiver);
+        OptionDialog dialog = new OptionDialog(ctx, bundle, text, buttons, receiver);
         dialog.setRequiresString(width, defaultValue);
         ctx.getBangClient().displayPopup(dialog, true, 400);
     }
@@ -114,7 +108,7 @@ public class OptionDialog extends BDecoratedWindow
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        _ctx.getBangClient().clearPopup(this, false);
+        _ctx.getBangClient().clearPopup(this, true);
         String value = (_input == null) ? null : _input.getText();
         int button;
         if (event.getSource() == _input) {
@@ -148,7 +142,7 @@ public class OptionDialog extends BDecoratedWindow
 
     protected void setRequiresString (int width, String defaultValue)
     {
-        add(1, _input = new BTextField(defaultValue, 
+        add(1, _input = new BTextField(defaultValue,
                     BangUI.TEXT_FIELD_MAX_LENGTH), GroupLayout.FIXED);
         _input.addListener(this);
         _input.setPreferredWidth(width);
