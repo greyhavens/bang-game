@@ -68,6 +68,12 @@ public class EnglishNameValidator extends NameValidator
         return MAX_HANDLE_CHARS;
     }
 
+    @Override // documentation inherited
+    public char[] getValidLetters ()
+    {
+        return VALID_LETTERS;
+    }
+    
     /** Determines whether the supplied string is all characters (ie. no
      * numbers or punctuation) or spaces. */
     protected boolean isValidCharacters (String text)
@@ -99,4 +105,7 @@ public class EnglishNameValidator extends NameValidator
     protected static final String[] RESERVED_REGEXES = {
         ".*sh[e][r]+[il][f]+.*",
     };
+    
+    /** The letters that we allow in names. */
+    protected static final char[] VALID_LETTERS = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 }

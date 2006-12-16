@@ -22,6 +22,16 @@ public class HackyTabs extends BComponent
     public HackyTabs (BangContext ctx, boolean vertical, String imgpref,
                       String[] tabs, int size, int border)
     {
+        this(ctx, vertical, imgpref, tabs, false, size, border);
+    }
+    
+    /**
+     * @param unselected if <code>true</code>, the tab images provided depict the unselected tabs;
+     * "_selected" will be appended for the selected images
+     */
+    public HackyTabs (BangContext ctx, boolean vertical, String imgpref,
+                      String[] tabs, boolean unselected, int size, int border)
+    {
         _ctx = ctx;
         _vertical = vertical;
         _tsize = size;
@@ -31,8 +41,14 @@ public class HackyTabs extends BComponent
 
         // load up our tab images
         _tabs = new BImage[tabs.length];
+        if (unselected) {
+            _stabs = new BImage[tabs.length];
+        }
         for (int ii = 0; ii < tabs.length; ii++) {
             _tabs[ii] = _ctx.loadImage(imgpref + tabs[ii] + ".png");
+            if (unselected) {
+                _stabs[ii] = _ctx.loadImage(imgpref + tabs[ii] + "_selected.png");
+            }
         }
     }
 
@@ -76,6 +92,9 @@ public class HackyTabs extends BComponent
         // reference our tab images
         for (int ii = 0; ii < _tabs.length; ii++) {
             _tabs[ii].reference();
+            if (_stabs != null) {
+                _stabs[ii].reference();
+            }
         }
     }
 
@@ -87,6 +106,9 @@ public class HackyTabs extends BComponent
         // release our tab images
         for (int ii = 0; ii < _tabs.length; ii++) {
             _tabs[ii].release();
+            if (_stabs != null) {
+                _stabs[ii].release();
+            }
         }
     }
 
@@ -96,12 +118,26 @@ public class HackyTabs extends BComponent
         super.renderComponent(renderer);
 
         int ix = 0, iy = 0;
-        if (_vertical) {
-            iy = getHeight() - _tsize*_selidx - _tabs[_selidx].getHeight();
-        } else {
-            ix = _tsize*_selidx;
+        if (_stabs == null) { // just render the selected tab
+            if (_vertical) {
+                iy = getHeight() - _tsize*_selidx - _tabs[_selidx].getHeight();
+            } else {
+                ix = _tsize*_selidx;
+            }
+            _tabs[_selidx].render(renderer, ix, iy, _alpha);
+            return;
         }
-        _tabs[_selidx].render(renderer, ix, iy, _alpha);
+        
+        int dx = 0, dy = 0;
+        if (_vertical) {
+            iy = getHeight() - _tsize;
+            dy = -_tsize;
+        } else {
+            dx = _tsize;
+        }
+        for (int ii = 0; ii < _tabs.length; ii++, ix += dx, iy += dy) {
+            (ii == _selidx ? _stabs : _tabs)[ii].render(renderer, ix, iy, _alpha);
+        }
     }
 
     protected MouseAdapter _mlistener = new MouseAdapter() {
@@ -118,6 +154,6 @@ public class HackyTabs extends BComponent
     protected BangContext _ctx;
     protected boolean _vertical;
     protected int _tsize, _tborder;
-    protected BImage[] _tabs;
+    protected BImage[] _tabs, _stabs;
     protected int _deftab, _selidx = -1;
 }

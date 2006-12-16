@@ -51,6 +51,8 @@ public class GangRecord
     public GangRecord (String name)
     {
         this.name = name;
+        statement = "";
+        url = "";
         members = new ArrayList<GangMemberEntry>();
     }
 

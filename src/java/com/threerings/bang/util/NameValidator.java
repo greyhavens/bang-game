@@ -42,4 +42,9 @@ public abstract class NameValidator
      * Returns the maximum length of a handle in characters.
      */
     public abstract int getMaxHandleLength ();
+    
+    /**
+     * Returns the (lowercase versions of the) letters that names can include. 
+     */
+    public abstract char[] getValidLetters ();
 }

@@ -1701,6 +1701,67 @@ map_boom_town:hover {
 }
 
 //
+// Hideout styles
+
+about_gangs_title {
+  padding: 10 20 5 0;
+}
+
+hideout_text {
+  font: "Helvetica" plain 12;
+  color: #4C2602;
+}
+
+about_gangs {
+  parent: "hideout_text";
+  padding: 0 20 10 145;
+}
+
+start_gang {
+  parent: "hideout_text";
+  padding: 5 60 5 0;
+}
+
+start_gang_reqs {
+  parent: "hideout_text";
+  padding: 0 190 5 0;
+}
+
+start_gang_cost {
+  parent: "money_label";
+  color: #4C2602;
+}
+
+gang_directory_title {
+  padding: 0 20 0 0;
+}
+
+directory_view {
+  background: image "ui/hideout/fields_directory.png" centerxy;
+}
+
+directory_letter {
+  font: "Old Town" plain 28;
+  color: #896D35;
+  padding: 0 2 0 3;
+}
+
+directory_letter:selected {
+  font: "Old Town" bold 28;
+  color: #652708;
+}
+
+directory_groups {
+  padding: 0 45 8 50;
+}
+
+directory_entry {
+  font: "Dom Casual" plain 18;
+  color: #5C361D;
+  padding: 5 5;
+}
+
+//
 // Post-game stats display
 
 endgame_border {

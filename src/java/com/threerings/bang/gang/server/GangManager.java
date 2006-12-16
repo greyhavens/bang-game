@@ -174,7 +174,7 @@ public class GangManager
 
         // if they're a gang member, wire them up
         if (mrec != null) {
-            GangHandler gang = _gangs.get(player.gangId);
+            GangHandler gang = _gangs.get(mrec.gangId);
             GangObject gangobj = gang.getGangObject();
 
             try {
@@ -275,21 +275,18 @@ public class GangManager
                 return MessageBundle.tcompose("m.gang_creation", name);
             }
 
-            protected String persistentAction () {
-                try {
-                    _gangrepo.insertGang(_grec);
-                    _gangrepo.insertMember(
-                        _mrec = new GangMemberRecord(user.playerId, _grec.gangId, LEADER_RANK));
-                    _gangrepo.insertHistoryEntry(
-                        _grec.gangId, MessageBundle.tcompose("m.founded_entry", user.handle));
-                    // we must create and insert our gang handler on the invoker thread
-                    _grec.members.add(new GangMemberEntry(
-                        user.handle, user.playerId, LEADER_RANK, _mrec.joined, 0));
-                    _gangs.put(_grec.gangId, new GangHandler(_grec));
-                    return null;
-                } catch (PersistenceException e) {
-                    return INTERNAL_ERROR;
-                }
+            protected String persistentAction ()
+                throws PersistenceException {
+                _gangrepo.insertGang(_grec);
+                _gangrepo.insertMember(
+                    _mrec = new GangMemberRecord(user.playerId, _grec.gangId, LEADER_RANK));
+                _gangrepo.insertHistoryEntry(
+                    _grec.gangId, MessageBundle.tcompose("m.founded_entry", user.handle));
+                // we must create and insert our gang handler on the invoker thread
+                _grec.members.add(new GangMemberEntry(
+                    user.handle, user.playerId, LEADER_RANK, _mrec.joined, 0));
+                _gangs.put(_grec.gangId, new GangHandler(_grec));
+                return null;
             }
             protected void rollbackPersistentAction ()
                 throws PersistenceException {
@@ -763,8 +760,8 @@ public class GangManager
             BangServer.invmgr.clearDispatcher(_gangobj.speakService);
             _rankval.cancel();
             _gangobj.destroy();
-            _gangobj = null;
             log.info("Gang shutdown " + this + ".");
+            _gangobj = null;
         }
 
         @Override // from Object
