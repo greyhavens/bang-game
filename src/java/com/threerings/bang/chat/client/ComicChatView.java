@@ -81,8 +81,8 @@ public abstract class ComicChatView
     }
 
     /**
-     * Appends a message sent by the local user (only used in circumstances
-     * where a player's chat is not normally echoed back to them).
+     * Appends a message sent by the local user (only used in circumstances where a player's chat
+     * is not normally echoed back to them).
      */
     public void appendSent (String msg)
     {
@@ -107,12 +107,11 @@ public abstract class ComicChatView
     }
 
     /**
-     *  A concrete {@link EntryBuilder} that lazily constructs a fancy
-     *  {@link ChatEntry} instance on demand.
+     *  A concrete {@link EntryBuilder} that lazily constructs a fancy {@link ChatEntry} instance
+     *  on demand.
      *
-     *  Additional complexity results from the need to temporarily cache a
-     *  version of the generated {@link ChatEntry} so that a second chat
-     *  message may be appended to it.
+     *  Additional complexity results from the need to temporarily cache a version of the generated
+     *  {@link ChatEntry} so that a second chat message may be appended to it.
      */
     protected class ChatEntryBuilder implements EntryBuilder<BComponent>
     {
@@ -149,11 +148,10 @@ public abstract class ComicChatView
         }
 
         /**
-         *  Construct a new builder, optionally constructing and
-         *  caching a {@link ChatEntry} immediately.
+         *  Construct a new builder, optionally constructing and caching a {@link ChatEntry}
+         *  immediately.
          */
-        protected ChatEntryBuilder (Handle speaker, String message,
-                                    boolean cache)
+        protected ChatEntryBuilder (Handle speaker, String message, boolean cache)
         {
             _speaker = speaker;
             _message = message;
@@ -166,8 +164,8 @@ public abstract class ComicChatView
         }
 
         /**
-         *  Two messages in a row from the same user share the same
-         *  {@link ChatEntry}; this method stores the second message.
+         *  Two messages in a row from the same user share the same {@link ChatEntry}; this method
+         *  stores the second message.
          */
         protected void setSecondMessage (String message)
         {
@@ -184,8 +182,8 @@ public abstract class ComicChatView
         }
 
         /**
-         *  When we're done adding messages to this entry, we absolutely
-         *  must get rid of the cached entry, or the whole point is lost.
+         * When we're done adding messages to this entry, we absolutely must get rid of the cached
+         * entry, or the whole point is lost.
          */
         protected void clearCachedEntry ()
         {
@@ -205,8 +203,8 @@ public abstract class ComicChatView
             addValue(builder, true);
         } else {
             builder.setSecondMessage(message);
-            // clear out the cached height for our builder or the scrolling
-            // list won't properly figure things out
+            // clear out the cached height for our builder or the scrolling list won't properly
+            // figure things out
             _values.get(_values.size()-1).height = -1;
             // and inject a snap to bottom request
             _vport.invalidateAndSnap();
@@ -228,8 +226,7 @@ public abstract class ComicChatView
     public void appendSystem (ChatMessage msg)
     {
         final String formattedMsg = SystemChatView.format(_ctx, msg);
-        final String style = SystemChatView.getAttentionLevel(msg) +
-            "_chat_label";
+        final String style = SystemChatView.getAttentionLevel(msg) + "_chat_label";
         addValue(new EntryBuilder<BComponent>() {
             public BComponent build() {
                 return new BLabel(formattedMsg, style);
@@ -253,9 +250,8 @@ public abstract class ComicChatView
     protected abstract int[] getSpeakerAvatar (Handle speaker);
 
     /**
-     * Returns whether this speaker should be placed on the left or right hand
-     * side of the window. By default our messages are left side, everyone else
-     * is right side.
+     * Returns whether this speaker should be placed on the left or right hand side of the
+     * window. By default our messages are left side, everyone else is right side.
      */
     protected boolean isLeftSide (Handle speaker)
     {
@@ -267,32 +263,24 @@ public abstract class ComicChatView
      */
     protected void createBubbleBackgrounds ()
     {
-        BufferedImage img = new BufferedImage(
-            90, 45, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage img = new BufferedImage(90, 45, BufferedImage.TYPE_INT_ARGB);
         Graphics2D gfx = img.createGraphics();
-        Area bubble = new Area(new RoundRectangle2D.Float(
-                                   8, 0, 81, 44, 30, 30));
-        bubble.add(new Area(new Arc2D.Float(
-                                -12, -8, 24, 24, -40f, 30f, Arc2D.PIE)));
-        gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                             RenderingHints.VALUE_ANTIALIAS_ON);
+        Area bubble = new Area(new RoundRectangle2D.Float(8, 0, 81, 44, 30, 30));
+        bubble.add(new Area(new Arc2D.Float(-12, -8, 24, 24, -40f, 30f, Arc2D.PIE)));
+        gfx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         gfx.setColor(new Color(0xF1EFE3));
         gfx.fill(bubble);
         gfx.setColor(new Color(0x896A4B));
         gfx.draw(bubble);
 
         // flip image up and down for first and rest of sent
-        _sfbg = new ImageBackground(
-            ImageBackground.FRAME_XY, new BImage(img, false));
-        _srbg = new ImageBackground(
-            ImageBackground.FRAME_XY, new BImage(img, true));
+        _sfbg = new ImageBackground(ImageBackground.FRAME_XY, new BImage(img, false));
+        _srbg = new ImageBackground(ImageBackground.FRAME_XY, new BImage(img, true));
 
         // flip left-to-right for received
         mirrorImage(img);
-        _rfbg = new ImageBackground(
-            ImageBackground.FRAME_XY, new BImage(img, false));
-        _rrbg = new ImageBackground(
-            ImageBackground.FRAME_XY, new BImage(img, true));
+        _rfbg = new ImageBackground(ImageBackground.FRAME_XY, new BImage(img, false));
+        _rrbg = new ImageBackground(ImageBackground.FRAME_XY, new BImage(img, true));
     }
 
     /**
@@ -309,8 +297,7 @@ public abstract class ComicChatView
         }
     }
 
-    /** Displays a player's avatar icon and pops up a player menu when
-     * clicked. */
+    /** Displays a player's avatar icon and pops up a player menu when clicked. */
     protected static class PlayerLabel extends BLabel
     {
         public PlayerLabel (BangContext ctx, Handle handle, BIcon icon) {
@@ -321,8 +308,7 @@ public abstract class ComicChatView
 
         public boolean dispatchEvent (BEvent event) {
             // pop up a player menu if they click the mouse
-            return PlayerPopupMenu.checkPopup(
-                _ctx, getWindow(), event, _handle, true) ||
+            return PlayerPopupMenu.checkPopup(_ctx, getWindow(), event, _handle, true) ||
                 super.dispatchEvent(event);
         }
 
@@ -345,8 +331,8 @@ public abstract class ComicChatView
         {
             if (_avatar == null && !Arrays.equals(avatar, _avatar)) {
                 _avatar = avatar;
-                AvatarView.getImage(ctx, avatar, AvatarLogic.WIDTH/8,
-                                    AvatarLogic.HEIGHT/8, mirror, this);
+                AvatarView.getImage(
+                    ctx, avatar, AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8, mirror, this);
             }
         }
 
@@ -397,8 +383,7 @@ public abstract class ComicChatView
         protected ArrayList<BLabel> _penders;
     }
 
-    /** A chat entry that displays an avatar icon along with one or more
-     * messages in bubbles. */
+    /** A chat entry that displays an avatar icon along with one or more messages in bubbles. */
     protected class ChatEntry extends BContainer
     {
         /** The speaker of this entry. */
@@ -415,35 +400,29 @@ public abstract class ComicChatView
             layout.setOffAxisJustification(GroupLayout.TOP);
             setLayoutManager(layout);
 
-            layout = GroupLayout.makeVert(
-                GroupLayout.NONE, GroupLayout.TOP, GroupLayout.CONSTRAIN);
-            layout.setOffAxisJustification(
-                _left ? GroupLayout.LEFT : GroupLayout.RIGHT);
+            layout = GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP, GroupLayout.CONSTRAIN);
+            layout.setOffAxisJustification(_left ? GroupLayout.LEFT : GroupLayout.RIGHT);
             add(_mcont = new BContainer(layout) {
                 protected Dimension computePreferredSize (
                     int whint, int hhint) {
                     Dimension ldim = _slabel.getPreferredSize(-1, -1);
                     return super.computePreferredSize(
                         _vport.getWidth() - _vport.getInsets().getHorizontal() -
-                        ChatEntry.this.getInsets().getHorizontal() -
-                        getInsets().getHorizontal() - hgap - ldim.width,
-                        hhint);
+                        ChatEntry.this.getInsets().getHorizontal() - getInsets().getHorizontal() -
+                        hgap - ldim.width, hhint);
                 }
             });
 
-            add(_left ? 0 : 1, _slabel = speaker.createLabel(_ctx, _showNames),
-                GroupLayout.FIXED);
+            add(_left ? 0 : 1, _slabel = speaker.createLabel(_ctx, _showNames), GroupLayout.FIXED);
         }
 
         public void addMessage (String msg)
         {
-            BLabel label = new BLabel(
-                msg, _left ? "sent_chat_bubble" : "received_chat_bubble") {
+            BLabel label = new BLabel(msg, _left ? "sent_chat_bubble" : "received_chat_bubble") {
                 protected void wasAdded() {
                     super.wasAdded();
-                    setBackground(
-                        DEFAULT, _mcont.getComponentCount() == 1 ?
-                        (_left ? _sfbg : _rfbg) : (_left ? _srbg : _rrbg));
+                    setBackground(DEFAULT, _mcont.getComponentCount() == 1 ?
+                                  (_left ? _sfbg : _rfbg) : (_left ? _srbg : _rrbg));
                 }
             };
             _mcont.add(label);
@@ -461,8 +440,8 @@ public abstract class ComicChatView
     /** Maps speakers to avatars and icons. */
     protected HashMap<Handle,Speaker> _speakers = new HashMap<Handle,Speaker>();
 
-    /** Chat bubble backgrounds for sent and received messages, first bubble in
-     * sequence and rest of bubbles in sequence. */
+    /** Chat bubble backgrounds for sent and received messages, first bubble in sequence and rest
+     * of bubbles in sequence. */
     protected ImageBackground _sfbg, _srbg, _rfbg, _rrbg;
    
 }
