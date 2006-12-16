@@ -127,11 +127,12 @@ public class PlaceChatView extends TabbedChatView
                 return true;
             }
 
-        } else if (msg instanceof SystemMessage) {
+        // make sure we're showing, otherwise we don't want to intercept system messages
+        } else if (isShowing() && msg instanceof SystemMessage) {
             SystemMessage smsg = (SystemMessage)msg;
             if (PLACE_CHAT_VIEW_TYPE.equals(msg.localtype) ||
                 SystemMessage.FEEDBACK == smsg.attentionLevel) {
-                _pchat.appendSystem(msg);
+                ((ComicChatView)_pane.getSelectedTab()).appendSystem(msg);
                 return true;
             }
         }
