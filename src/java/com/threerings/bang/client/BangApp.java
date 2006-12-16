@@ -132,7 +132,7 @@ public class BangApp extends JmeApp
         } catch (Throwable t) {
             // we need to catch any errors thrown by LWJGL here because we're not yet in the
             // standard JmeApp init process which will do that for us automagically
-            reportInitFailure(t);
+            reportInitFailure(null, t);
             return;
         }
 
@@ -164,7 +164,7 @@ public class BangApp extends JmeApp
 
         // two-pass transparency is expensive
         _ctx.getRenderer().getQueue().setTwoPassTransparency(false);
-        
+
         // turn on the FPS display if we're profiling
         if (_profiling) {
             displayStatistics(true);
@@ -224,7 +224,7 @@ public class BangApp extends JmeApp
     {
         return new GameCameraHandler(camera);
     }
-    
+
     @Override // documentation inherited
     protected InputHandler createInputHandler (CameraHandler camhand)
     {
@@ -262,7 +262,7 @@ public class BangApp extends JmeApp
     /**
      * Checks that we are running on at least the 1.5.0_06 JVM.
      *
-     * @throws Exception if the version is invalid 
+     * @throws Exception if the version is invalid
      */
     protected void checkJavaVersion ()
         throws Exception
@@ -270,7 +270,7 @@ public class BangApp extends JmeApp
         SystemInfo sysinfo = new SystemInfo();
         int[] minVersion = new int[] {1, 5, 0, 6};
         String[] jVersion = sysinfo.javaVersion.split("[._]");
-        String errmsg = "You are running java version " + sysinfo.javaVersion + 
+        String errmsg = "You are running java version " + sysinfo.javaVersion +
             ", but we require at least version 1.5.0_06";
         for (int ii = 0, ll = Math.min(minVersion.length, jVersion.length); ii < ll; ii++) {
             int diff = minVersion[ii] - Integer.valueOf(jVersion[ii]);
@@ -288,16 +288,7 @@ public class BangApp extends JmeApp
     @Override // documentation inherited
     protected void reportInitFailure (Throwable t)
     {
-        log.log(Level.WARNING, "JME initalization failed.", t);
-
-        // if we don't have a client yet, create a bare bones client that we
-        // can use to get our context
-        MessageManager msgmgr = (_client == null) ?
-            new MessageManager(BangClient.MESSAGE_MANAGER_PREFIX) :
-            _client.getContext().getMessageManager();        
-        InitFailedDialog ifd = new InitFailedDialog(msgmgr, t);
-        ifd.pack();
-        ifd.setVisible(true);
+        reportInitFailure(_client, t);
     }
 
     @Override // documentation inherited
@@ -306,7 +297,7 @@ public class BangApp extends JmeApp
         super.update(frameTick);
         _client._soundmgr.updateStreams(_frameTime);
     }
-    
+
     @Override // documentation inherited
     protected void cleanup ()
     {
@@ -320,6 +311,24 @@ public class BangApp extends JmeApp
         if (client.isLoggedOn()) {
             client.logoff(false);
         }
+    }
+
+    /**
+     * Pops up a dialog telling the user that we were wholly unable to start up the client and
+     * giving them some indication of their meager options.
+     */
+    protected static void reportInitFailure (BangClient client, Throwable t)
+    {
+        log.log(Level.WARNING, "JME initalization failed.", t);
+
+        // if we don't have a client yet, create a bare bones client that we
+        // can use to get our context
+        MessageManager msgmgr = (client == null) ?
+            new MessageManager(BangClient.MESSAGE_MANAGER_PREFIX) :
+            client.getContext().getMessageManager();
+        InitFailedDialog ifd = new InitFailedDialog(msgmgr, t);
+        ifd.pack();
+        ifd.setVisible(true);
     }
 
     /** The main thing! */
