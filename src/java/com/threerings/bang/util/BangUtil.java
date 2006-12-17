@@ -263,6 +263,25 @@ public class BangUtil
     }
 
     /**
+     * Extracts and converts an enum property from a properties instance.
+     */
+    public static <T extends Enum<T>> T getEnumProperty (
+        String type, Properties props, String key, T defval)
+    {
+        String value = props.getProperty(key);
+        T evalue = null;
+        if (value != null) {
+            @SuppressWarnings("unchecked") Class<T> etype = (Class<T>)defval.getClass();
+            evalue = Enum.valueOf(etype, value.toUpperCase());
+            if (evalue == null) {
+                log.warning("Invalid enum config [type=" + type + ", key=" + key +
+                            ", value=" + value + "].");
+            }
+        }
+        return (evalue != null) ? evalue : defval;
+    }
+
+    /**
      * Returns the index of the specified town or -1 if the supplied town id is
      * invalid.
      */

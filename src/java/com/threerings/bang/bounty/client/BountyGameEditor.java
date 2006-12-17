@@ -384,8 +384,8 @@ public class BountyGameEditor extends BDecoratedWindow
 
     protected File getFile (String filename)
     {
-        if (!filename.endsWith(".dat")) {
-            filename = filename + ".dat";
+        if (!filename.endsWith(".game")) {
+            filename = filename + ".game";
         }
         return new File(System.getProperty("user.home") + File.separator +
                         "Desktop" + File.separator + filename);

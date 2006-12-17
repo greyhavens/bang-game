@@ -201,7 +201,7 @@ public class PardnerView extends IconPalette
             // the not online icon is a different size from an actual avatar icon so we have to
             // adjust the insets
             int offtop = (entry.avatar == null) ? 20 : 5;
-            _label.layout(new Insets(25, offtop, 25, 31));
+            _label.layout(new Insets(25, offtop, 25, 31), getWidth(), getHeight());
         }
 
         @Override // documentation inherited

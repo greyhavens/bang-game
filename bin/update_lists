@@ -46,3 +46,10 @@ done
 find rsrc/terrain -name 'terrain.properties' | \
   sed 's:rsrc/terrain/::g' | sed 's:/terrain.properties::' | \
   ./bin/update_terrain_codes
+
+# Update our list of bounties
+for TOWN in $TOWNS; do
+    find rsrc/bounties/$TOWN -name 'bounty.properties' | \
+        sed 's:rsrc/bounties/::g' | sed 's:/bounty.properties::' | sort > \
+        rsrc/bounties/$TOWN/bounties.txt
+done

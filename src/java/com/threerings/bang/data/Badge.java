@@ -873,7 +873,7 @@ public class Badge extends Item
                 bimage = ctx.getImageCache().getSilhouetteBImage("badges/noimage.png", true);
             }
         } else {
-            bimage = ctx.getImageCache().getBImage(iconPath, true);
+            bimage = ctx.getImageCache().getBImage(iconPath, 1f, true);
             if (bimage == null) {
                 bimage = ctx.loadImage("badges/noimage.png");
             }

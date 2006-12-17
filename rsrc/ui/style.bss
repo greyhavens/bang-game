@@ -1762,6 +1762,29 @@ directory_entry {
 }
 
 //
+// Sheriff's Office styles
+
+bounty_list_tip {
+  parent: "label";
+  font: "Helvetica" plain 15;
+  padding: 5 0 0 137;
+  size: 1 49; // only height is used
+  text-align: center;
+}
+
+bounty_list_entry {
+  font: "Old Town Medium" plain 28;
+}
+bounty_list_entry:selected {
+  color: #FFFFFF;
+  background: image "ui/popupmenu/highlight.png" framexy;
+}
+
+bounty_list_details {
+  font: "Dom Casual" plain 16;
+}
+
+//
 // Post-game stats display
 
 endgame_border {

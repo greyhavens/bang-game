@@ -145,11 +145,12 @@ public class BangUI
             Font.PLAIN, AffineTransform.getScaleInstance(1.2, 1));
         _fonts.put("Dom Casual", dom);
 
-        // we want a normal and wide version of Old Town
+        // we have normal (thin), medium and wide version of Old Town
         Font town = loadFont(ctx, "ui/fonts/oldtown.ttf");
         _fonts.put("Old Town", town);
-        town = town.deriveFont(
-            Font.PLAIN, AffineTransform.getScaleInstance(1.4, 1));
+        town = town.deriveFont(Font.PLAIN, AffineTransform.getScaleInstance(1.2, 1));
+        _fonts.put("Old Town Medium", town);
+        town = town.deriveFont(Font.PLAIN, AffineTransform.getScaleInstance(1.4, 1));
         _fonts.put("Old Town Wide", town);
 
         COUNTER_FONT = _fonts.get("Old Town").deriveFont(Font.BOLD, 72);

@@ -71,16 +71,15 @@ public class PaletteIcon extends SelectableIcon
     {
         super.layout();
 
-        // we need to do some jiggery pokery to force the label in a bit from
-        // the edges
-        _text.layout(getTextInsets());
+        // we need to do some jiggery pokery to force the label in a bit from the edges
+        _text.layout(getTextInsets(), getWidth(), getHeight());
     }
 
     @Override // documentation inherited
     protected void renderComponent (Renderer renderer)
     {
         super.renderComponent(renderer);
-        _text.render(renderer, _alpha);
+        _text.render(renderer, 0, 0, getWidth(), getHeight(), _alpha);
     }
 
     /**

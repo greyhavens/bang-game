@@ -82,12 +82,12 @@ public class GoodsPalette extends IconPalette
         if (reselectPrevious && sgood != null) {
             int sidx = ListUtil.indexOf(goods, sgood);
             if (sidx != -1) {
-                displayPage(sidx / (_rows * _cols), false);
+                displayPage(sidx / (_rows * _cols), false, false);
                 _icons.get(sidx).setSelected(true);
                 return;
                 
             } else if (opage * (_rows * _cols) < goods.length) {
-                displayPage(opage, false);
+                displayPage(opage, false, false);
             }
         }
         
