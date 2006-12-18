@@ -113,8 +113,7 @@ public class SelectionView extends SteelWindow
             } else if (item instanceof CardItem) {
                 CardItem citem = (CardItem)item;
                 Card card = Card.getCard(citem.getType());
-                if (citem.getQuantity() > 0 && card != null &&
-                    card.isPlayable(_bangobj)) {
+                if (citem.getQuantity() > 0 && card != null && card.isPlayable(_bangobj)) {
                     cardcount++;
                 }
             }

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import com.samskivert.util.RandomUtil;
 
 import com.threerings.io.SimpleStreamableObject;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.DSet;
 
@@ -18,6 +19,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.data.scenario.TutorialInfo;
 import com.threerings.bang.util.BangUtil;
 
@@ -96,7 +98,8 @@ public abstract class Card extends SimpleStreamableObject
             // zero out any cards that can't be used in this round
             if (bangobj != null) {
                 for (int ii = 0; ii < wcards.length; ii++) {
-                    if (weights[ii] > 0 && !wcards[ii].isPlayable(bangobj)) {
+                    if (weights[ii] > 0 &&
+                        !wcards[ii].isPlayable(bangobj)) {
                         weights[ii] = 0;
                     }
                 }
@@ -158,12 +161,29 @@ public abstract class Card extends SimpleStreamableObject
     }
 
     /**
-     * Determines whether this card can be played in the identified game.
+     * Returns a fully qualified translatable string for displaying the name of this card.
+     */
+    public String getName ()
+    {
+        return MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + getType());
+    }
+
+    /**
+     * This will be called to determine if a card is playable during a game. If a card needs to
+     * inspect the configuration of the game, it can override this method. If it only cares about
+     * the scenario type, it should override {@link #isPlayable(String,ScenarioInfo)}.
      */
     public boolean isPlayable (BangObject bangobj)
     {
-        return BangUtil.getTownIndex(bangobj.townId) >=
-            BangUtil.getTownIndex(getTownId());
+        return isPlayable(bangobj.scenario);
+    }
+
+    /**
+     * Determines whether this card can be played in the specified scenario.
+     */
+    public boolean isPlayable (ScenarioInfo scenario)
+    {
+        return BangUtil.getTownIndex(scenario.getTownId()) >= BangUtil.getTownIndex(getTownId());
     }
 
     /**

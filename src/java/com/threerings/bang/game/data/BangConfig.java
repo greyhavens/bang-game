@@ -39,11 +39,15 @@ public class BangConfig extends GameConfig
         /** The units be used by this player. */
         public String[] team;
 
+        /** The cards to be used by this player. */
+        public String[] cards;
+
         // from interface Savable
         public void write (JMEExporter ex) throws IOException {
             OutputCapsule out = ex.getCapsule(this);
             out.write(bigShot, "bigShot", null);
             out.write(team, "team", null);
+            out.write(cards, "cards", null);
         }
 
         // from interface Savable
@@ -51,6 +55,7 @@ public class BangConfig extends GameConfig
             InputCapsule in = im.getCapsule(this);
             bigShot = in.readString("bigShot", null);
             team = in.readStringArray("team", null);
+            cards = in.readStringArray("cards", null);
         }
 
         // from interface Savable
@@ -62,7 +67,8 @@ public class BangConfig extends GameConfig
         public boolean equals (Object other)
         {
             Player oplayer = (Player)other;
-            return ObjectUtil.equals(bigShot, oplayer.bigShot) && Arrays.equals(team, oplayer.team);
+            return ObjectUtil.equals(bigShot, oplayer.bigShot) &&
+                Arrays.equals(team, oplayer.team) && Arrays.equals(cards, oplayer.cards);
         }
     }
 
@@ -221,9 +227,18 @@ public class BangConfig extends GameConfig
      */
     public void addPlayer (String bigShot, String[] team)
     {
+        addPlayer(bigShot, team, null);
+    }
+
+    /**
+     * Adds a player to this game config.
+     */
+    public void addPlayer (String bigShot, String[] team, String[] cards)
+    {
         Player player = new Player();
         player.bigShot = bigShot;
         player.team = team;
+        player.cards = cards;
         teams.add(player);
     }
 

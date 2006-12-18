@@ -55,9 +55,8 @@ public class Joker extends AddPieceCard
     }
 
     @Override // documentation inherited
-    public boolean isPlayable (BangObject bangobj)
+    public boolean isPlayable (ScenarioInfo scenario)
     {
-        return super.isPlayable(bangobj) &&
-            bangobj.scenario.getTeams() != ScenarioInfo.Teams.COOP;
+        return super.isPlayable(scenario) && scenario.getTeams() != ScenarioInfo.Teams.COOP;
     }
 }

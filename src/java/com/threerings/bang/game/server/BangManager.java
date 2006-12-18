@@ -926,7 +926,7 @@ public class BangManager extends GameManager
             if (_bconfig.type == BangConfig.Type.BOUNTY) {
                 for (int ii = 0; ii < getPlayerSlots(); ii++) {
                     selectTeam(ii, _bconfig.teams.get(ii).bigShot, _bconfig.teams.get(ii).team,
-                               null); // TODO: _bconfig.teams.get(ii).cards
+                               _bconfig.teams.get(ii).cards);
                 }
             }
             break;
@@ -1161,10 +1161,9 @@ public class BangManager extends GameManager
      */
     protected void selectTeam (int pidx, String bigShotType, String[] units, String[] cardTypes)
     {
-        Card[] cards = null;
-        if (cardTypes != null) {
-            cards = new Card[cardTypes.length];
-            for (int ii = 0; ii < cards.length; ii++) {
+        Card[] cards = new Card[cardTypes != null ? cardTypes.length : 0];
+        for (int ii = 0; ii < cards.length; ii++) {
+            if (cardTypes[ii] != null) {
                 cards[ii] = Card.newCard(cardTypes[ii]);
                 cards[ii].init(_bangobj, pidx);
                 cards[ii].found = false;
@@ -1283,6 +1282,7 @@ public class BangManager extends GameManager
         log.fine("Starting next phase [cur=" + _bangobj.state + "].");
         switch (_bangobj.state) {
         case BangObject.SELECT_PHASE:
+        case BangObject.SKIP_SELECT_PHASE:
             // add everyone's selected cards to the BangObject
             _bangobj.startTransaction();
             try {
@@ -1293,10 +1293,6 @@ public class BangManager extends GameManager
                 _bangobj.commitTransaction();
             }
             _cardSet.clear();
-            startPhase(BangObject.IN_PLAY);
-            break;
-
-        case BangObject.SKIP_SELECT_PHASE:
             startPhase(BangObject.IN_PLAY);
             break;
 

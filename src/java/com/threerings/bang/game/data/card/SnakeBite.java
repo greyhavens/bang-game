@@ -11,6 +11,7 @@ import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.SnakeBiteEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 /**
  * A card that makes a unit take damage at every tick.
@@ -24,10 +25,9 @@ public class SnakeBite extends Card
     }
 
     @Override // documentation inherited
-    public boolean isPlayable (BangObject bangobj)
+    public boolean isPlayable (ScenarioInfo scenario)
     {
-        return super.isPlayable(bangobj) &&
-            bangobj.scenario.hasEnemies(UnitConfig.Make.HUMAN);
+        return super.isPlayable(scenario) && scenario.hasEnemies(UnitConfig.Make.HUMAN);
     }
 
     @Override // documentation inherited

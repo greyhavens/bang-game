@@ -10,6 +10,7 @@ import com.threerings.bang.game.data.effect.MisfireEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 /**
  * A card that allows the player to cause a unit's next shot to injure themself.
@@ -62,9 +63,8 @@ public class Misfire extends Card
     }
 
     @Override // documentation inherited
-    public boolean isPlayable (BangObject bangobj)
+    public boolean isPlayable (ScenarioInfo scenario)
     {
-        return super.isPlayable(bangobj) &&
-            bangobj.scenario.getIdent() != ForestGuardiansInfo.IDENT;
+        return super.isPlayable(scenario) && scenario.getIdent() != ForestGuardiansInfo.IDENT;
     }
 }
