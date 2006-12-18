@@ -115,8 +115,8 @@ public class BangObject extends GameObject
     /** The field name of the <code>scenario</code> field. */
     public static final String SCENARIO = "scenario";
 
-    /** The field name of the <code>boardName</code> field. */
-    public static final String BOARD_NAME = "boardName";
+    /** The field name of the <code>marquee</code> field. */
+    public static final String MARQUEE = "marquee";
 
     /** The field name of the <code>boardHash</code> field. */
     public static final String BOARD_HASH = "boardHash";
@@ -185,7 +185,7 @@ public class BangObject extends GameObject
     /** Contains the non-interactive props on the game board within games
      * (but not in the editor or the town view). */
     public transient Prop[] props = new Prop[0];
-    
+
     /** Contains statistics on the game, updated every time any change is
      * made to pertinent game state. */
     public transient GameData gdata = new GameData();
@@ -222,8 +222,8 @@ public class BangObject extends GameObject
     /** The metadata for the current scenario. */
     public ScenarioInfo scenario;
 
-    /** The name of the current board. */
-    public String boardName;
+    /** The (untranslated) marquee to display before the start of the round. */
+    public String marquee;
 
     /** The MD5 hash of the game board, to be compared against any cached
      * version of the board stored on the client. */
@@ -232,7 +232,7 @@ public class BangObject extends GameObject
     /** A list of round-specific updates to be applied to the board after
      * downloading it or loading it from the cache. */
     public Piece[] boardUpdates;
-    
+
     /** The starting positions for each player. */
     public StreamablePoint[] startPositions;
 
@@ -299,7 +299,7 @@ public class BangObject extends GameObject
             protected Iterator<Piece> _it = pieces.iterator();
         };
     }
-    
+
     /** Returns the {@link #pieces} set as an array to allow for
      * simultaneous iteration and removal. */
     public Piece[] getPieceArray ()
@@ -604,8 +604,8 @@ public class BangObject extends GameObject
      */
     public int getRoundIndex ()
     {
-        return roundId - (state == IN_PLAY || 
-                          state == POST_ROUND || 
+        return roundId - (state == IN_PLAY ||
+                          state == POST_ROUND ||
                           state == GAME_OVER ? 1 : 0);
     }
 
@@ -806,19 +806,19 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Requests that the <code>boardName</code> field be set to the
+     * Requests that the <code>marquee</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setBoardName (String value)
+    public void setMarquee (String value)
     {
-        String ovalue = this.boardName;
+        String ovalue = this.marquee;
         requestAttributeChange(
-            BOARD_NAME, value, ovalue);
-        this.boardName = value;
+            MARQUEE, value, ovalue);
+        this.marquee = value;
     }
 
     /**

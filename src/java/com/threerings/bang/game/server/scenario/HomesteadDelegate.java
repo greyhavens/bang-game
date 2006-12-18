@@ -69,7 +69,7 @@ public class HomesteadDelegate extends ScenarioDelegate
                 _steads.add((Homestead)p);
             }
         }
-        
+
         // create mappings from homestead "colors" (stored owners) to
         // player indices.  the closest colored homestead to a player
         // determines his color; if there are no colored homesteads,
@@ -92,20 +92,18 @@ public class HomesteadDelegate extends ScenarioDelegate
             }
             if (colored != null) {
                 owners[colored.owner] = ii;
-                  
+
             } else if (unclaimed != null) {
                 unclaimed.owner = IntListUtil.indexOf(owners, -1);
                 owners[unclaimed.owner] = ii;
-                
+
             } else {
                 log.warning("Unable to find starting homestead for player " +
-                            "[board=" + bangobj.boardName +
-                            ":" + bangobj.players.length +
-                            ", start=" + start + "].");
+                            "[board=" + _bangmgr.getBoardInfo() + ", start=" + start + "].");
                 break;
             }
         }
-        
+
         // now assign the homesteads according to the mappings we created
         for (Homestead stead : getHomesteads()) {
             if (stead.owner == -1) {
@@ -117,7 +115,7 @@ public class HomesteadDelegate extends ScenarioDelegate
                 _claims.add(stead);
             }
         }
-        
+
         // finally, sort the claims by decreasing distance from the player
         // starts
         QuickSort.rsort(_claims, new Comparator<Homestead>() {
@@ -143,12 +141,12 @@ public class HomesteadDelegate extends ScenarioDelegate
             }
         }
     }
-    
+
     @Override // from ScenarioDelegate
     public void tick (BangObject bangobj, short tick)
     {
         super.tick(bangobj, tick);
-        
+
         int[] points = new int[bangobj.players.length];
         for (Homestead stead : _steads) {
             if (stead.owner != -1) {
@@ -161,7 +159,7 @@ public class HomesteadDelegate extends ScenarioDelegate
             bangobj.grantPoints(ii, points[ii]);
         }
     }
-    
+
     @Override // from Scenario
     public void pieceMoved (BangObject bangobj, Piece piece)
     {

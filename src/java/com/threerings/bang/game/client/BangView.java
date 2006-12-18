@@ -23,6 +23,7 @@ import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.Histogram;
 import com.samskivert.util.Interval;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
@@ -388,19 +389,17 @@ public class BangView extends BWindow
     {
         // if the board is cached, we can continue immediately; otherwise, we
         // must request the board from the server
+        String boardId = StringUtil.hexlate(_bangobj.boardHash) + ":" + _bangobj.players.length;
         BoardData bdata = _ctx.getBoardCache().loadBoard(_bangobj.boardHash);
         if (bdata != null) {
-            log.info("Loaded board from cache [board=" + _bangobj.boardName +
-                     ", pcount=" + _bangobj.players.length + "].");
+            log.info("Loaded board from cache [board=" + boardId + "].");
             continuePreparingForRound(config, pidx, bdata);
             return true;
         }
 
-        log.info("Downloading board [board=" + _bangobj.boardName +
-                 ", pcount=" + _bangobj.players.length + "].");
+        log.info("Downloading board [board=" + boardId + "].");
         _preparing = true;
-        _bangobj.service.getBoard(
-            _ctx.getClient(), new BangService.BoardListener() {
+        _bangobj.service.getBoard(_ctx.getClient(), new BangService.BoardListener() {
             public void requestProcessed (BoardData bdata) {
                 // save the board for future use and continue
                 _ctx.getBoardCache().saveBoard(_bangobj.boardHash, bdata);
@@ -409,8 +408,7 @@ public class BangView extends BWindow
                 setPhase(_pendingPhase);
             }
             public void requestFailed (String cause) {
-                _ctx.getChatDirector().displayFeedback(
-                    GameCodes.GAME_MSGS, cause);
+                _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, cause);
             }
         });
         return false;
@@ -569,7 +567,7 @@ public class BangView extends BWindow
         }
 
         public void start () {
-            _boardName = _bangobj.boardName;
+            _boardId = StringUtil.hexlate(_bangobj.boardHash);
             schedule(1000L, true);
         }
 
@@ -577,7 +575,7 @@ public class BangView extends BWindow
             cancel();
 
             // if we've already reported, then stop here
-            if (_boardName == null) {
+            if (_boardId == null) {
                 return;
             }
 
@@ -588,7 +586,7 @@ public class BangView extends BWindow
                     GL11.glGetString(GL11.GL_RENDERER) + ", " +
                     GL11.glGetString(GL11.GL_VERSION);
                 _bangobj.service.reportPerformance(
-                    _ctx.getClient(), _boardName, driver, histo);
+                    _ctx.getClient(), _boardId, driver, histo);
             }
             
             // if more than half of the samples are below 20 fps, recommend
@@ -601,14 +599,14 @@ public class BangView extends BWindow
             }
             
             _perfhisto.clear();
-            _boardName = null;
+            _boardId = null;
         }
 
         public void expired () {
             _perfhisto.addValue((int)_ctx.getApp().getRecentFrameRate());
         }
 
-        protected String _boardName;
+        protected String _boardId;
         protected Histogram _perfhisto = new Histogram(0, 10, 7);
     }
 

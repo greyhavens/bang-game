@@ -14,6 +14,8 @@ import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.ListUtil;
 
+import com.threerings.crowd.data.PlaceObject;
+
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.ShopView;
 import com.threerings.bang.client.TownButton;
@@ -23,6 +25,7 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.bounty.data.OfficeCodes;
+import com.threerings.bang.bounty.data.OfficeObject;
 
 /**
  * Displays the Sheriff's Office user interface
@@ -59,10 +62,14 @@ public class OfficeView extends ShopView
             btn.setStyleClass("invisibutton");
         }
 
-        // create our two bounty list views
+        // this will display a particular bounty
+        _detail = new BountyDetailView(_ctx);
+        add(_detail, new Rectangle(581, 110, 403, 496));
+
+        // create our bounty list views
         _tabs = new BountyList[] {
-            new BountyList(ctx, BountyConfig.Type.TOWN),
-            new BountyList(ctx, BountyConfig.Type.MOST_WANTED)
+            new BountyList(ctx, BountyConfig.Type.TOWN, _detail),
+            new BountyList(ctx, BountyConfig.Type.MOST_WANTED, _detail)
         };
         add(_active = _tabs[0], TAB_CONTENT_RECT);
 
@@ -70,27 +77,34 @@ public class OfficeView extends ShopView
         _status.setStatus(getShopTip(), false);
     }
 
-    @Override // documentation inherited
+    @Override // from ShopView
+    public void willEnterPlace (PlaceObject plobj)
+    {
+        super.willEnterPlace(plobj);
+        _detail.setOfficeObject((OfficeObject)plobj);
+    }
+
+    @Override // from ShopView
     protected Point getShopkeepNameLocation ()
     {
         return new Point(23, 548);
     }
 
-    @Override // documentation inherited
+    @Override // from ShopView
     protected void wasAdded ()
     {
         super.wasAdded();
         _wantedTab.reference();
     }
 
-    @Override // documentation inherited
+    @Override // from ShopView
     protected void wasRemoved ()
     {
         super.wasRemoved();
         _wantedTab.release();
     }
 
-    @Override // documentation inherited
+    @Override // from ShopView
     protected void renderComponent (Renderer renderer)
     {
         // hackity hack hack hack
@@ -116,6 +130,7 @@ public class OfficeView extends ShopView
     protected BImage _wantedTab;
     protected BountyList _active;
     protected BountyList[] _tabs;
+    protected BountyDetailView _detail;
 
     protected static Rectangle TAB_CONTENT_RECT = new Rectangle(43, 71, 508, 548);
 

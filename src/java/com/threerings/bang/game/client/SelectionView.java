@@ -68,9 +68,8 @@ public class SelectionView extends SteelWindow
 
         BContainer header = GroupLayout.makeHBox(GroupLayout.CENTER);
         String msg = MessageBundle.compose(
-            "m.round_header",
-            MessageBundle.taint(String.valueOf((bangobj.roundId + 1))),
-            bangobj.scenario.getName(), MessageBundle.taint(bangobj.boardName));
+            "m.round_header", MessageBundle.taint(String.valueOf((bangobj.roundId + 1))),
+            bangobj.scenario.getName(), bangobj.marquee);
         _header.setText(_msgs.xlate(msg));
 
         // set up our main structural bits

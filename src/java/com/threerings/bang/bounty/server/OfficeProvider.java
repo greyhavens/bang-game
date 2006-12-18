@@ -19,7 +19,7 @@ public interface OfficeProvider extends InvocationProvider
     /**
      * Handles a {@link OfficeService#playBountyGame} request.
      */
-    public void playBountyGame (ClientObject caller, String arg1, InvocationService.InvocationListener arg2)
+    public void playBountyGame (ClientObject caller, String arg1, String arg2, InvocationService.InvocationListener arg3)
         throws InvocationException;
 
     /**

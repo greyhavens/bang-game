@@ -16,6 +16,11 @@ public abstract class Criterion extends SimpleStreamableObject
     implements Savable
 {
     /**
+     * Returns a string describing this criterion for display before the game.
+     */
+    public abstract String getDescription (BangObject bangobj, PlayerObject player);
+
+    /**
      * Returns null if this criteron is met, a string explaining how it was missed if not.
      */
     public abstract String isMet (BangObject bangobj, PlayerObject player);

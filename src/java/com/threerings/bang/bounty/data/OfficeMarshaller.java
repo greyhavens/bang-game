@@ -24,12 +24,12 @@ public class OfficeMarshaller extends InvocationMarshaller
     public static final int PLAY_BOUNTY_GAME = 1;
 
     // from interface OfficeService
-    public void playBountyGame (Client arg1, String arg2, InvocationService.InvocationListener arg3)
+    public void playBountyGame (Client arg1, String arg2, String arg3, InvocationService.InvocationListener arg4)
     {
-        ListenerMarshaller listener3 = new ListenerMarshaller();
-        listener3.listener = arg3;
+        ListenerMarshaller listener4 = new ListenerMarshaller();
+        listener4.listener = arg4;
         sendRequest(arg1, PLAY_BOUNTY_GAME, new Object[] {
-            arg2, listener3
+            arg2, arg3, listener4
         });
     }
 

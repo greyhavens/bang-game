@@ -1087,6 +1087,11 @@ card_icon {
   background: image "ui/pstatus/card_up.png" centerxy;
 }
 
+bounty_pregame_crit {
+  font: "Helvetica" plain 15;
+  color: #4C2602;
+}
+
 //
 // In-game styles
 
@@ -1782,6 +1787,23 @@ bounty_list_entry:selected {
 
 bounty_list_details {
   font: "Dom Casual" plain 16;
+  color: #6c421b;
+}
+
+bounty_detail_reward {
+  font: "Old Town Medium" plain 56;
+  color: #652708;
+  vertical-align: top;
+}
+
+bounty_detail_title {
+  font: "Old Town" plain 36;
+  color: #4C2602;
+}
+
+bounty_detail_descrip {
+  font: "Dom Casual" plain 16;
+  color: #6c421b;
 }
 
 //

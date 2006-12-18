@@ -23,21 +23,22 @@ import com.threerings.bang.bounty.data.OfficeCodes;
  */
 public class BountyList extends BContainer
 {
-    public BountyList (BangContext ctx, BountyConfig.Type type)
+    public BountyList (BangContext ctx, BountyConfig.Type type, BountyDetailView detail)
     {
         super(GroupLayout.makeVStretch());
         _ctx = ctx;
 
         add(_tip = new BLabel("", "bounty_list_tip"), GroupLayout.FIXED);
         add(new Spacer(0, 8), GroupLayout.FIXED);
-        add(_list = new IconPalette(null, 1, BOUNTIES_PER_PAGE, BountyListEntry.ICON_SIZE, 1));
+        add(_list = new IconPalette(detail, 1, BOUNTIES_PER_PAGE, BountyListEntry.ICON_SIZE, 1));
 
         // enumerate our available bounties
         PlayerObject user = _ctx.getUserObject();
         ArrayList<BountyConfig> bounties = BountyConfig.getTownBounties(user.townId, type);
 
         // determine how many are unlocked/complete and decide which page on which to start
-        int unlocked = 0, completed = 0, selidx = bounties.size()-1;
+        int unlocked = 0, completed = 0;
+        _selidx = bounties.size()-1;
         for (int ii = 0; ii < bounties.size(); ii++) {
             BountyConfig config = bounties.get(ii);
             _list.addIcon(new BountyListEntry(ctx, config));
@@ -46,14 +47,8 @@ public class BountyList extends BContainer
             } else if (config.isAvailable(user)) {
                 unlocked++;
                 // select the first playable bounty
-                selidx = Math.min(selidx, ii);
+                _selidx = Math.min(_selidx, ii);
             }
-        }
-
-        // select the bounty we noted for selection
-        if (selidx >= 0) {
-            _list.displayPage(selidx/BOUNTIES_PER_PAGE);
-            _list.getIcon(selidx).setSelected(true);
         }
 
         // configure the tip based on what they've unlocked and completed
@@ -68,9 +63,21 @@ public class BountyList extends BContainer
         _tip.setText(_ctx.xlate(OfficeCodes.OFFICE_MSGS, "m.tip_" + tip));
     }
 
+    @Override // from BComponent
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        // select the bounty we noted for selection
+        if (_selidx >= 0) {
+            _list.displayPage(_selidx/BOUNTIES_PER_PAGE);
+            _list.getIcon(_selidx).setSelected(true);
+        }
+    }
+
     protected BangContext _ctx;
     protected BLabel _tip;
     protected IconPalette _list;
+    protected int _selidx;
 
     protected static final int BOUNTIES_PER_PAGE = 5;
 }

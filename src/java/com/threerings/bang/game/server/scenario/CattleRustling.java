@@ -97,9 +97,7 @@ public class CattleRustling extends Scenario
 
         // freak out if the board is improperly configured
         if (_cattleSpots.size() == 0) {
-            log.warning("Board has no cattle spots! " +
-                "[name=" + bangobj.boardName +
-                ", pcount=" + bangobj.players.length + "].");
+            log.warning("Board has no cattle spots! [board=" + _bangmgr.getBoardInfo() + "].");
             return;
         }
 

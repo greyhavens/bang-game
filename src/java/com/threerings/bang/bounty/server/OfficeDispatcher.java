@@ -42,7 +42,7 @@ public class OfficeDispatcher extends InvocationDispatcher
         case OfficeMarshaller.PLAY_BOUNTY_GAME:
             ((OfficeProvider)provider).playBountyGame(
                 source,
-                (String)args[0], (InvocationService.InvocationListener)args[1]
+                (String)args[0], (String)args[1], (InvocationService.InvocationListener)args[2]
             );
             return;
 

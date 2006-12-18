@@ -662,7 +662,12 @@ public class BangController extends GameController
             _view.showPlayerStatus();
         }
 
-        if (_config.type != BangConfig.Type.SALOON || _config.allPlayersAIs()) {
+        if (_config.type == BangConfig.Type.BOUNTY) {
+            // display our bounty criterion
+            _ctx.getBangClient().displayPopup(
+                new PreGameBountyView(_ctx, this, _bangobj, _config), true, 400);
+
+        } else if (_config.type != BangConfig.Type.SALOON || _config.allPlayersAIs()) {
             // since we're not selecting anything, let the server know that we're ready
             playerReadyFor(BangObject.SKIP_SELECT_PHASE);
 

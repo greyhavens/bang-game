@@ -289,7 +289,7 @@ public class TownView extends BWindow
             BangObject bangobj = new BangObject();
             // we only want to configure the board name the first time we're shown as it will
             // trigger a marquee being displayed with the town name
-            bangobj.boardName = _presented.contains(townId) ? null : bfile.name;
+            bangobj.marquee = _presented.contains(townId) ? null : MessageBundle.taint(bfile.name);
             bangobj.board = bfile.board;
             bangobj.pieces = new ModifiableDSet<Piece>(bfile.pieces);
             prepareForRound(bangobj, null, 0);

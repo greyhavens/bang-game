@@ -42,6 +42,12 @@ public class IntStatCriterion extends Criterion
     }
 
     // from Criterion
+    public String getDescription (BangObject bangobj, PlayerObject player)
+    {
+        return createMessage(bangobj, player, "descrip");
+    }
+
+    // from Criterion
     public String reportMet (BangObject bangobj, PlayerObject player)
     {
         return createMessage(bangobj, player, "met");
@@ -87,20 +93,20 @@ public class IntStatCriterion extends Criterion
     protected String createMessage (BangObject bangobj, PlayerObject player, String type)
     {
         int pidx = bangobj.getPlayerIndex(player.handle);
-        int actual = bangobj.stats[pidx].getIntStat(stat);
+        int actual = (bangobj.stats == null) ? 0 : bangobj.stats[pidx].getIntStat(stat);
         switch (condition) {
         case LESS_THAN:
-            if (actual < value) {
+            if (type.equals("failed") && actual < value) {
                 return null;
             }
             break;
         case EQUAL_TO:
-            if (actual == value) {
+            if (type.equals("failed") && actual == value) {
                 return null;
             }
             break;
         case AT_LEAST:
-            if (actual >= value) {
+            if (type.equals("failed") && actual >= value) {
                 return null;
             }
             break;

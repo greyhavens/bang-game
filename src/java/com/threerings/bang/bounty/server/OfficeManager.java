@@ -4,8 +4,12 @@
 package com.threerings.bang.bounty.server;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Level;
+
+import com.jme.util.export.binary.BinaryImporter;
+import com.samskivert.util.Invoker;
 
 import com.threerings.util.Name;
 
@@ -17,7 +21,9 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.BoardRecord;
 
 import com.threerings.bang.game.data.BangAI;
@@ -27,6 +33,7 @@ import com.threerings.bang.game.server.BangManager;
 
 import com.threerings.bang.bounty.client.OfficeService;
 import com.threerings.bang.bounty.data.BoardInfo;
+import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.bounty.data.OfficeCodes;
 import com.threerings.bang.bounty.data.OfficeMarshaller;
 import com.threerings.bang.bounty.data.OfficeObject;
@@ -40,11 +47,78 @@ public class OfficeManager extends PlaceManager
     implements OfficeCodes, OfficeProvider
 {
     // from interface OfficeProvider
-    public void playBountyGame (ClientObject caller, String ident,
-                                OfficeService.InvocationListener listener)
+    public void playBountyGame (ClientObject caller, String bountyId, final String gameId,
+                                final OfficeService.InvocationListener listener)
         throws InvocationException
     {
-        log.info("TODO: start " + ident);
+        final PlayerObject player = (PlayerObject)caller;
+
+        final BountyConfig config = BountyConfig.getBounty(bountyId);
+        if (config == null) {
+            log.warning("Received request to start unknown bounty [from=" + player.who() +
+                        ", bounty=" + bountyId + ", game=" + gameId + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // make sure they haven't hacked their client
+        if (!config.isAvailable(player)) {
+            log.warning("Player requested to start unavailable bounty [who=" + player.who() +
+                        ", bounty=" + bountyId + "].");
+            throw new InvocationException(ACCESS_DENIED);
+        }
+        if (config.inOrder) {
+            for (String game : config.games) {
+                if (game.equals(gameId)) {
+                    break;
+                } else if (!player.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED,
+                                                       config.getStatKey(game))) {
+                    log.warning("Player tryied to play bounty game out of order " +
+                                "[who=" + player.who() + ", bounty=" + bountyId +
+                                ", game=" + gameId + "].");
+                    throw new InvocationException(ACCESS_DENIED);
+                }
+            }
+        }
+
+        // check whether we've already cached the game config in question
+        final String key = bountyId + "/" + gameId;
+        BangConfig gconfig = _configs.get(key);
+        if (gconfig != null) {
+            startBountyGame(player, config, gameId, gconfig);
+            return;
+        }
+
+        // load up the game configuration from disk (on the invoker thread)
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                try {
+                    String path = "bounties/" + ServerConfig.townId + "/" +
+                        config.type.toString().toLowerCase() + "/" + key + ".game";
+                    _gconfig = (BangConfig)BinaryImporter.getInstance().load(
+                        BangServer.rsrcmgr.getResource(path));
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "Failed to load bounty game [key=" + key + "].", e);
+                }
+                return true;
+            }
+
+            public void handleResult () {
+                String err = INTERNAL_ERROR;
+                if (_gconfig != null) {
+                    _configs.put(key, _gconfig);
+                    try {
+                        startBountyGame(player, config, gameId, _gconfig);
+                        return;
+                    } catch (InvocationException ie) {
+                        err = ie.getMessage();
+                        // fall through and fail
+                    }
+                }
+                listener.requestFailed(err);
+            }
+
+            protected BangConfig _gconfig;
+        });
     }
 
     // from interface OfficeProvider
@@ -56,27 +130,33 @@ public class OfficeManager extends PlaceManager
         if (!player.tokens.isSupport()) {
             throw new InvocationException(ACCESS_DENIED);
         }
+        startBountyGame(player, null, null, config);
+    }
 
+    protected void startBountyGame (PlayerObject player, BountyConfig bounty, String gameId,
+                                    BangConfig gconfig)
+        throws InvocationException
+    {
         HashSet<String> names = new HashSet<String>();
         names.add(player.getVisibleName().toString());
 
         // configure our AIs and the player names array
-        config.type = BangConfig.Type.BOUNTY;
-        config.players = new Name[config.teams.size()];
-        config.ais = new BangAI[config.teams.size()];
-        config.players[0] = player.getVisibleName();
-        for (int ii = 1; ii < config.players.length; ii++) {
+        gconfig.type = BangConfig.Type.BOUNTY;
+        gconfig.players = new Name[gconfig.teams.size()];
+        gconfig.ais = new BangAI[gconfig.teams.size()];
+        gconfig.players[0] = player.getVisibleName();
+        for (int ii = 1; ii < gconfig.players.length; ii++) {
             BangAI ai = BangAI.createAI(1, 50, names);
-            config.players[ii] = ai.handle;
-            config.ais[ii] = ai;
+            gconfig.players[ii] = ai.handle;
+            gconfig.ais[ii] = ai;
         }
 
         try {
-            BangServer.plreg.createPlace(config);
-
+            BangManager bangmgr = (BangManager)BangServer.plreg.createPlace(gconfig);
+            bangmgr.setBountyConfig(bounty, gameId);
         } catch (InstantiationException ie) {
             log.log(Level.WARNING, "Error instantiating bounty game [for=" + player.who() +
-                    ", config=" + config + "].", ie);
+                    ", bounty=" + bounty + ", gconfig=" + gconfig + "].", ie);
             throw new InvocationException(INTERNAL_ERROR);
         }
     }
@@ -119,4 +199,7 @@ public class OfficeManager extends PlaceManager
     }
 
     protected OfficeObject _offobj;
+
+    /** A cache of all loaded bounty configurations. */
+    protected HashMap<String,BangConfig> _configs = new HashMap<String,BangConfig>();
 }

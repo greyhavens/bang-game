@@ -356,9 +356,9 @@ public class BoardView extends BComponent
         _board.shadowPieces(_bangobj.getPropPieceIterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
 
-        // create a marquee with our board name if we've got one
-        if (_bangobj.boardName != null) {
-            createMarquee(_bangobj.boardName);
+        // create a marquee if we've been configured to do so
+        if (_bangobj.marquee != null) {
+            createMarquee(_ctx.xlate(GameCodes.GAME_MSGS, _bangobj.marquee));
         }
 
         // refresh the lights and fog and wind and such

@@ -52,6 +52,7 @@ import com.threerings.parlor.game.server.GameManager;
 
 import com.threerings.bang.admin.data.StatusObject;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.bounty.data.BountyConfig;
 
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
@@ -233,6 +234,28 @@ public class BangManager extends GameManager
         if (_scenario instanceof Tutorial) {
             ((Tutorial)_scenario).actionProcessed(caller, actionId);
         }
+    }
+
+    /**
+     * If we are playing a bounty game, the manager will be configured with the appropriate bounty
+     * configuration via this method.
+     */
+    public void setBountyConfig (BountyConfig bounty, String bountyGameId)
+    {
+        _bounty = bounty;
+        _bountyGameId = bountyGameId;
+    }
+
+    /**
+     * Returns a string describing the current board. Used for debug logging.
+     */
+    public String getBoardInfo ()
+    {
+        if (_rounds == null || _activeRoundId < 0 || _activeRoundId >= _rounds.length ||
+            _bangobj == null || _bangobj.players == null) {
+            return "unknown";
+        }
+        return _rounds[_activeRoundId].board.name + ":" + _bangobj.players.length;
     }
 
     // documentation inherited from interface BangProvider
@@ -754,8 +777,8 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     public String where ()
     {
-        return (_bangobj == null) ? super.where() : "[" + super.where() + ", board=" +
-            _bangobj.boardName + ", pcount=" + _bangobj.players.length + "]";
+        return (_bangobj == null) ? super.where() :
+            "[" + super.where() + ", board=" + getBoardInfo() + "]";
     }
 
     @Override // documentation inherited
@@ -1008,7 +1031,11 @@ public class BangManager extends GameManager
 
         // set up the board and pieces so it's visible while purchasing
         _bangobj.board = (BangBoard)round.bdata.board.clone();
-        _bangobj.setBoardName(round.board.name);
+        if (_bounty != null) {
+            _bangobj.setMarquee(_bounty.getName(_bountyGameId));
+        } else {
+            _bangobj.setMarquee(MessageBundle.taint(round.board.name));
+        }
         _bangobj.setBoardHash(round.board.dataHash);
 
         // clone the pieces we get from the board as we may modify them during the game
@@ -1672,6 +1699,14 @@ public class BangManager extends GameManager
                 }
                 if (failed == 0) {
                     SpeakProvider.sendAttention(_bangobj, GAME_MSGS, "m.all_criterion_met");
+                    if (_bounty != null) {
+                        // mark this game (and possibly the whole bounty) as completed
+                        user.stats.addToSetStat(Stat.Type.BOUNTY_GAMES_COMPLETED,
+                                                _bounty.getStatKey(_bountyGameId));
+                        if (_bounty.isCompleted(user)) {
+                            user.stats.addToSetStat(Stat.Type.BOUNTIES_COMPLETED, _bounty.ident);
+                        }
+                    }
                 }
             }
             // END TEMP
@@ -2772,6 +2807,12 @@ public class BangManager extends GameManager
 
     /** A casted reference to our game object. */
     protected BangObject _bangobj;
+
+    /** Our bounty configuration if this is a bounty game, null otherwise. */
+    protected BountyConfig _bounty;
+
+    /** The id of the bounty game we're playing if this is a bounty game, null otherwise. */
+    protected String _bountyGameId;
 
     /** Contains info on each round that we played. */
     protected RoundRecord[] _rounds;

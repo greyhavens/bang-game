@@ -110,9 +110,8 @@ public class InGameOptionsView extends BDecoratedWindow
 
         // update our title with the current board info
         if (_bangobj != null && _bangobj.scenario != null) {
-            String scen = _ctx.xlate(
-                GameCodes.GAME_MSGS, _bangobj.scenario.getName());
-            _title.setText(_bangobj.boardName + " - " + scen);
+            _title.setText(_ctx.xlate(GameCodes.GAME_MSGS, _bangobj.marquee) + " - " +
+                           _ctx.xlate(GameCodes.GAME_MSGS, _bangobj.scenario.getName()));
         }
     }
 

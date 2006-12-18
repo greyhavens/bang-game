@@ -11,8 +11,10 @@ import java.util.Properties;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.io.SimpleStreamableObject;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
@@ -93,6 +95,37 @@ public class BountyConfig extends SimpleStreamableObject
      */
     public boolean isAvailable (PlayerObject user)
     {
+        return true;
+    }
+
+    /**
+     * Returns the (fully qualified) translatable string key for the specified bounty game.
+     */
+    public String getName (String game)
+    {
+        return MessageBundle.qualify(OfficeCodes.BOUNTY_MSGS, "m." + ident + "." + game);
+    }
+
+    /**
+     * Returns the stat set key used to identify the supplied game (which must be one of this
+     * bounty's games).
+     */
+    public String getStatKey (String game)
+    {
+        return ident + "." + game;
+    }
+
+    /**
+     * Checks whether all of this bounty's games have been completed by the specified player.
+     */
+    public boolean isCompleted (PlayerObject user)
+    {
+        // if they have completed all the games, they're done!
+        for (String game : games) {
+            if (!user.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED, getStatKey(game))) {
+                return false;
+            }
+        }
         return true;
     }
 
