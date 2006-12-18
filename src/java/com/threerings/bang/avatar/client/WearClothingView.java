@@ -84,17 +84,18 @@ public class WearClothingView extends BContainer
             add(new BButton(label, new ActionListener() {
                 public void actionPerformed (ActionEvent event) {
                     Look look = _pick.getSelection();
-                    if (look != null) {
-                        int[] print = look.getAvatar(ctx.getUserObject());
-                        try {
-                            StringSelection sel = new StringSelection(StringUtil.toString(print));
-                            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
-                            Toolkit.getDefaultToolkit().getSystemSelection().setContents(sel, null);
-                            ctx.getChatDirector().displayFeedback(
-                                BarberCodes.BARBER_MSGS, "m.print_copied");
-                        } catch (Exception e) {
-                            e.printStackTrace(System.err);
-                        }
+                    if (look == null) {
+                        return;
+                    }
+                    int[] print = look.getAvatar(ctx.getUserObject());
+                    StringSelection sel = new StringSelection(StringUtil.toString(print, "", ""));
+                    try {
+                        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
+                        Toolkit.getDefaultToolkit().getSystemSelection().setContents(sel, null);
+                        ctx.getChatDirector().displayFeedback(
+                            BarberCodes.BARBER_MSGS, "m.print_copied");
+                    } catch (Exception e) {
+                        e.printStackTrace(System.err);
                     }
                 }
             }, ""), new Point(740, 45));
