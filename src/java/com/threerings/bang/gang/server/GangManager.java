@@ -728,7 +728,7 @@ public class GangManager
                 public void expired () {
                     SaloonManager.refreshTopRanked(getGangObject(),
                         "GANG_MEMBERS", "RATINGS.PLAYER_ID = GANG_MEMBERS.PLAYER_ID and " +
-                        "GANG_ID = " + _gangobj.gangId, TOP_RANKED_LIST_SIZE);
+                        "GANG_MEMBERS.GANG_ID = " + _gangobj.gangId, TOP_RANKED_LIST_SIZE);
                 }
             };
             _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
