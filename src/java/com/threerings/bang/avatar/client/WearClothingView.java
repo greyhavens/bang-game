@@ -5,12 +5,16 @@ package com.threerings.bang.avatar.client;
 
 import com.jme.renderer.Renderer;
 
+import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
+import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
@@ -21,10 +25,14 @@ import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.util.BangContext;
 
-import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.avatar.data.BarberCodes;
 import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
+
+import java.awt.datatransfer.StringSelection;
+
+import java.awt.Toolkit;
 
 /**
  * Allows the customization of looks with clothing and accessories.
@@ -32,7 +40,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 public class WearClothingView extends BContainer
     implements ArticlePalette.Inspector
 {
-    public WearClothingView (BangContext ctx, StatusLabel status)
+    public WearClothingView (final BangContext ctx, StatusLabel status)
     {
         super(new AbsoluteLayout());
 
@@ -69,6 +77,28 @@ public class WearClothingView extends BContainer
                 setSlot(index);
             }
         }, new Rectangle(10, 35, 140, 470));
+
+        // if we're an admin show a button that copies our avatar fingerprint to the clipboard
+        if (ctx.getUserObject().tokens.isAdmin()) {
+            String label = ctx.xlate(BarberCodes.BARBER_MSGS, "m.copy_print");
+            add(new BButton(label, new ActionListener() {
+                public void actionPerformed (ActionEvent event) {
+                    Look look = _pick.getSelection();
+                    if (look != null) {
+                        int[] print = look.getAvatar(ctx.getUserObject());
+                        try {
+                            StringSelection sel = new StringSelection(StringUtil.toString(print));
+                            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
+                            Toolkit.getDefaultToolkit().getSystemSelection().setContents(sel, null);
+                            ctx.getChatDirector().displayFeedback(
+                                BarberCodes.BARBER_MSGS, "m.print_copied");
+                        } catch (Exception e) {
+                            e.printStackTrace(System.err);
+                        }
+                    }
+                }
+            }, ""), new Point(740, 45));
+        }
     }
 
     /**
