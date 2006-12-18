@@ -73,14 +73,13 @@ public abstract class Scenario
      * round.
      *
      * @param bangobj the game object.
-     * @param starts a list of start markers for all the players.
+     * @param starts an array of start markers for all the players.
      * @param pieces the remaining pieces on the board.
      * @param updates a list to populate with any pieces that were updated
      * during the filter process
      */
-    public void filterPieces (
-        BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces,
-        ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
+                              ArrayList<Piece> updates)
     {
         // extract the bonus spawn markers from the pieces array
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
@@ -152,8 +151,7 @@ public abstract class Scenario
      * indicating why the scenario is booched, which will be displayed to
      * the players and the game will be cancelled.
      */
-    public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
-                                PieceSet purchases)
+    public void roundWillStart (BangObject bangobj, Piece[] starts, PieceSet purchases)
         throws InvocationException
     {
         // record the time at which the round started
@@ -162,7 +160,7 @@ public abstract class Scenario
         // this will contain the starting spot for each player
         _startSpots = new Point[bangobj.players.length];
         for (int ii = 0; ii < _startSpots.length; ii++) {
-            Piece p = starts.get(ii);
+            Piece p = starts[ii];
             _startSpots[ii] = new Point(p.x, p.y);
         }
 

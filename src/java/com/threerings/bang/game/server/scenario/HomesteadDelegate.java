@@ -56,9 +56,8 @@ public class HomesteadDelegate extends ScenarioDelegate
     }
 
     @Override // documentation inherited
-    public void filterPieces (
-        BangObject bangobj, final ArrayList<Piece> starts,
-        ArrayList<Piece> pieces, ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, final Piece[] starts, ArrayList<Piece> pieces,
+                              ArrayList<Piece> updates)
     {
         super.filterPieces(bangobj, starts, pieces, updates);
 
@@ -76,7 +75,7 @@ public class HomesteadDelegate extends ScenarioDelegate
         // the closest unclaimed homestead is colored.
         int[] owners = new int[] { -1, -1, -1, -1 };
         for (int ii = 0; ii < bangobj.players.length; ii++) {
-            Piece start = starts.get(ii);
+            Piece start = starts[ii];
             Homestead unclaimed = null, colored = null;
             int udist = Integer.MAX_VALUE, cdist = Integer.MAX_VALUE;
             for (Homestead stead : getHomesteads()) {
@@ -116,12 +115,10 @@ public class HomesteadDelegate extends ScenarioDelegate
             }
         }
 
-        // finally, sort the claims by decreasing distance from the player
-        // starts
+        // finally, sort the claims by decreasing distance from the player starts
         QuickSort.rsort(_claims, new Comparator<Homestead>() {
             public int compare (Homestead h1, Homestead h2) {
-                Piece p1 = starts.get(h1.owner),
-                    p2 = starts.get(h2.owner);
+                Piece p1 = starts[h1.owner], p2 = starts[h2.owner];
                 return h1.getDistance(p1) - h2.getDistance(p2);
             }
         });

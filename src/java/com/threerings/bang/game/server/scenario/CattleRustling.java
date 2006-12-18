@@ -68,9 +68,8 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    public void filterPieces (
-        BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces,
-        ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
+                              ArrayList<Piece> updates)
     {
         super.filterPieces(bangobj, starts, pieces, updates);
 
@@ -86,8 +85,7 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
-                                PieceSet purchases)
+    public void roundWillStart (BangObject bangobj, Piece[] starts, PieceSet purchases)
         throws InvocationException
     {
         super.roundWillStart(bangobj, starts, purchases);

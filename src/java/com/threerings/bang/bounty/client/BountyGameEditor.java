@@ -80,17 +80,14 @@ public class BountyGameEditor extends BDecoratedWindow
         }
         add(cpanel);
 
-        BContainer ppanel = new BContainer(new TableLayout(2, 5, 5));
-        BContainer row = addRow(ppanel, "m.player_units");
-        _punits = new BComboBox[MAX_BOUNTY_UNITS];
-        for (int ii = 0; ii < _punits.length; ii++) {
-            row.add(_punits[ii] = new BComboBox());
-        }
-        _oppunits = new BComboBox[OPPONENTS.length][MAX_BOUNTY_UNITS];
-        for (int oo = 0; oo < _oppunits.length; oo++) {
-            row = addRow(ppanel, "m.opp_units");
-            for (int ii = 0; ii < _oppunits[oo].length; ii++) {
-                row.add(_oppunits[oo][ii] = new BComboBox());
+        BContainer ppanel = new BContainer(new TableLayout(2, 5, 5)), row;
+        _units = new BComboBox[1+OPPONENTS.length][MAX_BOUNTY_UNITS];
+        _starts = new BComboBox[1+OPPONENTS.length];
+        for (int pp = 0; pp < _units.length; pp++) {
+            row = addRow(ppanel, (pp == 0) ? "m.player_units" : "m.opp_units");
+            row.add(_starts[pp] = new BComboBox());
+            for (int ii = 0; ii < _units[pp].length; ii++) {
+                row.add(_units[pp][ii] = new BComboBox());
             }
         }
 
@@ -130,16 +127,16 @@ public class BountyGameEditor extends BDecoratedWindow
         // enumerate our available units
         String townId = _ctx.getUserObject().townId;
         _bsunits = new ArrayList<BComboBox.Item>();
-        _units = new ArrayList<BComboBox.Item>();
+        _runits = new ArrayList<BComboBox.Item>();
         for (int tt = 0, ll = BangUtil.getTownIndex(townId); tt <= ll; tt++) {
             String tid = BangCodes.TOWN_IDS[tt];
             _bsunits.add(new BComboBox.Item(null, _msgs.get("m.none")));
             for (UnitConfig uconf : UnitConfig.getTownUnits(tid, UnitConfig.Rank.BIGSHOT)) {
                 _bsunits.add(new BComboBox.Item(uconf.type, _msgs.xlate(uconf.getName())));
             }
-            _units.add(new BComboBox.Item(null, _msgs.get("m.none")));
+            _runits.add(new BComboBox.Item(null, _msgs.get("m.none")));
             for (UnitConfig uconf : UnitConfig.getTownUnits(tid, UnitConfig.Rank.NORMAL)) {
-                _units.add(new BComboBox.Item(uconf.type, _msgs.xlate(uconf.getName())));
+                _runits.add(new BComboBox.Item(uconf.type, _msgs.xlate(uconf.getName())));
             }
         }
 
@@ -182,17 +179,14 @@ public class BountyGameEditor extends BDecoratedWindow
         });
         _speed.selectItem(1);
         new StateSaver("bounty.speed", _speed);
-
-        for (int ii = 0; ii < _punits.length; ii++) {
-            _punits[ii].setItems(ii == 0 ? _bsunits : _units);
-            _punits[ii].selectItem(0);
-            new StateSaver("bounty.punits" + ii, _punits[ii]);
-        }
-        for (int oo = 0; oo < _oppunits.length; oo++) {
-            for (int ii = 0; ii < _oppunits[oo].length; ii++) {
-                _oppunits[oo][ii].setItems(ii == 0 ? _bsunits : _units);
-                _oppunits[oo][ii].selectItem(0);
-                new StateSaver("bounty.oppunits" + oo + "." + ii, _oppunits[oo][ii]);
+        for (int pp = 0; pp < _units.length; pp++) {
+            _starts[pp].setItems(START_SPOTS[0]);
+            _starts[pp].selectItem(0);
+            new StateSaver("bounty.starts." + pp, _starts[pp]);
+            for (int ii = 0; ii < _units[pp].length; ii++) {
+                _units[pp][ii].setItems(ii == 0 ? _bsunits : _runits);
+                _units[pp][ii].selectItem(0);
+                new StateSaver("bounty.units." + pp + "." + ii, _units[pp][ii]);
             }
         }
 
@@ -274,11 +268,9 @@ public class BountyGameEditor extends BDecoratedWindow
         for (BoardInfo info : _offobj.boards) {
             if (info.matches(players, scenario)) {
                 _board.addItem(info);
-                if (oinfo != null && info.name.equals(oinfo.name)) {
-                    _board.selectItem(_board.getItemCount()-1);
-                }
             }
         }
+        _board.selectItem(oinfo);
         if (_board.getSelectedIndex() == -1 && _board.getItemCount() > 0) {
             _board.selectItem(0);
         }
@@ -316,10 +308,9 @@ public class BountyGameEditor extends BDecoratedWindow
         for (int ii = 0; ii < _cardsel.length; ii++) {
             cards[ii] = (String)_cardsel[ii].getSelectedValue();
         }
-        config.addPlayer((String)_punits[0].getSelectedValue(), getTeam(_punits), cards);
-
-        for (int ii = 0, ll = (Integer)_opponents.getSelectedItem(); ii < ll; ii++) {
-            config.addPlayer((String)_oppunits[ii][0].getSelectedValue(), getTeam(_oppunits[ii]));
+        for (int ii = 0, ll = 1+(Integer)_opponents.getSelectedItem(); ii < ll; ii++) {
+            config.addPlayer((String)_units[ii][0].getSelectedValue(), getTeam(_units[ii]),
+                             (ii == 0) ? cards : null, (Integer)_starts[ii].getSelectedItem());
         }
 
         for (int ii = 0; ii < _criterion.getComponentCount(); ii++) {
@@ -348,7 +339,7 @@ public class BountyGameEditor extends BDecoratedWindow
         // configure the units
         for (int pidx = 0; pidx < config.teams.size(); pidx++) {
             BangConfig.Player player = config.teams.get(pidx);
-            BComboBox[] units = (pidx == 0) ? _punits : _oppunits[pidx-1];
+            BComboBox[] units = _units[pidx];
             units[0].selectValue(player.bigShot);
             for (int uu = 1; uu < units.length; uu++) {
                 units[uu].selectValue((player.team != null && player.team.length > (uu-1)) ?
@@ -374,9 +365,13 @@ public class BountyGameEditor extends BDecoratedWindow
 
     protected void enableUnitGrid (int oppcount)
     {
-        for (int oo = 0; oo < _oppunits.length; oo++) {
-            for (int ii = 0; ii < _oppunits[oo].length; ii++) {
-                _oppunits[oo][ii].setEnabled(oppcount > oo);
+        for (int pp = 0; pp < _units.length; pp++) {
+            _starts[pp].setEnabled(oppcount >= pp);
+            Integer ovalue = (Integer)_starts[pp].getSelectedItem();
+            _starts[pp].setItems(START_SPOTS[oppcount-1]);
+            _starts[pp].selectItem(ovalue);
+            for (int ii = 0; ii < _units[pp].length; ii++) {
+                _units[pp][ii].setEnabled(oppcount >= pp);
             }
         }
     }
@@ -446,16 +441,21 @@ public class BountyGameEditor extends BDecoratedWindow
     protected BComboBox _opponents, _scenario, _board;
     protected BComboBox _duration, _speed;
     protected BComboBox[] _cardsel = new BComboBox[GameCodes.MAX_CARDS];
-    protected BComboBox[] _punits;
-    protected BComboBox[][] _oppunits;
+    protected BComboBox[] _starts;
+    protected BComboBox[][] _units;
 
     protected BComboBox _ctype;
     protected BContainer _criterion;
 
-    protected ArrayList<BComboBox.Item> _bsunits, _units;
+    protected ArrayList<BComboBox.Item> _bsunits, _runits;
     protected ArrayList<BComboBox.Item> _cards = new ArrayList<BComboBox.Item>();
 
     protected static final Integer[] OPPONENTS = new Integer[] { 1, 2, 3 };
+    protected static final Integer[][] START_SPOTS = {
+        new Integer[] { -1, 0, 1 },
+        new Integer[] { -1, 0, 1, 2 },
+        new Integer[] { -1, 0, 1, 2, 3 },
+    };
 
     // default to max team size plus one for big shot
     protected static final int MAX_BOUNTY_UNITS = GameCodes.MAX_TEAM_SIZE + 1;

@@ -35,8 +35,8 @@ import static com.threerings.bang.Log.log;
 public class TreeBedDelegate extends ScenarioDelegate
 {
     @Override // documentation inherited
-    public void filterPieces (BangObject bangobj, ArrayList<Piece> starts,
-                              ArrayList<Piece> pieces, ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
+                              ArrayList<Piece> updates)
     {
         // collect and remove all the tree beds
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {

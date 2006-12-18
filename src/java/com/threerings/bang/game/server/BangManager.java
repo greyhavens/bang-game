@@ -1011,7 +1011,7 @@ public class BangManager extends GameManager
                 _scenario = (Scenario)Class.forName(sclass).newInstance();
             } catch (Exception e) {
                 log.log(Level.WARNING, "Failed to instantiate scenario class: " + sclass, e);
-                // TODO: cancel the game or something
+                cancelGame();
                 return;
             }
         }
@@ -1051,32 +1051,52 @@ public class BangManager extends GameManager
         }
 
         // extract and remove all player start markers
-        _starts.clear();
+        ArrayList<Piece> starts = new ArrayList<Piece>();
         for (Iterator<Piece> iter = pieces.iterator(); iter.hasNext(); ) {
             Piece p = iter.next();
             if (Marker.isMarker(p, Marker.START)) {
                 if (p.isValidScenario(_bangobj.scenario.getIdent())) {
-                    _starts.add(p);
+                    starts.add(p);
                 }
                 iter.remove();
             }
         }
-        // if we lack sufficient numbers, create some random ones
-        for (int ii = _starts.size(); ii < getPlayerSlots(); ii++) {
-            Marker p = new Marker(Marker.START);
-            p.x = (short)RandomUtil.getInt(_bangobj.board.getWidth());
-            p.y = (short)RandomUtil.getInt(_bangobj.board.getHeight());
-            _starts.add(p);
+        // if we lack sufficient numbers, freak out
+        if (starts.size() < getPlayerSlots()) {
+            log.warning("Board has insufficient start spots [game=" + where() +
+                        ", need=" + getPlayerSlots() + "].");
+            cancelGame();
+            return;
         }
-        // if this is not a tutorial, shuffle the starting positions
-        if (_bconfig.type != BangConfig.Type.TUTORIAL) {
-            Collections.shuffle(_starts);
+
+        // assign starting positions to the players
+        _starts = new Piece[getPlayerSlots()];
+        for (int tt = 0; tt < _bconfig.teams.size(); tt++) {
+            // start at the desired location (which depends on the game config and game type)
+            int stidx = _bconfig.teams.get(tt).startSpot;
+            if (stidx == -1) {
+                switch (_bconfig.type) {
+                case SALOON: stidx = RandomUtil.getInt(starts.size()); break;
+                default : stidx = tt; break;
+                }
+            }
+
+            // then scan from there upwards looking for an unused starting spot
+            for (int ii = 0, ll = starts.size(); ii < ll; ii++) {
+                int idx = (stidx + ii) % ll;
+                _starts[tt] = starts.get(idx);
+                // stop when we find an unused starting spot
+                if (_starts[tt] != null) {
+                    starts.set(idx, null);
+                    break;
+                }
+            }
         }
+
         // store them in the bang object for initial camera positions
-        _bangobj.startPositions = new StreamablePoint[_starts.size()];
-        for (int ii = 0, nn = _starts.size(); ii < nn; ii++) {
-            Piece start = _starts.get(ii);
-            _bangobj.startPositions[ii] = new StreamablePoint(start.x, start.y);
+        _bangobj.startPositions = new StreamablePoint[_starts.length];
+        for (int ii = 0, nn = _starts.length; ii < nn; ii++) {
+            _bangobj.startPositions[ii] = new StreamablePoint(_starts[ii].x, _starts[ii].y);
         }
         _bangobj.setStartPositions(_bangobj.startPositions);
 
@@ -1377,9 +1397,8 @@ public class BangManager extends GameManager
                 }
 
                 // now position each of them
-                Piece p = _starts.get(ii);
-                ArrayList<Point> spots =
-                    _bangobj.board.getOccupiableSpots(ppieces.size(), p.x, p.y, 4);
+                ArrayList<Point> spots = _bangobj.board.getOccupiableSpots(
+                    ppieces.size(), _starts[ii].x, _starts[ii].y, 4);
                 while (spots.size() > 0 && ppieces.size() > 0) {
                     Point spot = spots.remove(0);
                     Piece piece = ppieces.remove(0);
@@ -2856,7 +2875,7 @@ public class BangManager extends GameManager
     protected PreGameTimer _preGameTimer = new PreGameTimer();
 
     /** Used to track the locations where players can start. */
-    protected ArrayList<Piece> _starts = new ArrayList<Piece>();
+    protected Piece[] _starts;
 
     /** Maps card id to a {@link StartingCard} record. */
     protected HashIntMap<StartingCard> _scards = new HashIntMap<StartingCard>();

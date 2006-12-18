@@ -41,4 +41,21 @@ public class BoardInfo implements DSet.Entry
     {
         return name;
     }
+
+    @Override // from Object
+    public int hashCode ()
+    {
+        return name.hashCode() ^ players;
+    }
+
+    @Override // from Object
+    public boolean equals (Object other)
+    {
+        if (other instanceof BoardInfo) {
+            BoardInfo bother = (BoardInfo)other;
+            return bother.name.equals(name) && bother.players == players;
+        } else {
+            return false;
+        }
+    }
 }

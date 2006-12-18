@@ -112,9 +112,8 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     }
 
     @Override // documentation inherited
-    public void filterPieces (
-        BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces,
-        ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
+                              ArrayList<Piece> updates)
     {
         super.filterPieces(bangobj, starts, pieces, updates);
 

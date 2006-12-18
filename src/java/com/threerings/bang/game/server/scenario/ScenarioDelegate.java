@@ -37,9 +37,8 @@ public class ScenarioDelegate
      * @param updates a list to populate with any pieces that were updated
      * during the filter process
      */
-    public void filterPieces (
-        BangObject bangobj, ArrayList<Piece> starts, ArrayList<Piece> pieces,
-        ArrayList<Piece> updates)
+    public void filterPieces (BangObject bangobj, Piece[] starts, ArrayList<Piece> pieces,
+                              ArrayList<Piece> updates)
     {
     }
 

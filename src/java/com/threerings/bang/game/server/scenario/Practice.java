@@ -36,8 +36,7 @@ public class Practice extends Scenario
     }
 
     @Override // documentation inherited
-    public void roundWillStart (BangObject bangobj, ArrayList<Piece> starts,
-                                PieceSet purchases)
+    public void roundWillStart (BangObject bangobj, Piece[] starts, PieceSet purchases)
         throws InvocationException
     {
         super.roundWillStart(bangobj, starts, purchases);

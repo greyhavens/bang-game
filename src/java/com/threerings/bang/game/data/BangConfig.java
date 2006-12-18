@@ -42,12 +42,16 @@ public class BangConfig extends GameConfig
         /** The cards to be used by this player. */
         public String[] cards;
 
+        /** The index of the starting spot for this player or -1 for the default. */
+        public int startSpot = -1;
+
         // from interface Savable
         public void write (JMEExporter ex) throws IOException {
             OutputCapsule out = ex.getCapsule(this);
             out.write(bigShot, "bigShot", null);
             out.write(team, "team", null);
             out.write(cards, "cards", null);
+            out.write(startSpot, "startSpot", -1);
         }
 
         // from interface Savable
@@ -56,6 +60,7 @@ public class BangConfig extends GameConfig
             bigShot = in.readString("bigShot", null);
             team = in.readStringArray("team", null);
             cards = in.readStringArray("cards", null);
+            startSpot = in.readInt("startSpot", -1);
         }
 
         // from interface Savable
@@ -227,18 +232,19 @@ public class BangConfig extends GameConfig
      */
     public void addPlayer (String bigShot, String[] team)
     {
-        addPlayer(bigShot, team, null);
+        addPlayer(bigShot, team, null, -1);
     }
 
     /**
      * Adds a player to this game config.
      */
-    public void addPlayer (String bigShot, String[] team, String[] cards)
+    public void addPlayer (String bigShot, String[] team, String[] cards, int startSpot)
     {
         Player player = new Player();
         player.bigShot = bigShot;
         player.team = team;
         player.cards = cards;
+        player.startSpot = startSpot;
         teams.add(player);
     }
 
