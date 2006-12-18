@@ -336,9 +336,10 @@ public class BountyGameEditor extends BDecoratedWindow
             }
         }
 
-        // configure the units
+        // configure the units and starting spots
         for (int pidx = 0; pidx < config.teams.size(); pidx++) {
             BangConfig.Player player = config.teams.get(pidx);
+            _starts[pidx].selectItem(player.startSpot);
             BComboBox[] units = _units[pidx];
             units[0].selectValue(player.bigShot);
             for (int uu = 1; uu < units.length; uu++) {
