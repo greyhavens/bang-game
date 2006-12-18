@@ -7,8 +7,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+
 import java.lang.ref.SoftReference;
 import java.nio.FloatBuffer;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -132,11 +135,10 @@ public class AvatarView extends BLabel
      * image.
      */
     public static void getImage (
-        final BasicContext ctx, int[] avatar,
-        final ResultListener<BufferedImage> receiver)
+        BasicContext ctx, int[] avatar, ResultListener<BufferedImage> receiver)
     {
         // first check the cache
-        final AvatarKey key = new AvatarKey(avatar);
+        AvatarKey key = new AvatarKey(avatar);
         SoftReference<BufferedImage> iref = _icache.get(key);
         BufferedImage image;
         if (iref != null && (image = iref.get()) != null) {
@@ -144,47 +146,13 @@ public class AvatarView extends BLabel
             return;
         }
 
-        // TODO: handle multiple requests to getImage() for the same image
-        // before the first one completes; currently the code will queue up
-        // multiple composites
-        final CharacterDescriptor cdesc =
-            ctx.getAvatarLogic().decodeAvatar(avatar);
-        ctx.getInvoker().postUnit(new Invoker.Unit() {
-            public boolean invoke () {
-                ActionFrames af;
-                try {
-                    af = ctx.getCharacterManager().getActionFrames(
-                        cdesc, "default");
-                } catch (Exception e) {
-                    log.log(Level.WARNING, "Unable to load action frames " +
-                            "[cdesc=" + cdesc + "].", e);
-                    // return a blank image rather than null
-                    _image = ctx.getImageCache().createCompatibleImage(
-                        WIDTH, HEIGHT, true);
-                    return true;
-                }
-
-                // composite the myriad components and render them into an image
-                MultiFrameImage mfi = af.getFrames(0);
-                int ox = af.getXOrigin(0, 0), oy = af.getYOrigin(0, 0);
-                _image = ctx.getImageManager().createImage(
-                    WIDTH, HEIGHT, Transparency.BITMASK);
-                Graphics2D gfx = (Graphics2D)_image.createGraphics();
-                try {
-                    mfi.paintFrame(gfx, 0, WIDTH/2-ox, HEIGHT-oy);
-                } finally {
-                    gfx.dispose();
-                }
-                _icache.put(key, new SoftReference<BufferedImage>(_image));
-                return true;
-            }
-
-            public void handleResult () {
-                receiver.requestCompleted(_image);
-            }
-
-            protected BufferedImage _image;
-        });
+        // handle multiple pending requests to getImage() for the same fingerprint
+        AvatarResolver resolver = _rcache.get(key);
+        if (resolver != null) {
+            resolver.receivers.add(receiver);
+        } else {
+            _rcache.put(key, new AvatarResolver(ctx, key, avatar, receiver));
+        }
     }
 
     /**
@@ -421,6 +389,60 @@ public class AvatarView extends BLabel
         protected int[] _avatar;
     }
 
+    /** Handles composition of avatar images on the invoker thread. */
+    protected static class AvatarResolver extends Invoker.Unit
+    {
+        public ArrayList<ResultListener<BufferedImage>> receivers =
+            new ArrayList<ResultListener<BufferedImage>>();
+
+        public AvatarResolver (BasicContext ctx, AvatarKey key, int[] avatar,
+                               ResultListener<BufferedImage> receiver) {
+            _ctx = ctx;
+            _key = key;
+            _cdesc = _ctx.getAvatarLogic().decodeAvatar(avatar);
+            receivers.add(receiver);
+            _ctx.getInvoker().postUnit(this);
+        }
+
+        public boolean invoke () {
+            ActionFrames af;
+            try {
+                af = _ctx.getCharacterManager().getActionFrames(_cdesc, "default");
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Unable to load action frames " + _cdesc + ".", e);
+                // return a blank image rather than null
+                _image = _ctx.getImageCache().createCompatibleImage(WIDTH, HEIGHT, true);
+                return true;
+            }
+
+            // composite the myriad components and render them into an image
+            MultiFrameImage mfi = af.getFrames(0);
+            int ox = af.getXOrigin(0, 0), oy = af.getYOrigin(0, 0);
+            _image = _ctx.getImageManager().createImage(WIDTH, HEIGHT, Transparency.BITMASK);
+            Graphics2D gfx = (Graphics2D)_image.createGraphics();
+            try {
+                mfi.paintFrame(gfx, 0, WIDTH/2-ox, HEIGHT-oy);
+            } finally {
+                gfx.dispose();
+            }
+
+            // TODO: cache composited avatars on disk
+            return true;
+        }
+
+        public void handleResult () {
+            _icache.put(_key, new SoftReference<BufferedImage>(_image));
+            for (ResultListener<BufferedImage> receiver : receivers) {
+                receiver.requestCompleted(_image);
+            }
+        }
+
+        protected BasicContext _ctx;
+        protected AvatarKey _key;
+        protected CharacterDescriptor _cdesc;
+        protected BufferedImage _image;
+    }
+
     protected BasicContext _ctx;
     protected BImage _frame, _scroll, _image;
     protected int[] _avatar;
@@ -430,6 +452,10 @@ public class AvatarView extends BLabel
 
     /** Used to flip texture coordinates. */
     protected static Vector2f _tcoord = new Vector2f();
+
+    /** A mapping of active resolvers. */
+    protected static HashMap<AvatarKey, AvatarResolver> _rcache =
+        new HashMap<AvatarKey, AvatarResolver>();
 
     /** The avatar image cache. */
     protected static HashMap<AvatarKey, SoftReference<BufferedImage>> _icache =
