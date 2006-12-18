@@ -1701,7 +1701,7 @@ public class BangManager extends GameManager
                     }
                 }
                 if (failed == 0) {
-                    SpeakProvider.sendAttention(_bangobj, GAME_MSGS, "m.all_criterion_met");
+                    SpeakProvider.sendAttention(_bangobj, GAME_MSGS, "m.all_criteria_met");
 
                     if (_bounty != null) {
                         user.stats.addToSetStat(Stat.Type.BOUNTY_GAMES_COMPLETED,
