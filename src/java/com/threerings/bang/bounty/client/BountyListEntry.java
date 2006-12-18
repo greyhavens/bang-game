@@ -4,7 +4,6 @@
 package com.threerings.bang.bounty.client;
 
 import com.jme.renderer.Renderer;
-import com.jmex.bui.BImage;
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.Label;
 import com.jmex.bui.text.BTextFactory;
@@ -36,13 +35,13 @@ public class BountyListEntry extends SelectableIcon
         setStyleClass("bounty_list_entry");
         setPreferredSize(ICON_SIZE);
 
+        _ctx = ctx;
         this.config = config;
 
-        _frame = ctx.getImageCache().getBImage("ui/office/frame.png", 0.5f, false);
+        // create our various labels
         _labels = new Label[] {
             new Label(this), new Label(this), new Label(this), new Label(this), new Label(this)
         };
-
         MessageBundle msgs = ctx.getMessageManager().getBundle(OfficeCodes.OFFICE_MSGS);
         _labels[0].setText(ctx.xlate(OfficeCodes.BOUNTY_MSGS, "m." + config.ident + "_title"));
         _labels[1].setText(msgs.get("m.list_reward"));
@@ -50,6 +49,9 @@ public class BountyListEntry extends SelectableIcon
         _labels[2].setIcon(BangUI.scripIcon);
         _labels[3].setText(msgs.get("m.list_games", String.valueOf(config.games.size())));
         _labels[4].setText(msgs.get("m.diff_" + config.difficulty.toString().toLowerCase()));
+
+        // create our outlaw view (we'll configure it lazily)
+        _oview = new OutlawView(ctx, 0.5f);
     }
 
     @Override // from BComponent
@@ -60,7 +62,10 @@ public class BountyListEntry extends SelectableIcon
         for (Label label : _labels) {
             label.wasAdded();
         }
-        _frame.reference();
+
+        // start resolving our outlaw now that we're added (this will NOOP after the first time)
+        _oview.reference();
+        _oview.setOutlaw(_ctx, config.outlawPrint, config.isCompleted(_ctx.getUserObject()));
     }
 
     @Override // from BComponent
@@ -71,7 +76,7 @@ public class BountyListEntry extends SelectableIcon
         for (Label label : _labels) {
             label.wasRemoved();
         }
-        _frame.release();
+        _oview.release();
     }
 
     @Override // from BComponent
@@ -126,12 +131,13 @@ public class BountyListEntry extends SelectableIcon
                                LABEL_RECTS[ii].width, LABEL_RECTS[ii].height, _alpha);
         }
 
-        _frame.render(renderer, FRAME_LOC.x, FRAME_LOC.y, _alpha);
+        _oview.render(renderer, FRAME_LOC.x, FRAME_LOC.y, _alpha);
     }
 
-    protected BImage _frame;
+    protected BangContext _ctx;
     protected Label[] _labels;
     protected BTextFactory[] _altfacts;
+    protected OutlawView _oview;
 
     protected static final Point FRAME_LOC = new Point(40, 5);
     protected static final Rectangle[] LABEL_RECTS = {

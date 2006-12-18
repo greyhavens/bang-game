@@ -59,6 +59,9 @@ public class BountyConfig extends SimpleStreamableObject
     /** Whether or not the bounty games must be played in order. */
     public boolean inOrder = true;
 
+    /** An optional character fingerprint for the outlaw. */
+    public int[] outlawPrint;
+
     /** The names of our game definition files. */
     public ArrayList<String> games = new ArrayList<String>();
 
@@ -166,7 +169,8 @@ public class BountyConfig extends SimpleStreamableObject
         // parse the various bounty properties
         config.lock = BangUtil.getEnumProperty(which, props, "lock", LockType.NONE);
         config.difficulty = BangUtil.getEnumProperty(which, props, "difficulty", Difficulty.EASY);
-        config.inOrder = BangUtil.getBooleanProperty(which, props, "inOrder", config.inOrder);
+        config.inOrder = BangUtil.getBooleanProperty(which, props, "in_order", config.inOrder);
+        config.outlawPrint = StringUtil.parseIntArray(props.getProperty("outlaw_print", ""));
 
         for (String game : StringUtil.parseStringArray(props.getProperty("games", ""))) {
             config.games.add(game);

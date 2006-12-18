@@ -38,6 +38,7 @@ public class BountyDetailView extends BContainer
         _comp = new ImageIcon(ctx.loadImage("ui/tutorials/complete.png"));
         _incomp = new ImageIcon(ctx.loadImage("ui/tutorials/incomplete.png"));
 
+        add(_oview = new OutlawView(ctx, 1f), new Point(55, 272));
         add(_reward = new BLabel("", "bounty_detail_reward"), new Point(263, 438));
         _reward.setIcon(new ImageIcon(ctx.loadImage("ui/icons/big_scrip.png")));
         _reward.setIconTextGap(10);
@@ -69,6 +70,7 @@ public class BountyDetailView extends BContainer
         }
 
         _config = ((BountyListEntry)icon).config;
+        _oview.setOutlaw(_ctx, _config.outlawPrint, false);
         _reward.setText(String.valueOf(_config.reward.scrip));
         _title.setText(_ctx.xlate(OfficeCodes.BOUNTY_MSGS, "m." + _config.ident + "_title"));
         _descrip.setText(_ctx.xlate(OfficeCodes.BOUNTY_MSGS, "m." + _config.ident + "_descrip"));
@@ -119,6 +121,7 @@ public class BountyDetailView extends BContainer
     protected OfficeObject _offobj;
     protected BountyConfig _config;
 
+    protected OutlawView _oview;
     protected BLabel _reward, _title, _descrip;
     protected BContainer _games, _recent;
 

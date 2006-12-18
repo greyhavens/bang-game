@@ -31,6 +31,7 @@ public class BountyList extends BContainer
         add(_tip = new BLabel("", "bounty_list_tip"), GroupLayout.FIXED);
         add(new Spacer(0, 8), GroupLayout.FIXED);
         add(_list = new IconPalette(detail, 1, BOUNTIES_PER_PAGE, BountyListEntry.ICON_SIZE, 1));
+        _list.setAllowsEmptySelection(false);
 
         // enumerate our available bounties
         PlayerObject user = _ctx.getUserObject();
