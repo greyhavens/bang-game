@@ -216,6 +216,7 @@
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/bounties/${town}/bundle.jar" basedir="rsrc/bounties/${town}">
+      <include name="**/bounties.txt"/>
       <include name="**/*.png"/>
       <include name="**/*.game"/>
       <include name="**/*.properties"/>
