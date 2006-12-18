@@ -529,11 +529,12 @@
     </jar>
 
     <!-- the server can't access things in the bundle files, so we make one -->
-    <!-- big file with all of our bunt, prop, bonus and other properties -->
+    <!-- big file with all of our unit, prop, bonus and other properties -->
     <jar destfile="${deploy.dir}/bang-server-config.jar">
       <fileset dir=".">
         <include name="rsrc/**/*.txt"/>
         <include name="rsrc/**/*.properties"/>
+        <include name="rsrc/**/*.game"/>
         <include name="rsrc/**/*.dat"/>
         <exclude name="**/model.properties"/>
       </fileset>
