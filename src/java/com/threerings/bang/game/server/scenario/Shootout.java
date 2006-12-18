@@ -25,11 +25,10 @@ import com.threerings.bang.game.util.PointSet;
 public class Shootout extends Scenario
 {
     @Override // documentation inherited
-    public void roundWillStart (BangObject bangobj, ArrayList<Piece> markers,
-                                PieceSet purchases)
+    public void roundWillStart (BangObject bangobj, Piece[] starts, PieceSet purchases)
         throws InvocationException
     {
-        super.roundWillStart(bangobj, markers, purchases);
+        super.roundWillStart(bangobj, starts, purchases);
 
         // create a fresh knockout array
         _knockoutOrder = new int[bangobj.players.length];
