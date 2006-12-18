@@ -70,7 +70,7 @@ public class BountyDetailView extends BContainer
         }
 
         _config = ((BountyListEntry)icon).config;
-        _oview.setOutlaw(_ctx, _config.outlawPrint, false);
+        _oview.setOutlaw(_ctx, _config.outlawPrint, _config.isCompleted(_ctx.getUserObject()));
         _reward.setText(String.valueOf(_config.reward.scrip));
         _title.setText(_ctx.xlate(OfficeCodes.BOUNTY_MSGS, "m." + _config.ident + "_title"));
         _descrip.setText(_ctx.xlate(OfficeCodes.BOUNTY_MSGS, "m." + _config.ident + "_descrip"));

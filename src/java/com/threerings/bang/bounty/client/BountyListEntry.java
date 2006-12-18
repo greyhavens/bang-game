@@ -52,6 +52,7 @@ public class BountyListEntry extends SelectableIcon
 
         // create our outlaw view (we'll configure it lazily)
         _oview = new OutlawView(ctx, 0.5f);
+        _completed = config.isCompleted(_ctx.getUserObject());
     }
 
     @Override // from BComponent
@@ -65,7 +66,7 @@ public class BountyListEntry extends SelectableIcon
 
         // start resolving our outlaw now that we're added (this will NOOP after the first time)
         _oview.reference();
-        _oview.setOutlaw(_ctx, config.outlawPrint, config.isCompleted(_ctx.getUserObject()));
+        _oview.setOutlaw(_ctx, config.outlawPrint, _completed);
     }
 
     @Override // from BComponent
@@ -127,6 +128,9 @@ public class BountyListEntry extends SelectableIcon
         super.renderComponent(renderer);
 
         for (int ii = 0; ii < _labels.length; ii++) {
+            if (_completed && (ii == 1 || ii == 2)) {
+                continue; // don't show the reward for completed bounties
+            }
             _labels[ii].render(renderer, LABEL_RECTS[ii].x, LABEL_RECTS[ii].y,
                                LABEL_RECTS[ii].width, LABEL_RECTS[ii].height, _alpha);
         }
@@ -135,6 +139,7 @@ public class BountyListEntry extends SelectableIcon
     }
 
     protected BangContext _ctx;
+    protected boolean _completed;
     protected Label[] _labels;
     protected BTextFactory[] _altfacts;
     protected OutlawView _oview;

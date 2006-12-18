@@ -185,7 +185,7 @@ public class BountyConfig extends SimpleStreamableObject
             log.warning("Bounty name collision [which=" + which + ", old=" + collide + "].");
         }
 
-        log.info("Registered " + config + ".");
+        log.fine("Registered " + config + ".");
     }
 
     protected static void ensureBountiesLoaded ()

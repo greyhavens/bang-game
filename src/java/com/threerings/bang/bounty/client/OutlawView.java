@@ -31,11 +31,11 @@ public class OutlawView extends BComponent
     {
         _scale = scale;
         _images = new BImage[] {
-            ctx.getImageCache().getBImage("ui/office/background_light.png", scale, false),
-            ctx.getImageCache().getBImage("ui/office/background_dark.png", scale, false),
+            ctx.getImageCache().getBImage("ui/office/outlaw_bg.png", scale, false),
             ctx.getImageCache().getBImage("ui/office/frame.png", scale, false),
             ctx.getImageCache().getBImage("ui/office/sepia.png", scale, false),
-            ctx.getImageCache().getBImage("ui/office/check.png", scale, false),
+            ctx.getImageCache().getBImage("ui/office/dark.png", scale, false),
+            ctx.getImageCache().getBImage("ui/office/check.png", 1f, false), // not scaled
             null };
     }
 
@@ -74,16 +74,20 @@ public class OutlawView extends BComponent
 
     public void render (Renderer renderer, int x, int y, float alpha)
     {
-        _images[_completed ? DARKBG : LIGHTBG].render(renderer, x, y, alpha);
+        _images[BACKGROUND].render(renderer, x, y, alpha);
         if (_images[AVATAR] != null) {
             _images[AVATAR].render(renderer, x, y + (int)(4*_scale), alpha);
         }
         _images[FRAME].render(renderer, x, y, alpha);
-        _images[SEPIA].render(renderer, x, y, alpha * (_completed ? 0.6f : 0.3f));
         if (_completed) {
-            int ox = (_images[FRAME].getWidth() - _images[CHECK].getWidth())/2;
-            int oy = (_images[FRAME].getHeight() - _images[CHECK].getHeight())/2;
-            _images[CHECK].render(renderer, x+ox, y+oy, alpha);
+            _images[DARK].render(renderer, x, y, alpha * 0.6f);
+        }
+        if (_scale == 1f) {
+            _images[SEPIA].render(renderer, x, y, alpha * 0.3f);
+        }
+        if (_completed) {
+            int ox = (_images[FRAME].getWidth() - _images[CHECK].getWidth()) + (int)(10*_scale);
+            _images[CHECK].render(renderer, x+ox, y+(int)(8*_scale), alpha);
         }
     }
 
@@ -135,10 +139,10 @@ public class OutlawView extends BComponent
     protected float _scale;
     protected int[] _print;
 
-    protected static final int LIGHTBG = 0;
-    protected static final int DARKBG = 1;
-    protected static final int FRAME = 2;
-    protected static final int SEPIA = 3;
+    protected static final int BACKGROUND = 0;
+    protected static final int FRAME = 1;
+    protected static final int SEPIA = 2;
+    protected static final int DARK = 3;
     protected static final int CHECK = 4;
     protected static final int AVATAR = 5;
 }
