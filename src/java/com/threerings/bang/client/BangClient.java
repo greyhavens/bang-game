@@ -811,7 +811,7 @@ public class BangClient extends BasicClient
     // documentation inherited from interface ClientObserver
     public void clientConnectionFailed (Client client, Exception cause)
     {
-        // nothing doing
+        _logOffMsg = "connection";
     }
 
     // documentation inherited from interface ClientObserver
@@ -831,9 +831,11 @@ public class BangClient extends BasicClient
             client.getClientObject().removeListener(_nlistener);
         }
 
-        if (_pendingTownId == null && !_idledOut) {
-            // shut her right on down
-            _ctx.getApp().stop();
+        if (_logOffMsg != null) {
+            showLogOffMessage(_logOffMsg);
+
+        } else if (_pendingTownId == null) {
+            showLogOffMessage(DEFAULT_LOGOFF_MESSAGE);
         }
     }
 
@@ -853,28 +855,6 @@ public class BangClient extends BasicClient
     }
 
     /**
-     * Called when the client idle's out.
-     */
-    public void clientDidIdleOut ()
-    {
-        // stop the music
-        if (_mstream != null) {
-            _mstream.fadeOut(0.5f, true);
-            _mstream = null;
-        }
-        _idledOut = true;
-        log.info("Client idled out.");
-
-        // Clear out all the windows and just show the Idled out window
-        _ctx.getRootNode().removeAllWindows();
-        _ctx.getClient().logoff(false);
-        _mview = new IdleView(_ctx);
-        _ctx.getRootNode().addWindow(_mview);
-        _mview.pack();
-        _mview.center();
-    }
-
-    /**
      * Pops up a dialog suggesting a lower level of graphical detail to the
      * user, or saves the suggestion until it can be displayed.
      */
@@ -886,6 +866,26 @@ public class BangClient extends BasicClient
             _suggestLowerDetail = true;
         }
     }
+
+    /**
+     * Called when the client log's off with a message.
+     */
+    protected void showLogOffMessage (String msg)
+    {
+        // stop the music
+        if (_mstream != null) {
+            _mstream.fadeOut(0.5f, true);
+            _mstream = null;
+        }
+
+        // Clear out all the windows and just show the Idled out window
+        _ctx.getRootNode().removeAllWindows();
+        _mview = new LogOffView(_ctx, msg);
+        _ctx.getRootNode().addWindow(_mview);
+        _mview.pack();
+        _mview.center();
+    }
+
 
     protected Handle[] createHandles (String[] strings)
     {
@@ -1124,7 +1124,9 @@ public class BangClient extends BasicClient
             if (idle > LOGOFF_DELAY) {
                 if (_ctx.getClient().isLoggedOn()) {
                     cancel();
-                    clientDidIdleOut();
+                    log.info("Client idled out.");
+                    _logOffMsg = "idle";
+                    _ctx.getClient().logoff(false);
                 }
             }
         }
@@ -1258,7 +1260,6 @@ public class BangClient extends BasicClient
     protected BangContextImpl _ctx;
     protected Config _config = new Config("bang");
     protected String _pendingTownId;
-    protected boolean _idledOut;
 
     protected SetAdapter _nlistener = new SetAdapter() {
         public void entryAdded (EntryAddedEvent event) {
@@ -1288,7 +1289,11 @@ public class BangClient extends BasicClient
     protected boolean _viewTransition = false;
     protected String _priorLocationIdent;
     protected int _priorLocationOid;
+    protected String _logOffMsg;
 
     /** The time in milliseconds after which we log off an idle user. */
     protected static final long LOGOFF_DELAY = 8L * 60L * 1000L;
+
+    /** The default logoff message. */
+    protected static final String DEFAULT_LOGOFF_MESSAGE = "logoff";
 }

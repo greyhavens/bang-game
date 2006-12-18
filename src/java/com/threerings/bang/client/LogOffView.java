@@ -10,6 +10,7 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
@@ -19,19 +20,20 @@ import com.threerings.bang.util.BangContext;
 import static com.threerings.bang.Log.log;
 
 /**
- * A window that pops up if the client idles out.
+ * A window that pops up if the client logs off with a message.
  */
-public class IdleView extends BDecoratedWindow
+public class LogOffView extends BDecoratedWindow
     implements ActionListener
 {
-    public IdleView (BangContext ctx)
+    public LogOffView (BangContext ctx, String msg)
     {
-        super(ctx.getStyleSheet(), ctx.xlate(BangCodes.BANG_MSGS, "m.idle_title"));
+        super(ctx.getStyleSheet(), ctx.xlate(BangCodes.BANG_MSGS, "l." + msg + "_title"));
 
         _ctx = ctx;
         MessageBundle msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
+        setPreferredSize(new Dimension(600, 200));
 
-        add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.idle_out")));
+        add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + msg)));
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ((GroupLayout)bcont.getLayoutManager()).setGap(25);
         bcont.add(new BButton(msgs.get("m.quit"), this, "quit"));
