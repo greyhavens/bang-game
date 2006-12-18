@@ -73,6 +73,7 @@
        <exclude name="effects/**"/>
        <exclude name="extras/**"/>
        <exclude name="bonuses/**"/>
+       <exclude name="bounties/**"/>
        <exclude name="boards/**"/>
        <exclude name="avatars/**"/>
        <exclude name="goods/**"/>
@@ -212,6 +213,12 @@
     </jar>
     <jar file="rsrc/goods/${town}/bundle.jar" basedir="rsrc/goods/${town}">
       <include name="**/*.png"/>
+      <exclude name="**/source/**"/>
+    </jar>
+    <jar file="rsrc/bounties/${town}/bundle.jar" basedir="rsrc/bounties/${town}">
+      <include name="**/*.png"/>
+      <include name="**/*.game"/>
+      <include name="**/*.properties"/>
       <exclude name="**/source/**"/>
     </jar>
     <jar file="rsrc/sounds/music/${town}/bundle.jar"
@@ -516,6 +523,7 @@
         <exclude name="rsrc/props/**"/>
         <exclude name="rsrc/effects/**"/>
         <exclude name="rsrc/bonuses/**"/>
+        <exclude name="rsrc/bounties/**"/>
         <exclude name="rsrc/extras/**"/>
       </fileset>
     </jar>
