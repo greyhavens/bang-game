@@ -142,6 +142,7 @@ public class OfficeManager extends PlaceManager
 
         // configure our AIs and the player names array
         gconfig.type = BangConfig.Type.BOUNTY;
+        gconfig.rated = false;
         gconfig.players = new Name[gconfig.teams.size()];
         gconfig.ais = new BangAI[gconfig.teams.size()];
         gconfig.players[0] = player.getVisibleName();

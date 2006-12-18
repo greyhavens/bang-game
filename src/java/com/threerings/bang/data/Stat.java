@@ -47,7 +47,7 @@ public abstract class Stat
         // stats accumulated during a game (not persisted)
         DAMAGE_DEALT(new MaxIntStat(), true, false, false, false),
         BONUS_POINTS(new MaxIntStat(), true, false, false, false),
-        PACK_CARDS_PLAYED(new IntStat(), true, true, false, false),
+        PACK_CARDS_PLAYED(new IntStat(), false, true, false, false),
 
         // stats accumulated during a game (persisted)
         UNITS_KILLED(new MaxIntStat(), true, true),
@@ -62,8 +62,8 @@ public abstract class Stat
         UNITS_USED(new ByteByteStringMapStat(), false, false, true, true),
         BIGSHOT_WINS(new ByteByteStringMapStat(), false, false, true, true),
 
-        PACK_CARD_WINS(new IntStat(), true, true), // brought cards into game and won
-        BLUFF_CARD_WINS(new IntStat(), true, true), // brought 3 cards into game, played none, won
+        PACK_CARD_WINS(new IntStat(), false, true), // brought cards into game and won
+        BLUFF_CARD_WINS(new IntStat(), false, true), // brought 3 cards into game, played none, won
 
         CATTLE_RUSTLED(new MaxIntStat(), true, false),
         BRAND_POINTS(new MaxIntStat(), true, false),
@@ -74,7 +74,7 @@ public abstract class Stat
         STEADS_CLAIMED(new MaxIntStat(), true, false),
         STEADS_DESTROYED(new MaxIntStat(), true, false),
         STEAD_POINTS(new MaxIntStat(), true, false),
-        LONE_STEADER(new IntStat(), true, false), // all claimed steads are yours
+        LONE_STEADER(new IntStat(), false, false), // all claimed steads are yours
 
         TOTEMS_SMALL(new MaxIntStat(), true, false),
         TOTEMS_MEDIUM(new MaxIntStat(), true, false),

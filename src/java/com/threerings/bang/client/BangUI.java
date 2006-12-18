@@ -141,6 +141,7 @@ public class BangUI
 
         // we need to stretch Dom Casual out a bit
         Font dom = loadFont(ctx, "ui/fonts/domcasual.ttf");
+        _fonts.put("Dom Casual Thin", dom);
         dom = dom.deriveFont(
             Font.PLAIN, AffineTransform.getScaleInstance(1.2, 1));
         _fonts.put("Dom Casual", dom);

@@ -1673,6 +1673,9 @@ public class BangManager extends GameManager
         // do the normal round ending stuff as well
         roundDidEnd(false);
 
+        // indicates whether we completed our bounty for the first time
+        boolean completedBounty = false;
+
         PlayerObject user = (PlayerObject)getPlayer(0);
         if (user != null) {
             // if this was a tutorial practice session, and we played at least half of it, mark the
@@ -1699,11 +1702,14 @@ public class BangManager extends GameManager
                 }
                 if (failed == 0) {
                     SpeakProvider.sendAttention(_bangobj, GAME_MSGS, "m.all_criterion_met");
+
                     if (_bounty != null) {
-                        // mark this game (and possibly the whole bounty) as completed
                         user.stats.addToSetStat(Stat.Type.BOUNTY_GAMES_COMPLETED,
                                                 _bounty.getStatKey(_bountyGameId));
-                        if (_bounty.isCompleted(user)) {
+                        if (!user.stats.containsValue(
+                                Stat.Type.BOUNTIES_COMPLETED, _bounty.ident) &&
+                            _bounty.isCompleted(user)) {
+                            completedBounty = true;
                             user.stats.addToSetStat(Stat.Type.BOUNTIES_COMPLETED, _bounty.ident);
                         }
                     }
@@ -1762,6 +1768,12 @@ public class BangManager extends GameManager
                 // scale the earnings based on the scenario duration
                 award.cashEarned = (int)Math.ceil(
                     computeEarnings(ii) * _bconfig.duration.getAdjustment());
+
+                // if they completed a bounty, award them the bounty cash
+                if (completedBounty) {
+                    award.cashEarned += _bounty.reward.scrip;
+                    // TODO: handle other types of bounty prizes
+                }
             }
 
             // if this was a rated game, persist various stats and potentially award a badge

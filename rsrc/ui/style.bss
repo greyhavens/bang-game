@@ -1802,8 +1802,9 @@ bounty_detail_title {
 }
 
 bounty_detail_descrip {
-  font: "Dom Casual" plain 16;
+  font: "Dom Casual Thin" plain 16;
   color: #6c421b;
+  vertical-align: top;
 }
 
 //

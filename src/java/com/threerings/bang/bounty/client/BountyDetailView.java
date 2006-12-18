@@ -43,7 +43,7 @@ public class BountyDetailView extends BContainer
         _reward.setIcon(new ImageIcon(ctx.loadImage("ui/icons/big_scrip.png")));
         _reward.setIconTextGap(10);
         add(_title = new BLabel("", "bounty_detail_title"), new Point(203, 388));
-        add(_descrip = new BLabel("", "bounty_detail_descrip"), new Rectangle(203, 273, 184, 112));
+        add(_descrip = new BLabel("", "bounty_detail_descrip"), new Rectangle(203, 273, 184, 110));
 
         GroupLayout glay = GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.STRETCH).setGap(2);
