@@ -68,6 +68,7 @@ public class PropConfig
      */
     public static PropConfig getConfig (String type)
     {
+        ensurePropsRegistered();
         return _types.get(type);
     }
 
@@ -76,6 +77,7 @@ public class PropConfig
      */
     public static Collection<PropConfig> getConfigs ()
     {
+        ensurePropsRegistered();
         return _types.values();
     }
     
@@ -85,13 +87,27 @@ public class PropConfig
      */
     public static PropConfig[] getTownProps (String townId)
     {
+        ensurePropsRegistered();
         return _townMap.get(townId);
     }
 
     public static void main (String[] args)
     {
+        ensurePropsRegistered();
         for (PropConfig config : _types.values()) {
             System.err.println("" + config);
+        }
+    }
+
+    protected static void ensurePropsRegistered ()
+    {
+        if (_types == null) {
+            _types = new HashMap<String,PropConfig>();
+            _townMap = new HashMap<String,PropConfig[]>();
+            String[] props = BangUtil.townResourceToStrings("rsrc/props/TOWN/props.txt");
+            for (int ii = 0; ii < props.length; ii++) {
+                registerProp(props[ii]);
+            }
         }
     }
 
@@ -150,19 +166,8 @@ public class PropConfig
     }
 
     /** A mapping from prop type to its configuration. */
-    protected static HashMap<String,PropConfig> _types =
-        new HashMap<String,PropConfig>();
+    protected static HashMap<String,PropConfig> _types;
 
     /** A mapping from town to all props accessible in that town. */
-    protected static HashMap<String,PropConfig[]> _townMap =
-        new HashMap<String,PropConfig[]>();
-
-    static {
-        // register our props
-        String[] props = BangUtil.townResourceToStrings(
-            "rsrc/props/TOWN/props.txt");
-        for (int ii = 0; ii < props.length; ii++) {
-            registerProp(props[ii]);
-        }
-    }
+    protected static HashMap<String,PropConfig[]> _townMap;
 }
