@@ -28,7 +28,7 @@ public interface BangCodes extends InvocationCodes
 
     /** Enumerates our various town ids in order of accessibility. */
     public static final String[] TOWN_IDS = {
-        FRONTIER_TOWN, INDIAN_POST /*, BOOM_TOWN, GHOST_TOWN, CITY_OF_GOLD */
+        FRONTIER_TOWN, INDIAN_POST, BOOM_TOWN, /* GHOST_TOWN, CITY_OF_GOLD */
     };
 
     /** The message bundle identifier for our translation messages. */

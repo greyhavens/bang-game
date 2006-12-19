@@ -80,6 +80,15 @@ indian_post.uresource = rsrc/props/indian_post/bundle.jar
 indian_post.uresource = rsrc/units/indian_post/bundle.jar
 indian_post.uresource = rsrc/sounds/music/indian_post/bundle.jar
 
+# Boom Town game resources
+boom_town.uresource = rsrc/bonuses/boom_town/bundle.jar
+boom_town.uresource = rsrc/bounties/boom_town/bundle.jar
+boom_town.uresource = rsrc/effects/boom_town/bundle.jar
+boom_town.uresource = rsrc/extras/boom_town/bundle.jar
+boom_town.uresource = rsrc/props/boom_town/bundle.jar
+boom_town.uresource = rsrc/units/boom_town/bundle.jar
+boom_town.uresource = rsrc/sounds/music/boom_town/bundle.jar
+
 # Parameters passed to the JVM
 jvmarg = -Xmx256M
 jvmarg = -Djava.library.path=%APPDIR%/native
