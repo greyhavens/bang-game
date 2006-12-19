@@ -9,9 +9,14 @@ ROOT=`dirname $0`
 ROOT=`cd $ROOT/.. ; pwd`
 
 BUILD=$ROOT/pages/devclient
-CLASSPATH=`echo $BUILD/*/*.jar | sed 's/ /:/g'`
+CLASSPATH=$ROOT
+for JAR in $BUILD/code/*.jar; do
+    if [ "$JAR" != $BUILD/code/getdown-pro-new.jar ]; then
+        CLASSPATH=$JAR:$CLASSPATH
+    fi
+done
+export CLASSPATH
 
-java -classpath $CLASSPATH -Xmx128M -Dno_log_redir=true \
-    -Djava.library.path=$BUILD/native \
-    -Dappdir=$BUILD -Dresource_dir=$BUILD/rsrc \
+java -Xmx256M -Djava.library.path=$BUILD/native -Dappdir=$BUILD \
+    -Dresource_dir=$ROOT/rsrc -Dno_log_redir=true -Dno_unpack_resources=true \
     com.threerings.bang.client.BangApp
