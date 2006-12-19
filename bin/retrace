@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# $Id$
+#
+# Runs ReTrace with the right bits
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 mappingfile.map"
+    exit 1
+fi
+
+BANG_HOME=`dirname $0`
+BANG_HOME=`cd $BANG_HOME/.. ; pwd`
+
+echo "Paste your stacktrace into the shell below and press Ctrl-D:"
+java -classpath $BANG_HOME/lib/retrace.jar:$BANG_HOME/dist/lib/proguard.jar \
+    proguard.retrace.ReTrace $1
