@@ -326,8 +326,19 @@
     <delete><fileset dir="rsrc" includes="**/model.dat"/></delete>
     <delete><fileset dir="rsrc" includes="**/*.jar"/></delete>
     <delete><fileset dir="rsrc" includes="**/*.dat"/></delete>
-    <delete><fileset dir="rsrc" includes="**/*.txt"/></delete>
-    <delete><fileset dir="rsrc" includes="**/*.ogg"/></delete>
+    <delete>
+      <fileset dir="rsrc">
+        <exclude name="avatars/compmap.txt"/>
+        <exclude name="terrain/codes.txt"/>
+        <include name="**/*.txt"/>
+      </fileset>
+    </delete>
+    <delete>
+      <fileset dir=".">
+        <exclude name="rsrc/sounds/music/**/*.ogg"/>
+        <include name="rsrc/**/*.ogg"/>
+      </fileset>
+    </delete>
     <delete><fileset dir="etc/proguard" includes="*.map"/></delete>
     <delete dir="pages/devclient"/>
   </target>
