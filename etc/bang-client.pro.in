@@ -128,6 +128,11 @@
     public *;
 }
 
+# Prevent this interface from being nixed entirely
+-keep public interface com.threerings.bang.data.StatSet$Container {
+    public <methods>;
+}
+
 # Bug worky aroundy; Proguard is erroneously stripping all methods out of this
 # interface and -keepclassmembers doesn't seem to fix it only -keep
 -keep public interface com.threerings.media.util.AStarPathUtil$ExtendedTraversalPred {
