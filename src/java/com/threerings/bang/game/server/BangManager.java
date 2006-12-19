@@ -54,6 +54,7 @@ import com.threerings.bang.admin.data.StatusObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.bounty.data.BountyConfig;
 
+import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
@@ -339,7 +340,7 @@ public class BangManager extends GameManager
 
         // selecting a team implicitly reports one as ready for SELECT_PHASE (or rather its
         // completion)
-        playerReadyFor(user, BangObject.SELECT_PHASE);
+        playerReadyFor (user, BangObject.SELECT_PHASE);
     }
 
     // documentation inherited from interface BangProvider
@@ -960,11 +961,14 @@ public class BangManager extends GameManager
             for (Criterion crit : _bconfig.criteria) {
                 crit.addWatchedStats(sset);
             }
-            _bangobj.setCritStats(new StatSet());
-            stats[0].setContainer(new StatSet.Container() {
+            // this will clone the set so we need to switch to the cloned instance
+            _bangobj.setCritStats(stats[0]);
+            (stats[0] = _bangobj.critStats).setContainer(new StatSet.Container() {
                 public void addToStats (Stat stat) {
                     if (sset.contains(stat.getType())) {
                         _bangobj.addToCritStats(stat);
+                    } else {
+                        _bangobj.critStats.addQuietly(stat);
                     }
                 }
                 public void updateStats (Stat stat) {
@@ -1317,7 +1321,7 @@ public class BangManager extends GameManager
     protected void checkStartNextPhase ()
     {
         // if anyone has not yet reported readiness for this phase, we're not ready
-        if (!allPlayersReadyFor(_bangobj.state)) {
+        if (!allPlayersReadyFor (_bangobj.state)) {
             return;
         }
 
@@ -1802,10 +1806,17 @@ public class BangManager extends GameManager
             // compute this player's "take home" cash
             if (prec.playerId > 0 && _scenario.shouldPayEarnings(prec.user)) {
                 if (_bconfig.type == BangConfig.Type.BOUNTY) {
-                    // if they completed a bounty, award them the bounty cash
+                    // if they completed a bounty, award them the bounty reward
                     if (completedBounty) {
                         award.cashEarned += _bounty.reward.scrip;
-                        // TODO: handle other types of bounty prizes
+                        // if there's an article or badge that goes with this bounty award it
+                        if (_bounty.reward.article != null) {
+                            award.item = (Article)_bounty.reward.article.clone();
+                            award.item.setOwnerId(prec.playerId);
+                        } else if (_bounty.reward.badge != null) {
+                            award.item = _bounty.reward.badge.newBadge();
+                            award.item.setOwnerId(prec.playerId);
+                        }
                     }
 
                 } else {
@@ -2322,7 +2333,7 @@ public class BangManager extends GameManager
             _scenario.recordStats(_bangobj, gameMins, pidx, user);
 
             // determine whether this player qualifies for a new badge
-            award.badge = Badge.checkQualifies(user);
+            award.item = Badge.checkQualifies(user);
 
         } finally {
             user.commitTransaction();
@@ -2443,13 +2454,13 @@ public class BangManager extends GameManager
                                 notoriety + "].", pe);
                         }
                     }
-                    
-                    // grant them their badge
-                    if (award.badge != null) {
+
+                    // grant them their award item
+                    if (award.item != null) {
                         try {
-                            BangServer.itemrepo.insertItem(award.badge);
+                            BangServer.itemrepo.insertItem(award.item);
                         } catch (PersistenceException pe) {
-                            log.log(Level.WARNING, "Failed to store badge " + award.badge, pe);
+                            log.log(Level.WARNING, "Failed to store item " + award.item, pe);
                         }
                     }
 
@@ -2479,8 +2490,8 @@ public class BangManager extends GameManager
                     if (awards[ii].cashEarned > 0) {
                         player.setScrip(player.scrip + awards[ii].cashEarned);
                     }
-                    if (awards[ii].badge != null) {
-                        player.addToInventory(awards[ii].badge);
+                    if (awards[ii].item != null) {
+                        player.addToInventory(awards[ii].item);
                     }
                     for (Rating rating : _precords[pidx].nratings.values()) {
                         if (player.ratings.containsKey(rating.scenario)) {

@@ -13,6 +13,8 @@ import com.samskivert.util.StringUtil;
 import com.threerings.io.SimpleStreamableObject;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.Article;
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangUtil;
@@ -39,6 +41,12 @@ public class BountyConfig extends SimpleStreamableObject
     {
         /** Scrip payed when this bounty is completed. */
         public int scrip;
+
+        /** An article of clothing given out as a reward or null. */
+        public Article article;
+
+        /** A badge to be given out as a reward or null. */
+        public Badge.Type badge;
     }
 
     /** The town in which this bounty is available. */
@@ -178,6 +186,28 @@ public class BountyConfig extends SimpleStreamableObject
 
         config.reward = new Reward();
         config.reward.scrip = BangUtil.getIntProperty(which, props, "reward_scrip", 0);
+
+        String article = props.getProperty("reward_article", "");
+        if (article.length() > 0) {
+            bits = article.split(":");
+            if (bits.length != 3) {
+                log.warning("Invalid article reward specified in bounty [which=" + which +
+                            ", article=" + article + "].");
+            } else {
+                config.reward.article = new Article(
+                    0, bits[0], bits[1], StringUtil.parseIntArray(bits[3]));
+            }
+        }
+
+        String badge = props.getProperty("reward_badge", "");
+        if (badge.length() > 0) {
+            try {
+                config.reward.badge = Enum.valueOf(Badge.Type.class, badge);
+            } catch (Exception e) {
+                log.warning("Invalid badge reward specified in bounty [which=" + which +
+                            ", badge=" + badge + "].");
+            }
+        }
 
         // finally map it
         BountyConfig collide = _configs.put(config.ident, config);

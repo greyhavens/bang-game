@@ -86,10 +86,10 @@ public class StatsDisplay extends BDecoratedWindow
             hbox.add(cash);
             awards.add(hbox);
 
-            if (bangobj.awards[pidx].badge != null) {
+            if (bangobj.awards[pidx].item instanceof Badge) {
                 awards.add(new BLabel(msgs.get("m.stats_badges"), "stats_info"));
                 hbox = GroupLayout.makeHBox(GroupLayout.LEFT);
-                hbox.add(new ItemIcon(_ctx, bangobj.awards[pidx].badge));
+                hbox.add(new ItemIcon(_ctx, bangobj.awards[pidx].item));
                 awards.add(hbox);
             }
 

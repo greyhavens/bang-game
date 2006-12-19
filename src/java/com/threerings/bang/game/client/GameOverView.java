@@ -30,6 +30,7 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.client.bui.SteelWindow;
+import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
@@ -254,24 +255,26 @@ public class GameOverView extends SteelWindow
             label.setIcon(new ImageIcon(ctx.loadImage("ui/icons/big_scrip.png")));
             rrow.add(label);
 
-            if (award.badge != null) {
+            BangConfig config = (BangConfig)ctrl.getPlaceConfig();
+            if (award.item instanceof Badge) {
                 BContainer bcont = new BContainer(new BorderLayout());
                 bcont.setStyleClass("endgame_border");
                 txt = msgs.get("m.endgame_badge");
                 bcont.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
-                bcont.add(new ItemIcon(ctx, award.badge), BorderLayout.CENTER);
-                String reward = award.badge.getReward();
+                bcont.add(new ItemIcon(ctx, award.item), BorderLayout.CENTER);
+                String reward = ((Badge)award.item).getReward();
                 if (reward != null) {
                     txt = _ctx.xlate(BangCodes.BADGE_MSGS, reward);
                     bcont.add(new BLabel(txt, "endgame_reward"), BorderLayout.SOUTH);
                 }
                 row.add(bcont);
-            } else if (!((BangConfig)ctrl.getPlaceConfig()).rated) {
+
+            } else if (!config.rated && config.type != BangConfig.Type.BOUNTY) {
                 BContainer bcont = new BContainer(new BorderLayout());
                 bcont.setPreferredSize(new Dimension(200, -1));
                 bcont.setStyleClass("endgame_border");
-                bcont.add(new BLabel(
-                            msgs.get("m.endgame_unranked"), "endgame_text"), BorderLayout.CENTER);
+                bcont.add(new BLabel(msgs.get("m.endgame_unranked"), "endgame_text"),
+                          BorderLayout.CENTER);
                 row.add(bcont);
             }
         }

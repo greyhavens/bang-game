@@ -73,14 +73,12 @@ public class GameOverViewTest extends TestApp
             bangobj.awards[ii] = new Award();
             bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;
             if (bangobj.awards[ii].pidx == 2) {
-                bangobj.awards[ii].badge =
-                    Badge.Type.DISTANCE_MOVED_1.newBadge();
+                bangobj.awards[ii].item = Badge.Type.DISTANCE_MOVED_1.newBadge();
             }
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 100;
             bangobj.playerInfo[ii] = new BangObject.PlayerInfo();
-            bangobj.playerInfo[ii].avatar = BangAI.getAvatarPrint(
-                RandomUtil.getInt(100) > 50);
+            bangobj.playerInfo[ii].avatar = BangAI.getAvatarPrint(RandomUtil.getInt(100) > 50);
         }
 
         return new GameOverView(_ctx, null, bangobj, user);

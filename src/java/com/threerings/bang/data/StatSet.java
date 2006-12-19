@@ -194,6 +194,15 @@ public final class StatSet extends DSet<Stat>
         return (stat == null) ? 0 : stat.get(value);
     }
 
+    /**
+     * Don't call this method, it's only needed by some tricky business we do when preventing
+     * distributed object event generation for all but the bounty criteria related stats.
+     */
+    public void addQuietly (Stat stat)
+    {
+        add(stat);
+    }
+
     protected void addStat (Stat stat)
     {
         if (_container != null) {

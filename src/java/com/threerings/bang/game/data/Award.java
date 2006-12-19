@@ -5,7 +5,9 @@ package com.threerings.bang.game.data;
 
 import com.threerings.io.SimpleStreamableObject;
 
+import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
+import com.threerings.bang.data.Item;
 
 /**
  * Used to record and report awards at the end of a game.
@@ -22,8 +24,8 @@ public class Award extends SimpleStreamableObject
     /** The amount of cash "taken home" by this player. */
     public int cashEarned;
 
-    /** The badge earned by this player if any. */
-    public Badge badge;
+    /** The badge or clothing article earned by this player if any. */
+    public Item item;
 
     /** Default constructor used during unserialization. */
     public Award ()
@@ -41,7 +43,14 @@ public class Award extends SimpleStreamableObject
      */
     public String toString ()
     {
-        return rank + ":" + cashEarned + ":" +
-            (badge == null ? "none" : badge.getType());
+        String value = rank + ":" + cashEarned + ":";
+        if (item instanceof Badge) {
+            value += ((Badge)item).getType();
+        } else if (item instanceof Article) {
+            value += ((Article)item).getArticleName();
+        } else {
+            value += "none";
+        }
+        return value;
     }
 }
