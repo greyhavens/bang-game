@@ -12,6 +12,14 @@ import com.threerings.presents.dobj.DSet;
  */
 public final class StatSet extends DSet<Stat>
 {
+    /** An interface to be implemented by an entity that wishes to be notified when the contents of
+     * a stat set change. */
+    public interface Container
+    {
+        public void addToStats (Stat stat);
+        public void updateStats (Stat stat);
+    }
+
     /** Creates a stat set with the specified contents. */
     public StatSet (Iterator<Stat> contents)
     {
@@ -27,7 +35,7 @@ public final class StatSet extends DSet<Stat>
      * Wires this stat set up to a containing user object. All subsequent
      * modifications will be published to the container.
      */
-    public void setContainer (PlayerObject container)
+    public void setContainer (Container container)
     {
         _container = container;
     }
@@ -202,5 +210,5 @@ public final class StatSet extends DSet<Stat>
         }
     }
 
-    protected transient PlayerObject _container;
+    protected transient Container _container;
 }

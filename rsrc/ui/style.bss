@@ -1246,6 +1246,21 @@ context_help_text {
   vertical-align: top;
 }
 
+bounty_req_window {
+  background: image "ui/tutorials/bubble.png" framexy;
+  padding: 20 15 15 15;
+}
+
+bounty_req_descrip {
+  font: "Dom Casual" plain 16;
+  color: #4C2602;
+}
+
+bounty_req_value {
+  font: "Dom Casual" bold 16;
+  color: #4C2602;
+}
+
 //
 // Unit Status View
 

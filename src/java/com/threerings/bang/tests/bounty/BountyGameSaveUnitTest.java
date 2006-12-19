@@ -43,7 +43,7 @@ public class BountyGameSaveUnitTest extends TestCase
         crit.stat = Stat.Type.POINTS_EARNED;
         crit.condition = IntStatCriterion.Condition.AT_LEAST;
         crit.value = 500;
-        config.criterion.add(crit);
+        config.criteria.add(crit);
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {

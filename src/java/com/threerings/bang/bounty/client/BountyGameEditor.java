@@ -101,7 +101,7 @@ public class BountyGameEditor extends BDecoratedWindow
         row.add(new BButton(_msgs.get("m.add"), new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 CriterionEditor.Type type = (CriterionEditor.Type)_ctype.getSelectedValue();
-                _criterion.add(CriterionEditor.createEditor(_ctx, type));
+                _criteria.add(CriterionEditor.createEditor(_ctx, type));
                 BountyGameEditor.this.pack();
                 BountyGameEditor.this.center();
             }
@@ -109,8 +109,8 @@ public class BountyGameEditor extends BDecoratedWindow
 
         // add a panel that will contain our criterion
         ppanel.add(new BLabel(""));
-        ppanel.add(_criterion = new BContainer(GroupLayout.makeVStretch()));
-        ((GroupLayout)_criterion.getLayoutManager()).setPolicy(GroupLayout.NONE);
+        ppanel.add(_criteria = new BContainer(GroupLayout.makeVStretch()));
+        ((GroupLayout)_criteria.getLayoutManager()).setPolicy(GroupLayout.NONE);
         add(ppanel);
 
         // add a status label
@@ -313,8 +313,8 @@ public class BountyGameEditor extends BDecoratedWindow
                              (ii == 0) ? cards : null, (Integer)_starts[ii].getSelectedItem());
         }
 
-        for (int ii = 0; ii < _criterion.getComponentCount(); ii++) {
-            config.criterion.add(((CriterionEditor)_criterion.getComponent(ii)).getCriterion());
+        for (int ii = 0; ii < _criteria.getComponentCount(); ii++) {
+            config.criteria.add(((CriterionEditor)_criteria.getComponent(ii)).getCriterion());
         }
 
         return config;
@@ -355,9 +355,9 @@ public class BountyGameEditor extends BDecoratedWindow
         }
         enableUnitGrid(config.teams.size()-1);
 
-        _criterion.removeAll();
-        for (Criterion crit : config.criterion) {
-            _criterion.add(CriterionEditor.createEditor(_ctx, crit));
+        _criteria.removeAll();
+        for (Criterion crit : config.criteria) {
+            _criteria.add(CriterionEditor.createEditor(_ctx, crit));
         }
 
         BountyGameEditor.this.pack();
@@ -446,7 +446,7 @@ public class BountyGameEditor extends BDecoratedWindow
     protected BComboBox[][] _units;
 
     protected BComboBox _ctype;
-    protected BContainer _criterion;
+    protected BContainer _criteria;
 
     protected ArrayList<BComboBox.Item> _bsunits, _runits;
     protected ArrayList<BComboBox.Item> _cards = new ArrayList<BComboBox.Item>();

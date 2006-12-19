@@ -4,6 +4,7 @@
 package com.threerings.bang.bounty.data;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 import com.jme.util.export.InputCapsule;
 import com.jme.util.export.JMEExporter;
@@ -12,7 +13,6 @@ import com.jme.util.export.OutputCapsule;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 
 import com.threerings.bang.game.data.BangObject;
@@ -36,21 +36,35 @@ public class IntStatCriterion extends Criterion
     public int value;
 
     // from Criterion
-    public String isMet (BangObject bangobj, PlayerObject player)
+    public String getDescription ()
     {
-        return createMessage(bangobj, player, "failed");
+        String msg = MessageBundle.compose("m." + condition.toString().toLowerCase() + "_descrip",
+                                           stat.key(), MessageBundle.taint(String.valueOf(value)));
+        return MessageBundle.qualify(OfficeCodes.OFFICE_MSGS, msg);
     }
 
     // from Criterion
-    public String getDescription (BangObject bangobj, PlayerObject player)
+    public void addWatchedStats (HashSet<Stat.Type> stats)
     {
-        return createMessage(bangobj, player, "descrip");
+        stats.add(stat);
     }
 
     // from Criterion
-    public String reportMet (BangObject bangobj, PlayerObject player)
+    public String getCurrentState (BangObject bangobj)
     {
-        return createMessage(bangobj, player, "met");
+        return String.valueOf(bangobj.critStats.getIntStat(stat));
+    }
+
+    // from Criterion
+    public String isMet (BangObject bangobj)
+    {
+        return createMessage(bangobj, "failed");
+    }
+
+    // from Criterion
+    public String reportMet (BangObject bangobj)
+    {
+        return createMessage(bangobj, "met");
     }
 
     // from interface Savable
@@ -90,10 +104,9 @@ public class IntStatCriterion extends Criterion
         return stat + " " + condition + " " + value;
     }
 
-    protected String createMessage (BangObject bangobj, PlayerObject player, String type)
+    protected String createMessage (BangObject bangobj, String type)
     {
-        int pidx = bangobj.getPlayerIndex(player.handle);
-        int actual = (bangobj.stats == null) ? 0 : bangobj.stats[pidx].getIntStat(stat);
+        int actual = (bangobj.critStats == null) ? 0 : bangobj.critStats.getIntStat(stat);
         switch (condition) {
         case LESS_THAN:
             if (type.equals("failed") && actual < value) {

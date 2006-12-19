@@ -728,6 +728,11 @@ public class BangController extends GameController
         // zoom the camera to the center level
         ((GameInputHandler)_ctx.getInputHandler()).rollCamera(FastMath.PI);
 
+        // if we're in a bounty game, slide the criteria status view down from the top
+        if (_config.type == BangConfig.Type.BOUNTY) {
+            _view.showBountyCriteria();
+        }
+
         // if we're one of the players
         if (_bangobj.isActivePlayer(_pidx) || _config.allPlayersAIs()) {
             // let the game manager know that our units are in place and we're fully ready to go

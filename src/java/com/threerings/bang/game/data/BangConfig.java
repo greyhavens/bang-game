@@ -195,8 +195,8 @@ public class BangConfig extends GameConfig
     /** The configuration of each player's team in the game. */
     public ArrayList<Player> teams = new ArrayList<Player>();
 
-    /** Additional criterion to be met in addition to winning the game (used in bounty games). */
-    public ArrayList<Criterion> criterion = new ArrayList<Criterion>();
+    /** Additional criteria to be met in addition to winning the game (used in bounty games). */
+    public ArrayList<Criterion> criteria = new ArrayList<Criterion>();
 
     /**
      * Used to configure the number of players and team size for non-preconfigured games.
@@ -286,7 +286,7 @@ public class BangConfig extends GameConfig
         out.write(speed.toString(), "speed", Speed.NORMAL.toString());
         out.writeSavableArrayList(rounds, "rounds", DEF_ROUNDS);
         out.writeSavableArrayList(teams, "teams", DEF_TEAMS);
-        out.writeSavableArrayList(criterion, "criterion", DEF_CRIT);
+        out.writeSavableArrayList(criteria, "criteria", DEF_CRIT);
     }
 
     @SuppressWarnings("unchecked") // from interface Savable
@@ -299,7 +299,10 @@ public class BangConfig extends GameConfig
         speed = Speed.valueOf(in.readString("speed", Speed.NORMAL.toString()));
         rounds = in.readSavableArrayList("rounds", DEF_ROUNDS);
         teams = in.readSavableArrayList("teams", DEF_TEAMS);
-        criterion = in.readSavableArrayList("criterion", DEF_CRIT);
+        criteria = in.readSavableArrayList("criteria", DEF_CRIT);
+        if (criteria == DEF_CRIT) { // legacy fixy
+            criteria = in.readSavableArrayList("criterion", DEF_CRIT);
+        }
     }
 
     // from interface Savable
@@ -341,7 +344,7 @@ public class BangConfig extends GameConfig
         BangConfig oconfig = (BangConfig)other;
         return type == oconfig.type && duration == oconfig.duration && speed == oconfig.speed &&
             rounds.equals(oconfig.rounds) && teams.equals(oconfig.teams) &&
-            criterion.equals(oconfig.criterion);
+            criteria.equals(oconfig.criteria);
     }
 
     protected static final ArrayList<Round> DEF_ROUNDS = new ArrayList<Round>();

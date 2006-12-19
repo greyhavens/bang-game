@@ -953,6 +953,28 @@ public class BangManager extends GameManager
         _rounds[_activeRoundId].stats = stats;
         _bangobj.stats = stats;
 
+        // if this is a bounty game, set up a listener on the stat set so that we can broadcast the
+        // values of our criterion related stats when they change
+        if (_bconfig.type == BangConfig.Type.BOUNTY) {
+            final HashSet<Stat.Type> sset = new HashSet<Stat.Type>();
+            for (Criterion crit : _bconfig.criteria) {
+                crit.addWatchedStats(sset);
+            }
+            _bangobj.setCritStats(new StatSet());
+            stats[0].setContainer(new StatSet.Container() {
+                public void addToStats (Stat stat) {
+                    if (sset.contains(stat.getType())) {
+                        _bangobj.addToCritStats(stat);
+                    }
+                }
+                public void updateStats (Stat stat) {
+                    if (sset.contains(stat.getType())) {
+                        _bangobj.updateCritStats(stat);
+                    }
+                }
+            });
+        }
+
         // make sure we have a board at all
         final BoardRecord brec = _rounds[_activeRoundId].board;
         if (brec == null) {
@@ -1705,14 +1727,13 @@ public class BangManager extends GameManager
             // zero, who is the human player in a bounty game)
             if (_bconfig.type == BangConfig.Type.BOUNTY) {
                 int failed = 0;
-                for (Criterion criterion : _bconfig.criterion) {
-                    String msg = criterion.isMet(_bangobj, user);
+                for (Criterion crit : _bconfig.criteria) {
+                    String msg = crit.isMet(_bangobj);
                     if (msg != null) {
                         failed++;
                         SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
                     } else {
-                        SpeakProvider.sendAttention(
-                            _bangobj, GAME_MSGS, criterion.reportMet(_bangobj, user));
+                        SpeakProvider.sendAttention(_bangobj, GAME_MSGS, crit.reportMet(_bangobj));
                     }
                 }
                 if (failed == 0) {

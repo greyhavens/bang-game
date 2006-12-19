@@ -20,6 +20,7 @@ import com.threerings.bang.gang.data.GangCodes;
  * Extends the {@link BodyObject} with custom bits needed by Bang!.
  */
 public class PlayerObject extends BodyObject
+    implements StatSet.Container
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>playerId</code> field. */

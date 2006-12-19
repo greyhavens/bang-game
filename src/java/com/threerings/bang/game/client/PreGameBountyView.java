@@ -25,20 +25,21 @@ import com.threerings.bang.game.data.GameCodes;
  */
 public class PreGameBountyView extends BDecoratedWindow
 {
-    public PreGameBountyView (final BangContext ctx, final BangController ctrl,
+    public PreGameBountyView (final BangContext ctx, BangController ctrl,
                               BangObject bangobj, BangConfig config)
     {
         super(BangUI.stylesheet, ctx.xlate(GameCodes.GAME_MSGS, bangobj.marquee));
         setLayoutManager(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
                                               GroupLayout.STRETCH).setGap(15));
+        _ctrl = ctrl;
 
         add(new BLabel(ctx.xlate(GameCodes.GAME_MSGS, "m.bounty_pregame")));
 
         BContainer ccont = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER).
                                           setOffAxisJustification(GroupLayout.LEFT));
         PlayerObject user = ctx.getUserObject();
-        for (Criterion crit : config.criterion) {
-            String msg = ctx.xlate(GameCodes.GAME_MSGS, crit.getDescription(bangobj, user));
+        for (Criterion crit : config.criteria) {
+            String msg = ctx.xlate(GameCodes.GAME_MSGS, crit.getDescription());
             ccont.add(new BLabel(msg, "bounty_pregame_crit"));
         }
         add(ccont);
@@ -49,9 +50,17 @@ public class PreGameBountyView extends BDecoratedWindow
         butrow.add(new BButton(ctx.xlate(GameCodes.GAME_MSGS, "m.ready"), new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 ctx.getBangClient().clearPopup(PreGameBountyView.this, true);
-                ctrl.playerReadyFor(BangObject.SKIP_SELECT_PHASE);
             }
         }, ""));
         add(butrow);
     }
+
+    @Override // from BComponent
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _ctrl.playerReadyFor(BangObject.SKIP_SELECT_PHASE);
+    }
+
+    protected BangController _ctrl;
 }

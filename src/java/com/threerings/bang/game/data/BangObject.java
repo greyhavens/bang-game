@@ -106,6 +106,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>stats</code> field. */
     public static final String STATS = "stats";
 
+    /** The field name of the <code>critStats</code> field. */
+    public static final String CRIT_STATS = "critStats";
+
     /** The field name of the <code>service</code> field. */
     public static final String SERVICE = "service";
 
@@ -211,6 +214,9 @@ public class BangObject extends GameObject
     /** This value is set at the end of every round, to inform the players
      * of various interesting statistics. */
     public StatSet[] stats;
+
+    /** A stat set that contains only "watched" stats relating to criteria for a bounty game. */
+    public StatSet critStats;
 
     /** The invocation service via which the client communicates with the
      * server. */
@@ -755,6 +761,54 @@ public class BangObject extends GameObject
         requestElementUpdate(
             STATS, index, value, ovalue);
         this.stats[index] = value;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>critStats</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToCritStats (Stat elem)
+    {
+        requestEntryAdd(CRIT_STATS, critStats, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>critStats</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromCritStats (Comparable key)
+    {
+        requestEntryRemove(CRIT_STATS, critStats, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>critStats</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateCritStats (Stat elem)
+    {
+        requestEntryUpdate(CRIT_STATS, critStats, elem);
+    }
+
+    /**
+     * Requests that the <code>critStats</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setCritStats (StatSet value)
+    {
+        requestAttributeChange(CRIT_STATS, value, this.critStats);
+        @SuppressWarnings("unchecked") StatSet clone =
+            (value == null) ? null : (StatSet)value.clone();
+        this.critStats = clone;
     }
 
     /**

@@ -13,8 +13,8 @@ import com.jme.input.KeyInput;
 import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Controller;
 
-import com.jmex.bui.BLabel;
 import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.KeyEvent;
 import com.jmex.bui.icon.ImageIcon;
@@ -24,6 +24,8 @@ import com.jmex.bui.layout.GroupLayout;
 import com.samskivert.util.Histogram;
 import com.samskivert.util.Interval;
 import com.samskivert.util.StringUtil;
+
+import com.threerings.jme.effect.WindowSlider;
 
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.BodyObject;
@@ -326,6 +328,10 @@ public class BangView extends BWindow
             _ctx.getRootNode().removeWindow(_oview);
             _oview = null;
         }
+        if (_critview != null) {
+            _ctx.getRootNode().removeWindow(_critview);
+            _critview = null;
+        }
     }
 
     @Override // documentation inherited
@@ -536,6 +542,17 @@ public class BangView extends BWindow
         }
     }
 
+    protected void showBountyCriteria ()
+    {
+        if (_critview == null) {
+            _critview = new InGameBountyView(_ctx, (BangConfig)_ctrl.getPlaceConfig(), _bangobj);
+            _ctx.getRootNode().addWindow(_critview);
+            _critview.pack();
+            _ctx.getInterface().attachChild(
+                new WindowSlider(_critview, WindowSlider.FROM_TOP_STICKY, 1f, 0, 15));
+        }
+    }
+
     protected void setOverlay (BWindow overlay)
     {
         boolean hadFocus = chat.hasFocus();
@@ -621,6 +638,9 @@ public class BangView extends BWindow
 
     /** Displays the end of round timer. */
     protected RoundTimerView _timer;
+
+    /** Displays bounty criteria. */
+    protected InGameBountyView _critview;
 
     /** Displays a giant end practice button. */
     protected PracticeView _practiceView;
