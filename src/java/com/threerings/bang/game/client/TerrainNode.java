@@ -1319,6 +1319,15 @@ public class TerrainNode extends Node
         return FastMath.sqrt(dx*dx + dy*dy);
     }
     
+    /**
+     * Checks whether we should render terrain splats (as opposed to simply rendering the most
+     * common kind of terrain for each block).
+     */
+    protected static boolean shouldRenderSplats ()
+    {
+        return (BangPrefs.isMediumDetail() && TextureState.getNumberOfFixedUnits() >= 2);
+    }
+    
     /** Creates and adds a single terrain block on the invoker thread. */
     protected class BlockCreator extends Invoker.Unit
     {
@@ -1444,7 +1453,9 @@ public class TerrainNode extends Node
             // list
             mesh = new TriMesh("terrain", vbuf, nbuf, cbuf,
                 tbuf0, ibuf);
-            mesh.setTextureBuffer(0, tbuf1, 1);
+            if (shouldRenderSplats()) {
+                mesh.setTextureBuffer(0, tbuf1, 1);
+            }
             if (!_editorMode) {
                 mesh.getBatch(0).setMode(TriangleBatch.TRIANGLE_STRIP);
             }
@@ -1668,8 +1679,7 @@ public class TerrainNode extends Node
 
             // don't use certain textures as the base in low detail mode,
             // unless they're the only texture in that region
-            if (!BangPrefs.isMediumDetail() && 
-                    !TerrainConfig.getConfig(ccode-1).lowDetail) {
+            if (!shouldRenderSplats() &&  !TerrainConfig.getConfig(ccode-1).lowDetail) {
                 ccount = 0;
                 for (IntIntMap.IntIntEntry entry : codes.entrySet()) {
                     count = entry.getIntValue();
@@ -1715,7 +1725,7 @@ public class TerrainNode extends Node
             node.attachChild(base);
 
             // for low detail, just stop there
-            if (!BangPrefs.isMediumDetail()) {
+            if (!shouldRenderSplats()) {
                 node.updateRenderState();
                 return;
             }
