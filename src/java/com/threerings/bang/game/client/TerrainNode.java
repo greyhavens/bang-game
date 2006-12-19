@@ -1679,7 +1679,7 @@ public class TerrainNode extends Node
 
             // don't use certain textures as the base in low detail mode,
             // unless they're the only texture in that region
-            if (!shouldRenderSplats() &&  !TerrainConfig.getConfig(ccode-1).lowDetail) {
+            if (!shouldRenderSplats() && !TerrainConfig.getConfig(ccode-1).lowDetail) {
                 ccount = 0;
                 for (IntIntMap.IntIntEntry entry : codes.entrySet()) {
                     count = entry.getIntValue();
