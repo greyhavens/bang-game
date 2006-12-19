@@ -22,6 +22,7 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
@@ -264,6 +265,13 @@ public class GameOverView extends SteelWindow
                     txt = _ctx.xlate(BangCodes.BADGE_MSGS, reward);
                     bcont.add(new BLabel(txt, "endgame_reward"), BorderLayout.SOUTH);
                 }
+                row.add(bcont);
+            } else if (!((BangConfig)ctrl.getPlaceConfig()).rated) {
+                BContainer bcont = new BContainer(new BorderLayout());
+                bcont.setPreferredSize(new Dimension(200, -1));
+                bcont.setStyleClass("endgame_border");
+                bcont.add(new BLabel(
+                            msgs.get("m.endgame_unranked"), "endgame_text"), BorderLayout.CENTER);
                 row.add(bcont);
             }
         }
