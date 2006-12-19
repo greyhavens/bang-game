@@ -317,14 +317,16 @@
   <!-- cleans out the compiled code -->
   <target name="clean">
     <delete dir="${deploy.dir}/classes/com"/>
-    <delete><fileset dir="." includes="debug.txt.*"/></delete>
+    <delete><fileset dir="." includes="debug.txt*"/></delete>
   </target>
 
   <!-- fully cleans out the installed application -->
-  <target name="distclean">
+  <target name="distclean" depends="clean">
     <delete dir="${deploy.dir}"/>
     <delete><fileset dir="rsrc" includes="**/model.dat"/></delete>
     <delete><fileset dir="rsrc" includes="**/*.jar"/></delete>
+    <delete><fileset dir="rsrc" includes="**/*.dat"/></delete>
+    <delete><fileset dir="rsrc" includes="**/*.txt"/></delete>
   </target>
 
   <!-- build the java class files -->
