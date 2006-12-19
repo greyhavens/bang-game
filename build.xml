@@ -58,6 +58,13 @@
     <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
   </path>
 
+  <!-- declare a classpath for tool tasks -->
+  <path id="tool.classpath">
+    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+    <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
+    <fileset dir="${deploy.dir}" includes="bang-server-config.jar"/>
+  </path>
+
   <!-- prepares the application directories -->
   <target name="prepare" depends="copydistlibs,copydistprops,lists">
     <mkdir dir="${deploy.dir}"/>
@@ -94,7 +101,7 @@
 
   <!-- generates additional methods for distributed object classes -->
   <target name="gendobj" depends="prepare">
-    <taskdef name="dobj" classpathref="classpath"
+    <taskdef name="dobj" classpathref="tool.classpath"
              classname="com.threerings.presents.tools.GenDObjectTask"/>
     <!-- make sure the dobject class files are all compiled -->
     <javac srcdir="src/java" destdir="${deploy.dir}/classes"
@@ -111,7 +118,7 @@
   <!-- generates marshaller and dispatcher classes for all invocation -->
   <!-- service declarations -->
   <target name="genservice" depends="prepare">
-    <taskdef name="service" classpathref="classpath"
+    <taskdef name="service" classpathref="tool.classpath"
              classname="com.threerings.presents.tools.GenServiceTask"/>
     <!-- make sure the service class files are all compiled -->
     <javac srcdir="src/java" destdir="${deploy.dir}/classes"
@@ -128,7 +135,7 @@
   <!-- generates sender and decoder classes for all invocation -->
   <!-- receiver declarations -->
   <target name="genreceiver" depends="prepare">
-    <taskdef name="receiver" classpathref="classpath"
+    <taskdef name="receiver" classpathref="tool.classpath"
              classname="com.threerings.presents.tools.GenReceiverTask"/>
     <!-- make sure the receiver class files are all compiled -->
     <javac srcdir="src/java" destdir="${deploy.dir}/classes"
@@ -231,12 +238,12 @@
 
   <!-- compiles our models -->
   <target name="models">
-    <taskdef name="compile" classpathref="classpath"
+    <taskdef name="compile" classpathref="tool.classpath"
              classname="com.threerings.jme.tools.CompileModelTask"/>
     <compile>
       <fileset dir="rsrc" includes="**/model.properties"/>
     </compile>
-    <taskdef name="updatepropheight" classpathref="classpath"
+    <taskdef name="updatepropheight" classpathref="tool.classpath"
              classname="com.threerings.bang.tools.UpdatePropHeightTask"/>
     <updatepropheight>
       <fileset dir="rsrc" includes="**/prop.properties"/>
@@ -257,7 +264,7 @@
 
   <!-- loads our boards into the database -->
   <target name="boards">
-    <taskdef name="loadboard" classpathref="classpath"
+    <taskdef name="loadboard" classpathref="tool.classpath"
              classname="com.threerings.bang.tools.LoadBoardTask"/>
     <loadboard home=".">
       <fileset dir="rsrc/boards" includes="**/*.board"/>
@@ -266,7 +273,7 @@
 
   <!-- compiles our tutorial XML definitions -->
   <target name="tutorials">
-    <taskdef name="confcomp" classpathref="classpath"
+    <taskdef name="confcomp" classpathref="tool.classpath"
              classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp parser="com.threerings.bang.game.tools.xml.TutorialConfigParser">
       <fileset dir="rsrc/tutorials" includes="**/*.xml"/>
@@ -275,7 +282,7 @@
 
   <!-- creates the serialized color repository config -->
   <target name="colorpos">
-    <taskdef name="confcomp" classpathref="classpath"
+    <taskdef name="confcomp" classpathref="tool.classpath"
       classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp parser="com.threerings.media.image.tools.xml.ColorPositoryParser"
               configdef="rsrc/config/media/colordefs.xml"/>
@@ -283,7 +290,7 @@
 
   <!-- creates the serialized article and aspect catalogs -->
   <target name="catalogs">
-    <taskdef name="confcomp" classpathref="classpath"
+    <taskdef name="confcomp" classpathref="tool.classpath"
              classname="com.threerings.tools.CompiledConfigTask"/>
     <confcomp configdef="rsrc/avatars/articles.xml"
               parser="com.threerings.bang.avatar.tools.xml.ArticleCatalogParser"/>
@@ -293,7 +300,7 @@
 
   <!-- builds the avatar component bundles -->
   <target name="avatars" depends="catalogs">
-    <taskdef name="metabundle" classpathref="classpath"
+    <taskdef name="metabundle" classpathref="tool.classpath"
              classname="com.threerings.cast.bundle.tools.MetadataBundlerTask"/>
     <metabundle actiondef="${basedir}/rsrc/avatars/actions.xml"
                 classdef="${basedir}/rsrc/avatars/classes.xml"
@@ -303,7 +310,7 @@
 
   <!-- run the unit tests -->
   <target name="tests" depends="compile" description="Runs unit tests.">
-    <taskdef name="unit" classpathref="classpath"
+    <taskdef name="unit" classpathref="tool.classpath"
              classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
     <unit printsummary="no" haltonfailure="yes" fork="true">
       <classpath refid="classpath"/>
