@@ -44,8 +44,7 @@ public abstract class Item
     }
 
     /**
-     * Called by the item repository when an item is loaded from the
-     * database.
+     * Called by the item repository when an item is loaded from the database.
      */
     public void setItemId (int itemId)
     {
@@ -53,8 +52,7 @@ public abstract class Item
     }
 
     /**
-     * Called by the item repository when an item is loaded from the
-     * database.
+     * Called by the item repository when an item is loaded from the database.
      */
     public void setOwnerId (int ownerId)
     {
@@ -75,8 +73,8 @@ public abstract class Item
     }
 
     /**
-     * Returns a qualified translatable string to display in a tooltip when the
-     * player is hovering over this item's icon.
+     * Returns a qualified translatable string to display in a tooltip when the player is hovering
+     * over this item's icon.
      */
     public abstract String getTooltip ();
 
@@ -96,8 +94,8 @@ public abstract class Item
     }
 
     /**
-     * If an item needs to colorize its icon image or otherwise do something
-     * special, it can override this method.
+     * If an item needs to colorize its icon image or otherwise do something special, it can
+     * override this method.
      */
     public ImageIcon createIcon (BasicContext ctx, String iconPath)
     {
@@ -159,8 +157,7 @@ public abstract class Item
     }
 
     /**
-     * Returns true if the specified object is an item and has the same
-     * item id as this item.
+     * Returns true if the specified object is an item and has the same item id as this item.
      */
     public boolean equals (Object other)
     {
