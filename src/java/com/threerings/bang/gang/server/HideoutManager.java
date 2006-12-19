@@ -97,10 +97,16 @@ public class HideoutManager extends PlaceManager
         final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure they can contribute
+        // make sure they're in a gang
         PlayerObject user = (PlayerObject)caller;
-        verifyCanContribute(user);
-
+        verifyInGang(user);
+        
+        // make sure they can donate; we return a user-friendly message if not, even though they
+        // shouldn't see the option, because their clock may not match up with ours
+        if (!user.canDonate()) {
+            throw new InvocationException("e.too_soon");
+        }
+        
         // make sure the amounts are positive and that at least one is nonzero
         if (scrip < 0 || coins < 0 || scrip + coins == 0) {
             log.warning("Player tried to donate invalid amounts [who=" +
@@ -212,41 +218,6 @@ public class HideoutManager extends PlaceManager
     }
     
     /**
-     * Verifies that the specified user can contribute to his gang's coffers,
-     * throwing an exception if not.
-     */
-    protected void verifyCanContribute (PlayerObject user)
-        throws InvocationException
-    {
-        // first things first
-        verifyInGang(user);
-        
-        // if they've passed the donation delay, they're fine
-        if ((System.currentTimeMillis() - user.joinedGang) >= DONATION_DELAY) {
-            return;
-        }
-        
-        // non-leaders cannot donate yet
-        if (user.gangRank < LEADER_RANK) {
-            throw new InvocationException("e.too_soon");
-        }
-        
-        // get the gang object and throw an exception if the user is not the most senior
-        GangObject gangobj = (GangObject)BangServer.omgr.getObject(user.gangOid);
-        if (gangobj == null) {
-            log.warning("Gang object is null [who=" + user.who() +
-                ", gangId=" + user.gangId + ", gangOid = " +
-                user.gangOid + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
-        for (GangMemberEntry entry : gangobj.members) {
-            if (entry.joined < user.joinedGang) {
-                throw new InvocationException("e.too_soon");
-            }
-        }
-    }
-    
-    /**
      * Verifies that the specified user is in a gang, throwing an exception
      * and logging a warning if not.
      */
@@ -295,8 +266,4 @@ public class HideoutManager extends PlaceManager
     }
 
     protected HideoutObject _hobj;
-    
-    /** The amount of time that must elapse before members (other than the most senior leader) can
-     * contribute to the gang's coffers. */
-    protected static final long DONATION_DELAY = 7L * 24 * 60 * 60 * 1000;
 }

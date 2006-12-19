@@ -284,6 +284,15 @@ public class PlayerObject extends BodyObject
         return gangId > 0 && gangRank >= GangCodes.RECRUITER_RANK;
     }
     
+    /**
+     * Returns true if the player can donate to his gang's coffers.
+     */
+    public boolean canDonate ()
+    {
+        return gangRank >= GangCodes.LEADER_RANK ||
+            (System.currentTimeMillis() - joinedGang) >= GangCodes.DONATION_DELAY;
+    }
+    
     @Override // documentation inherited
     public BangTokenRing getTokens ()
     {

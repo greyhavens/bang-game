@@ -1781,6 +1781,62 @@ directory_entry {
   padding: 5 5;
 }
 
+gang_info_design {
+  padding: 0 15;
+}
+
+gang_info_content {
+  padding: 5 15;
+  size: 380 -1;
+}
+
+gang_title {
+  font: "Old Town" bold 36;
+  color: #652708;
+}
+
+gang_notoriety {
+  font: "Dom Casual" plain 22;
+  color: #5C361D;
+  text-align: center;
+}
+
+gang_statement {
+  parent: "hideout_text";
+  text-align: center;
+}
+
+gang_coffers {
+  parent: "money_label";
+  color: #4C2602;
+}
+
+coffer_label {
+  font: "Dom Casual" plain 18;
+  color: #5C361D;
+}
+
+menu_play {
+  background: image "ui/hideout/menu_play.png" centerxy;
+}
+menu_play:selected {
+  background: image "ui/hideout/menu_play_selected.png" centerxy;
+}
+
+menu_roster {
+  background: image "ui/hideout/menu_roster.png" centerxy;
+}
+menu_roster:selected {
+  background: image "ui/hideout/menu_roster_selected.png" centerxy;
+}
+
+menu_directory {
+  background: image "ui/hideout/menu_directory.png" centerxy;
+}
+menu_directory:selected {
+  background: image "ui/hideout/menu_directory_selected.png" centerxy;
+}
+
 //
 // Sheriff's Office styles
 

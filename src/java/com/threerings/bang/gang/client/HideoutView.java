@@ -6,12 +6,14 @@ package com.threerings.bang.gang.client;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BToggleButton;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
@@ -125,6 +127,7 @@ public class HideoutView extends ShopView
             public void objectAvailable (GangObject gangobj) {
                 _gangobj = gangobj;
                 _ctx.getChatDirector().addAuxiliarySource(_gangobj, ChatCodes.PLACE_CHAT_TYPE);
+                populateMemberInterface();
                 _status.setStatus(getShopTip(), false);
             }
             public void requestFailed (int oid, ObjectAccessException cause) {
@@ -184,6 +187,12 @@ public class HideoutView extends ShopView
      */
     protected void populateMemberInterface ()
     {
+        // add the gang info view
+        _ccont.add(new GangInfoView(_ctx, _hideoutobj, _gangobj, _status));
+        
+        // add the gang menu
+        _ccont.add(new GangMenu());
+        
         add(_tabs = new HackyTabs(_ctx, false, "ui/hideout/tab_",
             MEMBER_TABS, true, 145, 15), TABS_RECT);
     }
@@ -201,6 +210,69 @@ public class HideoutView extends ShopView
             _ctx.getChatDirector().removeAuxiliarySource(_gangobj);
             _gangobj = null;
         }
+    }
+    
+    /** Handles the menu for games, the member roster, and the gang directory. */
+    protected class GangMenu extends BContainer
+        implements ActionListener
+    {
+        public GangMenu ()
+        {
+            super(GroupLayout.makeVert(GroupLayout.CENTER));
+            
+            BContainer bcont = new BContainer(GroupLayout.makeHoriz(
+                GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.NONE));
+            _buttons = new BToggleButton[] {
+                addButton(bcont, "play"),
+                addButton(bcont, "roster"),
+                addButton(bcont, "directory") };
+            add(bcont);
+            
+            _buttons[0].setSelected(true);
+        }
+        
+        // documentation inherited from interface ActionListener
+        public void actionPerformed (ActionEvent event)
+        {
+            Object src = event.getSource();
+            for (BToggleButton button : _buttons) {
+                if (button != src) {
+                    button.setSelected(false);
+                }
+            }
+            if (getComponentCount() > 1) {
+                remove(1);
+            }
+            String action = event.getAction();
+            if (action.equals("play")) {
+                
+            } else if (action.equals("roster")) {
+            
+            } else { // action.equals("directory")
+                if (_directory == null) {
+                    _directory = new DirectoryView(_ctx, _hideoutobj);
+                }
+                add(_directory);
+            }
+        }
+        
+        protected BToggleButton addButton (BContainer bcont, String action)
+        {
+            BToggleButton button = new BToggleButton("", action) {
+                protected void fireAction (long when, int modifiers) {
+                    if (!_selected) { // only selection, no deselection
+                        super.fireAction(when, modifiers);
+                    }
+                }
+            };
+            button.setStyleClass("menu_" + action);
+            button.addListener(this);
+            bcont.add(button);
+            return button;
+        }
+        
+        protected BToggleButton[] _buttons;
+        protected DirectoryView _directory;
     }
     
     protected HideoutObject _hideoutobj;
