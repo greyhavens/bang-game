@@ -1321,7 +1321,7 @@ public class BangManager extends GameManager
     protected void checkStartNextPhase ()
     {
         // if anyone has not yet reported readiness for this phase, we're not ready
-        if (!allPlayersReadyFor (_bangobj.state)) {
+        if (!allPlayersReadyFor(_bangobj.state)) {
             return;
         }
 
