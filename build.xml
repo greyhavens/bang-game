@@ -145,7 +145,7 @@
 
   <!-- encodes our sounds to ogg and enumerates them into a master list -->
   <target name="sounds">
-    <exec executable="${basedir}/bin/encode_sounds"/> 
+    <exec executable="${basedir}/bin/encode_sounds" failonerror="true"/>
     <exec executable="find" output="rsrc/sounds.txt">
       <arg value="rsrc"/>
       <arg value="-name"/>
@@ -327,6 +327,9 @@
     <delete><fileset dir="rsrc" includes="**/*.jar"/></delete>
     <delete><fileset dir="rsrc" includes="**/*.dat"/></delete>
     <delete><fileset dir="rsrc" includes="**/*.txt"/></delete>
+    <delete><fileset dir="rsrc" includes="**/*.ogg"/></delete>
+    <delete><fileset dir="etc/proguard" includes="*.map"/></delete>
+    <delete dir="pages/devclient"/>
   </target>
 
   <!-- build the java class files -->
