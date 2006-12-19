@@ -46,7 +46,10 @@ public class ParticleUtil
                     return;
                 }
             }
-            _target.getParent().detachChild(_target);
+            Node parent = _target.getParent();
+            if (parent != null) {
+                parent.detachChild(_target);
+            }
         }
         
         /** The target effect. */
