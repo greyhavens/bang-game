@@ -1851,6 +1851,12 @@ endgame_title {
   color: #4C2602;
 }
 
+endgame_text {
+  font: "Dom Casual" plain 18;
+  text-align: center;
+  color: #4C2602;
+}
+
 endgame_header {
   font: "Dom Casual" plain 18;
   text-align: center;
