@@ -435,6 +435,7 @@ public class AvatarView extends BLabel
             for (ResultListener<BufferedImage> receiver : receivers) {
                 receiver.requestCompleted(_image);
             }
+            _rcache.remove(_key);
         }
 
         protected BasicContext _ctx;
