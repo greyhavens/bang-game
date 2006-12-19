@@ -36,8 +36,8 @@ public class LogOffView extends BDecoratedWindow
         add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m." + msg)));
         BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ((GroupLayout)bcont.getLayoutManager()).setGap(25);
-        bcont.add(new BButton(msgs.get("m.quit"), this, "quit"));
-        bcont.add(new BButton(msgs.get("m.restart"), this, "restart"));
+        bcont.add(_quit = new BButton(msgs.get("m.quit"), this, "quit"));
+        bcont.add(_restart = new BButton(msgs.get("m.restart"), this, "restart"));
         add(bcont, GroupLayout.FIXED);
     }
 
@@ -45,14 +45,17 @@ public class LogOffView extends BDecoratedWindow
     public void actionPerformed (ActionEvent event)
     {
         if ("restart".equals(event.getAction())) {
+            _restart.setEnabled(false);
             if (!_ctx.getBangClient().relaunchGetdown(_ctx, 500L)) {
                 log.info("Failed to restart Bang, exiting");
                 _ctx.getApp().stop();
             }
         } else if ("quit".equals(event.getAction())) {
+            _quit.setEnabled(false);
             _ctx.getApp().stop();
         }
     }
 
     protected BangContext _ctx;
+    protected BButton _quit, _restart;
 }
