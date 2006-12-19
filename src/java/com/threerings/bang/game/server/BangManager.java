@@ -1801,14 +1801,17 @@ public class BangManager extends GameManager
 
             // compute this player's "take home" cash
             if (prec.playerId > 0 && _scenario.shouldPayEarnings(prec.user)) {
-                // scale the earnings based on the scenario duration
-                award.cashEarned = (int)Math.ceil(
-                    computeEarnings(ii) * _bconfig.duration.getAdjustment());
+                if (_bconfig.type == BangConfig.Type.BOUNTY) {
+                    // if they completed a bounty, award them the bounty cash
+                    if (completedBounty) {
+                        award.cashEarned += _bounty.reward.scrip;
+                        // TODO: handle other types of bounty prizes
+                    }
 
-                // if they completed a bounty, award them the bounty cash
-                if (completedBounty) {
-                    award.cashEarned += _bounty.reward.scrip;
-                    // TODO: handle other types of bounty prizes
+                } else {
+                    // compute their earnings and scale them based on the scenario duration
+                    award.cashEarned = (int)Math.ceil(
+                        computeEarnings(ii) * _bconfig.duration.getAdjustment());
                 }
             }
 
