@@ -1893,6 +1893,9 @@ public class BangManager extends GameManager
             int highidx = _ranks[ii].pidx, lowidx = _ranks[ii+1].pidx;
             if (_bangobj.points[highidx] <= _bangobj.points[lowidx]) {
                 _bangobj.setPointsAt(_bangobj.points[lowidx]+1, highidx);
+                PlayerObject user = (PlayerObject)getPlayer(highidx);
+                SpeakProvider.sendAttention(_bangobj, GAME_MSGS, MessageBundle.tcompose(
+                            "m.tiebreaker_points", user.handle.toString()));
             }
         }
 
