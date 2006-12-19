@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="objpolySurface35" translation="-26.9024, -7.38406, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="15.0, 15.0, 15.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="Bank.png" transparent="true">
+  <triMesh name="objpolySurface35" translation="-26.9024, -7.38406, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="15.0, 15.0, 15.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="bank.png" transparent="true">
     <vertex location="8.12321, -4.65651, 9.35886" normal="0.0, -0.997046, -0.0768082" tcoords="0.003738, 0.239064"/>
     <vertex location="8.24551, -4.76813, 10.8079" normal="0.0, -0.997046, -0.0768082" tcoords="0.003738, 0.330611"/>
     <vertex location="4.43817, -4.76813, 10.8079" normal="0.0, -0.997046, -0.0768082" tcoords="0.229324, 0.330611"/>
@@ -1552,5 +1552,7 @@
     <vertex location="7.20374, -4.39127, 9.91864" normal="0.999565, 0.0, -0.0294956" tcoords="0.70549, 0.996296"/>
     <vertex location="7.10457, 1.1056, 6.55787" normal="0.999565, 0.0, -0.0294956" tcoords="0.994206, 0.816331"/>
   </triMesh>
+
+  <node name="Plane01" translation="2.33927, 3.16168, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0"/>
 
 </model>
