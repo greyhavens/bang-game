@@ -340,7 +340,7 @@ public class BangManager extends GameManager
 
         // selecting a team implicitly reports one as ready for SELECT_PHASE (or rather its
         // completion)
-        playerReadyFor (user, BangObject.SELECT_PHASE);
+        playerReadyFor(user, BangObject.SELECT_PHASE);
     }
 
     // documentation inherited from interface BangProvider
