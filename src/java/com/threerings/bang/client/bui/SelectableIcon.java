@@ -38,8 +38,9 @@ public class SelectableIcon extends BToggleButton
     {
         super.fireAction(when, modifiers);
 
-        // play a sound when an icon is selected
-        if (_selected) {
+        // play a sound when an icon is selected (but only if we're going to remain selected; if
+        // the palette we're in does not allow selection, we'll be immediately deselected again)
+        if (_selected && _palette.getSelectable() > 0) {
             BangUI.play(BangUI.FeedbackSound.ITEM_SELECTED);
         }
     }

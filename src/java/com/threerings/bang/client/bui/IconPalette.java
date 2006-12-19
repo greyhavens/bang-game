@@ -101,6 +101,14 @@ public class IconPalette extends BContainer
     }
 
     /**
+     * Returns the number of icons that may be simultaneously selected (which may be zero).
+     */
+    public int getSelectable ()
+    {
+        return _selectable;
+    }
+
+    /**
      * Configures the number of simultaneous selections allowed by this icon palette.
      */
     public void setSelectable (int selectable)
@@ -423,8 +431,7 @@ public class IconPalette extends BContainer
     protected void iconDeselected (SelectableIcon icon)
     {
         // refuse to allow the last icon to be deselected if we don't allow an empty selection
-        if (!_allowsEmpty && _selections.size() == 1 &&
-            _selections.get(0) == icon) {
+        if (!_allowsEmpty && _selections.size() == 1 && _selections.get(0) == icon) {
             icon.setSelected(true);
             return;
         }

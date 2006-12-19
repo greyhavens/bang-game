@@ -30,10 +30,6 @@ import com.threerings.bang.avatar.data.BarberObject;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
-import java.awt.datatransfer.StringSelection;
-
-import java.awt.Toolkit;
-
 /**
  * Allows the customization of looks with clothing and accessories.
  */
@@ -88,14 +84,9 @@ public class WearClothingView extends BContainer
                         return;
                     }
                     int[] print = look.getAvatar(ctx.getUserObject());
-                    StringSelection sel = new StringSelection(StringUtil.toString(print, "", ""));
-                    try {
-                        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
-                        Toolkit.getDefaultToolkit().getSystemSelection().setContents(sel, null);
+                    if (BangUI.copyToClipboard(StringUtil.toString(print, "", ""))) {
                         ctx.getChatDirector().displayFeedback(
                             BarberCodes.BARBER_MSGS, "m.print_copied");
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
                     }
                 }
             }, ""), new Point(740, 45));

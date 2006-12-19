@@ -5,6 +5,8 @@ package com.threerings.bang.client;
 
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
@@ -306,6 +308,24 @@ public class BangUI
             Display.setIcon(icons);
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to set icons.", e);
+        }
+    }
+
+    /**
+     * Copies the supplied text to the OS clipboard (and Unix selection).
+     *
+     * @return true if the text was copied, false if something failed.
+     */
+    public static boolean copyToClipboard (String text)
+    {
+        StringSelection sel = new StringSelection(text);
+        try {
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sel, null);
+            Toolkit.getDefaultToolkit().getSystemSelection().setContents(sel, null);
+            return true;
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to copy text to clipboard '" + text + "'.", e);
+            return false;
         }
     }
 

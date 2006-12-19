@@ -81,7 +81,6 @@ public class PlayerPopupMenu extends BPopupMenu
     {
         super(parent);
 
-        setStyleClass("player_menu");
         _ctx = ctx;
         _handle = handle;
         addListener(this);
@@ -92,11 +91,10 @@ public class PlayerPopupMenu extends BPopupMenu
 
         // add their name as a non-menu item
         String title = "@=u(" + handle.toString() + ")";
-        add(new BLabel(title, "player_menu_title"));
+        add(new BLabel(title, "popupmenu_title"));
 
         // add an item for viewing their wanted poster
-        BMenuItem item;
-        addMenuItem(item = new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
+        addMenuItem(new BMenuItem(msgs.get("m.pm_view_poster"), "view_poster"));
 
         // if we're an admin/support, add a link to their admin account page
         if (_ctx.getUserObject().tokens.isSupport()) {

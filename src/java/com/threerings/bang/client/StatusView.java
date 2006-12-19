@@ -215,13 +215,16 @@ public class StatusView extends BWindow
 
     protected void selectTab (int tabidx)
     {
+        // for now only admins get item popup menus
+        boolean isAdmin = _ctx.getUserObject().tokens.isAdmin();
+
         // create our tabs on the fly
         BComponent tab;
         switch (_selectedTab = tabidx) {
         default:
         case 0:
             if (_items == null) {
-                _items = new InventoryPalette(_ctx, INV_PRED);
+                _items = new InventoryPalette(_ctx, INV_PRED, isAdmin);
             }
             tab = _items;
             break;
@@ -229,6 +232,7 @@ public class StatusView extends BWindow
         case 1:
             if (_bigshots == null) {
                 _bigshots = new UnitPalette(_ctx, null, 5, 3);
+                _bigshots.setSelectable(0);
                 _bigshots.setUser(_ctx.getUserObject(), false);
             }
             tab = _bigshots;
@@ -243,7 +247,7 @@ public class StatusView extends BWindow
 
         case 3:
             if (_duds == null) {
-                _duds = new InventoryPalette(_ctx, DUDS_PRED);
+                _duds = new InventoryPalette(_ctx, DUDS_PRED, isAdmin);
             }
             tab = _duds;
             break;

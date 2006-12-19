@@ -98,6 +98,22 @@ public class Article extends Item
         return _components;
     }
 
+    /**
+     * Returns a string representation of this article that we can use in config files.
+     */
+    public String getPrint ()
+    {
+        return _slot + ":" + _name + ":" + StringUtil.toString(_components, "", "");
+    }
+
+    /**
+     * Returns string identifier name for this article.
+     */
+    public String getArticleName ()
+    {
+        return _name;
+    }
+
     @Override // documentation inherited
     public String getName ()
     {

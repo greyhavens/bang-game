@@ -28,8 +28,7 @@ import com.threerings.bang.util.BangUtil;
  */
 public class UnitPalette extends IconPalette
 {
-    public UnitPalette (
-        BangContext ctx, Inspector inspector, int columns, int rows)
+    public UnitPalette (BangContext ctx, Inspector inspector, int columns, int rows)
     {
         super(inspector, columns, rows, UnitIcon.ICON_SIZE, 1);
         setPaintBackground(true);

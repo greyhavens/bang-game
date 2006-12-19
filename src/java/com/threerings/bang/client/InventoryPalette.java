@@ -23,12 +23,11 @@ import com.threerings.bang.util.BangContext;
 public class InventoryPalette extends IconPalette
 {
     /**
-     * Creates an {@link InventoryPalette} with 5 columns, 3 rows,
-     * and no {@link Inspector}.
+     * Creates an {@link InventoryPalette} with 5 columns, 3 rows, and no {@link Inspector}.
      */
-    public InventoryPalette (BangContext ctx, Predicate<Item> itemp)
+    public InventoryPalette (BangContext ctx, Predicate<Item> itemp, boolean allowItemPopup)
     {
-        this(ctx, itemp, COLUMNS, 3);
+        this(ctx, itemp, null, COLUMNS, 3, allowItemPopup);
     }
 
     /**
@@ -37,19 +36,20 @@ public class InventoryPalette extends IconPalette
     public InventoryPalette (BangContext ctx, Predicate<Item> itemp,
                              int columns, int rows)
     {
-        this(ctx, itemp, null, columns, rows);
+        this(ctx, itemp, null, columns, rows, false);
     }
 
     /**
      * Creates an {@link InventoryPalette}.
      */
-    public InventoryPalette (BangContext ctx, Predicate<Item> itemp,
-                             Inspector inspector, int columns, int rows)
+    public InventoryPalette (BangContext ctx, Predicate<Item> itemp, Inspector inspector,
+                             int columns, int rows, boolean allowItemPopup)
     {
         super(inspector, columns, rows, ItemIcon.ICON_SIZE, 0);
         setPaintBackground(true);
         _ctx = ctx;
         _itemp = itemp;
+        _allowItemPopup = allowItemPopup;
     }
 
     @Override // documentation inherited
@@ -89,6 +89,7 @@ public class InventoryPalette extends IconPalette
             if (item instanceof CardItem) {
                 icon.setFitted(true);
             }
+            icon.setMenuEnabled(_allowItemPopup);
             addIcon(icon);
         }
     }
@@ -113,6 +114,7 @@ public class InventoryPalette extends IconPalette
 
     protected BangContext _ctx;
     protected Predicate<Item> _itemp;
+    protected boolean _allowItemPopup;
 
     protected static final int COLUMNS = 5;
 }

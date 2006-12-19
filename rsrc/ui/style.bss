@@ -52,6 +52,11 @@ menuitem:hover {
   background: image "ui/popupmenu/highlight.png" framexy;
 }
 
+popupmenu_title {
+  parent: "menuitem";
+  font: "Dom Casual" bold 20;
+}
+
 tooltip_window {
   background: image "ui/popupmenu/background.png" framexy;
   padding: 10;
@@ -576,15 +581,6 @@ table_data {
   font: "Dom Casual" plain 19;
   color: #FFFFFF;
   text-align: left;
-}
-
-player_menu {
-  parent: "popupmenu";
-}
-
-player_menu_title {
-  parent: "menuitem";
-  font: "Dom Casual" bold 20;
 }
 
 chat_history_log {

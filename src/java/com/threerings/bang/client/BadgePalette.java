@@ -18,7 +18,7 @@ public class BadgePalette extends InventoryPalette
 {
     public BadgePalette (BangContext ctx)
     {
-        super(ctx, null);
+        super(ctx, null, false);
     }
 
     @Override // from InventoryPalette
