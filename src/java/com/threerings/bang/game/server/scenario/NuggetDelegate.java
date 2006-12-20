@@ -57,6 +57,13 @@ public class NuggetDelegate extends CounterDelegate
     }
 
     @Override // documentation inherited
+    public void tick (BangObject bangobj, short tick)
+    {
+        super.tick(bangobj, tick);
+        _picker = null;
+    }
+
+    @Override // documentation inherited
     protected void checkAdjustedCounter (BangObject bangobj, Unit unit)
     {
         if (_counters == null || _counters.size() == 0) {
