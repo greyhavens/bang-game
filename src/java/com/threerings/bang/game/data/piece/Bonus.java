@@ -63,6 +63,7 @@ public class Bonus extends Piece
         double avgpow = bangobj.getAveragePower(reachers);
         int avgdam = bangobj.getAverageUnitDamage(reachers);
         int avgunits = bangobj.getAverageUnitCount(reachers);
+        int pointDiff = bangobj.getPointsDiff(reachers);
 
         // now compute weightings for each of our bonuses
         StringBuffer buf = new StringBuffer();
@@ -73,7 +74,7 @@ public class Bonus extends Piece
 //             if (!config.isValid(bangobj)) {
 //                 continue;
 //             }
-            weights[ii] = config.getWeight(bangobj, avgpow, avgdam, avgunits);
+            weights[ii] = config.getWeight(bangobj, avgpow, avgdam, avgunits, pointDiff);
             weights[ii] = Math.max(weights[ii], 0);
             // record data for logging
             if (buf.length() > 0) {
@@ -82,10 +83,9 @@ public class Bonus extends Piece
             buf.append(config.type).append(" ").append(weights[ii]);
         }
 
-        log.fine("Selecting bonus [turn=" + bangobj.tick +
-                 ", avgpow=" + avgpow + ", avgdam=" + avgdam +
-                 ", avgpc=" + avgunits + ", reachers=" + reachers +
-                 ", weights=(" + buf + ")].");
+        log.fine("Selecting bonus [turn=" + bangobj.tick + ", avgpow=" + avgpow + 
+                ", avgdam=" + avgdam + ", avgpc=" + avgunits + ", pointDiff=" + pointDiff + 
+                ", reachers=" + reachers + ", weights=(" + buf + ")].");
 
         // and select one at random
         return createBonus(configs[RandomUtil.getWeightedIndex(weights)]);

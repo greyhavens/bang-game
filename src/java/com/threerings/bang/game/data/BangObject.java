@@ -513,6 +513,22 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Returns the smallest point difference between specified players scores
+     * and the max score or 0 if no players can reach.
+     */
+    public int getPointsDiff (ArrayIntSet players)
+    {
+        int max = 0, ppoints = 0;
+        for (int ii = 0; ii < points.length; ii++) {
+            max = Math.max(max, points[ii]);
+            if (players.contains(ii)) {
+                ppoints = Math.max(ppoints, points[ii]);
+            }
+        }
+        return (ppoints == 0 ? 0 : max - ppoints);
+    }
+
+    /**
      * Updates the {@link #gdata} and {@link #pdata} information.
      */
     public void updateData ()

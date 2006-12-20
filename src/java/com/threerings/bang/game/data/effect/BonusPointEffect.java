@@ -58,5 +58,5 @@ public class BonusPointEffect extends BonusEffect
         return BONUS_POINTS;
     }
 
-    protected static final int BONUS_POINTS = 50;
+    protected static final int BONUS_POINTS = 25;
 }

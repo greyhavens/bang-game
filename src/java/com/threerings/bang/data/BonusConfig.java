@@ -42,6 +42,9 @@ public class BonusConfig
     /** The bonus's affinity for the late game. */
     public float lateGameAffinity;
 
+    /** The minimum point differential for this bonus to be available. */
+    public int minPointDiff;
+
     /** If the bonus can be held by a unit. */
     public boolean holdable;
 
@@ -110,12 +113,13 @@ public class BonusConfig
 
     /** Computes the weight of this particular bonus. */
     public int getWeight (BangObject bangobj, double averagePower,
-                          int averageDamage, int averagePieces)
+                          int averageDamage, int averagePieces, int pointDiff)
     {
         // bail out if the base weight is zero or it's not the required
         // scenario
         if (baseWeight == 0 || (scenario != null &&
-                !bangobj.scenario.getIdent().equals(scenario))) {
+                !bangobj.scenario.getIdent().equals(scenario)) ||
+                minPointDiff > pointDiff) {
             return 0;
         }
 
@@ -173,6 +177,8 @@ public class BonusConfig
         
         config.baseWeight = BangUtil.getIntProperty(
             type, props, "base_weight", 50);
+        config.minPointDiff = BangUtil.getIntProperty(
+            type, props, "min_point_diff", 0);
         config.damageAffinity = BangUtil.getFloatProperty(
             type, props, "damage_affinity", 0f);
         config.lowPowerAffinity = BangUtil.getFloatProperty(
