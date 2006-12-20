@@ -36,6 +36,8 @@ import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.saloon.client.TopScoreView;
+
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
@@ -99,7 +101,7 @@ public class HideoutView extends ShopView
     @Override // documentation inherited
     protected Point getShopkeepNameLocation ()
     {
-        return new Point(23, 548);
+        return new Point(22, 554);
     }
     
     /**
@@ -178,8 +180,10 @@ public class HideoutView extends ShopView
             _ctx.loadImage("ui/hideout/title_gang_directory.png")), "gang_directory_title"));
         _ccont.add(new DirectoryView(_ctx, _hideoutobj));
         
+        // add the one selectable tab
         add(_tabs = new HackyTabs(_ctx, false, "ui/hideout/tab_",
             NON_MEMBER_TABS, true, 145, 15), TABS_RECT);
+        _tcont.add(new TopGangView(_ctx, _hideoutobj));
     }
     
     /**
@@ -193,8 +197,37 @@ public class HideoutView extends ShopView
         // add the gang menu
         _ccont.add(new GangMenu());
         
+        // add the tabs and gang chat (the first selected tab)
+        final GangChatView gcview = new GangChatView(_ctx, _hideoutobj, _gangobj);
         add(_tabs = new HackyTabs(_ctx, false, "ui/hideout/tab_",
-            MEMBER_TABS, true, 145, 15), TABS_RECT);
+            MEMBER_TABS, true, 145, 15) {
+            protected void tabSelected (int index) {
+                _tcont.removeAll();
+                if (index == 0) {
+                    _tcont.add(gcview);
+                    
+                } else if (index == 1) {
+                    if (_tgview == null) {
+                        _tgview = new TopGangView(_ctx, _hideoutobj);
+                    }
+                    _tcont.add(_tgview);
+                    
+                } else { // index == 2
+                    if (_tmview == null) {
+                        _tmview = new TopScoreView(_ctx, _gangobj) {
+                            protected String getHeaderText () {
+                                return _msgs.get("m.top_members");
+                            }
+                        };
+                        _tmview.setStyleClass("gang_rank_view");
+                    }
+                    _tcont.add(_tmview);
+                }
+            }
+            protected TopGangView _tgview;
+            protected TopScoreView _tmview;
+        }, TABS_RECT);
+        _tcont.add(gcview);
     }
     
     /**
@@ -229,6 +262,7 @@ public class HideoutView extends ShopView
             add(bcont);
             
             _buttons[0].setSelected(true);
+            add(_play = new PlayView(_ctx, _hideoutobj));
         }
         
         // documentation inherited from interface ActionListener
@@ -245,9 +279,14 @@ public class HideoutView extends ShopView
             }
             String action = event.getAction();
             if (action.equals("play")) {
+                add(_play);
                 
             } else if (action.equals("roster")) {
-            
+                if (_roster == null) {
+                    _roster = new RosterView(_ctx, _gangobj);
+                }
+                add(_roster);
+                
             } else { // action.equals("directory")
                 if (_directory == null) {
                     _directory = new DirectoryView(_ctx, _hideoutobj);
@@ -272,6 +311,8 @@ public class HideoutView extends ShopView
         }
         
         protected BToggleButton[] _buttons;
+        protected PlayView _play;
+        protected RosterView _roster;
         protected DirectoryView _directory;
     }
     

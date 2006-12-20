@@ -1767,7 +1767,7 @@ directory_letter:selected {
   color: #652708;
 }
 
-directory_groups {
+directory_pane {
   padding: 0 45 8 50;
 }
 
@@ -1775,6 +1775,18 @@ directory_entry {
   font: "Dom Casual" plain 18;
   color: #5C361D;
   padding: 5 5;
+}
+
+roster_view {
+  background: image "ui/hideout/fields_roster.png" centerxy;
+}
+
+roster_pane {
+  padding: 3 13;  
+}
+
+play_view {
+  background: image "ui/hideout/fields_play.png" centerxy;
 }
 
 gang_info_design {
@@ -1800,6 +1812,8 @@ gang_notoriety {
 gang_statement {
   parent: "hideout_text";
   text-align: center;
+  vertical-align: center;
+  size: -1 80;
 }
 
 gang_coffers {
@@ -1831,6 +1845,34 @@ menu_directory {
 }
 menu_directory:selected {
   background: image "ui/hideout/menu_directory_selected.png" centerxy;
+}
+
+hideout_members {
+  background: image "ui/hideout/fields_members_in_hideout.png" centerxy;
+  size: 434 148;
+  padding: 8 19;
+}
+
+hideout_members_title {
+  font: "Dom Casual" plain 20;
+  color: #88582A;
+  text-align: center;
+}
+
+hideout_members_entry {
+  font: "Dom Casual" plain 17;
+  color: #5C361D;
+  text-align: center;
+  padding: 0 20;
+}
+
+gang_chat {
+  size: 430 360;
+  padding: 2 2;
+}
+
+gang_rank_view {
+  padding: 5 5;
 }
 
 //

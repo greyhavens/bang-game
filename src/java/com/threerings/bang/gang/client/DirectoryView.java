@@ -61,7 +61,7 @@ public class DirectoryView extends BContainer
         glay = GroupLayout.makeVert(GroupLayout.TOP);
         glay.setOffAxisJustification(GroupLayout.LEFT);
         BScrollPane gpane = new BScrollPane(_gcont = new BContainer(glay));
-        gpane.setStyleClass("directory_groups");
+        gpane.setStyleClass("directory_pane");
         add(gpane);
     }
 
@@ -86,7 +86,7 @@ public class DirectoryView extends BContainer
     protected void wasAdded ()
     {
         super.wasAdded();
-        showPage(0);
+        showPage(_pidx);
         _hideoutobj.addListener(_dirlist);
     }
     

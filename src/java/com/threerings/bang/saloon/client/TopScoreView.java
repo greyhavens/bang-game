@@ -31,12 +31,11 @@ public class TopScoreView extends BContainer
         setStyleClass("top_score_view");
         _ctx = ctx;
 
-        add(new BLabel(ctx.xlate(SaloonCodes.SALOON_MSGS, "m.top_scores"),
-                       "top_score_header"), BorderLayout.NORTH);
+        add(new BLabel(getHeaderText(), "top_score_header"), BorderLayout.NORTH);
 
         BContainer cont = new BContainer(
             GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                 GroupLayout.STRETCH));;
+                                 GroupLayout.STRETCH));
         add(new BScrollPane(cont), BorderLayout.CENTER);
 
         for (TopRankedList list : rankobj.getTopRanked()) {
@@ -52,6 +51,11 @@ public class TopScoreView extends BContainer
         }
     }
 
+    protected String getHeaderText ()
+    {
+        return _ctx.xlate(SaloonCodes.SALOON_MSGS, "m.top_scores");
+    }
+    
     protected void addScenario (BContainer cont, TopRankedList list)
     {
         cont.add(new Spacer(10, 5));

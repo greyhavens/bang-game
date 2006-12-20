@@ -719,6 +719,8 @@ public class GangManager
             _gangobj.gangId = record.gangId;
             _gangobj.name = record.getName();
             _gangobj.founded = record.founded.getTime();
+            _gangobj.statement = record.statement;
+            _gangobj.url = record.url;
             _gangobj.scrip = record.scrip;
             _gangobj.coins = record.coins;
             _gangobj.notoriety = record.notoriety;
