@@ -351,7 +351,7 @@ public class Unit extends Piece
             if (canActivateBonus(bangobj, bonus)) {
                 if (bonus.getConfig().holdable && holding != null) {
                     effects.add(HoldEffect.dropBonus(
-                            bangobj, this, -1, holding)); 
+                            bangobj, this, -2, holding)); 
                 }
                 effects.add(bonus.affect(bangobj, this));
             } else if (!bonus.getConfig().hidden) {

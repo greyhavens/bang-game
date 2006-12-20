@@ -51,7 +51,8 @@ public class HoldEffect extends BonusEffect
      * not be found.
      *
      * @param causerId the piece id of the piece that caused this piece to drop
-     * this bonus, used for animation sequencing.
+     * this bonus, used for animation sequencing.  If set to -2 then the piece will
+     * lose the bonus points they earned for picking up the bonus.
      */
     public static HoldEffect dropBonus (
         BangObject bangobj, Unit unit, int causerId, String type)
@@ -124,14 +125,14 @@ public class HoldEffect extends BonusEffect
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        if (!dropping) {
-            Unit unit = (Unit)bangobj.pieces.get(pieceId);
-            if (unit == null) {
-                log.warning(
-                        "Missing unit for hold effect [id=" + pieceId + "].");
-                return;
-            }
+        Unit unit = (Unit)bangobj.pieces.get(pieceId);
+        if (unit == null) {
+            log.warning(
+                    "Missing unit for hold effect [id=" + pieceId + "].");
+            return;
+        }
 
+        if (!dropping) {
             // mark the target piece as holding now as they may have landed
             // next to an object which will also try to give them a holdable
             // bonus; we'll need to update their holding again in apply to
@@ -146,6 +147,9 @@ public class HoldEffect extends BonusEffect
             } else {
                 drop.position(spot.x, spot.y);
                 drop.assignPieceId(bangobj);
+            }
+            if (causerId == -2) {
+                bangobj.grantBonusPoints(unit.owner, -getBonusPoints());
             }
         }
     }
