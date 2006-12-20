@@ -2753,7 +2753,8 @@ public class BangManager extends GameManager
         }
 
         public void pieceAffected (Piece piece, String effect) {
-            if (effect.equals(AdjustTickEffect.GIDDY_UPPED) &&
+            if ((effect.equals(AdjustTickEffect.GIDDY_UPPED) ||
+                 effect.equals(AdjustTickEffect.HALF_GIDDY_UPPED)) &&
                 piece.ticksUntilMovable(_bangobj.tick) == 0) {
                 // if a piece was giddy upped into readiness, immediately execute any advance order
                 // it has registered

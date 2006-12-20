@@ -40,6 +40,12 @@ public class AdjustTickEffect extends Effect
     {
     }
 
+    /**
+     * Adjust a units lastActed tick.
+     *
+     * @param delta If delta < 0 then the lastActed will be set to lastActed + delta.  If
+     * delta >= 0 then lastActed will be set to delta;
+     */
     public AdjustTickEffect (int pieceId, int delta)
     {
         this.pieceId = pieceId;
@@ -60,8 +66,11 @@ public class AdjustTickEffect extends Effect
             pieceId = 0;
             return;
         }
-        newLastActed = (short)Math.max(bangobj.tick - 4,
-            Math.min(p.lastActed + delta, bangobj.tick));
+        if (delta >= 0) {
+            newLastActed = (short)delta;
+        } else {
+            newLastActed = (short)Math.max(bangobj.tick - 4, p.lastActed + delta);
+        }
 
         // make sure we're actually changing something
         if (p.lastActed == newLastActed) {

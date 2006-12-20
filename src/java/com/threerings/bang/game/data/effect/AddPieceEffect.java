@@ -67,7 +67,7 @@ public class AddPieceEffect extends Effect
     // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        // nothing doing
+        piece.lastActed = (short)Math.min(piece.lastActed, bangobj.tick - 4);
     }
     
     // documentation inherited
