@@ -69,7 +69,7 @@ uresource = rsrc/units/frontier_town/bundle.jar
 uresource = rsrc/sounds/music/frontier_town/bundle.jar
 
 # Define our auxiliary resource groups
-auxgroups = indian_post
+@auxgroups_line@
 
 # Indian Trading Post game resources
 indian_post.uresource = rsrc/bonuses/indian_post/bundle.jar

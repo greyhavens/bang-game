@@ -471,6 +471,7 @@
       <filterset>
         <filter token="appbase_line" value="appbase = ${root_url}/devclient"/>
         <filter token="version_line" value=""/>
+        <filter token="auxgroups_line" value="auxgroups = indian_post, boom_town"/>
       </filterset>
     </copy>
 
@@ -502,6 +503,7 @@
       <filterset>
         <filter token="appbase_line" value="appbase = ${root_url}/client/%VERSION%"/>
         <filter token="version_line" value="version = ${version}"/>
+        <filter token="auxgroups_line" value="auxgroups = indian_post"/>
       </filterset>
     </copy>
     <!-- do some temporary fiddling to nix boom_town and bounties from production -->
