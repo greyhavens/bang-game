@@ -272,8 +272,9 @@ public class BangUtil
         T evalue = null;
         if (value != null) {
             @SuppressWarnings("unchecked") Class<T> etype = (Class<T>)defval.getClass();
-            evalue = Enum.valueOf(etype, value.toUpperCase());
-            if (evalue == null) {
+            try {
+                evalue = Enum.valueOf(etype, value.toUpperCase());
+            } catch (Exception e) {
                 log.warning("Invalid enum config [type=" + type + ", key=" + key +
                             ", value=" + value + "].");
             }
