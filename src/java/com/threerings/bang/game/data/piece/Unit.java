@@ -81,13 +81,14 @@ public class Unit extends Piece
     /**
      * Called to reinitialize this unit just prior to respawning it.
      */
-    public void respawnInit ()
+    public void respawnInit (BangObject bangobj)
     {
         damage = 0;
         consecKills = 0;
         influence = null;
         holding = null;
         setRespawnTick((short)0);
+        lastActed = (short)(bangobj.tick - 4);
     }
 
     /**
