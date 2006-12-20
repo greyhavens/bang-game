@@ -233,6 +233,9 @@ public abstract class FinancialAction extends Invoker.Unit
                 log.log(Level.WARNING, "Failed to rollback action " + this, pe);
             }
         }
+
+        // now it's safe for this user to start another financial action
+        _userLock.remove(_user.username);
     }
 
     protected void toString (StringBuffer buf)
