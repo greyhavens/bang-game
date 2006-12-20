@@ -26,6 +26,16 @@ public abstract class SetInfluenceEffect extends BonusEffect
     }
 
     @Override // documentation inherited
+    public void prepare (BangObject bangobj, IntIntMap dammap)
+    {
+        Unit unit = (Unit)bangobj.pieces.get(pieceId);
+        // only grant points if the unit doesn't already have an influence
+        if (unit != null && unit.influence != null) {
+            super.prepare(bangobj, dammap);
+        }
+    }
+
+    @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
