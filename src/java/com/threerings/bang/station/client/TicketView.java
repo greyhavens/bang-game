@@ -37,8 +37,8 @@ public class TicketView extends BContainer
         _ctx = ctx;
         _status = status;
 
-        // determine the town to which they'll be buying a ticket; the first
-        // one to which they don't currently hold a ticket
+        // determine the town to which they'll be buying a ticket; the first one to which they
+        // don't currently hold a ticket
         int ticketTownIdx = -1;
         for (int ii = 1; ii < BangCodes.TOWN_IDS.length; ii++) {
             String townId = BangCodes.TOWN_IDS[ii];
@@ -73,7 +73,7 @@ public class TicketView extends BContainer
         BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
         row.add(_buy = new BButton(msgs.get("b.buy_ticket"), this, ""));
         _buy.setStyleClass("big_button");
-        _buy.setEnabled(_ticketTownId != null);
+        _buy.setEnabled(_ticketTownId != null && StationCodes.TICKET_COINS[ticketTownIdx] > 0);
         add(row, new Rectangle(0, 21, 160, 46));
     }
 
