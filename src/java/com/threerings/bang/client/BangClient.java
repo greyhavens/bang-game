@@ -831,6 +831,9 @@ public class BangClient extends BasicClient
             client.getClientObject().removeListener(_nlistener);
         }
 
+        // clear our location observer
+        _ctx.getLocationDirector().removeLocationObserver(_priorLocationObserver);
+
         if (_logOffMsg != null) {
             showLogOffMessage(_logOffMsg);
 
