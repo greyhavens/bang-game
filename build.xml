@@ -407,8 +407,8 @@
     <!-- create our configuration jar file -->
     <jar destfile="${client_dir}/code/config.jar">
       <fileset dir=".">
-        <include name="deployment.properties"/>
-        <include name="build.properties"/>
+        <include name="dist/deployment.properties"/>
+        <include name="dist/build.properties"/>
       </fileset>
     </jar>
 
