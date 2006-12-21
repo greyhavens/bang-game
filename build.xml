@@ -607,7 +607,14 @@
   </target>
 
   <!-- rebuilds all subprojects and the whole top-level distribution -->
-  <target name="distall" depends="prepare,distjme,distprojects,dist,distwebapps,mdist"/>
+  <target name="distall" depends="prepare,distjme,distprojects,dist,distwebapps,mdist">
+    <if><equals arg1="${props.dist}" arg2="devel"/>
+      <then><antcall target="devclient"/></then>
+      <elseif><equals arg1="${props.dist}" arg2="production"/>
+        <then><antcall target="client"/></then>
+      </elseif>
+    </if>
+  </target>
 
   <!-- cleans out the application and all subprojects -->
   <target name="cleanall" depends="cleanprojects,cleanwebapps,clean"/>
