@@ -2,7 +2,7 @@
 <project name="Bang Installers" default="devclient" basedir=".">
 
   <!-- load up our configuration information -->
-  <property name="base.dir" value="../.."/>
+  <property name="base.dir" value="${basedir}/../.."/>
   <property name="web.home" value="${base.dir}/pages"/>
   <property file="${base.dir}/dist/deployment.properties"/>
   <property file="${cert_dir}/certificate.properties"/>

@@ -2,10 +2,10 @@
 <project name="Bang Linux Installer" default="devclient" basedir=".">
 
   <!-- load up our configuration information -->
-  <property name="base.dir" value="../../.."/>
+  <property name="base.dir" value="${basedir}/../../.."/>
   <property name="web.home" value="${base.dir}/pages"/>
   <property name="temp.dir" value="bang_install"/>
-  <property file="${base.dir}/deployment.properties"/>
+  <property file="${base.dir}/dist/deployment.properties"/>
 
   <!-- creates an install -->
   <target name="instbuild">
