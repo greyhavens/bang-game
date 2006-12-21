@@ -61,7 +61,7 @@ function prevImage()
 //Figure out screenshot numbers
 function updatePage()
 {
-    document.screenshot.src = imgDir + screenshotCurrent + '.png';
+    document.screenshot.src = imgDir + screenshotCurrent + '.jpg';
 
 	document.getElementById('displayCurrentTop').innerHTML = screenshotsTotal - screenshotCurrent + 1;
 	document.getElementById('displayCurrentTop').style.fontWeight = "bold";	

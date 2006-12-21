@@ -99,7 +99,7 @@ function buildGallery() {
 // Layout the specific screenshot
 
 function screenshot(number) {
-	document.write('<a href="'+myImgPage+'?'+ImgLibrary+','+number+','+screenshotsTotal+'"><img src="' + ImgLibrary + 'thumbs/' + number +'.png" border="0" class="thumb"></a>');
+	document.write('<a href="'+myImgPage+'?'+ImgLibrary+','+number+','+screenshotsTotal+'"><img src="' + ImgLibrary + 'thumbs/' + number +'.jpg" border="0" class="thumb"></a>');
 }
 
 
