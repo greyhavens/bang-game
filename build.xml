@@ -18,7 +18,7 @@
   <import file="projects/tools/etc/build-support.xml"/>
 
   <!-- declare the properties files. -->
-  <property name="props.list" value="server.properties"/>
+  <property name="props.list" value="server.properties,deployment.properties"/>
   <property name="optprops.list"  value="build.properties"/>
 
   <!-- declare the files from bin needed in the package -->
@@ -574,7 +574,6 @@
     <!-- big file with all of our unit, prop, bonus and other properties -->
     <jar destfile="${deploy.dir}/bang-server-config.jar">
       <fileset dir=".">
-        <include name="deployment.properties"/>
         <include name="rsrc/**/*.txt"/>
         <include name="rsrc/**/*.properties"/>
         <include name="rsrc/**/*.game"/>
