@@ -18,7 +18,7 @@
   <import file="projects/tools/etc/build-support.xml"/>
 
   <!-- declare the properties files. -->
-  <property name="props.list" value="server.properties,deployment.properties"/>
+  <property name="props.list" value="server.properties"/>
   <property name="optprops.list"  value="build.properties"/>
 
   <!-- declare the files from bin needed in the package -->
@@ -574,6 +574,7 @@
     <!-- big file with all of our unit, prop, bonus and other properties -->
     <jar destfile="${deploy.dir}/bang-server-config.jar">
       <fileset dir=".">
+        <include name="deployment.properties"/>
         <include name="rsrc/**/*.txt"/>
         <include name="rsrc/**/*.properties"/>
         <include name="rsrc/**/*.game"/>
@@ -610,11 +611,28 @@
   <!-- rebuilds all subprojects and the whole top-level distribution -->
   <target name="distall" depends="prepare,distjme,distprojects,dist,distwebapps,mdist">
     <if><equals arg1="${props.dist}" arg2="devel"/>
-      <then><antcall target="devclient"/></then>
-      <elseif><equals arg1="${props.dist}" arg2="production"/>
-        <then><antcall target="client"/></then>
-      </elseif>
-    </if>
+      <then>
+        <!--<antcall target="devclient"/>-->
+        <ant dir="projects/installers" target="devclient"/>
+        <!-- make our Proguard mapping file accessible to Hemiptera -->
+        <!--<copy file="etc/proguard/0.map" tofile="../threerings/etc/proguard/bang"/>-->
+        <java classpathref="classpath" failonerror="true" output="${web_dir}/units.html"
+              classname="com.threerings.bang.game.tools.PrintDamageTable">
+          <arg value="indian_post"/>
+        </java>
+        <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
+              classname="com.threerings.bang.avatar.tools.SummarizeAspects" />
+        <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
+              classname="com.threerings.bang.avatar.tools.SummarizeArticles"/>
+        <!-- TODO: com.threerings.bang.tools.DumpBoards rsrc/boards/*/?/*.board | -->
+        <!-- bin/summarize_boards > pages/boards.html -->
+      </then>
+    <elseif><equals arg1="${props.dist}" arg2="production"/>
+      <then>
+        <antcall target="client"/>
+        <ant dir="projects/installers" target="client"/>
+      </then>
+    </elseif></if>
   </target>
 
   <!-- cleans out the application and all subprojects -->

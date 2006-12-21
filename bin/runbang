@@ -44,7 +44,6 @@ fi
 
 CLASS=com.threerings.bang.server.BangServer
 JAVA_ARGS="-server -mx$SERVER_MEMORY \
-    -Dbang.home=$BANG_HOME/dist \
     -Dresource_dir=$BANG_HOME/rsrc \
     -Dno_unpack_resources=true \
     -Dhostname=$HOSTNAME \
@@ -82,7 +81,7 @@ done
 
 # Add the deployment directory to the CLASSPATH (so that $BANG_HOME/rsrc
 # is accessible)
-CLASSPATH=$BANG_HOME:$CLASSPATH
+CLASSPATH=$BANG_HOME/dist:$CLASSPATH
 export CLASSPATH
 
 # Set up the LD_LIBRARY_PATH to include our shared libraries
