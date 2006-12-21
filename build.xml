@@ -452,7 +452,7 @@
   </target>
 
   <!-- builds the development client getdown distribution -->
-  <target name="devclient">
+  <target name="devclient" depends="copydistprops">
     <echo message="Generating Proguard config file for devclient..."/>
     <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro">
       <arg line="etc/bang-client.pro.in"/>
@@ -500,7 +500,7 @@
   </target>
 
   <!-- builds the production client getdown distribution -->
-  <target name="client">
+  <target name="client" depends="copydistprops">
     <exec executable="bin/getversion" outputproperty="latest_version" failonerror="true">
       <arg line="client"/>
       <arg line="${root_url}"/>
