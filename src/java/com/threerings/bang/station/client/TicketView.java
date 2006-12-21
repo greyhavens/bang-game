@@ -56,14 +56,17 @@ public class TicketView extends BContainer
         add(new BLabel(msgs.get(body), "ticket_info"),
             new Rectangle(0, 230, 160, 173));
 
+        boolean townEnabled = (StationCodes.TICKET_COINS[ticketTownIdx] > 0);
         if (_ticketTownId != null) {
-            BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
-            row.add(new BLabel(msgs.get("l.price"), "price_label"));
-            MoneyLabel cost = new MoneyLabel(ctx, true);
-            cost.setMoney(StationCodes.TICKET_SCRIP[ticketTownIdx],
-                          StationCodes.TICKET_COINS[ticketTownIdx], false);
-            row.add(cost);
-            add(row, new Rectangle(0, 80, 160, 23));
+            if (townEnabled) {
+                BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
+                row.add(new BLabel(msgs.get("l.price"), "price_label"));
+                MoneyLabel cost = new MoneyLabel(ctx, true);
+                cost.setMoney(StationCodes.TICKET_SCRIP[ticketTownIdx],
+                              StationCodes.TICKET_COINS[ticketTownIdx], false);
+                row.add(cost);
+                add(row, new Rectangle(0, 80, 160, 23));
+            }
 
             String ipath = "goods/tickets/" + _ticketTownId + ".png";
             add(new BLabel(new ImageIcon(ctx.loadImage(ipath))),
@@ -73,7 +76,7 @@ public class TicketView extends BContainer
         BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
         row.add(_buy = new BButton(msgs.get("b.buy_ticket"), this, ""));
         _buy.setStyleClass("big_button");
-        _buy.setEnabled(_ticketTownId != null && StationCodes.TICKET_COINS[ticketTownIdx] > 0);
+        _buy.setEnabled(_ticketTownId != null && townEnabled);
         add(row, new Rectangle(0, 21, 160, 46));
     }
 
