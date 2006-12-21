@@ -642,6 +642,7 @@
       <param name="copy.list"  value="lfilter,filter_interesting,sum_invokers"/>
       <param name="copy.dest"  value="${pkg.base}/${tools.dir}/bin"/>
     </antcall>
+    <antcall target="prepare-server-rcscript"/>
   </target>
 
 </project>
