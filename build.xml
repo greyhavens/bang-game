@@ -1,10 +1,6 @@
 <!-- build configuration -->
 <project name="bang" default="qcompile" basedir=".">
 
-  <!-- read in our deployment properties -->
-  <property file="deployment.properties"/>
-  <property file="build.properties"/>
-
   <!-- things you probably don't want to change -->
   <property name="src.dir"      value="src/java"/>
   <property name="deploy.dir"   value="dist"/>
@@ -620,9 +616,15 @@
           <arg value="indian_post"/>
         </java>
         <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
-              classname="com.threerings.bang.avatar.tools.SummarizeAspects" />
+              fork="true" classname="com.threerings.bang.avatar.tools.SummarizeAspects">
+           <sysproperty key="no_unpack_resources" value="true"/>
+           <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
+        </java>
         <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
-              classname="com.threerings.bang.avatar.tools.SummarizeArticles"/>
+              fork="true" classname="com.threerings.bang.avatar.tools.SummarizeArticles">
+           <sysproperty key="no_unpack_resources" value="true"/>
+           <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
+        </java>
         <!-- TODO: com.threerings.bang.tools.DumpBoards rsrc/boards/*/?/*.board | -->
         <!-- bin/summarize_boards > pages/boards.html -->
       </then>
