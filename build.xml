@@ -354,6 +354,7 @@
         <include name="units.html"/>
       </fileset>
     </delete>
+    <ant dir="projects/installers" target="clean"/>
   </target>
 
   <!-- build the java class files -->

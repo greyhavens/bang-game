@@ -61,4 +61,10 @@
       <fileset dir="${web.home}/client" includes="getdown-pro.jar"/>
     </signjar>
   </target>
+
+  <!-- clean out the project -->
+  <target name="clean">
+    <delete file="data/getdown-pro.jar"/>
+    <delete file="${default_locale}/dev-install.exe"/>
+  </target>
 </project>
