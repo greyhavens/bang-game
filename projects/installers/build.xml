@@ -4,7 +4,7 @@
   <!-- load up our configuration information -->
   <property name="base.dir" value="../.."/>
   <property name="web.home" value="${base.dir}/pages"/>
-  <property file="${base.dir}/deployment.properties"/>
+  <property file="${base.dir}/dist/deployment.properties"/>
   <property file="${cert_dir}/certificate.properties"/>
 
   <target name="prepare">
