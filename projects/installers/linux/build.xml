@@ -35,14 +35,14 @@
       </filterset>
     </copy>
 
-    <exec executable="chmod">
+    <exec executable="chmod" failonerror="true">
       <arg line="a+rx"/>
       <arg line="${temp.dir}/finish_install.sh"/>
       <arg line="${temp.dir}/bang"/>
       <arg line="${temp.dir}/bangeditor"/>
     </exec>
 
-    <exec executable="makeself">
+    <exec executable="makeself" failonerror="true">
       <arg line="${temp.dir}"/>
       <arg line="${web.home}/${bclient_ident}/${installer.name}"/>
       <arg line="${bclient_ident}"/>
