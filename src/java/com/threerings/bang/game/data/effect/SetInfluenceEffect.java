@@ -30,7 +30,7 @@ public abstract class SetInfluenceEffect extends BonusEffect
     {
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         // only grant points if the unit doesn't already have an influence
-        if (unit != null && unit.influence != null) {
+        if (unit != null && unit.influence == null) {
             super.prepare(bangobj, dammap);
         }
     }
