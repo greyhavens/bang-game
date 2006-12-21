@@ -1981,6 +1981,14 @@ public class BangBoardView extends BoardView
         }
     }
 
+    @Override // documentation inherited
+    protected void clearBoardActions ()
+    {
+        super.clearBoardActions();
+        _pmoves.clear();
+        _pendmap.clear();
+    }
+
     /**
      * Creates a moe cursor with a card icon.
      */

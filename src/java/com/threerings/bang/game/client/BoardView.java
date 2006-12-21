@@ -196,6 +196,9 @@ public class BoardView extends BComponent
                 " w" + StringUtil.toString(waiterIds) +
                 " p" + StringUtil.toString(pieceIds) + ":" + hashCode();
         }
+
+        /** Whether this action has been cleared by the BoardView. */
+        protected boolean _cleared = false;
     }
 
     public BoardView (BasicContext ctx, boolean editorMode)
@@ -350,6 +353,9 @@ public class BoardView extends BComponent
 
         // reset the sound effects
         _sounds.reclaimAll();
+
+        // remove any possible pending or executing board actions
+        clearBoardActions();
 
         // start afresh
         _board = _bangobj.board;
@@ -775,6 +781,11 @@ public class BoardView extends BComponent
      */
     public void actionCompleted (BoardAction action)
     {
+        // we don't care about cleared actions
+        if (action._cleared) {
+            return;
+        }
+
         if (!_ractions.remove(action)) {
             log.warning("Action re-completed! [action=" + action + "].");
             Thread.dumpStack();
@@ -1264,6 +1275,22 @@ public class BoardView extends BComponent
                 actionCompleted(action);
             }
         });
+    }
+
+    /**
+     * Removes all pending and executing board actions from the queue.
+     */
+    protected void clearBoardActions ()
+    {
+        for (BoardAction action : _ractions) {
+            action._cleared = true;
+        }
+        _ractions.clear();
+        _pactions.clear();
+        _eunits.clear();
+        _ebounds.clear();
+        _pbounds.clear();
+        _punits.clear();
     }
 
     /**
