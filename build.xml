@@ -612,7 +612,7 @@
         <!-- make our Proguard mapping file accessible to Hemiptera -->
         <!--<copy file="etc/proguard/0.map" tofile="../threerings/etc/proguard/bang"/>-->
         <java classpathref="classpath" failonerror="true" output="${web_dir}/units.html"
-              classname="com.threerings.bang.game.tools.PrintDamageTable">
+              fork="true" classname="com.threerings.bang.game.tools.PrintDamageTable">
           <arg value="indian_post"/>
         </java>
         <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
