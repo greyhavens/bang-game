@@ -47,6 +47,9 @@ public class GangRecord
     /** The members of the gang. */
     public transient ArrayList<GangMemberEntry> members;
 
+    /** The avatar of the most senior leader. */
+    public transient int[] avatar;
+    
     /** Used when creating new gangs. */
     public GangRecord (String name)
     {

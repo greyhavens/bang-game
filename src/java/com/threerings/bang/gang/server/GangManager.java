@@ -22,10 +22,13 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.EntryAddedEvent;
+import com.threerings.presents.dobj.ElementUpdateListener;
+import com.threerings.presents.dobj.ElementUpdatedEvent;
+import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
@@ -42,9 +45,10 @@ import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.server.BangServer;
-import com.threerings.bang.server.PardnerEntryUpdater;
 import com.threerings.bang.server.persist.FinancialAction;
 import com.threerings.bang.server.persist.PlayerRecord;
+
+import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.saloon.server.SaloonManager;
 
@@ -187,6 +191,11 @@ public class GangManager
             } finally {
                 player.commitTransaction();
             }
+            
+            // if they are the most senior leader, listen for avatar changes
+            if (player.playerId == gangobj.getSeniorLeader().playerId) {
+                new AvatarUpdater().add(player, gangobj);
+            }       
             return;
         }
 
@@ -267,6 +276,8 @@ public class GangManager
                           final ResultListener<GangEntry> listener)
         throws InvocationException
     {
+        Look look = user.getLook(Look.Pose.WANTED_POSTER);
+        final int[] avatar = (look == null) ? null : look.getAvatar(user);
         new FinancialAction(user, FORM_GANG_SCRIP_COST, FORM_GANG_COIN_COST) {
             protected int getCoinType () {
                 return CoinTransaction.GANG_CREATION;
@@ -285,6 +296,7 @@ public class GangManager
                 // we must create and insert our gang handler on the invoker thread
                 _grec.members.add(new GangMemberEntry(
                     user.handle, user.playerId, LEADER_RANK, _mrec.joined, 0));
+                _grec.avatar = avatar;
                 _gangs.put(_grec.gangId, new GangHandler(_grec));
                 return null;
             }
@@ -396,42 +408,49 @@ public class GangManager
         }
 
         // determine whether to delete the gang
-        final boolean delete = (gangobj.members.size() == 1);
+        boolean delete = (gangobj.members.size() == 1);
 
         // gangs cannot be left without a leader; if we are removing the last leader, we must
-        // promote the most senior non-leader
+        // promote the most senior non-leader.  otherwise, if the most senior leader leaves,
+        // we must note the next most senior leader in order to update their avatar
         GangMemberEntry removal = gangobj.members.get(handle);
+        int seniorLeaderId = -1;
         if (removal.rank == LEADER_RANK && remover == null && !delete) {
             boolean leaderless = true;
-            GangMemberEntry senior = null;
+            GangMemberEntry msenior = null, lsenior = null;
             for (GangMemberEntry member : gangobj.members) {
                 if (member == removal) {
                     continue;
-                } else if (member.rank == LEADER_RANK) {
-                    leaderless = false;
-                    break;
-                } else if (senior == null || member.joined < senior.joined) {
-                    senior = member;
+                } else if (member.rank == LEADER_RANK &&
+                    (lsenior == null || member.joined < lsenior.joined)) {
+                    lsenior = member;
+                } else if (msenior == null || member.joined < msenior.joined) {
+                    msenior = member;
                 }
             }
-            if (leaderless) {
+            if (lsenior == null) {
+                final int seniorId = lsenior.playerId;
                 changeMemberRank(
-                    gangId, senior.playerId, senior.handle, null, senior.rank, LEADER_RANK,
+                    gangId, msenior.playerId, msenior.handle, null, msenior.rank, LEADER_RANK,
                     new InvocationService.ConfirmListener() {
                         public void requestProcessed () {
                             continueRemovingFromGang(
-                                gangId, playerId, handle, null, false, listener);
+                                gangId, playerId, handle, null, seniorId, false, listener);
                         }
                         public void requestFailed (String cause) {
                             listener.requestFailed(cause);
                         }
                     });
                 return;
+                
+            } else if (playerId == gangobj.getSeniorLeader().playerId) {
+                seniorLeaderId = lsenior.playerId;
             }
         }
 
         // continue the process
-        continueRemovingFromGang(gangId, playerId, handle, remover, delete, listener);
+        continueRemovingFromGang(
+            gangId, playerId, handle, remover, seniorLeaderId, delete, listener);
     }
 
     /**
@@ -630,10 +649,13 @@ public class GangManager
     /**
      * Continues the process of removing a member from a gang, perhaps after having promoted a
      * player to avoid leaving a gang leaderless.
+     *
+     * @param seniorLeaderId if not -1, the player id of the gang's new senior leader
      */
     protected void continueRemovingFromGang (
-        final int gangId, final int playerId, final Handle handle, final Handle remover,
-        final boolean delete, final InvocationService.ConfirmListener listener)
+        final int gangId, final int playerId, final Handle handle,
+        final Handle remover, final int seniorLeaderId, final boolean delete,
+        final InvocationService.ConfirmListener listener)
     {
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent ()
@@ -642,6 +664,9 @@ public class GangManager
                 if (delete) {
                     _gangrepo.deleteGang(gangId);
                 } else {
+                    if (seniorLeaderId > 0) {
+                        _avatar = BangServer.lookrepo.loadSnapshot(seniorLeaderId);
+                    }
                     _gangrepo.insertHistoryEntry(gangId, (remover == null) ?
                         MessageBundle.tcompose("m.left_entry", handle) :
                         MessageBundle.tcompose("m.expelled_entry", remover, handle));
@@ -650,10 +675,16 @@ public class GangManager
             public void handleSuccess () {
                 log.info("Removed member from gang [gangId=" + gangId + ", playerId=" + playerId +
                          ", handle=" + handle + ", delete=" + delete + "].");
-                // remove the member entry
+                // remove the member entry and perhaps start updating the new senior leader
                 GangObject gangobj = getGangObject(gangId);
                 if (gangobj != null) {
                     gangobj.removeFromMembers(handle);
+                    PlayerObject senior = BangServer.lookupPlayer(seniorLeaderId);
+                    if (senior != null) {
+                        new AvatarUpdater().add(senior, gangobj);
+                    } else if (_avatar != null) {
+                        gangobj.setAvatar(_avatar);
+                    }
                 }
                 
                 // update gang fields if the user didn't log in after being removed
@@ -670,6 +701,7 @@ public class GangManager
                 }
                 listener.requestProcessed();
             }
+            protected int[] _avatar;
         });
     }
 
@@ -721,6 +753,7 @@ public class GangManager
             _gangobj.founded = record.founded.getTime();
             _gangobj.statement = record.statement;
             _gangobj.url = record.url;
+            _gangobj.avatar = record.avatar;
             _gangobj.scrip = record.scrip;
             _gangobj.coins = record.coins;
             _gangobj.notoriety = record.notoriety;
@@ -778,6 +811,56 @@ public class GangManager
         protected Interval _rankval;
     }
 
+    /** Listens for changes to the avatar of the most senior leader, updating the gang object to
+     * match. */
+    protected class AvatarUpdater extends SetAdapter
+        implements AttributeChangeListener, ElementUpdateListener
+    {
+        public void add (PlayerObject player, GangObject gang)
+        {
+            _player = player;
+            _gang = gang;
+            _player.addListener(this);
+            updateAvatar();
+        }
+        
+        @Override // documentation inherited
+        public void entryUpdated (EntryUpdatedEvent event)
+        {
+            if (event.getName().equals(PlayerObject.LOOKS) &&
+                event.getEntry() == _player.getLook(Look.Pose.WANTED_POSTER)) {
+                updateAvatar();
+            }
+        }
+        
+        // documentation inherited from interface AttributeChangeListener
+        public void attributeChanged (AttributeChangedEvent event)
+        {
+            // stop listening if they leave the gang
+            if (event.getName().equals(PlayerObject.GANG_ID) && event.getIntValue() <= 0) {
+                _player.removeListener(this);
+            }
+        }
+        
+        // documentation inherited from interface ElementUpdateListener
+        public void elementUpdated (ElementUpdatedEvent event)
+        {
+            if (event.getName().equals(PlayerObject.POSES) &&
+                event.getIndex() == Look.Pose.WANTED_POSTER.ordinal()) {
+                updateAvatar();
+            }
+        }
+        
+        protected void updateAvatar ()
+        {
+            Look look = _player.getLook(Look.Pose.WANTED_POSTER);
+            _gang.setAvatar(look == null ? null : look.getAvatar(_player));
+        }
+        
+        protected PlayerObject _player;
+        protected GangObject _gang;
+    }
+    
     /** The persistent store for gang data. */
     protected GangRepository _gangrepo;
 

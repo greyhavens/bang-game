@@ -38,6 +38,9 @@ public class GangObject extends DObject
     /** The field name of the <code>url</code> field. */
     public static final String URL = "url";
 
+    /** The field name of the <code>avatar</code> field. */
+    public static final String AVATAR = "avatar";
+
     /** The field name of the <code>scrip</code> field. */
     public static final String SCRIP = "scrip";
 
@@ -72,6 +75,9 @@ public class GangObject extends DObject
     /** The gang's URL. */
     public String url;
     
+    /** The gang leader's avatar. */
+    public int[] avatar;
+    
     /** The amount of scrip in the gang's coffers. */
     public int scrip;
     
@@ -97,6 +103,21 @@ public class GangObject extends DObject
     public DSet<TopRankedList> getTopRanked ()
     {
         return topRanked;
+    }
+    
+    /**
+     * Returns the {@link GangMemberEntry} corresponding to the most senior leader of the gang.
+     */
+    public GangMemberEntry getSeniorLeader ()
+    {
+        GangMemberEntry senior = null;
+        for (GangMemberEntry entry : members) {
+            if (entry.rank == GangCodes.LEADER_RANK &&
+                (senior == null || entry.rank < senior.rank)) {
+                senior = entry;
+            }
+        }
+        return senior;
     }
     
     // AUTO-GENERATED: METHODS START
@@ -194,6 +215,39 @@ public class GangObject extends DObject
         requestAttributeChange(
             URL, value, ovalue);
         this.url = value;
+    }
+
+    /**
+     * Requests that the <code>avatar</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setAvatar (int[] value)
+    {
+        int[] ovalue = this.avatar;
+        requestAttributeChange(
+            AVATAR, value, ovalue);
+        this.avatar = (value == null) ? null : (int[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>avatar</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setAvatarAt (int value, int index)
+    {
+        int ovalue = this.avatar[index];
+        requestElementUpdate(
+            AVATAR, index, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.avatar[index] = value;
     }
 
     /**

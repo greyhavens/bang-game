@@ -105,6 +105,16 @@ public class GangRepository extends JORARepository
         GangRecord grec = loadByExample(_gtable, new GangRecord(gangId), _gangIdMask);
         if (grec != null && members) {
             grec.members = loadGangMembers(gangId);
+            
+            // load the avatar for the most senior member
+            GangMemberEntry senior = null;
+            for (GangMemberEntry entry : grec.members) {
+                if (entry.rank == GangCodes.LEADER_RANK &&
+                    (senior == null || entry.rank < senior.rank)) {
+                    senior = entry;
+                }
+            }
+            grec.avatar = BangServer.lookrepo.loadSnapshot(senior.playerId);
         }
         return grec;
     }

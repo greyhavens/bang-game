@@ -1782,7 +1782,30 @@ roster_view {
 }
 
 roster_pane {
-  padding: 3 13;  
+  padding: 3 13 3 20;  
+}
+
+roster_title {
+  font: "Old Town" plain 28;
+  color: #652708;
+  padding: 7 0 0 7;
+}
+
+leader_view {
+  font: "Dom Casual" plain 14;
+  color: #5C361D;
+  text-align: center;
+  padding: 17 25 0 0;
+}
+
+roster_table {
+  padding: 5 0 10 45;
+}
+
+roster_entry {
+  font: "Dom Casual" plain 17;
+  color: #5C361D;
+  padding: 0 20 0 0;
 }
 
 play_view {
