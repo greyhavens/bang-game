@@ -66,6 +66,12 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
      */
     protected void updateRemotePlayer (BangClientInfo info, int townIndex, String where)
     {
+        if (!(info.visibleName instanceof Handle)) {
+            log.info("Non-Handle-having remote player updated? [who=" + info +
+                     ", town=" + townIndex + ", via=" + where + "].");
+            return;
+        }
+
         Handle handle = (Handle)info.visibleName;
         ArrayList<Container<T>> containers = _mapping.get(handle);
         if (containers == null) {
