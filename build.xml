@@ -348,6 +348,12 @@
     </delete>
     <delete><fileset dir="etc/proguard" includes="*.map"/></delete>
     <delete dir="pages/devclient"/>
+    <delete>
+      <fileset dir="pages">
+        <include name="aspects.html"/>
+        <include name="units.html"/>
+      </fileset>
+    </delete>
   </target>
 
   <!-- build the java class files -->
