@@ -476,6 +476,27 @@
       <param name="client_dir" value="${web_dir}/devclient"/>
     </antcall>
     <delete file="etc/bang-client.pro"/>
+
+    <!-- make our Proguard mapping file accessible to Hemiptera -->
+    <!--<copy file="etc/proguard/0.map" tofile="../threerings/etc/proguard/bang"/>-->
+
+    <!-- generate some game metadata summary pages -->
+    <java classpathref="classpath" failonerror="true" output="${web_dir}/units.html"
+          fork="true" classname="com.threerings.bang.game.tools.PrintDamageTable">
+      <arg value="indian_post"/>
+    </java>
+    <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
+          fork="true" classname="com.threerings.bang.avatar.tools.SummarizeAspects">
+       <sysproperty key="no_unpack_resources" value="true"/>
+       <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
+    </java>
+    <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
+          fork="true" classname="com.threerings.bang.avatar.tools.SummarizeArticles">
+       <sysproperty key="no_unpack_resources" value="true"/>
+       <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
+    </java>
+    <!-- TODO: com.threerings.bang.tools.DumpBoards rsrc/boards/*/?/*.board | -->
+    <!-- bin/summarize_boards > pages/boards.html -->
   </target>
 
   <!-- builds the production client getdown distribution -->
@@ -609,24 +630,6 @@
       <then>
         <antcall target="devclient"/>
         <ant dir="projects/installers" target="devclient"/>
-        <!-- make our Proguard mapping file accessible to Hemiptera -->
-        <!--<copy file="etc/proguard/0.map" tofile="../threerings/etc/proguard/bang"/>-->
-        <java classpathref="classpath" failonerror="true" output="${web_dir}/units.html"
-              fork="true" classname="com.threerings.bang.game.tools.PrintDamageTable">
-          <arg value="indian_post"/>
-        </java>
-        <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
-              fork="true" classname="com.threerings.bang.avatar.tools.SummarizeAspects">
-           <sysproperty key="no_unpack_resources" value="true"/>
-           <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
-        </java>
-        <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
-              fork="true" classname="com.threerings.bang.avatar.tools.SummarizeArticles">
-           <sysproperty key="no_unpack_resources" value="true"/>
-           <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
-        </java>
-        <!-- TODO: com.threerings.bang.tools.DumpBoards rsrc/boards/*/?/*.board | -->
-        <!-- bin/summarize_boards > pages/boards.html -->
       </then>
     <elseif><equals arg1="${props.dist}" arg2="production"/>
       <then>
