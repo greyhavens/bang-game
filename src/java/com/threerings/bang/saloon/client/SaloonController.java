@@ -98,6 +98,7 @@ public class SaloonController extends PlaceController
     @Override // documentation inherited
     public void didLeavePlace (PlaceObject plobj)
     {
+        super.didLeavePlace(plobj);
         _ctx.getParlorDirector().removeGameReadyObserver(this);
     }
 
