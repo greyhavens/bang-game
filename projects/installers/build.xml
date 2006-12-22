@@ -65,6 +65,9 @@
   <!-- clean out the project -->
   <target name="clean">
     <delete file="data/getdown-pro.jar"/>
-    <delete file="${default_locale}/dev-install.exe"/>
+    <delete>
+      <fileset dir="${default_locale}" includes="*.exe"/>
+      <fileset dir="${default_locale}" includes="*.bin"/>
+    </delete>
   </target>
 </project>
