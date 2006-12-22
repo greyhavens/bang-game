@@ -355,19 +355,9 @@ public class UnitSprite extends MobileSprite
     }
 
     @Override // documentation inherited
-    public void cancelMove ()
-    {
-        super.cancelMove();
-        updateTileHighlight();
-        updateStatus();
-    }
-
-    @Override // documentation inherited
     public void pathCompleted ()
     {
         super.pathCompleted();
-        updateTileHighlight();
-        updateStatus();
 
         // turn the fire off and display an explosion when the unit reaches the
         // end of its death flight
@@ -526,6 +516,14 @@ public class UnitSprite extends MobileSprite
         } else {
             return super.getMoveSound();
         }
+    }
+
+    @Override // documentation inherited
+    protected void moveEnded ()
+    {
+        super.moveEnded();
+        updateTileHighlight();
+        updateStatus();
     }
 
     /**

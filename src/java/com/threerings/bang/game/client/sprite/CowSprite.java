@@ -93,6 +93,7 @@ public class CowSprite extends MobileSprite
             _tlight.setDefaultColor(JPIECE_COLORS[_piece.owner + 1]);
             _tlight.updateRenderState();
             _tlight.setCullMode(CULL_DYNAMIC);
+            updateTileHighlight();
         }
     }
 
