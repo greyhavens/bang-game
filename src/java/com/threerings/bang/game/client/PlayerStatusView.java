@@ -159,6 +159,7 @@ public class PlayerStatusView extends BContainer
         if (event.getName().equals(BangObject.PLAYER_INFO)) {
             if (event.getIndex() == _pidx) {
                 updateAvatar();
+                updateStatus();
             }
 
         } else if (event.getName().equals(BangObject.PLAYER_STATUS)) {
@@ -406,15 +407,15 @@ public class PlayerStatusView extends BContainer
     {
         switch (_bangobj.state) {
         case BangObject.SELECT_PHASE:
-            setRank(_bangobj.playerStatus[_pidx] ==
-                    BangObject.PLAYER_IN_PLAY ? -1 : -2);
+            setRank(_bangobj.playerInfo[_pidx].readyState ==
+                    BangObject.SELECT_PHASE ? -1 : -2);
             break;
 
         case BangObject.IN_PLAY:
             // on the first tick we wait for everyone to load their units
             if (_bangobj.tick == 0) {
-                setRank(_bangobj.playerStatus[_pidx] ==
-                        BangObject.PLAYER_IN_PLAY ? -1 : -2);
+                setRank(_bangobj.playerInfo[_pidx].readyState ==
+                        BangObject.IN_PLAY ? -1 : -2);
             }
             break;
 

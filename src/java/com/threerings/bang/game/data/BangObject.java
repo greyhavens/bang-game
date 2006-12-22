@@ -97,6 +97,9 @@ public class BangObject extends GameObject
 
         /** The player's avatar data. */
         public int[] avatar;
+
+        /** The readyness state of the player. */
+        public int readyState;
     }
 
     // AUTO-GENERATED: FIELDS START

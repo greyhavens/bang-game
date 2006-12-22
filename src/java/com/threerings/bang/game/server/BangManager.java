@@ -127,7 +127,6 @@ public class BangManager extends GameManager
         public int playerId, gangId;
         public Purse purse;
         public int[] finishedTick;
-        public int readyState;
 
         public DSet<Rating> ratings;
         public HashMap<String,Rating> nratings = new HashMap<String,Rating>();
@@ -490,7 +489,8 @@ public class BangManager extends GameManager
         }
 
         // note their readiness state
-        _precords[pidx].readyState = state;
+        _bangobj.playerInfo[pidx].readyState = state;
+        _bangobj.setPlayerInfoAt(_bangobj.playerInfo[pidx], pidx);
 
         // now check to see if we should proceed
         checkStartNextPhase();
@@ -914,10 +914,17 @@ public class BangManager extends GameManager
         case BangObject.SELECT_PHASE:
             // select big shots, team and cards for our AIs
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
-                if (isAI(ii)) {
-                    selectTeam(ii, _aiLogic[ii].getBigShotType(),
-                               _aiLogic[ii].getUnitTypes(getTeamSize()),
-                               _aiLogic[ii].getCardTypes());
+                _bangobj.startTransaction();
+                try {
+                    if (isAI(ii)) {
+                        selectTeam(ii, _aiLogic[ii].getBigShotType(),
+                                   _aiLogic[ii].getUnitTypes(getTeamSize()),
+                                   _aiLogic[ii].getCardTypes());
+                        _bangobj.playerInfo[ii].readyState = state;
+                        _bangobj.setPlayerInfoAt(_bangobj.playerInfo[ii], ii);
+                    }
+                } finally {
+                    _bangobj.commitTransaction();
                 }
             }
             break;
@@ -1182,7 +1189,7 @@ public class BangManager extends GameManager
     protected boolean allPlayersReadyFor (int phase)
     {
         for (int ii = 0; ii < _precords.length; ii++) {
-            if (!isAI(ii) && isActivePlayer(ii) && _precords[ii].readyState < phase) {
+            if (!isAI(ii) && isActivePlayer(ii) && _bangobj.playerInfo[ii].readyState < phase) {
                 log.fine(getPlayer(ii) + " (" + ii + ") not ready for " + phase + ". Waiting.");
                 return false;
             }
@@ -1927,7 +1934,7 @@ public class BangManager extends GameManager
 
         // resign anyone that has not selected a team
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
-            if (!isAI(ii) && _precords[ii].readyState == BangObject.SELECT_PHASE) {
+            if (!isAI(ii) && _bangobj.playerInfo[ii].readyState == BangObject.SELECT_PHASE) {
                 log.info("Player failed to make a selection in time [game=" + where() +
                          ", state=" + targetState + ", who=" + _bangobj.players[ii] + "].");
                 endPlayerGame(ii);
