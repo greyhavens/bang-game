@@ -78,17 +78,28 @@ public class HideoutManager extends PlaceManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void leaveGang (
-        ClientObject caller, HideoutService.ConfirmListener listener)
+    public void leaveGang (ClientObject caller, final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure they're in a gang
-        PlayerObject user = (PlayerObject)caller;
+        final PlayerObject user = (PlayerObject)caller;
         verifyInGang(user);
         
         // remove them
         BangServer.gangmgr.removeFromGang(
-            user.gangId, user.playerId, user.handle, null, listener);
+            user.gangId, user.playerId, user.handle, null, new ResultListener<Handle>() {
+                public void requestCompleted (Handle deletion) {
+                    if (deletion != null) {
+                        _hobj.removeFromGangs(deletion);
+                    }
+                    listener.requestProcessed();
+                }
+                public void requestFailed (Exception cause) {
+                    log.warning("Failed to leave gang [who=" + user.who() + ", error=" +
+                        cause + "].");
+                    listener.requestFailed(INTERNAL_ERROR);
+                }
+            });
     }
 
     // documentation inherited from interface HideoutProvider
@@ -120,17 +131,26 @@ public class HideoutManager extends PlaceManager
     
     // documentation inherited from interface HideoutProvider
     public void expelMember (
-        ClientObject caller, Handle handle,
-        HideoutService.ConfirmListener listener)
+        ClientObject caller, final Handle handle,
+        final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure they can change the user's status
-        PlayerObject user = (PlayerObject)caller;
+        final PlayerObject user = (PlayerObject)caller;
         GangMemberEntry entry = verifyCanChange(user, handle);
         
         // remove them
         BangServer.gangmgr.removeFromGang(
-            user.gangId, entry.playerId, handle, user.handle, listener);
+            user.gangId, entry.playerId, handle, user.handle, new ResultListener<Handle>() {
+                public void requestCompleted (Handle deletion) {
+                    listener.requestProcessed();
+                }
+                public void requestFailed (Exception cause) {
+                    log.warning("Failed to expel member from gang [who=" + user.who() +
+                        ", target=" + handle + ", error=" + cause + "].");
+                    listener.requestFailed(INTERNAL_ERROR);
+                }
+            });
     }
     
     // documentation inherited from interface HideoutProvider

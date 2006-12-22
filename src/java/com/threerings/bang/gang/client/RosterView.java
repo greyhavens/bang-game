@@ -7,15 +7,19 @@ import java.util.Arrays;
 
 import com.jme.renderer.Renderer;
 
+import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
+import com.jmex.bui.event.ActionEvent;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
 import com.samskivert.util.ResultListener;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
@@ -24,6 +28,8 @@ import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
 import com.threerings.presents.dobj.SetListener;
 
+import com.threerings.bang.client.bui.RequestDialog;
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.AvatarView;
@@ -31,6 +37,7 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
+import com.threerings.bang.gang.data.HideoutObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 
 import static com.threerings.bang.Log.*;
@@ -39,13 +46,19 @@ import static com.threerings.bang.Log.*;
  * Allows the user to browse the list of gang members.
  */
 public class RosterView extends BContainer
-    implements AttributeChangeListener, SetListener, GangCodes, HideoutCodes
+    implements ActionListener, AttributeChangeListener, SetListener, GangCodes, HideoutCodes
 {
-    public RosterView (BangContext ctx, GangObject gangobj)
+    public RosterView (
+        BangContext ctx, HideoutObject hideoutobj, GangObject gangobj, BContainer bcont,
+        StatusLabel status)
     {
         super(GroupLayout.makeVStretch());
         _ctx = ctx;
+        _hideoutobj = hideoutobj;
         _gangobj = gangobj;
+        _bcont = bcont;
+        _status = status;
+        _msgs = ctx.getMessageManager().getBundle(HIDEOUT_MSGS);
         
         setStyleClass("roster_view");
         
@@ -63,19 +76,19 @@ public class RosterView extends BContainer
         ((GroupLayout)left.getLayoutManager()).setGap(0);
         tcont.add(left);
         
-        left.add(new BLabel(_ctx.xlate(HIDEOUT_MSGS, "m.leaders"), "roster_title"));
+        left.add(new BLabel(_msgs.get("m.leaders"), "roster_title"));
         left.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/underline_short.png"))));
         left.add(_lcont = new BContainer(new TableLayout(2)));
         _lcont.setStyleClass("roster_table");
         
-        tcont.add(_lview = new LeaderView(), GroupLayout.FIXED);
+        tcont.add(_lview = new LeaderView(ctx, status), GroupLayout.FIXED);
         
         BContainer bottom = new BContainer(GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH));
         ((GroupLayout)bottom.getLayoutManager()).setGap(0);
         rcont.add(bottom);
         
-        bottom.add(new BLabel(_ctx.xlate(HIDEOUT_MSGS, "m.members"), "roster_title"));
+        bottom.add(new BLabel(_msgs.get("m.members"), "roster_title"));
         bottom.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/underline_long.png"))));
         bottom.add(_mcont = new BContainer(new TableLayout(4)));
         _mcont.setStyleClass("roster_table");
@@ -83,6 +96,19 @@ public class RosterView extends BContainer
         BScrollPane rpane = new BScrollPane(rcont);
         rpane.setStyleClass("roster_pane");
         add(rpane);
+    }
+    
+    // documentation inherited from interface ActionListener
+    public void actionPerformed (ActionEvent event)
+    {
+        String action = event.getAction();
+        if (action.equals("history")) {
+            _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), true, 400);
+        } else if (action.equals("invite")) {
+            _ctx.getBangClient().displayPopup(new InviteMemberDialog(_ctx, _status), true, 400);
+        } else if (action.equals("leave")) {
+            leaveGang();
+        }
     }
     
     // documentation inherited from interface AttributeChangeListener
@@ -147,6 +173,13 @@ public class RosterView extends BContainer
         updateMembers();
         _lview.update();
         _gangobj.addListener(this);
+
+        // populate the button panel
+        _bcont.add(new BButton(_msgs.get("m.history"), this, "history"));
+        if (_ctx.getUserObject().canRecruit()) {
+            _bcont.add(new BButton(_msgs.get("m.invite"), this, "invite"));
+        }
+        _bcont.add(new BButton(_msgs.get("m.leave"), this, "leave"));
     }
     
     @Override // documentation inherited
@@ -154,6 +187,7 @@ public class RosterView extends BContainer
     {
         super.wasRemoved();
         _gangobj.removeListener(this);
+        _bcont.removeAll();
     }
     
     protected void updateLeaders ()
@@ -178,32 +212,36 @@ public class RosterView extends BContainer
     
     protected void addMemberEntry (BContainer cont, GangMemberEntry entry)
     {
-        cont.add(new BLabel(entry.handle.toString(), "roster_entry"));
+        cont.add(new MemberLabel(_ctx, entry, false, _status, "roster_entry"));
         cont.add(new BLabel("(" + entry.notoriety + ")", "roster_entry"));
     }
     
-    protected class LeaderView extends BLabel
+    protected void leaveGang ()
     {
-        public LeaderView ()
+        String confirm = MessageBundle.tcompose("m.confirm_leave", _gangobj.name),
+            success = MessageBundle.tcompose("m.left", _gangobj.name);
+        _ctx.getBangClient().displayPopup(
+            new RequestDialog(_ctx, HIDEOUT_MSGS, confirm, "m.ok", "m.cancel", success, _status) {
+                protected void fireRequest (Object result) {
+                    _hideoutobj.service.leaveGang(_ctx.getClient(), this);
+                }        
+            }, true, 400);
+    }
+    
+    protected class LeaderView extends MemberLabel
+    {
+        public LeaderView (BangContext ctx, StatusLabel status)
         {
-            super("", "leader_view");
-            setIcon(_aicon = new AvatarIcon(_ctx));
+            super(ctx, false, status, "leader_view");
+            setIcon(_aicon = new AvatarIcon(ctx));
             setIconTextGap(0);
             setOrientation(BLabel.VERTICAL);
         }
         
         public void update ()
         {
-            // find the most senior leader
-            GangMemberEntry senior = null;
-            for (GangMemberEntry entry : _gangobj.members) {
-                if (entry.rank == LEADER_RANK &&
-                    (senior == null || entry.joined < senior.joined)) {
-                    senior = entry;
-                }
-            }
+            setMember(_gangobj.getSeniorLeader());
             _aicon.setAvatar(_gangobj.avatar);
-            setText(senior.handle.toString());
         }
         
         protected AvatarIcon _aicon;
@@ -274,8 +312,11 @@ public class RosterView extends BContainer
     }
     
     protected BangContext _ctx;
+    protected MessageBundle _msgs;
+    protected HideoutObject _hideoutobj;
     protected GangObject _gangobj;
+    protected StatusLabel _status;
     
-    protected BContainer _lcont, _mcont;
+    protected BContainer _bcont, _lcont, _mcont;
     protected LeaderView _lview;
 }

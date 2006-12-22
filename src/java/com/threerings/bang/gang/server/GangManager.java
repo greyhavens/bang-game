@@ -394,13 +394,15 @@ public class GangManager
      *
      * @param remover the leader responsible for kicking the member out, or <code>null</code> if
      * the member left voluntarily
+     * @param listener a listener that will be notified when the request completes with the name of
+     * a gang that was deleted, if any
      */
     public void removeFromGang (
         final int gangId, final int playerId, final Handle handle,
-        final Handle remover, final InvocationService.ConfirmListener listener)
+        final Handle remover, final ResultListener<Handle> listener)
         throws InvocationException
     {
-        GangObject gangobj = getGangObject(gangId);
+        final GangObject gangobj = getGangObject(gangId);
         if (gangobj == null) {
             log.warning("Missing gang object for removal [gangId=" + gangId +
                         ", playerId=" + playerId + ", handle=" + handle + "].");
@@ -435,10 +437,11 @@ public class GangManager
                     new InvocationService.ConfirmListener() {
                         public void requestProcessed () {
                             continueRemovingFromGang(
-                                gangId, playerId, handle, null, seniorId, false, listener);
+                                gangId, gangobj.name, playerId, handle, null, seniorId, false,
+                                listener);
                         }
                         public void requestFailed (String cause) {
-                            listener.requestFailed(cause);
+                            listener.requestFailed(new InvocationException(cause));
                         }
                     });
                 return;
@@ -450,7 +453,7 @@ public class GangManager
 
         // continue the process
         continueRemovingFromGang(
-            gangId, playerId, handle, remover, seniorLeaderId, delete, listener);
+            gangId, gangobj.name, playerId, handle, remover, seniorLeaderId, delete, listener);
     }
 
     /**
@@ -653,12 +656,12 @@ public class GangManager
      * @param seniorLeaderId if not -1, the player id of the gang's new senior leader
      */
     protected void continueRemovingFromGang (
-        final int gangId, final int playerId, final Handle handle,
+        final int gangId, final Handle gangName, final int playerId, final Handle handle,
         final Handle remover, final int seniorLeaderId, final boolean delete,
-        final InvocationService.ConfirmListener listener)
+        final ResultListener<Handle> listener)
     {
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
-            public void invokePersistent ()
+        BangServer.invoker.postUnit(new RepositoryListenerUnit<Handle>(listener) {
+            public Handle invokePersistResult ()
                 throws PersistenceException {
                 _gangrepo.deleteMember(playerId);
                 if (delete) {
@@ -671,6 +674,7 @@ public class GangManager
                         MessageBundle.tcompose("m.left_entry", handle) :
                         MessageBundle.tcompose("m.expelled_entry", remover, handle));
                 }
+                return (delete ? gangName : null);
             }
             public void handleSuccess () {
                 log.info("Removed member from gang [gangId=" + gangId + ", playerId=" + playerId +
@@ -699,7 +703,7 @@ public class GangManager
                     }
                     releaseGang(gangId);
                 }
-                listener.requestProcessed();
+                super.handleSuccess();
             }
             protected int[] _avatar;
         });

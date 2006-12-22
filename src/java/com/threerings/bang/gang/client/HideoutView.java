@@ -71,6 +71,8 @@ public class HideoutView extends ShopView
         glay.setOffAxisJustification(GroupLayout.RIGHT);
         add(_ccont = new BContainer(glay), new Rectangle(61, 113, 494, 529));
         add(_tcont = new BContainer(GroupLayout.makeVStretch()), new Rectangle(576, 72, 427, 515));
+        add(_bcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.RIGHT)),
+            new Rectangle(277, 69, 291, 29));
         
         // start with a random shop tip
         _status.setStatus(getShopTip(), false);
@@ -198,7 +200,7 @@ public class HideoutView extends ShopView
         _ccont.add(new GangMenu());
         
         // add the tabs and gang chat (the first selected tab)
-        final GangChatView gcview = new GangChatView(_ctx, _hideoutobj, _gangobj);
+        final GangChatView gcview = new GangChatView(_ctx, _hideoutobj, _gangobj, _status);
         add(_tabs = new HackyTabs(_ctx, false, "ui/hideout/tab_",
             MEMBER_TABS, true, 145, 15) {
             protected void tabSelected (int index) {
@@ -227,7 +229,6 @@ public class HideoutView extends ShopView
             protected TopGangView _tgview;
             protected TopScoreView _tmview;
         }, TABS_RECT);
-        _tcont.add(gcview);
     }
     
     /**
@@ -283,7 +284,7 @@ public class HideoutView extends ShopView
                 
             } else if (action.equals("roster")) {
                 if (_roster == null) {
-                    _roster = new RosterView(_ctx, _gangobj);
+                    _roster = new RosterView(_ctx, _hideoutobj, _gangobj, _bcont, _status);
                 }
                 add(_roster);
                 
@@ -320,7 +321,7 @@ public class HideoutView extends ShopView
     protected GangObject _gangobj;
     
     protected HackyTabs _tabs;
-    protected BContainer _ccont, _tcont;
+    protected BContainer _ccont, _tcont, _bcont;
     
     protected StatusLabel _status;
     

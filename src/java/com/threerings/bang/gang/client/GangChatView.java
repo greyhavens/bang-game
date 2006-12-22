@@ -21,6 +21,7 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.chat.client.PlaceChatView;
 
+import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
@@ -32,12 +33,14 @@ import com.threerings.bang.gang.data.HideoutObject;
 public class GangChatView extends BContainer
     implements HideoutCodes
 {
-    public GangChatView (BangContext ctx, HideoutObject hideoutobj, GangObject gangobj)
+    public GangChatView (
+        BangContext ctx, HideoutObject hideoutobj, GangObject gangobj, StatusLabel status)
     {
         super(GroupLayout.makeVert(GroupLayout.TOP));
         _ctx = ctx;
         _hideoutobj = hideoutobj;
         _gangobj = gangobj;
+        _status = status;
         
         BContainer pcont = new BContainer(
             GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP, GroupLayout.NONE));
@@ -78,8 +81,9 @@ public class GangChatView extends BContainer
     {
         _mcont.removeAll();
         for (OccupantInfo info : _hideoutobj.occupantInfo) {
-            if (_gangobj.members.containsKey(info.username)) {
-                _mcont.add(new BLabel(info.username.toString(), "hideout_members_entry"));
+            GangMemberEntry member = _gangobj.members.get(info.username);
+            if (member != null) {
+                _mcont.add(new MemberLabel(_ctx, member, true, _status, "hideout_members_entry"));
             }
         }
     }
@@ -87,6 +91,7 @@ public class GangChatView extends BContainer
     protected BangContext _ctx;
     protected HideoutObject _hideoutobj;
     protected GangObject _gangobj;
+    protected StatusLabel _status;
     
     protected BContainer _mcont;
     protected PlaceChatView _pcview;
@@ -108,12 +113,18 @@ public class GangChatView extends BContainer
     /** Listens to the gang object for changes in membership. */
     protected SetAdapter _memberlist = new SetAdapter() {
         public void entryAdded (EntryAddedEvent event) {
+            if (!event.getName().equals(GangObject.MEMBERS)) {
+                return;
+            }
             GangMemberEntry entry = (GangMemberEntry)event.getEntry();
             if (_hideoutobj.getOccupantInfo(entry.handle) != null) {
                 updateMembersInHideout();
             }
         }
         public void entryRemoved (EntryRemovedEvent event) {
+            if (!event.getName().equals(GangObject.MEMBERS)) {
+                return;
+            }
             GangMemberEntry entry = (GangMemberEntry)event.getOldEntry();
             if (_hideoutobj.getOccupantInfo(entry.handle) != null) {
                 updateMembersInHideout();
