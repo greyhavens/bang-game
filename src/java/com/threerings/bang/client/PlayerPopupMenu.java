@@ -6,20 +6,26 @@ package com.threerings.bang.client;
 import java.net.URL;
 import java.util.logging.Level;
 
+import com.jmex.bui.BButton;
+import com.jmex.bui.BContainer;
+import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BMenuItem;
 import com.jmex.bui.BPopupMenu;
+import com.jmex.bui.BTextField;
 import com.jmex.bui.BWindow;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.ResultListener;
 
 import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.gang.client.InviteMemberDialog;
 
@@ -42,8 +48,7 @@ public class PlayerPopupMenu extends BPopupMenu
 {
     /**
      * Checks for a mouse click and popups up the specified player's context menu if appropriate.
-     * Assumes that since we're looking the player up by oid, we're in the same room as them and
-     * want to allow them to be muted.
+     * Assumes that since we're looking the player up by oid, we're in the same room as them.
      */
     public static boolean checkPopup (
         BangContext ctx, BWindow parent, BEvent event, int playerOid)
@@ -59,14 +64,18 @@ public class PlayerPopupMenu extends BPopupMenu
 
     /**
      * Checks for a mouse click and popups up the specified player's context menu if appropriate.
+     *
+     * @param isPresent indicates whether or not the other player is present (chatting with us)
+     * versus on a high score list or something, for whom it would not make sense to provide
+     * options to mute or complain about the player.
      */
     public static boolean checkPopup (BangContext ctx, BWindow parent, BEvent event, Handle handle,
-                                      boolean allowMute)
+                                      boolean isPresent)
     {
         if (event instanceof MouseEvent) {
             MouseEvent mev = (MouseEvent)event;
             if (mev.getType() == MouseEvent.MOUSE_PRESSED) {
-                PlayerPopupMenu menu = new PlayerPopupMenu(ctx, parent, handle, allowMute);
+                PlayerPopupMenu menu = new PlayerPopupMenu(ctx, parent, handle, isPresent);
                 menu.popup(mev.getX(), mev.getY(), false);
                 return true;
             }
@@ -77,7 +86,7 @@ public class PlayerPopupMenu extends BPopupMenu
     /**
      * Creates a popup menu for the specified player.
      */
-    public PlayerPopupMenu (BangContext ctx, BWindow parent, Handle handle, boolean allowMute)
+    public PlayerPopupMenu (BangContext ctx, BWindow parent, Handle handle, boolean isPresent)
     {
         super(parent);
 
@@ -106,6 +115,11 @@ public class PlayerPopupMenu extends BPopupMenu
             return;
         }
 
+        // add an item for viewing their wanted poster
+        if (isPresent) {
+            addMenuItem(new BMenuItem(msgs.get("m.pm_register_complaint"), "complain"));
+        }
+
         // if they're our pardner, add some pardner-specific items
         PardnerEntry entry = _ctx.getUserObject().pardners.get(handle);
         if (entry != null) {
@@ -131,7 +145,7 @@ public class PlayerPopupMenu extends BPopupMenu
         // add an item for muting/unmuting (always allow unmuting, only allow muting if the caller
         // indicates that we're in a context where it is appropriate)
         boolean muted = _ctx.getMuteDirector().isMuted(handle);
-        if (muted || allowMute) {
+        if (muted || isPresent) {
             String mute = muted ? "unmute" : "mute";
             addMenuItem(new BMenuItem(msgs.get("m.pm_" + mute), mute));
         }
@@ -145,6 +159,9 @@ public class PlayerPopupMenu extends BPopupMenu
 
         } else if ("unmute".equals(event.getAction())) {
             _ctx.getMuteDirector().setMuted(_handle, false);
+
+        } else if ("complain".equals(event.getAction())) {
+            showComplainDialog();
 
         } else if ("chat_pardner".equals(event.getAction())) {
             PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);
@@ -220,6 +237,52 @@ public class PlayerPopupMenu extends BPopupMenu
                 _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, cause);
             }
         });
+    }
+
+    protected void showComplainDialog ()
+    {
+        String title = MessageBundle.tcompose("m.comp_title", _handle);
+        title = _ctx.xlate(BangCodes.BANG_MSGS, title);
+        final BDecoratedWindow cdiag = BangUI.createDialog(title);
+
+        cdiag.add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.comp_intro"), "dialog_text_left"));
+        final BTextField reason = new BTextField("", BangUI.TEXT_FIELD_MAX_LENGTH);
+        cdiag.add(reason, GroupLayout.FIXED);
+        reason.requestFocus();
+        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
+        cdiag.add(buttons, GroupLayout.FIXED);
+
+        ActionListener listener = new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                if (event.getAction().equals("submit")) {
+                    submitComplaint(reason.getText());
+                }
+                _ctx.getBangClient().clearPopup(cdiag, true);
+            }
+        };
+        BButton submit = new BButton(
+            _ctx.xlate(BangCodes.BANG_MSGS, "m.comp_submit"), listener, "submit");
+        buttons.add(submit);
+        buttons.add(new BButton(_ctx.xlate(BangCodes.BANG_MSGS, "m.cancel"), listener, "cancel"));
+        // disable the submit button until a reason is entered
+
+        new EnablingValidator(reason, submit);
+        _ctx.getBangClient().displayPopup(cdiag, true, 600);
+    }
+
+    protected void submitComplaint (String reason)
+    {
+        PlayerService psvc = ((PlayerService)_ctx.getClient().requireService(PlayerService.class));
+        PlayerService.ConfirmListener listener =new PlayerService.ConfirmListener() {
+            public void requestProcessed () {
+                String msg = MessageBundle.tcompose("m.comp_submitted", _handle);
+                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, msg);
+            }
+            public void requestFailed (String cause) {
+                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, cause);
+            }
+        };
+        psvc.registerComplaint(_ctx.getClient(), _handle, reason, listener);
     }
 
     protected BangContext _ctx;

@@ -89,6 +89,13 @@ public class PlayerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case PlayerMarshaller.REGISTER_COMPLAINT:
+            ((PlayerProvider)provider).registerComplaint(
+                source,
+                (Handle)args[0], (String)args[1], (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
         case PlayerMarshaller.REMOVE_PARDNER:
             ((PlayerProvider)provider).removePardner(
                 source,

@@ -231,7 +231,7 @@ public class FKeyPopups
 
     protected BDecoratedWindow createHelp ()
     {
-        BDecoratedWindow help = createDialogWindow("m.key_help_title");
+        BDecoratedWindow help = BangUI.createDialog(_msgs.get("m.key_help_title"));
         String text = _msgs.get("m.key_help");
         if (_ctx.getUserObject().tokens.isAdmin()) {
             text += _msgs.get("m.key_help_admin");
@@ -243,7 +243,7 @@ public class FKeyPopups
 
     protected BDecoratedWindow createReportBug ()
     {
-        final BDecoratedWindow bug = createDialogWindow("m.bug_title");
+        final BDecoratedWindow bug = BangUI.createDialog(_msgs.get("m.bug_title"));
         ((GroupLayout)bug.getLayoutManager()).setOffAxisPolicy(
             GroupLayout.STRETCH);
         bug.setLayer(BangCodes.NEVER_CLEAR_LAYER);
@@ -318,15 +318,6 @@ public class FKeyPopups
         }
         window.add(new BScrollPane(history));
         window.add(makeDismiss(window), GroupLayout.FIXED);
-        return window;
-    }
-
-    protected BDecoratedWindow createDialogWindow (String title)
-    {
-        BDecoratedWindow window =
-            new BDecoratedWindow(_ctx.getStyleSheet(), _msgs.get(title));
-        ((GroupLayout)window.getLayoutManager()).setGap(15);
-        window.setStyleClass("dialog_window");
         return window;
     }
 

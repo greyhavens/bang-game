@@ -144,7 +144,7 @@ public class FolkCell extends BContainer
 
             // add their name as a non-menu item
             String title = "@=u(" + handle.toString() + ")";
-            add(new BLabel(title, "player_menu_title"));
+            add(new BLabel(title, "popupmenu_title"));
 
             addMenuItem(new BMenuItem(saloonMsgs.get("m.folk_chat"), "chat"));
 

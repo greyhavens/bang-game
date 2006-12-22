@@ -38,10 +38,12 @@ import org.lwjgl.util.WaveData;
 import com.jme.image.Image;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BToggleButton;
+import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.text.AWTTextFactory;
@@ -164,8 +166,7 @@ public class BangUI
         // load up our HTML stylesheet
         css = new BangStyleSheet();
         try {
-            InputStream is =
-                _ctx.getResourceManager().getResource("ui/html_style.css");
+            InputStream is = _ctx.getResourceManager().getResource("ui/html_style.css");
             css.loadRules(new InputStreamReader(is), null);
         } catch (Throwable t) {
             log.log(Level.WARNING, "Failed to load HTML style sheet.", t);
@@ -188,22 +189,20 @@ public class BangUI
                 }
                 File file = _ctx.getResourceManager().getResourceFile(path);
                 if (!file.exists()) {
-                    throw new IOException(
-                        "Missing sound resource '" + path + "'.");
+                    throw new IOException("Missing sound resource '" + path + "'.");
                 }
                 if (path.endsWith(".ogg")) {
                     return loadOggClip(file);
                 }
-                
-                // TODO: preconvert all of our sounds to a standard format and
-                // then mmap() the sound files and stuff them directly into the
-                // clip; WaveData does all sorts of expensive conversion
+
+                // TODO: preconvert all of our sounds to a standard format and then mmap() the
+                // sound files and stuff them directly into the clip; WaveData does all sorts of
+                // expensive conversion
                 Clip clip = new Clip();
                 WaveData wfile = null;
                 Exception cause = null;
                 try {
-                    wfile = WaveData.create(
-                        AudioSystem.getAudioInputStream(file));
+                    wfile = WaveData.create(AudioSystem.getAudioInputStream(file));
                 } catch (Exception e) {
                     cause = e;
                 }
@@ -220,13 +219,11 @@ public class BangUI
         };
 
         // create the sound group for our UI sounds
-        _sgroup = _ctx.getSoundManager().createGroup(
-            BangUI.clipprov, UI_SOURCE_COUNT);
+        _sgroup = _ctx.getSoundManager().createGroup(BangUI.clipprov, UI_SOURCE_COUNT);
 
         // preload our feedback sounds
         for (FeedbackSound ident : FeedbackSound.values()) {
-            _sgroup.preloadClip(
-                "sounds/feedback/" + ident.toString().toLowerCase() + ".ogg");
+            _sgroup.preloadClip("sounds/feedback/" + ident.toString().toLowerCase() + ".ogg");
         }
     }
 
@@ -236,23 +233,23 @@ public class BangUI
     public static void configDefaultCursor ()
     {
         String path = "rsrc/ui/cursor.png";
-        BufferedImage image, 
-                      cursor = ImageCache.createCompatibleImage(32, 32, true);
+        BufferedImage image, cursor = ImageCache.createCompatibleImage(32, 32, true);
         try {
-            // getdown has already unpacked our resources, so we can load
-            // these images straight from the filesystem (this method may get
-            // called before the resource manager and image cache are set
-            // up, otherwise we'd use them)
+            // getdown has already unpacked our resources, so we can load these images straight
+            // from the filesystem (this method may get called before the resource manager and
+            // image cache are set up, otherwise we'd use them)
             image = ImageIO.read(BangUtil.getResourceFile(path));
         } catch (Exception e) {
-            log.log(Level.WARNING, "Failed to load cursor " +
-                    "[path=" + path + "].", e);
+            log.log(Level.WARNING, "Failed to load cursor [path=" + path + "].", e);
             return;
         }
         Graphics2D g = cursor.createGraphics();
-        g.drawImage(image, null, 0, 0);
-        configCursor(cursor, 0, 0);
-        g.dispose();
+        try {
+            g.drawImage(image, null, 0, 0);
+            configCursor(cursor, 0, 0);
+        } finally {
+            g.dispose();
+        }
     }
 
     /**
@@ -273,16 +270,15 @@ public class BangUI
             if (!Mouse.isCreated()) {
                 Mouse.create();
             }
-            Mouse.setNativeCursor(new Cursor(
-                        ww, hh, hx, hh - hy - 1, 1, data, null));
+            Mouse.setNativeCursor(new Cursor(ww, hh, hx, hh - hy - 1, 1, data, null));
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to set cursor.", e);
         }
     }
 
     /**
-     * Configures our application icons (shown in the corner of the window and
-     * in the task bar, etc.).
+     * Configures our application icons (shown in the corner of the window and in the task bar,
+     * etc.).
      */
     public static void configIcons ()
     {
@@ -290,17 +286,14 @@ public class BangUI
         for (int ii = 0; ii < ICON_SIZES.length; ii++) {
             String path = "rsrc/ui/icons/" + ICON_SIZES[ii] + "_icon.png";
             try {
-                // getdown has already unpacked our resources, so we can load
-                // these images straight from the filesystem (this method gets
-                // called before the resource manager and image cache are set
-                // up, otherwise we'd use them)
-                BufferedImage bicon =
-                    ImageIO.read(BangUtil.getResourceFile(path));
+                // getdown has already unpacked our resources, so we can load these images straight
+                // from the filesystem (this method gets called before the resource manager and
+                // image cache are set up, otherwise we'd use them)
+                BufferedImage bicon = ImageIO.read(BangUtil.getResourceFile(path));
                 Image icon = ImageCache.createImage(bicon, false);
                 icons[ii] = icon.getData();
             } catch (Exception e) {
-                log.log(Level.WARNING, "Failed to load icon " +
-                        "[path=" + path + "].", e);
+                log.log(Level.WARNING, "Failed to load icon [path=" + path + "].", e);
                 return;
             }
         }
@@ -344,8 +337,7 @@ public class BangUI
     {
         Sound sound = _sounds.get(ident);
         if (sound == null) {
-            sound = _sgroup.getSound(
-                "sounds/feedback/" + ident.toString().toLowerCase() + ".ogg");
+            sound = _sgroup.getSound("sounds/feedback/" + ident.toString().toLowerCase() + ".ogg");
             _sounds.put(ident, sound);
         }
         if (sound != null) {
@@ -397,19 +389,16 @@ public class BangUI
             }
         };
         try {
-            InputStream is =
-                _ctx.getResourceManager().getResource("ui/style.bss");
-            stylesheet =
-                new BStyleSheet(new InputStreamReader(is, "UTF-8"), rp);
+            InputStream is = _ctx.getResourceManager().getResource("ui/style.bss");
+            stylesheet = new BStyleSheet(new InputStreamReader(is, "UTF-8"), rp);
         } catch (IOException ioe) {
             log.log(Level.WARNING, "Failed to load stylesheet", ioe);
         }
     }
 
     /**
-     * Creates a label with the icon for the specified unit and the unit's
-     * name displayed below. If the supplied unit config is blank, an
-     * "<empty>" label will be created.
+     * Creates a label with the icon for the specified unit and the unit's name displayed below. If
+     * the supplied unit config is blank, an "<empty>" label will be created.
      */
     public static BLabel createUnitLabel (UnitConfig config)
     {
@@ -419,8 +408,8 @@ public class BangUI
     }
 
     /**
-     * Configures the supplied label as a unit label. If the supplied unit
-     * config is blank, an "<empty>" label will be configure.
+     * Configures the supplied label as a unit label. If the supplied unit config is blank, an
+     * "<empty>" label will be configure.
      */
     public static void configUnitLabel (BLabel label, UnitConfig config)
     {
@@ -442,13 +431,11 @@ public class BangUI
      */
     public static BIcon getUnitIcon (UnitConfig config)
     {
-        return new ImageIcon(
-            _ctx.loadImage("units/" + config.type + "/icon.png"));
+        return new ImageIcon(_ctx.loadImage("units/" + config.type + "/icon.png"));
     }
 
     /**
-     * Creates a label with the icon for the specified unit and the unit's
-     * name displayed below.
+     * Creates a label with the icon for the specified unit and the unit's name displayed below.
      */
     public static BButton createUnitButton (UnitConfig config)
     {
@@ -460,8 +447,8 @@ public class BangUI
     }
 
     /**
-     * Creates a label with the specified label and style class, looking up the
-     * label and <code>label_tip</code> in the supplied message bundle.
+     * Creates a label with the specified label and style class, looking up the label and
+     * <code>label_tip</code> in the supplied message bundle.
      */
     public static BLabel createLabel (
         MessageBundle msgs, String text, String style)
@@ -474,13 +461,24 @@ public class BangUI
         return label;
     }
 
+    /**
+     * Creates a dialog window with the supplied (already translated) title.
+     */
+    public static BDecoratedWindow createDialog (String title)
+    {
+        BDecoratedWindow diagwin = new BDecoratedWindow(_ctx.getStyleSheet(), title);
+        diagwin.setStyleClass("dialog_window");
+        ((GroupLayout)diagwin.getLayoutManager()).setGap(15);
+        ((GroupLayout)diagwin.getLayoutManager()).setOffAxisPolicy(GroupLayout.STRETCH);
+        return diagwin;
+    }
+
     protected static Font loadFont (BasicContext ctx, String path)
     {
         Font font = null;
         int type = path.endsWith(".pfb") ? Font.TYPE1_FONT : Font.TRUETYPE_FONT;
         try {
-            font = Font.createFont(
-                type, ctx.getResourceManager().getResourceFile(path));
+            font = Font.createFont(type, ctx.getResourceManager().getResourceFile(path));
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to load font '" + path + "'.", e);
             font = new Font("Dialog", Font.PLAIN, 16);
@@ -508,17 +506,15 @@ public class BangUI
         clip.data.rewind();
         return clip;
     }
-    
+
     /** We use this to provide custom fonts in our HTML views. */
     protected static class BangStyleSheet extends StyleSheet
     {
         public Font getFont (AttributeSet attrs) {
-            // Java's style sheet parser annoyingly looks up whatever is
-            // supplied for font-family and if it doesn't map to an internal
-            // Java font; it discards it. Thanks! So we do this hackery with
-            // the font-variant which it passes through unmolested.
-            String variant = (String)
-                attrs.getAttribute(CSS.Attribute.FONT_VARIANT);
+            // Java's style sheet parser annoyingly looks up whatever is supplied for font-family
+            // and if it doesn't map to an internal Java font; it discards it. Thanks! So we do
+            // this hackery with the font-variant which it passes through unmolested.
+            String variant = (String)attrs.getAttribute(CSS.Attribute.FONT_VARIANT);
             if (variant != null) {
                 Font base = _fonts.get(variant);
                 if (base != null) {
@@ -537,9 +533,8 @@ public class BangUI
                             size -= 2;
                         }
                     } catch (Throwable t) {
-                        log.log(Level.WARNING, "StyleConstants choked " +
-                                "looking up size [font=" + variant +
-                                ", attrs=" + attrs + "].", t);
+                        log.log(Level.WARNING, "StyleConstants choked looking up size " +
+                                "[font=" + variant + ", attrs=" + attrs + "].", t);
                         size = 9;
                     }
                     return base.deriveFont(style, size);
@@ -554,8 +549,7 @@ public class BangUI
     protected static HashMap<String,Font> _fonts = new HashMap<String,Font>();
 
     protected static SoundGroup _sgroup;
-    protected static HashMap<FeedbackSound,Sound> _sounds =
-        new HashMap<FeedbackSound,Sound>();
+    protected static HashMap<FeedbackSound,Sound> _sounds = new HashMap<FeedbackSound,Sound>();
 
     /** The number of simultaneous UI sounds allowed. */
     protected static final int UI_SOURCE_COUNT = 2;

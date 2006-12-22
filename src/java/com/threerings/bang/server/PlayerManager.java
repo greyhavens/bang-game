@@ -4,13 +4,14 @@
 package com.threerings.bang.server;
 
 import java.lang.ref.SoftReference;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
@@ -18,6 +19,7 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
+import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
 import com.threerings.util.StreamableHashMap;
 
@@ -29,8 +31,15 @@ import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
+import com.threerings.crowd.chat.data.ChatCodes;
+import com.threerings.crowd.chat.data.ChatMessage;
+import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.parlor.server.ParlorSender;
+
+import com.threerings.underwire.server.persist.EventRecord;
+import com.threerings.underwire.server.persist.UnderwireRepository;
+import com.threerings.underwire.web.data.Event;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -94,11 +103,13 @@ public class PlayerManager
     public void init (ConnectionProvider conprov)
         throws PersistenceException
     {
+        // we're the repository kings!
         _pardrepo = new PardnerRepository(conprov);
         _postrepo = new PosterRepository(conprov);
         _playrepo = new PlayerRepository(conprov);
         _raterepo = new RatingRepository(conprov);
         _lookrepo = new LookRepository(conprov);
+        _underepo = new UnderwireRepository(conprov);
 
         // register ourselves as the provider of the (bootstrap) PlayerService
         BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), true);
@@ -621,6 +632,61 @@ public class PlayerManager
         });
     }
 
+    // from interface PlayerProvider
+    public void registerComplaint (ClientObject caller, final Handle target, String reason,
+                                   PlayerService.ConfirmListener listener)
+        throws InvocationException
+    {
+        final PlayerObject user = (PlayerObject)caller;
+
+        // populate the event with what we can
+        final EventRecord event = new EventRecord();
+        event.source = user.username.toString();
+        event.status = Event.OPEN;
+        event.subject = reason;
+
+        // format and provide the complainer's chat history
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss:SSS");
+        StringBuilder chatHistory = new StringBuilder();
+        for (ChatMessage msg : SpeakProvider.getChatHistory(user.handle)) {
+            UserMessage umsg = (UserMessage)msg;
+            chatHistory.append(df.format(new Date(umsg.timestamp))).append(' ');
+            chatHistory.append(StringUtil.pad(ChatCodes.XLATE_MODES[umsg.mode], 10)).append(' ');
+            chatHistory.append(umsg.speaker).append(": ").append(umsg.message).append('\n');
+        }
+        event.chatHistory = chatHistory.toString();
+
+        // if the target is online, get their username from their player object
+        PlayerObject tuser = BangServer.lookupPlayer(target);
+        if (tuser != null) {
+            event.target = tuser.username.toString();
+        }
+
+        // now finish the job on the invoker thread
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent() throws PersistenceException {
+                // if the target is unset, look that up
+                if (event.target == null) {
+                    PlayerRecord tplayer = _playrepo.loadByHandle(target);
+                    if (tplayer == null) {
+                        log.warning("Unable to locate target of complaint [event=" + event +
+                                    ", target=" + target + "].");
+                    } else {
+                        event.target = tplayer.accountName;
+                    }
+                }
+                // insert the event into the support repository
+                _underepo.insertEvent(event);
+            }
+            public void handleSuccess() {
+                ((PlayerService.ConfirmListener)_listener).requestProcessed();
+            }
+            public String getFailureMessage() {
+                return "Failed to record complaint [event=" + event + "].";
+            }
+        });
+    }
+
     /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
@@ -868,9 +934,6 @@ public class PlayerManager
         }
     }
 
-    /** The number of milliseconds after which we reload rank levels from DB */
-    protected static final long RANK_RELOAD_TIMEOUT = (3600 * 1000);
-
     /** Provides access to the pardner database. */
     protected PardnerRepository _pardrepo;
 
@@ -885,6 +948,9 @@ public class PlayerManager
 
     /** Provides access to the player database. */
     protected PlayerRepository _playrepo;
+
+    /** Used to file complaint reports. */
+    protected UnderwireRepository _underepo;
 
     /** Maps the names of users to updaters responsible for keeping their {@link PardnerEntry}s
      * up-to-date. */
@@ -903,5 +969,7 @@ public class PlayerManager
 
     /** When we should next reload our rank levels */
     protected long _nextRankReload;
-}
 
+    /** The number of milliseconds after which we reload rank levels from DB */
+    protected static final long RANK_RELOAD_TIMEOUT = (3600 * 1000);
+}
