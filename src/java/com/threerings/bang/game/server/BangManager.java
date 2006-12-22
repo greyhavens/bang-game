@@ -1350,10 +1350,13 @@ public class BangManager extends GameManager
             break;
 
         case BangObject.IN_PLAY:
-            // queue up the first board tick
-            _ticker.schedule(_scenario.getTickTime(_bconfig, _bangobj), false);
-            // let the players know we're ready to go with the first tick
-            _bangobj.tick((short)0);
+            // if the game is already started then we don't reset the tick
+            if (_bangobj.tick < 0) {
+                // queue up the first board tick
+                _ticker.schedule(_scenario.getTickTime(_bconfig, _bangobj), false);
+                // let the players know we're ready to go with the first tick
+                _bangobj.tick((short)0);
+            }
             break;
 
         default:
