@@ -10,6 +10,7 @@ import javax.swing.text.html.HTMLDocument;
 import java.util.HashMap;
 import java.util.logging.Level;
 
+import com.jme.input.KeyInput;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
@@ -131,6 +132,8 @@ public class PaperView extends BContainer
             CachedDocument news = _news.get(_ctx.getUserObject().townId);
             if (news == null) {
                 refreshNews(false);
+            } else if (KeyInput.get().isKeyDown(KeyInput.KEY_LCONTROL)) {
+                refreshNews(true);
             } else {
                 setContents(news.getDocument());
             }
