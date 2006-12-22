@@ -7,7 +7,6 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationCodes;
-import com.threerings.presents.server.InvocationException;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
@@ -33,7 +32,6 @@ public abstract class Provider extends FinancialAction
      * sufficient funds in the constructor, that will be done elsewhere.
      */
     protected Provider (PlayerObject user, Good good, Object[] args)
-        throws InvocationException
     {
         // admins and support get things for free
         super(user, user.tokens.isSupport() ? 0 : good.getScripCost(),

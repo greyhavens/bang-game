@@ -37,6 +37,9 @@ public abstract class FinancialAction extends Invoker.Unit
     public void start ()
         throws InvocationException
     {
+        if (!_userLock.add(_user.username)) {
+            throw new InvocationException(BangCodes.BANG_MSGS, "e.processing_purchase");
+        }
         // check and immediately deduct the necessary funds
         if (_user.scrip < _scripCost || _user.coins < _coinCost) {
             throw new InvocationException(BangCodes.INSUFFICIENT_FUNDS);
@@ -118,11 +121,7 @@ public abstract class FinancialAction extends Invoker.Unit
     }
 
     protected FinancialAction (PlayerObject user, int scripCost, int coinCost)
-        throws InvocationException
     {
-        if (!_userLock.add(user.username)) {
-            throw new InvocationException(BangCodes.BANG_MSGS, "e.processing_purchase");
-        }
         _user = user;
         // admins and support get everything for free because they're cool like that
         _scripCost = user.tokens.isSupport() ? 0 : scripCost;
@@ -233,9 +232,6 @@ public abstract class FinancialAction extends Invoker.Unit
                 log.log(Level.WARNING, "Failed to rollback action " + this, pe);
             }
         }
-
-        // now it's safe for this user to start another financial action
-        _userLock.remove(_user.username);
     }
 
     protected void toString (StringBuffer buf)

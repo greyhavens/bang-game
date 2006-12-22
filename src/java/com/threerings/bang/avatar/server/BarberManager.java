@@ -405,7 +405,6 @@ public class BarberManager extends PlaceManager
         public BuyLookAction (
             PlayerObject user, Look look, int scripCost, int coinCost,
             BarberService.ConfirmListener listener) 
-            throws InvocationException
         {
             super(user, scripCost, coinCost);
             _look = look;
@@ -453,7 +452,6 @@ public class BarberManager extends PlaceManager
         public ChangeHandleAction (
             PlayerObject user, Handle handle,
             BarberService.ConfirmListener listener) 
-            throws InvocationException
         {
             super(user, BarberCodes.HANDLE_CHANGE_SCRIP_COST,
                 BarberCodes.HANDLE_CHANGE_COIN_COST);

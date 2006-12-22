@@ -93,7 +93,6 @@ public class StationManager extends PlaceManager
     {
         public BuyTicketAction (PlayerObject user, TrainTicket ticket,
                                 StationService.ConfirmListener listener) 
-            throws InvocationException
         {
             super(user, ticket.getScripCost(), ticket.getCoinCost());
             _ticket = ticket;
