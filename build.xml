@@ -523,8 +523,8 @@
     </exec>
 
     <!-- copy the getdown.txt file into the right place -->
-    <mkdir dir="${web_dir}/client"/>
-    <copy file="etc/getdown.txt" tofile="${web_dir}/client/getdown.txt.tmp"
+    <mkdir dir="${web_dir}/client/${version}"/>
+    <copy file="etc/getdown.txt" tofile="${web_dir}/client/${version}/getdown.txt.tmp"
           overwrite="true" encoding="UTF-8">
       <filterset>
         <filter token="appbase_line" value="appbase = ${root_url}/client/%VERSION%"/>
@@ -533,13 +533,13 @@
       </filterset>
     </copy>
     <!-- do some temporary fiddling to nix boom_town and bounties from production -->
-    <exec executable="egrep" output="${web_dir}/client/getdown.txt">
+    <exec executable="egrep" output="${web_dir}/client/${version}/getdown.txt">
       <arg line="-v"/>
       <arg line="boom_town|bounties"/>
       <arg line="${web_dir}/client/getdown.txt.tmp"/>
     </exec>
     <!-- delete the temporary file -->
-    <delete file="${web_dir}/client/getdown.txt.tmp"/>
+    <delete file="${web_dir}/client/${version}/getdown.txt.tmp"/>
 
     <antcall target="baseclient">
       <param name="client_dir" value="${web_dir}/client/${version}"/>
