@@ -1,0 +1,120 @@
+Year End Roundup
+
+Howdy pardners! The end of the year is fast approachin' and we here at the
+Triple-O Ranch are gettin' ready to take a short breather fer the holidays.
+Before we head off, I wanted to give y'all a quick update on the state of
+development and let ya know what you can look forward to in the New Year.</p>
+
+<p>We done got the game launched a few weeks back and we're durn happy about
+that.  Since then we've been ironing out a few wrinkles that poked their head
+up after beta and we've been workin' on a bunch of excitin' new features.</p>
+
+<h3 class="highlight"> Upcoming New Features </h3>
+
+<p> I want to talk about <span class="highlight">Gangs</span> which have been
+mentioned around these parts once er twice before. I reckon I can give you a
+few details on what that's going to invole at least to start.</p>
+
+<ul>
+<li> Once a player has been playin' the game fer a while (exact criterion will
+be explained later), they'll be able to form their own <span
+class="highlight">Gang</span>. </li>
+
+<li> Other players can join an existing Gang whenever they like, and indeed the
+whole idea to have a bunch of people in a Gang, so lots of little Gangs won't
+be as much fun as fewer larger Gangs. </li>
+
+<li> Players in a Gang can hang out and chat in their Gang's
+<span class="highlight">Hideout</span>. There they'll be able to browse their
+Gang's info, see who's in their Gang, if they're online and where, when they
+last logged on, that sort of thing. </li>
+
+<li> In the Hideout, Gang members will be able to check out their Gang's
+<span class="highlight">private Top Ranked lists</span>. So they can see who's
+the best in their Gang in each of the different gameplay scenarios and
+overall. </li>
+
+<li> In the Hideout they'll also be able to play <span class="highlight">Gang
+Matches</span>. In a Gang Match, players from different Gangs battle it out and
+the winner of the game earns Gang Points for their Gang. Gang Points can later
+be spent by the Gang Leaders to buy cool stuff for the Gang. </li>
+
+<li> Based on the accumulation of Gang Points during Gang Matches, Gangs will
+also be ranked on a <span class="highlight">Gang Leaderboard</span> so that you
+can see how your Gang stacks up against the rest. </li>
+
+<li> Players in a Gang will also be able to pool their resources to buy fancy
+<span class="highlight">Gang Outfits</span>. There may even be special duds
+that are only available to high ranking Gangs. </li>
+</ul>
+
+<p> In addition to Gangs, we've been doing some work on
+<span class="highlight">Tournaments</span> and an exciting new feature we're
+calling <span class="highlight">Bounties</span>. You'll just have to wait until
+after the holidays to hear more details about those 'cause old Sheriff Mike is
+only good for details on one major new feature at a time and I just done
+finished tellin' ya about Gangs. </p>
+
+<h3 class="highlight"> Patch Notes </h3>
+
+<p> We also shipped a little patch today to fix a few bugs and tidy up some
+other bits. Here are the details on that: </p>
+
+<ul>
+<li> We added a "Waiting for players to connect" window during the very beginning
+of a game where before ya sometimes had to stare at a black screen. </li>
+
+<li> We fixed some problems with picking up and dropping nuggets. </li>
+
+<li> We added a few new badges (play more games to figger out how to get 'em). </li>
+
+<li> We fixed the matchmaking code: it should now properly compare rankings and
+not put you in a game with a player that's ranked much higher or lower than you
+if you have "Near my rank" selected. </li>
+
+<li> If you are logged off due to being idle, or because your connection to our
+server failed, or because the server rebooted, we now pop up a little window
+telling you want happened and allowing you to easily restart the game and log
+back on. </li>
+
+<li> We fixed a problem where Pardners could sneak into locked Back Parlors by
+watchin' games and then clickin' Back to Parlor. </li>
+
+<li> We fixed some problems with Trains and the Engineer card. We also made the
+Trains move a random number of spaces between 1 and 4 every tick instead of
+just one. Watch out if yer standin' on them tracks! </li>
+
+<li> We now inform the players if tie breaker points were awarded at the end of
+a game. Ties are normally broken by checking to see who did more damage during
+the game, but if that's a tie too, we randomly assign an extra point to
+determine the winner. </li>
+
+<li> We tweaked the Bonus point handling a bit. If you drop a Bonus to pick up
+another one, you don't get any more points. We also lowerwed the points for the
+Bonus Star to 25 from 50 because we reckoned 50 was too dang much. Ya also
+don't get any points fer picking up a bonus that grants an influence to yer
+unit (like Lucky Horseshoe) if yer unit already has an influence. </li>
+
+<li> We added the ability to register a complaint about another player if
+they're being a dang pest. You can click on a player's avatar picture during
+chat and select "Register complaint..." from the menu. </li>
+
+<li> There are no doubt various other bug fixes and tweaks that I'm fergettin'
+so if there was somethin' buggin' ya before this release, give it another shot
+and see if we ain't done fixed it. </li>
+</ul>
+
+<p> Some of ya may have also noticed that we started doin' some advertisin' on
+<a href="http://www.penny-arcade.com">Penny Arcade</a>. If yer a Penny Arcade
+reader, then a fine Howdy to ya. We'll be doin' more advertisin' in the New
+Year and hopefully you'll start seein' a heck of a lot more cowpokes turnin' up
+in town. </p>
+
+<p> That's about all I got to say to ya fer now pardners. It's late and even
+the Sheriff has to sleep from time to time. Y'all be sure to enjoy yerselves
+durin' the holidays and we'll do the same. Expect to see us back refreshed and
+excited come the New Year.</p>
+
+<p> Merry solstice to you and yours, </p> 
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
