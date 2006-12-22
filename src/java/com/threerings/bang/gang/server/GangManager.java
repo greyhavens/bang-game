@@ -638,12 +638,15 @@ public class GangManager
                 keys.add(notif.getKey());
             }
         }
-        try {
-            for (Comparable key : keys) {
-                user.removeFromNotifications(key);
+        if (!keys.isEmpty()) {
+            try {
+                user.startTransaction();
+                for (Comparable key : keys) {
+                    user.removeFromNotifications(key);
+                }
+            } finally {
+                user.commitTransaction();
             }
-        } finally {
-            user.commitTransaction();
         }
         initPlayer(user, mrec, null);
         listener.requestProcessed();

@@ -123,7 +123,10 @@ public class PlayerPopupMenu extends BPopupMenu
         }
 
         // add gang-related items
-        addGangMenuItems();
+        if (shouldShowGangInvite()) {
+            addMenuItem(new BMenuItem(_ctx.xlate(BangCodes.BANG_MSGS, "m.pm_invite_member"),
+                "invite_member"));
+        }
         
         // add an item for muting/unmuting (always allow unmuting, only allow muting if the caller
         // indicates that we're in a context where it is appropriate)
@@ -200,12 +203,9 @@ public class PlayerPopupMenu extends BPopupMenu
     /**
      * Checks whether we should show the "invite into gang" option.
      */
-    protected void addGangMenuItems ()
+    protected boolean shouldShowGangInvite ()
     {
-        if (_ctx.getUserObject().canRecruit()) {
-            addMenuItem(new BMenuItem(_ctx.xlate(BangCodes.BANG_MSGS, "m.pm_invite_member"),
-                "invite_member"));
-        }
+        return _ctx.getUserObject().canRecruit();
     }
     
     protected void removePardner ()

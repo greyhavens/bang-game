@@ -67,6 +67,19 @@ public class MemberPopupMenu extends PlayerPopupMenu
             return;
         }
         _hideoutobj = (HideoutObject)plobj;
+        
+        if (!_member.canChangeStatus(_ctx.getUserObject())) {
+            return;
+        }
+        for (int ii = RANK_COUNT - 1; ii >= 0; ii--) {
+            if (ii == _member.rank) {
+                continue;
+            }
+            String msg = MessageBundle.compose(ii > _member.rank ? "m.promote" : "m.demote",
+                MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[ii]));
+            addMenuItem(new BMenuItem(_ctx.xlate(HIDEOUT_MSGS, msg), "rank_" + ii));
+        }
+        addMenuItem(new BMenuItem(_ctx.xlate(HIDEOUT_MSGS, "m.expel"), "expel"));
     }
     
     @Override // documentation inherited
@@ -82,22 +95,11 @@ public class MemberPopupMenu extends PlayerPopupMenu
     }
     
     @Override // documentation inherited
-    protected void addGangMenuItems ()
+    protected boolean shouldShowGangInvite ()
     {
-        if (!_member.canChangeStatus(_ctx.getUserObject())) {
-            return;
-        }
-        for (int ii = RANK_COUNT - 1; ii >= 0; ii--) {
-            if (ii == _member.rank) {
-                continue;
-            }
-            String msg = MessageBundle.compose(ii > _member.rank ? "m.promote" : "m.demote",
-                MessageBundle.qualify(GANG_MSGS, XLATE_RANKS[ii]));
-            addMenuItem(new BMenuItem(msg, "rank_" + ii));
-        }
-        addMenuItem(new BMenuItem(_ctx.xlate(HIDEOUT_MSGS, "m.expel"), "expel"));
+        return false;
     }
-    
+
     protected void changeMemberRank (final byte nrank)
     {
         String thandle = MessageBundle.taint(_member.handle),

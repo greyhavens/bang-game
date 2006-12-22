@@ -35,7 +35,7 @@ public class InviteMemberDialog extends RequestDialog
         BangContext ctx, StatusLabel status, Handle handle)
     {
         super(ctx, GangCodes.GANG_MSGS, "m.confirm_invite", "m.invite", "m.cancel",
-            MessageBundle.tcompose("m.member_invited", handle), status);
+            "m.member_invited", status);
         _handle = handle;
 
         setRequiresString(300, "");
