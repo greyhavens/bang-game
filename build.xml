@@ -536,7 +536,7 @@
     <exec executable="egrep" output="${web_dir}/client/${version}/getdown.txt">
       <arg line="-v"/>
       <arg line="boom_town|bounties"/>
-      <arg line="${web_dir}/client/getdown.txt.tmp"/>
+      <arg line="${web_dir}/client/${version}/getdown.txt.tmp"/>
     </exec>
     <!-- delete the temporary file -->
     <delete file="${web_dir}/client/${version}/getdown.txt.tmp"/>
