@@ -423,11 +423,11 @@
   </article>
 
 <!--
- <article name="male_head_wrap" townId="indian_post"
-           slot="hat" scrip="1000" coins="1"
-           colors="clothes_p">
-    <component cclass="male/hat" name="head_wrap"/>
-    <component cclass="male/hat_back" name="head_wrap"/>
+ <article name="male_fur_wrap" townId="indian_post"
+           slot="hat" scrip="1300" coins="1"
+           colors="clothes_p,clothes_s">
+    <component cclass="male/hat" name="fur"/>
+    <component cclass="male/hat_back" name="fur"/>
   </article>
 -->
 
