@@ -103,7 +103,7 @@ public class RosterView extends BContainer
     {
         String action = event.getAction();
         if (action.equals("history")) {
-            _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), true, 400);
+            _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), true, 500);
         } else if (action.equals("invite")) {
             _ctx.getBangClient().displayPopup(new InviteMemberDialog(_ctx, _status), true, 400);
         } else if (action.equals("leave")) {
