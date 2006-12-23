@@ -213,6 +213,22 @@ public class BangPrefs
     }
 
     /**
+     * Returns whether the chat mogrifier is enabled.
+     */
+    public static boolean getChatMogrifierEnabled ()
+    {
+        return config.getValue("mogrifier_enabled", true);
+    }
+
+    /**
+     * Configures whether the chat mogrifier is enabled.
+     */
+    public static void setChatMogrifierEnabled (boolean enabled)
+    {
+        config.setValue("mogrifier_enabled", enabled);
+    }
+
+    /**
      * Returns the card palette size preference, true for small.
      */
     public static boolean getCardPaletteSize ()

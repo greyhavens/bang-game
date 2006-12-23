@@ -148,7 +148,7 @@ public class OptionsView extends BDecoratedWindow
             cont.add(top, GroupLayout.FIXED);
 
             top.add(new BLabel(_msgs.get("m.chat_mode"), "right_label"));
-            BComboBox chatmode = new BComboBox();
+            final BComboBox chatmode = new BComboBox();
             top.add(chatmode);
             BComboBox.Item selitem = null;
             for (CurseFilter.Mode mode : CurseFilter.Mode.values()) {
@@ -163,11 +163,20 @@ public class OptionsView extends BDecoratedWindow
             chatmode.selectItem(selitem);
             chatmode.addListener(new ActionListener() {
                 public void actionPerformed (ActionEvent event) {
-                    BComboBox chatmode = (BComboBox)event.getSource();
-                    BangPrefs.setChatFilterMode(
-                        (CurseFilter.Mode)chatmode.getSelectedValue());
+                    BangPrefs.setChatFilterMode((CurseFilter.Mode)chatmode.getSelectedValue());
                 }
             });
+
+            top.add(new BLabel(_msgs.get("m.chat_mogrify"), "right_label"));
+            final BCheckBox mogrify = new BCheckBox("");
+            mogrify.setSelected(BangPrefs.getChatMogrifierEnabled());
+            mogrify.addListener(new ActionListener() {
+                public void actionPerformed (ActionEvent event) {
+                    BangPrefs.setChatMogrifierEnabled(mogrify.isSelected());
+                    _ctx.getChatDirector().setMogrifyChat(mogrify.isSelected());
+                }
+            });
+            top.add(mogrify);
 
             cont.add(new BLabel(_msgs.get("m.ignore_list")), GroupLayout.FIXED);
 

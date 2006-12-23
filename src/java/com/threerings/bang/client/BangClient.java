@@ -906,6 +906,7 @@ public class BangClient extends BasicClient
 
         // create our custom directors
         _chatdir = new BangChatDirector(_ctx);
+        _chatdir.setMogrifyChat(BangPrefs.getChatMogrifierEnabled());
         String curse = _ctx.xlate(BangCodes.CHAT_MSGS, "x.cursewords");
         String stop = _ctx.xlate(BangCodes.CHAT_MSGS, "x.stopwords");
         _chatdir.addChatFilter(new CurseFilter(curse, stop) {
