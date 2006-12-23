@@ -3,9 +3,11 @@
 
 package com.threerings.bang.server.ooo;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.StringUtil;
 
@@ -16,6 +18,9 @@ import com.threerings.util.Name;
 import com.threerings.user.OOOUser;
 import com.threerings.user.OOOUserManager;
 import com.threerings.user.OOOUserRepository;
+import com.threerings.user.RewardInfo;
+import com.threerings.user.RewardRecord;
+import com.threerings.user.RewardRepository;
 
 import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.net.AuthResponse;
@@ -52,6 +57,7 @@ public class OOOAuthenticator extends BangAuthenticator
             _usermgr = new OOOUserManager(ServerConfig.config.getSubProperties("oooauth"),
                                           BangServer.conprov);
             _authrep = (OOOUserRepository)_usermgr.getRepository();
+            _rewardrep = new RewardRepository(BangServer.conprov);
         } catch (PersistenceException pe) {
             log.log(Level.WARNING, "Failed to initialize OOO authenticator. " +
                     "Users will be unable to log in.", pe);
@@ -233,13 +239,72 @@ public class OOOAuthenticator extends BangAuthenticator
         // log.info("User logged on [user=" + user.username + "].");
         rdata.code = BangAuthResponseData.SUCCESS;
 
-        // pass their player record to the client resolver for retrieval
-        // later in the logging on process
         if (prec != null) {
+            // redeem any rewards for which they have become eligible, but don't let this stick a
+            // fork in the logon process
+            prec.rewards = new ArrayList<String>();
+            try {
+                ArrayList<RewardRecord> rewards =
+                    _rewardrep.loadActivatedRewards(prec.accountName, creds.ident);
+                for (RewardRecord record : rewards) {
+                    if (record.account.equals(user.username)) {
+                        maybeRedeemReward(prec, creds.ident, record, rewards);
+                    }
+                }
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Failed to redeem rewards for account " +
+                        "[who=" + prec.accountName + "].", e);
+            }
+
+            // pass their player record to the client resolver for use later
             BangClientResolver.stashPlayer(prec);
         }
     }
 
-    protected OOOUserRepository _authrep;
+    /**
+     * Ensures that this account is eligible for the reward in question and tacks it onto their
+     * rewards list if so.
+     */
+    protected void maybeRedeemReward (
+        PlayerRecord prec, String machIdent, RewardRecord record, ArrayList<RewardRecord> records)
+        throws PersistenceException
+    {
+        // if too many associated accounts (two) have already redeemed this reward, sorry charlie
+        int otherRedeemers = 0;
+        for (RewardRecord rrec : records) {
+            if (rrec.rewardId == record.rewardId && !rrec.account.equals(prec.accountName)) {
+                otherRedeemers++;
+            }
+        }
+        if (otherRedeemers > MAX_RELATED_REDEEMERS) {
+            return;
+        }
+
+        // otherwise load up the reward info
+        RewardInfo info = _rewards.get(record.rewardId);
+        if (info == null) {
+            // update our cached rewards
+            for (RewardInfo ninfo : _rewardrep.loadActiveRewards()) {
+                _rewards.put(ninfo.rewardId, ninfo);
+            }
+            info = _rewards.get(record.rewardId);
+        }
+        if (info == null || info.data == null || !info.data.toLowerCase().startsWith("bang:")) {
+            return; // reward is expired (and purged) or not bang related
+        }
+
+        // note this reward as redeemed
+        _rewardrep.redeemReward(record, machIdent);
+
+        // finally tack it's game data onto their list
+        prec.rewards.add(info.data);
+    }
+
     protected OOOUserManager _usermgr;
+    protected OOOUserRepository _authrep;
+    protected RewardRepository _rewardrep;
+    protected HashIntMap<RewardInfo> _rewards = new HashIntMap<RewardInfo>();
+
+    /** We only allow two accounts with the same machine ident to redeem a reward. */
+    protected static final int MAX_RELATED_REDEEMERS = 2;
 }

@@ -21,7 +21,6 @@ import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
-import com.threerings.util.StreamableHashMap;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -43,6 +42,7 @@ import com.threerings.underwire.web.data.Event;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
+import com.threerings.util.StreamableHashMap;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
@@ -204,6 +204,30 @@ public class PlayerManager
                 return player.who();
             }
         });
+    }
+
+    /**
+     * Called from {@link BangClientResolver#finishResolution} to redeem any rewards for which this
+     * player is eligible.
+     */
+    public void redeemRewards (PlayerObject player, ArrayList<String> rewards)
+    {
+        for (String reward : rewards) {
+            try {
+                String[] data = reward.split(":");
+                if (data[1].equalsIgnoreCase("coins")) {
+                    int coins = Integer.parseInt(data[2]);
+                    log.info("Granting coin reward [account=" + player.username +
+                             ", coins=" + coins + "].");
+                    BangServer.coinmgr.grantRewardCoins(player, coins);
+                }
+
+            } catch (Exception e) {
+                // sorry kid, not much we can do for you
+                log.log(Level.WARNING, "Failed to award reward to player [who=" + player.who() +
+                        ", reward=" + reward + "].", e);
+            }
+        }
     }
 
     // documentation inherited from interface PlayerProvider

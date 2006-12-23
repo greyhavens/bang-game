@@ -169,6 +169,9 @@ public class BangClientResolver extends CrowdClientResolver
         // toIntArray() returns a sorted array
         buser.friends = friends.toIntArray();
         buser.foes = foes.toIntArray();
+
+        // make a note of this player's redeemable rewards
+        _rewards = player.rewards;
     }
 
     @Override // documentation inherited
@@ -182,6 +185,11 @@ public class BangClientResolver extends CrowdClientResolver
 
         // initialize our gang information
         BangServer.gangmgr.initPlayer(buser, _grecord, _ginvites);
+
+        // redeem any rewards for which this player is eligible
+        if (_rewards != null && _rewards.size() > 0) {
+            BangServer.playmgr.redeemRewards(buser, _rewards);
+        }
     }
 
     @Override // documentation inherited
@@ -204,6 +212,9 @@ public class BangClientResolver extends CrowdClientResolver
 
     /** A temporary list of this player's gang invitations (or null). */
     protected ArrayList<GangInviteRecord> _ginvites;
+
+    /** Activated rewards that were redeemed for this player during authentication. */
+    protected ArrayList<String> _rewards;
 
     /** Used to temporarily store player records during resolution. */
     protected static HashMap<String,PlayerRecord> _pstash = new HashMap<String,PlayerRecord>();
