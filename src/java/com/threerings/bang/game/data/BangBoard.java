@@ -1169,11 +1169,11 @@ public class BangBoard extends SimpleStreamableObject
         byte tstate = _tstate[idx];
         boolean flightstate = (remain ? piece.isAirborne() : 
                 piece.isFlyer() || !piece.isCorporeal());
-        if ((flightstate && (!remain || tstate <= O_BRIDGE) &&
-                (!piece.isCorporeal() || tstate > O_PROP || 
-                 (tstate & TALL_FLAG) != 0 || piece instanceof Train ||
-                 (!remain && (tstate & TARGETABLE_FLAG) == 0 && 
-                  piece.getMinFireDistance() == 0)))) {
+        if ((flightstate && (!remain || (tstate <= O_BRIDGE && (tstate & TALL_FLAG) != 0)) &&
+                (!piece.isCorporeal() || tstate > O_PROP || (tstate & TALL_FLAG) != 0 || 
+                 piece instanceof Train || 
+                 (!remain && (tstate & TARGETABLE_FLAG) == 0 && piece.getMinFireDistance() == 0)
+                ))) {
             return true;
         } else if ((tstate == O_FLAT || tstate == O_BRIDGE) ||
                (piece instanceof Unit && tstate == O_BONUS) ||
