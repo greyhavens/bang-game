@@ -96,8 +96,7 @@ public class OOOAuthenticator extends BangAuthenticator
         if (svers != cvers) {
             rdata.code = (cvers > svers) ? NEWER_VERSION :
                 MessageBundle.tcompose(VERSION_MISMATCH, "" + svers);
-            log.info("Refusing wrong version " +
-                     "[creds=" + req.getCredentials() +
+            log.info("Refusing wrong version [creds=" + req.getCredentials() +
                      ", cvers=" + cvers + ", svers=" + svers + "].");
             return;
         }
@@ -116,21 +115,17 @@ public class OOOAuthenticator extends BangAuthenticator
         String username = creds.getUsername().toString();
         if (StringUtil.isBlank(creds.ident)) {
             log.warning("Received blank ident [creds=" + creds + "].");
-            BangServer.generalLog(
-                "refusing_spoofed_ident " + username +
-                " ip:" + conn.getInetAddress());
+            BangServer.generalLog("refusing_spoofed_ident " + username +
+                                  " ip:" + conn.getInetAddress());
             rdata.code = SERVER_ERROR;
             return;
         }
 
-        // if they supplied a known non-unique machine identifier, create
-        // one for them
+        // if they supplied a known non-unique machine identifier, create one for them
         if (IdentUtil.isBogusIdent(creds.ident.substring(1))) {
-            String sident = StringUtil.md5hex(
-                "" + Math.random() + System.currentTimeMillis());
+            String sident = StringUtil.md5hex("" + Math.random() + System.currentTimeMillis());
             creds.ident = "S" + IdentUtil.encodeIdent(sident);
-            BangServer.generalLog("creating_ident " + username +
-                                  " ip:" + conn.getInetAddress() +
+            BangServer.generalLog("creating_ident " + username + " ip:" + conn.getInetAddress() +
                                   " id:" + creds.ident);
             rdata.ident = creds.ident;
         }
@@ -138,14 +133,12 @@ public class OOOAuthenticator extends BangAuthenticator
         // convert the encrypted ident to the original MD5 hash
         try {
             String prefix = creds.ident.substring(0, 1);
-            creds.ident = prefix +
-                IdentUtil.decodeIdent(creds.ident.substring(1));
+            creds.ident = prefix + IdentUtil.decodeIdent(creds.ident.substring(1));
         } catch (Exception e) {
             log.warning("Received spoofed ident [who=" + username +
                         ", err=" + e.getMessage() + "].");
             BangServer.generalLog("refusing_spoofed_ident " + username +
-                                  " ip:" + conn.getInetAddress() +
-                                  " id:" + creds.ident);
+                                  " ip:" + conn.getInetAddress() + " id:" + creds.ident);
             rdata.code = SERVER_ERROR;
             return;
         }
@@ -157,12 +150,10 @@ public class OOOAuthenticator extends BangAuthenticator
             return;
         }
 
-        // we need to find out if this account has ever logged in so that
-        // we can decide how to handle tainted idents; so we load up the
-        // player record for this account; if this player makes it through
-        // the gauntlet, we'll stash this away in a place that the client
-        // resolver can get its hands on it so that we can avoid loading
-        // the record twice during authentication
+        // we need to find out if this account has ever logged in so that we can decide how to
+        // handle tainted idents; we load up the player record for this account; if this player
+        // makes it through the gauntlet, we'll stash this away in a place that the client resolver
+        // can get it so that we can avoid loading the record twice during authentication
         PlayerRecord prec = BangServer.playrepo.loadPlayer(username);
 
         // make sure this player has access to this server's town
@@ -176,19 +167,17 @@ public class OOOAuthenticator extends BangAuthenticator
             String townId = (prec == null || prec.townId == null) ?
                 BangCodes.FRONTIER_TOWN : prec.townId;
             if (BangUtil.getTownIndex(townId) < serverTownIdx) {
-                log.warning("Rejecting access to town server by " +
-                            "non-ticket-holder [who=" + username +
-                            ", stownId=" + ServerConfig.townId +
+                log.warning("Rejecting access to town server by non-ticket-holder " +
+                            "[who=" + username + ", stownId=" + ServerConfig.townId +
                             ", ptownId=" + townId + "].");
                 rdata.code = NO_TICKET;
                 return;
             }
         }
 
-        // check to see whether this account has been banned or if this is
-        // a first time user logging in from a tainted machine
-        int vc = _authrep.validateUser(
-            OOOUser.BANGHOWDY_SITE_ID, user, creds.ident, prec == null);
+        // check to see whether this account has been banned or if this is a first time user
+        // logging in from a tainted machine
+        int vc = _authrep.validateUser(OOOUser.BANGHOWDY_SITE_ID, user, creds.ident, prec == null);
         switch (vc) {
             // various error conditions
             case OOOUserRepository.ACCOUNT_BANNED:
@@ -203,17 +192,14 @@ public class OOOAuthenticator extends BangAuthenticator
         }
 
         // check whether we're restricting non-insider login
-        if (!RuntimeConfig.server.openToPublic &&
-            !user.holdsToken(OOOUser.INSIDER) &&
-            !user.holdsToken(OOOUser.TESTER) &&
-            !user.isSupportPlus()) {
+        if (!RuntimeConfig.server.openToPublic && !user.holdsToken(OOOUser.INSIDER) &&
+            !user.holdsToken(OOOUser.TESTER) && !user.isSupportPlus()) {
             rdata.code = NON_PUBLIC_SERVER;
             return;
         }
 
         // check whether we're restricting non-admin login
-        if (!RuntimeConfig.server.nonAdminsAllowed &&
-            !user.isSupportPlus()) {
+        if (!RuntimeConfig.server.nonAdminsAllowed && !user.isSupportPlus()) {
             rdata.code = UNDER_MAINTENANCE;
             return;
         }
@@ -240,9 +226,8 @@ public class OOOAuthenticator extends BangAuthenticator
         }
         rsp.authdata = new BangTokenRing(tokens);
 
-        // replace the username in their credentials with the
-        // canonical name in their user record as that username will
-        // later be stuffed into their user object
+        // replace the username in their credentials with the canonical name in their user record
+        // as that username will later be stuffed into their user object
         creds.setUsername(new Name(user.username));
 
         // log.info("User logged on [user=" + user.username + "].");

@@ -4,6 +4,7 @@
 package com.threerings.bang.server;
 
 import com.samskivert.io.PersistenceException;
+import com.samskivert.util.Invoker;
 
 import com.threerings.presents.server.Authenticator;
 
@@ -18,4 +19,10 @@ public abstract class BangAuthenticator extends Authenticator
      */
     public abstract void setAccountIsActive (String username, boolean isActive)
         throws PersistenceException;
+
+    @Override // from Authenticator
+    protected Invoker getInvoker ()
+    {
+        return BangServer.authInvoker;
+    }
 }

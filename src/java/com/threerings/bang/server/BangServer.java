@@ -13,6 +13,7 @@ import com.samskivert.jdbc.StaticConnectionProvider;
 import com.samskivert.util.AuditLogger;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
+import com.samskivert.util.Invoker;
 import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.Tuple;
@@ -100,6 +101,10 @@ public class BangServer extends CrowdServer
 
     /** Handles the heavy lifting relating to avatar looks and articles. */
     public static AvatarLogic alogic;
+
+    /** Any database actions that involve the authentication database <em>must</em> be run on this
+     * invoker to avoid blocking normal game database actions. */
+    public static Invoker authInvoker;
 
     /** A reference to the authenticator in use by the server. */
     public static BangAuthenticator author;
@@ -208,12 +213,16 @@ public class BangServer extends CrowdServer
     public void init ()
         throws Exception
     {
-        // create out database connection provider
-        // this must be done before calling super.init()
+        // create out database connection provider this must be done before calling super.init()
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
 
         // do the base server initialization
         super.init();
+
+        // create and start up our auth invoker
+        authInvoker = new Invoker("auth_invoker", omgr);
+        authInvoker.setDaemon(true);
+        authInvoker.start();
 
         // configure the client manager to use the appropriate client class
         clmgr.setClientFactory(new ClientFactory() {
@@ -230,8 +239,7 @@ public class BangServer extends CrowdServer
         rsrcmgr.initBundles(null, "config/resource/manager.properties", null);
 
         // create our avatar related bits
-        comprepo = new BundledComponentRepository(
-            rsrcmgr, null, AvatarCodes.AVATAR_RSRC_SET);
+        comprepo = new BundledComponentRepository(rsrcmgr, null, AvatarCodes.AVATAR_RSRC_SET);
         alogic = new AvatarLogic(rsrcmgr, comprepo);
 
         // create our repositories
@@ -241,8 +249,7 @@ public class BangServer extends CrowdServer
         statrepo = new StatRepository(conprov);
         ratingrepo = new RatingRepository(conprov);
         lookrepo = new LookRepository(conprov);
-        AccountActionRepository actionrepo =
-            new AccountActionRepository(conprov);
+        AccountActionRepository actionrepo = new AccountActionRepository(conprov);
 
         // create our various supporting managers
         playmgr = new PlayerManager();
@@ -256,8 +263,7 @@ public class BangServer extends CrowdServer
         // if we have a shared secret, assume we're running in a cluster
         String node = System.getProperty("node");
         if (node != null && ServerConfig.sharedSecret != null) {
-            log.info("Running in cluster mode as node '" +
-                     ServerConfig.nodename + "'.");
+            log.info("Running in cluster mode as node '" + ServerConfig.nodename + "'.");
             peermgr = new BangPeerManager(conprov, invoker);
         }
 
@@ -265,8 +271,8 @@ public class BangServer extends CrowdServer
         confreg = new DatabaseConfigRegistry(conprov, invoker);
         AdminProvider.init(invmgr, confreg);
 
-        // now initialize our runtime configuration, postponing the remaining
-        // server initialization until our configuration objects are available
+        // now initialize our runtime configuration, postponing the remaining server initialization
+        // until our configuration objects are available
         RuntimeConfig.init(omgr);
         omgr.postRunnable(new Runnable () {
             public void run () {
@@ -333,8 +339,7 @@ public class BangServer extends CrowdServer
         adminmgr.init(this);
         if (peermgr != null) {
             peermgr.init(ServerConfig.nodename, ServerConfig.sharedSecret,
-                         ServerConfig.hostname, ServerConfig.publicHostname,
-                         getListenPorts()[0]);
+                         ServerConfig.hostname, ServerConfig.publicHostname, getListenPorts()[0]);
         }
 
         // create our managers
@@ -351,13 +356,11 @@ public class BangServer extends CrowdServer
         townobj = omgr.registerObject(new TownObject());
         createTownObjectUpdateInterval();
 
-        log.info("Bang server v" + DeploymentConfig.getVersion() +
-                 " initialized.");
+        log.info("Bang server v" + DeploymentConfig.getVersion() + " initialized.");
     }
 
     /**
-     * Creates the interval that updates the town object's population once
-     * every thirty seconds.
+     * Creates the interval that updates the town object's population once every thirty seconds.
      */
     protected void createTownObjectUpdateInterval ()
     {
@@ -372,9 +375,8 @@ public class BangServer extends CrowdServer
     }
 
     /**
-     * Returns the player object for the specified user if they are online
-     * currently, null otherwise. This should only be called from the dobjmgr
-     * thread.
+     * Returns the player object for the specified user if they are online currently, null
+     * otherwise. This should only be called from the dobjmgr thread.
      */
     public static PlayerObject lookupPlayer (Handle handle)
     {
@@ -382,9 +384,8 @@ public class BangServer extends CrowdServer
     }
 
     /**
-     * Returns the player object for the specified id if they are online
-     * currently, null otherwise. This should only be called from the dobjmgr
-     * thread.
+     * Returns the player object for the specified id if they are online currently, null
+     * otherwise. This should only be called from the dobjmgr thread.
      */
     public static PlayerObject lookupPlayer (int playerId)
     {
@@ -392,9 +393,8 @@ public class BangServer extends CrowdServer
     }
 
     /**
-     * Returns the player object for the specified user if they are online
-     * currently, null otherwise. This should only be called from the dobjmgr
-     * thread.
+     * Returns the player object for the specified user if they are online currently, null
+     * otherwise. This should only be called from the dobjmgr thread.
      */
     public static PlayerObject lookupByAccountName (Name accountName)
     {
@@ -402,9 +402,8 @@ public class BangServer extends CrowdServer
     }
 
     /**
-     * Called when a player starts their session (or after they choose a handle
-     * for players on their first session) to associate the handle with the
-     * player's distributed object.
+     * Called when a player starts their session (or after they choose a handle for players on
+     * their first session) to associate the handle with the player's distributed object.
      */
     public static void registerPlayer (PlayerObject player)
     {
@@ -416,8 +415,7 @@ public class BangServer extends CrowdServer
     }
 
     /**
-     * Called when a player ends their session to clear their handle to player
-     * object mapping.
+     * Called when a player ends their session to clear their handle to player object mapping.
      */
     public static void clearPlayer (PlayerObject player)
     {
@@ -453,8 +451,8 @@ public class BangServer extends CrowdServer
     }
 
     /**
-     * Creates an audit log with the specified name (which should includ the
-     * <code>.log</code> suffix) in our server log directory.
+     * Creates an audit log with the specified name (which should includ the <code>.log</code>
+     * suffix) in our server log directory.
      */
     public static AuditLogger createAuditLog (String logname)
     {
@@ -502,10 +500,8 @@ public class BangServer extends CrowdServer
         }
     }
 
-    protected static HashMap<Handle,PlayerObject> _players =
-        new HashMap<Handle,PlayerObject>();
-    protected static HashIntMap<PlayerObject> _playerIds =
-        new HashIntMap<PlayerObject>();
+    protected static HashMap<Handle,PlayerObject> _players = new HashMap<Handle,PlayerObject>();
+    protected static HashIntMap<PlayerObject> _playerIds = new HashIntMap<PlayerObject>();
 
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server");

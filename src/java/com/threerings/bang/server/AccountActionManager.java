@@ -31,8 +31,7 @@ public class AccountActionManager
     /**
      * Creates the action manager and prepares it for operation.
      */
-    public AccountActionManager (PresentsDObjectMgr omgr,
-                                 AccountActionRepository actionrepo)
+    public AccountActionManager (PresentsDObjectMgr omgr, AccountActionRepository actionrepo)
         throws PersistenceException
     {
         _repo = actionrepo;
@@ -53,8 +52,7 @@ public class AccountActionManager
     }
 
     /**
-     * Get a list of new unseen accounting actions from the db and process
-     * them.
+     * Get a list of new unseen accounting actions from the db and process them.
      */
     protected void handleNewAccountActions ()
     {
@@ -63,14 +61,12 @@ public class AccountActionManager
         }
         _processingActions = true;
 
-        BangServer.invoker.postUnit(new Invoker.Unit("getAccountActions") {
+        BangServer.authInvoker.postUnit(new Invoker.Unit("getAccountActions") {
             public boolean invoke () {
                 try {
-                    _actions = _repo.getActions(
-                        ServerConfig.nodename, MAX_ACTIONS);
+                    _actions = _repo.getActions(ServerConfig.nodename, MAX_ACTIONS);
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING,
-                            "Failed to get list of new account actions!", pe);
+                    log.log(Level.WARNING, "Failed to get list of new account actions!", pe);
                 }
                 return true;
             }
@@ -92,27 +88,25 @@ public class AccountActionManager
      */
     protected void processActions (final List<AccountAction> actions)
     {
-        for (Iterator<AccountAction> itr = actions.iterator();
-             itr.hasNext(); ) {
+        for (Iterator<AccountAction> itr = actions.iterator(); itr.hasNext(); ) {
             AccountAction ba = itr.next();
             try {
                 handleAccountAction(ba);
             } catch (Throwable t) {
                 itr.remove(); // remove that action from our list
-                log.log(Level.WARNING, "Failure handling account action, " +
-                        "skipping. [action=" + ba + "].", t);
+                log.log(Level.WARNING, "Failure handling account action, skipping. " +
+                        "[action=" + ba + "].", t);
             }
         }
 
         // update the actions that were successfully processed.
         String uname = "updateActions:" + actions.size();
-        BangServer.invoker.postUnit(new Invoker.Unit(uname) {
+        BangServer.authInvoker.postUnit(new Invoker.Unit(uname) {
             public boolean invoke () {
                 try {
                     _repo.updateActions(actions, ServerConfig.nodename);
                 } catch (PersistenceException pe) {
-                    log.warning("Failed to mark processed actions! " +
-                                "[cause=" + pe + "].");
+                    log.warning("Failed to mark processed actions! [cause=" + pe + "].");
                 }
                 return true;
             }
@@ -153,30 +147,24 @@ public class AccountActionManager
     protected void coinsUpdated (String accountName)
     {
         // if this player is online, update their coin count
-        PlayerObject player =
-            BangServer.lookupByAccountName(new Name(accountName));
+        PlayerObject player = BangServer.lookupByAccountName(new Name(accountName));
         if (player != null) {
             BangServer.coinmgr.updateCoinCount(player);
         }
     }
 
     /**
-     * Note that an account has been deleted. Disables the associated player
-     * record.
+     * Note that an account has been deleted. Disables the associated player record.
      */
-    protected void disableAccount (final String accountName,
-                                   final String disabledName)
+    protected void disableAccount (final String accountName, final String disabledName)
     {
         BangServer.invoker.postUnit(new Invoker.Unit("disableAccount") {
             public boolean invoke () {
                 try {
-                    BangServer.playrepo.disablePlayer(
-                        accountName, disabledName);
+                    BangServer.playrepo.disablePlayer(accountName, disabledName);
                 } catch (PersistenceException pe) {
-                    log.warning("Error disabling account " +
-                                "[oname=" + accountName +
-                                ", dname=" + disabledName +
-                                ", cause=" + pe + "].");
+                    log.warning("Error disabling account [oname=" + accountName +
+                                ", dname=" + disabledName + ", cause=" + pe + "].");
                 }
                 return false;
             }
@@ -186,8 +174,7 @@ public class AccountActionManager
     /** Access to our accounting actions database. */
     protected AccountActionRepository _repo;
 
-    /** True if we're currently processing actions and should not start
-     * more. */
+    /** True if we're currently processing actions and should not start more. */
     protected boolean _processingActions = false;
 
     /** Interval with which we check for new accounting actions. */
