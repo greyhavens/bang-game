@@ -5,7 +5,12 @@
 # Moves the Bang! server log files from the runtime log directory into the
 # historical log directory and does various processing on them.
 
-use lib "/export/tools/lib/perl";
+BEGIN {
+    $root = `dirname $0`; chomp($root);
+    $root = `cd $root/.. ; pwd`; chomp($root);
+}
+
+use lib "$root/projects/tools/lib/perl";
 
 use Getopt::Long;
 use GrindUtil;
@@ -14,8 +19,6 @@ use GrindUtil;
 $ENV{'PATH'} = $ENV{'PATH'} . ":/usr/local/bin";
 
 my $usage = "Usage: $0 [--dryrun] node [year month day (ie. 2006 05 06)]\n";
-my $root = `dirname $0`; chomp($root);
-$root = `cd $root/.. ; pwd`; chomp($root);
 
 my $dry_run;
 GetOptions("dryrun" => \$dry_run);
