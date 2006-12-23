@@ -62,7 +62,7 @@ if [ ! -z "$UPDATE" ]; then
 fi
 
 # build the main thang
-$ANT cleanall distall
+$ANT distcleanall distall
 if [ $? != 0 ]; then
     rm -f $LOCKFILE
     exit 255
