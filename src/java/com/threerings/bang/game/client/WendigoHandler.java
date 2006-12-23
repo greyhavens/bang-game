@@ -15,6 +15,7 @@ import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.Sound;
 
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.util.ResultAttacher;
 
 import com.threerings.bang.game.client.sprite.PieceSprite;
@@ -44,8 +45,10 @@ public class WendigoHandler extends EffectHandler
         _sounds.getSound(SOUND_PATH + "flight.ogg").play(true);
         
         // fire off the snow storm effect
-        _view.displayCameraParticles("indian_post/wendigo/snow_storm",
-            CAMERA_EFFECT_DURATION);
+        if (BangPrefs.isHighDetail()) {
+            _view.displayCameraParticles("indian_post/wendigo/snow_storm",
+                CAMERA_EFFECT_DURATION);
+        }
         
         long delay = 0;
         for (WendigoEffect.Movement m : effect.moves) {
