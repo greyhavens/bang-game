@@ -43,6 +43,8 @@ import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.bounty.data.BountyConfig;
+
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
@@ -584,6 +586,8 @@ public class BangController extends GameController
         _bangobj.boardEffect = null;
         _bangobj.globalHindrance = null;
 
+        // TODO: if we're in a bounty game, sneak in a custom marquee
+
         // display the unit selection if appropriate
         _view.setPhase(BangView.PRE_SELECT_PHASE);
 
@@ -665,7 +669,8 @@ public class BangController extends GameController
         if (_config.type == BangConfig.Type.BOUNTY) {
             // display our bounty criterion
             _ctx.getBangClient().displayPopup(
-                new PreGameBountyView(_ctx, this, _bangobj, _config), true, 400);
+                new PreGameBountyView(_ctx, this, BountyConfig.getBounty(_bangobj.bountyInfo[0]),
+                                      _bangobj.bountyInfo[1], _config), true, 400);
 
         } else if (_config.type != BangConfig.Type.SALOON || _config.allPlayersAIs()) {
             // since we're not selecting anything, let the server know that we're ready

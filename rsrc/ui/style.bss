@@ -1083,9 +1083,23 @@ card_icon {
   background: image "ui/pstatus/card_up.png" centerxy;
 }
 
+bounty_pregame {
+  padding: 15;
+}
+
+bounty_pregame_title {
+  parent: "label";
+  font: "Old Town Wide" plain 22;
+}
+
 bounty_pregame_crit {
-  font: "Helvetica" plain 15;
-  color: #4C2602;
+  parent: "label";
+  color: #FFFFFF;
+}
+
+bounty_pregame_quote {
+  parent: "label";
+  color: #6C421B;
 }
 
 //
@@ -1919,7 +1933,7 @@ bounty_list_entry:selected {
 
 bounty_list_details {
   font: "Dom Casual" plain 16;
-  color: #6c421b;
+  color: #6C421B;
 }
 
 bounty_detail_reward {

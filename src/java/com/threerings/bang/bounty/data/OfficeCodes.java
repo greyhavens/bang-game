@@ -12,7 +12,4 @@ public interface OfficeCodes extends InvocationCodes
 {
     /** The identifier for our message bundle. */
     public static final String OFFICE_MSGS = "office";
-
-    /** The identifier for the bounty message bundle. */
-    public static final String BOUNTY_MSGS = "bounty";
 }

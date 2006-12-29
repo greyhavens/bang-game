@@ -243,7 +243,7 @@ public class BangManager extends GameManager
     public void setBountyConfig (BountyConfig bounty, String bountyGameId)
     {
         _bounty = bounty;
-        _bountyGameId = bountyGameId;
+        _bangobj.setBountyInfo(new String[] { _bounty.ident, bountyGameId });
     }
 
     /**
@@ -1064,11 +1064,7 @@ public class BangManager extends GameManager
 
         // set up the board and pieces so it's visible while purchasing
         _bangobj.board = (BangBoard)round.bdata.board.clone();
-        if (_bounty != null) {
-            _bangobj.setMarquee(_bounty.getName(_bountyGameId));
-        } else {
-            _bangobj.setMarquee(MessageBundle.taint(round.board.name));
-        }
+        _bangobj.setMarquee(MessageBundle.taint(round.board.name));
         _bangobj.setBoardHash(round.board.dataHash);
 
         // clone the pieces we get from the board as we may modify them during the game
@@ -1755,7 +1751,7 @@ public class BangManager extends GameManager
 
                     if (_bounty != null) {
                         user.stats.addToSetStat(Stat.Type.BOUNTY_GAMES_COMPLETED,
-                                                _bounty.getStatKey(_bountyGameId));
+                                                _bounty.getStatKey(_bangobj.bountyInfo[1]));
                         if (!user.stats.containsValue(
                                 Stat.Type.BOUNTIES_COMPLETED, _bounty.ident) &&
                             _bounty.isCompleted(user)) {
@@ -2885,9 +2881,6 @@ public class BangManager extends GameManager
 
     /** Our bounty configuration if this is a bounty game, null otherwise. */
     protected BountyConfig _bounty;
-
-    /** The id of the bounty game we're playing if this is a bounty game, null otherwise. */
-    protected String _bountyGameId;
 
     /** Contains info on each round that we played. */
     protected RoundRecord[] _rounds;

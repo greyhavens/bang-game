@@ -43,7 +43,7 @@ public class BountyListEntry extends SelectableIcon
             new Label(this), new Label(this), new Label(this), new Label(this), new Label(this)
         };
         MessageBundle msgs = ctx.getMessageManager().getBundle(OfficeCodes.OFFICE_MSGS);
-        _labels[0].setText(ctx.xlate(OfficeCodes.BOUNTY_MSGS, "m." + config.ident + "_title"));
+        _labels[0].setText(config.title);
         _labels[1].setText(msgs.get("m.list_reward"));
         _labels[2].setText(String.valueOf(config.reward.scrip));
         _labels[2].setIcon(BangUI.scripIcon);

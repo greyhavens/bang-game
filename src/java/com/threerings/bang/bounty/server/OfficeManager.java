@@ -67,11 +67,11 @@ public class OfficeManager extends PlaceManager
             throw new InvocationException(ACCESS_DENIED);
         }
         if (config.inOrder) {
-            for (String game : config.games) {
-                if (game.equals(gameId)) {
+            for (BountyConfig.GameInfo game : config.games) {
+                if (game.ident.equals(gameId)) {
                     break;
                 } else if (!player.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED,
-                                                       config.getStatKey(game))) {
+                                                       config.getStatKey(game.ident))) {
                     log.warning("Player tryied to play bounty game out of order " +
                                 "[who=" + player.who() + ", bounty=" + bountyId +
                                 ", game=" + gameId + "].");

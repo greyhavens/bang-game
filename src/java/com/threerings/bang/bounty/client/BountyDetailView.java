@@ -72,8 +72,8 @@ public class BountyDetailView extends BContainer
         _config = ((BountyListEntry)icon).config;
         _oview.setOutlaw(_ctx, _config.outlawPrint, _config.isCompleted(_ctx.getUserObject()));
         _reward.setText(String.valueOf(_config.reward.scrip));
-        _title.setText(_ctx.xlate(OfficeCodes.BOUNTY_MSGS, "m." + _config.ident + "_title"));
-        _descrip.setText(_ctx.xlate(OfficeCodes.BOUNTY_MSGS, "m." + _config.ident + "_descrip"));
+        _title.setText(_config.title);
+        _descrip.setText(_config.description);
         _games.removeAll();
         _recent.removeAll();
 
@@ -81,15 +81,15 @@ public class BountyDetailView extends BContainer
         GroupLayout glay = GroupLayout.makeHoriz(
             GroupLayout.STRETCH, GroupLayout.LEFT, GroupLayout.CONSTRAIN);
         boolean noMorePlay = false;
-        for (String game : _config.games) {
+        for (BountyConfig.GameInfo game : _config.games) {
             BContainer row = new BContainer(glay);
-            String key = _config.getStatKey(game);
+            String key = _config.getStatKey(game.ident);
             boolean completed = user.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED, key);
             row.add(new BLabel(completed ? _comp : _incomp), GroupLayout.FIXED);
-            row.add(new BLabel(_ctx.xlate(OfficeCodes.BOUNTY_MSGS, "m." + key)));
+            row.add(new BLabel(game.name));
             String pmsg = _ctx.xlate(OfficeCodes.OFFICE_MSGS, completed ? "m.replay" : "m.play");
             if (!noMorePlay) {
-                BButton play = new BButton(pmsg, this, game);
+                BButton play = new BButton(pmsg, this, game.ident);
                 if (completed) {
                     play.setStyleClass("alt_button");
                 } else {

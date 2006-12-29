@@ -124,6 +124,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>marquee</code> field. */
     public static final String MARQUEE = "marquee";
 
+    /** The field name of the <code>bountyInfo</code> field. */
+    public static final String BOUNTY_INFO = "bountyInfo";
+
     /** The field name of the <code>boardHash</code> field. */
     public static final String BOARD_HASH = "boardHash";
 
@@ -233,6 +236,9 @@ public class BangObject extends GameObject
 
     /** The (untranslated) marquee to display before the start of the round. */
     public String marquee;
+
+    /** If this is a bounty game, this contains the bounty id and game id being played. */
+    public String[] bountyInfo;
 
     /** The MD5 hash of the game board, to be compared against any cached
      * version of the board stored on the client. */
@@ -892,6 +898,39 @@ public class BangObject extends GameObject
         requestAttributeChange(
             MARQUEE, value, ovalue);
         this.marquee = value;
+    }
+
+    /**
+     * Requests that the <code>bountyInfo</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setBountyInfo (String[] value)
+    {
+        String[] ovalue = this.bountyInfo;
+        requestAttributeChange(
+            BOUNTY_INFO, value, ovalue);
+        this.bountyInfo = (value == null) ? null : (String[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>bountyInfo</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setBountyInfoAt (String value, int index)
+    {
+        String ovalue = this.bountyInfo[index];
+        requestElementUpdate(
+            BOUNTY_INFO, index, value, ovalue);
+        this.bountyInfo[index] = value;
     }
 
     /**

@@ -31,7 +31,7 @@ public class BountyConfig extends SimpleStreamableObject
     public enum Type { TOWN, MOST_WANTED };
 
     /** Defines the difficulty levels. */
-    public enum Difficulty { EASY, MODERATE, CHALLENGING, MIND_BENDINGLY_HARD };
+    public enum Difficulty { EASY, MEDIUM, HARD, EXTREME };
 
     /** Defines the mechanism that unlocks this bounty. */
     public enum LockType { NONE, BOUNTY, BADGE, LICENSE };
@@ -49,6 +49,49 @@ public class BountyConfig extends SimpleStreamableObject
         public Badge.Type badge;
     }
 
+    /** Defines the various bits for each bounty game. */
+    public static class GameInfo extends SimpleStreamableObject
+    {
+        /** A string identifying this game. */
+        public String ident;
+
+        /** The (translated) name of this game. */
+        public String name;
+
+        /** If true, the game's Big Shot is shown instead of the Outlaw before the game. */
+        public boolean preGameBigshot;
+
+        /** A (translated) quote shown before the bounty game. */
+        public String preGameQuote;
+
+        /** A (translated) quote shown if the bounty game is failed. */
+        public String failedQuote;
+
+        /** A (translated) quote shown if the bounty game is completed. */
+        public String completedQuote;
+
+        /** Logs a warning if required values are not specified. */
+        public void validate (String which) {
+            ArrayList<String> missing = new ArrayList<String>();
+            if (StringUtil.isBlank(name)) {
+                missing.add("name");
+            }
+            if (StringUtil.isBlank(preGameQuote)) {
+                missing.add("pre_game_quote");
+            }
+            if (StringUtil.isBlank(failedQuote)) {
+                missing.add("failed_quote");
+            }
+            if (StringUtil.isBlank(completedQuote)) {
+                missing.add("completed_quote");
+            }
+            if (missing.size() > 0) {
+                log.warning("Bounty game misconfigured [bounty=" + which + ", game=" + ident +
+                            ", missing=" + missing + "].");
+            }
+        }
+    }
+
     /** The town in which this bounty is available. */
     public String townId;
 
@@ -57,6 +100,12 @@ public class BountyConfig extends SimpleStreamableObject
 
     /** Uniquely identifies this bounty. */
     public String ident;
+
+    /** The (translated) title of this bounty. Generally the Outlaw's name. */
+    public String title;
+
+    /** The (translated) description of this bounty. Shown in the Sheriff's Office. */
+    public String description;
 
     /** The mechanism that unlocks this bounty. */
     public LockType lock = LockType.NONE;
@@ -71,7 +120,7 @@ public class BountyConfig extends SimpleStreamableObject
     public int[] outlawPrint;
 
     /** The names of our game definition files. */
-    public ArrayList<String> games = new ArrayList<String>();
+    public ArrayList<GameInfo> games = new ArrayList<GameInfo>();
 
     /** The reward earned by completing this bounty. */
     public Reward reward;
@@ -110,14 +159,6 @@ public class BountyConfig extends SimpleStreamableObject
     }
 
     /**
-     * Returns the (fully qualified) translatable string key for the specified bounty game.
-     */
-    public String getName (String game)
-    {
-        return MessageBundle.qualify(OfficeCodes.BOUNTY_MSGS, "m." + ident + "." + game);
-    }
-
-    /**
      * Returns the stat set key used to identify the supplied game (which must be one of this
      * bounty's games).
      */
@@ -127,13 +168,27 @@ public class BountyConfig extends SimpleStreamableObject
     }
 
     /**
+     * Returns the info record for the game with the specified ident or null.
+     */
+    public GameInfo getGame (String game)
+    {
+        for (GameInfo info : games) {
+            if (info.ident.equals(game)) {
+                return info;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Checks whether all of this bounty's games have been completed by the specified player.
      */
     public boolean isCompleted (PlayerObject user)
     {
         // if they have completed all the games, they're done!
-        for (String game : games) {
-            if (!user.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED, getStatKey(game))) {
+        for (GameInfo game : games) {
+            if (!user.stats.containsValue(
+                    Stat.Type.BOUNTY_GAMES_COMPLETED, getStatKey(game.ident))) {
                 return false;
             }
         }
@@ -179,9 +234,20 @@ public class BountyConfig extends SimpleStreamableObject
         config.difficulty = BangUtil.getEnumProperty(which, props, "difficulty", Difficulty.EASY);
         config.inOrder = BangUtil.getBooleanProperty(which, props, "in_order", config.inOrder);
         config.outlawPrint = StringUtil.parseIntArray(props.getProperty("outlaw_print", ""));
+        config.title = props.getProperty("title", "");
+        config.description = props.getProperty("descrip", "");
 
         for (String game : StringUtil.parseStringArray(props.getProperty("games", ""))) {
-            config.games.add(game);
+            GameInfo info = new GameInfo();
+            info.ident = game;
+            info.name = props.getProperty(game + ".name", "");
+            info.preGameBigshot =
+                BangUtil.getBooleanProperty(which, props, game + ".big_shot_quote", false);
+            info.preGameQuote = props.getProperty(game + ".pre_game_quote");
+            info.failedQuote = props.getProperty(game + ".failed_quote");
+            info.completedQuote = props.getProperty(game + ".completed_quote");
+            info.validate(which);
+            config.games.add(info);
         }
 
         config.reward = new Reward();
