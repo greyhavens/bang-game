@@ -2,10 +2,11 @@
 <project name="bang" default="qcompile" basedir=".">
 
   <!-- things you probably don't want to change -->
-  <property name="src.dir"      value="src/java"/>
-  <property name="deploy.dir"   value="dist"/>
-  <property name="app.name"     value="bang"/>
-  <property name="savedoc.dir"  value="docs"/>
+  <property name="src.dir"        value="src/java"/>
+  <property name="deploy.dir"     value="dist"/>
+  <property name="app.name"       value="bang"/>
+  <property name="savedoc.dir"    value="docs"/>
+  <property name="build.optimize" value="on"/>
   <property name="nartool.path"   value="${basedir}/projects/narya/bin"/>
 
   <!-- define our subprojects and include the standard build system -->
@@ -103,7 +104,7 @@
     <taskdef name="dobj" classpathref="tool.classpath"
              classname="com.threerings.presents.tools.GenDObjectTask"/>
     <!-- make sure the dobject class files are all compiled -->
-    <javac srcdir="src/java" destdir="${deploy.dir}/classes"
+    <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <include name="**/*Object.java"/>
@@ -120,7 +121,7 @@
     <taskdef name="service" classpathref="tool.classpath"
              classname="com.threerings.presents.tools.GenServiceTask"/>
     <!-- make sure the service class files are all compiled -->
-    <javac srcdir="src/java" destdir="${deploy.dir}/classes"
+    <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <include name="**/*Service.java"/>
@@ -137,7 +138,7 @@
     <taskdef name="receiver" classpathref="tool.classpath"
              classname="com.threerings.presents.tools.GenReceiverTask"/>
     <!-- make sure the receiver class files are all compiled -->
-    <javac srcdir="src/java" destdir="${deploy.dir}/classes"
+    <javac srcdir="src/java" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <include name="**/*Receiver.java"/>
@@ -361,8 +362,8 @@
 
   <!-- build the java class files -->
   <target name="qcompile">
-    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes"
-           debug="on" optimize="off" deprecation="on">
+    <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
+           debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint"/>
       <compilerarg value="-Xlint:-serial"/>
