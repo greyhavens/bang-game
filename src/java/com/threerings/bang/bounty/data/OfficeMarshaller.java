@@ -20,21 +20,8 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class OfficeMarshaller extends InvocationMarshaller
     implements OfficeService
 {
-    /** The method id used to dispatch {@link #playBountyGame} requests. */
-    public static final int PLAY_BOUNTY_GAME = 1;
-
-    // from interface OfficeService
-    public void playBountyGame (Client arg1, String arg2, String arg3, InvocationService.InvocationListener arg4)
-    {
-        ListenerMarshaller listener4 = new ListenerMarshaller();
-        listener4.listener = arg4;
-        sendRequest(arg1, PLAY_BOUNTY_GAME, new Object[] {
-            arg2, arg3, listener4
-        });
-    }
-
     /** The method id used to dispatch {@link #testBountyGame} requests. */
-    public static final int TEST_BOUNTY_GAME = 2;
+    public static final int TEST_BOUNTY_GAME = 1;
 
     // from interface OfficeService
     public void testBountyGame (Client arg1, BangConfig arg2, InvocationService.InvocationListener arg3)

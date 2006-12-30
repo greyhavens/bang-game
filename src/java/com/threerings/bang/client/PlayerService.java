@@ -64,6 +64,12 @@ public interface PlayerService extends InvocationService
                               boolean autoplay, InvocationListener listener);
 
     /**
+     * Requests to play the specified bounty game.
+     */
+    public void playBountyGame (Client client, String bounty, String game,
+                                InvocationListener listener);
+
+    /**
      * Requests to view another player's wanted poster.
      */
     public void getPosterInfo (Client client, Handle handle, ResultListener listener);

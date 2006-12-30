@@ -15,6 +15,7 @@ import com.jmex.bui.layout.TableLayout;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.Handle;
@@ -26,7 +27,9 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.bounty.client.OutlawView;
 import com.threerings.bang.bounty.data.BountyConfig;
+import com.threerings.bang.bounty.data.OfficeCodes;
 
+import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Criterion;
@@ -39,7 +42,7 @@ public class BountyGameOverView extends SteelWindow
     implements ActionListener
 {
     public BountyGameOverView (BasicContext ctx, BountyConfig bounty, String gameId,
-                               BangConfig gconfig, BangObject bangobj)
+                               BangConfig gconfig, BangObject bangobj, PlayerObject user)
     {
         super(ctx, "");
         _contents.setStyleClass("bover_contents");
@@ -50,6 +53,7 @@ public class BountyGameOverView extends SteelWindow
         _gameId = gameId;
         _gconfig = gconfig;
         _bangobj = bangobj;
+        _user = user;
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
         // start off with the game details
@@ -137,16 +141,14 @@ public class BountyGameOverView extends SteelWindow
     protected void displayResults ()
     {
         // note whether we've completed the entire bounty
-        PlayerObject user = (_bctx == null) ? null : _bctx.getUserObject();
-        boolean failed = (_failed > 0);
-        boolean completed = (!failed && user != null && _bounty.isCompleted(user));
+        boolean gfailed = (_failed > 0), completed = !gfailed && _bounty.isCompleted(_user);
 
         _header.setText(_msgs.get("m.bover_rtitle", _bounty.title));
         _contents.removeAll();
-        _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(25));
+        _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(35));
 
         BountyConfig.GameInfo info = _bounty.getGame(_gameId);
-        String result = failed ? "failed" : "complete";
+        String result = gfailed ? "failed" : "complete";
         String msg = completed ? _msgs.get("m.bover_all_complete", _bounty.title) :
             _msgs.get("m.bover_game_" + result, info.name);
         _contents.add(_overall = new BLabel(msg, "bover_overall"));
@@ -164,8 +166,7 @@ public class BountyGameOverView extends SteelWindow
         BContainer games = new BContainer(new TableLayout(2, 2, 20));
         for (BountyConfig.GameInfo game : _bounty.games) {
             String key = _bounty.getStatKey(game.ident);
-            boolean gcompleted = (user == null) ? (game == info && !failed) : // null when testing
-                user.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED, key);
+            boolean gcompleted = _user.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED, key);
             BContainer pair = GroupLayout.makeHBox(GroupLayout.LEFT);
             pair.add(new BLabel(gcompleted ? BangUI.completed : BangUI.incomplete));
             pair.add(new BLabel(game.name, "bover_game"));
@@ -173,7 +174,7 @@ public class BountyGameOverView extends SteelWindow
             if (gcompleted || buttoned) {
                 games.add(new BLabel(""));
             } else {
-                msg = _msgs.get(failed ? "m.bover_replay" : "m.bover_play");
+                msg = _msgs.get(gfailed ? "m.bover_replay" : "m.bover_play");
                 games.add(new BButton(msg, this, "play_" + game.ident));
                 buttoned = true;
             }
@@ -184,9 +185,15 @@ public class BountyGameOverView extends SteelWindow
         _contents.add(horiz);
 
         if (completed) {
-            // TODO: add rewards
+            // locate and display our award
+            int pidx = _bangobj.getPlayerIndex(_user.getVisibleName());
+            for (Award award : _bangobj.awards) {
+                if (pidx == award.pidx) {
+                    _contents.add(new AwardView(_ctx, _gconfig, _user, award));
+                }
+            }
         } else {
-            msg = failed ? info.failedQuote : info.completedQuote;
+            msg = gfailed ? info.failedQuote : info.completedQuote;
             _contents.add(new BLabel(msg, "bounty_quote"));
         }
 
@@ -220,8 +227,17 @@ public class BountyGameOverView extends SteelWindow
             displayResults();
 
         } else if (action.startsWith("play_")) {
-            String ident = action.substring(5);
-            // TODO: play bounty game
+            final BButton play = (BButton)event.getSource();
+            play.setEnabled(false);
+            PlayerService psvc = (PlayerService)
+                _bctx.getClient().requireService(PlayerService.class);
+            psvc.playBountyGame(_bctx.getClient(), _bounty.ident, action.substring(5),
+                                new PlayerService.InvocationListener() {
+                public void requestFailed (String cause) {
+                    _bctx.getChatDirector().displayFeedback(OfficeCodes.OFFICE_MSGS, cause);
+                    play.setEnabled(true);
+                }
+            });
         }
     }
 
@@ -238,6 +254,7 @@ public class BountyGameOverView extends SteelWindow
     protected String _gameId;
     protected BangConfig _gconfig;
     protected BangObject _bangobj;
+    protected PlayerObject _user;
 
     protected MessageBundle _msgs;
 

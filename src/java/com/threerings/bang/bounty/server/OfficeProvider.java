@@ -17,12 +17,6 @@ import com.threerings.presents.server.InvocationProvider;
 public interface OfficeProvider extends InvocationProvider
 {
     /**
-     * Handles a {@link OfficeService#playBountyGame} request.
-     */
-    public void playBountyGame (ClientObject caller, String arg1, String arg2, InvocationService.InvocationListener arg3)
-        throws InvocationException;
-
-    /**
      * Handles a {@link OfficeService#testBountyGame} request.
      */
     public void testBountyGame (ClientObject caller, BangConfig arg1, InvocationService.InvocationListener arg2)

@@ -68,6 +68,13 @@ public class PlayerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case PlayerMarshaller.PLAY_BOUNTY_GAME:
+            ((PlayerProvider)provider).playBountyGame(
+                source,
+                (String)args[0], (String)args[1], (InvocationService.InvocationListener)args[2]
+            );
+            return;
+
         case PlayerMarshaller.PLAY_COMPUTER:
             ((PlayerProvider)provider).playComputer(
                 source,

@@ -772,8 +772,9 @@ public class BangController extends GameController
     {
         BWindow view;
         if (_config.type == BangConfig.Type.BOUNTY) {
-            view = new BountyGameOverView(_ctx, BountyConfig.getBounty(_bangobj.bountyInfo[0]),
-                                          _bangobj.bountyInfo[1], _config, _bangobj);
+            view = new BountyGameOverView(
+                _ctx, BountyConfig.getBounty(_bangobj.bountyInfo[0]), _bangobj.bountyInfo[1],
+                _config, _bangobj, _ctx.getUserObject());
         } else {
             view = _statsView;
         }

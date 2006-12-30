@@ -55,6 +55,7 @@ public class BountyGameOverViewTest extends TestApp
         user.handle = new Handle("Wild Annie");
         user.inventory = new DSet<Item>(new Purse[] { new Purse(-1, 1) });
         user.scrip = 125378;
+        user.stats = new StatSet();
 
         BountyConfig config = BountyConfig.getBounty("dynamite_daltry");
         String gameId = "no_trespassing";
@@ -63,6 +64,7 @@ public class BountyGameOverViewTest extends TestApp
             String path = "bounties/frontier_town/town/dynamite_daltry/" + gameId + ".game";
             gconfig = (BangConfig)BinaryImporter.getInstance().load(
                 _ctx.getResourceManager().getResource(path));
+            gconfig.type = BangConfig.Type.BOUNTY;
         } catch (Exception e) {
             e.printStackTrace(System.err);
             System.exit(255);
@@ -83,7 +85,7 @@ public class BountyGameOverViewTest extends TestApp
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
             bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;
-            if (bangobj.awards[ii].pidx == 2) {
+            if (bangobj.awards[ii].pidx == 0) {
                 bangobj.awards[ii].item = Badge.Type.DISTANCE_MOVED_1.newBadge();
             }
             bangobj.awards[ii].rank = ii;
@@ -92,6 +94,6 @@ public class BountyGameOverViewTest extends TestApp
             bangobj.playerInfo[ii].avatar = BangAI.getAvatarPrint(RandomUtil.getInt(100) > 50);
         }
 
-        return new BountyGameOverView(_ctx, config, gameId, gconfig, bangobj);
+        return new BountyGameOverView(_ctx, config, gameId, gconfig, bangobj, user);
     }
 }

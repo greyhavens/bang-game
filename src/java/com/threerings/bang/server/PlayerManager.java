@@ -492,6 +492,15 @@ public class PlayerManager
     }
 
     // from interface PlayerProvider
+    public void playBountyGame (ClientObject caller, String bountyId, String gameId,
+                                PlayerService.InvocationListener listener)
+        throws InvocationException
+    {
+        // pass the buck to the office manager
+        BangServer.officemgr.playBountyGame(caller, bountyId, gameId, listener);
+    }
+
+    // from interface PlayerProvider
     public void getPosterInfo (ClientObject caller, final Handle handle,
                                final PlayerService.ResultListener listener)
         throws InvocationException

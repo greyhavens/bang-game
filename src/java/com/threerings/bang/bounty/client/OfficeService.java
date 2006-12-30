@@ -14,12 +14,6 @@ import com.threerings.bang.game.data.BangConfig;
 public interface OfficeService extends InvocationService
 {
     /**
-     * Requests to play the specified bounty game.
-     */
-    public void playBountyGame (
-        Client client, String bounty, String game, InvocationListener listener);
-
-    /**
      * Requests to test the sepecified bounty game configuration. Only available to admins.
      */
     public void testBountyGame (Client client, BangConfig config, InvocationListener listener);

@@ -7,33 +7,24 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.AffineTransformOp;
 import java.awt.geom.AffineTransform;
-import java.text.NumberFormat;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
-import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
-import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.BangUI;
-import com.threerings.bang.client.ItemIcon;
 import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.client.bui.SteelWindow;
-import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.data.Purse;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
@@ -81,15 +72,15 @@ public class GameOverView extends SteelWindow
      */
     public GameOverView (BangContext ctx, BangController ctrl, BangObject bangobj)
     {
-        this(ctx, ctrl, bangobj, ctx.getUserObject());
+        this(ctx, ctrl, (BangConfig)ctrl.getPlaceConfig(), bangobj, ctx.getUserObject());
         _bctx = ctx;
     }
 
     /**
      * The constructor used by the test harness.
      */
-    public GameOverView (BasicContext ctx, BangController ctrl, BangObject bangobj,
-                         PlayerObject user)
+    public GameOverView (BasicContext ctx, BangController ctrl, BangConfig bconfig,
+                         BangObject bangobj, PlayerObject user)
     {
         super(ctx, ctx.xlate(GameCodes.GAME_MSGS, "m.endgame_title"));
         setLayer(1);
@@ -147,16 +138,6 @@ public class GameOverView extends SteelWindow
 
             // display a summary of your round ranks for a multi-round game
             if (bangobj.roundId > 1 && pidx > -1) {
-                BangConfig bconfig;
-                if (ctrl == null) { // for testing
-                    bconfig = new BangConfig();
-                    bconfig.addRound("tb", null, null);
-                    bconfig.addRound("wa", null, null);
-                    bconfig.addRound("fg", null, null);
-                } else {
-                    bconfig = (BangConfig)ctrl.getPlaceConfig();
-                }
-
                 BContainer ranks = new BContainer(new TableLayout(3, 2, 5));
                 for (int ii = 0; ii < bangobj.perRoundRanks.length; ii++) {
                     String msg = msgs.get("m.endgame_round", "" + (ii + 1));
@@ -185,106 +166,14 @@ public class GameOverView extends SteelWindow
 
         // display our earnings and awarded badge (if any)
         if (award != null) {
-            BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
-            ((GroupLayout)row.getLayoutManager()).setGap(25);
-            ((GroupLayout)row.getLayoutManager()).setOffAxisPolicy(GroupLayout.STRETCH);
-            _contents.add(row);
-
-            BContainer econt = new BContainer(new BorderLayout(0, 15));
-            econt.setStyleClass("endgame_border");
-            row.add(econt);
-
-            String rankstr = msgs.get("m.endgame_rank" + award.rank);
-            String txt = msgs.get("m.endgame_earnings", rankstr);
-            econt.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
-
-            BContainer rrow = new BContainer(new TableLayout(7, 5, 5));
-            // we need to center this verticaly
-            BContainer vbox = GroupLayout.makeVBox(GroupLayout.CENTER);
-            vbox.add(rrow);
-            econt.add(vbox, BorderLayout.CENTER);
-
-            rrow.add(new BLabel(msgs.get("m.endgame_reward", rankstr), "endgame_smallheader"));
-            rrow.add(new Spacer(1, 1));
-
-            Purse purse = user.getPurse();
-            if (purse.getTownIndex() == 0) { // no purse
-                txt = msgs.get("m.endgame_nopurse");
-            } else {
-                txt = ctx.xlate(BangCodes.GOODS_MSGS, purse.getName());
-            }
-            rrow.add(new BLabel(txt, "endgame_smallheader"));
-
-            rrow.add(new Spacer(1, 1));
-            rrow.add(new BLabel(msgs.get("m.endgame_total"), "endgame_smallheader"));
-            rrow.add(new Spacer(30, 1));
-            rrow.add(new BLabel(msgs.get("m.endgame_have"), "endgame_header"));
-
-            NumberFormat cfmt = NumberFormat.getInstance();
-            BLabel label;
-            txt = cfmt.format(Math.round(award.cashEarned / purse.getPurseBonus()));
-            rrow.add(label = new BLabel(txt, "endgame_smallcash"));
-            label.setIcon(BangUI.scripIcon);
-            label.setIconTextGap(3);
-
-            rrow.add(new BLabel("+", "endgame_smallcash"));
-
-            NumberFormat pfmt = NumberFormat.getPercentInstance();
-            txt = pfmt.format(purse.getPurseBonus() - 1);
-            rrow.add(label = new BLabel(txt, "endgame_smallcash"));
-            if (purse.getTownIndex() == 0) { // no purse
-                label.setIcon(new BlankIcon(64, 64));
-            } else {
-                BufferedImage pimg = ctx.getImageCache().getBufferedImage(purse.getIconPath());
-                BImage scaled = new BImage(
-                    pimg.getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH));
-                label.setIcon(new ImageIcon(scaled));
-            }
-
-            rrow.add(new BLabel("=", "endgame_smallcash"));
-
-            txt = cfmt.format(award.cashEarned);
-            rrow.add(label = new BLabel(txt, "endgame_smallcash"));
-            label.setIcon(BangUI.scripIcon);
-            label.setIconTextGap(3);
-
-            rrow.add(new Spacer(1, 1));
-
-            label = new BLabel(cfmt.format(user.scrip), "endgame_cash");
-            label.setIconTextGap(6);
-            label.setIcon(new ImageIcon(ctx.loadImage("ui/icons/big_scrip.png")));
-            rrow.add(label);
-
-            BangConfig config = (BangConfig)ctrl.getPlaceConfig();
-            if (award.item instanceof Badge) {
-                BContainer bcont = new BContainer(new BorderLayout());
-                bcont.setStyleClass("endgame_border");
-                txt = msgs.get("m.endgame_badge");
-                bcont.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
-                bcont.add(new ItemIcon(ctx, award.item), BorderLayout.CENTER);
-                String reward = ((Badge)award.item).getReward();
-                if (reward != null) {
-                    txt = _ctx.xlate(BangCodes.BADGE_MSGS, reward);
-                    bcont.add(new BLabel(txt, "endgame_reward"), BorderLayout.SOUTH);
-                }
-                row.add(bcont);
-
-            } else if (!config.rated && config.type != BangConfig.Type.BOUNTY) {
-                BContainer bcont = new BContainer(new BorderLayout());
-                bcont.setPreferredSize(new Dimension(200, -1));
-                bcont.setStyleClass("endgame_border");
-                bcont.add(new BLabel(msgs.get("m.endgame_unranked"), "endgame_text"),
-                          BorderLayout.CENTER);
-                row.add(bcont);
-            }
+            _contents.add(new AwardView(_ctx, bconfig, user, award));
         }
 
         // add some buttons at the bottom
         _buttons.add(new BButton(msgs.get("m.view_stats"), this, "stats"));
         if (_ctx instanceof BangContext) {
             String from = ((BangContext)_ctx).getBangClient().getPriorLocationIdent();
-            BangConfig config = (BangConfig)ctrl.getPlaceConfig();
-            if (config.duration == BangConfig.Duration.PRACTICE) {
+            if (bconfig.duration == BangConfig.Duration.PRACTICE) {
                 from = "tutorial";
             }
             _buttons.add(new BButton(msgs.get("m.to_" + from), this, "to_" + from));

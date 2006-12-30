@@ -42,6 +42,12 @@ public interface PlayerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link PlayerService#playBountyGame} request.
+     */
+    public void playBountyGame (ClientObject caller, String arg1, String arg2, InvocationService.InvocationListener arg3)
+        throws InvocationException;
+
+    /**
      * Handles a {@link PlayerService#playComputer} request.
      */
     public void playComputer (ClientObject caller, int arg1, String[] arg2, String arg3, boolean arg4, InvocationService.InvocationListener arg5)

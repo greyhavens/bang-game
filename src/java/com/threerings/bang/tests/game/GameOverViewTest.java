@@ -24,6 +24,7 @@ import com.threerings.bang.tests.TestApp;
 import com.threerings.bang.game.client.GameOverView;
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangAI;
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
 import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
@@ -51,6 +52,11 @@ public class GameOverViewTest extends TestApp
         user.handle = new Handle("Wild Annie");
         user.inventory = new DSet<Item>(new Purse[] { new Purse(-1, 1) });
         user.scrip = 125378;
+
+        BangConfig bconfig = new BangConfig();
+        bconfig.addRound("tb", null, null);
+        bconfig.addRound("wa", null, null);
+        bconfig.addRound("fg", null, null);
 
         BangObject bangobj = new BangObject();
         bangobj.players = new Name[] {
@@ -81,6 +87,6 @@ public class GameOverViewTest extends TestApp
             bangobj.playerInfo[ii].avatar = BangAI.getAvatarPrint(RandomUtil.getInt(100) > 50);
         }
 
-        return new GameOverView(_ctx, null, bangobj, user);
+        return new GameOverView(_ctx, null, bconfig, bangobj, user);
     }
 }

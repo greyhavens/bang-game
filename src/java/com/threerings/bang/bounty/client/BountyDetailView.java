@@ -16,6 +16,7 @@ import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.PlayerObject;
@@ -58,7 +59,6 @@ public class BountyDetailView extends BContainer
     public void setOfficeObject (OfficeObject offobj)
     {
         _offobj = offobj;
-        _games.setEnabled(true);
     }
 
     // from interface IconPalette.Inspector
@@ -99,7 +99,6 @@ public class BountyDetailView extends BContainer
             }
             _games.add(row);
         }
-        _games.setEnabled(_offobj != null);
 
         // TODO: display recent finishers
     }
@@ -108,8 +107,9 @@ public class BountyDetailView extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         _games.setEnabled(false);
-        _offobj.service.playBountyGame(_ctx.getClient(), _config.ident, event.getAction(),
-                                       new OfficeService.InvocationListener() {
+        PlayerService psvc = (PlayerService)_ctx.getClient().requireService(PlayerService.class);
+        psvc.playBountyGame(_ctx.getClient(), _config.ident, event.getAction(),
+                            new PlayerService.InvocationListener() {
             public void requestFailed (String cause) {
                 _ctx.getChatDirector().displayFeedback(OfficeCodes.OFFICE_MSGS, cause);
                 _games.setEnabled(true);

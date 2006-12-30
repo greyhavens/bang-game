@@ -46,7 +46,10 @@ import static com.threerings.bang.Log.log;
 public class OfficeManager extends PlaceManager
     implements OfficeCodes, OfficeProvider
 {
-    // from interface OfficeProvider
+    /**
+     * This would be part of {@link OfficeService} but we need to be able to call it at the end of
+     * a bounty game at which point we are not in the Sheriff's Office.
+     */
     public void playBountyGame (ClientObject caller, String bountyId, final String gameId,
                                 final OfficeService.InvocationListener listener)
         throws InvocationException
