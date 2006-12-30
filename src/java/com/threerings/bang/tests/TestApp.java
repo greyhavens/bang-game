@@ -10,6 +10,7 @@ import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.ResultListener;
 
 import com.jme.input.InputHandler;
@@ -17,6 +18,7 @@ import com.jme.renderer.Renderer;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.system.DisplaySystem;
+import com.jme.system.PropertiesIO;
 
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BImage;
@@ -41,6 +43,7 @@ import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.BangApp;
+import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.GlobalKeyManager;
 import com.threerings.bang.client.util.ModelCache;
@@ -55,6 +58,13 @@ import static com.threerings.bang.Log.log;
  */
 public abstract class TestApp extends JmeApp
 {
+    @Override // from JmeApp
+    public boolean init ()
+    {
+        OneLineLogFormatter.configureDefaultHandler();
+        return super.init();
+    }
+
     protected void initTest ()
     {
         _ctx = new BasicContextImpl();
@@ -107,6 +117,20 @@ public abstract class TestApp extends JmeApp
             // TODO: report to the client
             log.log(Level.WARNING, "Failed to initialize rsrcmgr.", ioe);
         }
+    }
+
+    @Override // documentation inherited
+    protected DisplaySystem createDisplay ()
+    {
+        PropertiesIO props = new PropertiesIO(getConfigPath("jme.cfg"));
+        BangPrefs.configureDisplayMode(props, Boolean.getBoolean("safemode"));
+        _api = props.getRenderer();
+        DisplaySystem display = DisplaySystem.getDisplaySystem(_api);
+        display.setVSyncEnabled(true);
+        display.createWindow(props.getWidth(), props.getHeight(),
+                             props.getDepth(), props.getFreq(),
+                             props.getFullscreen());
+        return display;
     }
 
     /**

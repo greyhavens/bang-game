@@ -2088,3 +2088,48 @@ endgame_folks_help {
   color: #766300;
 }
   
+//
+// Bounty post-game stats display
+
+bover_contents {
+  padding: 30;
+}
+
+bover_header {
+  parent: "endgame_smallheader";
+  font: "Dom Casual" plain 18;
+}
+
+bover_smallheader {
+  parent: "endgame_smallheader";
+}
+
+bover_crit {
+  font: "Dom Casual" plain 24;
+  color: #FFFFFF;
+  text-effect: shadow;
+  effect-color: #715634;
+}
+
+bover_rcrit {
+  parent: "bover_crit";
+  text-align: right;
+}
+
+bover_result {
+  font: "Dom Casual" plain 36;
+  color: #FFFFFF;
+  text-effect: shadow;
+  effect-color: #715634;
+}
+
+bover_failed_result {
+  parent: "bover_result";
+  color: #9D0A0E;
+}
+
+bover_overall {
+  parent: "bover_result";
+  font: "Dom Casual" plain 48;
+  text-align: center;
+}

@@ -48,23 +48,21 @@ import static com.threerings.bang.avatar.util.AvatarLogic.*;
 public class AvatarView extends BLabel
 {
     /**
-     * Obtains a framable (skinnier) image for the specified avatar, scaled by
-     * one over the specified factor.
+     * Obtains a framable (skinnier) image for the specified avatar, scaled by one over the
+     * specified factor.
      */
-    public static void getFramableImage (
-        BasicContext ctx, int[] avatar, final int reduction,
-        final ResultListener<BImage> receiver)
+    public static void getFramableImage (BasicContext ctx, int[] avatar, final int reduction,
+                                         final ResultListener<BImage> receiver)
     {
         getImage(ctx, avatar, new ResultListener<BufferedImage>() {
             public void requestCompleted (BufferedImage base) {
                 BufferedImage cropped = base.getSubimage(
                     (WIDTH-FRAMED_WIDTH)/2, (HEIGHT-FRAMED_HEIGHT)/2,
                     FRAMED_WIDTH, FRAMED_HEIGHT);
-                receiver.requestCompleted(
-                    new BImage(cropped.getScaledInstance(
-                                   FRAMED_WIDTH/reduction,
-                                   FRAMED_HEIGHT/reduction,
-                                   BufferedImage.SCALE_SMOOTH)));
+                receiver.requestCompleted(new BImage(cropped.getScaledInstance(
+                                                         FRAMED_WIDTH/reduction,
+                                                         FRAMED_HEIGHT/reduction,
+                                                         BufferedImage.SCALE_SMOOTH)));
             }
             public void requestFailed (Exception cause) {
                 receiver.requestFailed(cause);
@@ -73,22 +71,18 @@ public class AvatarView extends BLabel
     }
 
     /**
-     * Obtains a coop framable (shorter) image for the specified avatar, 
-     * scaled by one over the specified factor.
+     * Obtains a coop framable (shorter) image for the specified avatar, scaled by one over the
+     * specified factor.
      */
-    public static void getCoopFramableImage (
-        BasicContext ctx, int[] avatar, final int reduction,
-        final ResultListener<BImage> receiver)
+    public static void getCoopFramableImage (BasicContext ctx, int[] avatar, final int reduction,
+                                             final ResultListener<BImage> receiver)
     {
         getImage(ctx, avatar, new ResultListener<BufferedImage>() {
             public void requestCompleted (BufferedImage base) {
-                BufferedImage cropped = base.getSubimage(
-                    0, 0, WIDTH, HEIGHT);
-                receiver.requestCompleted(
-                    new BImage(cropped.getScaledInstance(
-                                   WIDTH/reduction,
-                                   HEIGHT/reduction,
-                                   BufferedImage.SCALE_SMOOTH)));
+                BufferedImage cropped = base.getSubimage(0, 0, WIDTH, HEIGHT);
+                receiver.requestCompleted(new BImage(cropped.getScaledInstance(
+                                                         WIDTH/reduction, HEIGHT/reduction,
+                                                         BufferedImage.SCALE_SMOOTH)));
             }
             public void requestFailed (Exception cause) {
                 receiver.requestFailed(cause);
@@ -97,8 +91,7 @@ public class AvatarView extends BLabel
     }
 
     /**
-     * Obtains and scales an image for the specified avatar. The source image
-     * will be cached.
+     * Obtains and scales an image for the specified avatar. The source image will be cached.
      */
     public static void getImage (
         BasicContext ctx, int[] avatar, final int width, final int height,
@@ -106,8 +99,7 @@ public class AvatarView extends BLabel
     {
         getImage(ctx, avatar, new ResultListener<BufferedImage>() {
             public void requestCompleted (BufferedImage base) {
-                Image scaled = base.getScaledInstance(
-                    width, height, BufferedImage.SCALE_SMOOTH);
+                Image scaled = base.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH);
                 if (mirror) {
                     receiver.requestCompleted(new BImage(scaled) {
                         public void setTextureCoords (
@@ -130,9 +122,8 @@ public class AvatarView extends BLabel
     }
 
     /**
-     * Gets an unscaled image for the specified avatar, retrieving an existing
-     * image from the cache if possible but otherwise creating and caching the
-     * image.
+     * Gets an unscaled image for the specified avatar, retrieving an existing image from the cache
+     * if possible but otherwise creating and caching the image.
      */
     public static void getImage (
         BasicContext ctx, int[] avatar, ResultListener<BufferedImage> receiver)
@@ -158,11 +149,11 @@ public class AvatarView extends BLabel
     /**
      * Creates a view that can be used to display avatar images.
      *
-     * @param scale the image will be one over this value times the "natural"
-     * size of the avatar imagery. This should be at least 2.
+     * @param scale the image will be one over this value times the "natural" size of the avatar
+     * imagery. This should be at least 2.
      * @param framed whether to render a frame around the avatar image.
-     * @param named whether to display a banner containing the name of the
-     * avatar (which is set with {@link #setHandle}).
+     * @param named whether to display a banner containing the name of the avatar (which is set
+     * with {@link #setHandle}).
      */
     public AvatarView (BasicContext ctx, int scale,
                        boolean framed, boolean named)
@@ -193,8 +184,7 @@ public class AvatarView extends BLabel
             phei = HEIGHT/scale;
         }
 
-        // if we're going to display a name, load up the appropriate name
-        // banner image
+        // if we're going to display a name, load up the appropriate name banner image
         if (named) {
             String type = null;
             switch (scale) {
@@ -214,17 +204,17 @@ public class AvatarView extends BLabel
     }
 
     /**
-     * Configures the handle of the avatar we're viewing. This will also
-     * activate the player popup menu.
+     * Configures the handle of the avatar we're viewing. This will also activate the player popup
+     * menu.
      */
     public void setHandle (Handle handle)
     {
-        setHandle(_handle, _handle.toString());
+        setHandle(handle, handle.toString());
     }
 
     /**
-     * Configures the handle of the avatar we're viewing and potentially
-     * modified version of that handle for display.
+     * Configures the handle of the avatar we're viewing and potentially modified version of that
+     * handle for display.
      */
     public void setHandle (Handle handle, String displayHandle)
     {
@@ -233,8 +223,8 @@ public class AvatarView extends BLabel
     }
 
     /**
-     * Indicates whether to flip our avatar image around the y axis. This
-     * should be called before any call to {@link #setAvatar}.
+     * Indicates whether to flip our avatar image around the y axis. This should be called before
+     * any call to {@link #setAvatar}.
      *
      * <p>TODO: this doesn't currently work for framable images.
      */
@@ -271,8 +261,7 @@ public class AvatarView extends BLabel
     @Override // from BComponent
     public boolean dispatchEvent (BEvent event)
     {
-        // pop up a player menu if they click the mouse and we know who we're
-        // looking at
+        // pop up a player menu if they click the mouse and we know who we're looking at
         boolean handled = false;
         if (_handle != null && _ctx instanceof BangContext) {
             handled = PlayerPopupMenu.checkPopup(
