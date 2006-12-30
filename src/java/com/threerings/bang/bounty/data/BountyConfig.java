@@ -59,7 +59,7 @@ public class BountyConfig extends SimpleStreamableObject
         public String name;
 
         /** If true, the game's Big Shot is shown instead of the Outlaw before the game. */
-        public boolean preGameBigshot;
+        public boolean preGameBigShot;
 
         /** A (translated) quote shown before the bounty game. */
         public String preGameQuote;
@@ -77,7 +77,7 @@ public class BountyConfig extends SimpleStreamableObject
                 missing.add("name");
             }
             if (StringUtil.isBlank(preGameQuote)) {
-                missing.add("pre_game_quote");
+                missing.add("pregame_quote");
             }
             if (StringUtil.isBlank(failedQuote)) {
                 missing.add("failed_quote");
@@ -241,9 +241,9 @@ public class BountyConfig extends SimpleStreamableObject
             GameInfo info = new GameInfo();
             info.ident = game;
             info.name = props.getProperty(game + ".name", "");
-            info.preGameBigshot =
-                BangUtil.getBooleanProperty(which, props, game + ".big_shot_quote", false);
-            info.preGameQuote = props.getProperty(game + ".pre_game_quote");
+            info.preGameBigShot =
+                BangUtil.getBooleanProperty(which, props, game + ".bigshot_quote", false);
+            info.preGameQuote = props.getProperty(game + ".pregame_quote");
             info.failedQuote = props.getProperty(game + ".failed_quote");
             info.completedQuote = props.getProperty(game + ".completed_quote");
             info.validate(which);

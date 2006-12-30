@@ -3,9 +3,11 @@
 
 package com.threerings.bang.game.client;
 
+import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -41,11 +43,16 @@ public class PreGameBountyView extends SteelWindow
         _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(25));
 
         BContainer main = new BContainer(GroupLayout.makeHStretch().setGap(15));
-        OutlawView oview = new OutlawView(ctx, 1f);
-        main.add(oview, GroupLayout.FIXED);
-        oview.setOutlaw(ctx, bounty.outlawPrint, false);
+        if (bounty.getGame(gameId).preGameBigShot) {
+            main.add(new BigShotPortrait(ctx, config.teams.get(0).bigShot), GroupLayout.FIXED);
+        } else {
+            OutlawView oview = new OutlawView(ctx, 1f);
+            oview.setOutlaw(ctx, bounty.outlawPrint, false);
+            main.add(oview, GroupLayout.FIXED);
+        }
 
-        BContainer vert = new BContainer(GroupLayout.makeVStretch());
+        BContainer vert = new BContainer(
+            GroupLayout.makeVStretch().setOffAxisPolicy(GroupLayout.NONE));
         vert.add(new BLabel(ctx.xlate(GameCodes.GAME_MSGS, "m.bounty_pregame"),
                             "bounty_pregame_title"), GroupLayout.FIXED);
 
@@ -77,6 +84,31 @@ public class PreGameBountyView extends SteelWindow
     {
         super.wasRemoved();
         _ctrl.playerReadyFor(BangObject.SKIP_SELECT_PHASE);
+    }
+
+    protected static class BigShotPortrait extends BLabel
+    {
+        public BigShotPortrait (BangContext ctx, String bigShot) {
+            super("", "bigshot_portrait");
+            _frame = ctx.loadImage("ui/frames/small_frame.png");
+            setIcon(new ImageIcon(ctx.loadImage("units/" + bigShot + "/portrait.png")));
+            setPreferredSize(_frame.getWidth(), _frame.getHeight());
+        }
+
+        protected void wasAdded () {
+            super.wasAdded();
+            _frame.reference();
+        }
+        protected void wasRemoved () {
+            super.wasRemoved();
+            _frame.release();
+        }
+        protected void renderBorder (Renderer renderer) {
+            super.renderBorder(renderer);
+            _frame.render(renderer, 0, 0, _alpha);
+        }
+
+        protected BImage _frame;
     }
 
     protected BangController _ctrl;
