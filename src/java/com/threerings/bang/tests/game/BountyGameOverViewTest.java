@@ -19,6 +19,7 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 
 import com.threerings.bang.tests.TestApp;
@@ -76,6 +77,9 @@ public class BountyGameOverViewTest extends TestApp
         bangobj.awards = new Award[bangobj.players.length];
         bangobj.state = BangObject.GAME_OVER;
         bangobj.critStats = new StatSet();
+        bangobj.critStats.setStat(Stat.Type.CATTLE_RUSTLED, RandomUtil.getInt(10));
+        bangobj.critStats.setStat(Stat.Type.UNITS_LOST, 2);
+        bangobj.critStats.setStat(Stat.Type.BRAND_POINTS, 250);
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
             bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;

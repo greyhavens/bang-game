@@ -15,7 +15,7 @@ import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.avatar.client.AvatarView;
-import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
 
@@ -27,7 +27,7 @@ import static com.threerings.bang.Log.log;
 public class OutlawView extends BComponent
     implements ResultListener<BImage>
 {
-    public OutlawView (BangContext ctx, float scale)
+    public OutlawView (BasicContext ctx, float scale)
     {
         _scale = scale;
         _images = new BImage[] {
@@ -39,7 +39,7 @@ public class OutlawView extends BComponent
             null };
     }
 
-    public void setOutlaw (BangContext ctx, int[] print, boolean completed)
+    public void setOutlaw (BasicContext ctx, int[] print, boolean completed)
     {
         _completed = completed;
         if (Arrays.equals(print, _print)) {

@@ -1083,32 +1083,6 @@ card_icon {
   background: image "ui/pstatus/card_up.png" centerxy;
 }
 
-bounty_pregame {
-  padding: 15;
-}
-
-bounty_pregame_title {
-  parent: "label";
-  font: "Old Town Medium" plain 22;
-}
-
-bounty_pregame_crit {
-  parent: "label";
-  color: #FFFFFF;
-}
-
-bounty_pregame_quote {
-  parent: "label";
-  color: #6C421B;
-}
-
-bigshot_portrait {
-  padding: 5 10 5 10;
-  background: image "ui/frames/small_background.png" centerxy;
-  text-align: center;
-  vertical-align: bottom;
-}
-
 //
 // In-game styles
 
@@ -2087,9 +2061,39 @@ endgame_folks_help {
   font: "Dom Casual" plain 18;
   color: #766300;
 }
-  
+
 //
-// Bounty post-game stats display
+// Bounty styles
+
+bounty_title {
+  parent: "label";
+  font: "Old Town Medium" bold 22;
+}
+
+bounty_quote {
+  parent: "label";
+  color: #6C421B;
+}
+
+// Pre-game view
+
+bounty_pregame {
+  padding: 15;
+}
+
+bounty_pregame_crit {
+  parent: "label";
+  color: #FFFFFF;
+}
+
+bigshot_portrait {
+  padding: 5 10 5 10;
+  background: image "ui/frames/small_background.png" centerxy;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+// Post-game view
 
 bover_contents {
   padding: 30;
@@ -2114,6 +2118,11 @@ bover_crit {
 bover_rcrit {
   parent: "bover_crit";
   text-align: right;
+}
+
+bover_game {
+  font: "Dom Casual" plain 18;
+  color: #652708;
 }
 
 bover_result {

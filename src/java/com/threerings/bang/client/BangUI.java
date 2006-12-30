@@ -128,6 +128,12 @@ public class BangUI
     /** A right arrow icon. */
     public static BIcon rightArrow;
 
+    /** An icon indicating a list entry is completed. */
+    public static BIcon completed;
+
+    /** An icon indicating a list entry is incomplete. */
+    public static BIcon incomplete;
+
     /**
      * Configures the UI singleton with a context reference.
      */
@@ -180,6 +186,9 @@ public class BangUI
 
         leftArrow = new ImageIcon(ctx.loadImage("ui/icons/left_arrow.png"));
         rightArrow = new ImageIcon(ctx.loadImage("ui/icons/right_arrow.png"));
+
+        completed = new ImageIcon(ctx.loadImage("ui/tutorials/complete.png"));
+        incomplete = new ImageIcon(ctx.loadImage("ui/tutorials/incomplete.png"));
 
         // create our sound clip provider
         clipprov = new ClipProvider() {

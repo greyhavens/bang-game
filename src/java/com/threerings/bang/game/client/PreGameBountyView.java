@@ -53,8 +53,8 @@ public class PreGameBountyView extends SteelWindow
 
         BContainer vert = new BContainer(
             GroupLayout.makeVStretch().setOffAxisPolicy(GroupLayout.NONE));
-        vert.add(new BLabel(ctx.xlate(GameCodes.GAME_MSGS, "m.bounty_pregame"),
-                            "bounty_pregame_title"), GroupLayout.FIXED);
+        vert.add(new BLabel(ctx.xlate(GameCodes.GAME_MSGS, "m.bounty_pregame"), "bounty_title"),
+                 GroupLayout.FIXED);
 
         BContainer ccont = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER).
                                           setOffAxisJustification(GroupLayout.LEFT));
@@ -70,7 +70,7 @@ public class PreGameBountyView extends SteelWindow
         main.add(vert);
         _contents.add(main);
 
-        _contents.add(new BLabel(bounty.getGame(gameId).preGameQuote, "bounty_pregame_quote"));
+        _contents.add(new BLabel(bounty.getGame(gameId).preGameQuote, "bounty_quote"));
 
         _buttons.add(new BButton(ctx.xlate(GameCodes.GAME_MSGS, "m.ready"), new ActionListener() {
             public void actionPerformed (ActionEvent event) {

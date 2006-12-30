@@ -15,6 +15,7 @@ import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.PlayerObject;
@@ -35,8 +36,6 @@ public class BountyDetailView extends BContainer
     {
         super(new AbsoluteLayout());
         _ctx = ctx;
-        _comp = new ImageIcon(ctx.loadImage("ui/tutorials/complete.png"));
-        _incomp = new ImageIcon(ctx.loadImage("ui/tutorials/incomplete.png"));
 
         add(_oview = new OutlawView(ctx, 1f), new Point(55, 272));
         add(_reward = new BLabel("", "bounty_detail_reward"), new Point(263, 438));
@@ -85,7 +84,8 @@ public class BountyDetailView extends BContainer
             BContainer row = new BContainer(glay);
             String key = _config.getStatKey(game.ident);
             boolean completed = user.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED, key);
-            row.add(new BLabel(completed ? _comp : _incomp), GroupLayout.FIXED);
+            row.add(new BLabel(completed ? BangUI.completed : BangUI.incomplete),
+                    GroupLayout.FIXED);
             row.add(new BLabel(game.name));
             String pmsg = _ctx.xlate(OfficeCodes.OFFICE_MSGS, completed ? "m.replay" : "m.play");
             if (!noMorePlay) {
@@ -124,6 +124,4 @@ public class BountyDetailView extends BContainer
     protected OutlawView _oview;
     protected BLabel _reward, _title, _descrip;
     protected BContainer _games, _recent;
-
-    protected ImageIcon _comp, _incomp;
 }

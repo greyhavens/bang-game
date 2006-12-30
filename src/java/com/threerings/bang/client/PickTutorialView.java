@@ -9,10 +9,9 @@ import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
-import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
@@ -25,6 +24,8 @@ import com.threerings.bang.game.data.TutorialCodes;
 import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.util.TutorialUtil;
 
+import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
@@ -32,13 +33,10 @@ import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 
-import com.threerings.bang.client.util.ReportingListener;
-
 import static com.threerings.bang.Log.log;
 
 /**
- * Displays a list of completed and uncompleted tutorials and allows the user
- * to play and replay them.
+ * Displays a list of completed and uncompleted tutorials and allows the user to (re)play them.
  */
 public class PickTutorialView extends BDecoratedWindow
     implements ActionListener
@@ -49,16 +47,16 @@ public class PickTutorialView extends BDecoratedWindow
     /**
      * Creates the pick tutorial view.
      *
-     * @param completed the identifier for the just completed tutorial, or null
-     * if we're displaying this view from in town.
+     * @param completed the identifier for the just completed tutorial, or null if we're displaying
+     * this view from in town.
      */
     public PickTutorialView (BangContext ctx, Mode mode)
     {
         super(ctx.getStyleSheet(), null);
         setStyleClass("dialog_window");
-        setLayoutManager(GroupLayout.makeVert(
-                             GroupLayout.NONE, GroupLayout.CENTER,
-                             GroupLayout.NONE));
+        setLayoutManager(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.CENTER,
+                                              GroupLayout.NONE));
+        setPreferredSize(450, -1);
         ((GroupLayout)getLayoutManager()).setGap(25);
 
         _ctx = ctx;
@@ -84,11 +82,6 @@ public class PickTutorialView extends BDecoratedWindow
         add(new BLabel(_msgs.get(tmsg), "window_title"));
         add(new BLabel(_msgs.get(hmsg), "dialog_text"));
 
-        ImageIcon comp = new ImageIcon(
-            ctx.loadImage("ui/tutorials/complete.png"));
-        ImageIcon incomp = new ImageIcon(
-            ctx.loadImage("ui/tutorials/incomplete.png"));
-
         BContainer table = new BContainer(new TableLayout(2, 5, 15));
         add(table);
 
@@ -96,19 +89,18 @@ public class PickTutorialView extends BDecoratedWindow
         int townIdx = BangUtil.getTownIndex(self.townId);
         for (int ii = 0; ii < TutorialCodes.TUTORIALS[townIdx].length; ii++) {
             String tid = TutorialCodes.TUTORIALS[townIdx][ii];
-            ImageIcon icon;
+            BIcon icon;
             String btext;
             if (self.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED, tid)) {
-                icon = comp;
+                icon = BangUI.completed;
                 btext = "m.tut_replay";
             } else {
-                icon = incomp;
+                icon = BangUI.incomplete;
                 btext = "m.tut_play";
                 unplayed = true;
             }
 
-            BLabel tlabel = new BLabel(
-                _msgs.get("m.tut_" + tid), "tutorial_text");
+            BLabel tlabel = new BLabel(_msgs.get("m.tut_" + tid), "tutorial_text");
             tlabel.setIcon(icon);
             table.add(tlabel);
 
@@ -118,8 +110,7 @@ public class PickTutorialView extends BDecoratedWindow
 
             if (unplayed) {
                 tlabel.setEnabled(enabled);
-                // everything after the first unplayed tutorial is greyed out
-                enabled = false;
+                enabled = false; // everything after the first unplayed tutorial is greyed out
             }
         }
 
@@ -141,15 +132,14 @@ public class PickTutorialView extends BDecoratedWindow
     {
         String action = event.getAction();
         if (action.equals("dismiss")) {
-            BangPrefs.setDeclinedTutorials(_ctx.getUserObject());;
+            BangPrefs.setDeclinedTutorials(_ctx.getUserObject());
             _ctx.getBangClient().clearPopup(this, true);
             _ctx.getBangClient().checkShowIntro();
 
         } else if (action.startsWith("to_")) {
-            BangPrefs.setDeclinedTutorials(_ctx.getUserObject());;
+            BangPrefs.setDeclinedTutorials(_ctx.getUserObject());
             _ctx.getBangClient().clearPopup(this, true);
-            BangBootstrapData bbd = (BangBootstrapData)
-                _ctx.getClient().getBootstrapData();
+            BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
 
             if (action.equals("to_town")) {
                 _ctx.getLocationDirector().leavePlace();
@@ -167,12 +157,6 @@ public class PickTutorialView extends BDecoratedWindow
                 _ctx, BangCodes.BANG_MSGS, "m.start_tut_failed");
             psvc.playTutorial(_ctx.getClient(), action, rl);
         }
-    }
-
-    @Override // documentation inherited
-    protected Dimension computePreferredSize (int whint, int hhint)
-    {
-        return super.computePreferredSize(450, -1);
     }
 
     protected BangContext _ctx;
