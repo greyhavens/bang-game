@@ -36,12 +36,7 @@ public abstract class Criterion extends SimpleStreamableObject
     public abstract String getCurrentState (BangObject bangobj);
 
     /**
-     * Returns null if this criteron is met, a string explaining how it was missed if not.
+     * Returns true if this criteron is met, false if not.
      */
-    public abstract String isMet (BangObject bangobj);
-
-    /**
-     * Temporary debugging method for reporting the stats for a met criterion.
-     */
-    public abstract String reportMet (BangObject bangobj);
+    public abstract boolean isMet (BangObject bangobj);
 }

@@ -36,6 +36,7 @@ public class OutlawView extends BComponent
             ctx.getImageCache().getBImage("ui/office/sepia.png", scale, false),
             ctx.getImageCache().getBImage("ui/office/dark.png", scale, false),
             ctx.getImageCache().getBImage("ui/office/check.png", 1f, false), // not scaled
+            ctx.getImageCache().getBImage("ui/office/frame_bars.png", 1f, false), // not scaled
             null };
     }
 
@@ -78,14 +79,17 @@ public class OutlawView extends BComponent
         if (_images[AVATAR] != null) {
             _images[AVATAR].render(renderer, x, y + (int)(4*_scale), alpha);
         }
-        _images[FRAME].render(renderer, x, y, alpha);
-        if (_completed) {
-            _images[DARK].render(renderer, x, y, alpha * 0.6f);
+        if (_scale != 1f || !_completed) {
+            _images[FRAME].render(renderer, x, y, alpha);
         }
         if (_scale == 1f) {
-            _images[SEPIA].render(renderer, x, y, alpha * 0.3f);
-        }
-        if (_completed) {
+            if (_completed) {
+                _images[BARS].render(renderer, 0, 0, alpha);
+            } else {
+                _images[SEPIA].render(renderer, x, y, alpha * 0.3f);
+            }
+        } else if (_completed) {
+            _images[DARK].render(renderer, x, y, alpha * 0.6f);
             int ox = (_images[FRAME].getWidth() - _images[CHECK].getWidth()) + (int)(10*_scale);
             _images[CHECK].render(renderer, x+ox, y+(int)(8*_scale), alpha);
         }
@@ -144,5 +148,6 @@ public class OutlawView extends BComponent
     protected static final int SEPIA = 2;
     protected static final int DARK = 3;
     protected static final int CHECK = 4;
-    protected static final int AVATAR = 5;
+    protected static final int BARS = 5;
+    protected static final int AVATAR = 6;
 }

@@ -15,6 +15,7 @@ import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BWindow;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
@@ -159,7 +160,7 @@ public class BangController extends GameController
         // we'll use this one at the end of the game
         _postRoundMultex = new Multex(new Runnable() {
             public void run () {
-                _ctx.getBangClient().displayPopup(_statsView, true);
+                displayStatsView();
             }
         }, 2);
 
@@ -519,17 +520,6 @@ public class BangController extends GameController
         }
     }
 
-    protected void storeStats ()
-    {
-        // keep the stats for this round around for later
-        _statMap.put(_bangobj.roundId, _bangobj.stats);
-        // create our stats view now that we have our stats; we'll hold off on showing it until
-        // both post-round conditions have been met
-        _statsView = _bangobj.scenario.getStatsView(_ctx);
-        _statsView.init(BangController.this, _bangobj, true);
-        _postRoundMultex.satisfied(Multex.CONDITION_TWO);
-    }
-
     @Override // documentation inherited
     protected PlaceView createPlaceView (CrowdContext ctx)
     {
@@ -759,6 +749,35 @@ public class BangController extends GameController
         if (alert && _view.ustatus != null) {
             _view.ustatus.orderInvalidated(unitId, targetId);
         }
+    }
+
+    /**
+     * Called when our end of round stats are received on the game object.
+     */
+    protected void storeStats ()
+    {
+        // keep the stats for this round around for later
+        _statMap.put(_bangobj.roundId, _bangobj.stats);
+        // create our stats view now that we have our stats; we'll hold off on showing it until
+        // both post-round conditions have been met
+        _statsView = _bangobj.scenario.getStatsView(_ctx);
+        _statsView.init(BangController.this, _bangobj, true);
+        _postRoundMultex.satisfied(Multex.CONDITION_TWO);
+    }
+
+    /**
+     * Called to display the appropriate end of round (or game) display.
+     */
+    protected void displayStatsView ()
+    {
+        BWindow view;
+        if (_config.type == BangConfig.Type.BOUNTY) {
+            view = new BountyGameOverView(_ctx, BountyConfig.getBounty(_bangobj.bountyInfo[0]),
+                                          _bangobj.bountyInfo[1], _config, _bangobj);
+        } else {
+            view = _statsView;
+        }
+        _ctx.getBangClient().displayPopup(view, true);
     }
 
     /**

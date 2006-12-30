@@ -1733,35 +1733,25 @@ public class BangManager extends GameManager
                                         TutorialCodes.PRACTICE_PREFIX + _bconfig.getScenario(0));
             }
 
-            // TEMP: if this game had bounty criterion report whether they were met (by player
-            // zero, who is the human player in a bounty game)
+            // determine whether this bounty game's criteria were met, and if so, whether the
+            // entire bounty is now completed
             if (_bconfig.type == BangConfig.Type.BOUNTY) {
                 int failed = 0;
                 for (Criterion crit : _bconfig.criteria) {
-                    String msg = crit.isMet(_bangobj);
-                    if (msg != null) {
+                    if (!crit.isMet(_bangobj)) {
                         failed++;
-                        SpeakProvider.sendAttention(_bangobj, GAME_MSGS, msg);
-                    } else {
-                        SpeakProvider.sendAttention(_bangobj, GAME_MSGS, crit.reportMet(_bangobj));
                     }
                 }
                 if (failed == 0) {
-                    SpeakProvider.sendAttention(_bangobj, GAME_MSGS, "m.all_criteria_met");
-
-                    if (_bounty != null) {
-                        user.stats.addToSetStat(Stat.Type.BOUNTY_GAMES_COMPLETED,
-                                                _bounty.getStatKey(_bangobj.bountyInfo[1]));
-                        if (!user.stats.containsValue(
-                                Stat.Type.BOUNTIES_COMPLETED, _bounty.ident) &&
-                            _bounty.isCompleted(user)) {
-                            completedBounty = true;
-                            user.stats.addToSetStat(Stat.Type.BOUNTIES_COMPLETED, _bounty.ident);
-                        }
+                    user.stats.addToSetStat(Stat.Type.BOUNTY_GAMES_COMPLETED,
+                                            _bounty.getStatKey(_bangobj.bountyInfo[1]));
+                    if (!user.stats.containsValue(Stat.Type.BOUNTIES_COMPLETED, _bounty.ident) &&
+                        _bounty.isCompleted(user)) {
+                        completedBounty = true;
+                        user.stats.addToSetStat(Stat.Type.BOUNTIES_COMPLETED, _bounty.ident);
                     }
                 }
             }
-            // END TEMP
         }
 
         // note the duration of the game (in minutes and seconds)

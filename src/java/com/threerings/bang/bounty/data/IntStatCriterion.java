@@ -56,15 +56,27 @@ public class IntStatCriterion extends Criterion
     }
 
     // from Criterion
-    public String isMet (BangObject bangobj)
+    public boolean isMet (BangObject bangobj)
     {
-        return createMessage(bangobj, "failed");
-    }
-
-    // from Criterion
-    public String reportMet (BangObject bangobj)
-    {
-        return createMessage(bangobj, "met");
+        int actual = (bangobj.critStats == null) ? 0 : bangobj.critStats.getIntStat(stat);
+        switch (condition) {
+        case LESS_THAN:
+            if (actual < value) {
+                return true;
+            }
+            break;
+        case EQUAL_TO:
+            if (actual == value) {
+                return true;
+            }
+            break;
+        case AT_LEAST:
+            if (actual >= value) {
+                return true;
+            }
+            break;
+        }
+        return false;
     }
 
     // from interface Savable
@@ -102,31 +114,5 @@ public class IntStatCriterion extends Criterion
     public String toString ()
     {
         return stat + " " + condition + " " + value;
-    }
-
-    protected String createMessage (BangObject bangobj, String type)
-    {
-        int actual = (bangobj.critStats == null) ? 0 : bangobj.critStats.getIntStat(stat);
-        switch (condition) {
-        case LESS_THAN:
-            if (type.equals("failed") && actual < value) {
-                return null;
-            }
-            break;
-        case EQUAL_TO:
-            if (type.equals("failed") && actual == value) {
-                return null;
-            }
-            break;
-        case AT_LEAST:
-            if (type.equals("failed") && actual >= value) {
-                return null;
-            }
-            break;
-        }
-        String msg = MessageBundle.compose("m." + condition.toString().toLowerCase() + "_" + type,
-                                           stat.key(), MessageBundle.taint(String.valueOf(value)),
-                                           MessageBundle.taint(String.valueOf(actual)));
-        return MessageBundle.qualify(OfficeCodes.OFFICE_MSGS, msg);
     }
 }

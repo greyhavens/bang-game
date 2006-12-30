@@ -2139,6 +2139,6 @@ bover_failed_result {
 
 bover_overall {
   parent: "bover_result";
-  font: "Dom Casual" plain 48;
+  font: "Dom Casual" plain 42;
   text-align: center;
 }
