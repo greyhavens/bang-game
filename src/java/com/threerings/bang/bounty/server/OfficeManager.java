@@ -20,6 +20,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.server.BangServer;
@@ -133,7 +134,19 @@ public class OfficeManager extends PlaceManager
         if (!player.tokens.isSupport()) {
             throw new InvocationException(ACCESS_DENIED);
         }
-        startBountyGame(player, null, null, config);
+
+        // create a fake bounty config
+        BountyConfig bounty = new BountyConfig();
+        bounty.reward = new BountyConfig.Reward();
+        bounty.reward.scrip = 100;
+        BountyConfig.GameInfo info = new BountyConfig.GameInfo();
+        info.ident = "test";
+        info.preGameQuote = "Do you want to play a game?";
+        info.failedQuote = "All your base are belong to us.";
+        info.completedQuote = "Only now in this dark hour do I see the folly of guns.";
+        bounty.games.add(info);
+
+        startBountyGame(player, bounty, "test", config);
     }
 
     protected void startBountyGame (PlayerObject player, BountyConfig bounty, String gameId,
@@ -151,6 +164,15 @@ public class OfficeManager extends PlaceManager
         gconfig.players[0] = player.getVisibleName();
         for (int ii = 1; ii < gconfig.players.length; ii++) {
             BangAI ai = BangAI.createAI(1, 50, names);
+            if (ii == 1) {
+                if (bounty.title == null) { // we're in a test game
+                    bounty.title = ai.handle.toString();
+                    bounty.outlawPrint = ai.avatar;
+                } else {
+                    ai.handle = new Handle(bounty.title);
+                    ai.avatar = bounty.outlawPrint;
+                }
+            }
             gconfig.players[ii] = ai.handle;
             gconfig.ais[ii] = ai;
         }

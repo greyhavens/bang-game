@@ -72,6 +72,9 @@ public class BangView extends BWindow
     /** Our unit status view. */
     public UnitStatusView ustatus;
 
+    /** Displays bounty criteria. */
+    public InGameBountyView critview;
+
     /** Creates the main panel and its sub-interfaces. */
     public BangView (BangContext ctx, BangController ctrl)
     {
@@ -328,9 +331,9 @@ public class BangView extends BWindow
             _ctx.getRootNode().removeWindow(_oview);
             _oview = null;
         }
-        if (_critview != null) {
-            _ctx.getRootNode().removeWindow(_critview);
-            _critview = null;
+        if (critview != null) {
+            _ctx.getRootNode().removeWindow(critview);
+            critview = null;
         }
     }
 
@@ -544,12 +547,12 @@ public class BangView extends BWindow
 
     protected void showBountyCriteria ()
     {
-        if (_critview == null) {
-            _critview = new InGameBountyView(_ctx, (BangConfig)_ctrl.getPlaceConfig(), _bangobj);
-            _ctx.getRootNode().addWindow(_critview);
-            _critview.pack();
+        if (critview == null) {
+            critview = new InGameBountyView(_ctx, (BangConfig)_ctrl.getPlaceConfig(), _bangobj);
+            _ctx.getRootNode().addWindow(critview);
+            critview.pack();
             _ctx.getInterface().attachChild(
-                new WindowSlider(_critview, WindowSlider.FROM_TOP_STICKY, 1f, 0, 15));
+                new WindowSlider(critview, WindowSlider.FROM_TOP_STICKY, 1f, 0, 15));
         }
     }
 
@@ -638,9 +641,6 @@ public class BangView extends BWindow
 
     /** Displays the end of round timer. */
     protected RoundTimerView _timer;
-
-    /** Displays bounty criteria. */
-    protected InGameBountyView _critview;
 
     /** Displays a giant end practice button. */
     protected PracticeView _practiceView;

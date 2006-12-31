@@ -31,12 +31,12 @@ public abstract class Criterion extends SimpleStreamableObject
     /**
      * Returns the current state of this criterion (the value of the underlying statistic or
      * related bit of information). This is called throughout the game after each tick and as stats
-     * are updated.
+     * are updated. The returned value will be translated.
      */
-    public abstract String getCurrentState (BangObject bangobj);
+    public abstract String getCurrentState (BangObject bangobj, int rank);
 
     /**
      * Returns true if this criteron is met, false if not.
      */
-    public abstract boolean isMet (BangObject bangobj);
+    public abstract boolean isMet (BangObject bangobj, int rank);
 }

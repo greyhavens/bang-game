@@ -56,6 +56,15 @@ public class BountyGameOverView extends SteelWindow
         _user = user;
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
+        // locate our award
+        int pidx = _bangobj.getPlayerIndex(_user.getVisibleName());
+        for (Award award : _bangobj.awards) {
+            if (pidx == award.pidx) {
+                _award = award;
+                break;
+            }
+        }
+
         // start off with the game details
         displayDetails(true);
     }
@@ -109,10 +118,11 @@ public class BountyGameOverView extends SteelWindow
         int row = _failed = 0;
         for (Criterion crit : _gconfig.criteria) {
             _stats.add(new BLabel(_msgs.xlate(crit.getDescription()), "bover_crit"));
-            _stats.add(new BLabel(crit.getCurrentState(_bangobj), "bover_rcrit"));
+            _stats.add(new BLabel(_msgs.xlate(crit.getCurrentState(_bangobj, _award.rank)),
+                                  "bover_rcrit"));
             _stats.add(new BLabel(_msgs.get("m.bover_equals"), "bover_result"));
             String result = "complete", style = "bover_result";
-            if (!crit.isMet(_bangobj)) {
+            if (!crit.isMet(_bangobj, _award.rank)) {
                 _failed++;
                 result = "failed";
                 style = "bover_failed_result";
@@ -185,13 +195,7 @@ public class BountyGameOverView extends SteelWindow
         _contents.add(horiz);
 
         if (completed) {
-            // locate and display our award
-            int pidx = _bangobj.getPlayerIndex(_user.getVisibleName());
-            for (Award award : _bangobj.awards) {
-                if (pidx == award.pidx) {
-                    _contents.add(new AwardView(_ctx, _gconfig, _user, award));
-                }
-            }
+            _contents.add(new AwardView(_ctx, _gconfig, _user, _award));
         } else {
             msg = gfailed ? info.failedQuote : info.completedQuote;
             _contents.add(new BLabel(msg, "bounty_quote"));
@@ -255,6 +259,7 @@ public class BountyGameOverView extends SteelWindow
     protected BangConfig _gconfig;
     protected BangObject _bangobj;
     protected PlayerObject _user;
+    protected Award _award;
 
     protected MessageBundle _msgs;
 

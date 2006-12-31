@@ -50,13 +50,13 @@ public class IntStatCriterion extends Criterion
     }
 
     // from Criterion
-    public String getCurrentState (BangObject bangobj)
+    public String getCurrentState (BangObject bangobj, int rank)
     {
-        return String.valueOf(bangobj.critStats.getIntStat(stat));
+        return MessageBundle.taint(String.valueOf(bangobj.critStats.getIntStat(stat)));
     }
 
     // from Criterion
-    public boolean isMet (BangObject bangobj)
+    public boolean isMet (BangObject bangobj, int rank)
     {
         int actual = (bangobj.critStats == null) ? 0 : bangobj.critStats.getIntStat(stat);
         switch (condition) {

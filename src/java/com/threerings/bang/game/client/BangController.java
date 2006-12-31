@@ -659,8 +659,8 @@ public class BangController extends GameController
         if (_config.type == BangConfig.Type.BOUNTY) {
             // display our bounty criterion
             _ctx.getBangClient().displayPopup(
-                new PreGameBountyView(_ctx, this, BountyConfig.getBounty(_bangobj.bountyInfo[0]),
-                                      _bangobj.bountyInfo[1], _config), true, 400);
+                new PreGameBountyView(_ctx, this, _bangobj.bounty, _bangobj.bountyGameId, _config),
+                true, 400);
 
         } else if (_config.type != BangConfig.Type.SALOON || _config.allPlayersAIs()) {
             // since we're not selecting anything, let the server know that we're ready
@@ -772,9 +772,8 @@ public class BangController extends GameController
     {
         BWindow view;
         if (_config.type == BangConfig.Type.BOUNTY) {
-            view = new BountyGameOverView(
-                _ctx, BountyConfig.getBounty(_bangobj.bountyInfo[0]), _bangobj.bountyInfo[1],
-                _config, _bangobj, _ctx.getUserObject());
+            view = new BountyGameOverView(_ctx, _bangobj.bounty, _bangobj.bountyGameId,
+                                          _config, _bangobj, _ctx.getUserObject());
         } else {
             view = _statsView;
         }
@@ -820,6 +819,10 @@ public class BangController extends GameController
             for (int ii = 0; ii < _bangobj.points.length; ii++) {
                 if (_bangobj.points[ii] == spoints[rr]) {
                     _view.pstatus[ii].setRank(rank);
+                    // update our criteria view if one is showing
+                    if (ii == 0 && _view.critview != null) {
+                        _view.critview.setRank(rank);
+                    }
                 }
             }
         }

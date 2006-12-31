@@ -176,7 +176,6 @@ public class BountyConfig extends SimpleStreamableObject
             if (info.ident.equals(game)) {
                 return info;
             }
-            System.err.println(game + " != " + info.ident);
         }
         return null;
     }

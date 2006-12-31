@@ -77,7 +77,8 @@ public class OutlawView extends BComponent
     {
         _images[BACKGROUND].render(renderer, x, y, alpha);
         if (_images[AVATAR] != null) {
-            _images[AVATAR].render(renderer, x, y + (int)(4*_scale), alpha);
+            int offset = (int)(4*_scale);
+            _images[AVATAR].render(renderer, x + offset, y + offset, alpha);
         }
         if (_scale != 1f || !_completed) {
             _images[FRAME].render(renderer, x, y, alpha);

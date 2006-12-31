@@ -62,6 +62,13 @@ public class InGameBountyView extends BWindow
         bangobj.addListener(this);
     }
 
+    public void setRank (int rank)
+    {
+        System.err.println("Setting rank " + rank);
+        _rank = rank;
+        updateCurrent();
+    }
+
     // from interface AttributeChangeListener
     public void attributeChanged (AttributeChangedEvent event)
     {
@@ -108,13 +115,15 @@ public class InGameBountyView extends BWindow
     {
         int idx = 0;
         for (Criterion crit : _config.criteria) {
-            _current[idx++].setText(crit.getCurrentState(_bangobj));
+            _current[idx++].setText(
+                _ctx.xlate(GameCodes.GAME_MSGS, crit.getCurrentState(_bangobj, _rank)));
         }
     }
 
     protected BangContext _ctx;
     protected BangConfig _config;
     protected BangObject _bangobj;
+    protected int _rank;
 
     protected BLabel[] _current;
 }
