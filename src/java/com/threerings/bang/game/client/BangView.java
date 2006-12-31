@@ -97,14 +97,12 @@ public class BangView extends BWindow
     }
     
     /**
-     * Configures the interface for the specified phase. If the main game
-     * display has not yet been configured, this will trigger that
-     * configuration as well.
+     * Configures the interface for the specified phase. If the main game display has not yet been
+     * configured, this will trigger that configuration as well.
      */
     public boolean setPhase (int phase)
     {
-        // if we're not added to the UI hierarchy yet, we need to hold off a
-        // moment
+        // if we're not added to the UI hierarchy yet, we need to hold off a moment
         if (!isAdded() || _preparing) {
             _pendingPhase = phase;
             return false;
@@ -119,9 +117,8 @@ public class BangView extends BWindow
             clearOverlay();
         }
 
-        // we call this at the beginning of each phase because the scenario
-        // might decide to skip the selection or buying phase, so we need to
-        // prepare prior to starting whichever phase is first
+        // we call this at the beginning of each phase because the scenario might decide to skip
+        // the selection phase, so we need to prepare prior to starting whichever phase is first
         if (!_prepared && !prepareForRound(config, pidx)) {
             _pendingPhase = phase;
             return false; // will be called again when preparation is finished
@@ -198,17 +195,16 @@ public class BangView extends BWindow
     }
 
     /**
-     * Returns the number of pixels in the y direction that a window should be
-     * moved up so that it appears centered above the player status views.
+     * Returns the number of pixels in the y direction that a window should be moved up so that it
+     * appears centered above the player status views.
      */
     public int getCenterOffset ()
     {
         if (pstatus == null || pstatus[0] == null || !pstatus[0].isAdded()) {
             return 0;
         } else {
-            // offset by half the height of the player status views which we'd
-            // just get from the view themselves but they tend not to be laid
-            // out when we need this information
+            // offset by half the height of the player status views which we'd just get from the
+            // view themselves but they tend not to be laid out when we need this information
             return (5+70)/2;
         }
     }
@@ -216,15 +212,13 @@ public class BangView extends BWindow
     /**
      * Animates a card played either on a player or on the entire board.
      *
-     * @param pidx the index of the card's target, or -1 for the entire
-     * board
+     * @param pidx the index of the card's target, or -1 for the entire board
      */
     public void showCardPlayed (Card card, int pidx)
     {
-        final BWindow window = new BWindow(_ctx.getStyleSheet(),
-            new BorderLayout());
-        BLabel label = new BLabel(new ImageIcon(_ctx.loadImage(
-            card.getIconPath(pidx == -1 ? "card" : "icon"))));
+        final BWindow window = new BWindow(_ctx.getStyleSheet(), new BorderLayout());
+        BLabel label = new BLabel(
+            new ImageIcon(_ctx.loadImage(card.getIconPath(pidx == -1 ? "card" : "icon"))));
         if (pidx != -1) {
             label.setStyleClass(card.getStyle());
         }
@@ -236,20 +230,19 @@ public class BangView extends BWindow
             window.center();
         } else {
             window.setLocation(pstatus[pidx].getAbsoluteX() + 103,
-                pstatus[pidx].getAbsoluteY() + 15);
+                               pstatus[pidx].getAbsoluteY() + 15);
         }
-        final int ox = window.getX(), oy = window.getY(),
-            height = (pidx == -1) ? 200 : 100;
+        final int ox = window.getX(), oy = window.getY(), height = (pidx == -1) ? 200 : 100;
         _ctx.getRootNode().addController(new Controller() {
             public void update (float time) {
-                if ((_elapsed += time) >= CARD_FALL_DURATION +
-                    CARD_LINGER_DURATION + CARD_FADE_DURATION) {
+                if ((_elapsed += time) >= CARD_FALL_DURATION + CARD_LINGER_DURATION +
+                    CARD_FADE_DURATION) {
                     _ctx.getRootNode().removeWindow(window);
                     _ctx.getRootNode().removeController(this);
                 } else if (_elapsed >= CARD_FALL_DURATION +
                     CARD_LINGER_DURATION) {
-                    window.setAlpha(1f - (_elapsed - CARD_FALL_DURATION -
-                        CARD_LINGER_DURATION) / CARD_FADE_DURATION);
+                    window.setAlpha(1f - (_elapsed - CARD_FALL_DURATION - CARD_LINGER_DURATION) /
+                                    CARD_FADE_DURATION);
                 } else if (_elapsed >= CARD_FALL_DURATION) {
                     window.setAlpha(1f);
                     window.setLocation(ox, oy);
@@ -259,7 +252,7 @@ public class BangView extends BWindow
                     window.setLocation(ox, oy + (int)(height * (1f - alpha)));
                 }
             }
-            float _elapsed;
+            protected float _elapsed;
         });
     }
     
@@ -276,17 +269,14 @@ public class BangView extends BWindow
 
         // create the windows and the player status views
         for (int ii = 0; ii < pcount; ii++) {
-            _pswins[ii] = new BWindow(
-                _ctx.getStyleSheet(), GroupLayout.makeHStretch());
+            _pswins[ii] = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeHStretch());
             _pswins[ii].setLayer(1);
             _pswins[ii].setStyleClass("player_status_win");
-            pstatus[ii] = new PlayerStatusView(
-                _ctx, _bangobj, config, _ctrl, ii);
+            pstatus[ii] = new PlayerStatusView(_ctx, _bangobj, config, _ctrl, ii);
         }
 
         // then put the status views in windows, always putting ours leftmost
-        int idx = 0, pidx = _bangobj.getPlayerIndex(
-            _ctx.getUserObject().getVisibleName());
+        int idx = 0, pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().getVisibleName());
         if (pidx > -1) {
             _pswins[idx++].add(pstatus[pidx]);
         }
@@ -451,8 +441,8 @@ public class BangView extends BWindow
         }
         _bangobj.props = props.toArray(new Prop[props.size()]);
         
-        // if we arrived in the middle of the game, the pieces will already be
-        // configured; otherwise start with the ones provided by the board
+        // if we arrived in the middle of the game, the pieces will already be configured;
+        // otherwise start with the ones provided by the board
         if (_bangobj.state != BangObject.IN_PLAY) {
             _bangobj.pieces = new ModifiableDSet<Piece>(pieces.iterator());
             for (Piece update : _bangobj.boardUpdates) {
@@ -460,16 +450,12 @@ public class BangView extends BWindow
             }
         }
 
-        // tell the board view to start the game so that we can see the board
-        // while we're buying pieces
+        // tell the board view to start the game so that we can see the board during selection
         view.prepareForRound(_bangobj, config, pidx);
 
-        // let the camera and input handlers know that we're getting ready to
-        // start
-        ((GameCameraHandler)_ctx.getCameraHandler()).prepareForRound(
-            this, _bangobj);
-        ((GameInputHandler)_ctx.getInputHandler()).prepareForRound(
-            this, _bangobj);
+        // let the camera and input handlers know that we're getting ready to start
+        ((GameCameraHandler)_ctx.getCameraHandler()).prepareForRound(this, _bangobj);
+        ((GameInputHandler)_ctx.getInputHandler()).prepareForRound(this, _bangobj);
 
         // note that we've prepared
         _prepared = true;
@@ -512,12 +498,10 @@ public class BangView extends BWindow
     protected void showRoundTimer ()
     {
         if (!_timer.isAdded()) {
-            int height = _ctx.getDisplay().getHeight();
-            int width = _ctx.getDisplay().getWidth();
+            int height = _ctx.getDisplay().getHeight(), width = _ctx.getDisplay().getWidth();
             _ctx.getRootNode().addWindow(_timer);
             _timer.pack();
-            _timer.setLocation(
-                    width - _timer.getWidth(), height - _timer.getHeight());
+            _timer.setLocation(width - _timer.getWidth(), height - _timer.getHeight());
         }
     }
 
@@ -538,10 +522,9 @@ public class BangView extends BWindow
             _ctx.getRootNode().addWindow(_practiceView);
             _practiceView.pack();
             log.info("practice view [height=" + _practiceView.getHeight() +
-                    ", width=" + _practiceView.getWidth() + "].");
+                     ", width=" + _practiceView.getWidth() + "].");
             _practiceView.setLocation(
-                (_ctx.getDisplay().getWidth() - _practiceView.getWidth())/2,
-                10);
+                (_ctx.getDisplay().getWidth() - _practiceView.getWidth())/2, 10);
         }
     }
 
@@ -578,8 +561,8 @@ public class BangView extends BWindow
         }
     }
 
-    /** Used to track FPS throughout a round and report it to the server at the
-     * round's completion. */
+    /** Used to track FPS throughout a round and report it to the server at the round's
+     * completion. */
     protected class PerformanceTracker extends Interval
     {
         public PerformanceTracker () {
@@ -605,19 +588,18 @@ public class BangView extends BWindow
                 String driver = GL11.glGetString(GL11.GL_VENDOR) + ", " +
                     GL11.glGetString(GL11.GL_RENDERER) + ", " +
                     GL11.glGetString(GL11.GL_VERSION);
-                _bangobj.service.reportPerformance(
-                    _ctx.getClient(), _boardId, driver, histo);
+                _bangobj.service.reportPerformance(_ctx.getClient(), _boardId, driver, histo);
             }
             
-            // if more than half of the samples are below 20 fps, recommend
-            // lowering the detail level
+            // if more than half of the samples are below 20 fps, recommend lowering the detail
+            // level
             int[] buckets = _perfhisto.getBuckets();
             int below = buckets[0] + buckets[1];
             if (below > _perfhisto.size()/2 && BangPrefs.isMediumDetail() &&
                 BangPrefs.shouldSuggestDetail()) {
                 _ctx.getBangClient().suggestLowerDetail();
             }
-            
+
             _perfhisto.clear();
             _boardId = null;
         }
@@ -654,16 +636,15 @@ public class BangView extends BWindow
     /** The Connecting window. */
     protected BDecoratedWindow _connecting;
 
-    /** Keeps track of whether we've prepared or are preparing for the current
-     * round. */
+    /** Keeps track of whether we've prepared or are preparing for the current round. */
     protected boolean _prepared, _preparing;
 
-    /** If we were requested to start a particular phase before we were added
-     * to the interface hierarchy, that will be noted here. */
+    /** If we were requested to start a particular phase before we were added to the interface
+     * hierarchy, that will be noted here. */
     protected int _pendingPhase = -1;
 
-    /** Takes periodic samples of our frames per second and reports them to the
-     * server at the end of the round. */
+    /** Takes periodic samples of our frames per second and reports them to the server at the end
+     * of the round. */
     protected PerformanceTracker _perftrack;
 
     /** The time it takes for a played card to fall into position. */

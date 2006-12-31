@@ -3,15 +3,16 @@
 
 package com.threerings.bang.game.client;
 
+import com.jme.system.DisplaySystem;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
-import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.ActionEvent;
-import com.samskivert.util.Interval;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
+import com.samskivert.util.Interval;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
@@ -74,6 +75,11 @@ public class BountyGameOverView extends SteelWindow
     {
         super.wasAdded();
 
+        // fade out the game music
+        if (_bctx != null) {
+            _bctx.getBangClient().fadeOutMusic(2f);
+        }
+
         // start up an interval that will show the results
         new Interval(_ctx.getApp()) {
             public void expired () {
@@ -88,7 +94,7 @@ public class BountyGameOverView extends SteelWindow
                                 BangUI.FeedbackSound.INVALID_ACTION);
                     schedule(POST_ANIM_DELAY);
                 } else {
-                    displayResults();
+                    displayResults(true);
                 }
             }
             protected int _rows = _stats.getComponentCount()/COLS, _row = 1;
@@ -143,12 +149,23 @@ public class BountyGameOverView extends SteelWindow
 
         // relayout and recenter the window if we're already showing
         if (isShowing()) {
-            pack();
-            center();
+            relayout();
         }
     }
 
-    protected void displayResults ()
+    /**
+     * Re-pack()s and recenters the window, preserving the non-center vertical centering (which
+     * accounts for the space used by the player status views).
+     */
+    protected void relayout ()
+    {
+        int oy = getY(), oheight = getHeight(); // preserve our funny vertical centering
+        pack();
+        int width = DisplaySystem.getDisplaySystem().getWidth();
+        setLocation((width-getWidth())/2, oy + (oheight-getHeight())/2);
+    }
+
+    protected void displayResults (boolean playMusic)
     {
         // note whether we've completed the entire bounty
         boolean gfailed = (_failed > 0), completed = !gfailed && _bounty.isCompleted(_user);
@@ -206,8 +223,14 @@ public class BountyGameOverView extends SteelWindow
         _buttons.add(new BButton(_msgs.get("m.to_office"), this, "to_office"));
 
         // relayout and recenter the window
-        pack();
-        center();
+        relayout();
+
+        // cue up our end of game riff (1st place for all completed, 2nd place for game won, 4th
+        // place for game lost)
+        int cueidx = completed ? 0 : (gfailed ? 3 : 1);
+        if (_bctx != null && playMusic) {
+            _bctx.getBangClient().queueMusic("frontier_town/post_game" + cueidx, false, 2f);
+        }
     }
 
     // documentation inherited from interface ActionListener
@@ -228,7 +251,7 @@ public class BountyGameOverView extends SteelWindow
             displayDetails(false);
 
         } else if (action.equals("results")) {
-            displayResults();
+            displayResults(false);
 
         } else if (action.startsWith("play_")) {
             final BButton play = (BButton)event.getSource();

@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.server.scenario;
 
+import com.threerings.presents.server.InvocationException;
+
 import com.threerings.bang.data.BonusConfig;
 import com.threerings.bang.data.Stat;
 
@@ -28,11 +30,14 @@ public class NuggetDelegate extends CounterDelegate
     }
 
     @Override // documentation inherited
-    public void roundDidEnd (BangObject bangobj)
+    public void roundWillStart (BangObject bangobj)
+        throws InvocationException
     {
-        // note each players' nugget related stats
+        super.roundWillStart(bangobj);
+
+        // start everyone off with the appropriate NUGGETS_CLAIMED stat
         for (Counter counter : _counters) {
-            bangobj.stats[counter.owner].incrementStat(Stat.Type.NUGGETS_CLAIMED, counter.count);
+            bangobj.stats[counter.owner].setStat(Stat.Type.NUGGETS_CLAIMED, counter.count);
         }
     }
 
@@ -114,6 +119,8 @@ public class NuggetDelegate extends CounterDelegate
             effect.init(unit);
             effect.claimId = counter.pieceId;
             _bangmgr.deployEffect(unit.owner, effect);
+            // update the owner of this claim's NUGGETS_CLAIMED stat
+            bangobj.stats[counter.owner].setStat(Stat.Type.NUGGETS_CLAIMED, counter.count);
         }
     }
 

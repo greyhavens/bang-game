@@ -131,28 +131,11 @@ public class CattleRustling extends Scenario
     }
 
     @Override // documentation inherited
-    public void roundDidEnd (BangObject bangobj)
-    {
-        super.roundDidEnd(bangobj);
-
-        // note rustled counts
-        Piece[] pieces = bangobj.getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii] instanceof Cow && pieces[ii].owner != -1) {
-                bangobj.stats[pieces[ii].owner].incrementStat(Stat.Type.CATTLE_RUSTLED, 1);
-            }
-        }
-
-        // TODO: update MOST_CATTLE during the round as cattle change hands
-    }
-
-    @Override // documentation inherited
-    public void recordStats (
-        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+    public void recordStats (BangObject bangobj, int gameTime, int pidx, PlayerObject user)
     {
         super.recordStats(bangobj, gameTime, pidx, user);
 
-        // record their cattle related stats
+        // propagate this player's cattle related stats into their permanent stat set
         user.stats.incrementStat(
             Stat.Type.CATTLE_RUSTLED, bangobj.stats[pidx].getIntStat(Stat.Type.CATTLE_RUSTLED));
         user.stats.maxStat(
@@ -175,12 +158,10 @@ public class CattleRustling extends Scenario
         int newOwner = -1;
         int minDist = MAX_OWNER_DISTANCE+1;
 
-        // if the cow currently has an owner, and that owner is within
-        // range, start with them as the new owner and only assign another
-        // player to be the owner if they are closer than this player
+        // if the cow currently has an owner, and that owner is within range, start with them as
+        // the new owner and only assign another player to be the owner if they are yet closer
         if (cow.owner != -1) {
-            int oldDist = cow.getDistance(_startSpots[cow.owner].x,
-                                          _startSpots[cow.owner].y);
+            int oldDist = cow.getDistance(_startSpots[cow.owner].x, _startSpots[cow.owner].y);
             if (oldDist <= MAX_OWNER_DISTANCE) {
                 newOwner = cow.owner;
                 minDist = oldDist;
@@ -223,17 +204,17 @@ public class CattleRustling extends Scenario
                 }
             }
             for (Counter counter : _counters) {
-                if (counter.count != _counts[counter.owner]) {
-                    _bangmgr.deployEffect(
-                        -1, CountEffect.changeCount(
-                            counter.pieceId, _counts[counter.owner]));
+                int cattle = _counts[counter.owner];
+                if (counter.count != cattle) {
+                    _bangmgr.deployEffect(-1, CountEffect.changeCount(counter.pieceId, cattle));
                 }
                 // you get points for your branded cows at each tick
-                int points = _counts[counter.owner] * 
-                    CattleRustlingInfo.POINTS_PER_BRAND;
-                bangobj.stats[counter.owner].incrementStat(
-                        Stat.Type.BRAND_POINTS, points); 
+                int points = cattle * CattleRustlingInfo.POINTS_PER_BRAND;
+                bangobj.stats[counter.owner].incrementStat(Stat.Type.BRAND_POINTS, points); 
                 bangobj.grantPoints(counter.owner, points);
+                // update this player's current cattle rustled stats
+                bangobj.stats[counter.owner].setStat(Stat.Type.CATTLE_RUSTLED, cattle);
+                bangobj.stats[counter.owner].maxStat(Stat.Type.MOST_CATTLE, cattle);
             }
         }
 

@@ -77,11 +77,10 @@ public abstract class CounterDelegate extends ScenarioDelegate
     protected abstract int pointsPerCounter ();
 
     /**
-     * Checks whether any counters should be incremented or decremented due to
-     * the specified unit which has just moved.
+     * Checks whether any counters should be incremented or decremented due to the specified unit
+     * which has just moved.
      */
-    protected abstract void checkAdjustedCounter (
-        BangObject bangobj, Unit unit);
+    protected abstract void checkAdjustedCounter (BangObject bangobj, Unit unit);
 
     /** A list of the active counters. */
     protected ArrayList<Counter> _counters = new ArrayList<Counter>();
