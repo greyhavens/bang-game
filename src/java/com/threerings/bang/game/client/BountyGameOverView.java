@@ -70,6 +70,41 @@ public class BountyGameOverView extends SteelWindow
         displayDetails(true);
     }
 
+    // documentation inherited from interface ActionListener
+    public void actionPerformed (ActionEvent event)
+    {
+        String action = event.getAction();
+        if (action.equals("to_town")) {
+            _bctx.getBangClient().clearPopup(this, true);
+            _bctx.getLocationDirector().leavePlace();
+            _bctx.getBangClient().showTownView();
+
+        } else if (action.equals("to_office")) {
+            _bctx.getBangClient().clearPopup(this, true);
+            BangBootstrapData bbd = (BangBootstrapData)_bctx.getClient().getBootstrapData();
+            _bctx.getLocationDirector().moveTo(bbd.officeOid);
+
+        } else if (action.equals("stats")) {
+            displayDetails(false);
+
+        } else if (action.equals("results")) {
+            displayResults(false);
+
+        } else if (action.startsWith("play_")) {
+            final BButton play = (BButton)event.getSource();
+            play.setEnabled(false);
+            PlayerService psvc = (PlayerService)
+                _bctx.getClient().requireService(PlayerService.class);
+            psvc.playBountyGame(_bctx.getClient(), _bounty.ident, action.substring(5),
+                                new PlayerService.InvocationListener() {
+                public void requestFailed (String cause) {
+                    _bctx.getChatDirector().displayFeedback(OfficeCodes.OFFICE_MSGS, cause);
+                    play.setEnabled(true);
+                }
+            });
+        }
+    }
+
     @Override // from BComponent
     protected void wasAdded ()
     {
@@ -153,18 +188,6 @@ public class BountyGameOverView extends SteelWindow
         }
     }
 
-    /**
-     * Re-pack()s and recenters the window, preserving the non-center vertical centering (which
-     * accounts for the space used by the player status views).
-     */
-    protected void relayout ()
-    {
-        int oy = getY(), oheight = getHeight(); // preserve our funny vertical centering
-        pack();
-        int width = DisplaySystem.getDisplaySystem().getWidth();
-        setLocation((width-getWidth())/2, oy + (oheight-getHeight())/2);
-    }
-
     protected void displayResults (boolean playMusic)
     {
         // note whether we've completed the entire bounty
@@ -233,39 +256,16 @@ public class BountyGameOverView extends SteelWindow
         }
     }
 
-    // documentation inherited from interface ActionListener
-    public void actionPerformed (ActionEvent event)
+    /**
+     * Re-pack()s and recenters the window, preserving the non-center vertical centering (which
+     * accounts for the space used by the player status views).
+     */
+    protected void relayout ()
     {
-        String action = event.getAction();
-        if (action.equals("to_town")) {
-            _bctx.getBangClient().clearPopup(this, true);
-            _bctx.getLocationDirector().leavePlace();
-            _bctx.getBangClient().showTownView();
-
-        } else if (action.equals("to_office")) {
-            _bctx.getBangClient().clearPopup(this, true);
-            BangBootstrapData bbd = (BangBootstrapData)_bctx.getClient().getBootstrapData();
-            _bctx.getLocationDirector().moveTo(bbd.officeOid);
-
-        } else if (action.equals("stats")) {
-            displayDetails(false);
-
-        } else if (action.equals("results")) {
-            displayResults(false);
-
-        } else if (action.startsWith("play_")) {
-            final BButton play = (BButton)event.getSource();
-            play.setEnabled(false);
-            PlayerService psvc = (PlayerService)
-                _bctx.getClient().requireService(PlayerService.class);
-            psvc.playBountyGame(_bctx.getClient(), _bounty.ident, action.substring(5),
-                                new PlayerService.InvocationListener() {
-                public void requestFailed (String cause) {
-                    _bctx.getChatDirector().displayFeedback(OfficeCodes.OFFICE_MSGS, cause);
-                    play.setEnabled(true);
-                }
-            });
-        }
+        int oy = getY(), oheight = getHeight(); // preserve our funny vertical centering
+        pack();
+        int width = DisplaySystem.getDisplaySystem().getWidth();
+        setLocation((width-getWidth())/2, oy + (oheight-getHeight())/2);
     }
 
     protected void setRowVisible (int row, boolean visible)
