@@ -660,7 +660,7 @@ public class BangController extends GameController
             // display our bounty criterion
             _ctx.getBangClient().displayPopup(
                 new PreGameBountyView(_ctx, this, _bangobj.bounty, _bangobj.bountyGameId, _config),
-                true, 400);
+                true);
 
         } else if (_config.type != BangConfig.Type.SALOON || _config.allPlayersAIs()) {
             // since we're not selecting anything, let the server know that we're ready

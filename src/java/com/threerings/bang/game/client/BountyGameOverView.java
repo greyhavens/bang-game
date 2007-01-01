@@ -47,6 +47,7 @@ public class BountyGameOverView extends SteelWindow
     {
         super(ctx, "");
         _contents.setStyleClass("bover_contents");
+        setPreferredSize(770, -1);
 
         _ctx = ctx;
         _bctx = (ctx instanceof BangContext) ? (BangContext)ctx : null;

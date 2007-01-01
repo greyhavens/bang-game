@@ -59,7 +59,6 @@ public class LandGrab extends Scenario
         }
         int loneClaimerIdx = -1;
         for (int ii = 0; ii < steads.length; ii++) {
-            bangobj.stats[ii].incrementStat(Stat.Type.STEADS_CLAIMED, steads[ii]);
             // check to see if one player alone holds all claimed claims
             if (steads[ii] > 0) {
                 loneClaimerIdx = (loneClaimerIdx == -1) ? ii : -2;

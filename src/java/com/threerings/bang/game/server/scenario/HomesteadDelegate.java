@@ -39,9 +39,8 @@ public class HomesteadDelegate extends ScenarioDelegate
     }
 
     /**
-     * Determines the starting spot for the specified player based on their
-     * most recently claimed homestead. Returns null if they control no
-     * homesteads.
+     * Determines the starting spot for the specified player based on their most recently claimed
+     * homestead. Returns null if they control no homesteads.
      */
     public Point getStartSpot (int pidx)
     {
@@ -69,9 +68,8 @@ public class HomesteadDelegate extends ScenarioDelegate
             }
         }
 
-        // create mappings from homestead "colors" (stored owners) to
-        // player indices.  the closest colored homestead to a player
-        // determines his color; if there are no colored homesteads,
+        // create mappings from homestead "colors" (stored owners) to player indices.  the closest
+        // colored homestead to a player determines his color; if there are no colored homesteads,
         // the closest unclaimed homestead is colored.
         int[] owners = new int[] { -1, -1, -1, -1 };
         for (int ii = 0; ii < bangobj.players.length; ii++) {
@@ -130,12 +128,16 @@ public class HomesteadDelegate extends ScenarioDelegate
     {
         super.roundWillStart(bangobj);
 
-        // grant points for initial homesteads
+        // grant points and stats for initial homesteads
+        int[] steads = new int[bangobj.players.length];
         for (Homestead stead : getHomesteads()) {
             if (stead.owner != -1) {
-                bangobj.grantPoints(stead.owner,
-                    LandGrabInfo.POINTS_PER_STEAD);
+                steads[stead.owner]++;
             }
+        }
+        for (int ii = 0; ii < steads.length; ii++) {
+            bangobj.grantPoints(ii, steads[ii] * LandGrabInfo.POINTS_PER_STEAD);
+            bangobj.stats[ii].setStat(Stat.Type.STEADS_CLAIMED, steads[ii]);
         }
     }
 
@@ -151,8 +153,7 @@ public class HomesteadDelegate extends ScenarioDelegate
             }
         }
         for (int ii = 0; ii < points.length; ii++) {
-            bangobj.stats[ii].incrementStat(
-                Stat.Type.STEAD_POINTS, points[ii]);
+            bangobj.stats[ii].incrementStat(Stat.Type.STEAD_POINTS, points[ii]);
             bangobj.grantPoints(ii, points[ii]);
         }
     }
@@ -176,11 +177,10 @@ public class HomesteadDelegate extends ScenarioDelegate
         // update the destroy count of the shooting player (if any)
         if (piece instanceof Homestead) {
             Homestead stead = (Homestead)piece;
-            bangobj.grantPoints(stead.previousOwner,
-                -LandGrabInfo.POINTS_PER_STEAD);
+            bangobj.grantPoints(stead.previousOwner, -LandGrabInfo.POINTS_PER_STEAD);
+            bangobj.stats[stead.previousOwner].incrementStat(Stat.Type.STEADS_CLAIMED, -1);
             if (shooter != -1) {
-                bangobj.stats[shooter].incrementStat(
-                    Stat.Type.STEADS_DESTROYED, 1);
+                bangobj.stats[shooter].incrementStat(Stat.Type.STEADS_DESTROYED, 1);
             }
         }
     }
@@ -200,8 +200,8 @@ public class HomesteadDelegate extends ScenarioDelegate
                 _bangmgr.deployEffect(claimer.owner, effect);
 
                 // grant this player points for the claimed homestead
-                bangobj.grantPoints(
-                    claimer.owner, LandGrabInfo.POINTS_PER_STEAD);
+                bangobj.grantPoints(claimer.owner, LandGrabInfo.POINTS_PER_STEAD);
+                bangobj.stats[claimer.owner].incrementStat(Stat.Type.STEADS_CLAIMED, 1);
 
                 // move this homestead to the end of the claims list
                 if (_claims != null) {
