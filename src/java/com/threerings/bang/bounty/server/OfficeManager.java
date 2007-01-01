@@ -164,7 +164,8 @@ public class OfficeManager extends PlaceManager
         gconfig.players[0] = player.getVisibleName();
         for (int ii = 1; ii < gconfig.players.length; ii++) {
             BangAI ai = BangAI.createAI(1, 50, names);
-            if (ii == 1) {
+            // the last AI is the outlaw
+            if (ii == gconfig.players.length-1) {
                 if (bounty.title == null) { // we're in a test game
                     bounty.title = ai.handle.toString();
                     bounty.outlawPrint = ai.avatar;
