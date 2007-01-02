@@ -13,7 +13,6 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.TableLayout;
-import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
@@ -34,14 +33,13 @@ public class SystemChatView extends BWindow
     implements ChatDisplay, ChatCodes, BangCodes
 {
     /**
-     * Returns a string describing the system attention level of the given
-     * message, or <code>null</code> for none.
+     * Returns a string describing the system attention level of the given message, or
+     * <code>null</code> for none.
      */
     public static String getAttentionLevel (ChatMessage msg)
     {
         if (msg instanceof UserMessage) {
-            return ((UserMessage)msg).mode == BROADCAST_MODE ?
-                "attention" : null;
+            return ((UserMessage)msg).mode == BROADCAST_MODE ? "attention" : null;
         }
         if (!(msg instanceof SystemMessage)) {
             return null;
@@ -55,7 +53,7 @@ public class SystemChatView extends BWindow
             return "info";
         }
     }
-    
+
     /**
      * Formats the given system message.
      */
@@ -68,41 +66,37 @@ public class SystemChatView extends BWindow
         return ctx.xlate(CHAT_MSGS, MessageBundle.tcompose(
             "m.broadcast_format", umsg.speaker, msg.message));
     }
-    
+
     public SystemChatView (BangContext ctx)
     {
         super(ctx.getStyleSheet(), new TableLayout(3, 20, 20));
         setStyleClass("system_chat_view");
         _ctx = ctx;
         _ctx.getChatDirector().addChatDisplay(this);
-        
-        setBounds(0, 0, ctx.getDisplay().getWidth(),
-                ctx.getDisplay().getHeight());
+        setBounds(0, 0, ctx.getDisplay().getWidth(), ctx.getDisplay().getHeight());
         setLayer(2);
     }
-    
+
     @Override // we never want the chat window to accept clicks
     public BComponent getHitComponent (int mx, int my) {
         return null;
     }
-    
+
     @Override // documentation inherited
     public boolean isOverlay ()
     {
         return true;
     }
-    
+
     // documentation inherited from interface ChatDisplay
     public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
-        if (alreadyDisplayed ||
-            !msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE)) {
+        if (alreadyDisplayed || !msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE)) {
             return false;
         }
 
         String level = getAttentionLevel(msg);
-        if (level == null ||
-            !_ctx.getBangClient().canDisplayPopup(MainView.Type.SYSTEM)) {
+        if (level == null || !_ctx.getBangClient().canDisplayPopup(MainView.Type.SYSTEM)) {
             return false;
         }
         if (!isAdded()) {
@@ -122,45 +116,37 @@ public class SystemChatView extends BWindow
             _ctx.getRootNode().removeController(_fctrl);
         }
     }
-    
+
     /** A label displaying a single message. */
     protected class MessageLabel extends BLabel
     {
         public MessageLabel (String text, String styleClass)
         {
             super(text, styleClass);
+            setPreferredSize(308, -1);
         }
-        
+
         /**
          * Updates the alpha value of this label.
          *
-         * @return true if the label is still showing, false if it has
-         * completely vanished
+         * @return true if the label is still showing, false if it has completely vanished
          */
         public boolean updateAlpha (float time)
         {
             if (_elapsed >= MESSAGE_LINGER_DURATION + MESSAGE_FADE_DURATION) {
                 _alpha = 0f;
             } else if (_elapsed > MESSAGE_LINGER_DURATION) {
-                _alpha  = 1f - (_elapsed - MESSAGE_LINGER_DURATION) /
-                    MESSAGE_FADE_DURATION;
+                _alpha  = 1f - (_elapsed - MESSAGE_LINGER_DURATION) / MESSAGE_FADE_DURATION;
             } else {
                 _alpha  = 1f;
             }
             _elapsed += time;
             return _alpha > 0f;
         }
-        
-        protected Dimension computePreferredSize (int whint, int hhint)
-        {
-            return super.computePreferredSize(308, hhint);
-        }
-        
+
         protected float _elapsed;
     }
-    
-    protected BangContext _ctx;
-    
+
     /** Fades out the labels on the screen. */
     protected Controller _fctrl = new Controller() {
         public void update (float time) {
@@ -174,10 +160,13 @@ public class SystemChatView extends BWindow
             }
         }
     };
-    
+
+    /** Giver of life and context. */
+    protected BangContext _ctx;
+
     /** The amount of time for which messages linger on the screen. */
     protected static final float MESSAGE_LINGER_DURATION = 10f;
-    
+
     /** The amount of time it takes for messages to fade out. */
     protected static final float MESSAGE_FADE_DURATION = 1f;
 }
