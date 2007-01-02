@@ -102,7 +102,9 @@ public class BangAdminManager
         }
 
         protected String getCustomRebootMessage () {
-            return null;
+            // for now we don't have auto-reboots, so let's not claim every hand scheduled reboot
+            // is a "regularly scheduled reboot"
+            return MessageBundle.taint("");
         }
     }
 
