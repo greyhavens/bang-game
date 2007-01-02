@@ -13,6 +13,7 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
 
@@ -120,10 +121,8 @@ public class SystemChatView extends BWindow
     /** A label displaying a single message. */
     protected class MessageLabel extends BLabel
     {
-        public MessageLabel (String text, String styleClass)
-        {
+        public MessageLabel (String text, String styleClass) {
             super(text, styleClass);
-            setPreferredSize(308, -1);
         }
 
         /**
@@ -131,8 +130,7 @@ public class SystemChatView extends BWindow
          *
          * @return true if the label is still showing, false if it has completely vanished
          */
-        public boolean updateAlpha (float time)
-        {
+        public boolean updateAlpha (float time) {
             if (_elapsed >= MESSAGE_LINGER_DURATION + MESSAGE_FADE_DURATION) {
                 _alpha = 0f;
             } else if (_elapsed > MESSAGE_LINGER_DURATION) {
@@ -144,6 +142,10 @@ public class SystemChatView extends BWindow
             return _alpha > 0f;
         }
 
+        protected Dimension computePreferredSize (int whint, int hhint) {
+            return super.computePreferredSize(308, hhint);
+        }
+
         protected float _elapsed;
     }
 
@@ -152,8 +154,7 @@ public class SystemChatView extends BWindow
         public void update (float time) {
             boolean anyShowing = false;
             for (int ii = 0, nn = getComponentCount(); ii < nn; ii++) {
-                anyShowing = anyShowing ||
-                    ((MessageLabel)getComponent(ii)).updateAlpha(time);
+                anyShowing = anyShowing || ((MessageLabel)getComponent(ii)).updateAlpha(time);
             }
             if (!anyShowing) {
                 clear();
