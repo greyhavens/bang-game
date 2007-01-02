@@ -4,6 +4,7 @@
 package com.threerings.bang.admin.server;
 
 import com.samskivert.util.Interval;
+import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.ObjectAccessException;
