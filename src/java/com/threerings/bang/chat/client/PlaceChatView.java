@@ -10,6 +10,7 @@ import com.threerings.crowd.chat.client.SpeakService;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.crowd.chat.data.TellFeedbackMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
 import com.threerings.bang.data.BangCodes;
@@ -120,8 +121,8 @@ public class PlaceChatView extends TabbedChatView
 
         if (msg instanceof UserMessage) {
             UserMessage umsg = (UserMessage)msg;
-            if (umsg.mode == ChatCodes.BROADCAST_MODE) {
-                return false; // we don't handle broadcast messages
+            if (umsg.mode == ChatCodes.BROADCAST_MODE || umsg instanceof TellFeedbackMessage) {
+                return false; // we don't handle broadcast messages or tell feedback
             } else {
                 _pchat.appendReceived(umsg);
                 return true;
