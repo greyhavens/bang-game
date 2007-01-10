@@ -1,4 +1,3 @@
-</div>
 
 <!-- Begin Instadia tracking script -->
 <!--<script type="text/javascript" src="/js/instadia/puzzlepirates.com_setup.js"></script>-->

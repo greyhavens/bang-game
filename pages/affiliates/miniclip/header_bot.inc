@@ -4,4 +4,3 @@
 </head>
 
 <body>
-<div id="mcContainer">

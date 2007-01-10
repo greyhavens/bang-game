@@ -1,6 +1,6 @@
 /* CONTAINERS */
 #top {
-  background-image: url("images/land_top.jpg");
+  background-image: url("../images/land_top.jpg");
   background-repeat: no-repeat;
   position: absolute;
   margin: 0px;
@@ -12,7 +12,7 @@
 }
 
 #bottom {
-  background-image: url("images/land_bottom.jpg");
+  background-image: url("../images/land_bottom.jpg");
   position: absolute;
   margin: 0px;
   padding:0px;
@@ -51,11 +51,11 @@
 }
 
 a#playnow { 
-  background-image: url("images/play.png"); 
+  background-image: url("../images/play.png"); 
   border: none;
 }
 
 a#playnow:hover { 
-  background-image: url("images/play_hover.png"); 
+  background-image: url("../images/play_hover.png"); 
   border: none;
 }

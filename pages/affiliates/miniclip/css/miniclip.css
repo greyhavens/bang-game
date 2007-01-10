@@ -4,31 +4,12 @@ body {
   background-color: #ffffff;
   margin: 0px;
   padding: 0px;
-  font-family:Verdana, Arial, Helvetica, sans-serif;
-  font-size:10px;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 10px;
 }
 
-a {
-  color: #333366;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-a:active, a:visited, a:hover { 
-  color: #336699; 
-}
-  
 img {
   border: none;
-}
-
-/* FONT STYLES */
-.footer {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 10px;
-  color: #2b64a5;
-}
-
-a.footer, a.footer:link, a.footer:visited, a.footer:hover, a.footer:active{
-  text-decoration: underline;
 }
 
 /* CONTAINERS */
@@ -36,134 +17,7 @@ a.footer, a.footer:link, a.footer:visited, a.footer:hover, a.footer:active{
   position: absolute;
   top: 0px;
   left: 0px;
-  margin: 0px;
-  padding:0px;
   width: 920px;
   height: 500px;
   overflow: hidden;
-}
-
-#mcContainer {
-  margin: 0px;
-  padding:0px;
-  width: 920px;
-  height:500px;
-  overflow: hidden;
-}
-
-#mcHeader {
-  background-image: url("/images/miniclip/header.jpg");
-  margin: 0px;
-  padding:0px;
-  width: 920px;
-  height: 90px;
-  overflow: hidden;
-}
-
-#mcContent1 {
-  background-image: url("/images/miniclip/mcContent1.jpg");
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  margin: 0px;
-  padding:0px;
-  width: 8px;
-  height: 370px;
-  background-color: #ffffff;
-  overflow: hidden;
-}
-
-#mcContent2 {
-  position: absolute;
-  top: 0px;
-  left: 8px;
-  margin: 0px;
-  padding:0px;
-  width: 904px;
-  height: 370px;
-  background-color: #edeefd;
-  overflow: hidden;
-}
-
-#mcContent3 {
-  position: absolute;
-  top: 0px;
-  left: 912px;
-  background-image: url("/images/miniclip/mcContent3.jpg");
-  margin: 0px;
-  padding:0px;
-  width: 8px;
-  height: 370px;
-  background-color: #ffffff;
-  overflow: hidden;
-}
-
-#mcFooter {
-  background-image: url("/images/miniclip/footer.jpg");
-  position: absolute;
-  top: 460px;
-  left: 0px;
-  margin: 0px;
-  padding:0px;
-  width: 920px;
-  height: 40px;
-  overflow: hidden;
-}
-
-#mcFooter1 a{
-  background-image: url("/images/miniclip/logo_pp.jpg");
-  background-repeat: no-repeat;
-  position: absolute;
-  top: 8px;
-  left: 20px;
-  margin: 0px;
-  padding:0px;
-  width: 54px;
-  height: 20px;
-  text-align: center;
-  text-decoration: none;
-}
-
-#mcFooter1 a i { 
-  visibility: hidden; 
-}
-
-a#puzzlepirates:hover { 
-  background-image: url("/images/miniclip/logo_pp.jpg"); 
-  border: none;
-}
-
-#mcFooter2 {
-  z-index: 20;
-  position: absolute;
-  top: 12px;
-  left: 80px;
-  margin: 0px;
-  padding:0px;
-  width: 760px;
-  height: 20px;
-  text-align: center;
-  
-}
-
-#mcFooter3 a {
-  background-image: url("/images/miniclip/logo_threerings.jpg");
-  background-repeat: no-repeat;
-  position: absolute;
-  top: 8px;
-  left: 850px;
-  margin: 0px;
-  padding:0px;
-  width: 45px;
-  height: 21px;
-  text-decoration: none;
-}
-
-#mcFooter3 a i { 
-  visibility: hidden; 
-}
-
-a#threerings:hover { 
-  background-image: url("/images/miniclip/logo_threerings.jpg"); 
-  border: none;
 }

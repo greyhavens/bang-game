@@ -1,10 +1,10 @@
 body {
-  background-image: url("images/launch_background.jpg");
+  background-image: url("../images/launch_background.jpg");
   background-repeat: no-repeat;
 }
 
 #launchtitle {
-  background-image: url("/images/miniclip/title_launch.gif");
+  background-image: url("../images/title_launch.gif");
   background-repeat: no-repeat;
   position: absolute;
   top: 110px;
@@ -38,7 +38,7 @@ body {
 }
 
 #towns a {
-  background-image: url("images/launch_towns.jpg");
+  background-image: url("../images/launch_towns.jpg");
   position: absolute;
   top: 170px;
   left: 510px;
@@ -47,7 +47,7 @@ body {
 }
 
 #screenshots a {
-  background-image: url("images/launch_screens.jpg");
+  background-image: url("../images/launch_screens.jpg");
   position: absolute;
   top: 170px;
   left: 710px;
