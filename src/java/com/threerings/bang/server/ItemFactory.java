@@ -13,6 +13,7 @@ import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Purse;
+import com.threerings.bang.data.Song;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.data.UnitPass;
 
@@ -97,6 +98,7 @@ public class ItemFactory
         registerItemClass(Article.class);
         registerItemClass(UnitPass.class);
         registerItemClass(TrainTicket.class);
+        registerItemClass(Song.class);
         // end of registeration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
     }
 

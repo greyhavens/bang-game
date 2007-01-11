@@ -52,17 +52,17 @@ public class GoodsInspector extends BContainer
     public GoodsInspector (BangContext ctx, StoreView parent)
     {
         super(new AbsoluteLayout());
-
         _ctx = ctx;
         _parent = parent;
 
         add(_icon = new BLabel(""), new Rectangle(0, 0, 136, 156));
-
-        add(_title = new BLabel("", "medium_title"),
-            new Rectangle(190, 115, 300, 40));
+        add(_title = new BLabel("", "medium_title"), new Rectangle(190, 115, 300, 40));
         _title.setFit(BLabel.Fit.SCALE);
-        add(_descrip = new BLabel("", "goods_descrip"),
-            new Rectangle(190, 55, 400, 60));
+        add(_descrip = new BLabel("", "goods_descrip"), new Rectangle(190, 55, 400, 60));
+
+        // we'll add this later
+        _buy = new BButton(_ctx.xlate("store", "m.buy"), this, "buy");
+        _buy.setStyleClass("big_button");
     }
 
     /**
@@ -97,14 +97,12 @@ public class GoodsInspector extends BContainer
         // do some special jockeying to handle colorizations for articles
         if (_good instanceof ArticleGood) {
             ArticleCatalog.Article article =
-                _ctx.getAvatarLogic().getArticleCatalog().getArticle(
-                    _good.getType());
-            String[] cclasses =
-                _ctx.getAvatarLogic().getColorizationClasses(article);
+                _ctx.getAvatarLogic().getArticleCatalog().getArticle(_good.getType());
+            String[] cclasses = _ctx.getAvatarLogic().getColorizationClasses(article);
             _args[0] = _args[1] = _args[2] = Integer.valueOf(0);
 
-            // grab whatever random colorizations we were using for the icon
-            // and start with those in the inspector
+            // grab whatever random colorizations we were using for the icon and start with those
+            // in the inspector
             int[] colorIds = ((GoodsIcon)icon).colorIds;
             _zations = new Colorization[3];
             for (int ii = 0; ii < cclasses.length; ii++) {
@@ -114,11 +112,9 @@ public class GoodsInspector extends BContainer
                     continue;
                 }
 
-                // primary, secondary and tertiary colors have to go into the
-                // appropriate index
+                // primary, secondary and tertiary colors have to go into the appropriate index
                 int index = AvatarLogic.getColorIndex(cclass);
-                ColorSelector colorsel =
-                    new ColorSelector(_ctx, cclass, _colorpal);
+                ColorSelector colorsel = new ColorSelector(_ctx, cclass, _colorpal);
                 colorsel.setSelectedColorId(colorIds[index]);
                 colorsel.setProperty("index", Integer.valueOf(index));
                 add(_colorsel[index] = colorsel, CS_SPOTS[index]);
@@ -141,50 +137,31 @@ public class GoodsInspector extends BContainer
         }
 
         String action = event.getAction();
-
         if ("buy".equals(action)) {
-            StoreService.ConfirmListener cl = 
-                    new StoreService.ConfirmListener() {
+            _buy.setEnabled(false);
+            StoreService.ConfirmListener cl = new StoreService.ConfirmListener() {
                 public void requestProcessed () {
-                    if (_good instanceof CardTripletGood) {
-                        CardTripletGood ctg = (CardTripletGood)_good;
-                        PlayerObject pobj = _ctx.getUserObject();
-                        for (Item item : pobj.inventory) {
-                            if (item instanceof CardItem) {
-                                CardItem ci = (CardItem)item;
-                                if (ci.getType().equals(ctg.getCardType())) {
-                                    ctg.setQuantity(ci.getQuantity());
-                                }
-                            }
-                        }
-                    }
-                    String msg = "m.purchased";
-                    if (_good instanceof ArticleGood) {
-                        showTry();
-                        msg += "_article";
-                    } else {
-                        _parent.goodPurchased();
-                    }
-                    _descrip.setText(_ctx.xlate("store", msg));
-                    BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
+                    boughtGood();
                 }
                 public void requestFailed (String cause) {
+                    _buy.setEnabled(true);
                     _descrip.setText(_ctx.xlate("store", cause));
                 }
             };
-            _stobj.service.buyGood(
-                    _ctx.getClient(), _good.getType(), _args, cl);
+            _stobj.service.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
 
         } else if ("try".equals(action)) {
             _try.setEnabled(false);
-            BangBootstrapData bbd = (BangBootstrapData)
-                _ctx.getClient().getBootstrapData();
+            BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
             _ctx.getLocationDirector().moveTo(bbd.barberOid);
         }
     }
 
     protected void showBuy ()
     {
+        // enable the buy button
+        _buy.setEnabled(true);
+
         if (_display == Mode.BUY) {
             return;
         }
@@ -195,18 +172,41 @@ public class GoodsInspector extends BContainer
 
         if (_ccont == null) {
             _ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
-            _ccont.add(new BLabel(
-                        _ctx.xlate("store", "m.price"), "table_data"));
+            _ccont.add(new BLabel(_ctx.xlate("store", "m.price"), "table_data"));
             _ccont.add(_cost = new MoneyLabel(_ctx));
             _cost.setMoney(0, 0, false);
         }
         add(_ccont, new Rectangle(200, 15, 200, 25));
-
-        if (_buy == null) {
-            _buy = new BButton(_ctx.xlate("store", "m.buy"), this, "buy");
-            _buy.setStyleClass("big_button");
-        }
         add(_buy, new Point(400, 10));
+    }
+
+    protected void boughtGood ()
+    {
+        // if they just bought cards, the "in your pocket" count
+        if (_good instanceof CardTripletGood) {
+            CardTripletGood ctg = (CardTripletGood)_good;
+            PlayerObject pobj = _ctx.getUserObject();
+            for (Item item : pobj.inventory) {
+                if (item instanceof CardItem) {
+                    CardItem ci = (CardItem)item;
+                    if (ci.getType().equals(ctg.getCardType())) {
+                        ctg.setQuantity(ci.getQuantity());
+                    }
+                }
+            }
+        }
+
+        // if they bought an article, give them a quick button to go try it on
+        String msg = "m.purchased";
+        if (_good instanceof ArticleGood) {
+            showTry();
+            msg += "_article";
+        } else {
+            _parent.goodPurchased();
+        }
+
+        _descrip.setText(_ctx.xlate("store", msg));
+        BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
     }
 
     protected void showTry ()

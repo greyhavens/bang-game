@@ -17,24 +17,33 @@ import com.threerings.util.CompiledConfig;
 import com.threerings.presents.data.InvocationCodes;
 import com.threerings.presents.server.InvocationException;
 
+import com.threerings.bang.game.data.scenario.CattleRustlingInfo;
+import com.threerings.bang.game.data.scenario.ClaimJumpingInfo;
+import com.threerings.bang.game.data.scenario.ForestGuardiansInfo;
+import com.threerings.bang.game.data.scenario.GoldRushInfo;
+import com.threerings.bang.game.data.scenario.TotemBuildingInfo;
+import com.threerings.bang.game.data.scenario.WendigoAttackInfo;
+
+import com.threerings.bang.avatar.util.ArticleCatalog;
+import com.threerings.bang.avatar.util.AvatarLogic;
+
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
+import com.threerings.bang.data.Song;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.data.UnitPass;
 import com.threerings.bang.game.data.card.Card;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.util.BangUtil;
 
-import com.threerings.bang.avatar.util.ArticleCatalog;
-import com.threerings.bang.avatar.util.AvatarLogic;
-
 import com.threerings.bang.store.data.ArticleGood;
 import com.threerings.bang.store.data.CardPackGood;
 import com.threerings.bang.store.data.CardTripletGood;
 import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.PurseGood;
+import com.threerings.bang.store.data.SongGood;
 import com.threerings.bang.store.data.UnitPassGood;
 
 import static com.threerings.bang.Log.log;
@@ -101,6 +110,16 @@ public class GoodsCatalog
                 registerGood(uc.getTownId(), good, pf);
             }
         }
+
+        // register our music
+        pf = new SongProviderFactory();
+        registerGood(BangCodes.FRONTIER_TOWN, new SongGood(ClaimJumpingInfo.IDENT), pf);
+        registerGood(BangCodes.FRONTIER_TOWN, new SongGood(CattleRustlingInfo.IDENT), pf);
+        registerGood(BangCodes.FRONTIER_TOWN, new SongGood(GoldRushInfo.IDENT), pf);
+
+        registerGood(BangCodes.INDIAN_POST, new SongGood(TotemBuildingInfo.IDENT), pf);
+        registerGood(BangCodes.INDIAN_POST, new SongGood(WendigoAttackInfo.IDENT), pf);
+        registerGood(BangCodes.INDIAN_POST, new SongGood(ForestGuardiansInfo.IDENT), pf);
     }
 
     /**
@@ -145,16 +164,15 @@ public class GoodsCatalog
 
     /** Used to create a {@link Provider} for a particular {@link Good}. */
     protected abstract class ProviderFactory {
-        public abstract Provider createProvider (
-            PlayerObject user, Good good, Object[] args)
+        public abstract Provider createProvider (PlayerObject user, Good good, Object[] args)
             throws InvocationException;
     }
 
     /** Used for {@link PurseGood}s. */
     protected class PurseProviderFactory extends ProviderFactory {
-        public Provider createProvider (
-            PlayerObject user, Good good, Object[] args)
-            throws InvocationException {
+        public Provider createProvider (PlayerObject user, Good good, Object[] args)
+            throws InvocationException
+        {
             return new ItemProvider(user, good, args) {
                 protected Item createItem () throws InvocationException {
                     int townIndex = ((PurseGood)_good).getTownIndex();
@@ -168,9 +186,9 @@ public class GoodsCatalog
 
     /** Used for {@link CardPackGood}s and {@link CardTripletGood}s. */
     protected class CardProviderFactory extends ProviderFactory {
-        public Provider createProvider (
-            PlayerObject user, Good good, Object[] args)
-            throws InvocationException {
+        public Provider createProvider (PlayerObject user, Good good, Object[] args)
+            throws InvocationException
+        {
             if (good instanceof CardPackGood) {
                 return new CardPackProvider(user, good);
             } else {
@@ -181,9 +199,9 @@ public class GoodsCatalog
 
     /** Used for {@link ArticleGood}s. */
     protected class ArticleProviderFactory extends ProviderFactory {
-        public Provider createProvider (
-            PlayerObject user, Good good, Object[] args)
-            throws InvocationException {
+        public Provider createProvider (PlayerObject user, Good good, Object[] args)
+            throws InvocationException
+        {
             return new ItemProvider(user, good, args) {
                 protected Item createItem () throws InvocationException {
                     ArticleCatalog.Article article =
@@ -213,13 +231,26 @@ public class GoodsCatalog
 
     /** Used for {@link UnitPassGood}s. */
     protected class UnitPassProviderFactory extends ProviderFactory {
-        public Provider createProvider (
-            PlayerObject user, Good good, Object[] args)
-            throws InvocationException {
+        public Provider createProvider (PlayerObject user, Good good, Object[] args)
+            throws InvocationException
+        {
             return new ItemProvider(user, good, args) {
                 protected Item createItem () throws InvocationException {
                     String type = ((UnitPassGood)_good).getUnitType();
                     return new UnitPass(_user.playerId, type);
+                }
+            };
+        }
+    }
+
+    /** Used for {@link SongGood}s. */
+    protected class SongProviderFactory extends ProviderFactory {
+        public Provider createProvider (PlayerObject user, Good good, Object[] args)
+            throws InvocationException
+        {
+            return new ItemProvider(user, good, args) {
+                protected Item createItem () throws InvocationException {
+                    return new Song(_user.playerId, ((SongGood)_good).getSong());
                 }
             };
         }

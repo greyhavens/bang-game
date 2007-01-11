@@ -31,7 +31,7 @@ public class GoodsPalette extends IconPalette
     {
         super(inspector, 6, 3, GoodsIcon.ICON_SIZE, 1);
         _ctx = ctx;
-        setAllowsEmptySelection(false);
+        // setAllowsEmptySelection(false);
     }
 
     public void init (StoreObject stobj)
@@ -52,8 +52,7 @@ public class GoodsPalette extends IconPalette
 
     public void reinitGoods (boolean reselectPrevious)
     {
-        Good sgood = (getSelectedIcon() == null) ?
-            null : ((GoodsIcon)getSelectedIcon()).getGood();
+        Good sgood = (getSelectedIcon() == null) ? null : ((GoodsIcon)getSelectedIcon()).getGood();
         int opage = _page;
         clear();
 
@@ -73,26 +72,32 @@ public class GoodsPalette extends IconPalette
         for (int ii = 0; ii < goods.length; ii++) {
             addIcon(new GoodsIcon(_ctx, goods[ii]));
         }
-        
+
         // reselect the previously selected good if specified and it's still
         // there; otherwise, flip to the previous page (if it still exists)
         if (!isAdded() || _icons.isEmpty()) {
             return;
         }
-        if (reselectPrevious && sgood != null) {
-            int sidx = ListUtil.indexOf(goods, sgood);
-            if (sidx != -1) {
-                displayPage(sidx / (_rows * _cols), false, false);
-                _icons.get(sidx).setSelected(true);
-                return;
-                
-            } else if (opage * (_rows * _cols) < goods.length) {
-                displayPage(opage, false, false);
+
+        if (reselectPrevious) {
+            if (sgood != null) {
+                int sidx = ListUtil.indexOf(goods, sgood);
+                if (sidx != -1) {
+                    displayPage(sidx / (_rows * _cols), false, false);
+                    _icons.get(sidx).setSelected(true);
+                    return;
+
+                } else if (opage * (_rows * _cols) < goods.length) {
+                    displayPage(opage, false, false);
+                }
             }
+            // if we're trying to reselect our previous good but couldn't find it, don't select
+            // anything and leave the old good shown in the inspector
+
+        } else {
+            // select the first thing on the current page
+            _icons.get(_page * _rows * _cols).setSelected(true);
         }
-        
-        // select the first thing on the current page
-        _icons.get(_page * _rows * _cols).setSelected(true);
     }
 
     public void shutdown ()

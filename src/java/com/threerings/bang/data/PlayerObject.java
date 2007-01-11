@@ -238,8 +238,7 @@ public class PlayerObject extends BodyObject
     public boolean holdsPass (String unit)
     {
         for (Item item : inventory) {
-            if (item instanceof UnitPass &&
-                ((UnitPass)item).getUnitType().equals(unit)) {
+            if (item instanceof UnitPass && ((UnitPass)item).getUnitType().equals(unit)) {
                 return true;
             }
         }
@@ -252,8 +251,20 @@ public class PlayerObject extends BodyObject
     public boolean holdsTicket (String townId)
     {
         for (Item item : inventory) {
-            if (item instanceof TrainTicket &&
-                ((TrainTicket)item).getTownId().equals(townId)) {
+            if (item instanceof TrainTicket && ((TrainTicket)item).getTownId().equals(townId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if the player owns the specified song.
+     */
+    public boolean ownsSong (String song)
+    {
+        for (Item item : inventory) {
+            if (item instanceof Song && ((Song)item).getSong().equals(song)) {
                 return true;
             }
         }

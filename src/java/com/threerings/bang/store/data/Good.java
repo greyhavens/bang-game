@@ -13,8 +13,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 
 /**
- * Represents a particular good that can be purchased from the general
- * store.
+ * Represents a particular good that can be purchased from the general store.
  */
 public abstract class Good extends SimpleStreamableObject
     implements DSet.Entry, Comparable<Good>
@@ -25,8 +24,7 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
-     * Returns the string identifier that uniquely identifies this type of
-     * good.
+     * Returns the string identifier that uniquely identifies this type of good.
      */
     public String getType ()
     {
@@ -34,9 +32,8 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
-     * Returns the filename of the icon associated with this good. The default
-     * is based on the type of the good, but this can be overridden by
-     * specialized goods.
+     * Returns the filename of the icon associated with this good. The default is based on the type
+     * of the good, but this can be overridden by specialized goods.
      */
     public String getIconPath ()
     {
@@ -44,8 +41,7 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
-     * Returns a fully qualified translatable string indicating the name
-     * of this good.
+     * Returns a fully qualified translatable string indicating the name of this good.
      */
     public String getName ()
     {
@@ -53,14 +49,14 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
-     * Returns a fully qualified translatable string used to convey
-     * additional information about the good in question.
+     * Returns a fully qualified translatable string used to convey additional information about
+     * the good in question.
      */
     public abstract String getTip ();
 
     /**
-     * Returns a fully qualified translatable string used to convey
-     * additional information about the good in question for a tooltip window.
+     * Returns a fully qualified translatable string used to convey additional information about
+     * the good in question for a tooltip window.
      */
     public String getToolTip ()
     {
@@ -68,8 +64,8 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
-     * Returns the cost of this good in scrip. This is in addition to the
-     * coin cost ({@link #getCoinCost}).
+     * Returns the cost of this good in scrip. This is in addition to the coin cost ({@link
+     * #getCoinCost}).
      */
     public int getScripCost ()
     {
@@ -77,8 +73,8 @@ public abstract class Good extends SimpleStreamableObject
     }
 
     /**
-     * Returns the cost of this good in coins. This is in addition to the scrip
-     * cost ({@link #getScripCost}).
+     * Returns the cost of this good in coins. This is in addition to the scrip cost ({@link
+     * #getScripCost}).
      */
     public int getCoinCost ()
     {

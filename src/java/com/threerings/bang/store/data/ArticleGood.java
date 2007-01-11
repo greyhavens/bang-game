@@ -20,8 +20,7 @@ public class ArticleGood extends Good
     /**
      * Creates a good representing the specified article.
      */
-    public ArticleGood (
-            String type, int scripCost, int coinCost, String qualifier)
+    public ArticleGood (String type, int scripCost, int coinCost, String qualifier)
     {
         super(type, scripCost, coinCost);
         _qualifier = qualifier;
