@@ -91,6 +91,7 @@ public class EnglishNameCreator extends NameCreator
         "Pecos",
         "Prairie",
         "Rowdy",
+        "Saddlebags",
         "Shotgun",
         "Stagecoach",
         "Tascosa",
