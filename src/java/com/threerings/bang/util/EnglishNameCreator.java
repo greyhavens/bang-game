@@ -23,7 +23,7 @@ public class EnglishNameCreator extends NameCreator
     {
         return BSHOT_PREF_TABLE;
     }
-    
+
     @Override // documentation inherited
     public HashSet<String> getHandlePrefixes (boolean isMale)
     {
@@ -47,7 +47,7 @@ public class EnglishNameCreator extends NameCreator
     {
         return GANG_SUFF_TABLE;
     }
-    
+
     protected static HashSet<String> MALE_PREF_TABLE = new HashSet<String>();
     protected static HashSet<String> MALE_ROOT_TABLE = new HashSet<String>();
     protected static HashSet<String> MALE_SUFF_TABLE = new HashSet<String>();
@@ -58,28 +58,49 @@ public class EnglishNameCreator extends NameCreator
 
     protected static HashSet<String> AI_PREF_TABLE = new HashSet<String>();
     protected static HashSet<String> BSHOT_PREF_TABLE = new HashSet<String>();
-    
+
     protected static HashSet<String> GANG_SUFF_TABLE = new HashSet<String>();
-    
+
     protected static final String[] SHARED_PREFIXES = {
         "Anasazi",
         "Apache",
+        "Arapaho",
         "Aztec",
+        "Badwater",
+        "Black Jack",
+        "Boxcar",
         "Bronco",
         "Buckaroo",
         "Buffalo",
         "Cajun",
+        "Cattle",
+        "Cherokee",
+        "Chugwater",
         "Crazy",
+        "Curly",
+        "Deacon",
+        "Delaware",
+        "Frog Lip",
         "Hohokam",
         "Honest",
+        "Midnight",
         "Navaho",
         "Oklahoma",
+        "Panhandle",
         "Peacemaker",
+        "Pecos",
+        "Prairie",
+        "Rowdy",
         "Shotgun",
+        "Stagecoach",
+        "Tascosa",
+        "Tensleep",
         "Texas",
+        "Three Fingered",
         "Tombstone",
         "Tumbleweed",
         "Whistlestop",
+        "Whoopup",
         "Wild",
     };
 
@@ -90,6 +111,7 @@ public class EnglishNameCreator extends NameCreator
         "Deadwood",
         "Dirty",
         "Doc",
+        "Foghorn",
         "Honkytonk",
         "Judge",
         "Little",
@@ -127,44 +149,74 @@ public class EnglishNameCreator extends NameCreator
         "Useful",
         "Timely",
     };
-    
+
     protected static final String[] SHARED_ROOTS = {
         "Charlie",
         "Charley",
+        "Pat",
     };
 
     protected static final String[] MALE_ROOTS = {
         "Abe",
         "Adam",
+        "Al",
         "Alfred",
+        "Bart",
+        "Bass",
+        "Bat",
         "Baxter",
         "Bennie",
         "Bill",
         "Bob",
+        "Brigham",
         "Bubba",
+        "Butch",
         "Casey",
         "Chance",
+        "Christ",
+        "Clancey",
+        "Clay",
+        "Dave",
+        "Davey",
         "Deuce",
         "Doyle",
+        "Ed",
+        "Frank",
         "George",
         "Gilbert",
+        "Granville",
         "Guy",
         "Hank",
+        "Harry",
         "Henry",
         "Holliday",
         "Hugh",
+        "Isaac",
         "Jack",
+        "James",
         "Jesse",
+        "Joaquin",
+        "Joe",
+        "John",
+        "Joseph",
         "Karl",
         "Kit",
         "Lee",
         "Lloyd",
+        "Mac",
         "Melville",
+        "Pancho",
         "Paul",
         "Pete",
         "Roy",
+        "Sam",
+        "Samuel",
         "Shug",
+        "Temple",
+        "Thomas",
         "Tim",
+        "Tom",
+        "Tomas",
         "Tommy",
         "Tuff",
         "Ty",
@@ -173,6 +225,7 @@ public class EnglishNameCreator extends NameCreator
     };
 
     protected static final String[] FEMALE_ROOTS = {
+        "Alice",
         "Ann",
         "Anna",
         "Annie",
@@ -183,14 +236,18 @@ public class EnglishNameCreator extends NameCreator
         "Dixie",
         "Edith",
         "Elaine",
+        "Ella",
         "Fox",
         "Gabby",
+        "Glendoline",
         "Jackie",
         "Jane",
         "Janet",
+        "Jennie",
         "Jody",
         "Josey",
         "Judy",
+        "Kate",
         "Kathleen",
         "Kay",
         "Lucille",
@@ -205,7 +262,11 @@ public class EnglishNameCreator extends NameCreator
         "Molly",
         "Myra",
         "Patsy",
+        "Pearl",
+        "Rosa",
         "Rose",
+        "Rube",
+        "Sadie",
         "Sarah",
         "Tana",
         "Tanya",
@@ -215,51 +276,89 @@ public class EnglishNameCreator extends NameCreator
     protected static final String[] SHARED_SUFFIXES = {
         "Armstrong",
         "Avery",
+        "Barker",
+        "Barnett",
         "Bean",
         "Black",
+        "Bodmer",
+        "Boone",
+        "Brisbin",
+        "Brown",
+        "Burrows",
+        "Burr",
+        "Champion",
+        "Clanton",
         "Conway",
+        "Curry",
         "Dixon",
+        "Doolin",
         "Dunn",
+        "Evans",
+        "Fargo",
         "Frost",
+        "Garcia",
+        "Hamilton",
         "Hastings",
+        "Henderson",
+        "Herring",
+        "Hollister",
+        "Horn",
+        "Houston",
         "James",
+        "Ketchum",
+        "Kimmel",
         "Krebs",
         "Lambert",
         "LeDoux",
+        "LeFors",
         "Lippincott",
+        "Logan",
+        "Mackenzie",
         "Maddox",
+        "Maxwell",
+        "McDougal",
+        "Metcalf",
         "Montana",
+        "Moses",
         "Mulhall",
+        "Murieta",
         "Murray",
+        "Newcombe",
         "Nolan",
-        "O' Dell",
+        "O'Dell",
         "Parker",
         "Pierce",
         "Putney",
         "Regret",
+        "Ringo",
         "Rogers",
         "Sharp",
+        "Sieber",
         "Sinclair",
+        "Siringo",
+        "Skelton",
         "Starr",
+        "Stuart",
         "Thorn",
+        "Trafton",
+        "Villa",
+        "Wagner",
         "Whitfield",
         "Williams",
+        "Woodward",
         "the Kid",
     };
 
     protected static final String[] MALE_SUFFIXES = {
-        "Boone",
-        "Crocket",
+        "Crockett",
         "Earp",
         "Hickock",
-        "Skelton",
         "de Wolde",
     };
 
     protected static final String[] FEMALE_SUFFIXES = {
         "Canary",
-        "Evans",
-        "Moses",
+        "Cimarron",
         "Oakley",
     };
 
@@ -272,7 +371,7 @@ public class EnglishNameCreator extends NameCreator
         "Girls",
         "Congregation",
     };
-    
+
     static {
         CollectionUtil.addAll(MALE_PREF_TABLE, SHARED_PREFIXES);
         CollectionUtil.addAll(MALE_PREF_TABLE, MALE_PREFIXES);
@@ -290,7 +389,7 @@ public class EnglishNameCreator extends NameCreator
 
         CollectionUtil.addAll(AI_PREF_TABLE, AI_PREFIXES);
         CollectionUtil.addAll(BSHOT_PREF_TABLE, BIG_SHOT_PREFIXES);
-        
+
         CollectionUtil.addAll(GANG_SUFF_TABLE, GANG_SUFFIXES);
     }
 }
