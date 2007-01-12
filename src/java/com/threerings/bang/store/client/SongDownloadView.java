@@ -139,6 +139,9 @@ public class SongDownloadView extends BDecoratedWindow
             setCopyMode();
         } else {
             _main.setText(_msgs.get("m.copy_complete"));
+            _note.setText(_msgs.get("m.copy_complete_note"));
+            pack();
+            center();
         }
     }
 

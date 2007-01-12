@@ -113,10 +113,12 @@ public class GoodsCatalog
 
         // register our music
         pf = new SongProviderFactory();
+        registerGood(BangCodes.FRONTIER_TOWN, new SongGood(BangCodes.FRONTIER_TOWN), pf);
         registerGood(BangCodes.FRONTIER_TOWN, new SongGood(ClaimJumpingInfo.IDENT), pf);
         registerGood(BangCodes.FRONTIER_TOWN, new SongGood(CattleRustlingInfo.IDENT), pf);
         registerGood(BangCodes.FRONTIER_TOWN, new SongGood(GoldRushInfo.IDENT), pf);
 
+        registerGood(BangCodes.INDIAN_POST, new SongGood(BangCodes.INDIAN_POST), pf);
         registerGood(BangCodes.INDIAN_POST, new SongGood(TotemBuildingInfo.IDENT), pf);
         registerGood(BangCodes.INDIAN_POST, new SongGood(WendigoAttackInfo.IDENT), pf);
         registerGood(BangCodes.INDIAN_POST, new SongGood(ForestGuardiansInfo.IDENT), pf);
