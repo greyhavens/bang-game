@@ -35,6 +35,7 @@
     <file name="${extlib.dir}/commons-io.jar"/>
     <file name="${extlib.dir}/commons-lang.jar"/>
     <file name="${extlib.dir}/commons-logging.jar"/>
+    <file name="${extlib.dir}/ehcache-1.2.jar"/>
     <file name="${extlib.dir}/getdown.jar"/>
     <file name="${extlib.dir}/junit-3.7.jar"/>
     <file name="${extlib.dir}/mail.jar"/>
