@@ -573,6 +573,7 @@
       <include name="passes/**/*.png"/>
       <include name="purses/**/*.png"/>
       <include name="tickets/**/*.png"/>
+      <include name="*.png"/>
       <exclude name="**/source/**"/>
     </jar>
 
