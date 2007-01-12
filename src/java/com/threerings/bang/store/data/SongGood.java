@@ -54,7 +54,7 @@ public class SongGood extends Good
     public boolean isAvailable (PlayerObject user)
     {
         // for now one has to be an insider or an admin to see song goods
-        return (user.tokens.isInsider() || user.tokens.isAdmin()) && !user.ownsSong(getSong());
+        return /*(user.tokens.isInsider() || user.tokens.isAdmin()) &&*/ !user.ownsSong(getSong());
     }
 
     @Override // from Good

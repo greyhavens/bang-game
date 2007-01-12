@@ -78,7 +78,8 @@ public class ItemIcon extends PaletteIcon
 
         } else if ("download_song".equals(cmd)) {
             ctx.getBangClient().displayPopup(
-                new SongDownloadView(ctx, ((Song)_item).getSong()), true, 500);
+                new SongDownloadView(ctx, ((Song)_item).getSong()), true,
+                SongDownloadView.PREF_WIDTH);
         }
     }
 

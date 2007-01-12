@@ -165,7 +165,8 @@ public class GoodsInspector extends BContainer
 
         } else if ("download".equals(action)) {
             String song = ((SongGood)_good).getSong();
-            _ctx.getBangClient().displayPopup(new SongDownloadView(_ctx, song), true, 500);
+            _ctx.getBangClient().displayPopup(new SongDownloadView(_ctx, song), true,
+                                              SongDownloadView.PREF_WIDTH);
         }
     }
 

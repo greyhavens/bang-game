@@ -38,6 +38,8 @@ import static com.threerings.bang.Log.log;
 public class SongDownloadView extends BDecoratedWindow
     implements ActionListener
 {
+    public static final int PREF_WIDTH = 500;
+
     public SongDownloadView (BangContext ctx, String song)
     {
         super(ctx.getStyleSheet(), ctx.xlate(StoreCodes.STORE_MSGS, "m.download_title"));
@@ -140,7 +142,7 @@ public class SongDownloadView extends BDecoratedWindow
         } else {
             _main.setText(_msgs.get("m.copy_complete"));
             _note.setText(_msgs.get("m.copy_complete_note"));
-            pack();
+            pack(PREF_WIDTH, -1);
             center();
         }
     }
@@ -148,7 +150,7 @@ public class SongDownloadView extends BDecoratedWindow
     protected void reportFailure (String errmsg)
     {
         _note.setText(_msgs.get("m." + _action + "_failed", errmsg));
-        pack();
+        pack(PREF_WIDTH, -1);
         center();
     }
 
