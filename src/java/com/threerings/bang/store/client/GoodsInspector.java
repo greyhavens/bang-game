@@ -6,6 +6,7 @@ package com.threerings.bang.store.client;
 import java.awt.image.BufferedImage;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
@@ -39,9 +40,11 @@ import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.store.data.ArticleGood;
-import com.threerings.bang.store.data.Good;
-import com.threerings.bang.store.data.StoreObject;
 import com.threerings.bang.store.data.CardTripletGood;
+import com.threerings.bang.store.data.Good;
+import com.threerings.bang.store.data.SongGood;
+import com.threerings.bang.store.data.StoreCodes;
+import com.threerings.bang.store.data.StoreObject;
 
 /**
  * Displays detailed information on a particular good.
@@ -60,8 +63,12 @@ public class GoodsInspector extends BContainer
         _title.setFit(BLabel.Fit.SCALE);
         add(_descrip = new BLabel("", "goods_descrip"), new Rectangle(190, 55, 400, 60));
 
-        // we'll add this later
-        _buy = new BButton(_ctx.xlate("store", "m.buy"), this, "buy");
+        // we'll add these later
+        _ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
+        _ccont.add(new BLabel(_ctx.xlate(StoreCodes.STORE_MSGS, "m.price"), "table_data"));
+        _ccont.add(_cost = new MoneyLabel(_ctx));
+        _cost.setMoney(0, 0, false);
+        _buy = new BButton(_ctx.xlate(StoreCodes.STORE_MSGS, "m.buy"), this, "buy");
         _buy.setStyleClass("big_button");
     }
 
@@ -82,7 +89,8 @@ public class GoodsInspector extends BContainer
         }
 
         // make sure we're showing the buy interface
-        showBuy();
+        showMode(Mode.BUY);
+        _buy.setEnabled(true);
 
         // remove our color selectors
         removeColors();
@@ -145,7 +153,7 @@ public class GoodsInspector extends BContainer
                 }
                 public void requestFailed (String cause) {
                     _buy.setEnabled(true);
-                    _descrip.setText(_ctx.xlate("store", cause));
+                    _descrip.setText(_ctx.xlate(StoreCodes.STORE_MSGS, cause));
                 }
             };
             _stobj.service.buyGood(_ctx.getClient(), _good.getType(), _args, cl);
@@ -154,30 +162,11 @@ public class GoodsInspector extends BContainer
             _try.setEnabled(false);
             BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
             _ctx.getLocationDirector().moveTo(bbd.barberOid);
-        }
-    }
 
-    protected void showBuy ()
-    {
-        // enable the buy button
-        _buy.setEnabled(true);
-
-        if (_display == Mode.BUY) {
-            return;
+        } else if ("download".equals(action)) {
+            String song = ((SongGood)_good).getSong();
+            _ctx.getBangClient().displayPopup(new SongDownloadView(_ctx, song), true, 500);
         }
-        _display = Mode.BUY;
-        if (_try != null) {
-            remove(_try);
-        }
-
-        if (_ccont == null) {
-            _ccont = GroupLayout.makeHBox(GroupLayout.LEFT);
-            _ccont.add(new BLabel(_ctx.xlate("store", "m.price"), "table_data"));
-            _ccont.add(_cost = new MoneyLabel(_ctx));
-            _cost.setMoney(0, 0, false);
-        }
-        add(_ccont, new Rectangle(200, 15, 200, 25));
-        add(_buy, new Point(400, 10));
     }
 
     protected void boughtGood ()
@@ -199,35 +188,53 @@ public class GoodsInspector extends BContainer
         // if they bought an article, give them a quick button to go try it on
         String msg = "m.purchased";
         if (_good instanceof ArticleGood) {
-            showTry();
+            showMode(Mode.TRY);
             msg += "_article";
+        } else if (_good instanceof SongGood) {
+            showMode(Mode.DOWNLOAD);
+            msg += "_song";
         } else {
             _parent.goodPurchased();
         }
 
-        _descrip.setText(_ctx.xlate("store", msg));
+        _descrip.setText(_ctx.xlate(StoreCodes.STORE_MSGS, msg));
         BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
     }
 
-    protected void showTry ()
+    protected void showMode (Mode mode)
     {
-        if (_display == Mode.TRY) {
+        if (_mode == mode) {
             return;
         }
-        _display = Mode.TRY;
-        if (_ccont != null) {
-            remove(_ccont);
-        }
-        if (_buy != null) {
-            remove(_buy);
-        }
+
+        safeRemove(_try);
+        safeRemove(_ccont);
+        safeRemove(_buy);
+        safeRemove(_download);
         removeColors();
 
-        if (_try == null) {
-            _try = new BButton(_ctx.xlate("store", "m.try"), this, "try");
-            _try.setStyleClass("big_button");
+        switch (_mode = mode) {
+        case BUY:
+            add(_ccont, new Rectangle(200, 15, 200, 25));
+            add(_buy, new Point(400, 10));
+            break;
+
+        case TRY:
+            if (_try == null) {
+                _try = new BButton(_ctx.xlate(StoreCodes.STORE_MSGS, "m.try"), this, "try");
+                _try.setStyleClass("big_button");
+            }
+            add(_try, new Point(300, 10));
+            break;
+
+        case DOWNLOAD:
+            if (_download == null) {
+                _download = new BButton(
+                    _ctx.xlate(StoreCodes.STORE_MSGS, "m.download"), this, "download");
+            }
+            add(_download, new Point(300, 10));
+            break;
         }
-        add(_try, new Point(300, 10));
     }
 
     protected void removeColors ()
@@ -238,6 +245,13 @@ public class GoodsInspector extends BContainer
                 remove(_colorsel[ii]);
                 _colorsel[ii] = null;
             }
+        }
+    }
+
+    protected void safeRemove (BComponent comp)
+    {
+        if (comp != null && comp.isAdded()) {
+            remove(comp);
         }
     }
 
@@ -267,8 +281,8 @@ public class GoodsInspector extends BContainer
     protected Good _good;
 
     protected BLabel _icon, _title, _descrip;
-    protected BButton _buy, _try;
-    protected BContainer _ccont;
+    protected BButton _buy, _try, _download;
+    protected BContainer _ccont, _dcont;
     protected MoneyLabel _cost;
 
     protected BufferedImage _srcimg;
@@ -278,8 +292,8 @@ public class GoodsInspector extends BContainer
     protected Object[] _args = new Object[3];
     protected Colorization[] _zations;
 
-    protected static enum Mode { NEW, BUY, TRY };
-    protected Mode _display = Mode.NEW;
+    protected static enum Mode { NEW, BUY, TRY, DOWNLOAD };
+    protected Mode _mode = Mode.NEW;
 
     protected static final Point[] CS_SPOTS = {
         new Point(150, 105),

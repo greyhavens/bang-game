@@ -1388,6 +1388,14 @@ goods_descrip {
 }
 
 //
+// Song Download View styles
+
+song_note {
+  parent: "label";
+  font: "Dom Casual" plain 17;
+}
+
+//
 // Bank styles
 
 bank_title {

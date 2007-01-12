@@ -21,6 +21,7 @@ import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.store.data.CardTripletGood;
 import com.threerings.bang.store.data.Good;
+import com.threerings.bang.store.data.StoreCodes;
 import com.threerings.bang.store.data.StoreObject;
 
 import com.threerings.crowd.data.PlaceObject;
@@ -34,7 +35,7 @@ public class StoreView extends ShopView
 {
     public StoreView (BangContext ctx)
     {
-        super(ctx, "store");
+        super(ctx, StoreCodes.STORE_MSGS);
 
         // add our various interface components
         add(new BLabel(_msgs.get("m.intro_tip"), "shop_status"),
