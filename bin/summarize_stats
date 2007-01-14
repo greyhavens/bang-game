@@ -40,7 +40,7 @@ my %leavers;
 my %discons;
 my %logoffs;
 
-my $datedir;
+my $datedir = "";
 
 # grind and process the raw data
 while (<>) {
@@ -146,14 +146,14 @@ while (<>) {
 }
 
 printf("Type        Games\n");
-printf("vs Humans   %5d\n", $games{"human"});
-printf("vs Tin Cans %5d\n", $games{"tincan"});
-printf("Tutorials   %5d\n", $games{"tutorial"});
+printf("vs Humans   %5d\n", safe_get("human", \%games));
+printf("vs Tin Cans %5d\n", safe_get("tincan", \%games));
+printf("Tutorials   %5d\n", safe_get("tutorial", \%games));
 print "\n";
 
 print "Perf stats: http://bang1.banghowdy.com/stats/$datedir/perf.html\n\n";
 
-my $totrounds = $rounds{"human"} + $rounds{"tincan"};
+my $totrounds = safe_get("human", \%rounds) + safe_get("tincan", \%rounds);
 
 # summarize sessions, rounds played, earnings, etc.
 my $ucount = keys %usersess;
@@ -162,19 +162,18 @@ my $totmins = $tottime/60;
 my $newmins = $newtime/60;
 print "Username    Sess.  Minutes /sess  Rounds  Earnings /round\n";
 printf("all %6d %6d  %7.0f    %2.0f  %6d  %8d\n",
-       $ucount, $totsess, $totmins, $totmins/$totsess, $totrounds, $totearn);
+       $ucount, $totsess, $totmins, safe_div($totmins, $totsess), $totrounds, $totearn);
 if ($newsess > 0) {
     printf("noobs %4d %6d  %7.0f    %2.0f  %6d  %8d\n",
-           $ncount, $newsess, $newmins, $newmins/$newsess,
-           $newrounds, $newearn);
+           $ncount, $newsess, $newmins, safe_div($newmins, $newsess), $newrounds, $newearn);
 }
 printf("all  (avg)    %2.1f  %7.0f           %2.1f  %8d   %3.0f\n",
-       $totsess/$ucount, $totmins/$ucount, $totrounds/$ucount,
-       $totearn/$ucount, $totearn/$totrounds);
+       safe_div($totsess, $ucount), safe_div($totmins, $ucount), safe_div($totrounds, $ucount),
+       safe_div($totearn, $ucount), safe_div($totearn, $totrounds));
 if ($newsess > 0) {
     printf("noob (avg)    %2.1f  %7.0f           %2.1f  %8d   %3.0f\n",
-           $newsess/$ucount, $newmins/$ucount, $newrounds/$ucount,
-           $newearn/$ucount, $newearn/$newrounds);
+           safe_div($newsess, $ucount), safe_div($newmins, $ucount), safe_div($newrounds, $ucount),
+           safe_div($newearn, $ucount), safe_div($newearn, $newrounds));
 }
 print "\n";
 
@@ -200,9 +199,9 @@ print "\n";
 
 # break down games played by scenario
 printf("Scenario         Rounds\n");
-printf("%-15s  %6d\n", "(total)", $rounds{"unrated"} + $rounds{"rated"});
-printf("%-15s  %6d\n", "(unrated)", $rounds{"unrated"});
-printf("%-15s  %6d\n", "(rated)", $rounds{"rated"});
+printf("%-15s  %6d\n", "(total)", safe_get("unrated", \%rounds) + safe_get("rated", \%rounds));
+printf("%-15s  %6d\n", "(unrated)", safe_get("unrated", \%rounds));
+printf("%-15s  %6d\n", "(rated)", safe_get("rated", \%rounds));
 foreach $scen (sort { $byscen{$b} - $byscen{$a} } keys %byscen) {
     printf("%-15s  %6d\n", $scen, $byscen{$scen});
 }
@@ -264,14 +263,14 @@ sub note_leaver {
 sub sum_leavers {
     my ($what, $hash) = @_;
     my $cvalue = safe_get("tincan", $hash);
-    my $crounds = $rounds{"tincan"};
+    my $crounds = safe_get("tincan", \%rounds);
     my $hvalue = safe_get("human", $hash);
-    my $hrounds = $rounds{"human"};
+    my $hrounds = safe_get("human", \%rounds);
     my $tvalue = safe_get("tutorial", $hash);
-    my $trounds = $rounds{"tutorial"};
+    my $trounds = safe_get("tutorial", \%rounds);
     printf("%s %4d (%4.1f%%) %4d (%4.1f%%) %4d (%4.1f%%)\n",
            $what,
-           $cvalue, 100*$cvalue/$crounds,
-           $hvalue, 100*$hvalue/$hrounds,
-           $tvalue, 100*$tvalue/$trounds);
+           $cvalue, safe_div(100*$cvalue, $crounds),
+           $hvalue, safe_div(100*$hvalue, $hrounds),
+           $tvalue, safe_div(100*$tvalue, $trounds));
 }
