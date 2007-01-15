@@ -162,6 +162,7 @@ public class EnglishNameCreator extends NameCreator
         "Adam",
         "Al",
         "Alfred",
+        "Angus",
         "Bart",
         "Bass",
         "Bat",
