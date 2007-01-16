@@ -41,9 +41,8 @@ public class BankManager extends PlaceManager
     }
 
     // documentation inherited from interface BankProvider
-    public void postOffer (ClientObject caller, int coins, int pricePerCoin,
-                           boolean buying, boolean immediate,
-                           BankService.ResultListener listener)
+    public void postOffer (ClientObject caller, int coins, int pricePerCoin, boolean buying,
+                           boolean immediate, BankService.ResultListener listener)
         throws InvocationException
     {
         PlayerObject player = (PlayerObject)caller;
@@ -58,13 +57,11 @@ public class BankManager extends PlaceManager
     }
 
     // documentation inherited from interface BankProvider
-    public void cancelOffer (ClientObject caller, int offerId,
-                             BankService.ConfirmListener cl)
+    public void cancelOffer (ClientObject caller, int offerId, BankService.ConfirmListener cl)
         throws InvocationException
     {
         PlayerObject player = (PlayerObject)caller;
-        if (BangServer.coinexmgr.cancelOffer(
-                player.username.toString(), offerId)) {
+        if (BangServer.coinexmgr.cancelOffer(player.username.toString(), offerId)) {
             cl.requestProcessed();
         } else {
             cl.requestFailed(NO_SUCH_OFFER);
@@ -72,8 +69,7 @@ public class BankManager extends PlaceManager
     }
 
     // documentation inherited from interface OfferPublisher
-    public void updateOffers (ConsolidatedOffer[] buys,
-                              ConsolidatedOffer[] sells, int lastPrice)
+    public void updateOffers (ConsolidatedOffer[] buys, ConsolidatedOffer[] sells, int lastPrice)
     {
         if (buys != null) {
             _bankobj.setBuyOffers(buys);
@@ -107,8 +103,7 @@ public class BankManager extends PlaceManager
         // register our invocation service
         _bankobj = (BankObject)_plobj;
         _bankobj.setService((BankMarshaller)
-            BangServer.invmgr.registerDispatcher(
-                new BankDispatcher(this), false));
+                            BangServer.invmgr.registerDispatcher(new BankDispatcher(this), false));
 
         // register with the coin exchange manager
         BangServer.coinexmgr.registerPublisher(this);
