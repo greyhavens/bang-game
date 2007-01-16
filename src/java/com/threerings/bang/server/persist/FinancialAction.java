@@ -100,17 +100,20 @@ public abstract class FinancialAction extends Invoker.Unit
     @Override // documentation inherited
     public void handleResult ()
     {
-        if (_failmsg != null) {
-            // return the scrip and coins to the user
-            _user.setScrip(_user.scrip + _scripCost);
-            _user.setCoins(_user.coins + _coinCost);
-            actionFailed(_failmsg);
-        } else {
-            actionCompleted();
-        }
+        try {
+            if (_failmsg != null) {
+                // return the scrip and coins to the user
+                _user.setScrip(_user.scrip + _scripCost);
+                _user.setCoins(_user.coins + _coinCost);
+                actionFailed(_failmsg);
+            } else {
+                actionCompleted();
+            }
 
-        // now it's safe for this user to start another financial action
-        _userLock.remove(_user.username);
+        } finally {
+            // now it's safe for this user to start another financial action
+            _userLock.remove(_user.username);
+        }
     }
 
     /** Returns a string representation of this instance. */
