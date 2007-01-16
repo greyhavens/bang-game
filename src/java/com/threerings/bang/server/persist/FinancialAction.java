@@ -3,7 +3,7 @@
 
 package com.threerings.bang.server.persist;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
@@ -35,9 +35,13 @@ public abstract class FinancialAction extends Invoker.Unit
     public void start ()
         throws InvocationException
     {
-        if (!_userLock.add(_user.username)) {
+        String ntype = getClass().getName(), otype = _userLock.get(_user.username);
+        if (otype != null) {
+            log.info("Preventing overlapping financial action [who=" + _user.username +
+                     ", new=" + ntype + ", old=" + otype + "].");
             throw new InvocationException(BangCodes.BANG_MSGS, "e.processing_purchase");
         }
+        _userLock.put(_user.username, ntype);
 
         // check and immediately deduct the necessary funds
         if (_user.scrip < _scripCost || _user.coins < _coinCost) {
@@ -248,5 +252,5 @@ public abstract class FinancialAction extends Invoker.Unit
     protected String _failmsg;
     protected int _coinres = -1;
 
-    protected static HashSet<Name> _userLock = new HashSet<Name>();
+    protected static HashMap<Name,String> _userLock = new HashMap<Name,String>();
 }
