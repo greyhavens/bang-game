@@ -105,9 +105,8 @@ public class RanchManager extends PlaceManager
     /** Used to recruit and deliver a big shot to a player. */
     protected static final class RecruitBigShotAction extends FinancialAction
     {
-        public RecruitBigShotAction (
-            PlayerObject user, UnitConfig config, BigShotItem unit,
-            RanchService.ResultListener listener)
+        public RecruitBigShotAction (PlayerObject user, UnitConfig config, BigShotItem unit,
+                                     RanchService.ResultListener listener)
         {
             super(user, config.scripCost, config.coinCost);
             _unit = unit;
