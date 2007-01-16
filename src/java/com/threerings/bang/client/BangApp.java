@@ -269,11 +269,16 @@ public class BangApp extends JmeApp
     {
         SystemInfo sysinfo = new SystemInfo();
         int[] minVersion = new int[] {1, 5, 0, 6};
-        String[] jVersion = sysinfo.javaVersion.split("[._]");
+        String[] jVersion = sysinfo.javaVersion.split("[._-]");
         String errmsg = "You are running java version " + sysinfo.javaVersion +
             ", but we require at least version 1.5.0_06";
         for (int ii = 0, ll = Math.min(minVersion.length, jVersion.length); ii < ll; ii++) {
-            int diff = minVersion[ii] - Integer.valueOf(jVersion[ii]);
+            int diff;
+            try {
+                diff = minVersion[ii] - Integer.valueOf(jVersion[ii]);
+            } catch (NumberFormatException e) {
+                diff = 1;
+            }
             if (diff < 0) {
                 return;
             } else if (diff > 0) {
