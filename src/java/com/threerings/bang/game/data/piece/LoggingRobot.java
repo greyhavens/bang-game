@@ -119,7 +119,7 @@ public class LoggingRobot extends Unit
                 !bangobj.board.canCross(x, y, piece.x, piece.y) ||
                 // allow our hindrance to prevent proximity attacks
                 (hindrance != null &&
-                 hindrance.validTarget(this, piece, false))) {
+                 !hindrance.validTarget(this, piece, false))) {
                 continue;
             }
 
