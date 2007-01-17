@@ -1666,9 +1666,17 @@ public class BangManager extends GameManager
         // process any played cards
         ArrayList<StartingCard> updates = new ArrayList<StartingCard>();
         ArrayList<StartingCard> removals = new ArrayList<StartingCard>();
+        boolean shortRound = _rounds[_activeRoundId].duration == 0 || 
+                _rounds[_activeRoundId].lastTick < _rounds[_activeRoundId].duration/2;
         for (Iterator<StartingCard> iter = _scards.values().iterator(); iter.hasNext(); ) {
             StartingCard scard = iter.next();
             if (!scard.played) {
+                continue;
+            }
+            // If the round was short (ie: no earnings), then the remaining players don't lose
+            // their cards
+            if (shortRound && isActivePlayer(scard.pidx)) {
+                iter.remove();
                 continue;
             }
             if (scard.item.playCard()) {
