@@ -69,7 +69,10 @@ if [ -z "$NODEVLIBS" -a -d $BANG_HOME/dist/classes ]; then
     CLASSPATH=$BANG_HOME/dist/classes:$CLASSPATH
 else
     for JAR in $BANG_HOME/dist/bang-*.jar; do
-        CLASSPATH=$JAR:$CLASSPATH
+        # skip the bang-support jar, it duplicates what's in bang-code
+        if [ "$JAR" != "$BANG_HOME/dist/bang-support.jar" ]; then
+            CLASSPATH=$JAR:$CLASSPATH
+        fi
     done
 fi
 CLASSPATH=$BANG_HOME:$CLASSPATH

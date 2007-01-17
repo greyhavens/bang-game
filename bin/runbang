@@ -74,7 +74,8 @@ CLASSPATH="$JAVA_HOME/jre/lib/rt.jar"
 
 # Add all necessary JAR files to the CLASSPATH
 for jar in $BANG_HOME/dist/lib/*.jar $BANG_HOME/dist/bang-*.jar; do
-    if [ -e $jar ]; then
+    # skip the bang-support jar, it duplicates what's in bang-code
+    if [ "$JAR" != "$BANG_HOME/dist/bang-support.jar" ]; then
         CLASSPATH=$jar:$CLASSPATH
     fi
 done
