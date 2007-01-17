@@ -1244,6 +1244,15 @@ public class BangClient extends BasicClient
                     ((BangBootstrapData)_ctx.getClient().getBootstrapData()).saloonOid;
             }
         }
+
+        public void locationChangeFailed (int placeId, String reason) {
+            // if we fail to move to our prior location since it no longer exists, it was
+            // likely a back parlor which got destroyed, so just head back to the saloon
+            if (placeId == _priorLocationOid && "m.no_such_place".equals(reason)) {
+                _ctx.getLocationDirector().moveTo(
+                    ((BangBootstrapData)_ctx.getClient().getBootstrapData()).saloonOid);
+            }
+        }
     };
 
     protected GlobalKeyManager.Command _clearPopup =
