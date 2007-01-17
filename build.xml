@@ -332,7 +332,7 @@
   </target>
 
   <!-- fully cleans out the installed application -->
-  <target name="distclean" depends="copydistprops,clean">
+  <target name="distclean" depends="clean">
     <delete dir="${deploy.dir}"/>
     <delete><fileset dir="rsrc" includes="**/model.dat"/></delete>
     <delete><fileset dir="rsrc" includes="**/*.jar"/></delete>
