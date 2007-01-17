@@ -506,7 +506,7 @@
        <sysproperty key="no_unpack_resources" value="true"/>
        <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
     </java>
-    <exec executable="bin/update_board_summary"/>
+    <exec executable="${basedir}/bin/update_board_summary"/>
   </target>
 
   <!-- builds the production client getdown distribution -->
