@@ -1640,7 +1640,7 @@ public class BangManager extends GameManager
             int high = _bangobj.points[ranks[0].pidx];
             for (int ii = 0; ii < ranks.length; ii++) {
                 if (!coop) {
-                    int points = _bangobj.points[ranks[ii].pidx];
+                    int points = _bangobj.perRoundPoints[_activeRoundId][ranks[ii].pidx];
                     if (points < high) {
                         rank = (short)ii;
                         high = points;
@@ -1894,37 +1894,52 @@ public class BangManager extends GameManager
     @Override // documentation inherited
     protected void assignWinners (boolean[] winners)
     {
-        // compute the final ranking of each player, resolving ties using kill count, then a random
-        // ordering
-        int[] points = _bangobj.getFilteredPoints();
-        _ranks = new RankRecord[points.length];
-        for (int ii = 0; ii < _ranks.length; ii++) {
-            int kills = 0;
-            for (int rr = 0; rr < _rounds.length; rr++) {
-                if (_rounds[rr].stats != null) {
-                    kills += _rounds[rr].stats[ii].getIntStat(Stat.Type.UNITS_KILLED);
+        try {
+            _bangobj.startTransaction();
+            // compute the final ranking of each player, resolving ties using kill count, then a 
+            // random ordering
+            int[] points = _bangobj.getFilteredPoints();
+            _ranks = new RankRecord[points.length];
+            boolean[] active = new boolean[points.length];
+            for (int ii = 0; ii < _ranks.length; ii++) {
+                int kills = 0;
+                for (int rr = 0; rr < _rounds.length; rr++) {
+                    if (_rounds[rr].stats != null) {
+                        kills += _rounds[rr].stats[ii].getIntStat(Stat.Type.UNITS_KILLED);
+                    }
+                }
+                active[ii] = isActivePlayer(ii);
+                _ranks[ii] = new RankRecord(ii, points[ii], kills, (active[ii] ? 1 : 0));
+                // resigned players will have their points set to 0 (this will not affect their
+                // per round points which is used for various stat calculations later on).
+                if (!active[ii]) {
+                    _bangobj.setPointsAt(ii, 0);
+                    SpeakProvider.sendAttention(_bangobj, GAME_MSGS, MessageBundle.tcompose(
+                                "m.resign_points", _bangobj.players[ii].toString()));
                 }
             }
-            _ranks[ii] = new RankRecord(ii, points[ii], kills, (isActivePlayer(ii) ? 1 : 0));
-        }
 
-        // first shuffle, then sort so that ties are resolved randomly
-        ArrayUtil.shuffle(_ranks);
-        Arrays.sort(_ranks);
+            // first shuffle, then sort so that ties are resolved randomly
+            ArrayUtil.shuffle(_ranks);
+            Arrays.sort(_ranks);
 
-        // now ensure that each player has at least one more point than the player ranked
-        // immediately below them to communicate any last ditch tie resolution to the players
-        for (int ii = _ranks.length-2; ii >= 0; ii--) {
-            int highidx = _ranks[ii].pidx, lowidx = _ranks[ii+1].pidx;
-            if (_bangobj.points[highidx] <= _bangobj.points[lowidx]) {
-                _bangobj.setPointsAt(_bangobj.points[lowidx]+1, highidx);
-                SpeakProvider.sendAttention(_bangobj, GAME_MSGS, MessageBundle.tcompose(
-                            "m.tiebreaker_points", _bangobj.players[highidx].toString()));
+            // now ensure that each player has at least one more point than the player ranked
+            // immediately below them to communicate any last ditch tie resolution to the players
+            for (int ii = _ranks.length-2; ii >= 0; ii--) {
+                int highidx = _ranks[ii].pidx, lowidx = _ranks[ii+1].pidx;
+                // we won't break adjust points for resigned players
+                if (_bangobj.points[highidx] <= _bangobj.points[lowidx] && active[highidx]) {
+                    _bangobj.setPointsAt(_bangobj.points[lowidx]+1, highidx);
+                    SpeakProvider.sendAttention(_bangobj, GAME_MSGS, MessageBundle.tcompose(
+                                "m.tiebreaker_points", _bangobj.players[highidx].toString()));
+                }
             }
-        }
 
-        // finally pass the winner info up to the parlor services
-        winners[_ranks[0].pidx] = true;
+            // finally pass the winner info up to the parlor services
+            winners[_ranks[0].pidx] = true;
+        } finally {
+            _bangobj.commitTransaction();
+        }
     }
 
     /**
