@@ -109,13 +109,14 @@ public class PlaceChatView extends TabbedChatView
     // documentation inherited from interface ChatDisplay
     public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
+        log.info("displayMessage [msg=" + msg + "].");
         if (alreadyDisplayed) {
             return false;
         }
+        boolean isPlaceChatViewType = PLACE_CHAT_VIEW_TYPE.equals(msg.localtype);
 
         // if it's not place chat, pass it to our parent
-        if (!msg.localtype.equals(PLACE_CHAT_VIEW_TYPE) &&
-            !msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE)) {
+        if (!isPlaceChatViewType && !msg.localtype.equals(ChatCodes.PLACE_CHAT_TYPE)) {
             return super.displayMessage(msg, alreadyDisplayed);
         }
 
@@ -129,10 +130,9 @@ public class PlaceChatView extends TabbedChatView
             }
 
         // make sure we're showing, otherwise we don't want to intercept system messages
-        } else if (isShowing() && msg instanceof SystemMessage) {
+        } else if ((isShowing() || isPlaceChatViewType) && msg instanceof SystemMessage) {
             SystemMessage smsg = (SystemMessage)msg;
-            if (PLACE_CHAT_VIEW_TYPE.equals(msg.localtype) ||
-                SystemMessage.FEEDBACK == smsg.attentionLevel) {
+            if (isPlaceChatViewType || SystemMessage.FEEDBACK == smsg.attentionLevel) {
                 ((ComicChatView)_pane.getSelectedTab()).appendSystem(msg);
                 return true;
             }
