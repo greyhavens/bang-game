@@ -247,7 +247,8 @@ public class OOOAuthenticator extends BangAuthenticator
                 ArrayList<RewardRecord> rewards =
                     _rewardrep.loadActivatedRewards(prec.accountName, creds.ident);
                 for (RewardRecord record : rewards) {
-                    if (record.account.equals(user.username)) {
+                    if (record.account.equals(user.username) &&
+                        StringUtil.isBlank(record.redeemerIdent)) {
                         maybeRedeemReward(prec, creds.ident, record, rewards);
                     }
                 }
