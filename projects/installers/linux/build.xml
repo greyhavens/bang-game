@@ -3,7 +3,7 @@
 
   <!-- load up our configuration information -->
   <property name="base.dir" value="${basedir}/../../.."/>
-  <property name="web.home" value="${base.dir}/pages"/>
+  <property name="deploy.dir" value="dist"/>
   <property name="temp.dir" value="bang_install"/>
   <property file="${base.dir}/dist/deployment.properties"/>
 
@@ -44,7 +44,7 @@
 
     <exec executable="makeself" failonerror="true">
       <arg line="${temp.dir}"/>
-      <arg line="${web.home}/${bclient_ident}/${installer.name}"/>
+      <arg line="../${deploy.dir}/${installer.name}"/>
       <arg line="${bclient_ident}"/>
       <arg line="./finish_install.sh"/>
       <arg line="$0"/>

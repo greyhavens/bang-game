@@ -4,12 +4,13 @@
   <!-- load up our configuration information -->
   <property name="base.dir" value="${basedir}/../.."/>
   <property name="web.home" value="${base.dir}/pages"/>
+  <property name="deploy.dir" value="dist"/>
   <property file="${base.dir}/dist/deployment.properties"/>
   <property file="${cert_dir}/certificate.properties"/>
 
   <target name="prepare">
-    <copy todir="data"
-          file="${base.dir}/projects/tools/lib/java/getdown-pro.jar"/>
+    <copy todir="data" file="${base.dir}/projects/tools/lib/java/getdown-pro.jar"/>
+    <mkdir dir="${deploy.dir}"/>
   </target>
 
   <!-- builds and installs the dev installers -->
@@ -18,11 +19,12 @@
       <arg line="-V2"/>
       <arg line="dev-installer.nsi"/>
     </exec>
+    <ant target="devclient" dir="linux" antfile="build.xml" inheritAll="no"/>
     <copy todir="${web.home}/devclient/">
-      <fileset dir="${default_locale}" includes="dev-install.exe"/>
+      <fileset dir="${deploy.dir}" includes="dev-install.exe"/>
+      <fileset dir="${deploy.dir}" includes="dev-install.bin"/>
       <fileset dir="${default_locale}" includes="dev-install.dmg"/>
     </copy>
-    <ant target="devclient" dir="linux" antfile="build.xml" inheritAll="no"/>
   </target>
 
   <!-- builds and installs the test installers -->
@@ -31,11 +33,12 @@
       <arg line="-V2"/>
       <arg line="test-installer.nsi"/>
     </exec>
+    <ant target="tclient" dir="linux" antfile="build.xml" inheritAll="no"/>
     <copy todir="${web.home}/aclient/">
-      <fileset dir="${default_locale}" includes="test-install.exe"/>
+      <fileset dir="${deploy.dir}" includes="test-install.exe"/>
+      <fileset dir="${deploy.dir}" includes="test-install.bin"/>
       <fileset dir="${default_locale}" includes="test-install.dmg"/>
     </copy>
-    <ant target="tclient" dir="linux" antfile="build.xml" inheritAll="no"/>
   </target>
 
   <!-- builds and installs the production installers -->
@@ -44,12 +47,12 @@
       <arg line="-V2"/>
       <arg line="bang-installer.nsi"/>
     </exec>
+    <ant target="client" dir="linux" antfile="build.xml" inheritAll="no"/>
     <copy todir="${web.home}/client/">
-      <fileset dir="${default_locale}" includes="bang-install.exe"/>
+      <fileset dir="${deploy.dir}" includes="bang-install.exe"/>
+      <fileset dir="${deploy.dir}" includes="bang-install.bin"/>
       <fileset dir="${default_locale}" includes="bang-install.dmg"/>
     </copy>
-    <!-- build the Linux installer -->
-    <ant target="client" dir="linux" antfile="build.xml" inheritAll="no"/>
   </target>
 
   <!-- signs and install the Getdown applet jar file -->
@@ -65,9 +68,6 @@
   <!-- clean out the project -->
   <target name="clean">
     <delete file="data/getdown-pro.jar"/>
-    <delete>
-      <fileset dir="${default_locale}" includes="*.exe"/>
-      <fileset dir="${default_locale}" includes="*.bin"/>
-    </delete>
+    <delete dir="${deploy.dir}"/>
   </target>
 </project>

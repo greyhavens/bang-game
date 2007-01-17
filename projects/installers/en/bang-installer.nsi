@@ -9,7 +9,7 @@
   !define INSTALL_DIR "Bang Howdy"
   !define HOST "http://download.threerings.net/bang"
   !ifndef OUTFILENAME
-    !define OUTFILENAME "bang-install.exe"
+    !define OUTFILENAME "..\dist\bang-install.exe"
   !endif
 
   ; comment this out to enable the code that automatically downloads

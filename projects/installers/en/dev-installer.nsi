@@ -9,7 +9,7 @@
   !define INSTALL_DIR "Bang Howdy Dev"
   !define HOST "http://download.earth.threerings.net/bang"
   !ifndef OUTFILENAME
-    !define OUTFILENAME "dev-install.exe"
+    !define OUTFILENAME "..\dist\dev-install.exe"
   !endif
 
   ; comment this out to enable the code that automatically downloads
