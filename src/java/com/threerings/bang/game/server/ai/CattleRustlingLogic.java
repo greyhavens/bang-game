@@ -129,7 +129,7 @@ public class CattleRustlingLogic extends AILogic
         if (bshot != null && moveUnit(pieces, unit, moves, bshot.x,
             bshot.y, 1)) {
             return;
-        } else if (herd != null && (herd.x != unit.x || herd.y != unit.y) &&
+        } else if (herd != null && unit.getDistance(herd.x, herd.y) > 1 &&
             moveUnit(pieces, unit, moves, herd.x, herd.y, 1)) {
             return;
         } else if (ccow != null &&
