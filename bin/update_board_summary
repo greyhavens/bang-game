@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# Runs the board summarizer and directs the output to the appropriate location
+
+BANG_HOME=`dirname $0`
+BANG_HOME=`cd $BANG_HOME/.. ; pwd`
+
+$BANG_HOME/bin/bangjava com.threerings.bang.tools.DumpBoards \
+    rsrc/boards/*/?/*.board | $BANG_HOME/bin/summarize_boards > \
+    $BANG_HOME/pages/boards.html

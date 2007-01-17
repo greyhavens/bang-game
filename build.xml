@@ -506,8 +506,7 @@
        <sysproperty key="no_unpack_resources" value="true"/>
        <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
     </java>
-    <!-- TODO: com.threerings.bang.tools.DumpBoards rsrc/boards/*/?/*.board | -->
-    <!-- bin/summarize_boards > pages/boards.html -->
+    <exec executable="bin/update_board_summary"/>
   </target>
 
   <!-- builds the production client getdown distribution -->
