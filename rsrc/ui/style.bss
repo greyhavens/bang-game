@@ -1811,6 +1811,25 @@ roster_entry {
   padding: 0 20 0 0;
 }
 
+history_view {
+  background: image "ui/window/border_ornate.png" framexy;
+  size: 500 -1;
+  padding: 15 15;
+}
+
+history_date {
+  font: "Dom Casual" plain 17;
+  color: #5C361D;
+  vertical-align: top;
+  size: 135 -1;
+}
+
+history_desc {
+  font: "Dom Casual" plain 17;
+  color: #5C361D;
+  size: 325 -1;
+}
+
 play_view {
   background: image "ui/hideout/fields_play.png" centerxy;
 }

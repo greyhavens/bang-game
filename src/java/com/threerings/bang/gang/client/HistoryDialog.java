@@ -15,7 +15,6 @@ import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
-import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.util.MessageBundle;
@@ -42,12 +41,11 @@ public class HistoryDialog extends BDecoratedWindow
         
         ((GroupLayout)getLayoutManager()).setOffAxisPolicy(GroupLayout.STRETCH);
         
-        TableLayout tlay = new TableLayout(2, 2, 10);
-        tlay.setHorizontalAlignment(TableLayout.STRETCH);
-        tlay.setFixedColumn(0, true);
-        _econt = new BContainer(tlay);
+        GroupLayout glay = GroupLayout.makeVert(
+            GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
+        _econt = new BContainer(glay);
         _econt.setStyleClass("history_view");
-        add(_econt);
+        add(_econt, GroupLayout.FIXED);
         
         _econt.add(new BLabel(_ctx.xlate(HIDEOUT_MSGS, "m.loading_history")));
         _econt.add(new Spacer(1, 1));
@@ -125,11 +123,23 @@ public class HistoryDialog extends BDecoratedWindow
         _entries = entries;
         _offset = offset;
         
+        GroupLayout glay = GroupLayout.makeHoriz(
+            GroupLayout.STRETCH, GroupLayout.LEFT, GroupLayout.NONE);
+        glay.setGap(10);
+        glay.setOffAxisJustification(GroupLayout.TOP);
+        
         _econt.removeAll();
         for (HistoryEntry entry : entries) {
-            _econt.add(new BLabel(DATE_FORMAT.format(entry.getRecordedDate()), "history_entry"));
-            _econt.add(new BLabel(_ctx.xlate(HIDEOUT_MSGS, entry.description), "history_entry"));
+            BContainer cont = new BContainer(glay);
+            cont.add(new BLabel(DATE_FORMAT.format(entry.getRecordedDate()), "history_date"),
+                GroupLayout.FIXED);
+            BLabel desc = new BLabel(_ctx.xlate(HIDEOUT_MSGS, entry.description), "history_desc");
+            cont.add(desc);
+            _econt.add(cont);
+            desc.getPreferredSize(325, -1); // hack to ensure label computes correct height
         }
+        pack();
+        center();
     }
     
     protected BangContext _ctx;
