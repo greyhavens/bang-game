@@ -19,6 +19,7 @@ import com.threerings.bang.client.WalletLabel;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
 
@@ -43,7 +44,11 @@ public class SaloonView extends ShopView
 
         add(_parlist = new ParlorList(ctx), PARLIST_RECT);
 
-        add(_crview = new CriterionView(ctx, _ctrl), CRIT_RECT);
+        add(_crview = new CriterionView(ctx) {
+            protected void findMatch (Criterion criterion) {
+                _ctrl.findMatch(criterion);                
+            }
+        }, CRIT_RECT);
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
         _status.setText(getShopTip());
@@ -68,7 +73,11 @@ public class SaloonView extends ShopView
         }
 
         // display a match view for this pending match
-        add(_mview = new MatchView(_ctx, _ctrl, matchOid), MATCH_RECT);
+        add(_mview = new MatchView(_ctx, matchOid, true) {
+            protected void leaveMatch (int matchOid) {
+                _ctrl.leaveMatch(matchOid);
+            }
+        }, MATCH_RECT);
     }
 
     /**

@@ -10,7 +10,7 @@ import com.threerings.crowd.util.CrowdContext;
 import com.threerings.bang.util.BangContext;
 
 /**
- * Manages the client side of the Ranch.
+ * Manages the client side of the Hideout.
  */
 public class HideoutController extends PlaceController
 {

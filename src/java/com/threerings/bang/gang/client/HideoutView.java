@@ -263,7 +263,7 @@ public class HideoutView extends ShopView
             add(bcont);
             
             _buttons[0].setSelected(true);
-            add(_play = new PlayView(_ctx, _hideoutobj));
+            add(_play = new PlayView(_ctx, _hideoutobj, _status));
         }
         
         // documentation inherited from interface ActionListener
@@ -309,6 +309,13 @@ public class HideoutView extends ShopView
             button.addListener(this);
             bcont.add(button);
             return button;
+        }
+        
+        @Override // documentation inherited
+        protected void wasRemoved ()
+        {
+            super.wasRemoved();
+            _play.shutdown();
         }
         
         protected BToggleButton[] _buttons;

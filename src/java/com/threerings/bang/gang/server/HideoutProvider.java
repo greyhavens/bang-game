@@ -5,6 +5,7 @@ package com.threerings.bang.gang.server;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
+import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -35,6 +36,12 @@ public interface HideoutProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link HideoutService#findMatch} request.
+     */
+    public void findMatch (ClientObject caller, Criterion arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link HideoutService#formGang} request.
      */
     public void formGang (ClientObject caller, Handle arg1, String arg2, InvocationService.ConfirmListener arg3)
@@ -51,4 +58,9 @@ public interface HideoutProvider extends InvocationProvider
      */
     public void leaveGang (ClientObject caller, InvocationService.ConfirmListener arg1)
         throws InvocationException;
+
+    /**
+     * Handles a {@link HideoutService#leaveMatch} request.
+     */
+    public void leaveMatch (ClientObject caller, int arg1);
 }

@@ -21,6 +21,8 @@ import com.threerings.bang.util.NameFactory;
 
 import com.threerings.bang.avatar.server.BarberManager;
 
+import com.threerings.bang.saloon.server.MatchHostManager;
+
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangCodes;
@@ -35,7 +37,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Provides hideout-related services.
  */
-public class HideoutManager extends PlaceManager
+public class HideoutManager extends MatchHostManager
     implements GangCodes, HideoutCodes, HideoutProvider
 {
     // documentation inherited from interface HideoutProvider
@@ -254,13 +256,6 @@ public class HideoutManager extends PlaceManager
     protected PlaceObject createPlaceObject ()
     {
         return new HideoutObject();
-    }
-
-    @Override // documentation inherited
-    protected long idleUnloadPeriod ()
-    {
-        // we don't want to unload
-        return 0L;
     }
 
     @Override // documentation inherited

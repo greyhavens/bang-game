@@ -40,16 +40,15 @@ import static com.threerings.bang.Log.log;
  * Displays a pending matched game and handles the process of entering the game
  * when all is ready to roll.
  */
-public class MatchView extends BContainer
+public abstract class MatchView extends BContainer
     implements Subscriber<MatchObject>
 {
-    public MatchView (BangContext ctx, SaloonController ctrl, int matchOid)
+    public MatchView (BangContext ctx, int matchOid, boolean showChat)
     {
         super(GroupLayout.makeVStretch());
         setStyleClass("match_view");
 
         _ctx = ctx;
-        _ctrl = ctrl;
         _msgs = _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
         _msub = new SafeSubscriber<MatchObject>(matchOid, this);
         _msub.subscribe(_ctx.getDObjectManager());
@@ -80,11 +79,16 @@ public class MatchView extends BContainer
         row.add(_bye = new BButton(_msgs.get("m.leave"), new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 _bye.setEnabled(false);
-                _ctrl.leaveMatch(_mobj.getOid());
+                leaveMatch(_mobj.getOid());
             }
         }, "leave"));
         add(row, GroupLayout.FIXED);
 
+        // cut it short if we're not showing the chat display
+        if (!showChat) {
+            return;
+        }
+        
         // add a label that will overlay the "Back Parlors" text (it also has
         // custom spacing that positions everything properly)
         ImageIcon icon = new ImageIcon(
@@ -138,6 +142,9 @@ public class MatchView extends BContainer
         updateCriterion();
         updateStarting();
 
+        if (_chat == null) {
+            return;
+        }
         _ctx.getChatDirector().addAuxiliarySource(_mobj, "match_chat");
         _chat.setSpeakService(_mobj.speakService, "match_chat");
         _chat.setEnabled(true);
@@ -151,18 +158,23 @@ public class MatchView extends BContainer
     {
         log.warning("Failed to subscribe to match object " +
                     "[oid=" + oid + ", cause=" + cause + "].");
-        _ctrl.leaveMatch(-1);
+        leaveMatch(-1);
     }
 
+    /**
+     * Leaves the specified match.
+     */
+    protected abstract void leaveMatch (int matchOid);
+    
     @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        if (_mobj != null) {
-            _ctx.getChatDirector().removeAuxiliarySource(_mobj);
-        }
         _msub.unsubscribe(_ctx.getDObjectManager());
-        _chat.clearSpeakService();
+        if (_chat != null && _mobj != null) {
+            _ctx.getChatDirector().removeAuxiliarySource(_mobj);  
+            _chat.clearSpeakService();
+        }
     }
 
     protected void updateDisplay ()
@@ -210,7 +222,6 @@ public class MatchView extends BContainer
     };
 
     protected BangContext _ctx;
-    protected SaloonController _ctrl;
     protected MessageBundle _msgs;
     protected SafeSubscriber<MatchObject> _msub;
     protected MatchObject _mobj;

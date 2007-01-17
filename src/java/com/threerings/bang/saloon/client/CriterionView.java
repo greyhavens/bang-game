@@ -29,14 +29,13 @@ import com.threerings.bang.saloon.data.SaloonCodes;
 /**
  * Displays the set of configurable game criterion.
  */
-public class CriterionView extends BContainer
+public abstract class CriterionView extends BContainer
 {
-    public CriterionView (BangContext ctx, SaloonController ctrl)
+    public CriterionView (BangContext ctx)
     {
         super(new BorderLayout(5, 5));
 
         _ctx = ctx;
-        _ctrl = ctrl;
         MessageBundle msgs = _ctx.getMessageManager().getBundle(
             SaloonCodes.SALOON_MSGS);
 
@@ -114,6 +113,11 @@ public class CriterionView extends BContainer
         reenable();
     }
 
+    /**
+     * Finds or creates a match with the specified criterion.
+     */
+    protected abstract void findMatch (Criterion criterion); 
+    
     protected String[] xlate (MessageBundle msgs, String[] umsgs)
     {
         String[] tmsgs = new String[umsgs.length];
@@ -145,12 +149,11 @@ public class CriterionView extends BContainer
 
             // pass the buck onto the controller to do the rest
             _go.setEnabled(false);
-            _ctrl.findMatch(criterion);
+            findMatch(criterion);
         }
     };
 
     protected BangContext _ctx;
-    protected SaloonController _ctrl;
 
     protected BCheckBox[] _rounds = new BCheckBox[GameCodes.MAX_ROUNDS];
     protected BCheckBox[] _players = new BCheckBox[GameCodes.MAX_PLAYERS-1];

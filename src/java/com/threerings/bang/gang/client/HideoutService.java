@@ -9,6 +9,8 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.NameCreator;
 
+import com.threerings.bang.saloon.data.Criterion;
+
 import com.threerings.bang.gang.data.HistoryEntry;
 
 /**
@@ -57,4 +59,14 @@ public interface HideoutService extends InvocationService
      * @param listener a listener to notify with the array of {@link HistoryEntry}s
      */    
     public void getHistoryEntries (Client client, int offset, ResultListener listener);
+    
+    /**
+     * Requests that a game be located meeting the specified criterion.
+     */
+    public void findMatch (Client client, Criterion criterion, ResultListener listener);
+
+    /**
+     * Requests that we leave our currently pending match.
+     */
+    public void leaveMatch (Client client, int matchOid);
 }

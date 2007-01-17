@@ -6,6 +6,7 @@ package com.threerings.bang.gang.server;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.bang.gang.data.HideoutMarshaller;
+import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -60,6 +61,13 @@ public class HideoutDispatcher extends InvocationDispatcher
             );
             return;
 
+        case HideoutMarshaller.FIND_MATCH:
+            ((HideoutProvider)provider).findMatch(
+                source,
+                (Criterion)args[0], (InvocationService.ResultListener)args[1]
+            );
+            return;
+
         case HideoutMarshaller.FORM_GANG:
             ((HideoutProvider)provider).formGang(
                 source,
@@ -78,6 +86,13 @@ public class HideoutDispatcher extends InvocationDispatcher
             ((HideoutProvider)provider).leaveGang(
                 source,
                 (InvocationService.ConfirmListener)args[0]
+            );
+            return;
+
+        case HideoutMarshaller.LEAVE_MATCH:
+            ((HideoutProvider)provider).leaveMatch(
+                source,
+                ((Integer)args[0]).intValue()
             );
             return;
 
