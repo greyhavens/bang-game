@@ -355,6 +355,7 @@
     <delete>
       <fileset dir="pages">
         <include name="aspects.html"/>
+        <include name="boards.html"/>
         <include name="units.html"/>
       </fileset>
     </delete>
