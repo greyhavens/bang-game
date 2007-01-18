@@ -24,6 +24,9 @@ public class Award extends SimpleStreamableObject
     /** The amount of cash "taken home" by this player. */
     public int cashEarned;
 
+    /** The amount of notoriety earned for the player's team. */
+    public int notorietyEarned;
+    
     /** The badge or clothing article earned by this player if any. */
     public Item item;
 

@@ -1838,6 +1838,11 @@ public class BangManager extends GameManager
                     award.cashEarned = (int)Math.ceil(
                         computeEarnings(ii) * _bconfig.duration.getAdjustment());
                 }
+                
+                // for now, award one notoriety point for every twenty scrip
+                if (prec.gangId > 0) {
+                    award.notorietyEarned = award.cashEarned / 20;
+                }
             }
 
             // if this was a rated game, persist various stats and potentially award a badge
@@ -2451,6 +2456,15 @@ public class BangManager extends GameManager
      */
     protected void postGamePersist (final Award[] awards)
     {
+        // award notoriety through the gang manager
+        for (Award award : awards) {
+            if (award.notorietyEarned > 0) {
+                PlayerRecord prec = _precords[award.pidx];
+                BangServer.gangmgr.grantNotoriety(
+                    prec.gangId, prec.playerId, prec.user.handle, award.notorietyEarned);
+            }
+        }
+        
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 for (int pidx = 0; pidx < awards.length; pidx++) {
@@ -2467,19 +2481,6 @@ public class BangManager extends GameManager
                         } catch (PersistenceException pe) {
                             log.log(Level.WARNING, "Failed to award scrip [who=" + prec.playerId +
                                     ", scrip=" + award.cashEarned + "]", pe);
-                        }
-                    }
-
-                    // grant them notoriety for their gang (same as scrip earned, for now)
-                    int notoriety = award.cashEarned;
-                    if (prec.gangId > 0 && notoriety > 0) {
-                        try {
-                            BangServer.gangrepo.addNotoriety(
-                                prec.gangId, prec.playerId, notoriety);
-                        } catch (PersistenceException pe) {
-                            log.log(Level.WARNING, "Failed to grant notoriety [playerId=" +
-                                prec.playerId + ", gangId=" + prec.gangId + ", notoriety=" +
-                                notoriety + "].", pe);
                         }
                     }
 

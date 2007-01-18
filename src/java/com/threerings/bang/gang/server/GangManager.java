@@ -10,6 +10,7 @@ import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryListenerUnit;
+import com.samskivert.jdbc.RepositoryUnit;
 
 import com.samskivert.util.Collections;
 import com.samskivert.util.HashIntMap;
@@ -261,6 +262,44 @@ public class GangManager
             public ArrayList<GangEntry> invokePersistResult ()
                 throws PersistenceException {
                 return _gangrepo.loadGangs();
+            }
+        });
+    }
+    
+    /**
+     * Grants notoriety points to a gang member and his gang.
+     */
+    public void grantNotoriety (
+        final int gangId, final int playerId, final Handle handle, final int points)
+    {
+        final GangObject gang = getGangObject(gangId);
+        final PlayerObject player = BangServer.lookupPlayer(playerId);
+        BangServer.invoker.postUnit(new RepositoryUnit() {
+            public void invokePersist ()
+                throws PersistenceException {
+                _gangrepo.addNotoriety(gangId, playerId, points);
+            }
+            public void handleSuccess () {
+                if (gang != null && gang.isActive()) {
+                    GangMemberEntry member = gang.members.get(handle);
+                    gang.startTransaction();
+                    try {
+                        gang.setNotoriety(gang.notoriety + points);
+                        if (member != null) {
+                            member.notoriety += points;
+                            gang.updateMembers(member);
+                        } 
+                    } finally {
+                        gang.commitTransaction();
+                    }
+                }
+                if (player != null && player.isActive()) {
+                    player.setGangNotoriety(player.gangNotoriety + points);
+                }
+            }
+            public void handleFailure (Exception cause) {
+                log.warning("Failed to grant notoriety [gangId=" + gangId + ", playerId=" +
+                    playerId + ", points=" + points + ", error=" + cause + "].");
             }
         });
     }
