@@ -382,8 +382,8 @@ public class BangClient extends BasicClient
 
         // if they haven't done (or declined) the tutorials yet, show them
         if (BangPrefs.shouldShowTutorials(_ctx.getUserObject())) {
-            displayPopup(new PickTutorialView(
-                             _ctx, PickTutorialView.Mode.FIRST_TIME), true);
+            displayPopup(new PickTutorialView(_ctx, PickTutorialView.Mode.FIRST_TIME), true,
+                         PickTutorialView.WIDTH_HINT);
             return true;
         }
 

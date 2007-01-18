@@ -194,7 +194,8 @@ public class GameOverView extends SteelWindow
             } else if (action.equals("to_tutorial")) {
                 // display the pick tutorial view in "finished tutorial" mode
                 _bctx.getBangClient().displayPopup(
-                    new PickTutorialView(_bctx, PickTutorialView.Mode.COMPLETED), true);
+                    new PickTutorialView(_bctx, PickTutorialView.Mode.COMPLETED), true,
+                    PickTutorialView.WIDTH_HINT);
 
             } else {
                 _bctx.getLocationDirector().moveTo(_bctx.getBangClient().getPriorLocationOid());

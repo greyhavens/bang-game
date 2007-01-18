@@ -142,6 +142,7 @@ public class FKeyPopups
         }
 
         BDecoratedWindow popup = null;
+        int whint = 500;
         switch (type) {
         default:
         case HELP:
@@ -152,6 +153,7 @@ public class FKeyPopups
             break;
         case TUTORIALS:
             popup = new PickTutorialView(_ctx, PickTutorialView.Mode.FKEY);
+            whint = PickTutorialView.WIDTH_HINT;
             break;
         case CLIENT_LOG:
             popup = createRecentLog();
@@ -173,7 +175,7 @@ public class FKeyPopups
         if (popup != null) {
             clearPopup();
             _poppedType = type;
-            _ctx.getBangClient().displayPopup(_popped = popup, true, 500);
+            _ctx.getBangClient().displayPopup(_popped = popup, true, whint);
         }
     }
 

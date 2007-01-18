@@ -44,6 +44,9 @@ public class PickTutorialView extends BDecoratedWindow
     /** The various modes in which we pop up the tutorial view. */
     public static enum Mode { FIRST_TIME, FKEY, COMPLETED };
 
+    /** The width we prefer to have passed to {@link #pack}. */
+    public static final int WIDTH_HINT = 500;
+
     /**
      * Creates the pick tutorial view.
      *
@@ -56,7 +59,6 @@ public class PickTutorialView extends BDecoratedWindow
         setStyleClass("dialog_window");
         setLayoutManager(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.CENTER,
                                               GroupLayout.NONE));
-        setPreferredSize(450, -1);
         ((GroupLayout)getLayoutManager()).setGap(25);
 
         _ctx = ctx;
