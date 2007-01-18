@@ -63,4 +63,10 @@ public interface HideoutProvider extends InvocationProvider
      * Handles a {@link HideoutService#leaveMatch} request.
      */
     public void leaveMatch (ClientObject caller, int arg1);
+
+    /**
+     * Handles a {@link HideoutService#setStatement} request.
+     */
+    public void setStatement (ClientObject caller, String arg1, String arg2, InvocationService.ConfirmListener arg3)
+        throws InvocationException;
 }

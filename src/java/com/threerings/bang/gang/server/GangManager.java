@@ -366,6 +366,36 @@ public class GangManager
     }
 
     /**
+     * Processes a request to change the gang's statement.
+     */
+    public void setStatement (
+        final int gangId, final String statement, final String url,
+        final InvocationService.ConfirmListener listener)
+    {
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                _gangrepo.updateStatement(gangId, statement, url);
+            }
+            public void handleSuccess () {
+                log.info("Changed gang statement [gangId=" + gangId + ", statement=" + statement +
+                         ", url=" + url + "].");
+                GangObject gangobj = getGangObject(gangId);
+                if (gangobj != null) {
+                    gangobj.startTransaction();
+                    try {
+                        gangobj.setStatement(statement);
+                        gangobj.setUrl(url);
+                    } finally {
+                        gangobj.commitTransaction();
+                    }
+                }
+                listener.requestProcessed();
+            }
+        });
+    }
+    
+    /**
      * Processes a request to add to the gang's coffers.  It is assumed that the player belongs to
      * a gang and that the amounts are valid.
      */

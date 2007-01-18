@@ -1846,7 +1846,7 @@ gang_info_design {
 
 gang_info_content {
   padding: 5 15;
-  size: 380 -1;
+  size: 380 185;
 }
 
 gang_title {
@@ -1864,7 +1864,6 @@ gang_statement {
   parent: "hideout_text";
   text-align: center;
   vertical-align: center;
-  size: -1 80;
 }
 
 gang_coffers {

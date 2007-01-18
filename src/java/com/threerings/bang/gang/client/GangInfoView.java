@@ -16,6 +16,9 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.text.IntegerDocument;
 import com.jmex.bui.util.Dimension;
 
+import com.samskivert.util.ResultListener;
+
+import com.threerings.util.BrowserUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -25,8 +28,10 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
+import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutObject;
@@ -59,18 +64,31 @@ public class GangInfoView extends BContainer
         BContainer mcont = new BContainer(glay);
         add(mcont);
         
-        BContainer tcont = GroupLayout.makeVBox(GroupLayout.TOP);
+        BContainer tcont = new BContainer(GroupLayout.makeVert(
+            GroupLayout.STRETCH, GroupLayout.TOP, GroupLayout.NONE));
         tcont.setStyleClass("gang_info_content");
         mcont.add(tcont);
-        tcont.add(new BLabel(gangobj.name.toString().toUpperCase(), "gang_title"));
+        tcont.add(new BLabel(gangobj.name.toString().toUpperCase(), "gang_title"),
+            GroupLayout.FIXED);
         
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ncont.add(_ranking = new BLabel("\"OUTLAWS\"", "gang_notoriety"));
         ncont.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/diamond.png"))));
         ncont.add(_notoriety = new BLabel(getNotorietyText(), "gang_notoriety"));
-        tcont.add(ncont);
+        tcont.add(ncont, GroupLayout.FIXED);
         
-        tcont.add(_statement = new BLabel(gangobj.statement, "gang_statement"));
+        BContainer scont = GroupLayout.makeVBox(GroupLayout.CENTER);
+        scont.add(_statement = new BLabel(gangobj.statement, "gang_statement"));
+        BContainer pcont = GroupLayout.makeHBox(GroupLayout.CENTER);
+        pcont.add(_page = new BButton(_msgs.get("m.home_page"), this, "page"));
+        _page.setStyleClass("alt_button");
+        _page.setVisible(gangobj.getURL() != null);
+        if (_ctx.getUserObject().gangRank == GangCodes.LEADER_RANK) {
+            pcont.add(_edit = new BButton(_msgs.get("m.edit"), this, "edit"));
+            _edit.setStyleClass("alt_button");
+        }
+        scont.add(pcont);
+        tcont.add(scont);
         
         BContainer ccont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ccont.add(new BLabel(_msgs.get("m.coffers"), "coffer_label"));
@@ -82,7 +100,7 @@ public class GangInfoView extends BContainer
             ccont.add(_donate = new BButton(_msgs.get("m.donate"), this, "donate"));
             _donate.setStyleClass("alt_button");
         }
-        tcont.add(ccont);
+        tcont.add(ccont, GroupLayout.FIXED);
         
         add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/design_bottom.png")),
             "gang_info_design"));
@@ -91,7 +109,21 @@ public class GangInfoView extends BContainer
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
-        _ctx.getBangClient().displayPopup(new DonateDialog(_ctx, _status), true, 400);
+        String action = event.getAction();
+        if (action.equals("page")) {
+            BrowserUtil.browseURL(_gangobj.getURL(), new ResultListener() {
+                public void requestCompleted (Object result) {
+                }
+                public void requestFailed (Exception cause) {
+                    String msg = MessageBundle.tcompose("m.browser_launch_failed", _gangobj.url);
+                    _status.setStatus(BangAuthCodes.AUTH_MSGS, msg, true);
+                }
+            });
+        } if (action.equals("edit")) {
+            _ctx.getBangClient().displayPopup(new StatementDialog(_ctx, _status), true, 400);
+        } else if (action.equals("donate")) {
+            _ctx.getBangClient().displayPopup(new DonateDialog(_ctx, _status), true, 400);
+        }
     }
     
     // documentation inherited from interface AttributeChangeListener
@@ -100,6 +132,8 @@ public class GangInfoView extends BContainer
         String name = event.getName();
         if (name.equals(GangObject.STATEMENT)) {
             _statement.setText(_gangobj.statement);
+        } else if (name.equals(GangObject.URL)) {
+            _page.setVisible(_gangobj.getURL() != null);
         } else if (name.equals(GangObject.NOTORIETY)) {
             _notoriety.setText(getNotorietyText());
         } else if (name.equals(GangObject.SCRIP) || name.equals(GangObject.COINS)) {
@@ -124,6 +158,37 @@ public class GangInfoView extends BContainer
     protected String getNotorietyText ()
     {
         return _msgs.get("m.notoriety", Integer.toString(_gangobj.notoriety));
+    }
+    
+    protected class StatementDialog extends RequestDialog
+    {
+        public StatementDialog (BangContext ctx, StatusLabel status)
+        {
+            super(ctx, HideoutCodes.HIDEOUT_MSGS, "m.statement_tip", "m.update", "m.cancel",
+                "m.statement_updated", status);
+            
+            BContainer scont = GroupLayout.makeHBox(GroupLayout.CENTER);
+            scont.add(new BLabel(_msgs.get("m.statement")), GroupLayout.FIXED);
+            scont.add(_statement = new BTextField(
+                _gangobj.statement, HideoutCodes.MAX_STATEMENT_LENGTH));
+            _statement.setPreferredWidth(300);
+            add(1, scont);
+            
+            BContainer ucont = GroupLayout.makeHBox(GroupLayout.CENTER);
+            ucont.add(new BLabel(_msgs.get("m.url")), GroupLayout.FIXED);
+            ucont.add(_url = new BTextField(_gangobj.url, HideoutCodes.MAX_URL_LENGTH));
+            _url.setPreferredWidth(300);
+            add(2, ucont);
+        }
+        
+        // documentation inherited
+        protected void fireRequest (Object result)
+        {
+            _hideoutobj.service.setStatement(
+                _ctx.getClient(), _statement.getText(), _url.getText(), this);
+        }
+        
+        protected BTextField _statement, _url;
     }
     
     protected class DonateDialog extends RequestDialog
@@ -191,7 +256,7 @@ public class GangInfoView extends BContainer
     
     protected BLabel _ranking, _notoriety, _statement;   
     protected MoneyLabel _coffers;
-    protected BButton _donate;
+    protected BButton _page, _edit, _donate;
     
     protected StatusLabel _status;
 }

@@ -133,6 +133,16 @@ public class GangRepository extends JORARepository
     }
 
     /**
+     * Updates a gang's statement and URL.
+     */
+    public void updateStatement (int gangId, String statement, String url)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANGS set STATEMENT = " + JDBCUtil.escape(statement) +
+            ", URL = " + JDBCUtil.escape(url) + " where GANG_ID = " + gangId, 1);
+    }
+    
+    /**
      * Adds or removes cash to/from the gang's coffers.
      */
     public void addToCoffers (int gangId, int scrip, int coins)

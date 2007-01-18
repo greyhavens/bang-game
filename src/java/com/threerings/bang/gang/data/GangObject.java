@@ -3,6 +3,8 @@
 
 package com.threerings.bang.gang.data;
 
+import java.net.URL;
+
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
@@ -103,6 +105,19 @@ public class GangObject extends DObject
     public DSet<TopRankedList> getTopRanked ()
     {
         return topRanked;
+    }
+    
+    /**
+     * Returns the URL of the gang's home page, or <code>null</code> if no valid URL has been
+     * configured.
+     */
+    public URL getURL ()
+    {
+        try {
+            return new URL(url);
+        } catch (Exception e) {
+            return null;
+        }
     }
     
     /**

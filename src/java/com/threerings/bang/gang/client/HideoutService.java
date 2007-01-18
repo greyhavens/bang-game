@@ -35,6 +35,12 @@ public interface HideoutService extends InvocationService
     public void leaveGang (Client client, ConfirmListener listener);
     
     /**
+     * Requests to set the gang's statement and URL.
+     */
+    public void setStatement (
+        Client client, String statement, String url, ConfirmListener listener);
+    
+    /**
      * Requests to contribute scrip and/or coins to the gang's coffers.
      */
     public void addToCoffers (

@@ -105,6 +105,38 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
+    public void setStatement (
+        ClientObject caller, String statement, String url,
+        final HideoutService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure they're in a gang
+        PlayerObject user = (PlayerObject)caller;
+        verifyInGang(user);
+        
+        // and that they're a leader
+        if (user.gangRank != LEADER_RANK) {
+            log.warning("Non-leader tried to change gang statement [who=" + user.who() +
+                ", statement=" + statement + ", url=" + url + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        
+        // make sure the entries are valid
+        if (statement == null || statement.length() > MAX_STATEMENT_LENGTH) {
+            log.warning("Invalid statement [who=" + user.who() + ", statement=" +
+                statement + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        if (url == null || url.length() > MAX_URL_LENGTH) {
+            log.warning("Invalid URL [who=" + user.who() + ", url=" + url + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        
+        // pass it off to the gang manager
+        BangServer.gangmgr.setStatement(user.gangId, statement, url, listener);
+    }
+    
+    // documentation inherited from interface HideoutProvider
     public void addToCoffers (
         ClientObject caller, final int scrip, final int coins,
         final HideoutService.ConfirmListener listener)

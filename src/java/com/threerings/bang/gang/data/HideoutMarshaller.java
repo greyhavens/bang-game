@@ -122,4 +122,17 @@ public class HideoutMarshaller extends InvocationMarshaller
             Integer.valueOf(arg2)
         });
     }
+
+    /** The method id used to dispatch {@link #setStatement} requests. */
+    public static final int SET_STATEMENT = 9;
+
+    // from interface HideoutService
+    public void setStatement (Client arg1, String arg2, String arg3, InvocationService.ConfirmListener arg4)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(arg1, SET_STATEMENT, new Object[] {
+            arg2, arg3, listener4
+        });
+    }
 }

@@ -96,6 +96,13 @@ public class HideoutDispatcher extends InvocationDispatcher
             );
             return;
 
+        case HideoutMarshaller.SET_STATEMENT:
+            ((HideoutProvider)provider).setStatement(
+                source,
+                (String)args[0], (String)args[1], (InvocationService.ConfirmListener)args[2]
+            );
+            return;
+
         default:
             super.dispatchRequest(source, methodId, args);
             return;
