@@ -36,6 +36,7 @@ import com.threerings.bang.gang.data.GangEntry;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HistoryEntry;
+import com.threerings.bang.gang.data.TopRankedGangList;
 
 import static com.threerings.bang.Log.*;
 
@@ -392,6 +393,37 @@ public class GangRepository extends JORARepository
         return list;
     }
 
+    /**
+     * Loads the top-ranked gangs in terms of notoriety.
+     */
+    public TopRankedGangList loadTopRankedByNotoriety (int count)
+        throws PersistenceException
+    {
+        final ArrayList<Handle> names = new ArrayList<Handle>();
+        final String query = "select NAME from GANGS order by NOTORIETY desc limit " + count;
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        names.add(new Handle(rs.getString(1)));
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+        TopRankedGangList list = new TopRankedGangList();
+        list.criterion = "m.top_notoriety";
+        list.names = names.toArray(new Handle[names.size()]);
+        return list;
+    }
+    
     /**
      * Loads the entries for all members of the specified gang.
      */

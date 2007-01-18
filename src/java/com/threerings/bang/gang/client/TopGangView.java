@@ -35,9 +35,15 @@ public class TopGangView extends BContainer
 
         BContainer cont = new BContainer(
             GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                 GroupLayout.STRETCH));
+                                 GroupLayout.NONE));
         add(new BScrollPane(cont), BorderLayout.CENTER);
 
+        for (TopRankedGangList list : hideoutobj.topRanked) {
+            if (list.criterion.indexOf("m.top_notoriety") > -1) {
+                addScenario(cont, list);
+                break;
+            }
+        }
         for (TopRankedGangList list : hideoutobj.topRanked) {
             if (list.criterion.indexOf("m.scenario_oa") > -1) {
                 addScenario(cont, list);
@@ -45,7 +51,8 @@ public class TopGangView extends BContainer
             }
         }
         for (TopRankedGangList list : hideoutobj.topRanked) {
-            if (list.criterion.indexOf("m.scenario_oa") == -1) {
+            if (list.criterion.indexOf("m.top_notoriety") == -1 &&
+                list.criterion.indexOf("m.scenario_oa") == -1) {
                 addScenario(cont, list);
             }
         }
@@ -57,7 +64,7 @@ public class TopGangView extends BContainer
 
         BContainer col = new BContainer(GroupLayout.makeVStretch());
         
-        String cat = _ctx.xlate(SaloonCodes.SALOON_MSGS, list.criterion);
+        String cat = _ctx.xlate(HideoutCodes.HIDEOUT_MSGS, list.criterion);
         col.add(new BLabel(cat, "top_score_category"));
         for (int ii = 0; ii < list.names.length; ii++) {
             col.add(new BLabel((ii + 1) + ". " + list.names[ii], "top_score_list"));

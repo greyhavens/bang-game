@@ -4,7 +4,12 @@
 package com.threerings.bang.gang.server;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 
+import com.samskivert.io.PersistenceException;
+
+import com.samskivert.util.Interval;
+import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
 
 import com.threerings.presents.data.ClientObject;
@@ -31,6 +36,7 @@ import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutMarshaller;
 import com.threerings.bang.gang.data.HideoutObject;
+import com.threerings.bang.gang.data.TopRankedGangList;
 
 import static com.threerings.bang.Log.log;
 
@@ -310,7 +316,78 @@ public class HideoutManager extends MatchHostManager
                 log.warning("Failed to load gang list [error=" + cause + "].");
             }
         });
+        
+        // start up our top-ranked list refresher interval
+        _rankval = new Interval(BangServer.omgr) {
+            public void expired () {
+                refreshTopRanked();
+            }
+        };
+        _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
     }
 
+    @Override // documentation inherited
+    protected void didShutdown ()
+    {
+        super.didShutdown();
+
+        // clear out our invocation service
+        if (_hobj != null) {
+            BangServer.invmgr.clearDispatcher(_hobj.service);
+            _hobj = null;
+        }
+
+        // stop our top-ranked list refresher
+        if (_rankval != null) {
+            _rankval.cancel();
+            _rankval = null;
+        }
+    }
+    
+    protected void refreshTopRanked ()
+    {
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                try {
+                    _lists = new ArrayList<TopRankedGangList>();
+                    _lists.add(BangServer.gangrepo.loadTopRankedByNotoriety(TOP_RANKED_LIST_SIZE));
+                    return true;
+
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Failed to load top-ranked gangs.", pe);
+                    return false;
+                }
+            }
+
+            public void handleResult () {
+                // make sure we weren't shutdown while we were off invoking
+                if (!_hobj.isActive()) {
+                    return;
+                }
+                _hobj.startTransaction();
+                try {
+                    for (TopRankedGangList list : _lists) {
+                        if (_hobj.topRanked.containsKey(list.criterion)) {
+                            _hobj.updateTopRanked(list);
+                        } else {
+                            _hobj.addToTopRanked(list);
+                        }
+                    }
+                } finally {
+                    _hobj.commitTransaction();
+                }
+            }
+
+            protected ArrayList<TopRankedGangList> _lists;
+        });
+    }
+    
     protected HideoutObject _hobj;
+    protected Interval _rankval;
+    
+    /** The frequency with which we update the top-ranked gang lists. */
+    protected static final long RANK_REFRESH_INTERVAL = 60 * 60 * 1000L;
+
+    /** The size of the top-ranked gang lists. */
+    protected static final int TOP_RANKED_LIST_SIZE = 10;
 }
