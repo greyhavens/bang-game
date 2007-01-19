@@ -109,7 +109,7 @@ public class PlaceChatView extends TabbedChatView
     // documentation inherited from interface ChatDisplay
     public boolean displayMessage (ChatMessage msg, boolean alreadyDisplayed)
     {
-        log.info("displayMessage [msg=" + msg + "].");
+        //log.info("displayMessage [msg=" + msg + "].");
         if (alreadyDisplayed) {
             return false;
         }
