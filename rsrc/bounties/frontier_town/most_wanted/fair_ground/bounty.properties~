@@ -1,0 +1,43 @@
+#
+# $Id$
+#
+# Fair Grounds bounty
+
+lock = none
+difficulty = easy
+in_order = true
+outlaw_print = 294, 97, 104, 122, 188, 205, 209, 262342, 262344, 67108955, 1500774648
+
+games = rustling_arts, posse_rustling, thin_the_herd, ruined_escape
+
+reward_scrip = 400
+
+#
+# Localized messages
+
+title = Fair Grounds
+
+descrip = "It ain't all work and no play for a frontier deputy.  Make an offical showin' at the County Fair and show 'em yer steer roping tricks.  Maybe stop by the Kissing Booth, put some shine on that badge..."
+
+rustling_arts.name = Rustling Arts
+rustling_arts.pregame_quote = "This here's the Fair's main event: Even teams, two gunslingers and a cavalry officer all 'round -- heh, unless someone's cheatin'.  We're representin' the Sheriff's Office here, son, so don't make us look bad."
+rustling_arts.bigshot_quote = true
+rustling_arts.failed_quote = "That lowdown dirty cheat!  Well, since you ain't handlin' it, I'll call in the Sheriff to rustle up this artillery-totin' snake in the grass."
+rustling_arts.completed_quote = "That artillery-totin' dirty cheat Buster's makin' off with his whole ill-gotten herd!"
+
+posse_rustling.name = Posse Rustling
+posse_rustling.pregame_quote = "Our ropers from the Fair won't put a scratch on those artillery.  Heh.  But there's plenty of angry ranchers to form up a posse against that cattle-thief.  With enough reinforcements we should be able to reclaim at least a third of the cattle he hasn't already herded out of town."
+posse_rustling.bigshot_quote = true
+posse_rustling.failed_quote = "Damnation!  We didn't even slow 'im."
+posee_rustling.completed_quote = "Good leadership, pardner!  Now to catch up with the villain himself!"
+
+thin_the_herd.name = Thin the Herd
+thin_the_herd.pregame_quote = "Thar's the varmint!  Ha!  With all this dust kicking up he's having trouble managing the herd.  I bet in the confusion we can thin out his ranks without losing too many of our own... especially with some of the firepower the posse's brought along."
+thin_the_herd.bigshot_quite = true
+thin_the_herd.failed_quote = "Dagnabbit, I thought we could handle that.  We'll never bring him in now."
+thin_the_herd.completed_quote = "Hoo boy!  He's runnin' scared now, and steerin' right for his hideout!"
+
+ruined_escape.name = Ruined Escape
+ruined_escape.pregame_quote = "He'll have the upper hand in that maze of his.  But that greedy devil won't head out again without most of the herd in tow.  Keep him busy long enough and we make his hideout into his trap when the Sheriff gets here.  Go rustle them cattle!"
+ruined_escape.failed_quote = "Well, that's a few o' the steer returned, anyway.  How could we let him slip past us, and while driving beef to boot?"
+ruined_escape.completed_quote = "Well that is a sight!  Old 'Tank' Buster tripped up in 'is own hideout.  Nice work, pardner."
