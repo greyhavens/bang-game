@@ -732,9 +732,6 @@ public class BangController extends GameController
         if (_bangobj.isActivePlayer(_pidx) || _config.allPlayersAIs()) {
             // let the game manager know that our units are in place and we're fully ready to go
             playerReadyFor(BangObject.IN_PLAY);
-
-            // add and immediately fade in and out a "GO!" marquee
-            _view.view.fadeMarqueeInOut("m.round_start", 1f);
         }
     }
 

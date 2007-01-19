@@ -1029,6 +1029,7 @@ public class BangBoardView extends BoardView
         Camera camera = _ctx.getRenderer().getCamera();
         BoundingBox bbox = new BoundingBox(new Vector3f(),
             TILE_SIZE/2, TILE_SIZE/2, TILE_SIZE/2);
+        long pathDelay = 0L, segTime = (long)(1000L / Config.getMovementSpeed());
         for (UnitSprite sprite : _readyUnits) {
             Piece unit = sprite.getPiece();
             Point corner = getStartCorner(unit);
@@ -1077,13 +1078,17 @@ public class BangBoardView extends BoardView
                     fsprite.move(_board, path, Config.getMovementSpeed());
                 }
             }.schedule(delay);
+
+            // calculate how long it should take for all paths to complete
+            pathDelay = Math.max(pathDelay, path.size() * segTime);
             delay += 150L;
+            pathDelay -= 150L;
         }
         _readyUnits.clear();
 
         // tell the controller to report back to the server that we're ready;
         // but give the units another half a second to arrive
-        delay += 500L;
+        delay += 500L + Math.max(0L, pathDelay);
         new Interval(_ctx.getApp()) {
             public void expired () {
                 _ctrl.readyForRound();
@@ -1787,7 +1792,8 @@ public class BangBoardView extends BoardView
      */
     protected void ticked (short tick)
     {
-        // Once we've got the tick, force all our sprites to the starting positions
+        // Once we've got the tick, force all our sprites to the starting positions (they should
+        // already be there), and show the GO! marquee
         if (tick == 0) {
             for (PieceSprite sprite : _pieces.values()) {
                 if (sprite instanceof UnitSprite && ((UnitSprite)sprite).movingToStart &&
@@ -1797,9 +1803,12 @@ public class BangBoardView extends BoardView
                     Piece p = usprite.getPiece();
                     usprite.setLocation(_board, p.x, p.y);
                     usprite.snapToTerrain(false);
-                    log.info("Jumped sprite to start [piece=" + p + "].");
+                    log.warning("Jumped sprite to start [piece=" + p + "].");
                 }
             }
+
+            // add and immediately fade in and out a "GO!" marquee
+            fadeMarqueeInOut("m.round_start", 1f);
         }
         // update all of our sprites
         for (Piece piece : _bangobj.pieces) {
