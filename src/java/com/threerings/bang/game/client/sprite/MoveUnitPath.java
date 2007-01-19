@@ -81,17 +81,8 @@ public class MoveUnitPath extends LineSegmentPath
 
         _elapsed += time;
         if (_actions != null && _elapsed > _times[_index] && _index < _actions.length-1) {
-            // if we overshot this action, subtract our overshoot time from subsequent nodes so
-            // that we catch up as best we can
-            float extra = (_elapsed - _times[_index]);
-            _index++; // move to the next node
-            float deduct = extra / (_actions.length - _index);
-            for (int ii = _index; ii < _actions.length; ii++) {
-                // don't reduce a node's time below 1ms
-                _times[ii] = Math.max(0.001f, _times[ii] - deduct);
-            }
             // now switch to the next action
-            sprite.setAction(_actions[_index]);
+            sprite.setAction(_actions[++_index]);
         }
     }
 
