@@ -1787,6 +1787,20 @@ public class BangBoardView extends BoardView
      */
     protected void ticked (short tick)
     {
+        // Once we've got the tick, force all our sprites to the starting positions
+        if (tick == 0) {
+            for (PieceSprite sprite : _pieces.values()) {
+                if (sprite instanceof UnitSprite && ((UnitSprite)sprite).movingToStart &&
+                        sprite.isMoving()) {
+                    UnitSprite usprite = (UnitSprite)sprite;
+                    usprite.cancelMove();
+                    Piece p = usprite.getPiece();
+                    usprite.setLocation(_board, p.x, p.y);
+                    usprite.snapToTerrain(false);
+                    log.info("Jumped sprite to start [piece=" + p + "].");
+                }
+            }
+        }
         // update all of our sprites
         for (Piece piece : _bangobj.pieces) {
             if (piece.updateSpriteOnTick()) {
