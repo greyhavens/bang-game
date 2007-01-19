@@ -13,11 +13,6 @@ import com.threerings.bang.game.data.piece.Piece;
  */
 public class CollisionHandler extends EffectHandler
 {
-    public CollisionHandler (int damage)
-    {
-        _damage = damage;
-    }
-
     @Override // documentation inherited
     public void pieceMoved (Piece piece)
     {
@@ -36,6 +31,4 @@ public class CollisionHandler extends EffectHandler
             ms.setMoveAction(MobileSprite.MOVE_NORMAL);
         }
     }
-
-    protected int _damage;
 }

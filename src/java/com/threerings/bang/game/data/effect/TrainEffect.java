@@ -194,7 +194,7 @@ public class TrainEffect extends Effect
     @Override // documentation inherited
     public EffectHandler createHandler (BangObject bangobj)
     {
-        return (targetId > 0) ? new CollisionHandler(COLLISION_DAMAGE) : new EffectHandler();
+        return (targetId > 0) ? new CollisionHandler() : new EffectHandler();
     }
     
     @Override // documentation inherited

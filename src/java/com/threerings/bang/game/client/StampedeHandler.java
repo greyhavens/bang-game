@@ -31,11 +31,6 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class StampedeHandler extends CollisionHandler
 {
-    public StampedeHandler ()
-    {
-        super(StampedeEffect.COLLISION_DAMAGE);
-    }
-
     @Override // documentation inherited
     public boolean execute ()
     {
