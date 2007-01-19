@@ -531,8 +531,7 @@ public class MobileSprite extends ActiveSprite
         return createPath(coords, durations, action);
     }
 
-    protected Path createPath (
-            Vector3f[] coords, float[] durations, String action)
+    protected Path createPath (Vector3f[] coords, float[] durations, String action)
     {
         return new MoveUnitPath(this, coords, durations, _moveType, action);
     }

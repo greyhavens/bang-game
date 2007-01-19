@@ -341,8 +341,7 @@ public class UnitSprite extends MobileSprite
 
         // load the fire effect for the death flights of airborne steam units
         if (path instanceof MoveUnitPath && !_piece.isAlive() &&
-            _piece.isAirborne() && ((Unit)_piece).getConfig().make ==
-                UnitConfig.Make.STEAM) {
+            _piece.isAirborne() && ((Unit)_piece).getConfig().make == UnitConfig.Make.STEAM) {
             _ctx.loadParticles(FIRE_EFFECT, new ResultAttacher<Spatial>(this) {
                 public void requestCompleted (Spatial result) {
                     if (isMoving()) {
