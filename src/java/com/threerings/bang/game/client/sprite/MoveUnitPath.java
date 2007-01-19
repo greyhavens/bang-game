@@ -21,19 +21,18 @@ import static com.threerings.bang.client.BangMetrics.*;
  */
 public class MoveUnitPath extends LineSegmentPath
 {
-    public MoveUnitPath (
-        MobileSprite sprite, Vector3f[] coords, float[] durations)
+    public MoveUnitPath (MobileSprite sprite, Vector3f[] coords, float[] durations)
     {
         this(sprite, coords, durations, "walking", null);
     }
-    
-    public MoveUnitPath (MobileSprite sprite, Vector3f[] coords,
-            float[] durations, String type, String action)
+
+    public MoveUnitPath (MobileSprite sprite, Vector3f[] coords, float[] durations,
+                         String type, String action)
     {
         super(sprite, UP, FORWARD, coords, durations);
 
-        // either we do _type_ the whole time, or we break our path
-        // down into "start", "cycle" and "end"
+        // either we do _type_ the whole time, or we break our path down into "start", "cycle" and
+        // "end"
         String type_start = type + "_start";
         String type_cycle = type + "_cycle";
         String type_end = type + "_end";
@@ -79,11 +78,20 @@ public class MoveUnitPath extends LineSegmentPath
         // adjust to the terrain at the current coordinates
         MobileSprite sprite = (MobileSprite)_sprite;
         sprite.pathUpdate();
-        
+
         _elapsed += time;
-        if (_actions != null && _elapsed > _times[_index] &&
-            _index < _actions.length-1) {
-            sprite.setAction(_actions[++_index]);
+        if (_actions != null && _elapsed > _times[_index] && _index < _actions.length-1) {
+            // if we overshot this action, subtract our overshoot time from subsequent nodes so
+            // that we catch up as best we can
+            float extra = (_elapsed - _times[_index]);
+            _index++; // move to the next node
+            float deduct = extra / (_actions.length - _index);
+            for (int ii = _index; ii < _actions.length; ii++) {
+                // don't reduce a node's time below 1ms
+                _times[ii] = Math.max(0.001f, _times[ii] - deduct);
+            }
+            // now switch to the next action
+            sprite.setAction(_actions[_index]);
         }
     }
 
@@ -105,7 +113,7 @@ public class MoveUnitPath extends LineSegmentPath
         _temp.z = 0f;
         PathUtil.computeRotation(_up, _orient, _temp, _rotate);
         _sprite.setLocalRotation(_rotate);
-                
+
         updateCorneringParams(FIRST_HALF);
         updateCorneringParams(SECOND_HALF);
     }
@@ -116,21 +124,19 @@ public class MoveUnitPath extends LineSegmentPath
     protected void updateSpriteRotation ()
     {
         // see if we're turning a corner
-        int half = _accum < _durations[_current]*0.5f ?
-            FIRST_HALF : SECOND_HALF;
+        int half = _accum < _durations[_current]*0.5f ? FIRST_HALF : SECOND_HALF;
         if (_pivots[half] != null) {
-            float angle = _startAngles[half] + _angularVels[half] *
-                (_accum / _durations[_current]);
+            float angle = _startAngles[half] + _angularVels[half] * (_accum / _durations[_current]);
             _temp.set(CORNERING_RADIUS * FastMath.cos(angle),
-                CORNERING_RADIUS * FastMath.sin(angle), 0f);
+                      CORNERING_RADIUS * FastMath.sin(angle), 0f);
             _temp.addLocal(_pivots[half]);
             _sprite.setLocalTranslation(_temp);
-            _rotate.fromAngleNormalAxis(_angularVels[half] < 0 ?
-                angle : angle + FastMath.PI, Vector3f.UNIT_Z);
+            _rotate.fromAngleNormalAxis(
+                _angularVels[half] < 0 ? angle : angle + FastMath.PI, Vector3f.UNIT_Z);
             _sprite.setLocalRotation(_rotate);
         }
     }
-    
+
     /**
      * Updates the cornering parameters for the first or second half of the
      * current leg.
@@ -143,7 +149,7 @@ public class MoveUnitPath extends LineSegmentPath
             _angularVels = new float[2];
         }
 
-        int idx = _current + half;   
+        int idx = _current + half;
         if (idx <= 0 || idx >= _points.length - 1) {
             _pivots[half] = null;
             return;
@@ -163,18 +169,18 @@ public class MoveUnitPath extends LineSegmentPath
         Vector3f v3 = v1.cross(v2);
         _angularVels[half] = FastMath.asin(v3.length()) * (v3.z > 0 ? +1 : -1);
     }
-    
+
     protected String[] _actions;
     protected float[] _times;
     protected float _elapsed;
     protected int _index;
-    
+
     /** Angular parameters for the first and second half of the current leg. */
     protected Vector3f[] _pivots;
     protected float[] _startAngles, _angularVels;
-    
+
     protected static final int FIRST_HALF = 0;
     protected static final int SECOND_HALF = 1;
-    
+
     protected static final float CORNERING_RADIUS = TILE_SIZE * 0.5f;
 }
