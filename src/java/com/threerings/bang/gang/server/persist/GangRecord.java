@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.data.GangMemberEntry;
+import com.threerings.bang.gang.data.OutfitArticle;
 
 /**
  * Contains information loaded from the database about a gang
@@ -41,15 +42,15 @@ public class GangRecord
     /** The encoded brand. */
     public byte[] brand;
 
-    /** The encoded outfit. */
-    public byte[] outfit;
-
+    /** The currently configured gang outfit. */
+    public transient OutfitArticle[] outfit;
+        
     /** The members of the gang. */
     public transient ArrayList<GangMemberEntry> members;
 
     /** The avatar of the most senior leader. */
     public transient int[] avatar;
-    
+
     /** Used when creating new gangs. */
     public GangRecord (String name)
     {

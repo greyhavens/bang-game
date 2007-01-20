@@ -5,6 +5,7 @@ package com.threerings.bang.gang.server;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
+import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -21,6 +22,12 @@ public interface HideoutProvider extends InvocationProvider
      * Handles a {@link HideoutService#addToCoffers} request.
      */
     public void addToCoffers (ClientObject caller, int arg1, int arg2, InvocationService.ConfirmListener arg3)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link HideoutService#buyOutfits} request.
+     */
+    public void buyOutfits (ClientObject caller, OutfitArticle[] arg1, InvocationService.ConfirmListener arg2)
         throws InvocationException;
 
     /**
@@ -51,6 +58,12 @@ public interface HideoutProvider extends InvocationProvider
      * Handles a {@link HideoutService#getHistoryEntries} request.
      */
     public void getHistoryEntries (ClientObject caller, int arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
+
+    /**
+     * Handles a {@link HideoutService#getOutfitQuote} request.
+     */
+    public void getOutfitQuote (ClientObject caller, OutfitArticle[] arg1, InvocationService.ResultListener arg2)
         throws InvocationException;
 
     /**

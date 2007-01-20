@@ -36,6 +36,7 @@ import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
 import com.threerings.bang.gang.data.HideoutMarshaller;
 import com.threerings.bang.gang.data.HideoutObject;
+import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.TopRankedGangList;
 
 import static com.threerings.bang.Log.log;
@@ -116,16 +117,9 @@ public class HideoutManager extends MatchHostManager
         final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure they're in a gang
+        // make sure they're the leader of a gang
         PlayerObject user = (PlayerObject)caller;
-        verifyInGang(user);
-        
-        // and that they're a leader
-        if (user.gangRank != LEADER_RANK) {
-            log.warning("Non-leader tried to change gang statement [who=" + user.who() +
-                ", statement=" + statement + ", url=" + url + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
+        verifyIsLeader(user);
         
         // make sure the entries are valid
         if (statement == null || statement.length() > MAX_STATEMENT_LENGTH) {
@@ -235,6 +229,32 @@ public class HideoutManager extends MatchHostManager
         BangServer.gangmgr.getHistoryEntries(user.gangId, offset, HISTORY_PAGE_ENTRIES, listener);
     }
     
+    // documentation inherited from interface HideoutProvider
+    public void getOutfitQuote (
+        ClientObject caller, OutfitArticle[] outfit, HideoutService.ResultListener listener)
+        throws InvocationException
+    {
+        // make sure they're the leader of a gang
+        PlayerObject user = (PlayerObject)caller;
+        verifyIsLeader(user);
+        
+        // pass it on to the gang manager
+        BangServer.gangmgr.getOutfitQuote(user.gangId, outfit, listener);
+    }
+    
+    // documentation inherited from interface HideoutProvider
+    public void buyOutfits (
+        ClientObject caller, OutfitArticle[] outfit, HideoutService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure they're the leader of a gang
+        PlayerObject user = (PlayerObject)caller;
+        verifyIsLeader(user);
+        
+        // pass it on to the gang manager
+        BangServer.gangmgr.buyOutfits(user.gangId, outfit, listener);
+    }
+    
     /**
      * Verifies that the specified user can change the status (expel, change
      * rank, etc.) of the identified other member, throwing an exception and
@@ -275,6 +295,21 @@ public class HideoutManager extends MatchHostManager
         
         // return the entry for the next step
         return entry;
+    }
+    
+    /**
+     * Verifies that the specified user is a leader of a gang, throwing an
+     * exception and logging a warning if not.
+     */
+    protected void verifyIsLeader (PlayerObject user)
+        throws InvocationException
+    {
+        // first things first
+        verifyInGang(user); 
+        if (user.gangRank != LEADER_RANK) {
+            log.warning("User not gang leader [who=" + user.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
     }
     
     /**

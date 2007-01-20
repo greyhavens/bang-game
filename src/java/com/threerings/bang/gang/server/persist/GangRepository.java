@@ -22,6 +22,7 @@ import com.samskivert.jdbc.JORARepository;
 import com.samskivert.jdbc.jora.FieldMask;
 import com.samskivert.jdbc.jora.Table;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.util.MessageBundle;
@@ -30,12 +31,14 @@ import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.persist.PlayerRecord;
 
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangEntry;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HistoryEntry;
+import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.TopRankedGangList;
 
 import static com.threerings.bang.Log.*;
@@ -98,14 +101,23 @@ public class GangRepository extends JORARepository
      * Loads up the gang record associated with the specified id.  Returns null if no matching
      * record could be found.
      *
-     * @param members if true, load the member entries as well and store them in the record
+     * @param all if true, load the member entries and the rest of the gang's data and store it in
+     * the gang record
      */
-    public GangRecord loadGang (int gangId, boolean members)
+    public GangRecord loadGang (int gangId, boolean all)
         throws PersistenceException
     {
         GangRecord grec = loadByExample(_gtable, new GangRecord(gangId), _gangIdMask);
-        if (grec != null && members) {
+        if (grec != null && all) {
             grec.members = loadGangMembers(gangId);
+            
+            // load the outfit
+            ArrayList<GangOutfitRecord> recs = loadAll(_otable, "where GANG_ID = " + gangId);
+            grec.outfit = new OutfitArticle[recs.size()];
+            for (int ii = 0; ii < grec.outfit.length; ii++) {
+                GangOutfitRecord rec = recs.get(ii);
+                grec.outfit[ii] = new OutfitArticle(rec.article, rec.zations);
+            }
             
             // load the avatar for the most senior member
             GangMemberEntry senior = null;
@@ -173,9 +185,10 @@ public class GangRepository extends JORARepository
     {
         delete(_gtable, new GangRecord(gangId));
 
-        // delete all of the gang's invites and history entries
+        // delete all of the gang's invites, history entries, outfits
         update("delete from GANG_INVITES where GANG_ID = " + gangId);
         update("delete from GANG_HISTORY where GANG_ID = " + gangId);
+        update("delete from GANG_OUTFITS where GANG_ID = " + gangId);
     }
 
     /**
@@ -189,6 +202,42 @@ public class GangRepository extends JORARepository
         return loadByExample(_mtable, new GangMemberRecord(playerId), _playerIdMask);
     }
 
+    /**
+     * Loads the ids of gang members by gender.
+     *
+     * @param maleIds the set to populate with the ids of male members
+     * @param femaleIds the set to populate with the ids of female members
+     */
+    public void loadMemberIds (
+        int gangId, final ArrayIntSet maleIds, final ArrayIntSet femaleIds)
+        throws PersistenceException
+    {
+        final String query = "select GANG_MEMBERS.PLAYER_ID, FLAGS from GANG_MEMBERS, PLAYERS " +
+            "where GANG_MEMBERS.PLAYER_ID = PLAYERS.PLAYER_ID and GANG_ID = " + gangId;
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        int playerId = rs.getInt(1), flags = rs.getInt(2);
+                        if ((flags & PlayerRecord.IS_MALE_FLAG) != 0) {
+                            maleIds.add(playerId);
+                        } else {
+                            femaleIds.add(playerId);
+                        }
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+    }
+    
     /**
      * Inserts a new membership record.  The {@link GangMemberRecord#joined} field will be filled
      * in by this method if it is not already.
@@ -470,14 +519,14 @@ public class GangRepository extends JORARepository
             "SCRIP INTEGER NOT NULL",
             "COINS INTEGER NOT NULL",
             "BRAND BLOB",
-            "OUTFIT BLOB",
             "PRIMARY KEY (GANG_ID)",
             "UNIQUE (NAME)",
         }, "");
 
-        // TEMP: add the statement and url columns
+        // TEMP: add the statement and url columns, drop outfit
         JDBCUtil.addColumn(conn, "GANGS", "STATEMENT", "TEXT NOT NULL", "FOUNDED");
         JDBCUtil.addColumn(conn, "GANGS", "URL", "VARCHAR(255) NOT NULL", "STATEMENT");
+        JDBCUtil.dropColumn(conn, "GANGS", "OUTFIT");
         // END TEMP
 
         JDBCUtil.createTableIfMissing(conn, "GANG_MEMBERS", new String[] {
@@ -507,6 +556,13 @@ public class GangRepository extends JORARepository
             "PRIMARY KEY (ENTRY_ID)",
             "INDEX (GANG_ID)",
         }, "");
+        
+        JDBCUtil.createTableIfMissing(conn, "GANG_OUTFITS", new String[] {
+            "GANG_ID INTEGER NOT NULL",
+            "ARTICLE VARCHAR(64) NOT NULL",
+            "ZATIONS INTEGER NOT NULL",
+            "INDEX (GANG_ID)",
+        }, "");
     }
 
     @Override // documentation inherited
@@ -516,11 +572,14 @@ public class GangRepository extends JORARepository
         _mtable = new Table<GangMemberRecord>(
             GangMemberRecord.class, "GANG_MEMBERS", "PLAYER_ID", true);
         _htable = new Table<GangHistoryRecord>(
-            GangHistoryRecord.class, "GANG_HISTORY", "ENTRY_ID", true);
+            GangHistoryRecord.class, "GANG_HISTORY", "ENTRY_ID", true); 
+        _otable = new Table<GangOutfitRecord>(
+            GangOutfitRecord.class, "GANG_OUTFITS", "GANG_ID", true);
     }
 
     protected Table<GangRecord> _gtable;
     protected Table<GangMemberRecord> _mtable;
     protected Table<GangHistoryRecord> _htable;
+    protected Table<GangOutfitRecord> _otable;
     protected FieldMask _gangIdMask, _playerIdMask;
 }

@@ -12,6 +12,7 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryListenerUnit;
 import com.samskivert.jdbc.RepositoryUnit;
 
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Collections;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntMap;
@@ -40,6 +41,7 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
+import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PardnerEntry;
@@ -50,6 +52,7 @@ import com.threerings.bang.server.persist.FinancialAction;
 import com.threerings.bang.server.persist.PlayerRecord;
 
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.avatar.util.ArticleCatalog;
 
 import com.threerings.bang.saloon.server.SaloonManager;
 
@@ -60,8 +63,10 @@ import com.threerings.bang.gang.data.GangInvite;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HistoryEntry;
+import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.server.persist.GangInviteRecord;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
+import com.threerings.bang.gang.server.persist.GangOutfitRecord;
 import com.threerings.bang.gang.server.persist.GangRecord;
 import com.threerings.bang.gang.server.persist.GangRepository;
 
@@ -583,6 +588,27 @@ public class GangManager
         });
     }
 
+    /**
+     * Gets a quote for the specified outfit.  The result listener will receive an array containing
+     * the cost in scrip and coins to buy the outfit for every member who doesn't already own it.
+     */
+    public void getOutfitQuote (int gangId, OutfitArticle[] outfit,
+                                InvocationService.ResultListener listener)
+        throws InvocationException
+    {
+        processOutfit(gangId, outfit, listener, false);
+    }
+    
+    /**
+     * Buys the specified outfit for the gang.
+     */
+    public void buyOutfits (int gangId, OutfitArticle[] outfit,
+                            InvocationService.ConfirmListener listener)
+        throws InvocationException
+    {
+        processOutfit(gangId, outfit, listener, true);
+    }
+    
     // documentation inherited from interface SpeakProvider.SpeakerValidator
     public boolean isValidSpeaker (DObject speakObj, ClientObject speaker, byte mode)
     {
@@ -613,6 +639,57 @@ public class GangManager
         return MessageBundle.compose("m.times_2", cdesc, sdesc);
     }
 
+    /**
+     * Determines how much it would cost to buy the specified gang outfit and either reports the
+     * amount as a price quote or goes through with the purchase.
+     */
+    protected void processOutfit (
+        final int gangId, OutfitArticle[] outfit,
+        final InvocationService.InvocationListener listener, final boolean buy)
+        throws InvocationException
+    {
+        final ArticleCatalog.Article[] catarts = new ArticleCatalog.Article[outfit.length];
+        final Article[] articles = new Article[outfit.length];
+        for (int ii = 0; ii < outfit.length; ii++) {
+            OutfitArticle oart = outfit[ii];
+            catarts[ii] = BangServer.alogic.getArticleCatalog().getArticle(oart.article);
+            if (catarts[ii] == null) {
+                log.warning("Invalid article requested for outfit [gangId=" + gangId +
+                    ", article=" + oart.article + "].");
+                throw new InvocationException(INTERNAL_ERROR);
+            }
+            articles[ii] = BangServer.alogic.createArticle(-1, catarts[ii], oart.zations);
+            if (articles[ii] == null) {
+                // an error will have already been logged
+                throw new InvocationException(INTERNAL_ERROR);
+            }
+        }
+        
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent () throws PersistenceException {
+                ArrayIntSet maleIds = new ArrayIntSet(), femaleIds = new ArrayIntSet();
+                _gangrepo.loadMemberIds(gangId, maleIds, femaleIds);
+                for (int ii = 0; ii < articles.length; ii++) {
+                    Article article = articles[ii];
+                    ArrayIntSet memberIds = (article.getArticleName().indexOf("female") == -1) ?
+                        maleIds : femaleIds;
+                    ArrayIntSet ownerIds = BangServer.itemrepo.getItemOwners(memberIds, article);
+                    int count = memberIds.size() - ownerIds.size();
+                    _cost[0] += (catarts[ii].scrip * count);
+                    _cost[1] += (catarts[ii].coins * count);
+                }
+            }
+            public void handleSuccess () {
+                if (buy) {
+                    ((InvocationService.ConfirmListener)listener).requestProcessed();
+                } else {
+                    ((InvocationService.ResultListener)listener).requestProcessed(_cost);
+                }
+            }
+            protected int[] _cost = new int[2];
+        });
+    }
+    
     /**
      * Sends an invitation to join a gang.
      */
@@ -833,8 +910,9 @@ public class GangManager
             _gangobj.scrip = record.scrip;
             _gangobj.coins = record.coins;
             _gangobj.notoriety = record.notoriety;
+            _gangobj.outfit = record.outfit;
             _gangobj.members = new DSet<GangMemberEntry>(record.members.iterator());
-
+            
             _rankval = new Interval(BangServer.omgr) {
                 public void expired () {
                     SaloonManager.refreshTopRanked(getGangObject(),

@@ -12,6 +12,7 @@ import com.threerings.bang.util.NameCreator;
 import com.threerings.bang.saloon.data.Criterion;
 
 import com.threerings.bang.gang.data.HistoryEntry;
+import com.threerings.bang.gang.data.OutfitArticle;
 
 /**
  * Provides hideout-related functionality.
@@ -75,4 +76,16 @@ public interface HideoutService extends InvocationService
      * Requests that we leave our currently pending match.
      */
     public void leaveMatch (Client client, int matchOid);
+    
+    /**
+     * Requests a price quote for the specified gang outfit.  The listener will receive an integer
+     * array containing the scrip and coin cost to buy the specified articles for every member who
+     * doesn't already own them.
+     */
+    public void getOutfitQuote (Client client, OutfitArticle[] outfit, ResultListener listener);
+    
+    /**
+     * Purchases gang outfits for all members who don't already own them.
+     */
+    public void buyOutfits (Client client, OutfitArticle[] outfit, ConfirmListener listener);
 }

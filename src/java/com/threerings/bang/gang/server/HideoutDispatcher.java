@@ -6,6 +6,7 @@ package com.threerings.bang.gang.server;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.bang.gang.data.HideoutMarshaller;
+import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.saloon.data.Criterion;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -47,6 +48,13 @@ public class HideoutDispatcher extends InvocationDispatcher
             );
             return;
 
+        case HideoutMarshaller.BUY_OUTFITS:
+            ((HideoutProvider)provider).buyOutfits(
+                source,
+                (OutfitArticle[])args[0], (InvocationService.ConfirmListener)args[1]
+            );
+            return;
+
         case HideoutMarshaller.CHANGE_MEMBER_RANK:
             ((HideoutProvider)provider).changeMemberRank(
                 source,
@@ -79,6 +87,13 @@ public class HideoutDispatcher extends InvocationDispatcher
             ((HideoutProvider)provider).getHistoryEntries(
                 source,
                 ((Integer)args[0]).intValue(), (InvocationService.ResultListener)args[1]
+            );
+            return;
+
+        case HideoutMarshaller.GET_OUTFIT_QUOTE:
+            ((HideoutProvider)provider).getOutfitQuote(
+                source,
+                (OutfitArticle[])args[0], (InvocationService.ResultListener)args[1]
             );
             return;
 

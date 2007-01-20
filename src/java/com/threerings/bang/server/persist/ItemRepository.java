@@ -225,13 +225,7 @@ public class ItemRepository extends SimpleRepository
         throws PersistenceException
     {
         // first serialize the item
-        final ByteArrayOutInputStream out = new ByteArrayOutInputStream();
-        try {
-            item.persistTo(new ObjectOutputStream(out));
-        } catch (IOException ioe) {
-            String errmsg = "Error serializing item " + item;
-            throw new PersistenceException(errmsg, ioe);
-        }
+        final ByteArrayOutInputStream out = persistItem(item);
 
         // now insert the flattened data into the database
         executeUpdate(new Operation<Object>() {
@@ -323,6 +317,56 @@ public class ItemRepository extends SimpleRepository
         });
     }
 
+    /**
+     * Given a set of player ids and a prototype item, determines which of the players own
+     * an identical item.
+     */
+    public ArrayIntSet getItemOwners (final ArrayIntSet playerIds, final Item item)
+        throws PersistenceException
+    {
+        // serialize the item prototype
+        final ByteArrayOutInputStream out = persistItem(item);
+        final ArrayIntSet owners = new ArrayIntSet();
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                PreparedStatement stmt = conn.prepareStatement(
+                    "select OWNER_ID from ITEMS where OWNER_ID in " +
+                    StringUtil.toString(playerIds.iterator(), "(", ")") +
+                    " and ITEM_DATA = ?");
+                try {
+                    stmt.setBinaryStream(1, out.getInputStream(), out.size());
+                    ResultSet rs = stmt.executeQuery();
+                    while (rs.next()) {
+                        owners.add(rs.getInt(1));
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+        return owners;
+    }
+    
+    /**
+     * Persists the specified item to a new byte array stream.
+     */
+    protected ByteArrayOutInputStream persistItem (Item item)
+        throws PersistenceException
+    {
+        ByteArrayOutInputStream out = new ByteArrayOutInputStream();
+        try {
+            item.persistTo(new ObjectOutputStream(out));
+            return out;
+        } catch (IOException ioe) {
+            String errmsg = "Error serializing item " + item;
+            throw new PersistenceException(errmsg, ioe);
+        }
+    }
+    
     @Override // documentation inherited
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
