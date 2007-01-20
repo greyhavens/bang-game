@@ -1,7 +1,7 @@
 #
 # $Id$
 #
-# Mustache Kid by Rick
+# Sgt. Rusty By Josh
 
 lock = none
 difficulty = hard
@@ -9,38 +9,40 @@ in_order = true
 
 outlaw_print = 294, 0, 102, 109, 112, 122, 188, 208, 852118, 738197645, 882180270, 882180279
 
-games = chute, evenhand, crossing, stead_road
+games = greenhorns, gizmos, barons, angry
 
-reward_scrip = 700
+reward_scrip = 675
 
 #
 # Localized messages
 
-title = Mustache Kid
+title = Sgt. Rusty
 
-descrip = Don't let his peach fuzz fool you, this outlaw is \
-  Dangerous!  Maybe he weren't loved enough as a child, but he's \
-  a downright nasty varmit.  To bring in the Kid, you will \
-  have to beat him badly at his own deadly games.
+descrip = Nothin's scarier than a steam-soldier gone bad!  Rusty has \
+  decided that steam-bots alone ought to rule the west and now he's \
+  wanted for high treason and crimes 'gainst humanity!  He's trying to \
+  raise a robo-rebellion and it looks like he just might succeed!
 
-chute.name = Bad Neighbors
-chute.pregame_quote = "So, you think you can stop my mine raid?  I'll rain down artillery on your head from afar!  You won't catch me or my gold."
-chute.failed_quote = "You lose when you play with the Kid!"
-chute.completed_quote = "You got lucky this time old-timer.  You'll be sorry if you cross my path again."
+greenhorns.name = Gear-head Greenhorns
+greenhorns.pregame_quote = "What in sam hill could clockwork fellers want with cattle?!  That cavalry feller - is one of Rusty's old army buddies givin' 'em a hand?"
+gizmos.bigshot_quote = true
+greenhorns.failed_quote = "That no-good turncoat cavalry they got is mighty good at this here russlin' business!  Stick to it kid, you'll give him what-fer next time."
+greenhorns.completed_quote = "Seems they were tryin' to bust up ranchin' in these parts and run all the skin-folks out!  An' that WEREN'T no normal cavalry, he was clockwork through an' through! Why's Rusty makin' steamers what look like skinners?"
 
-evenhand.name = Ranch Games 
-evenhand.pregame_quote = "We've caught the Kid's gang unawares stashing their gold at their secret ranch.  The Kid isn't here, but this is a perfect time to put a dent in his pocket-book."
-evenhand.bigshot_quote = true
-evenhand.failed_quote = "His gang is tougher than we thought.  Let's regroup and try it again."
-evenhand.completed_quote = "Great goin'!  That ought to get his attention!"
+gizmos.name = Gold-fevered Gizmos
+gizmos.pregame_quote = "Why's Rusty's steam-gang snatchin' up all the gold?  Mebbe he's turned dandy and wants a gold-plated chassis?!"
+gizmos.bigshot_quote = true
+gizmos.failed_quote = "Dad burnit!  Don't you let them two-bit tin-men steam-roll ya, git back up on that horse kid!"
+gizmos.completed_quote = "Them bots said somethin' 'bout using that gold to mint their own currency! What in Tarnation?!"
 
-crossing.name = Deadly Crossing
-crossing.pregame_quote = "I've caught you on my turf this time.  My underlin's will smash up you and your steads."
-crossing.failed_quote = "If you know what is good fer you, you'd hightail it out of here.  If I catch you messin' with my buisness again I'll pin that deputy star to your forehead!"
-crossing.completed_quote = "You're persistent lawman, I'll give you that, but I've still got an escape plan"
+barons.name = Tin-can Land Barons
+barons.pregame_quote = "Rusty wants this land so's he kin form his own robot-only territory!  So that's what that currency business about.  Now that just ain't neighborly!"
+barons.bigshot_quote = true
+barons.failed_quote = "Holy Mackeral Kid!  Having a seperatist steam-folk nation next door is no good!  Better take another crack at it PRONTO!"
+barons.completed_quote = "At a way kid!  You killed Rusty's dreams of a steam-folk only nation but GOOD!"
 
-stead_road.name = Homestead Road
-stead_road.pregame_quote = "The kid's on the run alone!  To bring him in, we are going to have to crush him overwhelmingly once and for all.  You have to get ALL the steads."
-stead_road.bigshot_quote = true
-stead_road.failed_quote = "He's slipping away.  This is a tough one, try managing which steads you take and for goodness sake don't let him come back with an iron plate!"
-stead_road.completed_quote = "There be some scary fellers in here... Mommy!!"
+angry.name = Angry Automatons
+angry.pregame_quote = "Whoah Nelly! If  Rusty can't have his own territory, he'll take someone elses!  He wants to swap out the skin-folk for them steamers what look like skinners!!  Go throw a wrench in Rusty's works once and for all!"
+angry.bigshot_quote = true
+angry.failed_quote = "Them poor folks in Hill Town are doomed lessen you get rid o' them rampant robots!  Try again bucko!"
+angry.completed_quote = "My time'll come again - mark my words bounty hunter!  This land ain't big enough fur skinners n' steamers both!"
