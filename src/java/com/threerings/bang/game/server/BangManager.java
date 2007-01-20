@@ -2819,13 +2819,14 @@ public class BangManager extends GameManager
                             queueDeployEffect(piece.owner, effect, false);
                         }
 
-                        // if this is a human player and they're interacting with a bonus we may
-                        // need to update their BONUSES_COLLECTED stat
-                        if (piece.owner == -1 || !(effect instanceof BonusEffect) ||
-                            // don't count scenario bonuses or ones that give negative points
+                        // if this is a human player we may need to update BONUSES_COLLECTED
+                        if (piece.owner == -1 ||
+                            // don't count scenario bonuses
                             !(lapper instanceof Bonus) || ((Bonus)lapper).isScenarioBonus() ||
+                            // don't count bonuses that give negative points
+                            !(effect instanceof BonusEffect) ||
                             ((BonusEffect)effect).getBonusPoints() <= 0 ||
-                            // if the effect created was them dropping a held bonus, no go
+                            // don't count dropping a held bonus to pick up a new one
                             (effect instanceof HoldEffect && ((HoldEffect)effect).dropping)) {
                             continue;
                         }
