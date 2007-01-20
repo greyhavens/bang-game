@@ -35,8 +35,8 @@
   <add_piece what="unit" id="2004" type="frontier_town/tactician"
      location="25,17" owner="1"/>
 
-  <add_piece what="unit" id="3001" type="cow" location="26,16" owner="-1"/>
-  <add_piece what="unit" id="3002" type="cow" location="26,17" owner="-1"/>
+  <add_piece what="cow" id="3001" location="26,16" owner="-1"/>
+  <add_piece what="cow" id="3002" location="26,17" owner="-1"/>
 
   <text message="start_test"/>
   <wait event="text_clicked" allowAttack="true"/>
