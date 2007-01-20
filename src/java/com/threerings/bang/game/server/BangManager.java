@@ -2819,13 +2819,26 @@ public class BangManager extends GameManager
                             queueDeployEffect(piece.owner, effect, false);
                         }
 
-                        // small hackery: note that this player collected a bonus
-                        if (piece.owner != -1 && effect instanceof HoldEffect &&
-                            ((HoldEffect)effect).dropping == false && lapper instanceof Bonus &&
-                            !((Bonus)lapper).isScenarioBonus()) {
-                            _bangobj.stats[piece.owner].incrementStat(
-                                Stat.Type.BONUSES_COLLECTED, 1);
+                        // if this is a human player and they're interacting with a bonus we may
+                        // need to update their BONUSES_COLLECTED stat
+                        if (piece.owner == -1 || !(effect instanceof BonusEffect) ||
+                            !(lapper instanceof Bonus)) {
+                            continue;
                         }
+
+                        // don't count scenario bonuses or "bad" ones, which give negative points
+                        if (((Bonus)lapper).isScenarioBonus() ||
+                            ((BonusEffect)effect).getBonusPoints() <= 0) {
+                            continue;
+                        }
+
+                        // if the effect created was them dropping a held bonus, don't count that
+                        if (effect instanceof HoldEffect && ((HoldEffect)effect).dropping) {
+                            continue;
+                        }
+
+                        // hey, they seem to have activate a real bonus; count it
+                        _bangobj.stats[piece.owner].incrementStat(Stat.Type.BONUSES_COLLECTED, 1);
                     }
                 }
             }

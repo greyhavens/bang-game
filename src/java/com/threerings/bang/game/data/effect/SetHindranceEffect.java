@@ -70,17 +70,17 @@ public abstract class SetHindranceEffect extends BonusEffect
             "m.effect_influence", _unit.getName(), "m.hindrance_" + name);
     }
 
+    @Override // from BonusEffect
+    public int getBonusPoints ()
+    {
+        return 0; // maybe we should give negative points?
+    }
+
     /** Creates the hindrance that will be applied to the target unit. */
     protected abstract Hindrance createHindrance (Unit target);
 
     /** Returns the name of the effect that will be reported. */
     protected abstract String getEffectName();
-
-    @Override // from BonusEffect
-    protected int getBonusPoints ()
-    {
-        return 0; // maybe we should give negative points?
-    }
 
     protected transient Unit _unit;
 }

@@ -20,13 +20,13 @@ public class BonusPointEffect extends BonusEffect
     /** The identifier for the type of effect that we produce. */
     public static final String BONUS_POINT = "frontier_town/bonus_point";
 
-    @Override // documentation inherited
+    @Override // from Effect
     public int[] getAffectedPieces ()
     {
         return new int[] { pieceId };
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
@@ -41,7 +41,7 @@ public class BonusPointEffect extends BonusEffect
         return true;
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(pieceId);
@@ -53,7 +53,7 @@ public class BonusPointEffect extends BonusEffect
     }
 
     @Override // from BonusEffect
-    protected int getBonusPoints ()
+    public int getBonusPoints ()
     {
         return BONUS_POINTS;
     }

@@ -28,7 +28,7 @@ public class TrapEffect extends BonusEffect
     /** If the victim dies, its death effect. */
     public Effect deathEffect;
 
-    @Override // documentation inherited
+    @Override // from Effect
     public int[] getAffectedPieces ()
     {
         int[] pieces = new int[] { pieceId };
@@ -38,13 +38,13 @@ public class TrapEffect extends BonusEffect
         return pieces;
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public int[] getWaitPieces ()
     {
         return (deathEffect == null) ? NO_PIECES : deathEffect.getWaitPieces();
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         super.prepare(bangobj, dammap);
@@ -67,7 +67,7 @@ public class TrapEffect extends BonusEffect
         }
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public boolean apply (BangObject bangobj, Observer obs)
     {
         // find out who owns the bonus and what kind it is
@@ -84,13 +84,13 @@ public class TrapEffect extends BonusEffect
         return trapPiece(bangobj, obs, causer);
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public int getBaseDamage (Piece piece)
     {
         return TRAP_DAMAGE;
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public String getDescription (BangObject bangobj, int pidx)
     {
         Piece piece = bangobj.pieces.get(pieceId);
@@ -101,17 +101,17 @@ public class TrapEffect extends BonusEffect
         return MessageBundle.compose("m.effect_" + type, piece.getName());
     }
 
-    @Override // documentation inherited
+    @Override // from BonusEffect
+    public int getBonusPoints ()
+    {
+        return 0; // maybe we should give negative points?
+    }
+
+    @Override // from Effect
     protected String getActivatedEffect ()
     {
         // the name of the bonus doubles as its activation effect
         return _type;
-    }
-
-    @Override // from BonusEffect
-    protected int getBonusPoints ()
-    {
-        return 0; // maybe we should give negative points?
     }
 
     /**

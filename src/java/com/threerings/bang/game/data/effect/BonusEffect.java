@@ -29,6 +29,14 @@ public abstract class BonusEffect extends Effect
     /** In case something goes wrong, we can always punt. */
     public transient PuntEffect puntEffect;
 
+    /**
+     * Returns the number of points granted to the player that picks up this bonus.
+     */
+    public int getBonusPoints ()
+    {
+        return DEFAULT_BONUS_POINTS;
+    }
+
     @Override // documentation inherited
     public void init (Piece piece)
     {
@@ -83,14 +91,5 @@ public abstract class BonusEffect extends Effect
     protected String getActivatedEffect ()
     {
         return ACTIVATED_BONUS;
-    }
-
-    /**
-     * Returns the number of points granted to the player that picks up this
-     * bonus.
-     */
-    protected int getBonusPoints ()
-    {
-        return DEFAULT_BONUS_POINTS;
     }
 }

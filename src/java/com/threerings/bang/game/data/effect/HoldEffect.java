@@ -78,7 +78,7 @@ public class HoldEffect extends BonusEffect
         }
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public Object clone ()
     {
         HoldEffect effect = (HoldEffect)super.clone();
@@ -94,8 +94,24 @@ public class HoldEffect extends BonusEffect
     {
         return _droppedEffects.contains(effect);
     }
-    
-    @Override // documentation inherited
+
+    /**
+     * Returns the identifier for the dropped bonus effect.
+     */
+    public String getDroppedEffect ()
+    {
+        return DROPPED_BONUS;
+    }
+
+    /**
+     * Returns the identifier for the picked up bonus effect.
+     */
+    public String getPickedUpEffect ()
+    {
+        return PICKED_UP_BONUS;
+    }
+
+    @Override // from Effect
     public int[] getWaitPieces ()
     {
         if (causerId != -1) {
@@ -104,7 +120,7 @@ public class HoldEffect extends BonusEffect
         return super.getWaitPieces();
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public int[] getAffectedPieces ()
     {
         if (drop != null) {
@@ -113,7 +129,7 @@ public class HoldEffect extends BonusEffect
         return new int[] { pieceId, bonusId };
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public Rectangle[] getBounds (BangObject bangobj)
     {
         if (dropping && drop != null && drop.x != -1) {
@@ -122,7 +138,7 @@ public class HoldEffect extends BonusEffect
         return null;
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
@@ -154,13 +170,13 @@ public class HoldEffect extends BonusEffect
         }
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public boolean isApplicable ()
     {
         return (drop == null || drop.x != -1);
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public boolean apply (BangObject bangobj, Observer obs)
     {
         super.apply(bangobj, obs);
@@ -182,40 +198,24 @@ public class HoldEffect extends BonusEffect
         return true;
     }
 
-    @Override // documentation inherited
+    @Override // from Effect
     public EffectHandler createHandler (BangObject bangobj)
     {
         return new HoldHandler();
     }
 
-    /**
-     * Returns the identifier for the dropped bonus effect.
-     */
-    public String getDroppedEffect ()
+    @Override // from BonusEffect
+    public int getBonusPoints ()
     {
-        return DROPPED_BONUS;
+        return 5; // give 'em five points for picking something up
     }
 
-    /**
-     * Returns the identifier for the picked up bonus effect.
-     */
-    public String getPickedUpEffect ()
-    {
-        return PICKED_UP_BONUS;
-    }
-
-    @Override // documentation inherited
+    @Override // from Effect
     protected String getActivatedEffect ()
     {
         return null;
     }
 
-    @Override // from BonusEffect
-    protected int getBonusPoints ()
-    {
-        return 5; // give 'em five points for picking something up
-    }
-    
     /** Contains identifiers for all bonus drop effects.  Subclasses should add
      * their identifiers to the set in a static initializer. */
     protected static HashSet<String> _droppedEffects = new HashSet<String>();
