@@ -2822,18 +2822,11 @@ public class BangManager extends GameManager
                         // if this is a human player and they're interacting with a bonus we may
                         // need to update their BONUSES_COLLECTED stat
                         if (piece.owner == -1 || !(effect instanceof BonusEffect) ||
-                            !(lapper instanceof Bonus)) {
-                            continue;
-                        }
-
-                        // don't count scenario bonuses or "bad" ones, which give negative points
-                        if (((Bonus)lapper).isScenarioBonus() ||
-                            ((BonusEffect)effect).getBonusPoints() <= 0) {
-                            continue;
-                        }
-
-                        // if the effect created was them dropping a held bonus, don't count that
-                        if (effect instanceof HoldEffect && ((HoldEffect)effect).dropping) {
+                            // don't count scenario bonuses or ones that give negative points
+                            !(lapper instanceof Bonus) || ((Bonus)lapper).isScenarioBonus() ||
+                            ((BonusEffect)effect).getBonusPoints() <= 0 ||
+                            // if the effect created was them dropping a held bonus, no go
+                            (effect instanceof HoldEffect && ((HoldEffect)effect).dropping)) {
                             continue;
                         }
 
