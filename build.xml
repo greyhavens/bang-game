@@ -60,7 +60,7 @@
 
   <!-- declare a classpath for tool tasks -->
   <path id="tool.classpath">
-    <filelist dir="${deploy.dir}" files="deployment.properties,server.properties"/>
+    <pathelement location="${deploy.dir}"/>
     <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
     <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
     <fileset dir="${deploy.dir}" includes="bang-server-config.jar"/>
