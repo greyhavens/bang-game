@@ -62,8 +62,7 @@
   <path id="tool.classpath">
     <pathelement location="${deploy.dir}"/>
     <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-    <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
-    <fileset dir="${deploy.dir}" includes="bang-server-config.jar"/>
+    <pathelement location="${deploy.dir}/classes"/>
   </path>
 
   <!-- prepares the application directories -->
@@ -650,6 +649,9 @@
       </then>
     </elseif></if>
   </target>
+
+  <!-- rebuilds everything and extra bits for packaging -->
+  <target name="distpkg" depends="distall,javadoc"/>
 
   <!-- cleans out the application and all subprojects -->
   <target name="cleanall" depends="cleanprojects,cleanwebapps,clean"/>
