@@ -109,8 +109,15 @@ public class CattleRustling extends Scenario
       PLACER_LOOP:
         while (placed < cattle) {
             for (Marker cspot : _cattleSpots) {
-                Point spot = bangobj.board.getOccupiableSpot(
-                        cspot.x, cspot.y, 3);
+                ArrayList<Point> spots = bangobj.board.getOccupiableSpots(20, cspot.x, cspot.y, 3);
+                Point spot = null;
+                // we don't want to start cows on any tracks
+                for (Point pt : spots) {
+                    if (!bangobj.getTracks().containsKey(Piece.coord(pt.x, pt.y))) {
+                        spot = pt;
+                        break;
+                    }
+                }
                 if (spot == null) {
                     continue;
                 }
