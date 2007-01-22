@@ -666,6 +666,7 @@
     <antcall target="prepare-server-extra"/>
     <antcall target="prepare-webapps"/>
     <antcall target="prepare-pages"/>
+    <antcall target="prepare-docs"/>
   </target>
 
   <!-- install project specific server code into ${pkg.base} -->
