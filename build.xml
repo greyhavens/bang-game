@@ -62,7 +62,8 @@
   <path id="tool.classpath">
     <pathelement location="${deploy.dir}"/>
     <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
-    <pathelement location="${deploy.dir}/classes"/>
+    <fileset dir="${deploy.dir}" includes="bang-code.jar"/>
+    <fileset dir="${deploy.dir}" includes="bang-server-config.jar"/>
   </path>
 
   <!-- prepares the application directories -->
