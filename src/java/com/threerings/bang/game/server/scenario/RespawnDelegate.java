@@ -9,13 +9,14 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
-import com.threerings.bang.game.data.piece.Piece;
-import com.threerings.bang.game.data.piece.Revolutionary;
-import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.effect.AddPieceEffect;
 import com.threerings.bang.game.data.effect.IronPlateEffect;
 import com.threerings.bang.game.data.effect.ResurrectEffect;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Revolutionary;
+import com.threerings.bang.game.data.piece.Unit;
 
 import static com.threerings.bang.Log.log;
 
@@ -60,12 +61,15 @@ public class RespawnDelegate extends ScenarioDelegate
     {
         _respawn = respawn;
     }
-    
+
     @Override // from ScenarioDelegate
     public void roundWillStart (BangObject bangobj)
     {
         // clear our respawn queue
         _respawns.clear();
+
+        // disable respawning if the configuration indicates to do so
+        _respawn = ((BangConfig)_bangmgr.getConfig()).respawnUnits;
     }
 
     @Override // from ScenarioDelegate
@@ -87,8 +91,8 @@ public class RespawnDelegate extends ScenarioDelegate
             Point spot = _parent.getStartSpot(unit.owner);
             Point bspot = bangobj.board.getOccupiableSpot(spot.x, spot.y, 3);
             if (bspot == null) {
-                log.warning("Unable to locate spawn spot for to-be-respawned " +
-                            "unit [unit=" + unit + ", spot=" + spot + "].");
+                log.warning("Unable to locate spawn spot for to-be-respawned unit [unit=" + unit +
+                            ", spot=" + spot + "].");
                 // stick him back on the queue for a few ticks later
                 unit.setRespawnTick((short)(tick + _respawnTicks));
                 _respawns.add(unit);
@@ -104,12 +108,12 @@ public class RespawnDelegate extends ScenarioDelegate
                 bangobj.removeFromPieces(unit.getKey());
             }
 
-            boolean freeIronPlate = _freeIronPlate && 
-                !bangobj.hasLiveUnits(unit.owner);
+            boolean freeIronPlate = _freeIronPlate && !bangobj.hasLiveUnits(unit.owner);
 
             // then position it and add it back at its new location
             unit.position(bspot.x, bspot.y);
             _bangmgr.addPiece(unit, AddPieceEffect.RESPAWNED);
+
             if (freeIronPlate) {
                 IronPlateEffect effect = new IronPlateEffect();
                 effect.freebie = true;
@@ -128,8 +132,7 @@ public class RespawnDelegate extends ScenarioDelegate
         Unit unit = (Unit)piece;
         unit.setRespawnTick((short)(bangobj.tick + _respawnTicks));
 
-        // the Revolutionary will cause all allied units to respawn on the
-        // next tick
+        // the Revolutionary will cause all allied units to respawn on the next tick
         if (unit instanceof Revolutionary) {
             ArrayList<Unit> saved = new ArrayList<Unit>();
             for (Iterator<Unit> iter = _respawns.iterator(); iter.hasNext(); ) {
@@ -151,23 +154,20 @@ public class RespawnDelegate extends ScenarioDelegate
     public void pieceAffected (Piece piece, String effect)
     {
         // remove resurrected units from the respawn queue
-        if (ResurrectEffect.RESURRECTED.equals(effect) && 
-                piece instanceof Unit) {
+        if (ResurrectEffect.RESURRECTED.equals(effect) && piece instanceof Unit) {
             _respawns.remove((Unit)piece);
         }
     }
 
     /** A list of units waiting to be respawned. */
-    protected PriorityQueue<Unit> _respawns = new PriorityQueue<Unit>(10,
-            new Comparator<Unit>() {
-                public int compare (Unit u1, Unit u2) {
-                    return u1.getRespawnTick() - u2.getRespawnTick();
-                }
-
-                public boolean equals(Object obj) {
-                    return false;
-                }
-            });
+    protected PriorityQueue<Unit> _respawns = new PriorityQueue<Unit>(10, new Comparator<Unit>() {
+        public int compare (Unit u1, Unit u2) {
+            return u1.getRespawnTick() - u2.getRespawnTick();
+        }
+        public boolean equals(Object obj) {
+            return false;
+        }
+    });
 
     /** The number of ticks that must elapse before a unit is respawned. */
     protected int _respawnTicks = RESPAWN_TICKS;

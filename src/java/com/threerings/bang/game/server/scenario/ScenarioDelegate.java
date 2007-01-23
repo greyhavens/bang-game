@@ -7,17 +7,16 @@ import java.util.ArrayList;
 
 import com.threerings.presents.server.InvocationException;
 
-import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.server.BangManager;
 
 /**
- * Handles aspects of a scenario's logic in a way that can be combined with
- * other scenario delegates.
+ * Handles aspects of a scenario's logic in a way that can be combined with other scenario
+ * delegates.
  *
- * <p><em>Note:</em> this class is intentionally minimal. As we discover other
- * aspects of scenarios that need to be shared among various scenarios, we can
- * expand the delegate to support them.
+ * <p><em>Note:</em> this class is intentionally minimal. As we discover other aspects of scenarios
+ * that need to be shared among various scenarios, we can expand the delegate to support them.
  */
 public class ScenarioDelegate
 {

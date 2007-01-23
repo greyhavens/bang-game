@@ -50,8 +50,8 @@ public abstract class Scenario
      */
     public void init (BangManager bangmgr, ScenarioInfo info)
     {
-        _info = info;
         _bangmgr = bangmgr;
+        _info = info;
 
         // initialize our delegates
         for (ScenarioDelegate delegate : _delegates) {
@@ -610,11 +610,14 @@ public abstract class Scenario
         return idx;
     }
 
-    /** Our metadata. */
-    protected ScenarioInfo _info;
-
     /** The Bang game manager. */
     protected BangManager _bangmgr;
+
+    /** The game configuration. */
+    protected BangConfig _config;
+
+    /** Our metadata. */
+    protected ScenarioInfo _info;
 
     /** Delegates that handle certain aspects of our scenario. */
     protected ArrayList<ScenarioDelegate> _delegates =

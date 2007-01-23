@@ -192,6 +192,9 @@ public class BangConfig extends GameConfig
     /** Indicates the minimum weight of cards and bonuses that will be spawned in this game. */
     public int minWeight = 0;
 
+    /** Whether units respawn in this game. */
+    public boolean respawnUnits = true;
+
     /** The configuration of each round of the game. */
     public ArrayList<Round> rounds = new ArrayList<Round>();
 
@@ -287,6 +290,8 @@ public class BangConfig extends GameConfig
         out.write(type.toString(), "type", Type.BOUNTY.toString());
         out.write(duration.toString(), "duration", Duration.NORMAL.toString());
         out.write(speed.toString(), "speed", Speed.NORMAL.toString());
+        out.write(minWeight, "minWeight", minWeight);
+        out.write(respawnUnits, "respawnUnits", respawnUnits);
         out.writeSavableArrayList(rounds, "rounds", DEF_ROUNDS);
         out.writeSavableArrayList(teams, "teams", DEF_TEAMS);
         out.writeSavableArrayList(criteria, "criteria", DEF_CRIT);
@@ -300,6 +305,8 @@ public class BangConfig extends GameConfig
         type = Type.valueOf(in.readString("type", Type.BOUNTY.toString()));
         duration = Duration.valueOf(in.readString("duration", Duration.NORMAL.toString()));
         speed = Speed.valueOf(in.readString("speed", Speed.NORMAL.toString()));
+        minWeight = in.readInt("minWeight", 0);
+        respawnUnits = in.readBoolean("respawnUnits", true);
         rounds = in.readSavableArrayList("rounds", DEF_ROUNDS);
         teams = in.readSavableArrayList("teams", DEF_TEAMS);
         criteria = in.readSavableArrayList("criteria", DEF_CRIT);
