@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!-- declare the libraries needed to build this webapp -->
 <project name="library-dependencies">
-  <fileset dir="${libs.dir}" id="office.libs">
-    <include name="commons-collections.jar"/>
-    <include name="mysql-connector-java-3.1.12-bin.jar"/>
-    <include name="narya-base.jar"/>
-    <include name="narya-distrib.jar"/>
-    <include name="vilya-parlor.jar"/>
-    <include name="samskivert.jar"/>
-    <include name="servlet-2.3.jar"/>
-    <include name="threerings.jar"/>
-    <include name="velocity-1.5-dev.jar"/>
-  </fileset>
+  <filelist dir="${libs.dir}" id="office.libs">
+    <file name="commons-collections.jar"/>
+    <file name="mysql-connector-java-3.1.12-bin.jar"/>
+    <file name="narya-base.jar"/>
+    <file name="narya-distrib.jar"/>
+    <file name="vilya-parlor.jar"/>
+    <file name="samskivert.jar"/>
+    <file name="servlet-2.3.jar"/>
+    <file name="threerings.jar"/>
+    <file name="velocity-1.5-dev.jar"/>
+  </filelist>
 </project>
