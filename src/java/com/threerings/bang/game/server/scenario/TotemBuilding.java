@@ -85,8 +85,8 @@ public class TotemBuilding extends Scenario
         // start with totem pieces at every totem spot
         for (int ii = 0; ii < _totems.size(); ii++) {
             dropBonus(bangobj, TotemEffect.TOTEM_PIECES[
-                    RandomUtil.getInt(TotemEffect.TOTEM_PIECES.length)],
-                    _totems.getX(ii), _totems.getY(ii));
+                          RandomUtil.getInt(TotemEffect.TOTEM_PIECES.length)],
+                      _totems.getX(ii), _totems.getY(ii));
         }
     }
 
@@ -102,8 +102,7 @@ public class TotemBuilding extends Scenario
             if (pieces[ii] instanceof TotemBonus) {
                 totems++;
                 type = ((TotemBonus)pieces[ii]).getConfig().type;
-            } else if (pieces[ii] instanceof Unit &&
-                     TotemBonus.isHolding((Unit)pieces[ii])) {
+            } else if (pieces[ii] instanceof Unit && TotemBonus.isHolding((Unit)pieces[ii])) {
                 totems++;
                 type = ((Unit)pieces[ii]).holding;
             } else if (pieces[ii] instanceof TotemBase) {
@@ -117,30 +116,27 @@ public class TotemBuilding extends Scenario
             }
         }
 
-        // if there is not at least 1.5 totems in play for every player in the
-        // game, try to spawn another one
+        // if there is not at least 1.5 totems in play for every player in the game, try to spawn
+        // another one
         int numPlayers = bangobj.getActivePlayerCount();
         if (totems < TOTEM_RATIO * numPlayers) {
-            String type = TotemEffect.TOTEM_PIECES[RandomUtil.getInt(
-                    TotemEffect.TOTEM_PIECES.length)];
+            String type = TotemEffect.TOTEM_PIECES[
+                RandomUtil.getInt(TotemEffect.TOTEM_PIECES.length)];
             float progress = (float)bangobj.tick / bangobj.duration;
-            // if we're far enough along in the round and there isn't a
-            // crown for each base, maybe spawn one
-            if (progress > CROWN_SPAWN && crowns < bases &&
-                    RandomUtil.getInt(100) > 50) {
+            // if we're far enough along in the round and there isn't a crown for each base, maybe
+            // spawn one
+            if (progress > CROWN_SPAWN && crowns < bases && RandomUtil.getInt(100) > 50) {
                 type = TotemEffect.TOTEM_CROWN_BONUS;
             }
-            return placeBonus(bangobj, pieces, Bonus.createBonus(
-                        BonusConfig.getConfig(type)),
-                    _totems);
+            return placeBonus(bangobj, pieces, Bonus.createBonus(BonusConfig.getConfig(type)),
+                              _totems);
         } else {
             return super.addBonus(bangobj, pieces);
         }
     }
 
     @Override // documentation inherited
-    public void recordStats (
-        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+    public void recordStats (BangObject bangobj, int gameTime, int pidx, PlayerObject user)
     {
         super.recordStats(bangobj, gameTime, pidx, user);
 

@@ -90,8 +90,7 @@ public class BangObject extends GameObject
         }
     }
 
-    /** Used to keep track of player occupant information even if they're not
-     * in the room. */
+    /** Used to keep track of player occupant information even if they're not in the room. */
     public static class PlayerInfo implements Streamable
     {
         /** The player's unique identifier. */
@@ -196,16 +195,14 @@ public class BangObject extends GameObject
     /** Contains the representation of the game board. */
     public transient BangBoard board;
 
-    /** Contains the non-interactive props on the game board within games
-     * (but not in the editor or the town view). */
+    /** Contains the non-interactive props on the game board within games (but not in the editor or
+     * the town view). */
     public transient Prop[] props = new Prop[0];
 
-    /** Contains statistics on the game, updated every time any change is
-     * made to pertinent game state. */
+    /** Contains statistics on the game, updated every time any change is made to game state. */
     public transient GameData gdata = new GameData();
 
-    /** Contains statistics on each player, updated every time any change
-     * is made to pertinent game state. */
+    /** Contains statistics on each player, updated every time any change is made to game state. */
     public transient PlayerData[] pdata;
 
     /** Used to assign ids to pieces added during the game. */
@@ -217,20 +214,22 @@ public class BangObject extends GameObject
     /** A hindrance affecting all units (and applied to new units). */
     public transient Hindrance globalHindrance;
 
-    /** Avatar fingerprints and other data for each of the players in the game.
-     * We need these in case the player leaves early and so that we can provide
-     * fake info for AIs. */
+    /** The minimum card and bonus weight that is allowed in this game or 100 to disable cards and
+     * bonuses completely. */
+    public transient int minCardBonusWeight;
+
+    /** Avatar fingerprints and other data for each of the players in the game.  We need these in
+     * case the player leaves early and so that we can provide fake info for AIs. */
     public PlayerInfo[] playerInfo;
 
-    /** This value is set at the end of every round, to inform the players
-     * of various interesting statistics. */
+    /** This value is set at the end of every round, to inform the players of various interesting
+     * statistics. */
     public StatSet[] stats;
 
     /** A stat set that contains only "watched" stats relating to criteria for a bounty game. */
     public StatSet critStats;
 
-    /** The invocation service via which the client communicates with the
-     * server. */
+    /** The invocation service via which the client communicates with the server. */
     public BangMarshaller service;
 
     /** The id of the town in which this game is being played. */
@@ -248,12 +247,12 @@ public class BangObject extends GameObject
     /** The id of the bounty game being played or null. */
     public String bountyGameId;
 
-    /** The MD5 hash of the game board, to be compared against any cached
-     * version of the board stored on the client. */
+    /** The MD5 hash of the game board, to be compared against any cached version of the board
+     * stored on the client. */
     public byte[] boardHash;
 
-    /** A list of round-specific updates to be applied to the board after
-     * downloading it or loading it from the cache. */
+    /** A list of round-specific updates to be applied to the board after downloading it or loading
+     * it from the cache. */
     public Piece[] boardUpdates;
 
     /** The starting positions for each player. */
@@ -265,13 +264,12 @@ public class BangObject extends GameObject
     /** The current board tick count. */
     public short tick;
 
-    /** The tick after which the game will end. This may not be {@link
-     * #duration} - 1 because some scenarios may opt to end the game early. */
+    /** The tick after which the game will end. This may not be {@link #duration} - 1 because some
+     * scenarios may opt to end the game early. */
     public short lastTick;
 
-    /** The maximum number of ticks that will be allowed to elapse before the
-     * game is ended. Some scenarios may choose to end the game early (see
-     * {@link #lastTick}). */
+    /** The maximum number of ticks that will be allowed to elapse before the game is ended. Some
+     * scenarios may choose to end the game early (see {@link #lastTick}). */
     public short duration;
 
     /** Contains information on all pieces on the board. */
@@ -292,19 +290,16 @@ public class BangObject extends GameObject
     /** Total points earned by each player. */
     public int[] points;
 
-    /** Points earned per player per round, this is only broadcast to the
-     * client at the end of the game. */
+    /** Points earned per player per round, this is broadcast to the client at end of the game. */
     public int[][] perRoundPoints;
 
-    /** Rank for each player in each round, either an individual rank or
-     * the team rank for a coop game. */
+    /** Rank for each player in each round, either individual or the team rank for a coop game. */
     public short[][] perRoundRanks;
 
     /** Used to report cash and badges awarded at the end of the game. */
     public Award[] awards;
 
-    /** Returns an iterator over all the {@link #props} and all the
-     * {@link #pieces}. */
+    /** Returns an iterator over all the {@link #props} and all the {@link #pieces}. */
     public Iterator<Piece> getPropPieceIterator ()
     {
         return new Iterator<Piece>() {
@@ -323,18 +318,16 @@ public class BangObject extends GameObject
         };
     }
 
-    /** Returns the {@link #pieces} set as an array to allow for
-     * simultaneous iteration and removal. */
+    /** Returns {@link #pieces} as an array to allow for simultaneous iteration and removal. */
     public Piece[] getPieceArray ()
     {
         return pieces.toArray(new Piece[pieces.size()]);
     }
 
     /**
-     * Adds a piece directly to the piece set without broadcasting any
-     * distributed object events. This is used by entities that are known
-     * to run on both the client and server. The board's piece shadow is
-     * also updated by this call.
+     * Adds a piece directly to the piece set without broadcasting any distributed object events.
+     * This is used by entities that are known to run on both the client and server. The board's
+     * piece shadow is also updated by this call.
      */
     public void addPieceDirect (Piece piece)
     {
@@ -343,10 +336,9 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Removes a piece directly from the piece set without broadcasting
-     * any distributed object events. This is used by entities that are
-     * known to run on both the client and server. The board's piece
-     * shadow is also updated by this call.
+     * Removes a piece directly from the piece set without broadcasting any distributed object
+     * events. This is used by entities that are known to run on both the client and server. The
+     * board's piece shadow is also updated by this call.
      */
     public void removePieceDirect (Piece piece)
     {
@@ -355,9 +347,8 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns a list of pieces that overlap the specified piece given its
-     * (hypothetical) current coordinates. If no pieces overlap, null will
-     * be returned.
+     * Returns a list of pieces that overlap the specified piece given its (hypothetical) current
+     * coordinates. If no pieces overlap, null will be returned.
      */
     public ArrayList<Piece> getOverlappers (Piece piece)
     {
@@ -365,8 +356,7 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns true if the specified player has live pieces, false if they
-     * are totally knocked out.
+     * Returns true if the specified player has live pieces, false if they are totally knocked out.
      */
     public boolean hasLiveUnits (int pidx)
     {
@@ -381,8 +371,7 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the number of live units remaining for the specified
-     * player.
+     * Returns the number of live units remaining for the specified player.
      */
     public int countLiveUnits (int pidx)
     {
@@ -426,8 +415,8 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the targetable piece at the specified coordinates or null if no
-     * targetable piece exists at those coordinates.
+     * Returns the targetable piece at the specified coordinates or null if no targetable piece
+     * exists at those coordinates.
      */
     public Piece getTarget (int tx, int ty)
     {
@@ -456,8 +445,7 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the average number of live units among the specified set
-     * of players.
+     * Returns the average number of live units among the specified set of players.
      */
     public int getAverageUnitCount (ArrayIntSet players)
     {
@@ -501,8 +489,7 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the average power of the specified set of players
-     * (referenced by index).
+     * Returns the average power of the specified set of players (referenced by index).
      */
     public float getAveragePower (ArrayIntSet players)
     {
@@ -514,8 +501,7 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the average damage level of all live units owned by the
-     * specified players.
+     * Returns the average damage level of all live units owned by the specified players.
      */
     public int getAverageUnitDamage (ArrayIntSet players)
     {
@@ -530,8 +516,8 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the smallest point difference between specified players scores
-     * and the max score or 0 if no players can reach.
+     * Returns the smallest point difference between specified players scores and the max score or
+     * 0 if no players can reach.
      */
     public int getPointsDiff (ArrayIntSet players)
     {
@@ -584,17 +570,15 @@ public class BangObject extends GameObject
 
         gdata.averagePower = (float)gdata.totalPower / gdata.livePlayers;
         for (int ii = 0; ii < pdata.length; ii++) {
-            pdata[ii].powerFactor =
-                (float)pdata[ii].power / gdata.averagePower;
+            pdata[ii].powerFactor = (float)pdata[ii].power / gdata.averagePower;
         }
 
-//         log.info("Updated stats " + gdata + ": " +
-//                  StringUtil.toString(pdata));
+//         log.info("Updated stats " + gdata + ": " + StringUtil.toString(pdata));
     }
 
     /**
-     * Grants the specified number of bonus points to the specified player.
-     * Their total points will be updated by a call to {@link #grantPoints}.
+     * Grants the specified number of bonus points to the specified player.  Their total points
+     * will be updated by a call to {@link #grantPoints}.
      */
     public void grantBonusPoints (int pidx, int amount)
     {
@@ -603,9 +587,8 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Grants the specified number of points to the specified player, updating
-     * their {@link #points} and updating the appropriate earned points
-     * statistic.
+     * Grants the specified number of points to the specified player, updating their {@link
+     * #points} and updating the appropriate earned points statistic.
      */
     public void grantPoints (int pidx, int amount)
     {
@@ -616,14 +599,13 @@ public class BangObject extends GameObject
         // keep our point factors up to date (on the server)
         if (pdata != null) {
             float tscore = IntListUtil.sum(points);
-            pdata[pidx].pointFactor =
-                (tscore == 0) ? 1f : (points[pidx] / tscore);
+            pdata[pidx].pointFactor = (tscore == 0) ? 1f : (points[pidx] / tscore);
         }
     }
 
     /**
-     * Returns an adjusted points array where players that have resigned from
-     * the game are adjusted to zero.
+     * Returns an adjusted points array where players that have resigned from the game are adjusted
+     * to zero.
      */
     public int[] getFilteredPoints ()
     {
@@ -637,25 +619,22 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns the current index into any round-related array. Because the
-     * {@link #roundId} field is updated at slightly wonky times, this method
-     * has to do some figuring out to return the proper index.
+     * Returns the current index into any round-related array. Because the {@link #roundId} field
+     * is updated at slightly wonky times, this method has to do some figuring out to return the
+     * proper index.
      */
     public int getRoundIndex ()
     {
-        return roundId - (state == IN_PLAY ||
-                          state == POST_ROUND ||
-                          state == GAME_OVER ? 1 : 0);
+        return roundId - (state == IN_PLAY || state == POST_ROUND || state == GAME_OVER ? 1 : 0);
     }
 
     /**
-     * Returns a lazily computed mapping from encoded tile coordinates to
-     * pieces of track on the board.
+     * Returns a lazily computed mapping from encoded tile coordinates to pieces of track on the
+     * board.
      */
     public HashIntMap<Track> getTracks ()
     {
-        if (_trackBoardHash == null ||
-            !Arrays.equals(_trackBoardHash, boardHash)) {
+        if (_trackBoardHash == null || !Arrays.equals(_trackBoardHash, boardHash)) {
             // boardHash is null when testing uploaded boards
             if (boardHash != null) {
                 _trackBoardHash = (byte[])boardHash.clone();
@@ -671,13 +650,11 @@ public class BangObject extends GameObject
     }
 
     /**
-     * Returns a lazily computed mapping from encoded tile coordinates to
-     * teleporters on the board.
+     * Returns a lazily computed mapping from encoded tile coordinates to teleporters on the board.
      */
     public HashIntMap<Teleporter> getTeleporters ()
     {
-        if (_teleporterBoardHash == null ||
-            !Arrays.equals(_teleporterBoardHash, boardHash)) {
+        if (_teleporterBoardHash == null || !Arrays.equals(_teleporterBoardHash, boardHash)) {
             // boardHash is null when testing uploaded boards
             if (boardHash != null) {
                 _teleporterBoardHash = (byte[])boardHash.clone();
@@ -695,13 +672,12 @@ public class BangObject extends GameObject
     @Override // documentation inherited
     public boolean isInPlay ()
     {
-        return (state == SELECT_PHASE || state == IN_PLAY ||
-                state == POST_ROUND);
+        return (state == SELECT_PHASE || state == IN_PLAY || state == POST_ROUND);
     }
 
     /**
-     * Returns true only while the game is in the actual moving and shooting
-     * mode, not during round set up or after the round ends.
+     * Returns true only while the game is in the actual moving and shooting mode, not during round
+     * set up or after the round ends.
      */
     public boolean isInteractivePlay ()
     {

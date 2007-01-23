@@ -199,6 +199,11 @@ public abstract class Scenario
      */
     public boolean addBonus (BangObject bangobj, Piece[] pieces)
     {
+        // if bonuses are disabled for this game, stop here
+        if (bangobj.minCardBonusWeight >= 100) {
+            return false;
+        }
+
         // count up the unclaimed (non-scenario) bonuses on the board
         int bonuses = 0;
         for (Piece piece : pieces) {

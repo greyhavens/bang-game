@@ -51,16 +51,15 @@ public class BonusConfig
     /** If true, the bonus can only be activated by ground units. */
     public boolean groundOnly;
 
-    /** If true, the bonus can only be activated by players (not by unaligned
-     * units). */
+    /** If true, the bonus can only be activated by players (not by unaligned units). */
     public boolean playersOnly;
-    
+
     /** If true, the bonus is hidden. */
     public boolean hidden;
-    
+
     /** If specified, the bonus will only be spawned in this scenario. */
     public String scenario;
-    
+
     /** The custom bonus class use for this bonus, if specified. */
     public String bonusClass;
 
@@ -69,11 +68,11 @@ public class BonusConfig
 
     /** The card type associated with this bonus. */
     public String cardType;
-    
-    /** If the bonus should emit particles when it's on the board, the name of
-     * its particle effect. */
+
+    /** If the bonus should emit particles when it's on the board, the name of its particle
+     * effect. */
     public String particleEffect;
-    
+
     /** Returns a string representation of this instance. */
     public String toString ()
     {
@@ -96,8 +95,7 @@ public class BonusConfig
     }
 
     /**
-     * Returns an array of configurations for all bonus types accessible in
-     * the specified town.
+     * Returns an array of configurations for all bonus types accessible in the specified town.
      */
     public static BonusConfig[] getTownBonuses (String townId)
     {
@@ -111,15 +109,16 @@ public class BonusConfig
         }
     }
 
-    /** Computes the weight of this particular bonus. */
+    /**
+     * Computes the weight of this particular bonus.
+     */
     public int getWeight (BangObject bangobj, double averagePower,
                           int averageDamage, int averagePieces, int pointDiff)
     {
-        // bail out if the base weight is zero or it's not the required
-        // scenario
-        if (baseWeight == 0 || (scenario != null &&
-                !bangobj.scenario.getIdent().equals(scenario)) ||
-                minPointDiff > pointDiff) {
+        // bail out if the base weight is zero or it's not the required scenario
+        if (baseWeight == 0 ||
+            (scenario != null && !bangobj.scenario.getIdent().equals(scenario)) ||
+            minPointDiff > pointDiff) {
             return 0;
         }
 
@@ -174,15 +173,11 @@ public class BonusConfig
         config.effectClass = BangUtil.requireProperty(type, props, "effect");
         config.cardType = props.getProperty("card");
         config.particleEffect = props.getProperty("particles");
-        
-        config.baseWeight = BangUtil.getIntProperty(
-            type, props, "base_weight", 50);
-        config.minPointDiff = BangUtil.getIntProperty(
-            type, props, "min_point_diff", 0);
-        config.damageAffinity = BangUtil.getFloatProperty(
-            type, props, "damage_affinity", 0f);
-        config.lowPowerAffinity = BangUtil.getFloatProperty(
-            type, props, "low_power_affinity", 0f);
+
+        config.baseWeight = BangUtil.getIntProperty(type, props, "base_weight", 50);
+        config.minPointDiff = BangUtil.getIntProperty(type, props, "min_point_diff", 0);
+        config.damageAffinity = BangUtil.getFloatProperty(type, props, "damage_affinity", 0f);
+        config.lowPowerAffinity = BangUtil.getFloatProperty(type, props, "low_power_affinity", 0f);
 
         config.manyPiecesAffinity = BangUtil.getFloatProperty(
             type, props, "many_pieces_affinity", 0f);
@@ -191,21 +186,16 @@ public class BonusConfig
 
         config.earlyGameAffinity = BangUtil.getFloatProperty(
             type, props, "early_game_affinity", 0f);
-        config.lateGameAffinity = BangUtil.getFloatProperty(
-            type, props, "late_game_affinity", 0f);
+        config.lateGameAffinity = BangUtil.getFloatProperty(type, props, "late_game_affinity", 0f);
 
-        config.holdable = BangUtil.getBooleanProperty(
-            type, props, "holdable", false);
+        config.holdable = BangUtil.getBooleanProperty(type, props, "holdable", false);
 
         config.scenario = props.getProperty("scenario");
-        
-        config.groundOnly = BangUtil.getBooleanProperty(
-            type, props, "ground_only", false);
-        config.playersOnly = BangUtil.getBooleanProperty(
-            type, props, "players_only", false);
-        config.hidden = BangUtil.getBooleanProperty(
-            type, props, "hidden", false);
-            
+
+        config.groundOnly = BangUtil.getBooleanProperty(type, props, "ground_only", false);
+        config.playersOnly = BangUtil.getBooleanProperty(type, props, "players_only", false);
+        config.hidden = BangUtil.getBooleanProperty(type, props, "hidden", false);
+
         // map this config into the proper towns
         String towns = BangUtil.requireProperty(type, props, "towns");
         boolean andSoOn = false;
@@ -234,17 +224,14 @@ public class BonusConfig
     }
 
     /** A mapping from bonus type to its configuration. */
-    protected static HashMap<String,BonusConfig> _types =
-        new HashMap<String,BonusConfig>();
+    protected static HashMap<String,BonusConfig> _types = new HashMap<String,BonusConfig>();
 
     /** A mapping from town to all bonuses accessible in that town. */
-    protected static HashMap<String,BonusConfig[]> _townMap =
-        new HashMap<String,BonusConfig[]>();
+    protected static HashMap<String,BonusConfig[]> _townMap = new HashMap<String,BonusConfig[]>();
 
     static {
         // register our bonuses
-        String[] bonuses = BangUtil.townResourceToStrings(
-            "rsrc/bonuses/TOWN/bonuses.txt");
+        String[] bonuses = BangUtil.townResourceToStrings("rsrc/bonuses/TOWN/bonuses.txt");
         for (int ii = 0; ii < bonuses.length; ii++) {
             registerBonus(bonuses[ii]);
         }

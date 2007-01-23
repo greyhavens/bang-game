@@ -47,17 +47,14 @@ public abstract class Card extends SimpleStreamableObject
     public boolean found = true;
 
     /**
-     * Selects a random card from the set of all available cards for the
-     * specified town.
+     * Selects a random card from the set of all available cards for the specified town.
      *
-     * @param bangobj if this card is being created during a game, this will
-     * indicate the game object. Otherwise this will be null (generally meaning
-     * the card is being created for a pack).
-     * @param pidx the index of the player for whom the card is being
-     * generated, if the card is being created for a game
+     * @param bangobj if this card is being created during a game, this will indicate the game
+     * object. Otherwise this will be null (meaning the card is being created for a pack).
+     * @param pidx the index of the player for whom the card is being generated, if the card is
+     * being created for a game
      */
-    public static String selectRandomCard (
-        String townId, BangObject bangobj, int pidx)
+    public static String selectRandomCard (String townId, BangObject bangobj, int pidx)
     {
         if (bangobj != null && bangobj.scenario instanceof TutorialInfo) {
             // we always return missile cards in the tutorial
@@ -65,53 +62,53 @@ public abstract class Card extends SimpleStreamableObject
 
         } else {
             // if in a game, retrieve the player's point factor
-            double pointFactor = (bangobj == null) ?
-                1f : bangobj.pdata[pidx].pointFactor;
-            
+            double pointFactor = (bangobj == null) ? 1f : bangobj.pdata[pidx].pointFactor;
+
             // select the card based on a weighted random choice
             Card[] wcards = _wcards.get(townId);
-            int[] weights = _weights.get(townId);
+            int[] oweights = _weights.get(townId), weights = oweights;
 
             // clone the weights and adjust them based on the point factor
             if (pointFactor < 1f || pointFactor > 1.25f) {
                 weights = weights.clone();
                 if (pointFactor < 1) {
-                    // for players at a disadvantage, add a constant value to
-                    // all weights which will reduce the rarity variance
+                    // for players at a disadvantage, add a constant value to all weights which
+                    // will reduce the rarity variance
                     int adjust = (int)Math.round(200 * (1 - pointFactor));
                     for (int ii = 0; ii < weights.length; ii++) {
                         weights[ii] += adjust;
                     }
 
                 } else { // (pointFactor > 1.25)
-                    // for players above the average points, filter out all
-                    // cards below a cutoff frequency
+                    // for players above the average points, filter out all cards below a cutoff
+                    // frequency
                     int cutoff = (pointFactor > 1.5) ? 50 : 25;
                     for (int ii = 0; ii < weights.length; ii++) {
                         if (weights[ii] >= cutoff) {
                             weights[ii] = 0;
                         }
                     }
-                }                
+                }
             }
 
-            // zero out any cards that can't be used in this round
+            // zero out any cards that can't be used in this round (and whose unaltered frequency
+            // falls below the cutoff frequency in use for this game)
             if (bangobj != null) {
                 for (int ii = 0; ii < wcards.length; ii++) {
-                    if (weights[ii] > 0 &&
-                        !wcards[ii].isPlayable(bangobj)) {
+                    if (weights[ii] > 0 && (!wcards[ii].isPlayable(bangobj) ||
+                                            weights[ii] < bangobj.minCardBonusWeight)) {
                         weights[ii] = 0;
                     }
                 }
             }
-            
+
             return wcards[RandomUtil.getWeightedIndex(weights)].getType();
         }
     }
 
     /**
-     * Creates a card of the specified type. Returns null if no card
-     * exists with the specified type.
+     * Creates a card of the specified type. Returns null if no card exists with the specified
+     * type.
      */
     public static Card newCard (String type)
     {
@@ -152,8 +149,8 @@ public abstract class Card extends SimpleStreamableObject
     public abstract String getType ();
 
     /**
-     * Returns the badge necessary to enable this card for purchase in three
-     * packs at the General Store or null if it has no qualifier.
+     * Returns the badge necessary to enable this card for purchase in three packs at the General
+     * Store or null if it has no qualifier.
      */
     public Badge.Type getQualifier ()
     {
@@ -195,8 +192,7 @@ public abstract class Card extends SimpleStreamableObject
         return PlacementMode.VS_PIECE;
     }
 
-    /** Returns the radius that should be used when displaying this
-     * card's area of effect. */
+    /** Returns the radius that should be used when displaying this card's area of effect. */
     public int getRadius ()
     {
         return 0;
@@ -227,18 +223,17 @@ public abstract class Card extends SimpleStreamableObject
     }
 
     /**
-     * Returns true if this card can be played at the moment (only called
-     * for VS_BOARD cards).
+     * Returns true if this card can be played at the moment (only called for VS_BOARD cards).
      */
     public boolean isValid (BangObject bangobj)
     {
         return false;
     }
-    
+
     /**
-     * Checks whether the specified player's client should show a standard
-     * visualization (card dropping on a piece, etc.) when the card is played.
-     * Some cards hide their targets from all but their owners.
+     * Checks whether the specified player's client should show a standard visualization (card
+     * dropping on a piece, etc.) when the card is played.  Some cards hide their targets from all
+     * but their owners.
      */
     public boolean shouldShowVisualization (int pidx)
     {
@@ -246,8 +241,8 @@ public abstract class Card extends SimpleStreamableObject
     }
 
     /**
-     * Activates the specified card at the supplied coordinates. The
-     * returned effect will be prepared and effected immediately.
+     * Activates the specified card at the supplied coordinates. The returned effect will be
+     * prepared and effected immediately.
      *
      * @return the effect of the card activation.
      */
@@ -259,22 +254,21 @@ public abstract class Card extends SimpleStreamableObject
     public abstract String getTownId ();
 
     /**
-     * Returns the weight of this card compared to the others which is used to
-     * determine its rarity.
+     * Returns the weight of this card compared to the others which is used to determine its
+     * rarity.
      */
     public abstract int getWeight ();
 
     /**
-     * Returns the script cost for a pack of three of these cards or 0 if the
-     * cards are not for sale outside of bundles.
+     * Returns the script cost for a pack of three of these cards or 0 if the cards are not for
+     * sale outside of bundles.
      */
     public abstract int getScripCost ();
 
     /**
-     * This is used to assign the owner and a new unique id to a card when
-     * it is created (on the server). Derived classes can also override
-     * this method and further configure their card based on the relative
-     * strength or weakness of the receiving player.
+     * This is used to assign the owner and a new unique id to a card when it is created (on the
+     * server). Derived classes can also override this method and further configure their card
+     * based on the relative strength or weakness of the receiving player.
      */
     public void init (BangObject bangobj, int owner)
     {
@@ -287,8 +281,8 @@ public abstract class Card extends SimpleStreamableObject
     /**
      * Returns the path to this card's icon image.
      *
-     * @param which either <code>icon</code> for its tiny icon image or
-     * <code>card</code> for its inventory item image.
+     * @param which either <code>icon</code> for its tiny icon image or <code>card</code> for its
+     * inventory item image.
      */
     public String getIconPath (String which)
     {
@@ -333,8 +327,8 @@ public abstract class Card extends SimpleStreamableObject
     }
 
     /**
-     * Registers a card prototype so that it may be looked up and instantiated
-     * by "type" (as defined by {@link #getType}).
+     * Registers a card prototype so that it may be looked up and instantiated by "type" (as
+     * defined by {@link #getType}).
      */
     protected static void register (Card card)
     {
@@ -350,15 +344,13 @@ public abstract class Card extends SimpleStreamableObject
     /** A mapping from card identifier to card prototype. */
     protected static HashMap<String,Card> _cards = new HashMap<String,Card>();
 
-    /** Maps town id to an array of the weights for all cards available in that
-     * town. Used in conjunction with {@link #_wcards}. */
-    protected static HashMap<String,int[]> _weights =
-        new HashMap<String,int[]>();
+    /** Maps town id to an array of the weights for all cards available in that town. Used in
+     * conjunction with {@link #_wcards}. */
+    protected static HashMap<String,int[]> _weights = new HashMap<String,int[]>();
 
-    /** Maps town id to an array of the cards available in that town. Used in
-     * conjunction with {@link #_weights}. */
-    protected static HashMap<String,Card[]> _wcards =
-        new HashMap<String,Card[]>();
+    /** Maps town id to an array of the cards available in that town. Used in conjunction with
+     * {@link #_weights}. */
+    protected static HashMap<String,Card[]> _wcards = new HashMap<String,Card[]>();
 
     static {
         register(new Repair());
@@ -405,8 +397,7 @@ public abstract class Card extends SimpleStreamableObject
         register(new UnderdogSoldier());
 
         // create arrays of all cards introduced in each town
-        HashMap<String,ArrayList<Card>> bytown =
-            new HashMap<String,ArrayList<Card>>();
+        HashMap<String,ArrayList<Card>> bytown = new HashMap<String,ArrayList<Card>>();
         for (Card card : _cards.values()) {
             ArrayList<Card> clist = bytown.get(card.getTownId());
             if (clist == null) {

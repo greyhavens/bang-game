@@ -153,8 +153,7 @@ public class Tutorial extends Scenario
     @Override // documentation inherited
     public boolean shouldPayEarnings (PlayerObject user)
     {
-        return _firstTime && user.stats.containsValue(
-            Stat.Type.TUTORIALS_COMPLETED, _config.ident);
+        return _firstTime && user.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED, _config.ident);
     }
 
     @Override // documentation inherited
@@ -167,8 +166,8 @@ public class Tutorial extends Scenario
     @Override // documentation inherited
     protected short getBaseDuration ()
     {
-        // tutorials don't normally expire after a set time, but we do end them
-        // eventually if the player dallies too long
+        // tutorials don't normally expire after a set time, but we do end them eventually if the
+        // player dallies too long
         return 4000;
     }
 
@@ -206,8 +205,7 @@ public class Tutorial extends Scenario
                     }
                 }
                 if (bsitem == null) {
-                    log.warning("Player has no Big Shot in tutorial " +
-                                "[game=" + _bangobj.which() +
+                    log.warning("Player has no Big Shot in tutorial [game=" + _bangobj.which() +
                                 ", user=" + user.who() + "].");
                     return false;
                 }
@@ -235,15 +233,13 @@ public class Tutorial extends Scenario
             case 1:
                 Piece near = _bangobj.pieces.get(add.location[0]);
                 if (near == null) {
-                    log.warning("Can't add piece near non-existent piece " +
-                                add + ".");
+                    log.warning("Can't add piece near non-existent piece " + add + ".");
                     return false;
                 } else {
-                    Point spot = _bangobj.board.getOccupiableSpot(
-                        near.x, near.y, 2);
+                    Point spot = _bangobj.board.getOccupiableSpot(near.x, near.y, 2);
                     if (spot == null) {
-                        log.warning("Can't find spot near piece " +
-                                    "[piece=" + near + ", add=" + add + "].");
+                        log.warning("Can't find spot near piece [piece=" + near +
+                                    ", add=" + add + "].");
                         return false;
                     } else {
                         piece.position(spot.x, spot.y);
@@ -273,24 +269,21 @@ public class Tutorial extends Scenario
                 for (int ii = 0; ii < PieceCodes.DIRECTIONS.length; ii++) {
                     tx = target.x + PieceCodes.DX[ii];
                     ty = target.y + PieceCodes.DY[ii];
-                    if (_bangobj.board.canOccupy(unit, tx, ty) &&
-                            (tx != unit.x || ty != unit.y)) {
+                    if (_bangobj.board.canOccupy(unit, tx, ty) && (tx != unit.x || ty != unit.y)) {
                         foundMove = true;
                         break;
                     }
                 }
                 if (!foundMove) {
-                    log.warning("Unable to locate spot near target " +
-                        "[tut=" + _config.ident + ", unit=" + unit +
-                        ", target=" + target + "].");
+                    log.warning("Unable to locate spot near target [tut=" + _config.ident +
+                                ", unit=" + unit + ", target=" + target + "].");
                 }
             }
 
             try {
                 _bangmgr.executeOrder(unit, tx, ty, targetId, true);
             } catch (InvocationException ie) {
-                log.warning("Unable to execute action " + mua + ":" +
-                            ie.getMessage());
+                log.warning("Unable to execute action " + mua + ":" + ie.getMessage());
             }
 
         } else if (action instanceof TutorialConfig.ScenarioAction) {

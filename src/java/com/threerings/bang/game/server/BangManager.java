@@ -838,8 +838,9 @@ public class BangManager extends GameManager
             _rounds[ii].board = boards[ii];
         }
 
-        // configure the town associated with this server
+        // configure some game-wide bits
         _bangobj.setTownId(ServerConfig.townId);
+        _bangobj.minCardBonusWeight = _bconfig.minWeight;
 
         // create our per-player arrays
         int slots = getPlayerSlots();
@@ -1001,8 +1002,7 @@ public class BangManager extends GameManager
             return;
         }
 
-        BangServer.boardmgr.loadBoardData(
-            brec, new ResultListener<BoardRecord>() {
+        BangServer.boardmgr.loadBoardData(brec, new ResultListener<BoardRecord>() {
             public void requestCompleted (BoardRecord record) {
                 try {
                     _rounds[_activeRoundId].bdata = record.getBoardData();
@@ -1063,9 +1063,11 @@ public class BangManager extends GameManager
             }
         }
 
-        // set up the board and pieces so it's visible while purchasing
+        // set up the board and pieces and select a board tour marquee
         _bangobj.board = (BangBoard)round.bdata.board.clone();
-        _bangobj.setMarquee(MessageBundle.taint(round.board.name));
+        String marquee = (_bounty == null) ? round.board.name :
+            _bounty.getGame(_bangobj.bountyGameId).name;
+        _bangobj.setMarquee(MessageBundle.taint(marquee));
         _bangobj.setBoardHash(round.board.dataHash);
 
         // clone the pieces we get from the board as we may modify them during the game

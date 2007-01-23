@@ -29,6 +29,58 @@ import com.threerings.bang.game.client.BangController;
 public class BangConfig extends GameConfig
     implements Savable
 {
+    /** Indicates the type of game being played. */
+    public static enum Type {
+        TUTORIAL, PRACTICE, SALOON, BOUNTY
+    };
+
+    /** Used to adjust the duration of the rounds. */
+    public static enum Duration {
+        /** Used for practice tutorials. Super ultra short. */
+        PRACTICE(0.5f),
+
+        /** 70% of the duration of a normal game. */
+        QUICK(0.7f),
+
+        /** The standard duration. */
+        NORMAL(1f),
+
+        /** 130% of the duration of a normal game. */
+        LONG(1.3f);
+
+        public float getAdjustment () {
+            return _adjustment;
+        }
+
+        Duration (float adjustment) {
+            _adjustment = adjustment;
+        }
+
+        protected float _adjustment;
+    };
+
+    /** Used to adjust the speed of the ticks. */
+    public static enum Speed {
+        /** 70% of the inter-tick time of a normal game. */
+        FAST(0.7f),
+
+        /** The standard speed. */
+        NORMAL(1f),
+
+        /** 150% of the inter-tick time of a normal game. */
+        SLOW(1.5f);
+
+        public float getAdjustment () {
+            return _adjustment;
+        }
+
+        Speed (float adjustment) {
+            _adjustment = adjustment;
+        }
+
+        protected float _adjustment;
+    };
+
     /** Represents a particular player's team configuration. */
     public static class Player extends SimpleStreamableObject
         implements Savable
@@ -128,58 +180,6 @@ public class BangConfig extends GameConfig
         }
     }
 
-    /** Indicates the type of game being played. */
-    public static enum Type {
-        TUTORIAL, PRACTICE, SALOON, BOUNTY
-    };
-
-    /** Used to adjust the duration of the rounds. */
-    public static enum Duration {
-        /** Used for practice tutorials. Super ultra short. */
-        PRACTICE(0.5f),
-
-        /** 70% of the duration of a normal game. */
-        QUICK(0.7f),
-
-        /** The standard duration. */
-        NORMAL(1f),
-
-        /** 130% of the duration of a normal game. */
-        LONG(1.3f);
-
-        public float getAdjustment () {
-            return _adjustment;
-        }
-
-        Duration (float adjustment) {
-            _adjustment = adjustment;
-        }
-
-        protected float _adjustment;
-    };
-
-    /** Used to adjust the speed of the ticks. */
-    public static enum Speed {
-        /** 70% of the inter-tick time of a normal game. */
-        FAST(0.7f),
-
-        /** The standard speed. */
-        NORMAL(1f),
-
-        /** 150% of the inter-tick time of a normal game. */
-        SLOW(1.5f);
-
-        public float getAdjustment () {
-            return _adjustment;
-        }
-
-        Speed (float adjustment) {
-            _adjustment = adjustment;
-        }
-
-        protected float _adjustment;
-    };
-
     /** The type of game being played. */
     public Type type = Type.SALOON;
 
@@ -188,6 +188,9 @@ public class BangConfig extends GameConfig
 
     /** Whether or not to play a fast, normal or slow game. */
     public Speed speed = Speed.NORMAL;
+
+    /** Indicates the minimum weight of cards and bonuses that will be spawned in this game. */
+    public int minWeight = 0;
 
     /** The configuration of each round of the game. */
     public ArrayList<Round> rounds = new ArrayList<Round>();

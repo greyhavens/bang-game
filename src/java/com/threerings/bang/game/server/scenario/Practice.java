@@ -77,8 +77,7 @@ public class Practice extends Scenario
         // give the AI a new unit to replace the fallen
         if (_bangmgr.isAI(piece.owner)) {
             int owner = piece.owner;
-            UnitConfig[] ucs = UnitConfig.getTownUnits(
-                    bangobj.townId, VALID_RANKS);
+            UnitConfig[] ucs = UnitConfig.getTownUnits(bangobj.townId, VALID_RANKS);
             piece = Unit.getUnit(ucs[RandomUtil.getInt(ucs.length)].type);
             _bangmgr.initAndPrepareUnit((Unit)piece, owner);
             piece.lastActed = bangobj.tick;

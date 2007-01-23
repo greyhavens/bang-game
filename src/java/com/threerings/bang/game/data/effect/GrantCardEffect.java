@@ -58,8 +58,8 @@ public class GrantCardEffect extends BonusEffect
 
         super.prepare(bangobj, dammap);
 
-        card = Card.newCard(
-            Card.selectRandomCard(bangobj.townId, bangobj, _player));
+        // pick a weighted random card to be given to the player
+        card = Card.newCard(Card.selectRandomCard(bangobj.townId, bangobj, _player));
         card.init(bangobj, _player);
     }
 
@@ -84,9 +84,9 @@ public class GrantCardEffect extends BonusEffect
         if (piece == null || piece.owner != pidx || pidx == -1) {
             return null;
         }
-        return MessageBundle.compose("m.effect_card", piece.getName(),
-            MessageBundle.qualify(BangCodes.CARDS_MSGS,
-                "m." + card.getType()));
+        return MessageBundle.compose(
+            "m.effect_card", piece.getName(),
+            MessageBundle.qualify(BangCodes.CARDS_MSGS, "m." + card.getType()));
     }
 
     @Override // documentation inherited

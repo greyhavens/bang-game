@@ -6,7 +6,6 @@ package com.threerings.bang.game.data.piece;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.logging.Level;
 
 import com.samskivert.util.ArrayIntSet;
@@ -27,9 +26,8 @@ import com.threerings.bang.game.data.effect.PuntEffect;
 import static com.threerings.bang.Log.log;
 
 /**
- * Represents an exciting bonus waiting to be picked up by a player on the
- * board. Bonuses may generate full-blown effects or just influence the
- * piece that picked them up.
+ * Represents an exciting bonus waiting to be picked up by a player on the board. Bonuses may
+ * generate full-blown effects or just influence the piece that picked them up.
  */
 public class Bonus extends Piece
 {
@@ -37,21 +35,15 @@ public class Bonus extends Piece
     public short spot = (short)-1;
 
     /**
-     * Takes the various circumstances into effect and selects a bonus to
-     * be placed on the board at the specified position which can be
-     * reached on this same turn by the specfied set of players.
+     * Takes the various circumstances into effect and selects a bonus to be placed on the board at
+     * the specified position (which has been determined to be reachable on this same turn by the
+     * supplied set of players).
      */
     public static Bonus selectBonus (BangObject bangobj, ArrayIntSet reachers)
     {
         BonusConfig[] configs = BonusConfig.getTownBonuses(bangobj.townId);
-        int[] weights = _weights.get(bangobj.townId);
-        if (weights == null) {
-            // create a scratch array of the appropriate size
-            _weights.put(bangobj.townId, weights = new int[configs.length]);
-        }
 
-        // if no one can reach the spot, base our calculations on all the
-        // players instead
+        // if no one can reach the spot, base our calculations on all the players instead
         if (reachers == null) {
             reachers = new ArrayIntSet();
             for (int ii = 0; ii < bangobj.players.length; ii++) {
@@ -67,13 +59,13 @@ public class Bonus extends Piece
 
         // now compute weightings for each of our bonuses
         StringBuffer buf = new StringBuffer();
-        Arrays.fill(weights, 0);
+        int[] weights = new int[configs.length];
         for (int ii = 0; ii < configs.length; ii++) {
             BonusConfig config = configs[ii];
-// TODO: instantiate a prototype of the custom bonus class for each type?
-//             if (!config.isValid(bangobj)) {
-//                 continue;
-//             }
+            // if this bonus's base weight is below the minimum for this game, skip it
+            if (config.baseWeight < bangobj.minCardBonusWeight) {
+                continue;
+            }
             weights[ii] = config.getWeight(bangobj, avgpow, avgdam, avgunits, pointDiff);
             weights[ii] = Math.max(weights[ii], 0);
             // record data for logging
@@ -248,8 +240,4 @@ public class Bonus extends Piece
 
     /** The configuration for the bonus we represent. */
     protected transient BonusConfig _config;
-
-    /** Used when selecting a random bonus. */
-    protected static HashMap<String,int[]> _weights =
-        new HashMap<String,int[]>();
 }

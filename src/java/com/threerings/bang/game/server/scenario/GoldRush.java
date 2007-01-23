@@ -31,13 +31,11 @@ import com.threerings.bang.game.server.ai.GoldLogic;
  * A gameplay scenario wherein:
  * <ul>
  * <li> Each player has a mine shaft, and those mine shafts start empty of gold.
- * <li> Players must travel to the "hills" where there are gold nuggets for the
- * taking and pick up nuggets and carry them back to their carge tank.
- * <li> If the unit carrying the nugget is killed, it drops the nugget in a
- * nearby square and the nugget can then be picked up by any piece that lands
- * on it.
- * <li> Any units that are killed during the round respawn near the player's
- * starting marker.
+ * <li> Players must travel to the "hills" where there are gold nuggets for the taking and pick up
+ * nuggets and carry them back to their carge tank.
+ * <li> If the unit carrying the nugget is killed, it drops the nugget in a nearby square and the
+ * nugget can then be picked up by any piece that lands on it.
+ * <li> Any units that are killed during the round respawn near the player's starting marker.
  * </ul>
  */
 public class GoldRush extends Scenario
@@ -83,8 +81,7 @@ public class GoldRush extends Scenario
 
         // start with nuggets at every lode spot
         for (int ii = 0; ii < _lodes.size(); ii++) {
-            dropBonus(bangobj, NuggetEffect.NUGGET_BONUS,
-                _lodes.getX(ii), _lodes.getY(ii));
+            dropBonus(bangobj, NuggetEffect.NUGGET_BONUS, _lodes.getX(ii), _lodes.getY(ii));
         }
     }
 
@@ -96,26 +93,23 @@ public class GoldRush extends Scenario
         for (int ii = 0; ii < pieces.length; ii++) {
             if (Bonus.isBonus(pieces[ii], NuggetEffect.NUGGET_BONUS) ||
                 (pieces[ii] instanceof Unit && 
-                 NuggetEffect.NUGGET_BONUS.equals(
-                     ((Unit)pieces[ii]).holding))) {
+                 NuggetEffect.NUGGET_BONUS.equals(((Unit)pieces[ii]).holding))) {
                 nuggets++;
             }
         }
 
-        // if there is not at least one nugget in play for every player in the
-        // game, try to spawn another one
+        // if there is not at least one nugget in play for every player in the game, try to spawn
+        // another one
         if (nuggets < bangobj.getActivePlayerCount()) {
             return placeBonus(bangobj, pieces, Bonus.createBonus(
-                                  BonusConfig.getConfig(
-                                      NuggetEffect.NUGGET_BONUS)), _lodes);
+                                  BonusConfig.getConfig(NuggetEffect.NUGGET_BONUS)), _lodes);
         } else {
             return super.addBonus(bangobj, pieces);
         }
     }
 
     @Override // documentation inherited
-    public void recordStats (
-        BangObject bangobj, int gameTime, int pidx, PlayerObject user)
+    public void recordStats (BangObject bangobj, int gameTime, int pidx, PlayerObject user)
     {
         super.recordStats(bangobj, gameTime, pidx, user);
 
