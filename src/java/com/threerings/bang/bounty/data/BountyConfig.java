@@ -40,9 +40,6 @@ public class BountyConfig extends SimpleStreamableObject
     /** Defines the mechanism that unlocks this bounty. */
     public enum LockType { NONE, BOUNTY, BADGE, LICENSE };
 
-    /** Defines the speaker for a pre-game, failed or completed quote. */
-    public enum Speaker { BIGSHOT, OUTLAW, OPPONENT };
-
     /** Defines a reward for completing a bounty. */
     public static class Reward extends SimpleStreamableObject
     {
@@ -72,8 +69,8 @@ public class BountyConfig extends SimpleStreamableObject
     /** Defines a speaker and text for a quote. */
     public static class Quote extends SimpleStreamableObject
     {
-        /** The speaker of the quote. */
-        public Speaker speaker = Speaker.OUTLAW;
+        /** The player index of the speaker of the quote. */
+        public int speaker;
 
         /** The (translated) text of the quote. */
         public String text = "";
@@ -362,14 +359,7 @@ public class BountyConfig extends SimpleStreamableObject
     {
         Quote quote = new Quote();
         quote.text = props.getProperty(prefix + "_quote");
-        try {
-            String speaker = Speaker.OUTLAW.toString();
-            speaker = props.getProperty(prefix + "_speaker", speaker).toUpperCase();
-            quote.speaker = Enum.valueOf(Speaker.class, speaker);
-        } catch (Exception e) {
-            log.warning("Invalid speaker specified for quote [which=" + which +
-                        ", prefix=" + prefix + "].");
-        }
+        quote.speaker = BangUtil.getIntProperty(which, props, prefix + "_speaker", 1);
         return quote;
 
     }

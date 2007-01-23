@@ -42,29 +42,20 @@ public class PreGameBountyView extends SteelWindow
                                                 BountyConfig.Quote quote, boolean completed)
     {
         switch (quote.speaker) {
-        case BIGSHOT:
+        case 0:
             return new BigShotPortrait(ctx, config.teams.get(0).bigShot);
 
         default:
-        case OUTLAW: {
-            OutlawView oview = new OutlawView(ctx, 1f);
-            // TODO: support .outlawImage
-            oview.setOutlaw(ctx, bounty.outlawPrint, completed);
-            return oview;
-        }
-
-        case OPPONENT: {
             OutlawView oview = new OutlawView(ctx, 1f);
             BountyConfig.GameInfo info = bounty.getGame(gameId);
-            for (int ii = info.opponents.length-1; ii > 0; ii--) {
-                if (info.opponents[ii] != null) {
-                    // TODO: support .image
-                    oview.setOutlaw(ctx, info.opponents[ii].print, false);
-                    break;
-                }
+            if (info.opponents[quote.speaker] != null) {
+                // TODO: support .image
+                oview.setOutlaw(ctx, info.opponents[quote.speaker].print, false);
+            } else {
+                // TODO: support .outlawImage
+                oview.setOutlaw(ctx, bounty.outlawPrint, completed);
             }
             return oview;
-        }
         }
     }
 
