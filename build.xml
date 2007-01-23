@@ -682,6 +682,7 @@
     <copy file="rsrc/config/resource/manager.properties"
           todir="${pkg.base}/rsrc/config/resource/"/>
     <copy file="${tools.dir}/etc/build-support.xml" todir="${pkg.base}/${tools.dir}/etc"/>
+    <copy file="${tools.dir}/etc/package-support.xml" todir="${pkg.base}/${tools.dir}/etc"/>
     <copy file="${tools.dir}/lib/perl/GrindUtil.pm" todir="${pkg.base}/${tools.dir}/lib/perl"/>
     <antcall target="copywithperms">
       <param name="copy.perms" value="755"/>
