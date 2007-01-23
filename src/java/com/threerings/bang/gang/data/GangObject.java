@@ -5,8 +5,6 @@ package com.threerings.bang.gang.data;
 
 import java.net.URL;
 
-import com.threerings.util.Name;
-
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
