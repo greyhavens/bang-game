@@ -36,9 +36,6 @@ public class GangRecord
     /** The amount of scrip in the gang's coffers. */
     public int scrip;
 
-    /** The number of coins in the gang's coffers. */
-    public int coins;
-
     /** The encoded brand. */
     public byte[] brand;
 
@@ -81,6 +78,6 @@ public class GangRecord
     public String toString ()
     {
         return "[gangId=" + gangId + ", name=" + name + ", founded=" +
-            founded + ", scrip=" + scrip + ", coins=" + coins + "]";
+            founded + ", scrip=" + scrip + "]";
     }
 }

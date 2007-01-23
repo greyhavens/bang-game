@@ -5,6 +5,8 @@ package com.threerings.bang.gang.data;
 
 import java.net.URL;
 
+import com.threerings.util.Name;
+
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
@@ -111,6 +113,14 @@ public class GangObject extends DObject
     public DSet<TopRankedList> getTopRanked ()
     {
         return topRanked;
+    }
+    
+    /**
+     * Returns the name used to identity the gang's entry in the coin database.
+     */
+    public String getCoinAccount ()
+    {
+        return "{" + name + "}";
     }
     
     /**

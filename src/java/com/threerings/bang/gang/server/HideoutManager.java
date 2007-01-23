@@ -71,9 +71,15 @@ public class HideoutManager extends MatchHostManager
         // validate the root using the same rules as the BarberManager
         BarberManager.validateHandle(user, root);
         
+        // make sure the name isn't already in use
+        Handle name = new Handle(root + " " + suffix);
+        if (_hobj.gangs.containsKey(name)) {
+            throw new InvocationException("m.duplicate_gang_name");
+        }
+        
         // form the name and start up the financial action
-        BangServer.gangmgr.formGang(
-            user, new Handle(root + " " + suffix), new ResultListener<GangEntry>() {
+        BangServer.gangmgr.formGang(user, name,
+            new ResultListener<GangEntry>() {
                 public void requestCompleted (GangEntry result) {
                     _hobj.addToGangs(result);
                     listener.requestProcessed();
@@ -239,7 +245,7 @@ public class HideoutManager extends MatchHostManager
         verifyIsLeader(user);
         
         // pass it on to the gang manager
-        BangServer.gangmgr.getOutfitQuote(user.gangId, outfit, listener);
+        BangServer.gangmgr.getOutfitQuote(user, outfit, listener);
     }
     
     // documentation inherited from interface HideoutProvider
@@ -252,7 +258,7 @@ public class HideoutManager extends MatchHostManager
         verifyIsLeader(user);
         
         // pass it on to the gang manager
-        BangServer.gangmgr.buyOutfits(user.gangId, outfit, listener);
+        BangServer.gangmgr.buyOutfits(user, outfit, listener);
     }
     
     /**

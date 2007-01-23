@@ -20,6 +20,7 @@ import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.SimpleRepository;
 import com.samskivert.util.ArrayIntSet;
+import com.samskivert.util.Interator;
 import com.samskivert.util.StringUtil;
 import com.threerings.io.ObjectInputStream;
 
@@ -146,22 +147,10 @@ public class ItemRepository extends SimpleRepository
         throws PersistenceException
     {
         // first serialize the item
-        final ByteArrayOutInputStream out = new ByteArrayOutInputStream();
-        try {
-            item.persistTo(new ObjectOutputStream(out));
-        } catch (IOException ioe) {
-            String errmsg = "Error serializing item " + item;
-            throw new PersistenceException(errmsg, ioe);
-        }
+        final ByteArrayOutInputStream out = persistItem(item);
 
-        // determine it's assigned item type
-        Class itemClass = item.getClass();
-        final int itemType = ItemFactory.getType(itemClass);
-        if (itemType == -1) {
-            String errmsg = "Can't insert item of unknown type " +
-                "[item=" + item + ", itemClass=" + itemClass + "]";
-            throw new PersistenceException(errmsg);
-        }
+        // determine its assigned item type
+        final int itemType = getItemType(item);
 
         // now insert the flattened data into the database
         executeUpdate(new Operation<Object>() {
@@ -196,6 +185,56 @@ public class ItemRepository extends SimpleRepository
         });
     }
 
+    /**
+     * Inserts copies of the given prototype item into the inventories of the identified
+     * users and stores the created items in the provided list.
+     */
+    public void insertItems (
+        final Item prototype, final ArrayIntSet userIds, final ArrayList<Item> items)
+        throws PersistenceException
+    {
+        // first serialize the prototype
+        final ByteArrayOutInputStream out = persistItem(prototype);
+
+        // determine its assigned item type
+        final int itemType = getItemType(prototype);
+        
+        // now insert the flattened data into the database
+        executeUpdate(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                PreparedStatement stmt = null;
+                String query = "insert into ITEMS " +
+                    "(OWNER_ID, ITEM_TYPE, ITEM_DATA) values (?, ?, ?)";
+                try {
+                    stmt = conn.prepareStatement(query);
+                    stmt.setInt(2, itemType);
+                    stmt.setBinaryStream(3, out.getInputStream(), out.size());
+
+                    // do the insertions
+                    for (Interator it = userIds.interator(); it.hasNext(); ) {
+                        Item item = (Item)prototype.clone();
+                        item.setOwnerId(it.nextInt());
+                        stmt.setInt(1, item.getOwnerId());
+                        JDBCUtil.checkedUpdate(stmt, 1);
+                        item.setItemId(liaison.lastInsertedId(conn));
+                        items.add(item);
+                        
+                        // record the insertion
+                        BangServer.itemLog("item_created id:" + item.getItemId() +
+                                           " oid:" + item.getOwnerId() +
+                                           " type:" + item.getClass().getName());
+                    }
+                    return null;
+
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+            }
+        });
+    }
+    
     /**
      * Transfers the specified item to the specified player. The database
      * will be updated as well as the item's <code>ownerId</code> field.
@@ -326,6 +365,7 @@ public class ItemRepository extends SimpleRepository
     {
         // serialize the item prototype
         final ByteArrayOutInputStream out = persistItem(item);
+        final int itemType = getItemType(item);
         final ArrayIntSet owners = new ArrayIntSet();
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
@@ -334,9 +374,10 @@ public class ItemRepository extends SimpleRepository
                 PreparedStatement stmt = conn.prepareStatement(
                     "select OWNER_ID from ITEMS where OWNER_ID in " +
                     StringUtil.toString(playerIds.iterator(), "(", ")") +
-                    " and ITEM_DATA = ?");
+                    " and ITEM_TYPE = ? and ITEM_DATA = ?");
                 try {
-                    stmt.setBinaryStream(1, out.getInputStream(), out.size());
+                    stmt.setInt(1, itemType);
+                    stmt.setBinaryStream(2, out.getInputStream(), out.size());
                     ResultSet rs = stmt.executeQuery();
                     while (rs.next()) {
                         owners.add(rs.getInt(1));
@@ -365,6 +406,23 @@ public class ItemRepository extends SimpleRepository
             String errmsg = "Error serializing item " + item;
             throw new PersistenceException(errmsg, ioe);
         }
+    }
+    
+    /**
+     * Returns the integer item type of the specified item.
+     */
+    protected int getItemType (Item item)
+        throws PersistenceException
+    {
+        // determine it's assigned item type
+        Class itemClass = item.getClass();
+        int itemType = ItemFactory.getType(itemClass);
+        if (itemType == -1) {
+            String errmsg = "Can't insert item of unknown type " +
+                "[item=" + item + ", itemClass=" + itemClass + "]";
+            throw new PersistenceException(errmsg);
+        }
+        return itemType;
     }
     
     @Override // documentation inherited

@@ -43,6 +43,7 @@ import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
@@ -64,6 +65,7 @@ import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
+import com.threerings.bang.gang.server.persist.GangFinancialAction;
 import com.threerings.bang.gang.server.persist.GangInviteRecord;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
 import com.threerings.bang.gang.server.persist.GangOutfitRecord;
@@ -408,17 +410,15 @@ public class GangManager
                               final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
-        new FinancialAction(user, scrip, coins) {
-            protected int getCoinType () {
-                return CoinTransaction.GANG_DONATION;
+        final GangObject gang = getGangObject(user.gangId);
+        new FinancialAction(user, scrip, coins) { {
+                // because we're transferring rather than spending, we need to reserve coins even
+                // for admins
+                _coinCost = coins;
             }
-            protected String getCoinDescrip () {
-                return "m.gang_donation";
-            }
-
             protected String persistentAction () {
                 try {
-                    _gangrepo.addToCoffers(user.gangId, scrip, coins);
+                    _gangrepo.grantScrip(user.gangId, scrip);
                     _entryId = _gangrepo.insertHistoryEntry(user.gangId,
                         MessageBundle.compose(
                             "m.donation_entry",
@@ -429,9 +429,15 @@ public class GangManager
                     return INTERNAL_ERROR;
                 }
             }
+            protected boolean spendCoins (int reservationId)
+                throws PersistenceException {
+                return BangServer.coinmgr.getCoinRepository().transferCoins(
+                    reservationId, gang.getCoinAccount(), CoinTransaction.GANG_DONATION,
+                    "m.gang_donation", "m.gang_donation");
+            }
             protected void rollbackPersistentAction ()
                 throws PersistenceException {
-                _gangrepo.addToCoffers(user.gangId, -scrip, -coins);
+                _gangrepo.spendScrip(user.gangId, scrip);
                 if (_entryId > 0) {
                     _gangrepo.deleteHistoryEntry(_entryId);
                 }
@@ -592,21 +598,21 @@ public class GangManager
      * Gets a quote for the specified outfit.  The result listener will receive an array containing
      * the cost in scrip and coins to buy the outfit for every member who doesn't already own it.
      */
-    public void getOutfitQuote (int gangId, OutfitArticle[] outfit,
+    public void getOutfitQuote (PlayerObject user, OutfitArticle[] outfit,
                                 InvocationService.ResultListener listener)
         throws InvocationException
     {
-        processOutfit(gangId, outfit, listener, false);
+        processOutfit(user, outfit, listener, false);
     }
     
     /**
      * Buys the specified outfit for the gang.
      */
-    public void buyOutfits (int gangId, OutfitArticle[] outfit,
+    public void buyOutfits (PlayerObject user, OutfitArticle[] outfit,
                             InvocationService.ConfirmListener listener)
         throws InvocationException
     {
-        processOutfit(gangId, outfit, listener, true);
+        processOutfit(user, outfit, listener, true);
     }
     
     // documentation inherited from interface SpeakProvider.SpeakerValidator
@@ -644,17 +650,19 @@ public class GangManager
      * amount as a price quote or goes through with the purchase.
      */
     protected void processOutfit (
-        final int gangId, OutfitArticle[] outfit,
+        final PlayerObject user, OutfitArticle[] outfit,
         final InvocationService.InvocationListener listener, final boolean buy)
         throws InvocationException
     {
+        // validate the outfit and get the corresponding articles
+        // TODO: make sure gang has access to requested articles and colors
         final ArticleCatalog.Article[] catarts = new ArticleCatalog.Article[outfit.length];
         final Article[] articles = new Article[outfit.length];
         for (int ii = 0; ii < outfit.length; ii++) {
             OutfitArticle oart = outfit[ii];
             catarts[ii] = BangServer.alogic.getArticleCatalog().getArticle(oart.article);
             if (catarts[ii] == null) {
-                log.warning("Invalid article requested for outfit [gangId=" + gangId +
+                log.warning("Invalid article requested for outfit [who=" + user.who() +
                     ", article=" + oart.article + "].");
                 throw new InvocationException(INTERNAL_ERROR);
             }
@@ -665,10 +673,11 @@ public class GangManager
             }
         }
         
+        // find out how much it will cost to buy the articles
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
                 ArrayIntSet maleIds = new ArrayIntSet(), femaleIds = new ArrayIntSet();
-                _gangrepo.loadMemberIds(gangId, maleIds, femaleIds);
+                _gangrepo.loadMemberIds(user.gangId, maleIds, femaleIds);
                 for (int ii = 0; ii < articles.length; ii++) {
                     Article article = articles[ii];
                     ArrayIntSet memberIds = (article.getArticleName().indexOf("female") == -1) ?
@@ -677,17 +686,91 @@ public class GangManager
                     int count = memberIds.size() - ownerIds.size();
                     _cost[0] += (catarts[ii].scrip * count);
                     _cost[1] += (catarts[ii].coins * count);
+                    if (buy && count > 0) {
+                        _receiverIds[ii] = (ArrayIntSet)memberIds.clone();
+                        _receiverIds[ii].removeAll(ownerIds);
+                    }
                 }
             }
             public void handleSuccess () {
-                if (buy) {
-                    ((InvocationService.ConfirmListener)listener).requestProcessed();
-                } else {
+                if (!buy) {
+                    // if we're not buying, just report the price quote
                     ((InvocationService.ResultListener)listener).requestProcessed(_cost);
+                } else if (user.isActive()) {
+                    // only proceed if the buyer is still online
+                    try {
+                        buyOutfits(user, _cost[0], _cost[1], _receiverIds, articles,
+                            (InvocationService.ConfirmListener)listener);
+                    } catch (InvocationException e) {
+                        listener.requestFailed(e.getMessage());
+                    }
                 }
             }
             protected int[] _cost = new int[2];
+            protected ArrayIntSet[] _receiverIds = new ArrayIntSet[articles.length];
         });
+    }
+    
+    /**
+     * Having determined which gang members need parts of the outfit and computed the cost,
+     * uses fund from the gang's coffers to buy the outfits.
+     */
+    protected void buyOutfits (
+        PlayerObject user, int scripCost, int coinCost,
+        final ArrayIntSet[] userIds, final Article[] articles,
+        final InvocationService.ConfirmListener listener)
+        throws InvocationException
+    {
+        final GangObject gang = getGangObject(user.gangId);
+        if (gang == null) {
+            log.warning("Missing gang object for outfit purchase [who=" + user.who() +
+                ", gangId=" + user.gangId + "].");
+            listener.requestFailed(INTERNAL_ERROR);
+        }
+        new GangFinancialAction(user, gang, scripCost, coinCost) {
+            protected int getCoinType () {
+                return CoinTransaction.GANG_OUTFIT_PURCHASE;
+            }
+            protected String getCoinDescrip () {
+                return "m.gang_outfits";
+            }
+
+            protected String persistentAction ()
+                throws PersistenceException {
+                for (int ii = 0; ii < userIds.length; ii++) {
+                    if (userIds[ii] == null) {
+                        continue;
+                    }
+                    BangServer.itemrepo.insertItems(articles[ii], userIds[ii], _items);
+                }
+                return null;
+            }
+            protected void rollbackPersistentAction ()
+                throws PersistenceException {
+                if (!_items.isEmpty()) {
+                    ArrayIntSet itemIds = new ArrayIntSet();
+                    for (Item item : _items) {
+                        itemIds.add(item.getItemId());
+                    }
+                    BangServer.itemrepo.deleteItems(itemIds, "rollback");
+                }
+            }
+
+            protected void actionCompleted () {
+                for (Item item : _items) {
+                    PlayerObject owner = BangServer.lookupPlayer(item.getOwnerId());
+                    if (owner != null) {
+                        owner.addToInventory(item);
+                    }
+                }
+                listener.requestProcessed();
+            }
+            protected void actionFailed (String cause) {
+                listener.requestFailed(cause);
+            }
+            
+            protected ArrayList<Item> _items = new ArrayList<Item>();
+        }.start();
     }
     
     /**
@@ -898,7 +981,8 @@ public class GangManager
          * threads. */
         public volatile int online = 1;
 
-        public GangHandler (GangRecord record) {
+        public GangHandler (GangRecord record)
+            throws PersistenceException {
             // create and popupate (but do not yet register) our gang distributed object
             _gangobj = new GangObject();
             _gangobj.gangId = record.gangId;
@@ -908,7 +992,8 @@ public class GangManager
             _gangobj.url = record.url;
             _gangobj.avatar = record.avatar;
             _gangobj.scrip = record.scrip;
-            _gangobj.coins = record.coins;
+            _gangobj.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
+                _gangobj.getCoinAccount());
             _gangobj.notoriety = record.notoriety;
             _gangobj.outfit = record.outfit;
             _gangobj.members = new DSet<GangMemberEntry>(record.members.iterator());

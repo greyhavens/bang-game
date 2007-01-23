@@ -9,8 +9,6 @@ import java.util.logging.Level;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.util.Invoker;
 
-import com.threerings.util.Name;
-
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.coin.server.persist.CoinTransaction;
@@ -35,21 +33,22 @@ public abstract class FinancialAction extends Invoker.Unit
     public void start ()
         throws InvocationException
     {
-        String ntype = getClass().getName(), otype = _userLock.get(_user.username);
+        String account = getCoinAccount();
+        String ntype = getClass().getName(), otype = _accountLock.get(account);
         if (otype != null) {
-            log.info("Preventing overlapping financial action [who=" + _user.username +
+            log.info("Preventing overlapping financial action [who=" + account +
                      ", new=" + ntype + ", old=" + otype + "].");
             throw new InvocationException(BangCodes.BANG_MSGS, "e.processing_purchase");
         }
-        _userLock.put(_user.username, ntype);
+        _accountLock.put(account, ntype);
 
         // check and immediately deduct the necessary funds
-        if (_user.scrip < _scripCost || _user.coins < _coinCost) {
-            _userLock.remove(_user.username); // release our lock
+        int scrip = getScrip(), coins = getCoins();
+        if (scrip < _scripCost || coins < _coinCost) {
+            _accountLock.remove(account); // release our lock
             throw new InvocationException(BangCodes.INSUFFICIENT_FUNDS);
         }
-        _user.setScrip(_user.scrip - _scripCost);
-        _user.setCoins(_user.coins - _coinCost);
+        setCash(scrip - _scripCost, coins - _coinCost);
 
         BangServer.invoker.postUnit(this);
     }
@@ -60,7 +59,7 @@ public abstract class FinancialAction extends Invoker.Unit
         try {
             if (_coinCost > 0) {
                 _coinres = BangServer.coinmgr.getCoinRepository().reserveCoins(
-                    _user.username.toString(), _coinCost);
+                    getCoinAccount(), _coinCost);
                 if (_coinres == -1) {
                     log.warning("Failed to reserve coins " + this + ".");
                     fail(BangCodes.INSUFFICIENT_FUNDS);
@@ -70,7 +69,7 @@ public abstract class FinancialAction extends Invoker.Unit
 
             if (_scripCost > 0) {
                 // then deduct the in-game cash
-                BangServer.playrepo.spendScrip(_user.playerId, _scripCost);
+                spendScrip(_scripCost);
                 _scripSpent = true;
             }
 
@@ -84,8 +83,7 @@ public abstract class FinancialAction extends Invoker.Unit
 
             if (_coinCost > 0) {
                 // finally "spend" our reserved coins
-                if (!BangServer.coinmgr.getCoinRepository().spendCoins(
-                        _coinres, getCoinType(), getCoinDescrip())) {
+                if (!spendCoins(_coinres)) {
                     log.warning("Failed to spend coin reservation " + this +
                                 " [resid=" + _coinres + "].");
                     fail(BangCodes.INTERNAL_ERROR);
@@ -106,17 +104,16 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         try {
             if (_failmsg != null) {
-                // return the scrip and coins to the user
-                _user.setScrip(_user.scrip + _scripCost);
-                _user.setCoins(_user.coins + _coinCost);
+                // return the scrip and coins to the actor
+                setCash(getScrip() + _scripCost, getCoins() + _coinCost);
                 actionFailed(_failmsg);
             } else {
                 actionCompleted();
             }
 
         } finally {
-            // now it's safe for this user to start another financial action
-            _userLock.remove(_user.username);
+            // now it's safe for this actor to start another financial action
+            _accountLock.remove(getCoinAccount());
         }
     }
 
@@ -223,7 +220,7 @@ public abstract class FinancialAction extends Invoker.Unit
 
         if (_scripSpent) {
             try {
-                BangServer.playrepo.grantScrip(_user.playerId, _scripCost);
+                grantScrip(_scripCost);
             } catch (PersistenceException pe) {
                 log.log(Level.WARNING, "Failed to return scrip " + this, pe);
             }
@@ -237,7 +234,73 @@ public abstract class FinancialAction extends Invoker.Unit
             }
         }
     }
-
+    
+    /**
+     * Returns the amount of scrip held by the actor as reported in the dobj.
+     */
+    protected int getScrip ()
+    {
+        return _user.scrip;
+    }
+    
+    /**
+     * Returns the number of coins held by the actor as reported in the dobj.
+     */
+    protected int getCoins ()
+    {
+        return _user.coins;
+    }
+    
+    /**
+     * Updates the actor's cash in hand in the dobj.
+     */
+    protected void setCash (int scrip, int coins)
+    {
+        _user.startTransaction();
+        try {
+            _user.setScrip(scrip);
+            _user.setCoins(coins);
+        } finally {
+            _user.commitTransaction();
+        }
+    }
+    
+    /**
+     * Returns the actor's account in the coin database.
+     */
+    protected String getCoinAccount ()
+    {
+        return _user.username.toString();
+    }
+    
+    /**
+     * Updates the database to spend the actor's scrip.
+     */
+    protected void spendScrip (int scrip)
+        throws PersistenceException
+    {
+        BangServer.playrepo.spendScrip(_user.playerId, scrip);
+    }
+    
+    /**
+     * Updates the database to spend the actor's coins.
+     */
+    protected boolean spendCoins (int reservationId)
+        throws PersistenceException
+    {
+        return BangServer.coinmgr.getCoinRepository().spendCoins(
+            reservationId, getCoinType(), getCoinDescrip());
+    }
+    
+    /**
+     * Updates the database to grant scrip to the actor.
+     */
+    protected void grantScrip (int scrip)
+        throws PersistenceException
+    {
+        BangServer.playrepo.grantScrip(_user.playerId, scrip);
+    }
+    
     protected void toString (StringBuffer buf)
     {
         buf.append("type=").append(getClass().getName());
@@ -252,5 +315,5 @@ public abstract class FinancialAction extends Invoker.Unit
     protected String _failmsg;
     protected int _coinres = -1;
 
-    protected static HashMap<Name,String> _userLock = new HashMap<Name,String>();
+    protected static HashMap<String,String> _accountLock = new HashMap<String,String>();
 }

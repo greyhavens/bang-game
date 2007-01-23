@@ -156,15 +156,25 @@ public class GangRepository extends JORARepository
     }
     
     /**
-     * Adds or removes cash to/from the gang's coffers.
+     * Adds scrip to a gang's coffers.
      */
-    public void addToCoffers (int gangId, int scrip, int coins)
+    public void grantScrip (int gangId, int scrip)
         throws PersistenceException
     {
         checkedUpdate("update GANGS set SCRIP = SCRIP + " + scrip +
-                      ", COINS = COINS + " + coins + " where GANG_ID = " + gangId, 1);
+                      " where GANG_ID = " + gangId, 1);
     }
-
+    
+    /**
+     * Subtracts scrip from a gang's coffers.
+     */
+    public void spendScrip (int gangId, int scrip)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANGS set SCRIP = SCRIP - " + scrip +
+                      " where GANG_ID = " + gangId, 1);
+    }
+    
     /**
      * Adds notoriety points to the gang and user records.
      */
@@ -517,16 +527,16 @@ public class GangRepository extends JORARepository
             "URL VARCHAR(255) NOT NULL",
             "NOTORIETY INTEGER NOT NULL",
             "SCRIP INTEGER NOT NULL",
-            "COINS INTEGER NOT NULL",
             "BRAND BLOB",
             "PRIMARY KEY (GANG_ID)",
             "UNIQUE (NAME)",
         }, "");
 
-        // TEMP: add the statement and url columns, drop outfit
+        // TEMP: add the statement and url columns, drop outfit and coins
         JDBCUtil.addColumn(conn, "GANGS", "STATEMENT", "TEXT NOT NULL", "FOUNDED");
         JDBCUtil.addColumn(conn, "GANGS", "URL", "VARCHAR(255) NOT NULL", "STATEMENT");
         JDBCUtil.dropColumn(conn, "GANGS", "OUTFIT");
+        JDBCUtil.dropColumn(conn, "GANGS", "COINS");
         // END TEMP
 
         JDBCUtil.createTableIfMissing(conn, "GANG_MEMBERS", new String[] {
