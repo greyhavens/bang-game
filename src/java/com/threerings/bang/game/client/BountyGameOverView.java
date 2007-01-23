@@ -204,10 +204,10 @@ public class BountyGameOverView extends SteelWindow
             _msgs.get("m.bover_game_" + result, info.name);
         _contents.add(_overall = new BLabel(msg, "bover_overall"));
 
+        BountyConfig.Quote quote = gfailed ? info.failedQuote : info.completedQuote;
         BContainer horiz = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(25));
-        OutlawView oview = new OutlawView(_ctx, 1f);
-        oview.setOutlaw(_ctx, _bounty.outlawPrint, completed);
-        horiz.add(oview);
+        horiz.add(PreGameBountyView.createSpeakerView(
+                      _ctx, _bounty, _gameId, _gconfig, quote, completed));
 
         BContainer vert = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER).setGap(10));
         vert.add(new BLabel(_msgs.get(completed ? "m.bover_next_all_complete" :
@@ -238,7 +238,7 @@ public class BountyGameOverView extends SteelWindow
         if (completed) {
             _contents.add(new AwardView(_ctx, _gconfig, _user, _award));
         } else {
-            msg = gfailed ? info.failedQuote : info.completedQuote;
+            msg = quote.text;
             _contents.add(new BLabel(msg, "bounty_quote"));
         }
 

@@ -15,9 +15,13 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangUtil;
+
+import com.threerings.bang.game.data.BangAI;
+import com.threerings.bang.game.data.GameCodes;
 
 import static com.threerings.bang.Log.log;
 
@@ -36,6 +40,9 @@ public class BountyConfig extends SimpleStreamableObject
     /** Defines the mechanism that unlocks this bounty. */
     public enum LockType { NONE, BOUNTY, BADGE, LICENSE };
 
+    /** Defines the speaker for a pre-game, failed or completed quote. */
+    public enum Speaker { BIGSHOT, OUTLAW, OPPONENT };
+
     /** Defines a reward for completing a bounty. */
     public static class Reward extends SimpleStreamableObject
     {
@@ -49,6 +56,34 @@ public class BountyConfig extends SimpleStreamableObject
         public Badge.Type badge;
     }
 
+    /** Describes a particular opponent in a bounty game. */
+    public static class Opponent extends SimpleStreamableObject
+    {
+        /** This opponent's name. */
+        public String name;
+
+        /** The character fingerprint for this opponent (optional). */
+        public int[] print;
+
+        /** An image to use for the outlaw's avatar (instead of a print, optional). */
+        public String image;
+    }
+
+    /** Defines a speaker and text for a quote. */
+    public static class Quote extends SimpleStreamableObject
+    {
+        /** The speaker of the quote. */
+        public Speaker speaker = Speaker.OUTLAW;
+
+        /** The (translated) text of the quote. */
+        public String text = "";
+
+        /** Returns true if no required configuration is missing. */
+        public boolean isValid () {
+            return !StringUtil.isBlank(text);
+        }
+    }
+
     /** Defines the various bits for each bounty game. */
     public static class GameInfo extends SimpleStreamableObject
     {
@@ -58,17 +93,17 @@ public class BountyConfig extends SimpleStreamableObject
         /** The (translated) name of this game. */
         public String name;
 
-        /** If true, the game's Big Shot is shown instead of the Outlaw before the game. */
-        public boolean preGameBigShot;
+        /** Information on our opponents, if any. */
+        public Opponent[] opponents;
 
-        /** A (translated) quote shown before the bounty game. */
-        public String preGameQuote;
+        /** A quote shown before the bounty game. */
+        public Quote preGameQuote;
 
-        /** A (translated) quote shown if the bounty game is failed. */
-        public String failedQuote;
+        /** A quote shown if the bounty game is failed. */
+        public Quote failedQuote;
 
-        /** A (translated) quote shown if the bounty game is completed. */
-        public String completedQuote;
+        /** A quote shown if the bounty game is completed. */
+        public Quote completedQuote;
 
         /** Logs a warning if required values are not specified. */
         public void validate (String which) {
@@ -76,13 +111,13 @@ public class BountyConfig extends SimpleStreamableObject
             if (StringUtil.isBlank(name)) {
                 missing.add("name");
             }
-            if (StringUtil.isBlank(preGameQuote)) {
+            if (!preGameQuote.isValid()) {
                 missing.add("pregame_quote");
             }
-            if (StringUtil.isBlank(failedQuote)) {
+            if (!failedQuote.isValid()) {
                 missing.add("failed_quote");
             }
-            if (StringUtil.isBlank(completedQuote)) {
+            if (!completedQuote.isValid()) {
                 missing.add("completed_quote");
             }
             if (missing.size() > 0) {
@@ -116,8 +151,11 @@ public class BountyConfig extends SimpleStreamableObject
     /** Whether or not the bounty games must be played in order. */
     public boolean inOrder = true;
 
-    /** An optional character fingerprint for the outlaw. */
+    /** An avatar fingerprint for the outlaw (optional). */
     public int[] outlawPrint;
+
+    /** An image to use for the avatar of the outlaw (optional). */
+    public String outlawImage;
 
     /** The names of our game definition files. */
     public ArrayList<GameInfo> games = new ArrayList<GameInfo>();
@@ -181,6 +219,32 @@ public class BountyConfig extends SimpleStreamableObject
     }
 
     /**
+     * Returns a configured AI record for the specified opponent in this game.
+     */
+    public BangAI getOpponent (String game, int players, int index, BangAI oppai)
+    {
+        GameInfo info = getGame(game);
+        if (info == null) {
+            log.warning("Requested opponent for unknown game [bounty=" + ident +
+                        ", game=" + game + "].");
+            return oppai;
+        }
+
+        Opponent opp = info.opponents[index];
+        if (opp != null) {
+            oppai.handle = new Handle(opp.name);
+            oppai.avatar = opp.print;
+            // TODO: support opp.image
+        } else if (index == players-1) {
+            oppai.handle = new Handle(title);
+            oppai.avatar = outlawPrint;
+            // TODO: support outlawImage
+        }
+
+        return oppai;
+    }
+
+    /**
      * Checks whether all of this bounty's games have been completed by the specified player.
      */
     public boolean isCompleted (PlayerObject user)
@@ -241,11 +305,21 @@ public class BountyConfig extends SimpleStreamableObject
             GameInfo info = new GameInfo();
             info.ident = game;
             info.name = props.getProperty(game + ".name", "");
-            info.preGameBigShot =
-                BangUtil.getBooleanProperty(which, props, game + ".bigshot_quote", false);
-            info.preGameQuote = props.getProperty(game + ".pregame_quote");
-            info.failedQuote = props.getProperty(game + ".failed_quote");
-            info.completedQuote = props.getProperty(game + ".completed_quote");
+            info.opponents = new Opponent[GameCodes.MAX_PLAYERS];
+            for (int ii = 1; ii < info.opponents.length; ii++) {
+                String prefix = game + ".opponent." + ii;
+                String name = props.getProperty(prefix + ".name");
+                if (name != null) {
+                    info.opponents[ii] = new Opponent();
+                    info.opponents[ii].name =  name;
+                    info.opponents[ii].print =  StringUtil.parseIntArray(
+                        props.getProperty(prefix + ".print", ""));
+                    info.opponents[ii].image = props.getProperty(prefix + ".image");
+                }
+            }
+            info.preGameQuote = parseQuote(which, props, game + ".pregame");
+            info.failedQuote = parseQuote(which, props, game + ".failed");
+            info.completedQuote = parseQuote(which, props, game + ".completed");
             info.validate(which);
             config.games.add(info);
         }
@@ -284,6 +358,21 @@ public class BountyConfig extends SimpleStreamableObject
         log.fine("Registered " + config + ".");
     }
 
+    protected static Quote parseQuote (String which, Properties props, String prefix)
+    {
+        Quote quote = new Quote();
+        quote.text = props.getProperty(prefix + "_quote");
+        try {
+            String speaker = Speaker.OUTLAW.toString();
+            speaker = props.getProperty(prefix + "_speaker", speaker).toUpperCase();
+            quote.speaker = Enum.valueOf(Speaker.class, speaker);
+        } catch (Exception e) {
+            log.warning("Invalid speaker specified for quote [which=" + which +
+                        ", prefix=" + prefix + "].");
+        }
+        return quote;
+
+    }
     protected static void ensureBountiesLoaded ()
     {
         if (_configs.size() == 0) {

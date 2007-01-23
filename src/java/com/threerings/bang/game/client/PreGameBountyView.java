@@ -5,6 +5,7 @@ package com.threerings.bang.game.client;
 
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BImage;
@@ -18,6 +19,7 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.bounty.client.OutlawView;
 import com.threerings.bang.bounty.data.BountyConfig;
@@ -32,6 +34,40 @@ import com.threerings.bang.game.data.GameCodes;
  */
 public class PreGameBountyView extends SteelWindow
 {
+    /**
+     * Creates the appropriate view depending on the speaker type of the supplied quote.
+     */
+    public static BComponent createSpeakerView (BasicContext ctx, BountyConfig bounty,
+                                                String gameId, BangConfig config,
+                                                BountyConfig.Quote quote, boolean completed)
+    {
+        switch (quote.speaker) {
+        case BIGSHOT:
+            return new BigShotPortrait(ctx, config.teams.get(0).bigShot);
+
+        default:
+        case OUTLAW: {
+            OutlawView oview = new OutlawView(ctx, 1f);
+            // TODO: support .outlawImage
+            oview.setOutlaw(ctx, bounty.outlawPrint, completed);
+            return oview;
+        }
+
+        case OPPONENT: {
+            OutlawView oview = new OutlawView(ctx, 1f);
+            BountyConfig.GameInfo info = bounty.getGame(gameId);
+            for (int ii = info.opponents.length-1; ii > 0; ii--) {
+                if (info.opponents[ii] != null) {
+                    // TODO: support .image
+                    oview.setOutlaw(ctx, info.opponents[ii].print, false);
+                    break;
+                }
+            }
+            return oview;
+        }
+        }
+    }
+
     public PreGameBountyView (final BangContext ctx, BangController ctrl,
                               BountyConfig bounty, String gameId, BangConfig config)
     {
@@ -43,13 +79,8 @@ public class PreGameBountyView extends SteelWindow
         _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(25));
 
         BContainer main = new BContainer(GroupLayout.makeHStretch().setGap(15));
-        if (bounty.getGame(gameId).preGameBigShot) {
-            main.add(new BigShotPortrait(ctx, config.teams.get(0).bigShot), GroupLayout.FIXED);
-        } else {
-            OutlawView oview = new OutlawView(ctx, 1f);
-            oview.setOutlaw(ctx, bounty.outlawPrint, false);
-            main.add(oview, GroupLayout.FIXED);
-        }
+        main.add(createSpeakerView(ctx, bounty, gameId, config,
+                                   bounty.getGame(gameId).preGameQuote, false), GroupLayout.FIXED);
 
         BContainer vert = new BContainer(
             GroupLayout.makeVStretch().setOffAxisPolicy(GroupLayout.NONE));
@@ -70,7 +101,7 @@ public class PreGameBountyView extends SteelWindow
         main.add(vert);
         _contents.add(main);
 
-        _contents.add(new BLabel(bounty.getGame(gameId).preGameQuote, "bounty_quote"));
+        _contents.add(new BLabel(bounty.getGame(gameId).preGameQuote.text, "bounty_quote"));
 
         _buttons.add(new BButton(ctx.xlate(GameCodes.GAME_MSGS, "m.ready"), new ActionListener() {
             public void actionPerformed (ActionEvent event) {
@@ -88,7 +119,7 @@ public class PreGameBountyView extends SteelWindow
 
     protected static class BigShotPortrait extends BLabel
     {
-        public BigShotPortrait (BangContext ctx, String bigShot) {
+        public BigShotPortrait (BasicContext ctx, String bigShot) {
             super("", "bigshot_portrait");
             _frame = ctx.loadImage("ui/frames/small_frame.png");
             setIcon(new ImageIcon(ctx.loadImage("units/" + bigShot + "/portrait.png")));

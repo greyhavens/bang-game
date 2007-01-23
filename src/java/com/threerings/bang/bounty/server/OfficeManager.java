@@ -137,13 +137,17 @@ public class OfficeManager extends PlaceManager
 
         // create a fake bounty config
         BountyConfig bounty = new BountyConfig();
+        bounty.title = "Bounty Game Test";
         bounty.reward = new BountyConfig.Reward();
         bounty.reward.scrip = 100;
         BountyConfig.GameInfo info = new BountyConfig.GameInfo();
         info.ident = "test";
-        info.preGameQuote = "Do you want to play a game?";
-        info.failedQuote = "All your base are belong to us.";
-        info.completedQuote = "Only now in this dark hour do I see the folly of guns.";
+        info.preGameQuote = new BountyConfig.Quote();
+        info.preGameQuote.text = "Do you want to play a game?";
+        info.failedQuote = new BountyConfig.Quote();
+        info.failedQuote.text = "All your base are belong to us.";
+        info.completedQuote = new BountyConfig.Quote();
+        info.completedQuote.text = "Only now in this dark hour do I see the folly of guns.";
         bounty.games.add(info);
 
         startBountyGame(player, bounty, "test", config);
@@ -163,19 +167,9 @@ public class OfficeManager extends PlaceManager
         gconfig.ais = new BangAI[gconfig.teams.size()];
         gconfig.players[0] = player.getVisibleName();
         for (int ii = 1; ii < gconfig.players.length; ii++) {
-            BangAI ai = BangAI.createAI(1, 50, names);
-            // the last AI is the outlaw
-            if (ii == gconfig.players.length-1) {
-                if (bounty.title == null) { // we're in a test game
-                    bounty.title = ai.handle.toString();
-                    bounty.outlawPrint = ai.avatar;
-                } else {
-                    ai.handle = new Handle(bounty.title);
-                    ai.avatar = bounty.outlawPrint;
-                }
-            }
+            BangAI ai = BangAI.createAI(1, 50, names); // TODO: get skill level from BangConfig
+            gconfig.ais[ii] = bounty.getOpponent(gameId, gconfig.players.length, ii, ai);
             gconfig.players[ii] = ai.handle;
-            gconfig.ais[ii] = ai;
         }
 
         try {
