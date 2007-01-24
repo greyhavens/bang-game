@@ -180,7 +180,9 @@ public class BoardRepository extends JORARepository
         }, "");
 
         // TEMP: co-opt the unused PLAYS column as FLAGS
-        JDBCUtil.changeColumn(conn, "BOARDS", "PLAYS", "FLAGS INTEGER NOT NULL");
+        if (JDBCUtil.tableContainsColumn(conn, "BOARDS", "PLAYS")) {
+            JDBCUtil.changeColumn(conn, "BOARDS", "PLAYS", "FLAGS INTEGER NOT NULL");
+        }
         // END TEMP
     }
 
