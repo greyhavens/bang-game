@@ -96,7 +96,8 @@ public class GoodsInspector extends BContainer
         removeColors();
 
         // configure our main interface with the good info
-        _good = ((GoodsIcon)icon).getGood();
+        _gicon = (GoodsIcon)icon;
+        _good = _gicon.getGood();
         _title.setText(_ctx.xlate(BangCodes.GOODS_MSGS, _good.getName()));
         _descrip.setText(_ctx.xlate(BangCodes.GOODS_MSGS, _good.getTip()));
         _cost.setMoney(_good.getScripCost(), _good.getCoinCost(), false);
@@ -111,7 +112,7 @@ public class GoodsInspector extends BContainer
 
             // grab whatever random colorizations we were using for the icon and start with those
             // in the inspector
-            int[] colorIds = ((GoodsIcon)icon).colorIds;
+            int[] colorIds = _gicon.colorIds;
             _zations = new Colorization[3];
             for (int ii = 0; ii < cclasses.length; ii++) {
                 String cclass = cclasses[ii];
@@ -274,13 +275,16 @@ public class GoodsInspector extends BContainer
             _args[index] = Integer.valueOf(colorsel.getSelectedColor());
             _zations[index] = colorsel.getSelectedColorization();
             updateImage();
+            _gicon.setIcon(_icon.getIcon());
+            _gicon.colorIds[index] = colorsel.getSelectedColor();
         }
     };
 
     protected BangContext _ctx;
     protected StoreObject _stobj;
     protected Good _good;
-
+    protected GoodsIcon _gicon;
+    
     protected BLabel _icon, _title, _descrip;
     protected BButton _buy, _try, _download;
     protected BContainer _ccont, _dcont;
