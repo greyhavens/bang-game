@@ -49,7 +49,7 @@ menuitem:disabled {
 }
 
 menuitem:hover {
-  background: image "ui/popupmenu/highlight.png" framexy;
+  background: image "ui/popupmenu/highlight.png" framex;
 }
 
 popupmenu_title {
@@ -176,29 +176,29 @@ alt_button:selected {
 }
 
 fwd_button {
-  background: image "ui/buttons/forward_normal.png" framexy;
+  background: image "ui/buttons/forward_normal.png" centerxy;
 }
 fwd_button:disabled {
-  background: image "ui/buttons/forward_disabled.png" framexy;
+  background: image "ui/buttons/forward_disabled.png" centerxy;
 }
 fwd_button:hover {
-  background: image "ui/buttons/forward_hover.png" framexy;
+  background: image "ui/buttons/forward_hover.png" centerxy;
 }
 fwd_button:down {
-  background: image "ui/buttons/forward_down.png" framexy;
+  background: image "ui/buttons/forward_down.png" centerxy;
 }
 
 back_button {
-  background: image "ui/buttons/back_normal.png" framexy;
+  background: image "ui/buttons/back_normal.png" centerxy;
 }
 back_button:disabled {
-  background: image "ui/buttons/back_disabled.png" framexy;
+  background: image "ui/buttons/back_disabled.png" centerxy;
 }
 back_button:hover {
-  background: image "ui/buttons/back_hover.png" framexy;
+  background: image "ui/buttons/back_hover.png" centerxy;
 }
 back_button:down {
-  background: image "ui/buttons/back_down.png" framexy;
+  background: image "ui/buttons/back_down.png" centerxy;
 }
 
 arrow_button {
@@ -230,11 +230,11 @@ invisibutton:selected {
 n_state_button {
   text-align: center;
   vertical-align: center;
-  background: image "ui/buttons/n_state_normal.png" framexy;
+  background: image "ui/buttons/n_state_normal.png" framex;
 }
 
 n_state_button:hover {
-  background: image "ui/buttons/n_state_hover.png" framexy;
+  background: image "ui/buttons/n_state_hover.png" framex;
 }
 
 tabbedpane {
@@ -266,17 +266,17 @@ tab:selected {
 combobox {
   font: "Dom Casual" plain 16;
   color: #FFFFFF;
-  background: image "ui/combobox/normal.png" framexy;
+  background: image "ui/combobox/normal.png" framex;
   padding: 5 22 5 10;
   text-align: center;
 }
 
 combobox:hover {
-  background: image "ui/combobox/hover.png" framexy;
+  background: image "ui/combobox/hover.png" framex;
 }
 
 combobox:down {
-  background: image "ui/combobox/hover.png" framexy;
+  background: image "ui/combobox/hover.png" framex;
 }
 
 combobox:disabled {
@@ -286,7 +286,7 @@ combobox:disabled {
 textfield {
   color: #524129;
   font: "Dom Casual" plain 20;
-  background: image "ui/textfield.png" framexy;
+  background: image "ui/textfield.png" framex;
   padding: 5;
 }
 
@@ -315,98 +315,98 @@ checkbox:disselected {
 }
 
 scrollbar_hthumb {
-  background: image "ui/scrollbar/thumb_normal.png" framexy;
+  background: image "ui/scrollbar/thumb_normal.png" framex;
 }
 
 scrollbar_hthumb:down {
-  background: image "ui/scrollbar/thumb_down.png" framexy;
+  background: image "ui/scrollbar/thumb_down.png" framex;
 }
 
 scrollbar_hthumb:disabled {
-  background: image "ui/scrollbar/thumb_disabled.png" framexy;
+  background: image "ui/scrollbar/thumb_disabled.png" framex;
 }
 
 scrollbar_vthumb {
-  background: image "ui/scrollbar/thumb_normal.png" framexy;
+  background: image "ui/scrollbar/thumb_normal.png" framey;
 }
 
 scrollbar_vthumb:down {
-  background: image "ui/scrollbar/thumb_down.png" framexy;
+  background: image "ui/scrollbar/thumb_down.png" framey;
 }
 
 scrollbar_vthumb:disabled {
-  background: image "ui/scrollbar/thumb_disabled.png" framexy;
+  background: image "ui/scrollbar/thumb_disabled.png" framey;
 }
 
 scrollbar_hwell {
-  background: image "ui/scrollbar/well_normal.png" framexy;
+  background: image "ui/scrollbar/well_normal.png" framex;
   padding: 2 3 2 3;
 }
 
 scrollbar_hwell:disabled {
-  background: image "ui/scrollbar/well_disabled.png" framexy;
+  background: image "ui/scrollbar/well_disabled.png" framex;
 }
 
 scrollbar_vwell {
-  background: image "ui/scrollbar/well_normal.png" framexy;
+  background: image "ui/scrollbar/well_normal.png" framey;
   padding: 2 3 2 3;
 }
 
 scrollbar_vwell:disabled {
-  background: image "ui/scrollbar/well_disabled.png" framexy;
+  background: image "ui/scrollbar/well_disabled.png" framey;
 }
 
 scrollbar_hless {
-  icon: image "ui/scrollbar/left_normal.png" framexy;
+  icon: image "ui/scrollbar/left_normal.png" framex;
 }
 
 scrollbar_hless:down {
-  icon: image "ui/scrollbar/left_down.png" framexy;
+  icon: image "ui/scrollbar/left_down.png" framex;
 }
 
 scrollbar_hless:disabled {
-  icon: image "ui/scrollbar/left_disabled.png" framexy;
+  icon: image "ui/scrollbar/left_disabled.png" framex;
 }
 
 scrollbar_vless {
-  background: image "ui/scrollbar/top_normal.png" framexy;
+  background: image "ui/scrollbar/top_normal.png" framey;
 }
 
 scrollbar_vless:down {
-  background: image "ui/scrollbar/top_down.png" framexy;
+  background: image "ui/scrollbar/top_down.png" framey;
 }
 
 scrollbar_vless:disabled {
-  background: image "ui/scrollbar/top_disabled.png" framexy;
+  background: image "ui/scrollbar/top_disabled.png" framey;
 }
 
 scrollbar_hmore {
-  icon: image "ui/scrollbar/right_normal.png" framexy;
+  icon: image "ui/scrollbar/right_normal.png" framex;
 }
 
 scrollbar_hmore:down {
-  icon: image "ui/scrollbar/right_down.png" framexy;
+  icon: image "ui/scrollbar/right_down.png" framex;
 }
 
 scrollbar_hmore:disabled {
-  icon: image "ui/scrollbar/right_disabled.png" framexy;
+  icon: image "ui/scrollbar/right_disabled.png" framex;
 }
 
 scrollbar_vmore {
-  background: image "ui/scrollbar/bottom_normal.png" framexy;
+  background: image "ui/scrollbar/bottom_normal.png" framey;
 }
 
 scrollbar_vmore:down {
-  background: image "ui/scrollbar/bottom_down.png" framexy;
+  background: image "ui/scrollbar/bottom_down.png" framey;
 }
 
 scrollbar_vmore:disabled {
-  background: image "ui/scrollbar/bottom_disabled.png" framexy;
+  background: image "ui/scrollbar/bottom_disabled.png" framey;
 }
 
 hslider {
   icon: image "ui/slider/normal.png";
-  background: image "ui/slider/well.png" framexy;
+  background: image "ui/slider/well.png" framex;
 }
 hslider:down {
   icon: image "ui/slider/down.png";
@@ -902,33 +902,33 @@ folk_howto_button {
 // Town View styles
 
 tutorials_button {
-  background: image "ui/buttons/tutorials_normal.png" framexy;
+  background: image "ui/buttons/tutorials_normal.png" centerxy;
 }
 tutorials_button:hover {
-  background: image "ui/buttons/tutorials_hover.png" framexy;
+  background: image "ui/buttons/tutorials_hover.png" centerxy;
 }
 tutorials_button:down {
-  background: image "ui/buttons/tutorials_down.png" framexy;
+  background: image "ui/buttons/tutorials_down.png" centerxy;
 }
 
 saddlebag_button {
-  background: image "ui/buttons/saddlebag_normal.png" framexy;
+  background: image "ui/buttons/saddlebag_normal.png" centerxy;
 }
 saddlebag_button:hover {
-  background: image "ui/buttons/saddlebag_hover.png" framexy;
+  background: image "ui/buttons/saddlebag_hover.png" centerxy;
 }
 saddlebag_button:down {
-  background: image "ui/buttons/saddlebag_down.png" framexy;
+  background: image "ui/buttons/saddlebag_down.png" centerxy;
 }
 
 pardners_button {
-  background: image "ui/buttons/pardners_normal.png" framexy;
+  background: image "ui/buttons/pardners_normal.png" centerxy;
 }
 pardners_button:hover {
-  background: image "ui/buttons/pardners_hover.png" framexy;
+  background: image "ui/buttons/pardners_hover.png" centerxy;
 }
 pardners_button:down {
-  background: image "ui/buttons/pardners_down.png" framexy;
+  background: image "ui/buttons/pardners_down.png" centerxy;
 }
 
 tip_label {
@@ -939,13 +939,13 @@ tip_label {
 }
 
 exit_button {
-  background: image "ui/buttons/exit_normal.png" framexy;
+  background: image "ui/buttons/exit_normal.png" centerxy;
 }
 exit_button:hover {
-  background: image "ui/buttons/exit_hover.png" framexy;
+  background: image "ui/buttons/exit_hover.png" centerxy;
 }
 exit_button:down {
-  background: image "ui/buttons/exit_down.png" framexy;
+  background: image "ui/buttons/exit_down.png" centerxy;
 }
 
 town_menubar {
@@ -1038,7 +1038,7 @@ player_marquee_cont {
 player_marquee_label {
   font: "Dom Casual" plain 24;
   color: #4a2805;
-  background: image "ui/frames/big_scroll.png" framexy;
+  background: image "ui/frames/big_scroll.png" framex;
   text-align: center;
   vertical-align: center;
   padding: 0 0 11 0;
@@ -1126,22 +1126,22 @@ player_status_ff_menuitem:hover {
 }
 
 card_button {
-  background: image "ui/pstatus/card_up.png" framexy;
+  background: image "ui/pstatus/card_up.png" centerxy;
   padding: 1 1 0 0;
 }
 
 card_button:down {
-  background: image "ui/pstatus/card_down.png" framexy;
+  background: image "ui/pstatus/card_down.png" centerxy;
   padding: 2 0 0 1;
 }
 
 card_found_button {
-  background: image "ui/pstatus/card_found_up.png" framexy;
+  background: image "ui/pstatus/card_found_up.png" centerxy;
   padding: 1 1 0 0;
 }
 
 card_found_button:down {
-  background: image "ui/pstatus/card_found_down.png" framexy;
+  background: image "ui/pstatus/card_found_down.png" centerxy;
   padding: 2 0 0 1;
 }
 
@@ -1264,7 +1264,7 @@ unit_status_closed:hover {
 }
 
 unit_status_container {
-  background: image "ui/ustatus/unitstatus_open.png" framexy 97 32 21 54;
+  background: image "ui/ustatus/unitstatus_open.png" centerxy 97 32 21 54;
   padding: 3 9 11 42;
 }
 
