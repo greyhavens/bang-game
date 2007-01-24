@@ -290,8 +290,8 @@ public class BangConfig extends GameConfig
         out.write(type.toString(), "type", Type.BOUNTY.toString());
         out.write(duration.toString(), "duration", Duration.NORMAL.toString());
         out.write(speed.toString(), "speed", Speed.NORMAL.toString());
-        out.write(minWeight, "minWeight", minWeight);
-        out.write(respawnUnits, "respawnUnits", respawnUnits);
+        out.write(minWeight, "minWeight", 0);
+        out.write(respawnUnits, "respawnUnits", true);
         out.writeSavableArrayList(rounds, "rounds", DEF_ROUNDS);
         out.writeSavableArrayList(teams, "teams", DEF_TEAMS);
         out.writeSavableArrayList(criteria, "criteria", DEF_CRIT);

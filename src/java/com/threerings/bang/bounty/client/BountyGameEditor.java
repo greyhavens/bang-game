@@ -12,6 +12,7 @@ import com.jme.util.export.binary.BinaryExporter;
 import com.jme.util.export.binary.BinaryImporter;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
@@ -57,6 +58,7 @@ public class BountyGameEditor extends BDecoratedWindow
     {
         super(ctx.getStyleSheet(), ctx.xlate(OfficeCodes.OFFICE_MSGS, "m.create_bounty_game"));
         setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(20));
+        setModal(true);
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(OfficeCodes.OFFICE_MSGS);
@@ -78,6 +80,11 @@ public class BountyGameEditor extends BDecoratedWindow
         for (int ii = 0; ii < _cardsel.length; ii++) {
             cardp.add(_cardsel[ii] = new BComboBox());
         }
+
+        addRow(cpanel, "m.respawn").add(_respawn = new BCheckBox(""));
+        cpanel.add(new Spacer(10, 10));
+        addRow(cpanel, "m.min_weight").add(_minweight = new BComboBox(CUTOFFS));
+        cpanel.add(new Spacer(10, 10));
         add(cpanel);
 
         BContainer ppanel = new BContainer(new TableLayout(2, 5, 5)), row;
@@ -189,6 +196,11 @@ public class BountyGameEditor extends BDecoratedWindow
                 new StateSaver("bounty.units." + pp + "." + ii, _units[pp][ii]);
             }
         }
+
+        _respawn.setSelected(true);
+        new StateSaver("bounty.respawn", _respawn);
+        _minweight.selectItem(0);
+        new StateSaver("bounty.min_weight", _minweight);
 
         // finally add our board figurer listeners and refigure
         _opponents.addListener(_refigger);
@@ -303,6 +315,8 @@ public class BountyGameEditor extends BDecoratedWindow
         config.speed = (BangConfig.Speed)_speed.getSelectedValue();
         config.addRound((String)_scenario.getSelectedValue(),
                         ((BoardInfo)_board.getSelectedItem()).name, null);
+        config.respawnUnits = _respawn.isSelected();
+        config.minWeight = (Integer)_minweight.getSelectedItem();
 
         String[] cards = new String[_cardsel.length];
         for (int ii = 0; ii < _cardsel.length; ii++) {
@@ -326,6 +340,8 @@ public class BountyGameEditor extends BDecoratedWindow
         _opponents.selectItem(Integer.valueOf(config.teams.size()-1));
         _duration.selectValue(config.duration);
         _speed.selectValue(config.speed);
+        _respawn.setSelected(config.respawnUnits);
+        _minweight.selectItem(Integer.valueOf(config.minWeight));
 
         // locate and select the correct board
         for (int ii = 0; ii < _board.getItemCount(); ii++) {
@@ -440,8 +456,10 @@ public class BountyGameEditor extends BDecoratedWindow
     protected StatusLabel _status;
 
     protected BComboBox _opponents, _scenario, _board;
-    protected BComboBox _duration, _speed;
+    protected BComboBox _duration, _speed, _minweight;
     protected BComboBox[] _cardsel = new BComboBox[GameCodes.MAX_CARDS];
+    protected BCheckBox _respawn;
+
     protected BComboBox[] _starts;
     protected BComboBox[][] _units;
 
@@ -457,6 +475,9 @@ public class BountyGameEditor extends BDecoratedWindow
         new Integer[] { -1, 0, 1, 2 },
         new Integer[] { -1, 0, 1, 2, 3 },
     };
+
+    protected static final Integer[] CUTOFFS = new Integer[] {
+        0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
 
     // default to max team size plus one for big shot
     protected static final int MAX_BOUNTY_UNITS = GameCodes.MAX_TEAM_SIZE + 1;
