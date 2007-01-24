@@ -17,6 +17,11 @@ cd $BANG_HOME
 for SOUND in `find rsrc -name '*.wav'`; do
     OGG_SOUND=${SOUND%wav}ogg
     if [ ! -f $OGG_SOUND -o $SOUND -nt $OGG_SOUND ]; then
-        oggenc -Q -q $QUALITY $SOUND
+        oggenc -Q -q $QUALITY $SOUND 2>&1 | grep -v "Skipping chunk of type.*length.*"
+        # exit code > 1 is an error for grep
+        if [ $? -gt 1 ]; then
+            exit $?
+        fi
+
     fi
 done
