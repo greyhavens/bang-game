@@ -60,7 +60,16 @@ public class BoardManager
                 continue;
             }
 
+            // all boards are registered by name
             int pidx = record.players-2;
+            _byname[pidx].put(record.name, record);
+
+            // private boards are not registered by scenario so that they are not included in the
+            // random selection done for match made games
+            if (record.isFlagSet(BoardRecord.PRIVATE_BOARD)) {
+                continue;
+            }
+
             String[] scenarios = StringUtil.split(record.scenarios, ",");
             for (int ii = 0; ii < scenarios.length; ii++) {
                 BoardList[] lists = _byscenario.get(scenarios[ii]);
@@ -72,7 +81,6 @@ public class BoardManager
                 }
                 lists[pidx].add(record);
             }
-            _byname[pidx].put(record.name, record);
         }
     }
 

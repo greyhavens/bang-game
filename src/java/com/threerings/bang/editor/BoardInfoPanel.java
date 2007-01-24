@@ -52,18 +52,16 @@ public class BoardInfoPanel extends JPanel
 
         add(new JLabel(_msgs.get("m.scenarios")));
         JPanel spanel = new JPanel(
-            new VGroupLayout(VGroupLayout.NONE, VGroupLayout.STRETCH,
-                             2, VGroupLayout.TOP));
-        ArrayList<ScenarioInfo> scens = ScenarioInfo.getScenarios(
-            BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1], true);
-        JCheckBox box;
+            new VGroupLayout(VGroupLayout.NONE, VGroupLayout.STRETCH, 2, VGroupLayout.TOP));
 
         // prop visibility combo box
         _props = new JComboBox();
         _props.addItem(new ScenarioLabel(null));
 
-        for (ScenarioInfo info : scens) {
-            spanel.add(box = new JCheckBox(gmsgs.get(info.getName())));
+        String townId = BangCodes.TOWN_IDS[BangCodes.TOWN_IDS.length-1];
+        for (ScenarioInfo info : ScenarioInfo.getScenarios(townId, true)) {
+            JCheckBox box = new JCheckBox(gmsgs.get(info.getName()));
+            spanel.add(box);
             _sboxes.put(info.getIdent(), box);
             _props.addItem(new ScenarioLabel(info.getIdent()));
         }
@@ -75,6 +73,7 @@ public class BoardInfoPanel extends JPanel
                 return d;
             }
         });
+        add(_privateBoard = new JCheckBox(_msgs.get("m.private_board")));
 
         // create the prop visibility panel
         JPanel ppanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
@@ -108,6 +107,7 @@ public class BoardInfoPanel extends JPanel
         for (String scid : _sboxes.keySet()) {
             _sboxes.get(scid).setSelected(false);
         }
+
         // then turn on the ones that are valid for this board
         String[] scids = board.scenarios;
         for (int ii = 0; ii < scids.length; ii++) {
@@ -116,6 +116,7 @@ public class BoardInfoPanel extends JPanel
                 box.setSelected(true);
             }
         }
+        _privateBoard.setSelected(board.privateBoard);
     }
 
     /**
@@ -128,6 +129,7 @@ public class BoardInfoPanel extends JPanel
         board.players = _players;
         ArrayList<String> scenids = getSelectedScenarios();
         board.scenarios = scenids.toArray(new String[scenids.size()]);
+        board.privateBoard = _privateBoard.isSelected();
     }
 
     /**
@@ -202,6 +204,7 @@ public class BoardInfoPanel extends JPanel
     protected JTextField _name;
     protected JLabel _pcount, _plabel;
     protected JComboBox _props;
+    protected JCheckBox _privateBoard;
     protected int _players;
 
     protected EditorPanel _panel;

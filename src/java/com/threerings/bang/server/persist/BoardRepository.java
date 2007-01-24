@@ -64,7 +64,7 @@ public class BoardRepository extends JORARepository
                 try {
                     ResultSet rs = stmt.executeQuery(
                         "select BOARD_ID, NAME, CREATOR, SCENARIOS, " +
-                        "PLAYERS, PLAYS from BOARDS");
+                        "PLAYERS, FLAGS from BOARDS");
                     while (rs.next()) {
                         BoardRecord brec = new BoardRecord();
                         brec.boardId = rs.getInt(1);
@@ -72,7 +72,7 @@ public class BoardRepository extends JORARepository
                         brec.creator = rs.getString(3);
                         brec.scenarios = rs.getString(4);
                         brec.players = rs.getInt(5);
-                        brec.plays = rs.getInt(6);
+                        brec.flags = rs.getInt(6);
                         blist.add(brec);
                     }
                     
@@ -141,7 +141,6 @@ public class BoardRepository extends JORARepository
         BoardRecord orecord = (BoardRecord)loadByExample(_btable, record, mask);
         if (orecord != null) {
             record.boardId = orecord.boardId;
-            record.plays = orecord.plays;
             update(_btable, record);
         } else {
             record.boardId = insert(_btable, record);
@@ -172,13 +171,17 @@ public class BoardRepository extends JORARepository
             "CREATOR VARCHAR(255)",
             "SCENARIOS VARCHAR(255)",
             "PLAYERS INTEGER NOT NULL",
-            "PLAYS INTEGER NOT NULL",
+            "FLAGS INTEGER NOT NULL",
             "DATA MEDIUMBLOB NOT NULL",
             "DATA_HASH BLOB NOT NULL",
             "PRIMARY KEY (BOARD_ID)",
             "UNIQUE(NAME,PLAYERS)",
             "KEY(CREATOR)",
         }, "");
+
+        // TEMP: co-opt the unused PLAYS column as FLAGS
+        JDBCUtil.changeColumn(conn, "BOARDS", "PLAYS", "FLAGS INTEGER NOT NULL");
+        // END TEMP
     }
 
     @Override // documentation inherited

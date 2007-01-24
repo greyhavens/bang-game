@@ -20,27 +20,28 @@ import static com.threerings.bang.Log.log;
  */
 public class BoardRecord
 {
+    /** Indicates that this board should not be included in normal match made games. */
+    public static final int PRIVATE_BOARD = 1 << 0;
+
     /** The unique identifier for this board. */
     public int boardId;
 
     /** The human readable name of this board. */
     public String name;
 
-    /** The username of the player that created this board, or null if it
-     * is a system created board. */
+    /** The username of the player that created this board, or null if it is a system created
+     * board. */
     public String creator;
 
-    /** A comma separated list of scenarios for which this board is
-     * usable. Use {@link #setScenarios} and {@link #getScenarios}. */
+    /** A comma separated list of scenarios for which this board is usable. Use {@link
+     * #setScenarios} and {@link #getScenarios}. */
     public String scenarios;
 
     /** The number of players for which this board is appropriate. */
     public int players;
 
-    /** The number of player-games that have been played on this board
-     * (ie. if four players play one game on the board, this value is
-     * incremented by four). */
-    public int plays;
+    /** Bit flags maintained for this board. */
+    public int flags;
 
     /** The MD5 hash of the board data. */
     public byte[] dataHash;
@@ -66,6 +67,7 @@ public class BoardRecord
         creator = file.creator;
         setScenarios(file.scenarios);
         players = file.players;
+        setFlag(PRIVATE_BOARD, file.privateBoard);
         data = new BoardData(file.board, file.pieces).toBytes();
         dataHash = BoardData.getDataHash(data);
     }
@@ -105,6 +107,26 @@ public class BoardRecord
     }
 
     /**
+     * Returns true if the supplied flag is set.
+     */
+    public boolean isFlagSet (int flag)
+    {
+        return (flags & flag) != 0;
+    }
+
+    /**
+     * Activates or deactivates the specified flag.
+     */
+    public void setFlag (int flag, boolean active)
+    {
+        if (active) {
+            flags |= flag;
+        } else {
+            flags &= ~flag;
+        }
+    }
+
+    /**
      * Unserializes our binary data into a {@link BoardData} record.
      */
     public BoardData getBoardData ()
@@ -116,8 +138,7 @@ public class BoardRecord
     @Override // from BoardData
     public String toString ()
     {
-        return "[id=" + boardId + ", name=" + name + ", players=" + players +
-            ", data=" + super.toString() +
-            ", hash=" + StringUtil.hexlate(dataHash) + "]";
+        return "[id=" + boardId + ", name=" + name + ", players=" + players + ", flags=" + flags +
+            ", data=" + super.toString() + ", hash=" + StringUtil.hexlate(dataHash) + "]";
     }
 }

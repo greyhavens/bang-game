@@ -37,6 +37,9 @@ public class BoardFile
     /** The scenarios for which this board is usable. */
     public String[] scenarios;
 
+    /** Private boards are not included in the random selection for normal match made games. */
+    public boolean privateBoard;
+
     /** The number of players for which this board is appropriate. */
     public int players;
 
@@ -98,8 +101,8 @@ public class BoardFile
         scenarios = capsule.readStringArray("scenarios", DEF_SCENARIOS);
         players = capsule.readInt("players", 2);
         board = (BangBoard)capsule.readSavable("board", null);
-        pieces = ArrayUtil.copy(
-            capsule.readSavableArray("pieces", null), new Piece[0]);
+        pieces = ArrayUtil.copy(capsule.readSavableArray("pieces", null), new Piece[0]);
+        privateBoard = capsule.readBoolean("private", false);
     }
 
     // from interface Savable
@@ -113,6 +116,7 @@ public class BoardFile
         capsule.write(players, "players", 2);
         capsule.write(board, "board", null);
         capsule.write(pieces, "pieces", null);
+        capsule.write(privateBoard, "private", false);
     }
 
     protected static final String[] DEF_SCENARIOS = {};
