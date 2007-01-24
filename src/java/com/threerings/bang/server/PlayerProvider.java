@@ -66,6 +66,12 @@ public interface PlayerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link PlayerService#prepSongForDownload} request.
+     */
+    public void prepSongForDownload (ClientObject caller, String arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link PlayerService#registerComplaint} request.
      */
     public void registerComplaint (ClientObject caller, Handle arg1, String arg2, InvocationService.ConfirmListener arg3)

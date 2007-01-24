@@ -3,6 +3,7 @@
 
 package com.threerings.bang.server;
 
+import java.io.File;
 import java.lang.ref.SoftReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
+
+import org.apache.commons.io.IOUtils;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
@@ -720,6 +723,34 @@ public class PlayerManager
         });
     }
 
+    // from interface PlayerProvider
+    public void prepSongForDownload (ClientObject caller, final String song,
+                                     final PlayerService.ResultListener listener)
+        throws InvocationException
+    {
+        // make sure the player owns this song
+        PlayerObject user = (PlayerObject)caller;
+        if (!user.ownsSong(song)) {
+            throw new InvocationException(ACCESS_DENIED);
+        }
+
+        // create a temporary symlink in the data/download directory for use in downloading
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                _ident = createDownloadSymlink(song);
+                return true;
+            }
+            public void handleResult () {
+                if (_ident == null) {
+                    listener.requestFailed(INTERNAL_ERROR);
+                } else {
+                    listener.requestProcessed(_ident);
+                }
+            }
+            protected String _ident;
+        });
+    }
+
     /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
@@ -965,6 +996,46 @@ public class PlayerManager
         } finally {
             player.commitTransaction();
         }
+    }
+
+    /**
+     * Creates a (temporary) symlink allowing the download of the specified song.
+     *
+     * @return the random identifier assigned to the song for this download or null if we failed to
+     * create the symlink.
+     */
+    protected String createDownloadSymlink (String song)
+    {
+        File source = new File(ServerConfig.serverRoot, "data" + File.separator + "soundtrack" +
+                               File.separator + song + ".mp3");
+        if (!source.exists()) {
+            log.warning("Requested to create symlink for missing source [song=" + song + "].");
+            return null;
+        }
+
+        // generate a random name for the to be downloaded media
+        long rando = (long)(Math.random() * Long.MAX_VALUE);
+        String ident = StringUtil.md5hex("" + (rando ^ System.currentTimeMillis()));
+        File dest = new File(ServerConfig.serverRoot, "data" + File.separator + "downloads" +
+                             File.separator + ident);
+
+        // Java's file abstraction does not support symlinks, so we have to exec a process
+        String stderr = "";
+        try {
+            Process proc = new ProcessBuilder(
+                "ln", "-s", source.toString(), dest.toString()).start();
+            stderr = IOUtils.toString(proc.getErrorStream());
+            if (proc.waitFor() != 0) {
+                log.warning("Failed to create download symlink [song=" + song +
+                            ", ident=" + ident + ", stderr=" + stderr + "].");
+                return null;
+            }
+
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failure running ln command.", e);
+        }
+
+        return ident;
     }
 
     /** Provides access to the pardner database. */

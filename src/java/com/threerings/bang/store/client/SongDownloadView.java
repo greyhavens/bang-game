@@ -24,6 +24,7 @@ import com.samskivert.io.StreamUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangClient;
+import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.DeploymentConfig;
@@ -93,23 +94,31 @@ public class SongDownloadView extends BDecoratedWindow
 
     protected void startDownload ()
     {
-        // TODO: get the source by making a server request; the server will confirm that we own the
-        // song and create a temporarily available location from which to download it
+        // request a temporary identifier through which to download this song
+        PlayerService psvc = (PlayerService)_ctx.getClient().requireService(PlayerService.class);
+        psvc.prepSongForDownload(_ctx.getClient(), _song, new PlayerService.ResultListener() {
+            public void requestProcessed (Object result) {
+                actuallyStartDownload((String)result);
+            }
+            public void requestFailed (String reason) {
+                reportFailure(_msgs.xlate(reason));
+            }
+        });
+    }
 
-        String file = _song + ".mp3";
-        URL source;
+    protected void actuallyStartDownload (String ident)
+    {
         try {
-            source = new URL(DeploymentConfig.getDocBaseURL(), "/soundtrack/" + file);
-        } catch (Exception e) {
-            log.warning("Unable to create download URL [song=" + _song + ", error=" + e + "].");
-            reportFailure(_msgs.get("m.internal_error"));
-            return;
-        }
+            _action = "download";
+            _copier = new SongDownloader(
+                new URL(DeploymentConfig.getDocBaseURL(), "/downloads/" + ident),
+                new File(getSoundtrackDir(), _song + ".mp3"));
+            _copier.start();
 
-        // start the download thread
-        _action = "download";
-        _copier = new SongDownloader(source, new File(getSoundtrackDir(), file));
-        _copier.start();
+        } catch (Exception e) {
+            log.warning("Unable to start download [ident=" + ident + ", error=" + e + "].");
+            reportFailure(_msgs.get("m.internal_error"));
+        }
     }
 
     protected void startCopy ()

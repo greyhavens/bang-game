@@ -125,8 +125,21 @@ public class PlayerMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #prepSongForDownload} requests. */
+    public static final int PREP_SONG_FOR_DOWNLOAD = 9;
+
+    // from interface PlayerService
+    public void prepSongForDownload (Client arg1, String arg2, InvocationService.ResultListener arg3)
+    {
+        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, PREP_SONG_FOR_DOWNLOAD, new Object[] {
+            arg2, listener3
+        });
+    }
+
     /** The method id used to dispatch {@link #registerComplaint} requests. */
-    public static final int REGISTER_COMPLAINT = 9;
+    public static final int REGISTER_COMPLAINT = 10;
 
     // from interface PlayerService
     public void registerComplaint (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)
@@ -139,7 +152,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #removePardner} requests. */
-    public static final int REMOVE_PARDNER = 10;
+    public static final int REMOVE_PARDNER = 11;
 
     // from interface PlayerService
     public void removePardner (Client arg1, Handle arg2, InvocationService.ConfirmListener arg3)
@@ -152,7 +165,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #respondToNotification} requests. */
-    public static final int RESPOND_TO_NOTIFICATION = 11;
+    public static final int RESPOND_TO_NOTIFICATION = 12;
 
     // from interface PlayerService
     public void respondToNotification (Client arg1, Comparable arg2, int arg3, InvocationService.ConfirmListener arg4)
@@ -165,7 +178,7 @@ public class PlayerMarshaller extends InvocationMarshaller
     }
 
     /** The method id used to dispatch {@link #updatePosterInfo} requests. */
-    public static final int UPDATE_POSTER_INFO = 12;
+    public static final int UPDATE_POSTER_INFO = 13;
 
     // from interface PlayerService
     public void updatePosterInfo (Client arg1, int arg2, String arg3, int[] arg4, InvocationService.ConfirmListener arg5)

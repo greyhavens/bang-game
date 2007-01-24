@@ -96,6 +96,13 @@ public class PlayerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case PlayerMarshaller.PREP_SONG_FOR_DOWNLOAD:
+            ((PlayerProvider)provider).prepSongForDownload(
+                source,
+                (String)args[0], (InvocationService.ResultListener)args[1]
+            );
+            return;
+
         case PlayerMarshaller.REGISTER_COMPLAINT:
             ((PlayerProvider)provider).registerComplaint(
                 source,

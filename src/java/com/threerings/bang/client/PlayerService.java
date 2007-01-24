@@ -90,4 +90,10 @@ public interface PlayerService extends InvocationService
      */
     public void registerComplaint (Client client, Handle target, String reason,
                                    ConfirmListener listener);
+
+    /**
+     * Requests that the specified song be perpared for download. Informs the listener of the
+     * randomly assigned identifier that can be used to download the song.
+     */
+    public void prepSongForDownload (Client client, String song, ResultListener listener);
 }
