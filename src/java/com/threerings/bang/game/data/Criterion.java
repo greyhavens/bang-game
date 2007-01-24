@@ -17,8 +17,12 @@ import com.threerings.bang.data.Stat;
 public abstract class Criterion extends SimpleStreamableObject
     implements Savable
 {
+    /** Used to report criteria state during a game. */
+    public enum State { NOT_MET, MET, COMPLETE, FAILED };
+
     /**
-     * Returns a string describing this criterion for display before the game.
+     * Returns a string describing this criterion for display before the game. This will be
+     * translated using the {@link GameCodes#GAME_MSGS} bundle.
      */
     public abstract String getDescription ();
 
@@ -29,11 +33,20 @@ public abstract class Criterion extends SimpleStreamableObject
     public abstract void addWatchedStats (HashSet<Stat.Type> stats);
 
     /**
-     * Returns the current state of this criterion (the value of the underlying statistic or
-     * related bit of information). This is called throughout the game after each tick and as stats
-     * are updated. The returned value will be translated.
+     * Returns the current state of this criterion. This is called throughout the game after each
+     * tick and as stats are updated.
      */
-    public abstract String getCurrentState (BangObject bangobj, int rank);
+    public State getCurrentState (BangObject bangobj, int rank)
+    {
+        return isMet(bangobj, rank) ? State.MET : State.NOT_MET;
+    }
+
+    /**
+     * Returns the current value of this criterion's underlying statistic. This is called
+     * throughout the game after each tick and as stats are updated. The returned value will be
+     * translated using the {@link GameCodes#GAME_MSGS} bundle.
+     */
+    public abstract String getCurrentValue (BangObject bangobj, int rank);
 
     /**
      * Returns true if this criteron is met, false if not.

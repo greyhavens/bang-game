@@ -38,9 +38,8 @@ public class IntStatCriterion extends Criterion
     // from Criterion
     public String getDescription ()
     {
-        String msg = MessageBundle.compose("m." + condition.toString().toLowerCase() + "_descrip",
-                                           stat.key(), MessageBundle.taint(String.valueOf(value)));
-        return MessageBundle.qualify(OfficeCodes.OFFICE_MSGS, msg);
+        return MessageBundle.compose("m." + condition.toString().toLowerCase() + "_descrip",
+                                     stat.key(), MessageBundle.taint(String.valueOf(value)));
     }
 
     // from Criterion
@@ -49,8 +48,15 @@ public class IntStatCriterion extends Criterion
         stats.add(stat);
     }
 
+    @Override // from Criterion
+    public State getCurrentState (BangObject bangobj, int rank)
+    {
+        // TODO: support COMPLETED, FAILED
+        return isMet(bangobj, rank) ? State.MET : State.NOT_MET;
+    }
+
     // from Criterion
-    public String getCurrentState (BangObject bangobj, int rank)
+    public String getCurrentValue (BangObject bangobj, int rank)
     {
         return MessageBundle.taint(String.valueOf(bangobj.critStats.getIntStat(stat)));
     }

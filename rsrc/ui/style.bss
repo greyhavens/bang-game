@@ -85,31 +85,31 @@ label {
 
 button {
   color: #FFFFFF;
-  background: image "ui/buttons/small_normal.png" framexy;
+  background: image "ui/buttons/small_normal.png" framex;
   font: "Old Town" plain 24;
   text-align: center;
   vertical-align: center;
   padding: 0 25;
 }
 button:disabled {
-  background: image "ui/buttons/small_disabled.png" framexy;
+  background: image "ui/buttons/small_disabled.png" framex;
   color: #FFFFFF4C;
 }
 button:hover {
-  background: image "ui/buttons/small_hover.png" framexy;
+  background: image "ui/buttons/small_hover.png" framex;
 }
 button:down {
-  background: image "ui/buttons/small_down.png" framexy;
+  background: image "ui/buttons/small_down.png" framex;
   padding: 2 26 0 24;
 }
 button:selected {
-  background: image "ui/buttons/small_down.png" framexy;
+  background: image "ui/buttons/small_down.png" framex;
   padding: 2 26 0 24;
 }
 
 big_button {
   color: #FFFFFF;
-  background: image "ui/buttons/big_normal.png" framexy;
+  background: image "ui/buttons/big_normal.png" framex;
   font: "Old Town" plain 24;
   text-align: center;
   text-effect: shadow;
@@ -118,20 +118,20 @@ big_button {
   padding: 0 25;
 }
 big_button:disabled {
-  background: image "ui/buttons/big_disabled.png" framexy;
+  background: image "ui/buttons/big_disabled.png" framex;
   color: #FFFFFF4C;
 }
 big_button:hover {
-  background: image "ui/buttons/big_hover.png" framexy;
+  background: image "ui/buttons/big_hover.png" framex;
 }
 big_button:down {
-  background: image "ui/buttons/big_down.png" framexy;
+  background: image "ui/buttons/big_down.png" framex;
   padding: 2 26 0 24;
 }
 
 huge_button {
   color: #FFFFFF;
-  background: image "ui/buttons/huge_normal.png" framexy;
+  background: image "ui/buttons/huge_normal.png" framex;
   font: "Old Town Wide" plain 24;
   text-align: center;
   text-effect: shadow;
@@ -140,38 +140,38 @@ huge_button {
   padding: 0 25;
 }
 huge_button:disabled {
-  background: image "ui/buttons/huge_disabled.png" framexy;
+  background: image "ui/buttons/huge_disabled.png" framex;
   color: #FFFFFF4C;
 }
 huge_button:hover {
-  background: image "ui/buttons/huge_hover.png" framexy;
+  background: image "ui/buttons/huge_hover.png" framex;
 }
 huge_button:down {
-  background: image "ui/buttons/huge_down.png" framexy;
+  background: image "ui/buttons/huge_down.png" framex;
   padding: 2 26 0 24;
 }
 
 alt_button {
   color: #FFFFFF;
-  background: image "ui/buttons/secondary_normal.png" framexy;
+  background: image "ui/buttons/secondary_normal.png" framex;
   font: "Dom Casual" plain 16;
   text-align: center;
   vertical-align: center;
-  padding: 0 15 1 15;
+  padding: 0 15;
 }
 alt_button:disabled {
-  background: image "ui/buttons/secondary_disabled.png" framexy;
+  background: image "ui/buttons/secondary_disabled.png" framex;
   color: #FFFFFF4C;
 }
 alt_button:hover {
-  background: image "ui/buttons/secondary_hover.png" framexy;
+  background: image "ui/buttons/secondary_hover.png" framex;
 }
 alt_button:down {
-  background: image "ui/buttons/secondary_down.png" framexy;
+  background: image "ui/buttons/secondary_down.png" framex;
   padding: 2 16 0 14;
 }
 alt_button:selected {
-  background: image "ui/buttons/secondary_down.png" framexy;
+  background: image "ui/buttons/secondary_down.png" framex;
   padding: 2 16 0 14;
 }
 
@@ -443,7 +443,7 @@ list_entry:selected {
 window_title {
   font: "Old Town Wide" plain 30;
   text-align: center;
-  background: image "ui/window/scroll_title.png" framexy;
+  background: image "ui/window/scroll_title.png" framex;
   padding: 0 50 10 50;
   text-effect: shadow;
   color: #4C2602;
@@ -1239,17 +1239,12 @@ context_help_text {
 
 bounty_req_window {
   background: image "ui/tutorials/bubble.png" framexy;
-  padding: 20 15 15 15;
+  padding: 20 15 0 15;
 }
 
-bounty_req_descrip {
-  font: "Dom Casual" plain 16;
-  color: #4C2602;
-}
-
-bounty_req_value {
-  font: "Dom Casual" bold 16;
-  color: #4C2602;
+bounty_req_status {
+  font: "Dom Casual" plain 14;
+  padding: 0 10 10 10;
 }
 
 //

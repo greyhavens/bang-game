@@ -29,7 +29,7 @@ public class RankCriterion extends Criterion
     // from Criterion
     public String getDescription ()
     {
-        return MessageBundle.qualify(OfficeCodes.OFFICE_MSGS, "m.rank_descrip" + rank);
+        return "m.rank_descrip" + rank;
     }
 
     // from Criterion
@@ -39,9 +39,9 @@ public class RankCriterion extends Criterion
     }
 
     // from Criterion
-    public String getCurrentState (BangObject bangobj, int rank)
+    public String getCurrentValue (BangObject bangobj, int rank)
     {
-        return MessageBundle.qualify(OfficeCodes.OFFICE_MSGS, "m.rank_at" + rank);
+        return "m.rank_at" + rank;
     }
 
     // from Criterion
@@ -73,8 +73,7 @@ public class RankCriterion extends Criterion
     @Override // from Object
     public boolean equals (Object other)
     {
-        RankCriterion ocrit = (RankCriterion)other;
-        return rank == ocrit.rank;
+        return rank == ((RankCriterion)other).rank;
     }
 
     @Override // from Object

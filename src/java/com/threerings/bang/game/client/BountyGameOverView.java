@@ -160,7 +160,7 @@ public class BountyGameOverView extends SteelWindow
         int row = _failed = 0;
         for (Criterion crit : _gconfig.criteria) {
             _stats.add(new BLabel(_msgs.xlate(crit.getDescription()), "bover_crit"));
-            _stats.add(new BLabel(_msgs.xlate(crit.getCurrentState(_bangobj, _award.rank)),
+            _stats.add(new BLabel(_msgs.xlate(crit.getCurrentValue(_bangobj, _award.rank)),
                                   "bover_rcrit"));
             _stats.add(new BLabel(_msgs.get("m.bover_equals"), "bover_result"));
             String result = "complete", style = "bover_result";

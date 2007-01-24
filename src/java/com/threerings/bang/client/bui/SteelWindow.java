@@ -27,13 +27,11 @@ public class SteelWindow extends BDecoratedWindow
 
         add(_header = new BLabel(title, "window_title"), GroupLayout.FIXED);
         add(_contents = new BContainer());
-        add(_buttons = GroupLayout.makeHBox(GroupLayout.CENTER),
-            GroupLayout.FIXED);
+        add(_buttons = GroupLayout.makeHBox(GroupLayout.CENTER), GroupLayout.FIXED);
 
         // load up our custom header image
         _headimg = new ImageBackground(
-            ImageBackground.FRAME_XY,
-            ctx.loadImage("ui/window/header_steel.png"));
+            ImageBackground.FRAME_X, ctx.loadImage("ui/window/header_steel.png"));
     }
 
     @Override // documentation inherited
@@ -56,10 +54,8 @@ public class SteelWindow extends BDecoratedWindow
         // we don't call super because we need to jimmy things up a bit
         int hwidth = _header.getWidth() + 2*HEADER_EDGE;
         int hheight = _headimg.getMinimumHeight();
-        getBackground().render(renderer, 0, 0,
-                               _width, _height-hheight+OVERLAP, _alpha);
-        _headimg.render(renderer, (_width - hwidth)/2, _height - hheight,
-                        hwidth, hheight, _alpha);
+        getBackground().render(renderer, 0, 0, _width, _height-hheight+OVERLAP, _alpha);
+        _headimg.render(renderer, (_width - hwidth)/2, _height - hheight, hwidth, hheight, _alpha);
     }
 
     protected BLabel _header;

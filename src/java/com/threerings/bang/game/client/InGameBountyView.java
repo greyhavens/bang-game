@@ -3,6 +3,7 @@
 
 package com.threerings.bang.game.client;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import com.jme.renderer.Renderer;
@@ -10,6 +11,7 @@ import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BWindow;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
@@ -37,22 +39,21 @@ public class InGameBountyView extends BWindow
 {
     public InGameBountyView (BangContext ctx, BangConfig config, BangObject bangobj)
     {
-        super(BangUI.stylesheet, new TableLayout(2, 5, 15));
+        super(BangUI.stylesheet, new TableLayout(3, 5, 15));
         setStyleClass("bounty_req_window");
         _ctx = ctx;
         _config = config;
         _bangobj = bangobj;
 
+        _descrip = new BLabel[config.criteria.size()];
+        _state = new BLabel[config.criteria.size()];
         _current = new BLabel[config.criteria.size()];
         int idx = 0;
         for (Criterion crit : config.criteria) {
             String text = ctx.xlate(GameCodes.GAME_MSGS, crit.getDescription());
-            add(new BLabel(text, "bounty_req_descrip"));
-            BContainer pair = GroupLayout.makeHBox(GroupLayout.LEFT);
-            text = ctx.xlate(GameCodes.GAME_MSGS, "m.bounty_current");
-            pair.add(new BLabel(text, "bounty_req_descrip"));
-            pair.add(_current[idx++] = new BLabel("", "bounty_req_value"));
-            add(pair);
+            add(_descrip[idx] = new BLabel("", "bounty_req_status"));
+            add(_state[idx] = new BLabel("", "bounty_req_status"));
+            add(_current[idx++] = new BLabel("", "bounty_req_status"));
         }
 
         if (bangobj.critStats != null) {
@@ -64,7 +65,6 @@ public class InGameBountyView extends BWindow
 
     public void setRank (int rank)
     {
-        System.err.println("Setting rank " + rank);
         _rank = rank;
         updateCurrent();
     }
@@ -108,6 +108,7 @@ public class InGameBountyView extends BWindow
     @Override // from BWindow
     protected void renderBackground (Renderer renderer)
     {
+        // render our background at 50% transparency
         getBackground().render(renderer, 0, 0, _width, _height, 0.5f);
     }
 
@@ -115,8 +116,36 @@ public class InGameBountyView extends BWindow
     {
         int idx = 0;
         for (Criterion crit : _config.criteria) {
-            _current[idx++].setText(
-                _ctx.xlate(GameCodes.GAME_MSGS, crit.getCurrentState(_bangobj, _rank)));
+            String msg = _ctx.xlate(GameCodes.GAME_MSGS, crit.getDescription());
+            Criterion.State state = crit.getCurrentState(_bangobj, _rank);
+            // doris the hackasaurus!
+            String[] colors = COLORS.get(state);
+            msg.replaceAll("@=b", "@=b" + colors[0]);
+            msg.replaceAll("#6C421B", colors[1]);
+            _descrip[idx].setText(msg);
+
+            msg = _ctx.xlate(GameCodes.GAME_MSGS, ("m.bounty_state_" + state).toLowerCase());
+            _state[idx].setText("@=" + colors[1] + "(" + msg + ")");
+
+            switch (state) {
+            case NOT_MET:
+            case MET:
+                msg = _ctx.xlate(GameCodes.GAME_MSGS, crit.getCurrentValue(_bangobj, _rank));
+                _current[idx].setText(msg);
+                _current[idx].setIcon(null);
+                break;
+
+            case COMPLETE:
+                _current[idx].setText("");
+                _current[idx].setIcon(new ImageIcon(_ctx.loadImage("ui/icons/check_tiny.png")));
+                break;
+
+            case FAILED:
+                _current[idx].setText("");
+                _current[idx].setIcon(new ImageIcon(_ctx.loadImage("ui/icons/x_tiny.png")));
+                break;
+            }
+            idx++;
         }
     }
 
@@ -125,5 +154,14 @@ public class InGameBountyView extends BWindow
     protected BangObject _bangobj;
     protected int _rank;
 
-    protected BLabel[] _current;
+    protected BLabel[] _descrip, _state, _current;
+
+    protected static final HashMap<Criterion.State,String[]> COLORS =
+        new HashMap<Criterion.State,String[]>();
+    static {
+        COLORS.put(Criterion.State.NOT_MET, new String[] { "#FFFFFF", "#4C2602", "#FFFFFF" });
+        COLORS.put(Criterion.State.MET, new String[] { "#FFFFFF", "#4C2602", "#FFFFFF" });
+        COLORS.put(Criterion.State.COMPLETE, new String[] { "#FFDB02", "#FFDB02", "#FFDB02" });
+        COLORS.put(Criterion.State.FAILED, new String[] { "#F02E24", "#F02E24", "#F02E24" });
+    }
 }
