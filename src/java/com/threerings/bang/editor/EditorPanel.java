@@ -52,7 +52,7 @@ public class EditorPanel extends JPanel
     public EditorBoardView view;
 
     /** Displays board metadata. */
-    public BoardInfo info;
+    public BoardInfoPanel info;
     
     /** Allows user to select and configure tools. */
     public ToolPanel tools;
@@ -93,7 +93,7 @@ public class EditorPanel extends JPanel
         add(vlabel, VGroupLayout.FIXED);
 
         // add the various control panels
-        add(info = new BoardInfo(ctx, this), VGroupLayout.FIXED);
+        add(info = new BoardInfoPanel(ctx, this), VGroupLayout.FIXED);
         add(tools = new ToolPanel(ctx, this));
 
         // TODO: translate menu accelerators and short cuts

@@ -32,10 +32,10 @@ import com.threerings.bang.util.BasicContext;
 /**
  * Displays and allows editing of board metadata.
  */
-public class BoardInfo extends JPanel
+public class BoardInfoPanel extends JPanel
     implements ItemListener
 {
-    public BoardInfo (BasicContext ctx, EditorPanel panel)
+    public BoardInfoPanel (BasicContext ctx, EditorPanel panel)
     {
         _panel = panel;
         setLayout(new VGroupLayout(VGroupLayout.NONE, VGroupLayout.STRETCH,
