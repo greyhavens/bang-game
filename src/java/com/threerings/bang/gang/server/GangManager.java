@@ -650,7 +650,7 @@ public class GangManager
      * amount as a price quote or goes through with the purchase.
      */
     protected void processOutfit (
-        final PlayerObject user, OutfitArticle[] outfit,
+        final PlayerObject user, final OutfitArticle[] outfit,
         final InvocationService.InvocationListener listener, final boolean buy)
         throws InvocationException
     {
@@ -673,9 +673,12 @@ public class GangManager
             }
         }
         
-        // find out how much it will cost to buy the articles
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
+                // save the outfit as the gang's current
+                _gangrepo.updateOutfit(user.gangId, outfit);
+                
+                // find out who needs the articles and how much it will cost
                 ArrayIntSet maleIds = new ArrayIntSet(), femaleIds = new ArrayIntSet();
                 _gangrepo.loadMemberIds(user.gangId, maleIds, femaleIds);
                 for (int ii = 0; ii < articles.length; ii++) {
@@ -693,6 +696,12 @@ public class GangManager
                 }
             }
             public void handleSuccess () {
+                // update the gang's configured outfit
+                GangObject gangobj = getGangObject(user.gangId);
+                if (gangobj != null) {
+                    gangobj.setOutfit(outfit);
+                }
+                
                 if (!buy) {
                     // if we're not buying, just report the price quote
                     ((InvocationService.ResultListener)listener).requestProcessed(_cost);

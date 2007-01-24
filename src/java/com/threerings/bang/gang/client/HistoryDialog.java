@@ -17,6 +17,8 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.samskivert.util.ArrayUtil;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.bui.StatusLabel;
@@ -63,9 +65,9 @@ public class HistoryDialog extends BDecoratedWindow
         BContainer bcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
         bcont.add(new BButton(ctx.xlate(HIDEOUT_MSGS, "m.dismiss"), this, "dismiss"));
         add(bcont, GroupLayout.FIXED);
-    
-        // fetch the first batch of entries    
-        fetchEntries(0);
+        
+        // hide the dialog until we hear back from the server
+        setVisible(false);
     }
     
     // documentation inherited from interface ActionListener
@@ -81,6 +83,17 @@ public class HistoryDialog extends BDecoratedWindow
         }
     }
     
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        pack();
+        center();
+        
+        // fetch the first batch of entries    
+        fetchEntries(0);
+    }
+    
     /**
      * Fetches the entries starting at the specified offset.
      */
@@ -93,16 +106,37 @@ public class HistoryDialog extends BDecoratedWindow
             new HideoutService.ResultListener() {
             public void requestProcessed (Object result) {
                 HistoryEntry[] entries = (HistoryEntry[])result;
+                if (entries.length > HISTORY_PAGE_ENTRIES) {
+                    // we received one more entry than necessary to let us know that we can go
+                    // farther back
+                    entries = ArrayUtil.splice(entries, 0, 1);
+                    _back.setEnabled(true);
+                } else {
+                    _back.setEnabled(false);
+                }
                 updateEntries(entries, offset);
                 _forward.setEnabled(_offset != 0);
-                _back.setEnabled(entries.length == HISTORY_PAGE_ENTRIES);
+                ensureVisible();
             }
             public void requestFailed (String cause) {
                 _status.setStatus(HIDEOUT_MSGS, cause, true);
                 _forward.setEnabled(fenable);
                 _back.setEnabled(benable);
+                ensureVisible();
             }
         });
+    }
+    
+    /**
+     * Shows the dialog if it's not already showing.
+     */
+    protected void ensureVisible ()
+    {
+        if (isVisible()) {
+            return;
+        }
+        setVisible(true);
+        _ctx.getBangClient().animatePopup(this, 500);
     }
     
     /**

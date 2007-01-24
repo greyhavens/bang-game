@@ -14,8 +14,12 @@ import com.threerings.media.image.ColorPository.ClassRecord;
 import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.media.image.ColorPository;
 
+import com.threerings.presents.dobj.DObject;
+
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.PlayerObject;
+
+import com.threerings.bang.gang.data.GangObject;
 
 import static com.threerings.bang.Log.log;
 
@@ -26,45 +30,45 @@ import static com.threerings.bang.Log.log;
 public class ColorConstraints
 {
     /**
-     * Selects a random color from the records available to the supplied player
-     * in the specified class. Returns null if no colors are available to the
-     * player (which should never happen unless something is booched).
+     * Selects a random color from the records available to the supplied player or gang in the
+     * specified class. Returns null if no colors are available to the player or gang (which should
+     * never happen unless something is booched).
      */
     public static ColorRecord pickRandomColor (
-        ColorPository pository, String colorClass, PlayerObject user)
+        ColorPository pository, String colorClass, DObject entity)
     {
         ArrayList<ColorRecord> records =
-            getAvailableColors(pository, colorClass, user);
+            getAvailableColors(pository, colorClass, entity);
         return records.size() == 0 ? null :
             (ColorRecord)RandomUtil.pickRandom(records);
     }
 
     /**
-     * Returns a list of color records available to the supplied player in the
+     * Returns a list of color records available to the supplied player or gang in the
      * specified color class.
      */
     public static ArrayList<ColorRecord> getAvailableColors (
-        ColorPository pository, String colorClass, PlayerObject user)
+        ColorPository pository, String colorClass, DObject entity)
     {
         ArrayList<ColorRecord> colors = new ArrayList<ColorRecord>();
         ClassRecord clrec = pository.getClassRecord(colorClass);
         if (clrec == null) {
             log.warning("Requested non-existent color class " +
-                        "[class=" + colorClass + ", who=" + user.who() + "].");
+                        "[class=" + colorClass + ", which=" + entity.which() + "].");
             return colors;
         }
 
-        HashMap<String,Predicate<PlayerObject>> preds = _preds.get(colorClass);
+        HashMap<String,Predicate<DObject>> preds = _preds.get(colorClass);
         Iterator iter = clrec.colors.values().iterator();
         while (iter.hasNext()) {
             ColorRecord crec = (ColorRecord)iter.next();
-            Predicate<PlayerObject> pred = preds.get(crec.name);
+            Predicate<DObject> pred = preds.get(crec.name);
             if (pred == null) {
                 log.warning("Missing predicate for color [class=" + colorClass +
                             ", color=" + crec.name + "].");
                 continue;
             }
-            if (pred.isMatch(user)) {
+            if (pred.isMatch(entity)) {
                 colors.add(crec);
             }
         }
@@ -72,14 +76,14 @@ public class ColorConstraints
     }
 
     /**
-     * Returns true if the specified color is valid for the specified player.
+     * Returns true if the specified color is valid for the specified player or gang.
      */
     public static boolean isValidColor (
         ColorPository pository, String colorClass, int colorId,
-        PlayerObject user)
+        DObject entity)
     {
         ClassRecord clrec = pository.getClassRecord(colorClass);
-        HashMap<String,Predicate<PlayerObject>> preds = _preds.get(colorClass);
+        HashMap<String,Predicate<DObject>> preds = _preds.get(colorClass);
         if (clrec == null || preds == null) {
             return false;
         }
@@ -87,36 +91,52 @@ public class ColorConstraints
         if (crec == null) {
             return false;
         }
-        Predicate<PlayerObject> pred = preds.get(crec.name);
-        return (pred == null) ? false : pred.isMatch(user);
+        Predicate<DObject> pred = preds.get(crec.name);
+        return (pred == null) ? false : pred.isMatch(entity);
     }
 
     /** We use this to disable colors until we know what we want to do. */
-    protected static class Disabled extends Predicate<PlayerObject> {
-        public boolean isMatch (PlayerObject user) {
+    protected static class Disabled extends Predicate<DObject> {
+        public boolean isMatch (DObject entity) {
             return false;
         }
     }
 
-    /** Starter colors are available to every player any time. */
-    protected static class Starter extends Predicate<PlayerObject> {
-        public boolean isMatch (PlayerObject user) {
+    /** Starter colors are available to every player and every gang any time. */
+    protected static class Starter extends Predicate<DObject> {
+        public boolean isMatch (DObject entity) {
             return true;
         }
     }
 
+    /** Superclass of predicates that act differently on users and gangs. */
+    protected static abstract class DoublePredicate extends Predicate<DObject> {
+        public boolean isMatch (DObject entity) {
+            if (entity instanceof PlayerObject) {
+                return isMatch((PlayerObject)entity);
+            } else { // entity instanceof GangObject
+                return isMatch((GangObject)entity);
+            }
+        }
+        public abstract boolean isMatch (PlayerObject user);
+        public abstract boolean isMatch (GangObject gang);
+    }
+    
     /** Normal colors are available to every player after having created their
-     * first avatar look. */
-    protected static class Normal extends Predicate<PlayerObject> {
+     * first avatar look and are always available to gangs. */
+    protected static class Normal extends DoublePredicate {
         public boolean isMatch (PlayerObject user) {
             // available to anyone that has created their initial avatar
             return (user.handle != null);
         }
+        public boolean isMatch (GangObject gang) {
+            return true;
+        }
     }
 
     /** Some colors are only available to players that hold a particular
-     * badge. */
-    protected static class HoldsBadge extends Predicate<PlayerObject> {
+     * badge (never available to gangs, at the moment). */
+    protected static class HoldsBadge extends DoublePredicate {
         public HoldsBadge (Badge.Type badge) {
             _badge = badge;
         }
@@ -124,17 +144,20 @@ public class ColorConstraints
             // available to anyone that has created their initial avatar
             return user.holdsBadge(_badge);
         }
+        public boolean isMatch (GangObject gang) {
+            return false;
+        }
         protected Badge.Type _badge;
     }
 
-    protected static HashMap<String,HashMap<String,Predicate<PlayerObject>>>
-        _preds = new HashMap<String,HashMap<String,Predicate<PlayerObject>>>();
+    protected static HashMap<String,HashMap<String,Predicate<DObject>>>
+        _preds = new HashMap<String,HashMap<String,Predicate<DObject>>>();
 
     static {
-        HashMap<String,Predicate<PlayerObject>> preds;
+        HashMap<String,Predicate<DObject>> preds;
 
         _preds.put("hair", preds =
-            new HashMap<String,Predicate<PlayerObject>>());
+            new HashMap<String,Predicate<DObject>>());
         preds.put("black", new Starter());
         preds.put("blonde", new Starter());
         preds.put("brown", new Starter());
@@ -158,7 +181,7 @@ public class ColorConstraints
         preds.put("violet", new HoldsBadge(Badge.Type.GAMES_PLAYED_2));
 
         _preds.put("skin", preds =
-            new HashMap<String,Predicate<PlayerObject>>());
+            new HashMap<String,Predicate<DObject>>());
         preds.put("darkest", new Starter());
         preds.put("warm_dark", new Starter());
         preds.put("dark", new Starter());
@@ -171,7 +194,7 @@ public class ColorConstraints
         preds.put("pasty", new Starter());
 
         _preds.put("iris_t",
-            preds = new HashMap<String,Predicate<PlayerObject>>());
+            preds = new HashMap<String,Predicate<DObject>>());
         preds.put("beige", new Starter());
         preds.put("blue", new Starter());
         preds.put("brown", new Starter());
@@ -188,7 +211,7 @@ public class ColorConstraints
         preds.put("red", new HoldsBadge(Badge.Type.UNITS_KILLED_3));
 
         _preds.put("makeup_p",
-            preds = new HashMap<String,Predicate<PlayerObject>>());
+            preds = new HashMap<String,Predicate<DObject>>());
         _preds.put("makeup_s", preds);
         preds.put("aqua", new Normal());
         preds.put("black", new Normal());
@@ -210,7 +233,7 @@ public class ColorConstraints
         preds.put("yellow", new Normal());
 
         _preds.put("clothes_p",
-            preds = new HashMap<String,Predicate<PlayerObject>>());
+            preds = new HashMap<String,Predicate<DObject>>());
         _preds.put("clothes_s", preds);
         _preds.put("clothes_t", preds);
 
@@ -244,7 +267,7 @@ public class ColorConstraints
         preds.put("violet", new HoldsBadge(Badge.Type.DUDS_BOUGHT_2));
 
         _preds.put("familiar_p",
-            preds = new HashMap<String,Predicate<PlayerObject>>());
+            preds = new HashMap<String,Predicate<DObject>>());
         _preds.put("familiar_s", preds);
         _preds.put("familiar_t", preds);
     }

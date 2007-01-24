@@ -363,6 +363,11 @@ public class ItemRepository extends SimpleRepository
     public ArrayIntSet getItemOwners (final ArrayIntSet playerIds, final Item item)
         throws PersistenceException
     {
+        // make sure the set isn't empty
+        if (playerIds.isEmpty()) {
+            return new ArrayIntSet();
+        }
+        
         // serialize the item prototype
         final ByteArrayOutInputStream out = persistItem(item);
         final int itemType = getItemType(item);

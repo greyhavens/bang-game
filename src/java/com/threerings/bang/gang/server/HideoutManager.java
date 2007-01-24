@@ -231,8 +231,10 @@ public class HideoutManager extends MatchHostManager
             throw new InvocationException(INTERNAL_ERROR);
         }
         
-        // fetch the entries from the database
-        BangServer.gangmgr.getHistoryEntries(user.gangId, offset, HISTORY_PAGE_ENTRIES, listener);
+        // fetch the entries from the database.  we ask for one more than we display on a page in
+        // order to find out if there are any on the previous page
+        BangServer.gangmgr.getHistoryEntries(
+            user.gangId, offset, HISTORY_PAGE_ENTRIES + 1, listener);
     }
     
     // documentation inherited from interface HideoutProvider

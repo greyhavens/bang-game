@@ -12,7 +12,9 @@ import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.media.image.ColorPository;
+import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.media.image.Colorization;
+import com.threerings.presents.dobj.DObject;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.CompiledConfig;
 
@@ -503,6 +505,20 @@ public class AvatarLogic
         return createArticle(user.playerId, article, zations);
     }
 
+    /**
+     * Picks a set of random colors for the supplied article, limiting them to those accessible
+     * by the given entity.
+     */
+    public ColorRecord[] pickRandomColors (ArticleCatalog.Article article, DObject entity)
+    {
+        String[] cclasses = getColorizationClasses(article);
+        ColorRecord[] crecs = new ColorRecord[cclasses.length];
+        for (int ii = 0; ii < cclasses.length; ii++) {
+            crecs[ii] = ColorConstraints.pickRandomColor(_pository, cclasses[ii], entity);
+        }
+        return crecs;
+    }
+    
     /**
      * Returns the colorization classes used by the specified article.
      */

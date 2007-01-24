@@ -103,7 +103,10 @@ public class RosterView extends BContainer
     {
         String action = event.getAction();
         if (action.equals("history")) {
-            _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), true, 500);
+            _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), false, 500);
+        } else if (action.equals("outfit")) {
+            _ctx.getBangClient().displayPopup(
+                new OutfitDialog(_ctx, _hideoutobj, _gangobj), true, 500);
         } else if (action.equals("invite")) {
             _ctx.getBangClient().displayPopup(new InviteMemberDialog(_ctx, _status), true, 400);
         } else if (action.equals("leave")) {
@@ -176,6 +179,9 @@ public class RosterView extends BContainer
 
         // populate the button panel
         _bcont.add(new BButton(_msgs.get("m.history"), this, "history"));
+        if (_ctx.getUserObject().gangRank == LEADER_RANK) {
+            _bcont.add(new BButton(_msgs.get("m.outfit"), this, "outfit"));
+        }
         if (_ctx.getUserObject().canRecruit()) {
             _bcont.add(new BButton(_msgs.get("m.invite"), this, "invite"));
         }

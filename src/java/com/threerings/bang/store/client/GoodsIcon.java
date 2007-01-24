@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
 
-import com.threerings.media.image.ColorPository;
+import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.media.image.Colorization;
 import com.threerings.util.MessageBundle;
 
@@ -50,15 +50,12 @@ public class GoodsIcon extends PaletteIcon
         BImage image;
         if (_good instanceof ArticleGood) {
             AvatarLogic al = _ctx.getAvatarLogic();
-            String[] cclasses = al.getColorizationClasses(
-                al.getArticleCatalog().getArticle(_good.getType()));
+            ColorRecord[] crecs = al.pickRandomColors(
+                al.getArticleCatalog().getArticle(_good.getType()), _ctx.getUserObject());
             colorIds = new int[3];
-            Colorization[] zations = new Colorization[cclasses.length];
-            for (int ii = 0; ii < zations.length; ii++) {
-                ColorPository.ColorRecord crec = 
-                    ColorConstraints.pickRandomColor(
-                        al.getColorPository(), cclasses[ii],
-                        _ctx.getUserObject());
+            Colorization[] zations = new Colorization[crecs.length];
+            for (int ii = 0; ii < crecs.length; ii++) {
+                ColorRecord crec = crecs[ii];
                 if (crec == null) {
                     continue;
                 }

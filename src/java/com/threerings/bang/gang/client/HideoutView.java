@@ -72,7 +72,7 @@ public class HideoutView extends ShopView
         add(_ccont = new BContainer(glay), new Rectangle(61, 113, 494, 529));
         add(_tcont = new BContainer(GroupLayout.makeVStretch()), new Rectangle(576, 72, 427, 515));
         add(_bcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.RIGHT)),
-            new Rectangle(277, 69, 291, 29));
+            new Rectangle(177, 69, 391, 29));
         
         // start with a random shop tip
         _status.setStatus(getShopTip(), false);

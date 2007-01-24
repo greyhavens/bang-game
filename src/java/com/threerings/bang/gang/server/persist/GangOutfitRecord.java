@@ -16,4 +16,15 @@ public class GangOutfitRecord
     
     /** The encoded article colorizations. */
     public int zations;
+    
+    public GangOutfitRecord (int gangId, String article, int zations)
+    {
+        this.gangId = gangId;
+        this.article = article;
+        this.zations = zations;
+    }
+    
+    public GangOutfitRecord ()
+    {
+    }
 }

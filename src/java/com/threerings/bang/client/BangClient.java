@@ -473,15 +473,23 @@ public class BangClient extends BasicClient
         _popups.add(popup);
 
         if (animate) {
-            BangUI.play(BangUI.FeedbackSound.WINDOW_OPEN);
-            popup.pack(twidth, -1);
-            int dy = (_mview instanceof BangView) ?
-                ((BangView)_mview).getCenterOffset() : 0;
-            _ctx.getInterface().attachChild(
-                new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f, 0, dy));
+            animatePopup(popup, twidth);
         }
     }
 
+    /**
+     * Slides the popup window down on to the screen.
+     */
+    public void animatePopup (BWindow popup, int twidth)
+    {
+        BangUI.play(BangUI.FeedbackSound.WINDOW_OPEN);
+        popup.pack(twidth, -1);
+        int dy = (_mview instanceof BangView) ?
+            ((BangView)_mview).getCenterOffset() : 0;
+        _ctx.getInterface().attachChild(
+            new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f, 0, dy));
+    }
+    
     /**
      * Displays a popup window that will automatically be cleared if we leave
      * the current "place". This should be used for any overlay view shown atop

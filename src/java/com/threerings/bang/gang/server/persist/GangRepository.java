@@ -156,6 +156,21 @@ public class GangRepository extends JORARepository
     }
     
     /**
+     * Updates a gang's configured outfit.
+     */
+    public void updateOutfit (int gangId, OutfitArticle[] outfit)
+        throws PersistenceException
+    {
+        // delete the existing outfit
+        update("delete from GANG_OUTFITS where GANG_ID = " + gangId);
+        
+        // add the new
+        for (OutfitArticle oart : outfit) {
+            insert(_otable, new GangOutfitRecord(gangId, oart.article, oart.zations));
+        }
+    }
+    
+    /**
      * Adds scrip to a gang's coffers.
      */
     public void grantScrip (int gangId, int scrip)
