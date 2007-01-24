@@ -12,7 +12,7 @@
   <!-- define our subprojects and include the standard build system -->
   <property name="projects" value="samskivert,jme-bui,narya,nenya,vilya,threerings"/>
   <property name="webapps" value="office"/>
-  <import file="projects/tools/etc/build-support.xml" optional="true"/>
+  <import file="projects/tools/etc/build-support.xml"/>
 
   <!-- declare the properties files. -->
   <property name="props.list" value="server.properties,deployment.properties"/>
@@ -681,6 +681,7 @@
     <copy file="build.xml" todir="${pkg.base}"/>
     <copy file="rsrc/config/resource/manager.properties"
           todir="${pkg.base}/rsrc/config/resource/"/>
+    <copy file="${tools.dir}/etc/build-support.xml" todir="${pkg.base}/${tools.dir}/etc"/>
     <copy file="${tools.dir}/lib/perl/GrindUtil.pm" todir="${pkg.base}/${tools.dir}/lib/perl"/>
     <antcall target="copywithperms">
       <param name="copy.perms" value="755"/>
