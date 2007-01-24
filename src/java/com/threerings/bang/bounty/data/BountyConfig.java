@@ -227,7 +227,7 @@ public class BountyConfig extends SimpleStreamableObject
             return oppai;
         }
 
-        Opponent opp = info.opponents[index];
+        Opponent opp = info.opponents == null ? null : info.opponents[index];
         if (opp != null) {
             oppai.handle = new Handle(opp.name);
             oppai.avatar = opp.print;
