@@ -153,6 +153,15 @@ public class IconPalette extends BContainer
     }
 
     /**
+     * Returns a reference to the container holding the navigation buttons, so that they
+     * can be placed elsewhere.
+     */
+    public BContainer getNavigationContainer ()
+    {
+        return _bcont;
+    }
+    
+    /**
      * Adds an icon to this palette. Do not add icons directly with {@link #add}.
      */
     public void addIcon (SelectableIcon icon)

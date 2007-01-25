@@ -119,12 +119,14 @@ public class HackyTabs extends BComponent
 
         int ix = 0, iy = 0;
         if (_stabs == null) { // just render the selected tab
-            if (_vertical) {
-                iy = getHeight() - _tsize*_selidx - _tabs[_selidx].getHeight();
-            } else {
-                ix = _tsize*_selidx;
+            if (_selidx != -1) {
+                if (_vertical) {
+                    iy = getHeight() - _tsize*_selidx - _tabs[_selidx].getHeight();
+                } else {
+                    ix = _tsize*_selidx;
+                }
+                _tabs[_selidx].render(renderer, ix, iy, _alpha);
             }
-            _tabs[_selidx].render(renderer, ix, iy, _alpha);
             return;
         }
         
