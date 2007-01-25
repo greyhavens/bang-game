@@ -935,8 +935,8 @@ public class BangManager extends GameManager
             // automatically select big shots, team and cards as appropriate
             if (_bconfig.type == BangConfig.Type.BOUNTY) {
                 for (int ii = 0; ii < getPlayerSlots(); ii++) {
-                    selectTeam(ii, _bconfig.teams.get(ii).bigShot, _bconfig.teams.get(ii).team,
-                               _bconfig.teams.get(ii).cards);
+                    selectTeam(ii, _bconfig.plist.get(ii).bigShot, _bconfig.plist.get(ii).units,
+                               _bconfig.plist.get(ii).cards);
                 }
             }
             break;
@@ -1059,7 +1059,7 @@ public class BangManager extends GameManager
         for (int ii = 0; ii < _aiLogic.length; ii++) {
             if (_AIs[ii] != null) {
                 _aiLogic[ii] = _scenario.createAILogic(_AIs[ii]);
-                _aiLogic[ii].init(this, ii);
+                _aiLogic[ii].init(this, ii, (BangAI)_AIs[ii]);
             }
         }
 
@@ -1103,9 +1103,9 @@ public class BangManager extends GameManager
 
         // assign starting positions to the players
         _starts = new Piece[getPlayerSlots()];
-        for (int tt = 0; tt < _bconfig.teams.size(); tt++) {
+        for (int tt = 0; tt < _bconfig.plist.size(); tt++) {
             // start at the desired location (which depends on the game config and game type)
-            int stidx = _bconfig.teams.get(tt).startSpot;
+            int stidx = _bconfig.plist.get(tt).startSpot;
             if (stidx == -1) {
                 switch (_bconfig.type) {
                 case SALOON: stidx = RandomUtil.getInt(starts.size()); break;

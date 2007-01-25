@@ -81,7 +81,7 @@ public class BangConfig extends GameConfig
         protected float _adjustment;
     };
 
-    /** Represents a particular player's team configuration. */
+    /** Represents a particular player's configuration. */
     public static class Player extends SimpleStreamableObject
         implements Savable
     {
@@ -89,7 +89,7 @@ public class BangConfig extends GameConfig
         public String bigShot;
 
         /** The units be used by this player. */
-        public String[] team;
+        public String[] units;
 
         /** The cards to be used by this player. */
         public String[] cards;
@@ -97,22 +97,33 @@ public class BangConfig extends GameConfig
         /** The index of the starting spot for this player or -1 for the default. */
         public int startSpot = -1;
 
+        /** The team this player is on or -1 if they are on their own. */
+        public int teamIdx = -1;
+
+        /** If this player is an AI, the skill level to use for that AI. We configure this here and
+         * then use it to populate {@link BangConfig#ais} when the game is being created. */
+        public byte skill = 50;
+
         // from interface Savable
         public void write (JMEExporter ex) throws IOException {
             OutputCapsule out = ex.getCapsule(this);
             out.write(bigShot, "bigShot", null);
-            out.write(team, "team", null);
+            out.write(units, "team", null); // old name to avoid breakage
             out.write(cards, "cards", null);
             out.write(startSpot, "startSpot", -1);
+            out.write(teamIdx, "teamIdx", -1);
+            out.write(skill, "skill", (byte)50);
         }
 
         // from interface Savable
         public void read (JMEImporter im) throws IOException {
             InputCapsule in = im.getCapsule(this);
             bigShot = in.readString("bigShot", null);
-            team = in.readStringArray("team", null);
+            units = in.readStringArray("team", null); // old name to avoid breakage
             cards = in.readStringArray("cards", null);
             startSpot = in.readInt("startSpot", -1);
+            teamIdx = in.readInt("teamIdx", -1);
+            skill = in.readByte("skill", (byte)50);
         }
 
         // from interface Savable
@@ -125,7 +136,7 @@ public class BangConfig extends GameConfig
         {
             Player oplayer = (Player)other;
             return ObjectUtil.equals(bigShot, oplayer.bigShot) &&
-                Arrays.equals(team, oplayer.team) && Arrays.equals(cards, oplayer.cards);
+                Arrays.equals(units, oplayer.units) && Arrays.equals(cards, oplayer.cards);
         }
     }
 
@@ -198,8 +209,8 @@ public class BangConfig extends GameConfig
     /** The configuration of each round of the game. */
     public ArrayList<Round> rounds = new ArrayList<Round>();
 
-    /** The configuration of each player's team in the game. */
-    public ArrayList<Player> teams = new ArrayList<Player>();
+    /** The configuration for each player in the game. */
+    public ArrayList<Player> plist = new ArrayList<Player>();
 
     /** Additional criteria to be met in addition to winning the game (used in bounty games). */
     public ArrayList<Criterion> criteria = new ArrayList<Criterion>();
@@ -209,11 +220,11 @@ public class BangConfig extends GameConfig
      */
     public void init (int players, int teamSize)
     {
-        teams.clear();
+        plist.clear();
         for (int ii = 0; ii < players; ii++) {
             Player player = new Player();
-            player.team = new String[teamSize];
-            teams.add(player);
+            player.units = new String[teamSize];
+            plist.add(player);
         }
     }
 
@@ -222,7 +233,7 @@ public class BangConfig extends GameConfig
      */
     public int getTeamSize (int pidx)
     {
-        return teams.get(pidx).team.length;
+        return plist.get(pidx).units.length;
     }
 
     /**
@@ -236,22 +247,22 @@ public class BangConfig extends GameConfig
     /**
      * Adds a player to this game config.
      */
-    public void addPlayer (String bigShot, String[] team)
+    public void addPlayer (String bigShot, String[] units)
     {
-        addPlayer(bigShot, team, null, -1);
+        addPlayer(bigShot, units, null, -1);
     }
 
     /**
      * Adds a player to this game config.
      */
-    public void addPlayer (String bigShot, String[] team, String[] cards, int startSpot)
+    public void addPlayer (String bigShot, String[] units, String[] cards, int startSpot)
     {
         Player player = new Player();
         player.bigShot = bigShot;
-        player.team = team;
+        player.units = units;
         player.cards = cards;
         player.startSpot = startSpot;
-        teams.add(player);
+        plist.add(player);
     }
 
     /**
@@ -293,7 +304,7 @@ public class BangConfig extends GameConfig
         out.write(minWeight, "minWeight", 0);
         out.write(respawnUnits, "respawnUnits", true);
         out.writeSavableArrayList(rounds, "rounds", DEF_ROUNDS);
-        out.writeSavableArrayList(teams, "teams", DEF_TEAMS);
+        out.writeSavableArrayList(plist, "teams", DEF_PLAYERS); // old name to avoid breakage
         out.writeSavableArrayList(criteria, "criteria", DEF_CRIT);
     }
 
@@ -308,7 +319,7 @@ public class BangConfig extends GameConfig
         minWeight = in.readInt("minWeight", 0);
         respawnUnits = in.readBoolean("respawnUnits", true);
         rounds = in.readSavableArrayList("rounds", DEF_ROUNDS);
-        teams = in.readSavableArrayList("teams", DEF_TEAMS);
+        plist = in.readSavableArrayList("teams", DEF_PLAYERS); // old name to avoid breakage
         criteria = in.readSavableArrayList("criteria", DEF_CRIT);
         if (criteria == DEF_CRIT) { // legacy fixy
             criteria = in.readSavableArrayList("criterion", DEF_CRIT);
@@ -353,11 +364,11 @@ public class BangConfig extends GameConfig
         }
         BangConfig oconfig = (BangConfig)other;
         return type == oconfig.type && duration == oconfig.duration && speed == oconfig.speed &&
-            rounds.equals(oconfig.rounds) && teams.equals(oconfig.teams) &&
+            rounds.equals(oconfig.rounds) && plist.equals(oconfig.plist) &&
             criteria.equals(oconfig.criteria);
     }
 
     protected static final ArrayList<Round> DEF_ROUNDS = new ArrayList<Round>();
-    protected static final ArrayList<Player> DEF_TEAMS = new ArrayList<Player>();
+    protected static final ArrayList<Player> DEF_PLAYERS = new ArrayList<Player>();
     protected static final ArrayList<Criterion> DEF_CRIT = new ArrayList<Criterion>();
 }

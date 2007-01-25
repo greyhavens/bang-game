@@ -43,7 +43,7 @@ public class PreGameBountyView extends SteelWindow
     {
         switch (quote.speaker) {
         case 0:
-            return new BigShotPortrait(ctx, config.teams.get(0).bigShot);
+            return new BigShotPortrait(ctx, config.plist.get(0).bigShot);
 
         default:
             OutlawView oview = new OutlawView(ctx, 1f);

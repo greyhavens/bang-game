@@ -366,7 +366,7 @@ public class ParlorManager extends PlaceManager
 
         // we can use these values directly as we sanity checked them earlier
         config.init(_parobj.game.players + _parobj.game.tinCans, _parobj.game.teamSize);
-        config.players = new Handle[config.teams.size()];
+        config.players = new Handle[config.plist.size()];
         config.duration = _parobj.game.duration;
         config.speed = _parobj.game.speed;
         config.rated = false; // back parlor games are never rated

@@ -163,8 +163,8 @@ public class OfficeManager extends PlaceManager
         // configure our AIs and the player names array
         gconfig.type = BangConfig.Type.BOUNTY;
         gconfig.rated = false;
-        gconfig.players = new Name[gconfig.teams.size()];
-        gconfig.ais = new BangAI[gconfig.teams.size()];
+        gconfig.players = new Name[gconfig.plist.size()];
+        gconfig.ais = new BangAI[gconfig.plist.size()];
         gconfig.players[0] = player.getVisibleName();
         for (int ii = 1; ii < gconfig.players.length; ii++) {
             BangAI ai = BangAI.createAI(1, 50, names); // TODO: get skill level from BangConfig

@@ -22,6 +22,7 @@ import com.threerings.bang.game.data.piece.Teleporter;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
 
+import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.server.ai.AILogic;
 import com.threerings.bang.game.util.PointSet;
@@ -37,8 +38,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     public enum WaveAction { CONTINUE, END_WAVE, END_GAME };
 
     /**
-     * Informs the delegate that the wave has started so that it can start
-     * sending in the robots.
+     * Informs the delegate that the wave has started so that it can start sending in the robots.
      */
     public void waveStarted (BangObject bangobj, int wave, int difficulty,
                              ArrayList<TreeBed> trees, int treesGrown)
@@ -48,27 +48,24 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         float sratio = BASE_SUPER_RATIO + SUPER_RATIO_INCREMENT * _difficulty;
 
         int units = (_bangmgr.getTeamSize() + 1) * _bangmgr.getPlayerCount();
-        int rcount = Math.min(
-            MAX_ROBOTS, (int)Math.round(units * ratio)); // total bots
+        int rcount = Math.min(MAX_ROBOTS, (int)Math.round(units * ratio)); // total bots
         int scount = (int)Math.round(rcount * sratio); // super bots
         int ncount = rcount - scount; // non-super bots
 
         _target[LoggingRobot.LOCUST] = ncount / 2;
         _target[LoggingRobot.NORMAL] = ncount - _target[LoggingRobot.LOCUST];
         _target[LoggingRobot.SUPER_LOCUST] = scount / 2;
-        _target[LoggingRobot.SUPER] =
-            scount - _target[LoggingRobot.SUPER_LOCUST];
+        _target[LoggingRobot.SUPER] = scount - _target[LoggingRobot.SUPER_LOCUST];
 
         // determine the rate at which robots respawn
-        _rate = Math.min(BASE_RESPAWN_RATE +
-                         RESPAWN_RATE_INCREMENT * _difficulty, 1f);
+        _rate = Math.min(BASE_RESPAWN_RATE + RESPAWN_RATE_INCREMENT * _difficulty, 1f);
 
         // keep these around for later
         _wave = wave;
         _difficulty = difficulty;
         _ctrees = trees;
         _treesGrown = treesGrown;
-        
+
         // spawn the next wave
         for (int ii = 0; ii < LoggingRobot.UNIT_TYPES.length; ii++) {
             _living[ii] = 0;
@@ -77,8 +74,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     }
 
     /**
-     * Called by the logging robot to determine whether the current wave should
-     * be ended.
+     * Called by the logging robot to determine whether the current wave should be ended.
      */
     public WaveAction isWaveOver (BangObject bangobj, short tick)
     {
@@ -132,7 +128,9 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     public void roundWillStart (BangObject bangobj)
     {
         _logic = new LoggingRobotLogic();
-        _logic.init(_bangmgr, -1);
+        BangAI ai = new BangAI();
+        ai.skill = 50; // TODO: adjust based on round difficulty?
+        _logic.init(_bangmgr, -1, ai);
     }
 
     @Override // documentation inherited
@@ -153,8 +151,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
                 continue;
             }
 
-            // double the rate because we want that to be the average number of
-            // bots per tick
+            // double the rate because we want that to be the average number of bots per tick
             _accum[ii] += (FastMath.nextRandomFloat() * _rate * delta * 2);
             int nbots = (int)_accum[ii];
             if (nbots > 0) {
@@ -172,8 +169,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
             LoggingRobot bot = (LoggingRobot)piece;
             _living[bot.getRobotType()]--;
             if (bot.isSuper() && shooter != -1) {
-                bangobj.stats[shooter].incrementStat(
-                    Stat.Type.HARD_ROBOT_KILLS, 1);
+                bangobj.stats[shooter].incrementStat(Stat.Type.HARD_ROBOT_KILLS, 1);
             }
         }
     }
@@ -198,8 +194,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     }
 
     /**
-     * Finds and returns places to spawn logging robots based on the current
-     * aggression.
+     * Finds and returns places to spawn logging robots based on the current aggression.
      */
     protected Point[] findRobotSpawnPoints (BangObject bangobj, int count)
     {
@@ -209,8 +204,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         float aggression = computeAggression(bangobj);
         float absAggr = Math.abs(aggression);
         for (int ii = 0; ii < weights.length; ii++) {
-            weights[ii] = weightSpawnPoint(
-                bangobj, _robotSpots.get(ii), absAggr);
+            weights[ii] = weightSpawnPoint(bangobj, _robotSpots.get(ii), absAggr);
             wmax = Math.max(weights[ii], wmax);
         }
         if (aggression > 0f) { // invert weights for positive aggression
@@ -233,8 +227,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
             if (points[ii] == null) {
                 weights[idx] = -1;
             } else {
-                bangobj.board.shadowPieceTemp(
-                    dummy, points[ii].x, points[ii].y);
+                bangobj.board.shadowPieceTemp(dummy, points[ii].x, points[ii].y);
                 ii++;
             }
         }
@@ -242,8 +235,8 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     }
 
     /**
-     * Weights a spawn point according to the absolute value of the current
-     * aggression and the point's distance from living trees.
+     * Weights a spawn point according to the absolute value of the current aggression and the
+     * point's distance from living trees.
      */
     protected int weightSpawnPoint (
         BangObject bangobj, Marker marker, float absAggr)
@@ -253,8 +246,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
             if (!tree.isAlive() || tree.growth == 0) {
                 continue;
             }
-            int dist = tree.getDistance(marker),
-                sdist = (int)Math.ceil(dist * absAggr),
+            int dist = tree.getDistance(marker), sdist = (int)Math.ceil(dist * absAggr),
                 sgrowth = (int)Math.ceil(tree.growth * absAggr);
             total += (sdist * sgrowth);
         }
@@ -294,8 +286,7 @@ public class LoggingRobotDelegate extends ScenarioDelegate
         }
 
         @Override // documentation inherited
-        protected void moveUnit (
-            Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+        protected void moveUnit (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
         {
             // find closest living tree, closest unit, closest teleporter
             TreeBed ctree = null;
@@ -305,57 +296,53 @@ public class LoggingRobotDelegate extends ScenarioDelegate
                 if (piece instanceof TreeBed) {
                     TreeBed tree = (TreeBed)piece;
                     if (tree.growth > 0 && tree.isAlive() &&
-                        (ctree == null || unit.getDistance(tree) <
-                            unit.getDistance(ctree))) {
+                        (ctree == null || unit.getDistance(tree) < unit.getDistance(ctree))) {
                         ctree = tree;
                     }
+
                 } else if (piece instanceof Unit &&
-                    unit.validTarget(_bangobj, piece, false) &&
-                        (cunit == null || unit.getDistance(piece) <
-                            unit.getDistance(cunit))) {
+                           unit.validTarget(_bangobj, piece, false) &&
+                           (cunit == null || unit.getDistance(piece) < unit.getDistance(cunit))) {
                     cunit = (Unit)piece;
 
                 } else if (piece instanceof Teleporter &&
-                    (tporter == null || unit.getDistance(piece) <
-                        unit.getDistance(tporter))) {
+                           (tporter == null ||
+                            unit.getDistance(piece) < unit.getDistance(tporter))) {
                     tporter = (Teleporter)piece;
                 }
             }
 
             // if we're next to a living tree already, just shoot something
             if (ctree != null && unit.getDistance(ctree) == 1) {
-                Piece target = getBestTarget(pieces, unit, unit.x, unit.y,
-                    _teval);
+                Piece target = getBestTarget(pieces, unit, unit.x, unit.y, _teval);
                 if (target != null) {
                     executeOrder(unit, unit.x, unit.y, target);
                 }
 
             // if there's a living tree, head towards it
-            } else if (ctree != null && moveUnit(pieces, unit, moves, ctree.x,
-                ctree.y, 1, _teval)) {
+            } else if (ctree != null &&
+                       moveUnit(pieces, unit, moves, ctree.x, ctree.y, 1, _teval)) {
                 return;
 
             // otherwise, head towards the closet unit
-            } else if (cunit != null && moveUnit(pieces, unit, moves, cunit.x,
-                cunit.y, -1, _teval)) {
+            } else if (cunit != null &&
+                       moveUnit(pieces, unit, moves, cunit.x, cunit.y, -1, _teval)) {
                 return;
 
             // or the closest teleporter
-            } else if (tporter != null && moveUnit(pieces, unit, moves,
-                tporter.x, tporter.y, 0, _teval)) {
+            } else if (tporter != null &&
+                       moveUnit(pieces, unit, moves, tporter.x, tporter.y, 0, _teval)) {
                 return;
             }
         }
 
-        /** Ranks potential targets by the amount of damage the unit will do,
-         * and the amount of damage the target has already taken.  Trees are
-         * better than anything. */
+        /** Ranks potential targets by the amount of damage the unit will do, and the amount of
+         * damage the target has already taken.  Trees are better than anything. */
         protected TargetEvaluator _teval = new TargetEvaluator() {
-            public int getWeight (BangObject bangobj, Unit unit, Piece target,
-                    int dist, PointSet preferredMoves) {
+            public int getWeight (BangObject bangobj, Unit unit, Piece target, int dist,
+                                  PointSet preferredMoves) {
                 return (target instanceof TreeBed ? 100000 : 0) +
-                    unit.computeScaledDamage(bangobj, target, 1f) * 100 +
-                    target.damage;
+                    unit.computeScaledDamage(bangobj, target, 1f) * 100 + target.damage;
             }
         };
     }

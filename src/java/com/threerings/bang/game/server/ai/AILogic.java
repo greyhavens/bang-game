@@ -14,6 +14,7 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.bang.data.UnitConfig;
 
+import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
@@ -28,73 +29,116 @@ public abstract class AILogic extends PieceLogic
     /**
      * Initializes the AI logic before the start of a round.
      */
-    public void init (BangManager bangmgr, int pidx)
+    public void init (BangManager bangmgr, int pidx, BangAI ai)
     {
         _bangmgr = bangmgr;
         _bangobj = (BangObject)_bangmgr.getPlaceObject();
         _pidx = pidx;
+        _ai = ai;
     }
-    
+
     /**
      * Returns the type of Big Shot desired by the AI.
      */
     public abstract String getBigShotType ();
-    
+
     /**
-     * Returns the types of cards desired by the AI (or <code>null</code> for
-     * no cards, which is what the default implementation returns).
+     * Returns the types of cards desired by the AI (or <code>null</code> for no cards, which is
+     * what the default implementation returns).
      */
     public String[] getCardTypes ()
     {
         return null;
     }
-    
+
     /**
      * Returns the types of units that the AI wants for its team.
      *
      * @param count the number of units allowed
      */
     public abstract String[] getUnitTypes (int count);
-    
+
     /**
-     * Called on every tick to let the AI move its pieces.  Default
-     * implementation calls {@link #moveUnit} for each unit owned by the
-     * AI that is ready to move.
+     * Called on every tick to let the AI move its pieces.  Default implementation calls {@link
+     * #moveUnit} for each unit owned by the AI that is ready to move.
      *
-     * @param pieces the array of pieces on the board
-     * @param tick the current tick
+     * @param pieces the array of pieces on the board.
+     * @param tick the current tick.
      */
     public void tick (Piece[] pieces, short tick)
     {
         for (int ii = 0; ii < pieces.length; ii++) {
             if (pieces[ii] instanceof Unit && pieces[ii].owner == _pidx &&
-                pieces[ii].isAlive() &&
-                pieces[ii].ticksUntilMovable(tick) == 0) {
+                pieces[ii].isAlive() && pieces[ii].ticksUntilMovable(tick) == 0) {
                 Unit unit = (Unit)pieces[ii];
                 _moves.clear();
                 _attacks.clear();
                 unit.computeMoves(_bangobj.board, _moves, _attacks);
-                moveUnit(pieces, unit, _moves, _attacks);
+
+                // if our skill level is below 50 we have a linearly increasing probabilty of not
+                // doing what the scenario AI wants but rather doing something generic
+                if (_ai.skill < 50 && RandomUtil.getInt(50) > _ai.skill) {
+                    moveUnitDegraded(pieces, unit, _moves, _attacks);
+                } else {
+                    moveUnit(pieces, unit, _moves, _attacks);
+                }
             }
         }
     }
-    
+
     /**
      * Moves an owned, ticked-up unit.
      *
-     * @param pieces the array of pieces on the board
-     * @param unit the unit to move
-     * @param moves the places to which the unit can move
-     * @param attacks the places the unit can attack
+     * @param pieces the array of pieces on the board.
+     * @param unit the unit to move.
+     * @param moves the places to which the unit can move.
+     * @param attacks the places the unit can attack.
      */
-    protected void moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    protected void moveUnit (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
     {
     }
-    
+
     /**
-     * Returns a number of unique unit types by evaluating the provided array
-     * of configurations and making weighted random selections.
+     * Makes a scenario agnostic, variably non-optimal move.
+     *
+     * @param pieces the array of pieces on the board.
+     * @param unit the unit to move.
+     * @param moves the places to which the unit can move.
+     * @param attacks the places the unit can attack.
+     */
+    protected void moveUnitDegraded (Piece[] pieces, Unit unit, PointSet moves, PointSet attacks)
+    {
+        // unless we're really stupid, we'll generally attack someone if we can
+        int rando = RandomUtil.getInt(100);
+        if (rando < 3*_ai.skill/2) {
+            Piece target = null;
+            for (int tt = 0; tt < pieces.length; tt++) {
+                Piece p = pieces[tt];
+                if (p instanceof Unit && attacks.contains(p.x, p.y) &&
+                    unit.validTarget(_bangobj, p, false)) {
+                    target = p;
+                    break;
+                }
+            }
+            if (target != null && executeOrder(unit, Short.MAX_VALUE, 0, target)) {
+                return;
+            }
+        }
+
+        if (moves.size() == 0) {
+            return;
+        }
+
+        // rarely, we'll neither move or attack
+        if (rando < _ai.skill*4) {
+            int midx = RandomUtil.getInt(moves.size());
+            executeOrder(unit, moves.getX(midx), moves.getY(midx), null);
+        }
+    }
+
+    /**
+     * Returns a number of unique unit types by evaluating the provided array of configurations and
+     * making weighted random selections.
      */
     protected String[] getWeightedUnitTypes (
         UnitConfig[] configs, UnitConfigEvaluator evaluator, int count)
@@ -104,7 +148,7 @@ public abstract class AILogic extends PieceLogic
         for (int ii = 0; ii < configs.length; ii++) {
             weights[ii] = evaluator.getWeight(configs[ii]);
         }
-        
+
         // use the weights to select the desired number of types
         String[] types = new String[count];
         for (int ii = 0; ii < count; ii++) {
@@ -116,15 +160,13 @@ public abstract class AILogic extends PieceLogic
     }
 
     /**
-     * Attempts to move the unit towards a reachable objective and fire off
-     * a shot at the best target.
+     * Attempts to move the unit towards a reachable objective and fire off a shot at the best
+     * target.
      *
-     * @return true if we successfully moved, false if there were no suitable
-     * objectives
+     * @return true if we successfully moved, false if there were no suitable objectives.
      */
-    protected boolean moveUnit (
-        Piece[] pieces, final Unit unit, PointSet moves,
-        final ObjectiveEvaluator oeval, TargetEvaluator teval)
+    protected boolean moveUnit (Piece[] pieces, final Unit unit, PointSet moves,
+                                final ObjectiveEvaluator oeval, TargetEvaluator teval)
     {
         // gather the objectives of interest
         ArrayList<Objective> objectives = new ArrayList<Objective>();
@@ -134,41 +176,38 @@ public abstract class AILogic extends PieceLogic
                 objectives.add(new Objective(piece, weight));
             }
         }
-        
+
         // sort them by decreasing weight
         QuickSort.rsort(objectives);
-        
+
         // run through them until we find one we can actually reach
         for (Objective obj : objectives) {
             if (moveUnit(pieces, unit, moves, obj.piece.x, obj.piece.y,
-                    oeval.getDistance(unit, obj.piece), teval)) {
+                         oeval.getDistance(unit, obj.piece), teval)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     /**
-     * Attempts to move the unit towards the provided destination and fire
-     * off a shot at the best target.
+     * Attempts to move the unit towards the provided destination and fire off a shot at the best
+     * target.
      *
-     * @param tdist the desired distance to the target: 0 to land on the
-     * target, 1 to land next to the target, or, as a special case, -1 to
-     * land within the unit's firing range
-     * @return true if we successfully moved towards the destination,
-     * false if we couldn't find a path
+     * @param tdist the desired distance to the target: 0 to land on the target, 1 to land next to
+     * the target, or, as a special case, -1 to land within the unit's firing range.
+     * @return true if we successfully moved towards the destination, false if we couldn't find a
+     * path.
      */
-    protected boolean moveUnit (
-        Piece[] pieces, Unit unit, PointSet moves, int dx, int dy, int tdist,
-        TargetEvaluator evaluator)
+    protected boolean moveUnit (Piece[] pieces, Unit unit, PointSet moves, int dx, int dy,
+                                int tdist, TargetEvaluator evaluator)
     {
         Point dest = null;
         Piece target = null;
         // let the units with 0 fire distnace handle their own attack movement
         if (tdist == -1 && unit.getMaxFireDistance() == 0) {
             target = getBestTarget(pieces, unit, dx, dy, evaluator);
-            dest = unit.computeShotLocation(_bangobj.board, target, moves,
-                    false, new PointSet());
+            dest = unit.computeShotLocation(_bangobj.board, target, moves, false, new PointSet());
         } else {
             dest = getClosestPoint(unit, moves, dx, dy, tdist);
         }
@@ -183,11 +222,11 @@ public abstract class AILogic extends PieceLogic
     }
 
     /**
-     * Finds and returns the best target that the unit can reach according to
-     * the provided evaluator.
+     * Finds and returns the best target that the unit can reach according to the provided
+     * evaluator.
      */
     protected Piece getBestTarget (Piece[] pieces, Unit unit, PointSet attacks,
-            PointSet preferredMoves, TargetEvaluator evaluator)
+                                   PointSet preferredMoves, TargetEvaluator evaluator)
     {
         Piece best = null;
         int bweight = -1;
@@ -196,8 +235,8 @@ public abstract class AILogic extends PieceLogic
                 !attacks.contains(pieces[ii].x, pieces[ii].y)) {
                 continue;
             }
-            int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], 
-                    pieces[ii].getDistance(unit.x, unit.y), preferredMoves);
+            int dist = pieces[ii].getDistance(unit.x, unit.y);
+            int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], dist, preferredMoves);
             if (tweight > bweight) {
                 best = pieces[ii];
                 bweight = tweight;
@@ -207,8 +246,8 @@ public abstract class AILogic extends PieceLogic
     }
 
     /**
-     * Finds and returns the best target that the unit can reach after moving
-     * to the given destination, according to the provided evaluator.
+     * Finds and returns the best target that the unit can reach after moving to the given
+     * destination, according to the provided evaluator.
      */
     protected Piece getBestTarget (
         Piece[] pieces, Unit unit, int dx, int dy, TargetEvaluator evaluator)
@@ -220,12 +259,10 @@ public abstract class AILogic extends PieceLogic
                 continue;
             }
             int dist = pieces[ii].getDistance(dx, dy);
-            if (dist < unit.getMinFireDistance() ||
-                dist > unit.getMaxFireDistance()) {
+            if (dist < unit.getMinFireDistance() || dist > unit.getMaxFireDistance()) {
                 continue;
             }
-            int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], dist,
-                    EMPTY_POINT_SET);
+            int tweight = evaluator.getWeight(_bangobj, unit, pieces[ii], dist, EMPTY_POINT_SET);
             if (tweight > bweight) {
                 best = pieces[ii];
                 bweight = tweight;
@@ -235,30 +272,26 @@ public abstract class AILogic extends PieceLogic
     }
 
     /**
-     * Returns the best target that can be reached with the supplied
-     * destination moves and evaluator.
+     * Returns the best target that can be reached with the supplied destination moves and
+     * evaluator.
      *
-     * @param dest will be set to the location to move to for the target
-     * if one is found
+     * @param dest will be set to the location to move to for the target if one is found.
      */
-    protected Piece getBestTargetInMoves (
-            Piece[] pieces, Unit unit, PointSet attacks, PointSet moves,
-            Point dest, TargetEvaluator evaluator)
+    protected Piece getBestTargetInMoves (Piece[] pieces, Unit unit, PointSet attacks,
+                                          PointSet moves, Point dest, TargetEvaluator evaluator)
     {
         Piece best = null;
         int bweight = -1;
         for (Piece p : pieces) {
-            if (!unit.validTarget(_bangobj, p, false) ||
-                !attacks.contains(p.x, p.y)) {
+            if (!unit.validTarget(_bangobj, p, false) || !attacks.contains(p.x, p.y)) {
                continue;
             }
-            Point move = unit.computeShotLocation(
-                        _bangobj.board, p, moves, true);
+            Point move = unit.computeShotLocation(_bangobj.board, p, moves, true);
             if (move == null) {
                 continue;
             }
-            int tweight = evaluator.getWeight(_bangobj, unit, p,
-                    p.getDistance(unit.x, unit.y), EMPTY_POINT_SET);
+            int dist = p.getDistance(unit.x, unit.y);
+            int tweight = evaluator.getWeight(_bangobj, unit, p, dist, EMPTY_POINT_SET);
             if (tweight > bweight) {
                 best = p;
                 bweight = tweight;
@@ -269,8 +302,7 @@ public abstract class AILogic extends PieceLogic
     }
 
     /**
-     * Computes and returns the average location of all of our owned and
-     * living pieces.
+     * Computes and returns the average location of all of our owned and living pieces.
      */
     protected Point getControlCenter (Piece[] pieces)
     {
@@ -287,55 +319,55 @@ public abstract class AILogic extends PieceLogic
         center.y /= owned;
         return center;
     }
-    
+
     /** Used to evaluate unit configs for weighted random selections. */
     protected interface UnitConfigEvaluator
     {
         /** Returns the weight of the described unit. */
         public int getWeight (UnitConfig config);
     }
-    
+
     /** Used to rank potential objectives. */
     protected interface ObjectiveEvaluator
     {
-        /** Returns the weight of the specified objective for the given
-         * unit. */
+        /** Returns the weight of the specified objective for the given unit. */
         public int getWeight (Unit unit, Piece obj);
-        
-        /** Returns the desired distance from the objective (0 for on it,
-         * 1 for next to it, -1 for in target range). */
+
+        /** Returns the desired distance from the objective (0 for on it, 1 for next to it, -1 for
+         * in target range). */
         public int getDistance (Unit unit, Piece obj);
     }
-    
+
     /** Used to rank potential targets. */
     protected interface TargetEvaluator
     {
         /** Returns the weight of the specified target for the given unit. */
-        public int getWeight (BangObject bangobj, Unit unit, Piece target, 
-                int dist, PointSet preferredMoves);
+        public int getWeight (BangObject bangobj, Unit unit, Piece target, int dist,
+                              PointSet preferredMoves);
     }
-    
+
     /** Holds a piece objective and its weight. */
     protected static class Objective
         implements Comparable<Objective>
     {
         public Piece piece;
         public int weight;
-        
-        public Objective (Piece piece, int weight)
-        {
+
+        public Objective (Piece piece, int weight) {
             this.piece = piece;
             this.weight = weight;
         }
-        
-        public int compareTo (Objective obj)
-        {
+
+        public int compareTo (Objective obj) {
             return this.weight - obj.weight;
         }
     }
-    
+
     /** The index of the AI player. */
     protected int _pidx;
-    
+
+    /** Our AI configuration. */
+    protected BangAI _ai;
+
     protected static final PointSet EMPTY_POINT_SET = new PointSet();
 }

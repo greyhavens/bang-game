@@ -57,7 +57,7 @@ public class TableItem extends BContainer
         add(new BLabel(""));
 
         // we have one button for every "seat" at the table
-        int bcount = _tconfig.teams.size();
+        int bcount = _tconfig.plist.size();
 
         // create blank buttons for now and then we'll update everything
         // with the current state when we're done

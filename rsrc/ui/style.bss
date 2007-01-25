@@ -571,6 +571,12 @@ config_help_label {
   color: #4C2602;
 }
 
+table_header {
+  font: "Dom Casual" plain 14;
+  color: #FFFFFF;
+  text-align: center;
+}
+
 table_label {
   font: "Dom Casual" plain 19;
   color: #4C2804;
@@ -1993,6 +1999,17 @@ bounty_detail_descrip {
   font: "Dom Casual Thin" plain 16;
   color: #6c421b;
   vertical-align: top;
+}
+
+bge_table_tdata {
+  parent: "label";
+  vertical-align: "top";
+  font: "Dom Casual" plain 14;
+}
+
+bge_table_rdata {
+  parent: "label";
+  text-align: right;
 }
 
 //
