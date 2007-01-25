@@ -18,6 +18,7 @@ import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.QuickSort;
 
 import com.threerings.media.image.ColorPository.ColorRecord;
@@ -88,6 +89,7 @@ public class OutfitDialog extends BDecoratedWindow
         ((GroupLayout)acont.getLayoutManager()).setGap(-2);
         acont.setStyleClass("outfit_avatar_left");
         acont.add(_favatar = new AvatarView(ctx, 4, true, false));
+        _favatar.setAvatar(_faspects);
         acont.add(new BLabel(_msgs.get("m.cowgirls"), "outfit_scroll"));
         ltcont.add(acont);
         
@@ -117,6 +119,7 @@ public class OutfitDialog extends BDecoratedWindow
         ((GroupLayout)acont.getLayoutManager()).setGap(-2);
         acont.setStyleClass("outfit_avatar_right");
         acont.add(_mavatar = new AvatarView(ctx, 4, true, false));
+        _mavatar.setAvatar(_maspects);
         acont.add(new BLabel(_msgs.get("m.cowboys"), "outfit_scroll"));
         rtcont.add(acont);
         
@@ -143,6 +146,12 @@ public class OutfitDialog extends BDecoratedWindow
         _buy.setEnabled(!_oarts.isEmpty());
         bcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
         add(bcont, GroupLayout.FIXED);
+        
+        // pick random aspects for the avatars and update them
+        _faspects = _ctx.getAvatarLogic().pickRandomAspects(false, _ctx.getUserObject());
+        updateAvatar(false);
+        _maspects = _ctx.getAvatarLogic().pickRandomAspects(true, _ctx.getUserObject());
+        updateAvatar(true);
     }
     
     // documentation inherited from interface ActionListener
@@ -190,7 +199,9 @@ public class OutfitDialog extends BDecoratedWindow
         if (selected) {
             ItemIcon oicon = _oicons.get(key);
             if (oicon != null) {
+                _preventAvatarUpdate = true;
                 oicon.setSelected(false);
+                _preventAvatarUpdate = false;
             }
             _oicons.put(key, (ItemIcon)icon);
             _oarts.put(key, new OutfitArticle(
@@ -198,6 +209,9 @@ public class OutfitDialog extends BDecoratedWindow
         } else {
             _oicons.remove(key);
             _oarts.remove(key);
+        }
+        if (!_preventAvatarUpdate) {
+            updateAvatar(key.male);
         }
     }
     
@@ -297,6 +311,23 @@ public class OutfitDialog extends BDecoratedWindow
     }
     
     /**
+     * Updates the specified avatar with the current outfit selection.
+     */
+    protected void updateAvatar (boolean male)
+    {
+        int[] avatar = (male ? _maspects : _faspects);
+        AvatarLogic alogic = _ctx.getAvatarLogic();
+        ArticleCatalog artcat = alogic.getArticleCatalog();
+        for (OutfitArticle oart : _oarts.values()) {
+            if (isMaleArticle(oart.article) == male) {
+                avatar = ArrayUtil.concatenate(avatar,
+                    alogic.getComponentIds(artcat.getArticle(oart.article), oart.zations));
+            }
+        }
+        (male ? _mavatar : _favatar).setAvatar(avatar);
+    }
+    
+    /**
      * Checks whether the identified article is for men.
      */
     protected static boolean isMaleArticle (String name)
@@ -350,8 +381,12 @@ public class OutfitDialog extends BDecoratedWindow
     protected HashMap<OutfitKey, OutfitArticle> _oarts = new HashMap<OutfitKey, OutfitArticle>();
     protected HashMap<OutfitKey, ItemIcon> _oicons = new HashMap<OutfitKey, ItemIcon>();
     
+    /** Used to prevent unwanted avatar updates when switching between articles. */
+    protected boolean _preventAvatarUpdate;
+    
     /** The male and female avatar views. */
     protected AvatarView _mavatar, _favatar;
+    protected int[] _maspects, _faspects;
     
     /** The left and right article tabs. */
     protected HackyTabs _ltabs, _rtabs;

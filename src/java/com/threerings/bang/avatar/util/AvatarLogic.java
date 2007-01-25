@@ -4,11 +4,13 @@
 package com.threerings.bang.avatar.util;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.IntListUtil;
+import com.samskivert.util.RandomUtil;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.media.image.ColorPository;
@@ -441,6 +443,48 @@ public class AvatarLogic
     }
 
     /**
+     * Picks a set of random aspects from the set available to the given player.
+     */
+    public int[] pickRandomAspects (boolean male, PlayerObject user)
+    {
+        String gender = male ? "male/" : "female/";
+        ArrayIntSet compids = new ArrayIntSet();
+        for (Aspect aspect : ASPECTS) {
+            if ((aspect.maleOnly && !male) || aspect.optional) {
+                continue;
+            }
+            ArrayList<AspectCatalog.Aspect> catasps = new ArrayList<AspectCatalog.Aspect>();
+            for (AspectCatalog.Aspect catasp : _aspcat.getAspects(gender + aspect.name)) {
+                if (catasp.scrip <= AvatarCodes.MAX_STARTER_COST && catasp.coins == 0 &&
+                    BangUtil.getTownIndex(catasp.townId) <= BangUtil.getTownIndex(user.townId)) {
+                    catasps.add(catasp);
+                }
+            }
+            AspectCatalog.Aspect catasp = RandomUtil.pickRandom(catasps);
+            for (String cclass : aspect.classes) {
+                try {
+                    CharacterComponent ccomp = _crepo.getComponent(gender + cclass, catasp.name);
+                    int compmask = ccomp.componentId;
+                    for (String color : ccomp.componentClass.colors) {
+                        compmask |= composeZation(color,
+                            ColorConstraints.pickRandomColor(_pository, color, user).colorId);
+                    }
+                    compids.add(compmask);
+                } catch (NoSuchComponentException nsce) {
+                    log.warning("Missing character component [class=" + gender + cclass +
+                        ", name=" + catasp.name + "].");
+                }
+            }
+        }
+        int[] aspects = new int[compids.size()+1];
+        int hair = ColorConstraints.pickRandomColor(_pository, HAIR, user).colorId,
+            skin = ColorConstraints.pickRandomColor(_pository, SKIN, user).colorId;
+        aspects[0] = (hair << 5) | skin;
+        compids.toIntArray(aspects, 1);
+        return aspects;
+    }
+    
+    /**
      * Creates an inventory article from an article catalog entry and a
      * colorization mask.
      */
@@ -552,7 +596,7 @@ public class AvatarLogic
      * combines them with the supplied colorizations and returns an array
      * suitable for using in an {@link Article} instance.
      */
-    protected int[] getComponentIds (
+    public int[] getComponentIds (
         ArticleCatalog.Article article, int zations)
     {
         int[] componentIds = new int[article.components.size()];
