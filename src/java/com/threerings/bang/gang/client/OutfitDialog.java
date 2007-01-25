@@ -89,7 +89,6 @@ public class OutfitDialog extends BDecoratedWindow
         ((GroupLayout)acont.getLayoutManager()).setGap(-2);
         acont.setStyleClass("outfit_avatar_left");
         acont.add(_favatar = new AvatarView(ctx, 4, true, false));
-        _favatar.setAvatar(_faspects);
         acont.add(new BLabel(_msgs.get("m.cowgirls"), "outfit_scroll"));
         ltcont.add(acont);
         
@@ -119,7 +118,6 @@ public class OutfitDialog extends BDecoratedWindow
         ((GroupLayout)acont.getLayoutManager()).setGap(-2);
         acont.setStyleClass("outfit_avatar_right");
         acont.add(_mavatar = new AvatarView(ctx, 4, true, false));
-        _mavatar.setAvatar(_maspects);
         acont.add(new BLabel(_msgs.get("m.cowboys"), "outfit_scroll"));
         rtcont.add(acont);
         
