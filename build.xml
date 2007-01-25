@@ -614,7 +614,7 @@
 
   <!-- cleans JME which doesn't fit into our standard scheme -->
   <target name="cleanjme">
-    <echo>Building in jme...</echo>
+    <echo>Cleaning in jme...</echo>
     <ant dir="${project.dir}/jme" target="clean" inheritAll="false"/>
   </target>
 
