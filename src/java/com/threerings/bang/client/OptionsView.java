@@ -395,16 +395,19 @@ public class OptionsView extends BDecoratedWindow
             return;
         }
 
-        _fullscreen.setText(_msgs.get("m.restart"));
+        _fullscreen.setText(_msgs.get("m.restart_required"));
         OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
                 if (button == OptionDialog.OK_BUTTON) {
-                    _ctx.getApp().stop();
+                    if (!_ctx.getBangClient().relaunchGetdown(_ctx, 500L)) {
+                        log.info("Failed to restart Bang, exiting");
+                        _ctx.getApp().stop();
+                    }
                 }
             }
         };
         OptionDialog.showConfirmDialog(_ctx, BangCodes.OPTS_MSGS,
-                "m.fullscreen_changed", "m.quit", "m.resume", rr);
+                "m.fullscreen_changed", "m.restart", "m.resume", rr);
     }
 
     protected boolean isCurrent (DisplayMode mode)
