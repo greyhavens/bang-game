@@ -129,7 +129,7 @@ public class BountyGameOverView extends SteelWindow
                                 BangUI.FeedbackSound.INVALID_ACTION);
                     schedule(POST_ANIM_DELAY);
                 } else {
-                     displayResults(true);
+                    displayResults(true);
                 }
             }
             protected int _rows = _stats.getComponentCount()/COLS, _row = 1;
