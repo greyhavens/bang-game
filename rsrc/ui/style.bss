@@ -2136,7 +2136,7 @@ bover_smallheader {
 }
 
 bover_crit {
-  font: "Dom Casual" plain 24;
+  font: "Dom Casual" plain 18;
   color: #FFFFFF;
   text-effect: shadow;
   effect-color: #715634;
@@ -2153,7 +2153,7 @@ bover_game {
 }
 
 bover_result {
-  font: "Dom Casual" plain 36;
+  font: "Dom Casual" plain 24;
   color: #FFFFFF;
   text-effect: shadow;
   effect-color: #715634;

@@ -39,7 +39,7 @@ public class InGameBountyView extends BWindow
 {
     public InGameBountyView (BangContext ctx, BangConfig config, BangObject bangobj)
     {
-        super(BangUI.stylesheet, new TableLayout(3, 5, 15));
+        super(BangUI.stylesheet, new TableLayout(3, 5, 5));
         setStyleClass("bounty_req_window");
         _ctx = ctx;
         _config = config;
@@ -131,7 +131,7 @@ public class InGameBountyView extends BWindow
             case NOT_MET:
             case MET:
                 msg = _ctx.xlate(GameCodes.GAME_MSGS, crit.getCurrentValue(_bangobj, _rank));
-                _current[idx].setText(msg);
+                _current[idx].setText("@=" + colors[2] + "(" + msg + ")");
                 _current[idx].setIcon(null);
                 break;
 
@@ -160,7 +160,7 @@ public class InGameBountyView extends BWindow
         new HashMap<Criterion.State,String[]>();
     static {
         COLORS.put(Criterion.State.NOT_MET, new String[] { "#FFFFFF", "#4C2602", "#FFFFFF" });
-        COLORS.put(Criterion.State.MET, new String[] { "#FFFFFF", "#4C2602", "#FFFFFF" });
+        COLORS.put(Criterion.State.MET, new String[] { "#FFFFFF", "#FFDB02", "#FFDB02" });
         COLORS.put(Criterion.State.COMPLETE, new String[] { "#FFDB02", "#FFDB02", "#FFDB02" });
         COLORS.put(Criterion.State.FAILED, new String[] { "#F02E24", "#F02E24", "#F02E24" });
     }

@@ -47,7 +47,6 @@ public class BountyGameOverView extends SteelWindow
     {
         super(ctx, "");
         _contents.setStyleClass("bover_contents");
-        setPreferredSize(770, -1);
 
         _ctx = ctx;
         _bctx = (ctx instanceof BangContext) ? (BangContext)ctx : null;
@@ -130,7 +129,7 @@ public class BountyGameOverView extends SteelWindow
                                 BangUI.FeedbackSound.INVALID_ACTION);
                     schedule(POST_ANIM_DELAY);
                 } else {
-                    displayResults(true);
+                     displayResults(true);
                 }
             }
             protected int _rows = _stats.getComponentCount()/COLS, _row = 1;

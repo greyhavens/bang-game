@@ -61,7 +61,7 @@ public class BountyGameOverViewTest extends TestApp
         String gameId = "no_trespassing";
         BangConfig gconfig = null;
         try {
-            String path = "bounties/frontier_town/town/dynamite_daltry/" + gameId + ".game";
+            String path = "bounties/frontier_town/most_wanted/dynamite_daltry/" + gameId + ".game";
             gconfig = (BangConfig)BinaryImporter.getInstance().load(
                 _ctx.getResourceManager().getResource(path));
             gconfig.type = BangConfig.Type.BOUNTY;
