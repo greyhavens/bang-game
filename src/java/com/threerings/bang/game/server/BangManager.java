@@ -1163,6 +1163,13 @@ public class BangManager extends GameManager
         // clear out the selected big shots array
         _bangobj.setBigShots(new Unit[getPlayerSlots()]);
 
+        // configure our team assignments
+        int[] teams = new int[_bangobj.players.length];
+        for (int pidx = 0; pidx < teams.length; pidx++) {
+            teams[pidx] = _bangobj.scenario.getTeam(pidx, _bconfig.plist.get(pidx).teamIdx);
+        }
+        _bangobj.setTeams(teams);
+
         // configure anyone who is not in the game room as resigned for this round
         for (int ii = 0; ii < getPlayerSlots(); ii++) {
             if (isAI(ii)) {
@@ -1388,13 +1395,6 @@ public class BangManager extends GameManager
             _bangobj.startTransaction();
 
             try {
-                // configure our team assignments
-                int[] teams = new int[_bangobj.players.length];
-                for (int pidx = 0; pidx < teams.length; pidx++) {
-                    teams[pidx] = _bangobj.scenario.getTeam(pidx, _bconfig.plist.get(pidx).teamIdx);
-                }
-                _bangobj.setTeams(teams);
-
                 // let the scenario know that we're about to start the round
                 _scenario.roundWillStart(_bangobj, _starts, _purchases);
 

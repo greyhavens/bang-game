@@ -102,7 +102,7 @@ public class BangConfig extends GameConfig
 
         /** If this player is an AI, the skill level to use for that AI. We configure this here and
          * then use it to populate {@link BangConfig#ais} when the game is being created. */
-        public byte skill = 50;
+        public int skill = 50;
 
         // from interface Savable
         public void write (JMEExporter ex) throws IOException {
@@ -112,7 +112,7 @@ public class BangConfig extends GameConfig
             out.write(cards, "cards", null);
             out.write(startSpot, "startSpot", -1);
             out.write(teamIdx, "teamIdx", -1);
-            out.write(skill, "skill", (byte)50);
+            out.write(skill, "skill", 50);
         }
 
         // from interface Savable
@@ -123,7 +123,7 @@ public class BangConfig extends GameConfig
             cards = in.readStringArray("cards", null);
             startSpot = in.readInt("startSpot", -1);
             teamIdx = in.readInt("teamIdx", -1);
-            skill = in.readByte("skill", (byte)50);
+            skill = in.readInt("skill", 50);
         }
 
         // from interface Savable

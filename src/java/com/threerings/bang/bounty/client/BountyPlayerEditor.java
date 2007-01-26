@@ -17,7 +17,6 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.util.StateSaver;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangConfig;
@@ -68,20 +67,16 @@ public class BountyPlayerEditor extends BDecoratedWindow
 
         addRow(cpanel, "m.bplayer_start_spot").add(_start = new BComboBox(START_SPOTS[oppcount-1]));
         _start.selectItem(Integer.valueOf(player.startSpot));
-        new StateSaver("bounty.starts." + pidx, _start);
 
         addRow(cpanel, "m.bplayer_team").add(_team = new BComboBox(TEAMS));
         _team.selectItem(Integer.valueOf(player.teamIdx));
-        new StateSaver("bounty.team." + pidx, _team);
 
         if (pidx > 0) {
             addRow(cpanel, "m.bplayer_skill").add(_skill = new BComboBox(SKILLS));
             _skill.selectItem(Integer.valueOf(player.skill));
-            new StateSaver("bounty.skill." + pidx, _skill);
         }
 
         addRow(cpanel, "m.bplayer_bigshot").add(_bigshot = new BComboBox(bsunits));
-        new StateSaver("bounty.bigshot." + pidx, _bigshot);
         _bigshot.selectValue(player.bigShot);
 
         cpanel.add(new BLabel(_msgs.get("m.bplayer_units")));
@@ -89,7 +84,6 @@ public class BountyPlayerEditor extends BDecoratedWindow
         _units = new BComboBox[MAX_BOUNTY_UNITS];
         for (int ii = 0; ii < _units.length; ii++) {
             tpanel.add(_units[ii] = new BComboBox(runits));
-            new StateSaver("bounty.units." + pidx + "." + ii, _units[ii]);
             if (_player.units != null && _player.units.length > ii) {
                 _units[ii].selectValue(_player.units[ii]);
             } else {
@@ -113,6 +107,10 @@ public class BountyPlayerEditor extends BDecoratedWindow
             _player.bigShot = (String)_bigshot.getSelectedValue();
             _player.units = getUnits();
             _player.startSpot = (Integer)_start.getSelectedItem();
+            _player.teamIdx = (Integer)_team.getSelectedItem();
+            if (_pidx > 0) {
+                _player.skill = (Integer)_skill.getSelectedItem();
+            }
             // tell the game editor we're dismissed and to update its display, then disappear
             _editor.playerUpdated(_pidx);
             _ctx.getBangClient().clearPopup(this, true);
@@ -156,10 +154,10 @@ public class BountyPlayerEditor extends BDecoratedWindow
 
     protected static final Integer[] TEAMS = { -1, 0, 1 };
 
-    protected static final Integer[] SKILLS = new Integer[19];
+    protected static final Integer[] SKILLS = new Integer[9];
     static {
         for (int ii = 0; ii < SKILLS.length; ii++) {
-            SKILLS[ii] = ii * 5 + 5;
+            SKILLS[ii] = (ii+1) * 10;
         }
     };
 
