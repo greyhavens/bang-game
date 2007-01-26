@@ -359,7 +359,7 @@ public class BoardView extends BComponent
 
         // start afresh
         _board = _bangobj.board;
-        _board.shadowPieces(_bangobj.getPropPieceIterator());
+        _board.init(_bangobj.teams, _bangobj.getPropPieceIterator());
         _bbounds = new Rectangle(0, 0, _board.getWidth(), _board.getHeight());
 
         // create a marquee if we've been configured to do so
