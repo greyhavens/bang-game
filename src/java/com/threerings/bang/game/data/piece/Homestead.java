@@ -67,7 +67,6 @@ public class Homestead extends Prop
         // clear out our ownership
         previousOwner = owner;
         owner = -1;
-        team = -1;
 
         // and reset our damage
         damage = 0;

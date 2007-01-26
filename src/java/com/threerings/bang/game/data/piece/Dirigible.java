@@ -25,18 +25,18 @@ public class Dirigible extends Unit
         ArrayList<Piece> otherPieces = new ArrayList<Piece>();
         for (Piece piece : bangobj.pieces) {
             if (piece.isAlive() && piece.isTargetable() &&
-                    getDistance(piece) <= getMoveDistance()) {
+                getDistance(piece) <= getMoveDistance()) {
                 if (piece.owner == shooter) {
                     shooterPieces.add(piece);
-                } else if (!piece.isSameTeam(this)) {
+                } else if (!piece.isSameTeam(bangobj, this)) {
                     otherPieces.add(piece);
                 }
             }
         }
+
         Random rand = new Random(bangobj.tick);
         if (!shooterPieces.isEmpty()) {
-            _deathTarget = shooterPieces.get(
-                    rand.nextInt(shooterPieces.size()));
+            _deathTarget = shooterPieces.get(rand.nextInt(shooterPieces.size()));
         } else if (!otherPieces.isEmpty()) {
             _deathTarget = otherPieces.get(rand.nextInt(otherPieces.size()));
         }
@@ -52,8 +52,7 @@ public class Dirigible extends Unit
     {
         CrashEffect effect = null;
         if (_deathTarget != null) {
-            effect = new CrashEffect(
-                    _deathTarget, _deathTarget.adjustDefend(this, 25), pieceId);
+            effect = new CrashEffect(_deathTarget, _deathTarget.adjustDefend(this, 25), pieceId);
         }
         return effect;
     }

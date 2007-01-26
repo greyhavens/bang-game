@@ -1155,20 +1155,20 @@ public class BangManager extends GameManager
             }
         }
 
-        // configure the game object and board with the pieces
-        _bangobj.props = props.toArray(new Prop[props.size()]);
-        _bangobj.pieces = new ModifiableDSet<Piece>(pieces.iterator());
-        _bangobj.board.shadowPieces(_bangobj.getPropPieceIterator());
-
-        // clear out the selected big shots array
-        _bangobj.setBigShots(new Unit[getPlayerSlots()]);
-
         // configure our team assignments
         int[] teams = new int[_bangobj.players.length];
         for (int pidx = 0; pidx < teams.length; pidx++) {
             teams[pidx] = _bangobj.scenario.getTeam(pidx, _bconfig.plist.get(pidx).teamIdx);
         }
         _bangobj.setTeams(teams);
+
+        // configure the game object and board with the pieces
+        _bangobj.props = props.toArray(new Prop[props.size()]);
+        _bangobj.pieces = new ModifiableDSet<Piece>(pieces.iterator());
+        _bangobj.board.init(teams, _bangobj.getPropPieceIterator());
+
+        // clear out the selected big shots array
+        _bangobj.setBigShots(new Unit[getPlayerSlots()]);
 
         // configure anyone who is not in the game room as resigned for this round
         for (int ii = 0; ii < getPlayerSlots(); ii++) {

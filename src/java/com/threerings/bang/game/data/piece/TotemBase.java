@@ -46,7 +46,7 @@ public class TotemBase extends Prop
             _pieces.get(idx).damage = damage;
         }
         setOwner(bangobj, owner);
-        PieceData data = new PieceData(type, owner, team);
+        PieceData data = new PieceData(type, owner);
         _pieces.add(data);
         damage = data.type.damage();
     }
@@ -69,11 +69,9 @@ public class TotemBase extends Prop
             pd = _pieces.get(idx);
             damage = pd.damage;
             owner = pd.owner;
-            team = pd.team;
         } else {
             damage = 0;
             owner = -1;
-            team = -1;
         }
     }
 
@@ -202,7 +200,7 @@ public class TotemBase extends Prop
 
     protected static class PieceData extends SimpleStreamableObject
     {
-        public int owner, team;
+        public int owner;
         public TotemBonus.Type type;
         public int damage;
 
@@ -210,11 +208,10 @@ public class TotemBase extends Prop
         {
         }
 
-        public PieceData (String type, int owner, int team)
+        public PieceData (String type, int owner)
         {
             this.type = TotemBonus.TOTEM_LOOKUP.get(type);
             this.owner = owner;
-            this.team = team;
         }
     }
 

@@ -33,9 +33,8 @@ public class TricksterRavenSprite extends UnitSprite
         if (walking) {
             Point lastp = null;
             for (Point p : path) {
-                if (!board.isWalkable(p.x, p.y, _piece.team) || 
-                        (lastp != null && 
-                            !board.canCross(lastp.x, lastp.y, p.x, p.y))) {
+                if (!board.isWalkable(p.x, p.y, _piece) ||
+                    (lastp != null && !board.canCross(lastp.x, lastp.y, p.x, p.y))) {
                     walking = false;
                     break;
                 }

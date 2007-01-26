@@ -74,7 +74,7 @@ public class LandGrabLogic extends AILogic
         int ovalue = 0;
         Homestead ostead = null;
         for (Homestead stead : _steads) {
-            if (stead.isSameTeam(unit) || (!isBShot && stead.owner < 0)) {
+            if (stead.isSameTeam(_bangobj, unit) || (!isBShot && stead.owner < 0)) {
                 continue;
             }
             int value = Math.max(20 - unit.getDistance(stead), 0) * 10 +

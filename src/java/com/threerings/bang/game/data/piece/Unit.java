@@ -147,18 +147,10 @@ public class Unit extends Piece
     {
         Unit dup = getUnit(unitType);
         dup.setOwner(bangobj, owner);
-        dup.team = team;
         dup.lastActed = lastActed;
         dup.damage = damage;
         dup.assignPieceId(bangobj);
         return dup;
-    }
-
-    @Override // documentation inherited
-    public void setOwner (BangObject bangobj, int owner)
-    {
-        super.setOwner(bangobj, owner);
-        this.team = (owner >= 0) ? bangobj.teams[owner] : -1;
     }
 
     @Override // documentation inherited
