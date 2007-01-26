@@ -666,7 +666,14 @@
     <antcall target="prepare-server-extra"/>
     <antcall target="prepare-webapps"/>
     <antcall target="prepare-pages"/>
-    <antcall target="prepare-installer-pages"/>
+    <antcall target="prepare-extra-pages">
+      <param name="page.type" value="installer"/>
+    </antcall>
+    <!--
+    <antcall target="prepare-extra-pages">
+      <param name="page.type" value="client"/>
+    </antcall>
+    -->
     <antcall target="prepare-docs"/>
   </target>
 
@@ -697,17 +704,17 @@
     </copy>
   </target>
 
-  <!-- prepare the generated installer bits to be packaged -->
-  <target name="prepare-installer-pages">
-    <var name="pkg.name" value="${app.name}-installer-pages"/>
+  <!-- prepare the generated installer or client bits to be packaged -->
+  <target name="prepare-extra-pages">
+    <var name="pkg.name" value="${app.name}-${page.type}-pages"/>
     <var name="destroot.pkg" value="${destroot}/${pkg.name}"/>
     <var name="pkg.base" value="${destroot.pkg}/${prefix.app}"/>
-    <echo level="info">Installing ${deploy.dir}/installer-pages/ into ${destroot.pkg}...</echo>
+    <echo level="info">Installing ${deploy.dir}/${page.type}-pages/ into ${destroot.pkg}...</echo>
     <antcall target="clean-dir">
       <param name="dir" value="${destroot.pkg}"/>
     </antcall>
     <copy todir="${pkg.base}/pages">
-      <fileset dir="${deploy.dir}/installer-pages" includes="**"/>
+      <fileset dir="${deploy.dir}/${page.type}-pages" includes="**"/>
     </copy>
   </target>
 
