@@ -1837,7 +1837,7 @@ outfit_dialog {
 }
 
 outfit_articles {
-  background: image "ui/window/border_ornate.png" framexy;
+  background: image "ui/window/border_ornate_darker.png" framexy;
   padding: 8;
 }
 
@@ -1863,6 +1863,23 @@ outfit_avatar_right {
 
 outfit_tabs_right {
   background: image "ui/hideout/outfit_tabs_right_back.png" centerxy;
+}
+
+outfit_item {
+  background: image "ui/hideout/outfit_article_background.png" centerxy;
+  text-align: center;
+}
+
+outfit_controls {
+   padding: 30 5 5 20;
+}
+
+outfit_total_price {
+  font: "Old Town" bold 27;
+  text-align: center;
+  text-effect: outline;
+  color: #FFFFFF;
+  effect-color: #6C5237;
 }
 
 play_view {
@@ -1909,6 +1926,7 @@ gang_coffers {
 coffer_label {
   font: "Dom Casual" plain 18;
   color: #5C361D;
+  text-align: center;
 }
 
 menu_play {

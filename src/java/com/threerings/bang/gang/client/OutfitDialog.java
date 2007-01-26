@@ -3,6 +3,7 @@
 
 package com.threerings.bang.gang.client;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -25,6 +26,7 @@ import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.ItemIcon;
+import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.HackyTabs;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
@@ -99,11 +101,11 @@ public class OutfitDialog extends BDecoratedWindow
                 }
             });
         _ltabs.setStyleClass("outfit_tabs_left");
-        
+        _ltabs.setDefaultTab(-1);
+         
         pcont.add(_palette = new IconPalette(this, 5, 3, ItemIcon.ICON_SIZE, Integer.MAX_VALUE));
         _palette.setPaintBackground(true);
         _palette.setShowNavigation(false);
-        populatePalette();
         
         BContainer rcont = new BContainer(new BorderLayout(-5, 0));
         pcont.add(rcont);
@@ -130,20 +132,47 @@ public class OutfitDialog extends BDecoratedWindow
         _rtabs.setStyleClass("outfit_tabs_right");
         _rtabs.setDefaultTab(-1);
         
+        add(new Spacer(1, -4), GroupLayout.FIXED);
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.RIGHT);
-        ncont.setPreferredSize(new Dimension(ItemIcon.ICON_SIZE.width * 5, -1));
+        ncont.setPreferredSize(new Dimension(715, -1));
         ncont.add(_palette.getNavigationContainer());
-        add(ncont);
+        add(ncont, GroupLayout.FIXED);
+        
+        add(new Spacer(1, -5), GroupLayout.FIXED);
+        BContainer ccont = new BContainer(GroupLayout.makeHStretch());
+        ccont.setPreferredSize(900, 160);
+        add(ccont, GroupLayout.FIXED);
+        
+        ccont.add(_icont = GroupLayout.makeHBox(GroupLayout.LEFT));
+        ((GroupLayout)_icont.getLayoutManager()).setGap(10);
+        
+        BContainer bcont = GroupLayout.makeVBox(GroupLayout.CENTER);
+        bcont.setStyleClass("outfit_controls");
+        ((GroupLayout)bcont.getLayoutManager()).setPolicy(GroupLayout.STRETCH);
+        bcont.add(new BLabel(_msgs.get("m.total_price"), "outfit_total_price"), GroupLayout.FIXED);
+        bcont.add(_qcont = GroupLayout.makeVBox(GroupLayout.CENTER));
+        _qcont.add(_quote = new BButton(_msgs.get("m.get_quote"), this, "get_quote"));
+        _quote.setStyleClass("alt_button");
+        _qlabel = new MoneyLabel(ctx);
+        bcont.add(_buy = new BButton(_msgs.get("m.buy_outfits"), this, "buy_outfits"),
+            GroupLayout.FIXED);
+        ccont.add(bcont, GroupLayout.FIXED);
+        
+        BContainer dcont = GroupLayout.makeVBox(GroupLayout.CENTER);
+        dcont.setStyleClass("outfit_controls");
+        ((GroupLayout)dcont.getLayoutManager()).setPolicy(GroupLayout.STRETCH);
+        BContainer cofcont = GroupLayout.makeVBox(GroupLayout.CENTER);
+        cofcont.add(new BLabel(_msgs.get("m.coffers"), "coffer_label"));
+        cofcont.add(_coffers = new CofferLabel(ctx, gangobj));
+        dcont.add(cofcont);
+        dcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"), GroupLayout.FIXED);
+        ccont.add(dcont, GroupLayout.FIXED);
+        
+        boolean enable = !_oarts.isEmpty();
+        _quote.setEnabled(enable);
+        _buy.setEnabled(enable);
         
         add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
-             
-        BContainer bcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER));
-        bcont.add(_quote = new BButton(_msgs.get("m.get_quote"), this, "get_quote"));
-        _quote.setEnabled(!_oarts.isEmpty());
-        bcont.add(_buy = new BButton(_msgs.get("m.buy_outfits"), this, "buy_outfits"));
-        _buy.setEnabled(!_oarts.isEmpty());
-        bcont.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
-        add(bcont, GroupLayout.FIXED);
         
         // pick random aspects for the avatars and update them
         _faspects = _ctx.getAvatarLogic().pickRandomAspects(false, _ctx.getUserObject());
@@ -156,15 +185,31 @@ public class OutfitDialog extends BDecoratedWindow
     public void actionPerformed (ActionEvent event)
     {
         String action = event.getAction();
-        if (action.equals("get_quote")) {
+        if (action.equals("selectionChanged")) {
+            int zations = 0;
+            for (ColorSelector sel : _isels) {
+                zations |= AvatarLogic.composeZation(sel.getColorClass(), sel.getSelectedColor());
+            }
+            String name = ((Article)_iicon.getItem()).getArticleName();
+            AvatarLogic alogic = _ctx.getAvatarLogic();
+            Article article = alogic.createArticle(
+                -1, alogic.getArticleCatalog().getArticle(name), zations);
+            _iicon.setItem(article);
+            _ilabel.setIcon(_iicon.getIcon());
+            OutfitKey key = new OutfitKey(article);
+            _oarts.put(key, new OutfitArticle(name, zations));
+            updateAvatar(key.male);
+            
+        } else if (action.equals("get_quote")) {
             OutfitArticle[] oarts = _oarts.values().toArray(new OutfitArticle[0]);
             _quote.setEnabled(false);
             _hideoutobj.service.getOutfitQuote(_ctx.getClient(), oarts,
                 new HideoutService.ResultListener() {
                     public void requestProcessed (Object result) {
                         int[] cost = (int[])result;
-                        System.out.println(cost[0] + " " + cost[1]);
-                        _quote.setEnabled(true);
+                        _qcont.remove(_quote);
+                        _qcont.add(_qlabel);
+                        _qlabel.setMoney(cost[0], cost[1], true);
                     }
                     public void requestFailed (String cause) {
                         _status.setStatus(_msgs.xlate(cause), true);
@@ -185,7 +230,7 @@ public class OutfitDialog extends BDecoratedWindow
                     }
                 });
         } else if (action.equals("dismiss")) {
-            _ctx.getBangClient().clearPopup(this, true);
+            _ctx.getBangClient().clearPopup(this, true);   
         }
     }
     
@@ -197,9 +242,9 @@ public class OutfitDialog extends BDecoratedWindow
         if (selected) {
             ItemIcon oicon = _oicons.get(key);
             if (oicon != null) {
-                _preventAvatarUpdate = true;
+                _preventArticleUpdates = true;
                 oicon.setSelected(false);
-                _preventAvatarUpdate = false;
+                _preventArticleUpdates = false;
             }
             _oicons.put(key, (ItemIcon)icon);
             _oarts.put(key, new OutfitArticle(
@@ -208,9 +253,28 @@ public class OutfitDialog extends BDecoratedWindow
             _oicons.remove(key);
             _oarts.remove(key);
         }
-        if (!_preventAvatarUpdate) {
+        if (!_preventArticleUpdates) {
             updateAvatar(key.male);
+            if (selected) {
+                populateInspector((ItemIcon)icon);
+            } else if (icon == _iicon) {
+                populateInspector(null);
+            }
         }
+        if (_qlabel.getParent() == _qcont) {
+            _qcont.remove(_qlabel);
+            _qcont.add(_quote);
+        }
+        boolean enable = !_oarts.isEmpty();
+        _quote.setEnabled(enable);
+        _buy.setEnabled(enable);
+    }
+    
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        _ltabs.selectTab(0);
     }
     
     /**
@@ -234,6 +298,7 @@ public class OutfitDialog extends BDecoratedWindow
     {
         _palette.clear();
         _oicons.clear();
+        populateInspector(null);
         
         // sort the articles in the catalog first by slot, then by town, then by name
         AvatarLogic alogic = _ctx.getAvatarLogic();
@@ -283,11 +348,71 @@ public class OutfitDialog extends BDecoratedWindow
                 }
             }
             ItemIcon icon = new ItemIcon(_ctx, alogic.createArticle(-1, catart, zations));
+            icon.setTooltipText(null);
             _palette.addIcon(icon);
             if (select) {
+                _preventArticleUpdates = true;
                 icon.setSelected(true);
+                _preventArticleUpdates = false;
+                if (_iicon == null) { // inspect the first selected article
+                    populateInspector(icon);
+                }
             }
         }
+    }
+    
+    /**
+     * Configures the item inspector to manipulate the specified icon (or <code>null</code>
+     * to clear it out).
+     */
+    protected void populateInspector (ItemIcon icon)
+    {
+        // add the item icon label
+        _icont.removeAll();
+        if ((_iicon = icon) == null) {
+            return;
+        }
+        _icont.add(_ilabel = new BLabel(icon.getIcon(), "outfit_item"));
+        
+        // add the color selectors with the article's current colors
+        BContainer scont = GroupLayout.makeVBox(GroupLayout.CENTER);
+        Article article = (Article)icon.getItem();
+        AvatarLogic alogic = _ctx.getAvatarLogic();
+        ArticleCatalog.Article catart =
+            alogic.getArticleCatalog().getArticle(article.getArticleName());
+        String[] cclasses = alogic.getColorizationClasses(catart);
+        int comp = article.getComponents()[0];
+        int[] colors = new int[] {
+            AvatarLogic.decodePrimary(comp),
+            AvatarLogic.decodeSecondary(comp),
+            AvatarLogic.decodeTertiary(comp) };
+        _isels.clear();
+        for (String cclass : cclasses) {
+            if (cclass.equals(AvatarLogic.SKIN)) {
+                continue; // specified by global colorizations
+            }
+            ColorSelector sel = new ColorSelector(_ctx, cclass, this);
+            sel.setSelectedColorId(colors[AvatarLogic.getColorIndex(cclass)]);
+            scont.add(sel);
+            _isels.add(sel);
+        }
+        _icont.add(scont);
+        _icont.add(new Spacer(10, 1));
+        
+        // add the description and price labels
+        BContainer dcont = new BContainer(GroupLayout.makeVStretch());
+        dcont.setPreferredSize(-1, 135);
+        dcont.add(new BLabel(_msgs.xlate(article.getName()), "medium_title"), GroupLayout.FIXED);
+        BLabel tlabel = new BLabel(_msgs.get("m.article_tip"), "goods_descrip");
+        tlabel.setPreferredSize(250, -1);
+        dcont.add(tlabel);
+        BContainer pcont = GroupLayout.makeHBox(GroupLayout.LEFT);
+        pcont.add(new BLabel(_msgs.get("m.unit_price"), "table_data"));
+        MoneyLabel plabel = new MoneyLabel(_ctx);
+        plabel.setMoney(catart.scrip, catart.coins, false);
+        pcont.add(plabel);
+        dcont.add(pcont, GroupLayout.FIXED);
+        _icont.add(dcont);
     }
     
     /**
@@ -379,8 +504,8 @@ public class OutfitDialog extends BDecoratedWindow
     protected HashMap<OutfitKey, OutfitArticle> _oarts = new HashMap<OutfitKey, OutfitArticle>();
     protected HashMap<OutfitKey, ItemIcon> _oicons = new HashMap<OutfitKey, ItemIcon>();
     
-    /** Used to prevent unwanted avatar updates when switching between articles. */
-    protected boolean _preventAvatarUpdate;
+    /** Used to prevent unwanted article updates when switching between articles. */
+    protected boolean _preventArticleUpdates;
     
     /** The male and female avatar views. */
     protected AvatarView _mavatar, _favatar;
@@ -391,11 +516,24 @@ public class OutfitDialog extends BDecoratedWindow
     protected boolean _selmale;
     protected int _selidx;
     
+    /** Displays the articles in the current tab. */
     protected IconPalette _palette;
     
-    protected StatusLabel _status;
+    /** Article inspector controls. */
+    protected BContainer _icont;
+    protected ItemIcon _iicon;
+    protected BLabel _ilabel;
+    protected ArrayList<ColorSelector> _isels = new ArrayList<ColorSelector>();
     
+    /** Price quote/buy controls. */
+    protected BContainer _qcont;
     protected BButton _quote, _buy;
+    protected MoneyLabel _qlabel;
+    
+    /** Coffer controls. */
+    protected CofferLabel _coffers;
+    
+    protected StatusLabel _status;
     
     protected static final String[] TABS = { "hats", "clothes", "gear" };
 }

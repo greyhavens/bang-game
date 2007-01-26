@@ -92,10 +92,7 @@ public class GangInfoView extends BContainer
         
         BContainer ccont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ccont.add(new BLabel(_msgs.get("m.coffers"), "coffer_label"));
-        _coffers = new MoneyLabel(_ctx);
-        _coffers.setStyleClass("gang_coffers");
-        _coffers.setMoney(_gangobj.scrip, _gangobj.coins, false);
-        ccont.add(_coffers);
+        ccont.add(_coffers = new CofferLabel(ctx, gangobj));
         if (_ctx.getUserObject().canDonate()) {
             ccont.add(_donate = new BButton(_msgs.get("m.donate"), this, "donate"));
             _donate.setStyleClass("alt_button");
@@ -136,8 +133,6 @@ public class GangInfoView extends BContainer
             _page.setVisible(_gangobj.getURL() != null);
         } else if (name.equals(GangObject.NOTORIETY)) {
             _notoriety.setText(getNotorietyText());
-        } else if (name.equals(GangObject.SCRIP) || name.equals(GangObject.COINS)) {
-            _coffers.setMoney(_gangobj.scrip, _gangobj.coins, true);
         }
     }
     
@@ -255,7 +250,7 @@ public class GangInfoView extends BContainer
     protected GangObject _gangobj;
     
     protected BLabel _ranking, _notoriety, _statement;   
-    protected MoneyLabel _coffers;
+    protected CofferLabel _coffers;
     protected BButton _page, _edit, _donate;
     
     protected StatusLabel _status;

@@ -466,6 +466,9 @@ public class AvatarLogic
                     CharacterComponent ccomp = _crepo.getComponent(gender + cclass, catasp.name);
                     int compmask = ccomp.componentId;
                     for (String color : ccomp.componentClass.colors) {
+                        if (color.equals(HAIR) || color.equals(SKIN)) {
+                            continue;
+                        }
                         compmask |= composeZation(color,
                             ColorConstraints.pickRandomColor(_pository, color, user).colorId);
                     }

@@ -35,9 +35,8 @@ public class ItemIcon extends PaletteIcon
     public ItemIcon (BasicContext ctx, Item item, boolean small)
     {
         _ctx = ctx;
-        _item = item;
         _small = small;
-        setIcon(_item.createIcon(ctx, _item.getIconPath(small)));
+        setItem(item);
         String text = _item.getName(small);
         if (text != null) {
             setText(ctx.xlate(BangCodes.BANG_MSGS, text));
@@ -48,6 +47,15 @@ public class ItemIcon extends PaletteIcon
         }
     }
 
+    /**
+     * Sets the item for this icon and updates the contents.
+     */
+    public void setItem (Item item)
+    {
+        _item = item;
+        setIcon(_item.createIcon(_ctx, _item.getIconPath(_small)));
+    }
+    
     /**
      * Returns the item associated with this icon.
      */
