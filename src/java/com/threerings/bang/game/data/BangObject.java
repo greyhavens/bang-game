@@ -538,6 +538,15 @@ public class BangObject extends GameObject
     }
 
     /**
+     * Returns the team for the player with the specified index. If the pidx is -1 the team is
+     * reported as -1 so it is safe to pass {@link Piece#owner} to this method.
+     */
+    public int getTeam (int pidx)
+    {
+        return (pidx >= 0) ? teams[pidx] : -1;
+    }
+
+    /**
      * Updates the {@link #gdata} and {@link #pdata} information.
      */
     public void updateData ()

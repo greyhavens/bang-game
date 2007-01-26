@@ -84,7 +84,7 @@ public class CattleRustlingLogic extends AILogic
             }
 
             Cow cow = (Cow)pieces[ii];
-            if (cow.owner != _pidx &&
+            if (cow.getTeam(_bangobj) != _bangobj.getTeam(_pidx) &&
                 (ccow == null || unit.getDistance(cow) < unit.getDistance(ccow))) {
                 ccow = cow;
             }
@@ -176,7 +176,7 @@ public class CattleRustlingLogic extends AILogic
             }
 
             Cow cow = (Cow)pieces[ii];
-            if (cow.owner == _pidx) {
+            if (cow.getTeam(_bangobj) == _bangobj.getTeam(_pidx)) {
                 continue;
             }
             if (ccow == null || unit.getDistance(cow) < unit.getDistance(ccow)) {

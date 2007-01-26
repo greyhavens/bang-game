@@ -803,7 +803,7 @@ public abstract class Piece
      */
     public int getTeam (BangObject bangobj)
     {
-        return (owner >= 0) ? bangobj.teams[owner] : -1;
+        return bangobj.getTeam(owner);
     }
 
     /**
