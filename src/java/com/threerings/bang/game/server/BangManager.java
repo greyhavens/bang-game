@@ -1246,10 +1246,7 @@ public class BangManager extends GameManager
             // configure their big shot selection
             if (item != null) {
                 Unit unit = Unit.getUnit(item.getType());
-                unit.assignPieceId(_bangobj);
-                unit.init();
-                unit.setOwner(_bangobj, pidx);
-                unit.originalOwner = pidx;
+                initAndPrepareUnit(unit, pidx);
                 _bangobj.setBigShotsAt(unit, pidx);
             }
 
@@ -1391,6 +1388,13 @@ public class BangManager extends GameManager
             _bangobj.startTransaction();
 
             try {
+                // configure our team assignments
+                int[] teams = new int[_bangobj.players.length];
+                for (int pidx = 0; pidx < teams.length; pidx++) {
+                    teams[pidx] = _bangobj.scenario.getTeam(pidx, _bconfig.plist.get(pidx).teamIdx);
+                }
+                _bangobj.setTeams(teams);
+
                 // let the scenario know that we're about to start the round
                 _scenario.roundWillStart(_bangobj, _starts, _purchases);
 

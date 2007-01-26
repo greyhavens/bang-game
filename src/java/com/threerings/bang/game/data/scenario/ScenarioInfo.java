@@ -296,9 +296,9 @@ public abstract class ScenarioInfo
     /**
      * Returns the team id for the supplied owner.
      */
-    public int getTeam (int owner)
+    public int getTeam (int owner, int assignedTeam)
     {
-        return owner;
+        return assignedTeam;
     }
 
     /**

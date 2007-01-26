@@ -107,6 +107,9 @@ public class BangObject extends GameObject
     /** The field name of the <code>playerInfo</code> field. */
     public static final String PLAYER_INFO = "playerInfo";
 
+    /** The field name of the <code>teams</code> field. */
+    public static final String TEAMS = "teams";
+
     /** The field name of the <code>stats</code> field. */
     public static final String STATS = "stats";
 
@@ -221,6 +224,9 @@ public class BangObject extends GameObject
     /** Avatar fingerprints and other data for each of the players in the game.  We need these in
      * case the player leaves early and so that we can provide fake info for AIs. */
     public PlayerInfo[] playerInfo;
+
+    /** The team assignments for all players in the game. */
+    public int[] teams;
 
     /** This value is set at the end of every round, to inform the players of various interesting
      * statistics. */
@@ -737,6 +743,39 @@ public class BangObject extends GameObject
         requestElementUpdate(
             PLAYER_INFO, index, value, ovalue);
         this.playerInfo[index] = value;
+    }
+
+    /**
+     * Requests that the <code>teams</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setTeams (int[] value)
+    {
+        int[] ovalue = this.teams;
+        requestAttributeChange(
+            TEAMS, value, ovalue);
+        this.teams = (value == null) ? null : (int[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>teams</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setTeamsAt (int value, int index)
+    {
+        int ovalue = this.teams[index];
+        requestElementUpdate(
+            TEAMS, index, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.teams[index] = value;
     }
 
     /**

@@ -82,9 +82,10 @@ public class ForestGuardiansInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
-    public int getTeam (int owner)
+    public int getTeam (int owner, int assignedTeam)
     {
-        return (owner > -1 ? 0 : owner);
+        // all human players are on the same team
+        return (owner > -1 ? 0 : assignedTeam);
     }
 
     @Override // from ScenarioInfo

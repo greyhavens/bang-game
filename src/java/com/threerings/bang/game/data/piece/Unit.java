@@ -34,18 +34,15 @@ import static com.threerings.bang.Log.log;
  */
 public class Unit extends Piece
 {
-    /** The player to whom this unit will return on respawn or -1 if it should
-     * not be respawned. */
+    /** The player to whom this unit will return on respawn or -1 if it should not be respawned. */
     public int originalOwner = -1;
 
-    /** Any influence currently acting on this unit. This is not serialized,
-     * but will be filled in at the appropriate time on the client and server
-     * by effects. */
+    /** Any influence currently acting on this unit. This is not serialized, but will be filled in
+     * at the appropriate time on the client and server by effects. */
     public transient Influence influence;
 
-    /** Any hindrance currently acting on this unit. This is not serialized,
-     * but will be filled in at the appropriate time on the client and server
-     * by effects. */
+    /** Any hindrance currently acting on this unit. This is not serialized, but will be filled in
+     * at the appropriate time on the client and server by effects. */
     public transient Hindrance hindrance;
 
     /** Type of thing being held, or null for nothing. */
@@ -134,10 +131,9 @@ public class Unit extends Piece
     }
 
     /**
-     * Creates a new unit that is an exact duplicate of this unit, unless
-     * this unit is a Big Shot in which case a suitable substitute type is
-     * created. The unit will occupy a default location and must be moved
-     * before being added to the game.
+     * Creates a new unit that is an exact duplicate of this unit, unless this unit is a Big Shot
+     * in which case a suitable substitute type is created. The unit will occupy a default location
+     * and must be moved before being added to the game.
      */
     public Unit duplicate (BangObject bangobj)
     {
@@ -145,8 +141,7 @@ public class Unit extends Piece
     }
 
     /**
-     * Creates a new unit of a specific type that is otherwise an exact
-     * duplicate of this unit.
+     * Creates a new unit of a specific type that is otherwise an exact duplicate of this unit.
      */
     public Unit duplicate (BangObject bangobj, String unitType)
     {
@@ -163,7 +158,7 @@ public class Unit extends Piece
     public void setOwner (BangObject bangobj, int owner)
     {
         super.setOwner(bangobj, owner);
-        team = bangobj.scenario.getTeam(owner);
+        this.team = (owner >= 0) ? bangobj.teams[owner] : -1;
     }
 
     @Override // documentation inherited
@@ -174,8 +169,7 @@ public class Unit extends Piece
     }
 
     /**
-     * Returns the tick on which this unit should respawn or -1 if it
-     * should not be respawned.
+     * Returns the tick on which this unit should respawn or -1 if it should not be respawned.
      */
     public short getRespawnTick ()
     {
@@ -195,9 +189,8 @@ public class Unit extends Piece
      */
     public boolean canActivateBonus (BangObject bangobj, Bonus bonus)
     {
-        return isAlive() && 
-            (!"frontier_town/card".equals(bonus.getConfig().type) || 
-                bangobj.countPlayerCards(owner) < GameCodes.MAX_CARDS);
+        return isAlive() && (!"frontier_town/card".equals(bonus.getConfig().type) ||
+                             bangobj.countPlayerCards(owner) < GameCodes.MAX_CARDS);
     }
 
     /** Configures the instance after unserialization. */
@@ -217,13 +210,11 @@ public class Unit extends Piece
     }
 
     /**
-     * Returns the difference between the base damage and damage
-     * after modifiers.
+     * Returns the difference between the base damage and damage after modifiers.
      */
     public int computeDamageDiff (BangObject bangobj, Piece target)
     {
-        return (target.willDeflect(bangobj, this) ? 0 : 
-                computeDamage(target) - _config.damage);
+        return (target.willDeflect(bangobj, this) ? 0 : computeDamage(target) - _config.damage);
     }
 
     @Override // documentation inherited
@@ -236,14 +227,12 @@ public class Unit extends Piece
     public void init ()
     {
         super.init();
-
         // configure our last acted tick according to our initiative
         lastActed = (short)(-1 * _config.initiative);
     }
 
     @Override // documentation inherited
-    public int computeElevation (
-            BangBoard board, int tx, int ty, boolean moving)
+    public int computeElevation (BangBoard board, int tx, int ty, boolean moving)
     {
         if ((moving ? isFlyer() : isAirborne()) && isAlive()) {
             return computeAreaFlightElevation(board, tx, ty);
@@ -258,11 +247,11 @@ public class Unit extends Piece
     public int computeAreaFlightElevation (BangBoard board, int tx, int ty)
     {
         int nsElevation = Math.min(computeFlightElevation(board, tx - 1, ty),
-                computeFlightElevation(board, tx + 1, ty));
+                                   computeFlightElevation(board, tx + 1, ty));
         int ewElevation = Math.min(computeFlightElevation(board, tx, ty - 1),
-                computeFlightElevation(board, tx, ty + 1));
+                                   computeFlightElevation(board, tx, ty + 1));
         int elevation = Math.max(computeFlightElevation(board, tx, ty),
-                Math.max(nsElevation, ewElevation));
+                                 Math.max(nsElevation, ewElevation));
         return elevation;
     }
 
@@ -271,11 +260,10 @@ public class Unit extends Piece
      */
     public int computeFlightElevation (BangBoard board, int tx, int ty)
     {
-        int groundel = Math.max(board.getWaterLevel(),
-            board.getMaxHeightfieldElevation(tx, ty)) +
-                (int)(FLYER_GROUND_HEIGHT * board.getElevationUnitsPerTile()),
-            propel = board.getMaxElevation(tx, ty) +
-                (int)(FLYER_PROP_HEIGHT * board.getElevationUnitsPerTile());
+        int groundel = Math.max(board.getWaterLevel(), board.getMaxHeightfieldElevation(tx, ty)) +
+            (int)(FLYER_GROUND_HEIGHT * board.getElevationUnitsPerTile());
+        int propel = board.getMaxElevation(tx, ty) +
+            (int)(FLYER_PROP_HEIGHT * board.getElevationUnitsPerTile());
         return Math.max(groundel, propel);
     }
 
@@ -286,26 +274,23 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public boolean checkLineOfSight (
-        BangBoard board, int tx, int ty, Piece target)
+    public boolean checkLineOfSight (BangBoard board, int tx, int ty, Piece target)
     {
         // range units are not restricted to line of sight
         return (_config.mode == UnitConfig.Mode.RANGE ||
-            super.checkLineOfSight(board, tx, ty, target));
+                super.checkLineOfSight(board, tx, ty, target));
     }
 
     @Override // documentation inherited
-    public boolean checkLineOfSight (
-        BangBoard board, int tx, int ty, int dx, int dy)
+    public boolean checkLineOfSight (BangBoard board, int tx, int ty, int dx, int dy)
     {
         // range units are not restricted to line of sight
         return (_config.mode == UnitConfig.Mode.RANGE ||
-            super.checkLineOfSight(board, tx, ty, dx, dy));
+                super.checkLineOfSight(board, tx, ty, dx, dy));
     }
 
     @Override // documentation inherited
-    public Effect[] willShoot (
-            BangObject bangobj, Piece target, ShotEffect shot)
+    public Effect[] willShoot (BangObject bangobj, Piece target, ShotEffect shot)
     {
         if (influence != null) {
             return influence.willShoot(bangobj, target, shot);
@@ -337,8 +322,7 @@ public class Unit extends Piece
     /**
      * Used for overriding the shoot function.
      */
-    protected ShotEffect unitShoot (
-            BangObject bangobj, Piece target, float scale)
+    protected ShotEffect unitShoot (BangObject bangobj, Piece target, float scale)
     {
         return super.shoot(bangobj, target, scale);
     }
@@ -351,8 +335,7 @@ public class Unit extends Piece
             Bonus bonus = (Bonus)other;
             if (canActivateBonus(bangobj, bonus)) {
                 if (bonus.getConfig().holdable && holding != null) {
-                    effects.add(HoldEffect.dropBonus(
-                            bangobj, this, -2, holding)); 
+                    effects.add(HoldEffect.dropBonus(bangobj, this, -2, holding));
                 }
                 effects.add(bonus.affect(bangobj, this));
             } else if (!bonus.getConfig().hidden) {
@@ -365,8 +348,7 @@ public class Unit extends Piece
     }
 
     @Override // documentation inherited
-    public ShotEffect returnFire (
-        BangObject bangobj, Piece shooter, int newDamage)
+    public ShotEffect returnFire (BangObject bangobj, Piece shooter, int newDamage)
     {
         ShotEffect shot = null;
         int oldDamage = this.damage;
@@ -384,17 +366,16 @@ public class Unit extends Piece
     @Override // documentation inherited
     public Effect willDie (BangObject bangobj, int shooterId)
     {
-        return holding != null ?
-            HoldEffect.dropBonus(bangobj, this, shooterId, holding) : null;
+        return holding != null ? HoldEffect.dropBonus(bangobj, this, shooterId, holding) : null;
     }
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (
-            short tick, BangObject bangobj, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangObject bangobj, Piece[] pieces)
     {
         if (!isAlive()) {
             return null;
         }
+
         ArrayList<Effect> effects = new ArrayList<Effect>();
         if (influence != null && influence.isExpired(tick)) {
             ExpireInfluenceEffect effect = influence.createExpireEffect();
@@ -421,7 +402,7 @@ public class Unit extends Piece
     {
         consecKills++;
     }
-    
+
     @Override // documentation inherited
     public String[] attackInfluenceIcons ()
     {
@@ -448,56 +429,50 @@ public class Unit extends Piece
     @Override // documentation inherited
     protected int getTicksPerMove ()
     {
-        int ticks = (influence == null) ? super.getTicksPerMove() :
-            influence.adjustTicksPerMove(super.getTicksPerMove());
-        ticks = (holdingInfluence == null) ?
-            ticks : holdingInfluence.adjustTicksPerMove(ticks);
-        return (hindrance == null) ? ticks :
-            hindrance.adjustTicksPerMove(ticks);
+        int ticks = (influence == null) ?
+            super.getTicksPerMove() : influence.adjustTicksPerMove(super.getTicksPerMove());
+        ticks = (holdingInfluence == null) ? ticks : holdingInfluence.adjustTicksPerMove(ticks);
+        return (hindrance == null) ? ticks : hindrance.adjustTicksPerMove(ticks);
     }
 
     @Override // documentation inherited
     public int getSightDistance ()
     {
-        int distance = (influence == null) ? _config.sightDistance :
-            influence.adjustSightDistance(_config.sightDistance);
+        int distance = (influence == null) ?
+            _config.sightDistance : influence.adjustSightDistance(_config.sightDistance);
         distance = (holdingInfluence == null) ?
             distance : holdingInfluence.adjustSightDistance(distance);
-        return (hindrance == null) ? distance :
-            hindrance.adjustSightDistance(distance);
+        return (hindrance == null) ? distance : hindrance.adjustSightDistance(distance);
     }
 
     @Override // documentation inherited
     public int getMoveDistance ()
     {
-        int distance = (influence == null) ? _config.moveDistance :
-            influence.adjustMoveDistance(_config.moveDistance);
+        int distance = (influence == null) ?
+            _config.moveDistance : influence.adjustMoveDistance(_config.moveDistance);
         distance = (holdingInfluence == null) ?
             distance : holdingInfluence.adjustMoveDistance(distance);
-        return (hindrance == null) ? distance :
-            hindrance.adjustMoveDistance(distance);
+        return (hindrance == null) ? distance : hindrance.adjustMoveDistance(distance);
     }
 
     @Override // documentation inherited
     public int getMinFireDistance ()
     {
-        int distance = (influence == null) ? _config.minFireDistance :
-            influence.adjustMinFireDistance(_config.minFireDistance);
+        int distance = (influence == null) ?
+            _config.minFireDistance : influence.adjustMinFireDistance(_config.minFireDistance);
         distance = (holdingInfluence == null) ?
             distance : holdingInfluence.adjustMinFireDistance(distance);
-        return (hindrance == null) ? distance :
-            hindrance.adjustMinFireDistance(distance);
+        return (hindrance == null) ? distance : hindrance.adjustMinFireDistance(distance);
     }
 
     @Override // documentation inherited
     public int getMaxFireDistance ()
     {
-        int distance = (influence == null) ? _config.maxFireDistance :
-            influence.adjustMaxFireDistance(_config.maxFireDistance);
+        int distance = (influence == null) ?
+            _config.maxFireDistance : influence.adjustMaxFireDistance(_config.maxFireDistance);
         distance = (holdingInfluence == null) ?
             distance : holdingInfluence.adjustMaxFireDistance(distance);
-        return (hindrance == null) ? distance :
-            hindrance.adjustMaxFireDistance(distance);
+        return (hindrance == null) ? distance : hindrance.adjustMaxFireDistance(distance);
     }
 
     @Override // documentation inherited
@@ -511,7 +486,6 @@ public class Unit extends Piece
     public void wasKilled (short tick)
     {
         super.wasKilled(tick);
-
         // influences and hindrances do not survive through death
         influence = null;
         hindrance = null;
@@ -529,18 +503,16 @@ public class Unit extends Piece
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {
-        return _config.make == UnitConfig.Make.HUMAN ||
-               _config.make == UnitConfig.Make.SPIRIT;
+        return _config.make == UnitConfig.Make.HUMAN || _config.make == UnitConfig.Make.SPIRIT;
     }
 
     @Override // documentation inherited
-    public boolean validTarget (
-        BangObject bangobj, Piece target, boolean allowSelf)
+    public boolean validTarget (BangObject bangobj, Piece target, boolean allowSelf)
     {
         // if we do no damage to this type of target, it is not valid
         return super.validTarget(bangobj, target, allowSelf) &&
-            (computeDamage(target) > 0) && (hindrance == null || 
-                hindrance.validTarget(this, target, allowSelf));
+            (computeDamage(target) > 0) &&
+            (hindrance == null || hindrance.validTarget(this, target, allowSelf));
     }
 
     @Override // documentation inherited
@@ -580,8 +552,7 @@ public class Unit extends Piece
     /**
      * Compute the valid moves for this piece.
      */
-    public void computeMoves (
-            BangBoard board, PointSet moves, PointSet attacks)
+    public void computeMoves (BangBoard board, PointSet moves, PointSet attacks)
     {
         board.computeMoves(this, moves, attacks);
     }
@@ -624,8 +595,7 @@ public class Unit extends Piece
     /**
      * Generate a move effect for this unit.
      */
-    public MoveEffect generateMoveEffect (
-            BangObject bangobj, int nx, int ny, Piece target)
+    public MoveEffect generateMoveEffect (BangObject bangobj, int nx, int ny, Piece target)
     {
         MoveEffect meffect = new MoveEffect();
         meffect.init(this);
@@ -635,23 +605,21 @@ public class Unit extends Piece
     }
 
     /**
-     * Called on the server to give the unit a chance to generate an effect
-     * to deploy after it has moved of its own volition.
+     * Called on the server to give the unit a chance to generate an effect to deploy after it has
+     * moved of its own volition.
      */
     public Effect maybeGeneratePostMoveEffect (int steps)
     {
-        return (hindrance == null) ?
-            null : hindrance.maybeGeneratePostMoveEffect(steps);
+        return (hindrance == null) ? null : hindrance.maybeGeneratePostMoveEffect(steps);
     }
 
     /**
-     * Called on the server to give the unit a chance to generate an effect
-     * to deploy after it has been ordered to move/shoot.
+     * Called on the server to give the unit a chance to generate an effect to deploy after it has
+     * been ordered to move/shoot.
      */
     public Effect maybeGeneratePostOrderEffect ()
     {
-        return (hindrance == null) ?
-            null : hindrance.maybeGeneratePostOrderEffect();
+        return (hindrance == null) ? null : hindrance.maybeGeneratePostOrderEffect();
     }
 
     @Override // documentation inherited
@@ -700,36 +668,29 @@ public class Unit extends Piece
     @Override // documentation inherited
     public int adjustAttack (Piece target, int damage)
     {
-        damage = (influence == null || 
-                (_killShot && !influence.showClientAdjust())) ?
+        damage = (influence == null || (_killShot && !influence.showClientAdjust())) ?
             damage : influence.adjustAttack(target, damage);
-        damage = (holdingInfluence == null ||
-                (_killShot && !holdingInfluence.showClientAdjust())) ?
+        damage = (holdingInfluence == null || (_killShot && !holdingInfluence.showClientAdjust())) ?
             damage : holdingInfluence.adjustAttack(target, damage);
-        return (hindrance == null ||
-                (_killShot && !hindrance.showClientAdjust())) ?
+        return (hindrance == null || (_killShot && !hindrance.showClientAdjust())) ?
             damage : hindrance.adjustAttack(target, damage);
     }
 
     @Override // documentation inherited
     public int adjustDefend (Piece shooter, int damage)
     {
-        damage = (influence == null ||
-                (_killShot && !influence.showClientAdjust())) ?
+        damage = (influence == null || (_killShot && !influence.showClientAdjust())) ?
             damage : influence.adjustDefend(shooter, damage);
-        damage = (holdingInfluence == null ||
-                (_killShot && !influence.showClientAdjust())) ?
+        damage = (holdingInfluence == null || (_killShot && !influence.showClientAdjust())) ?
             damage : holdingInfluence.adjustDefend(shooter, damage);
-        return (hindrance == null ||
-                (_killShot && !influence.showClientAdjust())) ?
+        return (hindrance == null || (_killShot && !influence.showClientAdjust())) ?
             damage : hindrance.adjustDefend(shooter, damage);
     }
 
     @Override // documentation inherited
     public int adjustProxDefend (Piece shooter, int damage)
     {
-        return (influence == null ||
-                (_killShot && !influence.showClientAdjust())) ?
+        return (influence == null || (_killShot && !influence.showClientAdjust())) ?
             damage : influence.adjustDefend(shooter, damage);
     }
 
