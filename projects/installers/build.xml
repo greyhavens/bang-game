@@ -3,8 +3,8 @@
 
   <!-- load up our configuration information -->
   <property name="base.dir" value="${basedir}/../.."/>
-  <property name="web.home" value="${base.dir}/pages"/>
   <property name="deploy.dir" value="dist"/>
+  <property name="web.home" value="${base.dir}/${deploy.dir}/installer-pages"/>
   <property file="${base.dir}/dist/deployment.properties"/>
   <property file="${cert_dir}/certificate.properties"/>
 
