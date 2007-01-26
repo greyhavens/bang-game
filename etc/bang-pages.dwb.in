@@ -8,6 +8,10 @@
     Section     pages
     Architecture    all
     Description Web pages for rumbling in the Wild West.
+
+    # bang-pages depends on the underwire support pages for bang
+    Depends     bang-underwire-pages
+
     # Maintainer Scripts
     # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
     PreInstall      @SCRIPTPATH@/bang-pages-preinst
