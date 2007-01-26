@@ -51,7 +51,7 @@ public class HideoutDispatcher extends InvocationDispatcher
         case HideoutMarshaller.BUY_OUTFITS:
             ((HideoutProvider)provider).buyOutfits(
                 source,
-                (OutfitArticle[])args[0], (InvocationService.ConfirmListener)args[1]
+                (OutfitArticle[])args[0], (InvocationService.ResultListener)args[1]
             );
             return;
 

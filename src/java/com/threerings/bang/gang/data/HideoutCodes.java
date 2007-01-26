@@ -20,5 +20,5 @@ public interface HideoutCodes extends InvocationCodes
     public static final int MAX_URL_LENGTH = 200;
     
     /** The (maximum) number of history entries displayed on a single page. */
-    public static final int HISTORY_PAGE_ENTRIES = 15;
+    public static final int HISTORY_PAGE_ENTRIES = 10;
 }

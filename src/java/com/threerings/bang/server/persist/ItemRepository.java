@@ -193,11 +193,9 @@ public class ItemRepository extends SimpleRepository
         final Item prototype, final ArrayIntSet userIds, final ArrayList<Item> items)
         throws PersistenceException
     {
-        // first serialize the prototype
-        final ByteArrayOutInputStream out = persistItem(prototype);
-
-        // determine its assigned item type
+        // determine the prototype's assigned item type and serialize it
         final int itemType = getItemType(prototype);
+        final byte[] itemData = persistItem(prototype).toByteArray();
         
         // now insert the flattened data into the database
         executeUpdate(new Operation<Object>() {
@@ -210,7 +208,7 @@ public class ItemRepository extends SimpleRepository
                 try {
                     stmt = conn.prepareStatement(query);
                     stmt.setInt(2, itemType);
-                    stmt.setBinaryStream(3, out.getInputStream(), out.size());
+                    stmt.setBytes(3, itemData);
 
                     // do the insertions
                     for (Interator it = userIds.interator(); it.hasNext(); ) {

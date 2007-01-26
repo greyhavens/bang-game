@@ -39,9 +39,9 @@ public class HideoutMarshaller extends InvocationMarshaller
     public static final int BUY_OUTFITS = 2;
 
     // from interface HideoutService
-    public void buyOutfits (Client arg1, OutfitArticle[] arg2, InvocationService.ConfirmListener arg3)
+    public void buyOutfits (Client arg1, OutfitArticle[] arg2, InvocationService.ResultListener arg3)
     {
-        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
         listener3.listener = arg3;
         sendRequest(arg1, BUY_OUTFITS, new Object[] {
             arg2, listener3

@@ -85,7 +85,9 @@ public interface HideoutService extends InvocationService
     public void getOutfitQuote (Client client, OutfitArticle[] outfit, ResultListener listener);
     
     /**
-     * Purchases gang outfits for all members who don't already own them.
+     * Purchases gang outfits for all members who don't already own them.  The listener will
+     * receive an integer array containing the number of members who received articles and the
+     * total number of articles purchased.
      */
-    public void buyOutfits (Client client, OutfitArticle[] outfit, ConfirmListener listener);
+    public void buyOutfits (Client client, OutfitArticle[] outfit, ResultListener listener);
 }

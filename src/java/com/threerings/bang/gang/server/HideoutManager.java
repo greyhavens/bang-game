@@ -252,7 +252,7 @@ public class HideoutManager extends MatchHostManager
     
     // documentation inherited from interface HideoutProvider
     public void buyOutfits (
-        ClientObject caller, OutfitArticle[] outfit, HideoutService.ConfirmListener listener)
+        ClientObject caller, OutfitArticle[] outfit, HideoutService.ResultListener listener)
         throws InvocationException
     {
         // make sure they're the leader of a gang

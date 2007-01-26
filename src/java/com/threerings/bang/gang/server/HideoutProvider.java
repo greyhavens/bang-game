@@ -27,7 +27,7 @@ public interface HideoutProvider extends InvocationProvider
     /**
      * Handles a {@link HideoutService#buyOutfits} request.
      */
-    public void buyOutfits (ClientObject caller, OutfitArticle[] arg1, InvocationService.ConfirmListener arg2)
+    public void buyOutfits (ClientObject caller, OutfitArticle[] arg1, InvocationService.ResultListener arg2)
         throws InvocationException;
 
     /**

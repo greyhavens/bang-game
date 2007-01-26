@@ -606,10 +606,11 @@ public class GangManager
     }
     
     /**
-     * Buys the specified outfit for the gang.
+     * Buys the specified outfit for the gang.  The listener will receive an array containing the 
+     * number of members who received articles and the total number of articles purchased.
      */
     public void buyOutfits (PlayerObject user, OutfitArticle[] outfit,
-                            InvocationService.ConfirmListener listener)
+                            InvocationService.ResultListener listener)
         throws InvocationException
     {
         processOutfit(user, outfit, listener, true);
@@ -651,7 +652,7 @@ public class GangManager
      */
     protected void processOutfit (
         final PlayerObject user, final OutfitArticle[] outfit,
-        final InvocationService.InvocationListener listener, final boolean buy)
+        final InvocationService.ResultListener listener, final boolean buy)
         throws InvocationException
     {
         // validate the outfit and get the corresponding articles
@@ -704,12 +705,13 @@ public class GangManager
                 
                 if (!buy) {
                     // if we're not buying, just report the price quote
-                    ((InvocationService.ResultListener)listener).requestProcessed(_cost);
+                    listener.requestProcessed(_cost);
+                } else if (_cost[0] == 0 && _cost[1] == 0) {
+                    listener.requestProcessed(new int[] { 0, 0 });
                 } else if (user.isActive()) {
                     // only proceed if the buyer is still online
                     try {
-                        buyOutfits(user, _cost[0], _cost[1], _receiverIds, articles,
-                            (InvocationService.ConfirmListener)listener);
+                        buyOutfits(user, _cost[0], _cost[1], _receiverIds, articles, listener);
                     } catch (InvocationException e) {
                         listener.requestFailed(e.getMessage());
                     }
@@ -725,9 +727,9 @@ public class GangManager
      * uses fund from the gang's coffers to buy the outfits.
      */
     protected void buyOutfits (
-        PlayerObject user, int scripCost, int coinCost,
+        final PlayerObject user, final int scripCost, final int coinCost,
         final ArrayIntSet[] userIds, final Article[] articles,
-        final InvocationService.ConfirmListener listener)
+        final InvocationService.ResultListener listener)
         throws InvocationException
     {
         final GangObject gang = getGangObject(user.gangId);
@@ -746,12 +748,22 @@ public class GangManager
 
             protected String persistentAction ()
                 throws PersistenceException {
+                ArrayIntSet memberIds = new ArrayIntSet();
                 for (int ii = 0; ii < userIds.length; ii++) {
                     if (userIds[ii] == null) {
                         continue;
                     }
+                    memberIds.addAll(userIds[ii]);
                     BangServer.itemrepo.insertItems(articles[ii], userIds[ii], _items);
                 }
+                _memberCount = memberIds.size();
+                _entryId = _gangrepo.insertHistoryEntry(user.gangId,
+                        MessageBundle.compose(
+                            "m.outfit_entry",
+                            MessageBundle.taint(user.handle),
+                            getMoneyDesc(scripCost, coinCost),
+                            MessageBundle.tcompose("m.member_count", _memberCount),
+                            MessageBundle.tcompose("m.articles", _items.size())));
                 return null;
             }
             protected void rollbackPersistentAction ()
@@ -763,6 +775,9 @@ public class GangManager
                     }
                     BangServer.itemrepo.deleteItems(itemIds, "rollback");
                 }
+                if (_entryId > 0) {
+                    _gangrepo.deleteHistoryEntry(_entryId);
+                }
             }
 
             protected void actionCompleted () {
@@ -772,13 +787,15 @@ public class GangManager
                         owner.addToInventory(item);
                     }
                 }
-                listener.requestProcessed();
+                listener.requestProcessed(new int[] { _memberCount, _items.size() });
             }
             protected void actionFailed (String cause) {
                 listener.requestFailed(cause);
             }
             
             protected ArrayList<Item> _items = new ArrayList<Item>();
+            protected int _memberCount;
+            protected int _entryId;
         }.start();
     }
     

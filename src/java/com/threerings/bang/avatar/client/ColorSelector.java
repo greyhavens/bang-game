@@ -28,6 +28,8 @@ import com.threerings.media.image.ColorPository.ColorRecord;
 import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
 
+import com.threerings.presents.dobj.DObject;
+
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.util.AvatarLogic;
@@ -43,6 +45,12 @@ public class ColorSelector extends BComponent
     public ColorSelector (
         BangContext ctx, String colorClass, ActionListener listener)
     {
+        this(ctx, colorClass, ctx.getUserObject(), listener);
+    }
+    
+    public ColorSelector (
+        BangContext ctx, String colorClass, DObject entity, ActionListener listener)
+    {
         setStyleClass("color_selector");
         addListener(listener);
         _colorClass = colorClass;
@@ -50,7 +58,7 @@ public class ColorSelector extends BComponent
         ArrayList<ColorRecord> colors =
             ColorConstraints.getAvailableColors(
                 ctx.getAvatarLogic().getColorPository(), colorClass,
-                ctx.getUserObject());
+                entity);
 
         int dy = 0; // HAIR
         if (colorClass.endsWith("_s")) {

@@ -138,7 +138,7 @@ public class OutfitDialog extends BDecoratedWindow
         ncont.add(_palette.getNavigationContainer());
         add(ncont, GroupLayout.FIXED);
         
-        add(new Spacer(1, -5), GroupLayout.FIXED);
+        add(new Spacer(1, -10), GroupLayout.FIXED);
         BContainer ccont = new BContainer(GroupLayout.makeHStretch());
         ccont.setPreferredSize(900, 160);
         add(ccont, GroupLayout.FIXED);
@@ -173,6 +173,7 @@ public class OutfitDialog extends BDecoratedWindow
         _buy.setEnabled(enable);
         
         add(_status = new StatusLabel(ctx), GroupLayout.FIXED);
+        _status.setStatus(" ", false); // make sure it takes up space
         
         // pick random aspects for the avatars and update them
         _faspects = _ctx.getAvatarLogic().pickRandomAspects(false, _ctx.getUserObject());
@@ -220,8 +221,17 @@ public class OutfitDialog extends BDecoratedWindow
             OutfitArticle[] oarts = _oarts.values().toArray(new OutfitArticle[0]);
             _buy.setEnabled(false);
             _hideoutobj.service.buyOutfits(_ctx.getClient(), oarts,
-                new HideoutService.ConfirmListener() {
-                    public void requestProcessed () {
+                new HideoutService.ResultListener() {
+                    public void requestProcessed (Object result) {
+                        int[] counts = (int[])result;
+                        if (counts[0] == 0 && counts[1] == 0) {
+                            _status.setStatus(_msgs.get("m.nothing_bought"), false);
+                        } else {
+                            String msg = MessageBundle.compose("m.outfits_bought",
+                                MessageBundle.tcompose("m.member_count", counts[0]),
+                                MessageBundle.tcompose("m.articles", counts[1]));
+                            _status.setStatus(_msgs.xlate(msg), false);
+                        }
                         _buy.setEnabled(true);
                     }
                     public void requestFailed (String cause) {
@@ -391,7 +401,7 @@ public class OutfitDialog extends BDecoratedWindow
             if (cclass.equals(AvatarLogic.SKIN)) {
                 continue; // specified by global colorizations
             }
-            ColorSelector sel = new ColorSelector(_ctx, cclass, this);
+            ColorSelector sel = new ColorSelector(_ctx, cclass, _gangobj, this);
             sel.setSelectedColorId(colors[AvatarLogic.getColorIndex(cclass)]);
             scont.add(sel);
             _isels.add(sel);
