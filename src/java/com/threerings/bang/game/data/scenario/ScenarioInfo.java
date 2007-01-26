@@ -298,7 +298,8 @@ public abstract class ScenarioInfo
      */
     public int getTeam (int owner, int assignedTeam)
     {
-        return assignedTeam;
+        // if no assigned team then just use the owner
+        return (assignedTeam == -1 ? owner : assignedTeam);
     }
 
     /**
