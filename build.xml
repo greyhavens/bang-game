@@ -665,6 +665,7 @@
     <antcall target="prepare-server-extra"/>
     <antcall target="prepare-webapps"/>
     <antcall target="prepare-pages"/>
+    <antcall target="prepare-installer-pages"/>
     <antcall target="prepare-docs"/>
   </target>
 
@@ -692,6 +693,20 @@
     <mkdir dir="${pkg.base}/data"/>
     <copy todir="${pkg.base}/data">
       <fileset dir="data" includes="soundtrack/*.mp3"/>
+    </copy>
+  </target>
+
+  <!-- prepare the generated installer bits to be packaged -->
+  <target name="prepare-installer-pages">
+    <var name="pkg.name" value="${app.name}-installer-pages"/>
+    <var name="destroot.pkg" value="${destroot}/${pkg.name}"/>
+    <var name="pkg.base" value="${destroot.pkg}/${prefix.app}"/>
+    <echo level="info">Installing ${deploy.dir}/installer-pages/ into ${destroot.pkg}...</echo>
+    <antcall target="clean-dir">
+      <param name="dir" value="${destroot.pkg}"/>
+    </antcall>
+    <copy todir="${pkg.base}/pages">
+      <fileset dir="${deploy.dir}/installer-pages" includes="**"/>
     </copy>
   </target>
 

@@ -1,0 +1,11 @@
+# bang-installer-pages.dwb vi:ts=4:sw=4:expandtab:
+# Bang Installer Web Pages Dweeb Configuration File
+
+<Package>
+    Name        bang-installer-pages
+    Version     @VERSION@
+    Maintainer  Bang Developers <bang-dev@threerings.net>
+    Section     pages
+    Architecture    all
+    Description Web pages for the Bang installers.
+</Package>
