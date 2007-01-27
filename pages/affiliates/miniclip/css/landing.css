@@ -7,8 +7,8 @@
   padding:0px;
   top: 0px;
   left: 0px;
-  width: 920px;
-  height: 271px;
+  width: 589px;
+  height: 320px;
 }
 
 #bottom {
@@ -16,10 +16,10 @@
   position: absolute;
   margin: 0px;
   padding:0px;
-  top: 271px;
+  top: 320px;
   left: 0px;
-  width: 920px;
-  height: 229px;
+  width: 589px;
+  height: 180px;
   overflow: hidden;
 }
 
@@ -27,12 +27,12 @@
   position: absolute;
   margin: 0px;
   padding:0px;
-  top: 37px;
-  left: 7px;
-  width: 906px;
-  height: 165px;
+  top: 46px;
+  left: 11px;
+  width: 589px;
+  height: 100px;
   overflow: hidden;
-  text-align: center;
+  text-align: left;
 }
 
 /* BUTTONS */
@@ -40,8 +40,8 @@
   position: absolute;
   width: 352px;
   height: 83px;
-  top: 210px;
-  left: 284px;
+  top: 249px;
+  left: 115px;
   text-decoration: none;
   border: 1px solid;
 }

@@ -18,9 +18,9 @@
 
 #account { 
   position: absolute;
-  top: 342px;
-  left: 510px;
-  width: 400px; 
+  top: 82px;
+  left: 10px;
+  width: 540px;  
   height: 25px;
   text-align: center;
 }
@@ -31,11 +31,12 @@
 
 #info {
   position: absolute;
-  top: 380px;
-  left: 530px;
-  width: 372px; 
+  top: 466px;
+  left: 10px;
+  width: 540px; 
   height: 98px;
   color: #4c2602;
+  text-align: center;
 }
 
 #info a {

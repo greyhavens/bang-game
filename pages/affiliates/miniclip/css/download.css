@@ -5,8 +5,8 @@
 
 #downtitle {
   position: absolute;
-  top: 115px;
-  left: 10px;
+  top: 105px;
+  left: 40px;
   width: 490px;
   height: 20px; 
   text-align: center;
@@ -14,8 +14,8 @@
 
 #downwin {
   position: absolute;
-  top: 139px;
-  left: 10px;
+  top: 120px;
+  left: 30px;
   width: 490px; 
   height: 360px;
   vertical-align: middle;

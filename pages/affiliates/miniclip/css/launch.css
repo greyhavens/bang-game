@@ -3,19 +3,10 @@
   background-repeat: no-repeat;
 }
 
-#launchtitle {
-  position: absolute;
-  top: 108px;
-  left: 10px;
-  width: 490px;
-  height: 20px; 
-  text-align: center;
-}
-
 #launchwin {
   position: absolute;
-  top: 130px;
-  left: 10px;
+  top: 98px;
+  left: 40px;
   width: 490px; 
   height: 364px;
 }
