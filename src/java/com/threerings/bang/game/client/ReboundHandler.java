@@ -48,7 +48,11 @@ public class ReboundHandler extends EffectHandler
     @Override // documentation inherited
     public void pieceDropped (Piece piece)
     {
-        ((ReboundEffect)_effect).finishTrapPiece(_bangobj, this);
+		if (_effect instanceof ReboundEffect) {
+        	((ReboundEffect)_effect).finishTrapPiece(_bangobj, this);
+		} else {
+			super.pieceDropped(piece);
+		}
     }
     
     /**
