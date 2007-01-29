@@ -27,6 +27,10 @@ public abstract class StringSetStat extends Stat
      */
     public boolean add (String key)
     {
+        if (key == null) {
+            throw new IllegalArgumentException("Cannot add null to StringSetStat");
+        }
+
         int iidx = ArrayUtil.binarySearch(_values, 0, _values.length, key);
         if (iidx >= 0) {
             return false;
