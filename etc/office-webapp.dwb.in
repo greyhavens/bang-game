@@ -19,8 +19,8 @@
     <Permissions>
         Path        @PREFIX@/log
         Path        @PREFIX@/run
-        User        @APPNAME@
-        Group       @APPNAME@
+        User        @APPUSER@
+        Group       @APPUSER@
         Recursive   yes
     </Permissions>
 </Package>
