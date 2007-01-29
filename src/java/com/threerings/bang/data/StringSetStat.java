@@ -16,6 +16,9 @@ public abstract class StringSetStat extends Stat
      */
     public boolean contains (String key)
     {
+        if (key == null) {
+            throw new IllegalArgumentException("StringSetStat cannot contain null");
+        }
         return ArrayUtil.binarySearch(_values, 0, _values.length, key) >= 0;
     }
 

@@ -138,6 +138,7 @@ public class OfficeManager extends PlaceManager
         // create a fake bounty config
         BountyConfig bounty = new BountyConfig();
         bounty.title = "Bounty Game Test";
+        bounty.ident = "test";
         bounty.reward = new BountyConfig.Reward();
         bounty.reward.scrip = 100;
         BountyConfig.GameInfo info = new BountyConfig.GameInfo();
