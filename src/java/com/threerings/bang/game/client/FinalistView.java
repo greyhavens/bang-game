@@ -53,7 +53,6 @@ public class FinalistView extends BContainer
         super(new AbsoluteLayout());
 
         Name name = bangobj.players[pidx];
-        int[] avatar = bangobj.playerInfo[pidx].avatar;
 
         // load up our medal image and extract the appropriate colored tile
         BufferedImage medal = ctx.getImageCache().getBufferedImage(
@@ -73,6 +72,8 @@ public class FinalistView extends BContainer
         // create our avatar imagery
         boolean winner = (rank == 0);
         int scale =  winner ? 2 : 4;
+        int[] avatar = (winner && bangobj.playerInfo[pidx].victory != null ?
+            bangobj.playerInfo[pidx].victory : bangobj.playerInfo[pidx].avatar);
 
         // start with a blank avatar
         setAvatar(new BlankIcon(AvatarLogic.FRAMED_WIDTH/scale,

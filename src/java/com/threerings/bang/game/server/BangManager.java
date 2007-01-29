@@ -898,6 +898,14 @@ public class BangManager extends GameManager
                 if (look != null) {
                     pinfo[ii].avatar = look.getAvatar(prec.user);
                 }
+                look = prec.user.getLook(Look.Pose.VICTORY);
+                if (look != null) {
+                    pinfo[ii].victory = look.getAvatar(prec.user);
+                    // don't store the victory look if it's the same as the avatar
+                    if (Arrays.equals(pinfo[ii].avatar, pinfo[ii].victory)) {
+                        pinfo[ii].victory = null;
+                    }
+                }
             }
         }
         _bangobj.setPlayerInfo(pinfo);

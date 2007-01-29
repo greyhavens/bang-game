@@ -99,6 +99,9 @@ public class BangObject extends GameObject
         /** The player's avatar data. */
         public int[] avatar;
 
+        /** The player's victory pose. */
+        public int[] victory;
+
         /** The readyness state of the player. */
         public int readyState;
     }
