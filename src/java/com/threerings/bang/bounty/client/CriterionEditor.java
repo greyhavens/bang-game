@@ -150,7 +150,8 @@ public abstract class CriterionEditor extends BContainer
         protected void createInterface () {
             if (_ranks.size() == 0) {
                 for (int rr = 0; rr < GameCodes.MAX_PLAYERS-1; rr++) {
-                    _ranks.add(new BComboBox.Item(rr, _msgs.get("m.rank_at" + rr)));
+                    String msg = _ctx.xlate(GameCodes.GAME_MSGS, "m.rank_at" + rr);
+                    _ranks.add(new BComboBox.Item(rr, msg));
                 }
             }
             add(_rank = new BComboBox(_ranks));
