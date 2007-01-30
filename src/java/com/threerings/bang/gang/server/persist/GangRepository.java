@@ -134,13 +134,17 @@ public class GangRepository extends JORARepository
 
     /**
      * Insert a new gang record into the repository and assigns a unique gang id in the process.
-     * The {@link GangRecord#founded} field will be filled in by this method if it is not already.
+     * The {@link GangRecord#founded} and {@link GangRecord#lastPlayed} fields will be filled in
+     * by this method if they are not already.
      */
     public void insertGang (GangRecord gang)
         throws PersistenceException
     {
         if (gang.founded == null) {
             gang.founded = new Timestamp(System.currentTimeMillis());
+        }
+        if (gang.lastPlayed == null) {
+            gang.lastPlayed = gang.founded;
         }
         gang.gangId = insert(_gtable, gang);
     }
@@ -197,7 +201,7 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         checkedUpdate("update GANGS set NOTORIETY = NOTORIETY + " + points +
-                      " where GANG_ID = " + gangId, 1);
+                      ", LAST_PLAYED = NOW() where GANG_ID = " + gangId, 1);
         checkedUpdate("update GANG_MEMBERS set NOTORIETY = NOTORIETY + " + points +
                       " where PLAYER_ID = " + playerId, 1);
     }
@@ -541,17 +545,24 @@ public class GangRepository extends JORARepository
             "STATEMENT TEXT NOT NULL",
             "URL VARCHAR(255) NOT NULL",
             "NOTORIETY INTEGER NOT NULL",
+            "LAST_PLAYED DATETIME NOT NULL",
             "SCRIP INTEGER NOT NULL",
             "BRAND BLOB",
             "PRIMARY KEY (GANG_ID)",
             "UNIQUE (NAME)",
         }, "");
 
-        // TEMP: add the statement and url columns, drop outfit and coins
+        // TEMP: add the statement and url columns, drop outfit and coins, add last played
         JDBCUtil.addColumn(conn, "GANGS", "STATEMENT", "TEXT NOT NULL", "FOUNDED");
         JDBCUtil.addColumn(conn, "GANGS", "URL", "VARCHAR(255) NOT NULL", "STATEMENT");
         JDBCUtil.dropColumn(conn, "GANGS", "OUTFIT");
         JDBCUtil.dropColumn(conn, "GANGS", "COINS");
+        if (!JDBCUtil.tableContainsColumn(conn, "GANGS", "LAST_PLAYED")) {
+            JDBCUtil.addColumn(conn, "GANGS", "LAST_PLAYED", "DATETIME NOT NULL", "NOTORIETY");
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("update GANGS set LAST_PLAYED = NOW()");
+            stmt.close();
+        }
         // END TEMP
 
         JDBCUtil.createTableIfMissing(conn, "GANG_MEMBERS", new String[] {

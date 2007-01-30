@@ -52,6 +52,9 @@ public class GangObject extends DObject
     /** The field name of the <code>notoriety</code> field. */
     public static final String NOTORIETY = "notoriety";
 
+    /** The field name of the <code>notorietyRank</code> field. */
+    public static final String NOTORIETY_RANK = "notorietyRank";
+
     /** The field name of the <code>outfit</code> field. */
     public static final String OUTFIT = "outfit";
 
@@ -91,6 +94,9 @@ public class GangObject extends DObject
     
     /** The gang's total notoriety. */
     public int notoriety;
+    
+    /** The gang's rank in terms of notoriety. */
+    public byte notorietyRank;
     
     /** The currently configured gang outfit. */
     public OutfitArticle[] outfit;
@@ -325,6 +331,22 @@ public class GangObject extends DObject
         requestAttributeChange(
             NOTORIETY, Integer.valueOf(value), Integer.valueOf(ovalue));
         this.notoriety = value;
+    }
+
+    /**
+     * Requests that the <code>notorietyRank</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setNotorietyRank (byte value)
+    {
+        byte ovalue = this.notorietyRank;
+        requestAttributeChange(
+            NOTORIETY_RANK, Byte.valueOf(value), Byte.valueOf(ovalue));
+        this.notorietyRank = value;
     }
 
     /**

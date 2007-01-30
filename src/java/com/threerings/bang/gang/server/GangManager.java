@@ -292,6 +292,7 @@ public class GangManager
                     gang.startTransaction();
                     try {
                         gang.setNotoriety(gang.notoriety + points);
+                        gang.setNotorietyRank(getNotorietyRank(gang.notoriety));
                         if (member != null) {
                             member.notoriety += points;
                             gang.updateMembers(member);
@@ -1000,6 +1001,14 @@ public class GangManager
         return (rank == RECRUITER_RANK) ? MEMBER_RANK : rank;
     }
 
+    /**
+     * Returns the rank corresponding to the supplied notoriety level.
+     */
+    protected static byte getNotorietyRank (int notoriety)
+    {
+        return (byte)BangServer.ratingmgr.getRank(NOTORIETY_IDENT, notoriety);
+    }
+    
     /** Handles information for a particular Gang on the server. */
     protected class GangHandler
     {
@@ -1021,6 +1030,7 @@ public class GangManager
             _gangobj.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
                 _gangobj.getCoinAccount());
             _gangobj.notoriety = record.notoriety;
+            _gangobj.notorietyRank = getNotorietyRank(record.notoriety);
             _gangobj.outfit = record.outfit;
             _gangobj.members = new DSet<GangMemberEntry>(record.members.iterator());
             
@@ -1029,6 +1039,7 @@ public class GangManager
                     SaloonManager.refreshTopRanked(getGangObject(),
                         "GANG_MEMBERS", "RATINGS.PLAYER_ID = GANG_MEMBERS.PLAYER_ID and " +
                         "GANG_MEMBERS.GANG_ID = " + _gangobj.gangId, TOP_RANKED_LIST_SIZE);
+                    _gangobj.setNotorietyRank(getNotorietyRank(_gangobj.notoriety));
                 }
             };
             _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);

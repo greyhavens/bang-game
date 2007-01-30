@@ -13,6 +13,9 @@ public interface GangCodes extends InvocationCodes
     /** The message bundle identifier for our translation messages. */
     public static final String GANG_MSGS = "gang";
     
+    /** The rating type identifier used for gang notoriety. */
+    public static final String NOTORIETY_IDENT = "no";
+    
     /** Gang rank constant. */
     public static final byte MEMBER_RANK = 0;
 

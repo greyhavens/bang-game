@@ -30,6 +30,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Rating;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
+import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.saloon.data.TopRankedList;
 import com.threerings.bang.server.ServerConfig;
 
@@ -40,10 +41,10 @@ import static com.threerings.bang.Log.log;
  */
 public class RatingRepository extends SimpleRepository
 {
-    /** Keeps track of the rating levels for each rank for a given scenario */
+    /** Keeps track of the rating levels for each rank for a given rating type. */
     public static class RankLevels
     {
-        public String scenario;
+        public String type;
         public int[] levels = new int[RANK_PERCENTAGES.length];
 
         public int getRank (int rating)
@@ -55,9 +56,9 @@ public class RatingRepository extends SimpleRepository
             return rank;
         }
 
-        protected RankLevels (String scenario)
+        protected RankLevels (String type)
         {
-            this.scenario = scenario;
+            this.type = type;
         }
     }
 
@@ -243,7 +244,7 @@ public class RatingRepository extends SimpleRepository
     }
 
     /**
-     * Loads and returns rank levels for each scenario.
+     * Loads and returns rank levels for each rating type.
      */
     public List<RankLevels> loadRanks ()
         throws PersistenceException
@@ -254,17 +255,17 @@ public class RatingRepository extends SimpleRepository
                 throws SQLException, PersistenceException
             {
                 ResultSet rs = conn.prepareStatement(
-                    "   select SCENARIO, RANK, LEVEL " +
+                    "   select RATING_TYPE, RANK, LEVEL " +
                     "     from RANKS " +
-                    " order by SCENARIO, RANK ").executeQuery();
+                    " order by RATING_TYPE, RANK ").executeQuery();
                 RankLevels currentLevels = null;
                 while (rs.next()) {
-                    String scenario = rs.getString(1);
+                    String type = rs.getString(1);
                     int rank = rs.getInt(2);
                     int level = rs.getInt(3);
                     if (currentLevels == null ||
-                            !currentLevels.scenario.equals(scenario)) {
-                        currentLevels = new RankLevels(scenario);
+                            !currentLevels.type.equals(type)) {
+                        currentLevels = new RankLevels(type);
                         levelList.add(currentLevels);
                     }
                     currentLevels.levels[rank] = level;
@@ -288,38 +289,42 @@ public class RatingRepository extends SimpleRepository
         }
         if (BangCodes.FRONTIER_TOWN.equals(ServerConfig.townId)) {
             calculateRanks(ScenarioInfo.OVERALL_IDENT);
+            calculateRanks(GangCodes.NOTORIETY_IDENT);
         }
     }
     
     /**
-     * Scans RATINGS for the given scenario and calculates which rating is
+     * Scans RATINGS for the given rating type and calculates which rating is
      * is required to reach which rank. Each ranks corresponds to a certain
-     * percentile relative the entire player population.
+     * percentile relative the entire player/gang population.
      *
      * When calculations complete, the results are dumped to the RANKS table,
-     * which is first cleared of the current scenario. The {@link Metrics}
+     * which is first cleared of the current rating type. The {@link Metrics}
      * return value holds the calculated rank levels along with a few extra
      * values collected during the computation.
      *
      * This class was originally derived from Yohoho's GenerateStandings and
      * some core logic from there still remains.
      */
-    public Metrics calculateRanks (final String scenario)
+    public Metrics calculateRanks (final String type)
         throws PersistenceException
     {
-        // sort each row for this scenario from RATINGS into a histogram
+        // notoriety comes from the gang database, scenarios from RATINGS
+        final String what = type.equals(GangCodes.NOTORIETY_IDENT) ?
+            ("NOTORIETY from GANGS where LAST_PLAYED > " + STALE_DATE) :
+            ("RATING from RATINGS where SCENARIO = " + type + " and LAST_PLAYED > " + STALE_DATE);
+            
+        // sort each row for this type into a histogram
         final SparseHistogram histo = new SparseHistogram();
         execute(new Operation<Void>() {
             public Void invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
-                String query = "select RATING from RATINGS " +
-                    "where SCENARIO = ? and LAST_PLAYED > " + STALE_DATE;
-                PreparedStatement stmt = null;
+                String query = "select " + what;
+                Statement stmt = null;
                 try {
-                    stmt = conn.prepareStatement(query);
-                    stmt.setString(1, scenario);
-                    ResultSet rs = stmt.executeQuery();
+                    stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
                         histo.addValue(rs.getInt(1));
                     }
@@ -338,7 +343,7 @@ public class RatingRepository extends SimpleRepository
         int bucketCount = buckets.length;
         int sidx = 0, sum = 0;
 
-        final Metrics met = new Metrics(scenario);
+        final Metrics met = new Metrics(type);
         met.totalUsers = userCount;
 
         for (int bidx = 0; bidx < bucketCount &&
@@ -368,20 +373,20 @@ public class RatingRepository extends SimpleRepository
                     // clear the table
                     clear = conn.prepareStatement(
                             "delete from RANKS" +
-                            "      where SCENARIO = ? ");
-                    clear.setString(1, scenario);
+                            "      where RATING_TYPE = ? ");
+                    clear.setString(1, type);
                     clear.execute();
                     JDBCUtil.close(clear);
                     
                     // then fill it
                     insert = conn.prepareStatement(
                         "insert into RANKS " +
-                        "        set SCENARIO = ?, " +
+                        "        set RATING_TYPE = ?, " +
                         "            RANK = ?, " +
                         "            LEVEL = ? ");
                     int[] levels = met.levels;
                     for (int rank = 0; rank < levels.length; rank ++) {
-                        insert.setString(1, scenario);
+                        insert.setString(1, type);
                         insert.setInt(2, rank);
                         insert.setInt(3, levels[rank]);
                         insert.execute();
@@ -509,10 +514,10 @@ public class RatingRepository extends SimpleRepository
             "PRIMARY KEY (PLAYER_ID, SCENARIO)",
         }, "");
         JDBCUtil.createTableIfMissing(conn, "RANKS", new String[] {
-            "SCENARIO VARCHAR(2) NOT NULL",
+            "RATING_TYPE VARCHAR(2) NOT NULL",
             "RANK SMALLINT NOT NULL",
-            "LEVEL SMALLINT NOT NULL",
-            "PRIMARY KEY (SCENARIO, RANK)",
+            "LEVEL INTEGER NOT NULL",
+            "PRIMARY KEY (RATING_TYPE, RANK)",
         }, "");
         JDBCUtil.createTableIfMissing(conn, "SCORE_TRACKERS", new String[] {
             "SCENARIO VARCHAR(2) NOT NULL",
@@ -521,7 +526,8 @@ public class RatingRepository extends SimpleRepository
             "PRIMARY KEY (SCENARIO, PLAYERS)",
         }, "");
 
-        // TEMP: add our LAST_PLAYED column
+        // TEMP: add our LAST_PLAYED column, change RANKS to support non-scenario
+        // ratings
         if (!JDBCUtil.tableContainsColumn(conn, "RATINGS", "LAST_PLAYED")) {
             JDBCUtil.addColumn(
                 conn, "RATINGS", "LAST_PLAYED", "TIMESTAMP NOT NULL", null);
@@ -529,6 +535,10 @@ public class RatingRepository extends SimpleRepository
             stmt.executeUpdate("update RATINGS set LAST_PLAYED = " +
                                "DATE_SUB(NOW(), INTERVAL 1 WEEK)");
             stmt.close();
+        }
+        if (!JDBCUtil.tableContainsColumn(conn, "RANKS", "RATING_TYPE")) {
+            JDBCUtil.changeColumn(conn, "RANKS", "SCENARIO", "RATING_TYPE VARCHAR(2) NOT NULL");
+            JDBCUtil.changeColumn(conn, "RANKS", "LEVEL", "LEVEL INTEGER NOT NULL");
         }
         // END TEMP
     }
@@ -544,12 +554,17 @@ public class RatingRepository extends SimpleRepository
             return (int)((accumUsers[sidx] / (float)totalUsers) * 100);
         }
 
-        /** Convenience function for displaying metrics for a scenario */
+        /** Convenience function for displaying metrics for a rating type. */
         public void generateReport (PrintStream stream)
         {
-            String name = ScenarioInfo.OVERALL_IDENT.equals(scenario) ?
-                "OVERALL" :
-                ScenarioInfo.getScenarioInfo(scenario).getName();
+            String name;
+            if (GangCodes.NOTORIETY_IDENT.equals(type)) {
+                name = "NOTORIETY";
+            } else if (ScenarioInfo.OVERALL_IDENT.equals(type)) {
+                name = "OVERALL";
+            } else {
+                name = ScenarioInfo.getScenarioInfo(type).getName();
+            }
             stream.println(StringUtil.pad(name, 26));
             stream.println("tgt% act% users total rating");
             for (int sidx = 0; sidx < RANK_PERCENTAGES.length; sidx++) {
@@ -568,9 +583,9 @@ public class RatingRepository extends SimpleRepository
             }
         }
 
-        protected Metrics (String scenario)
+        protected Metrics (String type)
         {
-            super(scenario);
+            super(type);
         }
     }
 

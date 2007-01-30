@@ -16,6 +16,7 @@ import com.samskivert.util.Tuple;
 import com.threerings.parlor.rating.util.Percentiler;
 
 import com.threerings.bang.server.persist.RatingRepository;
+import com.threerings.bang.server.persist.RatingRepository.RankLevels;
 import com.threerings.bang.server.persist.RatingRepository.TrackerKey;
 
 import static com.threerings.bang.Log.*;
@@ -43,6 +44,9 @@ public class RatingManager
             createRankRecalculateInterval();
             createTrackerSyncInterval();
         }
+        
+        // create the interval to reload the ranks for all rating types
+        createRankReloadInterval();
     }
     
     /**
@@ -52,6 +56,16 @@ public class RatingManager
     {
         log.info("Rating manager shutting down.");
         syncTrackers();
+    }
+    
+    /**
+     * Given a numeric rating, returns its rank level.  This method must be thread-safe, as it is
+     * called from both the dobj and the invoker thread.
+     */
+    public int getRank (String type, int rating)
+    {
+        RankLevels levels = _rankLevels.get(type);
+        return (levels == null) ? 0 : levels.getRank(rating);
     }
     
     /**
@@ -105,6 +119,40 @@ public class RatingManager
     }
     
     /**
+     * Creates the interval that reloads the rank levels for all rating types every hour.
+     */
+    public void createRankReloadInterval ()
+    {
+        // reload soon after startup, then every hour
+        new Interval(BangServer.omgr) {
+            public void expired () {
+                reloadRanks();
+            }
+        }.schedule(1000L, 60 * 60 * 1000L);
+    }
+    
+    /**
+     * (Re)loads the rank data for all rating types.
+     */
+    protected void reloadRanks ()
+    {
+        BangServer.invoker.postUnit(new Invoker.Unit("rankLoader") {
+            public boolean invoke()  {
+                HashMap<String, RankLevels> newMap = new HashMap<String, RankLevels>();
+                try {
+                    for (RankLevels levels : _ratingrepo.loadRanks()) {
+                        newMap.put(levels.type, levels);
+                    }
+                    _rankLevels = newMap;
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Failure while reloading rank data", pe);
+                }
+                return false;
+            }
+        });
+    }
+    
+    /**
      * Creates the interval that synchronizes our score trackers with the
      * database every hour.
      */
@@ -154,4 +202,10 @@ public class RatingManager
     
     /** Score percentile trackers. */
     protected HashMap<TrackerKey, Percentiler> _trackers;
+    
+    /** A map of rating types to rank levels, reloaded every so often */
+    protected volatile HashMap<String, RankLevels> _rankLevels = new HashMap<String, RankLevels>();
+
+    /** When we should next reload our rank levels */
+    protected long _nextRankReload;
 }

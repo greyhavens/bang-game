@@ -33,6 +33,9 @@ public class GangRecord
     /** The gang's accumulated notoriety points. */
     public int notoriety;
 
+    /** The last time notoriety points were added. */
+    public Timestamp lastPlayed;
+    
     /** The amount of scrip in the gang's coffers. */
     public int scrip;
 
@@ -54,6 +57,7 @@ public class GangRecord
         this.name = name;
         statement = "";
         url = "";
+        outfit = new OutfitArticle[0];
         members = new ArrayList<GangMemberEntry>();
     }
 

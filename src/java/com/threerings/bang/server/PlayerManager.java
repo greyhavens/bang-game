@@ -136,9 +136,6 @@ public class PlayerManager
         if (BangServer.peermgr != null) {
             BangServer.peermgr.addPlayerObserver(_pardwatcher);
         }
-
-        // do an initial read of rank data
-        maybeScheduleRankReload();
     }
 
     /**
@@ -508,9 +505,6 @@ public class PlayerManager
                                final PlayerService.ResultListener listener)
         throws InvocationException
     {
-        // first, see if we need to refresh ranks from repository
-        maybeScheduleRankReload();
-
         // check the cache for previously generated posters
         SoftReference<PosterInfo> infoRef = _posterCache.get(handle);
         PosterInfo tmpInfo = null;
@@ -806,35 +800,6 @@ public class PlayerManager
     }
 
     /**
-     * If it's been more than a certain amount of time since the last time we refresh the rank
-     * levels from the database, go out and fetch them as soon as possible. As this is an
-     * asynchronous operation, we can't easily sneak one in before the poster request.
-     */
-    protected void maybeScheduleRankReload ()
-    {
-        long now = System.currentTimeMillis();
-        if (now < _nextRankReload) {
-            return;
-        }
-        _nextRankReload = now + RANK_RELOAD_TIMEOUT;
-
-        BangServer.invoker.postUnit(new Invoker.Unit() {
-            public boolean invoke()  {
-                Map<String, RankLevels> newMap = new HashMap<String, RankLevels>();
-                try {
-                    for (RankLevels levels : _raterepo.loadRanks()) {
-                        newMap.put(levels.scenario, levels);
-                    }
-                    _rankLevels = newMap;
-                } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failure while reloading rank data", pe);
-                }
-                return false;
-            }
-        });
-    }
-
-    /**
      * Converts a players {@link Rating}s records into ranking levels for inclusion in their poster
      * info.
      */
@@ -843,8 +808,7 @@ public class PlayerManager
     {
         StreamableHashMap<String, Integer> map = new StreamableHashMap<String,Integer>();
         for (Rating rating : ratings) {
-            RankLevels levels = _rankLevels.get(rating.scenario);
-            map.put(rating.scenario, (levels == null) ? 0 : levels.getRank(rating.rating));
+            map.put(rating.scenario, BangServer.ratingmgr.getRank(rating.scenario, rating.rating));
         }
         return map;
     }
@@ -1067,13 +1031,4 @@ public class PlayerManager
     /** A light-weight cache of soft {@link PosterInfo} references. */
     protected Map<Handle, SoftReference<PosterInfo>> _posterCache =
         new HashMap<Handle, SoftReference<PosterInfo>>();
-
-    /** A map of scenario ID's to rank levels, reloaded every so often */
-    protected Map<String, RankLevels> _rankLevels = new HashMap<String, RankLevels>();
-
-    /** When we should next reload our rank levels */
-    protected long _nextRankReload;
-
-    /** The number of milliseconds after which we reload rank levels from DB */
-    protected static final long RANK_RELOAD_TIMEOUT = (3600 * 1000);
 }
