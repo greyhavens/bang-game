@@ -787,11 +787,10 @@ public class GangManager
             }
 
             protected void actionCompleted () {
+                String source = MessageBundle.qualify(GANG_MSGS,
+                    MessageBundle.tcompose("m.gang_title", gang.name));
                 for (Item item : _items) {
-                    PlayerObject owner = BangServer.lookupPlayer(item.getOwnerId());
-                    if (owner != null) {
-                        owner.addToInventory(item);
-                    }
+                    BangServer.playmgr.deliverItem(item, source);
                 }
                 listener.requestProcessed(new int[] { _memberCount, _items.size() });
             }

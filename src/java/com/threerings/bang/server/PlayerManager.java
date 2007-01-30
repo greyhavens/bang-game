@@ -788,6 +788,35 @@ public class PlayerManager
     }
     
     /**
+     * Delivers the specified item to its owner if he is online (on any server).  The item is
+     * assumed to be in the database already; this method merely requests an update of the
+     * distributed object state.
+     *
+     * @param source a qualified translatable string describing the source of the item
+     */
+    public void deliverItem (Item item, String source)
+    {
+        int ownerId = item.getOwnerId();
+        PlayerObject user = BangServer.lookupPlayer(ownerId);
+        if (user != null) {
+            deliverItemLocal(user, item, source);
+        } else if (BangServer.peermgr != null) {
+            // try our peers
+            BangServer.peermgr.forwardItem(item, source);
+        }
+    }
+    
+    /**
+     * Delivers an item to a player on this server.
+     */
+    public void deliverItemLocal (PlayerObject user, Item item, String source)
+    {
+        user.addToInventory(item);
+        SpeakProvider.sendInfo(user, BangCodes.BANG_MSGS,
+            MessageBundle.compose("m.received_item", item.getName(), source));
+    }
+    
+    /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
     protected void playComputer (

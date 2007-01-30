@@ -5,10 +5,12 @@ package com.threerings.bang.server;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ObserverList;
 import com.samskivert.util.Tuple;
 
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -24,7 +26,9 @@ import com.threerings.crowd.peer.server.CrowdPeerManager;
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangNodeObject;
+import com.threerings.bang.data.BangPeerMarshaller;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangUtil;
 
@@ -35,6 +39,7 @@ import static com.threerings.bang.Log.log;
  * like pardner presence reporting.
  */
 public class BangPeerManager extends CrowdPeerManager
+    implements BangPeerProvider
 {
     /**
      * Used by entities that wish to know when a player logs onto or off of this or one of our peer
@@ -90,12 +95,54 @@ public class BangPeerManager extends CrowdPeerManager
             }
             BangClientInfo info = (BangClientInfo)peer.nodeobj.clients.get(handle);
             if (info != null) {
-                return new Tuple<BangClientInfo,Integer>(info, ((BangPeerNode)peer)._townIndex);
+                return new Tuple<BangClientInfo,Integer>(info, ((BangPeerNode)peer).townIndex);
             }
         }
         return null;
     }
+    
+    /**
+     * Requests to deliver the specified item to its owner if he's logged into one of our peer
+     * servers.
+     *
+     * @param source a qualified translatable string describing the source of the item
+     * @return true if the item was successfully delivered, false if the user was not online.
+     */
+    public boolean forwardItem (Item item, String source)
+    {
+        for (PeerNode peer : _peers.values()) {
+            if (peer.nodeobj == null) {
+                continue;
+            }
+            if (((BangPeerNode)peer).players.containsKey(item.getOwnerId())) {
+                ((BangNodeObject)peer.nodeobj).bangPeerService.deliverItem(
+                    peer.getClient(), item, source);
+                return true;
+            }
+        }
+        return false;
+    }
 
+    // from interface BangPeerProvider
+    public void deliverItem (ClientObject caller, Item item, String source)
+    {
+        PlayerObject user = BangServer.lookupPlayer(item.getOwnerId());
+        if (user != null) {
+            BangServer.playmgr.deliverItemLocal(user, item, source);
+        }
+    }
+    
+    @Override // from CrowdPeerManager
+    public void shutdown ()
+    {
+        super.shutdown();
+        
+        // clear out our invocation service
+        if (_nodeobj != null) {
+            BangServer.invmgr.clearDispatcher(((BangNodeObject)_nodeobj).bangPeerService);
+        }
+    }
+    
     @Override // from PeerManager
     protected PeerNode createPeerNode (NodeRecord record)
     {
@@ -118,14 +165,14 @@ public class BangPeerManager extends CrowdPeerManager
     protected void initClientInfo (PresentsClient client, ClientInfo info)
     {
         super.initClientInfo(client, info);
-
+        BangClientInfo binfo = (BangClientInfo)info;
+        PlayerObject player = (PlayerObject)client.getClientObject();
+        binfo.playerId = player.playerId;
+        
         // grab a snapshot of this player's avatar which is how they'll look to
         // pardners on other servers
-        PlayerObject player = (PlayerObject)client.getClientObject();
         Look look = player.getLook(Look.Pose.DEFAULT);
-        if (look != null) {
-            ((BangClientInfo)info).avatar = look.getAvatar(player);
-        }
+        binfo.avatar = (look == null) ? null : look.getAvatar(player);
     }
 
     @Override // from CrowdPeerManager
@@ -136,6 +183,9 @@ public class BangPeerManager extends CrowdPeerManager
         // stuff our town information into our node object
         BangNodeObject bnodeobj = (BangNodeObject)_nodeobj;
         bnodeobj.setTownId(ServerConfig.townId);
+        bnodeobj.setBangPeerService(
+            (BangPeerMarshaller)BangServer.invmgr.registerDispatcher(
+                new BangPeerDispatcher(this), false));
     }
 
     /**
@@ -169,6 +219,9 @@ public class BangPeerManager extends CrowdPeerManager
     protected class BangPeerNode extends PeerNode
         implements SetListener
     {
+        protected int townIndex;
+        protected HashIntMap<BangClientInfo> players = new HashIntMap<BangClientInfo>();
+
         public BangPeerNode (NodeRecord record) {
             super(record);
         }
@@ -181,19 +234,23 @@ public class BangPeerManager extends CrowdPeerManager
             object.addListener(this);
 
             // look up this node's town index once and store it
-            _townIndex = BangUtil.getTownIndex(((BangNodeObject)object).townId);
-            log.info("Got peer object " + _townIndex);
+            townIndex = BangUtil.getTownIndex(((BangNodeObject)object).townId);
+            log.info("Got peer object " + townIndex);
 
-            // issue a remotePlayerLoggedOn for all logged on players
+            // map and issue a remotePlayerLoggedOn for all logged on players
             for (ClientInfo info : object.clients) {
-                remotePlayerLoggedOn(_townIndex, (BangClientInfo)info);
+                BangClientInfo binfo = (BangClientInfo)info;
+                players.put(binfo.playerId, binfo);
+                remotePlayerLoggedOn(townIndex, binfo);
             }
         }
 
         public void entryAdded (EntryAddedEvent event) {
             log.info("Remote entry added " + event);
             if (event.getName().equals(NodeObject.CLIENTS)) {
-                remotePlayerLoggedOn(_townIndex, (BangClientInfo)event.getEntry());
+                BangClientInfo info = (BangClientInfo)event.getEntry();
+                players.put(info.playerId, info);
+                remotePlayerLoggedOn(townIndex, info);
             }
         }
 
@@ -203,11 +260,11 @@ public class BangPeerManager extends CrowdPeerManager
         public void entryRemoved (EntryRemovedEvent event) {
             log.info("Remote entry removed " + event);
             if (event.getName().equals(NodeObject.CLIENTS)) {
-                remotePlayerLoggedOff(_townIndex, (BangClientInfo)event.getOldEntry());
+                BangClientInfo info = (BangClientInfo)event.getOldEntry();
+                players.remove(info.playerId);
+                remotePlayerLoggedOff(townIndex, info);
             }
         }
-
-        protected int _townIndex;
     }
 
     protected ObserverList<RemotePlayerObserver> _remobs = new ObserverList<RemotePlayerObserver>(

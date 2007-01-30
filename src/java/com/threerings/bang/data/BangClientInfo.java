@@ -10,6 +10,9 @@ import com.threerings.crowd.peer.data.CrowdClientInfo;
  */
 public class BangClientInfo extends CrowdClientInfo
 {
+    /** The player's unique identifier. */
+    public int playerId;
+    
     /** This player's avatar (used for pardner purposes). */
     public int[] avatar;
 }
