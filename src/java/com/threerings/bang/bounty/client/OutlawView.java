@@ -48,7 +48,7 @@ public class OutlawView extends BComponent
         }
         _images[AVATAR] = null;
         _print = print;
-        if (_print != null) {
+        if (_print != null && _print.length > 0) {
             AvatarView.getFramableImage(ctx, _print, (int)(4/_scale), this);
         }
     }
