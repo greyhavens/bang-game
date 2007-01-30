@@ -4,6 +4,7 @@
   <!-- things you probably don't want to change -->
   <property name="src.dir"        value="src/java"/>
   <property name="deploy.dir"     value="dist"/>
+  <property name="var.dir"        value="var"/>
   <property name="app.name"       value="bang"/>
   <property name="savedoc.dir"    value="docs"/>
   <property name="build.optimize" value="on"/>
@@ -13,6 +14,11 @@
   <property name="projects" value="samskivert,jme-bui,narya,nenya,vilya,threerings"/>
   <property name="webapps" value="office"/>
   <import file="projects/tools/etc/build-support.xml"/>
+
+  <!-- override the fileset for the checkclean target to ignore ${var.dir} -->
+  <fileset id="checkclean.fileset" dir="${basedir}">
+    <exclude name="${var.dir}/**"/>
+  </fileset>
 
   <!-- declare the properties files. -->
   <property name="props.list" value="server.properties,deployment.properties"/>
