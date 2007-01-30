@@ -38,6 +38,11 @@ public class Forklift extends Unit
     protected ShotEffect generateShotEffect (
             BangObject bangobj, Piece target, int damage)
     {
-        return new SpringShotEffect(this, target, damage, null, null);
+        if (target instanceof Unit) {
+            return new SpringShotEffect(this, target, damage, null, null);
+        } else {
+            return new ShotEffect(
+                this, target, damage, attackInfluenceIcons(), defendInfluenceIcons(target));
+        }
     }
 }
