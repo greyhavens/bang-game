@@ -357,51 +357,51 @@ scrollbar_vwell:disabled {
 }
 
 scrollbar_hless {
-  icon: image "ui/scrollbar/left_normal.png" framex;
+  icon: image "ui/scrollbar/left_normal.png" centerxy;
 }
 
 scrollbar_hless:down {
-  icon: image "ui/scrollbar/left_down.png" framex;
+  icon: image "ui/scrollbar/left_down.png" centerxy;
 }
 
 scrollbar_hless:disabled {
-  icon: image "ui/scrollbar/left_disabled.png" framex;
+  icon: image "ui/scrollbar/left_disabled.png" centerxy;
 }
 
 scrollbar_vless {
-  background: image "ui/scrollbar/top_normal.png" framey;
+  background: image "ui/scrollbar/top_normal.png" centerxy;
 }
 
 scrollbar_vless:down {
-  background: image "ui/scrollbar/top_down.png" framey;
+  background: image "ui/scrollbar/top_down.png" centerxy;
 }
 
 scrollbar_vless:disabled {
-  background: image "ui/scrollbar/top_disabled.png" framey;
+  background: image "ui/scrollbar/top_disabled.png" centerxy;
 }
 
 scrollbar_hmore {
-  icon: image "ui/scrollbar/right_normal.png" framex;
+  icon: image "ui/scrollbar/right_normal.png" centerxy;
 }
 
 scrollbar_hmore:down {
-  icon: image "ui/scrollbar/right_down.png" framex;
+  icon: image "ui/scrollbar/right_down.png" centerxy;
 }
 
 scrollbar_hmore:disabled {
-  icon: image "ui/scrollbar/right_disabled.png" framex;
+  icon: image "ui/scrollbar/right_disabled.png" centerxy;
 }
 
 scrollbar_vmore {
-  background: image "ui/scrollbar/bottom_normal.png" framey;
+  background: image "ui/scrollbar/bottom_normal.png" centerxy;
 }
 
 scrollbar_vmore:down {
-  background: image "ui/scrollbar/bottom_down.png" framey;
+  background: image "ui/scrollbar/bottom_down.png" centerxy;
 }
 
 scrollbar_vmore:disabled {
-  background: image "ui/scrollbar/bottom_disabled.png" framey;
+  background: image "ui/scrollbar/bottom_disabled.png" centerxy;
 }
 
 hslider {
