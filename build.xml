@@ -350,7 +350,7 @@
         <include name="rsrc/**/*.ogg"/>
       </fileset>
     </delete>
-    <!--<delete><fileset dir="etc/proguard" includes="*.map"/></delete>-->
+    <delete><fileset dir="etc/proguard" includes="0.map"/></delete>
     <delete dir="pages/devclient"/>
     <delete>
       <fileset dir="pages">
