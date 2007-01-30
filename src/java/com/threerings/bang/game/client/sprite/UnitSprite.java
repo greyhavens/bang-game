@@ -284,11 +284,11 @@ public class UnitSprite extends MobileSprite
         }
 
         // display visualizations for influences and hindrances
-        if (!ObjectUtil.equals(unit.influence, _influence)) {
+        if (!ObjectUtil.equals(unit.getMainInfluence(), _influence)) {
             if (_influenceViz != null) {
                 _influenceViz.destroy();
             }
-            _influence = unit.influence;
+            _influence = unit.getMainInfluence();
             if (_influence != null) {
                 _influenceViz = _influence.createViz(BangPrefs.isHighDetail());
                 if (_influenceViz != null) {
@@ -296,11 +296,11 @@ public class UnitSprite extends MobileSprite
                 }
             }
         }
-        if (!ObjectUtil.equals(unit.hindrance, _hindrance)) {
+        if (!ObjectUtil.equals(unit.getHindrance(), _hindrance)) {
             if (_hindranceViz != null) {
                 _hindranceViz.destroy();
             }
-            _hindrance = unit.hindrance;
+            _hindrance = unit.getHindrance();
             if (_hindrance != null) {
                 _hindranceViz = _hindrance.createViz(BangPrefs.isHighDetail());
                 if (_hindranceViz != null) {

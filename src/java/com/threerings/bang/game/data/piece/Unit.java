@@ -37,20 +37,15 @@ public class Unit extends Piece
 {
     /** The player to whom this unit will return on respawn or -1 if it should not be respawned. */
     public int originalOwner = -1;
-
-    /** Any influence currently acting on this unit. This is not serialized, but will be filled in
+    
+    /** A set of influences acting on this unit. This is not serialized, but will be filled in
      * at the appropriate time on the client and server by effects. */
-    public transient Influence influence;
-
-    /** Any hindrance currently acting on this unit. This is not serialized, but will be filled in
-     * at the appropriate time on the client and server by effects. */
-    public transient Hindrance hindrance;
+    protected static enum InfluenceType { MAIN, HOLDING, SPECIAL, HINDRANCE };
+    protected transient Influence _influences[] = new Influence[4];
+    
 
     /** Type of thing being held, or null for nothing. */
     public String holding;
-
-    /** An additional influence caused by the thing being held. */
-    public transient Influence holdingInfluence;
 
     /** Used to track consecutive kills by this unit. */
     public transient int consecKills;
@@ -83,28 +78,80 @@ public class Unit extends Piece
     {
         damage = 0;
         consecKills = 0;
-        influence = null;
+        setMainInfluence(null, bangobj.tick);
         holding = null;
         setRespawnTick((short)0);
         lastActed = (short)(bangobj.tick - 4);
     }
-
+    
     /**
-     * Configures this piece with a new influence.
-     */
-    public void setInfluence (Influence influence, short tick)
+     * Gets the an array of all influences.
+     */    
+    public Influence[] getInfluences ()
     {
-        influence.init(tick);
-        this.influence = influence;
+        return _influences;
+    }
+    
+    /**
+     * Gets the main influence.
+     */    
+    public Influence getMainInfluence ()
+    {
+        return _influences[InfluenceType.MAIN.ordinal()];
     }
 
     /**
+     * Gets the holding influence.
+     */    
+    public Influence getHoldingInfluence ()
+    {
+        return _influences[InfluenceType.HOLDING.ordinal()];
+    }
+    
+    /**
+     * Gets the new hindrance.
+     */    
+    public Hindrance getHindrance ()
+    {
+        return (Hindrance)_influences[InfluenceType.HINDRANCE.ordinal()];
+    }    
+    
+    /**
+     * Configures this piece with a new main influence.
+     */    
+    public void setMainInfluence (Influence influence, short tick)
+    {
+        setInfluence(InfluenceType.MAIN, influence, tick);
+    }
+
+    /**
+     * Configures this piece with a new holding influence.
+     */    
+    public void setHoldingInfluence (Influence influence, short tick)
+    {
+        if (influence != null) {
+            influence.holding = true;
+        }
+        setInfluence(InfluenceType.HOLDING, influence, tick);
+    }
+    
+    /**
      * Configures this piece with a new hindrance.
-     */
+     */    
     public void setHindrance (Hindrance hindrance, short tick)
     {
-        hindrance.init(tick);
-        this.hindrance = hindrance;
+        setInfluence(InfluenceType.HINDRANCE, (Influence)hindrance, tick);
+    }    
+
+    /**
+     * Configures this piece with a new influence by type.
+     */
+    protected void setInfluence (InfluenceType type, Influence influence, short tick)
+    {
+        if (influence != null) {
+            influence.init(tick);
+        }
+        _influences[type.ordinal()] = influence;
     }
 
     /**
@@ -285,8 +332,8 @@ public class Unit extends Piece
     @Override // documentation inherited
     public Effect[] willShoot (BangObject bangobj, Piece target, ShotEffect shot)
     {
-        if (influence != null) {
-            return influence.willShoot(bangobj, target, shot);
+        if (getMainInfluence() != null) {
+            return getMainInfluence().willShoot(bangobj, target, shot);
         }
         return NO_EFFECTS;
     }
@@ -295,8 +342,8 @@ public class Unit extends Piece
     public ShotEffect shoot (BangObject bangobj, Piece target, float scale)
     {
         ShotEffect shot = null;
-        if (hindrance != null) {
-            shot = hindrance.shoot(bangobj, this, target, scale);
+        if (getHindrance() != null) {
+            shot = getHindrance().shoot(bangobj, this, target, scale);
         }
         if (shot == null) {
             shot = unitShoot(bangobj, target, scale);
@@ -370,18 +417,18 @@ public class Unit extends Piece
         }
 
         ArrayList<Effect> effects = new ArrayList<Effect>();
-        if (influence != null && influence.isExpired(tick)) {
-            ExpireInfluenceEffect effect = influence.createExpireEffect();
+        if (getMainInfluence() != null && getMainInfluence().isExpired(tick)) {
+            ExpireInfluenceEffect effect = getMainInfluence().createExpireEffect();
             effect.init(this);
             effects.add(effect);
         }
-        if (hindrance != null) {
-            if (hindrance.isExpired(tick)) {
-                ExpireInfluenceEffect effect = hindrance.createExpireEffect();
+        if (getHindrance() != null) {
+            if (getHindrance().isExpired(tick)) {
+                ExpireInfluenceEffect effect = getHindrance().createExpireEffect();
                 effect.init(this);
                 effects.add(effect);
             } else {
-                Effect effect = hindrance.tick();
+                Effect effect = getHindrance().tick();
                 if (effect != null) {
                     effects.add(effect);
                 }
@@ -402,14 +449,10 @@ public class Unit extends Piece
         if (_attackIcons == null) {
             _attackIcons = new ArrayList<String>();
         }
-        if (influence != null && influence.didAdjustAttack()) {
-            _attackIcons.add(influence.getName());
-        }
-        if (holdingInfluence != null && holdingInfluence.didAdjustAttack()) {
-            _attackIcons.add(holdingInfluence.getName());
-        }
-        if (hindrance != null && hindrance.didAdjustAttack()) {
-            _attackIcons.add(hindrance.getName());
+        for (Influence influence : getInfluences()) {
+            if (influence != null && influence.didAdjustAttack()) {
+                _attackIcons.add(influence.getName());
+            }
         }
         String[] icons = null;
         if (_attackIcons.size() > 0) {
@@ -422,57 +465,68 @@ public class Unit extends Piece
     @Override // documentation inherited
     protected int getTicksPerMove ()
     {
-        int ticks = (influence == null) ?
-            super.getTicksPerMove() : influence.adjustTicksPerMove(super.getTicksPerMove());
-        ticks = (holdingInfluence == null) ? ticks : holdingInfluence.adjustTicksPerMove(ticks);
-        return (hindrance == null) ? ticks : hindrance.adjustTicksPerMove(ticks);
+        int ticks = super.getTicksPerMove();
+        for (Influence influence : getInfluences()) {
+            if (influence != null) {
+                ticks = influence.adjustTicksPerMove(ticks);
+            } 
+        }
+        return ticks;
     }
 
     @Override // documentation inherited
     public int getSightDistance ()
     {
-        int distance = (influence == null) ?
-            _config.sightDistance : influence.adjustSightDistance(_config.sightDistance);
-        distance = (holdingInfluence == null) ?
-            distance : holdingInfluence.adjustSightDistance(distance);
-        return (hindrance == null) ? distance : hindrance.adjustSightDistance(distance);
+        int distance = _config.sightDistance;
+        for (Influence influence : getInfluences()) {
+            if (influence != null) {
+                distance = influence.adjustSightDistance(distance);
+            } 
+        }
+        return distance;        
     }
 
     @Override // documentation inherited
     public int getMoveDistance ()
     {
-        int distance = (influence == null) ?
-            _config.moveDistance : influence.adjustMoveDistance(_config.moveDistance);
-        distance = (holdingInfluence == null) ?
-            distance : holdingInfluence.adjustMoveDistance(distance);
-        return (hindrance == null) ? distance : hindrance.adjustMoveDistance(distance);
+        int distance = _config.moveDistance;
+        for (Influence influence : getInfluences()) {
+            if (influence != null) {
+                distance = influence.adjustMoveDistance(distance);
+            } 
+        }
+        return distance;        
     }
 
     @Override // documentation inherited
     public int getMinFireDistance ()
     {
-        int distance = (influence == null) ?
-            _config.minFireDistance : influence.adjustMinFireDistance(_config.minFireDistance);
-        distance = (holdingInfluence == null) ?
-            distance : holdingInfluence.adjustMinFireDistance(distance);
-        return (hindrance == null) ? distance : hindrance.adjustMinFireDistance(distance);
+        int distance = _config.minFireDistance;
+        for (Influence influence : getInfluences()) {
+            if (influence != null) {
+                distance = influence.adjustMinFireDistance(distance);
+            } 
+        }
+        return distance;        
     }
 
     @Override // documentation inherited
     public int getMaxFireDistance ()
     {
-        int distance = (influence == null) ?
-            _config.maxFireDistance : influence.adjustMaxFireDistance(_config.maxFireDistance);
-        distance = (holdingInfluence == null) ?
-            distance : holdingInfluence.adjustMaxFireDistance(distance);
-        return (hindrance == null) ? distance : hindrance.adjustMaxFireDistance(distance);
+        int distance = _config.maxFireDistance;
+        for (Influence influence : getInfluences()) {
+            if (influence != null) {
+                distance = influence.adjustMaxFireDistance(distance);
+            } 
+        }
+        return distance;        
     }
 
     @Override // documentation inherited
     public void wasAdded (BangObject bangobj)
     {
         super.wasAdded(bangobj);
-        hindrance = bangobj.globalHindrance;
+        setHindrance(bangobj.globalHindrance, bangobj.tick);
     }
 
     @Override // documentation inherited
@@ -480,16 +534,17 @@ public class Unit extends Piece
     {
         super.wasKilled(tick);
         // influences and hindrances do not survive through death
-        influence = null;
-        hindrance = null;
+        for (InfluenceType type : InfluenceType.values()) {
+            _influences[type.ordinal()] = null;
+        }
     }
 
     @Override // documentation inherited
     public void wasDamaged (int newDamage)
     {
         super.wasDamaged(newDamage);
-        if (hindrance != null) {
-            hindrance.wasDamaged(damage);
+        if (getHindrance() != null) {
+            getHindrance().wasDamaged(damage);
         }
     }
 
@@ -505,7 +560,7 @@ public class Unit extends Piece
         // if we do no damage to this type of target, it is not valid
         return super.validTarget(bangobj, target, allowSelf) &&
             (computeDamage(target) > 0) &&
-            (hindrance == null || hindrance.validTarget(this, target, allowSelf));
+            (getHindrance() == null || getHindrance().validTarget(this, target, allowSelf));
     }
 
     @Override // documentation inherited
@@ -524,14 +579,10 @@ public class Unit extends Piece
     public boolean isCorporeal ()
     {
         boolean corporeal = super.isCorporeal();
-        if (influence != null) {
-            corporeal = influence.adjustCorporeality(corporeal);
-        }
-        if (holdingInfluence != null) {
-            corporeal = holdingInfluence.adjustCorporeality(corporeal);
-        }
-        if (hindrance != null) {
-            corporeal = hindrance.adjustCorporeality(corporeal);
+        for (Influence influence : getInfluences()) {
+            if (influence != null) {
+                corporeal = influence.adjustCorporeality(corporeal);
+            }
         }
         return corporeal;
     }
@@ -573,14 +624,10 @@ public class Unit extends Piece
             cost = super.traversalCost(terrain) +
                 _config.movementAdjust[terrain.category.ordinal()];
         }
-        if (influence != null) {
-            cost = influence.adjustTraversalCost(terrain, cost);
-        }
-        if (holdingInfluence != null) {
-            cost = holdingInfluence.adjustTraversalCost(terrain, cost);
-        }
-        if (hindrance != null) {
-            cost = hindrance.adjustTraversalCost(terrain, cost);
+        for (Influence influence : getInfluences()) {
+            if (influence != null) {
+                cost = influence.adjustTraversalCost(terrain, cost);
+            }
         }
         return cost;
     }
@@ -603,7 +650,7 @@ public class Unit extends Piece
      */
     public Effect maybeGeneratePostMoveEffect (int steps)
     {
-        return (hindrance == null) ? null : hindrance.maybeGeneratePostMoveEffect(steps);
+        return (getHindrance() == null) ? null : getHindrance().maybeGeneratePostMoveEffect(steps);
     }
 
     /**
@@ -612,14 +659,14 @@ public class Unit extends Piece
      */
     public Effect maybeGeneratePostOrderEffect ()
     {
-        return (hindrance == null) ? null : hindrance.maybeGeneratePostOrderEffect();
+        return (getHindrance() == null) ? null : getHindrance().maybeGeneratePostOrderEffect();
     }
 
     @Override // documentation inherited
     public void didMove (int steps)
     {
-        if (hindrance != null) {
-            hindrance.didMove(steps, lastActed);
+        if (getHindrance() != null) {
+            getHindrance().didMove(steps, lastActed);
         }
     }
 
@@ -661,30 +708,36 @@ public class Unit extends Piece
     @Override // documentation inherited
     public int adjustAttack (Piece target, int damage)
     {
-        damage = (influence == null || (_killShot && !influence.showClientAdjust())) ?
-            damage : influence.adjustAttack(target, damage);
-        damage = (holdingInfluence == null || (_killShot && !holdingInfluence.showClientAdjust())) ?
-            damage : holdingInfluence.adjustAttack(target, damage);
-        return (hindrance == null || (_killShot && !hindrance.showClientAdjust())) ?
-            damage : hindrance.adjustAttack(target, damage);
+        for (Influence influence : getInfluences()) {
+            if (influence != null) {
+                if (!_killShot || influence.showClientAdjust())
+                {
+                    influence.adjustAttack(target, damage);
+                }
+            } 
+        }
+        return damage;
     }
 
     @Override // documentation inherited
     public int adjustDefend (Piece shooter, int damage)
     {
-        damage = (influence == null || (_killShot && !influence.showClientAdjust())) ?
-            damage : influence.adjustDefend(shooter, damage);
-        damage = (holdingInfluence == null || (_killShot && !influence.showClientAdjust())) ?
-            damage : holdingInfluence.adjustDefend(shooter, damage);
-        return (hindrance == null || (_killShot && !influence.showClientAdjust())) ?
-            damage : hindrance.adjustDefend(shooter, damage);
+        for (Influence influence : getInfluences()) {
+            if (influence != null) {
+                if (!_killShot || influence.showClientAdjust())
+                {
+                    influence.adjustDefend(shooter, damage);
+                }
+            } 
+        }
+        return damage;        
     }
 
     @Override // documentation inherited
     public int adjustProxDefend (Piece shooter, int damage)
     {
-        return (influence == null || (_killShot && !influence.showClientAdjust())) ?
-            damage : influence.adjustDefend(shooter, damage);
+        return (getMainInfluence() == null || (_killShot && !getMainInfluence().showClientAdjust())) ?
+            damage : getMainInfluence().adjustDefend(shooter, damage);
     }
 
     @Override // documentation inherited

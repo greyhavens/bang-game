@@ -86,11 +86,10 @@ public class HighNoonEffect extends Effect
                 return EFFECT_DURATION;
             }
         };
-        hindrance.init(bangobj.tick);
         for (int pieceId : pieceIds) {
             Unit unit = (Unit)bangobj.pieces.get(pieceId);
             if (unit != null) {
-                unit.hindrance = hindrance;
+                unit.setHindrance(hindrance, bangobj.tick);
                 reportEffect(obs, unit, UPDATED);
             } else {
                 log.warning("Missing piece for high noon effect [id=" +

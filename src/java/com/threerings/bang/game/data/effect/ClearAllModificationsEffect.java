@@ -25,8 +25,8 @@ public class ClearAllModificationsEffect extends GlobalEffect
     @Override // documentation inherited
     protected boolean validPiece (Piece piece)
     {
-        return (piece instanceof Unit && (((Unit)piece).influence != null ||
-                    ((Unit)piece).hindrance != null));
+        return (piece instanceof Unit && (((Unit)piece).getMainInfluence() != null ||
+                    ((Unit)piece).getHindrance() != null));
     }
 
     @Override // documentation inherited

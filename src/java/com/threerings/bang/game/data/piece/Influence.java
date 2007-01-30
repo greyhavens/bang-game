@@ -22,6 +22,8 @@ import com.threerings.io.SimpleStreamableObject;
  */
 public abstract class Influence extends SimpleStreamableObject
 {
+    public boolean holding = false;
+    
     /** Returns the name of this influence, used for icons and
      * messages (can be <code>null</code> for none). */
     public abstract String getName ();

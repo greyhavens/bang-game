@@ -16,7 +16,7 @@ public class ExpireHindranceEffect extends ExpireInfluenceEffect
     {
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit != null) {
-            unit.hindrance = null;
+            unit.setHindrance(null, bangobj.tick);
             reportEffect(obs, unit, UPDATED);
         }
         return true;

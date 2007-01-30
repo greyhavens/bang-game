@@ -96,8 +96,8 @@ public class UnitStatus extends PieceStatus
         }
 
         Unit unit = (Unit)piece;
-        if (unit.influence == null || unit.influence != _influence) {
-            _influence = unit.influence;
+        if (unit.getMainInfluence() == null || unit.getMainInfluence() != _influence) {
+            _influence = unit.getMainInfluence();
             if (_influence == null || 
                     (_influence.hidden() && unit.owner != pidx)) {
                 _info[4].setCullMode(CULL_ALWAYS);

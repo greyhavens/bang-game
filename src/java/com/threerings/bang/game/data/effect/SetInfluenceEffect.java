@@ -30,7 +30,7 @@ public abstract class SetInfluenceEffect extends BonusEffect
     {
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         // only grant points if the unit doesn't already have an influence
-        if (unit != null && unit.influence == null) {
+        if (unit != null && unit.getMainInfluence() == null) {
             super.prepare(bangobj, dammap);
         }
     }
@@ -47,7 +47,7 @@ public abstract class SetInfluenceEffect extends BonusEffect
             return false;
         }
 
-        unit.setInfluence(createInfluence(unit), bangobj.tick);
+        unit.setMainInfluence(createInfluence(unit), bangobj.tick);
         reportEffect(obs, unit, getEffectName());
         return true;
     }
@@ -59,7 +59,12 @@ public abstract class SetInfluenceEffect extends BonusEffect
         if (!(piece instanceof Unit) || piece.owner != pidx || pidx == -1) {
             return null;
         }
-        String name = ((Unit)piece).influence.getName();
+        String name = null;
+        Unit unit = ((Unit)piece);
+        if (unit.getMainInfluence() != null)
+        {
+            name = unit.getMainInfluence().getName();
+        }
         return (name == null) ? null : MessageBundle.compose(
             "m.effect_influence", piece.getName(), "m.influence_" + name);
     }

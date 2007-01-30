@@ -39,7 +39,7 @@ public abstract class SetHindranceEffect extends BonusEffect
     @Override // from Effect
     public boolean isApplicable ()
     {
-        return (_unit != null && _unit.hindrance == null);
+        return (_unit != null && _unit.getHindrance() == null);
     }
 
     @Override // from Effect
@@ -65,7 +65,7 @@ public abstract class SetHindranceEffect extends BonusEffect
         if (_unit == null || _unit.owner != pidx || pidx == -1) {
             return null;
         }
-        String name = _unit.hindrance.getName();
+        String name = _unit.getHindrance().getName();
         return (name == null) ? null : MessageBundle.compose(
             "m.effect_influence", _unit.getName(), "m.hindrance_" + name);
     }

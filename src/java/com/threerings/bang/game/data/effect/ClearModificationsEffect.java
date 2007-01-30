@@ -49,7 +49,7 @@ public class ClearModificationsEffect extends Effect
     public boolean isApplicable ()
     {
         return (_unit != null && 
-                (_unit.hindrance != null || _unit.influence != null));
+                (_unit.getHindrance() != null || _unit.getMainInfluence() != null));
     }
 
     @Override // documentation inherited
@@ -62,8 +62,8 @@ public class ClearModificationsEffect extends Effect
             return false;
         }
 
-        _unit.hindrance = null;
-        _unit.influence = null;
+        _unit.setHindrance(null, bangobj.tick);
+        _unit.setMainInfluence(null, bangobj.tick);
         reportEffect(obs, _unit, CLEAR_MODIFICATIONS);
         return true;
     }

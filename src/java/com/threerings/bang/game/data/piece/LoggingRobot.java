@@ -118,8 +118,8 @@ public class LoggingRobot extends Unit
             if (getDistance(piece) != 1 || !piece.isAlive() ||
                 !bangobj.board.canCross(x, y, piece.x, piece.y) ||
                 // allow our hindrance to prevent proximity attacks
-                (hindrance != null &&
-                 !hindrance.validTarget(this, piece, false))) {
+                (getHindrance() != null &&
+                 !getHindrance().validTarget(this, piece, false))) {
                 continue;
             }
 

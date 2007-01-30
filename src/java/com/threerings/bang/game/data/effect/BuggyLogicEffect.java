@@ -98,7 +98,7 @@ public class BuggyLogicEffect extends SetHindranceEffect
         if (_unit == null || _unit.originalOwner != pidx || pidx == -1) {
             return null;
         }
-        String name = _unit.hindrance.getName();
+        String name = _unit.getHindrance().getName();
         return (name == null) ? null : MessageBundle.compose(
             "m.effect_influence", _unit.getName(), "m.hindrance_" + name);
     }

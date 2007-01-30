@@ -912,14 +912,10 @@ public abstract class Piece
 
         Unit unit = (Unit)target;
         ArrayList<String> icons = new ArrayList<String>();
-        if (unit.influence != null && unit.influence.didAdjustDefend()) {
-            icons.add(unit.influence.getName());
-        }
-        if (unit.holdingInfluence != null && unit.holdingInfluence.didAdjustDefend()) {
-            icons.add(unit.holdingInfluence.getName());
-        }
-        if (unit.hindrance != null && unit.hindrance.didAdjustDefend()) {
-            icons.add(unit.hindrance.getName());
+        for (Influence influence : unit.getInfluences()) {
+            if (influence != null && influence.didAdjustDefend()) {
+                icons.add(influence.getName());
+            }
         }
         if (icons.size() > 0) {
             return icons.toArray(new String[icons.size()]);

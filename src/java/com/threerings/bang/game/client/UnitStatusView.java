@@ -386,10 +386,10 @@ public class UnitStatusView extends BWindow
         }
 
         protected void updateInfluence (Unit unit) {
-            if (unit.influence == _influenceU) {
+            if (unit.getMainInfluence() == _influenceU) {
                 return;
             }
-            _influenceU = unit.influence;
+            _influenceU = unit.getMainInfluence();
             if (_influenceL.getParent() != null) {
                 _opened.remove(_influenceL);
             }
@@ -403,10 +403,10 @@ public class UnitStatusView extends BWindow
         }
 
         protected void updateHindrance (Unit unit) {
-            if (unit.hindrance == _hindranceU) {
+            if (unit.getHindrance() == _hindranceU) {
                 return;
             }
-            _hindranceU = unit.hindrance;
+            _hindranceU = unit.getHindrance();
             if (_hindranceU != null && !_hindranceU.isVisible()) {
                 return;
             }
@@ -551,18 +551,18 @@ public class UnitStatusView extends BWindow
                 if (_sprite.isSelected()) {
                     _isInvalid = false;
                 }
-                if (unit.influence == null) {
+                if (unit.getMainInfluence() == null) {
                     setInfluence(null);
                 } else {
                     // we don't worry about refetching the image from the cache
                     // if our influence didn't actually change, it's cheap
                     String path =
-                        "influences/" + unit.influence.getName() + ".png";
+                        "influences/" + unit.getMainInfluence().getName() + ".png";
                     setInfluence(_ctx.getImageCache().getBImage(path));
                 }
                 // tint the unit icon red if it has a visible hindrance
                 /*
-                if (unit.hindrance == null || !unit.hindrance.isVisible()) {
+                if (unit.getHindrance() == null || !unit.getHindrance().isVisible()) {
                     _unit.setDefaultColor(ColorRGBA.white);
                 } else {
                     _unit.setDefaultColor(new ColorRGBA(1f, 0.5f, 0.5f, 0.8f));
