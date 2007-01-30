@@ -602,7 +602,8 @@ public class EditorController extends GameController
     }
 
     /**
-     * Removes pieces from the board which are not part of a valid scenario.
+     * Removes pieces from the board which are not part of a valid scenario or
+     * are not within the board boundaries.
      */
     public void pruneOrphanPieces ()
     {
@@ -613,6 +614,11 @@ public class EditorController extends GameController
         for (Piece p : pieces) {
             if (p.scenId != null && 
                     Arrays.binarySearch(scenarios, p.scenId) == -1) {
+                removePiece(p);
+            
+            // check for out of bounds
+            } else if (p.x < 0 || p.x >= _bangobj.board.getWidth() ||
+                    p.y < 0 || p.y >= _bangobj.board.getHeight()) {
                 removePiece(p);
             }
         }
