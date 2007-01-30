@@ -3,9 +3,10 @@
 
 package com.threerings.bang.game.server.scenario;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
-import com.samskivert.util.ArrayIntSet;
+import com.threerings.media.util.MathUtil;
 
 import com.threerings.presents.server.InvocationException;
 
@@ -23,35 +24,43 @@ public abstract class CounterDelegate extends ScenarioDelegate
     public void roundWillStart (BangObject bangobj)
         throws InvocationException
     {
-        ArrayIntSet assigned = new ArrayIntSet();
         Piece[] pieces = bangobj.getPieceArray();
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (!(pieces[ii] instanceof Counter)) {
-                continue;
-            }
 
-            // determine which start marker to which it is nearest
-            Counter counter = (Counter)pieces[ii];
-            int midx = _parent.getOwner(counter, assigned);
-            if (midx == -1) {
+        // find all the counters on this board
+        ArrayList<Counter> counters = new ArrayList<Counter>();
+        for (int ii = 0; ii < pieces.length; ii++) {
+            if (pieces[ii] instanceof Counter) {
+                counters.add((Counter)pieces[ii]);
+            }
+        }
+
+        // assign counters to start positions
+        for (int ii = 0; ii < bangobj.players.length; ii++) {
+            Point start = _parent.getStartSpot(ii);
+
+            int mindist = Integer.MAX_VALUE;
+            Counter counter = null;
+            for (Counter c : counters) {
+                int dist = MathUtil.distanceSq(c.x, c.y, start.x, start.y);
+                if (dist < mindist) {
+                    mindist = dist;
+                    counter = c;
+                }
+            }
+            if (counter == null) {
                 throw new InvocationException("m.no_start_marker_for_counter");
             }
-
-            // make sure we have a player associated with this start marker
-            if (midx >= bangobj.players.length) {
-                continue;
-            }
+            counters.remove(counter);
 
             // configure this counter for play
-            counter.owner = midx;
+            counter.owner = ii;
             counter.count = startingCount();
             bangobj.updatePieces(counter);
 
             // start the player with points for each nugget
             int points = counter.count * pointsPerCounter();
-            bangobj.grantPoints(midx, points);
+            bangobj.grantPoints(ii, points);
             _counters.add(counter);
-            assigned.add(midx);
         }
     }
 
