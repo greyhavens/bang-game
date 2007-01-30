@@ -365,13 +365,23 @@ public class EnglishNameCreator extends NameCreator
     };
 
     protected static final String[] GANG_SUFFIXES = {
-        "Gang",
-        "Crew",
-        "Posse",
-        "Clan",
+        "Bandits",
         "Boys",
-        "Girls",
+        "Bunch",
+        "Clan",
         "Congregation",
+        "Crew",
+        "Dudes",
+        "Gals",
+        "Gang",
+        "Girls",
+        "Guys",
+        "Outlaws",
+        "Posse",
+        "Renegades",
+        "Riders",
+        "Rustlers",
+        "Tribe",
     };
 
     static {
