@@ -73,6 +73,7 @@ import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PardnerInvite;
@@ -745,6 +746,47 @@ public class PlayerManager
         });
     }
 
+    // from interface PlayerProvider
+    public void destroyItem (
+        ClientObject caller, final int itemId, final PlayerService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure the player is holding the item
+        final PlayerObject user = (PlayerObject)caller;
+        final Item item = user.inventory.get(itemId);
+        if (item == null) {
+            log.warning("User requested to destroy invalid item [who=" + user.who() + ", itemId=" +
+                itemId + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        
+        // and that it's destroyable
+        if (!item.isDestroyable(user)) {
+            log.warning("User tried to destroy indestructable item [who=" + user.who() +
+                ", item=" + item + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+        
+        // remove it from their inventory immediately, then from the database
+        user.removeFromInventory(item.getKey());
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                BangServer.itemrepo.deleteItem(item, "trashed");
+            }
+            public void handleSuccess () {
+                listener.requestProcessed();
+            }
+            public void handleFailure (PersistenceException error) {
+                super.handleFailure(error);
+                user.addToInventory(item); // put it back
+            }
+            public String getFailureMessage () {
+                return "Failed to destroy item [who=" + user.who() + ", item=" + item + "]";
+            }
+        });
+    }
+    
     /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */

@@ -168,6 +168,16 @@ public abstract class Item
         }
     }
 
+    /**
+     * Determines whether this item can be destroyed.
+     */
+    public boolean isDestroyable (PlayerObject user)
+    {
+        // TODO: Determine which items (besides articles used in looks) should be
+        // indestructable
+        return true;
+    }
+    
     @Override // documentation inherited
     public int hashCode ()
     {

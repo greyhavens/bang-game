@@ -9,7 +9,13 @@ import java.util.Iterator;
 
 import com.samskivert.util.Predicate;
 
+import com.threerings.presents.dobj.EntryAddedEvent;
+import com.threerings.presents.dobj.EntryRemovedEvent;
+import com.threerings.presents.dobj.EntryUpdatedEvent;
+import com.threerings.presents.dobj.SetListener;
+
 import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
@@ -21,6 +27,7 @@ import com.threerings.bang.util.BangContext;
  * Displays some subset of the user's inventory.
  */
 public class InventoryPalette extends IconPalette
+    implements SetListener
 {
     /**
      * Creates an {@link InventoryPalette} with 5 columns, 3 rows, and no {@link Inspector}.
@@ -52,6 +59,63 @@ public class InventoryPalette extends IconPalette
         _allowItemPopup = allowItemPopup;
     }
 
+    // documentation inherited from SetListener
+    public void entryAdded (EntryAddedEvent event)
+    {
+        if (event.getName().equals(PlayerObject.INVENTORY)) {
+            Item item = (Item)event.getEntry();
+            if (_itemp.isMatch(item)) {
+                int idx = 0;
+                for (SelectableIcon icon : _icons) {
+                    ItemIcon iicon = (ItemIcon)icon;
+                    if (_itemComparator.compare(item, iicon.getItem()) < 0) {
+                        break;
+                    } else {
+                        idx++;
+                    }
+                }
+                addIcon(idx, new ItemIcon(_ctx, item));
+            }
+        }
+    }
+    
+    // documentation inherited from SetListener
+    public void entryRemoved (EntryRemovedEvent event)
+    {
+        if (event.getName().equals(PlayerObject.INVENTORY)) {
+            Item item = (Item)event.getOldEntry();
+            if (_itemp.isMatch(item)) {
+                removeIcon(getIcon(item));
+            }
+        }
+    }
+    
+    // documentation inherited from SetListener
+    public void entryUpdated (EntryUpdatedEvent event)
+    {
+        if (event.getName().equals(PlayerObject.INVENTORY)) {
+            Item item = (Item)event.getEntry();
+            if (_itemp.isMatch(item)) {
+                getIcon(item).setItem(item);
+            }
+        }
+    }
+    
+    /**
+     * Finds the icon corresponding to the specified item.
+     */
+    protected ItemIcon getIcon (Item item)
+    {
+        int itemId = item.getItemId();
+        for (SelectableIcon icon : _icons) {
+            ItemIcon iicon = (ItemIcon)icon;
+            if (iicon.getItem().getItemId() == itemId) {
+                return iicon;
+            }
+        }
+        return null;
+    }
+    
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -60,6 +124,9 @@ public class InventoryPalette extends IconPalette
         // populate our item display every time we are shown as we may be
         // hidden, the player's inventory updated, then reshown again
         populate();
+        
+        // listen to the user object for inventory changes
+        _ctx.getUserObject().addListener(this);
     }
 
     @Override // documentation inherited
@@ -69,6 +136,9 @@ public class InventoryPalette extends IconPalette
 
         // clear out our item display
         clear();
+        
+        // stop listening to the user object
+        _ctx.getUserObject().removeListener(this);
     }
 
     /**
@@ -79,7 +149,7 @@ public class InventoryPalette extends IconPalette
     {
         PlayerObject user = _ctx.getUserObject();
         Item[] items = user.inventory.toArray(new Item[user.inventory.size()]);
-        Arrays.sort(items, new ItemComparator());
+        Arrays.sort(items, _itemComparator);
         // sort the items in some vaguely sensible order
         for (Item item : items) {
             if (!_itemp.isMatch(item)) {
@@ -94,8 +164,12 @@ public class InventoryPalette extends IconPalette
         }
     }
 
+    protected BangContext _ctx;
+    protected Predicate<Item> _itemp;
+    protected boolean _allowItemPopup;
+
     /** Used to sort the inventory display. */
-    protected class ItemComparator implements Comparator<Item> {
+    protected Comparator<Item> _itemComparator = new Comparator<Item>() {
         public int compare (Item one, Item two) {
             if (!one.getClass().equals(two.getClass())) {
                 return one.getClass().getName().compareTo(
@@ -111,10 +185,6 @@ public class InventoryPalette extends IconPalette
             }
         }
     };
-
-    protected BangContext _ctx;
-    protected Predicate<Item> _itemp;
-    protected boolean _allowItemPopup;
-
-    protected static final int COLUMNS = 5;
+    
+    protected static final int COLUMNS = 5;    
 }

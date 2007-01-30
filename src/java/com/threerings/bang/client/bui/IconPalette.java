@@ -195,11 +195,20 @@ public class IconPalette extends BContainer
      */
     public void removeIcon (SelectableIcon icon)
     {
+        int idx = _icons.indexOf(icon);
         icon.setSelected(false);
         icon.setPalette(null);
-        _icons.remove(icon);
-        if (icon.isAdded()) {
-            _icont.remove(icon);
+        _icons.remove(idx);
+        
+        if (isAdded()) {
+            // update the current page of icons if necessary
+            int psize = _rows * _cols,
+                ipage = idx/psize;
+            if (ipage <= _page) {
+                displayPage(_page, true, false);
+            } else {
+                _forward.setEnabled(_icons.size() > (_page+1)*psize);
+            }
         }
     }
 

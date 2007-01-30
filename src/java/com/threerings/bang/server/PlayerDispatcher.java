@@ -40,6 +40,13 @@ public class PlayerDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case PlayerMarshaller.DESTROY_ITEM:
+            ((PlayerProvider)provider).destroyItem(
+                source,
+                ((Integer)args[0]).intValue(), (InvocationService.ConfirmListener)args[1]
+            );
+            return;
+
         case PlayerMarshaller.GET_POSTER_INFO:
             ((PlayerProvider)provider).getPosterInfo(
                 source,

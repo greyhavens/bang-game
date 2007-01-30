@@ -96,4 +96,9 @@ public interface PlayerService extends InvocationService
      * randomly assigned identifier that can be used to download the song.
      */
     public void prepSongForDownload (Client client, String song, ResultListener listener);
+    
+    /**
+     * Requests to destroy an item in the player's inventory.
+     */
+    public void destroyItem (Client client, int itemId, ConfirmListener listener);
 }

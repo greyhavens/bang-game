@@ -11,9 +11,13 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
 
+import com.threerings.util.MessageBundle;
+
 import com.threerings.bang.store.client.SongDownloadView;
 
+import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.PaletteIcon;
+import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Item;
@@ -78,8 +82,16 @@ public class ItemIcon extends PaletteIcon
         BangContext ctx = (BangContext)_ctx;
         String cmd = event.getAction();
         if ("destroy".equals(cmd)) {
-            // TODO: implement
-
+            OptionDialog.showConfirmDialog(ctx, BangCodes.BANG_MSGS,
+                MessageBundle.compose("m.confirm_destroy", _item.getName()),
+                new OptionDialog.ResponseReceiver() {
+                    public void resultPosted (int button, Object result) {
+                        if (button == OptionDialog.OK_BUTTON) {
+                            destroyItem();
+                        }
+                    }
+                });
+                
         } else if ("article_print".equals(cmd)) {
             BangUI.copyToClipboard(((Article)_item).getPrint());
             ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, "m.article_print_copied");
@@ -110,7 +122,8 @@ public class ItemIcon extends PaletteIcon
         if (!(_ctx instanceof BangContext)) {
             return;
         }
-
+        BangContext ctx = (BangContext)_ctx;
+        
         BPopupMenu menu = new BPopupMenu(getWindow());
         menu.addListener(this);
 
@@ -125,8 +138,10 @@ public class ItemIcon extends PaletteIcon
             menu.addMenuItem(createItem("download_song"));
         }
 
-        // all items have a "destroy" menu item
-        menu.addMenuItem(createItem("destroy"));
+        // all destroyable items have a "destroy" menu item
+        if (_item.isDestroyable(ctx.getUserObject())) {
+            menu.addMenuItem(createItem("destroy"));
+        }
         menu.popup(mx, my, false);
     }
 
@@ -135,6 +150,14 @@ public class ItemIcon extends PaletteIcon
         return new BMenuItem(_ctx.xlate(BangCodes.BANG_MSGS, "m.item_" + action), action);
     }
 
+    protected void destroyItem ()
+    {
+        BangContext ctx = (BangContext)_ctx;
+        PlayerService psvc = (PlayerService)ctx.getClient().requireService(PlayerService.class);
+        psvc.destroyItem(ctx.getClient(), _item.getItemId(),
+            new ReportingListener(ctx, BangCodes.BANG_MSGS, "m.destroy_failed"));
+    }
+    
     protected BasicContext _ctx;
     protected Item _item;
     protected boolean _menuEnabled;

@@ -8,6 +8,7 @@ import java.util.Comparator;
 import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
 
+import com.samskivert.util.IntListUtil;
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
@@ -15,6 +16,7 @@ import com.threerings.media.image.Colorization;
 import com.threerings.media.image.ImageUtil;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
@@ -154,6 +156,18 @@ public class Article extends Item
         return new ImageIcon(image);
     }
 
+    @Override // documentation inherited
+    public boolean isDestroyable (PlayerObject user)
+    {
+        // an article can be destroyed if it is not used in any of the player's looks
+        for (Look look : user.looks) {
+            if (IntListUtil.contains(look.articles, _itemId)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     @Override // documentation inherited
     protected void toString (StringBuilder buf)
     {

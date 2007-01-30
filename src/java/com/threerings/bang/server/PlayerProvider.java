@@ -18,6 +18,12 @@ import com.threerings.util.Name;
 public interface PlayerProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link PlayerService#destroyItem} request.
+     */
+    public void destroyItem (ClientObject caller, int arg1, InvocationService.ConfirmListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link PlayerService#getPosterInfo} request.
      */
     public void getPosterInfo (ClientObject caller, Handle arg1, InvocationService.ResultListener arg2)
