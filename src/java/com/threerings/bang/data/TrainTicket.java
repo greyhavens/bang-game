@@ -82,5 +82,12 @@ public class TrainTicket extends Item
         return "goods/tickets/" + getTownId() + ".png";
     }
 
+    @Override // documentation inherited
+    public boolean isEquivalent (Item other)
+    {
+        return super.isEquivalent(other) &&
+            ((TrainTicket)other)._townIndex == _townIndex;
+    }
+    
     protected int _townIndex;
 }

@@ -85,9 +85,15 @@ public class HideoutManager extends MatchHostManager
                     listener.requestProcessed();
                 }
                 public void requestFailed (Exception cause) {
-                    log.warning("Failed to create new gang [who=" + user.who() + ", error=" +
-                        cause + "].");
-                    listener.requestFailed(INTERNAL_ERROR);
+                    String msg;
+                    if (cause instanceof InvocationException) {
+                        msg = ((InvocationException)cause).getMessage();
+                    } else {
+                        log.warning("Failed to create new gang [who=" + user.who() + ", error=" +
+                            cause + "].");
+                        msg = INTERNAL_ERROR;
+                    }
+                    listener.requestFailed(msg);
                 }
             });
     }

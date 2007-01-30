@@ -65,6 +65,8 @@ public class GangRepository extends JORARepository
         super(conprov, GANG_DB_IDENT);
         _gangIdMask = _gtable.getFieldMask();
         _gangIdMask.setModified("gangId");
+        _nameMask = _gtable.getFieldMask();
+        _nameMask.setModified("name");
         _playerIdMask = _mtable.getFieldMask();
         _playerIdMask.setModified("playerId");
     }
@@ -136,10 +138,17 @@ public class GangRepository extends JORARepository
      * Insert a new gang record into the repository and assigns a unique gang id in the process.
      * The {@link GangRecord#founded} and {@link GangRecord#lastPlayed} fields will be filled in
      * by this method if they are not already.
+     *
+     * @return true if the gang was successfully inserted, false if there was already a gang with
+     * the desired name
      */
-    public void insertGang (GangRecord gang)
+    public boolean insertGang (final GangRecord gang)
         throws PersistenceException
     {
+        // make sure a gang with the specified name doesn't already exist
+        if (loadByExample(_gtable, gang, _nameMask) != null) {
+            return false;
+        }
         if (gang.founded == null) {
             gang.founded = new Timestamp(System.currentTimeMillis());
         }
@@ -147,6 +156,7 @@ public class GangRepository extends JORARepository
             gang.lastPlayed = gang.founded;
         }
         gang.gangId = insert(_gtable, gang);
+        return true;
     }
 
     /**
@@ -617,5 +627,5 @@ public class GangRepository extends JORARepository
     protected Table<GangMemberRecord> _mtable;
     protected Table<GangHistoryRecord> _htable;
     protected Table<GangOutfitRecord> _otable;
-    protected FieldMask _gangIdMask, _playerIdMask;
+    protected FieldMask _gangIdMask, _nameMask, _playerIdMask;
 }

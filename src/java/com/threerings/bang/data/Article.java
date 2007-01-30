@@ -3,6 +3,7 @@
 
 package com.threerings.bang.data;
 
+import java.util.Arrays;
 import java.util.Comparator;
 
 import com.jmex.bui.BImage;
@@ -156,6 +157,15 @@ public class Article extends Item
         return new ImageIcon(image);
     }
 
+    @Override // documentation inherited
+    public boolean isEquivalent (Item other)
+    {
+        Article oarticle;
+        return super.isEquivalent(other) &&
+            (oarticle = (Article)other)._name.equals(_name) &&
+            Arrays.equals(oarticle._components, _components);
+    }
+    
     @Override // documentation inherited
     public boolean isDestroyable (PlayerObject user)
     {

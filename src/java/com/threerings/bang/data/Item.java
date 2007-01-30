@@ -169,6 +169,17 @@ public abstract class Item
     }
 
     /**
+     * Compares this item to another in terms of its content, rather than its identity
+     * (for example, articles of the same type with the same colorizations are equal
+     * in content).
+     */
+    public boolean isEquivalent (Item other)
+    {
+        // must be of the exact same class
+        return (getClass() == other.getClass());
+    }
+    
+    /**
      * Determines whether this item can be destroyed.
      */
     public boolean isDestroyable (PlayerObject user)
@@ -176,6 +187,14 @@ public abstract class Item
         // TODO: Determine which items (besides articles used in looks) should be
         // indestructable
         return true;
+    }
+    
+    /**
+     * Determines whether users can have exact duplicates of this item.
+     */
+    public boolean allowsDuplicates ()
+    {
+        return false;
     }
     
     @Override // documentation inherited

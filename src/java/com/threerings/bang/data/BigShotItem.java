@@ -79,6 +79,15 @@ public class BigShotItem extends Item
         }
     }
 
+    @Override // documentation inherited
+    public boolean isEquivalent (Item other)
+    {
+        BigShotItem oshot;
+        return super.isEquivalent(other) &&
+            (oshot = (BigShotItem)other)._type.equals(_type) &&
+            oshot._name.equals(_name);
+    }
+    
     protected String _type;
     protected String _name;
 }

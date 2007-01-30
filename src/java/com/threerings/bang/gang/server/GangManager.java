@@ -335,7 +335,12 @@ public class GangManager
 
             protected String persistentAction ()
                 throws PersistenceException {
-                _gangrepo.insertGang(_grec);
+                if (!_gangrepo.insertGang(_grec)) {
+                    // we check this in the database, even though the HideoutManager checked it
+                    // against the local list, because another server may have created a gang
+                    // with the same name
+                    return "m.duplicate_gang_name";
+                }
                 _gangrepo.insertMember(
                     _mrec = new GangMemberRecord(user.playerId, _grec.gangId, LEADER_RANK));
                 _gangrepo.insertHistoryEntry(

@@ -15,6 +15,7 @@ import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.gang.data.GangCodes;
+import com.threerings.bang.util.BangUtil;
 
 /**
  * Extends the {@link BodyObject} with custom bits needed by Bang!.
@@ -224,12 +225,7 @@ public class PlayerObject extends BodyObject
      */
     public boolean holdsBadge (Badge.Type type)
     {
-        for (Item item : inventory) {
-            if (item instanceof Badge && ((Badge)item).getType().equals(type)) {
-                return true;
-            }
-        }
-        return false;
+        return holdsEquivalentItem(type.newBadge());
     }
 
     /**
@@ -237,12 +233,7 @@ public class PlayerObject extends BodyObject
      */
     public boolean holdsPass (String unit)
     {
-        for (Item item : inventory) {
-            if (item instanceof UnitPass && ((UnitPass)item).getUnitType().equals(unit)) {
-                return true;
-            }
-        }
-        return false;
+        return holdsEquivalentItem(new UnitPass(-1, unit));
     }
 
     /**
@@ -250,12 +241,7 @@ public class PlayerObject extends BodyObject
      */
     public boolean holdsTicket (String townId)
     {
-        for (Item item : inventory) {
-            if (item instanceof TrainTicket && ((TrainTicket)item).getTownId().equals(townId)) {
-                return true;
-            }
-        }
-        return false;
+        return holdsEquivalentItem(new TrainTicket(-1, BangUtil.getTownIndex(townId)));
     }
 
     /**
@@ -263,14 +249,22 @@ public class PlayerObject extends BodyObject
      */
     public boolean ownsSong (String song)
     {
-        for (Item item : inventory) {
-            if (item instanceof Song && ((Song)item).getSong().equals(song)) {
+        return holdsEquivalentItem(new Song(-1, song));
+    }
+
+    /**
+     * Returns true if the player holds an item that is equivalent in content to the one specified.
+     */
+    public boolean holdsEquivalentItem (Item item)
+    {
+        for (Item oitem : inventory) {
+            if (item.isEquivalent(oitem)) {
                 return true;
             }
         }
         return false;
     }
-
+    
     /**
      * Whether the specified player's id is in this player's friend list.
      */

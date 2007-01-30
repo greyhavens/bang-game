@@ -50,6 +50,13 @@ public class Song extends Item
         return "goods/song.png";
     }
 
+    @Override // documentation inherited
+    public boolean isEquivalent (Item other)
+    {
+        return super.isEquivalent(other) &&
+            ((Song)other)._song.equals(_song);
+    }
+    
     @Override // from Item
     protected void toString (StringBuilder buf)
     {

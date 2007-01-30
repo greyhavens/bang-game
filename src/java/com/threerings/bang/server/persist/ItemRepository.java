@@ -142,29 +142,42 @@ public class ItemRepository extends SimpleRepository
      * Inserts the specified item into the database. The item's owner id
      * must be valid at the time of insertion, but its item id will be
      * assigned during the insertion process.
+     *
+     * @return true if the item was successfully inserted, false if the user already owns an
+     * equivalent item and the item does not allow duplicates
      */
-    public void insertItem (final Item item)
+    public boolean insertItem (final Item item)
         throws PersistenceException
     {
-        // first serialize the item
-        final ByteArrayOutInputStream out = persistItem(item);
-
-        // determine its assigned item type
+        // determine the prototype's assigned item type and serialize it
         final int itemType = getItemType(item);
+        final byte[] itemData = persistItem(item).toByteArray();
 
         // now insert the flattened data into the database
-        executeUpdate(new Operation<Object>() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
+        return executeUpdate(new Operation<Boolean>() {
+            public Boolean invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
                 PreparedStatement stmt = null;
-                String query = "insert into ITEMS " +
+                String query = "select count(*) from ITEMS where OWNER_ID = ? " +
+                    "and ITEM_TYPE = ? and ITEM_DATA = ?";
+                String insert = "insert into ITEMS " +
                     "(OWNER_ID, ITEM_TYPE, ITEM_DATA) values (?, ?, ?)";
                 try {
-                    stmt = conn.prepareStatement(query);
+                    if (!item.allowsDuplicates()) {
+                        stmt = conn.prepareStatement(query);
+                        stmt.setInt(1, item.getOwnerId());
+                        stmt.setInt(2, itemType);
+                        stmt.setBytes(3, itemData);
+                        ResultSet rs = stmt.executeQuery();
+                        if (rs.next() && rs.getInt(1) > 0) {
+                            return false;
+                        }
+                    }
+                    stmt = conn.prepareStatement(insert);
                     stmt.setInt(1, item.getOwnerId());
                     stmt.setInt(2, itemType);
-                    stmt.setBinaryStream(3, out.getInputStream(), out.size());
+                    stmt.setBytes(3, itemData);
 
                     // do the insertion
                     JDBCUtil.checkedUpdate(stmt, 1);
@@ -176,7 +189,7 @@ public class ItemRepository extends SimpleRepository
                     BangServer.itemLog("item_created id:" + item.getItemId() +
                                        " oid:" + item.getOwnerId() +
                                        " type:" + item.getClass().getName());
-                    return null;
+                    return true;
 
                 } finally {
                     JDBCUtil.close(stmt);

@@ -22,14 +22,18 @@ public abstract class ItemProvider extends Provider
     {
         super(user, good, args);
         _item = createItem();
+        if (!_item.allowsDuplicates() && user.holdsEquivalentItem(_item)) {
+            throw new InvocationException("m.already_owned");
+        }
     }
 
     @Override // documentation inherited
     protected String persistentAction ()
         throws PersistenceException
     {
-        BangServer.itemrepo.insertItem(_item);
-        return null;
+        // we check here as well as on the dobj thread because another server may have
+        // created the item
+        return (BangServer.itemrepo.insertItem(_item) ? null : "m.already_owned");
     }
 
     @Override // documentation inherited

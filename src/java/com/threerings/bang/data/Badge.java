@@ -882,6 +882,13 @@ public class Badge extends Item
     }
 
     @Override // documentation inherited
+    public boolean isEquivalent (Item other)
+    {
+        return super.isEquivalent(other) &&
+            ((Badge)other)._code == _code;
+    }
+    
+    @Override // documentation inherited
     protected void toString (StringBuilder buf)
     {
         super.toString(buf);

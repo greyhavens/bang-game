@@ -117,6 +117,13 @@ public class Purse extends Item
         return getIconPath(_townIndex);
     }
 
+    @Override // documentation inherited
+    public boolean isEquivalent (Item other)
+    {
+        return super.isEquivalent(other) &&
+            ((Purse)other)._townIndex == _townIndex;
+    }
+    
     /**
      * Returns a "bonus" multiplier for awarded cash due to this purse.
      */

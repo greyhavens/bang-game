@@ -65,5 +65,12 @@ public class UnitPass extends Item
         }
     }
 
+    @Override // documentation inherited
+    public boolean isEquivalent (Item other)
+    {
+        return super.isEquivalent(other) &&
+            ((UnitPass)other)._unit.equals(_unit);
+    }
+    
     protected String _unit;
 }

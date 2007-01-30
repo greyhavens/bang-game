@@ -127,7 +127,16 @@ public class CardItem extends Item
         }
         return getIconPath();
     }
-
+    
+    @Override // documentation inherited
+    public boolean isEquivalent (Item other)
+    {
+        CardItem ocards;
+        return super.isEquivalent(other) &&
+            (ocards = (CardItem)other)._type.equals(_type) &&
+            ocards._quantity == _quantity;
+    }
+    
     protected String _type;
     protected int _quantity;
 }
