@@ -74,6 +74,7 @@ public class BoardInfoPanel extends JPanel
             }
         });
         add(_privateBoard = new JCheckBox(_msgs.get("m.private_board")));
+        _privateBoard.setSelected(true);
 
         // create the prop visibility panel
         JPanel ppanel = new JPanel(new HGroupLayout(HGroupLayout.STRETCH));
@@ -152,10 +153,10 @@ public class BoardInfoPanel extends JPanel
     public void clear ()
     {
         _name.setText("");
-        for (Iterator<JCheckBox> it = _sboxes.values().iterator();
-                it.hasNext(); ) {
+        for (Iterator<JCheckBox> it = _sboxes.values().iterator(); it.hasNext(); ) {
             it.next().setSelected(false);
         }
+        _privateBoard.setSelected(true);
     }
 
     /**

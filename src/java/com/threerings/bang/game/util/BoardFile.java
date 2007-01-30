@@ -38,7 +38,7 @@ public class BoardFile
     public String[] scenarios;
 
     /** Private boards are not included in the random selection for normal match made games. */
-    public boolean privateBoard = true;
+    public boolean privateBoard;
 
     /** The number of players for which this board is appropriate. */
     public int players;
