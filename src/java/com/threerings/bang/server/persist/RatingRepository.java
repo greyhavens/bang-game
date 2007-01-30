@@ -312,7 +312,8 @@ public class RatingRepository extends SimpleRepository
         // notoriety comes from the gang database, scenarios from RATINGS
         final String what = type.equals(GangCodes.NOTORIETY_IDENT) ?
             ("NOTORIETY from GANGS where LAST_PLAYED > " + STALE_DATE) :
-            ("RATING from RATINGS where SCENARIO = " + type + " and LAST_PLAYED > " + STALE_DATE);
+            ("RATING from RATINGS where SCENARIO = " + JDBCUtil.escape(type) +
+                " and LAST_PLAYED > " + STALE_DATE);
             
         // sort each row for this type into a histogram
         final SparseHistogram histo = new SparseHistogram();
