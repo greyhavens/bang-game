@@ -1,3 +1,11 @@
+<div id="threerings"><a href="http://www.threerings.net" onclick="this.target='_blank';">
+        <i>Three Rings</i></a>
+</div>
+<div id="banghowdy"><a href="http://www.banghowdy.com" onclick="this.target='_blank';">
+        <i>Bang Howdy</i></a>
+</div>
+
+
 </div>
 
 <!-- Begin Instadia tracking script -->

@@ -24,3 +24,34 @@
 #downwin a {
   color: #960000;
 }
+
+#launchoption {
+  position: absolute;
+  background-image: url("../images/link_launchoption.gif");
+  background-repeat: no-repeat;
+  top: 475px;
+  left: 20px;
+  width: 540px;
+  height: 18px; 
+  text-align: center;
+}
+
+#click a {
+  	position: absolute;
+  	width: 40px;
+    height: 18px;
+    top: 475px;
+    left: 434px;
+  	text-decoration: none;
+}
+
+#click a i { 
+	visibility: hidden; 
+} 
+
+a#herelink:hover { 
+    background: url("../images/link_here.gif") no-repeat top left;
+	width: 40px;
+    height: 18px;
+  	overflow: hidden;
+} 

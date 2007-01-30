@@ -1,21 +1,3 @@
-#towns a {
-  background-image: url("../images/launch_towns.jpg");
-  position: absolute;
-  top: 165px;
-  left: 510px;
-  width: 200px; 
-  height: 175px;
-}
-
-#screenshots a {
-  background-image: url("../images/launch_screens.jpg");
-  position: absolute;
-  top: 165px;
-  left: 710px;
-  width: 200px; 
-  height: 175px;
-}
-
 #account { 
   position: absolute;
   top: 82px;
@@ -29,22 +11,31 @@
   color: #960000;
 }
 
-#info {
-  position: absolute;
-  top: 466px;
-  left: 10px;
-  width: 540px; 
-  height: 98px;
-  color: #4c2602;
-  text-align: center;
+
+/* LOGOS */
+
+#threerings a {
+  	position: absolute;
+  	top: 10px;
+  	left: 520px;
+	width: 55px;
+	height: 30px;
+  	text-decoration: none;
+  }
+
+#threerings a i { 
+	visibility: hidden; 
 }
 
-#info a {
-  color: #960000;
-  font-size: 9px;
-}
+#banghowdy a {
+  	position: absolute;
+  	top: 10px;
+  	left: 215px;
+	width: 135px;
+	height: 60px;
+  	text-decoration: none;
+  }
 
-#info p {
-  padding: 0px;
-  margin: 10px 0px 0px 0px;
+#banghowdy a i { 
+	visibility: hidden; 
 }

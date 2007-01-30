@@ -38,12 +38,12 @@
 /* BUTTONS */
 #launch a {
   position: absolute;
-  width: 352px;
-  height: 83px;
-  top: 249px;
-  left: 115px;
+  width: 339px;
+  height: 93px;
+  top: 248px;
+  left: 121px;
   text-decoration: none;
-  border: 1px solid;
+  border: none;
 }
 
 #launch a i { 
@@ -51,11 +51,49 @@
 }
 
 a#playnow { 
-  background-image: url("../images/play.png"); 
+  background-image: url("../images/playbtn.jpg"); 
   border: none;
 }
 
 a#playnow:hover { 
-  background-image: url("../images/play_hover.png"); 
+  background-image: url("../images/playbtn_hover.jpg"); 
+  border: none;
+}
+
+/* LiNKS */
+
+#about a {
+  position: absolute;
+  width: 107px;
+  height: 15px;
+  top: 474px;
+  left: 187px;
+  text-decoration: none;
+}
+
+#about a i { 
+  visibility: hidden; 
+}
+
+a#aboutlink:hover { 
+  background-image: url("../images/link_about.jpg"); 
+  border: none;
+}
+
+#installhelp a {
+  position: absolute;
+  width: 81px;
+  height: 15px;
+  top: 474px;
+  left: 307px;
+  text-decoration: none;
+}
+
+#installhelp a i { 
+  visibility: hidden; 
+}
+
+a#installlink:hover { 
+  background-image: url("../images/link_install.jpg"); 
   border: none;
 }
