@@ -164,9 +164,6 @@ public class BountyGameEditor extends BDecoratedWindow
         new StateSaver("bounty.crit_type", _ctype);
         _opponents.selectItem(0);
         new StateSaver("bounty.opponents", _opponents);
-        for (int ii = 0; ii < _cardsel.length; ii++) {
-            new StateSaver("bounty.cards." + ii, _cardsel[ii]);
-        }
 
         String townId = _ctx.getUserObject().townId;
         ArrayList<BComboBox.Item> scens = new ArrayList<BComboBox.Item>();
@@ -367,6 +364,14 @@ public class BountyGameEditor extends BDecoratedWindow
         _speed.selectValue(config.speed);
         _respawn.setSelected(config.respawnUnits);
         _minweight.selectItem(Integer.valueOf(config.minWeight));
+
+        // configure our card selections
+        if (config.plist.size() > 0 && config.plist.get(0).cards != null) {
+            String[] cards = config.plist.get(0).cards;
+            for (int ii = 0; ii < cards.length; ii++) {
+                _cardsel[ii].selectValue(cards[ii]);
+            }
+        }
 
         // locate and select the correct board
         for (int ii = 0; ii < _board.getItemCount(); ii++) {
