@@ -53,6 +53,7 @@ import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.PieceCodes;
 import com.threerings.bang.game.data.piece.Prop;
 import com.threerings.bang.game.data.piece.Track;
+import com.threerings.bang.game.data.piece.Viewpoint;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
 import com.threerings.bang.game.util.ArrayDiffUtil;
 import com.threerings.bang.game.util.BoardFile;
@@ -612,13 +613,14 @@ public class EditorController extends GameController
                 _panel.info.getSelectedScenarios().toArray(new String[0]);
         Arrays.sort(scenarios);
         for (Piece p : pieces) {
-            if (p.scenId != null && 
-                    Arrays.binarySearch(scenarios, p.scenId) == -1) {
+            if (p.scenId != null && Arrays.binarySearch(scenarios, p.scenId) == -1) {
                 removePiece(p);
             
             // check for out of bounds
-            } else if (p.x < 0 || p.x >= _bangobj.board.getWidth() ||
-                    p.y < 0 || p.y >= _bangobj.board.getHeight()) {
+            } else if ((p.x < 0 || p.x >= _bangobj.board.getWidth() ||
+                        p.y < 0 || p.y >= _bangobj.board.getHeight()) &&
+                       // viewpoints are allowed to be out of bounds
+                       !(p instanceof Viewpoint)) {
                 removePiece(p);
             }
         }
