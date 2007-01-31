@@ -16,6 +16,7 @@ import com.jmex.bui.util.Dimension;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.OptionsView;
+import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.TabbedPane;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
@@ -23,6 +24,7 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.bounty.data.OfficeCodes;
 
 /**
  * Displays options while a player is in a game.
@@ -71,6 +73,9 @@ public class InGameOptionsView extends BDecoratedWindow
         tabs.addTab(msgs.get("t.general"), cont);
 
         BContainer box = GroupLayout.makeHBox(GroupLayout.CENTER);
+        if (config.type == BangConfig.Type.BOUNTY) {
+            box.add(new BButton(msgs.get("m.restart"), this, "restart"));
+        }
         if (config.type != BangConfig.Type.TUTORIAL && 
                 config.duration != BangConfig.Duration.PRACTICE) {
             box.add(new BButton(
@@ -100,6 +105,19 @@ public class InGameOptionsView extends BDecoratedWindow
 
         } else if ("dismiss".equals(action)) {
             _ctx.getBangClient().clearPopup(this, true);
+        
+        } else if ("restart".equals(action)) {
+            final BButton restart = (BButton)event.getSource();
+            restart.setEnabled(false);
+            PlayerService psvc = (PlayerService)
+                _ctx.getClient().requireService(PlayerService.class);
+            psvc.playBountyGame(_ctx.getClient(), _bangobj.bounty.ident, _bangobj.bountyGameId,
+                                new PlayerService.InvocationListener() {
+                public void requestFailed (String cause) {
+                    _ctx.getChatDirector().displayFeedback(OfficeCodes.OFFICE_MSGS, cause);
+                    restart.setEnabled(true);
+                }
+            });
         }
     }
 
