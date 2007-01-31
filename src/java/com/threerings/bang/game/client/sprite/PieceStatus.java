@@ -258,7 +258,7 @@ public class PieceStatus extends Node
     {
         texture.setWrap(Texture.WM_BCLAMP_S_BCLAMP_T);
         _tempstate.setTexture(texture);
-        _tempstate.load();
+        RenderUtil.ensureLoaded(_tempstate);
         return texture;
     }
 

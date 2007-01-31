@@ -1498,7 +1498,7 @@ public class TerrainNode extends Node
             
             // load the textures
             for (TextureState tstate : tstates) {
-                tstate.load();
+                RenderUtil.ensureLoaded(tstate);
             }
             
             // attach self and update render state

@@ -66,7 +66,7 @@ public class SafeMarkerSprite extends MarkerSprite
                 } else {
                     texstates[idx].setTexture(btex);
                 }
-                texstates[idx].load(); // load before cloning
+                RenderUtil.ensureLoaded(texstates[idx]); // load before cloning
             }
             
             // create the three other rotations of the texture

@@ -150,7 +150,7 @@ public class IconConfig
         if (frameWidth <= 0) {
             return createIcon(tstate, width, height);
         }
-        tstate.load();
+        RenderUtil.ensureLoaded(tstate);
         final Texture tex = tstate.getTexture().createSimpleClone();
         tstate.setTexture(tex);
         final int fwidth = tex.getImage().getWidth() / frameWidth,

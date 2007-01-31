@@ -393,6 +393,28 @@ public class RenderUtil
     }
 
     /**
+     * Ensures that the specified texture is loaded and bound to an OpenGL name.
+     */
+    public static void ensureLoaded (BasicContext ctx, Texture tex)
+    {
+        ensureLoaded(createTextureState(ctx, tex));
+    }
+    
+    /**
+     * Ensures that all the textures in the specified state are loaded and bound to
+     * OpenGL names.
+     */
+    public static void ensureLoaded (TextureState tstate)
+    {
+        for (int ii = 0, nn = tstate.getNumberOfSetTextures(); ii < nn; ii++) {
+            Texture tex = tstate.getTexture(ii);
+            if (tex.getTextureId() == 0) {
+                tstate.load(ii);
+            }
+        }
+    }
+    
+    /**
      * Configures the specified texture's scale and translation so as to select
      * the <code>tile</code>th tile from a <code>size</code> x
      * <code>size</code> grid.

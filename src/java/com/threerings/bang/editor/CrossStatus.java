@@ -93,10 +93,7 @@ public class CrossStatus extends Node
      */
     protected void loadTextures ()
     {
-        if (_tempstate == null) {
-            // we'll use this to load out textures into OpenGL as we go
-            _tempstate = _ctx.getRenderer().createTextureState();
-
+        if (_sidetexs == null) {
             // we flip the source image to generate the four different sides
             BufferedImage side = _ctx.getImageCache().getBufferedImage(
                     TEXTURE_PATH);
@@ -108,6 +105,7 @@ public class CrossStatus extends Node
             for (int ii = 0; ii < DIRECTIONS.length; ii++) {
                 _sidetexs[ii] = RenderUtil.createTexture(
                         _ctx.getImageCache().createImage(side, false));
+                RenderUtil.ensureLoaded(_ctx, _sidetexs[ii]);
                 side = rot90op.filter(side, null);
             }
         }
@@ -121,7 +119,6 @@ public class CrossStatus extends Node
     protected BasicContext _ctx;
     protected SharedMesh[] _info;
 
-    protected static TextureState _tempstate;
     protected static Texture[] _sidetexs;
 
     /** The path to our texture. */
