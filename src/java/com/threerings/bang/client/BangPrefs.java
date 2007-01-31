@@ -10,7 +10,7 @@ import org.lwjgl.opengl.Display;
 
 import com.jme.system.PropertiesIO;
 
-import com.samskivert.util.Config;
+import com.samskivert.util.PrefsConfig;
 
 import com.threerings.crowd.chat.client.CurseFilter;
 
@@ -34,7 +34,7 @@ public class BangPrefs
     };
 
     /** Contains our client-side preferences. */
-    public static Config config = new Config("bang");
+    public static PrefsConfig config = new PrefsConfig("bang");
 
     /**
      * Returns the display mode in the supplied list that matches the one

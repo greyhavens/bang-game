@@ -8,8 +8,9 @@ import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 
-import com.threerings.bang.data.BangCredentials;
 import com.threerings.presents.client.Client;
+
+import com.threerings.bang.data.BangCredentials;
 
 import static com.threerings.bang.Log.log;
 

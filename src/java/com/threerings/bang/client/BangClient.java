@@ -756,11 +756,11 @@ public class BangClient extends BasicClient
         // the account
         final String mkey = client.getCredentials().getUsername() + ".muted";
         _mutedir = new MuteDirector(
-            _ctx, createHandles(_config.getValue(mkey, new String[0])));
+            _ctx, createHandles(BangPrefs.config.getValue(mkey, new String[0])));
         _mutedir.setChatDirector(_chatdir);
         _mutedir.addMuteObserver(new MuteDirector.MuteObserver() {
             public void muteChanged (Name player, boolean nowMuted) {
-                _config.setValue(mkey, StringUtil.join(_mutedir.getMuted()));
+                BangPrefs.config.setValue(mkey, StringUtil.join(_mutedir.getMuted()));
             }
         });
 
@@ -1178,7 +1178,7 @@ public class BangClient extends BasicClient
         }
 
         public Config getConfig () {
-            return _config;
+            return BangPrefs.config;
         }
 
         public ChatDirector getChatDirector () {
@@ -1279,7 +1279,6 @@ public class BangClient extends BasicClient
     protected FKeyPopups _functionPopup;
 
     protected BangContextImpl _ctx;
-    protected Config _config = new Config("bang");
     protected String _pendingTownId;
 
     protected SetAdapter _nlistener = new SetAdapter() {
