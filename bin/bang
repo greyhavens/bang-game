@@ -104,7 +104,7 @@ case "$1" in
         ;;
 
   *)
-        echo "Usage: $0 nodename {start|stop|restart}"
+        echo "Usage: $0 {start|stop|restart} [nodename]"
         exit 1
 esac
 
