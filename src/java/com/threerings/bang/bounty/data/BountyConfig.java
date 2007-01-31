@@ -295,6 +295,9 @@ public class BountyConfig extends SimpleStreamableObject
         config.difficulty = BangUtil.getEnumProperty(which, props, "difficulty", Difficulty.EASY);
         config.inOrder = BangUtil.getBooleanProperty(which, props, "in_order", config.inOrder);
         config.outlawPrint = StringUtil.parseIntArray(props.getProperty("outlaw_print", ""));
+        if (config.outlawPrint != null && config.outlawPrint.length == 0) {
+            config.outlawPrint = null;
+        }
         config.title = props.getProperty("title", "");
         config.description = props.getProperty("descrip", "");
 
