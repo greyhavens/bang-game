@@ -40,7 +40,7 @@ public class ExpireInfluenceEffect extends Effect
     {
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         if (unit != null) {
-            unit.setHindrance(null);
+            unit.setMainInfluence(null);
             reportEffect(obs, unit, UPDATED);
         }
         return true;
