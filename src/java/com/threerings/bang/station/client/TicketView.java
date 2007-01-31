@@ -49,16 +49,18 @@ public class TicketView extends BContainer
             }
         }
 
-        MessageBundle msgs = ctx.getMessageManager().getBundle(
-            StationCodes.STATION_MSGS);
+        MessageBundle msgs = ctx.getMessageManager().getBundle(StationCodes.STATION_MSGS);
         String body = (_ticketTownId == null) ? "m.have_all_tickets" :
             ("m.buy_ticket_" + _ticketTownId);
-        add(new BLabel(msgs.get(body), "ticket_info"),
-            new Rectangle(0, 230, 160, 173));
+        add(new BLabel(msgs.get(body), "ticket_info"), new Rectangle(0, 230, 160, 173));
 
-        boolean townEnabled = (StationCodes.TICKET_COINS[ticketTownIdx] > 0);
+        boolean townEnabled = false;
+        if (ticketTownIdx > 0) {
+            townEnabled = (StationCodes.TICKET_COINS[ticketTownIdx] > 0) ||
+                ctx.getUserObject().tokens.isAdmin(); // admins get to go anywhere, yay!
+        }
         if (_ticketTownId != null) {
-            if (townEnabled || ctx.getUserObject().tokens.isAdmin()) {
+            if (townEnabled) {
                 BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
                 row.add(new BLabel(msgs.get("l.price"), "price_label"));
                 MoneyLabel cost = new MoneyLabel(ctx, true);
@@ -69,8 +71,7 @@ public class TicketView extends BContainer
             }
 
             String ipath = "goods/tickets/" + _ticketTownId + ".png";
-            add(new BLabel(new ImageIcon(ctx.loadImage(ipath))),
-                new Point(16, 112));
+            add(new BLabel(new ImageIcon(ctx.loadImage(ipath))), new Point(16, 112));
         }
 
         BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -108,8 +109,7 @@ public class TicketView extends BContainer
     protected String getTownMessage (String message)
     {
         return MessageBundle.compose(
-            message, MessageBundle.qualify(
-                BangCodes.BANG_MSGS, "m." + _ticketTownId));
+            message, MessageBundle.qualify(BangCodes.BANG_MSGS, "m." + _ticketTownId));
     }
 
     protected BangContext _ctx;

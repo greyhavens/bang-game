@@ -36,9 +36,8 @@ public class MapView extends BContainer
         super(new AbsoluteLayout());
         setStyleClass("station_map");
         _ctx = ctx;
-        MessageBundle msgs = ctx.getMessageManager().getBundle(
-            StationCodes.STATION_MSGS);
 
+        MessageBundle msgs = ctx.getMessageManager().getBundle(StationCodes.STATION_MSGS);
         ActionListener disabler = new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 setPending(true);
@@ -53,20 +52,17 @@ public class MapView extends BContainer
             String townId = BangCodes.TOWN_IDS[ii];
             String gocmd = StationController.TAKE_TRAIN + townId;
 
-            _towns[ii] = new PairedButton(
-                disabler, gocmd, "map_" + townId, null);
+            _towns[ii] = new PairedButton(disabler, gocmd, "map_" + townId, null);
             add(_towns[ii], TOWN_RECTS[ii]);
             _towns[ii].setEnabled(false);
 
             if (townId.equals(ctx.getUserObject().townId)) {
                 _tbuts[ii] = new BLabel("", "map_here");
             } else {
-                _tbuts[ii] = new PairedButton(
-                    disabler, gocmd, "map_take", _towns[ii]);
+                _tbuts[ii] = new PairedButton(disabler, gocmd, "map_take", _towns[ii]);
                 _towns[ii].setPair((PairedButton)_tbuts[ii]);
-                // frontier town is always enabled (if we're not in frontier
-                // town), the other towns all start disabled and we'll enable
-                // them if the player has a ticket
+                // frontier town is always enabled (if we're not in frontier town), the other towns
+                // all start disabled and we'll enable them if the player has a ticket
                 boolean enabled = (ii == 0);
                 _tbuts[ii].setEnabled(enabled);
                 _towns[ii].setEnabled(enabled);
@@ -78,8 +74,8 @@ public class MapView extends BContainer
     }
 
     /**
-     * Notes that we are or are not in the process of moving between towns and
-     * enables or disables our train buttons accordingly.
+     * Notes that we are or are not in the process of moving between towns and enables or disables
+     * our train buttons accordingly.
      */
     public void setPending (boolean pendingMove)
     {
@@ -107,8 +103,8 @@ public class MapView extends BContainer
             if (!(_tbuts[ii] instanceof BButton)) {
                 continue;
             }
-            boolean enabled = !_pendingMove && (ii == 0 ||
-                _ctx.getUserObject().holdsTicket(BangCodes.TOWN_IDS[ii]));
+            boolean enabled = !_pendingMove &&
+                (ii == 0 || _ctx.getUserObject().holdsTicket(BangCodes.TOWN_IDS[ii]));
             _tbuts[ii].setEnabled(enabled);
             _towns[ii].setEnabled(enabled);
         }
@@ -116,8 +112,8 @@ public class MapView extends BContainer
 
     protected class PairedButton extends BButton
     {
-        public PairedButton (ActionListener actlist, String command,
-                             String styleClass, PairedButton pair) {
+        public PairedButton (ActionListener actlist, String command, String styleClass,
+                             PairedButton pair) {
             super("", actlist, command);
             setStyleClass(styleClass);
             _pair = pair;
@@ -139,8 +135,8 @@ public class MapView extends BContainer
         protected PairedButton _pair;
     }
 
-    /** Listens for additions to the player's inventory and reenables our town
-     * buttons if they buy a ticket. */
+    /** Listens for additions to the player's inventory and reenables our town buttons if they buy
+     * a ticket. */
     protected SetAdapter _enabler = new SetAdapter() {
         public void entryAdded (EntryAddedEvent event) {
             if (event.getName().equals(PlayerObject.INVENTORY)) {
@@ -158,15 +154,16 @@ public class MapView extends BContainer
     protected static final Rectangle[] TOWN_RECTS = {
         new Rectangle(37, 149, 142, 119),
         new Rectangle(236, 396, 183, 71),
+        new Rectangle(250, 135, 183, 71),
     };
 
     protected static final Rectangle[] TBUT_RECTS = {
         new Rectangle(75, 132, 88, 19),
-        // this is a hack; the damned artists put a fucking gap in between the
-        // ITP town image and the take train image so we expand the take train
-        // label up and down by 23 pixels to cover the gap; we'd expand it only
-        // up and bottom align everything except that turns out not to be
-        // possible without giant fiasco thanks to the way we handle hovering
+        // this is a hack; the damned artists put a fucking gap in between the ITP (and Boom) town
+        // images and the take train image so we expand the take train label up and down by 23
+        // pixels to cover the gap; we'd expand it only up and bottom align everything except that
+        // turns out not to be possible without giant fiasco thanks to the way we handle hovering
         new Rectangle(276, 354-23, 88, 19+2*23),
+        new Rectangle(291, 61-23, 88, 19+2*23),
     };
 }
