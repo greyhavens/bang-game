@@ -62,8 +62,8 @@ public class ClearModificationsEffect extends Effect
             return false;
         }
 
-        _unit.setHindrance(null, bangobj.tick);
-        _unit.setMainInfluence(null, bangobj.tick);
+        _unit.setHindrance(null);
+        _unit.setMainInfluence(null);
         reportEffect(obs, _unit, CLEAR_MODIFICATIONS);
         return true;
     }

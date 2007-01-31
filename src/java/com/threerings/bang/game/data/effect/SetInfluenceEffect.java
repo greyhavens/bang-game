@@ -19,6 +19,9 @@ import static com.threerings.bang.Log.log;
  */
 public abstract class SetInfluenceEffect extends BonusEffect
 {
+    /** The type of influence to affect the unit. */
+    public Unit.InfluenceType influenceType = Unit.InfluenceType.MAIN;
+    
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
@@ -30,7 +33,7 @@ public abstract class SetInfluenceEffect extends BonusEffect
     {
         Unit unit = (Unit)bangobj.pieces.get(pieceId);
         // only grant points if the unit doesn't already have an influence
-        if (unit != null && unit.getMainInfluence() == null) {
+        if (unit != null && unit.getInfluences()[Unit.InfluenceType.MAIN.ordinal()] == null) {
             super.prepare(bangobj, dammap);
         }
     }
@@ -47,7 +50,9 @@ public abstract class SetInfluenceEffect extends BonusEffect
             return false;
         }
 
-        unit.setMainInfluence(createInfluence(unit), bangobj.tick);
+        Influence influence = createInfluence(unit);
+        influence.init(bangobj.tick);
+        unit.setInfluence(influenceType, influence);
         reportEffect(obs, unit, getEffectName());
         return true;
     }
@@ -61,9 +66,9 @@ public abstract class SetInfluenceEffect extends BonusEffect
         }
         String name = null;
         Unit unit = ((Unit)piece);
-        if (unit.getMainInfluence() != null)
+        if (unit.getInfluences()[influenceType.ordinal()] != null)
         {
-            name = unit.getMainInfluence().getName();
+            name = unit.getInfluences()[influenceType.ordinal()].getName();
         }
         return (name == null) ? null : MessageBundle.compose(
             "m.effect_influence", piece.getName(), "m.influence_" + name);

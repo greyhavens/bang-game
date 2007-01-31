@@ -35,15 +35,12 @@ import static com.threerings.bang.Log.log;
  */
 public class Unit extends Piece
 {
+    /** The type of influences that may act on this unit.*/
+    public static enum InfluenceType { MAIN, HOLDING, SPECIAL, HINDRANCE };
+    
     /** The player to whom this unit will return on respawn or -1 if it should not be respawned. */
     public int originalOwner = -1;
     
-    /** A set of influences acting on this unit. This is not serialized, but will be filled in
-     * at the appropriate time on the client and server by effects. */
-    protected static enum InfluenceType { MAIN, HOLDING, SPECIAL, HINDRANCE };
-    protected transient Influence _influences[] = new Influence[4];
-    
-
     /** Type of thing being held, or null for nothing. */
     public String holding;
 
@@ -78,7 +75,7 @@ public class Unit extends Piece
     {
         damage = 0;
         consecKills = 0;
-        setMainInfluence(null, bangobj.tick);
+        setMainInfluence(null);
         holding = null;
         setRespawnTick((short)0);
         lastActed = (short)(bangobj.tick - 4);
@@ -119,38 +116,35 @@ public class Unit extends Piece
     /**
      * Configures this piece with a new main influence.
      */    
-    public void setMainInfluence (Influence influence, short tick)
+    public void setMainInfluence (Influence influence)
     {
-        setInfluence(InfluenceType.MAIN, influence, tick);
+        setInfluence(InfluenceType.MAIN, influence);
     }
 
     /**
      * Configures this piece with a new holding influence.
      */    
-    public void setHoldingInfluence (Influence influence, short tick)
+    public void setHoldingInfluence (Influence influence)
     {
         if (influence != null) {
             influence.holding = true;
         }
-        setInfluence(InfluenceType.HOLDING, influence, tick);
+        setInfluence(InfluenceType.HOLDING, influence);
     }
     
     /**
      * Configures this piece with a new hindrance.
      */    
-    public void setHindrance (Hindrance hindrance, short tick)
+    public void setHindrance (Hindrance hindrance)
     {
-        setInfluence(InfluenceType.HINDRANCE, (Influence)hindrance, tick);
+        setInfluence(InfluenceType.HINDRANCE, (Influence)hindrance);
     }    
 
     /**
      * Configures this piece with a new influence by type.
      */
-    protected void setInfluence (InfluenceType type, Influence influence, short tick)
+    public void setInfluence (InfluenceType type, Influence influence)
     {
-        if (influence != null) {
-            influence.init(tick);
-        }
         _influences[type.ordinal()] = influence;
     }
 
@@ -526,7 +520,7 @@ public class Unit extends Piece
     public void wasAdded (BangObject bangobj)
     {
         super.wasAdded(bangobj);
-        setHindrance(bangobj.globalHindrance, bangobj.tick);
+        setHindrance(bangobj.globalHindrance);
     }
 
     @Override // documentation inherited
@@ -657,9 +651,10 @@ public class Unit extends Piece
      * Called on the server to give the unit a chance to generate an effect to deploy after it has
      * been ordered to move/shoot.
      */
-    public Effect maybeGeneratePostOrderEffect ()
+    public Effect[] maybeGeneratePostOrderEffects ()
     {
-        return (getHindrance() == null) ? null : getHindrance().maybeGeneratePostOrderEffect();
+        Effect effect = (getHindrance() == null) ? null : getHindrance().maybeGeneratePostOrderEffect();
+        return (effect == null) ? Piece.NO_EFFECTS : new Effect[] { effect };
     }
 
     @Override // documentation inherited
@@ -712,7 +707,7 @@ public class Unit extends Piece
             if (influence != null) {
                 if (!_killShot || influence.showClientAdjust())
                 {
-                    influence.adjustAttack(target, damage);
+                    damage = influence.adjustAttack(target, damage);
                 }
             } 
         }
@@ -726,7 +721,7 @@ public class Unit extends Piece
             if (influence != null) {
                 if (!_killShot || influence.showClientAdjust())
                 {
-                    influence.adjustDefend(shooter, damage);
+                    damage = influence.adjustDefend(shooter, damage);
                 }
             } 
         }
@@ -745,6 +740,10 @@ public class Unit extends Piece
     {
         return (_config != null ? _config.type : "");
     }
+    
+    /** A set of influences acting on this unit. This is not serialized, but will be filled in
+      * at the appropriate time on the client and server by effects. */
+    protected transient Influence _influences[] = new Influence[4];
 
     protected transient UnitConfig _config;
     protected transient short _respawnTick = -1;

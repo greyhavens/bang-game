@@ -55,7 +55,7 @@ public class FetishEffect extends HoldEffect
         if (unit == null) {
             return false;
         }
-        unit.setHoldingInfluence(dropping ? null : createHoldingInfluence(), bangobj.tick);
+        unit.setHoldingInfluence(dropping ? null : createHoldingInfluence());
         return true;
     }
 

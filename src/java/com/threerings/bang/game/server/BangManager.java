@@ -602,8 +602,8 @@ public class BangManager extends GameManager
                 }
 
                 // possibly deploy a post-order effect
-                Effect peffect = unit.maybeGeneratePostOrderEffect();
-                if (peffect != null) {
+                Effect[] peffects = unit.maybeGeneratePostOrderEffects();
+                for (Effect peffect : peffects) {
                     deployEffect(-1, peffect);
                 }
             }
@@ -615,7 +615,7 @@ public class BangManager extends GameManager
         } finally {
             _bangobj.commitTransaction();
         }
-
+        
         // finally, validate all of our advance orders and make sure none of them became invalid
         if (recheckOrders) {
             validateOrders();

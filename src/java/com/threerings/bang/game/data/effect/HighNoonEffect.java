@@ -89,7 +89,7 @@ public class HighNoonEffect extends Effect
         for (int pieceId : pieceIds) {
             Unit unit = (Unit)bangobj.pieces.get(pieceId);
             if (unit != null) {
-                unit.setHindrance(hindrance, bangobj.tick);
+                unit.setHindrance(hindrance);
                 reportEffect(obs, unit, UPDATED);
             } else {
                 log.warning("Missing piece for high noon effect [id=" +

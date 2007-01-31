@@ -54,7 +54,9 @@ public abstract class SetHindranceEffect extends BonusEffect
             return false;
         }
 
-        _unit.setHindrance(createHindrance(_unit), bangobj.tick);
+        Hindrance hindrance = createHindrance(_unit);
+        hindrance.init(bangobj.tick);
+        _unit.setHindrance(hindrance);
         reportEffect(obs, _unit, getEffectName());
         return true;
     }
