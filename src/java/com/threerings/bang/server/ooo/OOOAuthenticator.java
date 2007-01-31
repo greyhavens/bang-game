@@ -172,7 +172,7 @@ public class OOOAuthenticator extends BangAuthenticator
         if (serverTownIdx > 0) {
             String townId = (prec == null || prec.townId == null) ?
                 BangCodes.FRONTIER_TOWN : prec.townId;
-            if (BangUtil.getTownIndex(townId) < serverTownIdx) {
+            if (BangUtil.getTownIndex(townId) < serverTownIdx && !user.isAdmin()) {
                 log.warning("Rejecting access to town server by non-ticket-holder " +
                             "[who=" + username + ", stownId=" + ServerConfig.townId +
                             ", ptownId=" + townId + "].");
