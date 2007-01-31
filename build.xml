@@ -1,7 +1,7 @@
 <!-- build configuration -->
 <project name="bang" default="qcompile" basedir=".">
 
-  <!-- things you probably don't want to change -->
+  <!-- define various build properties -->
   <property name="src.dir"        value="src/java"/>
   <property name="deploy.dir"     value="dist"/>
   <property name="var.dir"        value="var"/>
@@ -261,15 +261,6 @@
       <include name="**/*.ogg"/>
       <exclude name="**/source/**"/>
     </jar>
-    <antcall target="town_bundles">
-      <param name="town" value="frontier_town"/>
-    </antcall>
-    <antcall target="town_bundles">
-      <param name="town" value="indian_post"/>
-    </antcall>
-    <antcall target="town_bundles">
-      <param name="town" value="boom_town"/>
-    </antcall>
   </target>
 
   <!-- loads our boards into the database -->
@@ -363,6 +354,7 @@
         <include name="aspects.html"/>
         <include name="boards.html"/>
         <include name="units.html"/>
+        <include name="client/getdown-pro.jar"/>
       </fileset>
     </delete>
     <ant dir="projects/installers" target="clean"/>
@@ -556,6 +548,15 @@
     <delete file="etc/bang-client.pro"/>
   </target>
 
+  <!-- signs and install the Getdown applet jar file -->
+  <target name="applet" depends="prepare">
+    <property file="${cert_dir}/certificate.properties"/>
+    <copy file="projects/tools/lib/java/getdown-pro.jar" todir="${web_dir}/client/"/>
+    <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
+      <fileset dir="${web_dir}/client" includes="getdown-pro.jar"/>
+    </signjar>
+  </target>
+
   <!-- a target for rebuilding everything -->
   <target name="all" depends="clean,prepare,compile,javadoc,dist"/>
 
@@ -572,7 +573,29 @@
   </target>
 
   <!-- builds the avatar, media and sounds jar files -->
-  <target name="mdist" depends="prepare,models,sounds,bits,avatars">
+  <target name="mdist" depends="prepare,sounds,bits">
+    <!-- build our models and avatars by execing ant separately because it seems to -->
+    <!-- otherwise blow its top due to some heap size wackiness -->
+    <exec executable="ant" dir="${basedir}" failonerror="true">
+      <env key="ANT_OPTS" value="-mx128M"/>
+      <arg line="avatars"/>
+    </exec>
+    <exec executable="ant" dir="${basedir}" failonerror="true">
+      <env key="ANT_OPTS" value="-mx128M"/>
+      <arg line="models"/>
+    </exec>
+
+    <!-- now build our media bundles -->
+    <antcall target="town_bundles">
+      <param name="town" value="frontier_town"/>
+    </antcall>
+    <antcall target="town_bundles">
+      <param name="town" value="indian_post"/>
+    </antcall>
+    <antcall target="town_bundles">
+      <param name="town" value="boom_town"/>
+    </antcall>
+
     <!-- put our non-town-specific goods resources in a bundle -->
     <jar file="rsrc/goods/bundle.jar" basedir="rsrc/goods">
       <include name="cards/**/*.png"/>
@@ -648,11 +671,13 @@
       <then>
         <antcall target="devclient"/>
         <ant dir="projects/installers" target="devclient"/>
+        <antcall target="applet"/>
       </then>
     <elseif><equals arg1="${props.dist}" arg2="production"/>
       <then>
         <antcall target="client"/>
         <ant dir="projects/installers" target="client"/>
+        <antcall target="applet"/>
       </then>
     </elseif></if>
   </target>

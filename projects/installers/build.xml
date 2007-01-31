@@ -6,7 +6,6 @@
   <property name="deploy.dir" value="dist"/>
   <property name="web.home" value="${base.dir}/${deploy.dir}/installer-pages"/>
   <property file="${base.dir}/dist/deployment.properties"/>
-  <property file="${cert_dir}/certificate.properties"/>
 
   <target name="prepare">
     <copy todir="data" file="${base.dir}/projects/tools/lib/java/getdown-pro.jar"/>
@@ -53,16 +52,6 @@
       <fileset dir="${deploy.dir}" includes="bang-install.bin"/>
       <fileset dir="${default_locale}" includes="bang-install.dmg"/>
     </copy>
-  </target>
-
-  <!-- signs and install the Getdown applet jar file -->
-  <target name="applet" depends="prepare">
-    <copy todir="${web.home}/client/" file="data/getdown-pro.jar"/>
-    <copy todir="${web.home}/client/" file="${default_locale}/background.png"/>
-    <signjar keystore="${cert_dir}/lib/keystore.dat" alias="threerings"
-             storepass="${sign.storepass}">
-      <fileset dir="${web.home}/client" includes="getdown-pro.jar"/>
-    </signjar>
   </target>
 
   <!-- clean out the project -->
