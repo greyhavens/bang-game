@@ -15,6 +15,9 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.TextureState;
 
+import com.threerings.jme.util.JmeUtil;
+import com.threerings.jme.util.JmeUtil.FrameState;
+
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
@@ -45,7 +48,7 @@ public class IconConfig
     public float frameRate;
     
     /** The animation repeat type (one of the repeat type constants in
-     * {@link Controller}. */
+     * {@link Controller}). */
     public int repeatType;
     
     /**
@@ -157,37 +160,17 @@ public class IconConfig
             fheight = tex.getImage().getHeight() / frameHeight;
         tex.setScale(new Vector3f(1f / fwidth, 1f / fheight, 1f));
         tex.setTranslation(new Vector3f());
-        final float spf = 1f / frameRate;
         
         Quad icon = new Quad("icon", width, height) {
             public void updateWorldData (float time) {
                 super.updateWorldData(time);
                 getBatch(0).queueDistance = 0f;
-                for (_faccum += time; _faccum >= spf; _faccum -= spf) {
-                    advanceFrame();
-                }
+                _fstate.update(time, frameRate, frameCount, repeatType);
                 Vector3f scale = tex.getScale();
-                tex.getTranslation().set((_fidx % fwidth) * scale.x,
-                    (fheight - 1 - (_fidx / fwidth)) * scale.y, 0f);
+                tex.getTranslation().set((_fstate.idx % fwidth) * scale.x,
+                    (fheight - 1 - (_fstate.idx / fwidth)) * scale.y, 0f);
             }
-            protected void advanceFrame () {
-                if ((_fidx += _fdir) >= frameCount) {
-                    if (repeatType == Controller.RT_CLAMP) {
-                        _fidx = frameCount - 1;
-                        _fdir = 0;
-                    } else if (repeatType == Controller.RT_WRAP) {
-                        _fidx = 0;
-                    } else { // repeatType == Controller.RT_CYCLE
-                        _fidx = frameCount - 2;
-                        _fdir = -1;
-                    }
-                } else if (_fidx < 0) {
-                    _fidx = 1;
-                    _fdir = +1;
-                }
-            }
-            protected int _fidx, _fdir = +1;
-            protected float _faccum;
+            protected FrameState _fstate = new FrameState();
         };
         configureIcon(icon, tstate);
         return icon;
@@ -226,14 +209,7 @@ public class IconConfig
             icon, props, "frame_count", 1);
         iconfig.frameRate = BangUtil.getFloatProperty(
             icon, props, "frame_rate", 8f);
-        String rtype = props.getProperty("repeat_type");
-        if ("wrap".equals(rtype)) {
-            iconfig.repeatType = Controller.RT_WRAP;
-        } else if ("cycle".equals(rtype)) {
-            iconfig.repeatType = Controller.RT_CYCLE;
-        } else { // "clamp" or null
-            iconfig.repeatType = Controller.RT_CLAMP;
-        }
+        iconfig.repeatType = JmeUtil.parseRepeatType(props.getProperty("repeat_type"));
         
         _icons.put(icon, iconfig);
     }
