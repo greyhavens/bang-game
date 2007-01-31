@@ -1,0 +1,51 @@
+#
+# $Id$
+#
+# Corn-fed Zeb By Josh
+
+lock = none
+difficulty = hard
+in_order = false
+
+outlaw_print = 294, 0, 102, 109, 112, 122, 188, 208, 852118, 738197645, 882180270, 882180279
+
+games = zeb_01, zeb_02, zeb_03, zeb_04
+
+reward_scrip = 500
+
+#
+# Localized messages
+
+title = Corn-fed Zeb
+
+descrip = Zebidiah Korndorfer got run out of town as a kid for stealin' pies, raidin' chicken coops\
+  and tryin' to eat his playmates.  Now he's bigger, meaner and HUNGRIER than ever! He rustles cattle\
+  and robs banks to fill his belly an' he's scared up a few prairie trash pals to help 'im! \
+
+zeb_01.name = Zeb's Supper
+zeb_01.opponent.1.name = Corn-fed Zeb
+zeb_01.pregame_quote = "This here ranch's muh dinner plate an' all these here beef-critters'r muh supper!  Clear out 'fore ah make a side dish outter yer! "
+zeb_01.pregame_speaker = 1
+zeb_01.failed_quote = "You been whupped good, at this rate you'll never wipe that ghastly grin off Calavera's puss!"
+zeb_01.failed_speaker = 0
+zeb_01.completed_quote = "You whupped 'em good!  I'd hate to be in their boots when they have to explain this to ole Boss Bones!"
+zeb_01.completed_speaker = 0
+
+zeb_02.name = Oro de Muerte
+zeb_02.opponent.1.name = Corn-fed Zeb
+zeb_02.pregame_quote = "Calavera's gang is gobblin' up every nugget in the gorge!  Prospectors are shakin' in their boots and goin' bust!  Those poor folks need someone to get back what's theirs and put a hurtin' on them that done 'em wrong!"
+zeb_02.pregame_speaker = 0
+zeb_02.failed_quote = "Tarnation! I reckon those outlaws are more scared of Calavera than they are of you!"
+zeb_02.failed_speaker = 0
+zeb_02.completed_quote = "Woo doggies!  I reckon Calavera's gang is out of the cattle trade once an' for all, thanks to you!"
+zeb_02.completed_speaker = 0
+
+zeb_03.name = Skull-man's Domain
+zeb_03.opponent.1.name = Corn-fed Zeb
+domain.pregame_quote = "Los Calavera's boys are strong-armin' homesteaders off their land and sendin' 'em runnin' for the hills! Protect the steads and send those would-be robber barons packin'!"
+zeb_03.pregame_speaker = 0
+zeb_03.bigshot_quote = true
+zeb_03.failed_quote = "Con Sarnit!  Now ole Boss Bones is liable to build an outlaw fortress on that land!  Best try again so that don't happen!"
+zeb_03.failed_speaker = 0
+zeb_03.completed_quote = "Heavens to Betsy!  Reckon that'll put Calavera's bandidos into hidin'.  Time to hunt 'em down pardner!"
+zeb_03.completed_speaker = 0
