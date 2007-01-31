@@ -58,7 +58,7 @@ public class TicketView extends BContainer
 
         boolean townEnabled = (StationCodes.TICKET_COINS[ticketTownIdx] > 0);
         if (_ticketTownId != null) {
-            if (townEnabled) {
+            if (townEnabled || ctx.getUserObject().tokens.isAdmin()) {
                 BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
                 row.add(new BLabel(msgs.get("l.price"), "price_label"));
                 MoneyLabel cost = new MoneyLabel(ctx, true);
