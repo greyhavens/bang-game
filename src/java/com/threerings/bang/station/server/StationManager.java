@@ -35,8 +35,7 @@ public class StationManager extends PlaceManager
     implements StationCodes, StationProvider
 {
     // documentation inherited from interface StationProvider
-    public void buyTicket (ClientObject caller,
-                           StationService.ConfirmListener listener)
+    public void buyTicket (ClientObject caller, StationService.ConfirmListener listener)
         throws InvocationException
     {
         PlayerObject user = (PlayerObject)caller;
@@ -57,9 +56,16 @@ public class StationManager extends PlaceManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // create and deliver the ticket to the player; all the heavy lifting
-        // is handled by the financial action
+        // create the ticket and make sure no funny business is afoot
         TrainTicket ticket = new TrainTicket(user.playerId, ticketTownIdx);
+        if (ticket.getCoinCost() < 0 && !user.tokens.isAdmin()) {
+            log.warning("Rejecting request to buy unavailable ticket [who=" + user.who() +
+                        ", ticket=" + ticket + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        // deliver the ticket to the player; all the heavy lifting is handled by the financial
+        // action
         new BuyTicketAction(user, ticket, listener).start();
     }
 
