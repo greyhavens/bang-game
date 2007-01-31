@@ -41,10 +41,9 @@ public interface TutorialCodes
             PRACTICE_PREFIX + TotemBuildingInfo.IDENT,
             "forest_guardians",
             PRACTICE_PREFIX + ForestGuardiansInfo.IDENT,
-        } , {
-			"robo_rampage",
-			PRACTICE_PREFIX + "rr",
-		}
+        } , { // boom town tutorials
+            "boom_units", // TEMP: test tutorial
+        }
     };
 
     /** An event message sent to the server to let the tutorial scenario know

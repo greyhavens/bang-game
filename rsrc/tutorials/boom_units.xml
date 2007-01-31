@@ -1,0 +1,18 @@
+<?xml version="1.0" standalone="yes"?>
+
+<tutorial ident="boom_units" board="Oak Creek Ranch" players="2">
+
+  <!-- add the test units -->
+  <add_piece what="unit" id="1000" type="boom_town/forklift" location="16,16" owner="0"/>
+  <add_piece what="unit" id="1001" type="boom_town/onearmedbandit" location="16,18" owner="0"/>
+
+  <!-- add something to shoot at -->
+  <add_piece what="unit" id="1100" type="frontier_town/gunslinger" location="18,16" owner="1"/>
+  <add_piece what="unit" id="1101" type="frontier_town/artillery" location="20,16" owner="1"/>
+  <add_piece what="unit" id="1102" type="frontier_town/cavalry" location="22,16" owner="1"/>
+
+  <center_on what="piece" id="1000"/>
+  <text message="test_away" step="1"/>
+  <wait event="text_clicked" allowAttack="true"/>
+
+</tutorial>
