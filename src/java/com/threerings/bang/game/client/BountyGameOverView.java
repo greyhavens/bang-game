@@ -11,6 +11,7 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
+import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.Interval;
 import com.threerings.util.MessageBundle;
@@ -273,6 +274,14 @@ public class BountyGameOverView extends SteelWindow
         for (int ii = row*COLS, ll = ii+COLS; ii < ll; ii++) {
             _stats.getComponent(ii).setAlpha(visible ? 1f : 0f);
         }
+    }
+
+    @Override // from BComponent
+    protected Dimension computePreferredSize (int whint, int hhint)
+    {
+        Dimension d = super.computePreferredSize(whint, hhint);
+        d.width = Math.min(d.width, 800);
+        return d;
     }
 
     protected BasicContext _ctx;
