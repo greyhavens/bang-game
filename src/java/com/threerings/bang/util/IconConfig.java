@@ -209,7 +209,8 @@ public class IconConfig
             icon, props, "frame_count", 1);
         iconfig.frameRate = BangUtil.getFloatProperty(
             icon, props, "frame_rate", 8f);
-        iconfig.repeatType = JmeUtil.parseRepeatType(props.getProperty("repeat_type"));
+        iconfig.repeatType = JmeUtil.parseRepeatType(props.getProperty("repeat_type"),
+            Controller.RT_WRAP);
         
         _icons.put(icon, iconfig);
     }
