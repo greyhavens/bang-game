@@ -96,6 +96,7 @@ public class HighNoonEffect extends Effect
                     pieceId + "].");
             }
         }
+        hindrance.init(bangobj.tick);
         bangobj.globalHindrance = hindrance;
 
         affectBoard(bangobj, HIGH_NOON, true, obs);
