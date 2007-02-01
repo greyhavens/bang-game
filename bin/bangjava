@@ -78,9 +78,16 @@ fi
 CLASSPATH=$BANG_HOME:$CLASSPATH
 export CLASSPATH
 
-# set up the LD_LIBRARY_PATH to include our shared libraries
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$BANG_HOME/dist/lib/`uname -m`-`uname -s`
-export LD_LIBRARY_PATH
+OS=`uname -s`
+NATIVE_LIBS=$BANG_HOME/dist/lib/`uname -m`-`uname -s`
+if [ "$OS" = "MacOS" ]; then
+    # pass -Djava.library.path to locate our shared libraries
+    JAVA_ARGS="$JAVA_ARGS -Djava.library.path=$NATIVE_LIBS"
+else
+    # set up the LD_LIBRARY_PATH to include our shared libraries
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NATIVE_LIBS
+    export LD_LIBRARY_PATH
+fi
 
 # do the deed
 eval $JAVA_VM $JAVA_ARGS $ARGS
