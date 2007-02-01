@@ -288,7 +288,8 @@ public class BountyConfig extends SimpleStreamableObject
         BountyConfig config = new BountyConfig();
         config.townId = bits[0];
         config.type = Type.valueOf(bits[1].toUpperCase());
-        config.ident = bits[2];
+        // skip further intervening directories which are just for organizational purposes
+        config.ident = bits[bits.length-1];
 
         // parse the various bounty properties
         config.lock = BangUtil.getEnumProperty(which, props, "lock", LockType.NONE);
