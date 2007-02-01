@@ -80,7 +80,7 @@ export CLASSPATH
 
 OS=`uname -s`
 NATIVE_LIBS=$BANG_HOME/dist/lib/`uname -m`-`uname -s`
-if [ "$OS" = "MacOS" ]; then
+if [ "$OS" = "Darwin" ]; then
     # pass -Djava.library.path to locate our shared libraries
     JAVA_ARGS="$JAVA_ARGS -Djava.library.path=$NATIVE_LIBS"
 else
