@@ -57,11 +57,11 @@ public class BountyGameOverViewTest extends TestApp
         user.scrip = 125378;
         user.stats = new StatSet();
 
-        BountyConfig config = BountyConfig.getBounty("dynamite_daltry");
-        String gameId = "no_trespassing";
+        String bountyId = "sgt._rusty", gameId = "greenhorns";
+        BountyConfig config = BountyConfig.getBounty(bountyId);
         BangConfig gconfig = null;
         try {
-            String path = "bounties/frontier_town/most_wanted/dynamite_daltry/" + gameId + ".game";
+            String path = "bounties/frontier_town/most_wanted/" + bountyId + "/" + gameId + ".game";
             gconfig = (BangConfig)BinaryImporter.getInstance().load(
                 _ctx.getResourceManager().getResource(path));
             gconfig.type = BangConfig.Type.BOUNTY;
