@@ -1091,8 +1091,9 @@ public class BangClient extends BasicClient
             return false;
         }
 
+        File appdir = new File(localDataDir(""));
         String[] args = new String[] {
-            LaunchUtil.getJVMPath(), "-jar", pro.toString(), localDataDir("")
+            LaunchUtil.getJVMPath(appdir), "-jar", pro.toString(), appdir.getPath()
         };
         log.info("Running " + StringUtil.join(args, "\n  "));
         try {
