@@ -131,6 +131,7 @@ public class BasicClient
 
         // these manage local client resources
         _rsrcmgr = new ResourceManager("rsrc");
+        _rsrcmgr.activateResourceProtocol();
         _msgmgr = new MessageManager(MESSAGE_MANAGER_PREFIX);
         _icache = new ImageCache(_ctx.getResourceManager());
         _tcache = new TextureCache(_ctx);
