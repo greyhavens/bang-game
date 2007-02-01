@@ -21,10 +21,12 @@ public class RandomInfluenceEffect extends SetInfluenceEffect
     
     public RandomInfluenceEffect ()
     {
+        influenceType = Unit.InfluenceType.SPECIAL;
     }
 
     public RandomInfluenceEffect (int pieceId, Kind kind)
     {
+        influenceType = Unit.InfluenceType.SPECIAL;
         this.pieceId = pieceId;
         _kind = kind;
     }
@@ -67,7 +69,7 @@ public class RandomInfluenceEffect extends SetInfluenceEffect
     protected Influence createUpAttack () {
         return new Influence() {
             public String getName () {
-                  return "increase_attack_damage";
+                  return "increase_attack";
             }    
             public int adjustAttack (Piece target, int damage) {
                 return Math.round(1.3f * damage);
@@ -84,7 +86,7 @@ public class RandomInfluenceEffect extends SetInfluenceEffect
     protected Influence createUpDefense() {
         return new Influence() {
             public String getName () {
-                  return "increase_defense_damage";
+                  return "increase_defense";
             }    
             public int adjustDefend (Piece shooter, int damage) {
                 return Math.round(0.7f * damage);
