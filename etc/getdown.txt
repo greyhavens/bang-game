@@ -89,6 +89,11 @@ boom_town.uresource = rsrc/props/boom_town/bundle.jar
 boom_town.uresource = rsrc/units/boom_town/bundle.jar
 boom_town.uresource = rsrc/sounds/music/boom_town/bundle.jar
 
+# Version requirements for our JVM
+java_version = 1050006
+java_location = [windows] /client/java_windows.jar
+java_location = [linux] /client/java_linux.jar
+
 # Parameters passed to the JVM
 jvmarg = -Xmx256M
 jvmarg = -Djava.library.path=%APPDIR%/native
