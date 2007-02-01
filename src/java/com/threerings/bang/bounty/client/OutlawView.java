@@ -15,6 +15,7 @@ import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
 import com.threerings.bang.avatar.client.AvatarView;
+import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
@@ -40,16 +41,27 @@ public class OutlawView extends BComponent
             null };
     }
 
-    public void setOutlaw (BasicContext ctx, int[] print, boolean completed)
+    public void setOutlaw (BasicContext ctx, BountyConfig.Opponent outlaw, boolean completed)
     {
         _completed = completed;
-        if (Arrays.equals(print, _print)) {
+        if (_outlaw != null && _outlaw.name.equals(outlaw.name)) {
             return;
         }
+        _outlaw = outlaw;
+
+        // clear out any existing outlaw image
+        if (_images[AVATAR] != null && _added) {
+            _images[AVATAR].release();
+        }
         _images[AVATAR] = null;
-        _print = print;
-        if (_print != null && _print.length > 0) {
-            AvatarView.getFramableImage(ctx, _print, (int)(4/_scale), this);
+
+        if (!StringUtil.isBlank(_outlaw.image)) {
+            _images[AVATAR] = ctx.getImageCache().getBImage(_outlaw.image, _scale/2, false);
+            if (_added) {
+                _images[AVATAR].reference();
+            }
+        } else if (_outlaw.print != null && _outlaw.print.length > 0) {
+            AvatarView.getFramableImage(ctx, _outlaw.print, (int)(4/_scale), this);
         }
     }
 
@@ -77,8 +89,8 @@ public class OutlawView extends BComponent
     {
         _images[BACKGROUND].render(renderer, x, y, alpha);
         if (_images[AVATAR] != null) {
-            int offset = (int)(4*_scale);
-            _images[AVATAR].render(renderer, x + offset, y + offset, alpha);
+            int xoff = (_images[FRAME].getWidth() - _images[AVATAR].getWidth())/2;
+            _images[AVATAR].render(renderer, x + xoff, y + (int)(4*_scale), alpha);
         }
         if (_scale != 1f || !_completed) {
             _images[FRAME].render(renderer, x, y, alpha);
@@ -108,8 +120,7 @@ public class OutlawView extends BComponent
     // from interface ResultListener<BImage>
     public void requestFailed (Exception cause)
     {
-        log.log(Level.WARNING, "Failed to load outlaw image " +
-                "[print=" + StringUtil.toString(_print) + "].", cause);
+        log.log(Level.WARNING, "Failed to load outlaw image " + _outlaw + ".", cause);
     }
 
     @Override // from BComponent
@@ -142,7 +153,7 @@ public class OutlawView extends BComponent
     protected BImage[] _images;
     protected boolean _added, _completed;
     protected float _scale;
-    protected int[] _print;
+    protected BountyConfig.Opponent _outlaw;
 
     protected static final int BACKGROUND = 0;
     protected static final int FRAME = 1;

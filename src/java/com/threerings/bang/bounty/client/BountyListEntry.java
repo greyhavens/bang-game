@@ -66,7 +66,7 @@ public class BountyListEntry extends SelectableIcon
 
         // start resolving our outlaw now that we're added (this will NOOP after the first time)
         _oview.reference();
-        _oview.setOutlaw(_ctx, config.outlawPrint, _completed);
+        _oview.setOutlaw(_ctx, config.getOutlaw(), _completed);
     }
 
     @Override // from BComponent

@@ -216,6 +216,18 @@ public class BountyConfig extends SimpleStreamableObject
     }
 
     /**
+     * Returns the "outlaw" targeted by this bounty as an {@link Opponent} record.
+     */
+    public Opponent getOutlaw ()
+    {
+        Opponent outop = new Opponent();
+        outop.name = title;
+        outop.print = outlawPrint;
+        outop.image = outlawImage;
+        return outop;
+    }
+
+    /**
      * Returns a configured AI record for the specified opponent in this game.
      */
     public BangAI getOpponent (String game, int players, int index, BangAI oppai)
@@ -299,6 +311,7 @@ public class BountyConfig extends SimpleStreamableObject
         if (config.outlawPrint != null && config.outlawPrint.length == 0) {
             config.outlawPrint = null;
         }
+        config.outlawImage = getImageProperty(which, props, "outlaw_image");
         config.title = props.getProperty("title", "");
         config.description = props.getProperty("descrip", "");
 
@@ -315,7 +328,7 @@ public class BountyConfig extends SimpleStreamableObject
                     info.opponents[ii].name =  name;
                     info.opponents[ii].print =  StringUtil.parseIntArray(
                         props.getProperty(prefix + ".print", ""));
-                    info.opponents[ii].image = props.getProperty(prefix + ".image");
+                    info.opponents[ii].image = getImageProperty(which, props, prefix + ".image");
                 }
             }
             info.preGameQuote = parseQuote(which, props, game + ".pregame");
@@ -365,8 +378,14 @@ public class BountyConfig extends SimpleStreamableObject
         quote.text = props.getProperty(prefix + "_quote");
         quote.speaker = BangUtil.getIntProperty(which, props, prefix + "_speaker", 1);
         return quote;
-
     }
+
+    protected static String getImageProperty (String which, Properties props, String key)
+    {
+        String image = props.getProperty(key, (String)null);
+        return StringUtil.isBlank(image) ? null : "bounties/" + which + "/" + image;
+    }
+
     protected static void ensureBountiesLoaded ()
     {
         if (_configs.size() == 0) {
