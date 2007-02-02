@@ -44,6 +44,12 @@ public class PracticeInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
+    public boolean showDetailedMarquee ()
+    {
+        return false;
+    }
+
+    @Override // from ScenarioInfo
     public Stat.Type[] getObjectives ()
     {
         return null;

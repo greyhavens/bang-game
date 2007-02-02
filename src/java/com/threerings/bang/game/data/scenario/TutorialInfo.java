@@ -28,6 +28,12 @@ public class TutorialInfo extends ScenarioInfo
     }
 
     @Override // from ScenarioInfo
+    public boolean showDetailedMarquee ()
+    {
+        return false;
+    }
+
+    @Override // from ScenarioInfo
     public boolean isValidMarker (Marker marker)
     {
         return true; // if it's on a tutorial board, we need it

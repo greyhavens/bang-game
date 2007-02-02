@@ -226,6 +226,15 @@ public abstract class ScenarioInfo
     }
 
     /**
+     * Returns true if we should show the players and round during the pre-game marquee, false
+     * otherwise.
+     */
+    public boolean showDetailedMarquee ()
+    {
+        return true;
+    }
+
+    /**
      * Returns the stats associated with the scenario's primary objective.
      */
     public abstract Stat.Type[] getObjectives ();

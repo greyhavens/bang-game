@@ -711,6 +711,53 @@ public class BangBoardView extends BoardView
         super.removeSprite(sprite);
     }
 
+    @Override // documentation inherited
+    public void refreshBoard ()
+    {
+        super.refreshBoard();
+        if (!_bangobj.scenario.showDetailedMarquee()) {
+            return;
+        }
+
+        // create marquees with the avatars of all the participants
+        _pmarquees = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeHStretch()) {
+            public boolean isOverlay () {
+                return true;
+            }
+            public BComponent getHitComponent (int mx, int my) {
+               return null;
+            }
+        };
+
+        // set up two rows with two slots each that will hold our marquee bits
+        GroupLayout layout = GroupLayout.makeVert(GroupLayout.CENTER);
+        layout.setGap(10);
+        BContainer info = new BContainer(layout);
+        BContainer[] cols = new BContainer[2];
+        _pmarquees.add(cols[0] = new BContainer(layout));
+        _pmarquees.add(info);
+        _pmarquees.add(cols[1] = new BContainer(layout));
+
+        // create avatar displays for each player in the game
+        for (int ii = 0; ii < _bangobj.players.length; ii++) {
+            cols[ii%2].add(createPlayerMarquee(ii));
+        }
+
+        // add some additional information in the center colum
+        String msg = MessageBundle.compose(
+            "m.marquee_header", MessageBundle.taint(String.valueOf((_bangobj.roundId + 1))),
+            _bangobj.scenario.getName());
+        info.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, msg), "marquee_subtitle"));
+        info.add(new Spacer(25, 100));
+        if (_bconfig.rated) {
+            info.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, "m.ranked"), "marquee_subtitle"));
+        }
+
+        // create and add the marquees and the whole window
+        _pmarquees.setBounds(0, 0, _ctx.getDisplay().getWidth(), _ctx.getDisplay().getHeight());
+        _ctx.getRootNode().addWindow(_pmarquees);
+    }
+
     /**
      * Continues switching into or out of "high noon" mode after the screen has
      * faded to white.
@@ -800,59 +847,6 @@ public class BangBoardView extends BoardView
     protected boolean shouldShowSky ()
     {
         return false;
-    }
-
-    @Override // documentation inherited
-    protected void createMarquee (String text)
-    {
-        super.createMarquee(text);
-        if (_bangobj.state != BangObject.PRE_GAME &&
-            _bangobj.state != BangObject.SELECT_PHASE) {
-            return;
-        }
-
-        // create marquees with the avatars of all the participants
-        _pmarquees = new BWindow(
-            _ctx.getStyleSheet(), GroupLayout.makeHStretch()) {
-            public boolean isOverlay () {
-                return true;
-            }
-            public BComponent getHitComponent (int mx, int my) {
-               return null;
-            }
-        };
-
-        // set up two rows with two slots each that will hold our marquee bits
-        GroupLayout layout = GroupLayout.makeVert(GroupLayout.CENTER);
-        layout.setGap(10);
-        BContainer info = new BContainer(layout);
-        BContainer[] cols = new BContainer[2];
-        _pmarquees.add(cols[0] = new BContainer(layout));
-        _pmarquees.add(info);
-        _pmarquees.add(cols[1] = new BContainer(layout));
-
-        // create avatar displays for each player in the game
-        for (int ii = 0; ii < _bangobj.players.length; ii++) {
-            cols[ii%2].add(createPlayerMarquee(ii));
-        }
-
-        // add some additional information in the center colum
-        String msg = MessageBundle.compose(
-            "m.marquee_header",
-            MessageBundle.taint(String.valueOf((_bangobj.roundId + 1))),
-            _bangobj.scenario.getName());
-        info.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, msg),
-                            "marquee_subtitle"));
-        info.add(new Spacer(25, 100));
-        if (_bconfig.rated) {
-            info.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, "m.ranked"),
-                                "marquee_subtitle"));
-        }
-
-        // create and add the marquees and the whole window
-        _pmarquees.setBounds(0, 0, _ctx.getDisplay().getWidth(),
-                             _ctx.getDisplay().getHeight());
-        _ctx.getRootNode().addWindow(_pmarquees);
     }
 
     /**
