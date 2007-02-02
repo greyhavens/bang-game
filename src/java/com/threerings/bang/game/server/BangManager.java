@@ -1569,6 +1569,12 @@ public class BangManager extends GameManager
         // tick the scenario which will do all the standard processing
         _scenario.tick(_bangobj, tick);
 
+        // If this is a bounty game without respawns, the game could end early
+
+        if (shouldEndBountyGame()) {
+            _bangobj.lastTick = tick;
+        }
+
         // determine whether we should end the game
         if (tick >= _bangobj.lastTick) {
             // let the scenario do any end of round business
@@ -1780,6 +1786,16 @@ public class BangManager extends GameManager
                         failed++;
                     }
                 }
+                // the player must survive a no-respawn game
+                if (_bconfig.respawnUnits == false) {
+                    failed++;
+                    for (Piece p : _bangobj.getPieceArray()) {
+                        if (p instanceof Unit && p.isAlive() && ((Unit)p).owner == 0) {
+                            failed--;
+                            break;
+                        }
+                    }
+                }
                 if (failed == 0) {
                     user.stats.addToSetStat(Stat.Type.BOUNTY_GAMES_COMPLETED,
                                             _bounty.getStatKey(_bangobj.bountyGameId));
@@ -1930,6 +1946,62 @@ public class BangManager extends GameManager
     {
         return _bangobj.isInPlay() &&
             (getActiveHumanCount() == 0 || _gameobj.getActivePlayerCount() == 1);
+    }
+
+    /**
+     * Possibly cause a bounty game to end early.  In a no-respawn game; If all the player units are
+     * dead then the game ends (and the player loses).  If all the AI units are dead then end the
+     * game if the player meets the bounty criteria.
+     */
+    protected boolean shouldEndBountyGame ()
+    {
+        if (_bconfig.type != BangConfig.Type.BOUNTY || _bconfig.respawnUnits) {
+            return false;
+        }
+
+        boolean playerDead = true, AIDead = true;
+        for (Piece p : _bangobj.getPieceArray()) {
+            if (p instanceof Unit && p.isAlive()) {
+                if (((Unit)p).owner == 0) {
+                    playerDead = false;
+                } else {
+                    AIDead = false;
+                }
+                if (!playerDead && !AIDead) {
+                    break;
+                }
+            }
+        }
+
+        // when a player loses all their units, they're done
+        if (playerDead) {
+            return true;
+        }
+
+        // otherwise check if we've killed off all the AI
+        if (AIDead) {
+            // determine the player's rank
+            int playerPoints = _bangobj.points[0];
+            int rank = 0;
+            for (int ii = 1; ii < _bangobj.points.length; ii++) {
+                if (playerPoints < _bangobj.points[ii]) {
+                    rank++;
+                }
+            }
+
+            // if all the AI units are dead and the player has met all bounty criteria, end the game
+            boolean failed = false;
+            for (Criterion crit : _bconfig.criteria) {
+                if (!crit.isMet(_bangobj, rank)) {
+                    failed = true;
+                    break;
+                }
+            }
+            if (!failed) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override // documentation inherited
