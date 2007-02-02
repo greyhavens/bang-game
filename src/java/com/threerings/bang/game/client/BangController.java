@@ -4,6 +4,7 @@
 package com.threerings.bang.game.client;
 
 import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +22,7 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Multex;
 import com.samskivert.util.HashIntMap;
+import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 import com.samskivert.swing.event.CommandEvent;
 
@@ -43,6 +45,8 @@ import com.threerings.bang.client.GlobalKeyManager;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.util.BangContext;
+
+import com.threerings.bang.avatar.client.AvatarView;
 
 import com.threerings.bang.bounty.data.BountyConfig;
 
@@ -517,6 +521,16 @@ public class BangController extends GameController
             // we handle things specially in the tutorial and practice
             _config.type != BangConfig.Type.TUTORIAL && _config.type != BangConfig.Type.PRACTICE) {
             storeStats();
+
+        // generate the winner's victory pose so it will be cached when we get around to showing
+        // the game over window
+        } else if (event.getName().equals(BangObject.AWARDS) && 
+                _config.type == BangConfig.Type.SALOON) {
+            int pidx = _bangobj.awards[0].pidx;
+            if (_bangobj.playerInfo[pidx].victory != null) {
+                AvatarView.getImage(_ctx, _bangobj.playerInfo[pidx].victory, 
+                        new ResultListener.NOOP<BufferedImage>());
+            }
         }
     }
 
