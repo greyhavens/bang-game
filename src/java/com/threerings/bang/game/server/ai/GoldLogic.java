@@ -71,14 +71,14 @@ public class GoldLogic extends AILogic
                     cclaim = claim;
                 }
 
-            } else if (Bonus.isBonus(pieces[ii], NuggetEffect.NUGGET_BONUS)) {
+            } else if (NuggetEffect.isNuggetBonus(pieces[ii])) {
                 if (cnugget == null || unit.getDistance(pieces[ii]) < unit.getDistance(cnugget)) {
                     cnugget = pieces[ii];
                 }
 
             } else if (pieces[ii] instanceof Unit && pieces[ii].owner != _pidx) {
                 Unit target = (Unit)pieces[ii];
-                if (NuggetEffect.NUGGET_BONUS.equals(target.holding) &&
+                if (NuggetEffect.isNuggetBonus(target.holding) &&
                     (ctarget == null ||
                      unit.getDistance(target) < unit.getDistance(ctarget)) &&
                     unit.validTarget(_bangobj, target, false)) {
@@ -105,7 +105,7 @@ public class GoldLogic extends AILogic
         }
 
         // if we have a nugget or our claim is in danger, haul ass back home
-        if ((NuggetEffect.NUGGET_BONUS.equals(unit.holding) ||
+        if ((NuggetEffect.isNuggetBonus(unit.holding) ||
              (breached && oclaim.count > 0 && unit.getDistance(oclaim) > DEFENSIVE_PERIMETER)) &&
             moveUnit(pieces, unit, moves, oclaim, 1)) {
 
@@ -194,7 +194,7 @@ public class GoldLogic extends AILogic
         public int getWeight (BangObject bangobj, Unit unit, Piece target, int dist,
                               PointSet preferredMoves) {
             boolean nuggeted = (target instanceof Unit &&
-                                NuggetEffect.NUGGET_BONUS.equals(((Unit)target).holding));
+                                NuggetEffect.isNuggetBonus(((Unit)target).holding));
             return (nuggeted ?  1000 : 0) + unit.computeScaledDamage(bangobj, target, 1f) * 100 +
                 target.damage;
         }
