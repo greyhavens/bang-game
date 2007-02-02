@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.data.piece;
 
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.threerings.bang.data.Stat;
@@ -12,6 +14,7 @@ import com.threerings.bang.game.client.sprite.TotemSprite;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.BonusEffect;
 import com.threerings.bang.game.data.effect.TotemEffect;
+import com.threerings.bang.game.util.PointSet;
 
 /**
  * Special code to handle totem bonuses.
@@ -95,5 +98,26 @@ public class TotemBonus extends Bonus
     public PieceSprite createSprite ()
     {
         return new TotemSprite(_config.type);
+    }
+
+    @Override // documentation inherited
+    public Point getDropLocation (BangObject bangobj)
+    {
+        // try not to drop a totem bonus next to a totem base
+        ArrayList<Point> points = bangobj.board.getOccupiableSpots(50, x, y, 3);
+        PointSet reserved = new PointSet();
+        for (Piece piece : bangobj.pieces) {
+            if (piece instanceof TotemBase) {
+                for (int ii = 0; ii < DIRECTIONS.length; ii++) {
+                    reserved.add(piece.x + DX[ii], piece.y + DY[ii]);
+                }
+            }
+        }
+        for (Point pt : points) {
+            if (!reserved.contains(pt.x, pt.y)) {
+                return pt;
+            }
+        }
+        return (points.size() > 0 ? points.get(0) : null);
     }
 }

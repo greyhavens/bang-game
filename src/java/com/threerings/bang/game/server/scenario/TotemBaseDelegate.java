@@ -40,12 +40,24 @@ public class TotemBaseDelegate extends CounterDelegate
     @Override // documentation inherited
     public void tick (BangObject bangobj, short tick)
     {
+        super.tick(bangobj, tick);
+
         boolean alive = false;
         for (TotemBase base : _bases) {
             alive = alive || base.canAddPiece();
         }
         if (!alive) {
             bangobj.setLastTick(tick);
+        }
+        _picker = null;
+    }
+
+    @Override // documentation inherited
+    public void pieceAffected (Piece piece, String effect)
+    {
+        if (TotemEffect.PICKED_UP_TOTEM.equals(effect) ||
+                TotemEffect.PICKED_UP_CROWN.equals(effect)) {
+            _picker = piece;
         }
     }
 
@@ -89,6 +101,8 @@ public class TotemBaseDelegate extends CounterDelegate
             return;
         }
 
+        boolean justPickedUp = (_picker != null && _picker.pieceId == unit.pieceId);
+
         // if this unit landed next to one of the bases, do some stuff
         TotemBase base = null;
         for (TotemBase b : _bases) {
@@ -102,7 +116,7 @@ public class TotemBaseDelegate extends CounterDelegate
         }
 
         // add a totem piece to the base if we can
-        if (TotemBonus.isHolding(unit) && base.canAddPiece()) {
+        if (!justPickedUp && TotemBonus.isHolding(unit) && base.canAddPiece()) {
             TotemEffect effect = new TotemEffect();
             effect.init(unit);
             effect.type = unit.holding;
@@ -182,6 +196,9 @@ public class TotemBaseDelegate extends CounterDelegate
 
     /** Stores the old points values. */
     protected int[] _points;
+
+    /** The last piece to pick up a totem bonus. */
+    protected Piece _picker;
 
     /** Point bonuses. */
     protected static final int MAX_PIECE_BONUS = 50;
