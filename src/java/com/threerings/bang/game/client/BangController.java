@@ -830,7 +830,11 @@ public class BangController extends GameController
      */
     protected void playerReadyFor (int phase)
     {
-        _bangobj.manager.invoke("playerReadyFor", phase);
+        // if a player bails out during the pre-game we may end up getting called after we're all
+        // shutdown, so just NOOP, don't NPE
+        if (_bangobj != null) {
+            _bangobj.manager.invoke("playerReadyFor", phase);
+        }
     }
 
     /** Listens for game state changes and calls {@link #updateRank}. */
