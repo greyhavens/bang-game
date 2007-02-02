@@ -361,7 +361,9 @@
     <taskdef resource="org/tigris/subversion/svnant/svnantlib.xml">
       <classpath><path refid="subversion.classpath"/></classpath>
     </taskdef>
-    <svn><revert><fileset dir="rsrc" includes="**/model.properties"/></revert></svn>
+    <svn javahl="false">
+      <revert><fileset dir="rsrc" includes="**/model.properties"/></revert>
+    </svn>
   </target>
 
   <!-- build the java class files -->
