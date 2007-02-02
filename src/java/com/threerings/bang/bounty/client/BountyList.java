@@ -12,6 +12,7 @@ import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Star;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangContext;
 
@@ -39,17 +40,30 @@ public class BountyList extends BContainer
 
         // determine how many are unlocked/complete and decide which page on which to start
         int unlocked = 0, completed = 0;
-        _selidx = bounties.size()-1;
+        _selidx = bounties.size();
+        Star.Difficulty firstUnavail = null;
         for (int ii = 0; ii < bounties.size(); ii++) {
             BountyConfig config = bounties.get(ii);
-            _list.addIcon(new BountyListEntry(ctx, config));
             if (user.stats.containsValue(Stat.Type.BOUNTIES_COMPLETED, config.ident)) {
                 completed++;
             } else if (config.isAvailable(user)) {
                 unlocked++;
                 // select the first playable bounty
                 _selidx = Math.min(_selidx, ii);
+            } else if (type == BountyConfig.Type.TOWN) {
+                continue; // don't show town bounties that are not yet unlocked
+            } else if (firstUnavail != null && config.difficulty != firstUnavail) {
+                // only show one difficulty level beyond what's unlocked for most wanted bounties
+                continue;
+            } else if (firstUnavail == null) {
+                firstUnavail = config.difficulty;
             }
+            _list.addIcon(new BountyListEntry(ctx, config));
+        }
+
+        // if we had no playable bounties, select the first
+        if (_selidx == bounties.size()) {
+            _selidx = 0;
         }
 
         // configure the tip based on what they've unlocked and completed
@@ -58,6 +72,8 @@ public class BountyList extends BContainer
             tip = "all_complete";
         } else if (unlocked + completed == bounties.size()) {
             tip = "all_unlocked";
+        } else if (firstUnavail != null) {
+            tip = firstUnavail.toString().toLowerCase();
         } else {
             tip = type.toString().toLowerCase();
         }

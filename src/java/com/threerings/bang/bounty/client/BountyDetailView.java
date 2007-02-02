@@ -95,6 +95,7 @@ public class BountyDetailView extends BContainer
                 } else {
                     noMorePlay = _config.inOrder;
                 }
+                play.setEnabled(_config.isAvailable(_ctx.getUserObject()));
                 row.add(play, GroupLayout.FIXED);
             }
             _games.add(row);

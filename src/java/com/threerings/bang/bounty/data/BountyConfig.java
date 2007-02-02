@@ -20,6 +20,7 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Star;
 import com.threerings.bang.data.Stat;
+import com.threerings.bang.data.StringSetStat;
 import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.game.data.BangAI;
@@ -35,9 +36,6 @@ public class BountyConfig extends SimpleStreamableObject
 {
     /** Defines the two different types of bounties. */
     public enum Type { TOWN, MOST_WANTED };
-
-//     /** Defines the mechanism that unlocks this bounty. */
-//     public enum LockType { NONE, BOUNTY, BADGE, LICENSE };
 
     /** Defines a reward for completing a bounty. */
     public static class Reward extends SimpleStreamableObject
@@ -135,9 +133,6 @@ public class BountyConfig extends SimpleStreamableObject
     /** The (translated) description of this bounty. Shown in the Sheriff's Office. */
     public String description;
 
-//     /** The mechanism that unlocks this bounty. */
-//     public LockType lock = LockType.NONE;
-
     /** The difficulty of this bounty. */
     public Star.Difficulty difficulty;
 
@@ -183,7 +178,30 @@ public class BountyConfig extends SimpleStreamableObject
      */
     public boolean isAvailable (PlayerObject user)
     {
-        return true;
+        if (user.tokens.isSupport()) {
+            return true;
+
+        } else if (type == Type.MOST_WANTED) {
+            return user.holdsStar(BangUtil.getTownIndex(townId), difficulty);
+
+        } else if (difficulty == Star.Difficulty.EASY) {
+            return true;
+
+        } else {
+            Star.Difficulty level = Star.getPrevious(difficulty);
+            int cleared = 0;
+            StringSetStat completed = (StringSetStat)
+                user.stats.get(Stat.Type.BOUNTIES_COMPLETED.name());
+            if (completed != null) {
+                for (String ident : completed.values()) {
+                    BountyConfig config = getBounty(ident);
+                    if (config != null && config.difficulty == level) {
+                        cleared++;
+                    }
+                }
+            }
+            return cleared >= TOWN_CLEAR_PROGRESS;
+        }
     }
 
     /**
@@ -293,7 +311,6 @@ public class BountyConfig extends SimpleStreamableObject
         config.ident = bits[2] + "/" + bits[3];
 
         // parse the various bounty properties
-//         config.lock = BangUtil.getEnumProperty(which, props, "lock", LockType.NONE);
         config.difficulty =
             BangUtil.getEnumProperty(which, props, "difficulty", Star.Difficulty.EASY);
         config.inOrder = BangUtil.getBooleanProperty(which, props, "in_order", config.inOrder);
@@ -386,4 +403,7 @@ public class BountyConfig extends SimpleStreamableObject
 
     /** We cache all loaded bounty configs. */
     protected static HashMap<String,BountyConfig> _configs = new HashMap<String,BountyConfig>();
+
+    /** The number of Town Bounties that must be cleared to progress to the next level. */
+    protected static final int TOWN_CLEAR_PROGRESS = 4;
 }

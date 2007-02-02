@@ -49,6 +49,14 @@ public abstract class StringSetStat extends Stat
         return true;
     }
 
+    /**
+     * Returns the values in this set. <em>Do not</em> modify the returned array.
+     */
+    public String[] values ()
+    {
+        return _values;
+    }
+
     @Override // documentation inherited
     public String valueToString ()
     {

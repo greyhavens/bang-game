@@ -48,6 +48,20 @@ public class Star extends Item
     }
 
     /**
+     * Returns the difficulty level previous to the supplied level or null if EASY is supplied.
+     */
+    public static Difficulty getPrevious (Difficulty difficulty)
+    {
+        switch (difficulty) {
+        default:
+        case EASY: return null;
+        case MEDIUM: return Difficulty.EASY;
+        case HARD: return Difficulty.MEDIUM;
+        case EXTREME: return Difficulty.HARD;
+        }
+    }
+
+    /**
      * Creates a Deputy's Star for the specified town and difficulty combination.
      */
     public Star (int ownerId, int townIdx, Difficulty difficulty)

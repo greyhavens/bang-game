@@ -69,13 +69,13 @@ public class StarGood extends Good
             return false;
         }
 
-        // otherwise if we're copper or below, we're available by default
+        // otherwise if we're medium or below, we're available by default
         switch (_difficulty) {
+        default: return false;
         case EASY:
         case MEDIUM: return true;
-        case HARD: return user.holdsStar(_townIdx, Star.Difficulty.MEDIUM);
-        case EXTREME: return user.holdsStar(_townIdx, Star.Difficulty.HARD);
-        default: return false;
+        case HARD:
+        case EXTREME: return user.holdsStar(_townIdx, Star.getPrevious(_difficulty));
         }
     }
 
