@@ -246,7 +246,7 @@ public class PlayerPopupMenu extends BPopupMenu
         final BDecoratedWindow cdiag = BangUI.createDialog(title);
 
         cdiag.add(new BLabel(_ctx.xlate(BangCodes.BANG_MSGS, "m.comp_intro"), "dialog_text_left"));
-        final BTextField reason = new BTextField("", BangUI.TEXT_FIELD_MAX_LENGTH);
+        final BTextField reason = new BTextField("", MAX_SUBJECT_LENGTH);
         cdiag.add(reason, GroupLayout.FIXED);
         reason.requestFocus();
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -287,4 +287,6 @@ public class PlayerPopupMenu extends BPopupMenu
 
     protected BangContext _ctx;
     protected Handle _handle;
+
+    protected static final int MAX_SUBJECT_LENGTH = 200;
 }
