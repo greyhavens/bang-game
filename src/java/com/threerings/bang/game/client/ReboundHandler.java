@@ -8,8 +8,10 @@ import com.jme.math.Vector3f;
 
 import com.threerings.jme.sprite.BallisticPath;
 
+import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.effect.ReboundEffect;
+import com.threerings.bang.game.data.effect.SpringShotEffect;
 import com.threerings.bang.game.data.effect.ShotEffect;
 import com.threerings.bang.game.data.piece.Piece;
 
@@ -20,6 +22,32 @@ import static com.threerings.bang.Log.*;
  */
 public class ReboundHandler extends EffectHandler
 {
+    @Override // documentation inherited
+    public boolean execute ()
+    {
+        if (_effect instanceof ShotEffect) {
+            
+            // if we have a target, let the shooter's sprite know that it will be
+            // shooting the specified target
+            ShotEffect shot = (ShotEffect)_effect;
+            Piece target = _bangobj.pieces.get(shot.targetId);
+            Piece shooter = _bangobj.pieces.get(shot.shooterId);
+            if (target != null && shooter != null) {
+                PieceSprite ssprite = _view.getPieceSprite(shooter);
+                if (ssprite instanceof MobileSprite) {
+                    ((MobileSprite)ssprite).willShoot(
+                        target, _view.getPieceSprite(target));
+                }
+            }
+            
+            // pre-apply the shot effect which may update the shooter
+            shot.preapply(_bangobj, this);
+        }
+        
+        // now determine whether or not anything remained pending
+        return super.execute();        
+    }
+    
     @Override // documentation inherited
     public void pieceMoved (final Piece piece)
     {
@@ -50,6 +78,8 @@ public class ReboundHandler extends EffectHandler
     {
 		if (_effect instanceof ReboundEffect) {
         	((ReboundEffect)_effect).finishTrapPiece(_bangobj, this);
+    	} else if (_effect instanceof SpringShotEffect) {
+            ((SpringShotEffect)_effect).pieceDropped(_bangobj, this);
 		} else {
 			super.pieceDropped(piece);
 		}

@@ -33,13 +33,21 @@ public class Forklift extends Unit
         return board.canCross(tx, ty, target.x, target.y) &&
             super.checkLineOfSight(board, tx, ty, target);
     }
+    
+    @Override // documentation inherited
+    public int computeScaledDamage (
+            BangObject bangobj, Piece target, float scale)
+    {
+        // do a constant damage
+        return computeDamage(target);
+    }
 
     @Override // documentation inherited
     protected ShotEffect generateShotEffect (
             BangObject bangobj, Piece target, int damage)
     {
         if (target instanceof Unit) {
-            return new SpringShotEffect(this, target, damage, null, null);
+            return new SpringShotEffect(this, target, 0, null, null);
         } else {
             return new ShotEffect(
                 this, target, damage, attackInfluenceIcons(), defendInfluenceIcons(target));

@@ -115,6 +115,25 @@ public class SpringShotEffect extends ShotEffect
         return true;
     }
     
+    /**
+     * Damage the target piece and handle any death effects.
+     */
+    public boolean pieceDropped (BangObject bangobj, Observer obs)
+    {
+        Piece target = bangobj.pieces.get(targetId);
+        Piece shooter = bangobj.pieces.get(shooterId);
+        
+        if (target == null) {
+            log.warning("Missing target for spring shot effect " +
+                        "[id=" + targetId + "].");
+            return false;
+        } else {
+            damage(bangobj, obs, shooter.owner, shooter, target, getBaseDamage(target),
+                ShotEffect.DAMAGED);
+            return true;
+        }
+    }    
+    
     /** The minimum distance away to send sprung pieces. */
     protected static final int MIN_REBOUND_DISTANCE = 5;
     
