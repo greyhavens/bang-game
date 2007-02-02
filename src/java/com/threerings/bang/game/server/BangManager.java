@@ -1570,7 +1570,6 @@ public class BangManager extends GameManager
         _scenario.tick(_bangobj, tick);
 
         // If this is a bounty game without respawns, the game could end early
-
         if (shouldEndBountyGame()) {
             _bangobj.lastTick = tick;
         }
@@ -1959,15 +1958,15 @@ public class BangManager extends GameManager
             return false;
         }
 
-        boolean playerDead = true, AIDead = true;
+        boolean playerDead = true, aiDead = true;
         for (Piece p : _bangobj.getPieceArray()) {
             if (p instanceof Unit && p.isAlive()) {
                 if (((Unit)p).owner == 0) {
                     playerDead = false;
                 } else {
-                    AIDead = false;
+                    aiDead = false;
                 }
-                if (!playerDead && !AIDead) {
+                if (!playerDead && !aiDead) {
                     break;
                 }
             }
@@ -1978,30 +1977,29 @@ public class BangManager extends GameManager
             return true;
         }
 
-        // otherwise check if we've killed off all the AI
-        if (AIDead) {
-            // determine the player's rank
-            int playerPoints = _bangobj.points[0];
-            int rank = 0;
-            for (int ii = 1; ii < _bangobj.points.length; ii++) {
-                if (playerPoints < _bangobj.points[ii]) {
-                    rank++;
-                }
-            }
+        // otherwise check whether we've killed off all the AI units
+        if (!aiDead) {
+            return false;
+        }
 
-            // if all the AI units are dead and the player has met all bounty criteria, end the game
-            boolean failed = false;
-            for (Criterion crit : _bconfig.criteria) {
-                if (!crit.isMet(_bangobj, rank)) {
-                    failed = true;
-                    break;
-                }
-            }
-            if (!failed) {
-                return true;
+        // determine the player's rank for the subsequent isMet() checks
+        int playerPoints = _bangobj.points[0];
+        int rank = 0;
+        for (int ii = 1; ii < _bangobj.points.length; ii++) {
+            if (playerPoints < _bangobj.points[ii]) {
+                rank++;
             }
         }
-        return false;
+
+        // if any unmet criteria remain, don't end the game
+        for (Criterion crit : _bconfig.criteria) {
+            if (!crit.isMet(_bangobj, rank)) {
+                return false;
+            }
+        }
+
+        // all the AI units are dead and the player has met all bounty criteria, end the game
+        return true;
     }
 
     @Override // documentation inherited
