@@ -23,6 +23,7 @@ import static com.threerings.bang.Log.log;
  * Loads and manages unit configuration information.
  */
 public class UnitConfig
+    implements Comparable<UnitConfig>
 {
     /** Defines a unit's modality. */
     public enum Mode {
@@ -288,6 +289,17 @@ public class UnitConfig
     public String toString ()
     {
         return StringUtil.fieldsToString(this);
+    }
+
+    // from interface Comparable<UnitConfig>
+    public int compareTo (UnitConfig other)
+    {
+        int rv = BangUtil.getTownIndex(other.getTownId()) - BangUtil.getTownIndex(getTownId());
+        if (rv != 0) {
+            return rv;
+        }
+        rv = Math.abs(badgeCode) - Math.abs(other.badgeCode);
+        return rv != 0 ? rv : type.compareTo(other.type);
     }
 
     protected static void registerUnit (String type)

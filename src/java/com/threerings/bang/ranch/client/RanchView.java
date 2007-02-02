@@ -4,7 +4,6 @@
 package com.threerings.bang.ranch.client;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.EnumSet;
 
 import com.jmex.bui.BContainer;
@@ -61,28 +60,13 @@ public class RanchView extends ShopView
 
         // create our bigshot and normal unit palettes
         _bigshots = new UnitPalette(ctx, _inspector, COLS, ROWS);
-        UnitConfig[] units =
-            UnitConfig.getTownUnits(townId, UnitConfig.Rank.BIGSHOT);
-        Arrays.sort(units, new Comparator<UnitConfig>() {
-            public int compare (UnitConfig uc1, UnitConfig uc2) {
-                int rv = uc2.getTownId().compareTo(uc1.getTownId());
-                return (rv != 0) ? rv : uc1.type.compareTo(uc2.type);
-            };
-        });
+        UnitConfig[] units = UnitConfig.getTownUnits(townId, UnitConfig.Rank.BIGSHOT);
+        Arrays.sort(units);
         _bigshots.setBigShots(units, _ctx.getUserObject());
 
         _units = new UnitPalette(ctx, _inspector, COLS, ROWS);
         units = UnitConfig.getTownUnits(townId, UnitConfig.Rank.NORMAL);
-        Arrays.sort(units, new Comparator<UnitConfig>() {
-            public int compare (UnitConfig uc1, UnitConfig uc2) {
-                int rv = uc2.getTownId().compareTo(uc1.getTownId());
-                if (rv != 0) {
-                    return rv;
-                }
-                rv = Math.abs(uc1.badgeCode) - Math.abs(uc2.badgeCode);
-                return rv != 0 ? rv : uc1.type.compareTo(uc2.type);
-            };
-        });
+        Arrays.sort(units);
         _units.setUnits(units, false);
 
         // create our tabs
