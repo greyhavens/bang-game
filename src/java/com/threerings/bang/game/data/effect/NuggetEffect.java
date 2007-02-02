@@ -47,6 +47,15 @@ public class NuggetEffect extends HoldEffect
      * Determines whether the given bonus type represents either a real nugget
      * or a nugget of fool's gold.
      */
+    public static boolean isNuggetBonus (Piece piece)
+    {
+        return (piece instanceof Bonus) && isNuggetBonus(((Bonus)piece).getConfig().type);
+    }
+
+    /**
+     * Determines whether the given bonus type represents either a real nugget
+     * or a nugget of fool's gold.
+     */
     public static boolean isNuggetBonus (String type)
     {
         return NUGGET_BONUS.equals(type) ||
