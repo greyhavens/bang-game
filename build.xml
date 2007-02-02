@@ -98,6 +98,8 @@
        <exclude name="**/source/**"/>
       </fileset>
     </copy>
+    <!-- use the default ehcache config for now -->
+    <copy file="projects/tools/etc/ehcache.xml" todir="${deploy.dir}/classes"/>
   </target>
 
   <!-- generates additional methods for distributed object classes -->
@@ -322,7 +324,7 @@
     <delete><fileset dir="." includes="debug.txt*"/></delete>
   </target>
 
-  <!-- fully cleans out the installed application -->
+  <!-- fully cleans out all build results -->
   <target name="distclean" depends="clean">
     <delete dir="${deploy.dir}"/>
     <delete><fileset dir="rsrc" includes="**/model.dat"/></delete>
@@ -341,8 +343,11 @@
         <include name="rsrc/**/*.ogg"/>
       </fileset>
     </delete>
+
     <delete><fileset dir="etc/proguard" includes="0.map"/></delete>
     <delete dir="pages/devclient"/>
+    <ant dir="projects/installers" target="clean"/>
+
     <delete>
       <fileset dir="pages">
         <include name="aspects.html"/>
@@ -351,7 +356,12 @@
         <include name="client/getdown-pro.jar"/>
       </fileset>
     </delete>
-    <ant dir="projects/installers" target="clean"/>
+
+    <!-- revert any modified model.properties files to avoid checkclean freakout -->
+    <taskdef resource="org/tigris/subversion/svnant/svnantlib.xml">
+      <classpath><path refid="subversion.classpath"/></classpath>
+    </taskdef>
+    <svn><revert><fileset dir="rsrc" includes="**/model.properties"/></revert></svn>
   </target>
 
   <!-- build the java class files -->
@@ -487,7 +497,7 @@
     <!-- generate some game metadata summary pages -->
     <java classpathref="classpath" failonerror="true" output="${web_dir}/units.html"
           fork="true" classname="com.threerings.bang.game.tools.PrintDamageTable">
-      <arg value="indian_post"/>
+      <arg value="boom_town"/>
     </java>
     <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
           fork="true" classname="com.threerings.bang.avatar.tools.SummarizeAspects">
