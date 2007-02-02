@@ -1431,12 +1431,15 @@ public class BangManager extends GameManager
             for (int ii = 0; ii < getPlayerSlots(); ii++) {
                 // skip players that have abandoned ship
                 if (!isActivePlayer(ii)) {
+                    // scenario.roundWillStart could have given players some points
+                    _bangobj.perRoundPoints[_activeRoundId][ii] = -1;
                     continue;
                 }
 
                 // note that this player is participating in this round by changing their
-                // perRoundPoints from -1 to zero
-                _bangobj.perRoundPoints[_activeRoundId][ii] = 0;
+                // perRoundPoints from -1 to zero (since scenario.roundWillStart could have already
+                // added points to this value, will just increase by 1)
+                _bangobj.perRoundPoints[_activeRoundId][ii]++;
 
                 // first filter out this player's pieces
                 ArrayList<Piece> ppieces = new ArrayList<Piece>();
@@ -1892,6 +1895,22 @@ public class BangManager extends GameManager
 
         // and persist the awards as well
         postGamePersist(awards);
+
+        // round point and rank information for debugging
+        StringBuffer buf = new StringBuffer("Game Results [");
+        buf.append("oid:").append(_bangobj.getOid()).append(", ");
+        buf.append("players: ").append(Arrays.toString(_bangobj.players)).append(", ");
+        buf.append("scores: ").append(Arrays.toString(_bangobj.points)).append(", ");
+        buf.append("rounds: ");
+        for (int ii = 0; ii < _bangobj.perRoundPoints.length; ii++) {
+            if (ii > 0) {
+                buf.append(", ");
+            }
+            buf.append(ii).append(":");
+            buf.append(Arrays.toString(_bangobj.perRoundPoints[ii]));
+        }
+        buf.append("]");
+        log.info(buf.toString());
     }
 
     @Override // documentation inherited
@@ -1920,9 +1939,8 @@ public class BangManager extends GameManager
             _bangobj.startTransaction();
             // compute the final ranking of each player, resolving ties using kill count, then a 
             // random ordering
-            int[] points = _bangobj.getFilteredPoints();
-            _ranks = new RankRecord[points.length];
-            boolean[] active = new boolean[points.length];
+            _ranks = new RankRecord[_bangobj.players.length];
+            boolean[] active = new boolean[_ranks.length];
             for (int ii = 0; ii < _ranks.length; ii++) {
                 int kills = 0;
                 for (int rr = 0; rr < _rounds.length; rr++) {
@@ -1931,7 +1949,6 @@ public class BangManager extends GameManager
                     }
                 }
                 active[ii] = isActivePlayer(ii);
-                _ranks[ii] = new RankRecord(ii, points[ii], kills, (active[ii] ? 1 : 0));
                 // resigned players will have their points set to 0 (this will not affect their
                 // per round points which is used for various stat calculations later on).
                 if (!active[ii]) {
@@ -1939,6 +1956,7 @@ public class BangManager extends GameManager
                     SpeakProvider.sendAttention(_bangobj, GAME_MSGS, MessageBundle.tcompose(
                                 "m.resign_points", _bangobj.players[ii].toString()));
                 }
+                _ranks[ii] = new RankRecord(ii, _bangobj.points[ii], kills, (active[ii] ? 1 : 0));
             }
 
             // first shuffle, then sort so that ties are resolved randomly
