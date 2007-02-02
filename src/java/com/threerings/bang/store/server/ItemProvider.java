@@ -15,7 +15,7 @@ import com.threerings.bang.store.data.Good;
 /**
  * Creates an item and inserts it into the player's inventory.
  */
-public abstract class ItemProvider extends Provider
+public class ItemProvider extends Provider
 {
     public ItemProvider (PlayerObject user, Good good, Object[] args)
         throws InvocationException
@@ -51,8 +51,11 @@ public abstract class ItemProvider extends Provider
     }
 
     /** Creates the item that will be delivered by this provider. */
-    protected abstract Item createItem ()
-        throws InvocationException;
+    protected Item createItem ()
+        throws InvocationException
+    {
+        return _good.createItem(_user.playerId);
+    }
 
     /** The item that will be delivered. */
     protected Item _item;

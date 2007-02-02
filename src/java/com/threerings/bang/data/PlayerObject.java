@@ -245,6 +245,14 @@ public class PlayerObject extends BodyObject
     }
 
     /**
+     * Returns true if the player owns the specified Deputy Sheriff's Star.
+     */
+    public boolean holdsStar (int townIdx, Star.Difficulty difficulty)
+    {
+        return holdsEquivalentItem(new Star(-1, townIdx, difficulty));
+    }
+
+    /**
      * Returns true if the player owns the specified song.
      */
     public boolean ownsSong (String song)

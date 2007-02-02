@@ -16,6 +16,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.data.Star;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.bounty.data.BountyConfig;
@@ -48,7 +49,7 @@ public class BountyListEntry extends SelectableIcon
         _labels[2].setText(String.valueOf(config.reward.scrip));
         _labels[2].setIcon(BangUI.scripIcon);
         _labels[3].setText(msgs.get("m.list_games", String.valueOf(config.games.size())));
-        _labels[4].setText(msgs.get("m.diff_" + config.difficulty.toString().toLowerCase()));
+        _labels[4].setText(msgs.xlate(Star.getName(config.difficulty)));
 
         // create our outlaw view (we'll configure it lazily)
         _oview = new OutlawView(ctx, 0.5f);
@@ -59,7 +60,6 @@ public class BountyListEntry extends SelectableIcon
     protected void wasAdded ()
     {
         super.wasAdded();
-
         for (Label label : _labels) {
             label.wasAdded();
         }

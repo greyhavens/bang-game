@@ -6,8 +6,10 @@ package com.threerings.bang.store.data;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
+import com.threerings.bang.data.UnitPass;
 
 /**
  * Makes available a pass that provides access to a particular unit.
@@ -42,15 +44,6 @@ public class UnitPassGood extends Good
     }
 
     @Override // documentation inherited
-    public boolean isAvailable (PlayerObject user)
-    {
-        // make sure the player doesn't already have the badge requirement for
-        // this unit or the pass itself
-        UnitConfig uc = UnitConfig.getConfig(getUnitType(), true);
-        return (uc == null) ? false : !uc.hasAccess(user);
-    }
-
-    @Override // documentation inherited
     public String getName ()
     {
         return UnitConfig.getName(getUnitType()) + "_pass";
@@ -62,5 +55,20 @@ public class UnitPassGood extends Good
         String msg = UnitConfig.getName(getUnitType());
         msg = MessageBundle.compose("m.unit_pass_tip", msg);
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
+    }
+
+    @Override // documentation inherited
+    public boolean isAvailable (PlayerObject user)
+    {
+        // make sure the player doesn't already have the badge requirement for this unit or the
+        // pass itself
+        UnitConfig uc = UnitConfig.getConfig(getUnitType(), true);
+        return (uc == null) ? false : !uc.hasAccess(user);
+    }
+
+    @Override // documentation inherited
+    public Item createItem (int playerId)
+    {
+        return new UnitPass(playerId, getUnitType());
     }
 }

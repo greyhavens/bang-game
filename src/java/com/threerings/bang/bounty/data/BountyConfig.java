@@ -18,6 +18,7 @@ import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Star;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.util.BangUtil;
 
@@ -35,11 +36,8 @@ public class BountyConfig extends SimpleStreamableObject
     /** Defines the two different types of bounties. */
     public enum Type { TOWN, MOST_WANTED };
 
-    /** Defines the difficulty levels. */
-    public enum Difficulty { EASY, MEDIUM, HARD, EXTREME };
-
-    /** Defines the mechanism that unlocks this bounty. */
-    public enum LockType { NONE, BOUNTY, BADGE, LICENSE };
+//     /** Defines the mechanism that unlocks this bounty. */
+//     public enum LockType { NONE, BOUNTY, BADGE, LICENSE };
 
     /** Defines a reward for completing a bounty. */
     public static class Reward extends SimpleStreamableObject
@@ -137,11 +135,11 @@ public class BountyConfig extends SimpleStreamableObject
     /** The (translated) description of this bounty. Shown in the Sheriff's Office. */
     public String description;
 
-    /** The mechanism that unlocks this bounty. */
-    public LockType lock = LockType.NONE;
+//     /** The mechanism that unlocks this bounty. */
+//     public LockType lock = LockType.NONE;
 
     /** The difficulty of this bounty. */
-    public Difficulty difficulty;
+    public Star.Difficulty difficulty;
 
     /** Whether or not the bounty games must be played in order. */
     public boolean inOrder = true;
@@ -295,8 +293,9 @@ public class BountyConfig extends SimpleStreamableObject
         config.ident = bits[2] + "/" + bits[3];
 
         // parse the various bounty properties
-        config.lock = BangUtil.getEnumProperty(which, props, "lock", LockType.NONE);
-        config.difficulty = BangUtil.getEnumProperty(which, props, "difficulty", Difficulty.EASY);
+//         config.lock = BangUtil.getEnumProperty(which, props, "lock", LockType.NONE);
+        config.difficulty =
+            BangUtil.getEnumProperty(which, props, "difficulty", Star.Difficulty.EASY);
         config.inOrder = BangUtil.getBooleanProperty(which, props, "in_order", config.inOrder);
         config.outlaw.print = StringUtil.parseIntArray(props.getProperty("outlaw_print", ""));
         config.outlaw.image = getImageProperty(which, props, "outlaw_image");

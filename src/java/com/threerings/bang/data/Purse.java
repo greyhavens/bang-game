@@ -25,9 +25,8 @@ public class Purse extends Item
         "gold_purse",
     };
 
-    /** The bonus mulitpliers for the various purses. This is public so that we
-     * can use this information when displaying the purses for sale in the
-     * General Store. */
+    /** The bonus mulitpliers for the various purses. This is public so that we can use this
+     * information when displaying the purses for sale in the General Store. */
     public static final float[] PURSE_BONUS  = {
         1f, // default
         1.1f, // frontier town
@@ -50,13 +49,11 @@ public class Purse extends Item
      */
     public static String getName (int townIndex)
     {
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS,
-                                     "m." + PURSE_TYPES[townIndex]);
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m." + PURSE_TYPES[townIndex]);
     }
 
     /**
-     * Returns a description of the specified purse as a qualified translatable
-     * string.
+     * Returns a description of the specified purse as a qualified translatable string.
      */
     public static String getDescrip (int townIndex)
     {
@@ -66,14 +63,13 @@ public class Purse extends Item
     }
 
     /**
-     * Returns a qualified translatable string to display in a tooltip when the
-     * player is hovering over the specified purse's icon.
+     * Returns a qualified translatable string to display in a tooltip when the player is hovering
+     * over the specified purse's icon.
      */
     public static String getTooltip (int townIndex)
     {
         String msg = MessageBundle.compose(
-            "m.goods_icon", "m." + PURSE_TYPES[townIndex],
-            getDescrip(townIndex));
+            "m.goods_icon", "m." + PURSE_TYPES[townIndex], getDescrip(townIndex));
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, msg);
     }
 
@@ -99,37 +95,36 @@ public class Purse extends Item
         return _townIndex;
     }
 
-    @Override // documentation inherited
-    public String getName ()
-    {
-        return getName(_townIndex);
-    }
-
-    @Override // documentation inherited
-    public String getTooltip ()
-    {
-        return getTooltip(_townIndex);
-    }
-
-    @Override // documentation inherited
-    public String getIconPath ()
-    {
-        return getIconPath(_townIndex);
-    }
-
-    @Override // documentation inherited
-    public boolean isEquivalent (Item other)
-    {
-        return super.isEquivalent(other) &&
-            ((Purse)other)._townIndex == _townIndex;
-    }
-    
     /**
      * Returns a "bonus" multiplier for awarded cash due to this purse.
      */
     public float getPurseBonus ()
     {
         return PURSE_BONUS[_townIndex];
+    }
+
+    @Override // from Item
+    public String getName ()
+    {
+        return getName(_townIndex);
+    }
+
+    @Override // from Item
+    public String getTooltip ()
+    {
+        return getTooltip(_townIndex);
+    }
+
+    @Override // from Item
+    public String getIconPath ()
+    {
+        return getIconPath(_townIndex);
+    }
+
+    @Override // from Item
+    public boolean isEquivalent (Item other)
+    {
+        return super.isEquivalent(other) && ((Purse)other)._townIndex == _townIndex;
     }
 
     protected int _townIndex;

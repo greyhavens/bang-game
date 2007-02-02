@@ -10,6 +10,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 
 /**
@@ -94,6 +95,14 @@ public abstract class Good extends SimpleStreamableObject
      */
     public abstract boolean isAvailable (PlayerObject user);
 
+    /**
+     * Creates the {@link Item} sold by this good for the specified player.
+     */
+    public Item createItem (int playerId)
+    {
+        throw new RuntimeException("createItem() not supported by this Good");
+    }
+
     // from interface DSet.Entry
     public Comparable getKey ()
     {
@@ -115,8 +124,7 @@ public abstract class Good extends SimpleStreamableObject
     @Override // documentation inherited
     public boolean equals (Object other)
     {
-        return other.getClass().equals(getClass()) &&
-            _type.equals(((Good)other)._type);
+        return other.getClass().equals(getClass()) && _type.equals(((Good)other)._type);
     }
 
     /** Creates a good of the specified type. */

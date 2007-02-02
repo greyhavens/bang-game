@@ -32,6 +32,7 @@ import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.data.Song;
+import com.threerings.bang.data.Star;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.data.UnitPass;
 import com.threerings.bang.game.data.card.Card;
@@ -44,35 +45,27 @@ import com.threerings.bang.store.data.CardTripletGood;
 import com.threerings.bang.store.data.Good;
 import com.threerings.bang.store.data.PurseGood;
 import com.threerings.bang.store.data.SongGood;
+import com.threerings.bang.store.data.StarGood;
 import com.threerings.bang.store.data.UnitPassGood;
 
 import static com.threerings.bang.Log.log;
 
 /**
- * Enumerates the various goods that can be purchased from the General
- * Shop and associates them with providers that are used to actually
- * create and deliver the goods when purchased.
+ * Enumerates the various goods that can be purchased from the General Shop and associates them
+ * with providers that are used to actually create and deliver the goods when purchased.
  */
 public class GoodsCatalog
 {
     /**
-     * Creates a goods catalog, loading up the various bits necessary to create
-     * articles of clothing and accessories for avatars.
+     * Creates a goods catalog, loading up the various bits necessary to create articles of
+     * clothing and accessories for avatars.
      */
     public GoodsCatalog (AvatarLogic alogic)
     {
         _alogic= alogic;
 
-        // register our purses
-        ProviderFactory pf = new PurseProviderFactory();
-        registerGood(BangCodes.FRONTIER_TOWN, new PurseGood(1, 1000, 1), pf);
-        registerGood(BangCodes.INDIAN_POST, new PurseGood(2, 2500, 2), pf);
-//         registerGood(BangCodes.BOOM_TOWN, new PurseGood(3, 5000, 4), pf);
-//         registerGood(BangCodes.GHOST_TOWN, new PurseGood(4, 7500, 5), pf);
-//         registerGood(BangCodes.CITY_OF_GOLD, new PurseGood(5, 15000, 8), pf);
-
         // register our packs of cards
-        pf = new CardProviderFactory();
+        ProviderFactory pf = new CardProviderFactory();
         for (int ii = 0; ii < PACK_PRICES.length; ii += 3) {
             registerGood("", // register card packs for all towns
                          new CardPackGood(PACK_PRICES[ii], PACK_PRICES[ii+1],
@@ -88,19 +81,23 @@ public class GoodsCatalog
             registerGood(card.getTownId(), good, pf);
         }
 
-        // load up our avatar article catalog and use the data therein to
-        // create goods for all avatar articles
+        // use the avatar article catalog to create goods for all avatar articles
         pf = new ArticleProviderFactory();
-        for (ArticleCatalog.Article article :
-                 _alogic.getArticleCatalog().getArticles()) {
-            ArticleGood good = new ArticleGood(
-                article.townId + "/" + article.name, article.scrip,
-                article.coins, article.qualifier);
+        for (ArticleCatalog.Article article : _alogic.getArticleCatalog().getArticles()) {
+            ArticleGood good = new ArticleGood(article.townId + "/" + article.name, article.scrip,
+                                               article.coins, article.qualifier);
             registerGood(article.townId, good, pf);
         }
 
+        // the remainder of the goods can generate their own items
+        pf = new ItemProviderFactory();
+
+        // register our purses
+        for (int townIdx = 0; townIdx < BangCodes.TOWN_IDS.length; townIdx++) {
+            registerGood(BangCodes.TOWN_IDS[townIdx], new PurseGood(townIdx), pf);
+        }
+
         // register our unit passes
-        pf = new UnitPassProviderFactory();
         UnitConfig[] units = UnitConfig.getTownUnits(ServerConfig.townId);
         for (int ii = 0; ii < units.length; ii++) {
             UnitConfig uc = units[ii];
@@ -111,8 +108,17 @@ public class GoodsCatalog
             }
         }
 
+        // register our deputy sheriff's stars
+        for (int townIdx = 0; townIdx < BangCodes.TOWN_IDS.length; townIdx++) {
+            for (Star.Difficulty diff : Star.Difficulty.values()) {
+                if (diff == Star.Difficulty.EASY) { // no easy star
+                    continue;
+                }
+                registerGood(BangCodes.TOWN_IDS[townIdx], new StarGood(townIdx, diff), pf);
+            }
+        }
+
         // register our music
-        pf = new SongProviderFactory();
         registerGood(BangCodes.FRONTIER_TOWN, new SongGood(BangCodes.FRONTIER_TOWN), pf);
         registerGood(BangCodes.FRONTIER_TOWN, new SongGood(ClaimJumpingInfo.IDENT), pf);
         registerGood(BangCodes.FRONTIER_TOWN, new SongGood(CattleRustlingInfo.IDENT), pf);
@@ -136,9 +142,8 @@ public class GoodsCatalog
     }
 
     /**
-     * Requests that a {@link Provider} be created to provide the specified
-     * good to the specified user. Returns null if no provider is registered
-     * for the good in question.
+     * Requests that a {@link Provider} be created to provide the specified good to the specified
+     * user. Returns null if no provider is registered for the good in question.
      */
     public Provider getProvider (PlayerObject user, Good good, Object[] args)
         throws InvocationException
@@ -153,8 +158,7 @@ public class GoodsCatalog
     /**
      * Registers a Good -> ProviderFactory mapping for the specified town.
      */
-    protected void registerGood (
-        String townId, Good good, ProviderFactory factory)
+    protected void registerGood (String townId, Good good, ProviderFactory factory)
     {
         _providers.put(good, factory);
         ArrayList<Good> goods = _tgoods.get(townId);
@@ -168,22 +172,6 @@ public class GoodsCatalog
     protected abstract class ProviderFactory {
         public abstract Provider createProvider (PlayerObject user, Good good, Object[] args)
             throws InvocationException;
-    }
-
-    /** Used for {@link PurseGood}s. */
-    protected class PurseProviderFactory extends ProviderFactory {
-        public Provider createProvider (PlayerObject user, Good good, Object[] args)
-            throws InvocationException
-        {
-            return new ItemProvider(user, good, args) {
-                protected Item createItem () throws InvocationException {
-                    int townIndex = ((PurseGood)_good).getTownIndex();
-                    return new Purse(_user.playerId, townIndex);
-                }
-            };
-        }
-
-        protected int _townIndex;
     }
 
     /** Used for {@link CardPackGood}s and {@link CardTripletGood}s. */
@@ -209,21 +197,16 @@ public class GoodsCatalog
                     ArticleCatalog.Article article =
                         _alogic.getArticleCatalog().getArticle(_good.getType());
                     if (article == null) {
-                        log.warning("Requested to create article for unknown " +
-                                    "catalog entry [who=" + _user.who() +
-                                    ", good=" + _good + "].");
-                        throw new InvocationException(
-                            InvocationCodes.INTERNAL_ERROR);
+                        log.warning("Requested to create article for unknown catalog entry " +
+                                    "[who=" + _user.who() + ", good=" + _good + "].");
+                        throw new InvocationException(InvocationCodes.INTERNAL_ERROR);
                     }
                     // our arguments are colorization ids
                     int zations = AvatarLogic.composeZations(
-                        (Integer)_args[0], (Integer)_args[1],
-                        (Integer)_args[2]);
-                    Item item = _alogic.createArticle(
-                        _user.playerId, article, zations);
+                        (Integer)_args[0], (Integer)_args[1], (Integer)_args[2]);
+                    Item item = _alogic.createArticle(_user.playerId, article, zations);
                     if (item == null) {
-                        throw new InvocationException(
-                            InvocationCodes.INTERNAL_ERROR);
+                        throw new InvocationException(InvocationCodes.INTERNAL_ERROR);
                     }
                     return item;
                 }
@@ -231,30 +214,12 @@ public class GoodsCatalog
         }
     }
 
-    /** Used for {@link UnitPassGood}s. */
-    protected class UnitPassProviderFactory extends ProviderFactory {
+    /** Used for goods that can handle creation themselves. */
+    protected class ItemProviderFactory extends ProviderFactory {
         public Provider createProvider (PlayerObject user, Good good, Object[] args)
             throws InvocationException
         {
-            return new ItemProvider(user, good, args) {
-                protected Item createItem () throws InvocationException {
-                    String type = ((UnitPassGood)_good).getUnitType();
-                    return new UnitPass(_user.playerId, type);
-                }
-            };
-        }
-    }
-
-    /** Used for {@link SongGood}s. */
-    protected class SongProviderFactory extends ProviderFactory {
-        public Provider createProvider (PlayerObject user, Good good, Object[] args)
-            throws InvocationException
-        {
-            return new ItemProvider(user, good, args) {
-                protected Item createItem () throws InvocationException {
-                    return new Song(_user.playerId, ((SongGood)_good).getSong());
-                }
-            };
+            return new ItemProvider(user, good, args);
         }
     }
 
@@ -262,13 +227,10 @@ public class GoodsCatalog
     protected AvatarLogic _alogic;
 
     /** A mapping from town id to a list of goods available in that town. */
-    protected HashMap<String,ArrayList<Good>> _tgoods =
-        new HashMap<String,ArrayList<Good>>();
+    protected HashMap<String,ArrayList<Good>> _tgoods = new HashMap<String,ArrayList<Good>>();
 
-    /** Contains mappings from {@link Good} to {@link ProviderFactory} for all
-     * salable goods. */
-    protected HashMap<Good,ProviderFactory> _providers =
-        new HashMap<Good,ProviderFactory>();
+    /** Contains mappings from {@link Good} to {@link ProviderFactory} for all salable goods. */
+    protected HashMap<Good,ProviderFactory> _providers = new HashMap<Good,ProviderFactory>();
 
     /** Quantity, scrip cost and coin cost for our packs of cards. */
     protected static final int[] PACK_PRICES = {

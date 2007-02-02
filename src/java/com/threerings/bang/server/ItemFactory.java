@@ -14,6 +14,7 @@ import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.data.Song;
+import com.threerings.bang.data.Star;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.data.UnitPass;
 
@@ -99,6 +100,7 @@ public class ItemFactory
         registerItemClass(UnitPass.class);
         registerItemClass(TrainTicket.class);
         registerItemClass(Song.class);
+        registerItemClass(Star.class);
         // end of registeration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
     }
 

@@ -8,7 +8,9 @@ import com.threerings.util.MessageBundle;
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Song;
 
 /**
  * Represents a full-length version of a single song for sale.
@@ -51,13 +53,6 @@ public class SongGood extends Good
     }
 
     @Override // from Good
-    public boolean isAvailable (PlayerObject user)
-    {
-        // for now one has to be an insider or an admin to see song goods
-        return (user.tokens.isInsider() || user.tokens.isAdmin()) && !user.ownsSong(getSong());
-    }
-
-    @Override // from Good
     public String getTip ()
     {
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.song_tip");
@@ -67,5 +62,18 @@ public class SongGood extends Good
     public int getCoinType ()
     {
         return CoinTransaction.SONG_PURCHASE;
+    }
+
+    @Override // from Good
+    public boolean isAvailable (PlayerObject user)
+    {
+        // for now one has to be an insider or an admin to see song goods
+        return (user.tokens.isInsider() || user.tokens.isAdmin()) && !user.ownsSong(getSong());
+    }
+
+    @Override // documentation inherited
+    public Item createItem (int playerId)
+    {
+        return new Song(playerId, getSong());
     }
 }

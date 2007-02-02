@@ -5,6 +5,7 @@ package com.threerings.bang.store.data;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 
@@ -13,14 +14,20 @@ import com.threerings.bang.data.Purse;
  */
 public class PurseGood extends Good
 {
+    /** The scrip cost of purses indexed by town. */
+    public static final int[] SCRIP_COST = { 1000, 2500, 5000, 7500, 15000 };
+
+    /** The coin cost of purses indexed by town. */
+    public static final int[] COIN_COST = { 1, 2, 4, 5, 8 };
+
     /**
-     * Creates a good representing the purse associated with the specified
-     * town.
+     * Creates a good representing the purse associated with the specified town.
      */
-    public PurseGood (int townIndex, int scripCost, int coinCost)
+    public PurseGood (int townIndex)
     {
-        super(Purse.PURSE_TYPES[townIndex], scripCost, coinCost);
-        _townIndex = townIndex;
+        super(Purse.PURSE_TYPES[townIndex+1], SCRIP_COST[townIndex], COIN_COST[townIndex]);
+        // annoyingly Purse maintains townIndex+1 not actual townIndex
+        _townIndex = townIndex+1;
     }
 
     /** A constructor only used during serialization. */
@@ -28,18 +35,16 @@ public class PurseGood extends Good
     {
     }
 
-    /**
-     * Returns the index of the town with which our purse is associated.
-     */
-    public int getTownIndex ()
-    {
-        return _townIndex;
-    }
-
     @Override // documentation inherited
     public String getIconPath ()
     {
         return Purse.getIconPath(_townIndex);
+    }
+
+    @Override // documentation inherited
+    public String getTip ()
+    {
+        return Purse.getDescrip(_townIndex);
     }
 
     @Override // documentation inherited
@@ -50,9 +55,9 @@ public class PurseGood extends Good
     }
 
     @Override // documentation inherited
-    public String getTip ()
+    public Item createItem (int playerId)
     {
-        return Purse.getDescrip(_townIndex);
+        return new Purse(playerId, _townIndex);
     }
 
     protected int _townIndex;
