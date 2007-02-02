@@ -572,6 +572,11 @@
   <!-- rebuild all the niggling bits -->
   <target name="bits" depends="colorpos,tutorials"/>
 
+  <!-- convenience targets that build specific projects and copy the results -->
+  <target name="bui">
+    <antcall target="distprojects"><param name="projects" value="jme-bui"/></antcall>
+  </target>
+
   <!-- builds the distribution jar files -->
   <target name="dist" depends="prepare,compile">
     <!-- create the main jar file with all the code and fiddly bits -->
