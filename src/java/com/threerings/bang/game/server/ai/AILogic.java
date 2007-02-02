@@ -16,6 +16,7 @@ import com.threerings.bang.data.UnitConfig;
 
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.game.data.piece.Counter;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.server.BangManager;
@@ -308,10 +309,10 @@ public abstract class AILogic extends PieceLogic
     {
         Point center = new Point();
         int owned = 0;
-        for (int ii = 0; ii < pieces.length; ii++) {
-            if (pieces[ii].owner == _pidx && pieces[ii].isAlive()) {
-                center.x += pieces[ii].x;
-                center.y += pieces[ii].y;
+        for (Piece p : pieces) {
+            if (p.owner == _pidx && p.isAlive() && !(p instanceof Counter)) {
+                center.x += p.x;
+                center.y += p.y;
                 owned++;
             }
         }
