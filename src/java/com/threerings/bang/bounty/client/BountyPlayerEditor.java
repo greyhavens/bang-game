@@ -68,8 +68,12 @@ public class BountyPlayerEditor extends BDecoratedWindow
         addRow(cpanel, "m.bplayer_start_spot").add(_start = new BComboBox(START_SPOTS[oppcount-1]));
         _start.selectItem(Integer.valueOf(player.startSpot));
 
-        addRow(cpanel, "m.bplayer_team").add(_team = new BComboBox(TEAMS));
-        _team.selectItem(Integer.valueOf(player.teamIdx));
+        _teams.add(new BComboBox.Item(-1, _msgs.xlate("m.no_teams")));
+        for (int ii = 0; ii <= oppcount; ii++) {
+            _teams.add(new BComboBox.Item(ii, _msgs.get("m.on_team", String.valueOf(ii+1))));
+        }
+        addRow(cpanel, "m.bplayer_team").add(_team = new BComboBox(_teams));
+        _team.selectValue(Integer.valueOf(player.teamIdx));
 
         if (pidx > 0) {
             addRow(cpanel, "m.bplayer_skill").add(_skill = new BComboBox(SKILLS));
@@ -107,7 +111,7 @@ public class BountyPlayerEditor extends BDecoratedWindow
             _player.bigShot = (String)_bigshot.getSelectedValue();
             _player.units = getUnits();
             _player.startSpot = (Integer)_start.getSelectedItem();
-            _player.teamIdx = (Integer)_team.getSelectedItem();
+            _player.teamIdx = (Integer)_team.getSelectedValue();
             if (_pidx > 0) {
                 _player.skill = (Integer)_skill.getSelectedItem();
             }
@@ -152,7 +156,7 @@ public class BountyPlayerEditor extends BDecoratedWindow
         new Integer[] { -1, 0, 1, 2, 3 },
     };
 
-    protected static final Integer[] TEAMS = { -1, 0, 1 };
+    protected ArrayList<BComboBox.Item> _teams = new ArrayList<BComboBox.Item>();
 
     protected static final Integer[] SKILLS = new Integer[9];
     static {

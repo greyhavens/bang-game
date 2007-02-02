@@ -306,12 +306,18 @@ public class BountyGameEditor extends BDecoratedWindow
                 cardsel.selectItem(0);
             }
         }
+
+        if (isAdded()) {
+            pack();
+            center();
+        }
     }
 
     protected void playerUpdated (int pidx)
     {
         _starts[pidx].setText(String.valueOf(_players[pidx].startSpot));
-        _teams[pidx].setText(String.valueOf(_players[pidx].teamIdx));
+        _teams[pidx].setText(_players[pidx].teamIdx == -1 ? _msgs.get("m.no_teams") :
+                             _msgs.get("m.on_team", String.valueOf(_players[pidx].teamIdx+1)));
         _skills[pidx].setText(pidx == 0 ? "" : String.valueOf(_players[pidx].skill));
         String bsname = _players[pidx].bigShot == null ?  _msgs.get("m.none") :
             _msgs.xlate(UnitConfig.getName(_players[pidx].bigShot));
