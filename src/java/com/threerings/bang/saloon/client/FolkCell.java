@@ -26,6 +26,7 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.InvitePardnerDialog;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.WantedPosterView;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
@@ -65,14 +66,13 @@ public class FolkCell extends BContainer
     /**
      * Looks up and returns the proper avatar information for a player.
      */
-    public int[] getAvatar ()
+    public AvatarInfo getAvatar ()
     {
         if (_isPardner) {
             PardnerEntry entry = _ctx.getUserObject().pardners.get(_handle);
             return entry != null ? entry.avatar : null;
         } else {
-            OccupantInfo info =
-                _ctx.getOccupantDirector().getOccupantInfo(_handle);
+            OccupantInfo info = _ctx.getOccupantDirector().getOccupantInfo(_handle);
             return info != null ? ((BangOccupantInfo) info).avatar : null;
         }
     }

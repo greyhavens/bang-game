@@ -9,6 +9,7 @@ import com.samskivert.util.RandomUtil;
 
 import com.threerings.parlor.game.data.GameAI;
 
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.NameFactory;
 
@@ -21,7 +22,7 @@ public class BangAI extends GameAI
     public boolean isMale;
 
     /** The avatar for this AI. */
-    public int[] avatar;
+    public AvatarInfo avatar;
 
     /** This AI's name. */
     public Handle handle;
@@ -34,8 +35,7 @@ public class BangAI extends GameAI
     /**
      * Creates a new AI for a Bang game.
      */
-    public static BangAI createAI (int personality, int skill,
-                                   HashSet<String> usedNames)
+    public static BangAI createAI (int personality, int skill, HashSet<String> usedNames)
     {
         // create an AI instance and configure it
         BangAI ai = new BangAI();
@@ -44,14 +44,10 @@ public class BangAI extends GameAI
         ai.isMale = (RandomUtil.getInt(100) > 49);
 
         // first pick a name for this AI
-        HashSet<String> prefs =
-            NameFactory.getCreator().getAIPrefixes(ai.isMale);
-        HashSet<String> roots =
-            NameFactory.getCreator().getHandleRoots(ai.isMale);
+        HashSet<String> prefs = NameFactory.getCreator().getAIPrefixes(ai.isMale);
+        HashSet<String> roots = NameFactory.getCreator().getHandleRoots(ai.isMale);
         for (int ii = 0; ii < 25; ii++) {
-            String name;
-            name = RandomUtil.pickRandom(prefs) + " "
-                + RandomUtil.pickRandom(roots);
+            String name = RandomUtil.pickRandom(prefs) + " " + RandomUtil.pickRandom(roots);
             if (!usedNames.contains(name)) {
                 usedNames.add(name);
                 ai.handle = new Handle(name);
@@ -62,7 +58,7 @@ public class BangAI extends GameAI
         }
 
         // pick a random avatar finger print
-        ai.avatar = getAvatarPrint(ai.isMale);
+        ai.avatar = getAvatar(ai.isMale);
 
         return ai;
     }
@@ -70,9 +66,9 @@ public class BangAI extends GameAI
     /**
      * Returns a random AI avatar fingerprint.
      */
-    public static int[] getAvatarPrint (boolean isMale)
+    public static AvatarInfo getAvatar (boolean isMale)
     {
-        return RandomUtil.pickRandom(AVATAR_PRINTS[isMale ? 0 : 1]);
+        return new AvatarInfo(RandomUtil.pickRandom(AVATAR_PRINTS[isMale ? 0 : 1]));
     }
 
     protected static final int[][][] AVATAR_PRINTS = {

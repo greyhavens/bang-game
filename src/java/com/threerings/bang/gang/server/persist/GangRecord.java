@@ -6,6 +6,7 @@ package com.threerings.bang.gang.server.persist;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
@@ -49,7 +50,7 @@ public class GangRecord
     public transient ArrayList<GangMemberEntry> members;
 
     /** The avatar of the most senior leader. */
-    public transient int[] avatar;
+    public transient AvatarInfo avatar;
 
     /** Used when creating new gangs. */
     public GangRecord (String name)

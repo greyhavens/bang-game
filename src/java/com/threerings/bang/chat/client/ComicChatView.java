@@ -40,6 +40,7 @@ import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.client.PlayerPopupMenu;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
@@ -133,7 +134,7 @@ public abstract class ComicChatView
             }
 
             // update the speaker's icon in case it has changed
-            int[] avatar = getSpeakerAvatar(_speaker);
+            AvatarInfo avatar = getSpeakerAvatar(_speaker);
             sprec.setAvatar(_ctx, avatar, isLeftSide(_speaker) ^
                             !_ctx.getAvatarLogic().isMale(avatar));
 
@@ -247,7 +248,7 @@ public abstract class ComicChatView
     /**
      * Returns the avatar to use for the specified speaker.
      */
-    protected abstract int[] getSpeakerAvatar (Handle speaker);
+    protected abstract AvatarInfo getSpeakerAvatar (Handle speaker);
 
     /**
      * Returns whether this speaker should be placed on the left or right hand side of the
@@ -327,9 +328,9 @@ public abstract class ComicChatView
             // avatar = new AvatarView(ctx, 8, false);
         }
 
-        public void setAvatar (BangContext ctx, int[] avatar, boolean mirror)
+        public void setAvatar (BangContext ctx, AvatarInfo avatar, boolean mirror)
         {
-            if (_avatar == null && !Arrays.equals(avatar, _avatar)) {
+            if (_avatar == null || !_avatar.equals(avatar)) {
                 _avatar = avatar;
                 AvatarView.getImage(
                     ctx, avatar, AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8, mirror, this);
@@ -378,7 +379,7 @@ public abstract class ComicChatView
             // not called
         }
 
-        protected int[] _avatar;
+        protected AvatarInfo _avatar;
         protected BIcon _avicon;
         protected ArrayList<BLabel> _penders;
     }

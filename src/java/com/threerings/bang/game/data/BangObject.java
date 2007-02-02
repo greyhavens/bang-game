@@ -16,6 +16,7 @@ import com.threerings.io.Streamable;
 import com.threerings.parlor.game.data.GameObject;
 import com.threerings.util.StreamablePoint;
 
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 
@@ -96,11 +97,11 @@ public class BangObject extends GameObject
         /** The player's unique identifier. */
         public int playerId = -1;
 
-        /** The player's avatar data. */
-        public int[] avatar;
+        /** The player's normal avatar pose. */
+        public AvatarInfo avatar;
 
         /** The player's victory pose. */
-        public int[] victory;
+        public AvatarInfo victory;
 
         /** The readyness state of the player. */
         public int readyState;

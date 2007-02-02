@@ -100,7 +100,7 @@ public class BangPeerManager extends CrowdPeerManager
         }
         return null;
     }
-    
+
     /**
      * Requests to deliver the specified item to its owner if he's logged into one of our peer
      * servers.
@@ -131,18 +131,18 @@ public class BangPeerManager extends CrowdPeerManager
             BangServer.playmgr.deliverItemLocal(user, item, source);
         }
     }
-    
+
     @Override // from CrowdPeerManager
     public void shutdown ()
     {
         super.shutdown();
-        
+
         // clear out our invocation service
         if (_nodeobj != null) {
             BangServer.invmgr.clearDispatcher(((BangNodeObject)_nodeobj).bangPeerService);
         }
     }
-    
+
     @Override // from PeerManager
     protected PeerNode createPeerNode (NodeRecord record)
     {
@@ -168,7 +168,7 @@ public class BangPeerManager extends CrowdPeerManager
         BangClientInfo binfo = (BangClientInfo)info;
         PlayerObject player = (PlayerObject)client.getClientObject();
         binfo.playerId = player.playerId;
-        
+
         // grab a snapshot of this player's avatar which is how they'll look to
         // pardners on other servers
         Look look = player.getLook(Look.Pose.DEFAULT);

@@ -11,6 +11,7 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.bang.data.Article;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.PlayerObject;
 
 import com.threerings.bang.avatar.util.AvatarLogic;
@@ -69,10 +70,9 @@ public class Look extends SimpleStreamableObject
     public transient boolean modified;
 
     /**
-     * Combines the aspect and article information into a full avatar
-     * fingerprint.
+     * Combines the aspect and article information into a full avatar fingerprint.
      */
-    public int[] getAvatar (PlayerObject player)
+    public AvatarInfo getAvatar (PlayerObject player)
     {
         ArrayIntSet compids = new ArrayIntSet();
 
@@ -100,7 +100,7 @@ public class Look extends SimpleStreamableObject
         int[] avatar = new int[compids.size()+1];
         avatar[0] = aspects[0];
         compids.toIntArray(avatar, 1);
-        return avatar;
+        return new AvatarInfo(avatar);
     }
 
     /**

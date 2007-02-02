@@ -11,6 +11,7 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.crowd.chat.data.SpeakMarshaller;
 import com.threerings.crowd.chat.data.SpeakObject;
 
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.saloon.data.TopRankedList;
@@ -84,7 +85,7 @@ public class GangObject extends DObject
     public String url;
     
     /** The gang leader's avatar. */
-    public int[] avatar;
+    public AvatarInfo avatar;
     
     /** The amount of scrip in the gang's coffers. */
     public int scrip;
@@ -260,29 +261,12 @@ public class GangObject extends DObject
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setAvatar (int[] value)
+    public void setAvatar (AvatarInfo value)
     {
-        int[] ovalue = this.avatar;
+        AvatarInfo ovalue = this.avatar;
         requestAttributeChange(
             AVATAR, value, ovalue);
-        this.avatar = (value == null) ? null : (int[])value.clone();
-    }
-
-    /**
-     * Requests that the <code>index</code>th element of
-     * <code>avatar</code> field be set to the specified value.
-     * The local value will be updated immediately and an event will be
-     * propagated through the system to notify all listeners that the
-     * attribute did change. Proxied copies of this object (on clients)
-     * will apply the value change when they received the attribute
-     * changed notification.
-     */
-    public void setAvatarAt (int value, int index)
-    {
-        int ovalue = this.avatar[index];
-        requestElementUpdate(
-            AVATAR, index, Integer.valueOf(value), Integer.valueOf(ovalue));
-        this.avatar[index] = value;
+        this.avatar = (value == null) ? null : (AvatarInfo)value.clone();
     }
 
     /**

@@ -13,6 +13,7 @@ import com.threerings.crowd.chat.data.SystemMessage;
 import com.threerings.crowd.chat.data.TellFeedbackMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangOccupantInfo;
 import com.threerings.bang.data.Handle;
@@ -35,7 +36,7 @@ public class PlaceChatView extends TabbedChatView
         super(ctx, new Dimension(400, 400));
 
         _pchat = new ComicChatView(ctx, _tabSize, true) {
-            protected int[] getSpeakerAvatar (Handle speaker) {
+            protected AvatarInfo getSpeakerAvatar (Handle speaker) {
                 BangOccupantInfo boi = (BangOccupantInfo)
                     _ctx.getOccupantDirector().getOccupantInfo(speaker);
                 return boi == null ? null : boi.avatar;

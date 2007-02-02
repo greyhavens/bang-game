@@ -69,6 +69,7 @@ import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.PlayerService;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;

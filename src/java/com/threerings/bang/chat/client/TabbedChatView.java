@@ -30,6 +30,7 @@ import com.threerings.bang.chat.data.PlayerMessage;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.TabbedPane;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
@@ -168,7 +169,7 @@ public class TabbedChatView extends BContainer
      */
     protected class UserTab extends ComicChatView
     {
-        public UserTab (BangContext ctx, Handle user, int[] avatar)
+        public UserTab (BangContext ctx, Handle user, AvatarInfo avatar)
         {
             super(ctx, _tabSize, false);
             _user = user;
@@ -233,7 +234,7 @@ public class TabbedChatView extends BContainer
         }
 
         @Override // documentation inherited
-        protected int[] getSpeakerAvatar (Handle speaker)
+        protected AvatarInfo getSpeakerAvatar (Handle speaker)
         {
             if (speaker.equals(_ctx.getUserObject().handle)) {
                 PlayerObject player = _ctx.getUserObject();
@@ -252,7 +253,7 @@ public class TabbedChatView extends BContainer
         }
 
         protected Handle _user;
-        protected int[] _avatar;
+        protected AvatarInfo _avatar;
         protected TabbedPane _myPane;
     }
 

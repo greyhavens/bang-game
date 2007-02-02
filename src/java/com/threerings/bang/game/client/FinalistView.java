@@ -24,6 +24,7 @@ import com.threerings.media.image.Colorization;
 
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.avatar.util.AvatarLogic;
+import com.threerings.bang.data.AvatarInfo;
 
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
@@ -31,21 +32,19 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 
 /**
- * Displays a player's avatar and name and a medal indicating their rank at the
- * end of a game.
+ * Displays a player's avatar and name and a medal indicating their rank at the end of a game.
  */
 public class FinalistView extends BContainer
 {
     /**
      * Creates a view for the specified player, rank, etc.
      *
-     * @param pidx the player's index in the game (so we can display a medal of
-     * the correct player color).
+     * @param pidx the player's index in the game (so we can display a medal of the correct player
+     * color).
      * @param name the player's name.
      * @param avatar the player's avatar information.
-     * @param rank the plaer's rank at the end of the game. If their rank is
-     * zero (1st place) the view will be in the large format, otherwise it will
-     * be in the small format.
+     * @param rank the plaer's rank at the end of the game. If their rank is zero (1st place) the
+     * view will be in the large format, otherwise it will be in the small format.
      */
     public FinalistView (BasicContext ctx, BangObject bangobj, 
             BangController ctrl, int pidx, int rank)
@@ -58,31 +57,27 @@ public class FinalistView extends BContainer
         BufferedImage medal = ctx.getImageCache().getBufferedImage(
             "ui/postgame/medals" + rank + ".png");
         int mwidth = MEDAL_SIZE[rank].width, mheight = MEDAL_SIZE[rank].height;
-        _medal = new ImageIcon(
-            new BImage(medal.getSubimage(mwidth * pidx, 0, mwidth, mheight)));
+        _medal = new ImageIcon(new BImage(medal.getSubimage(mwidth * pidx, 0, mwidth, mheight)));
 
         // load up our background
         Colorization[] zations = {
-            ctx.getAvatarLogic().getColorPository().getColorization(
-                    "metal", rank + 1)
+            ctx.getAvatarLogic().getColorPository().getColorization("metal", rank + 1)
         };
         _background = ctx.getImageCache().createColorizedBImage(
-                "ui/postgame/background.png", zations, false);
+            "ui/postgame/background.png", zations, false);
 
         // create our avatar imagery
         boolean winner = (rank == 0);
         int scale =  winner ? 2 : 4;
-        int[] avatar = (winner && bangobj.playerInfo[pidx].victory != null ?
-            bangobj.playerInfo[pidx].victory : bangobj.playerInfo[pidx].avatar);
+        AvatarInfo avatar = (winner && bangobj.playerInfo[pidx].victory != null ?
+                             bangobj.playerInfo[pidx].victory : bangobj.playerInfo[pidx].avatar);
 
         // start with a blank avatar
-        setAvatar(new BlankIcon(AvatarLogic.FRAMED_WIDTH/scale,
-                                AvatarLogic.FRAMED_HEIGHT/scale));
+        setAvatar(new BlankIcon(AvatarLogic.FRAMED_WIDTH/scale, AvatarLogic.FRAMED_HEIGHT/scale));
 
         // then if we have a real one, load it up in the background
         if (avatar != null) {
-            AvatarView.getFramableImage(ctx, avatar, scale,
-                                        new ResultListener<BImage>() {
+            AvatarView.getFramableImage(ctx, avatar, scale, new ResultListener<BImage>() {
                 public void requestCompleted (BImage avatar) {
                     setAvatar(new ImageIcon(avatar));
                 }

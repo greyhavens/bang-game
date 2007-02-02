@@ -13,7 +13,7 @@ import com.threerings.bang.avatar.data.Look;
 public class BangOccupantInfo extends OccupantInfo
 {
     /** The player's avatar definition. */
-    public int[] avatar;
+    public AvatarInfo avatar;
 
     /** The player id */
     public int playerId;

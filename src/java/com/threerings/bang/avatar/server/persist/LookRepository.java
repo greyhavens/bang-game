@@ -20,6 +20,7 @@ import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.SimpleRepository;
 
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.data.AvatarInfo;
 
 import static com.threerings.bang.Log.log;
 
@@ -143,29 +144,27 @@ public class LookRepository extends SimpleRepository
     }
 
     /**
-     * Loads the specified player's "wanted poster" snapshot. Returns null if
-     * no snapshot could be located for that player.
+     * Loads the specified player's "wanted poster" snapshot. Returns null if no snapshot could be
+     * located for that player.
      */
-    public int[] loadSnapshot (int playerId)
+    public AvatarInfo loadSnapshot (int playerId)
         throws PersistenceException
     {
-        final String query = "select AVATAR from SNAPSHOTS " +
-            "where PLAYER_ID = " + playerId;
-        return execute(new Operation<int[]>() {
-            public int[] invoke (Connection conn, DatabaseLiaison liaison)
+        final String query = "select AVATAR from SNAPSHOTS where PLAYER_ID = " + playerId;
+        return execute(new Operation<AvatarInfo>() {
+            public AvatarInfo invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
             {
                 Statement stmt = conn.createStatement();
-                int[] avatar = null;
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     if (rs.next()) {
-                        avatar = fromByteArray(rs.getBytes(1));
+                        return new AvatarInfo(fromByteArray(rs.getBytes(1)));
                     }
                 } finally {
                     JDBCUtil.close(stmt);
                 }
-                return avatar;
+                return null;
             }
         });
     }

@@ -91,7 +91,7 @@ public class BountyGameOverViewTest extends TestApp
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 100;
             bangobj.playerInfo[ii] = new BangObject.PlayerInfo();
-            bangobj.playerInfo[ii].avatar = BangAI.getAvatarPrint(RandomUtil.getInt(100) > 50);
+            bangobj.playerInfo[ii].avatar = BangAI.getAvatar(RandomUtil.getInt(100) > 50);
         }
 
         return new BountyGameOverView(_ctx, config, gameId, gconfig, bangobj, user);

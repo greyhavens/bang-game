@@ -27,6 +27,7 @@ import com.threerings.cast.ComponentRepository;
 import com.threerings.cast.NoSuchComponentException;
 
 import com.threerings.bang.data.Article;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangUtil;
 
@@ -37,17 +38,15 @@ import com.threerings.bang.avatar.data.LookConfig;
 import static com.threerings.bang.Log.log;
 
 /**
- * Used to calculate various things about avatars, decode avatar fingerprints
- * and whatnot.
+ * Used to calculate various things about avatars, decode avatar fingerprints and whatnot.
  */
 public class AvatarLogic
 {
-    /** Defines a particular aspect of an avatar's look. An aspect will
-     * configure one or more character components in the avatar's look. */
+    /** Defines a particular aspect of an avatar's look. An aspect will configure one or more
+     * character components in the avatar's look. */
     public static class Aspect
     {
-        /** A string identifier for this aspect. Translated for display on the
-         * client. */
+        /** A string identifier for this aspect. Translated for display on the client. */
         public String name;
 
         /** The names of the component classes configured by this aspect. */
@@ -59,8 +58,7 @@ public class AvatarLogic
         /** Indicates that this aspect is only for male avatars. */
         public boolean maleOnly;
 
-        public Aspect (String name, String[] classes,
-                       boolean optional, boolean maleOnly)
+        public Aspect (String name, String[] classes, boolean optional, boolean maleOnly)
         {
             this.name = name;
             this.classes = classes;
@@ -77,8 +75,7 @@ public class AvatarLogic
     /** Defines the various aspects of an avatar's look. */
     public static final Aspect[] ASPECTS = {
         new Aspect("head", new String[] { "head" }, false, false),
-        new Aspect("hair", new String[] {
-            "hair_front", "hair_middle", "hair_back" }, false, false),
+        new Aspect("hair", new String[] { "hair_front", "hair_middle", "hair_back" }, false, false),
         new Aspect("eyebrows", new String[] { "eyebrows" }, false, false),
         new Aspect("eyes", new String[] { "eyes" }, false, false),
         new Aspect("nose", new String[] { "nose" }, false, false),
@@ -89,11 +86,9 @@ public class AvatarLogic
 
     /** Defines the various article slots available to an avatar. */
     public static final Aspect[] SLOTS = {
-        new Aspect("hat", new String[] {
-            "hat", "hat_back", "hat_band" }, true, false),
+        new Aspect("hat", new String[] { "hat", "hat_back", "hat_band" }, true, false),
         new Aspect("clothing", new String[] {
-            "clothing_back", "clothing_front", "clothing_props" },
-                   false, false),
+            "clothing_back", "clothing_front", "clothing_props" }, false, false),
         new Aspect("glasses", new String[] { "glasses" }, true, false),
         new Aspect("jewelry", new String[] { "jewelry" }, true, false),
         new Aspect("makeup", new String[] { "makeup" }, true, false),
@@ -135,8 +130,8 @@ public class AvatarLogic
     }
 
     /**
-     * Returns the appropriate index for this color class (which depends on
-     * whether it is primary, secondary or tertiary).
+     * Returns the appropriate index for this color class (which depends on whether it is primary,
+     * secondary or tertiary).
      */
     public static int getColorIndex (String cclass)
     {
@@ -147,15 +142,14 @@ public class AvatarLogic
         } else if (cclass.endsWith("_t")) {
             return 2;
         } else  {
-            log.warning("Requested color index for non-indexed color " +
-                        "[cclass=" + cclass + "].");
+            log.warning("Requested color index for non-indexed color [cclass=" + cclass + "].");
             return 0;
         }
     }
 
     /**
-     * Creates a colorization mask with the specified colorization id in the
-     * appropriate position for the specified colorization class.
+     * Creates a colorization mask with the specified colorization id in the appropriate position
+     * for the specified colorization class.
      */
     public static int composeZation (String cclass, int colorId)
     {
@@ -168,10 +162,9 @@ public class AvatarLogic
     }
 
     /**
-     * Creates a colorization mask with the specified three colorization ids
-     * (which may be zero if the component in question does not require
-     * secondary or tertiary colorizations). This value can then be provided to
-     * {@link #createArticle}.
+     * Creates a colorization mask with the specified three colorization ids (which may be zero if
+     * the component in question does not require secondary or tertiary colorizations). This value
+     * can then be provided to {@link #createArticle}.
      */
     public static int composeZations (int primary, int secondary, int tertiary)
     {
@@ -209,8 +202,8 @@ public class AvatarLogic
     }
 
     /**
-     * Creates a logic instance which will make use of the supplied sources to
-     * obtain avatar related information.
+     * Creates a logic instance which will make use of the supplied sources to obtain avatar
+     * related information.
      */
     public AvatarLogic (ResourceManager rsrcmgr, ComponentRepository crepo)
         throws IOException
@@ -248,8 +241,8 @@ public class AvatarLogic
     }
 
     /**
-     * Decodes an avatar fingerprint into a {@link CharacterDescriptor} that
-     * can be passed to the character manager.
+     * Decodes an avatar fingerprint into a {@link CharacterDescriptor} that can be passed to the
+     * character manager.
      */
     public CharacterDescriptor decodeAvatar (int[] avatar)
     {
@@ -260,8 +253,8 @@ public class AvatarLogic
         // compact the array to remove unused entries
         avatar = IntListUtil.compact(avatar);
 
-        // the subsequent elements are article colorizations and component ids
-        // composed into a single integer
+        // the subsequent elements are article colorizations and component ids composed into a
+        // single integer
         int clength = avatar.length-1;
         int[] componentIds = new int[clength];
         Colorization[][] zations = new Colorization[clength][];
@@ -275,19 +268,18 @@ public class AvatarLogic
     }
 
     /**
-     * Determines whether the given avatar belongs to a male character by
-     * looking for a gender-specific component.  Returns false if no
-     * gender-specific components are found.
+     * Determines whether the given avatar belongs to a male character by looking for a
+     * gender-specific component.  Returns false if no gender-specific components are found.
      */
-    public boolean isMale (int[] avatar)
+    public boolean isMale (AvatarInfo avatar)
     {
-        if (avatar == null) {
+        if (avatar == null || avatar.print == null) {
             return false;
         }
-        for (int ii = 1; ii < avatar.length; ii++) {
+        for (int ii = 1; ii < avatar.print.length; ii++) {
             CharacterComponent ccomp;
             try {
-                ccomp = _crepo.getComponent(avatar[ii] & 0xFFFF);
+                ccomp = _crepo.getComponent(avatar.print[ii] & 0xFFFF);
             } catch (NoSuchComponentException e) {
                 continue;
             }
@@ -301,15 +293,13 @@ public class AvatarLogic
     }
 
     /**
-     * Decodes and returns the colorizations encoded into the supplied encoded
-     * component.
+     * Decodes and returns the colorizations encoded into the supplied encoded component.
      *
-     * @param colors usually null, in which case the colorization classes
-     * appropriate to the specified component will be used, but if non-null,
-     * they are a list of colorization classes to use instead.
+     * @param colors usually null, in which case the colorization classes appropriate to the
+     * specified component will be used, but if non-null, they are a list of colorization classes
+     * to use instead.
      */
-    public Colorization[] decodeColorizations (
-        int fqComponentId, String[] colors)
+    public Colorization[] decodeColorizations (int fqComponentId, String[] colors)
     {
         // look up the component in the repository
         int componentId = (fqComponentId & 0xFFFF);
@@ -317,13 +307,11 @@ public class AvatarLogic
         try {
             ccomp = _crepo.getComponent(componentId);
         } catch (NoSuchComponentException nsce) {
-            log.warning("Avatar contains non-existent component " +
-                        "[compId=" + componentId + "].");
+            log.warning("Avatar contains non-existent component [compId=" + componentId + "].");
             return null;
         }
 
-        // if we weren't provided with classes, use the values from the
-        // component class record
+        // if we weren't provided with classes, use the values from the component class record
         HashSet<String> colset = new HashSet<String>();
         if (colors == null) {
             CollectionUtil.addAll(colset, ccomp.componentClass.colors);
@@ -364,18 +352,17 @@ public class AvatarLogic
     /**
      * Creates a new {@link Look} with the specified configuration.
      *
-     * @return the newly created look or null if the look configuration was
-     * invalid for some reason (in which case an error will have been logged).
+     * @return the newly created look or null if the look configuration was invalid for some reason
+     * (in which case an error will have been logged).
      *
      * @param user the user for whom we are creating the look.
-     * @param cost a two element array into which the scrip and coin cost of
-     * the look will be filled in (in that order).
+     * @param cost a two element array into which the scrip and coin cost of the look will be
+     * filled in (in that order).
      */
     public Look createLook (PlayerObject user, LookConfig config, int[] cost)
     {
         String gender = user.isMale ? "male/" : "female/";
-        int scrip = AvatarCodes.BASE_LOOK_SCRIP_COST,
-            coins = AvatarCodes.BASE_LOOK_COIN_COST;
+        int scrip = AvatarCodes.BASE_LOOK_SCRIP_COST, coins = AvatarCodes.BASE_LOOK_COIN_COST;
         ArrayIntSet compids = new ArrayIntSet();
         for (int ii = 0; ii < config.aspects.length; ii++) {
             AvatarLogic.Aspect aclass = AvatarLogic.ASPECTS[ii];
@@ -384,14 +371,12 @@ public class AvatarLogic
                 if (aclass.optional) {
                     continue;
                 }
-                log.warning("Requested to purchase look that is missing a " +
-                            "non-optional aspect [who=" + user.who() +
-                            ", class=" + acname + "].");
+                log.warning("Requested to purchase look that is missing a non-optional aspect " +
+                            "[who=" + user.who() + ", class=" + acname + "].");
                 return null;
             }
 
-            AspectCatalog.Aspect aspect =
-                _aspcat.getAspect(acname, config.aspects[ii]);
+            AspectCatalog.Aspect aspect = _aspcat.getAspect(acname, config.aspects[ii]);
             if (aspect == null) {
                 log.warning("Requested to purchase look with unknown aspect " +
                             "[who=" + user.who() + ", class=" + acname +
@@ -453,6 +438,7 @@ public class AvatarLogic
             if ((aspect.maleOnly && !male) || aspect.optional) {
                 continue;
             }
+
             ArrayList<AspectCatalog.Aspect> catasps = new ArrayList<AspectCatalog.Aspect>();
             for (AspectCatalog.Aspect catasp : _aspcat.getAspects(gender + aspect.name)) {
                 if (catasp.scrip <= AvatarCodes.MAX_STARTER_COST && catasp.coins == 0 &&
@@ -460,6 +446,7 @@ public class AvatarLogic
                     catasps.add(catasp);
                 }
             }
+
             AspectCatalog.Aspect catasp = RandomUtil.pickRandom(catasps);
             for (String cclass : aspect.classes) {
                 try {
@@ -473,12 +460,14 @@ public class AvatarLogic
                             ColorConstraints.pickRandomColor(_pository, color, user).colorId);
                     }
                     compids.add(compmask);
+
                 } catch (NoSuchComponentException nsce) {
                     log.warning("Missing character component [class=" + gender + cclass +
                         ", name=" + catasp.name + "].");
                 }
             }
         }
+
         int[] aspects = new int[compids.size()+1];
         int hair = ColorConstraints.pickRandomColor(_pository, HAIR, user).colorId,
             skin = ColorConstraints.pickRandomColor(_pository, SKIN, user).colorId;
@@ -486,13 +475,11 @@ public class AvatarLogic
         compids.toIntArray(aspects, 1);
         return aspects;
     }
-    
+
     /**
-     * Creates an inventory article from an article catalog entry and a
-     * colorization mask.
+     * Creates an inventory article from an article catalog entry and a colorization mask.
      */
-    public Article createArticle (
-        int playerId, ArticleCatalog.Article article, int zations)
+    public Article createArticle (int playerId, ArticleCatalog.Article article, int zations)
     {
         // sanity check the slot name
         Aspect slot = null;
@@ -508,30 +495,24 @@ public class AvatarLogic
             return null;
         }
         String type = article.townId + "/" + article.name;
-        return new Article(playerId, article.slot, type,
-                           getComponentIds(article, zations));
+        return new Article(playerId, article.slot, type, getComponentIds(article, zations));
     }
 
     /**
-     * Creates the default clothing article for the specified gender, choosing
-     * random colorizations.
+     * Creates the default clothing article for the specified gender, choosing random
+     * colorizations.
      */
     public Article createDefaultClothing (PlayerObject user, boolean forMale)
     {
-        int primary = ColorConstraints.pickRandomColor(
-            _pository, "clothes_p", user).colorId;
-        int secondary = ColorConstraints.pickRandomColor(
-            _pository, "clothes_s", user).colorId;
-        int tertiary = ColorConstraints.pickRandomColor(
-            _pository, "clothes_t", user).colorId;
-        return createDefaultClothing(
-            user, forMale, composeZations(primary, secondary, tertiary));
+        int primary = ColorConstraints.pickRandomColor(_pository, "clothes_p", user).colorId;
+        int secondary = ColorConstraints.pickRandomColor(_pository, "clothes_s", user).colorId;
+        int tertiary = ColorConstraints.pickRandomColor(_pository, "clothes_t", user).colorId;
+        return createDefaultClothing(user, forMale, composeZations(primary, secondary, tertiary));
     }
 
     /**
-     * Creates the default clothing article for the specified gender, with the
-     * specified colorizations (which should have come from {@link
-     * #composeZation}.
+     * Creates the default clothing article for the specified gender, with the specified
+     * colorizations (which should have come from {@link #composeZation}.
      */
     public Article createDefaultClothing (
         PlayerObject user, boolean forMale, int zations)
@@ -545,8 +526,7 @@ public class AvatarLogic
             }
         }
         if (article == null) {
-            log.warning("Missing starter clothing article " +
-                        "[gender=" + prefix + "].");
+            log.warning("Missing starter clothing article [gender=" + prefix + "].");
             return null;
         }
         return createArticle(user.playerId, article, zations);
@@ -565,23 +545,21 @@ public class AvatarLogic
         }
         return crecs;
     }
-    
+
     /**
      * Returns the colorization classes used by the specified article.
      */
     public String[] getColorizationClasses (ArticleCatalog.Article article)
     {
-        // if a specific set of colorizations have not been specified for an
-        // article, we generate the list by computing the union of the classes
-        // used by each of the individual components in the article; then we
-        // cache it because we're cool like that
+        // if a specific set of colorizations have not been specified for an article, we generate
+        // the list by computing the union of the classes used by each of the individual components
+        // in the article; then we cache it because we're cool like that
         if (article.colors == null) {
             HashSet<String> classes = new HashSet<String>();
             for (ArticleCatalog.Component comp : article.components) {
                 ComponentClass cclass = _crepo.getComponentClass(comp.cclass);
                 if (cclass == null) {
-                    log.warning("Missing component classs for article " +
-                                "[article=" + article +
+                    log.warning("Missing component classs for article [article=" + article +
                                 ", cclass=" + comp.cclass + "].");
                     continue;
                 }
@@ -595,26 +573,22 @@ public class AvatarLogic
     }
 
     /**
-     * Looks up the appropriate component ids for the specified article,
-     * combines them with the supplied colorizations and returns an array
-     * suitable for using in an {@link Article} instance.
+     * Looks up the appropriate component ids for the specified article, combines them with the
+     * supplied colorizations and returns an array suitable for using in an {@link Article}
+     * instance.
      */
-    public int[] getComponentIds (
-        ArticleCatalog.Article article, int zations)
+    public int[] getComponentIds (ArticleCatalog.Article article, int zations)
     {
         int[] componentIds = new int[article.components.size()];
         int idx = 0;
         for (ArticleCatalog.Component comp : article.components) {
             try {
-                CharacterComponent ccomp =
-                    _crepo.getComponent(comp.cclass, comp.name);
+                CharacterComponent ccomp = _crepo.getComponent(comp.cclass, comp.name);
                 // the zations are already shifted 16 bits left
                 componentIds[idx++] = ccomp.componentId | zations;
             } catch (NoSuchComponentException nsce) {
-                log.warning("Article references unknown component " +
-                            "[article=" + article.name +
-                            ", cclass=" + comp.cclass +
-                            ", name=" + comp.name + "].");
+                log.warning("Article references unknown component [article=" + article.name +
+                            ", cclass=" + comp.cclass + ", name=" + comp.name + "].");
             }
         }
         return componentIds;

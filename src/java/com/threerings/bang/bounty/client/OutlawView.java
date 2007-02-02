@@ -54,15 +54,7 @@ public class OutlawView extends BComponent
             _images[AVATAR].release();
         }
         _images[AVATAR] = null;
-
-        if (!StringUtil.isBlank(_outlaw.image)) {
-            _images[AVATAR] = ctx.getImageCache().getBImage(_outlaw.image, _scale/2, false);
-            if (_added) {
-                _images[AVATAR].reference();
-            }
-        } else if (_outlaw.print != null && _outlaw.print.length > 0) {
-            AvatarView.getFramableImage(ctx, _outlaw.print, (int)(4/_scale), this);
-        }
+        AvatarView.getFramableImage(ctx, _outlaw.avatar, (int)(4/_scale), this);
     }
 
     public void reference ()
@@ -89,8 +81,8 @@ public class OutlawView extends BComponent
     {
         _images[BACKGROUND].render(renderer, x, y, alpha);
         if (_images[AVATAR] != null) {
-            int xoff = (_images[FRAME].getWidth() - _images[AVATAR].getWidth())/2;
-            _images[AVATAR].render(renderer, x + xoff, y + (int)(4*_scale), alpha);
+            int offset = (int)(4*_scale);
+            _images[AVATAR].render(renderer, x + offset, y + offset, alpha);
         }
         if (_scale != 1f || !_completed) {
             _images[FRAME].render(renderer, x, y, alpha);

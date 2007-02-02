@@ -366,9 +366,8 @@ public class PlayerStatusView extends BContainer
         // load up this player's avatar image
         if (_bangobj.playerInfo != null &&
             _bangobj.playerInfo[_pidx].avatar != null) {
-            AvatarView.getFramableImage(
-                _ctx, _bangobj.playerInfo[_pidx].avatar, 9,
-                new ResultListener<BImage>() {
+            AvatarView.getFramableImage(_ctx, _bangobj.playerInfo[_pidx].avatar, 9,
+                                        new ResultListener<BImage>() {
                 public void requestCompleted (BImage image) {
                     setAvatar(new ImageIcon(image));
                 }
@@ -392,9 +391,8 @@ public class PlayerStatusView extends BContainer
 
     protected void checkPlayerHere ()
     {
-        _playerHere =
-            (_bconfig.ais != null && _bconfig.ais.length > _pidx &&
-             _bconfig.ais[_pidx] != null) ||
+        _playerHere = (_bconfig.ais != null && _bconfig.ais.length > _pidx &&
+                       _bconfig.ais[_pidx] != null) ||
             (_bangobj.getOccupantInfo(_bangobj.players[_pidx]) != null);
     }
 

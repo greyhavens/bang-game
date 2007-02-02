@@ -27,6 +27,7 @@ import com.threerings.cast.CharacterComponent;
 import com.threerings.cast.NoSuchComponentException;
 
 import com.threerings.bang.data.Article;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
@@ -82,24 +83,22 @@ public class BarberManager extends PlaceManager
     }
 
     /**
-     * Returns an avatar snapshot for the specified player. If they are online,
-     * it will be obtained from their loaded player object (and returned
-     * immediately), otherwise it will be loaded from the database (and require
-     * an asynchronous reply).
+     * Returns an avatar snapshot for the specified player. If they are online, it will be obtained
+     * from their loaded player object (and returned immediately), otherwise it will be loaded from
+     * the database (and require an asynchronous reply).
      */
-    public void getSnapshot (int playerId, ResultListener<int[]> listener)
+    public void getSnapshot (int playerId, ResultListener<AvatarInfo> listener)
     {
         // if they're online it's easy peasy
         PlayerObject user = BangServer.lookupPlayer(playerId);
         if (user != null) {
-            listener.requestCompleted(
-                user.getLook(Look.Pose.WANTED_POSTER).getAvatar(user));
+            listener.requestCompleted(user.getLook(Look.Pose.WANTED_POSTER).getAvatar(user));
             return;
         }
 
         // otherwise we have to go to the database (TODO: cache these?)
         final int fpid = playerId;
-        final ResultListener<int[]> flist = listener;
+        final ResultListener<AvatarInfo> flist = listener;
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 try {
@@ -118,7 +117,7 @@ public class BarberManager extends PlaceManager
                 }
             }
 
-            protected int[] _snap;
+            protected AvatarInfo _snap;
             protected Exception _error;
         });
     }

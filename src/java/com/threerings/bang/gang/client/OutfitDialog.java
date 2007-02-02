@@ -32,6 +32,7 @@ import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
@@ -448,16 +449,16 @@ public class OutfitDialog extends BDecoratedWindow
      */
     protected void updateAvatar (boolean male)
     {
-        int[] avatar = (male ? _maspects : _faspects);
+        int[] avatar = male ? _maspects : _faspects;
         AvatarLogic alogic = _ctx.getAvatarLogic();
         ArticleCatalog artcat = alogic.getArticleCatalog();
         for (OutfitArticle oart : _oarts.values()) {
             if (isMaleArticle(oart.article) == male) {
-                avatar = ArrayUtil.concatenate(avatar,
-                    alogic.getComponentIds(artcat.getArticle(oart.article), oart.zations));
+                avatar = ArrayUtil.concatenate(
+                    avatar, alogic.getComponentIds(artcat.getArticle(oart.article), oart.zations));
             }
         }
-        (male ? _mavatar : _favatar).setAvatar(avatar);
+        (male ? _mavatar : _favatar).setAvatar(new AvatarInfo(avatar));
     }
     
     /**

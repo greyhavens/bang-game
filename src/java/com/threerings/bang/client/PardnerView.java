@@ -3,7 +3,6 @@
 
 package com.threerings.bang.client;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 import java.text.SimpleDateFormat;
@@ -171,7 +170,7 @@ public class PardnerView extends IconPalette
                 removeIcon(this);
                 addToPalette();
             }
-            if (!Arrays.equals(oentry.avatar, nentry.avatar)) {
+            if (oentry.avatar == null || !oentry.avatar.equals(nentry.avatar)) {
                 updateAvatar();
             }
         }

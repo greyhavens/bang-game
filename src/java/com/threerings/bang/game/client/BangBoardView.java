@@ -41,6 +41,7 @@ import com.jmex.bui.Spacer;
 import com.jmex.bui.event.InputEvent;
 import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.event.MouseListener;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
@@ -860,8 +861,7 @@ public class BangBoardView extends BoardView
     protected BContainer createPlayerMarquee (int pidx)
     {
         // create the marquee
-        BContainer marquee = new BContainer(
-            GroupLayout.makeVert(GroupLayout.CENTER));
+        BContainer marquee = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER));
         ((GroupLayout)marquee.getLayoutManager()).setGap(-1);
         marquee.setStyleClass("player_marquee_cont");
         if (_bangobj.playerInfo[pidx].avatar != null) {
@@ -869,8 +869,7 @@ public class BangBoardView extends BoardView
             aview.setAvatar(_bangobj.playerInfo[pidx].avatar);
             marquee.add(aview);
         }
-        marquee.add(new BLabel(_bangobj.players[pidx].toString(),
-                               "player_marquee_label"));
+        marquee.add(new BLabel(_bangobj.players[pidx].toString(), "player_marquee_label"));
         return marquee;
     }
 

@@ -22,6 +22,7 @@ import com.threerings.bang.chat.client.TabbedChatView.UserTab;
 
 import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.MainView;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
@@ -60,7 +61,7 @@ public class PardnerChatView extends BDecoratedWindow
      *
      * @return true if we managed to display the view, false if we can't at the moment
      */
-    public boolean display (Handle pardner, int[] avatar, boolean grabFocus)
+    public boolean display (Handle pardner, AvatarInfo avatar, boolean grabFocus)
     {
         return _tabView.openUserTab(pardner, avatar, grabFocus) != null;
     }
@@ -72,7 +73,7 @@ public class PardnerChatView extends BDecoratedWindow
      * focused. If false, the tab will be added if it does not exist but will not be made current,
      * nor will focus be moved to the input field.
      */
-    public UserTab openUserTab (Handle handle, int[] avatar, boolean focus)
+    public UserTab openUserTab (Handle handle, AvatarInfo avatar, boolean focus)
     {
         return _tabView.openUserTab(handle, avatar, focus);
     }
@@ -180,7 +181,7 @@ public class PardnerChatView extends BDecoratedWindow
          * be focused. If false, the tab will be added if it does not exist but will not be made
          * current, nor will focus be moved to the input field.
          */
-        public UserTab openUserTab (Handle handle, int[] avatar, boolean focus)
+        public UserTab openUserTab (Handle handle, AvatarInfo avatar, boolean focus)
         {
             UserTab tab = _users.get(handle);
             if (tab == null) {

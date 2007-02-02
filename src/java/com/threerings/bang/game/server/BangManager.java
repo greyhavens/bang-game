@@ -883,10 +883,12 @@ public class BangManager extends GameManager
             PlayerRecord prec = (_precords[ii] = new PlayerRecord());
             prec.finishedTick = new int[_bconfig.getRounds()];
             pinfo[ii] = new BangObject.PlayerInfo();
+
             if (isAI(ii)) {
                 prec.playerId = -1;
                 prec.ratings = new DSet<Rating>();
                 pinfo[ii].avatar = ((BangAI)_AIs[ii]).avatar;
+
             } else if (isActivePlayer(ii)) {
                 prec.user = (PlayerObject)getPlayer(ii);
                 prec.playerId = prec.user.playerId;
@@ -894,6 +896,7 @@ public class BangManager extends GameManager
                 prec.purse = prec.user.getPurse();
                 prec.ratings = prec.user.ratings;
                 pinfo[ii].playerId = prec.user.playerId;
+
                 Look look = prec.user.getLook(Look.Pose.DEFAULT);
                 if (look != null) {
                     pinfo[ii].avatar = look.getAvatar(prec.user);
@@ -902,7 +905,7 @@ public class BangManager extends GameManager
                 if (look != null) {
                     pinfo[ii].victory = look.getAvatar(prec.user);
                     // don't store the victory look if it's the same as the avatar
-                    if (Arrays.equals(pinfo[ii].avatar, pinfo[ii].victory)) {
+                    if (pinfo[ii].avatar.equals(pinfo[ii].victory)) {
                         pinfo[ii].victory = null;
                     }
                 }

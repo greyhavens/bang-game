@@ -25,7 +25,7 @@ public class PosterInfo extends SimpleStreamableObject
     public byte rank;
     
     /** This poster's player's avatar */
-    public int[] avatar;
+    public AvatarInfo avatar;
 
     /** The personal statement given by this poster's player */
     public String statement;

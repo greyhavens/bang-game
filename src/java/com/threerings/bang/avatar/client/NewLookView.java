@@ -42,6 +42,7 @@ import com.threerings.bang.client.bui.PaletteIcon;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
@@ -324,7 +325,7 @@ public class NewLookView extends BContainer
         compids.toIntArray(avatar, 1);
 
         // update the avatar and cost displays
-        _avatar.setAvatar(avatar);
+        _avatar.setAvatar(new AvatarInfo(avatar));
         if (_cost != null) {
             _cost.setMoney(scrip, coins, false);
         }

@@ -24,6 +24,7 @@ import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
@@ -209,9 +210,8 @@ public class SaloonManager extends MatchHostManager
         list.criterion = MessageBundle.qualify(GameCodes.GAME_MSGS, "m.scenario_" + list.criterion);
         int topRankId = (list.playerIds == null || list.playerIds.length == 0) ?
             0 : list.playerIds[0];
-        BangServer.barbermgr.getSnapshot(
-            topRankId, new ResultListener<int[]>() {
-            public void requestCompleted (int[] snapshot) {
+        BangServer.barbermgr.getSnapshot(topRankId, new ResultListener<AvatarInfo>() {
+            public void requestCompleted (AvatarInfo snapshot) {
                 list.topDogSnapshot = snapshot;
                 commitList();
             }

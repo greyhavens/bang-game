@@ -83,7 +83,7 @@ public class WearClothingView extends BContainer
                     if (look == null) {
                         return;
                     }
-                    int[] print = look.getAvatar(ctx.getUserObject());
+                    int[] print = look.getAvatar(ctx.getUserObject()).print;
                     if (BangUI.copyToClipboard(StringUtil.toString(print, "", ""))) {
                         ctx.getChatDirector().displayFeedback(
                             BarberCodes.BARBER_MSGS, "m.print_copied");

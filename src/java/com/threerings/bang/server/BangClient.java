@@ -82,8 +82,8 @@ public class BangClient extends CrowdClient
 
         // if we have auth data in the form of a token ring, use it
         if (_authdata instanceof BangTokenRing) {
-            // we can set things directly here rather than use the setter
-            // methods because the user object is not yet out in the wild
+            // we can set things directly here rather than use the setter methods because the user
+            // object is not yet out in the wild
             user.tokens = (BangTokenRing)_authdata;
         } else {
             log.warning("Missing or bogus authdata [who=" + _username +
@@ -95,8 +95,7 @@ public class BangClient extends CrowdClient
         // configure the player in the town for this server
         user.townId = ServerConfig.townId;
 
-        // make a note of their current avatar poses for later comparison and
-        // potential updating
+        // make a note of their current avatar poses for later comparison and potential updating
         _startPoses = (String[])user.poses.clone();
     }
 
@@ -134,8 +133,7 @@ public class BangClient extends CrowdClient
     }
 
     /**
-     * Records to logs and the database anything that needs recording at
-     * the end of a session.
+     * Records to logs and the database anything that needs recording at the end of a session.
      */
     protected void recordEndedSession ()
     {
@@ -150,9 +148,8 @@ public class BangClient extends CrowdClient
     }
 
     /**
-     * This method is called on the invoker thread and writes to the
-     * database any necessary information at the end of a player's
-     * session.
+     * This method is called on the invoker thread and writes to the database any necessary
+     * information at the end of a player's session.
      */
     protected void performDatabaseSaves (PlayerObject user)
     {
@@ -175,8 +172,7 @@ public class BangClient extends CrowdClient
                 }
             }
 
-            // record our playtime to the database and potentially update our
-            // poses
+            // record our playtime to the database and potentially update our poses
             boolean[] changed = new boolean[_startPoses.length];
             for (int ii = 0; ii < changed.length; ii++) {
                 changed[ii] = !ObjectUtil.equals(_startPoses[ii], user.poses[ii]);
@@ -184,19 +180,12 @@ public class BangClient extends CrowdClient
             BangServer.playrepo.noteSessionEnded(
                 user.playerId, user.poses, changed, (int)Math.round(_connectTime / 60f));
 
-            // TEMP: remove after a while; this generates snapshots for curmudgeonly old users that
-            // predated the snapshot system and have not made a single change to their avatar in
-            // the intervening four months
-            if (BangServer.lookrepo.loadSnapshot(user.playerId) == null) {
-                updatedWanted = true;
-            }
-            // END TEMP
-
             // if our wanted poster look changed, generate a new snapshot
             if (updatedWanted || changed[Look.Pose.WANTED_POSTER.ordinal()]) {
                 Look look = user.getLook(Look.Pose.WANTED_POSTER);
-                if (look != null) {
-                    BangServer.lookrepo.updateSnapshot(user.playerId, look.getAvatar(user));
+                int[] print;
+                if (look != null && (print = look.getAvatar(user).print) != null) {
+                    BangServer.lookrepo.updateSnapshot(user.playerId, print);
                 }
             }
 

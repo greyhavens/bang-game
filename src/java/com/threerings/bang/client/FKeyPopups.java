@@ -330,13 +330,11 @@ public class FKeyPopups
         final File target = new File(System.getProperty("user.home") +
                                      File.separator + "Desktop" +
                                      File.separator + look.name + ".png");
-        AvatarView.getImage(_ctx, look.getAvatar(user),
-                            new ResultListener<BufferedImage>() {
+        AvatarView.getImage(_ctx, look.getAvatar(user), new ResultListener<BufferedImage>() {
             public void requestCompleted (BufferedImage image) {
                 try {
                     ImageIO.write(image, "PNG", target);
-                    _ctx.getChatDirector().displayFeedback(
-                        BangCodes.BANG_MSGS, "m.avatar_saved");
+                    _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, "m.avatar_saved");
                 } catch (Exception e) {
                     log.log(Level.WARNING, "Failed to write avatar image " +
                             "[target=" + target + "].", e);

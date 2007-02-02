@@ -42,6 +42,7 @@ import com.threerings.crowd.chat.server.SpeakProvider;
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.Article;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
@@ -324,7 +325,7 @@ public class GangManager
         throws InvocationException
     {
         Look look = user.getLook(Look.Pose.WANTED_POSTER);
-        final int[] avatar = (look == null) ? null : look.getAvatar(user);
+        final AvatarInfo avatar = (look == null) ? null : look.getAvatar(user);
         new FinancialAction(user, FORM_GANG_SCRIP_COST, FORM_GANG_COIN_COST) {
             protected int getCoinType () {
                 return CoinTransaction.GANG_CREATION;
@@ -968,7 +969,7 @@ public class GangManager
                 }
                 super.handleSuccess();
             }
-            protected int[] _avatar;
+            protected AvatarInfo _avatar;
         });
     }
 

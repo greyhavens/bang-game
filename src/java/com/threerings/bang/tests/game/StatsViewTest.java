@@ -81,7 +81,7 @@ public class StatsViewTest extends TestApp
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 100;
             bangobj.playerInfo[ii] = new BangObject.PlayerInfo();
-            bangobj.playerInfo[ii].avatar = BangAI.getAvatarPrint(RandomUtil.getInt(100) > 50);
+            bangobj.playerInfo[ii].avatar = BangAI.getAvatar(RandomUtil.getInt(100) > 50);
             bangobj.stats[ii] = new StatSet();
             bangobj.stats[ii].setStat(Stat.Type.CATTLE_RUSTLED, RandomUtil.getInt(5) * ii);
             bangobj.stats[ii].setStat(Stat.Type.NUGGETS_CLAIMED, RandomUtil.getInt(10));

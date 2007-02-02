@@ -34,7 +34,7 @@ public class PardnerEntry
     public Handle handle;
 
     /** The pardner's avatar. */
-    public int[] avatar;
+    public AvatarInfo avatar;
 
     /** The pardner's status ({@link #OFFLINE}, {@link #IN_TOWN}, etc). */
     public byte status;

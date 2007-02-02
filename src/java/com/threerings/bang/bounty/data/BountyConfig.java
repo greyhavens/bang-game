@@ -14,6 +14,7 @@ import com.threerings.io.SimpleStreamableObject;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.Article;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
@@ -59,11 +60,8 @@ public class BountyConfig extends SimpleStreamableObject
         /** This opponent's name. */
         public String name;
 
-        /** The character fingerprint for this opponent (optional). */
-        public int[] print;
-
-        /** An image to use for the outlaw's avatar (instead of a print, optional). */
-        public String image;
+        /** The avatar for this opponent. */
+        public AvatarInfo avatar = new AvatarInfo();
     }
 
     /** Defines a speaker and text for a quote. */
@@ -148,11 +146,8 @@ public class BountyConfig extends SimpleStreamableObject
     /** Whether or not the bounty games must be played in order. */
     public boolean inOrder = true;
 
-    /** An avatar fingerprint for the outlaw (optional). */
-    public int[] outlawPrint;
-
-    /** An image to use for the avatar of the outlaw (optional). */
-    public String outlawImage;
+    /** An avatar for the outlaw. */
+    public AvatarInfo outlaw = new AvatarInfo();
 
     /** The names of our game definition files. */
     public ArrayList<GameInfo> games = new ArrayList<GameInfo>();
@@ -199,7 +194,7 @@ public class BountyConfig extends SimpleStreamableObject
      */
     public String getStatKey (String game)
     {
-        return ident + "." + game;
+        return ident.substring(ident.lastIndexOf("/")+1) + "." + game;
     }
 
     /**
@@ -222,8 +217,7 @@ public class BountyConfig extends SimpleStreamableObject
     {
         Opponent outop = new Opponent();
         outop.name = title;
-        outop.print = outlawPrint;
-        outop.image = outlawImage;
+        outop.avatar = outlaw;
         return outop;
     }
 
@@ -242,12 +236,10 @@ public class BountyConfig extends SimpleStreamableObject
         Opponent opp = info.opponents == null ? null : info.opponents[index];
         if (opp != null) {
             oppai.handle = new Handle(opp.name);
-            oppai.avatar = opp.print;
-            // TODO: support opp.image
+            oppai.avatar = opp.avatar;
         } else if (index == players-1) {
             oppai.handle = new Handle(title);
-            oppai.avatar = outlawPrint;
-            // TODO: support outlawImage
+            oppai.avatar = outlaw;
         }
 
         return oppai;
@@ -300,18 +292,14 @@ public class BountyConfig extends SimpleStreamableObject
         BountyConfig config = new BountyConfig();
         config.townId = bits[0];
         config.type = Type.valueOf(bits[1].toUpperCase());
-        // skip further intervening directories which are just for organizational purposes
-        config.ident = bits[bits.length-1];
+        config.ident = bits[2] + "/" + bits[3];
 
         // parse the various bounty properties
         config.lock = BangUtil.getEnumProperty(which, props, "lock", LockType.NONE);
         config.difficulty = BangUtil.getEnumProperty(which, props, "difficulty", Difficulty.EASY);
         config.inOrder = BangUtil.getBooleanProperty(which, props, "in_order", config.inOrder);
-        config.outlawPrint = StringUtil.parseIntArray(props.getProperty("outlaw_print", ""));
-        if (config.outlawPrint != null && config.outlawPrint.length == 0) {
-            config.outlawPrint = null;
-        }
-        config.outlawImage = getImageProperty(which, props, "outlaw_image");
+        config.outlaw.print = StringUtil.parseIntArray(props.getProperty("outlaw_print", ""));
+        config.outlaw.image = getImageProperty(which, props, "outlaw_image");
         config.title = props.getProperty("title", "");
         config.description = props.getProperty("descrip", "");
 
@@ -326,9 +314,10 @@ public class BountyConfig extends SimpleStreamableObject
                 if (name != null) {
                     info.opponents[ii] = new Opponent();
                     info.opponents[ii].name =  name;
-                    info.opponents[ii].print =  StringUtil.parseIntArray(
-                        props.getProperty(prefix + ".print", ""));
-                    info.opponents[ii].image = getImageProperty(which, props, prefix + ".image");
+                    info.opponents[ii].avatar.print =
+                        StringUtil.parseIntArray(props.getProperty(prefix + ".print", ""));
+                    info.opponents[ii].avatar.image =
+                        getImageProperty(which, props, prefix + ".image");
                 }
             }
             info.preGameQuote = parseQuote(which, props, game + ".pregame");

@@ -34,6 +34,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.Article;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
@@ -183,7 +184,7 @@ public class FirstLookView extends BContainer
         compids.toIntArray(avatar, 1);
 
         // update the avatar display
-        _avatar.setAvatar(avatar);
+        _avatar.setAvatar(new AvatarInfo(avatar));
     }
 
     protected int getColorizations (String aspect)

@@ -7,6 +7,7 @@ import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 
 /**
@@ -25,24 +26,7 @@ public class TopRankedList extends SimpleStreamableObject
     public Handle[] players;
 
     /** A snapshot of the number one player. */
-    public int[] topDogSnapshot;
-
-    /**
-     * Returns the top dog snapshot in a format embeddable in an in-game web
-     * page.
-     */
-    public String getTopDogSnapshotURL ()
-    {
-        StringBuffer buf = new StringBuffer("avatar:///");
-        int ll = (topDogSnapshot == null) ? 0 : topDogSnapshot.length;
-        for (int ii = 0; ii < ll; ii++) {
-            if (ii > 0) {
-                buf.append(",");
-            }
-            buf.append(topDogSnapshot[ii]);
-        }
-        return buf.toString();
-    }
+    public AvatarInfo topDogSnapshot;
 
     // documentation inherited from interface DSet.Key
     public Comparable getKey ()

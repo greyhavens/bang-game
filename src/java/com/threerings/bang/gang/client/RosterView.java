@@ -30,6 +30,7 @@ import com.threerings.presents.dobj.SetListener;
 
 import com.threerings.bang.client.bui.RequestDialog;
 import com.threerings.bang.client.bui.StatusLabel;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.avatar.client.AvatarView;
@@ -261,13 +262,12 @@ public class RosterView extends BContainer
             super(ctx.loadImage("ui/hideout/leader_frame.png"));
         }
         
-        public void setAvatar (int[] avatar)
+        public void setAvatar (AvatarInfo avatar)
         {
-            if (Arrays.equals(avatar, _avatar)) {
+            if (avatar.equals(_avatar)) {
                 return;
             }
-            AvatarView.getImage(_ctx, avatar, 65, 82, false, this);
-            _avatar = avatar;
+            AvatarView.getImage(_ctx, _avatar = avatar, 65, 82, false, this);
         }
         
         public void requestCompleted (BImage result)
@@ -312,7 +312,7 @@ public class RosterView extends BContainer
             }
         }
         
-        protected int[] _avatar;
+        protected AvatarInfo _avatar;
         protected BImage _aimg;
         protected boolean _added;
     }

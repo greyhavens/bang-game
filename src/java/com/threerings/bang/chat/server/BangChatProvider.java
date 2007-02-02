@@ -9,6 +9,7 @@ import com.threerings.crowd.data.BodyObject;
 
 import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.chat.data.PlayerMessage;
+import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.PlayerObject;
 
 /**
@@ -21,7 +22,7 @@ public class BangChatProvider extends ChatProvider
     protected UserMessage createTellMessage (BodyObject source, String message)
     {
         PlayerObject player = (PlayerObject)source;
-        int[] avatar = player.getLook(Look.Pose.DEFAULT).getAvatar(player);
+        AvatarInfo avatar = player.getLook(Look.Pose.DEFAULT).getAvatar(player);
         return new PlayerMessage(player.handle, avatar, message);
     }
 }
