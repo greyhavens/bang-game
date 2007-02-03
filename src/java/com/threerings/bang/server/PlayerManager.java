@@ -25,11 +25,14 @@ import com.samskivert.util.Tuple;
 
 import org.apache.commons.io.IOUtils;
 
+import com.threerings.io.Streamable;
+
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.peer.data.ClientInfo;
+import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
@@ -119,7 +122,7 @@ public class PlayerManager
         // register ourselves as the provider of the (bootstrap) PlayerService
         BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), true);
 
-        // register our remote player observer
+        // register our remote player observer and poster cache observer
         _pardwatcher = new RemotePlayerWatcher<PardnerEntry>() {
             protected String getSetName () {
                 return PlayerObject.PARDNERS;
@@ -137,6 +140,12 @@ public class PlayerManager
         };
         if (BangServer.peermgr != null) {
             BangServer.peermgr.addPlayerObserver(_pardwatcher);
+            BangServer.peermgr.addStaleCacheObserver(POSTER_CACHE, 
+                new PeerManager.StaleCacheObserver() {
+                    public void changedCacheData (Streamable data) {
+                        _posterCache.remove((Handle)data);
+                    }
+                });
         }
     }
 
@@ -605,6 +614,7 @@ public class PlayerManager
             }
             public void handleSuccess() {
                 cl.requestProcessed();
+                BangServer.peermgr.broadcastStaleCacheData(POSTER_CACHE, user.handle);
             }
             public String getFailureMessage() {
                 return "Failed to store wanted poster record [poster = " + poster + "]";
@@ -1103,4 +1113,7 @@ public class PlayerManager
     /** A light-weight cache of soft {@link PosterInfo} references. */
     protected Map<Handle, SoftReference<PosterInfo>> _posterCache =
         new HashMap<Handle, SoftReference<PosterInfo>>();
+
+    /** The name of our poster cache. */
+    protected static final String POSTER_CACHE = "posterCache";
 }
