@@ -15,6 +15,8 @@ if (!open($LOG, ">$root/log/respawn-$node.log")) {
 }
 
 my $pidfile = shift;
+my $server_pidfile = shift;
+
 if (defined $pidfile) {
     if (open(OUT, ">$pidfile")) {
         print OUT "$$\n";
@@ -32,7 +34,7 @@ while (1) {
 
     # actually run the server
     print $LOG "$now Running bang server\n";
-    my $rcode = system("$root/bin/runbang $node");
+    my $rcode = system("$root/bin/runbang $node $server_pidfile");
 
     # note the time again
     my $finish = time();

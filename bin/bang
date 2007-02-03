@@ -5,6 +5,12 @@
 # Startup script for the Bang! game server. Currently works on Debian and
 # Redhat 9.
 
+WHOAMI=`whoami`
+if [ "$WHOAMI" != "root" ]; then
+    echo "This script must be run as root."
+    exit 255
+fi
+
 # Locate our ocean directory
 BANG_HOME=`dirname $0`/..
 BANG_HOME=`cd $BANG_HOME ; pwd`
@@ -22,37 +28,40 @@ if [ ! -z "$2" ]; then
 fi
 
 DAEMON=$BANG_HOME/bin/bangrespawn
-PIDFILE=/var/run/bang-$NODE.pid
-LOGFILE=/tmp/bang-$NODE.log
+RESPAWN_PIDFILE=$BANG_HOME/run/bangrespawn-$NODE.pid
+SERVER_PIDFILE=$BANG_HOME/run/bangserver-$NODE.pid
+LOGFILE=$BANG_HOME/log/respawn-$NODE.log
 
 # See how we were called
 case "$1" in
   start)
         # Make sure bangrespawn is not currently running
-	if [ -f $PIDFILE ]; then
+	if [ -f $RESPAWN_PIDFILE ]; then
 	    echo "bangrespawn appears to be already running for $NODE."
             echo "Run '$0 stop' to stop it first."
 	    exit 1
 	fi
 
         # Make sure there are no hung Bang server processes
-        RPIDS=`ps auxww | grep BangServer | grep java | grep $NODE | \
-            awk '{ print $2 }' | sort -n | head -1`
-        if [ ! -z "$RPIDS" ]; then
-            echo "WARNING: A $NODE Bang server process is currently running."
-            echo "If it has failed and you wish to forcibly restart it, please"
-            echo "execute the following commands:"
-            echo ""
-            echo "% kill -QUIT $RPIDS"
-            echo "% kill -KILL $RPIDS"
-            echo ""
-            echo "And then rerun this script."
-            exit -1
+        if [ -f $SERVER_PIDFILE ]; then
+            PID=`cat $SERVER_PIDFILE`
+            RPIDS=`ps auxww | grep " $PID " | grep java | awk '{ print $2 }' | sort -n | head -1`
+            if [ ! -z "$RPIDS" ]; then
+                echo "WARNING: A $NODE Bang server process is currently running."
+                echo "If it has failed and you wish to forcibly restart it, please"
+                echo "execute the following commands:"
+                echo ""
+                echo "% kill -QUIT $RPIDS"
+                echo "% kill -KILL $RPIDS"
+                echo ""
+                echo "And then rerun this script."
+                exit -1
+            fi
         fi
 
         # Make sure someone running things as root didn't booch the permissions
         # on the bundles
-        BFILE=/tmp/booched.txt
+        BFILE=$BANG_HOME/run/booched.txt
         find $BANG_HOME/rsrc -user root > $BFILE
         if [ -s "$BFILE" ]; then
             cat $BFILE | xargs chown -R $BANG_USER
@@ -66,40 +75,38 @@ case "$1" in
 
         # Go ahead and start things up
         echo -n "Starting $DAEMON: "
-        touch $PIDFILE $LOGFILE
-        chown $BANG_USER $PIDFILE $LOGFILE
-        su - $BANG_USER -c "$DAEMON $NODE $PIDFILE" >$LOGFILE 2>&1 </dev/null &
+        touch $RESPAWN_PIDFILE $LOGFILE
+        chown $BANG_USER $RESPAWN_PIDFILE $LOGFILE
+        su - $BANG_USER -c "$DAEMON $NODE $RESPAWN_PIDFILE $SERVER_PIDFILE" >$LOGFILE 2>&1 </dev/null &
         echo "started."
         ;;
 
   stop)
-	if [ ! -f $PIDFILE ]; then
-	    echo "No $PIDFILE exists. Is bangrespawn running?"
+	if [ ! -f $RESPAWN_PIDFILE ]; then
+	    echo "No $RESPAWN_PIDFILE exists. Is bangrespawn running?"
 	    exit 1
 	fi
-        echo -n "Shutting down bang, "
-        $BANG_HOME/bin/bangrestart $NODE
+        echo -n "Shutting down bang node $NODE, "
+        kill -INT `cat $SERVER_PIDFILE`
         echo -n "bangrespawn: "
-        kill `cat $PIDFILE`
+        kill `cat $RESPAWN_PIDFILE`
         echo "stopped."
-        rm -f $PIDFILE
+        rm -f $RESPAWN_PIDFILE $SERVER_PIDFILE
         ;;
 
   unspawn)
-	if [ ! -f $PIDFILE ]; then
-	    echo "No $PIDFILE exists. Is bangrespawn running?"
+	if [ ! -f $RESPAWN_PIDFILE ]; then
+	    echo "No $RESPAWN_PIDFILE exists. Is bangrespawn running?"
 	    exit 1
 	fi
         echo -n "Shutting down bangrespawn: "
-        kill `cat $PIDFILE`
+        kill `cat $RESPAWN_PIDFILE`
         echo "stopped."
-        rm -f $PIDFILE
+        rm -f $RESPAWN_PIDFILE
         ;;
 
   restart)
-        echo -n "Restarting bang server: "
-        $BANG_HOME/bin/bangrestart $NODE
-        echo "restarted."
+        echo "Restart the server from within the game."
         exit 1
         ;;
 
