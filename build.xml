@@ -448,7 +448,7 @@
       <fileset dir="${deploy.dir}/lib" includes="commons-digester.jar"/>
       <fileset dir="${deploy.dir}/lib" includes="commons-logging.jar"/>
     </copy>
-    <copy file="projects/tools/lib/java/getdown-retro-pro.jar"
+    <copy file="projects/tools/lib/java/getdown-pro.jar"
           tofile="${client_dir}/code/getdown-pro-new.jar"/>
     <delete file="${deploy.dir}/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">
