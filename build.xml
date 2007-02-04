@@ -564,7 +564,7 @@
 
     <!-- sanity check to avoid confusion if someone tries to call this directly -->
     <fail message="client_dir property must be specified: ant -Dclient_dir=devclient applet">
-      <condition><not><isset property="${client_dir}"/></not></condition>
+      <condition><not><isset property="client_dir"/></not></condition>
     </fail>
 
     <!-- copy the applet jar file into place and sign it -->
