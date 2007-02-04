@@ -30,6 +30,7 @@
     <file name="${extlib.dir}/ant-nodeps.jar"/>
     <file name="${extlib.dir}/ant.jar"/>
     <file name="${extlib.dir}/commons-beanutils.jar"/>
+    <file name="${extlib.dir}/commons-codec.jar"/>
     <file name="${extlib.dir}/commons-collections.jar"/>
     <file name="${extlib.dir}/commons-digester.jar"/>
     <file name="${extlib.dir}/commons-io.jar"/>
@@ -353,7 +354,7 @@
         <include name="aspects.html"/>
         <include name="boards.html"/>
         <include name="units.html"/>
-        <include name="client/getdown-pro.jar"/>
+        <include name="client/getdown-retro-pro.jar"/>
       </fileset>
     </delete>
 
@@ -447,7 +448,7 @@
       <fileset dir="${deploy.dir}/lib" includes="commons-digester.jar"/>
       <fileset dir="${deploy.dir}/lib" includes="commons-logging.jar"/>
     </copy>
-    <copy file="projects/tools/lib/java/getdown-pro.jar"
+    <copy file="projects/tools/lib/java/getdown-retro-pro.jar"
           tofile="${client_dir}/code/getdown-pro-new.jar"/>
     <delete file="${deploy.dir}/bang-pcode.jar"/>
     <copy todir="${client_dir}/rsrc">
@@ -462,10 +463,10 @@
 
     <!-- generate the getdown digest file -->
     <taskdef name="digest" classname="com.threerings.getdown.tools.DigesterTask">
-     <classpath>
-       <pathelement path="${deploy.dir}/lib/samskivert.jar"/>
-       <pathelement path="${deploy.dir}/lib/getdown.jar"/>
-     </classpath>
+      <classpath>
+        <pathelement path="${deploy.dir}/lib/samskivert.jar"/>
+        <pathelement path="${deploy.dir}/lib/getdown.jar"/>
+      </classpath>
     </taskdef>
     <digest appdir="${client_dir}"/>
   </target>
@@ -560,10 +561,25 @@
   <!-- signs and install the Getdown applet jar file -->
   <target name="applet" depends="prepare">
     <property file="${cert_dir}/certificate.properties"/>
-    <copy file="projects/tools/lib/java/getdown-pro.jar" todir="${web_dir}/client/"/>
+
+    <!-- copy the applet jar file into place and sign it -->
+    <copy file="projects/tools/lib/java/getdown-retro-pro.jar" todir="${web_dir}/client/"/>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
-      <fileset dir="${web_dir}/client" includes="getdown-pro.jar"/>
+      <fileset dir="${web_dir}/client" includes="getdown-retro-pro.jar"/>
     </signjar>
+
+    <!-- generate our signed applet tags -->
+    <taskdef name="appsign" classname="com.threerings.getdown.tools.AppletParamTask">
+      <classpath>
+        <pathelement path="${deploy.dir}/lib/commons-codec.jar"/>
+        <pathelement path="${deploy.dir}/lib/samskivert.jar"/>
+        <pathelement path="${deploy.dir}/lib/getdown.jar"/>
+      </classpath>
+    </taskdef>
+    <appsign keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}"
+             keypass="${sign.keypass}" appbase="${root_url}/${client_dir}" appname="${client_ident}"
+             imgpath="/client/background.png" file="pages/incl/launch_open.html.in"
+             tofile="pages/incl/launch_open.html"/>
   </target>
 
   <!-- a target for rebuilding everything -->
@@ -685,13 +701,13 @@
       <then>
         <antcall target="devclient"/>
         <ant dir="projects/installers" target="devclient"/>
-        <antcall target="applet"/>
+        <antcall target="applet"><param name="client_dir" value="devclient"/></antcall>
       </then>
     <elseif><equals arg1="${props.dist}" arg2="production"/>
       <then>
         <antcall target="client"/>
         <ant dir="projects/installers" target="client"/>
-        <antcall target="applet"/>
+        <antcall target="applet"><param name="client_dir" value="client"/></antcall>
       </then>
     </elseif></if>
   </target>
