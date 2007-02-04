@@ -102,7 +102,7 @@ public class SaloonManager extends MatchHostManager
                               final SaloonService.ResultListener rl)
         throws InvocationException
     {
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
 
         // make sure this player doesn't already have a parlor created
         if (_parlors.containsKey(user.handle)) {
@@ -134,7 +134,7 @@ public class SaloonManager extends MatchHostManager
                             SaloonService.ResultListener rl)
         throws InvocationException
     {
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
 
         // locate the parlor in question
         ParlorManager parmgr = _parlors.get(creator);
@@ -149,13 +149,19 @@ public class SaloonManager extends MatchHostManager
         rl.requestProcessed(parmgr.getPlaceObject().getOid());
     }
 
-    @Override // documentation inherited
+    @Override // from ShopManager
+    protected String getIdent ()
+    {
+        return "saloon";
+    }
+
+    @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
         return new SaloonObject();
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();
@@ -174,7 +180,7 @@ public class SaloonManager extends MatchHostManager
         _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didShutdown ()
     {
         super.didShutdown();

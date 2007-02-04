@@ -48,13 +48,12 @@ public class HideoutManager extends MatchHostManager
     implements GangCodes, HideoutCodes, HideoutProvider
 {
     // documentation inherited from interface HideoutProvider
-    public void formGang (
-        ClientObject caller, Handle root, String suffix,
-        final HideoutService.ConfirmListener listener)
+    public void formGang (ClientObject caller, Handle root, String suffix,
+                          final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure they're not already in a gang
-        final PlayerObject user = (PlayerObject)caller;
+        final PlayerObject user = requireShopEnabled(caller);
         if (user.gangId > 0) {
             log.warning("Player tried to form a gang when already in one " +
                 "[who=" + user.who() + ", gangId=" + user.gangId + "].");
@@ -103,7 +102,7 @@ public class HideoutManager extends MatchHostManager
         throws InvocationException
     {
         // make sure they're in a gang
-        final PlayerObject user = (PlayerObject)caller;
+        final PlayerObject user = requireShopEnabled(caller);
         verifyInGang(user);
         
         // remove them
@@ -124,13 +123,12 @@ public class HideoutManager extends MatchHostManager
     }
 
     // documentation inherited from interface HideoutProvider
-    public void setStatement (
-        ClientObject caller, String statement, String url,
-        final HideoutService.ConfirmListener listener)
+    public void setStatement (ClientObject caller, String statement, String url,
+                              final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure they're the leader of a gang
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
         verifyIsLeader(user);
         
         // make sure the entries are valid
@@ -149,13 +147,12 @@ public class HideoutManager extends MatchHostManager
     }
     
     // documentation inherited from interface HideoutProvider
-    public void addToCoffers (
-        ClientObject caller, final int scrip, final int coins,
-        final HideoutService.ConfirmListener listener)
+    public void addToCoffers (ClientObject caller, final int scrip, final int coins,
+                              final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure they're in a gang
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
         verifyInGang(user);
         
         // make sure they can donate; we return a user-friendly message if not, even though they
@@ -176,13 +173,12 @@ public class HideoutManager extends MatchHostManager
     }
     
     // documentation inherited from interface HideoutProvider
-    public void expelMember (
-        ClientObject caller, final Handle handle,
-        final HideoutService.ConfirmListener listener)
+    public void expelMember (ClientObject caller, final Handle handle,
+                             final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure they can change the user's status
-        final PlayerObject user = (PlayerObject)caller;
+        final PlayerObject user = requireShopEnabled(caller);
         GangMemberEntry entry = verifyCanChange(user, handle);
         
         // remove them
@@ -200,13 +196,12 @@ public class HideoutManager extends MatchHostManager
     }
     
     // documentation inherited from interface HideoutProvider
-    public void changeMemberRank (
-        ClientObject caller, Handle handle, byte rank,
-        HideoutService.ConfirmListener listener)
+    public void changeMemberRank (ClientObject caller, Handle handle, byte rank,
+                                  HideoutService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure they can change the user's status
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
         GangMemberEntry entry = verifyCanChange(user, handle);
         
         // make sure it's a valid rank
@@ -222,12 +217,12 @@ public class HideoutManager extends MatchHostManager
     }
     
     // documentation inherited from interface HideoutProvider
-    public void getHistoryEntries (
-        ClientObject caller, int offset, HideoutService.ResultListener listener)
+    public void getHistoryEntries (ClientObject caller, int offset,
+                                   HideoutService.ResultListener listener)
         throws InvocationException
     {
         // make sure they're in a gang
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
         verifyInGang(user);
         
         // make sure the offset is valid
@@ -244,12 +239,12 @@ public class HideoutManager extends MatchHostManager
     }
     
     // documentation inherited from interface HideoutProvider
-    public void getOutfitQuote (
-        ClientObject caller, OutfitArticle[] outfit, HideoutService.ResultListener listener)
+    public void getOutfitQuote (ClientObject caller, OutfitArticle[] outfit,
+                                HideoutService.ResultListener listener)
         throws InvocationException
     {
         // make sure they're the leader of a gang
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
         verifyIsLeader(user);
         
         // pass it on to the gang manager
@@ -257,12 +252,12 @@ public class HideoutManager extends MatchHostManager
     }
     
     // documentation inherited from interface HideoutProvider
-    public void buyOutfits (
-        ClientObject caller, OutfitArticle[] outfit, HideoutService.ResultListener listener)
+    public void buyOutfits (ClientObject caller, OutfitArticle[] outfit,
+                            HideoutService.ResultListener listener)
         throws InvocationException
     {
         // make sure they're the leader of a gang
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
         verifyIsLeader(user);
         
         // pass it on to the gang manager
@@ -338,23 +333,28 @@ public class HideoutManager extends MatchHostManager
             throw new InvocationException(INTERNAL_ERROR);
         }
     }
+
+    @Override // from ShopManager
+    protected String getIdent ()
+    {
+        return "hideout";
+    }
     
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
         return new HideoutObject();
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();
 
         // register our invocation service
         _hobj = (HideoutObject)_plobj;
-        _hobj.setService(
-            (HideoutMarshaller)BangServer.invmgr.registerDispatcher(
-                new HideoutDispatcher(this), false));
+        _hobj.setService((HideoutMarshaller)
+                         BangServer.invmgr.registerDispatcher(new HideoutDispatcher(this), false));
     
         // load up the gangs for the directory
         BangServer.gangmgr.loadGangs(new ResultListener<ArrayList<GangEntry>>() {
@@ -375,7 +375,7 @@ public class HideoutManager extends MatchHostManager
         _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didShutdown ()
     {
         super.didShutdown();

@@ -9,11 +9,11 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.server.ShopManager;
 
 import com.threerings.bang.store.client.StoreService;
 import com.threerings.bang.store.data.Good;
@@ -25,7 +25,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Handles the server-side operation of the General Store.
  */
-public class StoreManager extends PlaceManager
+public class StoreManager extends ShopManager
     implements StoreProvider
 {
     // documentation inherited from interface StoreProvider
@@ -33,7 +33,7 @@ public class StoreManager extends PlaceManager
                          StoreService.ConfirmListener cl)
         throws InvocationException
     {
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
 
         // make sure we sell the good in question
         Good good = _stobj.goods.get(type);
@@ -61,20 +61,19 @@ public class StoreManager extends PlaceManager
         provider.start();
     }
 
-    @Override // documentation inherited
+    @Override // from ShopManager
+    protected String getIdent ()
+    {
+        return "store";
+    }
+
+    @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
         return new StoreObject();
     }
 
-    @Override // documentation inherited
-    protected long idleUnloadPeriod ()
-    {
-        // we don't want to unload
-        return 0L;
-    }
-
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didInit ()
     {
         super.didInit();
@@ -83,7 +82,7 @@ public class StoreManager extends PlaceManager
         _goods = new GoodsCatalog(BangServer.alogic);
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();

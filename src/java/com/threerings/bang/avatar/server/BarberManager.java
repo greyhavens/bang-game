@@ -21,7 +21,6 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.cast.CharacterComponent;
 import com.threerings.cast.NoSuchComponentException;
@@ -31,6 +30,7 @@ import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.ShopManager;
 import com.threerings.bang.server.persist.FinancialAction;
 import com.threerings.bang.util.NameFactory;
 
@@ -50,7 +50,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Provides Barber-related services.
  */
-public class BarberManager extends PlaceManager
+public class BarberManager extends ShopManager
     implements BarberCodes, BarberProvider, AvatarProvider
 {
     /**
@@ -127,7 +127,7 @@ public class BarberManager extends PlaceManager
                               BarberService.ConfirmListener cl)
         throws InvocationException
     {
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
 
         if (StringUtil.isBlank(config.name) ||
             config.name.length() > BarberCodes.MAX_LOOK_NAME_LENGTH) {
@@ -217,11 +217,10 @@ public class BarberManager extends PlaceManager
     }
 
     // from interface BarberProvider
-    public void changeHandle (
-        ClientObject caller, Handle handle, BarberService.ConfirmListener cl)
+    public void changeHandle (ClientObject caller, Handle handle, BarberService.ConfirmListener cl)
         throws InvocationException
     {
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
 
         // make sure it's actually different
         if (user.handle.equals(handle)) {
@@ -236,12 +235,12 @@ public class BarberManager extends PlaceManager
     }
 
     // from interface AvatarProvider
-    public void createAvatar (
-        ClientObject caller, final Handle handle, boolean isMale,
-        LookConfig config, int zations, final AvatarService.ConfirmListener cl)
+    public void createAvatar (ClientObject caller, final Handle handle, boolean isMale,
+                              LookConfig config, int zations,
+                              final AvatarService.ConfirmListener cl)
         throws InvocationException
     {
-        final PlayerObject user = (PlayerObject)caller;
+        final PlayerObject user = requireShopEnabled(caller);
 
         // sanity check
         if (user.handle != null && !user.handle.isBlank() &&
@@ -279,17 +278,16 @@ public class BarberManager extends PlaceManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // create their default clothing article, we'll fill in its item id
-        // after we've inserted the article into the database
+        // create their default clothing article, we'll fill in its item id after we've inserted
+        // the article into the database
         look.articles = new int[AvatarLogic.SLOTS.length];
-        final Article article = BangServer.alogic.createDefaultClothing(
-            user, isMale, zations);
+        final Article article = BangServer.alogic.createDefaultClothing(user, isMale, zations);
 
-        // the client should prevent selection of non-starter components, but
-        // we check on the server because we can't trust those bastards
+        // the client should prevent selection of non-starter components, but we check on the
+        // server because we can't trust those bastards
         int maxScrip = AvatarCodes.BASE_LOOK_SCRIP_COST;
-        // allow up to the MAX_STARTER_COST for each aspect; this isn't
-        // precisely correct, but it doesn't leave too much room for hackery
+        // allow up to the MAX_STARTER_COST for each aspect; this isn't precisely correct, but it
+        // doesn't leave too much room for hackery
         maxScrip += AvatarCodes.MAX_STARTER_COST * config.aspects.length;
         if (cost[0] > maxScrip || cost[1] > AvatarCodes.BASE_LOOK_COIN_COST) {
             log.warning("Tried to create avatar with a non-zero cost look " +
@@ -365,20 +363,19 @@ public class BarberManager extends PlaceManager
         user.setPosesAt(name, pose.ordinal());
     }
 
-    @Override // documentation inherited
+    @Override // from ShopManager
+    protected String getIdent ()
+    {
+        return "barber";
+    }
+
+    @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
         return new BarberObject();
     }
 
-    @Override // documentation inherited
-    protected long idleUnloadPeriod ()
-    {
-        // we don't want to unload
-        return 0L;
-    }
-
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didInit ()
     {
         super.didInit();
@@ -387,7 +384,7 @@ public class BarberManager extends PlaceManager
         BangServer.invmgr.registerDispatcher(new AvatarDispatcher(this), true);
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();

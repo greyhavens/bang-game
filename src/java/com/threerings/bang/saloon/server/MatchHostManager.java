@@ -20,6 +20,7 @@ import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.ShopManager;
 
 import com.threerings.bang.game.data.BangConfig;
 
@@ -34,7 +35,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Base manager for places that host matched games.
  */
-public abstract class MatchHostManager extends PlaceManager
+public abstract class MatchHostManager extends ShopManager
     implements SaloonCodes
 {
     /**
@@ -99,13 +100,6 @@ public abstract class MatchHostManager extends PlaceManager
             clearPlayerFromMatch(match, caller.getOid());
             checkReadiness(match);
         }
-    }
-
-    @Override // documentation inherited
-    protected long idleUnloadPeriod ()
-    {
-        // we don't want to unload
-        return 0L;
     }
 
     @Override // documentation inherited

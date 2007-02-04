@@ -266,7 +266,7 @@ public class GangObject extends DObject
         AvatarInfo ovalue = this.avatar;
         requestAttributeChange(
             AVATAR, value, ovalue);
-        this.avatar = (value == null) ? null : (AvatarInfo)value.clone();
+        this.avatar = value;
     }
 
     /**

@@ -175,6 +175,14 @@ public class TownView extends BWindow
         _active = active;
     }
 
+    /**
+     * If we fail to enter a shop, we need to reset our camera viewpoint.
+     */
+    public void resetViewpoint ()
+    {
+        _bview.moveToViewpoint("main", 1f);
+    }
+
     // from interface MainView
     public boolean allowsPopup (Type type)
     {

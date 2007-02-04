@@ -14,12 +14,12 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.server.PlaceManager;
 
-import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.ShopManager;
 import com.threerings.bang.server.persist.FinancialAction;
 
 import com.threerings.bang.ranch.client.RanchService;
@@ -32,7 +32,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Provides ranch-related services.
  */
-public class RanchManager extends PlaceManager
+public class RanchManager extends ShopManager
     implements RanchCodes, RanchProvider
 {
     // documentation inherited from interface RanchProvider
@@ -40,7 +40,7 @@ public class RanchManager extends PlaceManager
                                 RanchService.ResultListener listener)
         throws InvocationException
     {
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
         UnitConfig config = UnitConfig.getConfig(type, false);
         if (config == null) {
             log.warning("Requested to recruit bogus unit [who=" + user.who() +
@@ -70,20 +70,19 @@ public class RanchManager extends PlaceManager
         new RecruitBigShotAction(user, config, unit, listener).start();
     }
 
-    @Override // documentation inherited
+    @Override // from ShopManager
+    protected String getIdent ()
+    {
+        return "ranch";
+    }
+
+    @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
         return new RanchObject();
     }
 
-    @Override // documentation inherited
-    protected long idleUnloadPeriod ()
-    {
-        // we don't want to unload
-        return 0L;
-    }
-
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didInit ()
     {
         super.didInit();
@@ -91,7 +90,7 @@ public class RanchManager extends PlaceManager
         // TODO: anything?
     }
 
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();

@@ -8,15 +8,16 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.ResultAdapter;
 
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.coin.data.CoinExOfferInfo;
 import com.threerings.coin.server.CoinExOffer;
 
+import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.data.ConsolidatedOffer;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangCoinExchangeManager;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.ShopManager;
 
 import com.threerings.bang.bank.client.BankService;
 import com.threerings.bang.bank.data.BankCodes;
@@ -28,14 +29,14 @@ import static com.threerings.bang.Log.log;
 /**
  * Handles the server-side operation of the Bank.
  */
-public class BankManager extends PlaceManager
+public class BankManager extends ShopManager
     implements BankProvider, BankCodes, BangCoinExchangeManager.OfferPublisher
 {
     // documentation inherited from interface BankProvider
     public void getMyOffers (ClientObject caller, BankService.OfferListener ol)
         throws InvocationException
     {
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
         CoinExOfferInfo[][] offers = BangServer.coinexmgr.getPlayerOffers(user);
         ol.gotOffers(offers[0], offers[1]);
     }
@@ -45,7 +46,7 @@ public class BankManager extends PlaceManager
                            boolean immediate, BankService.ResultListener listener)
         throws InvocationException
     {
-        PlayerObject player = (PlayerObject)caller;
+        PlayerObject player = requireShopEnabled(caller);
         CoinExOffer offer = new CoinExOffer();
         offer.accountName = player.username.toString();
         offer.gameName = offer.accountName;
@@ -60,7 +61,7 @@ public class BankManager extends PlaceManager
     public void cancelOffer (ClientObject caller, int offerId, BankService.ConfirmListener cl)
         throws InvocationException
     {
-        PlayerObject player = (PlayerObject)caller;
+        PlayerObject player = requireShopEnabled(caller);
         if (BangServer.coinexmgr.cancelOffer(player.username.toString(), offerId)) {
             cl.requestProcessed();
         } else {
@@ -82,28 +83,27 @@ public class BankManager extends PlaceManager
         }
     }
 
-    @Override // documentation inherited
+    @Override // from ShopManager
+    protected String getIdent ()
+    {
+        return "bank";
+    }
+
+    @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
         return new BankObject();
     }
 
-    @Override // documentation inherited
-    protected long idleUnloadPeriod ()
-    {
-        // we don't want to unload
-        return 0L;
-    }
-
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();
 
         // register our invocation service
         _bankobj = (BankObject)_plobj;
-        _bankobj.setService((BankMarshaller)
-                            BangServer.invmgr.registerDispatcher(new BankDispatcher(this), false));
+        _bankobj.setService(
+            (BankMarshaller)BangServer.invmgr.registerDispatcher(new BankDispatcher(this), false));
 
         // register with the coin exchange manager
         BangServer.coinexmgr.registerPublisher(this);

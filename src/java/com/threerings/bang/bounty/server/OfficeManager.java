@@ -18,13 +18,13 @@ import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ServerConfig;
+import com.threerings.bang.server.ShopManager;
 import com.threerings.bang.server.persist.BoardRecord;
 
 import com.threerings.bang.game.data.BangAI;
@@ -44,7 +44,7 @@ import static com.threerings.bang.Log.log;
 /**
  * Handles the server side of the Sheriff's Office.
  */
-public class OfficeManager extends PlaceManager
+public class OfficeManager extends ShopManager
     implements OfficeCodes, OfficeProvider
 {
     /**
@@ -55,7 +55,7 @@ public class OfficeManager extends PlaceManager
                                 final OfficeService.InvocationListener listener)
         throws InvocationException
     {
-        final PlayerObject player = (PlayerObject)caller;
+        final PlayerObject player = requireShopEnabled(caller);
 
         final BountyConfig config = BountyConfig.getBounty(bountyId);
         if (config == null) {
@@ -130,7 +130,7 @@ public class OfficeManager extends PlaceManager
                                 OfficeService.InvocationListener listener)
         throws InvocationException
     {
-        PlayerObject player = (PlayerObject)caller;
+        PlayerObject player = requireShopEnabled(caller);
         if (!player.tokens.isSupport()) {
             throw new InvocationException(ACCESS_DENIED);
         }
@@ -183,17 +183,16 @@ public class OfficeManager extends PlaceManager
         }
     }
 
+    @Override // from ShopManager
+    protected String getIdent ()
+    {
+        return "office";
+    }
+
     @Override // documentation inherited
     protected PlaceObject createPlaceObject ()
     {
         return new OfficeObject();
-    }
-
-    @Override // documentation inherited
-    protected long idleUnloadPeriod ()
-    {
-        // we don't want to unload
-        return 0L;
     }
 
     @Override // documentation inherited

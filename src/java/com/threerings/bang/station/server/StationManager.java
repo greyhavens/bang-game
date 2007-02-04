@@ -11,7 +11,6 @@ import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 
 import com.threerings.crowd.data.PlaceObject;
-import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
@@ -19,6 +18,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.ShopManager;
 import com.threerings.bang.server.persist.FinancialAction;
 
 import com.threerings.bang.station.client.StationService;
@@ -31,14 +31,14 @@ import static com.threerings.bang.Log.log;
 /**
  * Implements the server-side of the Train Station services.
  */
-public class StationManager extends PlaceManager
+public class StationManager extends ShopManager
     implements StationCodes, StationProvider
 {
     // documentation inherited from interface StationProvider
     public void buyTicket (ClientObject caller, StationService.ConfirmListener listener)
         throws InvocationException
     {
-        PlayerObject user = (PlayerObject)caller;
+        PlayerObject user = requireShopEnabled(caller);
 
         // determine the town to which this player will be traveling
         int ticketTownIdx = -1;
@@ -69,20 +69,19 @@ public class StationManager extends PlaceManager
         new BuyTicketAction(user, ticket, listener).start();
     }
 
-    @Override // documentation inherited
+    @Override // from ShopManager
+    protected String getIdent ()
+    {
+        return "station";
+    }
+
+    @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
         return new StationObject();
     }
 
-    @Override // documentation inherited
-    protected long idleUnloadPeriod ()
-    {
-        // we don't want to unload
-        return 0L;
-    }
-
-    @Override // documentation inherited
+    @Override // from PlaceManager
     protected void didStartup ()
     {
         super.didStartup();

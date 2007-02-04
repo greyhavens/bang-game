@@ -772,7 +772,7 @@ public class BangClient extends BasicClient
 
         // listen to location changes so we know where we're coming from
         BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
-        _ctx.getLocationDirector().addLocationObserver(_priorLocationObserver);
+        _ctx.getLocationDirector().addLocationObserver(_locationObserver);
         _priorLocationIdent = "saloon";
         _priorLocationOid = bbd.saloonOid;
 
@@ -840,7 +840,7 @@ public class BangClient extends BasicClient
         }
 
         // clear our location observer
-        _ctx.getLocationDirector().removeLocationObserver(_priorLocationObserver);
+        _ctx.getLocationDirector().removeLocationObserver(_locationObserver);
 
         if (_logOffMsg != null) {
             showLogOffMessage(_logOffMsg);
@@ -1227,8 +1227,8 @@ public class BangClient extends BasicClient
         }
     }
 
-    protected LocationAdapter _priorLocationObserver =
-        new LocationAdapter() {
+    /** Handles some location change related bits. */
+    protected LocationAdapter _locationObserver = new LocationAdapter() {
         public void locationDidChange (PlaceObject place) {
             if (place instanceof SaloonObject) {
                 _priorLocationIdent = "saloon";
@@ -1255,11 +1255,19 @@ public class BangClient extends BasicClient
         }
 
         public void locationChangeFailed (int placeId, String reason) {
-            // if we fail to move to our prior location since it no longer exists, it was
-            // likely a back parlor which got destroyed, so just head back to the saloon
             if (placeId == _priorLocationOid && "m.no_such_place".equals(reason)) {
+                // if we fail to move to our prior location since it no longer exists, it was
+                // likely a back parlor which got destroyed, so just head back to the saloon
                 _ctx.getLocationDirector().moveTo(
                     ((BangBootstrapData)_ctx.getClient().getBootstrapData()).saloonOid);
+
+            } else {
+                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, reason);
+                if (_mview instanceof TownView) {
+                    ((TownView)_mview).resetViewpoint();
+                } else {
+                    showTownView();
+                }
             }
         }
     };
