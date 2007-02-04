@@ -562,6 +562,11 @@
   <target name="applet" depends="prepare">
     <property file="${cert_dir}/certificate.properties"/>
 
+    <!-- sanity check to avoid confusion if someone tries to call this directly -->
+    <fail message="client_dir property must be specified: ant -Dclient_dir=devclient applet">
+      <condition><not><isset property="${client_dir}"/></not></condition>
+    </fail>
+
     <!-- copy the applet jar file into place and sign it -->
     <copy file="projects/tools/lib/java/getdown-retro-pro.jar" todir="${web_dir}/client/"/>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
