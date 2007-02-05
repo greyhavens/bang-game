@@ -1,6 +1,6 @@
 <?xml version="1.0" standalone="yes"?>
 
-<tutorial ident="boom_units" board="Oak Creek Ranch" players="2">
+<tutorial ident="boom_units" board="Oak Creek Ranch 2" players="2">
 
   <!-- add the test units -->
   <add_piece what="unit" id="1000" type="boom_town/forklift" location="16,16" owner="0"/>
