@@ -676,6 +676,9 @@
         <include name="rsrc/**/*.dat"/>
         <exclude name="**/model.properties"/>
       </fileset>
+      <fileset dir="${deploy.dir}/classes">
+        <include name="ehcache.xml"/>
+      </fileset>
     </jar>
   </target>
 
