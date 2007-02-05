@@ -73,7 +73,7 @@ public class DeploymentConfig
      */
     public static URL getDocBaseURL ()
     {
-        return getURL("doc_base_url");
+        return getURL("doc_base_url", null);
     }
 
     /**
@@ -81,15 +81,15 @@ public class DeploymentConfig
      */
     public static URL getBugSubmitURL ()
     {
-        return getURL("bug_submit_url");
+        return getURL("bug_submit_url", null);
     }
 
     /**
      * Returns the URL to send players to create a new account.
      */
-    public static URL getNewAccountURL ()
+    public static URL getNewAccountURL (String suffix)
     {
-        return getURL("new_account_url");
+        return getURL("new_account_url", suffix);
     }
 
     /**
@@ -97,7 +97,7 @@ public class DeploymentConfig
      */
     public static URL getServerStatusURL ()
     {
-        return getURL("server_status_url");
+        return getURL("server_status_url", null);
     }
 
     /**
@@ -109,10 +109,14 @@ public class DeploymentConfig
     }
 
     /** Helper function for getting URL properties. */
-    protected static URL getURL (String key)
+    protected static URL getURL (String key, String args)
     {
         String url = config.getValue(key, "not_specified");
+        String sep = (url.indexOf("?") == -1) ? "?" : "&";
         try {
+            if (args != null) {
+                url = url + sep + args;
+            }
             return new URL(url);
         } catch (Exception e) {
             log.log(Level.WARNING, "Failed to parse " + key + ": " + url, e);

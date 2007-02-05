@@ -3,15 +3,21 @@
 
 package com.threerings.bang.client;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -249,6 +255,42 @@ public class BangClient extends BasicClient
         SendReportUtil.submitReportAsync(
             submitURL, report, files, ctx.getClient().getRunQueue(), rl);
         ctx.getChatDirector().displayFeedback(BANG_MSGS, "m.bug_submit_started");
+    }
+
+    /**
+     * Attempts to locate and read the file created by our installer which contains the name of the
+     * installer (or an affiliate identifier) which contains any affiliate information that we
+     * might need.
+     */
+    public static String getAffiliateFromInstallFile ()
+    {
+        // look for the handy dandy file created by the installer
+        File insfile = new File(localDataDir("installer.txt"));
+        if (!insfile.exists()) {
+            return null;
+        }
+
+        try {
+            BufferedReader bin = new BufferedReader(
+                new InputStreamReader(new FileInputStream(insfile)));
+            String name = bin.readLine();
+            if (StringUtil.isBlank(name)) {
+                return null;
+            }
+
+            // check for an new-style string with site id and tag id
+            Matcher m = Pattern.compile("bang-(.*)-install").matcher(name);
+            if (m.find()) {
+                return m.group(1);
+            }
+
+            // otherwise return the whole thing
+            return name;
+
+        } catch (Exception e) {
+            // not readable, no problem
+        }
+        return null;
     }
 
     /**

@@ -208,7 +208,7 @@ public class PlayerPopupMenu extends BPopupMenu
             };
             try {
                 // the handle seems to get magically URL encoded; so we don't have to
-                URL url = new URL(DeploymentConfig.getNewAccountURL(),
+                URL url = new URL(DeploymentConfig.getNewAccountURL(null),
                                   "/office/player.xhtml?handle=" + _handle.toString());
                 BrowserUtil.browseURL(url, listener);
             } catch (Exception e) {

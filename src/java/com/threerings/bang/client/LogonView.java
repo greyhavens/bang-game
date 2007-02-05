@@ -210,7 +210,9 @@ public class LogonView extends BWindow
             _status.setStatus(_msgs.get("m.server_status_launched"), false);
 
         } else if ("new_account".equals(event.getAction())) {
-            BrowserUtil.browseURL(_shownURL = DeploymentConfig.getNewAccountURL(), _browlist);
+            String affsuf = BangClient.getAffiliateFromInstallFile();
+            affsuf = (affsuf == null) ? null : ("affiliate=" + affsuf);
+            BrowserUtil.browseURL(_shownURL = DeploymentConfig.getNewAccountURL(affsuf), _browlist);
             _status.setStatus(_msgs.get("m.new_account_launched"), false);
 
         } else if ("exit".equals(event.getAction())) {
