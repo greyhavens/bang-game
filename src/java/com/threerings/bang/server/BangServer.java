@@ -18,6 +18,8 @@ import com.samskivert.util.LoggingLogProvider;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.Tuple;
 
+import net.sf.ehcache.CacheManager;
+
 import com.threerings.admin.server.AdminProvider;
 import com.threerings.admin.server.ConfigRegistry;
 import com.threerings.admin.server.DatabaseConfigRegistry;
@@ -298,6 +300,9 @@ public class BangServer extends CrowdServer
 
         // shut down the rating manager
         ratingmgr.shutdown();
+
+        // shutdown the ehcache manager
+        CacheManager.getInstance().shutdown();
 
         // close our audit logs
         _glog.close();
