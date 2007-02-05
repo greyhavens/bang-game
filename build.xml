@@ -12,6 +12,8 @@
   <!-- define our subprojects and include the standard build system -->
   <property name="projects" value="samskivert,jme-bui,narya,nenya,vilya,threerings"/>
   <property name="webapps" value="office"/>
+  <!-- jetty needs to import server.conf, not bang.conf which is the default -->
+  <property name="jetty.app.conf" value="server.conf"/>
   <import file="projects/tools/etc/build-support.xml"/>
 
   <!-- declare the properties files. -->
