@@ -59,15 +59,6 @@ case "$1" in
             fi
         fi
 
-        # Make sure someone running things as root didn't booch the permissions
-        # on the bundles
-        BFILE=$BANG_HOME/run/booched.txt
-        find $BANG_HOME/rsrc -user root > $BFILE
-        if [ -s "$BFILE" ]; then
-            cat $BFILE | xargs chown -R $BANG_USER
-        fi
-        rm $BFILE
-
         # Let's blow that file descriptor limit wide open baby!
         ulimit -n 4096
         # Bump our maximum data segment size to 1.5 gigs
