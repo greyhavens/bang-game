@@ -230,9 +230,6 @@ public class BangPeerManager extends CrowdPeerManager
         public void objectAvailable (NodeObject object) {
             super.objectAvailable(object);
 
-            // add ourselves as a listener to hear future DSet events
-            object.addListener(this);
-
             // look up this node's town index once and store it
             townIndex = BangUtil.getTownIndex(((BangNodeObject)object).townId);
             log.info("Got peer object " + townIndex);

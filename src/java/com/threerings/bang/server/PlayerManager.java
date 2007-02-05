@@ -614,7 +614,9 @@ public class PlayerManager
             }
             public void handleSuccess() {
                 cl.requestProcessed();
-                BangServer.peermgr.broadcastStaleCacheData(POSTER_CACHE, user.handle);
+                if (BangServer.peermgr != null) {
+                    BangServer.peermgr.broadcastStaleCacheData(POSTER_CACHE, user.handle);
+                }
             }
             public String getFailureMessage() {
                 return "Failed to store wanted poster record [poster = " + poster + "]";
