@@ -357,7 +357,7 @@
         <include name="aspects.html"/>
         <include name="boards.html"/>
         <include name="units.html"/>
-        <include name="client/getdown-pro.jar"/>
+        <include name="client/getdown-retro-pro.jar"/>
       </fileset>
     </delete>
 
