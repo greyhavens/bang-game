@@ -11,12 +11,16 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
 import java.util.logging.Level;
 
 import com.samskivert.util.Config;
 import com.samskivert.util.RunQueue;
+import com.samskivert.swing.GroupLayout;
 
 import com.threerings.util.Name;
 
@@ -47,8 +51,10 @@ public class EditorClient extends BasicClient
         _ctx = new EditorContextImpl();
         _frame = frame;
         _frame.setJMenuBar(new JMenuBar());
-        _frame.getContentPane().add(
-            _status = new JLabel(" "), BorderLayout.SOUTH);
+        JPanel statusPanel = GroupLayout.makeHBox(GroupLayout.STRETCH);
+        statusPanel.add(_status = new JLabel(" "));
+        statusPanel.add(_coords = new JLabel("x:  , y:  "), GroupLayout.FIXED);
+        _frame.getContentPane().add(statusPanel, BorderLayout.SOUTH);
 
         // we can't use lightweight popups because our OpenGL display is a
         // heavyweight component
@@ -200,6 +206,10 @@ public class EditorClient extends BasicClient
                     _status.getHeight());
             }
         }
+
+        public void displayCoords (int x, int y) {
+            _coords.setText("x:" + x + ", y:" + y);
+        }
         
         public JFrame getFrame () {
             return _frame;
@@ -211,4 +221,5 @@ public class EditorClient extends BasicClient
 
     protected JFrame _frame;
     protected JLabel _status;
+    protected JLabel _coords;
 }

@@ -1093,6 +1093,7 @@ public class EditorBoardView extends BoardView
     {
         super.hoverTileChanged(tx, ty);
         _panel.tools.getActiveTool().hoverTileChanged(tx, ty);
+        ((EditorContext)_ctx).displayCoords(tx, ty);
     }
 
     @Override // documentation inherited
