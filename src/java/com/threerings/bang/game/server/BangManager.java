@@ -2023,7 +2023,7 @@ public class BangManager extends GameManager
                 // resigned players will have their points set to 0 (this will not affect their
                 // per round points which is used for various stat calculations later on).
                 if (!active[ii]) {
-                    _bangobj.setPointsAt(ii, 0);
+                    _bangobj.setPointsAt(0, ii);
                     SpeakProvider.sendAttention(_bangobj, GAME_MSGS, MessageBundle.tcompose(
                                 "m.resign_points", _bangobj.players[ii].toString()));
                 }
