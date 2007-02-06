@@ -19,6 +19,7 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
+import com.threerings.bang.data.BangNodeObject;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
@@ -77,26 +78,53 @@ public class HideoutManager extends MatchHostManager
         }
         
         // form the name and start up the financial action
-        BangServer.gangmgr.formGang(user, name,
-            new ResultListener<GangEntry>() {
-                public void requestCompleted (GangEntry result) {
-                    _hobj.addToGangs(result);
-                    listener.requestProcessed();
-                }
-                public void requestFailed (Exception cause) {
-                    String msg;
-                    if (cause instanceof InvocationException) {
-                        msg = ((InvocationException)cause).getMessage();
-                    } else {
-                        log.warning("Failed to create new gang [who=" + user.who() + ", error=" +
-                            cause + "].");
-                        msg = INTERNAL_ERROR;
-                    }
-                    listener.requestFailed(msg);
-                }
-            });
+        BangServer.gangmgr.formGang(user, name, listener);
     }
 
+    /**
+     * Adds an entry to the Hideout's list of gangs and broadcasts the addition to the server's
+     * peers (if any).
+     */
+    public void addGang (GangEntry entry)
+    {
+        addGangLocal(entry);
+        if (BangServer.peermgr != null) {
+            ((BangNodeObject)BangServer.peermgr.getNodeObject()).setAddedGang(entry);
+        }
+    }
+    
+    /**
+     * Removes an entry from the Hideout's list of gangs and broadcasts the removal to the server's
+     * peers (if any).
+     */
+    public void removeGang (Handle name)
+    {
+        removeGangLocal(name);
+        if (BangServer.peermgr != null) {
+            ((BangNodeObject)BangServer.peermgr.getNodeObject()).setRemovedGang(name);
+        }
+    }
+    
+    /**
+     * Adds an entry to the Hideout's list of gangs on this server only.
+     */
+    public void addGangLocal (GangEntry entry)
+    {
+        if (_hobj != null) {
+            _hobj.addToGangs(entry);
+        }
+    }
+    
+    /**
+     * Removes an entry from the Hideout's list on this server only.
+     */
+    public void removeGangLocal (Handle name)
+    {
+        if (_hobj != null) {
+            _hobj.removeFromGangs(name);
+        }
+    }
+    
     // documentation inherited from interface HideoutProvider
     public void leaveGang (ClientObject caller, final HideoutService.ConfirmListener listener)
         throws InvocationException
@@ -107,19 +135,7 @@ public class HideoutManager extends MatchHostManager
         
         // remove them
         BangServer.gangmgr.removeFromGang(
-            user.gangId, user.playerId, user.handle, null, new ResultListener<Handle>() {
-                public void requestCompleted (Handle deletion) {
-                    if (deletion != null) {
-                        _hobj.removeFromGangs(deletion);
-                    }
-                    listener.requestProcessed();
-                }
-                public void requestFailed (Exception cause) {
-                    log.warning("Failed to leave gang [who=" + user.who() + ", error=" +
-                        cause + "].");
-                    listener.requestFailed(INTERNAL_ERROR);
-                }
-            });
+            user.gangId, user.playerId, user.handle, null, listener);
     }
 
     // documentation inherited from interface HideoutProvider
@@ -183,16 +199,7 @@ public class HideoutManager extends MatchHostManager
         
         // remove them
         BangServer.gangmgr.removeFromGang(
-            user.gangId, entry.playerId, handle, user.handle, new ResultListener<Handle>() {
-                public void requestCompleted (Handle deletion) {
-                    listener.requestProcessed();
-                }
-                public void requestFailed (Exception cause) {
-                    log.warning("Failed to expel member from gang [who=" + user.who() +
-                        ", target=" + handle + ", error=" + cause + "].");
-                    listener.requestFailed(INTERNAL_ERROR);
-                }
-            });
+            user.gangId, entry.playerId, handle, user.handle, listener);
     }
     
     // documentation inherited from interface HideoutProvider

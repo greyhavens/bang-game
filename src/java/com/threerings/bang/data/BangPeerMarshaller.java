@@ -4,6 +4,7 @@
 package com.threerings.bang.data;
 
 import com.threerings.bang.client.BangPeerService;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -19,14 +20,36 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class BangPeerMarshaller extends InvocationMarshaller
     implements BangPeerService
 {
+    /** The method id used to dispatch {@link #deliverGangInvite} requests. */
+    public static final int DELIVER_GANG_INVITE = 1;
+
+    // from interface BangPeerService
+    public void deliverGangInvite (Client arg1, Handle arg2, Handle arg3, int arg4, Handle arg5, String arg6)
+    {
+        sendRequest(arg1, DELIVER_GANG_INVITE, new Object[] {
+            arg2, arg3, Integer.valueOf(arg4), arg5, arg6
+        });
+    }
+
     /** The method id used to dispatch {@link #deliverItem} requests. */
-    public static final int DELIVER_ITEM = 1;
+    public static final int DELIVER_ITEM = 2;
 
     // from interface BangPeerService
     public void deliverItem (Client arg1, Item arg2, String arg3)
     {
         sendRequest(arg1, DELIVER_ITEM, new Object[] {
             arg2, arg3
+        });
+    }
+
+    /** The method id used to dispatch {@link #deliverPardnerInvite} requests. */
+    public static final int DELIVER_PARDNER_INVITE = 3;
+
+    // from interface BangPeerService
+    public void deliverPardnerInvite (Client arg1, Handle arg2, Handle arg3, String arg4)
+    {
+        sendRequest(arg1, DELIVER_PARDNER_INVITE, new Object[] {
+            arg2, arg3, arg4
         });
     }
 }

@@ -184,7 +184,7 @@ public class PlayerManager
             if (record.isActive()) {
                 pardners.add(getPardnerEntry(record.handle, record.lastSession));
             } else {
-                sendPardnerInvite(player, record.handle, record.message, record.lastSession);
+                sendPardnerInviteLocal(player, record.handle, record.message, record.lastSession);
             }
         }
 
@@ -315,10 +315,7 @@ public class PlayerManager
                     listener.requestFailed(_error);
                     return;
                 }
-                PlayerObject invitee = BangServer.lookupPlayer(handle);
-                if (invitee != null) {
-                    sendPardnerInvite(invitee, inviter.handle, message, new Date());
-                }
+                sendPardnerInvite(handle, inviter.handle, message);
                 listener.requestProcessed();
             }
             public String getFailureMessage () {
@@ -830,6 +827,34 @@ public class PlayerManager
     }
     
     /**
+     * Sends a pardner invite to the specified player if he is online (on any server).
+     */
+    public void sendPardnerInvite (Handle invitee, Handle inviter, String message)
+    {
+        PlayerObject user = BangServer.lookupPlayer(invitee);
+        if (user != null) {
+            sendPardnerInviteLocal(user, inviter, message, new Date());
+        } else if (BangServer.peermgr != null) {
+            BangServer.peermgr.forwardPardnerInvite(invitee, inviter, message);
+        }
+    }
+    
+    /**
+     * Sends a pardner invite to the specified player from the named inviter (on this server only).
+     */
+    public void sendPardnerInviteLocal (
+        final PlayerObject user, final Handle inviter, String message, final Date lastSession)
+    {
+        user.addToNotifications(
+            new PardnerInvite(inviter, message, new PardnerInvite.ResponseHandler() {
+            public void handleResponse (int resp, InvocationService.ConfirmListener listener) {
+                handleInviteResponse(
+                    user, inviter, lastSession, (resp == PardnerInvite.ACCEPT), listener);
+            }
+        }));
+    }
+
+    /**
      * Helper function for playing games. Assumes all parameters have been checked for validity.
      */
     protected void playComputer (
@@ -940,21 +965,6 @@ public class PlayerManager
     protected void clearPardnerEntryUpdater (Handle handle)
     {
         _updaters.remove(handle);
-    }
-
-    /**
-     * Sends a pardner invite to the specified player from the named inviter.
-     */
-    protected void sendPardnerInvite (
-        final PlayerObject user, final Handle inviter, String message, final Date lastSession)
-    {
-        user.addToNotifications(
-            new PardnerInvite(inviter, message, new PardnerInvite.ResponseHandler() {
-            public void handleResponse (int resp, InvocationService.ConfirmListener listener) {
-                handleInviteResponse(
-                    user, inviter, lastSession, (resp == PardnerInvite.ACCEPT), listener);
-            }
-        }));
     }
 
     /**

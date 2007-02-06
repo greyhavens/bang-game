@@ -3,6 +3,8 @@
 
 package com.threerings.bang.server;
 
+import java.util.Date;
+
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.HashIntMap;
@@ -11,6 +13,7 @@ import com.samskivert.util.ObserverList;
 import com.samskivert.util.Tuple;
 
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
@@ -24,11 +27,15 @@ import com.threerings.presents.server.PresentsClient;
 import com.threerings.crowd.peer.server.CrowdPeerManager;
 
 import com.threerings.bang.avatar.data.Look;
+
+import com.threerings.bang.gang.data.GangEntry;
+
 import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangNodeObject;
 import com.threerings.bang.data.BangPeerMarshaller;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
+import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangUtil;
 
@@ -102,13 +109,59 @@ public class BangPeerManager extends CrowdPeerManager
     }
 
     /**
+     * Requests to deliver the a pardner invite to a player if he's logged into one of our peer
+     * servers.
+     */
+    public void forwardPardnerInvite (Handle invitee, Handle inviter, String message)
+    {
+        PeerNode peer = getPlayerPeer(invitee);
+        if (peer != null) {
+            ((BangNodeObject)peer.nodeobj).bangPeerService.deliverPardnerInvite(
+                peer.getClient(), invitee, inviter, message);
+        }
+    }
+    
+    // from interface BangPeerProvider
+    public void deliverPardnerInvite (
+        ClientObject caller, Handle invitee, Handle inviter, String message)
+    {
+        PlayerObject user = BangServer.lookupPlayer(invitee);
+        if (user != null) {
+            BangServer.playmgr.sendPardnerInviteLocal(user, inviter, message, new Date());
+        }
+    }
+    
+    /**
+     * Requests to deliver a gang invite to a player if he's logged into one of our peer servers.
+     */
+    public void forwardGangInvite (
+        Handle invitee, Handle inviter, int gangId, Handle name, String message)
+    {
+        PeerNode peer = getPlayerPeer(invitee);
+        if (peer != null) {
+            ((BangNodeObject)peer.nodeobj).bangPeerService.deliverGangInvite(
+                peer.getClient(), invitee, inviter, gangId, name, message);
+        }
+    }
+    
+    // from interface BangPeerProvider
+    public void deliverGangInvite (
+        ClientObject caller, Handle invitee, Handle inviter, int gangId, Handle name,
+        String message)
+    {
+        PlayerObject user = BangServer.lookupPlayer(invitee);
+        if (user != null) {
+            BangServer.gangmgr.sendGangInviteLocal(user, inviter, gangId, name, message);
+        }
+    }
+    
+    /**
      * Requests to deliver the specified item to its owner if he's logged into one of our peer
      * servers.
      *
      * @param source a qualified translatable string describing the source of the item
-     * @return true if the item was successfully delivered, false if the user was not online.
      */
-    public boolean forwardItem (Item item, String source)
+    public void forwardItem (Item item, String source)
     {
         for (PeerNode peer : _peers.values()) {
             if (peer.nodeobj == null) {
@@ -117,10 +170,9 @@ public class BangPeerManager extends CrowdPeerManager
             if (((BangPeerNode)peer).players.containsKey(item.getOwnerId())) {
                 ((BangNodeObject)peer.nodeobj).bangPeerService.deliverItem(
                     peer.getClient(), item, source);
-                return true;
+                return;
             }
         }
-        return false;
     }
 
     // from interface BangPeerProvider
@@ -216,6 +268,19 @@ public class BangPeerManager extends CrowdPeerManager
         });
     }
 
+    /**
+     * Returns the peer node on which the identified user is logged in, if any.
+     */
+    protected PeerNode getPlayerPeer (Handle handle)
+    {
+        for (PeerNode peer : _peers.values()) {
+            if (peer.nodeobj != null && peer.nodeobj.clients.containsKey(handle)) {
+                return peer;
+            }
+        }
+        return null;
+    }
+    
     protected class BangPeerNode extends PeerNode
         implements SetListener
     {
@@ -242,6 +307,20 @@ public class BangPeerManager extends CrowdPeerManager
             }
         }
 
+        @Override // from PeerNode
+        public void attributeChanged (AttributeChangedEvent event)
+        {
+            super.attributeChanged(event);
+            
+            // pass gang directory updates to the HideoutManager
+            String name = event.getName();
+            if (name.equals(BangNodeObject.ADDED_GANG)) {
+                BangServer.hideoutmgr.addGangLocal((GangEntry)event.getValue());
+            } else if (name.equals(BangNodeObject.REMOVED_GANG)) {
+                BangServer.hideoutmgr.removeGangLocal((Handle)event.getValue());
+            }
+        }
+        
         public void entryAdded (EntryAddedEvent event) {
             log.info("Remote entry added " + event);
             if (event.getName().equals(NodeObject.CLIENTS)) {

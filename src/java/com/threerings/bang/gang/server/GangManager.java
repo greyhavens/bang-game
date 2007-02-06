@@ -144,10 +144,7 @@ public class GangManager
                     listener.requestFailed(_error);
                     return;
                 }
-                PlayerObject invitee = BangServer.lookupPlayer(handle);
-                if (invitee != null) {
-                    sendGangInvite(invitee, player.handle, player.gangId, gangobj.name, message);
-                }
+                sendGangInvite(handle, player.handle, player.gangId, gangobj.name, message);
                 listener.requestProcessed();
             }
             protected String _error;
@@ -211,7 +208,8 @@ public class GangManager
         // otherwise dispatch any pending gang invitations
         if (invites != null) {
             for (GangInviteRecord record : invites) {
-                sendGangInvite(player, record.inviter, record.gangId, record.name, record.message);
+                sendGangInviteLocal(player, record.inviter, record.gangId, record.name,
+                    record.message);
             }
         }
     }
@@ -321,7 +319,7 @@ public class GangManager
      * {@link GangEntry} for the gang
      */
     public void formGang (final PlayerObject user, final Handle name,
-                          final ResultListener<GangEntry> listener)
+                          final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
         Look look = user.getLook(Look.Pose.WANTED_POSTER);
@@ -363,15 +361,16 @@ public class GangManager
             protected void actionCompleted () {
                 log.info("Formed new gang [who=" + user.who() + ", name=" + name +
                          ", gangId=" + _grec.gangId + "].");
+                BangServer.hideoutmgr.addGang(new GangEntry(name));
                 if (!user.isActive()) {
                     releaseGang(_grec.gangId);  // he bailed; no point in continuing
                 } else {
                     initPlayer(user, _mrec, null);
-                    listener.requestCompleted(new GangEntry(name));
+                    listener.requestProcessed();
                 }
             }
             protected void actionFailed (String cause) {
-                listener.requestFailed(new InvocationException(cause));
+                listener.requestFailed(cause);
             }
 
             protected GangRecord _grec = new GangRecord(name.toString());
@@ -486,7 +485,7 @@ public class GangManager
      */
     public void removeFromGang (
         final int gangId, final int playerId, final Handle handle,
-        final Handle remover, final ResultListener<Handle> listener)
+        final Handle remover, final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
         final GangObject gangobj = getGangObject(gangId);
@@ -528,7 +527,7 @@ public class GangManager
                                 listener);
                         }
                         public void requestFailed (String cause) {
-                            listener.requestFailed(new InvocationException(cause));
+                            listener.requestFailed(cause);
                         }
                     });
                 return;
@@ -623,6 +622,36 @@ public class GangManager
         processOutfit(user, outfit, listener, true);
     }
     
+    /**
+     * Sends a gang invite to the specified player if he is online (on any server).
+     */
+    public void sendGangInvite (
+        Handle invitee, Handle inviter, int gangId, Handle name, String message)
+    {
+        PlayerObject user = BangServer.lookupPlayer(invitee);
+        if (user != null) {
+            sendGangInviteLocal(user, inviter, gangId, name, message);
+        } else if (BangServer.peermgr != null) {
+            BangServer.peermgr.forwardGangInvite(invitee, inviter, gangId, name, message);
+        }
+    }
+    
+    /**
+     * Sends an invitation to join a gang (on this server only).
+     */
+    public void sendGangInviteLocal (
+        final PlayerObject user, final Handle inviter, final int gangId,
+        final Handle name, String message)
+    {
+        user.addToNotifications(new GangInvite(inviter, name, message,
+            new GangInvite.ResponseHandler() {
+            public void handleResponse (int resp, InvocationService.ConfirmListener listener) {
+                handleInviteResponse(
+                    user, inviter, gangId, name, (resp == GangInvite.ACCEPT), listener);
+            }
+        }));
+    }
+
     // documentation inherited from interface SpeakProvider.SpeakerValidator
     public boolean isValidSpeaker (DObject speakObj, ClientObject speaker, byte mode)
     {
@@ -806,22 +835,6 @@ public class GangManager
     }
     
     /**
-     * Sends an invitation to join a gang.
-     */
-    protected void sendGangInvite (
-        final PlayerObject user, final Handle inviter, final int gangId,
-        final Handle name, String message)
-    {
-        user.addToNotifications(new GangInvite(inviter, name, message,
-            new GangInvite.ResponseHandler() {
-            public void handleResponse (int resp, InvocationService.ConfirmListener listener) {
-                handleInviteResponse(
-                    user, inviter, gangId, name, (resp == GangInvite.ACCEPT), listener);
-            }
-        }));
-    }
-
-    /**
      * Processes the response to a gang invitation.
      */
     protected void handleInviteResponse (
@@ -922,11 +935,10 @@ public class GangManager
     protected void continueRemovingFromGang (
         final int gangId, final Handle gangName, final int playerId, final Handle handle,
         final Handle remover, final int seniorLeaderId, final boolean delete,
-        final ResultListener<Handle> listener)
+        final InvocationService.ConfirmListener listener)
     {
-        BangServer.invoker.postUnit(new RepositoryListenerUnit<Handle>(listener) {
-            public Handle invokePersistResult ()
-                throws PersistenceException {
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent () throws PersistenceException {
                 _gangrepo.deleteMember(playerId);
                 if (delete) {
                     _gangrepo.deleteGang(gangId);
@@ -938,8 +950,8 @@ public class GangManager
                         MessageBundle.tcompose("m.left_entry", handle) :
                         MessageBundle.tcompose("m.expelled_entry", remover, handle));
                 }
-                return (delete ? gangName : null);
             }
+            
             public void handleSuccess () {
                 log.info("Removed member from gang [gangId=" + gangId + ", playerId=" + playerId +
                          ", handle=" + handle + ", delete=" + delete + "].");
@@ -954,7 +966,6 @@ public class GangManager
                         gangobj.setAvatar(_avatar);
                     }
                 }
-                
                 // update gang fields if the user didn't log in after being removed
                 PlayerObject plobj = BangServer.lookupPlayer(handle);
                 if (plobj != null && plobj.gangId > 0) {
@@ -967,7 +978,15 @@ public class GangManager
                     }
                     releaseGang(gangId);
                 }
-                super.handleSuccess();
+                // remove the gang from the hideout's list if deleting
+                if (delete) {
+                    BangServer.hideoutmgr.removeGang(gangName);
+                }
+                listener.requestProcessed();
+            }
+            public String getFailureMessage () {
+                return "Failed to remove member from gang [gangId=" + gangId + ", playerId=" +
+                    playerId + ", handle=" + handle + ", delete=" + delete + "].";
             }
             protected AvatarInfo _avatar;
         });
