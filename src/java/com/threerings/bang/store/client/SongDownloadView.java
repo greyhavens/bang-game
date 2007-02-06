@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashSet;
 import java.util.logging.Level;
 
 import com.jmex.bui.BButton;
@@ -41,6 +42,19 @@ public class SongDownloadView extends BDecoratedWindow
 {
     public static final int PREF_WIDTH = 500;
 
+    /**
+     * Returns true if the specified song is already downloaded in full.
+     */
+    public static boolean songDownloaded (String song)
+    {
+        // avoid going to the filesystem once we know we've downloaded this song
+        if (_downloaded.contains(song) || new File(getSoundtrackDir(), song + ".done").exists()) {
+            _downloaded.add(song);
+            return true;
+        }
+        return false;
+    }
+
     public SongDownloadView (BangContext ctx, String song)
     {
         super(ctx.getStyleSheet(), ctx.xlate(StoreCodes.STORE_MSGS, "m.download_title"));
@@ -61,8 +75,10 @@ public class SongDownloadView extends BDecoratedWindow
         buttons.add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
         add(buttons, GroupLayout.FIXED);
 
-        // TODO: check to see if the music file exists, seems to be the right size, etc. to avoid
-        // pointless redownloading; add "copy to desktop" option in that case
+        // if the song is already downloaded, switch straight to copy mode
+        if (songDownloaded(song)) {
+            setCopyMode();
+        }
     }
 
     // from interface ActionListener
@@ -112,7 +128,7 @@ public class SongDownloadView extends BDecoratedWindow
             _action = "download";
             _copier = new SongDownloader(
                 new URL(DeploymentConfig.getDocBaseURL(), "/downloads/" + ident),
-                new File(getSoundtrackDir(), _song + ".mp3"));
+                _song);
             _copier.start();
 
         } catch (Exception e) {
@@ -129,17 +145,6 @@ public class SongDownloadView extends BDecoratedWindow
         _action = "copy";
         _copier = new DesktopCopier(new File(getSoundtrackDir(), _song + ".mp3"), target);
         _copier.start();
-    }
-
-    protected File getSoundtrackDir ()
-    {
-        File tgtdir = new File(BangClient.localDataDir("soundtrack"));
-        if (!tgtdir.exists()) {
-            if (!tgtdir.mkdir()) {
-                log.warning("Unable to create " + tgtdir + ". Breakage imminent.");
-            }
-        }
-        return tgtdir;
     }
 
     protected void updateProgress (int percent)
@@ -170,14 +175,29 @@ public class SongDownloadView extends BDecoratedWindow
         _actbtn.setText(_msgs.get("m.copy_to_desktop"));
         _actbtn.setAction("copy");
         _actbtn.setEnabled(true);
+
+        // note in our cache that this song has been downloaded
+        _downloaded.add(_song);
+    }
+
+    protected static File getSoundtrackDir ()
+    {
+        File tgtdir = new File(BangClient.localDataDir("soundtrack"));
+        if (!tgtdir.exists()) {
+            if (!tgtdir.mkdir()) {
+                log.warning("Unable to create " + tgtdir + ". Breakage imminent.");
+            }
+        }
+        return tgtdir;
     }
 
     /** Copies data from an input stream to a file. */
     protected abstract class Copier extends Thread
     {
-        protected Copier (File target)
+        protected Copier (File target, File done)
         {
             _target = target;
+            _done = done;
         }
 
         public synchronized void shutdown ()
@@ -215,6 +235,11 @@ public class SongDownloadView extends BDecoratedWindow
                     if (npercent != percent) {
                         reportProgress(percent = npercent);
                     }
+                }
+
+                // create a "done" file if desired
+                if (_done != null) {
+                    _done.createNewFile();
                 }
 
                 // be sure to report completion
@@ -263,14 +288,15 @@ public class SongDownloadView extends BDecoratedWindow
         protected abstract int getInputLength ();
 
         protected boolean _running = true;
-        protected File _target;
+        protected File _target, _done;
     }
 
     /** Handles the downloading of a music track. */
     protected class SongDownloader extends Copier
     {
-        public SongDownloader (URL source, File target) {
-            super(target);
+        public SongDownloader (URL source, String song) {
+            super(new File(getSoundtrackDir(), song + ".mp3"),
+                  new File(getSoundtrackDir(), song + ".done"));
             _source = source;
         }
 
@@ -295,7 +321,7 @@ public class SongDownloadView extends BDecoratedWindow
     protected class DesktopCopier extends Copier
     {
         public DesktopCopier (File source, File target) {
-            super(target);
+            super(target, null);
             _source = source;
         }
 
@@ -322,4 +348,7 @@ public class SongDownloadView extends BDecoratedWindow
 
     protected BLabel _main, _note;
     protected BButton _actbtn;
+
+    /** A cache tracking which songs have been downloaded to avoid repeat lookups. */
+    protected static HashSet<String> _downloaded = new HashSet<String>();
 }

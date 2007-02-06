@@ -96,7 +96,7 @@ public class ItemIcon extends PaletteIcon
             BangUI.copyToClipboard(((Article)_item).getPrint());
             ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, "m.article_print_copied");
 
-        } else if ("download_song".equals(cmd)) {
+        } else if ("download_song".equals(cmd) || "copy_song".equals(cmd)) {
             ctx.getBangClient().displayPopup(
                 new SongDownloadView(ctx, ((Song)_item).getSong()), true,
                 SongDownloadView.PREF_WIDTH);
@@ -134,8 +134,13 @@ public class ItemIcon extends PaletteIcon
         // to put this code)
         if (_item instanceof Article) {
             menu.addMenuItem(createItem("article_print"));
+
         } else if (_item instanceof Song) {
-            menu.addMenuItem(createItem("download_song"));
+            if (SongDownloadView.songDownloaded(((Song)_item).getSong())) {
+                menu.addMenuItem(createItem("copy_song"));
+            } else {
+                menu.addMenuItem(createItem("download_song"));
+            }
         }
 
         // all destroyable items have a "destroy" menu item
