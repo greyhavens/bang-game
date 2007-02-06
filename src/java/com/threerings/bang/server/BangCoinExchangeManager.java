@@ -33,10 +33,9 @@ import static com.threerings.bang.Log.log;
  */
 public class BangCoinExchangeManager extends CoinExchangeManager
 {
-    /** Entities that will publish the coin exchange offers should implement
-     * this interface and register themselves with the coin exchange manager to
-     * be informed when they should reread and updated their list of published
-     * offers. */
+    /** Entities that will publish the coin exchange offers should implement this interface and 
+     * register themselves with the coin exchange manager to be informed when they should reread 
+     * and updated their list of published offers. */
     public interface OfferPublisher
     {
         /**
@@ -46,8 +45,22 @@ public class BangCoinExchangeManager extends CoinExchangeManager
          * @param sells if non-null, the latest consolidated sell offers.
          * @param lastPrice if not -1 the last trade price should be updated.
          */
-        public void updateOffers (ConsolidatedOffer[] buys,
-                                  ConsolidatedOffer[] sells, int lastPrice);
+        public void updateOffers (
+                ConsolidatedOffer[] buys, ConsolidatedOffer[] sells, int lastPrice);
+
+        /**
+         * Called when an coin exchange offer has been modified.
+         *
+         * @param offerId the offerId of the modified coin exchange offer
+         */
+        public void offerModified (int offerId);
+
+        /**
+         * Called when coin exchange offers have been destroyed.
+         *
+         * @param offerIds an int array of destroyed coin exchange offerIds
+         */
+        public void offersDestroyed (int[] offerIds);
     }
 
     /**
@@ -76,9 +89,8 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     {
         _publishers.add(publisher);
 
-        // trigger a full published info update; ideally we'd only inform the
-        // newly registered publisher, but there's only really ever one
-        // publisher anyway, so it's a wash
+        // trigger a full published info update; ideally we'd only inform the newly registered 
+        // publisher, but there's only really ever one publisher anyway, so it's a wash
         updatePublishedInfo(true, true, _lastPrice);
     }
 
@@ -91,9 +103,8 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     }
 
     /**
-     * Returns a two element array containing the outstanding buy and sell
-     * offers (in that order) for the specified player. The returned arrays may
-     * be zero length but will not be null.
+     * Returns a two element array containing the outstanding buy and sell offers (in that order) 
+     * for the specified player. The returned arrays may be zero length but will not be null.
      */
     public CoinExOfferInfo[][] getPlayerOffers (PlayerObject player)
     {
@@ -111,8 +122,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     }
 
     @Override // documentation inherited
-    protected void updatePublishedInfo (
-        boolean buy, boolean sell, int lastPrice)
+    protected void updatePublishedInfo (boolean buy, boolean sell, int lastPrice)
     {
         ConsolidatedOffer[] buys = null;
         if (buy) {
@@ -130,18 +140,36 @@ public class BangCoinExchangeManager extends CoinExchangeManager
     }
 
     @Override // documentation inherited
+    protected void offersDestroyed (List<CoinExOffer> destroyed)
+    {
+        int[] offerIds = new int[destroyed.size()];
+        for (int ii = 0; ii < offerIds.length; ii++) {
+            offerIds[ii] = destroyed.get(ii).offerId;
+        }
+        for (OfferPublisher publisher : _publishers) {
+            publisher.offersDestroyed(offerIds);
+        }
+    }
+
+    @Override // documentation inherited
+    protected void offerModified (CoinExOffer modified)
+    {
+        for (OfferPublisher publisher : _publishers) {
+            publisher.offerModified(modified.offerId);
+        }
+    }
+
+    @Override // documentation inherited
     protected void updateUserCoins (String gameName, String accountName)
     {
-        PlayerObject player =
-            BangServer.lookupByAccountName(new Name(accountName));
+        PlayerObject player = BangServer.lookupByAccountName(new Name(accountName));
         if (player != null) {
             BangServer.coinmgr.updateCoinCount(player);
         }
     }
 
     @Override // documentation inherited
-    protected void distributeCurrency (
-        final CoinExOffer info, final int currency, final String msg)
+    protected void distributeCurrency (final CoinExOffer info, final int currency, final String msg)
     {
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
@@ -149,16 +177,14 @@ public class BangCoinExchangeManager extends CoinExchangeManager
                     BangServer.playrepo.grantScrip(info.accountName, currency);
                     return true;
                 } catch (PersistenceException pe) {
-                    log.log(Level.WARNING, "Failed to grant scrip to player " +
-                            "[offer=" + info + ", amount=" + currency +
-                            ", type=" + msg + "].", pe);
+                    log.log(Level.WARNING, "Failed to grant scrip to player " + "[offer=" + info + 
+                            ", amount=" + currency + ", type=" + msg + "].", pe);
                     return false;
                 }
             }
 
             public void handleResult () {
-                PlayerObject player = BangServer.lookupByAccountName(
-                    new Name(info.accountName));
+                PlayerObject player = BangServer.lookupByAccountName(new Name(info.accountName));
                 if (player != null) {
                     player.setScrip(player.scrip + currency);
                 }
@@ -173,8 +199,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         // make sure they have the necessary currency to begin with
         final PlayerObject player = (PlayerObject)user;
         if (player.scrip < cost) {
-            listener.requestFailed(new InvocationException(
-                                       BangCodes.INSUFFICIENT_FUNDS));
+            listener.requestFailed(new InvocationException(BangCodes.INSUFFICIENT_FUNDS));
             return;
         }
 
@@ -253,12 +278,10 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         return list.toArray(new CoinExOfferInfo[list.size()]);
     }
 
-    protected ArrayList<OfferPublisher> _publishers =
-        new ArrayList<OfferPublisher>();
+    protected ArrayList<OfferPublisher> _publishers = new ArrayList<OfferPublisher>();
 
     /** Used to reverse sort our offers. */
-    protected Comparator<ConsolidatedOffer> _revcmp =
-        new Comparator<ConsolidatedOffer>() {
+    protected Comparator<ConsolidatedOffer> _revcmp = new Comparator<ConsolidatedOffer>() {
         public int compare (ConsolidatedOffer o1, ConsolidatedOffer o2) {
             return o1.price - o2.price;
         }

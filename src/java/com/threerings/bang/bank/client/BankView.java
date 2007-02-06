@@ -53,9 +53,9 @@ public class BankView extends ShopView
         add(_qbuy = new QuickTransact(ctx, _status, true),
             new Rectangle(630, 463, 320, 30));
 
-        add(_fsell = new FullTransact(ctx, _status, false),
+        add(_fsell = new FullTransact(ctx, this, _status, false),
             new Rectangle(225, 85, 330, 315));
-        add(_fbuy = new FullTransact(ctx, _status, true),
+        add(_fbuy = new FullTransact(ctx, this, _status, true),
             new Rectangle(630, 85, 330, 315));
 
         add(new WalletLabel(ctx, true), new Rectangle(25, 40, 150, 40));
@@ -72,10 +72,22 @@ public class BankView extends ShopView
         _fbuy.init(bankobj);
         _fsell.init(bankobj);
 
+        updateMyOffers(bankobj, false);
+    }
+
+    /**
+     * Update the list of the player's buy and sell offers.
+     */
+    public void updateMyOffers (BankObject bankobj, final boolean clear)
+    {
         // issue a request for our outstanding offers
         BankService.OfferListener ol = new BankService.OfferListener() {
             public void gotOffers (CoinExOfferInfo[] buys,
                                    CoinExOfferInfo[] sells) {
+                if (clear) {
+                    _fbuy.clearPostedOffers();
+                    _fsell.clearPostedOffers();
+                }
                 _fbuy.notePostedOffers(buys);
                 _fsell.notePostedOffers(sells);
             }

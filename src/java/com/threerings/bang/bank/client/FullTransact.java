@@ -23,6 +23,8 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.MessageEvent;
+import com.threerings.presents.dobj.MessageListener;
 
 import com.threerings.coin.data.CoinExOfferInfo;
 
@@ -44,10 +46,11 @@ import static com.threerings.bang.Log.log;
 public class FullTransact extends BContainer
     implements ActionListener, BankCodes
 {
-    public FullTransact (BangContext ctx, StatusLabel status, boolean buying)
+    public FullTransact (BangContext ctx, BankView view, StatusLabel status, boolean buying)
     {
         super(new AbsoluteLayout());
         _ctx = ctx;
+        _view = view;
         _status = status;
         _buying = buying;
         _msgs = ctx.getMessageManager().getBundle(BANK_MSGS);
@@ -94,6 +97,7 @@ public class FullTransact extends BContainer
     {
         _bankobj = bankobj;
         _bankobj.addListener(_updater);
+        _bankobj.addListener(_myUpdater);
         updateOffers();
     }
 
@@ -102,6 +106,11 @@ public class FullTransact extends BContainer
         for (int ii = 0; ii < offers.length; ii++) {
             notePostedOffer(offers[ii]);
         }
+    }
+
+    public void clearPostedOffers ()
+    {
+        _myoffers.removeAll();
     }
 
     // documentation inherited from interface ActionListener
@@ -172,6 +181,25 @@ public class FullTransact extends BContainer
         }
     }
 
+    protected void offerModified (int offerId)
+    {
+        for (int ii = 0; ii < _myoffers.getComponentCount(); ii += 5) {
+            BButton rb = (BButton)_myoffers.getComponent(ii+4);
+            CoinExOfferInfo rbinfo = (CoinExOfferInfo)rb.getProperty("offer");
+            if (rbinfo.offerId == offerId) {
+                _view.updateMyOffers(_bankobj, true);
+                break;
+            }
+        }
+    }
+
+    protected void offersDestroyed (int[] offerIds)
+    {
+        for (int id : offerIds) {
+            clearPostedOffer(id);
+        }
+    }
+
     protected void notePostedOffer (CoinExOfferInfo offer)
     {
         OfferLabel mine = new OfferLabel(_myoffers);
@@ -184,10 +212,15 @@ public class FullTransact extends BContainer
 
     protected void clearPostedOffer (CoinExOfferInfo offer)
     {
+        clearPostedOffer(offer.offerId);
+    }
+
+    protected void clearPostedOffer (int offerId)
+    {
         for (int ii = 0; ii < _myoffers.getComponentCount(); ii += 5) {
             BButton rb = (BButton)_myoffers.getComponent(ii+4);
             CoinExOfferInfo rbinfo = (CoinExOfferInfo)rb.getProperty("offer");
-            if (rbinfo.offerId == offer.offerId) {
+            if (rbinfo.offerId == offerId) {
                 _myoffers.remove(_myoffers.getComponent(ii));
                 _myoffers.remove(_myoffers.getComponent(ii));
                 _myoffers.remove(_myoffers.getComponent(ii));
@@ -264,7 +297,20 @@ public class FullTransact extends BContainer
         }
     };
 
+    protected MessageListener _myUpdater = new MessageListener() {
+        public void messageReceived (MessageEvent event) {
+            String name = event.getName();
+            if (OFFER_MODIFIED.equals(name)) {
+                offerModified((Integer)event.getArgs()[0]);
+
+            } else if (OFFERS_DESTROYED.equals(name)) {
+                offersDestroyed((int[])event.getArgs()[0]);
+            }
+        }
+    };
+
     protected BangContext _ctx;
+    protected BankView _view;
     protected MessageBundle _msgs;
     protected BankObject _bankobj;
     protected boolean _buying;

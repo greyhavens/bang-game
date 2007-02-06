@@ -6,6 +6,7 @@ package com.threerings.bang.bank.server;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.ResultAdapter;
+import com.threerings.presents.dobj.MessageEvent;
 
 import com.threerings.crowd.data.PlaceObject;
 
@@ -81,6 +82,20 @@ public class BankManager extends ShopManager
         if (lastPrice != -1) {
             _bankobj.setLastTrade(lastPrice);
         }
+    }
+
+    // documentation inherited from interface OfferPublisher
+    public void offerModified (int offerId)
+    {
+        _omgr.postEvent(new MessageEvent(
+                    _bankobj.getOid(), OFFER_MODIFIED, new Integer[] { offerId }));
+    }
+
+    // documentation inherited from interface OfferPublisher
+    public void offersDestroyed (int[] offerIds)
+    {
+        _omgr.postEvent(new MessageEvent(
+                    _bankobj.getOid(), OFFERS_DESTROYED, new Object[] { offerIds }));
     }
 
     @Override // from ShopManager

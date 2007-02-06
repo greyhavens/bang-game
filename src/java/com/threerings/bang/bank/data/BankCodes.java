@@ -15,4 +15,10 @@ public interface BankCodes extends InvocationCodes
 
     /** An error response returned by the bank service. */
     public static final String NO_SUCH_OFFER = "m.no_such_offer";
+
+    /** An event name for a modified offer. */
+    public static final String OFFER_MODIFIED = "offer_modified";
+
+    /** An event name for a destroyed offers. */
+    public static final String OFFERS_DESTROYED = "offers_destroyed";
 }
