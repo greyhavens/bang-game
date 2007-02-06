@@ -9,8 +9,11 @@ import com.threerings.bang.game.client.sprite.TargetableActiveSprite;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
+import com.threerings.bang.util.BangContext;
+import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.data.effect.Effect;
-import com.threerings.bang.game.data.effect.ClearPieceEffect;
+import com.threerings.bang.game.data.effect.ExplodeEffect;
+import com.threerings.bang.game.client.effect.ExplosionViz;
 
 import static com.threerings.bang.Log.log;
 
@@ -19,6 +22,22 @@ import static com.threerings.bang.Log.log;
  */
 public class Breakable extends Prop
 {
+    public void init() {
+        damage = 99;
+    }
+
+    @Override // documentation inherited
+    public boolean removeWhenDead ()
+    {
+        return true;
+    }
+    
+    @Override // documentation inherited
+    public Effect willDie (BangObject bangobj, int shooterId)
+    {
+        return new ExplodeEffect(this);
+    }
+    
     @Override // documentation inherited
     public boolean isTargetable ()
     {
@@ -29,13 +48,7 @@ public class Breakable extends Prop
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
     {
-        if (lastActed != tick-1 || isAlive()) {
-            return null;
-        }
-
-        ArrayList<Effect> effects = new ArrayList<Effect>();
-        effects.add(new ClearPieceEffect(this));
-        return effects;
+        return null;
     }
 
     @Override // documentation inherited
@@ -48,10 +61,6 @@ public class Breakable extends Prop
     public PieceSprite createSprite ()
     {
         return new TargetableActiveSprite("props", "boom_town/breakables/breakable") {
-            public boolean removed () {
-                queueAction(REMOVED);
-                return true;
-            }
             
             public boolean isHoverable ()
             {
