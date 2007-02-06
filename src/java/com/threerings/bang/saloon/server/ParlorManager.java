@@ -75,6 +75,11 @@ public class ParlorManager extends PlaceManager
             return;
         }
 
+        // if the parlor is shutting down or not yet initialized, fail
+        if (_parobj == null || _parobj.info == null) {
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
         // make sure the password matches if we have a password
         if (_parobj.info.passwordProtected &&
             !password.equalsIgnoreCase(_password)) {
@@ -83,8 +88,7 @@ public class ParlorManager extends PlaceManager
 
         // make sure they're a pardner of the creator if that is required
         if (_parobj.info.pardnersOnly) {
-            PlayerObject creator =
-                BangServer.lookupPlayer(_parobj.info.creator);
+            PlayerObject creator = BangServer.lookupPlayer(_parobj.info.creator);
             if (creator == null) {
                 throw new InvocationException(CREATOR_NOT_ONLINE);
             }
