@@ -32,9 +32,12 @@ import com.jmex.bui.util.Rectangle;
 
 import com.threerings.bang.game.client.sprite.PieceStatus;
 import com.threerings.bang.game.client.sprite.UnitSprite;
+import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.piece.Influence;
+import com.threerings.bang.game.data.piece.Hindrance;
 
 import com.threerings.bang.client.BangPrefs;
 import com.threerings.bang.data.UnitConfig;
@@ -46,8 +49,6 @@ import com.threerings.bang.ranch.client.UnitBonus;
 import com.threerings.util.MessageBundle;
 
 import static com.threerings.bang.Log.log;
-import com.threerings.bang.game.data.piece.Influence;
-import com.threerings.bang.game.data.piece.Hindrance;
 
 /**
  * Displays the status of the various units in iconic form.
@@ -55,11 +56,12 @@ import com.threerings.bang.game.data.piece.Hindrance;
 public class UnitStatusView extends BWindow
 {
     public UnitStatusView (
-        BangContext ctx, BangBoardView view, BangObject bangobj)
+        BangContext ctx, BangController ctrl, BangBoardView view, BangObject bangobj)
     {
         super(ctx.getStyleSheet(), new AbsoluteLayout(true));
 
         _ctx = ctx;
+        _ctrl = ctrl;
         _view = view;
         _bangobj = bangobj;
         _pidx = bangobj.getPlayerIndex(_ctx.getUserObject().getVisibleName());
@@ -120,9 +122,10 @@ public class UnitStatusView extends BWindow
             return;
         }
 
-        // if this unit was hijacked from another player, or a duplicate,
-        // remove this label
-        if (((Unit)usprite.getPiece()).originalOwner != _pidx) {
+        // if this unit was hijacked from another player, or a duplicate, or there are no unit
+        // respawns, remove this label
+        if (((Unit)usprite.getPiece()).originalOwner != _pidx || 
+                !((BangConfig)_ctrl.getPlaceConfig()).respawnUnits) {
             _ustatuses.remove(ustatus);
             resort();
             reposition();
@@ -649,6 +652,7 @@ public class UnitStatusView extends BWindow
     }
 
     protected BangContext _ctx;
+    protected BangController _ctrl;
     protected BangBoardView _view;
     protected BangObject _bangobj;
     protected int _pidx;
