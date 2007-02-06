@@ -237,6 +237,10 @@ public class SongDownloadView extends BDecoratedWindow
                     }
                 }
 
+                // close and flush the output file
+                out.close();
+                out = null;
+
                 // create a "done" file if desired
                 if (_done != null) {
                     _done.createNewFile();
