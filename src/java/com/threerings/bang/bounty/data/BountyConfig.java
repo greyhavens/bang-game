@@ -43,8 +43,8 @@ public class BountyConfig extends SimpleStreamableObject
         /** Scrip payed when this bounty is completed. */
         public int scrip;
 
-        /** An article of clothing given out as a reward or null. */
-        public Article article;
+        /** An article of clothing given out as a reward or null (male and female). */
+        public Article[] articles;
 
         /** A badge to be given out as a reward or null. */
         public Badge.Type badge;
@@ -346,15 +346,14 @@ public class BountyConfig extends SimpleStreamableObject
         config.reward = new Reward();
         config.reward.scrip = BangUtil.getIntProperty(which, props, "reward_scrip", 0);
 
-        String article = props.getProperty("reward_article", "");
-        if (article.length() > 0) {
-            bits = article.split(":");
-            if (bits.length != 3) {
-                log.warning("Invalid article reward specified in bounty [which=" + which +
-                            ", article=" + article + "].");
+        Article male = parseArticle(which, props.getProperty("reward_article_male", ""));
+        Article female = parseArticle(which, props.getProperty("reward_article_female", ""));
+        if (male != null || female != null) {
+            if (male == null || female == null) {
+                log.warning("Missing article for geneder [which=" + which +
+                            ", male=" + male + ", female=" + female + "].");
             } else {
-                config.reward.article = new Article(
-                    0, bits[0], bits[1], StringUtil.parseIntArray(bits[3]));
+                config.reward.articles = new Article[] { male, female };
             }
         }
 
@@ -383,6 +382,20 @@ public class BountyConfig extends SimpleStreamableObject
         quote.text = props.getProperty(prefix + "_quote");
         quote.speaker = BangUtil.getIntProperty(which, props, prefix + "_speaker", 1);
         return quote;
+    }
+
+    protected static Article parseArticle (String which, String article)
+    {
+        if (article == null || article.length() == 0) {
+            return null;
+        }
+        String[] bits = article.split(":");
+        if (bits.length != 3) {
+            log.warning("Invalid article reward specified in bounty [which=" + which +
+                        ", article=" + article + "].");
+            return null;
+        }
+        return new Article(0, bits[0], bits[1], StringUtil.parseIntArray(bits[3]));
     }
 
     protected static String getImageProperty (String which, Properties props, String key)
