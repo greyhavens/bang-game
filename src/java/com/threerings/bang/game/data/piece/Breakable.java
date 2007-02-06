@@ -35,7 +35,12 @@ public class Breakable extends Prop
     @Override // documentation inherited
     public Effect willDie (BangObject bangobj, int shooterId)
     {
-        return new ExplodeEffect(this);
+        if (!isExploding) {
+            isExploding = true;
+            return new ExplodeEffect(this, 60, 1);
+        } else {
+            return null;
+        }
     }
     
     @Override // documentation inherited
@@ -76,4 +81,6 @@ public class Breakable extends Prop
             }            
         };
     }
+    
+    protected boolean isExploding = false;
 }
