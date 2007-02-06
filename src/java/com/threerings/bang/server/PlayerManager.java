@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.ArrayUtil;
+import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ListUtil;
 import com.samskivert.util.StringUtil;
@@ -147,6 +148,19 @@ public class PlayerManager
                     }
                 });
         }
+
+        // register our download symlink cleaning interval; note that because this simply posts an
+        // invoker unit, it is not routed through the dobjmgr
+        new Interval() {
+            public void expired () {
+                BangServer.invoker.postUnit(new Invoker.Unit() {
+                    public boolean invoke () {
+                        purgeDownloadLinks();
+                        return false;
+                    }
+                });
+            }
+        }.schedule(DOWNLOAD_PURGE_INTERVAL, true);
     }
 
     /**
@@ -1089,11 +1103,41 @@ public class PlayerManager
                 return null;
             }
 
+            // create a timestamp file
+            File stamp = new File(dest.getPath() + ".stamp");
+            if (!stamp.createNewFile()) {
+                log.warning("Failed to create timestamp file [stamp=" + stamp + "].");
+            }
+
         } catch (Exception e) {
             log.log(Level.WARNING, "Failure running ln command.", e);
         }
 
         return ident;
+    }
+
+    /**
+     * Called periodically (on the invoker thread) to purge download symlinks that are more than 5
+     * minutes old.
+     */
+    protected void purgeDownloadLinks ()
+    {
+        File ddir = new File(ServerConfig.serverRoot, "data" + File.separator + "downloads");
+        long now = System.currentTimeMillis();
+        for (File file : ddir.listFiles()) {
+            if (!file.getName().endsWith(".stamp")) {
+                continue;
+            }
+            if (now - file.lastModified() > DOWNLOAD_PURGE_EXPIRE) {
+                if (!file.delete()) {
+                    log.warning("Failed to delete stamp file [file=" + file.getPath() + "].");
+                }
+                file = new File(file.getPath().substring(0, file.getPath().length()-6));
+                if (!file.delete()) {
+                    log.warning("Failed to delete symlink file [file=" + file.getPath() + "].");
+                }
+            }
+        }
     }
 
     /** Provides access to the pardner database. */
@@ -1128,4 +1172,10 @@ public class PlayerManager
 
     /** The name of our poster cache. */
     protected static final String POSTER_CACHE = "posterCache";
+
+    /** The time after which song download symlinks are purged. */
+    protected static final long DOWNLOAD_PURGE_EXPIRE = 5 * 60 * 1000L;
+
+    /** The frequency with which download symlinks are purged. */
+    protected static final long DOWNLOAD_PURGE_INTERVAL = 60 * 1000L;
 }
