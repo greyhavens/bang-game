@@ -39,7 +39,7 @@ public class PlayerSlot extends AvatarView
 
         // load up some images
         _silhouette = ctx.loadImage("ui/saloon/silhouette.png");
-        _emptyScroll = ctx.loadImage("ui/frames/tall_tiny_scroll.png");
+        _emptyScroll = ctx.loadImage("ui/frames/tall_tiny_scroll0.png");
 
         // AvatarView sets a preferred size, but we want to override that
         setPreferredSize(null);

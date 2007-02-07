@@ -782,10 +782,10 @@ public class StatsView extends SteelWindow
      */
     protected AvatarView makeAvatarView (int idx)
     {
-        AvatarView aview = new AvatarView(_ctx, 8, false, true);
+        AvatarView aview = new AvatarView(_ctx, 8, false, true, colorLookup[idx + 1]);
         aview.setAvatar(_bobj.playerInfo[idx].avatar);
         aview.setText(_bobj.players[idx].toString());
-        aview.setStyleClass("endgame_player" + idx);
+        aview.setStyleClass("endgame_player");
         Dimension d = aview.getPreferredSize(-1, -1);
         d.height = Math.max(GRID_HEIGHT, d.height);
         aview.setPreferredSize(d);

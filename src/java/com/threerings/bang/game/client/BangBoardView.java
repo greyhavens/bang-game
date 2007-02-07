@@ -863,7 +863,8 @@ public class BangBoardView extends BoardView
             aview.setAvatar(_bangobj.playerInfo[pidx].avatar);
             marquee.add(aview);
         }
-        marquee.add(new BLabel(_bangobj.players[pidx].toString(), "player_marquee_label"));
+        marquee.add(new BLabel(_bangobj.players[pidx].toString(), 
+                    "player_marquee_label" + colorLookup[pidx + 1]));
         return marquee;
     }
 

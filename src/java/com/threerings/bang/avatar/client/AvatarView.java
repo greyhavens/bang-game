@@ -175,6 +175,21 @@ public class AvatarView extends BLabel
      */
     public AvatarView (BasicContext ctx, int scale, boolean framed, boolean named)
     {
+        this(ctx, scale, framed, named, 0);
+    }
+
+    /**
+     * Creates a view that can be used to display avatar images.
+     *
+     * @param scale the image will be one over this value times the "natural" size of the avatar
+     * imagery. This should be at least 2.
+     * @param framed whether to render a frame around the avatar image.
+     * @param named whether to display a banner containing the name of the avatar (which is set
+     * with {@link #setHandle}).
+     * @param color the color index of the banner
+     */
+    public AvatarView (BasicContext ctx, int scale, boolean framed, boolean named, int color)
+    {
         super("");
         if (framed) {
             setStyleClass("avatar_view_framed_" + scale);
@@ -211,7 +226,7 @@ public class AvatarView extends BLabel
             case 8: type = "tiny"; break;
             }
             if (type != null) {
-                _scroll = ctx.loadImage("ui/frames/" + type + "_scroll.png");
+                _scroll = ctx.loadImage("ui/frames/" + type + "_scroll" + color + ".png");
                 phei += _scroll.getHeight()/2;
                 pwid = Math.max(pwid, _scroll.getWidth());
             }

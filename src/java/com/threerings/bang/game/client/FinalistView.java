@@ -31,6 +31,8 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 
+import static com.threerings.bang.client.BangMetrics.*;
+
 /**
  * Displays a player's avatar and name and a medal indicating their rank at the end of a game.
  */
@@ -90,7 +92,7 @@ public class FinalistView extends BContainer
         // load up our frame and scroll banner
         String prefix = winner ? "ui/frames/big_" : "ui/frames/small_";
         _frame = new ImageIcon(ctx.loadImage(prefix + "frame.png"));
-        _banner = new ImageIcon(ctx.loadImage(prefix + "scroll.png"));
+        _banner = new ImageIcon(ctx.loadImage(prefix + "scroll" + colorLookup[pidx + 1] + ".png"));
 
         // create a label for their name
         String sclass = "endgame_player_" + (winner ? "big" : "small");
@@ -180,7 +182,7 @@ public class FinalistView extends BContainer
 
     protected static final Rectangle[] NAME_RECTS = {
         new Rectangle(21, 13, 251, 25),
-        new Rectangle(7, 6, 136, 17),
+        new Rectangle(7, 7, 136, 17),
     };
 
     protected static final Point[] FF_POS = {
