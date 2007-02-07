@@ -1057,11 +1057,46 @@ player_marquee_cont {
 
 player_marquee_label {
   font: "Dom Casual" plain 24;
-  color: #4a2805;
-  background: image "ui/frames/big_scroll.png" framex;
+  color: #FFFFFF;
+  background: image "ui/frames/big_scroll0.png" centerx;
   text-align: center;
   vertical-align: center;
   padding: 0 0 11 0;
+}
+
+player_marquee_label1 {
+  parent: "player_marquee_label";
+  background: image "ui/frames/big_scroll1.png" centerx;
+}
+
+player_marquee_label2 {
+  parent: "player_marquee_label";
+  background: image "ui/frames/big_scroll2.png" centerx;
+}
+
+player_marquee_label3 {
+  parent: "player_marquee_label";
+  background: image "ui/frames/big_scroll3.png" centerx;
+}
+
+player_marquee_label4 {
+  parent: "player_marquee_label";
+  background: image "ui/frames/big_scroll4.png" centerx;
+}
+
+player_marquee_label5 {
+  parent: "player_marquee_label";
+  background: image "ui/frames/big_scroll5.png" centerx;
+}
+
+player_marquee_label6 {
+  parent: "player_marquee_label";
+  background: image "ui/frames/big_scroll6.png" centerx;
+}
+
+player_marquee_label7 {
+  parent: "player_marquee_label";
+  background: image "ui/frames/big_scroll7.png" centerx;
 }
 
 pick_subtitle {
@@ -2056,13 +2091,13 @@ endgame_border {
 endgame_player_big {
   font: "Dom Casual" plain 24;
   text-align: center;
-  color: #442801;
+  color: #FFFFFF;
 }
 
 endgame_player_small {
   font: "Dom Casual" plain 14;
   text-align: center;
-  color: #442801;
+  color: #FFFFFF;
 }
 
 endgame_wave_header {
@@ -2147,24 +2182,9 @@ endgame_stattotalhigh {
   color: #FFFF66;
 }
 
-endgame_player0 {
+endgame_player {
   parent: "avatar_view_unframed_8";
-  color: #0000CC;
-}
-
-endgame_player1 {
-  parent: "avatar_view_unframed_8";
-  color: #CC0000;
-}
-
-endgame_player2 {
-  parent: "avatar_view_unframed_8";
-  color: #00AA00;
-}
-
-endgame_player3 {
-  parent: "avatar_view_unframed_8";
-  color: #888800;
+  color: #FFFFFF;
 }
 
 endgame_folks_help {
