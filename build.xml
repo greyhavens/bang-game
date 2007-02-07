@@ -785,18 +785,16 @@
 
   <!-- install project specific server code into ${pkg.base} -->
   <target name="prepare-server-extra">
+    <copy todir="${pkg.base}/${deploy.dir}/rsrc">
+      <fileset dir="${deploy.dir}/rsrc" includes="**/*.jar"/>
+    </copy>
     <copy todir="${pkg.base}/rsrc">
-      <fileset dir="${deploy.dir}/rsrc">
-        <include name="**/*.jar"/>
-      </fileset>
-      <fileset dir="rsrc">
-        <include name="**/*.board"/>
-      </fileset>
+      <fileset dir="rsrc" includes="**/*.board"/>
     </copy>
     <copy file="log/README" todir="${pkg.base}/log"/>
     <copy file="build.xml" todir="${pkg.base}"/>
     <copy file="rsrc/config/resource/manager.properties"
-          todir="${pkg.base}/rsrc/config/resource/"/>
+          todir="${pkg.base}/${deploy.dir}/rsrc/config/resource/"/>
     <copy file="${tools.dir}/etc/build-support.xml" todir="${pkg.base}/${tools.dir}/etc"/>
     <copy file="${tools.dir}/lib/perl/GrindUtil.pm" todir="${pkg.base}/${tools.dir}/lib/perl"/>
     <antcall target="copywithperms">

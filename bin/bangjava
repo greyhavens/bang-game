@@ -18,6 +18,7 @@ fi
 # set up our java arguments
 JAVA_ARGS="-Dno_unpack_resources=true \
     -Dbang.home=$BANG_HOME \
+    -Dresource_dir=$BANG_HOME/dist/rsrc \
     -Drsrc_cache_dir=/tmp"
 
 # extract -D arguments so that we can put them before the classname
@@ -43,12 +44,6 @@ while [ ! -z "$1" ]; do
     esac
     shift
 done
-
-if [ -z "$NODEVLIBS" ]; then
-    JAVA_ARGS="$JAVA_ARGS -Dresource_dir=$BANG_HOME/dist/rsrc"
-else
-    JAVA_ARGS="$JAVA_ARGS -Dresource_dir=$BANG_HOME/rsrc"
-fi
 
 # Some temporary business for multiprocessor FreeBSD machines
 NEEDS_MEMBAR=`$JAVA_VM -fullversion 2>&1 | grep diablo`
