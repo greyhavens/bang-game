@@ -395,7 +395,7 @@ public class BountyConfig extends SimpleStreamableObject
                         ", article=" + article + "].");
             return null;
         }
-        return new Article(0, bits[0], bits[1], StringUtil.parseIntArray(bits[3]));
+        return new Article(0, bits[0], bits[1], StringUtil.parseIntArray(bits[2]));
     }
 
     protected static String getImageProperty (String which, Properties props, String key)
