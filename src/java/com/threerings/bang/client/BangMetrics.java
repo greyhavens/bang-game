@@ -115,9 +115,15 @@ public class BangMetrics
         }
 
         // 1v1v1v1
-        if (maxsize == 1 || numteams == 1) {
+        if (maxsize == 1) {
             for (int ii = 0; ii < teams.length; ii++) {
                 colorLookup[ii+1] = teams[ii] + 1;
+            }
+
+        // coop game
+        } else if (numteams == 1) {
+            for (int ii = 0; ii < teams.length; ii++) {
+                colorLookup[ii+1] = ii + 1;
             }
 
         // 3v1

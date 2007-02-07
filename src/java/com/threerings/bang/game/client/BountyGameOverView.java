@@ -236,7 +236,8 @@ public class BountyGameOverView extends SteelWindow
         _contents.add(horiz);
 
         if (completed) {
-            _contents.add(new AwardView(_ctx, _gconfig, _user, _award));
+            _contents.add(new AwardView(
+                        _ctx, _bangobj, _gconfig, _user, _award));
         } else {
             msg = quote.text;
             _contents.add(new BLabel(msg, "bounty_quote"));

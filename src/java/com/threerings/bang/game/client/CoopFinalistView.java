@@ -32,6 +32,8 @@ import com.threerings.bang.game.data.GameCodes;
 
 import com.threerings.media.image.Colorization;
 
+import static com.threerings.bang.client.BangMetrics.*;
+
 /**
  * Displays a player's avatar and name at the end of a game.
  */
@@ -84,6 +86,9 @@ public class CoopFinalistView extends BContainer
                     }
                 });
             }
+            ImageIcon ribbon = new ImageIcon(ctx.loadImage(
+                        "ui/postgame/small_scroll_coop" + colorLookup[ii + 1] + ".png"));
+            add(new BLabel(ribbon), new Point(RIBBON_OFFSET[ii] + ax, 20));
             BLabel handle = new BLabel(bangobj.players[ii].toString(), 
                         "endgame_player_small");
             handle.setFit(BLabel.Fit.SCALE);
@@ -191,4 +196,5 @@ public class CoopFinalistView extends BContainer
 
     protected static final int[] NAME_OFFSET = { 7, 155, 303, 451 };
     protected static final int[] FF_OFFSET = { 112, 260, 408, 556 };
+    protected static final int[] RIBBON_OFFSET = { 0, 148, 296, 444 };
 }

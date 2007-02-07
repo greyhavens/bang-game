@@ -28,7 +28,9 @@ import com.threerings.bang.util.BasicContext;
 
 import com.threerings.bang.game.data.Award;
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.scenario.ScenarioInfo;
 
 /**
  * Displays end-of-game awards. Used by the {@link GameOverView} and the {@link
@@ -36,21 +38,24 @@ import com.threerings.bang.game.data.GameCodes;
  */
 public class AwardView extends BContainer
 {
-    public AwardView (BasicContext ctx, BangConfig bconfig, PlayerObject user, Award award)
+    public AwardView (BasicContext ctx, BangObject bangobj, BangConfig bconfig, 
+                      PlayerObject user, Award award)
     {
         super(GroupLayout.makeHoriz(GroupLayout.CENTER).
               setGap(25).setOffAxisPolicy(GroupLayout.STRETCH));
 
         MessageBundle msgs = ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         boolean isBounty = (bconfig.type == BangConfig.Type.BOUNTY);
+        boolean isCoop = 
+            bangobj.roundId == 1 && bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP;
 
         BContainer econt = new BContainer(new BorderLayout(0, 15));
         econt.setStyleClass("endgame_border");
         add(econt);
 
         String rankstr = msgs.get("m.endgame_rank" + award.rank);
-        String txt= isBounty ?
-            msgs.get("m.bover_earnings") : msgs.get("m.endgame_earnings", rankstr);
+        String txt= isBounty ?  msgs.get("m.bover_earnings") : (isCoop ? 
+                msgs.get("m.endgame_coop_earnings") : msgs.get("m.endgame_earnings", rankstr));
         econt.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
 
         BContainer rrow = new BContainer(new TableLayout(isBounty ? 3 : 7, 5, 5));
@@ -59,11 +64,9 @@ public class AwardView extends BContainer
         vbox.add(rrow);
         econt.add(vbox, BorderLayout.CENTER);
 
-        if (isBounty) {
-            rrow.add(new BLabel(msgs.get("m.bover_reward"), "endgame_smallheader"));
-        } else {
-            rrow.add(new BLabel(msgs.get("m.endgame_reward", rankstr), "endgame_smallheader"));
-        }
+        txt = isBounty ? msgs.get("m.bover_reward") : (isCoop ?
+                msgs.get("m.endgame_coop_reward") : msgs.get("m.endgame_reward", rankstr));
+        rrow.add(new BLabel(txt, "endgame_smallheader"));
 
         Purse purse;
         if (isBounty) {

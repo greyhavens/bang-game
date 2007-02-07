@@ -166,7 +166,7 @@ public class GameOverView extends SteelWindow
 
         // display our earnings and awarded badge (if any)
         if (award != null) {
-            _contents.add(new AwardView(_ctx, bconfig, user, award));
+            _contents.add(new AwardView(_ctx, bangobj, bconfig, user, award));
         }
 
         // add some buttons at the bottom
