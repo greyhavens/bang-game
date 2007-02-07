@@ -789,7 +789,7 @@
       <fileset dir="${deploy.dir}/rsrc" includes="avatars/**/*.jar"/>
     </copy>
     <copy todir="${pkg.base}/rsrc">
-      <fileset dir="rsrc" includes="**/*.board"/>
+      <fileset dir="rsrc" includes="boards/**/*.board"/>
     </copy>
     <copy file="log/README" todir="${pkg.base}/log"/>
     <copy file="build.xml" todir="${pkg.base}"/>
