@@ -207,6 +207,7 @@
     <for list="units,props,bonuses,effects,extras,goods,bounties" param="type"><sequential>
       <jar file="${deploy.dir}/rsrc/@{type}/${town}/bundle.jar">
         <fileset dir="${deploy.dir}/rsrc/@{type}/${town}">
+          <include name="*.txt"/>
           <include name="**/*"/>
           <exclude name="**/*.jar"/>
         </fileset>
