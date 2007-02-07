@@ -1341,6 +1341,7 @@ player_status_name {
   font: "Dom Casual" plain 13;
   text-align: center;
   padding: 1 0 0 0;
+  color: #FFFFFF;
 }
 player_status0 {
   parent: "player_status_name";
