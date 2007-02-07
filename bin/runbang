@@ -45,7 +45,7 @@ fi
 
 CLASS=com.threerings.bang.server.BangServer
 JAVA_ARGS="-server -mx$SERVER_MEMORY \
-    -Dresource_dir=$BANG_HOME/rsrc \
+    -Dresource_dir=$BANG_HOME/dist/rsrc \
     -Dno_unpack_resources=true \
     -Dhostname=$HOSTNAME \
     -Dis_node=true \
