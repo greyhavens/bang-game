@@ -847,8 +847,7 @@ public class BangClient extends BasicClient
 
         // show the town view to start, this will call checkShowIntro() once the town view has
         // "presented" the first town
-//         showTownView();
-        checkShowIntro(false);
+        showTownView();
     }
 
     // documentation inherited from interface ClientObserver
