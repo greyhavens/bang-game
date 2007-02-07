@@ -114,7 +114,7 @@ public class UnitSprite extends MobileSprite
                 if (hovered) {
                     _pendnode.setDefaultColor(ColorRGBA.white);
                 } else {
-                    _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner + 1]);
+                    _pendnode.setDefaultColor(getJPieceColor(_piece.owner));
                 }
                 _pendnode.updateRenderState();
             }
@@ -221,7 +221,7 @@ public class UnitSprite extends MobileSprite
             }
             _pendtst.setTexture(createPendingTexture(ticks-1));
             _pendnode.setRenderState(_pendtst);
-            _pendnode.setDefaultColor(JPIECE_COLORS[_piece.owner + 1]);
+            _pendnode.setDefaultColor(getJPieceColor(_piece.owner));
             _pendnode.updateRenderState();
         }
     }

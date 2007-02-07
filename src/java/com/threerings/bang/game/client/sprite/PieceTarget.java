@@ -144,7 +144,7 @@ public class PieceTarget extends Node
 
         if (_attackers > 0) {
             displayTextureQuad(_ptquad, _crosstst[Math.min(_attackers, 3)+1],
-                    JPIECE_COLORS[pidx + 1]);
+                    getJPieceColor(pidx));
         } else {
             _ptquad.setCullMode(CULL_ALWAYS);
         }

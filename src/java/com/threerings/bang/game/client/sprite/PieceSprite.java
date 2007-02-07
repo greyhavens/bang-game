@@ -604,7 +604,7 @@ public class PieceSprite extends Sprite
     {
         _zations = new Colorization[] {
             _ctx.getAvatarLogic().getColorPository().getColorization("unit",
-                PIECE_COLOR_IDS[_piece.owner + 1] ) };
+                colorLookup[_piece.owner + 1] + 1 ) };
     }
     
     /**

@@ -53,8 +53,8 @@ public class DamageIconViz extends IconViz
         if (target == null) {
             return;
         }
-        displayDamageIconViz(target, JPIECE_COLORS[target.owner + 1],
-            DARKER_COLORS[target.owner + 1], effect, ctx, view);
+        displayDamageIconViz(target, getJPieceColor(target.owner), 
+                getDarkerPieceColor(target.owner), effect, ctx, view);
     }
     
     /**

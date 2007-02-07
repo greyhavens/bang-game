@@ -178,7 +178,7 @@ public class OverlayChatView extends BWindow
         ColorRGBA color = ColorRGBA.white;
         int pidx;
         if ((pidx = _bangobj.getPlayerIndex(speaker)) != -1) {
-            color = JPIECE_COLORS[pidx + 1];
+            color = JPIECE_COLORS[colorLookup[pidx + 1]];
         }
         appendMessage(speaker + ": " + message, color);
     }

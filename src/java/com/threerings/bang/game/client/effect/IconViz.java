@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client.effect;
 
+import java.util.Iterator;
+
 import com.jme.math.FastMath;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
@@ -29,7 +31,6 @@ import com.threerings.bang.game.data.piece.Piece;
 
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
-import java.util.Iterator;
 
 /**
  * An effect visualization that floats an icon above the sprite, letting users
@@ -94,7 +95,7 @@ public class IconViz extends EffectViz
                 if (_color != null) {
                     color = _color;
                 } else if (_target != null) {
-                    color = JPIECE_COLORS[_target.owner + 1];
+                    color = getJPieceColor(_target.owner);
                 }
                 _billboard.attachChild(IconConfig.createIcon(_ctx,
                     _ipath, ICON_SIZE, ICON_SIZE, color));

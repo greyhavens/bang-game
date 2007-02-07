@@ -99,7 +99,7 @@ public class TotemBaseSprite extends TargetablePropSprite
                 final int idx = ii;
                 Colorization[] zations = new Colorization[] {
                     _ctx.getAvatarLogic().getColorPository().getColorization(
-                            "unit", PIECE_COLOR_IDS[owner + 1]) };
+                            "unit", colorLookup[owner + 1] + 1) };
                 Sprite totemPiece = new Sprite();
                 _totemPieces.add(totemPiece);
                 _totemHeights.add(0f);

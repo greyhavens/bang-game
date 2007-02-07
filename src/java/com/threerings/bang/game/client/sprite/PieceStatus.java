@@ -189,7 +189,7 @@ public class PieceStatus extends Node
      */
     protected ColorRGBA getColor ()
     {
-        return (_color == null) ? JPIECE_COLORS[_owner + 1] : _color;
+        return (_color == null) ? getJPieceColor(_owner) : _color;
     }
     
     /**
@@ -197,7 +197,7 @@ public class PieceStatus extends Node
      */
     protected ColorRGBA getDarkerColor ()
     {
-        return (_dcolor == null) ? DARKER_COLORS[_owner + 1] : _dcolor;
+        return (_dcolor == null) ? getDarkerPieceColor(_owner) : _dcolor;
     }
     
     /**

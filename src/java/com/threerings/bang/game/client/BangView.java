@@ -261,31 +261,6 @@ public class BangView extends BWindow
     {
         _bangobj = (BangObject)plobj;
 
-        // create our player status displays
-        BangConfig config = (BangConfig)_ctrl.getPlaceConfig();
-        int pcount = _bangobj.players.length;
-        _pswins = new BWindow[pcount];
-        pstatus = new PlayerStatusView[pcount];
-
-        // create the windows and the player status views
-        for (int ii = 0; ii < pcount; ii++) {
-            _pswins[ii] = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeHStretch());
-            _pswins[ii].setLayer(1);
-            _pswins[ii].setStyleClass("player_status_win");
-            pstatus[ii] = new PlayerStatusView(_ctx, _bangobj, config, _ctrl, ii);
-        }
-
-        // then put the status views in windows, always putting ours leftmost
-        int idx = 0, pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().getVisibleName());
-        if (pidx > -1) {
-            _pswins[idx++].add(pstatus[pidx]);
-        }
-        for (int ii = 0; ii < pcount; ii++) {
-            if (ii != pidx) {
-                _pswins[idx++].add(pstatus[ii]);
-            }
-        }
-
         // initialize the round timer
         _timer.init(_bangobj);
 
@@ -369,6 +344,42 @@ public class BangView extends BWindow
         return _timer;
     }
 
+    
+    /**
+     * Creates the player status views.
+     */
+    protected void createPlayerStatusViews ()
+    {
+        if (_pswins != null) {
+            return;
+        }
+
+        // create our player status displays
+        BangConfig config = (BangConfig)_ctrl.getPlaceConfig();
+        int pcount = _bangobj.players.length;
+
+        _pswins = new BWindow[pcount];
+        pstatus = new PlayerStatusView[pcount];
+        // create the windows and the player status views
+        for (int ii = 0; ii < pcount; ii++) {
+            _pswins[ii] = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeHStretch());
+            _pswins[ii].setLayer(1);
+            _pswins[ii].setStyleClass("player_status_win");
+            pstatus[ii] = new PlayerStatusView(_ctx, _bangobj, config, _ctrl, ii);
+        }
+
+        // then put the status views in windows, always putting ours leftmost
+        int idx = 0, pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().getVisibleName());
+        if (pidx > -1) {
+            _pswins[idx++].add(pstatus[pidx]);
+        }
+        for (int ii = 0; ii < pcount; ii++) {
+            if (ii != pidx) {
+                _pswins[idx++].add(pstatus[ii]);
+            }
+        }
+    }
+
     /**
      * Displays a connecting window while we wait for all players to arrive.
      */
@@ -386,6 +397,8 @@ public class BangView extends BWindow
      */
     protected boolean prepareForRound (final BangConfig config, final int pidx)
     {
+        createPlayerStatusViews();
+
         // if the board is cached, we can continue immediately; otherwise, we
         // must request the board from the server
         String boardId = StringUtil.hexlate(_bangobj.boardHash) + ":" + _bangobj.players.length;

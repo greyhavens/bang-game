@@ -77,8 +77,8 @@ public class CounterSprite extends PropSprite
             }
             Vector2f[] tcoords = new Vector2f[4];
             Texture tex = RenderUtil.createTextTexture(
-                _ctx, BangUI.COUNTER_FONT, JPIECE_COLORS[_piece.owner + 1],
-                DARKER_COLORS[_piece.owner + 1], String.valueOf(counter.count),
+                _ctx, BangUI.COUNTER_FONT, getJPieceColor(_piece.owner),
+                getDarkerPieceColor(_piece.owner), String.valueOf(counter.count),
                 tcoords, null);
             _counter.setTextureBuffer(
                 0, BufferUtils.createFloatBuffer(tcoords));

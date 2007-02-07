@@ -41,6 +41,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.parlor.game.client.GameController;
 
+import com.threerings.bang.client.BangMetrics;
 import com.threerings.bang.client.GlobalKeyManager;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.StatSet;
@@ -185,8 +186,13 @@ public class BangController extends GameController
     @Override // documentation inherited
     public void willEnterPlace (PlaceObject plobj)
     {
-        super.willEnterPlace(plobj);
         _bangobj = (BangObject)plobj;
+        // generate our color lookup if the teams are set
+        if (_bangobj.teams != null) {
+            BangMetrics.generateColorLookup(_bangobj.teams);
+        }
+
+        super.willEnterPlace(plobj);
         _bangobj.addListener(_ranklist);
 
         // register to receive messages from the server
@@ -200,6 +206,7 @@ public class BangController extends GameController
 
         // determine our player index
         _pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().getVisibleName());
+
 
         // we may be returning to an already started game
         if (_bangobj.state != BangObject.PRE_GAME) {
@@ -531,6 +538,10 @@ public class BangController extends GameController
                 AvatarView.getImage(_ctx, _bangobj.playerInfo[pidx].victory, 
                         new ResultListener.NOOP<BufferedImage>());
             }
+
+        // regenerate our color lookup when the teams change
+        } else if (event.getName().equals(BangObject.TEAMS)) {
+            BangMetrics.generateColorLookup(_bangobj.teams);
         }
     }
 

@@ -80,15 +80,17 @@ public class PlayerStatusView extends BContainer
         _pidx = pidx;
 
         // load up the background and rank images for our player
+        int lookup = colorLookup[pidx + 1];
         _color = new ImageIcon(
-            _ctx.loadImage("ui/pstatus/background" + pidx + ".png"));
-        _rankimg = _ctx.loadImage("ui/pstatus/rank" + pidx + ".png");
+            _ctx.loadImage("ui/pstatus/background" + lookup + ".png"));
+        _rankimg = _ctx.loadImage("ui/pstatus/rank" + lookup + ".png");
+        ImageIcon ribbon = new ImageIcon(_ctx.loadImage("ui/pstatus/ribbon" + lookup + ".png"));
 
         // create our interface elements
         int selfidx = _bangobj.getPlayerIndex(
             _ctx.getUserObject().getVisibleName());
-        _player = new BLabel(_bangobj.players[_pidx].toString(),
-                             "player_status" + _pidx);
+        add(new BLabel(ribbon), RIBBON_LOC);
+        _player = new BLabel(_bangobj.players[_pidx].toString(), "player_status_name");
         _player.setFit(BLabel.Fit.SCALE);
         String hmsg = "m.help_" + (_pidx == selfidx ? "you" : "they");
         _player.setTooltipText(ctx.xlate(GameCodes.GAME_MSGS, hmsg));
@@ -460,6 +462,7 @@ public class PlayerStatusView extends BContainer
     protected static final Point AVATAR_LOC = new Point(33, 4);
     protected static final Point CASH_LOC = new Point(97, 36);
     protected static final Point FF_LOC = new Point(0, 32);
+    protected static final Point RIBBON_LOC = new Point(7, 1);
 
     protected static final Rectangle RANK_RECT = new Rectangle(8, 37, 21, 23);
     protected static final Rectangle NAME_RECT = new Rectangle(12, 2, 98, 16);

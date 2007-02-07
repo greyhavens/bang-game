@@ -180,7 +180,7 @@ public class StatsView extends SteelWindow
             if (_recolor) {
                 zations = new Colorization[] {
                     _ctx.getAvatarLogic().getColorPository().getColorization(
-                        "unit", PIECE_COLOR_IDS[ii + 1] ) };
+                        "unit", colorLookup[ii + 1] + 1 ) };
             }
             for (int jj = 0; jj < _objectiveIcons[ii].length; jj++) {
                 String path = "ui/postgame/icons/" +
