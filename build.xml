@@ -518,16 +518,16 @@
     <!--<copy file="etc/proguard/0.map" tofile="../threerings/etc/proguard/bang"/>-->
 
     <!-- generate some game metadata summary pages -->
-    <java classpathref="classpath" failonerror="true" output="${web_dir}/units.html"
+    <java classpathref="tool.classpath" failonerror="true" output="${web_dir}/units.html"
           fork="true" classname="com.threerings.bang.game.tools.PrintDamageTable">
       <arg value="boom_town"/>
     </java>
-    <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
+    <java classpathref="tool.classpath" failonerror="true" output="${web_dir}/aspects.html"
           fork="true" classname="com.threerings.bang.avatar.tools.SummarizeAspects">
        <sysproperty key="no_unpack_resources" value="true"/>
        <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
     </java>
-    <java classpathref="classpath" failonerror="true" output="${web_dir}/aspects.html"
+    <java classpathref="tool.classpath" failonerror="true" output="${web_dir}/aspects.html"
           fork="true" classname="com.threerings.bang.avatar.tools.SummarizeArticles">
        <sysproperty key="no_unpack_resources" value="true"/>
        <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
