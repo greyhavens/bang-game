@@ -52,7 +52,6 @@ import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.system.DisplaySystem;
-import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
 
 import com.jmex.bui.util.Dimension;
@@ -409,7 +408,7 @@ public class RenderUtil
         for (int ii = 0, nn = tstate.getNumberOfSetTextures(); ii < nn; ii++) {
             Texture tex = tstate.getTexture(ii);
             if (tex.getTextureId() == 0) {
-                tstate.load(ii);
+                tstate.apply();
             }
         }
     }
