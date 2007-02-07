@@ -13,33 +13,37 @@ cd $BANG_HOME
 
 # Update our list of props
 for TOWN in $TOWNS; do
+    mkdir -p dist/rsrc/props/$TOWN
     find rsrc/props/$TOWN -name 'prop.properties' | \
         sed 's:rsrc/props/::g' | sed 's:/prop.properties::' | sort > \
-        rsrc/props/$TOWN/props.txt
+        dist/rsrc/props/$TOWN/props.txt
 done
 
 # Update our list of units
 for TOWN in $TOWNS; do
+    mkdir -p dist/rsrc/units/$TOWN
     find rsrc/units/$TOWN -name 'unit.properties' | \
         sed 's:rsrc/units/::g' | sed 's:/unit.properties::' | sort > \
-        rsrc/units/$TOWN/units.txt
+        dist/rsrc/units/$TOWN/units.txt
 done
 
 # Update our list of bonuses
 for TOWN in $TOWNS; do
+    mkdir -p dist/rsrc/bonuses/$TOWN
     find rsrc/bonuses/$TOWN -name 'bonus.properties' | \
         sed 's:rsrc/bonuses/::g' | sed 's:/bonus.properties::' | sort > \
-        rsrc/bonuses/$TOWN/bonuses.txt
+        dist/rsrc/bonuses/$TOWN/bonuses.txt
 done
 
 # Update our lists of particle effects and icons
 for TOWN in $TOWNS; do
+    mkdir -p dist/rsrc/effects/$TOWN
     find rsrc/effects/$TOWN -name 'particles.properties' | \
         sed 's:rsrc/effects/::g' | sed 's:/particles.properties::' | sort > \
-        rsrc/effects/$TOWN/particles.txt
+        dist/rsrc/effects/$TOWN/particles.txt
     find rsrc/effects/$TOWN -name 'icon.properties' | \
         sed 's:rsrc/effects/::g' | sed 's:/icon.properties::' | sort > \
-        rsrc/effects/$TOWN/icons.txt
+        dist/rsrc/effects/$TOWN/icons.txt
 done
 
 # Update our list of terrain codes
@@ -49,7 +53,8 @@ find rsrc/terrain -name 'terrain.properties' | \
 
 # Update our list of bounties
 for TOWN in $TOWNS; do
+    mkdir -p dist/rsrc/bounties/$TOWN
     find rsrc/bounties/$TOWN -name 'bounty.properties' | \
         sed 's:rsrc/bounties/::g' | sed 's:/bounty.properties::' | sort > \
-        rsrc/bounties/$TOWN/bounties.txt
+        dist/rsrc/bounties/$TOWN/bounties.txt
 done

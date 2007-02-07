@@ -15,14 +15,15 @@ cd $BANG_HOME
 
 # Encode any sounds that have been modified
 for SOUND in `find rsrc -name '*.wav'`; do
-    OGG_SOUND=${SOUND%wav}ogg
+    OGG_SOUND=dist/${SOUND%wav}ogg
+    mkdir -p `dirname $OGG_SOUND`
     if [ ! -f $OGG_SOUND -o $SOUND -nt $OGG_SOUND ]; then
-        oggenc -Q -q $QUALITY $SOUND 2>&1 | grep -v "Skipping chunk of type.*length.*"
+        oggenc --discard-comments -Q -q $QUALITY $SOUND -o $OGG_SOUND 2>&1 |\
+            grep -v "Skipping chunk of type.*length.*"
         EC=$?
         # exit code > 1 is an error for grep
         if [ $EC -gt 1 ]; then
             exit $EC
         fi
-
     fi
 done
