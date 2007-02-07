@@ -1,5 +1,5 @@
 <!-- build configuration -->
-<project name="bang" default="qcompile" basedir=".">
+<project name="bang" default="compile" basedir=".">
 
   <!-- define various build properties -->
   <property name="src.dir"        value="src/java"/>
@@ -388,22 +388,13 @@
   </target>
 
   <!-- build the java class files -->
-  <target name="qcompile">
+  <target name="compile" depends="prepare">
     <javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" includeAntRuntime="false"
            debug="on" optimize="${build.optimize}" deprecation="on">
       <classpath refid="classpath"/>
       <compilerarg value="-Xlint"/>
       <compilerarg value="-Xlint:-serial"/>
     </javac>
-  </target>
-  <target name="compile" depends="prepare,qcompile">
-    <!-- copy native libraries into ${deploy.dir}/lib -->
-    <copy todir="${deploy.dir}/lib">
-      <fileset dir="projects/narya/${deploy.dir}/lib" includes="**/libsignal.so"/>
-      <fileset dir="lib/" includes="**/*.so"/>
-      <fileset dir="lib/" includes="**/*.jnilib"/>
-      <fileset dir="lib/" includes="**/*.dylib"/>
-    </copy>
   </target>
 
   <!-- build the javadoc documentation -->
@@ -742,6 +733,15 @@
 
   <!-- rebuilds all subprojects and the whole top-level distribution -->
   <target name="distall" depends="prepare,distjme,distprojects,dist,distwebapps,mdist">
+    <!-- copy native libraries into ${deploy.dir}/lib -->
+    <copy todir="${deploy.dir}/lib">
+      <fileset dir="projects/narya/${deploy.dir}/lib" includes="**/libsignal.so"/>
+      <fileset dir="lib/" includes="**/*.so"/>
+      <fileset dir="lib/" includes="**/*.jnilib"/>
+      <fileset dir="lib/" includes="**/*.dylib"/>
+    </copy>
+
+    <!-- if we're packaging, build the distributable client and installers -->
     <if><equals arg1="${props.dist}" arg2="devel"/>
       <then>
         <antcall target="devclient"/>
