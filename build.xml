@@ -8,6 +8,7 @@
   <property name="savedoc.dir"    value="docs"/>
   <property name="build.optimize" value="on"/>
   <property name="nartool.path"   value="${basedir}/projects/narya/bin"/>
+  <property name="towns"          value="frontier_town,indian_post,boom_town"/>
 
   <!-- define our subprojects and include the standard build system -->
   <property name="projects" value="samskivert,jme-bui,narya,nenya,vilya,threerings"/>
@@ -75,8 +76,8 @@
     <mkdir dir="${deploy.dir}/docs"/>
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
-    <mkdir dir="${deploy.dir}/classes/rsrc"/>
-    <copy todir="${deploy.dir}/classes/rsrc">
+    <mkdir dir="${deploy.dir}/rsrc"/>
+    <copy todir="${deploy.dir}/rsrc">
       <fileset dir="rsrc">
        <include name="**/*"/>
        <exclude name="units/**"/>
@@ -91,15 +92,12 @@
        <exclude name="sounds/**"/>
        <exclude name="tutorials/**/*.xml"/>
        <exclude name="config/**/*.xml"/>
-       <exclude name="**/*.properties"/>
-       <exclude name="**/*.bss"/>
-       <exclude name="**/*.css"/>
-       <exclude name="**/*.txt"/>
-       <exclude name="**/*.jar"/>
        <exclude name="**/*.wav"/>
        <exclude name="**/source/**"/>
       </fileset>
     </copy>
+    <copy file="rsrc/config/resource/manager.properties"
+          tofile="${deploy.dir}/rsrc/config/resource/manager.properties"/>
     <!-- use the default ehcache config for now -->
     <copy file="projects/tools/etc/ehcache.xml" todir="${deploy.dir}/classes"/>
   </target>
@@ -184,72 +182,21 @@
 
   <!-- builds bundles for a specific town -->
   <target name="town_bundles">
-    <jar file="${deploy.dir}/rsrc/units/${town}/bundle.jar">
-      <fileset dir="rsrc/units/${town}">
-        <include name="units.txt"/>
-        <include name="**/unit.properties"/>
-        <include name="**/*.png"/>
-        <exclude name="**/source/**"/>
-      </fileset>
-      <fileset dir="${deploy.dir}/rsrc/units/${town}">
-        <include name="**/model.dat"/>
-        <include name="**/*.ogg"/>
-      </fileset>
-    </jar>
-    <jar file="${deploy.dir}/rsrc/props/${town}/bundle.jar">
-      <fileset dir="rsrc/props/${town}">
-        <include name="props.txt"/>
-        <include name="**/prop.properties"/>
-        <include name="**/*.png"/>
-        <exclude name="**/source/**"/>
-      </fileset>
-      <fileset dir="${deploy.dir}/rsrc/props/${town}">
-        <include name="**/model.dat"/>
-        <include name="**/*.ogg"/>
-      </fileset>
-    </jar>
-    <jar file="${deploy.dir}/rsrc/bonuses/${town}/bundle.jar">
-      <fileset dir="rsrc/bonuses/${town}">
-        <include name="bonuses.txt"/>
-        <include name="**/bonus.properties"/>
-        <include name="**/*.png"/>
-        <exclude name="**/source/**"/>
-      </fileset>
-      <fileset dir="${deploy.dir}/rsrc/bonuses/${town}">
-        <include name="**/model.dat"/>
-        <include name="**/*.ogg"/>
-      </fileset>
-    </jar>
-    <jar file="${deploy.dir}/rsrc/effects/${town}/bundle.jar">
-      <fileset dir="rsrc/effects/${town}">
-        <include name="**/particles.txt"/>
-        <include name="**/particles.properties"/>
-        <include name="**/particles.jme"/>
-        <include name="**/icons.txt"/>
-        <include name="**/icon.properties"/>
-        <include name="**/*.png"/>
-        <exclude name="**/source/**"/>
-      </fileset>
-      <fileset dir="${deploy.dir}/rsrc/effects/${town}">
-        <include name="**/*.ogg"/>
-      </fileset>
-    </jar>
-    <mkdir dir="${deploy.dir}/rsrc/extras/${town}"/>
-    <jar file="${deploy.dir}/rsrc/extras/${town}/bundle.jar">
-      <fileset dir="rsrc/extras/${town}">
-        <include name="**/*.png"/>
-        <exclude name="**/source/**"/>
-      </fileset>
-      <fileset dir="${deploy.dir}/rsrc/extras/${town}">
-        <include name="**/model.dat"/>
-        <include name="**/*.ogg"/>
-      </fileset>
-    </jar>
+    <for list="units,props,bonuses,effects,extras" param="type"><sequential>
+      <jar file="${deploy.dir}/rsrc/@{type}/${town}/bundle.jar">
+        <fileset dir="${deploy.dir}/rsrc/@{type}/${town}">
+          <include name="**/*"/>
+          <exclude name="**/*.jar"/>
+        </fileset>
+      </jar>
+    </sequential></for>
+
     <mkdir dir="${deploy.dir}/rsrc/goods/${town}"/>
     <jar file="${deploy.dir}/rsrc/goods/${town}/bundle.jar" basedir="rsrc/goods/${town}">
       <include name="**/*.png"/>
       <exclude name="**/source/**"/>
     </jar>
+
     <jar file="${deploy.dir}/rsrc/bounties/${town}/bundle.jar" basedir="rsrc/bounties/${town}">
       <include name="**/bounties.txt"/>
       <include name="**/*.png"/>
@@ -257,6 +204,7 @@
       <include name="**/*.properties"/>
       <exclude name="**/source/**"/>
     </jar>
+
     <mkdir dir="${deploy.dir}/rsrc/sounds/music/${town}"/>
     <jar file="${deploy.dir}/rsrc/sounds/music/${town}/bundle.jar"
          basedir="${deploy.dir}/rsrc/sounds/music/${town}">
@@ -276,6 +224,47 @@
     <updatepropheight>
       <fileset dir="rsrc" includes="**/prop.properties"/>
     </updatepropheight>
+
+    <for list="${towns}" param="town"><sequential>
+      <copy todir="${deploy.dir}/rsrc/units/@{town}">
+        <fileset dir="rsrc/units/@{town}">
+          <include name="**/unit.properties"/>
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+      <copy todir="${deploy.dir}/rsrc/props/@{town}">
+        <fileset dir="rsrc/props/@{town}">
+          <include name="**/prop.properties"/>
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+      <copy todir="${deploy.dir}/rsrc/bonuses/@{town}">
+        <fileset dir="rsrc/bonuses/@{town}">
+          <include name="**/bonus.properties"/>
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+      <copy todir="${deploy.dir}/rsrc/effects/@{town}">
+        <fileset dir="rsrc/effects/@{town}">
+          <include name="**/particles.txt"/>
+          <include name="**/particles.properties"/>
+          <include name="**/particles.jme"/>
+          <include name="**/icons.txt"/>
+          <include name="**/icon.properties"/>
+          <include name="**/*.png"/>
+        </fileset>
+      </copy>
+      <mkdir dir="${deploy.dir}/rsrc/extras/@{town}"/>
+      <copy todir="${deploy.dir}/rsrc/extras/@{town}">
+        <fileset dir="rsrc/extras/@{town}">
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+    </sequential></for>
   </target>
 
   <!-- loads our boards into the database -->
@@ -339,7 +328,7 @@
                 classdef="${basedir}/rsrc/avatars/classes.xml"
                 target="${deploy.dir}/rsrc/avatars/metadata.jar"/>
 
-    <for list="frontier_town,indian_post" param="town"><sequential>
+    <for list="${towns}" param="town"><sequential>
       <for list="male,female" param="gender"><sequential>
         <antcall target="town_avatars">
           <param name="town" value="@{town}"/>
@@ -649,15 +638,9 @@
     </exec>
 
     <!-- now build our media bundles -->
-    <antcall target="town_bundles">
-      <param name="town" value="frontier_town"/>
-    </antcall>
-    <antcall target="town_bundles">
-      <param name="town" value="indian_post"/>
-    </antcall>
-    <antcall target="town_bundles">
-      <param name="town" value="boom_town"/>
-    </antcall>
+    <for list="${towns}" param="town"><sequential>
+      <antcall target="town_bundles"><param name="town" value="@{town}"/></antcall>
+    </sequential></for>
 
     <!-- build our wreckage bundle -->
     <mkdir dir="${deploy.dir}/rsrc/units/wreckage"/>
@@ -684,19 +667,29 @@
     </jar>
 
     <!-- our top-level resources have all been copied into ${deploy.dir}/ -->
-    <jar file="${deploy.dir}/rsrc/bundle.jar" basedir="${deploy.dir}/classes/rsrc"/>
+    <jar file="${deploy.dir}/rsrc/bundle.jar" basedir="${deploy.dir}/rsrc">
+      <include name="**/*.png"/>
+      <include name="**/*.jpg"/>
+      <include name="**/*.vert"/>
+      <include name="**/*.frag"/>
+      <include name="**/*.board"/>
+      <exclude name="units/**"/>
+      <exclude name="props/**"/>
+      <exclude name="effects/**"/>
+      <exclude name="bonuses/**"/>
+      <exclude name="bounties/**"/>
+      <exclude name="extras/**"/>
+    </jar>
 
     <!-- collect up various configuration bits needed by the client -->
     <jar destfile="${deploy.dir}/bang-config.jar">
       <fileset dir="${deploy.dir}">
-        <include name="rsrc/**/*.dat"/>
-      </fileset>
-      <fileset dir=".">
-        <include name="rsrc/**/*.txt"/>
-        <include name="rsrc/**/*.properties"/>
-        <include name="rsrc/**/*.bss"/>
-        <include name="rsrc/**/*.css"/>
-        <include name="rsrc/**/*.tmpl"/>
+        <include name="rsrc/**/*"/>
+        <exclude name="rsrc/**/*.png"/>
+        <exclude name="rsrc/**/*.jpg"/>
+        <exclude name="rsrc/**/*.vert"/>
+        <exclude name="rsrc/**/*.frag"/>
+        <exclude name="rsrc/**/*.board"/>
         <exclude name="rsrc/units/**"/>
         <exclude name="rsrc/props/**"/>
         <exclude name="rsrc/effects/**"/>
@@ -709,14 +702,13 @@
     <!-- the server can't access things in the bundle files, so we make one -->
     <!-- big file with all of our unit, prop, bonus and other properties -->
     <jar destfile="${deploy.dir}/bang-server-config.jar">
-      <fileset dir=".">
-        <include name="rsrc/**/*.txt"/>
-        <include name="rsrc/**/*.properties"/>
-        <include name="rsrc/**/*.game"/>
-        <exclude name="**/model.properties"/>
-      </fileset>
       <fileset dir="${deploy.dir}">
-        <include name="rsrc/**/*.dat"/>
+        <include name="rsrc/units/**"/>
+        <include name="rsrc/props/**"/>
+        <include name="rsrc/effects/**"/>
+        <include name="rsrc/bonuses/**"/>
+        <include name="rsrc/bounties/**"/>
+        <include name="rsrc/extras/**"/>
       </fileset>
       <fileset dir="${deploy.dir}/classes">
         <include name="ehcache.xml"/>

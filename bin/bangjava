@@ -18,7 +18,6 @@ fi
 # set up our java arguments
 JAVA_ARGS="-Dno_unpack_resources=true \
     -Dbang.home=$BANG_HOME \
-    -Dresource_dir=$BANG_HOME/rsrc \
     -Drsrc_cache_dir=/tmp"
 
 # extract -D arguments so that we can put them before the classname
@@ -45,6 +44,12 @@ while [ ! -z "$1" ]; do
     shift
 done
 
+if [ -z "$NODEVLIBS" ]; then
+    JAVA_ARGS="$JAVA_ARGS -Dresource_dir=$BANG_HOME/dist/rsrc"
+else
+    JAVA_ARGS="$JAVA_ARGS -Dresource_dir=$BANG_HOME/rsrc"
+fi
+
 # Some temporary business for multiprocessor FreeBSD machines
 NEEDS_MEMBAR=`$JAVA_VM -fullversion 2>&1 | grep diablo`
 if [ ! -z "$NEEDS_MEMBAR" ]; then
@@ -66,8 +71,7 @@ for JAR in $BANG_HOME/dist/lib/*.jar; do
     CLASSPATH=$CLASSPATH:$JAR
 done
 if [ -z "$NODEVLIBS" -a -d $BANG_HOME/dist/classes ]; then
-    CLASSPATH=$BANG_HOME/dist/classes:$CLASSPATH
-    CLASSPATH=$BANG_HOME/dist:$CLASSPATH
+    CLASSPATH=$BANG_HOME/dist/classes:$BANG_HOME/dist:$CLASSPATH
 else
     for JAR in $BANG_HOME/dist/bang-*.jar; do
         # skip the bang-support jar, it duplicates what's in bang-code
