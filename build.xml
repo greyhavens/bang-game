@@ -363,7 +363,7 @@
 
     <!-- if we're generating package, revert any modified model.properties files to -->
     <!-- avoid checkclean freakout -->
-    <if><isset property="${props.dist}"/><then>
+    <if><isset property="props.dist"/><then>
       <taskdef resource="org/tigris/subversion/svnant/svnantlib.xml">
         <classpath><path refid="subversion.classpath"/></classpath>
       </taskdef>
