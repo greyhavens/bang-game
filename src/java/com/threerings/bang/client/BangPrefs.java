@@ -37,11 +37,10 @@ public class BangPrefs
     public static PrefsConfig config = new PrefsConfig("bang");
 
     /**
-     * Returns the display mode in the supplied list that matches the one
-     * configured as our preference, or null if there are no matches.
+     * Returns the display mode in the supplied list that matches the one configured as our
+     * preference, or null if there are no matches.
      */
-    public static void configureDisplayMode (
-            PropertiesIO props, boolean safeMode)
+    public static void configureDisplayMode (PropertiesIO props, boolean safeMode)
     {
         // first look up our "preferred" mode
         int width = safeMode ? 1024 : config.getValue("display_width", 1024);
@@ -144,8 +143,8 @@ public class BangPrefs
     }
 
     /**
-     * Checks whether the application should recommend changes to the graphical
-     * detail level based on performance history.
+     * Checks whether the application should recommend changes to the graphical detail level based
+     * on performance history.
      */
     public static boolean shouldSuggestDetail ()
     {
@@ -153,8 +152,7 @@ public class BangPrefs
     }
 
     /**
-     * Sets whether the application should recommend changes to the detail
-     * level.
+     * Sets whether the application should recommend changes to the detail level.
      */
     public static void setSuggestDetail (boolean suggest)
     {
@@ -178,8 +176,7 @@ public class BangPrefs
     }
 
     /**
-     * Returns the volume of the sound effects, a value from zero to one
-     * hundred.
+     * Returns the volume of the sound effects, a value from zero to one hundred.
      */
     public static int getEffectsVolume ()
     {
@@ -187,8 +184,7 @@ public class BangPrefs
     }
 
     /**
-     * Updates the volume of the sound effects, a value from zero to one
-     * hundred.
+     * Updates the volume of the sound effects, a value from zero to one hundred.
      */
     public static void updateEffectsVolume (int volume)
     {
@@ -261,36 +257,26 @@ public class BangPrefs
     }
 
     /**
-     * Used to prevent the tutorials from automatically showing up once a user
-     * has dismissed them the first time or completed the first two. This is
-     * tracked per-town, so the a player will be shown the tutorial view again
+     * Used to prevent the Where To view from automatically showing up once a user has requested it
+     * not be auto-shown. This is tracked per-town, so the a player will be shown the view again
      * the first time they visit a new town.
      */
-    public static boolean shouldShowTutorials (PlayerObject user)
+    public static boolean shouldShowWhereTo (PlayerObject user)
     {
-        int townIdx = BangUtil.getTownIndex(user.townId);
-        return !config.getValue(
-            user.username + ".declined_tuts." + user.townId, false) &&
-            !(user.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED,
-                                       TutorialCodes.TUTORIALS[townIdx][0]) &&
-              user.stats.containsValue(Stat.Type.TUTORIALS_COMPLETED,
-                                       TutorialCodes.TUTORIALS[townIdx][1]));
+        return !config.getValue(user.username + ".no_where." + user.townId, false);
     }
 
     /**
-     * Called when the user has dismissed the tutorial dialog instead of
-     * choosing a tutorial. This marks the player as having declined the
-     * tutorials for the town they are currently in.
+     * Called when the user has requested not to show the Where To view.
      */
-    public static void setDeclinedTutorials (PlayerObject user)
+    public static void setNoWhereTo (PlayerObject user)
     {
-        config.setValue(user.username + ".declined_tuts." + user.townId, true);
+        config.setValue(user.username + ".no_where." + user.townId, true);
     }
 
     /**
-     * Returns the id of the last town to which the specified user logged
-     * on. If the user has never logged on, the default town (Frontier Town)
-     * will be returned.
+     * Returns the id of the last town to which the specified user logged on. If the user has never
+     * logged on, the default town (Frontier Town) will be returned.
      */
     public static String getLastTownId (String username)
     {
@@ -300,8 +286,8 @@ public class BangPrefs
     }
 
     /**
-     * Stores the id of the town to which the specified user has connected so
-     * we can go directly to that town next time.
+     * Stores the id of the town to which the specified user has connected so we can go directly to
+     * that town next time.
      */
     public static void setLastTownId (String username, String townId)
     {
@@ -313,8 +299,7 @@ public class BangPrefs
     /**
      * Returns the closest display mode to our specified default.
      */
-    protected static DisplayMode getClosest (
-        int width, int height, int depth, int freq)
+    protected static DisplayMode getClosest (int width, int height, int depth, int freq)
     {
         DisplayMode c = null;
         try {
@@ -331,8 +316,7 @@ public class BangPrefs
                     c = m;
                 } else if (closer(c.getHeight(), m.getHeight(), height)) {
                     c = m;
-                } else if (closer(c.getBitsPerPixel(), m.getBitsPerPixel(),
-                                  depth)) {
+                } else if (closer(c.getBitsPerPixel(), m.getBitsPerPixel(), depth)) {
                     c = m;
                 } else if (closer(c.getFrequency(), m.getFrequency(), freq)) {
                     c = m;

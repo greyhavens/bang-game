@@ -405,12 +405,12 @@ public class BangClient extends BasicClient
      * This is called after first logging on and then at the completion of each
      * phase of the intro and tutorial.
      */
-    public boolean checkShowIntro ()
+    public boolean checkShowIntro (boolean skipWhereTo)
     {
         PlayerObject user = _ctx.getUserObject();
 
-        // if this player does not have a name, it's their first time, so pop
-        // up the create avatar view
+        // if this player does not have a name, it's their first time, so pop up the create avatar
+        // view
         if (user.handle == null) {
             displayPopup(new CreateAvatarView(_ctx), true, 800);
             return true;
@@ -419,13 +419,6 @@ public class BangClient extends BasicClient
         // if they have no big shots then they need the intro for those
         if (!user.hasBigShot()) {
             displayPopup(new FirstBigShotView(_ctx), true, 600);
-            return true;
-        }
-
-        // if they haven't done (or declined) the tutorials yet, show them
-        if (BangPrefs.shouldShowTutorials(_ctx.getUserObject())) {
-            displayPopup(new PickTutorialView(_ctx, PickTutorialView.Mode.FIRST_TIME), true,
-                         PickTutorialView.WIDTH_HINT);
             return true;
         }
 
@@ -442,8 +435,13 @@ public class BangClient extends BasicClient
             }
         }
 
-        // if the main view is the town view, activate it because we're done
-        // fooling around
+        // show them the Where To view if they haven't turned it off
+        if (!skipWhereTo && BangPrefs.shouldShowWhereTo(_ctx.getUserObject())) {
+            displayPopup(new WhereToView(_ctx), true, 900);
+            return true;
+        }
+
+        // if the main view is the town view, activate it because we're done fooling around
         if (_mview instanceof TownView) {
             ((TownView)_mview).setActive(true);
         }
@@ -849,7 +847,8 @@ public class BangClient extends BasicClient
 
         // show the town view to start, this will call checkShowIntro() once the town view has
         // "presented" the first town
-        showTownView();
+//         showTownView();
+        checkShowIntro(false);
     }
 
     // documentation inherited from interface ClientObserver
@@ -972,20 +971,19 @@ public class BangClient extends BasicClient
 
     protected void displayNotification (final Notification notification)
     {
-        final ReportingListener rl =
-            new ReportingListener(_ctx, BANG_MSGS, "e.response_failed");
+        final ReportingListener rl = new ReportingListener(_ctx, BANG_MSGS, "e.response_failed");
 
         // if it comes from a person on our mute list, auto-reject it
         final Handle source = notification.getSource();
         if (source != null && _ctx.getMuteDirector().isMuted(source)) {
-            log.info("Auto-rejecting notification [who=" + source + ", notification=" +
-                notification + "].");
+            log.info("Auto-rejecting notification [who=" + source +
+                     ", notification=" + notification + "].");
             _psvc.respondToNotification(
                 _client, notification.getKey(), notification.getRejectIndex(), rl);
-            // flag this notification as answered and loop back to checkShowIntro
-            // in case there are more
+            // flag this notification as answered and loop back to checkShowIntro in case there are
+            // more
             notification.responded = true;
-            checkShowIntro();
+            checkShowIntro(false);
             return;
         }
 
@@ -1005,10 +1003,10 @@ public class BangClient extends BasicClient
                     button = notification.getRejectIndex();
                 }
                 _psvc.respondToNotification(_client, notification.getKey(), button, rl);
-                // flag this notification as answered and loop back to checkShowIntro
-                // in case there are more
+                // flag this notification as answered and loop back to checkShowIntro in case there
+                // are more
                 notification.responded = true;
-                checkShowIntro();
+                checkShowIntro(false);
             }
         });
     }
@@ -1019,33 +1017,31 @@ public class BangClient extends BasicClient
         if (!BangPrefs.isMediumDetail()) {
             return false; // already at lowest detail level
         }
+
         final BangPrefs.DetailLevel current = BangPrefs.getDetailLevel(),
             lower = BangPrefs.isHighDetail() ?
-                BangPrefs.DetailLevel.MEDIUM : BangPrefs.DetailLevel.LOW;
-        OptionDialog.ResponseReceiver rr =
-            new OptionDialog.ResponseReceiver() {
+            BangPrefs.DetailLevel.MEDIUM : BangPrefs.DetailLevel.LOW;
+        OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
             public void resultPosted (int button, Object result) {
                 if (button == 0) { // switch
                     BangPrefs.updateDetailLevel(lower);
                 } else if (button == 2) { // disable suggestions
                     BangPrefs.setSuggestDetail(false);
                 }
-                checkShowIntro();
+                checkShowIntro(false);
             }
         };
-        String text = MessageBundle.compose("m.detail_suggest",
-            "m.detail_" + current.toString().toLowerCase(),
+        String text = MessageBundle.compose(
+            "m.detail_suggest", "m.detail_" + current.toString().toLowerCase(),
             "m.detail_" + lower.toString().toLowerCase());
-        OptionDialog.showConfirmDialog(_ctx, "options", text,
-            new String[] { "m.detail_yes", "m.detail_no", "m.detail_dontask" },
-            rr);
+        OptionDialog.showConfirmDialog(_ctx, "options", text, new String[] {
+            "m.detail_yes", "m.detail_no", "m.detail_dontask" }, rr);
         return true;
     }
 
     protected void setMainView (final BWindow view)
     {
-        // if the new view is a game view, fade out the current music as we
-        // fade out the current view
+        // if the view is a game view, fade out the current music as we fade out the current view
         if (view instanceof BangView && _mstream != null) {
             _mstream.fadeOut(0.5f, true);
             _mstream = null;
@@ -1053,8 +1049,7 @@ public class BangClient extends BasicClient
 
         // if we have an existing main view, fade that out
         if (_mview != null) {
-            FadeInOutEffect fade =
-                new FadeInOutEffect(ColorRGBA.black, 0f, 1f, 0.5f, true) {
+            FadeInOutEffect fade = new FadeInOutEffect(ColorRGBA.black, 0f, 1f, 0.5f, true) {
                 protected void fadeComplete () {
                     super.fadeComplete();
                     _ctx.getRootNode().removeWindow(_mview);
@@ -1064,6 +1059,7 @@ public class BangClient extends BasicClient
             };
             _ctx.getInterface().attachChild(fade);
             _viewTransition = true;
+
         } else {
             fadeInMainView(view);
         }
@@ -1088,19 +1084,16 @@ public class BangClient extends BasicClient
             String townId = _ctx.getUserObject().townId;
             queueMusic(townId + "/town", true, 3f);
 
-            // also re-wire up our options view whenever the main view changes
-            // as the BangView overrides the escape mapping during the game
-            _ctx.getKeyManager().registerCommand(
-                KeyInput.KEY_ESCAPE, _clearPopup);
+            // also re-wire up our options view whenever the main view changes as the BangView
+            // overrides the escape mapping during the game
+            _ctx.getKeyManager().registerCommand(KeyInput.KEY_ESCAPE, _clearPopup);
         }
 
-        // don't fade in the game or town views, they will handle that
-        // themselves when they're ready to roll
+        // don't fade in the game or town views, they'll handle that themselves when they're ready
         if (view instanceof BangView || view instanceof TownView) {
             return;
         }
-        _ctx.getInterface().attachChild(
-            new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true));
+        _ctx.getInterface().attachChild(new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true));
     }
 
     /**

@@ -237,7 +237,7 @@ public class TownView extends BWindow
 
     protected void finishedIntroPan ()
     {
-        _active = !_bctx.getBangClient().checkShowIntro();
+        _active = !_bctx.getBangClient().checkShowIntro(false);
     }
 
     protected void fireCommand (String command)

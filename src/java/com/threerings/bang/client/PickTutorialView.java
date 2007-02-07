@@ -134,12 +134,10 @@ public class PickTutorialView extends BDecoratedWindow
     {
         String action = event.getAction();
         if (action.equals("dismiss")) {
-            BangPrefs.setDeclinedTutorials(_ctx.getUserObject());
             _ctx.getBangClient().clearPopup(this, true);
-            _ctx.getBangClient().checkShowIntro();
+            _ctx.getBangClient().checkShowIntro(false);
 
         } else if (action.startsWith("to_")) {
-            BangPrefs.setDeclinedTutorials(_ctx.getUserObject());
             _ctx.getBangClient().clearPopup(this, true);
             BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
 

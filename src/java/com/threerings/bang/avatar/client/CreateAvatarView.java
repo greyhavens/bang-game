@@ -141,7 +141,7 @@ public class CreateAvatarView extends BDecoratedWindow
             public void requestProcessed () {
                 // move to the next phase of the intro
                 _ctx.getBangClient().clearPopup(CreateAvatarView.this, true);
-                _ctx.getBangClient().checkShowIntro();
+                _ctx.getBangClient().checkShowIntro(false);
             }
             public void requestFailed (String reason) {
                 _status.setStatus(_msgs.xlate(reason), true);

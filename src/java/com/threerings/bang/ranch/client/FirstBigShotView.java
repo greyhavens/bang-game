@@ -129,7 +129,7 @@ public class FirstBigShotView extends BDecoratedWindow
             public void requestProcessed () {
                 // move to the next phase of the intro
                 _ctx.getBangClient().clearPopup(FirstBigShotView.this, true);
-                _ctx.getBangClient().checkShowIntro();
+                _ctx.getBangClient().checkShowIntro(false);
             }
             public void requestFailed (String reason) {
                 _status.setText(_msgs.xlate(reason));

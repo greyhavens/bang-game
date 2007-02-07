@@ -758,6 +758,20 @@ look_upsell {
 }
 
 //
+// Where To View styles
+
+where_title {
+  parent: "label";
+  font: "Old Town Wide" plain 24;
+  text-align: center;
+}
+
+where_info {
+  parent: "label";
+  font: "Dom Casual" plain 16;
+}
+
+//
 // Pardner View styles
 
 pardner_view { 
