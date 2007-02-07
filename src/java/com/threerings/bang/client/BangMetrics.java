@@ -158,5 +158,5 @@ public class BangMetrics
     }
 
     /** The color mapping from player indices to player color. */
-    public static int[] colorLookup;
+    public static int[] colorLookup = { 0, 1, 2, 3, 4 };
 }
