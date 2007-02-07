@@ -786,7 +786,7 @@
   <!-- install project specific server code into ${pkg.base} -->
   <target name="prepare-server-extra">
     <copy todir="${pkg.base}/${deploy.dir}/rsrc">
-      <fileset dir="${deploy.dir}/rsrc" includes="**/*.jar"/>
+      <fileset dir="${deploy.dir}/rsrc" includes="avatars/**/*.jar"/>
     </copy>
     <copy todir="${pkg.base}/rsrc">
       <fileset dir="rsrc" includes="**/*.board"/>
