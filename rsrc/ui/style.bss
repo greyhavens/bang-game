@@ -1270,7 +1270,7 @@ unit_status_closed:hover {
 }
 
 unit_status_container {
-  background: image "ui/ustatus/unitstatus_open.png" centerxy 97 32 21 54;
+  background: image "ui/ustatus/unitstatus_open.png" framexy 97 32 21 54;
   padding: 3 9 11 42;
 }
 
