@@ -66,7 +66,7 @@ for JAR in $BANG_HOME/dist/lib/*.jar; do
     CLASSPATH=$CLASSPATH:$JAR
 done
 if [ -z "$NODEVLIBS" -a -d $BANG_HOME/dist/classes ]; then
-    CLASSPATH=$BANG_HOME/dist/classes:$BANG_HOME/dist:$CLASSPATH
+    CLASSPATH=$BANG_HOME/dist/classes:$CLASSPATH
 else
     for JAR in $BANG_HOME/dist/bang-*.jar; do
         # skip the bang-support jar, it duplicates what's in bang-code
@@ -74,8 +74,8 @@ else
             CLASSPATH=$JAR:$CLASSPATH
         fi
     done
-    CLASSPATH=$BANG_HOME:$CLASSPATH
 fi
+CLASSPATH=$BANG_HOME/dist:$CLASSPATH
 export CLASSPATH
 
 OS=`uname -s`
