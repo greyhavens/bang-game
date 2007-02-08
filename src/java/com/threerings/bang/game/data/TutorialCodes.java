@@ -42,7 +42,7 @@ public interface TutorialCodes
             "forest_guardians",
             PRACTICE_PREFIX + ForestGuardiansInfo.IDENT,
         } , { // boom town tutorials
-            "boom_units", // TEMP: test tutorial
+            "boom_units", ""// TEMP: test tutorial
         }
     };
 
