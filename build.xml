@@ -77,6 +77,8 @@
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/rsrc"/>
+
+    <!-- copy global static resources -->
     <copy todir="${deploy.dir}/rsrc">
       <fileset dir="rsrc">
        <include name="**/*"/>
@@ -94,6 +96,18 @@
        <exclude name="config/**/*.xml"/>
        <exclude name="**/*.wav"/>
        <exclude name="**/source/**"/>
+      </fileset>
+    </copy>
+
+    <!-- copy global static resources -->
+    <copy todir="${deploy.dir}/rsrc/goods">
+      <fileset dir="rsrc/goods">
+        <include name="cards/**/*.png"/>
+        <include name="passes/**/*.png"/>
+        <include name="purses/**/*.png"/>
+        <include name="tickets/**/*.png"/>
+        <include name="*.png"/>
+        <exclude name="**/source/**"/>
       </fileset>
     </copy>
 
@@ -656,14 +670,9 @@
     </jar>
 
     <!-- put our non-town-specific goods resources in a bundle -->
-    <mkdir dir="${deploy.dir}/rsrc/goods"/>
-    <jar file="${deploy.dir}/rsrc/goods/bundle.jar" basedir="rsrc/goods">
-      <include name="cards/**/*.png"/>
-      <include name="passes/**/*.png"/>
-      <include name="purses/**/*.png"/>
-      <include name="tickets/**/*.png"/>
-      <include name="*.png"/>
-      <exclude name="**/source/**"/>
+    <jar file="${deploy.dir}/rsrc/goods/bundle.jar" basedir="${deploy.dir}/rsrc/goods">
+      <include name="**/*"/>
+      <exclude name="*.jar"/>
     </jar>
 
     <!-- our top-level resources have all been copied into ${deploy.dir}/ -->
