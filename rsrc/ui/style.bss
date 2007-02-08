@@ -762,7 +762,10 @@ look_upsell {
 
 where_title {
   parent: "label";
-  font: "Old Town Wide" plain 24;
+  font: "Old Town Wide" plain 32;
+  text-effect: outline;
+  color: #FFFFFF;
+  effect-color: #6C5237;
   text-align: center;
 }
 
