@@ -39,6 +39,15 @@ public class BountyGameOverViewTest extends TestApp
 {
     public static void main (String[] args)
     {
+        if (args.length > 2) {
+            _type = args[0];
+            _bountyId = args[1];
+            _gameId = args[2];
+        }
+        if (args.length > 3) {
+            _result = Enum.valueOf(Result.class, args[3].toUpperCase());
+        }
+
         LoggingSystem.getLogger().setLevel(Level.WARNING);
         BountyGameOverViewTest test = new BountyGameOverViewTest();
         if (test.init()) {
@@ -57,11 +66,11 @@ public class BountyGameOverViewTest extends TestApp
         user.scrip = 5378;
         user.stats = new StatSet();
 
-        String bountyId = "hard/sgt._rusty", gameId = "greenhorns";
-        BountyConfig config = BountyConfig.getBounty(bountyId);
+        BountyConfig config = BountyConfig.getBounty(_bountyId);
         BangConfig gconfig = null;
         try {
-            String path = "bounties/frontier_town/most_wanted/" + bountyId + "/" + gameId + ".game";
+            String path = "bounties/frontier_town/" +
+                _type + "/" + _bountyId + "/" + _gameId + ".game";
             gconfig = (BangConfig)BinaryImporter.getInstance().load(
                 _ctx.getResourceManager().getResource(path));
             gconfig.type = BangConfig.Type.BOUNTY;
@@ -95,6 +104,21 @@ public class BountyGameOverViewTest extends TestApp
             bangobj.playerInfo[ii].avatar = BangAI.getAvatar(RandomUtil.getInt(100) > 50);
         }
 
-        return new BountyGameOverView(_ctx, config, gameId, gconfig, bangobj, user);
+        return new BountyGameOverView(_ctx, config, _gameId, gconfig, bangobj, user) {
+            protected boolean bountyGameFailed () {
+                return (_result == Result.LOST);
+            }
+            protected boolean bountyCompleted (boolean gameFailed) {
+                return (_result == Result.COMPLETED);
+            }
+        };
     }
+
+    protected static String _type = "most_wanted";
+    protected static String _bountyId = "hard/sgt._rusty";
+    protected static String _gameId = "greenhorns";
+    protected static Result _result = Result.WON;
+
+    /** Used for testing. */
+    public static enum Result { LOST, WON, COMPLETED };
 }

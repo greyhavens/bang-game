@@ -127,6 +127,9 @@ public class BountyConfig extends SimpleStreamableObject
     /** Uniquely identifies this bounty. */
     public String ident;
 
+    /** Used to force an order on bounties with the same scrip reward. */
+    public int order;
+
     /** The (translated) title of this bounty. Generally the Outlaw's name. */
     public String title;
 
@@ -296,6 +299,9 @@ public class BountyConfig extends SimpleStreamableObject
         if (other.reward.scrip != reward.scrip) {
             return reward.scrip - other.reward.scrip;
         }
+        if (order != other.order) {
+            return order - other.order;
+        }
         if (other.games.size() != games.size()) {
             return games.size() - other.games.size();
         }
@@ -319,6 +325,7 @@ public class BountyConfig extends SimpleStreamableObject
         config.ident = bits[2] + "/" + bits[3];
 
         // parse the various bounty properties
+        config.order = BangUtil.getIntProperty(which, props, "order", 0);
         config.difficulty =
             BangUtil.getEnumProperty(which, props, "difficulty", Star.Difficulty.EASY);
         config.inOrder = BangUtil.getBooleanProperty(which, props, "in_order", config.inOrder);

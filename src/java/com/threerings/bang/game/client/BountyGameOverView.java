@@ -192,7 +192,7 @@ public class BountyGameOverView extends SteelWindow
     protected void displayResults (boolean playMusic)
     {
         // note whether we've completed the entire bounty
-        boolean gfailed = (_failed > 0), completed = !gfailed && _bounty.isCompleted(_user);
+        boolean gfailed = bountyGameFailed(), completed = bountyCompleted(gfailed);
 
         _header.setText(_msgs.get("m.bover_rtitle", _bounty.title));
         _contents.removeAll();
@@ -256,6 +256,18 @@ public class BountyGameOverView extends SteelWindow
         if (_bctx != null && playMusic) {
             _bctx.getBangClient().queueMusic("frontier_town/post_game" + cueidx, false, 2f);
         }
+    }
+
+    /** Helper function for {@link #displayResults}, overridable for testing. */
+    protected boolean bountyGameFailed ()
+    {
+        return (_failed > 0);
+    }
+
+    /** Helper function for {@link #displayResults}, overridable for testing. */
+    protected boolean bountyCompleted (boolean gameFailed)
+    {
+        return !gameFailed && _bounty.isCompleted(_user);
     }
 
     /**
