@@ -88,7 +88,7 @@ public class CounterSprite extends PropSprite
             _tstate.setTexture(tex);
             _counter.updateRenderState();
             _dcount = counter.count;
-            //_counter.setCullMode(CULL_DYNAMIC);
+            _counter.setCullMode(CULL_DYNAMIC);
         }
     }
 
@@ -111,7 +111,7 @@ public class CounterSprite extends PropSprite
         bbn.setLocalTranslation(new Vector3f(
                     0, 0, (_config.height + 0.5f) * TILE_SIZE));
         attachChild(bbn);
-        //_counter.setCullMode(CULL_ALWAYS);
+        _counter.setCullMode(CULL_ALWAYS);
     }
 
     @Override // documentation inherited
