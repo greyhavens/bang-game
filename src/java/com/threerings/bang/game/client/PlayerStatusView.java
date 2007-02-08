@@ -142,6 +142,14 @@ public class PlayerStatusView extends BContainer
         }
     }
 
+    /**
+     * Returns the player index for this player status view.
+     */
+    public int getPidx ()
+    {
+        return _pidx;
+    }
+
     // documentation inherited from interface AttributeChangeListener
     public void attributeChanged (AttributeChangedEvent event)
     {

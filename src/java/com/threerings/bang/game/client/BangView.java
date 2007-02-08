@@ -370,12 +370,29 @@ public class BangView extends BWindow
 
         // then put the status views in windows, always putting ours leftmost
         int idx = 0, pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().getVisibleName());
+        boolean[] added = new boolean[pcount];
         if (pidx > -1) {
             _pswins[idx++].add(pstatus[pidx]);
+            added[pidx] = true;
         }
+        // players on the same team next
         for (int ii = 0; ii < pcount; ii++) {
-            if (ii != pidx) {
+            if (!added[ii] && _bangobj.teams[ii] == _bangobj.teams[pidx]) {
                 _pswins[idx++].add(pstatus[ii]);
+                added[ii] = true;
+            }
+        }
+        // remaining players ordered by team
+        for (int ii = 0; ii < pcount; ii++) {
+            if (!added[ii]) {
+                _pswins[idx++].add(pstatus[ii]);
+                added[ii] = true;
+                for (int jj = ii + 1; jj < pcount; jj++) {
+                    if (!added[jj] && _bangobj.teams[ii] == _bangobj.teams[jj]) {
+                        _pswins[idx++].add(pstatus[jj]);
+                        added[jj] = true;
+                    }
+                }
             }
         }
     }
@@ -493,18 +510,40 @@ public class BangView extends BWindow
 
         int width = _ctx.getDisplay().getWidth();
         int height = _ctx.getDisplay().getHeight();
-        int gap = 0, wcount = _pswins.length;
+        int gap = 0, wcount = _pswins.length, tgap = 2, offset = 5;
+        int tcount = wcount;
+        for (int ii = 0; ii < wcount; ii++) {
+            for (int jj = ii + 1; jj < wcount; jj++) {
+                if (_bangobj.teams[ii] == _bangobj.teams[jj]) {
+                    tcount--;
+                    break;
+                }
+            }
+        }
+        if (tcount == 1) {
+            tcount = wcount;
+        }
+        int lastpidx = 0;
 
         for (int ii = 0; ii < wcount; ii++) {
             BWindow pwin = _pswins[ii];
+            PlayerStatusView psv = (PlayerStatusView)pwin.getComponent(0);
             _ctx.getRootNode().addWindow(pwin);
             pwin.pack();
             // compute the gap once we've laid out our first status window
             int wwidth = _pswins[ii].getWidth();
             if (gap == 0) {
-                gap = ((width - 10) - (wcount * wwidth)) / (wcount-1);
+                gap = ((width - 10) - (wcount * wwidth) - tgap * (wcount - tcount)) / 
+                    (tcount - 1);
+                offset = 5;
+            } else if (_bangobj.teams[lastpidx] != _bangobj.teams[psv.getPidx()]) {
+                offset += gap; 
+            } else {
+                offset += tgap;
             }
-            pwin.setLocation(5 + (wwidth+gap) * ii, 5);
+            pwin.setLocation(offset, 5);
+            offset += wwidth;
+            lastpidx = psv.getPidx();
         }
     }
 
