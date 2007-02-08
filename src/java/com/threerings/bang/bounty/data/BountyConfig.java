@@ -262,6 +262,8 @@ public class BountyConfig extends SimpleStreamableObject
         if (oppai.avatar != null && oppai.avatar.image == null && 
                 (oppai.avatar.print == null || oppai.avatar.print.length == 0)) {
             oppai.avatar = null;
+            log.warning("Malformed avatar [bounty=" + ident + ", game=" + game + 
+                        ", index=" + index + "].");
         }
 
         return oppai;
