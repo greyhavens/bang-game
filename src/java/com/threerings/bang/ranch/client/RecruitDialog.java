@@ -11,13 +11,13 @@ import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.MoneyLabel;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.client.bui.StatusLabel;
@@ -56,10 +56,7 @@ public class RecruitDialog extends BDecoratedWindow
         row.add(new BLabel(_msgs.get("m.rd_name")), GroupLayout.FIXED);
         row.add(_name = new BTextField(
                     config.pickRandomName(), BigShotItem.MAX_NAME_LENGTH));
-        BButton random = new BButton(new ImageIcon(
-            ctx.loadImage("ui/icons/dice.png")), this, "random");
-        random.setStyleClass("arrow_button");
-        row.add(random, GroupLayout.FIXED);
+        row.add(BangUI.createDiceButton(this, "random"), GroupLayout.FIXED);
         cont.add(row, GroupLayout.FIXED);
 
         cont.add(_status = new StatusLabel(ctx), GroupLayout.FIXED);

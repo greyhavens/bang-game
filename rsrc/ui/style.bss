@@ -216,6 +216,21 @@ arrow_button:disabled {
   parent: "alt_button:disabled";
 }
 
+dice_button {
+  parent: alt_button;
+  padding: 4 5;
+}
+dice_button:hover {
+  parent: "alt_button:hover";
+}
+dice_button:down {
+  parent: "alt_button:down";
+  padding: 5 7 3 3;
+}
+dice_button:disabled {
+  parent: "alt_button:disabled";
+}
+
 invisibutton {
 }
 invisibutton:disabled {

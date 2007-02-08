@@ -43,9 +43,10 @@ import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BToggleButton;
-import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.text.AWTTextFactory;
 import com.jmex.bui.text.BTextFactory;
 
@@ -453,6 +454,17 @@ public class BangUI
         button.setOrientation(BButton.VERTICAL);
         button.setStyleClass("unit_label");
         return button;
+    }
+
+    /**
+     * Creates a button that displays little dice on it.
+     */
+    public static BButton createDiceButton (ActionListener listener, String action)
+    {
+        ImageIcon dicon = new ImageIcon(_ctx.loadImage("ui/icons/dice.png"));
+        BButton btn = new BButton(dicon, listener, action);
+        btn.setStyleClass("dice_button");
+        return btn;
     }
 
     /**

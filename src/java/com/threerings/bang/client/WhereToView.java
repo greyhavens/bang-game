@@ -50,10 +50,7 @@ public class WhereToView extends BDecoratedWindow
     /** The width to hint when laying out this window. */
     public static final int WIDTH_HINT = 900;
 
-    /**
-     * Creates the view.
-     */
-    public WhereToView (BangContext ctx)
+    public WhereToView (BangContext ctx, boolean postGame)
     {
         super(ctx.getStyleSheet(), null);
         setStyleClass("dialog_window");
@@ -115,11 +112,12 @@ public class WhereToView extends BDecoratedWindow
 
         BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
         ((GroupLayout)row.getLayoutManager()).setGap(25);
-        if (BangPrefs.shouldShowWhereTo(_ctx.getUserObject())) {
+        if (!postGame && BangPrefs.shouldShowWhereTo(_ctx.getUserObject())) {
             row.add(_nowhere = new BCheckBox(_msgs.get("m.no_whereto")));
         }
-        String dmsg = _ctx.getBangClient().isShowingTownView() ? "m.to_town" : "m.dismiss";
-        row.add(new BButton(_msgs.get(dmsg), this, "dismiss"));
+        String dmsg = (postGame || _ctx.getBangClient().isShowingTownView()) ?
+            "m.to_town" : "m.dismiss";
+        row.add(new BButton(_msgs.get(dmsg), this, postGame ? "to_town" : "dismiss"));
         add(row);
     }
 
@@ -136,11 +134,15 @@ public class WhereToView extends BDecoratedWindow
 
         } else if (action.startsWith("to_")) {
             _ctx.getBangClient().clearPopup(this, true);
+
             BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
             if (action.equals("to_office")) {
                 _ctx.getLocationDirector().moveTo(bbd.officeOid);
             } else if (action.equals("to_saloon")) {
                 _ctx.getLocationDirector().moveTo(bbd.saloonOid);
+            } else if (action.equals("to_town")) {
+                _ctx.getLocationDirector().leavePlace();
+                _ctx.getBangClient().showTownView();
             }
 
         } else {
@@ -177,26 +179,28 @@ public class WhereToView extends BDecoratedWindow
 
         BLabel tlabel = new BLabel(_msgs.get("m.tut_" + tid), "tutorial_text");
         tlabel.setIcon(icon);
+        tlabel.setEnabled(enabled);
         box.add(tlabel);
 
         BButton play = new BButton(_msgs.get(btext), this, tid);
         play.setStyleClass("alt_button");
         box.add(play);
 
+        if (unplayed) {
+            // practice and labels after the first unplayed tutorial is greyed out
+            enabled = false;
+        }
+
         if (plusPractice) {
             BButton practice = new BButton(_msgs.get("m.tut_practice"), this, tutorials[idx+1]);
             practice.setStyleClass("alt_button");
+            practice.setEnabled(enabled);
             box.add(practice);
         } else {
             box.add(new BLabel(""));
         }
 
-        if (unplayed) {
-            tlabel.setEnabled(enabled);
-            return false; // everything after the first unplayed tutorial is greyed out
-        }
-
-        return true;
+        return enabled;
     }
 
     protected BangContext _ctx;

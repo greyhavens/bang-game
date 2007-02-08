@@ -25,7 +25,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 
-import com.threerings.bang.client.PickTutorialView;
+import com.threerings.bang.client.WhereToView;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.data.BangConfig;
@@ -159,9 +159,9 @@ public class TutorialController
             _ctx.getRootNode().removeWindow(_view.tutwin);
         }
 
-        // display the pick tutorial view in "finished tutorial" mode
+        // display the WhereToView so they can pick a new tutorial or go back to town
         _ctx.getBangClient().displayPopup(
-            new PickTutorialView(_ctx, PickTutorialView.Mode.COMPLETED), true);
+            new WhereToView(_ctx, true), true, WhereToView.WIDTH_HINT);
     }
 
     /** Called from {@link BangController#didLeavePlace}. */

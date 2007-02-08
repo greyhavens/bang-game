@@ -437,7 +437,7 @@ public class BangClient extends BasicClient
 
         // show them the Where To view if they haven't turned it off
         if (!skipWhereTo && BangPrefs.shouldShowWhereTo(_ctx.getUserObject())) {
-            displayPopup(new WhereToView(_ctx), true, WhereToView.WIDTH_HINT);
+            displayPopup(new WhereToView(_ctx, false), true, WhereToView.WIDTH_HINT);
             return true;
         }
 

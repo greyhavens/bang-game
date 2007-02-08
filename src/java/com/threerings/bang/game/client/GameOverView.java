@@ -21,7 +21,7 @@ import com.jmex.bui.layout.TableLayout;
 
 import com.threerings.util.MessageBundle;
 
-import com.threerings.bang.client.PickTutorialView;
+import com.threerings.bang.client.WhereToView;
 import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
@@ -192,10 +192,8 @@ public class GameOverView extends SteelWindow
                 _bctx.getBangClient().showTownView();
 
             } else if (action.equals("to_tutorial")) {
-                // display the pick tutorial view in "finished tutorial" mode
                 _bctx.getBangClient().displayPopup(
-                    new PickTutorialView(_bctx, PickTutorialView.Mode.COMPLETED), true,
-                    PickTutorialView.WIDTH_HINT);
+                    new WhereToView(_bctx, true), true, WhereToView.WIDTH_HINT);
 
             } else {
                 _bctx.getLocationDirector().moveTo(_bctx.getBangClient().getPriorLocationOid());

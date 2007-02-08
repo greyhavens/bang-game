@@ -17,7 +17,6 @@ import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
@@ -71,9 +70,10 @@ public class FirstLookView extends BContainer
         ((GroupLayout)wrapper.getLayoutManager()).setGap(10);
         wrapper.add(_toggles);
 
-        // add a button to randomly pick new settings
-        ImageIcon dicon = new ImageIcon(ctx.loadImage("ui/icons/dice.png"));
-        BButton rando = new BButton(dicon, new ActionListener() {
+        // do some jimmying to center the rando button nicely
+        BContainer jimmy = GroupLayout.makeHBox(GroupLayout.CENTER);
+        jimmy.add(new Spacer(122, 5));
+        jimmy.add(BangUI.createDiceButton(new ActionListener() {
             public void actionPerformed (ActionEvent event) {
                 for (AspectToggle at : _ats) {
                     at.pickRandom();
@@ -83,13 +83,7 @@ public class FirstLookView extends BContainer
                 _eyes.pickRandom();
                 updateAvatar();
             }
-        }, "random");
-        rando.setStyleClass("arrow_button");
-
-        // do some jimmying to center the rando button nicely
-        BContainer jimmy = GroupLayout.makeHBox(GroupLayout.CENTER);
-        jimmy.add(new Spacer(122, 5));
-        jimmy.add(rando);
+        }, "random"));
         wrapper.add(jimmy);
         add(wrapper, BorderLayout.CENTER);
     }

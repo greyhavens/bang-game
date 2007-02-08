@@ -13,7 +13,6 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.TextEvent;
 import com.jmex.bui.event.TextListener;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.samskivert.util.StringUtil;
@@ -22,6 +21,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.bang.client.BangClient;
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
@@ -83,10 +83,7 @@ public class FirstBigShotView extends BDecoratedWindow
                 _done.setEnabled(isReady());
             }
         });
-        BButton random = new BButton(new ImageIcon(
-            ctx.loadImage("ui/icons/dice.png")), this, "random");
-        random.setStyleClass("arrow_button");
-        ncont.add(random);
+        ncont.add(BangUI.createDiceButton(this, "random"));
         ncont.add(new Spacer(25, 0));
 
         add(_status);

@@ -151,7 +151,7 @@ public class FKeyPopups
             popup = createReportBug();
             break;
         case TUTORIALS:
-            popup = new WhereToView(_ctx);
+            popup = new WhereToView(_ctx, false);
             whint = WhereToView.WIDTH_HINT;
             break;
         case CLIENT_LOG:

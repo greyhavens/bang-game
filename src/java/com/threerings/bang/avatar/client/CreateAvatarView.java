@@ -17,7 +17,6 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.TextEvent;
 import com.jmex.bui.event.TextListener;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.text.LengthLimitedDocument;
 
@@ -85,10 +84,7 @@ public class CreateAvatarView extends BDecoratedWindow
                                 _done, _status, _msgs.get("m.create_defstatus"),
                                 _msgs.get("m.invalid_handle")));
 
-        ImageIcon dicon = new ImageIcon(ctx.loadImage("ui/icons/dice.png"));
-        BButton btn;
-        col.add(btn = new BButton(dicon, this, "random"), GroupLayout.FIXED);
-        btn.setStyleClass("arrow_button");
+        col.add(BangUI.createDiceButton(this, "random"), GroupLayout.FIXED);
         row.add(col);
         inner.add(row);
         inner.add(_look = new FirstLookView(ctx, _status));
@@ -169,9 +165,8 @@ public class CreateAvatarView extends BDecoratedWindow
 
     protected static class HandleListener implements TextListener
     {
-        public HandleListener (
-            BButton button, StatusLabel status,
-            String defaultStatus, String invalidStatus)
+        public HandleListener (BButton button, StatusLabel status,
+                               String defaultStatus, String invalidStatus)
         {
             _button = button;
             _status = status;
@@ -181,12 +176,11 @@ public class CreateAvatarView extends BDecoratedWindow
 
         public void textChanged (TextEvent event) {
             String text = ((BTextField)event.getSource()).getText();
-            boolean valid =
-                NameFactory.getValidator().isValidHandle(new Handle(text));
+            boolean valid = NameFactory.getValidator().isValidHandle(new Handle(text));
             _button.setEnabled(valid);
             int minLength = NameFactory.getValidator().getMinHandleLength();
             _status.setStatus((!valid && text.length() >= minLength) ?
-                _invstatus : _defstatus, false);
+                              _invstatus : _defstatus, false);
         }
 
         protected BButton _button;
