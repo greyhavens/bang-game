@@ -81,16 +81,6 @@ public class BountyListEntry extends SelectableIcon
     }
 
     @Override // from BComponent
-    protected void stateDidChange ()
-    {
-        super.stateDidChange();
-
-        for (Label label : _labels) {
-            label.stateDidChange();
-        }
-    }
-
-    @Override // from BComponent
     protected void configureStyle (BStyleSheet style)
     {
         super.configureStyle(style);

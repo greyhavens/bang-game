@@ -54,6 +54,7 @@ public class GameOverViewTest extends TestApp
         user.scrip = 125378;
 
         BangConfig bconfig = new BangConfig();
+        bconfig.rated = false;
         bconfig.addRound("tb", null, null);
         bconfig.addRound("wa", null, null);
         bconfig.addRound("fg", null, null);
@@ -78,9 +79,9 @@ public class GameOverViewTest extends TestApp
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
             bangobj.awards[ii] = new Award();
             bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;
-            if (bangobj.awards[ii].pidx == 2) {
-                bangobj.awards[ii].item = Badge.Type.DISTANCE_MOVED_1.newBadge();
-            }
+//             if (bangobj.awards[ii].pidx == 2) {
+//                 bangobj.awards[ii].item = Badge.Type.DISTANCE_MOVED_1.newBadge();
+//             }
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 100;
             bangobj.playerInfo[ii] = new BangObject.PlayerInfo();

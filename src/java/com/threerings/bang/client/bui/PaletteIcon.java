@@ -60,13 +60,6 @@ public class PaletteIcon extends SelectableIcon
     }
 
     @Override // documentation inherited
-    protected void stateDidChange ()
-    {
-        super.stateDidChange();
-        _text.stateDidChange();
-    }
-
-    @Override // documentation inherited
     protected void layout ()
     {
         super.layout();

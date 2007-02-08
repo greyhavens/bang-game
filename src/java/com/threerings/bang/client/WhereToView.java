@@ -4,6 +4,7 @@
 package com.threerings.bang.client;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
@@ -46,6 +47,9 @@ import static com.threerings.bang.Log.log;
 public class WhereToView extends BDecoratedWindow
     implements ActionListener
 {
+    /** The width to hint when laying out this window. */
+    public static final int WIDTH_HINT = 900;
+
     /**
      * Creates the view.
      */
@@ -62,65 +66,61 @@ public class WhereToView extends BDecoratedWindow
         PlayerObject self = _ctx.getUserObject();
 
         add(new BLabel(_msgs.get("m.whereto_title"), "window_title"));
-        add(new BLabel(_msgs.get("m.whereto_intro"), "where_info"));
 
-        BContainer table = new BContainer(new TableLayout(3, 0, 25));
-        add(table);
+        BContainer horiz = new BContainer(GroupLayout.makeHStretch().setGap(25));
+        add(horiz);
+
+        BContainer tutcol = new BContainer(GroupLayout.makeVert(GroupLayout.TOP).setGap(10));
+        tutcol.add(new BLabel(_msgs.get("m.whereto_tuts"), "where_title"));
+        tutcol.add(new BLabel(_msgs.get("m.whereto_intro"), "where_info"));
 
         boolean enabled = true;
         int townIdx = BangUtil.getTownIndex(self.townId);
         String[] tutorials = TutorialCodes.TUTORIALS[townIdx];
+        BContainer tuts = new BContainer(new TableLayout(3, 5, 5));
         if (townIdx == 0) { // frontier town is special
-            BContainer box = new BContainer(new TableLayout(2, 5, 5));
-            enabled = createTutorialButton(box, tutorials, 0, enabled, false);
-            enabled = createTutorialButton(box, tutorials, 1, enabled, false);
-            table.add(box);
-
-            box = new BContainer(new TableLayout(3, 5, 5));
-            enabled = createTutorialButton(box, tutorials, 2, enabled, true);
-            enabled = createTutorialButton(box, tutorials, 4, enabled, true);
-            table.add(box);
-
-            box = new BContainer(new TableLayout(3, 5, 5));
-            enabled = createTutorialButton(box, tutorials, 6, enabled, true);
-            enabled = createTutorialButton(box, tutorials, 8, enabled, true);
-            table.add(box);
-
+            enabled = createTutorialButton(tuts, tutorials, 0, enabled, false);
+            enabled = createTutorialButton(tuts, tutorials, 1, enabled, false);
+            for (int ii = 2; ii < tutorials.length; ii += 2) {
+                enabled = createTutorialButton(tuts, tutorials, ii, enabled, true);
+            }
         } else {
             for (int ii = 0; ii < tutorials.length; ii += 2) {
-                BContainer box = new BContainer(new TableLayout(3, 5, 5));
-                enabled = createTutorialButton(box, tutorials, ii, enabled, true);
-                table.add(box);
+                enabled = createTutorialButton(tuts, tutorials, ii, enabled, true);
             }
         }
+        tutcol.add(tuts);
+        horiz.add(tutcol);
 
-        BContainer bldgs = new BContainer(GroupLayout.makeHStretch().setGap(10));
+        BContainer bldgs = new BContainer(GroupLayout.makeVStretch().setGap(25));
         for (String ident : BLDGS) {
             if (bldgs.getComponentCount() > 0) {
                 bldgs.add(new Spacer(5, 0), GroupLayout.FIXED);
             }
+            BContainer brow = new BContainer(GroupLayout.makeHStretch().setGap(10));
             String spath = "ui/" + ident + "/" + _ctx.getUserObject().townId + "/shop.png";
-            bldgs.add(new BLabel(new ImageIcon(_ctx.loadImage(spath))), GroupLayout.FIXED);
+            brow.add(new BLabel(new ImageIcon(_ctx.loadImage(spath))), GroupLayout.FIXED);
             BContainer box = new BContainer(GroupLayout.makeVStretch());
             box.add(new BLabel(_msgs.get("m.bldg_" + ident), "where_title"), GroupLayout.FIXED);
             box.add(new BLabel(_msgs.get("m.bldg_info_" + ident), "where_info"));
             BButton go = new BButton(_msgs.get("m.bldg_go"), this, "to_" + ident);
             go.setStyleClass("alt_button");
-            BContainer brow = GroupLayout.makeHBox(GroupLayout.CENTER);
-            brow.add(go);
-            box.add(brow, GroupLayout.FIXED);
-            bldgs.add(box);
+            BContainer butrow = GroupLayout.makeHBox(GroupLayout.CENTER);
+            butrow.add(go);
+            box.add(butrow, GroupLayout.FIXED);
+            brow.add(box);
+            bldgs.add(brow);
         }
-        add(bldgs);
+        horiz.add(bldgs);
 
-        add(new BButton(_msgs.get("m.dismiss"), this, "dismiss"));
-    }
-
-    @Override // from BContainer
-    public void validate ()
-    {
-        pack();
-        super.validate();
+        BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ((GroupLayout)row.getLayoutManager()).setGap(25);
+        if (BangPrefs.shouldShowWhereTo(_ctx.getUserObject())) {
+            row.add(_nowhere = new BCheckBox(_msgs.get("m.no_whereto")));
+        }
+        String dmsg = _ctx.getBangClient().isShowingTownView() ? "m.to_town" : "m.dismiss";
+        row.add(new BButton(_msgs.get(dmsg), this, "dismiss"));
+        add(row);
     }
 
     // from interface ActionListener
@@ -129,7 +129,10 @@ public class WhereToView extends BDecoratedWindow
         String action = event.getAction();
         if (action.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);
-            _ctx.getBangClient().checkShowIntro(true);
+            if (_nowhere != null && _nowhere.isSelected()) {
+                BangPrefs.setNoWhereTo(_ctx.getUserObject());
+                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, "m.whereto_byebye");
+            }
 
         } else if (action.startsWith("to_")) {
             _ctx.getBangClient().clearPopup(this, true);
@@ -147,6 +150,13 @@ public class WhereToView extends BDecoratedWindow
                 _ctx, BangCodes.BANG_MSGS, "m.start_tut_failed");
             psvc.playTutorial(_ctx.getClient(), action, rl);
         }
+    }
+
+    @Override // from BContainer
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _ctx.getBangClient().checkShowIntro(true);
     }
 
     protected boolean createTutorialButton (BContainer box, String[] tutorials, int idx,
@@ -177,6 +187,8 @@ public class WhereToView extends BDecoratedWindow
             BButton practice = new BButton(_msgs.get("m.tut_practice"), this, tutorials[idx+1]);
             practice.setStyleClass("alt_button");
             box.add(practice);
+        } else {
+            box.add(new BLabel(""));
         }
 
         if (unplayed) {
@@ -189,6 +201,7 @@ public class WhereToView extends BDecoratedWindow
 
     protected BangContext _ctx;
     protected MessageBundle _msgs;
+    protected BCheckBox _nowhere;
 
     protected static final String[] BLDGS = { "office", "saloon" };
 }

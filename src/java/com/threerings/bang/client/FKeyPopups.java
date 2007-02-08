@@ -37,7 +37,6 @@ import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.admin.client.RuntimeConfigView;
 import com.threerings.bang.admin.client.ServerStatusView;
 import com.threerings.bang.chat.client.BangChatDirector;
-import com.threerings.bang.client.PickTutorialView;
 import com.threerings.bang.client.bui.EnablingValidator;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangTokenRing;
@@ -152,8 +151,8 @@ public class FKeyPopups
             popup = createReportBug();
             break;
         case TUTORIALS:
-            popup = new PickTutorialView(_ctx, PickTutorialView.Mode.FKEY);
-            whint = PickTutorialView.WIDTH_HINT;
+            popup = new WhereToView(_ctx);
+            whint = WhereToView.WIDTH_HINT;
             break;
         case CLIENT_LOG:
             popup = createRecentLog();

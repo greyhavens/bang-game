@@ -437,12 +437,12 @@ public class BangClient extends BasicClient
 
         // show them the Where To view if they haven't turned it off
         if (!skipWhereTo && BangPrefs.shouldShowWhereTo(_ctx.getUserObject())) {
-            displayPopup(new WhereToView(_ctx), true, 900);
+            displayPopup(new WhereToView(_ctx), true, WhereToView.WIDTH_HINT);
             return true;
         }
 
         // if the main view is the town view, activate it because we're done fooling around
-        if (_mview instanceof TownView) {
+        if (isShowingTownView()) {
             ((TownView)_mview).setActive(true);
         }
 
@@ -454,9 +454,17 @@ public class BangClient extends BasicClient
      */
     public void showTownView ()
     {
-        if (!(_mview instanceof TownView)) {
+        if (!isShowingTownView()) {
             setMainView(new TownView(_ctx));
         }
+    }
+
+    /**
+     * Returns true if we're currently displaying the town view.
+     */
+    public boolean isShowingTownView ()
+    {
+        return (_mview instanceof TownView);
     }
 
     /**
@@ -1297,7 +1305,7 @@ public class BangClient extends BasicClient
 
             } else {
                 _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, reason);
-                if (_mview instanceof TownView) {
+                if (isShowingTownView()) {
                     ((TownView)_mview).resetViewpoint();
                 } else {
                     showTownView();
