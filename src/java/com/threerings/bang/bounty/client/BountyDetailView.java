@@ -46,7 +46,7 @@ public class BountyDetailView extends BContainer
         add(_descrip = new BLabel("", "bounty_detail_descrip"), new Rectangle(203, 273, 184, 110));
 
         GroupLayout glay = GroupLayout.makeVert(
-            GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.STRETCH).setGap(2);
+            GroupLayout.NONE, GroupLayout.BOTTOM, GroupLayout.STRETCH).setGap(2);
         add(_games = new BContainer(glay), new Rectangle(55, 116, 332, 152));
 
         TableLayout tlay = new TableLayout(2, 0, 0).setHorizontalAlignment(TableLayout.STRETCH);
