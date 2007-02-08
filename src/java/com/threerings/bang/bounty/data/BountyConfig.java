@@ -258,6 +258,12 @@ public class BountyConfig extends SimpleStreamableObject
             oppai.avatar = outlaw;
         }
 
+        // don't let a malformed avatarInfo sneak through
+        if (oppai.avatar != null && oppai.avatar.image == null && 
+                (oppai.avatar.print == null || oppai.avatar.print.length == 0)) {
+            oppai.avatar = null;
+        }
+
         return oppai;
     }
 
