@@ -54,10 +54,10 @@ public class BountyGameOverViewTest extends TestApp
         PlayerObject user = new PlayerObject();
         user.handle = new Handle("Wild Annie");
         user.inventory = new DSet<Item>(new Purse[] { new Purse(-1, 1) });
-        user.scrip = 125378;
+        user.scrip = 5378;
         user.stats = new StatSet();
 
-        String bountyId = "sgt._rusty", gameId = "greenhorns";
+        String bountyId = "hard/sgt._rusty", gameId = "greenhorns";
         BountyConfig config = BountyConfig.getBounty(bountyId);
         BangConfig gconfig = null;
         try {
@@ -79,7 +79,8 @@ public class BountyGameOverViewTest extends TestApp
         bangobj.awards = new Award[bangobj.players.length];
         bangobj.state = BangObject.GAME_OVER;
         bangobj.critStats = new StatSet();
-        bangobj.critStats.setStat(Stat.Type.CATTLE_RUSTLED, RandomUtil.getInt(10));
+        bangobj.critStats.setStat(Stat.Type.CATTLE_RUSTLED, 5+RandomUtil.getInt(10));
+        bangobj.critStats.setStat(Stat.Type.UNITS_KILLED, 5);
         bangobj.critStats.setStat(Stat.Type.UNITS_LOST, 2);
         bangobj.critStats.setStat(Stat.Type.BRAND_POINTS, 250);
         for (int ii = 0; ii < bangobj.awards.length; ii++) {
@@ -89,7 +90,7 @@ public class BountyGameOverViewTest extends TestApp
                 bangobj.awards[ii].item = Badge.Type.DISTANCE_MOVED_1.newBadge();
             }
             bangobj.awards[ii].rank = ii;
-            bangobj.awards[ii].cashEarned = 100;
+            bangobj.awards[ii].cashEarned = 500;
             bangobj.playerInfo[ii] = new BangObject.PlayerInfo();
             bangobj.playerInfo[ii].avatar = BangAI.getAvatar(RandomUtil.getInt(100) > 50);
         }

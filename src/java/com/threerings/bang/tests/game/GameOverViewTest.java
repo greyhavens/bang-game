@@ -51,7 +51,7 @@ public class GameOverViewTest extends TestApp
         PlayerObject user = new PlayerObject();
         user.handle = new Handle("Wild Annie");
         user.inventory = new DSet<Item>(new Purse[] { new Purse(-1, 1) });
-        user.scrip = 125378;
+        user.scrip = 1000;
 
         BangConfig bconfig = new BangConfig();
         bconfig.rated = false;
