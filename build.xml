@@ -196,9 +196,6 @@
       <arg value="rsrc"/>
       <arg value="-name"/>
       <arg value="*.ogg"/>
-      <arg value="!"/>
-      <arg value="-path"/>
-      <arg value="rsrc/sounds/music/*"/>
     </exec>
     <mkdir dir="${deploy.dir}/rsrc/sounds/effects"/>
     <jar file="${deploy.dir}/rsrc/sounds/effects/bundle.jar" basedir="rsrc/sounds/effects">
