@@ -52,6 +52,7 @@
     <file name="lib/lwjgl_util.jar"/>
     <file name="lib/jorbis-0.0.12.jar"/>
     <file name="lib/jogg-0.0.5.jar"/>
+    <file name="lib/jl1.0.jar"/>
     <file name="lib/hemiptera.jar"/>
   </filelist>
 
