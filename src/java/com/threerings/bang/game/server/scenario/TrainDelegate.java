@@ -97,7 +97,7 @@ public class TrainDelegate extends ScenarioDelegate
         for (int i = 0; i < dirs.length; i++) {
             int x = unit.x + PieceCodes.DX[dirs[i]];
             int y = unit.y + PieceCodes.DY[dirs[i]];
-            if (bangobj.board.isOccupiable(x, y)) {
+            if (bangobj.board.isOccupiable(x, y) && bangobj.board.canCross(unit.x, unit.y, x, y)) {
                 Point pt = new Point(x, y);
                 passable.add(pt);
                 if (!bangobj.getTracks().containsKey(Piece.coord(x, y))) {
