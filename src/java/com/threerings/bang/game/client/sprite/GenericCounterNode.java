@@ -53,7 +53,7 @@ public class GenericCounterNode extends Node
         bbn.setLocalTranslation(new Vector3f(
                     0, 0, (int)((1.0 + 0.5) * TILE_SIZE)));
         attachChild(bbn);
-        //_quad.setCullMode(CULL_ALWAYS);
+        _quad.setCullMode(CULL_ALWAYS);
     }    
     
     /**

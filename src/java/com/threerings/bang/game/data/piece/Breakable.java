@@ -4,6 +4,8 @@
 package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
+import com.samskivert.util.IntIntMap;
+
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.game.client.BoardView;
@@ -17,6 +19,7 @@ import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.DamageEffect;
 import com.threerings.bang.game.data.effect.ExplodeEffect;
 import com.threerings.bang.game.data.piece.CounterInterface;
 
@@ -28,7 +31,7 @@ import static com.threerings.bang.Log.log;
 public class Breakable extends Prop
     implements CounterInterface
 {
-    public class BreakableSprite extends TargetableActiveSprite
+    public static class BreakableSprite extends TargetableActiveSprite
     {
         public GenericCounterNode counter;
         
@@ -43,8 +46,8 @@ public class Breakable extends Prop
         {
             super.init(ctx, view, board, sounds, piece, tick);
             counter = new GenericCounterNode();
-            this.attachChild(counter);
             counter.createGeometry((CounterInterface)piece, (BangContext)ctx);
+            this.attachChild(counter);
         }
 
         public boolean isHoverable ()
@@ -59,16 +62,38 @@ public class Breakable extends Prop
             _target.updated(piece, tick);
             counter.updateCount((CounterInterface)piece);
         }            
-    };
-        
-    public void init()
-    {
-        damage = 0;
     }
     
-    public int getCount()
+    public static class UpdateEffect extends Effect
     {
-        return _count;
+        public UpdateEffect()
+        {
+        }
+        
+        public UpdateEffect(Piece piece)
+        {
+            _piece = piece;
+        }
+        
+        @Override // documentation inherited
+        public void prepare (BangObject bangobj, IntIntMap dammap)
+        {
+        }
+        
+        @Override // documentation inherited
+        public int[] getAffectedPieces ()
+        {
+            return new int[] { _piece.pieceId };
+        }
+        
+        public boolean apply (BangObject bangobj, Effect.Observer observer)
+        {
+            bangobj.pieces.updateDirect(_piece);
+            reportEffect(observer, _piece, UPDATED);
+            return true;
+        }
+        
+        protected Piece _piece;
     }
 
     @Override // documentation inherited
@@ -88,6 +113,12 @@ public class Breakable extends Prop
         }
     }
     
+    // from CounterInterface
+    public int getCount()
+    {
+        return _count;
+    }
+
     @Override // documentation inherited
     public boolean isTargetable ()
     {
@@ -98,6 +129,24 @@ public class Breakable extends Prop
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
     {
+        if (damage > 1) {
+            ArrayList<Effect> effects = new ArrayList<Effect>();
+            
+            if (_count == -1) {
+                // start countdown             
+                _count = 3;
+            } else {
+                _count -= 1;
+            }
+                
+            if (_count == 0) {
+                effects.add(new DamageEffect(this, 100));
+            } else if (_count > 0) {
+                effects.add(new UpdateEffect(this));
+            }
+            return effects;
+        }
+            
         return null;
     }
 
@@ -114,5 +163,5 @@ public class Breakable extends Prop
     }
 
     protected boolean isExploding = false;
-    protected int _count = 10;
+    protected int _count = -1;
 }
