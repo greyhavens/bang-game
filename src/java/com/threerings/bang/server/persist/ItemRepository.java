@@ -97,7 +97,8 @@ public class ItemRepository extends SimpleRepository
     {
         final ArrayList<Article> wraps = new ArrayList<Article>();
         final String query = "select ITEM_ID, ITEM_TYPE, OWNER_ID, ITEM_DATA from ITEMS " +
-            "where ITEM_TYPE = " + ItemFactory.getType(Article.class);
+            "where ITEM_TYPE = " + ItemFactory.getType(Article.class) +
+            " and ITEM_DATA like \"%male_head_wrap%\"";
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -106,11 +107,8 @@ public class ItemRepository extends SimpleRepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        Article art = (Article)decodeItem(
-                            rs.getInt(1), rs.getInt(2), rs.getInt(3), (byte[])rs.getObject(4));
-                        if ("indian_post/male_head_wrap".equals(art.getArticleName())) {
-                            wraps.add(art);
-                        }
+                        wraps.add((Article)decodeItem(
+                            rs.getInt(1), rs.getInt(2), rs.getInt(3), (byte[])rs.getObject(4)));
                     }
                 } finally {
                     JDBCUtil.close(stmt);
