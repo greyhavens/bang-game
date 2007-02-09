@@ -17,7 +17,7 @@ import static com.threerings.bang.Log.log;
  */
 public class RandomInfluenceEffect extends SetInfluenceEffect
 {
-    public enum Kind { UP_MOVE, UP_ATTACK, UP_DEFENSE, EXPLODE };
+    public enum Kind { NONE, UP_MOVE, UP_ATTACK, UP_DEFENSE, EXPLODE };
     
     public RandomInfluenceEffect ()
     {
