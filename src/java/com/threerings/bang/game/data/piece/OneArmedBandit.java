@@ -28,17 +28,38 @@ public class OneArmedBandit extends Unit
     public int getCount()
     {
         return _kind.ordinal();
-    }    
+    }
+    
+    public void wasKilled (short tick)
+    {
+        super.wasKilled(tick);
+        _kind = RandomInfluenceEffect.Kind.NONE;
+    }
     
     @Override // documentation inherited
     public Effect[] maybeGeneratePostOrderEffects ()
     {
-        _kind = RandomUtil.pickRandom(RandomInfluenceEffect.Kind.values());
-        Effect randomEffect = (_kind != RandomInfluenceEffect.Kind.EXPLODE) ?
-            new RandomInfluenceEffect(this.pieceId, _kind) : new AreaDamageEffect(owner, 100, 1, x, y);
+        // if the last order was to explode
+        Effect randomEffect;
+        if (_kind == RandomInfluenceEffect.Kind.EXPLODE) {
+            randomEffect = new AreaDamageEffect(owner, 100, 1, x, y);
+        } else {
+            _kind = RandomUtil.pickRandom(RandomInfluenceEffect.Kind.values(), RandomInfluenceEffect.Kind.NONE);
+            randomEffect = (_kind != RandomInfluenceEffect.Kind.EXPLODE) ?
+                new RandomInfluenceEffect(this.pieceId, _kind) : null;
+        }        
+                
         Effect[] effects = super.maybeGeneratePostOrderEffects();
-        effects = (effects == NO_EFFECTS) ? new Effect[] { randomEffect } : ArrayUtil.append(effects, randomEffect);
-        effects = ArrayUtil.append(effects, new UpdateEffect(this));
+        
+        if (randomEffect != null) {
+            effects = (effects == NO_EFFECTS) ?
+                new Effect[] { randomEffect } : ArrayUtil.append(effects, randomEffect);
+        }
+
+        Effect updateEffect =  new UpdateEffect(this);
+        effects = (effects == NO_EFFECTS) ?
+            new Effect[] { updateEffect } : ArrayUtil.append(effects, updateEffect);
+        
         return effects;
     }
     
@@ -48,5 +69,5 @@ public class OneArmedBandit extends Unit
         return new OneArmedBanditSprite(_config.type);
     }
     
-    RandomInfluenceEffect.Kind _kind = RandomUtil.pickRandom(RandomInfluenceEffect.Kind.values());
+    RandomInfluenceEffect.Kind _kind = RandomInfluenceEffect.Kind.NONE;
 }
