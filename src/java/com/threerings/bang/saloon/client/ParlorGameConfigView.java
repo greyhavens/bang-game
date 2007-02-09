@@ -188,6 +188,8 @@ public class ParlorGameConfigView extends BContainer
         if (_parobj != null) {
             _parobj.removeListener(this);
             _parobj = null;
+            // no trying to create matches on our way out
+            _create.setEnabled(false);
         }
     }
 
@@ -204,7 +206,10 @@ public class ParlorGameConfigView extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         if (event.getSource() == _create) {
-            startMatchMaking();
+            // make sure we're still in the parlor
+            if (_parobj != null) {
+                startMatchMaking();
+            }
         } else {
             if (shouldSyncGameConfig()) {
                 _parobj.service.updateGameConfig(
