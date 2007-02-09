@@ -1322,7 +1322,7 @@ context_help_text {
 
 bounty_req_window {
   background: image "ui/tutorials/bubble.png" framexy;
-  padding: 20 15 0 15;
+  padding: 20 15 10 15;
 }
 
 bounty_req_status {
