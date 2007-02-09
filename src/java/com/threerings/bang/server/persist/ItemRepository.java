@@ -26,6 +26,7 @@ import com.threerings.io.ObjectInputStream;
 
 import com.threerings.io.ObjectOutputStream;
 
+import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ItemFactory;
@@ -86,6 +87,44 @@ public class ItemRepository extends SimpleRepository
         });
         return items;
     }
+
+    // TEMP can be removed after all servers are past v. 2007-02-09
+    /**
+     * Remove all male headwraps from the repo and return them as a list.
+     */
+    public ArrayList<Article> purgeHeadWraps ()
+        throws PersistenceException
+    {
+        final ArrayList<Article> wraps = new ArrayList<Article>();
+        final String query = "select ITEM_ID, ITEM_TYPE, OWNER_ID, ITEM_DATA from ITEMS " +
+            "where ITEM_TYPE = " + ItemFactory.getType(Article.class);
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        Article art = (Article)decodeItem(
+                            rs.getInt(1), rs.getInt(2), rs.getInt(3), (byte[])rs.getObject(4));
+                        if ("indian_post/male_head_wrap".equals(art.getArticleName())) {
+                            wraps.add(art);
+                        }
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
+
+        for (Article wrap : wraps) {
+            deleteItem(wrap, "Purging all male head wraps");
+        }
+        return wraps;
+    }
+    // /TEMP can be removed after all servers are past v. 2007-02-09
 
     /**
      * Instantiates the appropriate item class and decodes the item from
@@ -209,7 +248,7 @@ public class ItemRepository extends SimpleRepository
         // determine the prototype's assigned item type and serialize it
         final int itemType = getItemType(prototype);
         final byte[] itemData = persistItem(prototype).toByteArray();
-        
+
         // now insert the flattened data into the database
         executeUpdate(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
@@ -231,7 +270,7 @@ public class ItemRepository extends SimpleRepository
                         JDBCUtil.checkedUpdate(stmt, 1);
                         item.setItemId(liaison.lastInsertedId(conn));
                         items.add(item);
-                        
+
                         // record the insertion
                         BangServer.itemLog("item_created id:" + item.getItemId() +
                                            " oid:" + item.getOwnerId() +
@@ -245,7 +284,7 @@ public class ItemRepository extends SimpleRepository
             }
         });
     }
-    
+
     /**
      * Transfers the specified item to the specified player. The database
      * will be updated as well as the item's <code>ownerId</code> field.
@@ -378,7 +417,7 @@ public class ItemRepository extends SimpleRepository
         if (playerIds.isEmpty()) {
             return new ArrayIntSet();
         }
-        
+
         // serialize the item prototype
         final ByteArrayOutInputStream out = persistItem(item);
         final int itemType = getItemType(item);
@@ -407,7 +446,7 @@ public class ItemRepository extends SimpleRepository
         });
         return owners;
     }
-    
+
     /**
      * Persists the specified item to a new byte array stream.
      */
@@ -423,7 +462,7 @@ public class ItemRepository extends SimpleRepository
             throw new PersistenceException(errmsg, ioe);
         }
     }
-    
+
     /**
      * Returns the integer item type of the specified item.
      */
@@ -440,7 +479,7 @@ public class ItemRepository extends SimpleRepository
         }
         return itemType;
     }
-    
+
     @Override // documentation inherited
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException

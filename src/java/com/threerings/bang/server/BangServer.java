@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.StaticConnectionProvider;
+import com.samskivert.jdbc.TransitionRepository;
 import com.samskivert.util.AuditLogger;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
@@ -90,6 +91,9 @@ public class BangServer extends CrowdServer
      * databases. */
     public static ConnectionProvider conprov;
 
+    /** Used to coordinate transitions to persistent data. */
+    public static TransitionRepository transitrepo;
+
     /** A resource manager with which we can load resources in the same manner
      * that the client does (for resources that are used on both the server and
      * client). */
@@ -134,7 +138,7 @@ public class BangServer extends CrowdServer
 
     /** Manages the persistent repository of gang data. */
     public static GangRepository gangrepo;
-    
+
     /** Manages the persistent repository of items. */
     public static ItemRepository itemrepo;
 
@@ -217,6 +221,9 @@ public class BangServer extends CrowdServer
     {
         // create out database connection provider this must be done before calling super.init()
         conprov = new StaticConnectionProvider(ServerConfig.getJDBCConfig());
+
+        // create our transition manager prior to doing anything else
+        transitrepo = new TransitionRepository(conprov);
 
         // do the base server initialization
         super.init();

@@ -17,6 +17,7 @@ import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
 import com.samskivert.jdbc.ConnectionProvider;
+import com.samskivert.jdbc.TransitionRepository;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
@@ -73,6 +74,7 @@ import com.threerings.bang.game.server.BangManager;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.PlayerService;
+import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangCodes;
@@ -141,7 +143,7 @@ public class PlayerManager
         };
         if (BangServer.peermgr != null) {
             BangServer.peermgr.addPlayerObserver(_pardwatcher);
-            BangServer.peermgr.addStaleCacheObserver(POSTER_CACHE, 
+            BangServer.peermgr.addStaleCacheObserver(POSTER_CACHE,
                 new PeerManager.StaleCacheObserver() {
                     public void changedCacheData (Streamable data) {
                         _posterCache.remove((Handle)data);
@@ -161,7 +163,74 @@ public class PlayerManager
                 });
             }
         }.schedule(DOWNLOAD_PURGE_INTERVAL, true);
+
+        // TEMP can be removed after all servers are past v. 2007-02-09
+        // Remove all the male head wraps
+        try {
+            BangServer.transitrepo.transition(PlayerManager.class, "remove_head_wraps",
+                    new TransitionRepository.Transition() {
+                        public void run () {
+                            removeHeadWraps();
+                        }
+            });
+        } catch (PersistenceException pe) {
+            log.log(Level.WARNING, "Problem removing head wraps!", pe);
+        }
+        // /TEMP can be removed after all servers are past v. 2007-02-09
     }
+
+    // TEMP can be removed after all servers are past v. 2007-02-09
+    public void removeHeadWraps ()
+    {
+        log.info("Removing head wraps");
+        BangServer.invoker.postUnit(new Invoker.Unit("removeHeadWraps") {
+            public boolean invoke () {
+                ArrayList<Article> wraps;
+                try {
+                    wraps = BangServer.itemrepo.purgeHeadWraps();
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Could not remove all head wraps", pe);
+                    return false;
+                }
+                removeArticleFromLooks(wraps);
+                return true;
+            }
+        });
+
+    }
+
+    // must be run on invoker thread
+    protected void removeArticleFromLooks (ArrayList<Article> arts)
+    {
+        for (Article wrap : arts) {
+            int itemId = wrap.getItemId(), ownerId = wrap.getOwnerId();
+            ArrayList<Look> looks;
+            try {
+                looks = _lookrepo.loadLooks(ownerId);
+                for (Look look : looks) {
+                    for (int ii = 0; ii < look.articles.length; ii++) {
+                        if (look.articles[ii] == itemId) {
+                            look.articles[ii] = 0;
+                            _lookrepo.updateLook(ownerId, look);
+                            break;
+                        }
+                    }
+                }
+            } catch (PersistenceException pe) {
+                log.log(Level.WARNING, "Failed to remove wrap from looks [wrap=" + wrap + "].", pe);
+            }
+            try {
+                // give them 2000 scrip for their loss
+                BangServer.playrepo.grantScrip(ownerId, 2000);
+            } catch (PersistenceException pe) {
+                log.log(Level.WARNING,
+                        "Failed to grant scrip for wrap [ownerId=" + ownerId + "].", pe);
+            }
+        }
+
+        log.info("Removed " + arts.size() + " head wraps");
+    }
+    // /TEMP can be removed after all servers are past v. 2007-02-09
 
     /**
      * Returns the pardner repository.
@@ -783,14 +852,14 @@ public class PlayerManager
                 itemId + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
+
         // and that it's destroyable
         if (!item.isDestroyable(user)) {
             log.warning("User tried to destroy indestructable item [who=" + user.who() +
                 ", item=" + item + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
+
         // remove it from their inventory immediately, then from the database
         user.removeFromInventory(item.getKey());
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
@@ -810,7 +879,7 @@ public class PlayerManager
             }
         });
     }
-    
+
     /**
      * Delivers the specified item to its owner if he is online (on any server).  The item is
      * assumed to be in the database already; this method merely requests an update of the
@@ -829,7 +898,7 @@ public class PlayerManager
             BangServer.peermgr.forwardItem(item, source);
         }
     }
-    
+
     /**
      * Delivers an item to a player on this server.
      */
@@ -839,7 +908,7 @@ public class PlayerManager
         SpeakProvider.sendInfo(user, BangCodes.BANG_MSGS,
             MessageBundle.compose("m.received_item", item.getName(), source));
     }
-    
+
     /**
      * Sends a pardner invite to the specified player if he is online (on any server).
      */
@@ -852,7 +921,7 @@ public class PlayerManager
             BangServer.peermgr.forwardPardnerInvite(invitee, inviter, message);
         }
     }
-    
+
     /**
      * Sends a pardner invite to the specified player from the named inviter (on this server only).
      */
