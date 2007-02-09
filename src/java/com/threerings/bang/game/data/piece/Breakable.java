@@ -128,7 +128,7 @@ public class Breakable extends Prop
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
-        return (PieceSprite)new BreakableSprite("props", "boom_town/breakables/breakable");
+        return new BreakableSprite("props", "boom_town/breakables/breakable");
     }
 
     protected boolean isExploding = false;
