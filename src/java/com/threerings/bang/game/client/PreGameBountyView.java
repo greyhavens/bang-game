@@ -87,9 +87,7 @@ public class PreGameBountyView extends SteelWindow
             clabel.setIcon(star);
             ccont.add(clabel);
         }
-        BContainer wrap = GroupLayout.makeHBox(GroupLayout.CENTER);
-        wrap.add(ccont);
-        vert.add(wrap, BorderLayout.CENTER);
+        vert.add(GroupLayout.makeHBox(GroupLayout.CENTER, ccont), BorderLayout.CENTER);
 
         // if there any special game conditions (currently just no respawn), display them
         StringBuilder rules = new StringBuilder();
