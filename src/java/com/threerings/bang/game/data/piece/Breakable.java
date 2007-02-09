@@ -4,12 +4,7 @@
 package com.threerings.bang.game.data.piece;
 
 import java.util.ArrayList;
-import com.samskivert.util.IntIntMap;
 
-import com.threerings.bang.util.BasicContext;
-import com.threerings.bang.util.BangContext;
-import com.threerings.bang.game.client.BoardView;
-import com.threerings.bang.game.client.BangBoardView;
 import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.TargetableActiveSprite;
 import com.threerings.bang.game.client.sprite.GenericCounterNode;
@@ -17,12 +12,12 @@ import com.threerings.bang.game.client.effect.ExplosionViz;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.BangObject;
 
-import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.data.effect.Effect;
 import com.threerings.bang.game.data.effect.UpdateEffect;
 import com.threerings.bang.game.data.effect.DamageEffect;
 import com.threerings.bang.game.data.effect.ExplodeEffect;
 import com.threerings.bang.game.data.piece.CounterInterface;
+import com.threerings.bang.game.client.sprite.BreakableSprite;
 
 import static com.threerings.bang.Log.log;
 
@@ -32,38 +27,6 @@ import static com.threerings.bang.Log.log;
 public class Breakable extends Prop
     implements CounterInterface
 {
-    public static class BreakableSprite extends TargetableActiveSprite
-    {
-        public GenericCounterNode counter;
-        
-        public BreakableSprite (String type, String name) 
-        {
-            super(type, name);
-        }
-
-        public void init (
-            BasicContext ctx, BoardView view, BangBoard board, 
-            com.threerings.openal.SoundGroup sounds, Piece piece, short tick)
-        {
-            super.init(ctx, view, board, sounds, piece, tick);
-            counter = new GenericCounterNode();
-            counter.createGeometry((CounterInterface)piece, (BangContext)ctx);
-            this.attachChild(counter);
-        }
-
-        public boolean isHoverable ()
-        {
-            return true;
-        }
-        
-        @Override // documentation inherited
-        public void updated (Piece piece, short tick)
-        {
-            super.updated(piece, tick);
-            _target.updated(piece, tick);
-            counter.updateCount((CounterInterface)piece);
-        }            
-    }
     
     @Override // documentation inherited
     public boolean removeWhenDead ()
