@@ -48,7 +48,7 @@ import com.threerings.hemiptera.util.SendReportUtil;
 import com.threerings.jme.effect.FadeInOutEffect;
 import com.threerings.jme.effect.WindowSlider;
 
-import com.threerings.openal.OggFileStream;
+import com.threerings.openal.FileStream;
 
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.ClientObserver;
@@ -537,7 +537,7 @@ public class BangClient extends BasicClient
         _ctx.getInterface().attachChild(
             new WindowSlider(popup, WindowSlider.FROM_TOP, 0.25f, 0, dy));
     }
-    
+
     /**
      * Displays a popup window that will automatically be cleared if we leave
      * the current "place". This should be used for any overlay view shown atop
@@ -643,10 +643,10 @@ public class BangClient extends BasicClient
             _playingMusic = key;
             if (!_playedIntro && ifile.exists()) {
                 _playedIntro = true;
-                _mstream = new OggFileStream(_soundmgr, ifile, false);
+                _mstream = new FileStream(_soundmgr, ifile, false);
                 _mstream.queueFile(mfile, loop);
             } else {
-                _mstream = new OggFileStream(_soundmgr, mfile, loop);
+                _mstream = new FileStream(_soundmgr, mfile, loop);
             }
             _mstream.setGain(volume);
             if (wasPlaying && crossfade > 0f) {
@@ -1291,7 +1291,7 @@ public class BangClient extends BasicClient
                 _priorLocationOid = place.getOid();
             } else {
                 _priorLocationIdent = "saloon";
-                _priorLocationOid = 
+                _priorLocationOid =
                     ((BangBootstrapData)_ctx.getClient().getBootstrapData()).saloonOid;
             }
         }
@@ -1355,7 +1355,7 @@ public class BangClient extends BasicClient
     protected boolean _suggestLowerDetail;
 
     protected String _playingMusic;
-    protected OggFileStream _mstream;
+    protected FileStream _mstream;
     protected boolean _playedIntro;
     protected boolean _viewTransition = false;
     protected String _priorLocationIdent;
