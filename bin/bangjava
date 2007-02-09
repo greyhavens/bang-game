@@ -33,7 +33,12 @@ while [ ! -z "$1" ]; do
             JAVA_ARGS="-agentlib:yjpagent $JAVA_ARGS"
             JAVA_ARGS="-Dprofiling=true $JAVA_ARGS"
             ;;
-            
+
+        -debugger)
+            JDWP_ARGS="transport=dt_socket,server=y,address=8000,suspend=n";
+            JAVA_ARGS="-agentlib:jdwp=$JDWP_ARGS $JAVA_ARGS"
+            ;;
+
         -D*)
             JAVA_ARGS="$JAVA_ARGS '$1'"
             ;;
