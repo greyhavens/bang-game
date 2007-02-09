@@ -3,10 +3,12 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import com.jme.scene.Spatial;
 import com.jme.math.FastMath;
 
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.ParticleUtil;
 
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BangBoard;
@@ -15,6 +17,7 @@ import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.game.data.piece.CounterInterface;
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.sprite.TargetableActiveSprite;
+import com.threerings.bang.client.util.ResultAttacher;
 
 
 
@@ -50,6 +53,21 @@ import com.threerings.bang.game.client.sprite.TargetableActiveSprite;
      {
          super.updated(piece, tick);
          _target.updated(piece, tick);
-         counter.updateCount((CounterInterface)piece);
-     }            
+         
+        if (_piece.isAlive()) {
+            counter.updateCount((CounterInterface)piece);
+            _ctx.loadParticles("boom_town/breakables/smoke", new ResultAttacher<Spatial>(this) {
+                public void requestCompleted (Spatial result) {
+                    super.requestCompleted(result);
+                    _smoke = result;
+                }
+            });
+        } else {
+            if (_smoke != null) {
+                ParticleUtil.stopAndRemove(_smoke);
+                _smoke = null;
+            }
+        }
+     }
+     protected Spatial _smoke;
  }
