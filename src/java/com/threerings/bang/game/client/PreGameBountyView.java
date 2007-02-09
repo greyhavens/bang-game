@@ -51,7 +51,7 @@ public class PreGameBountyView extends SteelWindow
         default:
             OutlawView oview = new OutlawView(ctx, 1f);
             BountyConfig.GameInfo info = bounty.getGame(gameId);
-            if (info.opponents[quote.speaker] != null) {
+            if (quote.speaker >= 0 && info.opponents[quote.speaker] != null) {
                 oview.setOutlaw(ctx, info.opponents[quote.speaker], false);
             } else {
                 oview.setOutlaw(ctx, bounty.getOutlaw(), completed);

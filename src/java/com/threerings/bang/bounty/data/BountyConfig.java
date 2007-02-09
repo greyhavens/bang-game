@@ -400,7 +400,7 @@ public class BountyConfig extends SimpleStreamableObject
     {
         Quote quote = new Quote();
         quote.text = props.getProperty(prefix + "_quote");
-        quote.speaker = BangUtil.getIntProperty(which, props, prefix + "_speaker", 1);
+        quote.speaker = BangUtil.getIntProperty(which, props, prefix + "_speaker", -1);
         return quote;
     }
 
