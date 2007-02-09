@@ -98,7 +98,7 @@ public class SaloonManager extends MatchHostManager
     }
 
     // documentation inherited from interface SaloonProvider
-    public void createParlor (ClientObject caller, boolean pardnersOnly, final String password,
+    public void createParlor (ClientObject caller, ParlorInfo.Type type, final String password,
                               final SaloonService.ResultListener rl)
         throws InvocationException
     {
@@ -112,8 +112,7 @@ public class SaloonManager extends MatchHostManager
         // create the new parlor
         final ParlorInfo info = new ParlorInfo();
         info.creator = user.handle;
-        info.pardnersOnly = pardnersOnly;
-        info.passwordProtected = !StringUtil.isBlank(password);
+        info.type = type;
 
         try {
             ParlorManager parmgr = (ParlorManager)BangServer.plreg.createPlace(new ParlorConfig());

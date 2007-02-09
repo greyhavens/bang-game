@@ -6,6 +6,7 @@ package com.threerings.bang.saloon.data;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.Criterion;
+import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
@@ -25,12 +26,12 @@ public class SaloonMarshaller extends InvocationMarshaller
     public static final int CREATE_PARLOR = 1;
 
     // from interface SaloonService
-    public void createParlor (Client arg1, boolean arg2, String arg3, InvocationService.ResultListener arg4)
+    public void createParlor (Client arg1, ParlorInfo.Type arg2, String arg3, InvocationService.ResultListener arg4)
     {
         InvocationMarshaller.ResultMarshaller listener4 = new InvocationMarshaller.ResultMarshaller();
         listener4.listener = arg4;
         sendRequest(arg1, CREATE_PARLOR, new Object[] {
-            Boolean.valueOf(arg2), arg3, listener4
+            arg2, arg3, listener4
         });
     }
 

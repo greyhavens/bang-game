@@ -305,6 +305,10 @@ textfield {
   padding: 5;
 }
 
+textfield:disabled {
+  color: #999999;
+}
+
 textarea {
   color: #524129;
   background: image "ui/textfield.png" framexy;

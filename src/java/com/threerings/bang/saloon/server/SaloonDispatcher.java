@@ -6,6 +6,7 @@ package com.threerings.bang.saloon.server;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.saloon.client.SaloonService;
 import com.threerings.bang.saloon.data.Criterion;
+import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.SaloonMarshaller;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
@@ -43,7 +44,7 @@ public class SaloonDispatcher extends InvocationDispatcher
         case SaloonMarshaller.CREATE_PARLOR:
             ((SaloonProvider)provider).createParlor(
                 source,
-                ((Boolean)args[0]).booleanValue(), (String)args[1], (InvocationService.ResultListener)args[2]
+                (ParlorInfo.Type)args[0], (String)args[1], (InvocationService.ResultListener)args[2]
             );
             return;
 

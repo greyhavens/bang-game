@@ -63,9 +63,8 @@ public class ParlorManager extends PlaceManager
     }
 
     /**
-     * Ratifies the entry of the supplied player. Throws an invocation
-     * exception explaining the reason for rejection if they do not meet the
-     * entry requirements.
+     * Ratifies the entry of the supplied player. Throws an invocation exception explaining the
+     * reason for rejection if they do not meet the entry requirements.
      */
     public void ratifyEntry (PlayerObject user, String password)
         throws InvocationException
@@ -80,14 +79,16 @@ public class ParlorManager extends PlaceManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
-        // make sure the password matches if we have a password
-        if (_parobj.info.passwordProtected &&
-            !password.equalsIgnoreCase(_password)) {
-            throw new InvocationException(INCORRECT_PASSWORD);
-        }
+        switch (_parobj.info.type) {
+        case PASSWORD:
+            // make sure the password matches if we have a password
+            if (!password.equalsIgnoreCase(_password)) {
+                throw new InvocationException(INCORRECT_PASSWORD);
+            }
+            break;
 
-        // make sure they're a pardner of the creator if that is required
-        if (_parobj.info.pardnersOnly) {
+        case PARDNERS_ONLY:
+            // make sure they're a pardner of the creator if that is required
             PlayerObject creator = BangServer.lookupPlayer(_parobj.info.creator);
             if (creator == null) {
                 throw new InvocationException(CREATOR_NOT_ONLINE);
@@ -95,12 +96,12 @@ public class ParlorManager extends PlaceManager
             if (!creator.pardners.containsKey(user.handle)) {
                 throw new InvocationException(NOT_PARDNER);
             }
+            break;
         }
     }
 
     // documentation inherited from interface ParlorProvider
-    public void updateParlorConfig (
-        ClientObject caller, ParlorInfo info, boolean onlyCreatorStart)
+    public void updateParlorConfig (ClientObject caller, ParlorInfo info, boolean onlyCreatorStart)
     {
         PlayerObject user = (PlayerObject)caller;
         if (user.handle.equals(_parobj.info.creator)) {
@@ -138,16 +139,14 @@ public class ParlorManager extends PlaceManager
 
         // otherwise just make sure they have the necessary privileges
         PlayerObject user = (PlayerObject)caller;
-        if (user.handle.equals(_parobj.info.creator) ||
-            !_parobj.onlyCreatorStart) {
+        if (user.handle.equals(_parobj.info.creator) || !_parobj.onlyCreatorStart) {
             _parobj.setGame(game);
         }
     }
 
     // documentation inherited from interface ParlorProvider
-    public void startMatchMaking (
-        ClientObject caller, ParlorGameConfig game, byte[] bdata,
-        ParlorService.InvocationListener listener)
+    public void startMatchMaking (ClientObject caller, ParlorGameConfig game, byte[] bdata,
+                                  ParlorService.InvocationListener listener)
         throws InvocationException
     {
         // if we're not allowing new games, fail immediately
@@ -163,17 +162,12 @@ public class ParlorManager extends PlaceManager
         } else {
             // sanity check the configuration
             int minPlayers = (game.tinCans > 0) ? 1 : 2;
-            game.players = MathUtil.bound(
-                minPlayers, game.players, GameCodes.MAX_PLAYERS);
-            game.rounds = MathUtil.bound(
-                1, game.rounds, GameCodes.MAX_ROUNDS);
-            game.teamSize = MathUtil.bound(
-                1, game.teamSize, GameCodes.MAX_TEAM_SIZE);
-            game.tinCans = MathUtil.bound(
-                0, game.tinCans, GameCodes.MAX_PLAYERS - game.players);
+            game.players = MathUtil.bound(minPlayers, game.players, GameCodes.MAX_PLAYERS);
+            game.rounds = MathUtil.bound(1, game.rounds, GameCodes.MAX_ROUNDS);
+            game.teamSize = MathUtil.bound(1, game.teamSize, GameCodes.MAX_TEAM_SIZE);
+            game.tinCans = MathUtil.bound(0, game.tinCans, GameCodes.MAX_PLAYERS - game.players);
             if (game.scenarios == null || game.scenarios.length == 0) {
-                game.scenarios = ScenarioInfo.getScenarioIds(
-                    ServerConfig.townId, false);
+                game.scenarios = ScenarioInfo.getScenarioIds(ServerConfig.townId, false);
             }
 
             // update the game config with the desired config
@@ -250,8 +244,7 @@ public class ParlorManager extends PlaceManager
 
         _parobj = (ParlorObject)_plobj;
         _parobj.setService((ParlorMarshaller)
-                           BangServer.invmgr.registerDispatcher(
-                               new ParlorDispatcher(this), false));
+                           BangServer.invmgr.registerDispatcher(new ParlorDispatcher(this), false));
     }
 
     @Override // documentation inherited
@@ -433,6 +426,12 @@ public class ParlorManager extends PlaceManager
         return super.shouldDeclareEmpty(leaver) && _activeGames.size() == 0;
     }
 
+    protected ObjectDeathListener _gameOverListener = new ObjectDeathListener() {
+        public void objectDestroyed (ObjectDestroyedEvent event) {
+            _activeGames.remove(event.getTargetOid());
+            maybeShutdown();
+        }
+    };
 
     protected ParlorObject _parobj;
     protected SaloonManager _salmgr;
@@ -441,12 +440,4 @@ public class ParlorManager extends PlaceManager
     protected Interval _starter;
     protected Throttle _throttle = new Throttle(1, 10);
     protected ArrayIntSet _activeGames = new ArrayIntSet();
-
-    protected ObjectDeathListener _gameOverListener =
-       new ObjectDeathListener() {
-           public void objectDestroyed (ObjectDestroyedEvent event) {
-               _activeGames.remove(event.getTargetOid());
-               maybeShutdown();
-           }
-       }; 
 }

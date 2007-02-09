@@ -36,8 +36,8 @@ import com.threerings.bang.saloon.data.SaloonObject;
 import static com.threerings.bang.Log.log;
 
 /**
- * Displays a list of back parlors and allows a player to enter those parlors
- * or create a new parlor.
+ * Displays a list of back parlors and allows a player to enter those parlors or create a new
+ * parlor.
  */
 public class ParlorList extends BContainer
     implements ActionListener, SetListener
@@ -49,8 +49,7 @@ public class ParlorList extends BContainer
 
         _list = new BContainer(new TableLayout(5, 10, 5));
         _list.setStyleClass("parlor_list");
-        ((TableLayout)_list.getLayoutManager()).setHorizontalAlignment(
-            TableLayout.STRETCH);
+        ((TableLayout)_list.getLayoutManager()).setHorizontalAlignment(TableLayout.STRETCH);
         add(new BScrollPane(_list), BorderLayout.CENTER);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.RIGHT);
@@ -92,27 +91,24 @@ public class ParlorList extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         if ("create".equals(event.getAction())) {
-            _ctx.getBangClient().displayPopup(
-                new CreateParlorDialog(_ctx, _salobj), true);
+            _ctx.getBangClient().displayPopup(new CreateParlorDialog(_ctx, _salobj), true);
 
         } else if ("enter".equals(event.getAction())) {
             final BButton btn = (BButton)event.getSource();
             final ParlorInfo info = (ParlorInfo)btn.getProperty("info");
             if (!_ctx.getUserObject().tokens.isSupport() &&
                 !_ctx.getUserObject().handle.equals(info.creator) &&
-                info.passwordProtected) {
+                info.type == ParlorInfo.Type.PASSWORD) {
                 // ask for a password, then join
-                OptionDialog.ResponseReceiver rr =
-                    new OptionDialog.ResponseReceiver() {
+                OptionDialog.ResponseReceiver rr = new OptionDialog.ResponseReceiver() {
                     public void resultPosted (int button, Object result) {
                         if (button == 0) {
                             joinParlor(info.creator, ((String)result).trim());
                         }
                     }
                 };
-                OptionDialog.showStringDialog(
-                    _ctx, SaloonCodes.SALOON_MSGS, "m.enter_pass",
-                    new String[] { "m.enter", "m.cancel" }, 100, "", rr);
+                OptionDialog.showStringDialog(_ctx, SaloonCodes.SALOON_MSGS, "m.enter_pass",
+                                              new String[] { "m.enter", "m.cancel" }, 100, "", rr);
             } else {
                 joinParlor(info.creator, null);
             }
@@ -143,7 +139,7 @@ public class ParlorList extends BContainer
             } else {
                 row.update(info);
             }
-            if(_ctx.getUserObject().handle.equals(info.creator)) {
+            if (_ctx.getUserObject().handle.equals(info.creator)) {
                 updateEnterButton(info);
             }
         }
@@ -156,12 +152,11 @@ public class ParlorList extends BContainer
             Handle handle = (Handle)event.getKey();
             ParlorRow row = _rows.remove(handle);
             if (row == null) {
-                log.warning("No row for removed parlor " +
-                            "[key=" + event.getKey() + "].");
+                log.warning("No row for removed parlor [key=" + event.getKey() + "].");
             } else {
                 row.clear();
             }
-            if(_ctx.getUserObject().handle.equals(handle)) {
+            if (_ctx.getUserObject().handle.equals(handle)) {
                 updateEnterButton(null);
             }
         }
@@ -170,12 +165,10 @@ public class ParlorList extends BContainer
     protected void updateEnterButton (ParlorInfo info)
     {
         if (info == null) {
-            _enterParlor.setText(_ctx.xlate(
-                        SaloonCodes.SALOON_MSGS, "m.create_parlor"));
+            _enterParlor.setText(_ctx.xlate(SaloonCodes.SALOON_MSGS, "m.create_parlor"));
             _enterParlor.setAction("create");
         } else {
-            _enterParlor.setText(_ctx.xlate(
-                        SaloonCodes.SALOON_MSGS, "m.to_parlor"));
+            _enterParlor.setText(_ctx.xlate(SaloonCodes.SALOON_MSGS, "m.to_parlor"));
             _enterParlor.setAction("enter");
             _enterParlor.setProperty("info", info);
         }
@@ -183,20 +176,19 @@ public class ParlorList extends BContainer
 
     protected void joinParlor (Handle owner, String password)
     {
-        // if the saloon object is null, we're on our way out and should
-        // not try joining another parlor
+        // if the saloon object is null, we're on our way out and should not try joining a parlor
         if (_salobj == null) {
             return;
         }
-        _salobj.service.joinParlor(_ctx.getClient(), owner, password,
-                                   new SaloonService.ResultListener() {
+
+        _salobj.service.joinParlor(
+            _ctx.getClient(), owner, password, new SaloonService.ResultListener() {
             public void requestProcessed (Object result) {
                 _ctx.getLocationDirector().moveTo((Integer)result);
             }
             public void requestFailed (String cause) {
                 _ctx.getChatDirector().displayFeedback(
-                    SaloonCodes.SALOON_MSGS,
-                    MessageBundle.compose("m.enter_parlor_failed", cause));
+                    SaloonCodes.SALOON_MSGS, MessageBundle.compose("m.enter_parlor_failed", cause));
             }
         });
     }
@@ -204,13 +196,11 @@ public class ParlorList extends BContainer
     protected class ParlorRow
     {
         public ParlorRow (ParlorInfo info) {
-            MessageBundle msgs = _ctx.getMessageManager().getBundle(
-                SaloonCodes.SALOON_MSGS);
+            MessageBundle msgs = _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
             String lbl = msgs.get("m.parlor_name", info.creator);
             _name = new BLabel(lbl, "parlor_label");
             _name.setFit(BLabel.Fit.SCALE);
-            _pards = new BLabel("");
-            _lock = new BLabel("");
+            _icon = new BLabel("");
             _occs = new BLabel("");
             _enter = new BButton(msgs.get("m.enter"), ParlorList.this, "enter");
             _enter.setStyleClass("alt_button");
@@ -219,21 +209,21 @@ public class ParlorList extends BContainer
 
         public void update (ParlorInfo info) {
             _occs.setText(String.valueOf(info.occupants));
-            _pards.setIcon(info.pardnersOnly ?
-                           new ImageIcon(_ctx.loadImage(PARDS_PATH)) :
-                           new BlankIcon(16, 16));
-            _lock.setIcon(info.passwordProtected ?
-                          new ImageIcon(_ctx.loadImage(LOCKED_PATH)) :
-                          new BlankIcon(16, 16));
+            if (info.type != ParlorInfo.Type.NORMAL) {
+                String ipath = "ui/saloon/" + info.type.toString().toLowerCase() + ".png";
+                _icon.setIcon(new ImageIcon(_ctx.loadImage(ipath)));
+            } else {
+                _icon.setIcon(new BlankIcon(16, 16));
+            }
             _enter.setProperty("info", info);
 
-            // if we're the creator, or the creator is our pardner, always show
-            // this parlor (regardless of whether it is empty)
+            // if we're the creator, or the creator is our pardner, always show this parlor
+            // (regardless of whether it is empty)
             if (_ctx.getUserObject().handle.equals(info.creator) ||
                 _ctx.getUserObject().pardners.containsKey(info.creator)) {
                 add();
 
-            } else if (info.pardnersOnly || info.occupants == 0) {
+            } else if (info.type == ParlorInfo.Type.PARDNERS_ONLY || info.occupants == 0) {
                 // if it's pardners only or empty, don't show it
                 clear();
 
@@ -245,8 +235,7 @@ public class ParlorList extends BContainer
         public void add () {
             if (_name.getParent() == null) {
                 _list.add(_name);
-                _list.add(_pards);
-                _list.add(_lock);
+                _list.add(_icon);
                 _list.add(_occs);
                 _list.add(_enter);
             }
@@ -255,14 +244,13 @@ public class ParlorList extends BContainer
         public void clear () {
             if (_name.getParent() != null) {
                 _list.remove(_name);
-                _list.remove(_pards);
-                _list.remove(_lock);
+                _list.remove(_icon);
                 _list.remove(_occs);
                 _list.remove(_enter);
             }
         }
 
-        protected BLabel _name, _occs, _pards, _lock;
+        protected BLabel _name, _occs, _icon;
         protected BButton _enter;
     }
 
@@ -273,6 +261,6 @@ public class ParlorList extends BContainer
 
     protected HashMap<Handle,ParlorRow> _rows = new HashMap<Handle,ParlorRow>();
 
-    protected static final String PARDS_PATH = "ui/saloon/pardners_only.png";
+    protected static final String ICON_PATH = "ui/saloon/pardners_only.png";
     protected static final String LOCKED_PATH = "ui/saloon/locked.png";
 }

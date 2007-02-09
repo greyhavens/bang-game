@@ -5,8 +5,10 @@ package com.threerings.bang.saloon.client;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
+import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -16,6 +18,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.SaloonCodes;
 import com.threerings.bang.saloon.data.SaloonObject;
 
@@ -27,8 +30,7 @@ public class CreateParlorDialog extends BDecoratedWindow
 {
     public CreateParlorDialog (BangContext ctx, SaloonObject salobj)
     {
-        super(ctx.getStyleSheet(),
-              ctx.xlate(SaloonCodes.SALOON_MSGS, "m.create_title"));
+        super(ctx.getStyleSheet(), ctx.xlate(SaloonCodes.SALOON_MSGS, "m.create_title"));
         setModal(true);
 
         _ctx = ctx;
@@ -36,20 +38,30 @@ public class CreateParlorDialog extends BDecoratedWindow
         _msgs = ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
 
         BContainer params = new BContainer(
-            GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP,
-                                 GroupLayout.STRETCH));
+            GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH));
         add(params);
 
         BContainer row = GroupLayout.makeHBox(GroupLayout.LEFT);
-        row.add(_pardsOnly = new BCheckBox(_msgs.get("m.pards_only")));
-        _pardsOnly.setTooltipText(_msgs.get("m.pards_only_tip"));
+        BLabel label;
+        row.add(label = new BLabel(_msgs.get("m.parlor_type")));
+        label.setTooltipText(_msgs.get("m.parlor_type_tip"));
+        row.add(_type = new BComboBox(ParlorConfigView.getParlorTypes(ctx)));
+        _type.selectItem(0);
+        _type.addListener(new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                ParlorInfo.Type type = (ParlorInfo.Type)_type.getSelectedValue();
+                _password.setEnabled(type == ParlorInfo.Type.PASSWORD);
+            }
+        });
+        _type.setTooltipText(_msgs.get("m.parlor_type_tip"));
         params.add(row);
 
         row = GroupLayout.makeHBox(GroupLayout.LEFT);
-        row.add(_usePass = new BCheckBox(_msgs.get("m.use_password")));
-        _usePass.setTooltipText(_msgs.get("m.use_password_tip"));
+        row.add(label = new BLabel(_msgs.get("m.use_password")));
+        label.setTooltipText(_msgs.get("m.parlor_type_tip"));
         row.add(_password = new BTextField(50));
         _password.setPreferredWidth(75);
+        _password.setEnabled(false);
         params.add(row);
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -63,21 +75,20 @@ public class CreateParlorDialog extends BDecoratedWindow
     {
         String action = event.getAction();
         if ("create".equals(action)) {
+            ParlorInfo.Type type = (ParlorInfo.Type)_type.getSelectedValue();
+            String passwd = type == ParlorInfo.Type.PASSWORD ? _password.getText() : null;
             _salobj.service.createParlor(
-                _ctx.getClient(), _pardsOnly.isSelected(),
-                _usePass.isSelected() ? _password.getText() : null,
-                new SaloonService.ResultListener() {
-                    public void requestProcessed (Object result) {
-                        // move immediately to our new parlor
-                        _ctx.getLocationDirector().moveTo((Integer)result);
-                    }
-                    public void requestFailed (String cause) {
-                        _ctx.getChatDirector().displayFeedback(
-                            SaloonCodes.SALOON_MSGS,
-                            MessageBundle.compose(
-                                "m.create_parlor_failed", cause));
-                    }
-                });
+                _ctx.getClient(), type, passwd, new SaloonService.ResultListener() {
+                public void requestProcessed (Object result) {
+                    // move immediately to our new parlor
+                    _ctx.getLocationDirector().moveTo((Integer)result);
+                }
+                public void requestFailed (String cause) {
+                    _ctx.getChatDirector().displayFeedback(
+                        SaloonCodes.SALOON_MSGS,
+                        MessageBundle.compose("m.create_parlor_failed", cause));
+                }
+            });
             _ctx.getBangClient().clearPopup(this, true);
 
         } else if ("cancel".equals(action)) {
@@ -89,6 +100,6 @@ public class CreateParlorDialog extends BDecoratedWindow
     protected SaloonObject _salobj;
     protected MessageBundle _msgs;
 
-    protected BCheckBox _pardsOnly, _usePass;
+    protected BComboBox _type;
     protected BTextField _password;
 }

@@ -15,14 +15,14 @@ import com.threerings.bang.data.Handle;
 public class ParlorInfo extends SimpleStreamableObject
     implements DSet.Entry
 {
+    /** Indicates the type of this parlor. */
+    public enum Type { NORMAL, SOCIAL,  PARDNERS_ONLY, PASSWORD /*, RECRUITING */ };
+
     /** The player that created the parlor. */
     public Handle creator;
 
-    /** Whether or not this parlor is pardners only. */
-    public boolean pardnersOnly;
-
-    /** Whether or not this parlor is password protected. */
-    public boolean passwordProtected;
+    /** The type of this parlor. */
+    public Type type;
 
     /** The number of occupants in this parlor. */
     public int occupants;
@@ -37,9 +37,6 @@ public class ParlorInfo extends SimpleStreamableObject
     public boolean equals (Object other)
     {
         ParlorInfo oinfo = (ParlorInfo)other;
-        return creator.equals(oinfo.creator) &&
-            pardnersOnly == oinfo.pardnersOnly &&
-            passwordProtected == oinfo.passwordProtected &&
-            occupants == oinfo.occupants;
+        return creator.equals(oinfo.creator) && type == oinfo.type && occupants == oinfo.occupants;
     }
 }

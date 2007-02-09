@@ -3,15 +3,20 @@
 
 package com.threerings.bang.saloon.client;
 
+import java.util.ArrayList;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
+import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.TextEvent;
 import com.jmex.bui.event.TextListener;
 import com.jmex.bui.layout.GroupLayout;
+import com.jmex.bui.layout.TableLayout;
 
 import com.samskivert.util.Interval;
 import com.threerings.util.MessageBundle;
@@ -39,21 +44,27 @@ public class ParlorConfigView extends BContainer
         _ctx = ctx;
         _msgs = ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
 
+        BContainer bits = new BContainer(new TableLayout(2, 5, 5));
+        BLabel label;
+        bits.add(label = new BLabel(_msgs.get("m.parlor_type")));
+        label.setTooltipText(_msgs.get("m.parlor_type_tip"));
+        bits.add(_type = new BComboBox(getParlorTypes(ctx)));
+        _type.setTooltipText(_msgs.get("m.parlor_type_tip"));
+        _type.selectItem(0);
+        _type.addListener(new ActionListener() {
+            public void actionPerformed (ActionEvent event) {
+                ParlorInfo.Type type = (ParlorInfo.Type)_type.getSelectedValue();
+                _changePass.setEnabled(type == ParlorInfo.Type.PASSWORD);
+            }
+        });
+        _type.addListener(_parconf);
+
+        bits.add(new BLabel(_msgs.get("m.use_password")));
+        bits.add(_changePass = new BButton(_msgs.get("m.change"), new ChangePasswordHelper(), ""));
+        _changePass.setEnabled(false);
+        add(bits);
+
         BContainer row = GroupLayout.makeHBox(GroupLayout.LEFT);
-        row.add(_pards = new BCheckBox(_msgs.get("m.pards_only")));
-        _pards.setTooltipText(_msgs.get("m.pards_only_tip"));
-        _pards.addListener(_parconf);
-        add(row);
-
-        row = GroupLayout.makeHBox(GroupLayout.LEFT);
-        row.add(_usePass = new BCheckBox(_msgs.get("m.req_password")));
-        _usePass.setTooltipText(_msgs.get("m.use_password_tip"));
-        _usePass.addListener(_parconf);
-        row.add(_changePass = new BButton(
-                    _msgs.get("m.change"), new ChangePasswordHelper(), ""));
-        add(row);
-
-        row = GroupLayout.makeHBox(GroupLayout.LEFT);
         row.add(_creator = new BCheckBox(_msgs.get("m.creator_only")));
         _creator.setTooltipText(_msgs.get("m.creator_only_tip"));
         _creator.addListener(_parconf);
@@ -86,25 +97,30 @@ public class ParlorConfigView extends BContainer
 
     protected void updateDisplay ()
     {
-        _pards.setSelected(_parobj.info.pardnersOnly);
-        _usePass.setSelected(_parobj.info.passwordProtected);
+        _type.selectValue(_parobj.info.type);
         _creator.setSelected(_parobj.onlyCreatorStart);
 
-        boolean amCreator =
-            _ctx.getUserObject().handle.equals(_parobj.info.creator);
-        _pards.setEnabled(amCreator);
-        _usePass.setEnabled(amCreator);
-        _changePass.setEnabled(amCreator);
+        boolean amCreator = _ctx.getUserObject().handle.equals(_parobj.info.creator);
+        _type.setEnabled(amCreator);
+        _changePass.setEnabled(amCreator && _parobj.info.type == ParlorInfo.Type.PASSWORD);
         _creator.setEnabled(amCreator);
     }
 
     protected void updateConfig ()
     {
         ParlorInfo info = new ParlorInfo();
-        info.pardnersOnly = _pards.isSelected();
-        info.passwordProtected = _usePass.isSelected();
-        _parobj.service.updateParlorConfig(
-            _ctx.getClient(), info, _creator.isSelected());
+        info.type = (ParlorInfo.Type)_type.getSelectedValue();
+        _parobj.service.updateParlorConfig(_ctx.getClient(), info, _creator.isSelected());
+    }
+
+    protected static ArrayList<BComboBox.Item> getParlorTypes (BangContext ctx)
+    {
+        ArrayList<BComboBox.Item> types = new ArrayList<BComboBox.Item>();
+        for (ParlorInfo.Type type : ParlorInfo.Type.values()) {
+            String msg = "m.pt_" + type.toString().toLowerCase();
+            types.add(new BComboBox.Item(type, ctx.xlate(SaloonCodes.SALOON_MSGS, msg)));
+        }
+        return types;
     }
 
     protected class ChangePasswordHelper
@@ -118,8 +134,7 @@ public class ParlorConfigView extends BContainer
 
         public void resultPosted (int button, Object result) {
             if (button == 0) {
-                _parobj.service.updateParlorPassword(
-                    _ctx.getClient(), ((String)result).trim());
+                _parobj.service.updateParlorPassword(_ctx.getClient(), ((String)result).trim());
             }
         }
     }
@@ -134,6 +149,7 @@ public class ParlorConfigView extends BContainer
     protected MessageBundle _msgs;
     protected ParlorObject _parobj;
 
+    protected BComboBox _type;
     protected BCheckBox _pards, _usePass, _creator;
     protected BButton _changePass;
 }
