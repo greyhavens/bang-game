@@ -98,7 +98,7 @@ public class TabbedChatView extends BContainer
         if (!_input.hasFocus() && !_send.hasFocus()) {
             return;
         }
-        ComicChatView tab = (ComicChatView)_pane.getSelectedTab();
+        ChatTab tab = (ChatTab)_pane.getSelectedTab();
         if (tab != null) {
             tab.clear();
         }

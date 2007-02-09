@@ -5,6 +5,7 @@ package com.threerings.bang.chat.client;
 
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.util.Dimension;
+import com.jmex.bui.BComponent;
 
 import com.threerings.crowd.chat.client.SpeakService;
 import com.threerings.crowd.chat.data.ChatCodes;
@@ -33,16 +34,25 @@ public class PlaceChatView extends TabbedChatView
 
     public PlaceChatView (BangContext ctx, String title)
     {
+        this(ctx, title, false);
+    }
+
+    public PlaceChatView (BangContext ctx, String title, boolean simple)
+    {
         super(ctx, new Dimension(400, 400));
 
-        _pchat = new ComicChatView(ctx, _tabSize, true) {
-            protected AvatarInfo getSpeakerAvatar (Handle speaker) {
-                BangOccupantInfo boi = (BangOccupantInfo)
-                    _ctx.getOccupantDirector().getOccupantInfo(speaker);
-                return boi == null ? null : boi.avatar;
-            }
-        };
-        _pane.addTab(title, _pchat);
+        if (simple) {
+            _pchat = new SimpleChatView(ctx, _tabSize);
+        } else {
+            _pchat = new ComicChatView(ctx, _tabSize, true) {
+                protected AvatarInfo getSpeakerAvatar (Handle speaker) {
+                    BangOccupantInfo boi = (BangOccupantInfo)
+                        _ctx.getOccupantDirector().getOccupantInfo(speaker);
+                    return boi == null ? null : boi.avatar;
+                }
+            };
+        }
+        _pane.addTab(title, (BComponent)_pchat);
     }
 
     /**
@@ -186,5 +196,5 @@ public class PlaceChatView extends TabbedChatView
     }
 
     protected SpeakService _spsvc;
-    protected ComicChatView _pchat;
+    protected ChatTab _pchat;
 }

@@ -55,6 +55,7 @@ import static com.threerings.bang.Log.log;
  */
 public abstract class ComicChatView
     extends BScrollingList<EntryBuilder<BComponent>, BComponent>
+    implements ChatTab
 {
     /**
      *  A factory of entries to send into {@link BScrollingList}.
@@ -81,10 +82,7 @@ public abstract class ComicChatView
         createBubbleBackgrounds();
     }
 
-    /**
-     * Appends a message sent by the local user (only used in circumstances where a player's chat
-     * is not normally echoed back to them).
-     */
+    // documentation inherited from interface ChatTab
     public void appendSent (String msg)
     {
         String filtered = _ctx.getChatDirector().filter(msg, null, true);
@@ -93,16 +91,14 @@ public abstract class ComicChatView
         }
     }
 
-    /**
-     * Appends a message received from the chat director.
-     */
+    // documentation inherited from interface ChatTab
     public void appendReceived (UserMessage msg)
     {
         appendSpoken((Handle)msg.speaker, msg.message);
     }
 
     @Override // from BScrollingList
-        protected BComponent createComponent (EntryBuilder<BComponent> builder)
+    protected BComponent createComponent (EntryBuilder<BComponent> builder)
     {
         return builder.build();
     }
@@ -128,15 +124,9 @@ public abstract class ComicChatView
 
             // look up our speaker record for this speaker
             Speaker sprec = _speakers.get(_speaker);
-            if (sprec == null) {
-                sprec = new Speaker(_speaker);
-                _speakers.put(_speaker, sprec);
-            }
 
-            // update the speaker's icon in case it has changed
-            AvatarInfo avatar = getSpeakerAvatar(_speaker);
-            sprec.setAvatar(_ctx, avatar, isLeftSide(_speaker) ^
-                            !_ctx.getAvatarLogic().isMale(avatar));
+            sprec.loadAvatar(_ctx, 
+                    isLeftSide(_speaker) ^ !_ctx.getAvatarLogic().isMale(sprec.getAvatar()));
 
             ChatEntry entry = new ChatEntry(sprec, isLeftSide(_speaker));
             if (_message != null) {
@@ -156,6 +146,17 @@ public abstract class ComicChatView
         {
             _speaker = speaker;
             _message = message;
+
+            // look up our speaker record for this speaker
+            Speaker sprec = _speakers.get(_speaker);
+            if (sprec == null) {
+                sprec = new Speaker(_speaker);
+                _speakers.put(_speaker, sprec);
+            }
+
+            // update the speaker's avatar in case it has changed
+            AvatarInfo avatar = getSpeakerAvatar(_speaker);
+            sprec.setAvatar(avatar);
 
             if (cache) {
                 _cachedEntry = build();
@@ -221,9 +222,7 @@ public abstract class ComicChatView
         }
     }
 
-    /**
-     * Appends a message received from the system.
-     */
+    // documentation inherited from interface ChatTab
     public void appendSystem (ChatMessage msg)
     {
         final String formattedMsg = SystemChatView.format(_ctx, msg);
@@ -236,9 +235,7 @@ public abstract class ComicChatView
         _last = null;
     }
 
-    /**
-     * Clears out all displayed messages.
-     */
+    // documentation inherited from interface ChatTab
     public void clear ()
     {
         removeValues();
@@ -328,12 +325,24 @@ public abstract class ComicChatView
             // avatar = new AvatarView(ctx, 8, false);
         }
 
-        public void setAvatar (BangContext ctx, AvatarInfo avatar, boolean mirror)
+        public void setAvatar (AvatarInfo avatar)
         {
             if (_avatar == null || !_avatar.equals(avatar)) {
                 _avatar = avatar;
+                _avicon = null;
+            }
+        }
+
+        public AvatarInfo getAvatar ()
+        {
+            return _avatar;
+        }
+
+        public void loadAvatar (BangContext ctx, boolean mirror)
+        {
+            if (_avicon == null && _avatar != null) {
                 AvatarView.getImage(
-                    ctx, avatar, AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8, mirror, this);
+                    ctx, _avatar, AvatarLogic.WIDTH/8, AvatarLogic.HEIGHT/8, mirror, this);
             }
         }
 
@@ -383,7 +392,7 @@ public abstract class ComicChatView
         protected BIcon _avicon;
         protected ArrayList<BLabel> _penders;
     }
-
+ 
     /** A chat entry that displays an avatar icon along with one or more messages in bubbles. */
     protected class ChatEntry extends BContainer
     {
@@ -422,7 +431,7 @@ public abstract class ComicChatView
             BLabel label = new BLabel(msg, _left ? "sent_chat_bubble" : "received_chat_bubble") {
                 protected void wasAdded() {
                     super.wasAdded();
-                    setBackground(DEFAULT, _mcont.getComponentCount() == 1 ?
+                    setBackground(DEFAULT, _mcont.getComponent(0) == this ?
                                   (_left ? _sfbg : _rfbg) : (_left ? _srbg : _rrbg));
                 }
             };
