@@ -57,8 +57,7 @@ public class FolkCell extends BContainer
         add(new BLabel(_handle.toString(), "folk_label"));
         if (_isPardner) {
             BLabel pardIcon = new BLabel("", "folk_pardner");
-            pardIcon.setIcon(
-                new ImageIcon(_ctx.loadImage(ParlorList.PARDS_PATH)));
+            pardIcon.setIcon(new ImageIcon(_ctx.loadImage("ui/saloon/pardners_only.png")));
             add(pardIcon);
         }
     }
