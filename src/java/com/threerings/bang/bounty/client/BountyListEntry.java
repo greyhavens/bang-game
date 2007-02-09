@@ -46,7 +46,7 @@ public class BountyListEntry extends SelectableIcon
         MessageBundle msgs = ctx.getMessageManager().getBundle(OfficeCodes.OFFICE_MSGS);
         _labels[0].setText(config.title);
         _labels[1].setText(msgs.get("m.list_reward"));
-        _labels[2].setText(String.valueOf(config.reward.scrip));
+        _labels[2].setText(config.reward.scrip + (config.reward.hasExtraReward() ? "+" : ""));
         _labels[2].setIcon(BangUI.scripIcon);
         _labels[3].setText(msgs.get("m.list_games", String.valueOf(config.games.size())));
         _labels[4].setText(msgs.xlate(Star.getName(config.difficulty)));

@@ -48,6 +48,11 @@ public class BountyConfig extends SimpleStreamableObject
 
         /** A badge to be given out as a reward or null. */
         public Badge.Type badge;
+
+        /** Returns true if this bounty has a reward in addition to the scrip. */
+        public boolean hasExtraReward () {
+            return (articles != null) || (badge != null);
+        }
     }
 
     /** Describes a particular opponent in a bounty game. */
