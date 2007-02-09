@@ -386,7 +386,7 @@
     <component cclass="male/hat" name="buffalo"/>
     <component cclass="male/hat_back" name="buffalo"/>
     <component cclass="male/hat_band" name="medallion_buffalo"/>
-  </article> 
+  </article>
 
   <article name="male_revolutionary_hat" townId="indian_post"
            slot="hat" scrip="2500" coins="3" qualifier="bigshot"
@@ -401,35 +401,33 @@
     <component cclass="male/hat" name="trickster_raven"/>
   </article>
 
- <article name="male_topper" townId="indian_post"
+  <article name="male_topper" townId="indian_post"
            slot="hat" scrip="2000" coins="2"
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="native_topper"/>
     <component cclass="male/hat_back" name="native_topper"/>
   </article>
 
- <article name="male_tlingit_wooden" townId="indian_post"
+  <article name="male_tlingit_wooden" townId="indian_post"
            slot="hat" scrip="2500" coins="2"
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="tlingit_wooden"/>
     <component cclass="male/hat_back" name="tlingit_wooden"/>
   </article>
 
- <article name="male_tlingit_headress" townId="indian_post"
+  <article name="male_tlingit_headress" townId="indian_post"
            slot="hat" scrip="2000" coins="3"
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="male/hat" name="tlingit_headress"/>
     <component cclass="male/hat_back" name="tlingit_headress"/>
   </article>
 
-<!--
  <article name="male_fur_wrap" townId="indian_post"
-           slot="hat" scrip="1300" coins="1"
+           slot="hat" scrip="3000" coins="2"
            colors="clothes_p,clothes_s">
     <component cclass="male/hat" name="fur"/>
     <component cclass="male/hat_back" name="fur"/>
   </article>
--->
 
  <article name="male_battered" townId="indian_post"
            slot="hat" scrip="1500" coins="1"
@@ -927,14 +925,14 @@
   </article>
 
   <article name="female_topper" townId="indian_post"
-           slot="hat" scrip="2500" coins="2" 
+           slot="hat" scrip="2500" coins="2"
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat" name="topper"/>
     <component cclass="female/hat_back" name="topper"/>
   </article>
 
   <article name="female_feather_coronet" townId="indian_post"
-           slot="hat" scrip="2250" coins="3" 
+           slot="hat" scrip="2250" coins="3"
            colors="clothes_p,clothes_s,clothes_t">
     <component cclass="female/hat_back" name="feather_coronet"/>
   </article>
