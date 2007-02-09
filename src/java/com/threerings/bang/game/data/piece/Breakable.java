@@ -19,6 +19,7 @@ import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.data.effect.Effect;
+import com.threerings.bang.game.data.effect.UpdateEffect;
 import com.threerings.bang.game.data.effect.DamageEffect;
 import com.threerings.bang.game.data.effect.ExplodeEffect;
 import com.threerings.bang.game.data.piece.CounterInterface;
@@ -64,38 +65,6 @@ public class Breakable extends Prop
         }            
     }
     
-    public static class UpdateEffect extends Effect
-    {
-        public UpdateEffect()
-        {
-        }
-        
-        public UpdateEffect(Piece piece)
-        {
-            _piece = piece;
-        }
-        
-        @Override // documentation inherited
-        public void prepare (BangObject bangobj, IntIntMap dammap)
-        {
-        }
-        
-        @Override // documentation inherited
-        public int[] getAffectedPieces ()
-        {
-            return new int[] { _piece.pieceId };
-        }
-        
-        public boolean apply (BangObject bangobj, Effect.Observer observer)
-        {
-            bangobj.pieces.updateDirect(_piece);
-            reportEffect(observer, _piece, UPDATED);
-            return true;
-        }
-        
-        protected Piece _piece;
-    }
-
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {
