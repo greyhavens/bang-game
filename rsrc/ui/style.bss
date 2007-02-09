@@ -1024,6 +1024,16 @@ received_chat_bubble {
   padding: 14 22 14 14;
 }
 
+sent_chat {
+  font: "Dom Casual" plain 16;
+  color: #222222;
+}
+
+received_chat {
+  parent: "sent_chat";
+  color: #000000;
+}
+
 send_button {
   padding: 0 16;
   parent: "button";
