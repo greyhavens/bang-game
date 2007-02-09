@@ -56,7 +56,7 @@ import com.threerings.bang.client.util.ResultAttacher;
          
         if (_piece.isAlive()) {
             counter.updateCount((CounterInterface)piece);
-            _ctx.loadParticles("boom_town/breakables/smoke", new ResultAttacher<Spatial>(this) {
+            _ctx.loadParticles("frontier_town/fire", new ResultAttacher<Spatial>(this) {
                 public void requestCompleted (Spatial result) {
                     super.requestCompleted(result);
                     _smoke = result;
