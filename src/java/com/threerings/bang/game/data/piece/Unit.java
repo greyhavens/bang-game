@@ -37,10 +37,10 @@ public class Unit extends Piece
 {
     /** The type of influences that may act on this unit.*/
     public static enum InfluenceType { MAIN, HOLDING, SPECIAL, HINDRANCE };
-    
+
     /** The player to whom this unit will return on respawn or -1 if it should not be respawned. */
     public int originalOwner = -1;
-    
+
     /** Type of thing being held, or null for nothing. */
     public String holding;
 
@@ -80,18 +80,18 @@ public class Unit extends Piece
         setRespawnTick((short)0);
         lastActed = (short)(bangobj.tick - 4);
     }
-    
+
     /**
      * Gets the an array of all influences.
-     */    
+     */
     public Influence[] getInfluences ()
     {
         return _influences;
     }
-    
+
     /**
      * Gets the main influence.
-     */    
+     */
     public Influence getMainInfluence ()
     {
         return _influences[InfluenceType.MAIN.ordinal()];
@@ -99,23 +99,23 @@ public class Unit extends Piece
 
     /**
      * Gets the holding influence.
-     */    
+     */
     public Influence getHoldingInfluence ()
     {
         return _influences[InfluenceType.HOLDING.ordinal()];
     }
-    
+
     /**
      * Gets the new hindrance.
-     */    
+     */
     public Hindrance getHindrance ()
     {
         return (Hindrance)_influences[InfluenceType.HINDRANCE.ordinal()];
-    }    
-    
+    }
+
     /**
      * Configures this piece with a new main influence.
-     */    
+     */
     public void setMainInfluence (Influence influence)
     {
         setInfluence(InfluenceType.MAIN, influence);
@@ -123,7 +123,7 @@ public class Unit extends Piece
 
     /**
      * Configures this piece with a new holding influence.
-     */    
+     */
     public void setHoldingInfluence (Influence influence)
     {
         if (influence != null) {
@@ -131,14 +131,14 @@ public class Unit extends Piece
         }
         setInfluence(InfluenceType.HOLDING, influence);
     }
-    
+
     /**
      * Configures this piece with a new hindrance.
-     */    
+     */
     public void setHindrance (Hindrance hindrance)
     {
         setInfluence(InfluenceType.HINDRANCE, (Influence)hindrance);
-    }    
+    }
 
     /**
      * Configures this piece with a new influence by type.
@@ -388,8 +388,8 @@ public class Unit extends Piece
         int oldDamage = this.damage;
         if (_config.returnFire > 0 && newDamage < 100 &&
             targetInRange(x, y, shooter.x, shooter.y)) {
-            // return fire shots are always executed at 75% health
-            this.damage = 75;
+            // return fire shots are always executed at 50% health
+            this.damage = 50;
             shot = shoot(bangobj, shooter, _config.returnFire/100f);
             shot.type = ShotEffect.RETURN_FIRE;
             this.damage = oldDamage;
@@ -463,7 +463,7 @@ public class Unit extends Piece
         for (Influence influence : getInfluences()) {
             if (influence != null) {
                 ticks = influence.adjustTicksPerMove(ticks);
-            } 
+            }
         }
         return ticks;
     }
@@ -475,9 +475,9 @@ public class Unit extends Piece
         for (Influence influence : getInfluences()) {
             if (influence != null) {
                 distance = influence.adjustSightDistance(distance);
-            } 
+            }
         }
-        return distance;        
+        return distance;
     }
 
     @Override // documentation inherited
@@ -487,9 +487,9 @@ public class Unit extends Piece
         for (Influence influence : getInfluences()) {
             if (influence != null) {
                 distance = influence.adjustMoveDistance(distance);
-            } 
+            }
         }
-        return distance;        
+        return distance;
     }
 
     @Override // documentation inherited
@@ -499,9 +499,9 @@ public class Unit extends Piece
         for (Influence influence : getInfluences()) {
             if (influence != null) {
                 distance = influence.adjustMinFireDistance(distance);
-            } 
+            }
         }
-        return distance;        
+        return distance;
     }
 
     @Override // documentation inherited
@@ -511,9 +511,9 @@ public class Unit extends Piece
         for (Influence influence : getInfluences()) {
             if (influence != null) {
                 distance = influence.adjustMaxFireDistance(distance);
-            } 
+            }
         }
-        return distance;        
+        return distance;
     }
 
     @Override // documentation inherited
@@ -709,7 +709,7 @@ public class Unit extends Piece
                 {
                     damage = influence.adjustAttack(target, damage);
                 }
-            } 
+            }
         }
         return damage;
     }
@@ -723,9 +723,9 @@ public class Unit extends Piece
                 {
                     damage = influence.adjustDefend(shooter, damage);
                 }
-            } 
+            }
         }
-        return damage;        
+        return damage;
     }
 
     @Override // documentation inherited
@@ -740,7 +740,7 @@ public class Unit extends Piece
     {
         return (_config != null ? _config.type : "");
     }
-    
+
     /** A set of influences acting on this unit. This is not serialized, but will be filled in
       * at the appropriate time on the client and server by effects. */
     protected transient Influence _influences[] = new Influence[4];
