@@ -101,6 +101,12 @@ public class WhereToView extends BDecoratedWindow
             box.add(new BLabel(_msgs.get("m.bldg_" + ident), "where_title"), GroupLayout.FIXED);
             box.add(new BLabel(_msgs.get("m.bldg_info_" + ident), "where_info"));
             BButton go = new BButton(_msgs.get("m.bldg_go"), this, "to_" + ident);
+            // TEMP: disable sheriff's office in ITP
+            if (BangCodes.INDIAN_POST.equals(self.townId) && ident.equals("office")) {
+                go.setText(_msgs.get("m.bldg_soon"));
+                go.setEnabled(false);
+            }
+            // END TEMP
             go.setStyleClass("alt_button");
             BContainer butrow = GroupLayout.makeHBox(GroupLayout.CENTER);
             butrow.add(go);
