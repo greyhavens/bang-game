@@ -59,7 +59,7 @@ public class TabbedChatView extends BContainer
             public void selectTab (int tabidx) {
                 super.selectTab(tabidx);
                 // hide and disable our input elements if we're on a non-chat tab
-                boolean visible = (getSelectedTab() instanceof UserTab);
+                boolean visible = (getSelectedTab() instanceof ChatTab);
                 _input.setVisible(visible);
                 _input.setEnabled(visible);
                 _send.setVisible(visible);
