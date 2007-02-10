@@ -3,21 +3,20 @@
 
 package com.threerings.bang.saloon.client;
 
-import java.util.HashMap;
-
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.Spacer;
-import com.jmex.bui.icon.BlankIcon;
-import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.icon.BlankIcon;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
+import com.samskivert.util.ComparableArrayList;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -47,7 +46,7 @@ public class ParlorList extends BContainer
         super(new BorderLayout(10, 10));
         _ctx = ctx;
 
-        _list = new BContainer(new TableLayout(5, 10, 5));
+        _list = new BContainer(new TableLayout(4, 10, 5));
         _list.setStyleClass("parlor_list");
         ((TableLayout)_list.getLayoutManager()).setHorizontalAlignment(TableLayout.STRETCH);
         add(new BScrollPane(_list), BorderLayout.CENTER);
@@ -67,9 +66,9 @@ public class ParlorList extends BContainer
         _salobj = salobj;
         _salobj.addListener(this);
 
-        // add info on the existing parlors (TODO: sort sensibly)
+        // add info on the existing parlors
         for (ParlorInfo info : _salobj.parlors) {
-            _rows.put(info.creator, new ParlorRow(info));
+            maybeAddInfo(info);
             if (_ctx.getUserObject().handle.equals(info.creator)) {
                 updateEnterButton(info);
             }
@@ -120,9 +119,8 @@ public class ParlorList extends BContainer
     {
         if (SaloonObject.PARLORS.equals(event.getName())) {
             ParlorInfo info = (ParlorInfo)event.getEntry();
-            // TODO: insert at appropriate spot
-            _rows.put(info.creator, new ParlorRow(info));
-            if(_ctx.getUserObject().handle.equals(info.creator)) {
+            maybeAddInfo(info);
+            if (_ctx.getUserObject().handle.equals(info.creator)) {
                 updateEnterButton(info);
             }
         }
@@ -133,15 +131,29 @@ public class ParlorList extends BContainer
     {
         if (SaloonObject.PARLORS.equals(event.getName())) {
             ParlorInfo info = (ParlorInfo)event.getEntry();
-            ParlorRow row = _rows.get(info.creator);
-            if (row == null) {
-                log.warning("No row for updated parlor " + info + ".");
-            } else {
-                row.update(info);
-            }
             if (_ctx.getUserObject().handle.equals(info.creator)) {
                 updateEnterButton(info);
             }
+
+            // see if we already have an entry that we can update
+            for (ParlorRow row : _parlors) {
+                if (row.info.creator.equals(info.creator)) {
+                    // remove and reinsert in case our sort order changed
+                    _parlors.remove(row);
+                    if (getWeight(info) > 0) {
+                        // then update the parlor
+                        row.update(info);
+                        _parlors.insertSorted(row);
+                        row.reposition();
+                    } else {
+                        row.clear();
+                    }
+                    return;
+                }
+            }
+
+            // otherwise we may need to readd
+            maybeAddInfo(info);
         }
     }
 
@@ -150,11 +162,13 @@ public class ParlorList extends BContainer
     {
         if (SaloonObject.PARLORS.equals(event.getName())) {
             Handle handle = (Handle)event.getKey();
-            ParlorRow row = _rows.remove(handle);
-            if (row == null) {
-                log.warning("No row for removed parlor [key=" + event.getKey() + "].");
-            } else {
-                row.clear();
+            for (int ii = 0; ii < _parlors.size(); ii++) {
+                ParlorRow row = _parlors.get(ii);
+                if (row.info.creator.equals(handle)) {
+                    _parlors.remove(ii);
+                    row.clear();
+                    break;
+                }
             }
             if (_ctx.getUserObject().handle.equals(handle)) {
                 updateEnterButton(null);
@@ -193,8 +207,37 @@ public class ParlorList extends BContainer
         });
     }
 
-    protected class ParlorRow
+    protected void maybeAddInfo (ParlorInfo info)
     {
+        if (getWeight(info) > 0) {
+            ParlorRow row = new ParlorRow(info);
+            _parlors.insertSorted(row);
+            row.reposition();
+        }
+    }
+
+    protected int getWeight (ParlorInfo info)
+    {
+        int weight = info.occupants;
+        if (_ctx.getUserObject().handle.equals(info.creator)) {
+            weight += 2000;
+        } else if (_ctx.getUserObject().pardners.containsKey(info.creator)) {
+            weight += 1000;
+        } else if (info.type == ParlorInfo.Type.SOCIAL) {
+            weight += 500;
+        } else if (info.type == ParlorInfo.Type.NORMAL) {
+            weight += 100;
+        } else if (info.type == ParlorInfo.Type.PARDNERS_ONLY) {
+            weight -= 1000;
+        }
+        return weight;
+    }
+
+    protected class ParlorRow
+        implements Comparable<ParlorRow>
+    {
+        public ParlorInfo info;
+
         public ParlorRow (ParlorInfo info) {
             MessageBundle msgs = _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
             String lbl = msgs.get("m.parlor_name", info.creator);
@@ -208,6 +251,7 @@ public class ParlorList extends BContainer
         }
 
         public void update (ParlorInfo info) {
+            this.info = info;
             _occs.setText(String.valueOf(info.occupants));
             if (info.type != ParlorInfo.Type.NORMAL) {
                 String ipath = "ui/saloon/" + info.type.toString().toLowerCase() + ".png";
@@ -216,28 +260,20 @@ public class ParlorList extends BContainer
                 _icon.setIcon(new BlankIcon(16, 16));
             }
             _enter.setProperty("info", info);
-
-            // if we're the creator, or the creator is our pardner, always show this parlor
-            // (regardless of whether it is empty)
-            if (_ctx.getUserObject().handle.equals(info.creator) ||
-                _ctx.getUserObject().pardners.containsKey(info.creator)) {
-                add();
-
-            } else if (info.type == ParlorInfo.Type.PARDNERS_ONLY || info.occupants == 0) {
-                // if it's pardners only or empty, don't show it
-                clear();
-
-            } else {
-                add();
-            }
         }
 
-        public void add () {
+        public void reposition () {
+            // if we're not at our proper index, remove ourselves first
+            int index = _parlors.indexOf(this) * 4;
+            if (_name.getParent() != null && _list.getComponent(index) != _name) {
+                clear();
+            }
+
             if (_name.getParent() == null) {
-                _list.add(_name);
-                _list.add(_icon);
-                _list.add(_occs);
-                _list.add(_enter);
+                _list.add(index, _enter);
+                _list.add(index, _occs);
+                _list.add(index, _icon);
+                _list.add(index, _name);
             }
         }
 
@@ -250,6 +286,10 @@ public class ParlorList extends BContainer
             }
         }
 
+        public int compareTo (ParlorRow other) {
+            return getWeight(other.info) - getWeight(info);
+        }
+
         protected BLabel _name, _occs, _icon;
         protected BButton _enter;
     }
@@ -259,8 +299,5 @@ public class ParlorList extends BContainer
     protected BContainer _list;
     protected BButton _enterParlor;
 
-    protected HashMap<Handle,ParlorRow> _rows = new HashMap<Handle,ParlorRow>();
-
-    protected static final String ICON_PATH = "ui/saloon/pardners_only.png";
-    protected static final String LOCKED_PATH = "ui/saloon/locked.png";
+    protected ComparableArrayList<ParlorRow> _parlors = new ComparableArrayList<ParlorRow>();
 }
