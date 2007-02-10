@@ -195,10 +195,9 @@ public class GoodsInspector extends BContainer
         } else if (_good instanceof SongGood) {
             showMode(Mode.DOWNLOAD);
             msg += "_song";
-        } else {
-            _parent.goodPurchased();
         }
 
+        _parent.goodPurchased();
         _descrip.setText(_ctx.xlate(StoreCodes.STORE_MSGS, msg));
         BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
     }

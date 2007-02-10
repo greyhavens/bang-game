@@ -53,8 +53,7 @@ public class Song extends Item
     @Override // documentation inherited
     public boolean isEquivalent (Item other)
     {
-        return super.isEquivalent(other) &&
-            ((Song)other)._song.equals(_song);
+        return super.isEquivalent(other) && ((Song)other)._song.equals(_song);
     }
     
     @Override // from Item
