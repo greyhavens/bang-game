@@ -746,7 +746,7 @@ mute_list_pane {
 //
 // Status View styles
 
-status_view { 
+status_view {
   background: image "ui/status/background.png" centerxy;
   padding: 65 0 0 0;
 }
@@ -764,7 +764,7 @@ status_tabinfo {
   color: #ffefc0;
 }
 
-stats_view { 
+stats_view {
   padding: 5;
   color: #000000;
 }
@@ -796,7 +796,7 @@ where_info {
 //
 // Pardner View styles
 
-pardner_view { 
+pardner_view {
   color: #7e4e26;
   font: "Old Town" plain 24;
 }
@@ -838,7 +838,7 @@ poster_popup {
   padding: 16 8;
 }
 
-poster_view { 
+poster_view {
   background: image "ui/wanted/background.png" centerxy;
 }
 
@@ -906,7 +906,7 @@ poster_edit_popup {
   padding: 8;
 }
 
-poster_edit_view { 
+poster_edit_view {
 }
 
 //
@@ -1017,7 +1017,7 @@ sent_chat_bubble {
   color: #003b27;
   text-align: center;
   vertical-align: center;
-  padding: 14 14 14 22;
+  padding: 10 10 10 18;
 }
 
 received_chat_bubble {
@@ -1025,7 +1025,7 @@ received_chat_bubble {
   color: #09103a;
   text-align: center;
   vertical-align: center;
-  padding: 14 22 14 14;
+  padding: 10 18 10 10;
 }
 
 sent_chat {
@@ -1871,7 +1871,7 @@ roster_view {
 }
 
 roster_pane {
-  padding: 3 13 3 20;  
+  padding: 3 13 3 20;
 }
 
 roster_title {
