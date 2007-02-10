@@ -655,13 +655,13 @@
     </sequential></for>
 
     <!-- build our wreckage bundle -->
-    <mkdir dir="${deploy.dir}/rsrc/extras/wreckage"/>
-    <jar file="${deploy.dir}/rsrc/extras/wreckage/bundle.jar">
-      <fileset dir="rsrc/extras/wreckage">
+    <mkdir dir="${deploy.dir}/rsrc/units/wreckage"/>
+    <jar file="${deploy.dir}/rsrc/units/wreckage/bundle.jar">
+      <fileset dir="rsrc/units/wreckage">
         <include name="**/*.png"/>
         <exclude name="**/source/**"/>
       </fileset>
-      <fileset dir="${deploy.dir}/rsrc/extras/wreckage">
+      <fileset dir="${deploy.dir}/rsrc/units/wreckage">
         <include name="**/model.dat"/>
         <include name="**/*.ogg"/>
       </fileset>
