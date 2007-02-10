@@ -16,11 +16,16 @@ import com.threerings.bang.game.client.sprite.ActiveSprite;
 public class TargetableActiveSprite extends ActiveSprite
     implements Targetable
 {
-    public TargetableActiveSprite (String type, String name) 
+    public TargetableActiveSprite (String type, String name)
     {
         super(type, name);
     }
-    
+
+    public boolean isHoverable ()
+    {
+        return true;
+    }
+
     // from interface Targetable
     public void setTargeted (BangObject bangobj, TargetMode mode, Unit attacker)
     {

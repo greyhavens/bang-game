@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client.sprite;
 
+import com.threerings.openal.SoundGroup;
+
 import com.jme.scene.Spatial;
 import com.jme.math.FastMath;
 
@@ -27,33 +29,28 @@ import com.threerings.bang.client.util.ResultAttacher;
  public class BreakableSprite extends TargetableActiveSprite
  {
      public GenericCounterNode counter;
-     
-     public BreakableSprite (String type, String name) 
+
+     public BreakableSprite (String type, String name)
      {
          super(type, name);
      }
 
      public void init (
-         BasicContext ctx, BoardView view, BangBoard board, 
-         com.threerings.openal.SoundGroup sounds, Piece piece, short tick)
+         BasicContext ctx, BoardView view, BangBoard board,
+         SoundGroup sounds, Piece piece, short tick)
      {
          super.init(ctx, view, board, sounds, piece, tick);
          counter = new GenericCounterNode();
-         counter.createGeometry((CounterInterface)piece, (BangContext)ctx);
-         this.attachChild(counter);
+         counter.createGeometry((CounterInterface)piece, ctx);
+         attachChild(counter);
      }
 
-     public boolean isHoverable ()
-     {
-         return true;
-     }
-     
      @Override // documentation inherited
      public void updated (Piece piece, short tick)
      {
          super.updated(piece, tick);
          _target.updated(piece, tick);
-         
+
         if (_piece.isAlive()) {
             counter.updateCount((CounterInterface)piece);
             _ctx.loadParticles("frontier_town/fire", new ResultAttacher<Spatial>(this) {

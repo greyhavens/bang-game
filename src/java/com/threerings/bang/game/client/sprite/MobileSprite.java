@@ -71,15 +71,6 @@ public class MobileSprite extends ActiveSprite
     {
         super(type, name);
     }
-
-    /**
-     * Returns an array containing the types of wreckage to be thrown from this
-     * sprite when it blows up.
-     */
-    public String[] getWreckageTypes ()
-    {
-        return _wtypes;
-    }
     
     /**
      * Called to inform us that we will be shooting the specified target
@@ -307,14 +298,6 @@ public class MobileSprite extends ActiveSprite
         createDustManager();
     }
 
-    @Override // documentation inherited
-    protected void modelLoaded (Model model)
-    {
-        super.modelLoaded(model);
-        _wtypes = StringUtil.parseStringArray(
-            _model.getProperties().getProperty("wreckage", ""));
-    }
-    
     /**
      * Creates the dust particle manager, if this unit kicks up dust.
      */
@@ -562,8 +545,6 @@ public class MobileSprite extends ActiveSprite
         }
     }
 
-    protected String[] _wtypes;
-    
     protected ParticleMesh _dust;
     protected Sound _moveSound;
     protected PieceSprite _tsprite;

@@ -70,6 +70,15 @@ public class ActiveSprite extends PieceSprite
         _name = name;
         addProceduralActions();
     }
+    
+    /**
+     * Returns an array containing the types of wreckage to be thrown from this
+     * sprite when it blows up.
+     */
+    public String[] getWreckageTypes ()
+    {
+        return _wtypes;
+    }    
 
     /**
      * Returns true if this sprite supports the specified action
@@ -320,11 +329,13 @@ public class ActiveSprite extends PieceSprite
         // load our model
         loadModel(_type, _name, _variant);
     }
-
+    
     @Override // documentation inherited
     protected void modelLoaded (Model model)
     {
         super.modelLoaded(model);
+        _wtypes = StringUtil.parseStringArray(
+            _model.getProperties().getProperty("wreckage", ""));
         _ianims = StringUtil.parseStringArray(
             _model.getProperties().getProperty("idle", ""));
         startNextIdle(true);
@@ -450,8 +461,9 @@ public class ActiveSprite extends PieceSprite
         protected String _action;
     }
 
+    protected String[] _wtypes;
     protected String[] _ianims;
-    
+
     protected String _action, _idle;
     protected float _nextAction, _nextIdle;
     protected ArrayList<String> _actions = new ArrayList<String>();

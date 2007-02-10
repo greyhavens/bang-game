@@ -29,13 +29,13 @@ public class OneArmedBandit extends Unit
     {
         return _kind.ordinal();
     }
-    
+
     public void wasKilled (short tick)
     {
         super.wasKilled(tick);
         _kind = RandomInfluenceEffect.Kind.NONE;
     }
-    
+
     @Override // documentation inherited
     public Effect[] maybeGeneratePostOrderEffects ()
     {
@@ -47,27 +47,23 @@ public class OneArmedBandit extends Unit
             _kind = RandomUtil.pickRandom(RandomInfluenceEffect.Kind.values(), RandomInfluenceEffect.Kind.NONE);
             randomEffect = (_kind != RandomInfluenceEffect.Kind.EXPLODE) ?
                 new RandomInfluenceEffect(this.pieceId, _kind) : null;
-        }        
-                
-        Effect[] effects = super.maybeGeneratePostOrderEffects();
-        
-        if (randomEffect != null) {
-            effects = (effects == NO_EFFECTS) ?
-                new Effect[] { randomEffect } : ArrayUtil.append(effects, randomEffect);
         }
 
-        Effect updateEffect =  new UpdateEffect(this);
-        effects = (effects == NO_EFFECTS) ?
-            new Effect[] { updateEffect } : ArrayUtil.append(effects, updateEffect);
-        
+        Effect[] effects = super.maybeGeneratePostOrderEffects();
+
+        if (randomEffect != null) {
+            effects = ArrayUtil.append(effects, randomEffect);
+        }
+        effects = ArrayUtil.append(effects, new UpdateEffect(this));
+
         return effects;
     }
-    
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
         return new OneArmedBanditSprite(_config.type);
     }
-    
+
     RandomInfluenceEffect.Kind _kind = RandomInfluenceEffect.Kind.NONE;
 }

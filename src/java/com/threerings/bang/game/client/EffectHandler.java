@@ -72,6 +72,8 @@ import com.threerings.bang.game.data.piece.TotemBase;
 import com.threerings.bang.game.data.piece.TotemBonus;
 import com.threerings.bang.game.data.piece.TreeBed;
 import com.threerings.bang.game.data.piece.Unit;
+import com.threerings.bang.game.data.piece.Breakable;
+
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -107,7 +109,7 @@ public class EffectHandler extends BoardView.BoardAction
     }
 
     @Override // documentation inherited
-    public boolean canExecute (ArrayIntSet penders, 
+    public boolean canExecute (ArrayIntSet penders,
             HashSet<Rectangle> boundset, LinkedList<Integer> syncQueue)
     {
         if (!super.canExecute(penders, boundset, syncQueue)) {
@@ -228,11 +230,17 @@ public class EffectHandler extends BoardView.BoardAction
         if (wasDamaged && piece instanceof TotemBase) {
             maybeFlyTotemPiece((TotemBase)piece);
         }
-        
+
         // add wreck effect for steam-powered units
-        if (wasDamaged && piece instanceof Unit &&
+        boolean pieceIsDeadSteamUnit = wasDamaged && piece instanceof Unit &&
             ((Unit)piece).getConfig().make == UnitConfig.Make.STEAM &&
-            (effviz instanceof ExplosionViz || !piece.isAlive())) {
+            (effviz instanceof ExplosionViz || !piece.isAlive());
+
+        // add wreck effect for breakables
+        boolean pieceIsBreakable =
+            piece instanceof Breakable && !piece.isAlive();
+
+        if (pieceIsDeadSteamUnit || pieceIsBreakable) {
             effviz = new WreckViz(effviz);
         }
 
@@ -240,7 +248,7 @@ public class EffectHandler extends BoardView.BoardAction
         if (effect.equals(AddPieceEffect.DROPPED)) {
             dropPiece(piece);
         }
-        
+
         // queue the effect up on the piece sprite
         if (effviz != null) {
             queueEffect(sprite, piece, effviz);
@@ -330,7 +338,7 @@ public class EffectHandler extends BoardView.BoardAction
         } else if (effect == null && _view.isHighNoon()) {
             _view.setHighNoon(false);
         }
-        
+
         // perhaps play a sound to go with our visual effect
         String soundPath = getSoundPath(effect);
         if (soundPath != null) {
@@ -359,7 +367,7 @@ public class EffectHandler extends BoardView.BoardAction
 
         if (_bangobj.tick - _tick >= FAST_TICK_DELTA) {
             log.info("Performing fast animations [effect=" + _effect +
-                    ", tick=" + _tick + ", bangobj.tick=" + _bangobj.tick + 
+                    ", tick=" + _tick + ", bangobj.tick=" + _bangobj.tick +
                     "].");
             sprite.fastAnimations(true);
         }
@@ -408,13 +416,13 @@ public class EffectHandler extends BoardView.BoardAction
     {
         _bview.pstatus[card.owner].cardAdded(card, true);
     }
-    
+
     // documentation inherited from interface Effect.Observer
     public void cardRemoved (Card card)
     {
         _bview.pstatus[card.owner].cardRemoved(card, true, false);
     }
-    
+
     // documentation inherited from interface Effect.Observer
     public void cardPlayed (Card card, Object target)
     {
@@ -422,14 +430,14 @@ public class EffectHandler extends BoardView.BoardAction
         if (!card.shouldShowVisualization(_pidx)) {
             return;
         }
-        
+
         // play a sound effect, if one exists
         String path = "rsrc/cards/" + card.getTownId() + "/" + card.getType() +
             "/play.ogg";
         if (SoundUtil.haveSound(path)) {
             _sounds.getSound(path).play(true);
         }
-        
+
         // display the visualization
         IconViz iviz;
         switch (card.getPlacementMode()) {
@@ -450,24 +458,24 @@ public class EffectHandler extends BoardView.BoardAction
                 iviz.init(_ctx, _view, piece, null);
                 iviz.display(sprite);
                 return;
-                
+
             case VS_AREA:
                 int[] coords = (int[])target;
                 iviz = IconViz.createCardViz(card);
                 iviz.init(_ctx, _view, coords[0], coords[1], null);
                 iviz.display(null);
                 return;
-        
+
             case VS_PLAYER:
                 _bview.showCardPlayed(card, (Integer)target);
                 return;
-        
+
             case VS_BOARD:
                 _bview.showCardPlayed(card, -1);
                 return;
         }
     }
-    
+
     // documentation inherited from interface Effect.Observer
     public void tickDelayed (long extraTime)
     {
@@ -544,7 +552,7 @@ public class EffectHandler extends BoardView.BoardAction
         addInfluenceSounds(sounds, shot.defendIcons);
         return sounds.toArray(new Sound[sounds.size()]);
     }
-    
+
     /**
      * Looks for sounds representing the named influences, loading them and
      * adding them to the list if present.
@@ -559,10 +567,10 @@ public class EffectHandler extends BoardView.BoardAction
             String path = "rsrc/influences/sounds/" + influence + ".ogg";
             if (SoundUtil.haveSound(path)) {
                 sounds.add(_sounds.getSound(path));
-            }       
+            }
         }
     }
-    
+
     /**
      * Plays a group of sounds simultaneously.
      */
@@ -574,7 +582,7 @@ public class EffectHandler extends BoardView.BoardAction
             }
         }
     }
-    
+
     /**
      * Queues up an action on a sprite and sets up the necessary observation to
      * ensure that we wait until the action is completed to complete our
@@ -623,7 +631,7 @@ public class EffectHandler extends BoardView.BoardAction
         PieceSprite sprite = dummy.createSprite();
         sprite.init(_ctx, _view, _bangobj.board, _sounds, dummy, _tick);
         _view.addSprite(sprite);
-        
+
         // fly the sprite from the totem to its position
         final int penderId = notePender();
         Vector3f btrans = new Vector3f(bsprite.getWorldTranslation());
@@ -639,7 +647,7 @@ public class EffectHandler extends BoardView.BoardAction
             }
         });
     }
-    
+
     /**
      * Flies a dropped bonus from the unit that dropped it to its current
      * location (optionally fading it in), then bounces it a few times.
@@ -700,7 +708,7 @@ public class EffectHandler extends BoardView.BoardAction
         trans.addLocal(sprite.getWorldTranslation());
         return trans;
     }
-    
+
     /**
      * Drops a piece from the sky to its starting location.
      */
@@ -760,7 +768,7 @@ public class EffectHandler extends BoardView.BoardAction
     {
         // nothing doing
     }
-    
+
     /**
      * Find and returns a sound to play on a piece's landing after its drop.
      */
@@ -775,7 +783,7 @@ public class EffectHandler extends BoardView.BoardAction
         }
         return _sounds.getSound(DEFAULT_LAND_SOUND);
     }
-    
+
     /**
      * Bounces a sprite up to the specified height and schedules another
      * bounce.
@@ -798,9 +806,9 @@ public class EffectHandler extends BoardView.BoardAction
                 }
                 maybeComplete(penderId);
             }
-        }); 
+        });
     }
-    
+
     /**
      * Called when the sprite finishes its final bounce.
      */
@@ -820,7 +828,7 @@ public class EffectHandler extends BoardView.BoardAction
             }
         }
     }
-    
+
     protected boolean isCompleted ()
     {
         return (!_applying && _penders.size() == 0);
@@ -835,7 +843,7 @@ public class EffectHandler extends BoardView.BoardAction
             }
         }.schedule((long)(duration * 1000));
     }
-    
+
     protected int notePender ()
     {
         _penders.add(++_nextPenderId);
@@ -882,10 +890,10 @@ public class EffectHandler extends BoardView.BoardAction
 
     /** The duration of particle effects activated on top of the camera. */
     protected static final float CAMERA_EFFECT_DURATION = 2f;
-    
+
     /** The height from which to drop pieces onto the board. */
     protected static final float PIECE_DROP_HEIGHT = 150f;
-    
+
     /** Used by {@link #getSoundPath}. */
     protected static final String[] SOUND_PREFIXES = {
         "rsrc/cards/", "rsrc/bonuses/", "rsrc/extras/", "rsrc/effects/"
@@ -895,7 +903,7 @@ public class EffectHandler extends BoardView.BoardAction
     protected static final String[] SOUND_SUFFIXES = {
         ".ogg", "/activate.ogg"
     };
-    
+
     /** The backup place to look for a sound to play on a unit's landing, for
      * units that do not have a custom landing sound. */
     protected static final String DEFAULT_LAND_SOUND =

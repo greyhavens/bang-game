@@ -20,7 +20,7 @@ public class UpdateEffect extends Effect
 
     public UpdateEffect(Piece piece)
     {
-     _piece = piece;
+        _piece = piece;
     }
 
     @Override // documentation inherited
@@ -31,14 +31,14 @@ public class UpdateEffect extends Effect
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
-     return new int[] { _piece.pieceId };
+        return new int[] { _piece.pieceId };
     }
 
     public boolean apply (BangObject bangobj, Effect.Observer observer)
     {
-     bangobj.pieces.updateDirect(_piece);
-     reportEffect(observer, _piece, UPDATED);
-     return true;
+        bangobj.pieces.updateDirect(_piece);
+        reportEffect(observer, _piece, UPDATED);
+        return true;
     }
 
     protected Piece _piece;

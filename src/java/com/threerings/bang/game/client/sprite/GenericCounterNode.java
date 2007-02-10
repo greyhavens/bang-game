@@ -18,7 +18,6 @@ import com.jme.util.geom.BufferUtils;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.RenderUtil;
-import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.data.BangBoard;
@@ -35,7 +34,7 @@ public class GenericCounterNode extends Node
     /**
      * Creates the geometry
      */
-    public void createGeometry (CounterInterface counter, BangContext ctx)
+    public void createGeometry (CounterInterface counter, BasicContext ctx)
     {
         // create a billboard to display this mine's current nugget count
         _ctx = ctx;
@@ -54,8 +53,8 @@ public class GenericCounterNode extends Node
                     0, 0, (int)((1.0 + 0.5) * TILE_SIZE)));
         attachChild(bbn);
         _quad.setCullMode(CULL_ALWAYS);
-    }    
-    
+    }
+
     /**
      * Updates the count hovering over the sprite.
      */
@@ -83,7 +82,7 @@ public class GenericCounterNode extends Node
         }
     }
 
-    protected BangContext _ctx;
+    protected BasicContext _ctx;
     protected Quad _quad;
     protected TextureState _tstate;
     protected int _dcount = -1;
