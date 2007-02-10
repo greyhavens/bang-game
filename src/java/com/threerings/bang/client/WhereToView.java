@@ -133,10 +133,6 @@ public class WhereToView extends BDecoratedWindow
         String action = event.getAction();
         if (action.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);
-            if (_nowhere != null && _nowhere.isSelected()) {
-                BangPrefs.setNoWhereTo(_ctx.getUserObject());
-                _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, "m.whereto_byebye");
-            }
 
         } else if (action.startsWith("to_")) {
             _ctx.getBangClient().clearPopup(this, true);
@@ -164,6 +160,11 @@ public class WhereToView extends BDecoratedWindow
     protected void wasRemoved ()
     {
         super.wasRemoved();
+
+        if (_nowhere != null && _nowhere.isSelected()) {
+            BangPrefs.setNoWhereTo(_ctx.getUserObject());
+            _ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, "m.whereto_byebye");
+        }
         _ctx.getBangClient().checkShowIntro(true);
     }
 
