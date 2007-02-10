@@ -811,6 +811,8 @@ public class BangClient extends BasicClient
                 BangPrefs.config.setValue(mkey, StringUtil.join(_mutedir.getMuted()));
             }
         });
+        // update our chat throttle
+        ((BangChatDirector)_ctx.getChatDirector()).checkClientThrottle();
 
         // register our status view key bindings
         StatusView.bindKeys(_ctx);

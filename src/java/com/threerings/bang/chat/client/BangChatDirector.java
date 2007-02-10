@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
+import com.samskivert.util.Throttle;
 import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
@@ -22,6 +23,7 @@ import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
 
 /**
@@ -66,6 +68,18 @@ public class BangChatDirector extends ChatDirector
                 return SUCCESS;
             }
         });
+    }
+
+    /**
+     * Initialize the chat throttle.
+     */
+    public void checkClientThrottle ()
+    {
+        // if we're a support user, turn off the throttle
+        PlayerObject user = _ctx.getUserObject();
+        if (user != null && user.tokens.isSupport()) {
+            _chatThrottle = new Throttle(1, 0);
+        }
     }
 
     /**
@@ -150,6 +164,23 @@ public class BangChatDirector extends ChatDirector
         }
     }
 
+    @Override // documentation inherited
+    protected String checkCanChat (SpeakService speakSvc, String message, byte mode)
+    {
+        // if we're speaking on a particular channel, just let it through
+        if (speakSvc != null) {
+            return null;
+        }
+
+        // make sure their voice isn't going hoarse
+        long now = System.currentTimeMillis();
+        if (_chatThrottle.wouldThrottle(now)) {
+            return "e.too_chatty";
+        }
+        _chatThrottle.noteOp(now);
+        return null;
+    }
+
     /** Provides acces to client services. */
     protected BangContext _ctx;
 
@@ -159,6 +190,9 @@ public class BangChatDirector extends ChatDirector
     /** The text of any message being composed on the client when the last chat
      * entry field disappeared. */
     protected String _haltedMessage = "";
+
+    /** We throttle chat for non support users. */
+    protected Throttle _chatThrottle = new Throttle(4, 10000);
 
     /** The total number of chat messages we store before dumping the oldest */
     protected static final int MESSAGE_HISTORY_LIMIT = 50;
