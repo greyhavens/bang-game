@@ -56,6 +56,15 @@ public class TabbedChatView extends BContainer
         _ctx.getChatDirector().pushChatDisplay(this);
 
         add(_pane = new TabbedPane(true) {
+            public void selectTab (int tabidx) {
+                super.selectTab(tabidx);
+                // hide and disable our input elements if we're on a non-chat tab
+                boolean visible = (getSelectedTab() instanceof UserTab);
+                _input.setVisible(visible);
+                _input.setEnabled(visible);
+                _send.setVisible(visible);
+                _send.setEnabled(visible);
+            }
             protected void tabWasRemoved (BComponent tab, boolean btnClose) {
                 if (btnClose) {
                     ((UserTab)tab).wasClosed();
@@ -68,12 +77,10 @@ public class TabbedChatView extends BContainer
 
         _pane.addListener(this);
         BContainer tcont = new BContainer(
-            GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER,
-                                  GroupLayout.NONE));
+            GroupLayout.makeHoriz(GroupLayout.STRETCH, GroupLayout.CENTER, GroupLayout.NONE));
         tcont.add(_input = new BTextField(BangUI.TEXT_FIELD_MAX_LENGTH));
         _input.addListener(this);
-        ImageIcon icon = new ImageIcon(
-            _ctx.loadImage("ui/chat/bubble_icon.png"));
+        ImageIcon icon = new ImageIcon(_ctx.loadImage("ui/chat/bubble_icon.png"));
         tcont.add(_send = new BButton(icon, this, "send"), GroupLayout.FIXED);
         add(tcont, GroupLayout.FIXED);
 
@@ -84,8 +91,7 @@ public class TabbedChatView extends BContainer
     }
 
     /**
-     * This must be called when we are leaving the room in which this chat view
-     * is displaying chat.
+     * This must be called when we are leaving the room in which this chat view is displaying chat.
      */
     public void shutdown ()
     {
@@ -98,9 +104,9 @@ public class TabbedChatView extends BContainer
         if (!_input.hasFocus() && !_send.hasFocus()) {
             return;
         }
-        ChatTab tab = (ChatTab)_pane.getSelectedTab();
-        if (tab != null) {
-            tab.clear();
+        Object tab = _pane.getSelectedTab();
+        if (tab instanceof ChatTab) {
+            ((ChatTab)tab).clear();
         }
     }
 
@@ -110,15 +116,14 @@ public class TabbedChatView extends BContainer
         if (isAdded() && // don't intercept feedback if we're not showing
             msg instanceof SystemMessage &&
             SystemMessage.FEEDBACK == ((SystemMessage)msg).attentionLevel) {
-            // we also have to handle feedback messages because that's 
-            // how tell failures are reported
-            UserTab tab = (UserTab)_pane.getSelectedTab();
-            if (tab != null) {
-                tab.appendSystem(msg);
+            // we also have to handle feedback messages because that's how tell failures are
+            // reported
+            Object tab = _pane.getSelectedTab();
+            if (tab instanceof UserTab) {
+                ((UserTab)tab).appendSystem(msg);
                 return true;
             }
         }
-
         return false;
     }
 
@@ -130,12 +135,10 @@ public class TabbedChatView extends BContainer
             String msg = _input.getText().trim();
             _input.setText("");
             if (msg.startsWith("/")) {
-                String error = _ctx.getChatDirector().requestChat(
-                    null, msg, true);
+                String error = _ctx.getChatDirector().requestChat(null, msg, true);
                 if (!ChatCodes.SUCCESS.equals(error)) {
                     SystemMessage sysmsg = new SystemMessage(
-                        _ctx.xlate(BangCodes.CHAT_MSGS, error),
-                        null, SystemMessage.FEEDBACK);
+                        _ctx.xlate(BangCodes.CHAT_MSGS, error), null, SystemMessage.FEEDBACK);
                     ((UserTab)_pane.getSelectedTab()).appendSystem(sysmsg);
                 }
 
@@ -146,11 +149,10 @@ public class TabbedChatView extends BContainer
     }
 
     /**
-     * Allows subclasses to bring the chat interface to front if it is hidden
-     * and a chat message arrives.
+     * Allows subclasses to bring the chat interface to front if it is hidden and a chat message
+     * arrives.
      *
-     * @return true if the tabs were brought to front, false if that was not
-     * possible.
+     * @return true if the tabs were brought to front, false if that was not possible.
      */
     protected boolean displayTabs ()
     {
@@ -181,15 +183,14 @@ public class TabbedChatView extends BContainer
          */
         public void requestTell (final String msg)
         {
-            _ctx.getChatDirector().requestTell(
-                _user, msg, new ResultListener<Name>() {
-                    public void requestCompleted (Name result) {
-                        appendSent(msg);
-                    }
-                    public void requestFailed (Exception cause) {
-                        // will be reported in a feedback message
-                    }
-                });
+            _ctx.getChatDirector().requestTell(_user, msg, new ResultListener<Name>() {
+                public void requestCompleted (Name result) {
+                    appendSent(msg);
+                }
+                public void requestFailed (Exception cause) {
+                    // will be reported in a feedback message
+                }
+            });
         }
 
         /**
@@ -246,8 +247,7 @@ public class TabbedChatView extends BContainer
 
             } else {
                 // this should never happen
-                log.warning("Unknown speaker [speaker=" + speaker +
-                            ", user=" + _user + "].");
+                log.warning("Unknown speaker [speaker=" + speaker + ", user=" + _user + "].");
                 return null;
             }
         }
@@ -262,9 +262,7 @@ public class TabbedChatView extends BContainer
     protected BButton _send;
     protected TabbedPane _pane;
     protected Dimension _tabSize;
-
-    protected HashMap<Handle,UserTab> _users =
-        new HashMap<Handle,UserTab>();
-
     protected BIcon _alert;
+
+    protected HashMap<Handle,UserTab> _users = new HashMap<Handle,UserTab>();
 }

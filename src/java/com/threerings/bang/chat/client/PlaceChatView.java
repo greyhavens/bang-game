@@ -39,20 +39,23 @@ public class PlaceChatView extends TabbedChatView
 
     public PlaceChatView (BangContext ctx, String title, boolean simple)
     {
-        super(ctx, new Dimension(400, 400));
+        this(ctx, title, simple ? new SimpleChatView(ctx, TAB_SIZE) : 
+             new ComicChatView(ctx, TAB_SIZE, true) {
+                 protected AvatarInfo getSpeakerAvatar (Handle speaker) {
+                     BangOccupantInfo boi = (BangOccupantInfo)
+                         _ctx.getOccupantDirector().getOccupantInfo(speaker);
+                     return boi == null ? null : boi.avatar;
+                 }
+             });
+    }
 
-        if (simple) {
-            _pchat = new SimpleChatView(ctx, _tabSize);
-        } else {
-            _pchat = new ComicChatView(ctx, _tabSize, true) {
-                protected AvatarInfo getSpeakerAvatar (Handle speaker) {
-                    BangOccupantInfo boi = (BangOccupantInfo)
-                        _ctx.getOccupantDirector().getOccupantInfo(speaker);
-                    return boi == null ? null : boi.avatar;
-                }
-            };
+    public PlaceChatView (BangContext ctx, String title, BComponent main)
+    {
+        super(ctx, TAB_SIZE);
+        if (main instanceof ChatTab) {
+            _pchat = (ChatTab)main;
         }
-        _pane.addTab(title, (BComponent)_pchat);
+        _pane.addTab(title, main);
     }
 
     /**
@@ -135,7 +138,7 @@ public class PlaceChatView extends TabbedChatView
             UserMessage umsg = (UserMessage)msg;
             if (umsg.mode == ChatCodes.BROADCAST_MODE || umsg instanceof TellFeedbackMessage) {
                 return false; // we don't handle broadcast messages or tell feedback
-            } else {
+            } else if (_pchat != null) {
                 _pchat.appendReceived(umsg);
                 return true;
             }
@@ -156,7 +159,7 @@ public class PlaceChatView extends TabbedChatView
     public void actionPerformed (ActionEvent ae)
     {
         // if the place chat tab is not selected, let our parent handle it
-        if (_pane.getSelectedTab() != _pchat) {
+        if (_pchat == null || _pane.getSelectedTab() != _pchat) {
             super.actionPerformed(ae);
             return;
         }
@@ -197,4 +200,6 @@ public class PlaceChatView extends TabbedChatView
 
     protected SpeakService _spsvc;
     protected ChatTab _pchat;
+
+    protected static final Dimension TAB_SIZE = new Dimension(400, 400);
 }

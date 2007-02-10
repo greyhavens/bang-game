@@ -63,7 +63,15 @@ public class PaperView extends BContainer
 
         // this container will display the friendly folks UI
         _folks = new BContainer(GroupLayout.makeVStretch());
-        _folks.add(_chat = new PaperChatView(_ctx, "m.saloon_chat"));
+        BangHTMLView help = new BangHTMLView();
+        help.setStyleClass("news_help");
+        help.setContents(_msgs.get("m.saloon_help"));
+        _folks.add(_chat = new PlaceChatView(_ctx, _msgs.get("m.saloon_info"), help) {
+            protected boolean displayTabs () {
+                displayPage(1);
+                return true;
+            }
+        });
 
         // when the news is loaded; it will display the news tab, but we need to hand set the
         // proper navigation button to selected
@@ -97,14 +105,6 @@ public class PaperView extends BContainer
     {
         // unregister our chat display
         _chat.shutdown();
-    }
-
-    /**
-     * Returns the chat view
-     */
-    public PlaceChatView getChat ()
-    {
-        return _chat;
     }
 
     protected BToggleButton createMastheadButton (String id)
@@ -202,18 +202,6 @@ public class PaperView extends BContainer
         }
     }
 
-    /** Displays place and player to player chat. */
-    protected class PaperChatView extends PlaceChatView
-    {
-        public PaperChatView (BangContext ctx, String title) {
-            super(ctx, ctx.xlate(SaloonCodes.SALOON_MSGS, title));
-        }
-        protected boolean displayTabs () {
-            displayPage(1);
-            return true;
-        }
-    }
-
     /** Used to asynchronously update the news. */
     protected ResultListener<String> _newsup = new ResultListener<String>() {
         public void requestCompleted (String result) {
@@ -262,7 +250,7 @@ public class PaperView extends BContainer
     protected BScrollPane _contscroll;
 
     protected BContainer _folks;
-    protected PaperChatView _chat;
+    protected PlaceChatView _chat;
 
     protected TopScoreView _topscore;
 
