@@ -619,12 +619,28 @@ public class BangClient extends BasicClient
             return;
         }
 
-        String prefix = "sounds/music/" + key;
-        File mfile = _rsrcmgr.getResourceFile(prefix + ".ogg"),
+        // first check for the full length version
+        File mfile = null, ifile = null;
+        if (key.endsWith("/town")) {
+            String townId = key.substring(0, key.length()-5);
+            if (_ctx.getUserObject().ownsSong(townId)) {
+                mfile = _rsrcmgr.getResourceFile("../soundtrack/" + townId + ".mp3");
+            }
+        } else if (key.indexOf("scenario_") != -1) {
+            String scenario = key.substring(key.length() - 2);
+            if (_ctx.getUserObject().ownsSong(scenario)) {
+                mfile = _rsrcmgr.getResourceFile("../soundtrack/" + scenario + ".mp3");
+            }
+        }
+
+        // if no full length version, use the regular version
+        if (mfile == null || !mfile.exists()) {
+            String prefix = "sounds/music/" + key;
+            mfile = _rsrcmgr.getResourceFile(prefix + ".ogg");
             ifile = _rsrcmgr.getResourceFile(prefix + "_intro.ogg");
+        }
         if (!mfile.exists()) {
-            log.warning("Requested to play non-existent music " +
-                        "[key=" + key + "].");
+            log.warning("Requested to play non-existent music [key=" + key + "].");
             return;
         }
 
@@ -641,22 +657,23 @@ public class BangClient extends BasicClient
 
         try {
             _playingMusic = key;
-            if (!_playedIntro && ifile.exists()) {
+            if (!_playedIntro && ifile != null && ifile.exists()) {
                 _playedIntro = true;
                 _mstream = new FileStream(_soundmgr, ifile, false);
                 _mstream.queueFile(mfile, loop);
             } else {
                 _mstream = new FileStream(_soundmgr, mfile, loop);
             }
+
             _mstream.setGain(volume);
             if (wasPlaying && crossfade > 0f) {
                 _mstream.fadeIn(crossfade);
             } else {
                 _mstream.play();
             }
+
         } catch (Throwable t) {
-            log.log(Level.WARNING, "Failed to start music " +
-                    "[path=" + mfile + "].", t);
+            log.log(Level.WARNING, "Failed to start music [path=" + mfile + "].", t);
         }
     }
 
