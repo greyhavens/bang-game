@@ -631,6 +631,8 @@ public class BangClient extends BasicClient
             if (_ctx.getUserObject().ownsSong(scenario)) {
                 mfile = _rsrcmgr.getResourceFile("../soundtrack/" + scenario + ".mp3");
             }
+        } else {
+            mfile = _rsrcmgr.getResourceFile("../soundtrack/" + key + ".mp3");
         }
 
         // if no full length version, use the regular version

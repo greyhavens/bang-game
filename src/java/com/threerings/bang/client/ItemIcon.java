@@ -96,6 +96,9 @@ public class ItemIcon extends PaletteIcon
             BangUI.copyToClipboard(((Article)_item).getPrint());
             ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, "m.article_print_copied");
 
+        } else if ("play_song".equals(cmd)) {
+            ctx.getBangClient().queueMusic(((Song)_item).getSong(), true, 1f);
+
         } else if ("download_song".equals(cmd) || "copy_song".equals(cmd)) {
             ctx.getBangClient().displayPopup(
                 new SongDownloadView(ctx, ((Song)_item).getSong()), true,
@@ -138,6 +141,7 @@ public class ItemIcon extends PaletteIcon
         } else if (_item instanceof Song) {
             if (SongDownloadView.songDownloaded(((Song)_item).getSong())) {
                 menu.addMenuItem(createItem("copy_song"));
+                menu.addMenuItem(createItem("play_song"));
             } else {
                 menu.addMenuItem(createItem("download_song"));
             }
