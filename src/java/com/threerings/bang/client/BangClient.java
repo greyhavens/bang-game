@@ -797,6 +797,12 @@ public class BangClient extends BasicClient
     }
 
     // documentation inherited from interface ClientObserver
+    public void clientWillLogon (Client client)
+    {
+        // nothing doing
+    }
+
+    // documentation inherited from interface ClientObserver
     public void clientFailedToLogon (Client client, Exception cause)
     {
         // nothing doing
