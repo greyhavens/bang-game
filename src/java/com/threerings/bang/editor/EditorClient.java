@@ -145,7 +145,8 @@ public class EditorClient extends BasicClient
                 // fake up a bootstrap...
                 BootstrapData data = new BootstrapData();
                 data.clientOid = clobj.getOid();
-                data.services = EditorServer.invmgr.getBootstrapServices(new String[0]);
+                data.services = EditorServer.invmgr.getBootstrapServices(
+                    _ctx.getClient().getBootGroups());
 
                 // ...and configure the client to operate using the
                 // server's distributed object manager
