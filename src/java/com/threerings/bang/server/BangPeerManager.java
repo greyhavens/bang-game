@@ -236,8 +236,7 @@ public class BangPeerManager extends CrowdPeerManager
         BangNodeObject bnodeobj = (BangNodeObject)_nodeobj;
         bnodeobj.setTownId(ServerConfig.townId);
         bnodeobj.setBangPeerService(
-            (BangPeerMarshaller)BangServer.invmgr.registerDispatcher(
-                new BangPeerDispatcher(this), false));
+            (BangPeerMarshaller)BangServer.invmgr.registerDispatcher(new BangPeerDispatcher(this)));
     }
 
     /**

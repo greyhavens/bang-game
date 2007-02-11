@@ -88,9 +88,8 @@ public class StationManager extends ShopManager
 
         // register our invocation service
         _stobj = (StationObject)_plobj;
-        _stobj.setService(
-            (StationMarshaller)BangServer.invmgr.registerDispatcher(
-                new StationDispatcher(this), false));
+        _stobj.setService((StationMarshaller)
+                          BangServer.invmgr.registerDispatcher(new StationDispatcher(this)));
     }
 
     /** Used to recruit and deliver a big shot to a player. */

@@ -89,8 +89,8 @@ public class StoreManager extends ShopManager
 
         // register our invocation service
         _stobj = (StoreObject)_plobj;
-        _stobj.setService((StoreMarshaller)BangServer.invmgr.registerDispatcher(
-                              new StoreDispatcher(this), false));
+        _stobj.setService((StoreMarshaller)
+                          BangServer.invmgr.registerDispatcher(new StoreDispatcher(this)));
 
         // populate the store object with our salable goods
         _stobj.setGoods(new DSet<Good>(_goods.getGoods(ServerConfig.townId)));

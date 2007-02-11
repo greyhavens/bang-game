@@ -168,7 +168,7 @@ public class SaloonManager extends MatchHostManager
         // register our invocation service
         _salobj = (SaloonObject)_plobj;
         _salobj.setService((SaloonMarshaller)
-                           BangServer.invmgr.registerDispatcher(new SaloonDispatcher(this), false));
+                           BangServer.invmgr.registerDispatcher(new SaloonDispatcher(this)));
 
         // start up our top-ranked list refresher interval
         _rankval = new Interval(BangServer.omgr) {

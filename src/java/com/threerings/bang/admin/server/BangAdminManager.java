@@ -40,9 +40,8 @@ public class BangAdminManager
         // create and configure our status object
         statobj = BangServer.omgr.registerObject(new StatusObject());
         statobj.serverStartTime = System.currentTimeMillis();
-        statobj.setService(
-            (BangAdminMarshaller)BangServer.invmgr.registerDispatcher(
-                new BangAdminDispatcher(this), false));
+        statobj.setService((BangAdminMarshaller)
+                           BangServer.invmgr.registerDispatcher(new BangAdminDispatcher(this)));
 
         // start up our connection manager stat monitor
         _conmgrStatsUpdater.schedule(5000L, true);

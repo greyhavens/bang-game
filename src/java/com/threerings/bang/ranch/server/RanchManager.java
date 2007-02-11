@@ -97,8 +97,8 @@ public class RanchManager extends ShopManager
 
         // register our invocation service
         _robj = (RanchObject)_plobj;
-        _robj.setService((RanchMarshaller)BangServer.invmgr.registerDispatcher(
-                             new RanchDispatcher(this), false));
+        _robj.setService((RanchMarshaller)
+                         BangServer.invmgr.registerDispatcher(new RanchDispatcher(this)));
     }
 
     /** Used to recruit and deliver a big shot to a player. */

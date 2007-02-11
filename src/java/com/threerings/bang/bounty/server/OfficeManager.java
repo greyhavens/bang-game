@@ -202,8 +202,8 @@ public class OfficeManager extends ShopManager
 
         // register our invocation service
         _offobj = (OfficeObject)_plobj;
-        _offobj.setService((OfficeMarshaller)BangServer.invmgr.registerDispatcher(
-                               new OfficeDispatcher(this), false));
+        _offobj.setService((OfficeMarshaller)
+                           BangServer.invmgr.registerDispatcher(new OfficeDispatcher(this)));
 
         // publish all known boards as board info records
         ArrayList<BoardInfo> infos = new ArrayList<BoardInfo>();

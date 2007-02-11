@@ -381,7 +381,7 @@ public class BarberManager extends ShopManager
         super.didInit();
 
         // register ourselves as the AvatarService provider
-        BangServer.invmgr.registerDispatcher(new AvatarDispatcher(this), true);
+        BangServer.invmgr.registerDispatcher(new AvatarDispatcher(this), GLOBAL_GROUP);
     }
 
     @Override // from PlaceManager
@@ -391,8 +391,8 @@ public class BarberManager extends ShopManager
 
         // register our invocation service
         _bobj = (BarberObject)_plobj;
-        _bobj.setService((BarberMarshaller)BangServer.invmgr.registerDispatcher(
-                             new BarberDispatcher(this), false));
+        _bobj.setService((BarberMarshaller)
+                         BangServer.invmgr.registerDispatcher(new BarberDispatcher(this)));
     }
 
     /** Used to purchase a new avatar look. */

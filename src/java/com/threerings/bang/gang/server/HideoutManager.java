@@ -361,7 +361,7 @@ public class HideoutManager extends MatchHostManager
         // register our invocation service
         _hobj = (HideoutObject)_plobj;
         _hobj.setService((HideoutMarshaller)
-                         BangServer.invmgr.registerDispatcher(new HideoutDispatcher(this), false));
+                         BangServer.invmgr.registerDispatcher(new HideoutDispatcher(this)));
     
         // load up the gangs for the directory
         BangServer.gangmgr.loadGangs(new ResultListener<ArrayList<GangEntry>>() {

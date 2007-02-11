@@ -90,7 +90,7 @@ public class GangManager
         _gangrepo = new GangRepository(conprov);
 
         // register ourselves as the provider of the (bootstrap) GangService
-        BangServer.invmgr.registerDispatcher(new GangDispatcher(this), true);
+        BangServer.invmgr.registerDispatcher(new GangDispatcher(this), GLOBAL_GROUP);
     }
 
     /**
@@ -1073,7 +1073,7 @@ public class GangManager
             if (_gangobj.getOid() == 0) {
                 _gangobj.speakService =
                     (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
-                        new SpeakDispatcher(new SpeakProvider(_gangobj, GangManager.this)), false);
+                        new SpeakDispatcher(new SpeakProvider(_gangobj, GangManager.this)));
                 BangServer.omgr.registerObject(_gangobj);
                 log.info("Initialized gang object " + this + ".");
             }

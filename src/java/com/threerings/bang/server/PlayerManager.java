@@ -123,7 +123,7 @@ public class PlayerManager
         _underepo = new UnderwireRepository(conprov);
 
         // register ourselves as the provider of the (bootstrap) PlayerService
-        BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), true);
+        BangServer.invmgr.registerDispatcher(new PlayerDispatcher(this), GLOBAL_GROUP);
 
         // register our remote player observer and poster cache observer
         _pardwatcher = new RemotePlayerWatcher<PardnerEntry>() {

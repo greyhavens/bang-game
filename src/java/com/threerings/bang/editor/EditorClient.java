@@ -92,6 +92,12 @@ public class EditorClient extends BasicClient
     }
 
     // documentation inherited from interface SessionObserver
+    public void clientWillLogon (Client client)
+    {
+        // NADA
+    }
+
+    // documentation inherited from interface SessionObserver
     public void clientDidLogon (Client client)
     {
         EditorConfig config = new EditorConfig();
@@ -139,7 +145,7 @@ public class EditorClient extends BasicClient
                 // fake up a bootstrap...
                 BootstrapData data = new BootstrapData();
                 data.clientOid = clobj.getOid();
-                data.services = EditorServer.invmgr.bootlist;
+                data.services = EditorServer.invmgr.getBootstrapServices(new String[0]);
 
                 // ...and configure the client to operate using the
                 // server's distributed object manager

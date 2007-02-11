@@ -244,7 +244,7 @@ public class ParlorManager extends PlaceManager
 
         _parobj = (ParlorObject)_plobj;
         _parobj.setService((ParlorMarshaller)
-                           BangServer.invmgr.registerDispatcher(new ParlorDispatcher(this), false));
+                           BangServer.invmgr.registerDispatcher(new ParlorDispatcher(this)));
     }
 
     @Override // documentation inherited
