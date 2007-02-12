@@ -775,7 +775,26 @@
   </target>
 
   <!-- rebuilds everything and extra bits for packaging -->
-  <target name="distpkg" depends="distall,javadoc"/>
+  <target name="distpkg" depends="distall">
+    <if><isset property="build.docs"/><then>
+      <antcall target="javadoc"/>
+    </then></if>
+    <!-- if we're generating a package, commit any changes to compmap.txt -->
+    <if><isset property="props.dist"/><then>
+      <property name="comp.map" value="${basedir}/rsrc/avatars/compmap.txt"/>
+      <taskdef resource="org/tigris/subversion/svnant/svnantlib.xml">
+        <classpath><path refid="subversion.classpath"/></classpath>
+      </taskdef>
+      <svn javahl="false">
+        <status path="${comp.map}" textStatusProperty="compStatus"/>
+      </svn>
+      <if><equals arg1="${compStatus}" arg2="modified"/><then>
+        <svn javahl="false">
+          <commit file="${comp.map}" message="New component mappings."/>
+        </svn>
+      </then></if>
+    </then></if>
+  </target>
 
   <!-- cleans out the application and all subprojects -->
   <target name="cleanall" depends="cleanprojects,cleanwebapps,clean"/>
@@ -797,7 +816,9 @@
       <param name="page.type" value="client"/>
     </antcall>
     -->
-    <antcall target="prepare-docs"/>
+    <if><isset property="build.docs"/><then>
+      <antcall target="prepare-docs"/>
+    </then></if>
   </target>
 
   <!-- install project specific server code into ${pkg.base} -->
