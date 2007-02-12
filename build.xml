@@ -679,7 +679,7 @@
       <include name="**/*.jpg"/>
       <include name="**/*.vert"/>
       <include name="**/*.frag"/>
-      <include name="**/*.board"/>
+      <include name="menu/**/*.board"/>
       <include name="menu/*.ogg"/>
       <exclude name="units/**"/>
       <exclude name="props/**"/>
