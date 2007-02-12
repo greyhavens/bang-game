@@ -338,8 +338,7 @@ public class BangClient extends BasicClient
         _ctx.getRootNode().addWindow(_mview);
         _mview.pack();
         _mview.center();
-        FadeInOutEffect fade =
-            new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true) {
+        FadeInOutEffect fade = new FadeInOutEffect(ColorRGBA.black, 1f, 0f, 0.25f, true) {
             protected void fadeComplete () {
                 super.fadeComplete();
                 // now start unpacking our resources

@@ -107,7 +107,7 @@ public class BasicClient
         _invoker = new Invoker("invoker", rqueue);
         _invoker.setLongThresholds(INVOKER_THRESHOLD);
         _invoker.start();
-        
+
         // create the directors/managers/etc. provided by the context
         createContextServices(rqueue);
 
@@ -137,7 +137,7 @@ public class BasicClient
         _tcache = new TextureCache(_ctx);
         _mcache = new ModelCache(_ctx);
         _pcache = new ParticleCache(_ctx);
-        
+
         // intialize our performance monitor
         PerfMonitor.init(_ctx);
 
@@ -273,7 +273,7 @@ public class BasicClient
         public Invoker getInvoker () {
             return _invoker;
         }
-        
+
         public GlobalKeyManager getKeyManager () {
             return _keymgr;
         }
@@ -297,11 +297,11 @@ public class BasicClient
         public ModelCache getModelCache () {
             return _mcache;
         }
-        
+
         public ParticleCache getParticleCache () {
             return _pcache;
         }
-        
+
         public DisplaySystem getDisplay () {
             return _app.getContext().getDisplay();
         }
@@ -355,7 +355,7 @@ public class BasicClient
         public void loadParticles (String name, ResultListener<Spatial> rl) {
             _pcache.getParticles(name, rl);
         }
-        
+
         public BImage loadImage (String rsrcPath) {
             return _icache.getBImage(rsrcPath);
         }
@@ -365,7 +365,7 @@ public class BasicClient
     protected BasicContextImpl _ctx;
     protected GlobalKeyManager _keymgr = new GlobalKeyManager();
     protected Invoker _invoker;
-    
+
     protected MessageManager _msgmgr;
     protected ResourceManager _rsrcmgr;
     protected ImageManager _imgmgr;
