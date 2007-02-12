@@ -792,7 +792,7 @@
         <exec executable="svn">
           <arg value="commit"/>
           <arg value="-m"/>
-          <arg value="\"New component mappings.\""/>
+          <arg value="'New component mappings.'"/>
           <arg value="${comp.map}"/>
         </exec>
       </then></if>
