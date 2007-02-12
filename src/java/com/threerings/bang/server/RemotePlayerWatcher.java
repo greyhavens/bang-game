@@ -67,8 +67,7 @@ public abstract class RemotePlayerWatcher<T extends DSet.Entry>
     protected void updateRemotePlayer (BangClientInfo info, int townIndex, String where)
     {
         if (!(info.visibleName instanceof Handle)) {
-            log.info("Non-Handle-having remote player updated? [who=" + info +
-                     ", town=" + townIndex + ", via=" + where + "].");
+            // they haven't yet created their character
             return;
         }
 
