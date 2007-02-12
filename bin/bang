@@ -97,8 +97,9 @@ case "$1" in
         ;;
 
   restart)
-        echo "Restart the server from within the game."
-        exit 1
+        $0 stop $*
+        sleep 2
+        $0 start $*
         ;;
 
   *)
