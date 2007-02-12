@@ -373,6 +373,22 @@ public class PlayerRepository extends JORARepository
         JDBCUtil.dropColumn(conn, "PLAYERS", "GANG_RANK");
         JDBCUtil.dropColumn(conn, "PLAYERS", "JOINED_GANG");
         // END TEMP
+
+        // TEMP: add normalized column
+        if (!JDBCUtil.tableContainsColumn(conn, "PLAYERS", "NORMALIZED")) {
+            JDBCUtil.addColumn(conn, "PLAYERS", "NORMALIZED", "VARCHAR(64) UNIQUE", "HANDLE");
+            Statement stmt = conn.createStatement();
+            try {
+                stmt.executeUpdate("drop index HANDLE on PLAYERS");
+                // NOTE: all collisions must be removed by hand before this is run or it will fail
+                stmt.executeUpdate(
+                    "update PLAYERS set NORMALIZED = LOWER(REPLACE(HANDLE, \" \", \"\")) " +
+                    "where HANDLE is NOT NULL");
+            } finally {
+                stmt.close();
+            }
+        }
+        // END TEMP
     }
 
     @Override // documentation inherited
