@@ -44,6 +44,11 @@ webapp_dir = /export/threerings/webapps
 server_auth = com.threerings.bang.server.ooo.OOOAuthenticator
 
 #
+# Auto-restart server if code changes (used on dev server)
+
+# auto_restart = false
+
+#
 # The default database mapping; all other definitions will inherit from
 # this and need only be specified in cases where they differ from the
 # defaults
