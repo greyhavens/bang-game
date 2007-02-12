@@ -789,9 +789,12 @@
         <status path="${comp.map}" textStatusProperty="compStatus"/>
       </svn>
       <if><equals arg1="${compStatus}" arg2="modified"/><then>
-        <svn javahl="false">
-          <commit file="${comp.map}" message="New component mappings."/>
-        </svn>
+        <exec executable="svn">
+          <arg value="commit"/>
+          <arg value="-m"/>
+          <arg value="\"New component mappings.\""/>
+          <arg value="${comp.map}"/>
+        </exec>
       </then></if>
     </then></if>
   </target>
