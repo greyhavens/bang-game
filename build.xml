@@ -680,6 +680,7 @@
       <include name="**/*.vert"/>
       <include name="**/*.frag"/>
       <include name="**/*.board"/>
+      <include name="menu/*.ogg"/>
       <exclude name="units/**"/>
       <exclude name="props/**"/>
       <exclude name="effects/**"/>
