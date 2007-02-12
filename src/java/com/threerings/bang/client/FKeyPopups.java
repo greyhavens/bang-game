@@ -294,7 +294,8 @@ public class FKeyPopups
         BDecoratedWindow window = new BDecoratedWindow(
             _ctx.getStyleSheet(), _msgs.get("m.chat_history_title"));
         ((GroupLayout) window.getLayoutManager()).setGap(10);
-        
+        window.setLayer(BangUI.POPUP_MENU_LAYER);
+
         BTextArea history = new BTextArea();
         history.setStyleClass( "chat_history_log");
         history.setPreferredSize(new Dimension(800, 600));
