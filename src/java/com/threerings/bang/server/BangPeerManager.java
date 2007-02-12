@@ -321,7 +321,7 @@ public class BangPeerManager extends CrowdPeerManager
         }
         
         public void entryAdded (EntryAddedEvent event) {
-            log.info("Remote entry added " + event);
+            // log.info("Remote entry added " + event);
             if (event.getName().equals(NodeObject.CLIENTS)) {
                 BangClientInfo info = (BangClientInfo)event.getEntry();
                 players.put(info.playerId, info);
@@ -333,7 +333,7 @@ public class BangPeerManager extends CrowdPeerManager
         }
 
         public void entryRemoved (EntryRemovedEvent event) {
-            log.info("Remote entry removed " + event);
+            // log.info("Remote entry removed " + event);
             if (event.getName().equals(NodeObject.CLIENTS)) {
                 BangClientInfo info = (BangClientInfo)event.getOldEntry();
                 players.remove(info.playerId);
