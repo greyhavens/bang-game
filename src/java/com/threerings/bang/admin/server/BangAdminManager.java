@@ -50,6 +50,23 @@ public class BangAdminManager
         _rebmgr.init();
     }
 
+    /**
+     * Schedules a reboot for the specified number of minutes in the future.
+     */
+    public void scheduleReboot (int minutes, String initiator)
+    {
+        // if this is a zero minute reboot, just do the deed
+        if (minutes == 0) {
+            log.info("Performing immediate shutdown [for=" + initiator + "].");
+            _server.shutdown();
+            return;
+        }
+
+        // shave 5 seconds off to avoid rounding up to the next time
+        long when = System.currentTimeMillis() + minutes * 60 * 1000L - 5000L;
+        _rebmgr.scheduleReboot(when, initiator);
+    }
+
     // from interface BangAdminProvider
     public void scheduleReboot (ClientObject caller, int minutes)
     {
@@ -59,17 +76,7 @@ public class BangAdminManager
                         "[who=" + user.who() + "].");
             return;
         }
-
-        // if this is a zero minute reboot, just do the deed
-        if (minutes == 0) {
-            log.info("Performing immediate shutdown [for=" + user.who() + "].");
-            _server.shutdown();
-            return;
-        }
-
-        // shave 5 seconds off to avoid rounding up to the next time
-        long when = System.currentTimeMillis() + minutes * 60 * 1000L - 5000L;
-        _rebmgr.scheduleReboot(when, user.who());
+        scheduleReboot(minutes, user.who());
     }
 
     /** Used to manage automatic reboots. */

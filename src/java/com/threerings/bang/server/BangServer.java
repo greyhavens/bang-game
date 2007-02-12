@@ -5,6 +5,7 @@ package com.threerings.bang.server;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.samskivert.io.PersistenceException;
@@ -29,6 +30,7 @@ import com.threerings.cast.bundle.BundledComponentRepository;
 import com.threerings.resource.ResourceManager;
 import com.threerings.util.Name;
 
+import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.net.AuthRequest;
 import com.threerings.presents.server.Authenticator;
 import com.threerings.presents.server.ClientFactory;
@@ -293,6 +295,17 @@ public class BangServer extends CrowdServer
                 }
             }
         });
+
+        // start up an interval that checks to see if our code has changed and auto-restarts the
+        // server as soon as possible when it has
+        if (ServerConfig.config.getValue("auto_restart", false)) {
+            _codeModified = new File(ServerConfig.serverRoot, "dist/bang-code.jar").lastModified();
+            new Interval(omgr) {
+                public void expired () {
+                    checkAutoRestart();
+                }
+            }.schedule(AUTO_RESTART_CHECK_INTERVAL, true);
+        }
     }
 
     @Override // documentation inherited
@@ -496,6 +509,22 @@ public class BangServer extends CrowdServer
         _stlog.log(report);
     }
 
+    protected void checkAutoRestart ()
+    {
+        long lastModified = new File(ServerConfig.serverRoot, "dist/bang-code.jar").lastModified();
+        if (lastModified > _codeModified) {
+            int players = 0;
+            for (Iterator<ClientObject> iter = clmgr.enumerateClientObjects(); iter.hasNext(); ) {
+                if (iter.next() instanceof PlayerObject) {
+                    players++;
+                }
+            }
+            if (players == 0) {
+                adminmgr.scheduleReboot(0, "codeUpdateAutoRestart");
+            }
+        }
+    }
+
     public static void main (String[] args)
     {
         // set up the proper logging services
@@ -512,6 +541,8 @@ public class BangServer extends CrowdServer
         }
     }
 
+    protected long _codeModified;
+
     protected static HashMap<Handle,PlayerObject> _players = new HashMap<Handle,PlayerObject>();
     protected static HashIntMap<PlayerObject> _playerIds = new HashIntMap<PlayerObject>();
 
@@ -520,4 +551,7 @@ public class BangServer extends CrowdServer
     protected static AuditLogger _ilog = createAuditLog("item");
     protected static AuditLogger _stlog = createAuditLog("state");
     protected static AuditLogger _plog = createAuditLog("perf");
+
+    /** Check for modified code every 30 seconds. */
+    protected static final long AUTO_RESTART_CHECK_INTERVAL = 30 * 1000L;
 }
