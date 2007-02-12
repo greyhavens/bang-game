@@ -62,6 +62,9 @@
     <jar file="${web_dir}/lwjgl-linux.jar">
       <fileset dir="lib/i686-Linux" includes="*.so"/>
     </jar>
+    <jar file="${web_dir}/lwjgl-macos.jar">
+      <fileset dir="lib/Universal-MacOS" includes="*.jnilib,*.dylib"/>
+    </jar>
 
     <!-- create the JNLP file -->
     <copy todir="${web_dir}">
