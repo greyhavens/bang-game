@@ -458,7 +458,7 @@ public class Badge extends Item
         },
         CODGER_USER {
             public boolean qualifies (PlayerObject user) {
-                return checkBigShotUsage(user.stats, "frontier_town/coder");
+                return checkBigShotUsage(user.stats, "frontier_town/codger");
             }
         },
         FT_BIGSHOT_USER {
