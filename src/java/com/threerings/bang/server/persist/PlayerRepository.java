@@ -137,7 +137,9 @@ public class PlayerRepository extends JORARepository
         String gensql = isMale ? ("| " + PlayerRecord.IS_MALE_FLAG) :
             ("& " + ~PlayerRecord.IS_MALE_FLAG);
         final String query = "update PLAYERS set FLAGS = FLAGS " + gensql +
-            ", HANDLE = " + JDBCUtil.escape(handle.toString()) + " where PLAYER_ID = " + playerId;
+            ", HANDLE = " + JDBCUtil.escape(handle.toString()) +
+            ", NORMALIZED = " + JDBCUtil.escape(handle.getNormal()) +
+            " where PLAYER_ID = " + playerId;
         return executeUpdate(new Operation<Boolean>() {
             public Boolean invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -342,7 +344,8 @@ public class PlayerRepository extends JORARepository
         JDBCUtil.createTableIfMissing(conn, "PLAYERS", new String[] {
             "PLAYER_ID INTEGER NOT NULL AUTO_INCREMENT",
             "ACCOUNT_NAME VARCHAR(64) NOT NULL",
-            "HANDLE VARCHAR(64) UNIQUE",
+            "HANDLE VARCHAR(64)",
+            "NORMALIZED VARCHAR(64) UNIQUE",
             "SCRIP INTEGER NOT NULL",
             "LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "VICTORY_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
@@ -369,6 +372,22 @@ public class PlayerRepository extends JORARepository
         JDBCUtil.dropColumn(conn, "PLAYERS", "GANG_ID");
         JDBCUtil.dropColumn(conn, "PLAYERS", "GANG_RANK");
         JDBCUtil.dropColumn(conn, "PLAYERS", "JOINED_GANG");
+        // END TEMP
+
+        // TEMP: add normalized column
+        if (!JDBCUtil.tableContainsColumn(conn, "PLAYERS", "NORMALIZED")) {
+            JDBCUtil.addColumn(conn, "PLAYERS", "NORMALIZED", "VARCHAR(64) UNIQUE", "HANDLE");
+            Statement stmt = conn.createStatement();
+            try {
+                stmt.executeUpdate("drop index HANDLE on PLAYERS");
+                // NOTE: all collisions must be removed by hand before this is run or it will fail
+                stmt.executeUpdate(
+                    "update PLAYERS set NORMALIZED = LOWER(REPLACE(HANDLE, \" \", \"\")) " +
+                    "where HANDLE is NOT NULL");
+            } finally {
+                stmt.close();
+            }
+        }
         // END TEMP
     }
 

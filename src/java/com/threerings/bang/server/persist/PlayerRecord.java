@@ -30,6 +30,9 @@ public class PlayerRecord
     /** The cowboy handle (in-game name) associated with this player. */
     public String handle;
 
+    /** The normalized handle for this player (used to avoid name collisions). */
+    public String normalized;
+
     /** The amount of scrip this player holds. */
     public int scrip;
 
