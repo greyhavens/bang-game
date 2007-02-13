@@ -42,15 +42,15 @@ public class BountyDetailView extends BContainer
         add(_reward = new BLabel("", "bounty_detail_reward"), new Point(263, 438));
         _reward.setIcon(new ImageIcon(ctx.loadImage("ui/icons/big_scrip.png")));
         _reward.setIconTextGap(10);
-        add(_title = new BLabel("", "bounty_detail_title"), new Point(203, 388));
-        add(_descrip = new BLabel("", "bounty_detail_descrip"), new Rectangle(203, 273, 184, 110));
+        add(_title = new BLabel("", "bounty_detail_title"), new Point(203, 400));
+        add(_descrip = new BLabel("", "bounty_detail_descrip"), new Rectangle(203, 273, 184, 122));
 
         GroupLayout glay = GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.BOTTOM, GroupLayout.STRETCH).setGap(2);
         add(_games = new BContainer(glay), new Rectangle(55, 116, 332, 152));
         add(new BLabel(_ctx.xlate(OfficeCodes.OFFICE_MSGS, "m.recent_completers"), "bounty_recent"),
-            new Point(30, 93));
-        add(_recent = new RecentCompletersView(ctx), new Rectangle(55, 3, 326, 86));
+            new Point(30, 78));
+        add(_recent = new RecentCompletersView(ctx), new Rectangle(55, 3, 326, 71));
     }
 
     /**
