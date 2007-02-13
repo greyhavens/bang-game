@@ -1,8 +1,8 @@
-# bang-installer-pages.dwb vi:ts=4:sw=4:expandtab:
+# bang-installer.dwb vi:ts=4:sw=4:expandtab:
 # Bang Installer Web Pages Dweeb Configuration File
 
 <Package>
-    Name        bang-installer-pages
+    Name        bang-installer
     Version     @VERSION@
     Maintainer  Bang Developers <bang-dev@threerings.net>
     Section     pages
