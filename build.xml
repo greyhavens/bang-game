@@ -682,6 +682,7 @@
       <include name="**/*.jpg"/>
       <include name="**/*.vert"/>
       <include name="**/*.frag"/>
+      <include name="**/*.ttf"/>
       <include name="menu/**/*.board"/>
       <include name="menu/*.ogg"/>
       <include name="influences/**/*.ogg"/>
