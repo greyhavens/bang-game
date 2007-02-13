@@ -384,7 +384,6 @@
   <target name="distclean" depends="clean">
     <delete dir="${deploy.dir}"/>
 
-    <delete><fileset dir="etc/proguard" includes="0.map"/></delete>
     <delete file="pages/incl/launch_open.html"/>
     <ant dir="projects/installers" target="clean" inheritAll="false"/>
     <ant dir="projects/pseditor" target="clean" inheritAll="false"/>
@@ -529,7 +528,9 @@
     <delete file="etc/bang-client.pro"/>
 
     <!-- make our Proguard mapping file accessible to Hemiptera -->
-    <!--<copy file="etc/proguard/0.map" tofile="../threerings/etc/proguard/bang"/>-->
+    <!-- TODO when the prod client is also NWO, change -printmapping in .pro to output to dist -->
+    <mkdir dir="${deploy.dir}/hemiptera-map"/>
+    <move file="etc/proguard/0.map" todir="${deploy.dir}/hemiptera-map"/>
 
     <!-- generate some game metadata summary pages -->
     <java classpathref="tool.classpath" failonerror="true" output="${web_dir}/units.html"
@@ -825,6 +826,10 @@
     </antcall>
     <antcall target="prepare-extra">
       <param name="extra.type" value="client"/>
+    </antcall>
+    <antcall target="prepare-extra">
+      <param name="extra.type" value="hemiptera-map"/>
+      <param name="prefix.app" value="${prefix}/threerings/etc/proguard/bang"/>
     </antcall>
     <if><equals arg1="${build.docs}" arg2="true"/><then>
       <antcall target="prepare-docs"/>

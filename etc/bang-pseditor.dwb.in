@@ -7,5 +7,5 @@
     Maintainer  Bang Developers <bang-dev@threerings.net>
     Section     pages
     Architecture    all
-    Description The bang particle editor, lives inside the web document root.
+    Description The Bang particle editor, lives inside the web document root.
 </Package>
