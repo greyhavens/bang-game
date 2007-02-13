@@ -385,7 +385,8 @@
     <delete><fileset dir="etc/proguard" includes="0.map"/></delete>
     <delete dir="pages/devclient"/>
     <delete file="pages/incl/launch_open.html"/>
-    <ant dir="projects/installers" target="clean"/>
+    <ant dir="projects/installers" target="clean" inheritAll="false"/>
+    <ant dir="projects/pseditor" target="clean" inheritAll="false"/>
 
     <delete>
       <fileset dir="pages">
@@ -776,9 +777,10 @@
 
   <!-- rebuilds everything and extra bits for packaging -->
   <target name="distpkg" depends="distall">
-    <if><isset property="build.docs"/><then>
+    <if><equals arg1="${build.docs}" arg2="true"/><then>
       <antcall target="javadoc"/>
     </then></if>
+    <ant dir="projects/pseditor" target="proguard" inheritAll="false"/>
     <!-- if we're generating a package, commit any changes to compmap.txt -->
     <if><isset property="props.dist"/><then>
       <property name="comp.map" value="${basedir}/rsrc/avatars/compmap.txt"/>
@@ -811,15 +813,18 @@
     <antcall target="prepare-server-extra"/>
     <antcall target="prepare-webapps"/>
     <antcall target="prepare-pages"/>
-    <antcall target="prepare-extra-pages">
-      <param name="page.type" value="installer"/>
+    <antcall target="prepare-extra">
+      <param name="extra.type" value="installer"/>
+    </antcall>
+    <antcall target="prepare-extra">
+      <param name="extra.type" value="pseditor"/>
     </antcall>
     <!--
     <antcall target="prepare-extra-pages">
       <param name="page.type" value="client"/>
     </antcall>
     -->
-    <if><isset property="build.docs"/><then>
+    <if><equals arg1="${build.docs}" arg2="true"/><then>
       <antcall target="prepare-docs"/>
     </then></if>
   </target>
@@ -852,16 +857,16 @@
   </target>
 
   <!-- prepare the generated installer or client bits to be packaged -->
-  <target name="prepare-extra-pages">
-    <var name="pkg.name" value="${app.name}-${page.type}-pages"/>
+  <target name="prepare-extra">
+    <var name="pkg.name" value="bang-${extra.type}"/>
     <var name="destroot.pkg" value="${destroot}/${pkg.name}"/>
     <var name="pkg.base" value="${destroot.pkg}/${prefix.app}"/>
-    <echo level="info">Installing ${deploy.dir}/${page.type}-pages/ into ${destroot.pkg}...</echo>
+    <echo level="info">Installing ${deploy.dir}/${extra.type}/ into ${destroot.pkg}...</echo>
     <antcall target="clean-dir">
       <param name="dir" value="${destroot.pkg}"/>
     </antcall>
-    <copy todir="${pkg.base}/pages">
-      <fileset dir="${deploy.dir}/${page.type}-pages" includes="**"/>
+    <copy todir="${pkg.base}">
+      <fileset dir="${deploy.dir}/${extra.type}" includes="**"/>
     </copy>
   </target>
 
