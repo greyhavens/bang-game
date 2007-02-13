@@ -294,6 +294,7 @@ public class BountyGameOverView extends SteelWindow
     {
         Dimension d = super.computePreferredSize(whint, hhint);
         d.width = Math.min(d.width, 800);
+        d.height = Math.max(d.height, 500);
         return d;
     }
 
