@@ -136,7 +136,7 @@ public class WreckViz extends ParticleEffectViz
 
         public void bind (String type)
         {
-            _ctx.loadModel("extras", "wreckage/" + type,
+            _ctx.loadModel("units", "wreckage/" + type,
                 new ResultAttacher<Model>(this));
         }
 
