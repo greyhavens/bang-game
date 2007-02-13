@@ -11,7 +11,7 @@
 
     # bang-pages depends on the underwire support pages for bang and the installers
     Depends     bang-underwire-pages
-    Depends     bang-installer-pages
+    Depends     bang-installer
 
     # Maintainer Scripts
     # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
