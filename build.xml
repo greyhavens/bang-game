@@ -123,6 +123,13 @@
         </fileset>
       </copy>
 
+      <copy todir="${deploy.dir}/rsrc/cards/@{town}">
+        <fileset dir="rsrc/cards/@{town}">
+          <include name="**/*.png"/>
+          <exclude name="**/source/**"/>
+        </fileset>
+      </copy>
+
       <copy todir="${deploy.dir}/rsrc/bounties/@{town}">
         <fileset dir="rsrc/bounties/@{town}">
           <include name="**/bounties.txt"/>
