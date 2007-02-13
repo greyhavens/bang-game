@@ -238,7 +238,7 @@ public class EffectHandler extends BoardView.BoardAction
 
         // add wreck effect for breakables
         boolean pieceIsBreakable =
-            piece instanceof Breakable && !piece.isAlive();
+            wasDamaged && piece instanceof Breakable && !piece.isAlive();
 
         if (pieceIsDeadSteamUnit || pieceIsBreakable) {
             effviz = new WreckViz(effviz);

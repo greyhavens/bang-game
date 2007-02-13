@@ -5,6 +5,8 @@ package com.threerings.bang.game.client.sprite;
 
 import com.threerings.openal.SoundGroup;
 
+import java.util.ArrayList;
+
 import com.jme.scene.Spatial;
 import com.jme.math.FastMath;
 
@@ -12,6 +14,7 @@ import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.ParticleUtil;
 
+import com.threerings.bang.game.client.effect.WreckViz;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
@@ -53,18 +56,38 @@ import com.threerings.bang.client.util.ResultAttacher;
 
         if (_piece.isAlive()) {
             counter.updateCount((CounterInterface)piece);
-            _ctx.loadParticles("frontier_town/fire", new ResultAttacher<Spatial>(this) {
-                public void requestCompleted (Spatial result) {
-                    super.requestCompleted(result);
-                    _smoke = result;
-                }
-            });
+            if (_smoke == null) {
+                _ctx.loadParticles("frontier_town/fire", new ResultAttacher<Spatial>(this) {
+                    public void requestCompleted (Spatial result) {
+                        super.requestCompleted(result);
+                        _smoke = result;
+                    }
+                });
+            }
         } else {
+            // remove all effects
             if (_smoke != null) {
                 ParticleUtil.stopAndRemove(_smoke);
                 _smoke = null;
+                ArrayList<Spatial> children = getChildren();
+                for (Spatial child : children){
+                    if (!(child instanceof WreckViz.Wreckage))
+                    {
+                        child.setCullMode(Spatial.CULL_ALWAYS);
+                    }
+                }
+                if (_status != null) {
+                    _status.detachAllChildren();
+                }
             }
         }
      }
+
+     public boolean removed ()
+     {
+         queueAction(REMOVED);
+         return true;
+     };
+
      protected Spatial _smoke;
  }

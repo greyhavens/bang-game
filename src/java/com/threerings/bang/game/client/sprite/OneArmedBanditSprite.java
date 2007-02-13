@@ -5,6 +5,7 @@ package com.threerings.bang.game.client.sprite;
 
 import com.threerings.openal.SoundGroup;
 
+import com.jme.scene.Spatial;
 import com.jme.math.FastMath;
 
 import com.threerings.bang.util.BasicContext;
@@ -47,6 +48,12 @@ import com.threerings.bang.game.client.sprite.UnitSprite;
      {
          super.updated(piece, tick);
          _target.updated(piece, tick);
-         counter.updateCount((CounterInterface)piece);
+         
+         if (piece.isAlive()) {
+             counter.setCullMode(Spatial.CULL_DYNAMIC);
+             counter.updateCount((CounterInterface)piece);
+         } else {
+             counter.setCullMode(Spatial.CULL_ALWAYS);
+         }
      }
  }

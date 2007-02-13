@@ -49,10 +49,16 @@ my $arch = "$machtype-$ostype";
 my $libs = "$root/lib/$arch";
 my $libpath = $ENV{"LD_LIBRARY_PATH"};
 
-if (defined $libpath) {
-    $ENV{"LD_LIBRARY_PATH"} = "$libs:$libpath";
+
+if ($ostype == "Darwin") {
+    # pass -Djava.library.path to locate our shared libraries
+    $jargs="$jargs -Djava.library.path=$root/lib/Universal-MacOS/"
 } else {
-    $ENV{"LD_LIBRARY_PATH"} = $libs;
+    if (defined $libpath) {
+        $ENV{"LD_LIBRARY_PATH"} = "$libs:$libpath";
+    } else {
+        $ENV{"LD_LIBRARY_PATH"} = $libs;
+    }
 }
 
 # the classpath needs to start with .
@@ -97,4 +103,5 @@ if ($verbose) {
     print "Classpath: " . join("\n           ", split(/:/, $classpath)) . "\n";
     print "App args: $appargs\n";
 }
+
 exec($cmd);

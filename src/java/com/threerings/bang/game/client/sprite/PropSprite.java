@@ -41,7 +41,7 @@ public class PropSprite extends PieceSprite
     /** The ratio between radians and the coarse rotation units used for pitch
      * and roll values. */
     public static final float COARSE_ROTATION_SCALE = FastMath.PI / 128;
-    
+
     /** The ratio between world units and fine translation units. */
     public static final float FINE_POSITION_SCALE =
         (TILE_SIZE * 0.5f) / 128;
@@ -58,8 +58,8 @@ public class PropSprite extends PieceSprite
         // set the scale before locking the model's transforms
         Prop p = (Prop)piece;
         setLocalScale(p.getScale());
-        
-        super.init(ctx, view, board, sounds, piece, tick); 
+
+        super.init(ctx, view, board, sounds, piece, tick);
     }
 
     @Override // documentation inherited
@@ -111,7 +111,7 @@ public class PropSprite extends PieceSprite
     protected void createGeometry ()
     {
         super.createGeometry();
-        
+
         // our models are centered at the origin, but we need to shift
         // them to the center of the prop's footprint
         loadModel("props", _config.model, _config.variant);
@@ -134,10 +134,10 @@ public class PropSprite extends PieceSprite
             handle.updateModelBound();
             handle.setLightCombineMode(LightState.OFF);
             attachChild(handle);
-            handle.updateRenderState();        
+            handle.updateRenderState();
         }
     }
-    
+
     @Override // documentation inherited
     protected void centerWorldCoords (Vector3f coords)
     {

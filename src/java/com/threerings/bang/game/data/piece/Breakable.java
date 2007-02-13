@@ -27,13 +27,13 @@ import static com.threerings.bang.Log.log;
 public class Breakable extends Prop
     implements CounterInterface
 {
-    
+
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {
         return true;
     }
-    
+
     @Override // documentation inherited
     public Effect willDie (BangObject bangobj, int shooterId)
     {
@@ -44,7 +44,7 @@ public class Breakable extends Prop
             return null;
         }
     }
-    
+
     // from CounterInterface
     public int getCount()
     {
@@ -55,22 +55,22 @@ public class Breakable extends Prop
     public boolean isTargetable ()
     {
         return true;
-    }    
-    
+    }
+
     @Override // documentation inherited
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
     {
         if (damage > 1) {
             ArrayList<Effect> effects = new ArrayList<Effect>();
-            
+
             if (_count == -1) {
-                // start countdown             
+                // start countdown
                 _count = 3;
             } else {
                 _count -= 1;
             }
-                
+
             if (_count == 0) {
                 effects.add(new DamageEffect(this, 100));
             } else if (_count > 0) {
@@ -78,7 +78,7 @@ public class Breakable extends Prop
             }
             return effects;
         }
-            
+
         return null;
     }
 
@@ -87,7 +87,7 @@ public class Breakable extends Prop
     {
         return board.getElevation(tx, ty);
     }
- 
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {

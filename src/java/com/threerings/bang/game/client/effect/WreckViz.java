@@ -96,7 +96,7 @@ public class WreckViz extends ParticleEffectViz
     }
 
     /** A piece of wreckage thrown from the machine. */
-    protected class Wreckage extends Node
+    public class Wreckage extends Node
     {
         public Wreckage ()
         {
