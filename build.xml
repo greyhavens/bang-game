@@ -818,11 +818,9 @@
     <antcall target="prepare-extra">
       <param name="extra.type" value="pseditor"/>
     </antcall>
-    <!--
-    <antcall target="prepare-extra-pages">
-      <param name="page.type" value="client"/>
+    <antcall target="prepare-extra">
+      <param name="extra.type" value="client"/>
     </antcall>
-    -->
     <if><equals arg1="${build.docs}" arg2="true"/><then>
       <antcall target="prepare-docs"/>
     </then></if>
