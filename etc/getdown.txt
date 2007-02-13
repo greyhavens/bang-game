@@ -62,6 +62,7 @@ uresource = rsrc/units/wreckage/bundle.jar
 # Frontier Town game resources
 uresource = rsrc/bonuses/frontier_town/bundle.jar
 uresource = rsrc/bounties/frontier_town/bundle.jar
+uresource = rsrc/cards/frontier_town/bundle.jar
 uresource = rsrc/effects/frontier_town/bundle.jar
 uresource = rsrc/extras/frontier_town/bundle.jar
 uresource = rsrc/props/frontier_town/bundle.jar
@@ -74,6 +75,7 @@ uresource = rsrc/sounds/music/frontier_town/bundle.jar
 # Indian Trading Post game resources
 indian_post.uresource = rsrc/bonuses/indian_post/bundle.jar
 indian_post.uresource = rsrc/bounties/indian_post/bundle.jar
+indian_post.uresource = rsrc/cards/indian_post/bundle.jar
 indian_post.uresource = rsrc/effects/indian_post/bundle.jar
 indian_post.uresource = rsrc/extras/indian_post/bundle.jar
 indian_post.uresource = rsrc/props/indian_post/bundle.jar
@@ -83,6 +85,7 @@ indian_post.uresource = rsrc/sounds/music/indian_post/bundle.jar
 # Boom Town game resources
 boom_town.uresource = rsrc/bonuses/boom_town/bundle.jar
 boom_town.uresource = rsrc/bounties/boom_town/bundle.jar
+boom_town.uresource = rsrc/cards/boom_town/bundle.jar
 boom_town.uresource = rsrc/effects/boom_town/bundle.jar
 boom_town.uresource = rsrc/extras/boom_town/bundle.jar
 boom_town.uresource = rsrc/props/boom_town/bundle.jar
