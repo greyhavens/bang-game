@@ -1,11 +1,11 @@
-# bang-client-pages.dwb vi:ts=4:sw=4:expandtab:
+# bang-client.dwb vi:ts=4:sw=4:expandtab:
 # Bang Client Web Pages Dweeb Configuration File
 
 <Package>
-    Name        bang-client-pages
+    Name        bang-client
     Version     @VERSION@
     Maintainer  Bang Developers <bang-dev@threerings.net>
     Section     pages
     Architecture    all
-    Description Web pages for the Bang clients.
+    Description The bang client, lives inside the web document root.
 </Package>

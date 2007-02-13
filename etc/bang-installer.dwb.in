@@ -7,5 +7,5 @@
     Maintainer  Bang Developers <bang-dev@threerings.net>
     Section     pages
     Architecture    all
-    Description Web pages for the Bang installers.
+    Description The Bang installers, live inside the web document root.
 </Package>

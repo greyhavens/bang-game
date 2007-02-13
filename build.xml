@@ -383,7 +383,6 @@
     <delete dir="${deploy.dir}"/>
 
     <delete><fileset dir="etc/proguard" includes="0.map"/></delete>
-    <delete dir="pages/devclient"/>
     <delete file="pages/incl/launch_open.html"/>
     <ant dir="projects/installers" target="clean" inheritAll="false"/>
     <ant dir="projects/pseditor" target="clean" inheritAll="false"/>
@@ -512,8 +511,8 @@
     </exec>
 
     <!-- copy the getdown.txt file into the right place -->
-    <mkdir dir="${web_dir}/devclient"/>
-    <copy file="etc/getdown.txt" tofile="${web_dir}/devclient/getdown.txt"
+    <mkdir dir="${deploy.dir}/client/pages/devclient"/>
+    <copy file="etc/getdown.txt" tofile="${deploy.dir}/client/pages/devclient/getdown.txt"
           overwrite="true" encoding="UTF-8">
       <filterset>
         <filter token="appbase_line" value="appbase = ${root_url}/devclient"/>
@@ -523,7 +522,7 @@
     </copy>
 
     <antcall target="baseclient">
-      <param name="client_dir" value="${web_dir}/devclient"/>
+      <param name="client_dir" value="${deploy.dir}/client/pages/devclient"/>
     </antcall>
     <delete file="etc/bang-client.pro"/>
 
