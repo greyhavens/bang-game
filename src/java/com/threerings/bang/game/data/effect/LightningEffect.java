@@ -59,7 +59,7 @@ public class LightningEffect extends Effect
     {
         ArrayList<ChainDamage> damaged = new ArrayList<ChainDamage>();
         LinkedList<Point> points = new LinkedList<Point>();
-        
+
         // get a list of all the units
         ArrayList<Piece> targetPieces = new ArrayList<Piece>();
         for (Piece p: bangobj.pieces) {
@@ -77,8 +77,7 @@ public class LightningEffect extends Effect
         byte step = 1, size = 1;
         while (!points.isEmpty()) {
             Point pt = points.poll();
-            for (Iterator<Piece> iter = targetPieces.iterator();
-                    iter.hasNext(); ) {
+            for (Iterator<Piece> iter = targetPieces.iterator(); iter.hasNext(); ) {
                 Piece p = iter.next();
                 if (p.getDistance(pt.x, pt.y) == 1) {
                     damagePiece(bangobj, damaged, p, step, dammap);
@@ -98,14 +97,17 @@ public class LightningEffect extends Effect
     public boolean isApplicable ()
     {
         return (chain.length > 0);
-    } 
+    }
 
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
         int[] apieces = new int[chain.length];
-        for (int ii = 0; ii < apieces.length; ii++) {
+        for (int ii = 0; ii < chain.length; ii++) {
             apieces[ii] = chain[ii].pieceId;
+            if (chain[ii].deathEffect != null) {
+                apieces = concatenate(apieces, chain[ii].deathEffect.getAffectedPieces());
+            }
         }
         return apieces;
     }
@@ -135,18 +137,15 @@ public class LightningEffect extends Effect
             }
             Piece target = bangobj.pieces.get(cd.pieceId);
             if (target == null) {
-                log.warning("Missing piece for lightning effect " +
-                            "[pieceId=" + cd.pieceId + "].");
+                log.warning("Missing piece for lightning effect [pieceId=" + cd.pieceId + "].");
                 continue;
             }
             if (cd.deathEffect != null) {
                 cd.deathEffect.apply(bangobj, obs);
             }
-            reportEffect(obs, target, (pieceId == cd.pieceId ? 
-                        ChainingShotEffect.PRIMARY_EFFECT :
-                        ChainingShotEffect.SECONDARY_EFFECT));
-            damage(bangobj, obs, -1, null, target, cd.newDamage,
-                ShotEffect.DAMAGED); 
+            reportEffect(obs, target, (pieceId == cd.pieceId ?
+                        ChainingShotEffect.PRIMARY_EFFECT : ChainingShotEffect.SECONDARY_EFFECT));
+            damage(bangobj, obs, -1, null, target, cd.newDamage, ShotEffect.DAMAGED);
         }
         return remaining;
     }
@@ -158,8 +157,7 @@ public class LightningEffect extends Effect
             return null;
         }
         String names = getPieceNames(bangobj, pidx, getAffectedPieces());
-        return (names == null) ?
-            null : MessageBundle.compose("m.effect_lightning", names);
+        return (names == null) ?  null : MessageBundle.compose("m.effect_lightning", names);
     }
 
     @Override // documentation inherited
@@ -192,11 +190,9 @@ public class LightningEffect extends Effect
     }
 
     /**
-     * Helper function that calculates the damage to a piece and handles
-     * any pesky dying issues.
+     * Helper function that calculates the damage to a piece and handles any pesky dying issues.
      */
-    protected void damagePiece (
-            BangObject bangobj, ArrayList<ChainDamage> damaged, 
+    protected void damagePiece (BangObject bangobj, ArrayList<ChainDamage> damaged,
             Piece p, int step, IntIntMap dammap)
     {
         int damage = calculateDamage(step);
