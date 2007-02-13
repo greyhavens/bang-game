@@ -4,17 +4,23 @@
   <!-- define some basic project parameters -->
   <property name="app.name" value="pseditor"/>
 
-  <!-- read in our deployment properties -->
-  <property file="deployment.properties"/>
-
   <!-- things you probably don't want to change -->
+  <property name="base.dir"     value="../.."/>
   <property name="src.dir"      value="src/java"/>
   <property name="deploy.dir"   value="dist"/>
   <property name="dist.jar"     value="${app.name}.jar"/>
+  <property name="install.dir"  value="${base.dir}/${deploy.dir}/pseditor/pages"/>
+
+  <!-- read in our deployment properties -->
+  <property file="${base.dir}/${deploy.dir}/deployment.properties"/>
+
+  <!-- import some targets to enumerate library dependencies -->
+  <property name="libs.dir" value="${base.dir}/${deploy.dir}/lib"/>
+  <import file="libs-incl.xml"/>
 
   <!-- declare our classpath -->
   <path id="classpath">
-    <fileset dir="lib" includes="**/*.jar"/>
+    <fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
     <pathelement location="${deploy.dir}/classes"/>
   </path>
 
@@ -27,6 +33,9 @@
     </copy>
     <copy todir="${deploy.dir}/classes">
       <fileset dir="rsrc" includes="**/*"/>
+    </copy>
+    <copy todir="${deploy.dir}/lib" flatten="true">
+      <fileset refid="${app.name}.libs"/>
     </copy>
   </target>
 
@@ -47,37 +56,37 @@
   <!-- builds the standalone viewer jar -->
   <target name="proguard" depends="dist">
     <!-- generate the all-in-wonder jar file -->
-    <taskdef resource="proguard/ant/task.properties"
-             classpath="lib/proguard.jar"/>
+    <taskdef resource="proguard/ant/task.properties" classpath="${deploy.dir}/lib/proguard.jar"/>
     <proguard configuration="etc/pseditor.pro"/>
-    <copy todir="${web_dir}">
+    <copy todir="${install.dir}/${app.name}">
       <fileset dir="dist" includes="pseditor-pro.jar"/>
       <fileset dir="lib" includes="lwjgl.jar"/>
     </copy>
 
     <!-- create the platform jar files -->
-    <jar file="${web_dir}/lwjgl-windows.jar">
-      <fileset dir="lib/i686-Windows" includes="*.dll"/>
+    <jar file="${install.dir}/${app.name}/lwjgl-windows.jar">
+      <fileset dir="${base.dir}/lib/i686-Windows" includes="*.dll"/>
     </jar>
-    <jar file="${web_dir}/lwjgl-linux.jar">
-      <fileset dir="lib/i686-Linux" includes="*.so"/>
+    <jar file="${install.dir}/${app.name}/lwjgl-linux.jar">
+      <fileset dir="${base.dir}/lib/i686-Linux" includes="*.so"/>
     </jar>
-    <jar file="${web_dir}/lwjgl-macos.jar">
-      <fileset dir="lib/Universal-MacOS" includes="*.jnilib,*.dylib"/>
+    <jar file="${install.dir}/${app.name}/lwjgl-macos.jar">
+      <fileset dir="${base.dir}/lib/Universal-MacOS" includes="*.jnilib,*.dylib"/>
     </jar>
 
     <!-- create the JNLP file -->
-    <copy todir="${web_dir}">
+    <copy todir="${install.dir}/${app.name}">
       <fileset dir="etc" includes="pseditor.jnlp"/>
       <filterset>
-        <filter token="application_uri" value="${application_uri}"/>
+        <filter token="application_uri" value="${pseditor_application_uri}"/>
       </filterset>
     </copy>
 
     <!-- sign the jar files -->
-    <signjar keystore="${sign.keystore}" alias="${sign.alias}"
+    <property file="${cert_dir}/certificate.properties"/>
+    <signjar keystore="${sign.keystore}" alias="${sign.alias}" keypass="${sign.keypass}"
       storepass="${sign.storepass}" lazy="true">
-      <fileset dir="${web_dir}" includes="*.jar"/>
+      <fileset dir="${install.dir}/${app.name}" includes="*.jar"/>
     </signjar>
   </target>
 
@@ -86,8 +95,7 @@
 
   <!-- builds the main jar file -->
   <target name="dist" depends="prepare,compile">
-    <jar file="${deploy.dir}/${dist.jar}"
-         basedir="${deploy.dir}/classes"/>
+    <jar file="${deploy.dir}/${dist.jar}" basedir="${deploy.dir}/classes"/>
   </target>
 
 </project>

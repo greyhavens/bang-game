@@ -3,14 +3,14 @@
 #
 # Proguard configuration file for Game Gardens client
 
--injars ../lib/jme.jar(!META-INF/*)
--injars ../lib/jme-effects.jar(!META-INF/*)
--injars ../lib/jme-awt.jar(!META-INF/*)
--injars ../lib/jme-gamestates.jar(!META-INF/*)
--injars ../lib/jme-scene.jar(!META-INF/*)
+-injars ../dist/lib/jme.jar(!META-INF/*)
+-injars ../dist/lib/jme-effects.jar(!META-INF/*)
+-injars ../dist/lib/jme-awt.jar(!META-INF/*)
+-injars ../dist/lib/jme-gamestates.jar(!META-INF/*)
+-injars ../dist/lib/jme-scene.jar(!META-INF/*)
 -injars ../dist/pseditor.jar(!META-INF/*)
 
--libraryjars ../lib/lwjgl.jar
+-libraryjars ../dist/lib/lwjgl.jar
 -libraryjars <java.home>/lib/rt.jar
 
 -dontobfuscate
