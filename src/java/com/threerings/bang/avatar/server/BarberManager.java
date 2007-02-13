@@ -400,7 +400,7 @@ public class BarberManager extends ShopManager
     {
         public BuyLookAction (
             PlayerObject user, Look look, int scripCost, int coinCost,
-            BarberService.ConfirmListener listener) 
+            BarberService.ConfirmListener listener)
         {
             super(user, scripCost, coinCost);
             _look = look;
@@ -447,7 +447,7 @@ public class BarberManager extends ShopManager
     {
         public ChangeHandleAction (
             PlayerObject user, Handle handle,
-            BarberService.ConfirmListener listener) 
+            BarberService.ConfirmListener listener)
         {
             super(user, BarberCodes.HANDLE_CHANGE_SCRIP_COST,
                 BarberCodes.HANDLE_CHANGE_COIN_COST);
@@ -466,7 +466,7 @@ public class BarberManager extends ShopManager
         protected String persistentAction () throws PersistenceException {
             return BangServer.playrepo.configurePlayer(
                 _user.playerId, _handle, _user.isMale) ?
-                null : AvatarCodes.ERR_DUP_HANDLE;
+                null : MessageBundle.qualify(AvatarCodes.AVATAR_MSGS, AvatarCodes.ERR_DUP_HANDLE);
         }
         protected void rollbackPersistentAction () throws PersistenceException {
             BangServer.playrepo.configurePlayer(
