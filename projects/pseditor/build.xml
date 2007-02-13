@@ -60,7 +60,7 @@
     <proguard configuration="etc/pseditor.pro"/>
     <copy todir="${install.dir}">
       <fileset dir="dist" includes="pseditor-pro.jar"/>
-      <fileset dir="lib" includes="lwjgl.jar"/>
+      <fileset dir="${deploy.dir}/lib" includes="lwjgl.jar"/>
     </copy>
 
     <!-- create the platform jar files -->
