@@ -142,15 +142,16 @@ public class EditorClient extends BasicClient
         // create our client object
         ClientResolutionListener clr = new ClientResolutionListener() {
             public void clientResolved (Name username, ClientObject clobj) {
-                // fake up a bootstrap...
+                // prepare to do our standalone logon...
+                String[] groups = _ctx.getClient().prepareStandaloneLogon();
+
+                // ...fake up a bootstrap...
                 BootstrapData data = new BootstrapData();
                 data.clientOid = clobj.getOid();
-                data.services = EditorServer.invmgr.getBootstrapServices(
-                    _ctx.getClient().getBootGroups());
+                data.services = EditorServer.invmgr.getBootstrapServices(groups);
 
-                // ...and configure the client to operate using the
-                // server's distributed object manager
-                _ctx.getClient().gotBootstrap(data, EditorServer.omgr);
+                // ...and configure the client to use the server's distributed object manager
+                _ctx.getClient().standaloneLogon(data, EditorServer.omgr);
             }
 
             public void resolutionFailed (Name username, Exception reason) {
