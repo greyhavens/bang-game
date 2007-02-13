@@ -9,7 +9,7 @@
   <property name="src.dir"      value="src/java"/>
   <property name="deploy.dir"   value="dist"/>
   <property name="dist.jar"     value="${app.name}.jar"/>
-  <property name="install.dir"  value="${base.dir}/${deploy.dir}/pseditor/pages"/>
+  <property name="install.dir"  value="${base.dir}/${deploy.dir}/pseditor/pages/${app.name}"/>
 
   <!-- read in our deployment properties -->
   <property file="${base.dir}/${deploy.dir}/deployment.properties"/>
@@ -58,24 +58,24 @@
     <!-- generate the all-in-wonder jar file -->
     <taskdef resource="proguard/ant/task.properties" classpath="${deploy.dir}/lib/proguard.jar"/>
     <proguard configuration="etc/pseditor.pro"/>
-    <copy todir="${install.dir}/${app.name}">
+    <copy todir="${install.dir}">
       <fileset dir="dist" includes="pseditor-pro.jar"/>
       <fileset dir="lib" includes="lwjgl.jar"/>
     </copy>
 
     <!-- create the platform jar files -->
-    <jar file="${install.dir}/${app.name}/lwjgl-windows.jar">
+    <jar file="${install.dir}/lwjgl-windows.jar">
       <fileset dir="${base.dir}/lib/i686-Windows" includes="*.dll"/>
     </jar>
-    <jar file="${install.dir}/${app.name}/lwjgl-linux.jar">
+    <jar file="${install.dir}/lwjgl-linux.jar">
       <fileset dir="${base.dir}/lib/i686-Linux" includes="*.so"/>
     </jar>
-    <jar file="${install.dir}/${app.name}/lwjgl-macos.jar">
+    <jar file="${install.dir}/lwjgl-macos.jar">
       <fileset dir="${base.dir}/lib/Universal-MacOS" includes="*.jnilib,*.dylib"/>
     </jar>
 
     <!-- create the JNLP file -->
-    <copy todir="${install.dir}/${app.name}">
+    <copy todir="${install.dir}">
       <fileset dir="etc" includes="pseditor.jnlp"/>
       <filterset>
         <filter token="application_uri" value="${pseditor_application_uri}"/>
@@ -86,7 +86,7 @@
     <property file="${cert_dir}/certificate.properties"/>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" keypass="${sign.keypass}"
       storepass="${sign.storepass}" lazy="true">
-      <fileset dir="${install.dir}/${app.name}" includes="*.jar"/>
+      <fileset dir="${install.dir}" includes="*.jar"/>
     </signjar>
   </target>
 
