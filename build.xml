@@ -683,7 +683,7 @@
       <include name="**/*.frag"/>
       <include name="menu/**/*.board"/>
       <include name="menu/*.ogg"/>
-      <include name="influences/*.ogg"/>
+      <include name="influences/**/*.ogg"/>
       <exclude name="bonuses/**"/>
       <exclude name="bounties/**"/>
       <exclude name="cards/**"/>
