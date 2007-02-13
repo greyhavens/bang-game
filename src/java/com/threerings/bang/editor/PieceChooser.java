@@ -48,7 +48,7 @@ public class PieceChooser extends JPanel
         add(new JLabel(_ctx.xlate("editor", "m.pieces")));
 
         PieceCategory root = new PieceCategory("", "");
-        
+
         addPiece(root, "viewpoint", new Viewpoint());
         addPiece(root, "markers/start", Marker.getMarker(Marker.START));
         //addPiece(root, "markers/bonus", new Marker(Marker.BONUS));
@@ -61,7 +61,7 @@ public class PieceChooser extends JPanel
         addPiece(root, "markers/fetish", Marker.getMarker(Marker.FETISH));
         addPiece(root, "markers/safe_alt", Marker.getMarker(Marker.SAFE_ALT));
         addPiece(root, "markers/impass", Marker.getMarker(Marker.IMPASS));
-        
+
         for (PropConfig config : PropConfig.getConfigs()) {
             Prop prop = Prop.getProp(config.type);
             addPiece(root, config.type, Prop.getProp(config.type));
@@ -74,7 +74,7 @@ public class PieceChooser extends JPanel
             }
         }
         root.sortChildren();
-        
+
         _tree = new JTree(root);
         _tree.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         _tree.setRootVisible(false);
@@ -82,7 +82,7 @@ public class PieceChooser extends JPanel
             TreeSelectionModel.SINGLE_TREE_SELECTION);
         add(_tree);
     }
-    
+
     /**
      * Returns the piece selected by the user, or <code>null</code> for none.
      */
@@ -95,7 +95,7 @@ public class PieceChooser extends JPanel
         PieceCategory node = ((PieceCategory)path.getLastPathComponent());
         return (node instanceof NamedPiece) ? ((NamedPiece)node).piece : null;
     }
-    
+
     /**
      * Adds a piece to the tree under the specified root.
      *
@@ -107,18 +107,18 @@ public class PieceChooser extends JPanel
         if (root.getParent() != null && !root.townCategory) {
             prefix = root.key + "_";
         }
-        
+
         int idx = type.indexOf('/');
         if (idx == -1) {
             root.add(new NamedPiece(type, prefix + type, piece));
             return;
         }
-        
+
         String cat = type.substring(0, idx);
         PieceCategory child = null;
         for (int ii = 0, nn = root.getChildCount(); ii < nn; ii++) {
             PieceCategory node = (PieceCategory)root.getChildAt(ii);
-            if (node.name.equals(cat)) {
+            if (node.name.equals(cat) && node.getAllowsChildren()) {
                 child = node;
                 break;
             }
@@ -128,7 +128,7 @@ public class PieceChooser extends JPanel
         }
         addPiece(child, type.substring(idx + 1), piece);
     }
-    
+
     /** Used to group pieces. */
     protected class PieceCategory extends DefaultMutableTreeNode
     {
@@ -141,14 +141,14 @@ public class PieceChooser extends JPanel
             this.key = key;
             townCategory = ListUtil.contains(BangCodes.TOWN_IDS, key);
         }
-        
+
         public String toString ()
         {
             String msg = "m.piece_" + key;
             return _ctx.getMessageManager().getBundle("editor").exists(msg) ?
                 _ctx.xlate("editor", msg) : name;
         }
-        
+
         /**
          * Recursively sorts the children of this node by their names.
          */
@@ -166,12 +166,12 @@ public class PieceChooser extends JPanel
             }
         }
     }
-    
+
     /** Combines a piece prototype with its translatable name. */
     protected class NamedPiece extends PieceCategory
     {
         public Piece piece;
-        
+
         public NamedPiece (String name, String key, Piece piece)
         {
             super(name, key);
@@ -179,10 +179,10 @@ public class PieceChooser extends JPanel
             allowsChildren = false;
         }
     }
-    
+
     protected BasicContext _ctx;
     protected JTree _tree;
-    
+
     /** Compares objects by their string representations. */
     protected static final Comparator<Object> NAME_COMPARATOR =
         new Comparator<Object>() {
