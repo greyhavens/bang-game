@@ -50,6 +50,7 @@ viewer_title = Bang! Howdy Model Viewer
 
 #
 # Used by the particle editor
+
 pseditor_application_uri = http://dev.banghowdy.com/pseditor
 
 #
