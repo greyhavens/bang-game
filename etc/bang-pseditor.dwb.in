@@ -1,0 +1,11 @@
+# bang-pseditor.dwb vi:ts=4:sw=4:expandtab:
+# Bang Particle Editor Dweeb Configuration File
+
+<Package>
+    Name        bang-pseditor
+    Version     @VERSION@
+    Maintainer  Bang Developers <bang-dev@threerings.net>
+    Section     pages
+    Architecture    all
+    Description The bang particle editor, lives inside the web document root.
+</Package>
