@@ -48,9 +48,9 @@ public class BountyDetailView extends BContainer
         GroupLayout glay = GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.BOTTOM, GroupLayout.STRETCH).setGap(2);
         add(_games = new BContainer(glay), new Rectangle(55, 116, 332, 152));
-
-        TableLayout tlay = new TableLayout(2, 0, 0).setHorizontalAlignment(TableLayout.STRETCH);
-        add(_recent = new BContainer(tlay), new Rectangle(55, 3, 326, 86));
+        add(new BLabel(_ctx.xlate(OfficeCodes.OFFICE_MSGS, "m.recent_completers"), "bounty_recent"),
+            new Point(30, 93));
+        add(_recent = new RecentCompletersView(ctx), new Rectangle(55, 3, 326, 86));
     }
 
     /**
@@ -74,7 +74,8 @@ public class BountyDetailView extends BContainer
         _title.setText(_config.title);
         _descrip.setText(_config.description);
         _games.removeAll();
-        _recent.removeAll();
+
+        _recent.setCompleters(_offobj == null ? null : _offobj.completers.get(_config.ident));
 
         PlayerObject user = _ctx.getUserObject();
         GroupLayout glay = GroupLayout.makeHoriz(
@@ -124,5 +125,6 @@ public class BountyDetailView extends BContainer
 
     protected OutlawView _oview;
     protected BLabel _reward, _title, _descrip;
-    protected BContainer _games, _recent;
+    protected BContainer _games;
+    protected RecentCompletersView _recent;
 }

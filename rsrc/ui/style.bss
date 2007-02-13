@@ -2115,6 +2115,10 @@ bge_table_rdata {
   text-align: right;
 }
 
+bounty_recent {
+  font: "Dom Casual" plain 14;
+}
+
 //
 // Post-game stats display
 

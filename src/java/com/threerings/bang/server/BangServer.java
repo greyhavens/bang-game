@@ -59,6 +59,7 @@ import com.threerings.bang.bank.data.BankConfig;
 import com.threerings.bang.bank.server.BankManager;
 import com.threerings.bang.bounty.data.OfficeConfig;
 import com.threerings.bang.bounty.server.OfficeManager;
+import com.threerings.bang.bounty.server.persist.BountyRepository;
 import com.threerings.bang.chat.server.BangChatProvider;
 import com.threerings.bang.gang.data.HideoutConfig;
 import com.threerings.bang.gang.server.GangManager;
@@ -152,6 +153,9 @@ public class BangServer extends CrowdServer
 
     /** Manages the persistent repository of avatar looks. */
     public static LookRepository lookrepo;
+
+    /** Tracks bounty related persistent statistics. */
+    public static BountyRepository bountyrepo;
 
     /** Provides micropayment services. (This will need to be turned into a
      * pluggable interface to support third party micropayment systems.) */
@@ -260,6 +264,7 @@ public class BangServer extends CrowdServer
         statrepo = new StatRepository(conprov);
         ratingrepo = new RatingRepository(conprov);
         lookrepo = new LookRepository(conprov);
+        bountyrepo = new BountyRepository(conprov);
         AccountActionRepository actionrepo = new AccountActionRepository(conprov);
 
         // create our various supporting managers

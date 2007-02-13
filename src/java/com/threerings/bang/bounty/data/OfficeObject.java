@@ -16,12 +16,18 @@ public class OfficeObject extends PlaceObject
     /** The field name of the <code>boards</code> field. */
     public static final String BOARDS = "boards";
 
+    /** The field name of the <code>completers</code> field. */
+    public static final String COMPLETERS = "completers";
+
     /** The field name of the <code>service</code> field. */
     public static final String SERVICE = "service";
     // AUTO-GENERATED: FIELDS END
 
     /** Contains metadata on all available boards. */
     public DSet<BoardInfo> boards;
+
+    /** Contains recent completers for all bounties. */
+    public DSet<RecentCompleters> completers;
 
     /** Provides office-related services. */
     public OfficeMarshaller service;
@@ -73,6 +79,54 @@ public class OfficeObject extends PlaceObject
         @SuppressWarnings("unchecked") DSet<com.threerings.bang.bounty.data.BoardInfo> clone =
             (value == null) ? null : value.typedClone();
         this.boards = clone;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>completers</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToCompleters (RecentCompleters elem)
+    {
+        requestEntryAdd(COMPLETERS, completers, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>completers</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromCompleters (Comparable key)
+    {
+        requestEntryRemove(COMPLETERS, completers, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>completers</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateCompleters (RecentCompleters elem)
+    {
+        requestEntryUpdate(COMPLETERS, completers, elem);
+    }
+
+    /**
+     * Requests that the <code>completers</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setCompleters (DSet<com.threerings.bang.bounty.data.RecentCompleters> value)
+    {
+        requestAttributeChange(COMPLETERS, value, this.completers);
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.bounty.data.RecentCompleters> clone =
+            (value == null) ? null : value.typedClone();
+        this.completers = clone;
     }
 
     /**

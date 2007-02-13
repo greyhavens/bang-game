@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.logging.Level;
 
 import com.jme.util.export.binary.BinaryImporter;
+import com.samskivert.jdbc.RepositoryUnit;
 import com.samskivert.util.Invoker;
 
 import com.threerings.util.Name;
@@ -38,6 +39,8 @@ import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.bounty.data.OfficeCodes;
 import com.threerings.bang.bounty.data.OfficeMarshaller;
 import com.threerings.bang.bounty.data.OfficeObject;
+import com.threerings.bang.bounty.data.RecentCompleters;
+import com.threerings.bang.bounty.server.persist.RecentCompletersRecord;
 
 import static com.threerings.bang.Log.log;
 
@@ -125,6 +128,38 @@ public class OfficeManager extends ShopManager
         });
     }
 
+    /**
+     * Called by the BangManager when a bounty game is completed that completes a whole bounty for
+     * a player.
+     */
+    public void noteCompletedBounty (String bountyId, Handle player)
+    {
+        // add their name to the appropriate completers list
+        RecentCompleters comp = _offobj.completers.get(bountyId);
+        if (comp == null) {
+            comp = new RecentCompleters();
+            comp.bountyId = bountyId;
+            comp.addCompleter(player.toString());
+            _offobj.addToCompleters(comp);
+        } else {
+            comp.addCompleter(player.toString());
+            _offobj.updateCompleters(comp);
+        }
+
+        // record it to the database
+        final RecentCompletersRecord record = new RecentCompletersRecord(ServerConfig.townId, comp);
+        BangServer.invoker.postUnit(new Invoker.Unit("updateRecentCompleters") {
+            public boolean invoke () {
+                try {
+                    BangServer.bountyrepo.storeCompleters(record);
+                } catch (Exception e) {
+                    log.log(Level.WARNING, "Failed to store recent completers " + record + ".", e);
+                }
+                return false;
+            };
+        });
+    }
+
     // from interface OfficeProvider
     public void testBountyGame (ClientObject caller, BangConfig config,
                                 OfficeService.InvocationListener listener)
@@ -154,21 +189,22 @@ public class OfficeManager extends ShopManager
         startBountyGame(player, bounty, "test", config);
     }
 
-    protected void startBountyGame (PlayerObject player, BountyConfig bounty, String gameId,
+    protected void startBountyGame (PlayerObject user, BountyConfig bounty, String gameId,
                                     BangConfig gconfig)
         throws InvocationException
     {
         HashSet<String> names = new HashSet<String>();
-        names.add(player.getVisibleName().toString());
+        names.add(user.getVisibleName().toString());
 
         // configure our AIs and the player names array
         gconfig.type = BangConfig.Type.BOUNTY;
         gconfig.rated = false;
         gconfig.players = new Name[gconfig.plist.size()];
         gconfig.ais = new BangAI[gconfig.plist.size()];
-        gconfig.players[0] = player.getVisibleName();
+        gconfig.players[0] = user.getVisibleName();
         for (int ii = 1; ii < gconfig.players.length; ii++) {
-            BangAI ai = BangAI.createAI(1, 50, names); // TODO: get skill level from BangConfig
+            BangConfig.Player player = gconfig.plist.get(ii);
+            BangAI ai = BangAI.createAI(1, player.skill, names);
             gconfig.ais[ii] = bounty.getOpponent(gameId, gconfig.players.length, ii, ai);
             gconfig.players[ii] = ai.handle;
         }
@@ -177,7 +213,7 @@ public class OfficeManager extends ShopManager
             BangManager bangmgr = (BangManager)BangServer.plreg.createPlace(gconfig);
             bangmgr.setBountyConfig(bounty, gameId);
         } catch (InstantiationException ie) {
-            log.log(Level.WARNING, "Error instantiating bounty game [for=" + player.who() +
+            log.log(Level.WARNING, "Error instantiating bounty game [for=" + user.who() +
                     ", bounty=" + bounty + ", gconfig=" + gconfig + "].", ie);
             throw new InvocationException(INTERNAL_ERROR);
         }
@@ -217,6 +253,24 @@ public class OfficeManager extends ShopManager
             }
         }
         _offobj.setBoards(new DSet<BoardInfo>(infos.iterator()));
+
+        // load our recent completers information from the database
+        BangServer.invoker.postUnit(new RepositoryUnit("loadRecentCompleters") {
+            public void invokePersist () throws Exception {
+                for (RecentCompletersRecord record :
+                         BangServer.bountyrepo.loadCompleters(ServerConfig.townId)) {
+                    _comps.add(record.toRecentCompleters());
+                }
+            }
+            public void handleSuccess () {
+                _offobj.setCompleters(new DSet<RecentCompleters>(_comps));
+            }
+            public void handleFailure (Exception cause) {
+                log.log(Level.WARNING, "Failed to load recent completers.", cause);
+                _offobj.setCompleters(new DSet<RecentCompleters>());
+            }
+            protected ArrayList<RecentCompleters> _comps = new ArrayList<RecentCompleters>();
+        });
     }
 
     protected OfficeObject _offobj;

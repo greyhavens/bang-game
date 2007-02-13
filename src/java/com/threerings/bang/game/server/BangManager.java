@@ -1802,6 +1802,8 @@ public class BangManager extends GameManager
                         _bounty.isCompleted(user)) {
                         completedBounty = true;
                         user.stats.addToSetStat(Stat.Type.BOUNTIES_COMPLETED, _bounty.ident);
+                        // report this completion to the office manager
+                        BangServer.officemgr.noteCompletedBounty(_bounty.ident, user.handle);
                     }
                 }
             }
