@@ -24,6 +24,7 @@
       <param-name>messages_path</param-name>
       <param-value>messages</param-value>
     </init-param>
+    <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
