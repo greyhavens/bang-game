@@ -14,26 +14,29 @@ import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 
 /**
- * Extends {@link PardnerEntry} with gang-related data.
+ * Contains information on a single gang member.
  */
 public class GangMemberEntry extends SimpleStreamableObject
     implements DSet.Entry
-{       
+{
     /** The member's handle. */
     public Handle handle;
-     
+
     /** The member's player id. */
     public int playerId;
-    
+
     /** The member's gang rank. */
     public byte rank;
-    
+
     /** The time at which the member joined the gang. */
     public long joined;
 
     /** The member's notoriety. */
     public int notoriety;
-    
+
+    /** The index of the town that the member is logged into, or -1 if the member is offline. */
+    public byte townIdx = -1;
+
     /**
      * Constructor for entries loaded from the database.
      */
@@ -45,7 +48,7 @@ public class GangMemberEntry extends SimpleStreamableObject
         this.joined = joined.getTime();
         this.notoriety = notoriety;
     }
-    
+
     /**
      * No-arg constructor for deserialization.
      */
@@ -60,13 +63,27 @@ public class GangMemberEntry extends SimpleStreamableObject
      */
     public boolean canChangeStatus (PlayerObject player)
     {
-        return (player.gangRank == GangCodes.LEADER_RANK &&
-            (rank != GangCodes.LEADER_RANK || player.joinedGang < joined));
+        return canChangeStatus(player.gangRank, player.joinedGang);
     }
-    
+
+    /**
+     * Determines whether the specified menber can expel this member from the
+     * gang, change his rank, etc.
+     */
+    public boolean canChangeStatus (GangMemberEntry member)
+    {
+        return canChangeStatus(member.rank, member.joined);
+    }
+
     // documentation inherited from interface DSet.Entry
     public Comparable getKey ()
     {
         return handle;
+    }
+
+    protected boolean canChangeStatus (byte rank, long joined)
+    {
+        return (rank == GangCodes.LEADER_RANK &&
+            (this.rank != GangCodes.LEADER_RANK || joined < this.joined));
     }
 }

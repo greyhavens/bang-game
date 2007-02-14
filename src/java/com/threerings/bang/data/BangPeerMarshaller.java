@@ -7,6 +7,7 @@ import com.threerings.bang.client.BangPeerService;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.dobj.InvocationResponseEvent;
 
@@ -50,6 +51,19 @@ public class BangPeerMarshaller extends InvocationMarshaller
     {
         sendRequest(arg1, DELIVER_PARDNER_INVITE, new Object[] {
             arg2, arg3, arg4
+        });
+    }
+
+    /** The method id used to dispatch {@link #getGangOid} requests. */
+    public static final int GET_GANG_OID = 4;
+
+    // from interface BangPeerService
+    public void getGangOid (Client arg1, int arg2, InvocationService.ResultListener arg3)
+    {
+        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, GET_GANG_OID, new Object[] {
+            Integer.valueOf(arg2), listener3
         });
     }
 }

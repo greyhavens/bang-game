@@ -8,9 +8,6 @@ import java.net.URL;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
-import com.threerings.crowd.chat.data.SpeakMarshaller;
-import com.threerings.crowd.chat.data.SpeakObject;
-
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.saloon.data.TopRankObject;
@@ -20,11 +17,11 @@ import com.threerings.bang.saloon.data.TopRankedList;
  * Contains data concerning a single gang.
  */
 public class GangObject extends DObject
-    implements SpeakObject, TopRankObject
+    implements TopRankObject
 {
     // AUTO-GENERATED: FIELDS START
-    /** The field name of the <code>speakService</code> field. */
-    public static final String SPEAK_SERVICE = "speakService";
+    /** The field name of the <code>gangPeerService</code> field. */
+    public static final String GANG_PEER_SERVICE = "gangPeerService";
 
     /** The field name of the <code>gangId</code> field. */
     public static final String GANG_ID = "gangId";
@@ -66,60 +63,57 @@ public class GangObject extends DObject
     public static final String TOP_RANKED = "topRanked";
     // AUTO-GENERATED: FIELDS END
 
-    /** Used for chatting among the gang members. */
-    public SpeakMarshaller speakService;
-    
+    /** Used by peers to make requests on the behalf of their users. */
+    public GangPeerMarshaller gangPeerService;
+
     /** This gang's unique identifier. */
     public int gangId;
 
     /** The name of this gang. */
     public Handle name;
-    
+
     /** The day on which this gang was founded. */
     public long founded;
-    
+
     /** The gang's statement. */
     public String statement;
-    
+
     /** The gang's URL. */
     public String url;
-    
+
     /** The gang leader's avatar. */
     public AvatarInfo avatar;
-    
+
     /** The amount of scrip in the gang's coffers. */
     public int scrip;
-    
+
     /** The number of coins in the gang's coffers. */
     public int coins;
-    
+
     /** The gang's total notoriety. */
     public int notoriety;
-    
+
     /** The gang's rank in terms of notoriety. */
     public byte notorietyRank;
-    
+
     /** The currently configured gang outfit. */
     public OutfitArticle[] outfit;
-    
+
     /** Contains a {@link GangMemberInfo} for each member of this gang. */
     public DSet<GangMemberEntry> members = new DSet<GangMemberEntry>();
 
     /** Contains info on the top-ranked members by various criterion. */
     public DSet<TopRankedList> topRanked = new DSet<TopRankedList>();
-    
-    // documentation inherited from interface SpeakObject
-    public void applyToListeners (ListenerOp op)
-    {
-        // no-op
-    }
-    
+
+    /** On servers using this object as a proxy, the oid on the peer server. */
+    public transient int remoteOid;
+
     // documentation inherited from interface TopRankObject
     public DSet<TopRankedList> getTopRanked ()
     {
         return topRanked;
     }
-    
+
     /**
      * Returns the name used to identity the gang's entry in the coin database.
      */
@@ -127,7 +121,7 @@ public class GangObject extends DObject
     {
         return "{" + name + "}";
     }
-    
+
     /**
      * Returns the URL of the gang's home page, or <code>null</code> if no valid URL has been
      * configured.
@@ -140,7 +134,7 @@ public class GangObject extends DObject
             return null;
         }
     }
-    
+
     /**
      * Returns the {@link GangMemberEntry} corresponding to the most senior leader of the gang.
      */
@@ -149,28 +143,28 @@ public class GangObject extends DObject
         GangMemberEntry senior = null;
         for (GangMemberEntry entry : members) {
             if (entry.rank == GangCodes.LEADER_RANK &&
-                (senior == null || entry.rank < senior.rank)) {
+                (senior == null || entry.joined < senior.joined)) {
                 senior = entry;
             }
         }
         return senior;
     }
-    
+
     // AUTO-GENERATED: METHODS START
     /**
-     * Requests that the <code>speakService</code> field be set to the
+     * Requests that the <code>gangPeerService</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
      * that the attribute did change. Proxied copies of this object (on
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setSpeakService (SpeakMarshaller value)
+    public void setGangPeerService (GangPeerMarshaller value)
     {
-        SpeakMarshaller ovalue = this.speakService;
+        GangPeerMarshaller ovalue = this.gangPeerService;
         requestAttributeChange(
-            SPEAK_SERVICE, value, ovalue);
-        this.speakService = value;
+            GANG_PEER_SERVICE, value, ovalue);
+        this.gangPeerService = value;
     }
 
     /**

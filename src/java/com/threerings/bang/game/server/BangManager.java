@@ -615,7 +615,7 @@ public class BangManager extends GameManager
         } finally {
             _bangobj.commitTransaction();
         }
-        
+
         // finally, validate all of our advance orders and make sure none of them became invalid
         if (recheckOrders) {
             validateOrders();
@@ -1691,7 +1691,7 @@ public class BangManager extends GameManager
         // process any played cards
         ArrayList<StartingCard> updates = new ArrayList<StartingCard>();
         ArrayList<StartingCard> removals = new ArrayList<StartingCard>();
-        boolean shortRound = _rounds[_activeRoundId].duration == 0 || 
+        boolean shortRound = _rounds[_activeRoundId].duration == 0 ||
                 _rounds[_activeRoundId].lastTick < _rounds[_activeRoundId].duration/2;
         for (Iterator<StartingCard> iter = _scards.values().iterator(); iter.hasNext(); ) {
             StartingCard scard = iter.next();
@@ -1876,7 +1876,7 @@ public class BangManager extends GameManager
                     award.cashEarned = (int)Math.ceil(
                         computeEarnings(ii) * _bconfig.duration.getAdjustment());
                 }
-                
+
                 // for now, award one notoriety point for every twenty scrip
                 if (prec.gangId > 0) {
                     award.notorietyEarned = award.cashEarned / 20;
@@ -2010,7 +2010,7 @@ public class BangManager extends GameManager
     {
         try {
             _bangobj.startTransaction();
-            // compute the final ranking of each player, resolving ties using kill count, then a 
+            // compute the final ranking of each player, resolving ties using kill count, then a
             // random ordering
             _ranks = new RankRecord[_bangobj.players.length];
             boolean[] active = new boolean[_ranks.length];
@@ -2568,11 +2568,15 @@ public class BangManager extends GameManager
         for (Award award : awards) {
             if (award.notorietyEarned > 0) {
                 PlayerRecord prec = _precords[award.pidx];
-                BangServer.gangmgr.grantNotoriety(
-                    prec.gangId, prec.playerId, prec.user.handle, award.notorietyEarned);
+                try {
+                    BangServer.gangmgr.requireGangPeerProvider(prec.gangId).grantNotoriety(
+                        null, prec.user.handle, award.notorietyEarned);
+                } catch (InvocationException e) {
+                    // a warning will have been logged by GangManager
+                }
             }
         }
-        
+
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 for (int pidx = 0; pidx < awards.length; pidx++) {

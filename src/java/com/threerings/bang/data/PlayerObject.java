@@ -48,9 +48,6 @@ public class PlayerObject extends BodyObject
     /** The field name of the <code>joinedGang</code> field. */
     public static final String JOINED_GANG = "joinedGang";
 
-    /** The field name of the <code>gangNotoriety</code> field. */
-    public static final String GANG_NOTORIETY = "gangNotoriety";
-
     /** The field name of the <code>inventory</code> field. */
     public static final String INVENTORY = "inventory";
 
@@ -108,19 +105,16 @@ public class PlayerObject extends BodyObject
 
     /** The id of the user's gang, if any. */
     public int gangId;
-    
+
     /** The oid of the gang dobj. */
     public int gangOid;
-    
+
     /** The user's rank in the gang. */
     public byte gangRank;
-    
+
     /** The date upon which the user joined the gang. */
     public long joinedGang;
-    
-    /** The amount of notoriety that the user has gained for his gang. */
-    public int gangNotoriety;
-    
+
     /** Contains all items held by this user. */
     public DSet<Item> inventory;
 
@@ -150,7 +144,7 @@ public class PlayerObject extends BodyObject
 
     /** The set of notifications pending response (pardner requests, etc.) */
     public DSet<Notification> notifications;
-    
+
     /** The player ids of this player's friendly folks, sorted. */
     public int[] friends;
 
@@ -272,7 +266,7 @@ public class PlayerObject extends BodyObject
         }
         return false;
     }
-    
+
     /**
      * Whether the specified player's id is in this player's friend list.
      */
@@ -296,7 +290,7 @@ public class PlayerObject extends BodyObject
     {
         return gangId > 0 && gangRank >= GangCodes.RECRUITER_RANK;
     }
-    
+
     /**
      * Returns true if the player can donate to his gang's coffers.
      */
@@ -305,7 +299,7 @@ public class PlayerObject extends BodyObject
         return gangRank >= GangCodes.LEADER_RANK ||
             (System.currentTimeMillis() - joinedGang) >= GangCodes.DONATION_DELAY;
     }
-    
+
     @Override // documentation inherited
     public BangTokenRing getTokens ()
     {
@@ -487,22 +481,6 @@ public class PlayerObject extends BodyObject
         requestAttributeChange(
             JOINED_GANG, Long.valueOf(value), Long.valueOf(ovalue));
         this.joinedGang = value;
-    }
-
-    /**
-     * Requests that the <code>gangNotoriety</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setGangNotoriety (int value)
-    {
-        int ovalue = this.gangNotoriety;
-        requestAttributeChange(
-            GANG_NOTORIETY, Integer.valueOf(value), Integer.valueOf(ovalue));
-        this.gangNotoriety = value;
     }
 
     /**

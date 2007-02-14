@@ -120,11 +120,6 @@ public class BangClient extends CrowdClient
             BangServer.clearPlayer(user);
         }
 
-        // release the reference to the gang object
-        if (user.gangId > 0) {
-            BangServer.gangmgr.releaseGang(user.gangId);
-        }
-        
         // this session is over, make a note of it
         recordEndedSession();
 

@@ -8,6 +8,7 @@ import com.threerings.bang.data.BangPeerMarshaller;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.data.InvocationMarshaller;
 import com.threerings.presents.server.InvocationDispatcher;
@@ -57,6 +58,13 @@ public class BangPeerDispatcher extends InvocationDispatcher
             ((BangPeerProvider)provider).deliverPardnerInvite(
                 source,
                 (Handle)args[0], (Handle)args[1], (String)args[2]
+            );
+            return;
+
+        case BangPeerMarshaller.GET_GANG_OID:
+            ((BangPeerProvider)provider).getGangOid(
+                source,
+                ((Integer)args[0]).intValue(), (InvocationService.ResultListener)args[1]
             );
             return;
 

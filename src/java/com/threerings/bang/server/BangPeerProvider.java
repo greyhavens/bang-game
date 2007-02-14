@@ -7,6 +7,7 @@ import com.threerings.bang.client.BangPeerService;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.presents.client.Client;
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.InvocationProvider;
@@ -30,4 +31,10 @@ public interface BangPeerProvider extends InvocationProvider
      * Handles a {@link BangPeerService#deliverPardnerInvite} request.
      */
     public void deliverPardnerInvite (ClientObject caller, Handle arg1, Handle arg2, String arg3);
+
+    /**
+     * Handles a {@link BangPeerService#getGangOid} request.
+     */
+    public void getGangOid (ClientObject caller, int arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
 }

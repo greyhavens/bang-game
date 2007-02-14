@@ -33,23 +33,7 @@ public abstract class FinancialAction extends Invoker.Unit
     public void start ()
         throws InvocationException
     {
-        String account = getCoinAccount();
-        String ntype = getClass().getName(), otype = _accountLock.get(account);
-        if (otype != null) {
-            log.info("Preventing overlapping financial action [who=" + account +
-                     ", new=" + ntype + ", old=" + otype + "].");
-            throw new InvocationException(BangCodes.BANG_MSGS, "e.processing_purchase");
-        }
-        _accountLock.put(account, ntype);
-
-        // check and immediately deduct the necessary funds
-        int scrip = getScrip(), coins = getCoins();
-        if (scrip < _scripCost || coins < _coinCost) {
-            _accountLock.remove(account); // release our lock
-            throw new InvocationException(BangCodes.INSUFFICIENT_FUNDS);
-        }
-        setCash(scrip - _scripCost, coins - _coinCost);
-
+        lockAndDeduct();
         BangServer.invoker.postUnit(this);
     }
 
@@ -131,6 +115,12 @@ public abstract class FinancialAction extends Invoker.Unit
         // admins and support get everything for free because they're cool like that
         _scripCost = user.tokens.isSupport() ? 0 : scripCost;
         _coinCost = user.tokens.isSupport() ? 0 : coinCost;
+    }
+
+    protected FinancialAction (int scripCost, int coinCost)
+    {
+        _scripCost = scripCost;
+        _coinCost = coinCost;
     }
 
     /**
@@ -234,7 +224,31 @@ public abstract class FinancialAction extends Invoker.Unit
             }
         }
     }
-    
+
+    /**
+     * Locks (or attempts to lock) the coin account and deducts the required funds from the dobj.
+     */
+    protected void lockAndDeduct ()
+        throws InvocationException
+    {
+        String account = getCoinAccount();
+        String ntype = getClass().getName(), otype = _accountLock.get(account);
+        if (otype != null) {
+            log.info("Preventing overlapping financial action [who=" + account +
+                     ", new=" + ntype + ", old=" + otype + "].");
+            throw new InvocationException(BangCodes.BANG_MSGS, "e.processing_purchase");
+        }
+        _accountLock.put(account, ntype);
+
+        // check and immediately deduct the necessary funds
+        int scrip = getScrip(), coins = getCoins();
+        if (scrip < _scripCost || coins < _coinCost) {
+            _accountLock.remove(account); // release our lock
+            throw new InvocationException(BangCodes.INSUFFICIENT_FUNDS);
+        }
+        setCash(scrip - _scripCost, coins - _coinCost);
+    }
+
     /**
      * Returns the amount of scrip held by the actor as reported in the dobj.
      */
@@ -242,7 +256,7 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         return _user.scrip;
     }
-    
+
     /**
      * Returns the number of coins held by the actor as reported in the dobj.
      */
@@ -250,7 +264,7 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         return _user.coins;
     }
-    
+
     /**
      * Updates the actor's cash in hand in the dobj.
      */
@@ -264,7 +278,7 @@ public abstract class FinancialAction extends Invoker.Unit
             _user.commitTransaction();
         }
     }
-    
+
     /**
      * Returns the actor's account in the coin database.
      */
@@ -272,7 +286,7 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         return _user.username.toString();
     }
-    
+
     /**
      * Updates the database to spend the actor's scrip.
      */
@@ -281,7 +295,7 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         BangServer.playrepo.spendScrip(_user.playerId, scrip);
     }
-    
+
     /**
      * Updates the database to spend the actor's coins.
      */
@@ -291,7 +305,7 @@ public abstract class FinancialAction extends Invoker.Unit
         return BangServer.coinmgr.getCoinRepository().spendCoins(
             reservationId, getCoinType(), getCoinDescrip());
     }
-    
+
     /**
      * Updates the database to grant scrip to the actor.
      */
@@ -300,7 +314,7 @@ public abstract class FinancialAction extends Invoker.Unit
     {
         BangServer.playrepo.grantScrip(_user.playerId, scrip);
     }
-    
+
     protected void toString (StringBuffer buf)
     {
         buf.append("type=").append(getClass().getName());

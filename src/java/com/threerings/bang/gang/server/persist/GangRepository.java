@@ -113,6 +113,10 @@ public class GangRepository extends JORARepository
         if (grec != null && all) {
             grec.members = loadGangMembers(gangId);
             
+            // load the coin count
+            grec.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
+                grec.getCoinAccount());
+            
             // load the outfit
             ArrayList<GangOutfitRecord> recs = loadAll(_otable, "where GANG_ID = " + gangId);
             grec.outfit = new OutfitArticle[recs.size()];

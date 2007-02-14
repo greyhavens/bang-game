@@ -59,7 +59,7 @@ public class GangChatView extends BContainer
     protected void wasAdded ()
     {
         super.wasAdded();
-        _pcview.setSpeakService(_gangobj.speakService);
+//        _pcview.setSpeakService(_gangobj.speakService);
         _ctx.getOccupantDirector().addOccupantObserver(_occlist);
         _gangobj.addListener(_memberlist);
         updateMembersInHideout();
@@ -69,7 +69,7 @@ public class GangChatView extends BContainer
     protected void wasRemoved ()
     {
         super.wasRemoved();
-        _pcview.clearSpeakService();
+//        _pcview.clearSpeakService();
         _ctx.getOccupantDirector().removeOccupantObserver(_occlist);
         _gangobj.removeListener(_memberlist);
     }

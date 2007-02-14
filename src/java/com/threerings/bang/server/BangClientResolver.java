@@ -11,6 +11,7 @@ import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.ArrayUtil;
 import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.RandomUtil;
+import com.samskivert.util.ResultListener;
 
 import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
@@ -24,6 +25,7 @@ import com.threerings.bang.server.persist.PlayerRecord;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
+import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
@@ -152,12 +154,9 @@ public class BangClientResolver extends CrowdClientResolver
         _precords = BangServer.playmgr.getPardnerRepository().getPardnerRecords(player.playerId);
 
         // load up this player's gang information
-        _grecord = BangServer.gangmgr.getGangRepository().loadMember(player.playerId);
+        _grecord = BangServer.gangrepo.loadMember(player.playerId);
         if (_grecord == null) {
-            _ginvites = BangServer.gangmgr.getGangRepository().getInviteRecords(player.playerId);
-        } else {
-            // make sure this gang's data is loaded from the database
-            BangServer.gangmgr.resolveGang(_grecord.gangId);
+            _ginvites = BangServer.gangrepo.getInviteRecords(player.playerId);
         }
 
         // load this player's friends and foes
@@ -175,6 +174,28 @@ public class BangClientResolver extends CrowdClientResolver
     }
 
     @Override // documentation inherited
+    public void handleResult ()
+    {
+        // if something went wrong or the player isn't in a gang, we can go right to the final
+        // processing stage
+        if (_grecord == null || _failure != null) {
+            super.handleResult();
+            return;
+        }
+        // otherwise, we must resolve the gang through the gang manager
+        BangServer.gangmgr.resolveGang(_grecord.gangId,
+            new ResultListener<GangObject>() {
+                public void requestCompleted (GangObject result) {
+                    BangClientResolver.super.handleResult();
+                }
+                public void requestFailed (Exception cause) {
+                    _failure = cause;
+                    BangClientResolver.super.handleResult();
+                }
+            });
+    }
+
+    @Override // documentation inherited
     protected void finishResolution (ClientObject clobj)
     {
         super.finishResolution(clobj);
@@ -189,18 +210,6 @@ public class BangClientResolver extends CrowdClientResolver
         // redeem any rewards for which this player is eligible
         if (_rewards != null && _rewards.size() > 0) {
             BangServer.playmgr.redeemRewards(buser, _rewards);
-        }
-    }
-
-    @Override // documentation inherited
-    protected void reportFailure (Exception cause)
-    {
-        super.reportFailure(cause);
-
-        // let the gang manager know we're not going to finish our gang resolution
-        PlayerObject buser = (PlayerObject)_clobj;
-        if (buser.gangId > 0) {
-            BangServer.gangmgr.releaseGang(buser.gangId);
         }
     }
 

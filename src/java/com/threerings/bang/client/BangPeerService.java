@@ -33,5 +33,10 @@ public interface BangPeerService extends InvocationService
      *
      * @param source a qualified translatable string describing the source of the item
      */
-    public void deliverItem (Client client, Item item, String source);    
+    public void deliverItem (Client client, Item item, String source);
+
+    /**
+     * Requests the oid of a gang for which this peer holds a lock.
+     */    
+    public void getGangOid (Client client, int gangId, ResultListener listener);
 }

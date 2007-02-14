@@ -43,6 +43,9 @@ public class GangRecord
     /** The encoded brand. */
     public byte[] brand;
 
+    /** The number of coins in the gang's coffers. */
+    public transient int coins;
+    
     /** The currently configured gang outfit. */
     public transient OutfitArticle[] outfit;
         
@@ -79,6 +82,12 @@ public class GangRecord
         return new Handle(name);
     }
 
+    /** Returns the name used to identity the gang's entry in the coin database. */
+    public String getCoinAccount ()
+    {
+        return "{" + name + "}"; 
+    }
+    
     /** Returns a string representation of this instance. */
     public String toString ()
     {

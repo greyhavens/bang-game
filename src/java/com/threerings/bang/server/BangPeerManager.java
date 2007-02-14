@@ -10,18 +10,24 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.ObserverList;
+import com.samskivert.util.ResultListener;
 import com.samskivert.util.Tuple;
 
+import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.EntryUpdatedEvent;
+import com.threerings.presents.dobj.ObjectAccessException;
 import com.threerings.presents.dobj.SetListener;
+import com.threerings.presents.dobj.Subscriber;
+import com.threerings.presents.util.ResultAdapter;
 
 import com.threerings.presents.peer.data.ClientInfo;
 import com.threerings.presents.peer.data.NodeObject;
 import com.threerings.presents.peer.server.persist.NodeRecord;
+import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
 
 import com.threerings.crowd.peer.server.CrowdPeerManager;
@@ -29,7 +35,9 @@ import com.threerings.crowd.peer.server.CrowdPeerManager;
 import com.threerings.bang.avatar.data.Look;
 
 import com.threerings.bang.gang.data.GangEntry;
+import com.threerings.bang.gang.data.GangObject;
 
+import com.threerings.bang.client.BangPeerService;
 import com.threerings.bang.data.BangClientInfo;
 import com.threerings.bang.data.BangNodeObject;
 import com.threerings.bang.data.BangPeerMarshaller;
@@ -120,7 +128,7 @@ public class BangPeerManager extends CrowdPeerManager
                 peer.getClient(), invitee, inviter, message);
         }
     }
-    
+
     // from interface BangPeerProvider
     public void deliverPardnerInvite (
         ClientObject caller, Handle invitee, Handle inviter, String message)
@@ -130,7 +138,7 @@ public class BangPeerManager extends CrowdPeerManager
             BangServer.playmgr.sendPardnerInviteLocal(user, inviter, message, new Date());
         }
     }
-    
+
     /**
      * Requests to deliver a gang invite to a player if he's logged into one of our peer servers.
      */
@@ -143,7 +151,7 @@ public class BangPeerManager extends CrowdPeerManager
                 peer.getClient(), invitee, inviter, gangId, name, message);
         }
     }
-    
+
     // from interface BangPeerProvider
     public void deliverGangInvite (
         ClientObject caller, Handle invitee, Handle inviter, int gangId, Handle name,
@@ -154,7 +162,7 @@ public class BangPeerManager extends CrowdPeerManager
             BangServer.gangmgr.sendGangInviteLocal(user, inviter, gangId, name, message);
         }
     }
-    
+
     /**
      * Requests to deliver the specified item to its owner if he's logged into one of our peer
      * servers.
@@ -182,6 +190,41 @@ public class BangPeerManager extends CrowdPeerManager
         if (user != null) {
             BangServer.playmgr.deliverItemLocal(user, item, source);
         }
+    }
+
+    /**
+     * Subscribes to the specified gang on the given node.
+     */
+    public void subscribeToGang (
+        final String nodeName, int gangId, final ResultListener<GangObject> listener)
+    {
+        PeerNode peer = _peers.get(nodeName);
+        if (peer == null) {
+            String msg = "Unknown node for gang subscription [name=" + nodeName + "].";
+            listener.requestFailed(new Exception(msg));
+            return;
+        }
+        ((BangNodeObject)peer.nodeobj).bangPeerService.getGangOid(peer.getClient(), gangId,
+            new BangPeerService.ResultListener() {
+                public void requestProcessed (Object result) {
+                    continueSubscribingToGang(nodeName, (Integer)result, listener);
+                }
+                public void requestFailed (String cause) {
+                    listener.requestFailed(new InvocationException(cause));
+                }
+            });
+    }
+
+    // from interface BangPeerProvider
+    public void getGangOid (
+        ClientObject caller, int gangId, final InvocationService.ResultListener listener)
+    {
+        BangServer.gangmgr.resolveGang(gangId,
+            new ResultAdapter<GangObject>(listener) {
+                public void requestCompleted (GangObject result) {
+                    listener.requestProcessed(result.getOid());
+                }
+            });
     }
 
     @Override // from CrowdPeerManager
@@ -279,7 +322,26 @@ public class BangPeerManager extends CrowdPeerManager
         }
         return null;
     }
-    
+
+    /**
+     * Continues the process of subscribing to a gang once we know its oid on the peer.
+     */
+    protected void continueSubscribingToGang (
+        String nodeName, final int remoteOid, final ResultListener<GangObject> listener)
+    {
+        proxyRemoteObject(nodeName, remoteOid,
+            new ResultListener<Integer>() {
+                public void requestCompleted (Integer result) {
+                    GangObject gangobj = (GangObject)BangServer.omgr.getObject(result);
+                    gangobj.remoteOid = remoteOid;
+                    listener.requestCompleted(gangobj);
+                }
+                public void requestFailed (Exception cause) {
+                    listener.requestFailed(cause);
+                }
+            });
+    }
+
     protected class BangPeerNode extends PeerNode
         implements SetListener
     {
@@ -310,7 +372,7 @@ public class BangPeerManager extends CrowdPeerManager
         public void attributeChanged (AttributeChangedEvent event)
         {
             super.attributeChanged(event);
-            
+
             // pass gang directory updates to the HideoutManager
             String name = event.getName();
             if (name.equals(BangNodeObject.ADDED_GANG)) {
@@ -319,7 +381,7 @@ public class BangPeerManager extends CrowdPeerManager
                 BangServer.hideoutmgr.removeGangLocal((Handle)event.getValue());
             }
         }
-        
+
         public void entryAdded (EntryAddedEvent event) {
             // log.info("Remote entry added " + event);
             if (event.getName().equals(NodeObject.CLIENTS)) {

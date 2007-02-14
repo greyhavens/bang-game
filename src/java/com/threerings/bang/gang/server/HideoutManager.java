@@ -48,6 +48,50 @@ import static com.threerings.bang.Log.log;
 public class HideoutManager extends MatchHostManager
     implements GangCodes, HideoutCodes, HideoutProvider
 {
+    /**
+     * Adds an entry to the Hideout's list of gangs and broadcasts the addition to the server's
+     * peers (if any).
+     */
+    public void addGang (GangEntry entry)
+    {
+        addGangLocal(entry);
+        if (BangServer.peermgr != null) {
+            ((BangNodeObject)BangServer.peermgr.getNodeObject()).setAddedGang(entry);
+        }
+    }
+
+    /**
+     * Removes an entry from the Hideout's list of gangs and broadcasts the removal to the server's
+     * peers (if any).
+     */
+    public void removeGang (Handle name)
+    {
+        removeGangLocal(name);
+        if (BangServer.peermgr != null) {
+            ((BangNodeObject)BangServer.peermgr.getNodeObject()).setRemovedGang(name);
+        }
+    }
+
+    /**
+     * Adds an entry to the Hideout's list of gangs on this server only.
+     */
+    public void addGangLocal (GangEntry entry)
+    {
+        if (_hobj != null) {
+            _hobj.addToGangs(entry);
+        }
+    }
+
+    /**
+     * Removes an entry from the Hideout's list on this server only.
+     */
+    public void removeGangLocal (Handle name)
+    {
+        if (_hobj != null) {
+            _hobj.removeFromGangs(name);
+        }
+    }
+
     // documentation inherited from interface HideoutProvider
     public void formGang (ClientObject caller, Handle root, String suffix,
                           final HideoutService.ConfirmListener listener)
@@ -60,82 +104,37 @@ public class HideoutManager extends MatchHostManager
                 "[who=" + user.who() + ", gangId=" + user.gangId + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
+
         // make sure the suffix is in the approved set
         if (!NameFactory.getCreator().getGangSuffixes().contains(suffix)) {
             log.warning("Tried to form gang with invalid suffix [who=" +
                 user.who() + ", suffix=" + suffix + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
+
         // validate the root using the same rules as the BarberManager
         BarberManager.validateHandle(user, root);
-        
+
         // make sure the name isn't already in use
         Handle name = new Handle(root + " " + suffix);
         if (_hobj.gangs.containsKey(name)) {
             throw new InvocationException("m.duplicate_gang_name");
         }
-        
+
         // form the name and start up the financial action
         BangServer.gangmgr.formGang(user, name, listener);
     }
 
-    /**
-     * Adds an entry to the Hideout's list of gangs and broadcasts the addition to the server's
-     * peers (if any).
-     */
-    public void addGang (GangEntry entry)
-    {
-        addGangLocal(entry);
-        if (BangServer.peermgr != null) {
-            ((BangNodeObject)BangServer.peermgr.getNodeObject()).setAddedGang(entry);
-        }
-    }
-    
-    /**
-     * Removes an entry from the Hideout's list of gangs and broadcasts the removal to the server's
-     * peers (if any).
-     */
-    public void removeGang (Handle name)
-    {
-        removeGangLocal(name);
-        if (BangServer.peermgr != null) {
-            ((BangNodeObject)BangServer.peermgr.getNodeObject()).setRemovedGang(name);
-        }
-    }
-    
-    /**
-     * Adds an entry to the Hideout's list of gangs on this server only.
-     */
-    public void addGangLocal (GangEntry entry)
-    {
-        if (_hobj != null) {
-            _hobj.addToGangs(entry);
-        }
-    }
-    
-    /**
-     * Removes an entry from the Hideout's list on this server only.
-     */
-    public void removeGangLocal (Handle name)
-    {
-        if (_hobj != null) {
-            _hobj.removeFromGangs(name);
-        }
-    }
-    
     // documentation inherited from interface HideoutProvider
     public void leaveGang (ClientObject caller, final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure they're in a gang
-        final PlayerObject user = requireShopEnabled(caller);
-        verifyInGang(user);
-        
-        // remove them
-        BangServer.gangmgr.removeFromGang(
-            user.gangId, user.playerId, user.handle, null, listener);
+        // make sure they have access
+        PlayerObject user = requireShopEnabled(caller);
+
+        // pass it off to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).removeFromGang(
+            null, null, user.handle, listener);
     }
 
     // documentation inherited from interface HideoutProvider
@@ -143,10 +142,9 @@ public class HideoutManager extends MatchHostManager
                               final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure they're the leader of a gang
+        // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
-        verifyIsLeader(user);
-        
+
         // make sure the entries are valid
         if (statement == null || statement.length() > MAX_STATEMENT_LENGTH) {
             log.warning("Invalid statement [who=" + user.who() + ", statement=" +
@@ -157,188 +155,116 @@ public class HideoutManager extends MatchHostManager
             log.warning("Invalid URL [who=" + user.who() + ", url=" + url + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
-        // pass it off to the gang manager
-        BangServer.gangmgr.setStatement(user.gangId, statement, url, listener);
+
+        // pass it off to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).setStatement(
+            null, user.handle, statement, url, listener);
     }
-    
+
     // documentation inherited from interface HideoutProvider
     public void addToCoffers (ClientObject caller, final int scrip, final int coins,
                               final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure they're in a gang
+        // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
-        verifyInGang(user);
-        
+
         // make sure they can donate; we return a user-friendly message if not, even though they
         // shouldn't see the option, because their clock may not match up with ours
         if (!user.canDonate()) {
             throw new InvocationException("e.too_soon");
         }
-        
+
         // make sure the amounts are positive and that at least one is nonzero
         if (scrip < 0 || coins < 0 || scrip + coins == 0) {
             log.warning("Player tried to donate invalid amounts [who=" +
                 user.who() + ", scrip=" + scrip + ", coins=" + coins + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
-        // start up the financial action
-        BangServer.gangmgr.addToCoffers(user, scrip, coins, listener);
+
+        // pass it off to the gang handler
+        BangServer.gangmgr.requireGang(user.gangId).addToCoffers(
+            user, scrip, coins, listener);
     }
-    
+
     // documentation inherited from interface HideoutProvider
     public void expelMember (ClientObject caller, final Handle handle,
                              final HideoutService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure they can change the user's status
-        final PlayerObject user = requireShopEnabled(caller);
-        GangMemberEntry entry = verifyCanChange(user, handle);
-        
-        // remove them
-        BangServer.gangmgr.removeFromGang(
-            user.gangId, entry.playerId, handle, user.handle, listener);
+        // make sure they have access
+        PlayerObject user = requireShopEnabled(caller);
+
+        // pass it off to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).removeFromGang(
+            null, user.handle, handle, listener);
     }
-    
+
     // documentation inherited from interface HideoutProvider
     public void changeMemberRank (ClientObject caller, Handle handle, byte rank,
                                   HideoutService.ConfirmListener listener)
         throws InvocationException
     {
-        // make sure they can change the user's status
+        // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
-        GangMemberEntry entry = verifyCanChange(user, handle);
-        
+
         // make sure it's a valid rank
-        if (rank < 0 || rank >= RANK_COUNT || rank == entry.rank) {
+        if (rank < 0 || rank >= RANK_COUNT) {
             log.warning("Tried to change member to invalid rank [who=" + user.who() +
-                ", entry=" + entry + ", rank=" + rank + "].");
+                ", target=" + handle + ", rank=" + rank + "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
-        // change it
-        BangServer.gangmgr.changeMemberRank(
-            user.gangId, entry.playerId, entry.handle, user.handle, entry.rank, rank, listener);
+
+        // pass it on to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).changeMemberRank(
+            null, user.handle, handle, rank, listener);
     }
-    
+
     // documentation inherited from interface HideoutProvider
     public void getHistoryEntries (ClientObject caller, int offset,
                                    HideoutService.ResultListener listener)
         throws InvocationException
     {
-        // make sure they're in a gang
+        // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
-        verifyInGang(user);
-        
+
         // make sure the offset is valid
         if (offset < 0) {
             log.warning("Invalid history entry offset [who=" + user.who() + ", offset=" + offset +
                 "].");
             throw new InvocationException(INTERNAL_ERROR);
         }
-        
-        // fetch the entries from the database.  we ask for one more than we display on a page in
+
+        // pass it off to the gang handler.  we ask for one more than we display on a page in
         // order to find out if there are any on the previous page
-        BangServer.gangmgr.getHistoryEntries(
-            user.gangId, offset, HISTORY_PAGE_ENTRIES + 1, listener);
+        BangServer.gangmgr.requireGang(user.gangId).getHistoryEntries(
+            offset, HISTORY_PAGE_ENTRIES + 1, listener);
     }
-    
+
     // documentation inherited from interface HideoutProvider
     public void getOutfitQuote (ClientObject caller, OutfitArticle[] outfit,
                                 HideoutService.ResultListener listener)
         throws InvocationException
     {
-        // make sure they're the leader of a gang
+        // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
-        verifyIsLeader(user);
-        
-        // pass it on to the gang manager
-        BangServer.gangmgr.getOutfitQuote(user, outfit, listener);
+
+        // pass it on to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).processOutfits(
+            null, user.handle, outfit, false, user.tokens.isAdmin(), listener);
     }
-    
+
     // documentation inherited from interface HideoutProvider
     public void buyOutfits (ClientObject caller, OutfitArticle[] outfit,
                             HideoutService.ResultListener listener)
         throws InvocationException
     {
-        // make sure they're the leader of a gang
+        // make sure they have access
         PlayerObject user = requireShopEnabled(caller);
-        verifyIsLeader(user);
-        
-        // pass it on to the gang manager
-        BangServer.gangmgr.buyOutfits(user, outfit, listener);
-    }
-    
-    /**
-     * Verifies that the specified user can change the status (expel, change
-     * rank, etc.) of the identified other member, throwing an exception and
-     * logging a warning if not.
-     *
-     * @return the gang member's entry in the distributed object's member list,
-     * if the check succeeded
-     */
-    protected GangMemberEntry verifyCanChange (PlayerObject user, Handle handle)
-        throws InvocationException
-    {
-        // first things first
-        verifyInGang(user);
-        
-        // make sure the gang object exists and contains the member
-        GangObject gangobj =
-            (GangObject)BangServer.omgr.getObject(user.gangOid);
-        if (gangobj == null) {
-            log.warning("Gang object is null [who=" + user.who() +
-                ", gangId=" + user.gangId + ", gangOid = " +
-                user.gangOid + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
-        GangMemberEntry entry = gangobj.members.get(handle);
-        if (entry == null) {
-            log.warning("Gang member does not exist [who=" + user.who() +
-                ", gang=" + gangobj.which() + ", handle=" + handle + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
-        
-        // make sure they can change the status
-        if (!entry.canChangeStatus(user)) {
-            log.warning("Tried to change outranking member [who=" +
-                user.who() + ", gang=" + gangobj.which() + ", member=" +
-                entry + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
-        
-        // return the entry for the next step
-        return entry;
-    }
-    
-    /**
-     * Verifies that the specified user is a leader of a gang, throwing an
-     * exception and logging a warning if not.
-     */
-    protected void verifyIsLeader (PlayerObject user)
-        throws InvocationException
-    {
-        // first things first
-        verifyInGang(user); 
-        if (user.gangRank != LEADER_RANK) {
-            log.warning("User not gang leader [who=" + user.who() + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
-    }
-    
-    /**
-     * Verifies that the specified user is in a gang, throwing an exception
-     * and logging a warning if not.
-     */
-    protected void verifyInGang (PlayerObject user)
-        throws InvocationException
-    {
-        if (user.gangId <= 0) {
-            log.warning("User not in gang [who=" + user.who() + "].");
-            throw new InvocationException(INTERNAL_ERROR);
-        }
+
+        // pass it on to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).processOutfits(
+            null, user.handle, outfit, true, user.tokens.isAdmin(), listener);
     }
 
     @Override // from ShopManager
@@ -346,7 +272,7 @@ public class HideoutManager extends MatchHostManager
     {
         return "hideout";
     }
-    
+
     @Override // from PlaceManager
     protected PlaceObject createPlaceObject ()
     {
@@ -362,7 +288,7 @@ public class HideoutManager extends MatchHostManager
         _hobj = (HideoutObject)_plobj;
         _hobj.setService((HideoutMarshaller)
                          BangServer.invmgr.registerDispatcher(new HideoutDispatcher(this)));
-    
+
         // load up the gangs for the directory
         BangServer.gangmgr.loadGangs(new ResultListener<ArrayList<GangEntry>>() {
             public void requestCompleted (ArrayList<GangEntry> result) {
@@ -372,7 +298,7 @@ public class HideoutManager extends MatchHostManager
                 log.warning("Failed to load gang list [error=" + cause + "].");
             }
         });
-        
+
         // start up our top-ranked list refresher interval
         _rankval = new Interval(BangServer.omgr) {
             public void expired () {
@@ -399,7 +325,7 @@ public class HideoutManager extends MatchHostManager
             _rankval = null;
         }
     }
-    
+
     protected void refreshTopRanked ()
     {
         BangServer.invoker.postUnit(new Invoker.Unit() {
@@ -437,10 +363,10 @@ public class HideoutManager extends MatchHostManager
             protected ArrayList<TopRankedGangList> _lists;
         });
     }
-    
+
     protected HideoutObject _hobj;
     protected Interval _rankval;
-    
+
     /** The frequency with which we update the top-ranked gang lists. */
     protected static final long RANK_REFRESH_INTERVAL = 60 * 60 * 1000L;
 
