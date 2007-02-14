@@ -396,7 +396,7 @@
 
     <!-- TODO when the applet is NWO remove these lines -->
     <delete file="pages/incl/launch_open.html"/>
-    <delete file="client/getdown-retro-pro.jar"/>
+    <delete file="pages/client/getdown-retro-pro.jar"/>
 
     <!-- if we're generating packages, revert any modified model.properties files to -->
     <!-- avoid checkclean freakout -->
