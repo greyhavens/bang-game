@@ -58,8 +58,10 @@ while [ ! -z "$1" ]; do
     shift
 done
 
+CLIENT_MEMORY=128M
 CLASS=com.threerings.bang.client.BangApp
-eval $BANG_HOME/bin/bangjava -Dno_log_redir=true $JARGS $CLASS $ARGS
+eval $BANG_HOME/bin/bangjava -Dno_log_redir=true -mx$CLIENT_MEMORY \
+    $JARGS $CLASS $ARGS
 
 # restore key repeat, which LWJGL borks if the game crashes
 xset r on
