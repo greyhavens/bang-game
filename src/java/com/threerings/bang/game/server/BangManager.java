@@ -2667,7 +2667,10 @@ public class BangManager extends GameManager
                 }
                 for (StartingCard scard : removals) {
                     try {
-                        BangServer.itemrepo.deleteItem(scard.item, "played_last_card");
+                        // the item may have never been saved to the database
+                        if (scard.item.getItemId() != 0) {
+                            BangServer.itemrepo.deleteItem(scard.item, "played_last_card");
+                        }
                     } catch (PersistenceException pe) {
                         log.log(Level.WARNING, "Failed to delete played card " +
                                 "[item=" + scard.item + "]", pe);
