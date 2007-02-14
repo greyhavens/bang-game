@@ -4,6 +4,7 @@
 package com.threerings.bang.bounty.client;
 
 import com.jme.renderer.Renderer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.Label;
 import com.jmex.bui.text.BTextFactory;
@@ -38,6 +39,7 @@ public class BountyListEntry extends SelectableIcon
 
         _ctx = ctx;
         this.config = config;
+        _lock = ctx.loadImage("ui/office/lock.png");
 
         // create our various labels
         _labels = new Label[] {
@@ -54,6 +56,7 @@ public class BountyListEntry extends SelectableIcon
         // create our outlaw view (we'll configure it lazily)
         _oview = new OutlawView(ctx, 0.5f);
         _completed = config.isCompleted(_ctx.getUserObject());
+        _locked = !config.isAvailable(_ctx.getUserObject());
     }
 
     @Override // from BComponent
@@ -63,6 +66,7 @@ public class BountyListEntry extends SelectableIcon
         for (Label label : _labels) {
             label.wasAdded();
         }
+        _lock.reference();
 
         // start resolving our outlaw now that we're added (this will NOOP after the first time)
         _oview.reference();
@@ -77,6 +81,7 @@ public class BountyListEntry extends SelectableIcon
         for (Label label : _labels) {
             label.wasRemoved();
         }
+        _lock.release();
         _oview.release();
     }
 
@@ -117,6 +122,12 @@ public class BountyListEntry extends SelectableIcon
     {
         super.renderComponent(renderer);
 
+        if (_locked) {
+            int lx = LOCK_RECT.x + (LOCK_RECT.width - _lock.getWidth())/2;
+            int ly = LOCK_RECT.y + (LOCK_RECT.height - _lock.getHeight())/2;
+            _lock.render(renderer, lx, ly, _alpha);
+        }
+
         for (int ii = 0; ii < _labels.length; ii++) {
             if (_completed && (ii == 1 || ii == 2)) {
                 continue; // don't show the reward for completed bounties
@@ -129,12 +140,14 @@ public class BountyListEntry extends SelectableIcon
     }
 
     protected BangContext _ctx;
-    protected boolean _completed;
+    protected boolean _locked, _completed;
+    protected BImage _lock;
     protected Label[] _labels;
     protected BTextFactory[] _altfacts;
     protected OutlawView _oview;
 
     protected static final Point FRAME_LOC = new Point(40, 5);
+    protected static final Rectangle LOCK_RECT = new Rectangle(2, 0, 38, 88);
     protected static final Rectangle[] LABEL_RECTS = {
         new Rectangle(125, 51, 200, 30),
         new Rectangle(306, 51, 120, 30),
