@@ -41,7 +41,7 @@ public class BountyList extends BContainer
         // determine how many are unlocked/complete and decide which page on which to start
         int unlocked = 0, completed = 0;
         _selidx = bounties.size();
-        Star.Difficulty firstUnavail = null;
+        Star.Difficulty firstUnavail = null, highestAvail = null;
         for (int ii = 0; ii < bounties.size(); ii++) {
             BountyConfig config = bounties.get(ii);
             if (user.stats.containsValue(Stat.Type.BOUNTIES_COMPLETED, config.ident)) {
@@ -50,12 +50,14 @@ public class BountyList extends BContainer
                 unlocked++;
                 // select the first playable bounty
                 _selidx = Math.min(_selidx, ii);
-            } else if (type == BountyConfig.Type.TOWN) {
+                // note the highest available difficulty
+                highestAvail = config.difficulty;
+            } else if (type == BountyConfig.Type.TOWN && config.difficulty != highestAvail) {
                 continue; // don't show town bounties that are not yet unlocked
             } else if (firstUnavail != null && config.difficulty != firstUnavail) {
                 // only show one difficulty level beyond what's unlocked for most wanted bounties
                 continue;
-            } else if (firstUnavail == null) {
+            } else if (firstUnavail == null && config.difficulty != highestAvail) {
                 firstUnavail = config.difficulty;
             }
             _list.addIcon(new BountyListEntry(ctx, config));
@@ -84,6 +86,7 @@ public class BountyList extends BContainer
     protected void wasAdded ()
     {
         super.wasAdded();
+
         // select the bounty we noted for selection
         if (_selidx >= 0) {
             _list.displayPage(_selidx/BOUNTIES_PER_PAGE);

@@ -123,6 +123,9 @@ public class BountyConfig extends SimpleStreamableObject
         }
     }
 
+    /** The {@link #order} index of the last town bounty, which we treat specially. */
+    public static final int LAST_TOWN_BOUNTY = 4;
+
     /** The town in which this bounty is available. */
     public String townId;
 
@@ -190,26 +193,25 @@ public class BountyConfig extends SimpleStreamableObject
             return true;
 
         } else if (type == Type.MOST_WANTED) {
-            return user.holdsStar(BangUtil.getTownIndex(townId), difficulty);
+            if (!user.holdsStar(BangUtil.getTownIndex(townId), difficulty)) {
+                return false;
+            }
+            // fall through to last bounty check
 
         } else if (difficulty == Star.Difficulty.EASY) {
-            return true;
+            // fall through to last bounty check
 
         } else {
             Star.Difficulty level = Star.getPrevious(difficulty);
-            int cleared = 0;
-            StringSetStat completed = (StringSetStat)
-                user.stats.get(Stat.Type.BOUNTIES_COMPLETED.name());
-            if (completed != null) {
-                for (String ident : completed.values()) {
-                    BountyConfig config = getBounty(ident);
-                    if (config != null && config.difficulty == level) {
-                        cleared++;
-                    }
-                }
+            if (getClearedCount(user, level) < TOWN_CLEAR_PROGRESS) {
+                return false;
             }
-            return cleared >= TOWN_CLEAR_PROGRESS;
+            // fall through to last bounty check
         }
+
+        // the last bounty requires 3 of 4 to be cleared
+        return (order != LAST_TOWN_BOUNTY) ? true :
+            getClearedCount(user, difficulty) >= LAST_CLEAR_PROGRESS;
     }
 
     /**
@@ -424,6 +426,22 @@ public class BountyConfig extends SimpleStreamableObject
         return StringUtil.isBlank(image) ? null : "bounties/" + which + "/" + image;
     }
 
+    protected static int getClearedCount (PlayerObject user, Star.Difficulty level)
+    {
+        int cleared = 0;
+        StringSetStat completed = (StringSetStat)
+            user.stats.get(Stat.Type.BOUNTIES_COMPLETED.name());
+        if (completed != null) {
+            for (String ident : completed.values()) {
+                BountyConfig config = getBounty(ident);
+                if (config != null && config.difficulty == level) {
+                    cleared++;
+                }
+            }
+        }
+        return cleared;
+    }
+
     protected static void ensureBountiesLoaded ()
     {
         if (_configs.size() == 0) {
@@ -436,6 +454,9 @@ public class BountyConfig extends SimpleStreamableObject
 
     /** We cache all loaded bounty configs. */
     protected static HashMap<String,BountyConfig> _configs = new HashMap<String,BountyConfig>();
+
+    /** The number of bounties that must be cleared to unlock the final bounty in a level. */
+    protected static final int LAST_CLEAR_PROGRESS = 3;
 
     /** The number of Town Bounties that must be cleared to progress to the next level. */
     protected static final int TOWN_CLEAR_PROGRESS = 4;

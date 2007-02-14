@@ -5,6 +5,7 @@ package com.threerings.bang.bounty.client;
 
 import com.jme.renderer.Renderer;
 import com.jmex.bui.BImage;
+import com.jmex.bui.BLabel;
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.Label;
 import com.jmex.bui.text.BTextFactory;
@@ -19,6 +20,7 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.SelectableIcon;
 import com.threerings.bang.data.Star;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.util.BangUtil;
 
 import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.bounty.data.OfficeCodes;
@@ -43,20 +45,27 @@ public class BountyListEntry extends SelectableIcon
 
         // create our various labels
         _labels = new Label[] {
-            new Label(this), new Label(this), new Label(this), new Label(this), new Label(this)
+            new Label(this), new Label(this), new Label(this), new Label(this), new Label(this),
+            new Label(this)
         };
         MessageBundle msgs = ctx.getMessageManager().getBundle(OfficeCodes.OFFICE_MSGS);
         _labels[0].setText(config.title);
         _labels[1].setText(msgs.get("m.list_reward"));
         _labels[2].setText(config.reward.scrip + (config.reward.hasExtraReward() ? "+" : ""));
+        _labels[2].setFit(BLabel.Fit.SCALE);
         _labels[2].setIcon(BangUI.scripIcon);
         _labels[3].setText(msgs.get("m.list_games", String.valueOf(config.games.size())));
         _labels[4].setText(msgs.xlate(Star.getName(config.difficulty)));
+        _labels[5].setText(msgs.get("m.last_unlock"));
 
         // create our outlaw view (we'll configure it lazily)
         _oview = new OutlawView(ctx, 0.5f);
         _completed = config.isCompleted(_ctx.getUserObject());
         _locked = !config.isAvailable(_ctx.getUserObject());
+        int townIdx = BangUtil.getTownIndex(config.townId);
+        _lastLocked = _locked && (config.order == BountyConfig.LAST_TOWN_BOUNTY) &&
+            (config.type == BountyConfig.Type.TOWN ||
+             _ctx.getUserObject().holdsStar(townIdx, config.difficulty));
     }
 
     @Override // from BComponent
@@ -113,7 +122,7 @@ public class BountyListEntry extends SelectableIcon
     @Override // from BComponent
     protected BTextFactory getTextFactory (Label forLabel)
     {
-        return (forLabel == _labels[3] || forLabel == _labels[4]) ?
+        return (forLabel == _labels[3] || forLabel == _labels[4] || forLabel == _labels[5]) ?
             _altfacts[getState()] : getTextFactory();
     }
 
@@ -132,6 +141,9 @@ public class BountyListEntry extends SelectableIcon
             if (_completed && (ii == 1 || ii == 2)) {
                 continue; // don't show the reward for completed bounties
             }
+            if (!_lastLocked && (ii == 5)) {
+                continue; // don't show the last bounty locked message
+            }
             _labels[ii].render(renderer, LABEL_RECTS[ii].x, LABEL_RECTS[ii].y,
                                LABEL_RECTS[ii].width, LABEL_RECTS[ii].height, _alpha);
         }
@@ -140,7 +152,7 @@ public class BountyListEntry extends SelectableIcon
     }
 
     protected BangContext _ctx;
-    protected boolean _locked, _completed;
+    protected boolean _locked, _completed, _lastLocked;
     protected BImage _lock;
     protected Label[] _labels;
     protected BTextFactory[] _altfacts;
@@ -154,5 +166,6 @@ public class BountyListEntry extends SelectableIcon
         new Rectangle(420, 51, 65, 30),
         new Rectangle(125, 26, 100, 18),
         new Rectangle(125, 7, 100, 18),
+        new Rectangle(316, 7, 200, 37),
     };
 }
