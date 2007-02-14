@@ -96,7 +96,12 @@ public class BountyGameOverViewTest extends TestApp
             bangobj.awards[ii] = new Award();
             bangobj.awards[ii].pidx = bangobj.awards.length-ii-1;
             if (bangobj.awards[ii].pidx == 0) {
-                bangobj.awards[ii].item = Badge.Type.DISTANCE_MOVED_1.newBadge();
+                if (RandomUtil.getInt(100) > 50) {
+                    bangobj.awards[ii].item = Badge.Type.DISTANCE_MOVED_1.newBadge();
+                } else {
+                    bangobj.awards[ii].item =
+                        _ctx.getAvatarLogic().createDefaultClothing(user, true);
+                }
             }
             bangobj.awards[ii].rank = ii;
             bangobj.awards[ii].cashEarned = 500;

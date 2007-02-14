@@ -132,19 +132,25 @@ public class AwardView extends BContainer
         _scrip.setIcon(new ImageIcon(ctx.loadImage("ui/icons/big_scrip.png")));
         _table.add(_scrip);
 
-        if (award.item instanceof Badge) {
-            _badge = new BContainer(new BorderLayout());
-            _badge.setStyleClass("endgame_border");
-            txt = msgs.get("m.endgame_badge");
-            _badge.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
-            _badge.add(new ItemIcon(ctx, award.item), BorderLayout.CENTER);
-            String reward = ((Badge)award.item).getReward();
-            if (reward != null) {
-                txt = ctx.xlate(BangCodes.BADGE_MSGS, reward);
-                _badge.add(new BLabel(txt, "endgame_reward"), BorderLayout.SOUTH);
+        if (award.item != null) {
+            _item = new BContainer(new BorderLayout());
+            _item.setStyleClass("endgame_border");
+            if (award.item instanceof Badge) {
+                txt = msgs.get("m.endgame_badge");
+            } else {
+                txt = msgs.get("m.endgame_item");
             }
-            _badge.setAlpha(0f);
-            add(_badge);
+            _item.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
+            _item.add(new ItemIcon(ctx, award.item), BorderLayout.CENTER);
+            if (award.item instanceof Badge) {
+                String reward = ((Badge)award.item).getReward();
+                if (reward != null) {
+                    txt = ctx.xlate(BangCodes.BADGE_MSGS, reward);
+                    _item.add(new BLabel(txt, "endgame_reward"), BorderLayout.SOUTH);
+                }
+            }
+            _item.setAlpha(0f);
+            add(_item);
 
         } else if (!bconfig.rated && !isBounty) {
             BContainer bcont = new BContainer(new BorderLayout());
@@ -183,12 +189,12 @@ public class AwardView extends BContainer
                     _scrip.setText(_cfmt.format(user.scrip));
                     BangUI.play(BangUI.FeedbackSound.ITEM_PURCHASE);
                     _done = true;
-                    if (_badge != null) {
+                    if (_item != null) {
                         schedule(POST_ANIM_DELAY);
                     }
 
-                } else if (_badge != null) {
-                    _badge.setAlpha(1f);
+                } else if (_item != null) {
+                    _item.setAlpha(1f);
                     BangUI.play(BangUI.FeedbackSound.CHAT_SEND);
                 }
             }
@@ -208,7 +214,7 @@ public class AwardView extends BContainer
 
     protected BContainer _table;
     protected BLabel _scrip;
-    protected BContainer _badge;
+    protected BContainer _item;
     protected NumberFormat _cfmt = NumberFormat.getInstance();
 
     protected static final long PRE_ANIM_DELAY = 1000L;
