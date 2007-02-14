@@ -5,6 +5,10 @@
 BANG_HOME=`dirname $0`
 BANG_HOME=`cd $BANG_HOME/.. ; pwd`
 
+OUTPUT="$BANG_HOME/pages/boards.html"
+if [ ! -z "$1" ]; then
+  OUTPUT="$1"
+fi
+
 $BANG_HOME/bin/bangjava com.threerings.bang.tools.DumpBoards \
-    rsrc/boards/*/?/*.board | $BANG_HOME/bin/summarize_boards > \
-    $BANG_HOME/pages/boards.html
+    rsrc/boards/*/?/*.board | $BANG_HOME/bin/summarize_boards > $OUTPUT
