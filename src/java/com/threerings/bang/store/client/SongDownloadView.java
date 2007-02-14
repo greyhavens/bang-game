@@ -127,8 +127,8 @@ public class SongDownloadView extends BDecoratedWindow
         try {
             _action = "download";
             _copier = new SongDownloader(
-                new URL(DeploymentConfig.getDocBaseURL(), "/downloads/" + ident),
-                _song);
+                new URL("http", DeploymentConfig.getServerHost(_ctx.getUserObject().townId),
+                        "/downloads/" + ident), _song);
             _copier.start();
 
         } catch (Exception e) {
