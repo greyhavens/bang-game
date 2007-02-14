@@ -1,4 +1,4 @@
-525
+527
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
 female/clothing_back := dogsoldier := 503
@@ -94,6 +94,7 @@ female/familiar := mini_blimp := 386
 female/glasses := mask := 498
 female/glasses := round := 94
 female/glasses := steamgoggles := 336
+female/glasses := von_helmet_goggles := 527
 female/hair_back := back_curly := 191
 female/hair_back := back_fancy := 192
 female/hair_back := bangstraight := 95
@@ -357,6 +358,7 @@ male/glasses := goggles := 438
 male/glasses := mask := 502
 male/glasses := round := 8
 male/glasses := steamgoggles := 34
+male/glasses := von_helmet_goggles := 526
 male/hair_back := braids := 35
 male/hair_back := fro := 36
 male/hair_back := long_messy := 9
