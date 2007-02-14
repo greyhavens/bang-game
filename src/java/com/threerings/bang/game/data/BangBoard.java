@@ -565,7 +565,18 @@ public class BangBoard extends SimpleStreamableObject
      */
     public List<Point> computePath (int ox, int oy, Piece piece)
     {
-        return computePath (ox, oy, piece.x, piece.y, piece);
+        return computePath(ox, oy, piece, true);
+    }
+
+    /**
+     * Computes and returns a path from the specified coordinates to the supplied piece's current
+     * coordinates. Returns null if no path could be found.
+     *
+     * @param pdist if true, use the piece move distance
+     */
+    public List<Point> computePath (int ox, int oy, Piece piece, boolean pdist)
+    {
+        return computePath(ox, oy, piece.x, piece.y, piece, pdist);
     }
 
     /**
@@ -574,10 +585,19 @@ public class BangBoard extends SimpleStreamableObject
      */
     public List<Point> computePath (int ox, int oy, int dx, int dy, Piece piece)
     {
+        return computePath(ox, oy, dx, dy, piece, true);
+    }
+
+    /**
+     * Computes and returns a path from the specified coordinates to the supplied
+     * coordinates. Returns null if no path could be found.
+     */
+    public List<Point> computePath (int ox, int oy, int dx, int dy, Piece piece, boolean pdist)
+    {
 //         log.info("Computing path from " + ox + "/" + oy + " to " + piece.x + "/" + piece.y +
 //                  " maxdist:" + piece.getMoveDistance() + ".");
-        return AStarPathUtil.getPath(this, piece.getStepper(), piece, piece.getMoveDistance(),
-                                     ox, oy, dx, dy, false);
+        return AStarPathUtil.getPath(this, piece.getStepper(), piece,
+                pdist ? piece.getMoveDistance() : MAX_PATH, ox, oy, dx, dy, false);
     }
 
     /**
@@ -1800,4 +1820,7 @@ public class BangBoard extends SimpleStreamableObject
 
     /** Minimum delta for a tile to be considered sloping. */
     protected static final float MIN_SLOPE = 0.5f;
+
+    /** Maximum path distnace. */
+    protected static final int MAX_PATH = 50;
 }

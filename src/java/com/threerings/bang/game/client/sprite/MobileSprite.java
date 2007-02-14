@@ -48,10 +48,10 @@ public class MobileSprite extends ActiveSprite
 {
     /** Queued up when the sprite is teleported out of existence. */
     public static final String TELEPORTED_OUT = "__teleported_out__";
-    
+
     /** Queued up when the sprite is teleported back into existence. */
     public static final String TELEPORTED_IN = "__teleported_in__";
-    
+
     /** Normal movement. */
     public static final int MOVE_NORMAL = 0;
 
@@ -63,7 +63,7 @@ public class MobileSprite extends ActiveSprite
 
     /** Flying movement. */
     public static final String MOVE_FLYING = "flying";
-    
+
     /**
      * Creates a mobile sprite with the specified model type and name.
      */
@@ -71,7 +71,7 @@ public class MobileSprite extends ActiveSprite
     {
         super(type, name);
     }
-    
+
     /**
      * Called to inform us that we will be shooting the specified target
      * sprite when we finish our path.
@@ -219,7 +219,7 @@ public class MobileSprite extends ActiveSprite
             setLocalTranslation(pos);
         }
     }
-    
+
     /**
      * Called whenever this sprite is moved to a new point along a path.
      */
@@ -246,12 +246,12 @@ public class MobileSprite extends ActiveSprite
     public void checkMoveSound (String msg)
     {
         if (_moveSound != null && _moveSound.isPlaying()) {
-            log.warning("Move sound playing when " + msg + " [piece=" + 
+            log.warning("Move sound playing when " + msg + " [piece=" +
                     _piece + "]");
             stopMoveSound();
         }
     }
-    
+
     /**
      * Adds any procedural actions for this sprite.
      */
@@ -288,7 +288,7 @@ public class MobileSprite extends ActiveSprite
             }
         });
     }
-    
+
     @Override // documentation inherited
     protected void createGeometry ()
     {
@@ -384,7 +384,7 @@ public class MobileSprite extends ActiveSprite
             _moveSound.loop(false);
         }
     }
-    
+
     /**
      * Stops looping the move sound.
      */
@@ -408,7 +408,7 @@ public class MobileSprite extends ActiveSprite
             _dust.setReleaseRate(0);
         }
     }
-    
+
     /**
      * Returns an array of sound identifiers that will be preloaded for this
      * mobile sprite. These are assumed to be relative to rsrc/type/name/.
@@ -440,7 +440,7 @@ public class MobileSprite extends ActiveSprite
                 move(path);
                 _px = _piece.x;
                 _py = _piece.y;
-                
+
             } else {
                 setLocation(board, _piece.x, _piece.y);
             }
@@ -455,7 +455,7 @@ public class MobileSprite extends ActiveSprite
     {
         List<Point> path = null;
         if (board != null) {
-            path = board.computePath(_px, _py, _piece);
+            path = board.computePath(_px, _py, _piece, _moveAction != MOVE_PUSH);
         }
 
         if (path != null) {
@@ -522,7 +522,7 @@ public class MobileSprite extends ActiveSprite
     /**
      * Sets the coordinate in the given array at the specified index.
      */
-    protected void setCoord (BangBoard board, Vector3f[] coords, int idx, 
+    protected void setCoord (BangBoard board, Vector3f[] coords, int idx,
                              int nx, int ny, boolean moving)
     {
         coords[idx] = new Vector3f();
@@ -536,7 +536,7 @@ public class MobileSprite extends ActiveSprite
     protected void updateHighlight ()
     {
         super.updateHighlight();
-        
+
         if (_dust != null && isMoving()) {
             _dust.getOriginOffset().set(localTranslation);
             ColorRGBA start = _dust.getStartColor();
