@@ -3,8 +3,10 @@
 
 package com.threerings.bang.bounty.client;
 
+import com.jme.renderer.Renderer;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -37,6 +39,7 @@ public class BountyDetailView extends BContainer
     {
         super(new AbsoluteLayout());
         _ctx = ctx;
+        _claimed = ctx.loadImage("ui/office/claimed.png");
 
         add(_oview = new OutlawView(ctx, 1f), new Point(55, 272));
         add(_reward = new BLabel("", "bounty_detail_reward"), new Point(263, 438));
@@ -69,7 +72,8 @@ public class BountyDetailView extends BContainer
         }
 
         _config = ((BountyListEntry)icon).config;
-        _oview.setOutlaw(_ctx, _config.getOutlaw(), _config.isCompleted(_ctx.getUserObject()));
+        _completed = _config.isCompleted(_ctx.getUserObject());
+        _oview.setOutlaw(_ctx, _config.getOutlaw(), _completed);
         _reward.setText(_config.reward.scrip + (_config.reward.hasExtraReward() ? "+" : ""));
         _title.setText(_config.title);
         _descrip.setText(_config.description);
@@ -101,8 +105,6 @@ public class BountyDetailView extends BContainer
             }
             _games.add(row);
         }
-
-        // TODO: display recent finishers
     }
 
     // from interface ActionListener
@@ -119,9 +121,35 @@ public class BountyDetailView extends BContainer
         });
     }
 
+    @Override // from BComponent
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        _claimed.reference();
+    }
+
+    @Override // from BComponent
+    protected void wasRemoved ()
+    {
+        super.wasRemoved();
+        _claimed.release();
+    }
+
+    @Override // from BComponent
+    protected void renderComponent (Renderer renderer)
+    {
+        super.renderComponent(renderer);
+        if (_completed) {
+            _claimed.render(renderer, 250, 458, _alpha);
+        }
+    }
+
     protected BangContext _ctx;
     protected OfficeObject _offobj;
     protected BountyConfig _config;
+
+    protected boolean _completed;
+    protected BImage _claimed;
 
     protected OutlawView _oview;
     protected BLabel _reward, _title, _descrip;
