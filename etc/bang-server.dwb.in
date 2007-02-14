@@ -14,4 +14,12 @@
     PostInstall     @SCRIPTPATH@/bang-server-postinst
     # PreUninstall    path/to/preuninstall/script
     PostUninstall   @SCRIPTPATH@/bang-server-postrm
+
+    # data/downloads is written to for temp downloads
+    <Permissions>
+        Path        @PREFIX@/data/downloads
+        User        @APPUSER@
+        Group       @APPUSER@
+        Recursive   yes
+    </Permissions>
 </Package>

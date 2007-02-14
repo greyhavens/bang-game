@@ -863,6 +863,7 @@
     </antcall>
     <antcall target="prepare-server-rcscript"/>
     <mkdir dir="${pkg.base}/data"/>
+    <mkdir dir="${pkg.base}/data/downloads"/>
     <copy todir="${pkg.base}/data">
       <fileset dir="data" includes="soundtrack/*.mp3"/>
     </copy>
