@@ -64,12 +64,6 @@ public class StarGood extends Good
     @Override // documentation inherited
     public boolean isAvailable (PlayerObject user)
     {
-        // TEMP: disable for normal peeps
-        if (!(user.tokens.isInsider() || user.tokens.isAdmin())) {
-            return false;
-        }
-        // TEMP
-
         // make sure we don't already have it
         if (user.holdsStar(_townIdx, _difficulty)) {
             return false;
