@@ -549,6 +549,10 @@
        <sysproperty key="no_unpack_resources" value="true"/>
        <sysproperty key="resource_dir" value="${basedir}/rsrc"/>
     </java>
+    <java classpathref="tool.classpath" failonerror="true" output="${pages.out}/ft_bounties.html"
+          fork="true" classname="com.threerings.bang.bounty.tools.SummarizeBounties">
+       <arg value="frontier_town"/>
+    </java>
     <exec executable="${basedir}/bin/update_board_summary">
       <arg value="${pages.out}/boards.html"/>
     </exec>
