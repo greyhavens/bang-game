@@ -17,6 +17,7 @@ import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
 import com.samskivert.util.Invoker;
 import com.samskivert.util.LoggingLogProvider;
+import com.samskivert.util.ObserverList;
 import com.samskivert.util.OneLineLogFormatter;
 import com.samskivert.util.Tuple;
 
@@ -90,6 +91,28 @@ import static com.threerings.bang.Log.log;
  */
 public class BangServer extends CrowdServer
 {
+    /**
+     * Implemented by objects that wish to be notified when players log on and off,
+     * or changes their handle.
+     */
+    public static interface PlayerObserver
+    {
+        /**
+         * Called when a player logs on.
+         */
+        public void playerLoggedOn (PlayerObject user);
+
+        /**
+         * Called when a player logs off.
+         */
+        public void playerLoggedOff (PlayerObject user);
+
+        /**
+         * Called when a player changes their handle.
+         */
+        public void playerChangedHandle (PlayerObject user, Handle oldHandle);
+    }
+
     /** The connection provider used to obtain access to our JDBC
      * databases. */
     public static ConnectionProvider conprov;
@@ -405,6 +428,22 @@ public class BangServer extends CrowdServer
     }
 
     /**
+     * Registers a player observer.
+     */
+    public static void addPlayerObserver (PlayerObserver observer)
+    {
+        _playobs.add(observer);
+    }
+
+    /**
+     * Removes a player observer registration.
+     */
+    public static void removePlayerObserver (PlayerObserver observer)
+    {
+        _playobs.remove(observer);
+    }
+
+    /**
      * Returns the player object for the specified user if they are online currently, null
      * otherwise. This should only be called from the dobjmgr thread.
      */
@@ -432,28 +471,61 @@ public class BangServer extends CrowdServer
     }
 
     /**
-     * Called when a player starts their session (or after they choose a handle for players on
-     * their first session) to associate the handle with the player's distributed object.
+     * Called when a player starts their session to associate the handle with the player's
+     * distributed object.
      */
-    public static void registerPlayer (PlayerObject player)
+    public static void registerPlayer (final PlayerObject player)
     {
         _players.put(player.handle, player);
         _playerIds.put(player.playerId, player);
 
         // update our players online count in the status object
         adminmgr.statobj.setPlayersOnline(clmgr.getClientCount());
+
+        // notify our player observers
+        _playobs.apply(new ObserverList.ObserverOp<PlayerObserver>() {
+            public boolean apply (PlayerObserver observer) {
+                observer.playerLoggedOn(player);
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Called when a player sets their handle for the first time, or changes it later on,
+     * to change the handle association.
+     */
+    public static void updatePlayer (final PlayerObject player, final Handle oldHandle)
+    {
+        _players.put(player.handle, player);
+
+        // notify our player observers
+        _playobs.apply(new ObserverList.ObserverOp<PlayerObserver>() {
+            public boolean apply (PlayerObserver observer) {
+                observer.playerChangedHandle(player, oldHandle);
+                return true;
+            }
+        });
     }
 
     /**
      * Called when a player ends their session to clear their handle to player object mapping.
      */
-    public static void clearPlayer (PlayerObject player)
+    public static void clearPlayer (final PlayerObject player)
     {
         _players.remove(player.handle);
         _playerIds.remove(player.playerId);
 
         // update our players online count in the status object
         adminmgr.statobj.setPlayersOnline(clmgr.getClientCount());
+
+        // notify our player observers
+        _playobs.apply(new ObserverList.ObserverOp<PlayerObserver>() {
+            public boolean apply (PlayerObserver observer) {
+                observer.playerLoggedOff(player);
+                return true;
+            }
+        });
     }
 
     /**
@@ -550,6 +622,9 @@ public class BangServer extends CrowdServer
 
     protected static HashMap<Handle,PlayerObject> _players = new HashMap<Handle,PlayerObject>();
     protected static HashIntMap<PlayerObject> _playerIds = new HashIntMap<PlayerObject>();
+
+    protected static ObserverList<PlayerObserver> _playobs =
+        new ObserverList<PlayerObserver>(ObserverList.FAST_UNSAFE_NOTIFY);
 
     protected static File _logdir = new File(ServerConfig.serverRoot, "log");
     protected static AuditLogger _glog = createAuditLog("server");

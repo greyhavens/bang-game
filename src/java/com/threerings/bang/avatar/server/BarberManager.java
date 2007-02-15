@@ -334,11 +334,12 @@ public class BarberManager extends ShopManager
                     cl.requestFailed(_error);
                 } else {
                     user.addToLooks(look);
+                    Handle ohandle = user.handle;
                     user.setHandle(handle);
                     user.addToInventory(article);
                     // register the player with their handle as we were unable
                     // to do so when they logged on
-                    BangServer.registerPlayer(user);
+                    BangServer.updatePlayer(user, ohandle);
                     cl.requestProcessed();
                 }
             }
@@ -474,7 +475,9 @@ public class BarberManager extends ShopManager
         }
 
         protected void actionCompleted () {
+            Handle ohandle = _user.handle;
             _user.setHandle(_handle);
+            BangServer.updatePlayer(_user, ohandle);
             _listener.requestProcessed();
         }
         protected void actionFailed (String cause) {

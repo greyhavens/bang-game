@@ -51,6 +51,7 @@ import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangPeerManager.RemotePlayerObserver;
 import com.threerings.bang.server.BangServer;
+import com.threerings.bang.server.BangServer.PlayerObserver;
 import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.PeerFinancialAction;
 import com.threerings.bang.server.persist.ProxyFinancialAction;
@@ -76,7 +77,7 @@ import static com.threerings.bang.Log.*;
  * Manages a single gang from resolution to destruction.
  */
 public class GangHandler
-    implements ClientObserver, RemotePlayerObserver, SetListener, ObjectDeathListener,
+    implements PlayerObserver, RemotePlayerObserver, SetListener, ObjectDeathListener,
         GangPeerProvider, GangCodes
 {
     /**
@@ -213,23 +214,22 @@ public class GangHandler
         return (_gangobj == null ? "" : (_gangobj.name + " ")) + "(" + _gangId + ")";
     }
 
-    // documentation inherited from interface ClientObserver
-    public void clientSessionDidStart (PresentsClient client)
+    // documentation inherited from interface PlayerObserver
+    public void playerLoggedOn (PlayerObject user)
     {
-        // make sure it's not a peer
-        Object clobj = client.getClientObject();
-        if (clobj instanceof PlayerObject) {
-            playerLocationChanged(((PlayerObject)clobj).handle, ServerConfig.townIndex);
-        }
+        playerLocationChanged(user.handle, ServerConfig.townIndex);
     }
 
-    // documentation inherited from interface ClientObserver
-    public void clientSessionDidEnd (PresentsClient client)
+    // documentation inherited from interface PlayerObserver
+    public void playerLoggedOff (PlayerObject user)
     {
-        Object clobj = client.getClientObject();
-        if (clobj instanceof PlayerObject) {
-            playerLocationChanged(((PlayerObject)clobj).handle, -1);
-        }
+        playerLocationChanged(user.handle, -1);
+    }
+
+    // documentation inherited from interface PlayerObserver
+    public void playerChangedHandle (PlayerObject user, Handle handle)
+    {
+        // TODO: handle this sensibly
     }
 
     // documentation inherited from interface RemotePlayerObserver
@@ -940,18 +940,9 @@ public class GangHandler
 
         // find out which members are online (and listen for updates)
         for (GangMemberEntry entry : _gangobj.members) {
-            PlayerObject user = BangServer.lookupPlayer(entry.handle);
-            if (user != null) {
-                entry.townIdx = (byte)ServerConfig.townIndex;
-                continue;
-            }
-            Tuple<BangClientInfo, Integer> result =
-                BangServer.peermgr.locateRemotePlayer(entry.handle);
-            if (result != null) {
-                entry.townIdx = result.right.byteValue();
-            }
+            initTownIndex(entry);
         }
-        BangServer.clmgr.addClientObserver(this);
+        BangServer.addPlayerObserver(this);
         BangServer.peermgr.addPlayerObserver(this);
 
         // register the service for peers
@@ -1123,7 +1114,7 @@ public class GangHandler
         _rankval.cancel();
         _unloadval.cancel();
 
-        BangServer.clmgr.removeClientObserver(this);
+        BangServer.removePlayerObserver(this);
         BangServer.peermgr.removePlayerObserver(this);
 
         BangServer.invmgr.clearDispatcher(_gangobj.gangPeerService);
@@ -1173,10 +1164,33 @@ public class GangHandler
                     handle, _gangobj.name));
         }
         if (mrec != null) {
-            _gangobj.addToMembers(
-                new GangMemberEntry(handle, playerId, MEMBER_RANK, mrec.joined, 0));
+            GangMemberEntry entry =
+                new GangMemberEntry(handle, playerId, MEMBER_RANK, mrec.joined, 0);
+            initTownIndex(entry);
+            _gangobj.addToMembers(entry);
+            if (entry.townIdx == -1) {
+                maybeScheduleUnload();
+            } else {
+                maybeCancelUnload();
+            }
         }
         listener.requestProcessed();
+    }
+
+    /**
+     * Sets the town index for the supplied member entry based on where the member is
+     * logged in (if anywhere).
+     */
+    protected void initTownIndex (GangMemberEntry entry)
+    {
+        PlayerObject user = BangServer.lookupPlayer(entry.handle);
+        if (user != null) {
+            entry.townIdx = (byte)ServerConfig.townIndex;
+            return;
+        }
+        Tuple<BangClientInfo, Integer> result =
+            BangServer.peermgr.locateRemotePlayer(entry.handle);
+        entry.townIdx = (result == null) ? -1 : result.right.byteValue();
     }
 
     /**
