@@ -65,40 +65,7 @@ public class ClaimJumping extends Scenario
     public ClaimJumping ()
     {
         registerDelegate(new TrainDelegate());
-        registerDelegate(new NuggetDelegate(true, NUGGET_COUNT) {
-            public void tick (BangObject bangobj, short tick) {
-                super.tick(bangobj, tick);
-
-                // if we're not at least half-way through the round, don't do
-                // our empty claim calculations
-                if (bangobj.tick < bangobj.duration/2) {
-                    return;
-                }
-
-                // check to see if there are empty claims
-                boolean empty = false;
-                for (Counter claim : _counters) {
-                    if (claim.count == 0) {
-                        empty = true;
-                        break;
-                    }
-                }
-
-                // if we are not already ending early, and one or more claims
-                // are empty, adjust the lastTick...
-                short realLastTick = (short)(bangobj.duration - 1);
-                if (bangobj.lastTick == realLastTick && empty) {
-                    short lastTick = (short)(tick + EMPTY_CLAIM_TICKS);
-                    if (lastTick < realLastTick) {
-                        bangobj.setLastTick(lastTick);
-                    }
-
-                // ...if no claims are empty clear the early ending tick
-                } else if (bangobj.lastTick != realLastTick && !empty) {
-                    bangobj.setLastTick(realLastTick);
-                }
-            }
-        });
+        registerDelegate(new NuggetDelegate(true, NUGGET_COUNT));
         registerDelegate(new RespawnDelegate());
     }
 
@@ -134,7 +101,7 @@ public class ClaimJumping extends Scenario
         Arrays.fill(weights, 1);
 
         int placed = 0;
-        for (int ii = 0; (ii < bangobj.players.length) && 
+        for (int ii = 0; (ii < bangobj.players.length) &&
                     (ii < weights.length); ii++) {
             int idx = RandomUtil.getWeightedIndex(weights);
             Bonus nugget = dropBonus(bangobj, NuggetEffect.NUGGET_BONUS,
