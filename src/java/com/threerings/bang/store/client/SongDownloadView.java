@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.logging.Level;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
@@ -68,7 +69,8 @@ public class SongDownloadView extends BDecoratedWindow
 
         add(_main = new BLabel(_msgs.get("m.download_info")), GroupLayout.FIXED);
         add(new BLabel(ctx.xlate(BangCodes.GOODS_MSGS, "m.song_" + song)), GroupLayout.FIXED);
-        add(_note = new BLabel(_msgs.get("m.download_tip"), "song_note"), GroupLayout.FIXED);
+        add(_note = new BLabel(_msgs.get("m.download_agree"), "song_note"), GroupLayout.FIXED);
+        add(_agree = new BCheckBox(_msgs.get("m.download_iagree")));
 
         BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         buttons.add(_actbtn = new BButton(_msgs.get("m.start_download"), this, "start"));
@@ -78,6 +80,15 @@ public class SongDownloadView extends BDecoratedWindow
         // if the song is already downloaded, switch straight to copy mode
         if (songDownloaded(song)) {
             setCopyMode();
+
+        } else {
+            // otherwise wire up the terms and conditions agreement button
+            _actbtn.setEnabled(false);
+            _agree.addListener(new ActionListener() {
+                public void actionPerformed (ActionEvent event) {
+                    _actbtn.setEnabled(_agree.isSelected());
+                }
+            });
         }
     }
 
@@ -90,6 +101,7 @@ public class SongDownloadView extends BDecoratedWindow
             startDownload();
 
         } else if (event.getAction().equals("copy")) {
+            _agree.setEnabled(false);
             startCopy();
 
         } else if (event.getAction().equals("dismiss")) {
@@ -125,6 +137,7 @@ public class SongDownloadView extends BDecoratedWindow
     protected void actuallyStartDownload (String ident)
     {
         try {
+            _note.setText(_msgs.get("m.download_note"));
             _action = "download";
             _copier = new SongDownloader(
                 new URL("http", DeploymentConfig.getServerHost(_ctx.getUserObject().townId),
@@ -172,6 +185,7 @@ public class SongDownloadView extends BDecoratedWindow
     {
         _main.setText(_msgs.get("m.download_complete"));
         _note.setText(_msgs.get("m.download_copy"));
+        _agree.setVisible(false);
         _actbtn.setText(_msgs.get("m.copy_to_desktop"));
         _actbtn.setAction("copy");
         _actbtn.setEnabled(true);
@@ -351,6 +365,7 @@ public class SongDownloadView extends BDecoratedWindow
     protected String _action;
 
     protected BLabel _main, _note;
+    protected BCheckBox _agree;
     protected BButton _actbtn;
 
     /** A cache tracking which songs have been downloaded to avoid repeat lookups. */
