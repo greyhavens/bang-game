@@ -37,7 +37,7 @@ public class Train extends Piece
 
     /** A car carrying coal. */
     public static final byte COAL_CAR = 4;
-    
+
     /** The types of cars to insert between the engine and the caboose. */
     public static final byte[] CAR_TYPES =
         { CATTLE_CAR, FREIGHT_CAR, COAL_CAR };
@@ -56,10 +56,10 @@ public class Train extends Piece
 
     /** The connected track group on which this train lies. */
     public int group;
-    
+
     /** The path being followed by the train, if any. */
     public transient List<Point> path;
-    
+
     /**
      * Attempts to find a path from the train's next position to the given
      * destination.
@@ -71,7 +71,7 @@ public class Train extends Piece
     {
         if (nextX == UNSET || dest.intersects(nextX, nextY)) {
             // we're about to disappear, or that's already where we're going
-            return null; 
+            return null;
         }
         AStarPathUtil.TraversalPred tpred = new AStarPathUtil.TraversalPred() {
             public boolean canTraverse (Object traverser, int x, int y) {
@@ -94,7 +94,7 @@ public class Train extends Piece
         }
         return path;
     }
-    
+
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {
@@ -104,7 +104,7 @@ public class Train extends Piece
     @Override // documentation inherited
     public boolean preventsOverlap (Piece lapper)
     {
-        return !(lapper.isAirborne() || lapper instanceof Track ||
+        return !(lapper.isAirborne() || lapper instanceof Track || lapper instanceof Marker ||
             lapper instanceof Bonus || lapper instanceof Prop);
     }
 
@@ -114,7 +114,7 @@ public class Train extends Piece
         // don't punt bonuses here; we'll do it in the TrainDelegate
         return NO_EFFECTS;
     }
-    
+
     @Override // documentation inherited
     public PieceSprite createSprite ()
     {
