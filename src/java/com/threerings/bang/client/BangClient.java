@@ -1080,9 +1080,8 @@ public class BangClient extends BasicClient
     protected void setMainView (final BWindow view)
     {
         // if the view is a game view, fade out the current music as we fade out the current view
-        if (view instanceof BangView && _mstream != null) {
-            _mstream.fadeOut(0.5f, true);
-            _mstream = null;
+        if (view instanceof BangView) {
+            fadeOutMusic(0.5f);
         }
 
         // if we have an existing main view, fade that out
