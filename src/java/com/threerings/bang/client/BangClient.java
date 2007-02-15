@@ -286,7 +286,7 @@ public class BangClient extends BasicClient
 
             // if it's just bang-install then return empty string (no affiliate)
             if (name.indexOf("bang-install") != -1) {
-                return "";
+                return null;
             }
 
             // otherwise return the whole thing
