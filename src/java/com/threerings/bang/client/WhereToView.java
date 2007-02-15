@@ -201,7 +201,7 @@ public class WhereToView extends BDecoratedWindow
         if (plusPractice) {
             BButton practice = new BButton(_msgs.get("m.tut_practice"), this, tutorials[idx+1]);
             practice.setStyleClass("alt_button");
-            practice.setEnabled(enabled);
+            practice.setEnabled(!unplayed);
             box.add(practice);
         } else {
             box.add(new BLabel(""));
