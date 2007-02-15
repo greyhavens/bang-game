@@ -18,6 +18,7 @@ import com.threerings.bang.data.Star;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.game.data.BangAI;
 import com.threerings.bang.game.data.BangConfig;
+import com.threerings.bang.game.data.GameCodes;
 
 import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.bounty.data.OfficeCodes;
@@ -96,6 +97,9 @@ public class SummarizeBounties
         System.out.println("<tr style='border-top: 1px solid'>" +
                            "<td valign='top'><i>" + game.name + "</i><br>");
         System.out.println("<font size='-1'>");
+        String smsg = "m.scenario_" + gconfig.rounds.get(0).scenario;
+        System.out.print("<b>" + _msgmgr.getBundle(GameCodes.GAME_MSGS).get(smsg) + "</b> " +
+                         gconfig.rounds.get(0).board);
         String[] players = new String[gconfig.plist.size()];
         for (int ii = 0; ii < players.length; ii++) {
             BangAI ai = config.getOpponent(game.ident, gconfig.plist.size(), ii, new BangAI());
