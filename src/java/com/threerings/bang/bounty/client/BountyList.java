@@ -37,7 +37,7 @@ public class BountyList extends BContainer
 
         // enumerate our available bounties
         PlayerObject user = _ctx.getUserObject();
-        ArrayList<BountyConfig> bounties = BountyConfig.getTownBounties(user.townId, type);
+        ArrayList<BountyConfig> bounties = BountyConfig.getBounties(user.townId, type);
 
         // determine how many are unlocked/complete and decide which page on which to start
         int unlocked = 0, completed = 0;

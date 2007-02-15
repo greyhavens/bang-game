@@ -99,8 +99,7 @@ public class OfficeManager extends ShopManager
         BangServer.invoker.postUnit(new Invoker.Unit() {
             public boolean invoke () {
                 try {
-                    String path = "bounties/" + ServerConfig.townId + "/" +
-                        config.type.toString().toLowerCase() + "/" + key + ".game";
+                    String path = config.getGamePath(key);
                     _gconfig = (BangConfig)BinaryImporter.getInstance().load(
                         BangServer.rsrcmgr.getResource(path));
                 } catch (Exception e) {

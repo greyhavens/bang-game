@@ -174,7 +174,7 @@ public class BountyConfig extends SimpleStreamableObject
     /**
      * Returns a sorted list of all bounties for the specified town and type.
      */
-    public static ArrayList<BountyConfig> getTownBounties (String townId, Type type)
+    public static ArrayList<BountyConfig> getBounties (String townId, Type type)
     {
         ensureBountiesLoaded();
         ArrayList<BountyConfig> matches = new ArrayList<BountyConfig>();
@@ -237,6 +237,15 @@ public class BountyConfig extends SimpleStreamableObject
             }
         }
         return null;
+    }
+
+    /**
+     * Returns the resource path to the specified game definition file.
+     */
+    public String getGamePath (String game)
+    {
+        return "bounties/" + townId + "/" + type.toString().toLowerCase() + "/" +
+            ident + "/" + game + ".game";
     }
 
     /**

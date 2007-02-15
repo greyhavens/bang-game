@@ -140,8 +140,7 @@ public class UnitConfig
     public static String getName (String type)
     {
         int slidx = type.lastIndexOf("/");
-        return MessageBundle.qualify(
-            BangCodes.UNITS_MSGS, "m." + type.substring(slidx+1));
+        return MessageBundle.qualify(BangCodes.UNITS_MSGS, "m." + type.substring(slidx+1));
     }
 
     /** Returns a translatable tooltip for the specified unit type. */
