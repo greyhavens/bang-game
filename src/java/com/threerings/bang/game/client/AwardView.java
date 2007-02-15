@@ -173,7 +173,7 @@ public class AwardView extends BContainer
                     BangUI.play(BangUI.FeedbackSound.CHAT_RECEIVE);
                     schedule(INTER_ANIM_DELAY);
 
-                } else if (_cscrip == 0) {
+                } else if (_cscrip == -1) {
                     _cscrip = scrip;
                     setVisible(++_step);
                     BangUI.play(BangUI.FeedbackSound.CHAT_RECEIVE);
@@ -199,7 +199,7 @@ public class AwardView extends BContainer
                 }
             }
 
-            protected int _step, _cscrip;
+            protected int _step, _cscrip = -1;
             protected boolean _done;
         }.schedule(PRE_ANIM_DELAY);
     }
