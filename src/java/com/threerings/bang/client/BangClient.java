@@ -284,6 +284,11 @@ public class BangClient extends BasicClient
                 return m.group(1);
             }
 
+            // if it's just bang-install then return empty string (no affiliate)
+            if (name.indexOf("bang-install") != -1) {
+                return "";
+            }
+
             // otherwise return the whole thing
             return name;
 
