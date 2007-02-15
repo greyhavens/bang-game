@@ -76,7 +76,7 @@ public class BountyConfig extends SimpleStreamableObject
 
         /** Returns true if no required configuration is missing. */
         public boolean isValid () {
-            return !StringUtil.isBlank(text);
+            return text != null; // blank is OK, it means we won't use it
         }
     }
 
@@ -152,6 +152,9 @@ public class BountyConfig extends SimpleStreamableObject
 
     /** An avatar for the outlaw. */
     public AvatarInfo outlaw = new AvatarInfo();
+
+    /** Whether to show bars over the outlaw when completed. */
+    public boolean showBars = true;
 
     /** The names of our game definition files. */
     public ArrayList<GameInfo> games = new ArrayList<GameInfo>();
@@ -338,6 +341,7 @@ public class BountyConfig extends SimpleStreamableObject
         config.inOrder = BangUtil.getBooleanProperty(which, props, "in_order", config.inOrder);
         config.outlaw.print = StringUtil.parseIntArray(props.getProperty("outlaw_print", ""));
         config.outlaw.image = getImageProperty(which, props, "outlaw_image");
+        config.showBars = !BangUtil.getBooleanProperty(which, props, "no_bars", false);
         config.title = props.getProperty("title", "");
         config.description = props.getProperty("descrip", "");
 

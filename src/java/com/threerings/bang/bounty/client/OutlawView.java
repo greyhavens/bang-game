@@ -41,9 +41,11 @@ public class OutlawView extends BComponent
             null };
     }
 
-    public void setOutlaw (BasicContext ctx, BountyConfig.Opponent outlaw, boolean completed)
+    public void setOutlaw (BasicContext ctx, BountyConfig.Opponent outlaw, boolean completed,
+                           boolean showBars)
     {
         _completed = completed;
+        _showBars = showBars;
         if (_outlaw != null && _outlaw.name.equals(outlaw.name)) {
             return;
         }
@@ -88,7 +90,7 @@ public class OutlawView extends BComponent
             _images[FRAME].render(renderer, x, y, alpha);
         }
         if (_scale == 1f) {
-            if (_completed) {
+            if (_completed && _showBars) {
                 _images[BARS].render(renderer, 0, 0, alpha);
             } else {
                 _images[SEPIA].render(renderer, x, y, alpha * 0.3f);
@@ -143,7 +145,7 @@ public class OutlawView extends BComponent
     }
 
     protected BImage[] _images;
-    protected boolean _added, _completed;
+    protected boolean _added, _completed, _showBars;
     protected float _scale;
     protected BountyConfig.Opponent _outlaw;
 

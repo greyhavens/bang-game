@@ -14,6 +14,7 @@ import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.Interval;
+import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
@@ -200,8 +201,13 @@ public class BountyGameOverView extends SteelWindow
 
         BountyConfig.GameInfo info = _bounty.getGame(_gameId);
         String result = gfailed ? "failed" : "complete";
-        String msg = completed ? _msgs.get("m.bover_all_complete", _bounty.title) :
-            _msgs.get("m.bover_game_" + result, info.name);
+        String msg;
+        if (completed) {
+            msg = _msgs.get(_bounty.showBars ? "m.bover_all_complete" :
+                            "m.bover_all_complete_non_outlaw", _bounty.title);
+        } else {
+            msg = _msgs.get("m.bover_game_" + result, info.name);
+        }
         _contents.add(_overall = new BLabel(msg, "bover_overall"));
 
         BountyConfig.Quote quote = gfailed ? info.failedQuote : info.completedQuote;
@@ -235,12 +241,11 @@ public class BountyGameOverView extends SteelWindow
         horiz.add(vert);
         _contents.add(horiz);
 
+        if (!StringUtil.isBlank(quote.text)) {
+            _contents.add(new BLabel(quote.text, "bounty_quote"));
+        }
         if (completed) {
-            _contents.add(new AwardView(
-                        _ctx, _bangobj, _gconfig, _user, _award));
-        } else {
-            msg = quote.text;
-            _contents.add(new BLabel(msg, "bounty_quote"));
+            _contents.add(new AwardView(_ctx, _bangobj, _gconfig, _user, _award));
         }
 
         _buttons.removeAll();
