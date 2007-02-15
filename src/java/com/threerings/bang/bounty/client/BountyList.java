@@ -11,6 +11,7 @@ import com.jmex.bui.Spacer;
 import com.jmex.bui.layout.GroupLayout;
 
 import com.threerings.bang.client.bui.IconPalette;
+import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Star;
 import com.threerings.bang.data.Stat;
@@ -71,7 +72,8 @@ public class BountyList extends BContainer
         // configure the tip based on what they've unlocked and completed
         String tip;
         if (completed == bounties.size()) {
-            tip = "all_complete";
+            tip = "all_complete_" + type.toString().toLowerCase();
+            tip = MessageBundle.compose(tip, "m." + user.townId);
         } else if (unlocked + completed == bounties.size()) {
             tip = "all_unlocked";
         } else if (firstUnavail != null) {

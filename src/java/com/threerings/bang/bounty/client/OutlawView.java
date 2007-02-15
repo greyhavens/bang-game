@@ -89,8 +89,8 @@ public class OutlawView extends BComponent
         if (_scale != 1f || !_completed) {
             _images[FRAME].render(renderer, x, y, alpha);
         }
-        if (_scale == 1f) {
-            if (_completed && _showBars) {
+        if (_scale == 1f && _showBars) {
+            if (_completed) {
                 _images[BARS].render(renderer, 0, 0, alpha);
             } else {
                 _images[SEPIA].render(renderer, x, y, alpha * 0.3f);
