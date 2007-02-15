@@ -80,9 +80,8 @@ import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
 /**
- * Displays the main "town" menu interface where a player can navigate to
- * the ranch, the saloon, the general store, the bank, the train station
- * and wherever else we might dream up.
+ * Displays the main "town" menu interface where a player can navigate to the ranch, the saloon,
+ * the general store, the bank, the train station and wherever else we might dream up.
  */
 public class TownView extends BWindow
     implements MainView, ActionListener
@@ -114,6 +113,11 @@ public class TownView extends BWindow
         Enumeration iter = props.propertyNames();
         while (iter.hasMoreElements()) {
             String command = (String)iter.nextElement();
+            // TEMP: disable hideout for the public
+            if (command.equals("hideout") && !ctx.getUserObject().tokens.isSupport()) {
+                continue;
+            }
+            // END TEMP
             _commands.put(props.getProperty(command), command);
         }
 
@@ -152,18 +156,6 @@ public class TownView extends BWindow
         button = new BButton(new BlankIcon(128, 30), this, "exit");
         button.setStyleClass("exit_button");
         _menu.add(button, GroupLayout.FIXED);
-
-        // if we're an admin add some temporary buttons
-        if (ctx.getUserObject().tokens.isSupport()) {
-            add(_admin = GroupLayout.makeHBox(GroupLayout.CENTER));
-            ActionListener fire = new ActionListener() {
-                public void actionPerformed (ActionEvent event) {
-                    fireCommand(event.getAction());
-                }
-            };
-            _admin.add(new BButton("Sheriff's Office", fire, "office"));
-            _admin.add(new BButton("Hideout", fire, "hideout"));
-        }
     }
 
     /**
