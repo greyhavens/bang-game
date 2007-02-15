@@ -32,7 +32,6 @@ public class HomesteadSprite extends TargetableActiveSprite
         return true;
     }
 
-
     @Override // documentation inherited
     public void updated (Piece piece, short tick)
     {

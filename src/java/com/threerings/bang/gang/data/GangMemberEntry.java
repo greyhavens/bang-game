@@ -17,7 +17,7 @@ import com.threerings.bang.data.PlayerObject;
  * Contains information on a single gang member.
  */
 public class GangMemberEntry extends SimpleStreamableObject
-    implements DSet.Entry
+    implements Cloneable, DSet.Entry
 {
     /** The member's handle. */
     public Handle handle;
@@ -73,6 +73,16 @@ public class GangMemberEntry extends SimpleStreamableObject
     public boolean canChangeStatus (GangMemberEntry member)
     {
         return canChangeStatus(member.rank, member.joined);
+    }
+
+    @Override // documentation inherited
+    public Object clone ()
+    {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null; // will not happen
+        }
     }
 
     // documentation inherited from interface DSet.Entry

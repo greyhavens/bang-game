@@ -227,9 +227,21 @@ public class GangHandler
     }
 
     // documentation inherited from interface PlayerObserver
-    public void playerChangedHandle (PlayerObject user, Handle handle)
+    public void playerChangedHandle (PlayerObject user, Handle oldHandle)
     {
-        // TODO: handle this sensibly
+        // TODO: handle this for remote members
+        GangMemberEntry entry = _gangobj.members.get(oldHandle);
+        if (entry != null) {
+            _gangobj.startTransaction();
+            try {
+                _gangobj.removeFromMembers(oldHandle);
+                entry = (GangMemberEntry)entry.clone();
+                entry.handle = user.handle;
+                _gangobj.addToMembers(entry);
+            } finally {
+                _gangobj.commitTransaction();
+            }
+        }
     }
 
     // documentation inherited from interface RemotePlayerObserver

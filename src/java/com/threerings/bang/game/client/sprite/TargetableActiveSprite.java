@@ -50,18 +50,6 @@ public class TargetableActiveSprite extends ActiveSprite
         _target.configureAttacker(pidx, delta);
     }
 
-    @Override // documentation inherited
-    protected void addProceduralActions ()
-    {
-        super.addProceduralActions();
-        _procActions.put("reacting", new ProceduralAction() {
-            public float activate () {
-                // TODO: either an animation or a particle effect
-                return FastMath.FLT_EPSILON;
-            }
-        });
-    }
-
     @Override // from PieceSprite
     protected void createGeometry ()
     {

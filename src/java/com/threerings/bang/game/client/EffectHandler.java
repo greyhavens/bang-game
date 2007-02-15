@@ -280,7 +280,9 @@ public class EffectHandler extends BoardView.BoardAction
             ActiveSprite asprite = (ActiveSprite)sprite;
             if (wasDamaged) {
                 if (piece.isAlive()) {
-                    queueAction(asprite, "reacting");
+                    if (asprite.hasAction("reacting")) {
+                        queueAction(asprite, "reacting");
+                    }
                 } else if (asprite.hasAction("dying")) {
                     queueAction(asprite,  "dying");
                     if (sprite instanceof UnitSprite) {
