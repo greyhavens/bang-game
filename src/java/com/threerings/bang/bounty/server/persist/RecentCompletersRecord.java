@@ -17,6 +17,10 @@ import com.threerings.bang.bounty.data.RecentCompleters;
 @Entity
 public class RecentCompletersRecord extends PersistentRecord
 {
+    /** Increment this value if you modify the definition of this persistent object in a way that
+     * will result in a change to its SQL counterpart. */
+    public static final int SCHEMA_VERSION = 1;
+
     /** A column identifier for the {@link #townId} field. */
     public static final String TOWN_ID = "townId";
 
