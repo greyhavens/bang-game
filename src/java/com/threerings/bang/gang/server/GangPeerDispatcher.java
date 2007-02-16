@@ -90,6 +90,13 @@ public class GangPeerDispatcher extends InvocationDispatcher
             );
             return;
 
+        case GangPeerMarshaller.SEND_SPEAK:
+            ((GangPeerProvider)provider).sendSpeak(
+                source,
+                (Handle)args[0], (String)args[1], ((Byte)args[2]).byteValue()
+            );
+            return;
+
         case GangPeerMarshaller.SET_AVATAR:
             ((GangPeerProvider)provider).setAvatar(
                 source,

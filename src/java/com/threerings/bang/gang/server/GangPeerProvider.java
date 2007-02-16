@@ -60,6 +60,11 @@ public interface GangPeerProvider extends InvocationProvider
         throws InvocationException;
 
     /**
+     * Handles a {@link GangPeerService#sendSpeak} request.
+     */
+    public void sendSpeak (ClientObject caller, Handle arg1, String arg2, byte arg3);
+
+    /**
      * Handles a {@link GangPeerService#setAvatar} request.
      */
     public void setAvatar (ClientObject caller, AvatarInfo arg1);

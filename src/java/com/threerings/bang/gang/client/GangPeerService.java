@@ -41,6 +41,11 @@ public interface GangPeerService extends InvocationService
         ConfirmListener listener);
 
     /**
+     * Handles a remote member's request to speak on the gang object.
+     */
+    public void sendSpeak (Client client, Handle handle, String message, byte mode);
+
+    /**
      * Sets the gang's statement and URL.
      */
     public void setStatement (

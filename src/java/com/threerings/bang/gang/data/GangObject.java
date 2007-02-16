@@ -8,6 +8,9 @@ import java.net.URL;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.crowd.chat.data.SpeakMarshaller;
+import com.threerings.crowd.chat.data.SpeakObject;
+
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.saloon.data.TopRankObject;
@@ -17,7 +20,7 @@ import com.threerings.bang.saloon.data.TopRankedList;
  * Contains data concerning a single gang.
  */
 public class GangObject extends DObject
-    implements TopRankObject
+    implements SpeakObject, TopRankObject
 {
     // AUTO-GENERATED: FIELDS START
     /** The field name of the <code>gangPeerService</code> field. */
@@ -66,6 +69,9 @@ public class GangObject extends DObject
     /** Used by peers to make requests on the behalf of their users. */
     public GangPeerMarshaller gangPeerService;
 
+    /** The service used to send chat messages.  This is rewritten for peer nodes. */
+    public SpeakMarshaller speakService;
+
     /** This gang's unique identifier. */
     public int gangId;
 
@@ -108,11 +114,8 @@ public class GangObject extends DObject
     /** On servers using this object as a proxy, the oid on the peer server. */
     public transient int remoteOid;
 
-    // documentation inherited from interface TopRankObject
-    public DSet<TopRankedList> getTopRanked ()
-    {
-        return topRanked;
-    }
+    /** On servers, stores the town index for the benefit of {@link #applyToListeners}. */
+    public transient int townIdx;
 
     /**
      * Returns the name used to identity the gang's entry in the coin database.
@@ -148,6 +151,22 @@ public class GangObject extends DObject
             }
         }
         return senior;
+    }
+
+    // documentation inherited from interface SpeakObject
+    public void applyToListeners (SpeakObject.ListenerOp op)
+    {
+        for (GangMemberEntry member : members) {
+            if (member.townIdx == townIdx) {
+                op.apply(member.handle);
+            }
+        }
+    }
+
+    // documentation inherited from interface TopRankObject
+    public DSet<TopRankedList> getTopRanked ()
+    {
+        return topRanked;
     }
 
     // AUTO-GENERATED: METHODS START

@@ -38,7 +38,10 @@ import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
 import com.threerings.presents.util.PersistingUnit;
 
+import com.threerings.crowd.chat.data.SpeakMarshaller;
+import com.threerings.crowd.chat.server.SpeakDispatcher;
 import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.crowd.chat.server.SpeakProvider.SpeakerValidator;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
@@ -80,7 +83,7 @@ import static com.threerings.bang.Log.*;
  */
 public class GangHandler
     implements PlayerObserver, RemotePlayerObserver, SetListener, ObjectDeathListener,
-        GangPeerProvider, GangCodes
+        SpeakerValidator, GangPeerProvider, GangCodes
 {
     /**
      * Creates the handler and starts the process of resolving the specified gang.
@@ -378,6 +381,12 @@ public class GangHandler
         }
     }
 
+    // documentation inherited from interface ObjectDeathListener
+    public boolean isValidSpeaker (DObject speakobj, ClientObject speaker, byte mode)
+    {
+        return _gangobj.members.containsKey(((PlayerObject)speaker).handle);
+    }
+
     // documentation inherited from interface GangPeerProvider
     public void grantNotoriety (
         ClientObject caller, final Handle handle, final int points)
@@ -515,6 +524,21 @@ public class GangHandler
             protected GangMemberRecord _mrec;
             protected String _error;
         });
+    }
+
+    // documentation inherited from interface GangPeerProvider
+    public void sendSpeak (ClientObject caller, Handle handle, String message, byte mode)
+    {
+        // make sure it comes from this server or a peer and that they're in the gang
+        try {
+            verifyLocalOrPeer(caller);
+            verifyInGang(handle);
+        } catch (InvocationException e) {
+            return;
+        }
+
+        // speak!
+        SpeakProvider.sendSpeak(_gangobj, handle, null, message, mode);
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -974,6 +998,10 @@ public class GangHandler
             (GangPeerMarshaller)BangServer.invmgr.registerDispatcher(
                 new GangPeerDispatcher(this));
 
+        // register the speak service for local users
+        _gangobj.speakService = (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
+            new SpeakDispatcher(new SpeakProvider(_gangobj, this)));
+
         // register and announce
         BangServer.omgr.registerObject(_gangobj);
         log.info("Initialized gang object " + this + ".");
@@ -1084,17 +1112,39 @@ public class GangHandler
         BangServer.peermgr.subscribeToGang(nodeName, _gangId,
             new ResultListener<GangObject>() {
                 public void requestCompleted (GangObject result) {
-                    _gangobj = result;
-                    _proxy = PeerUtil.createProviderProxy(
-                        GangPeerProvider.class, _gangobj.gangPeerService, _client);
-
-                    log.info("Subscribed to gang " + this + " on " + _nodeName + ".");
-                    didInit();
+                    setGangObject(result);
                 }
                 public void requestFailed (Exception cause) {
                     initFailed(cause);
                 }
             });
+    }
+
+    /**
+     * Configures a gang object received from a peer node.
+     */
+    protected void setGangObject (GangObject gangobj)
+    {
+        _gangobj = gangobj;
+
+        // rewrite the speak service with a provider of our own that forwards speech to
+        // the controlling node
+        _gangobj.speakService =
+            (SpeakMarshaller)BangServer.invmgr.registerDispatcher(new SpeakDispatcher(
+                new SpeakProvider(_gangobj, this) {
+                    public void speak (ClientObject caller, String message, byte mode) {
+                        _gangobj.gangPeerService.sendSpeak(
+                            _client, ((PlayerObject)caller).handle, message, mode);
+                    }
+                }));
+
+        _gangobj.townIdx = ServerConfig.townIndex;
+
+        _proxy = PeerUtil.createProviderProxy(
+            GangPeerProvider.class, _gangobj.gangPeerService, _client);
+
+        log.info("Subscribed to gang " + this + " on " + _nodeName + ".");
+        didInit();
     }
 
     /**
@@ -1124,6 +1174,7 @@ public class GangHandler
     protected void unsubscribeFromPeer ()
     {
         _gangobj.removeListener(this);
+        BangServer.invmgr.clearDispatcher(_gangobj.speakService);
         BangServer.peermgr.unproxyRemoteObject(_nodeName, _gangobj.remoteOid);
 
         log.info("Unsubscribed from gang " + this + ".");
@@ -1142,6 +1193,7 @@ public class GangHandler
         BangServer.peermgr.removePlayerObserver(this);
 
         BangServer.invmgr.clearDispatcher(_gangobj.gangPeerService);
+        BangServer.invmgr.clearDispatcher(_gangobj.speakService);
         _gangobj.destroy();
 
         log.info("Gang shutdown " + this + ".");
