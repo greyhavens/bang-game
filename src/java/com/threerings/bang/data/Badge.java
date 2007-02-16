@@ -605,13 +605,15 @@ public class Badge extends Item
         BOUNTY_SHARK,
         BOUNTY_ALL_FT_TOWN {
             public boolean qualifies (PlayerObject user) {
-                return hasCompletedBounties(user.stats, TOWN_BOUNTIES.get(BangCodes.FRONTIER_TOWN));
+                return hasCompletedBounties(
+                    user.stats, BangCodes.FRONTIER_TOWN, BountyConfig.Type.TOWN);
             }
         },
         BOUNTY_ALL_FT {
             public boolean qualifies (PlayerObject user) {
                 return user.holdsBadge(BOUNTY_ALL_FT_TOWN) &&
-                    hasCompletedBounties(user.stats, WANTED_BOUNTIES.get(BangCodes.FRONTIER_TOWN));
+                    hasCompletedBounties(
+                        user.stats, BangCodes.FRONTIER_TOWN, BountyConfig.Type.MOST_WANTED);
             }
         },
 
@@ -964,9 +966,10 @@ public class Badge extends Item
     }
 
     /** Used by the all bounty badges. */
-    protected static boolean hasCompletedBounties (StatSet stats, ArrayList<String> bounties)
+    protected static boolean hasCompletedBounties (
+        StatSet stats, String townId, BountyConfig.Type type)
     {
-        for (String bounty : bounties) {
+        for (String bounty : BountyConfig.getBountyIds(townId, type)) {
             if (!stats.containsValue(Stat.Type.BOUNTIES_COMPLETED, bounty)) {
                 return false;
             }
@@ -1061,20 +1064,4 @@ public class Badge extends Item
     /** Used by unit usage badges. */
     protected static final EnumSet<UnitConfig.Rank> ALL_UNITS =
         EnumSet.of(UnitConfig.Rank.BIGSHOT, UnitConfig.Rank.NORMAL);
-
-    /** Used by the all bounty badges. */
-    protected static final HashMap<String,ArrayList<String>> TOWN_BOUNTIES =
-        new HashMap<String,ArrayList<String>>();
-
-    /** Used by the all bounty badges. */
-    protected static final HashMap<String,ArrayList<String>> WANTED_BOUNTIES =
-        new HashMap<String,ArrayList<String>>();
-
-    static {
-        for (String townId : BangCodes.TOWN_IDS) {
-            TOWN_BOUNTIES.put(townId, BountyConfig.getBountyIds(townId, BountyConfig.Type.TOWN));
-            WANTED_BOUNTIES.put(
-                townId, BountyConfig.getBountyIds(townId, BountyConfig.Type.MOST_WANTED));
-        }
-    }
 }

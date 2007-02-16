@@ -190,11 +190,16 @@ public class BountyConfig extends SimpleStreamableObject
     /**
      * Returns the identifiers of all bounties of the specified town and type.
      */
-    public static ArrayList<String> getBountyIds (String townId, Type type)
+    public static String[] getBountyIds (String townId, Type type)
     {
-        ArrayList<String> ids = new ArrayList<String>();
-        for (BountyConfig config : getBounties(townId, type)) {
-            ids.add(config.ident);
+        String key = townId + type;
+        String[] ids = _idCache.get(key);
+        if (ids == null) {
+            ArrayList<String> idlist = new ArrayList<String>();
+            for (BountyConfig config : getBounties(townId, type)) {
+                idlist.add(config.ident);
+            }
+            _idCache.put(key, ids = idlist.toArray(new String[idlist.size()]));
         }
         return ids;
     }
@@ -485,4 +490,7 @@ public class BountyConfig extends SimpleStreamableObject
 
     /** The number of Town Bounties that must be cleared to progress to the next level. */
     protected static final int TOWN_CLEAR_PROGRESS = 4;
+
+    /** A cache of bounty ids by type + town. */
+    protected static final HashMap<String,String[]> _idCache = new HashMap<String,String[]>();
 }
