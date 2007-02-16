@@ -595,6 +595,14 @@ public class Badge extends Item
         },
         NEW_SHERRIF_IN_TOWN,
 
+        // frontier town bounty badges
+        BOUNTY_DYNAMITE,
+        BOUNTY_SANCHO,
+        BOUNTY_MAUDE,
+        BOUNTY_CALAVERA,
+        BOUNTY_MUSTACHE,
+        BOUNTY_SHARK,
+
         UNUSED;
 
         /** Returns a new blank stat instance of the specified type. */
@@ -703,6 +711,10 @@ public class Badge extends Item
 
         // you suck badges
         Type.UNITS_LOST_1, Type.UNITS_LOST_2, null, Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,
+
+        // frontier town bounty badges
+        Type.BOUNTY_DYNAMITE, Type.BOUNTY_SANCHO, null, null, null,
+        Type.BOUNTY_MAUDE, Type.BOUNTY_CALAVERA, Type.BOUNTY_MUSTACHE, Type.BOUNTY_SHARK, null,
 
         // general non-series (wacky) badges
         Type.IRON_HORSE, Type.SAINT_NICK,
