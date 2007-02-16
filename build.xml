@@ -713,6 +713,7 @@
         <exclude name="rsrc/**/*.vert"/>
         <exclude name="rsrc/**/*.frag"/>
         <exclude name="rsrc/**/*.board"/>
+        <exclude name="**/*.jar"/>
         <exclude name="rsrc/bonuses/**"/>
         <exclude name="rsrc/bounties/**"/>
         <exclude name="rsrc/cards/**"/>
