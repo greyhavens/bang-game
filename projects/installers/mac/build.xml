@@ -79,10 +79,13 @@
   <!-- creates the disk image -->
   <target name="image">
     <exec executable="mkisofs" failonerror="true">
-      <arg line="-r"/>
       <arg line="-hide-rr-moved"/>
       <arg line="-hide-joliet"/>
       <arg line=".rr_moved"/>
+      <arg line="-uid"/>
+      <arg line="0"/>
+      <arg line="-gid"/>
+      <arg line="0"/>
       <arg line="-J"/>
       <arg line="-V"/>
       <arg line="'${base.name}'"/>
