@@ -201,7 +201,9 @@
 
   <!-- encodes our sounds to ogg and enumerates them into a master list -->
   <target name="sounds">
-    <exec executable="${basedir}/bin/encode_sounds" failonerror="true"/>
+    <copy todir="${deploy.dir}/rsrc">
+      <fileset dir="rsrc" includes="**/*.ogg"/>
+    </copy>
     <exec executable="find" dir="${deploy.dir}" output="${deploy.dir}/rsrc/sounds.txt">
       <arg value="rsrc"/>
       <arg value="-name"/>
