@@ -64,6 +64,8 @@ import com.threerings.crowd.client.LocationAdapter;
 import com.threerings.crowd.client.PlaceView;
 import com.threerings.crowd.data.PlaceObject;
 
+import com.threerings.admin.data.AdminCodes;
+
 import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.ranch.client.FirstBigShotView;
 import com.threerings.bang.ranch.data.RanchObject;
@@ -803,7 +805,7 @@ public class BangClient extends BasicClient
     // documentation inherited from interface ClientObserver
     public void clientWillLogon (Client client)
     {
-        // nothing doing
+        client.addServiceGroup(AdminCodes.ADMIN_GROUP);
     }
 
     // documentation inherited from interface ClientObserver
