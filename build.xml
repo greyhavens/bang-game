@@ -208,9 +208,9 @@
       <arg value="*.ogg"/>
     </exec>
     <mkdir dir="${deploy.dir}/rsrc/sounds/effects"/>
-    <jar file="${deploy.dir}/rsrc/sounds/effects/bundle.jar" basedir="rsrc/sounds/effects">
+    <jar file="${deploy.dir}/rsrc/sounds/effects/bundle.jar"
+         basedir="${deploy.dir}/rsrc/sounds/effects">
       <include name="**/*.ogg"/>
-      <exclude name="**/source/**"/>
     </jar>
     <jar file="${deploy.dir}/rsrc/sounds/feedback/bundle.jar"
          basedir="${deploy.dir}/rsrc/sounds/feedback">
