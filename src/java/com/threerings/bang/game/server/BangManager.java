@@ -1884,7 +1884,7 @@ public class BangManager extends GameManager
                 }
 
                 // for now, award one notoriety point for every twenty scrip
-                if (prec.gangId > 0) {
+                if (_bconfig.grantNotoriety && prec.gangId > 0) {
                     award.notorietyEarned = award.cashEarned / 20;
                 }
             }

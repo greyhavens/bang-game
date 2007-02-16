@@ -88,7 +88,7 @@ public abstract class MatchView extends BContainer
         if (!showChat) {
             return;
         }
-        
+
         // add a label that will overlay the "Back Parlors" text (it also has
         // custom spacing that positions everything properly)
         ImageIcon icon = new ImageIcon(
@@ -165,14 +165,14 @@ public abstract class MatchView extends BContainer
      * Leaves the specified match.
      */
     protected abstract void leaveMatch (int matchOid);
-    
+
     @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
         _msub.unsubscribe(_ctx.getDObjectManager());
         if (_chat != null && _mobj != null) {
-            _ctx.getChatDirector().removeAuxiliarySource(_mobj);  
+            _ctx.getChatDirector().removeAuxiliarySource(_mobj);
             _chat.clearSpeakService();
         }
     }
@@ -190,14 +190,19 @@ public abstract class MatchView extends BContainer
         _players.setText(_msgs.get("m.cr_players", value));
         value = _mobj.criterion.getRoundString();
         _rounds.setText(_msgs.get("m.cr_rounds", value));
-        _ranked.setText(_msgs.get(_mobj.criterion.getDesiredRankedness() ?
-                                  "m.ranked" : "m.unranked"));
+        updateRanked();
         value = _mobj.criterion.getAIString();
         _opponents.setText(_msgs.get("m.cr_aiopps", value));
         value = "m." + CriterionView.RANGE[_mobj.criterion.range];
         _range.setText(_msgs.get(value));
         _prevscen.setText(_mobj.criterion.allowPreviousTowns ?
                           _msgs.get("m.cr_allscens") : "");
+    }
+
+    protected void updateRanked ()
+    {
+        _ranked.setText(_msgs.get(_mobj.criterion.getDesiredRankedness() ?
+                                  "m.ranked" : "m.unranked"));
     }
 
     protected void updateStarting ()

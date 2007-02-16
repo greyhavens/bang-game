@@ -64,8 +64,7 @@ public abstract class CriterionView extends BContainer
         }
         table.add(row);
 
-        table.add(BangUI.createLabel(msgs, "m.rankedness", "match_label"));
-        table.add(_ranked = new BComboBox(xlate(msgs, RANKED)));
+        addRankedControl(msgs, table);
         _ranked.selectItem(0);
         new StateSaver("saloon.ranked", _ranked);
 
@@ -74,14 +73,7 @@ public abstract class CriterionView extends BContainer
         _range.selectItem(0);
         new StateSaver("saloon.range", _range);
 
-        table.add(BangUI.createLabel(msgs, "m.opponents", "match_label"));
-        row = new BContainer(GroupLayout.makeHStretch());
-        for (int ii = 0; ii < _aiopps.length; ii++) {
-            row.add(_aiopps[ii] = new BCheckBox("" + ii));
-            _aiopps[ii].setSelected(ii < 2);
-            new StateSaver("saloon.tincans." + ii, _aiopps[ii]);
-        }
-        table.add(row);
+        addAIControls(msgs, table);
 
         _prev = new BCheckBox(msgs.get("m.allow_previous"));
         _prev.setSelected(ScenarioInfo.hasPlayedAllTownScenarios(
@@ -113,11 +105,35 @@ public abstract class CriterionView extends BContainer
         reenable();
     }
 
+    protected void addRankedControl (MessageBundle msgs, BContainer table)
+    {
+        table.add(BangUI.createLabel(msgs, "m.rankedness", "match_label"));
+        table.add(_ranked = new BComboBox(xlate(msgs, RANKED)));
+    }
+
+    protected void addAIControls (MessageBundle msgs, BContainer table)
+    {
+        table.add(BangUI.createLabel(msgs, "m.opponents", "match_label"));
+        BContainer row = new BContainer(GroupLayout.makeHStretch());
+        for (int ii = 0; ii < _aiopps.length; ii++) {
+            row.add(_aiopps[ii] = new BCheckBox("" + ii));
+            _aiopps[ii].setSelected(ii < 2);
+            new StateSaver("saloon.tincans." + ii, _aiopps[ii]);
+        }
+        table.add(row);
+    }
+
+    protected int getAllowAIs ()
+    {
+        return Criterion.compose(_aiopps[0].isSelected(), _aiopps[1].isSelected(),
+            _aiopps[2].isSelected());
+    }
+
     /**
      * Finds or creates a match with the specified criterion.
      */
-    protected abstract void findMatch (Criterion criterion); 
-    
+    protected abstract void findMatch (Criterion criterion);
+
     protected String[] xlate (MessageBundle msgs, String[] umsgs)
     {
         String[] tmsgs = new String[umsgs.length];
@@ -141,9 +157,7 @@ public abstract class CriterionView extends BContainer
             criterion.ranked = Criterion.compose(
                 (rsel == 0 || rsel == 2), (rsel == 1 || rsel == 2), false);
             criterion.range = _range.getSelectedIndex();
-            criterion.allowAIs = Criterion.compose(
-                _aiopps[0].isSelected(), _aiopps[1].isSelected(),
-                _aiopps[2].isSelected());
+            criterion.allowAIs = getAllowAIs();
             criterion.allowPreviousTowns =
                 _prev.isAdded() ? _prev.isSelected() : true;
 

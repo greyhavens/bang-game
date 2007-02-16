@@ -52,17 +52,8 @@ public abstract class MatchHostManager extends ShopManager
             throw new InvocationException(NEW_GAMES_DISABLED);
         }
 
-        // sanity check the criterion, force at least 2 players, 1 round, and match zero AIs if
-        // nothing was selected
-        if (criterion.players == 0) {
-            criterion.players = 1;
-        }
-        if (criterion.rounds == 0) {
-            criterion.rounds = 1;
-        }
-        if (criterion.allowAIs == 0) {
-            criterion.allowAIs = 1;
-        }
+        // sanity check the criterion
+        checkCriterion(criterion);
 
         // look for an existing match that is compatible
         for (Match match : _matches.values()) {
@@ -79,7 +70,7 @@ public abstract class MatchHostManager extends ShopManager
         }
 
         // otherwise we need to create a new match
-        Match match = new Match(user, criterion);
+        Match match = createMatch(user, criterion);
         match.setObject(BangServer.omgr.registerObject(new MatchObject()));
         match.matchobj.setSpeakService(
             (SpeakMarshaller)BangServer.invmgr.registerDispatcher(
@@ -129,6 +120,31 @@ public abstract class MatchHostManager extends ShopManager
                 }
             }
         }
+    }
+
+    /**
+     * Enforces sanity checks on the given criterion.
+     */
+    protected void checkCriterion (Criterion criterion)
+    {
+        // force at least 2 players, 1 round, and match zero AIs if nothing was selected
+        if (criterion.players == 0) {
+            criterion.players = 1;
+        }
+        if (criterion.rounds == 0) {
+            criterion.rounds = 1;
+        }
+        if (criterion.allowAIs == 0) {
+            criterion.allowAIs = 1;
+        }
+    }
+
+    /**
+     * Creates a match object for the given user and criterion.
+     */
+    protected Match createMatch (PlayerObject user, Criterion criterion)
+    {
+        return new Match(user, criterion);
     }
 
     /**

@@ -104,7 +104,7 @@ public class Match
         if (getPlayerCount() >= criterion.getDesiredPlayers()) {
             return false;
         }
-        
+
         // make sure we're not a foe of theirs and none of them one of ours
         for (int i = 0; i < players.length; i ++) {
             if (players[i] != null && (players[i].isFoe(player.playerId) ||
@@ -112,13 +112,13 @@ public class Match
                 return false;
             }
         }
-        
+
         // now make sure the joining player satisfies our rating range requirements: the joiner
         // must fall within our desired range of the average rating and the min and max rating must
         // fall within the joiner's criterion-specified range
         Rating prating = player.getRating(ScenarioInfo.OVERALL_IDENT);
         if (criterion.range < Criterion.OPEN) {
-            int range = (criterion.range == Criterion.TIGHT ? 
+            int range = (criterion.range == Criterion.TIGHT ?
                     RuntimeConfig.server.nearRankRange : RuntimeConfig.server.looseRankRange);
             for (int ii = 0; ii < players.length; ii++) {
                 if (players[ii] == null) {
@@ -132,7 +132,7 @@ public class Match
         }
 
         if (_criterion.range < Criterion.OPEN) {
-            int range = (_criterion.range == Criterion.TIGHT ? 
+            int range = (_criterion.range == Criterion.TIGHT ?
                     RuntimeConfig.server.nearRankRange : RuntimeConfig.server.looseRankRange);
             if (Math.abs(_avgRating - prating.rating) > range) {
                 return false;
