@@ -79,7 +79,7 @@ public class OfficeManager extends ShopManager
                     break;
                 } else if (!player.stats.containsValue(Stat.Type.BOUNTY_GAMES_COMPLETED,
                                                        config.getStatKey(game.ident))) {
-                    log.warning("Player tryied to play bounty game out of order " +
+                    log.warning("Player tried to play bounty game out of order " +
                                 "[who=" + player.who() + ", bounty=" + bountyId +
                                 ", game=" + gameId + "].");
                     throw new InvocationException(ACCESS_DENIED);
