@@ -113,7 +113,11 @@ public class SummarizeBounties
             BangConfig.Player player = gconfig.plist.get(ii);
             System.out.print("<li><u>" + players[ii] + ":</u>");
             if (player.bigShot != null) {
-                System.out.print(" " + (bigShot = _msgs.xlate(UnitConfig.getName(player.bigShot))));
+                String name = _msgs.xlate(UnitConfig.getName(player.bigShot));
+                System.out.print(" " + name);
+                if (ii == 0) {
+                    bigShot = name;
+                }
             }
             for (String unit : player.units) {
                 System.out.print(", " + _msgs.xlate(UnitConfig.getName(unit)));
