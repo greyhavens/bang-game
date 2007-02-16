@@ -27,6 +27,7 @@ import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.Invoker;
+import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.StringUtil;
 
@@ -270,7 +271,7 @@ public class AvatarView extends BLabel
      */
     public void setAvatar (AvatarInfo avatar)
     {
-        if ((_avatar != null && _avatar.equals(avatar)) || avatar == null) {
+        if (avatar == null || ObjectUtil.equals(_avatar, avatar)) {
             return;
         }
         _avatar = (AvatarInfo)avatar.clone();
