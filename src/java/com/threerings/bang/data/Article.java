@@ -22,6 +22,7 @@ import com.threerings.bang.avatar.util.ArticleCatalog;
 import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
@@ -31,16 +32,24 @@ import static com.threerings.bang.Log.log;
  */
 public class Article extends Item
 {
-    /** Used to sort articles. */
-    public static final Comparator<Article> ARTICLE_COMP =
-        new Comparator<Article>() {
-        public int compare (Article a1, Article a2) {
-            int a1idx = AvatarLogic.getSlotIndex(a1.getSlot());
-            int a2idx = AvatarLogic.getSlotIndex(a2.getSlot());
-            return (a1idx == a2idx) ?
-            (a2.getItemId() - a1.getItemId()) : (a1idx - a2idx);
-        }
-    };
+    /**
+     * Creates a comparator to sort articles.
+     */
+    public static Comparator<Article> createComparator (final PlayerObject user)
+    {
+        return new Comparator<Article>() {
+            public int compare (Article a1, Article a2) {
+                // sort wearable articles before unwearable ones
+                if (a1.isWearable(user) != a2.isWearable(user)) {
+                    return a1.isWearable(user) ? -1 : +1;
+                }
+                int a1idx = AvatarLogic.getSlotIndex(a1.getSlot());
+                int a2idx = AvatarLogic.getSlotIndex(a2.getSlot());
+                return (a1idx == a2idx) ?
+                    (a2.getItemId() - a1.getItemId()) : (a1idx - a2idx);
+            }
+        };
+    }
 
     /**
      * Returns the path to the icon for an article of the specified type.
@@ -102,6 +111,23 @@ public class Article extends Item
     }
 
     /**
+     * Returns the id of the gang with which this article is associated, or 0 for none.
+     * Gang articles can only be worn by members of the gang.
+     */
+    public int getGangId ()
+    {
+        return _gangId;
+    }
+
+    /**
+     * Sets the gang id.
+     */
+    public void setGangId (int gangId)
+    {
+        _gangId = gangId;
+    }
+
+    /**
      * Returns a string representation of this article that we can use in config files.
      */
     public String getPrint ()
@@ -117,6 +143,15 @@ public class Article extends Item
         return _name;
     }
 
+    /**
+     * Determines whether the user can wear this article at present.
+     */
+    public boolean isWearable (PlayerObject user)
+    {
+        // gang articles can only be worn by current members
+        return (_gangId == 0 || _gangId == user.gangId);
+    }
+
     @Override // documentation inherited
     public String getName ()
     {
@@ -124,9 +159,10 @@ public class Article extends Item
     }
 
     @Override // documentation inherited
-    public String getTooltip ()
+    public String getTooltip (PlayerObject user)
     {
-        return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.article_tip");
+        return MessageBundle.qualify(BangCodes.GOODS_MSGS,
+            "m.article_tip" + (isWearable(user) ? "" : "_unwearable"));
     }
 
     @Override // documentation inherited
@@ -138,6 +174,8 @@ public class Article extends Item
     @Override // documentation inherited
     public ImageIcon createIcon (BasicContext ctx, String iconPath)
     {
+        // TODO: dim this out, put a lock on it or something if it's unwearable;
+        // indicate somehow that it's a gang article if appropriate
         AvatarLogic al = ctx.getAvatarLogic();
         ArticleCatalog.Article aca = al.getArticleCatalog().getArticle(_name);
         if (aca == null) {
@@ -163,9 +201,10 @@ public class Article extends Item
         Article oarticle;
         return super.isEquivalent(other) &&
             (oarticle = (Article)other)._name.equals(_name) &&
-            Arrays.equals(oarticle._components, _components);
+            Arrays.equals(oarticle._components, _components) &&
+            oarticle._gangId == _gangId;
     }
-    
+
     @Override // documentation inherited
     public boolean isDestroyable (PlayerObject user)
     {
@@ -177,7 +216,7 @@ public class Article extends Item
         }
         return true;
     }
-    
+
     @Override // documentation inherited
     protected void toString (StringBuilder buf)
     {
@@ -186,8 +225,12 @@ public class Article extends Item
         buf.append(", name=").append(_name);
         buf.append(", components=");
         StringUtil.toString(buf, _components);
+        if (_gangId > 0) {
+            buf.append(", gangId=").append(_gangId);
+        }
     }
 
     protected String _slot, _name;
     protected int[] _components;
+    protected int _gangId;
 }

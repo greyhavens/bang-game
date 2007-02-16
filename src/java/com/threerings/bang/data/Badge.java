@@ -854,7 +854,7 @@ public class Badge extends Item
     }
 
     @Override // documentation inherited
-    public String getTooltip ()
+    public String getTooltip (PlayerObject user)
     {
         if (_silhouette) {
             return null;
@@ -899,7 +899,7 @@ public class Badge extends Item
         return super.isEquivalent(other) &&
             ((Badge)other)._code == _code;
     }
-    
+
     @Override // documentation inherited
     protected void toString (StringBuilder buf)
     {

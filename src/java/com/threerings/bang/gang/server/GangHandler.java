@@ -56,7 +56,9 @@ import com.threerings.bang.server.ServerConfig;
 import com.threerings.bang.server.persist.PeerFinancialAction;
 import com.threerings.bang.server.persist.ProxyFinancialAction;
 
+import com.threerings.bang.avatar.data.Look;
 import com.threerings.bang.avatar.util.ArticleCatalog;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.saloon.server.SaloonManager;
 
@@ -331,16 +333,20 @@ public class GangHandler
         // make sure we're tracking the right avatar
         updateAvatarUpdater(null);
 
-        // clear the user's gang fields if he's online
+        // clear the user's gang fields and purge his looks if he's online
         Handle handle = (Handle)event.getKey();
         PlayerObject user = BangServer.lookupPlayer(handle);
         if (user == null) {
             return;
         }
+        ArrayList<Look> modified = stripLooks(user.inventory, user.looks);
         user.startTransaction();
         try {
             user.setGangId(0);
             user.setGangOid(0);
+            for (Look look : modified) {
+                user.updateLooks(look);
+            }
         } finally {
             user.commitTransaction();
         }
@@ -724,6 +730,7 @@ public class GangHandler
                 // an error will have already been logged
                 throw new InvocationException(INTERNAL_ERROR);
             }
+            articles[ii].setGangId(_gangId);
         }
 
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
@@ -731,14 +738,19 @@ public class GangHandler
                 // save the outfit as the gang's current
                 BangServer.gangrepo.updateOutfit(_gangId, outfit);
 
-                // find out who needs the articles and how much it will cost
+                // find out who needs the articles and how much it will cost (we check against the
+                // non-gang version of the article, too, because there's no point in granting a
+                // limited article to someone who has an unlimited one)
                 ArrayIntSet maleIds = new ArrayIntSet(), femaleIds = new ArrayIntSet();
                 BangServer.gangrepo.loadMemberIds(_gangId, maleIds, femaleIds);
                 for (int ii = 0; ii < articles.length; ii++) {
-                    Article article = articles[ii];
+                    Article article = articles[ii],
+                        alternate = (Article)article.clone();
+                    alternate.setGangId(0);
                     ArrayIntSet memberIds = (article.getArticleName().indexOf("female") == -1) ?
                         maleIds : femaleIds;
-                    ArrayIntSet ownerIds = BangServer.itemrepo.getItemOwners(memberIds, article);
+                    ArrayIntSet ownerIds = BangServer.itemrepo.getItemOwners(
+                        memberIds, article, alternate);
                     int count = memberIds.size() - ownerIds.size();
                     _cost[0] += (catarts[ii].scrip * count);
                     _cost[1] += (catarts[ii].coins * count);
@@ -1215,7 +1227,7 @@ public class GangHandler
     {
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
-                BangServer.gangrepo.deleteMember(entry.playerId);
+                deleteFromGang(entry.playerId);
                 if (delete) {
                     BangServer.gangrepo.deleteGang(_gangId);
                 } else {
@@ -1253,6 +1265,71 @@ public class GangHandler
             }
             protected AvatarInfo _avatar;
         });
+    }
+
+    /**
+     * Removes the specified member and strips his looks of any gang articles.
+     */
+    protected void deleteFromGang (int playerId)
+        throws PersistenceException
+    {
+        // delete the member record itself
+        BangServer.gangrepo.deleteMember(playerId);
+
+        // strip the looks of all gang articles and update
+        ArrayList<Look> modified = stripLooks(
+            BangServer.itemrepo.loadItems(playerId),
+            BangServer.lookrepo.loadLooks(playerId));
+        for (Look look : modified) {
+            BangServer.lookrepo.updateLook(playerId, look);
+        }
+    }
+
+    /**
+     * Strips the given looks of all gang items, returning a list of the ones modified.
+     */
+    protected ArrayList<Look> stripLooks (Iterable<Item> items, Iterable<Look> looks)
+    {
+        // find the item ids of all gang articles as well as suitable replacements for
+        // each slot
+        ArrayIntSet removals = new ArrayIntSet();
+        int[] replacements = new int[AvatarLogic.SLOTS.length];
+        for (Item item : items) {
+            if (!(item instanceof Article)) {
+                continue;
+            }
+            Article article = (Article)item;
+            int itemId = article.getItemId();
+            if (article.getGangId() == _gangId) {
+                removals.add(itemId);
+            } else if (article.getGangId() > 0) {
+                continue;
+            }
+            int sidx = AvatarLogic.getSlotIndex(article.getSlot());
+            if (!AvatarLogic.SLOTS[sidx].optional) {
+                // we end up with the newest articles for each slot, or 0 if we can't
+                // find one (which shouldn't happen).  the selection doesn't really
+                // matter, but we need to be consistent between the database and the
+                // dobj
+                replacements[sidx] = Math.max(replacements[sidx], itemId);
+            }
+        }
+
+        // modify the looks
+        ArrayList<Look> modified = new ArrayList<Look>();
+        for (Look look : looks) {
+            int[] articles = look.articles;
+            for (int ii = 0; ii < articles.length; ii++) {
+                if (removals.contains(articles[ii])) {
+                    articles[ii] = replacements[ii];
+                    look.modified = true;
+                }
+            }
+            if (look.modified) {
+                modified.add(look);
+            }
+        }
+        return modified;
     }
 
     /**

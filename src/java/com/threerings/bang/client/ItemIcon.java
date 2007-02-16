@@ -45,7 +45,10 @@ public class ItemIcon extends PaletteIcon
         if (text != null) {
             setText(ctx.xlate(BangCodes.BANG_MSGS, text));
         }
-        String tt = _item.getTooltip();
+        if (!(ctx instanceof BangContext)) {
+            return;
+        }
+        String tt = _item.getTooltip(((BangContext)ctx).getUserObject());
         if (tt != null) {
             setTooltipText(ctx.xlate(BangCodes.BANG_MSGS, tt));
         }
@@ -59,7 +62,7 @@ public class ItemIcon extends PaletteIcon
         _item = item;
         setIcon(_item.createIcon(_ctx, _item.getIconPath(_small)));
     }
-    
+
     /**
      * Returns the item associated with this icon.
      */
@@ -100,7 +103,7 @@ public class ItemIcon extends PaletteIcon
                         }
                     }
                 });
-                
+
         } else if ("article_print".equals(cmd)) {
             BangUI.copyToClipboard(((Article)_item).getPrint());
             ctx.getChatDirector().displayFeedback(BangCodes.BANG_MSGS, "m.article_print_copied");
@@ -135,7 +138,7 @@ public class ItemIcon extends PaletteIcon
             return;
         }
         BangContext ctx = (BangContext)_ctx;
-        
+
         BPopupMenu menu = new BPopupMenu(getWindow());
         menu.addListener(this);
 
@@ -179,7 +182,7 @@ public class ItemIcon extends PaletteIcon
         psvc.destroyItem(ctx.getClient(), _item.getItemId(),
             new ReportingListener(ctx, BangCodes.BANG_MSGS, "m.destroy_failed"));
     }
-    
+
     protected BasicContext _ctx;
     protected Item _item;
     protected boolean _menuEnabled;

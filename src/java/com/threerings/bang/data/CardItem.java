@@ -107,7 +107,7 @@ public class CardItem extends Item
     }
 
     @Override // documentation inherited
-    public String getTooltip ()
+    public String getTooltip (PlayerObject user)
     {
         return getTooltipText(_type);
     }
@@ -127,7 +127,7 @@ public class CardItem extends Item
         }
         return getIconPath();
     }
-    
+
     @Override // documentation inherited
     public boolean isEquivalent (Item other)
     {
@@ -136,7 +136,7 @@ public class CardItem extends Item
             (ocards = (CardItem)other)._type.equals(_type) &&
             ocards._quantity == _quantity;
     }
-    
+
     protected String _type;
     protected int _quantity;
 }

@@ -76,7 +76,7 @@ public abstract class Item
      * Returns a qualified translatable string to display in a tooltip when the player is hovering
      * over this item's icon.
      */
-    public abstract String getTooltip ();
+    public abstract String getTooltip (PlayerObject user);
 
     /**
      * Returns the path to the icon to use for this item.
@@ -178,7 +178,7 @@ public abstract class Item
         // must be of the exact same class
         return (getClass() == other.getClass());
     }
-    
+
     /**
      * Determines whether this item can be destroyed.
      */
@@ -188,7 +188,7 @@ public abstract class Item
         // indestructable
         return true;
     }
-    
+
     /**
      * Determines whether users can have exact duplicates of this item.
      */
@@ -196,7 +196,7 @@ public abstract class Item
     {
         return false;
     }
-    
+
     @Override // documentation inherited
     public int hashCode ()
     {

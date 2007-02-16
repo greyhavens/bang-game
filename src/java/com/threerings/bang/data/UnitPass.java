@@ -40,7 +40,7 @@ public class UnitPass extends Item
     }
 
     @Override // documentation inherited
-    public String getTooltip ()
+    public String getTooltip (PlayerObject user)
     {
         String msg = UnitConfig.getName(_unit);
         msg = MessageBundle.compose("m.unit_pass_tip", msg);
@@ -71,6 +71,6 @@ public class UnitPass extends Item
         return super.isEquivalent(other) &&
             ((UnitPass)other)._unit.equals(_unit);
     }
-    
+
     protected String _unit;
 }

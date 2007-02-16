@@ -201,7 +201,7 @@ public class BarberManager extends ShopManager
             }
 
             Article article = (Article)user.inventory.get(articles[ii]);
-            if (article == null ||
+            if (article == null || !article.isWearable(user) ||
                 !article.getSlot().equals(AvatarLogic.SLOTS[ii].name)) {
                 log.warning("Asked to configure look with invalid article " +
                             "[who=" + user.who() + ", article=" + article +

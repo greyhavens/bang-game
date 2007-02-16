@@ -107,7 +107,7 @@ public class Star extends Item
     }
 
     @Override // from Item
-    public String getTooltip ()
+    public String getTooltip (PlayerObject user)
     {
         return getTooltip(_townIdx, _difficulty);
     }

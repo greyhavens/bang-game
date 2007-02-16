@@ -19,12 +19,14 @@ import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.DatabaseLiaison;
 import com.samskivert.jdbc.JDBCUtil;
 import com.samskivert.jdbc.SimpleRepository;
+import com.samskivert.jdbc.TransitionRepository;
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Interator;
 import com.samskivert.util.StringUtil;
 import com.threerings.io.ObjectInputStream;
 
 import com.threerings.io.ObjectOutputStream;
+import com.threerings.io.Streamable;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Item;
@@ -56,6 +58,17 @@ public class ItemRepository extends SimpleRepository
         throws PersistenceException
     {
         super(conprov, ITEM_DB_IDENT);
+
+        // TEMP can be removed after all servers are past v. 2007-02-15
+        BangServer.transitrepo.transition(
+            ItemRepository.class, "add_article_gang_ids",
+            new TransitionRepository.Transition() {
+                public void run ()
+                    throws PersistenceException {
+                    addArticleGangIds();
+                }
+            });
+        // /TEMP can be removed after all servers are past v. 2007-02-15
     }
 
     /**
@@ -123,6 +136,61 @@ public class ItemRepository extends SimpleRepository
         return wraps;
     }
     // /TEMP can be removed after all servers are past v. 2007-02-09
+
+    // TEMP can be removed after all servers are past v. 2007-02-15
+    public static class OldArticle
+        implements Streamable
+    {
+        public String slot, name;
+        public int[] components;
+    }
+    public void addArticleGangIds ()
+        throws PersistenceException
+    {
+        // convert the articles one by one
+        final String query = "select ITEM_ID, OWNER_ID, ITEM_DATA from ITEMS " +
+            "where ITEM_TYPE = " + ItemFactory.getType(Article.class);
+        final int[] counts = new int[2];
+        execute(new Operation<Object>() {
+            public Object invoke (Connection conn, DatabaseLiaison liaison)
+                throws SQLException, PersistenceException
+            {
+                Statement stmt = conn.createStatement();
+                try {
+                    ResultSet rs = stmt.executeQuery(query);
+                    while (rs.next()) {
+                        int itemId = rs.getInt(1);
+                        int ownerId = rs.getInt(2);
+                        OldArticle oart = new OldArticle();
+                        ObjectInputStream oin = new ObjectInputStream(rs.getBinaryStream(3));
+                        boolean converted;
+                        try {
+                            // if there's data left over, then it has already been converted
+                            oin.readBareObject(oart);
+                            converted = (oin.available() > 0);
+                        } catch (Exception e) {
+                            throw new PersistenceException(e);
+                        }
+                        if (!converted) {
+                            Article nart = new Article(
+                                ownerId, oart.slot, oart.name, oart.components);
+                            nart.setItemId(itemId);
+                            updateItem(nart);
+                            counts[0]++;
+                        } else {
+                            counts[1]++;
+                        }
+                    }
+                } finally {
+                    JDBCUtil.close(stmt);
+                }
+                return null;
+            }
+        });
+        log.info("Added gang ids to " + counts[0] + " articles (" + counts[1] +
+            " already converted).");
+    }
+    // /TEMP can be removed after all servers are past v. 2007-02-15
 
     /**
      * Instantiates the appropriate item class and decodes the item from
@@ -407,8 +475,11 @@ public class ItemRepository extends SimpleRepository
     /**
      * Given a set of player ids and a prototype item, determines which of the players own
      * an identical item.
+     *
+     * @param alt an optional alternate item to match (which must be of the same item type)
      */
-    public ArrayIntSet getItemOwners (final ArrayIntSet playerIds, final Item item)
+    public ArrayIntSet getItemOwners (
+        final ArrayIntSet playerIds, final Item item, final Item alt)
         throws PersistenceException
     {
         // make sure the set isn't empty
@@ -417,7 +488,8 @@ public class ItemRepository extends SimpleRepository
         }
 
         // serialize the item prototype
-        final ByteArrayOutInputStream out = persistItem(item);
+        final ByteArrayOutInputStream out = persistItem(item),
+            aout = (alt == null) ? null : persistItem(alt);
         final int itemType = getItemType(item);
         final ArrayIntSet owners = new ArrayIntSet();
         execute(new Operation<Object>() {
@@ -427,10 +499,14 @@ public class ItemRepository extends SimpleRepository
                 PreparedStatement stmt = conn.prepareStatement(
                     "select OWNER_ID from ITEMS where OWNER_ID in " +
                     StringUtil.toString(playerIds.iterator(), "(", ")") +
-                    " and ITEM_TYPE = ? and ITEM_DATA = ?");
+                    " and ITEM_TYPE = ? and (ITEM_DATA = ?" +
+                    (aout == null ? ")" : " or ITEM_DATA = ?)"));
                 try {
                     stmt.setInt(1, itemType);
                     stmt.setBinaryStream(2, out.getInputStream(), out.size());
+                    if (aout != null) {
+                        stmt.setBinaryStream(3, aout.getInputStream(), out.size());
+                    }
                     ResultSet rs = stmt.executeQuery();
                     while (rs.next()) {
                         owners.add(rs.getInt(1));

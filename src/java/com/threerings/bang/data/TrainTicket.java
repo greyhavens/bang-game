@@ -68,7 +68,7 @@ public class TrainTicket extends Item
     }
 
     @Override // documentation inherited
-    public String getTooltip ()
+    public String getTooltip (PlayerObject user)
     {
         String msg = MessageBundle.qualify(
             BangCodes.BANG_MSGS, "m." + getTownId());
@@ -88,6 +88,6 @@ public class TrainTicket extends Item
         return super.isEquivalent(other) &&
             ((TrainTicket)other)._townIndex == _townIndex;
     }
-    
+
     protected int _townIndex;
 }

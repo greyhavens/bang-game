@@ -55,6 +55,7 @@ public class InventoryPalette extends IconPalette
         super(inspector, columns, rows, ItemIcon.ICON_SIZE, 0);
         setPaintBackground(true);
         _ctx = ctx;
+        _acomp = Article.createComparator(ctx.getUserObject());
         _itemp = itemp;
         _allowItemPopup = allowItemPopup;
     }
@@ -78,7 +79,7 @@ public class InventoryPalette extends IconPalette
             }
         }
     }
-    
+
     // documentation inherited from SetListener
     public void entryRemoved (EntryRemovedEvent event)
     {
@@ -89,7 +90,7 @@ public class InventoryPalette extends IconPalette
             }
         }
     }
-    
+
     // documentation inherited from SetListener
     public void entryUpdated (EntryUpdatedEvent event)
     {
@@ -100,7 +101,7 @@ public class InventoryPalette extends IconPalette
             }
         }
     }
-    
+
     /**
      * Finds the icon corresponding to the specified item.
      */
@@ -115,7 +116,7 @@ public class InventoryPalette extends IconPalette
         }
         return null;
     }
-    
+
     @Override // documentation inherited
     protected void wasAdded ()
     {
@@ -124,7 +125,7 @@ public class InventoryPalette extends IconPalette
         // populate our item display every time we are shown as we may be
         // hidden, the player's inventory updated, then reshown again
         populate();
-        
+
         // listen to the user object for inventory changes
         _ctx.getUserObject().addListener(this);
     }
@@ -136,7 +137,7 @@ public class InventoryPalette extends IconPalette
 
         // clear out our item display
         clear();
-        
+
         // stop listening to the user object
         _ctx.getUserObject().removeListener(this);
     }
@@ -165,6 +166,7 @@ public class InventoryPalette extends IconPalette
     }
 
     protected BangContext _ctx;
+    protected Comparator<Article> _acomp;
     protected Predicate<Item> _itemp;
     protected boolean _allowItemPopup;
 
@@ -177,7 +179,7 @@ public class InventoryPalette extends IconPalette
             }
             // compare articles specially to make Rick happy
             if (one instanceof Article) {
-                return Article.ARTICLE_COMP.compare((Article)one, (Article)two);
+                return _acomp.compare((Article)one, (Article)two);
             } else {
                 String t1 = _ctx.xlate(BangCodes.BANG_MSGS, one.getName(false));
                 return t1.compareTo(
@@ -185,6 +187,6 @@ public class InventoryPalette extends IconPalette
             }
         }
     };
-    
-    protected static final int COLUMNS = 5;    
+
+    protected static final int COLUMNS = 5;
 }

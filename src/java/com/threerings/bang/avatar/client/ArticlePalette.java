@@ -3,6 +3,7 @@
 
 package com.threerings.bang.avatar.client;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
 import com.samskivert.util.SortableArrayList;
@@ -28,6 +29,7 @@ public class ArticlePalette extends IconPalette
         super(inspector, 4, 3, ItemIcon.ICON_SIZE, 1);
         setPaintBackground(true);
         _ctx = ctx;
+        _acomp = Article.createComparator(ctx.getUserObject());
         _view = view;
     }
 
@@ -63,10 +65,13 @@ public class ArticlePalette extends IconPalette
             }
             articles.add((Article)item);
         }
-        articles.sort(Article.ARTICLE_COMP);
+        articles.sort(_acomp);
 
         // now create icons for each article
         for (Article article : articles) {
+            if (!article.isWearable(player)) {
+                continue; // TODO: show them disabled?
+            }
             ItemIcon icon = new ItemIcon(_ctx, article);
             addIcon(icon);
 
@@ -78,5 +83,6 @@ public class ArticlePalette extends IconPalette
     }
 
     protected BangContext _ctx;
+    protected Comparator<Article> _acomp;
     protected PickLookView _view;
 }

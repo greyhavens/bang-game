@@ -56,7 +56,7 @@ public class BigShotItem extends Item
     }
 
     @Override // documentation inherited
-    public String getTooltip ()
+    public String getTooltip (PlayerObject user)
     {
         return UnitConfig.getTip(_type);
     }
@@ -87,7 +87,7 @@ public class BigShotItem extends Item
             (oshot = (BigShotItem)other)._type.equals(_type) &&
             oshot._name.equals(_name);
     }
-    
+
     protected String _type;
     protected String _name;
 }

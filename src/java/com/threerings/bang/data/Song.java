@@ -39,7 +39,7 @@ public class Song extends Item
     }
 
     @Override // from Item
-    public String getTooltip ()
+    public String getTooltip (PlayerObject user)
     {
         return MessageBundle.qualify(BangCodes.GOODS_MSGS, "m.song_tip");
     }
@@ -55,7 +55,7 @@ public class Song extends Item
     {
         return super.isEquivalent(other) && ((Song)other)._song.equals(_song);
     }
-    
+
     @Override // from Item
     protected void toString (StringBuilder buf)
     {
