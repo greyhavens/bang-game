@@ -268,12 +268,20 @@ public class PardnerView extends IconPalette
         protected void updateStatus ()
         {
             // update the location icon
-            String locpath = null;
-            if (entry.status == PardnerEntry.IN_GAME || entry.status == PardnerEntry.IN_SALOON) {
-                String where = entry.status == PardnerEntry.IN_GAME ? "game" : "saloon";
-                locpath = "ui/pardners/in_" + where + ".png";
-            } else if (entry.getTownIndex() != -1) {
-                locpath = "ui/pardners/" + BangCodes.TOWN_IDS[entry.getTownIndex()] + ".png";
+            String locpath = "ui/pardners/";
+            switch (entry.status) {
+              case PardnerEntry.IN_GAME:
+                locpath += "in_game.png";
+                break;
+              case PardnerEntry.IN_SALOON:
+                locpath += "in_saloon.png";
+                break;
+              case PardnerEntry.IN_BOUNTY:
+                locpath += "in_bounty.png";
+                break;
+              default:
+                locpath = entry.getTownIndex() == -1 ? null :
+                    locpath + BangCodes.TOWN_IDS[entry.getTownIndex()] + ".png";
             }
             setLocation(locpath == null ? null : new ImageIcon(_ctx.loadImage(locpath)));
 

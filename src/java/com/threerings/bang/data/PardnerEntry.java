@@ -30,6 +30,9 @@ public class PardnerEntry
     /** The pardner is in a game. */
     public static final byte IN_GAME = 3;
 
+    /** The pardner is doing a bounty. */
+    public static final byte IN_BOUNTY = 4;
+
     /** The pardner's handle. */
     public Handle handle;
 
@@ -96,7 +99,7 @@ public class PardnerEntry
      */
     public boolean isAvailable ()
     {
-        return status != OFFLINE && status != IN_GAME;
+        return status != OFFLINE && status != IN_GAME && status != IN_BOUNTY;
     }
 
     /**

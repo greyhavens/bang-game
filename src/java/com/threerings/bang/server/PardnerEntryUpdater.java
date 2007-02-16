@@ -169,8 +169,12 @@ public class PardnerEntryUpdater extends SetAdapter
             entry.gameOid = 0;
             DObject plobj = BangServer.omgr.getObject(_player.location);
             if (plobj instanceof BangObject) {
-                entry.status = PardnerEntry.IN_GAME;
-                entry.gameOid = plobj.getOid();
+                if (((BangObject)plobj).bounty != null) {
+                    entry.status = PardnerEntry.IN_BOUNTY;
+                } else {
+                    entry.status = PardnerEntry.IN_GAME;
+                    entry.gameOid = plobj.getOid();
+                }
             } else if (plobj instanceof SaloonObject) {
                 entry.status = PardnerEntry.IN_SALOON;
             } else {
