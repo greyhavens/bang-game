@@ -1,0 +1,67 @@
+Bountiful Bounties
+
+Howdy pardners! We've been a bit quiet since the start of the New Year because
+we've been hard at work on fun fancy new features for y'all to enjoy. We
+shuffled up the schedule a bit and we're happy to report that we've released
+<span class="highlight">Bounties</span> today.</p>
+
+<p> What are bounties, ya might be wonderin'. Well, bounties are a single player
+campaign mode where an intrepid Deputy (that's you) is pitted against an Outlaw
+(and sometimes their henchmen) in a series of games. Except that in bounty
+games the goal isn't always to come in first place. Games can define additional
+criteria like finishin' the game without losing more than five units or gunnin'
+down more than ten of the opponent's units in the process. </p>
+
+<p> When the Outlaw is finally brung in, the Deputy gets the bounty reward.
+That's a healthy helpin' o' scrip and for especially tough outlaws, it might
+include special <span class="highlight">Badges</span> or even <span
+class="highlight">fancy Duds</span> that can't be bought by regular folks in
+the General Store. </p>
+
+<p> We've also released full-length versions of our in-game music, written and
+produced by them crazy cowpokes over at SomaTone Interactive Audio. If ya
+reckon ya like the music in Bang! Howdy then yer in luck because now you can
+get full length versions of the tracks fer listenin' to on yer iPod or other
+fancy portable music playin' device. No need to go to your local record store,
+you can download it directly from the <span class="highlight">General
+Store</span> in the game. </p>
+
+<p> There are of course a small raft of minor tweaks, bug fixes and other
+little twiddlin's that we are constantly doin' as a matter of course. For the
+detail oriented among ye, we'll enumerate those more specifically: </p>
+
+<ul>
+<li> Removed Saloon chat and added "social parlors" where folks can hang out
+and chat. We also sort the list of parlors based on how many people are in 'em
+to make it easy to find the popular spots. </li>
+
+<li> We redid the tutorial interface and created a helpful display to get new
+folks right into the fun. </li>
+
+<li> Fixed a problem where units were gettin' pushed through fences. Ouch! </li>
+
+<li> Redid the in-game interfaces to make player colors clearer. You'll notice
+that some of the Outlaws in bounties are teamed up against ya. Could it be that
+we might be adding team play some time soon? </li>
+
+<li> Taught the AI how to be fooled by Fool's Gold. </li>
+
+<li> Various other little bug fixes and small adjustments. </li>
+</ul>
+
+<p> Astute pardners will also notice the <span class="highlight">Hideout</span>
+perched upon the hill there in Frontier Town. We've been making good progress
+on <span class="highlight">Gangs</span> and it won't be long before those will
+be makin' their way out of the nest and into the wide world as well. </p>
+
+<p> On top of that, we've got <span class="highlight">Boom Town</span>
+development going in full swing and we're dreamin' up all sorts of crazy
+steam-powered robot antics and beaverin' away to make them a reality. It's
+going to be a fair while before Boom Town is ready for public consumption but
+we promise to keep ya entertained between now and then with all sorts of good
+stuff. </p>
+
+<p> In the meanwhile, good luck bringin' in them Outlaws and we'll see ya
+'round the Sheriff's Office, </p>
+
+<p align="right">- <a href="mailto:mdb@threerings.net">Sheriff Mike</a>
