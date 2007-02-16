@@ -2,7 +2,7 @@
 
 <model>
 
-  <triMesh name="pole" translation="-100.0, -100.0, 3.14142" rotation="0.0, 0.0, 0.0, 1.0" scale="18.0, 18.0, 18.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="skin.png" transparent="false">
+  <triMesh name="pole" translation="0.0, 0.0, 3.14142" rotation="0.0, 0.0, 0.0, 1.0" scale="18.0, 18.0, 18.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="true" texture="skin.png" transparent="false">
     <vertex location="0.927803, 1.607, -0.383484" normal="0.5, 0.866025, 0.0" tcoords="0.017965, 0.021423"/>
     <vertex location="-0.927803, 1.607, -0.383484" normal="-0.5, 0.866025, 3.97711e-007" tcoords="0.25, 0.021423"/>
     <vertex location="-0.927802, 1.607, 0.482269" normal="-0.5, 0.866026, 5.50777e-007" tcoords="0.25, 0.142374"/>
@@ -125,7 +125,7 @@
     <vertex location="1.08949, 0.0, 4.59736" normal="0.0, 0.0, 1.0" tcoords="0.612756, 0.529194"/>
   </triMesh>
 
-  <triMesh name="cap" translation="-100.0, -100.0, 3.14142" rotation="0.0, 0.0, 0.0, 1.0" scale="18.0, 18.0, 18.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="skin.png" transparent="false">
+  <triMesh name="cap" translation="0.0, 0.0, 3.14142" rotation="0.0, 0.0, 0.0, 1.0" scale="18.0, 18.0, 18.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="skin.png" transparent="false">
     <vertex location="0.604743, 1.04745, 4.61194" normal="0.498866, 0.864061, 0.0673164" tcoords="0.366049, 0.805014"/>
     <vertex location="-0.604742, 1.04745, 4.61194" normal="-0.498866, 0.864061, 0.0673158" tcoords="0.535544, 0.805014"/>
     <vertex location="-0.558957, 0.968143, 5.96916" normal="-0.498866, 0.864061, 0.0673158" tcoords="0.535544, 0.981662"/>
@@ -206,7 +206,7 @@
     <vertex location="0.825016, 0.0, 6.2564" normal="0.700174, 0.0, 0.713973" tcoords="0.749026, 0.102205"/>
   </triMesh>
 
-  <triMesh name="beam" parent="cap" translation="2.23517e-007, 2.23517e-007, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="lightbeam.png" transparent="false">
+  <triMesh name="beam" parent="cap" translation="0.0, 0.0, 0.0" rotation="0.0, 0.0, 0.0, 1.0" scale="1.0, 1.0, 1.0" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="lightbeam.png" transparent="false">
     <vertex location="-3.00305, -8.50423, 8.23538" normal="0.0, 0.292387, 0.9563" tcoords="1.0, 0.985192"/>
     <vertex location="3.00162, -8.50423, 8.23538" normal="0.0, 0.292387, 0.9563" tcoords="0.0, 0.985192"/>
     <vertex location="0.540841, -0.912155, 5.91411" normal="0.0, 0.292387, 0.9563" tcoords="0.0, 0.5"/>
@@ -257,7 +257,7 @@
     <vertex location="-0.517695, -0.470323, 5.88704" normal="-0.994365, 0.103335, 0.0236515" tcoords="-1.0, 0.022212"/>
   </triMesh>
 
-  <triMesh name="flare" translation="-100.0, -100.0, 98.1319" rotation="0.0, 0.0, 0.0, 1.0" scale="0.153083, 0.153083, 0.274133" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="bulb.png" transparent="false">
+  <triMesh name="flare" translation="0.0, 0.0, 98.1319" rotation="0.0, 0.0, 0.0, 1.0" scale="0.153083, 0.153083, 0.274133" offsetTranslation="0.0, 0.0, 0.0" offsetRotation="0.0, 0.0, 0.0, 1.0" offsetScale="1.0, 1.0, 1.0" solid="false" texture="bulb.png" transparent="false">
     <vertex location="-100.0, 0.0, 55.8424" normal="0.0, 1.0, 0.0" tcoords="0.0, 1.0"/>
     <vertex location="100.0, 0.0, 55.8424" normal="0.0, 1.0, 0.0" tcoords="0.0, 0.0"/>
     <vertex location="-100.0, 0.0, -55.8424" normal="0.0, 1.0, 0.0" tcoords="1.0, 1.0"/>
