@@ -1795,6 +1795,12 @@ public class BangManager extends GameManager
                         }
                     }
                 }
+
+                // leaving a game early constitutes a bounty failure
+                if (_bangobj.tick < _bangobj.lastTick) {
+                    failed++;
+                }
+
                 if (failed == 0) {
                     user.stats.addToSetStat(Stat.Type.BOUNTY_GAMES_COMPLETED,
                                             _bounty.getStatKey(_bangobj.bountyGameId));
