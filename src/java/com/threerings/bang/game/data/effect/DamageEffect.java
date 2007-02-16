@@ -21,23 +21,26 @@ public class DamageEffect extends Effect
 
     /** The base amount of damage to inflict. */
     public int baseDamage;
-    
+
     /** The piece's new damage amount. */
     public int ndamage;
-    
+
+    /** The player index originating the damage. */
+    public int pidx = -1;
+
     /** The piece's death effect, if it died. */
     public Effect deathEffect;
-    
+
     public DamageEffect ()
     {
     }
-    
+
     public DamageEffect (Piece piece, int damage)
     {
         pieceId = piece.pieceId;
         baseDamage = damage;
     }
-    
+
     @Override // documentation inherited
     public int[] getAffectedPieces ()
     {
@@ -46,13 +49,13 @@ public class DamageEffect extends Effect
         }
         return ArrayUtil.append(deathEffect.getAffectedPieces(), pieceId);
     }
-    
+
     @Override // documentation inherited
     public int[] getWaitPieces ()
     {
         return (deathEffect == null) ? NO_PIECES : deathEffect.getWaitPieces();
     }
-    
+
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
@@ -70,7 +73,7 @@ public class DamageEffect extends Effect
             log.warning("Damage effect missing piece [id=" + pieceId + "].");
         }
     }
-    
+
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
@@ -79,14 +82,14 @@ public class DamageEffect extends Effect
         }
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null) {
-            log.warning("Missing piece for damage effect [id=" + 
+            log.warning("Missing piece for damage effect [id=" +
                     pieceId + "].");
             return false;
         }
-        return damage(bangobj, obs, -1, null, piece, ndamage,
+        return damage(bangobj, obs, pidx, null, piece, ndamage,
             ShotEffect.DAMAGED);
     }
-    
+
     @Override // documentation inherited
     public int getBaseDamage (Piece piece)
     {

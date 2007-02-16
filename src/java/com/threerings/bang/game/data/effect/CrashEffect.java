@@ -39,6 +39,10 @@ public class CrashEffect extends DamageEffect
         if (piece == null || piece.damage >= 100) {
             pieceId = -1;
         } else {
+            Piece crasher = bangobj.pieces.get(crasherId);
+            if (crasher != null) {
+                pidx = crasher.owner;
+            }
             super.prepare(bangobj, dammap);
         }
     }
