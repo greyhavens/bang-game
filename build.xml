@@ -734,6 +734,7 @@
         <include name="rsrc/bonuses/**"/>
         <include name="rsrc/bounties/**"/>
         <include name="rsrc/extras/**"/>
+        <exclude name="**/*.jar"/>
       </fileset>
       <fileset dir="${deploy.dir}/classes">
         <include name="ehcache.xml"/>
