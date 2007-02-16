@@ -587,7 +587,7 @@
     <!-- do some temporary fiddling to nix boom_town and bounties from production -->
     <exec executable="egrep" output="${web_dir}/client/${version}/getdown.txt">
       <arg line="-v"/>
-      <arg line="boom_town|bounties"/>
+      <arg line="boom_town"/>
       <arg line="${web_dir}/client/${version}/getdown.txt.tmp"/>
     </exec>
     <!-- delete the temporary file -->
