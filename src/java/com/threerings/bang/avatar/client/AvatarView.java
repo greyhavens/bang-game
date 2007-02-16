@@ -65,7 +65,7 @@ public class AvatarView extends BLabel
                 BufferedImage cropped = base.getSubimage(
                     (base.getWidth()-fwidth)/2, (base.getHeight()-fheight)/2, fwidth, fheight);
                 // compute our reduction based on the canonical width/height
-                int sw = FRAMED_WIDTH/reduction, sh = FRAMED_HEIGHT/reduction; 
+                int sw = FRAMED_WIDTH/reduction, sh = FRAMED_HEIGHT/reduction;
                 receiver.requestCompleted(
                     new BImage(cropped.getScaledInstance(sw, sh, BufferedImage.SCALE_SMOOTH)));
             }
@@ -270,7 +270,7 @@ public class AvatarView extends BLabel
      */
     public void setAvatar (AvatarInfo avatar)
     {
-        if (_avatar != null && _avatar.equals(avatar)) {
+        if ((_avatar != null && _avatar.equals(avatar)) || avatar == null) {
             return;
         }
         _avatar = (AvatarInfo)avatar.clone();
