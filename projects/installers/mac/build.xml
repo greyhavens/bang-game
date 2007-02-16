@@ -78,31 +78,17 @@
 
   <!-- creates the disk image -->
   <target name="image">
-    <exec executable="/usr/bin/hdiutil" failonerror="true">
-      <arg line="makehybrid"/>
-      <arg line="-hfs"/>
-      <arg line="-hfs-volume-name"/>
+    <exec executable="mkisofs" failonerror="true">
+      <arg line="-r"/>
+      <arg line="-hide-rr-moved"/>
+      <arg line="-hide-joliet"/>
+      <arg line=".rr_moved"/>
+      <arg line="-J"/>
+      <arg line="-V"/>
       <arg line="'${base.name}'"/>
-      <arg line="-hfs-openfolder"/>
-      <arg file="${img.dir}"/>
-      <arg file="${img.dir}"/>
       <arg line="-o"/>
-      <arg file="${tmp.dmg}"/>
-    </exec>
-
-    <exec executable="/usr/bin/hdiutil" failonerror="true">
-      <arg line="convert"/>
-      <arg line="'${tmp.dmg}.dmg'"/>
-      <arg line="-format"/>
-      <arg line="UDZO"/>
-      <arg line="-o"/>
-      <arg line="'${inst.dir}/bang-install'"/>
-    </exec>
-    <delete file="${tmp.dmg}.dmg"/>
-
-    <exec executable="/usr/bin/hdiutil" failonerror="true">
-      <arg line="internet-enable"/>
       <arg line="'${inst.dir}/bang-install.dmg'"/>
+      <arg file="${img.dir}"/>
     </exec>
   </target> 
 
@@ -133,8 +119,8 @@
     <property name="app.name" value="Dev ${base.name}.app"/>
     <property name="app_base.name" value="Dev ${base.name}"/>
   </target>
-  <target name="devclient" depends="devprops,app"/>
-  <target name="devclient_full" depends="devprops,app,makefull"/>
+  <target name="devclient" depends="devprops,app,image"/>
+  <target name="devclient_full" depends="devprops,app,makefull,image"/>
 
   <!-- creates the client app -->
   <target name="props">
@@ -144,8 +130,8 @@
     <property name="app.name" value="${base.name}.app"/>
     <property name="app_base.name" value="${base.name}"/>
   </target>
-  <target name="client" depends="props,app"/>
-  <target name="client_full" depends="props,app,makefull"/>
+  <target name="client" depends="props,app,image"/>
+  <target name="client_full" depends="props,app,makefull,image"/>
 
   <!-- creates the tclient installer -->
   <target name="tprops">
