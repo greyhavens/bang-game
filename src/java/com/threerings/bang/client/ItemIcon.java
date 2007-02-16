@@ -76,6 +76,15 @@ public class ItemIcon extends PaletteIcon
         _menuEnabled = menuEnabled;
     }
 
+    /**
+     * Indicates whether or not the item popup menu is enabled for this item.
+     */
+    public boolean isMenuEnabled ()
+    {
+        // TEMP: for now menus are only enabled on songs
+        return _menuEnabled && (_item instanceof Song);
+    }
+
     // from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
@@ -109,7 +118,7 @@ public class ItemIcon extends PaletteIcon
     @Override // from BToggleButton
     public boolean dispatchEvent (BEvent event)
     {
-        if (isEnabled() && _menuEnabled && event instanceof MouseEvent) {
+        if (isEnabled() && isMenuEnabled() && event instanceof MouseEvent) {
             MouseEvent mev = (MouseEvent)event;
             if (mev.getType() == MouseEvent.MOUSE_PRESSED) {
                 displayItemPopup(mev.getX(), mev.getY());
@@ -136,7 +145,9 @@ public class ItemIcon extends PaletteIcon
         // add item specific stuff (this is sort of a hack but there's not really anywhere better
         // to put this code)
         if (_item instanceof Article) {
-            menu.addMenuItem(createItem("article_print"));
+            if (ctx.getUserObject().tokens.isAdmin()) {
+                menu.addMenuItem(createItem("article_print"));
+            }
 
         } else if (_item instanceof Song) {
             if (SongDownloadView.songDownloaded(((Song)_item).getSong())) {
@@ -149,7 +160,9 @@ public class ItemIcon extends PaletteIcon
 
         // all destroyable items have a "destroy" menu item
         if (_item.isDestroyable(ctx.getUserObject())) {
-            menu.addMenuItem(createItem("destroy"));
+            if (ctx.getUserObject().tokens.isAdmin()) {
+                menu.addMenuItem(createItem("destroy"));
+            }
         }
         menu.popup(mx, my, false);
     }
