@@ -188,6 +188,18 @@ public class BountyConfig extends SimpleStreamableObject
     }
 
     /**
+     * Returns the identifiers of all bounties of the specified town and type.
+     */
+    public static ArrayList<String> getBountyIds (String townId, Type type)
+    {
+        ArrayList<String> ids = new ArrayList<String>();
+        for (BountyConfig config : getBounties(townId, type)) {
+            ids.add(config.ident);
+        }
+        return ids;
+    }
+
+    /**
      * Returns true if this bounty is available to the specified player.
      */
     public boolean isAvailable (PlayerObject user)

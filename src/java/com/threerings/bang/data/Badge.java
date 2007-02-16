@@ -17,6 +17,7 @@ import com.samskivert.util.HashIntMap;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
+import com.threerings.bang.bounty.data.BountyConfig;
 import com.threerings.bang.game.data.card.Card;
 
 import com.threerings.bang.util.BangUtil;
@@ -602,6 +603,17 @@ public class Badge extends Item
         BOUNTY_CALAVERA,
         BOUNTY_MUSTACHE,
         BOUNTY_SHARK,
+        BOUNTY_ALL_FT_TOWN {
+            public boolean qualifies (PlayerObject user) {
+                return hasCompletedBounties(user.stats, TOWN_BOUNTIES.get(BangCodes.FRONTIER_TOWN));
+            }
+        },
+        BOUNTY_ALL_FT {
+            public boolean qualifies (PlayerObject user) {
+                return user.holdsBadge(BOUNTY_ALL_FT_TOWN) &&
+                    hasCompletedBounties(user.stats, WANTED_BOUNTIES.get(BangCodes.FRONTIER_TOWN));
+            }
+        },
 
         UNUSED;
 
@@ -713,8 +725,9 @@ public class Badge extends Item
         Type.UNITS_LOST_1, Type.UNITS_LOST_2, null, Type.CONSEC_LOSSES_1, Type.CONSEC_LOSSES_2,
 
         // frontier town bounty badges
-        Type.BOUNTY_DYNAMITE, Type.BOUNTY_SANCHO, null, null, null,
-        Type.BOUNTY_MAUDE, Type.BOUNTY_CALAVERA, Type.BOUNTY_MUSTACHE, Type.BOUNTY_SHARK, null,
+        Type.BOUNTY_DYNAMITE, Type.BOUNTY_SANCHO, null, null, Type.BOUNTY_ALL_FT_TOWN,
+        Type.BOUNTY_MAUDE, Type.BOUNTY_CALAVERA, Type.BOUNTY_MUSTACHE, Type.BOUNTY_SHARK,
+        Type.BOUNTY_ALL_FT,
 
         // general non-series (wacky) badges
         Type.IRON_HORSE, Type.SAINT_NICK,
@@ -950,6 +963,17 @@ public class Badge extends Item
             stats.getMapValue(Stat.Type.BIGSHOT_WINS, type) >= 30;
     }
 
+    /** Used by the all bounty badges. */
+    protected static boolean hasCompletedBounties (StatSet stats, ArrayList<String> bounties)
+    {
+        for (String bounty : bounties) {
+            if (!stats.containsValue(Stat.Type.BOUNTIES_COMPLETED, bounty)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Registers all badge awards. We have to do this on demand rather than in
      * a static initializer because of a twisty maze of already interdependent
@@ -1037,4 +1061,20 @@ public class Badge extends Item
     /** Used by unit usage badges. */
     protected static final EnumSet<UnitConfig.Rank> ALL_UNITS =
         EnumSet.of(UnitConfig.Rank.BIGSHOT, UnitConfig.Rank.NORMAL);
+
+    /** Used by the all bounty badges. */
+    protected static final HashMap<String,ArrayList<String>> TOWN_BOUNTIES =
+        new HashMap<String,ArrayList<String>>();
+
+    /** Used by the all bounty badges. */
+    protected static final HashMap<String,ArrayList<String>> WANTED_BOUNTIES =
+        new HashMap<String,ArrayList<String>>();
+
+    static {
+        for (String townId : BangCodes.TOWN_IDS) {
+            TOWN_BOUNTIES.put(townId, BountyConfig.getBountyIds(townId, BountyConfig.Type.TOWN));
+            WANTED_BOUNTIES.put(
+                townId, BountyConfig.getBountyIds(townId, BountyConfig.Type.MOST_WANTED));
+        }
+    }
 }
