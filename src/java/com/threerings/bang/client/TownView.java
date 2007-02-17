@@ -76,6 +76,8 @@ import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.RenderUtil;
 
+import com.threerings.bang.tourney.client.TourneyListView;
+
 import static com.threerings.bang.Log.*;
 import static com.threerings.bang.client.BangMetrics.*;
 
@@ -156,6 +158,17 @@ public class TownView extends BWindow
         button = new BButton(new BlankIcon(128, 30), this, "exit");
         button.setStyleClass("exit_button");
         _menu.add(button, GroupLayout.FIXED);
+
+        // if we're an admin add some temporary buttons
+        if (ctx.getUserObject().tokens.isSupport()) {
+            add(_admin = GroupLayout.makeHBox(GroupLayout.CENTER));
+            ActionListener fire = new ActionListener() {
+                public void actionPerformed (ActionEvent event) {
+                    fireCommand(event.getAction());
+                }
+            };
+            _admin.add(new BButton("Tournaments", this, "tourney"));
+        }
     }
 
     /**
@@ -211,6 +224,10 @@ public class TownView extends BWindow
 
         } else if ("pardners".equals(cmd)) {
             StatusView.showStatusTab(_bctx, StatusView.PARDNERS_TAB);
+
+        } else if ("tourney".equals(cmd)) {
+            _bctx.getBangClient().displayPopup(
+                    new TourneyListView(_bctx), true, 500);
         }
     }
 

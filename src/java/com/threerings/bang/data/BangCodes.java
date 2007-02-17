@@ -55,6 +55,9 @@ public interface BangCodes extends InvocationCodes
     /** The message bundle identifier for our translation messages. */
     public static final String CARDS_MSGS = "cards";
 
+    /** The message bundle identifier for our translation messages. */
+    public static final String TOURNEY_MSGS = "tourney";
+
     /** The last player id that is considered a beta player. */
     public static final int BETA_PLAYER_CUTOFF = 33755;
 

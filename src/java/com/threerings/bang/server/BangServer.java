@@ -74,6 +74,7 @@ import com.threerings.bang.station.data.StationConfig;
 import com.threerings.bang.station.server.StationManager;
 import com.threerings.bang.store.data.StoreConfig;
 import com.threerings.bang.store.server.StoreManager;
+import com.threerings.bang.tourney.server.BangTourniesManager;
 
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
@@ -155,6 +156,9 @@ public class BangServer extends CrowdServer
 
     /** Manages gangs. */
     public static GangManager gangmgr;
+
+    /** Manages tournaments. */
+    public static BangTourniesManager tournmgr;
 
     /** Manages rating bits. */
     public static RatingManager ratingmgr;
@@ -293,6 +297,7 @@ public class BangServer extends CrowdServer
         // create our various supporting managers
         playmgr = new PlayerManager();
         gangmgr = new GangManager();
+        tournmgr = new BangTourniesManager(conprov);
         ratingmgr = new RatingManager();
         coinmgr = new BangCoinManager(conprov, actionrepo);
         coinexmgr = new BangCoinExchangeManager(conprov);
@@ -387,6 +392,7 @@ public class BangServer extends CrowdServer
         boardmgr.init(conprov);
         playmgr.init(conprov);
         gangmgr.init(conprov);
+        tournmgr.init();
         ratingmgr.init(conprov);
         coinexmgr.init();
         adminmgr.init(this);

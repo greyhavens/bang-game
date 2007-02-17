@@ -40,6 +40,9 @@ public class BangBootstrapData extends BootstrapData
     /** The room oid of the Sheriff's office. */
     public int officeOid;
 
+    /** The oid for the list of active/pending tournies. */
+    public int tourniesOid;
+
     /**
      * Returns the place oid for the shop with the specified string identifier or -1 if the
      * identifier is unknown.
