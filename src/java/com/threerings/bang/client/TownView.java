@@ -186,6 +186,15 @@ public class TownView extends BWindow
     public void resetViewpoint ()
     {
         _bview.moveToViewpoint("main", 1f);
+
+        // wait until we've finished animating the camera and then check to see if we
+        // should display a tutorial or intro
+        _bctx.getCameraHandler().addCameraObserver(new CameraPath.Observer() {
+            public boolean pathCompleted (CameraPath path) {
+                finishedIntroPan();
+                return false; // removes our observer
+            }
+        });
     }
 
     // from interface MainView
