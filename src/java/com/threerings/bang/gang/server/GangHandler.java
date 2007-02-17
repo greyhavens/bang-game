@@ -1371,13 +1371,14 @@ public class GangHandler
         ArrayList<Look> modified = new ArrayList<Look>();
         for (Look look : looks) {
             int[] articles = look.articles;
+            boolean replaced = false;
             for (int ii = 0; ii < articles.length; ii++) {
                 if (removals.contains(articles[ii])) {
                     articles[ii] = replacements[ii];
-                    look.modified = true;
+                    replaced = true;
                 }
             }
-            if (look.modified) {
+            if (replaced) {
                 modified.add(look);
             }
         }
