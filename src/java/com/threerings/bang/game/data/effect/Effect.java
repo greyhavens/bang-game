@@ -192,10 +192,7 @@ public abstract class Effect extends SimpleStreamableObject
         boolean alive = target.isAlive();
         if (!alive) {
             target.wasKilled(bangobj.tick);
-            if (shooter != null && target.owner >= 0) {
-                shooter.didKill();
-            }
-            
+
             // airborn targets must land when they die
             Point pt = target.maybeCrash(bangobj, shooterIdx);
             if (pt != null) {
@@ -222,6 +219,13 @@ public abstract class Effect extends SimpleStreamableObject
         // if we have a shooter and we're on the server, record the kill
         if (shooterIdx != -1 && bangobj.getManager().isManager(bangobj) &&
                 target instanceof Unit) {
+            if (shooter != null && target.owner >= 0) {
+                shooter.didKill();
+                if (shooter instanceof Unit) {
+                    bangobj.stats[shooterIdx].maxStat(
+                            Stat.Type.CONSEC_KILLS, ((Unit)shooter).consecKills);
+                }
+            }
             // record the kill statistics
             bangobj.stats[shooterIdx].incrementStat(Stat.Type.UNITS_KILLED, 1);
             if (target.owner != -1) {
