@@ -6,6 +6,8 @@ package com.threerings.bang.data;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import com.jme.renderer.Renderer;
+
 import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
 
@@ -23,6 +25,7 @@ import com.threerings.bang.avatar.util.AvatarLogic;
 
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
@@ -174,25 +177,24 @@ public class Article extends Item
     @Override // documentation inherited
     public ImageIcon createIcon (BasicContext ctx, String iconPath)
     {
-        // TODO: dim this out, put a lock on it or something if it's unwearable;
-        // indicate somehow that it's a gang article if appropriate
+        // TODO: indicate somehow that it's a wearable gang article?
         AvatarLogic al = ctx.getAvatarLogic();
         ArticleCatalog.Article aca = al.getArticleCatalog().getArticle(_name);
         if (aca == null) {
             log.warning("Article no longer exists? " + this);
-            return super.createIcon(ctx, iconPath);
+            return customizeIcon(ctx, super.createIcon(ctx, iconPath));
         }
 
         Colorization[] zations = al.decodeColorizations(
             getComponents()[0], al.getColorizationClasses(aca));
         if (zations == null) {
-            return super.createIcon(ctx, iconPath);
+            return customizeIcon(ctx, super.createIcon(ctx, iconPath));
         }
 
         BImage image = new BImage(
             ImageUtil.recolorImage(
                 ctx.getImageCache().getBufferedImage(iconPath), zations));
-        return new ImageIcon(image);
+        return customizeIcon(ctx, new ImageIcon(image));
     }
 
     @Override // documentation inherited
@@ -215,6 +217,36 @@ public class Article extends Item
             }
         }
         return true;
+    }
+
+    /**
+     * If the article is unwearable, returns an icon with a lock on it.
+     */
+    protected ImageIcon customizeIcon (BasicContext ctx, final ImageIcon base)
+    {
+        if (!(ctx instanceof BangContext) || isWearable(((BangContext)ctx).getUserObject())) {
+            return base;
+        }
+        return new ImageIcon(ctx.loadImage("ui/ranch/unit_locked.png")) {
+            public int getHeight () {
+                return base.getHeight();
+            }
+            public int getWidth () {
+                return base.getWidth();
+            }
+            public void wasAdded () {
+                super.wasAdded();
+                base.wasAdded();
+            }
+            public void wasRemoved () {
+                super.wasRemoved();
+                base.wasRemoved();
+            }
+            public void render (Renderer r, int x, int y, float alpha) {
+                base.render(r, x, y, alpha);
+                super.render(r, x, y, alpha);
+            }
+        };
     }
 
     @Override // documentation inherited
