@@ -655,8 +655,8 @@
 
     <!-- make our Proguard mapping file accessible to Hemiptera -->
     <mkdir dir="${deploy.dir}/hemiptera-map"/>
-    <!-- commit the proguard map file -->
     <copy file="etc/proguard/${version}.map" todir="${deploy.dir}/hemiptera-map"/>
+    <!-- commit the proguard map file -->
     <exec executable="svn">
       <arg value="commit"/>
       <arg value="-m"/>
