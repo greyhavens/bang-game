@@ -222,8 +222,9 @@ public class RosterView extends BContainer
 
     protected void addMemberEntry (BContainer cont, GangMemberEntry entry)
     {
-        cont.add(new MemberLabel(_ctx, entry, false, _status, "roster_entry"));
-        cont.add(new BLabel("(" + entry.notoriety + ")", "roster_entry"));
+        String style = "roster_entry" + (entry.isActive() ? "" : "_inactive");
+        cont.add(new MemberLabel(_ctx, entry, false, _status, style));
+        cont.add(new BLabel("(" + entry.notoriety + ")", style));
     }
 
     protected void leaveGang ()
@@ -329,19 +330,25 @@ public class RosterView extends BContainer
     protected BContainer _bcont, _lcont, _mcont;
     protected LeaderView _lview;
 
-    /** Sorts in order of decreasing seniority. */
+    /** Sorts active members before inactive, then by decreasing seniority. */
     protected static final Comparator<GangMemberEntry> LEADER_COMP =
         new Comparator<GangMemberEntry>() {
             public int compare (GangMemberEntry m1, GangMemberEntry m2) {
+                if (m1.isActive() != m2.isActive()) {
+                    return (m1.isActive() ? -1 : +1);
+                }
                 long diff = m1.joined - m2.joined;
                 return (diff == 0) ? 0 : (diff < 0 ? -1 : +1);
             }
         };
 
-    /** Sorts in order of decreasing notoriety. */
+    /** Sorts active members before inactive, then by decreasing notoriety. */
     protected static final Comparator<GangMemberEntry> MEMBER_COMP =
         new Comparator<GangMemberEntry>() {
             public int compare (GangMemberEntry m1, GangMemberEntry m2) {
+                if (m1.isActive() != m2.isActive()) {
+                    return (m1.isActive() ? -1 : +1);
+                }
                 return m2.notoriety - m1.notoriety;
             }
         };

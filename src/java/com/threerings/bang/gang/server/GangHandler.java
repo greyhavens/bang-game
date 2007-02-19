@@ -1038,7 +1038,9 @@ public class GangHandler
         if (entry == null) {
             return;
         }
-        entry.townIdx = (byte)townIndex;
+        if ((entry.townIdx = (byte)townIndex) == -1) {
+            entry.lastSession = System.currentTimeMillis();
+        }
         _gangobj.updateMembers(entry);
         if (townIndex == -1) {
             maybeScheduleUnload();
@@ -1241,7 +1243,7 @@ public class GangHandler
         }
         if (mrec != null) {
             GangMemberEntry entry =
-                new GangMemberEntry(handle, playerId, MEMBER_RANK, mrec.joined, 0);
+                new GangMemberEntry(handle, playerId, MEMBER_RANK, mrec.joined, 0, mrec.joined);
             initTownIndex(entry);
             _gangobj.addToMembers(entry);
             if (entry.townIdx == -1) {

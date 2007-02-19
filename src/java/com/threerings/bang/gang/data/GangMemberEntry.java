@@ -34,19 +34,24 @@ public class GangMemberEntry extends SimpleStreamableObject
     /** The member's notoriety. */
     public int notoriety;
 
+    /** The time of the member's last session. */
+    public long lastSession;
+
     /** The index of the town that the member is logged into, or -1 if the member is offline. */
     public byte townIdx = -1;
 
     /**
      * Constructor for entries loaded from the database.
      */
-    public GangMemberEntry (Handle handle, int playerId, byte rank, Date joined, int notoriety)
+    public GangMemberEntry (
+        Handle handle, int playerId, byte rank, Date joined, int notoriety, Date lastSession)
     {
         this.handle = handle;
         this.playerId = playerId;
         this.rank = rank;
         this.joined = joined.getTime();
         this.notoriety = notoriety;
+        this.lastSession = lastSession.getTime();
     }
 
     /**
@@ -54,6 +59,15 @@ public class GangMemberEntry extends SimpleStreamableObject
      */
     public GangMemberEntry ()
     {
+    }
+
+    /**
+     * Determines whether this member is active (has logged in recently).
+     */
+    public boolean isActive ()
+    {
+        return townIdx != -1 ||
+            (System.currentTimeMillis() - lastSession) < GangCodes.ACTIVITY_DELAY;
     }
 
     /**

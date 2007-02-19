@@ -251,7 +251,7 @@ public class GangManager
                 _gangrepo.insertHistoryEntry(
                     _grec.gangId, MessageBundle.tcompose("m.founded_entry", user.handle));
                 _grec.members.add(new GangMemberEntry(
-                    user.handle, user.playerId, LEADER_RANK, _mrec.joined, 0));
+                    user.handle, user.playerId, LEADER_RANK, _mrec.joined, 0, _mrec.joined));
                 _grec.avatar = avatar;
                 return null;
             }

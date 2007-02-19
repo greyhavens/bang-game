@@ -1896,6 +1896,10 @@ roster_entry {
   color: #5C361D;
   padding: 0 20 0 0;
 }
+roster_entry_inactive {
+  parent: "roster_entry";
+  color: #90734F;
+}
 
 history_view {
   background: image "ui/window/border_ornate.png" framexy;

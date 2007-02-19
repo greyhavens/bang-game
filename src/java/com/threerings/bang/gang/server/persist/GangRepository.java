@@ -98,7 +98,7 @@ public class GangRepository extends JORARepository
         });
         return list;
     }
-    
+
     /**
      * Loads up the gang record associated with the specified id.  Returns null if no matching
      * record could be found.
@@ -112,11 +112,11 @@ public class GangRepository extends JORARepository
         GangRecord grec = loadByExample(_gtable, new GangRecord(gangId), _gangIdMask);
         if (grec != null && all) {
             grec.members = loadGangMembers(gangId);
-            
+
             // load the coin count
             grec.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
                 grec.getCoinAccount());
-            
+
             // load the outfit
             ArrayList<GangOutfitRecord> recs = loadAll(_otable, "where GANG_ID = " + gangId);
             grec.outfit = new OutfitArticle[recs.size()];
@@ -124,7 +124,7 @@ public class GangRepository extends JORARepository
                 GangOutfitRecord rec = recs.get(ii);
                 grec.outfit[ii] = new OutfitArticle(rec.article, rec.zations);
             }
-            
+
             // load the avatar for the most senior member
             GangMemberEntry senior = null;
             for (GangMemberEntry entry : grec.members) {
@@ -172,7 +172,7 @@ public class GangRepository extends JORARepository
         checkedUpdate("update GANGS set STATEMENT = " + JDBCUtil.escape(statement) +
             ", URL = " + JDBCUtil.escape(url) + " where GANG_ID = " + gangId, 1);
     }
-    
+
     /**
      * Updates a gang's configured outfit.
      */
@@ -181,13 +181,13 @@ public class GangRepository extends JORARepository
     {
         // delete the existing outfit
         update("delete from GANG_OUTFITS where GANG_ID = " + gangId);
-        
+
         // add the new
         for (OutfitArticle oart : outfit) {
             insert(_otable, new GangOutfitRecord(gangId, oart.article, oart.zations));
         }
     }
-    
+
     /**
      * Adds scrip to a gang's coffers.
      */
@@ -197,7 +197,7 @@ public class GangRepository extends JORARepository
         checkedUpdate("update GANGS set SCRIP = SCRIP + " + scrip +
                       " where GANG_ID = " + gangId, 1);
     }
-    
+
     /**
      * Subtracts scrip from a gang's coffers.
      */
@@ -207,7 +207,7 @@ public class GangRepository extends JORARepository
         checkedUpdate("update GANGS set SCRIP = SCRIP - " + scrip +
                       " where GANG_ID = " + gangId, 1);
     }
-    
+
     /**
      * Adds notoriety points to the gang and user records.
      */
@@ -280,7 +280,7 @@ public class GangRepository extends JORARepository
             }
         });
     }
-    
+
     /**
      * Inserts a new membership record.  The {@link GangMemberRecord#joined} field will be filled
      * in by this method if it is not already.
@@ -515,7 +515,7 @@ public class GangRepository extends JORARepository
         list.names = names.toArray(new Handle[names.size()]);
         return list;
     }
-    
+
     /**
      * Loads the entries for all members of the specified gang.
      */
@@ -524,7 +524,7 @@ public class GangRepository extends JORARepository
     {
         final ArrayList<GangMemberEntry> list = new ArrayList<GangMemberEntry>();
         final String query = "select HANDLE, GANG_MEMBERS.PLAYER_ID, RANK, " +
-            "JOINED, NOTORIETY from GANG_MEMBERS, PLAYERS " +
+            "JOINED, NOTORIETY, LAST_SESSION from GANG_MEMBERS, PLAYERS " +
             "where GANG_MEMBERS.PLAYER_ID = PLAYERS.PLAYER_ID and GANG_ID = " + gangId;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
@@ -536,7 +536,8 @@ public class GangRepository extends JORARepository
                     while (rs.next()) {
                         list.add(new GangMemberEntry(
                             new Handle(rs.getString(1)), rs.getInt(2),
-                            rs.getByte(3), rs.getTimestamp(4), rs.getInt(5)));
+                            rs.getByte(3), rs.getTimestamp(4), rs.getInt(5),
+                            rs.getTimestamp(6)));
                     }
                     return null;
 
@@ -606,7 +607,7 @@ public class GangRepository extends JORARepository
             "PRIMARY KEY (ENTRY_ID)",
             "INDEX (GANG_ID)",
         }, "");
-        
+
         JDBCUtil.createTableIfMissing(conn, "GANG_OUTFITS", new String[] {
             "GANG_ID INTEGER NOT NULL",
             "ARTICLE VARCHAR(64) NOT NULL",
@@ -622,7 +623,7 @@ public class GangRepository extends JORARepository
         _mtable = new Table<GangMemberRecord>(
             GangMemberRecord.class, "GANG_MEMBERS", "PLAYER_ID", true);
         _htable = new Table<GangHistoryRecord>(
-            GangHistoryRecord.class, "GANG_HISTORY", "ENTRY_ID", true); 
+            GangHistoryRecord.class, "GANG_HISTORY", "ENTRY_ID", true);
         _otable = new Table<GangOutfitRecord>(
             GangOutfitRecord.class, "GANG_OUTFITS", "GANG_ID", true);
     }
