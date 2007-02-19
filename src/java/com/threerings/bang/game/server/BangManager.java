@@ -1663,7 +1663,7 @@ public class BangManager extends GameManager
                 rank = (short)(BangObject.COOP_RANK + BangServer.ratingmgr.getPercentile(
                                    _bangobj.scenario.getIdent(), ranks.length, avgscore, false));
             }
-            int high = _bangobj.points[ranks[0].pidx];
+            int high = _bangobj.perRoundPoints[_activeRoundId][ranks[0].pidx];
             for (int ii = 0; ii < ranks.length; ii++) {
                 if (!coop) {
                     int points = _bangobj.perRoundPoints[_activeRoundId][ranks[ii].pidx];
