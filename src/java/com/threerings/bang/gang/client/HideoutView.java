@@ -73,7 +73,7 @@ public class HideoutView extends ShopView
         add(_tcont = new BContainer(GroupLayout.makeVStretch()), new Rectangle(576, 72, 427, 515));
         add(_bcont = new BContainer(GroupLayout.makeHoriz(GroupLayout.RIGHT)),
             new Rectangle(177, 69, 391, 29));
-        
+
         // start with a random shop tip
         _status.setStatus(getShopTip(), false);
     }
@@ -82,30 +82,30 @@ public class HideoutView extends ShopView
     public void willEnterPlace (PlaceObject plobj)
     {
         _hideoutobj = (HideoutObject)plobj;
-        
+
         // subscribe to the gang object and update the ui
         updateGangObject();
-        
+
         // listen for changes in gang membership
         _ctx.getUserObject().addListener(_userlist);
     }
-    
+
     // documentation inherited from interface PlaceView
     public void didLeavePlace (PlaceObject plobj)
     {
         // stop listening to the user
         _ctx.getUserObject().removeListener(_userlist);
-        
+
         // unsubscribe from the gang object
         unsubscribeFromGang();
     }
-    
+
     @Override // documentation inherited
     protected Point getShopkeepNameLocation ()
     {
         return new Point(22, 554);
     }
-    
+
     /**
      * Updates the UI when first entering or when the player joins or leaves a gang.
      */
@@ -115,7 +115,7 @@ public class HideoutView extends ShopView
         if (_tabs != null) {
             clearInterface();
         }
-        
+
         // if the user is not in a gang, make sure that we are not subscribed
         PlayerObject player = _ctx.getUserObject();
         if (player.gangOid <= 0) {
@@ -123,7 +123,7 @@ public class HideoutView extends ShopView
             populateNonMemberInterface();
             return;
         }
-        
+
         // subscribe to the gang object
         _status.setStatus(_msgs.get("m.loading_gang"), false);
         (_gangsub = new SafeSubscriber<GangObject>(
@@ -141,7 +141,7 @@ public class HideoutView extends ShopView
             }
         })).subscribe(_ctx.getDObjectManager());
     }
-    
+
     /**
      * Clears out the entire interface.
      */
@@ -151,7 +151,7 @@ public class HideoutView extends ShopView
         _ccont.removeAll();
         _tcont.removeAll();
     }
-    
+
     /**
      * Populates the interface for non-members.
      */
@@ -176,18 +176,18 @@ public class HideoutView extends ShopView
         }, "start_gang"));
         bcont.add(new Spacer(20, 1));
         _ccont.add(bcont);
-        
+
         // add the gang directory
         _ccont.add(new BLabel(new ImageIcon(
             _ctx.loadImage("ui/hideout/title_gang_directory.png")), "gang_directory_title"));
         _ccont.add(new DirectoryView(_ctx, _hideoutobj));
-        
+
         // add the one selectable tab
         add(_tabs = new HackyTabs(_ctx, false, "ui/hideout/tab_",
             NON_MEMBER_TABS, true, 145, 15), TABS_RECT);
         _tcont.add(new TopGangView(_ctx, _hideoutobj));
     }
-    
+
     /**
      * Populates the interface for gang members.
      */
@@ -195,10 +195,10 @@ public class HideoutView extends ShopView
     {
         // add the gang info view
         _ccont.add(new GangInfoView(_ctx, _hideoutobj, _gangobj, _status));
-        
+
         // add the gang menu
         _ccont.add(new GangMenu());
-        
+
         // add the tabs and gang chat (the first selected tab)
         final GangChatView gcview = new GangChatView(_ctx, _hideoutobj, _gangobj, _status);
         add(_tabs = new HackyTabs(_ctx, false, "ui/hideout/tab_",
@@ -207,13 +207,13 @@ public class HideoutView extends ShopView
                 _tcont.removeAll();
                 if (index == 0) {
                     _tcont.add(gcview);
-                    
+
                 } else if (index == 1) {
                     if (_tgview == null) {
                         _tgview = new TopGangView(_ctx, _hideoutobj);
                     }
                     _tcont.add(_tgview);
-                    
+
                 } else { // index == 2
                     if (_tmview == null) {
                         _tmview = new TopScoreView(_ctx, _gangobj) {
@@ -230,7 +230,7 @@ public class HideoutView extends ShopView
             protected TopScoreView _tmview;
         }, TABS_RECT);
     }
-    
+
     /**
      * Unsubscribes from the gang object and stops listening.
      */
@@ -245,7 +245,7 @@ public class HideoutView extends ShopView
             _gangobj = null;
         }
     }
-    
+
     /** Handles the menu for games, the member roster, and the gang directory. */
     protected class GangMenu extends BContainer
         implements ActionListener
@@ -253,7 +253,8 @@ public class HideoutView extends ShopView
         public GangMenu ()
         {
             super(GroupLayout.makeVert(GroupLayout.CENTER));
-            
+            setPreferredSize(new Dimension(494, -1));
+
             BContainer bcont = new BContainer(GroupLayout.makeHoriz(
                 GroupLayout.NONE, GroupLayout.CENTER, GroupLayout.NONE));
             _buttons = new BToggleButton[] {
@@ -261,11 +262,11 @@ public class HideoutView extends ShopView
                 addButton(bcont, "roster"),
                 addButton(bcont, "directory") };
             add(bcont);
-            
+
             _buttons[0].setSelected(true);
             add(_play = new PlayView(_ctx, _hideoutobj, _status));
         }
-        
+
         // documentation inherited from interface ActionListener
         public void actionPerformed (ActionEvent event)
         {
@@ -281,13 +282,13 @@ public class HideoutView extends ShopView
             String action = event.getAction();
             if (action.equals("play")) {
                 add(_play);
-                
+
             } else if (action.equals("roster")) {
                 if (_roster == null) {
                     _roster = new RosterView(_ctx, _hideoutobj, _gangobj, _bcont, _status);
                 }
                 add(_roster);
-                
+
             } else { // action.equals("directory")
                 if (_directory == null) {
                     _directory = new DirectoryView(_ctx, _hideoutobj);
@@ -295,7 +296,7 @@ public class HideoutView extends ShopView
                 add(_directory);
             }
         }
-        
+
         protected BToggleButton addButton (BContainer bcont, String action)
         {
             BToggleButton button = new BToggleButton("", action) {
@@ -310,30 +311,30 @@ public class HideoutView extends ShopView
             bcont.add(button);
             return button;
         }
-        
+
         @Override // documentation inherited
         protected void wasRemoved ()
         {
             super.wasRemoved();
             _play.shutdown();
         }
-        
+
         protected BToggleButton[] _buttons;
         protected PlayView _play;
         protected RosterView _roster;
         protected DirectoryView _directory;
     }
-    
+
     protected HideoutObject _hideoutobj;
     protected GangObject _gangobj;
-    
+
     protected HackyTabs _tabs;
     protected BContainer _ccont, _tcont, _bcont;
-    
+
     protected StatusLabel _status;
-    
+
     protected SafeSubscriber<GangObject> _gangsub;
-    
+
     /** Listens to the user object for changes in gang membership. */
     protected AttributeChangeListener _userlist = new AttributeChangeListener() {
         public void attributeChanged (AttributeChangedEvent event) {
@@ -342,13 +343,13 @@ public class HideoutView extends ShopView
             }
         }
     };
-    
+
     /** The tabs for non-members. */
     protected final String[] NON_MEMBER_TABS = { "top_gangs" };
-    
+
     /** The tabs for gang members. */
     protected final String[] MEMBER_TABS = { "gang_chat", "top_gangs", "top_members" };
-    
+
     /** The bounds of the tabs. */
     protected static final Rectangle TABS_RECT = new Rectangle(572, 588, 3*145, 44);
 }
