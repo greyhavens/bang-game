@@ -95,7 +95,7 @@ public class BangView extends BWindow
     {
         return _ctrl;
     }
-    
+
     /**
      * Configures the interface for the specified phase. If the main game display has not yet been
      * configured, this will trigger that configuration as well.
@@ -255,7 +255,7 @@ public class BangView extends BWindow
             protected float _elapsed;
         });
     }
-    
+
     // documentation inherited from interface PlaceView
     public void willEnterPlace (PlaceObject plobj)
     {
@@ -344,7 +344,7 @@ public class BangView extends BWindow
         return _timer;
     }
 
-    
+
     /**
      * Creates the player status views.
      */
@@ -374,12 +374,13 @@ public class BangView extends BWindow
         if (pidx > -1) {
             _pswins[idx++].add(pstatus[pidx]);
             added[pidx] = true;
-        }
-        // players on the same team next
-        for (int ii = 0; ii < pcount; ii++) {
-            if (!added[ii] && _bangobj.teams[ii] == _bangobj.teams[pidx]) {
-                _pswins[idx++].add(pstatus[ii]);
-                added[ii] = true;
+
+            // players on the same team next
+            for (int ii = 0; ii < pcount; ii++) {
+                if (!added[ii] && _bangobj.teams[ii] == _bangobj.teams[pidx]) {
+                    _pswins[idx++].add(pstatus[ii]);
+                    added[ii] = true;
+                }
             }
         }
         // remaining players ordered by team
@@ -470,7 +471,7 @@ public class BangView extends BWindow
             }
         }
         _bangobj.props = props.toArray(new Prop[props.size()]);
-        
+
         // if we arrived in the middle of the game, the pieces will already be configured;
         // otherwise start with the ones provided by the board
         if (_bangobj.state != BangObject.IN_PLAY) {
@@ -533,11 +534,11 @@ public class BangView extends BWindow
             // compute the gap once we've laid out our first status window
             int wwidth = _pswins[ii].getWidth();
             if (gap == 0) {
-                gap = ((width - 10) - (wcount * wwidth) - tgap * (wcount - tcount)) / 
+                gap = ((width - 10) - (wcount * wwidth) - tgap * (wcount - tcount)) /
                     (tcount - 1);
                 offset = 5;
             } else if (_bangobj.teams[lastpidx] != _bangobj.teams[psv.getPidx()]) {
-                offset += gap; 
+                offset += gap;
             } else {
                 offset += tgap;
             }
@@ -642,7 +643,7 @@ public class BangView extends BWindow
                     GL11.glGetString(GL11.GL_VERSION);
                 _bangobj.service.reportPerformance(_ctx.getClient(), _boardId, driver, histo);
             }
-            
+
             // if more than half of the samples are below 20 fps, recommend lowering the detail
             // level
             int[] buckets = _perfhisto.getBuckets();
@@ -701,10 +702,10 @@ public class BangView extends BWindow
 
     /** The time it takes for a played card to fall into position. */
     protected static final float CARD_FALL_DURATION = 0.5f;
-    
+
     /** The time a played card lingers in view. */
     protected static final float CARD_LINGER_DURATION = 1.25f;
-    
+
     /** The time it takes for a played card to fade out. */
     protected static final float CARD_FADE_DURATION = 0.25f;
 }
