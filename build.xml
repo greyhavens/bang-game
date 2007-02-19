@@ -947,20 +947,16 @@
       <param name="client.version" value="${version}"/>
       <param name="pkg.name" value="bang-client"/>
     </antcall>
-    <!-- the production dwb file needs the version number appended -->
+    <!-- append the version number to the package name. for dev this will always be 0 -->
     <!-- also setup the bang-client-current package -->
     <!-- TODO don't do this inside of etc/ -->
-    <if><or><equals arg1="${props.dist}" arg2="production"/>
-        <equals arg1="${props.dist}" arg2="test"/></or>
-      <then>
-      <copy file="etc/bang-client.dwb.in" tofile="etc/bang-client-${version}.dwb.in"/>
-      <mkdir dir="${destroot}/bang-client-current"/>
-      <copy file="etc/bang-client-current.dwb.in.in" tofile="etc/bang-client-current.dwb.in">
-        <filterset>
-          <filter token="CLIENTVERSION" value="${version}"/>
-        </filterset>
-      </copy>
-    </then></if>
+    <copy file="etc/bang-client.dwb.in" tofile="etc/bang-client-${version}.dwb.in"/>
+    <mkdir dir="${destroot}/bang-client-current"/>
+    <copy file="etc/bang-client-current.dwb.in.in" tofile="etc/bang-client-current.dwb.in">
+      <filterset>
+        <filter token="CLIENTVERSION" value="${version}"/>
+      </filterset>
+    </copy>
 
     <antcall target="prepare-extra">
       <param name="extra.type" value="hemiptera-map"/>
