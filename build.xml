@@ -29,7 +29,8 @@
   <!-- declare the files from bin needed in the package -->
   <property name="bin.list1"  value="bangjava,bangserver,bangtool,mysql,process_stats"/>
   <property name="bin.list2"  value="roll_logs,runbang,summarize_perf,summarize_stats"/>
-  <property name="bin.list3"  value="bang,bangrespawn"/>
+  <!-- TODO getversion will be replaced with a pure ant implementation -->
+  <property name="bin.list3"  value="bang,bangrespawn,getversion"/>
   <property name="bin.list"   value="${bin.list1},${bin.list2},${bin.list3}"/>
 
   <!-- declare the libraries needed by the Bang runtime -->
