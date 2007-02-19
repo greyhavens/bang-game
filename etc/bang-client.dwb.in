@@ -2,10 +2,17 @@
 # Bang Client Web Pages Dweeb Configuration File
 
 <Package>
-    Name        bang-client
+    Name        @PKGNAME@
     Version     @VERSION@
     Maintainer  Bang Developers <bang-dev@threerings.net>
     Section     pages
     Architecture    all
     Description The Bang client, lives inside the web document root.
+
+    # Maintainer Scripts
+    # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
+    # PreInstall      @SCRIPTPATH@/bang-client-preinst
+    PostInstall      @SCRIPTPATH@/bang-client-postinst
+    # PreUninstall    path/to/preuninstall/script
+    # PostUninstall   @SCRIPTPATH@/bang-client-postrm
 </Package>

@@ -4,6 +4,7 @@
   <!-- define various build properties -->
   <property name="src.dir"        value="src/java"/>
   <property name="deploy.dir"     value="dist"/>
+  <property name="var.dir"        value="var"/>
   <property name="app.name"       value="bang"/>
   <property name="savedoc.dir"    value="docs"/>
   <property name="build.optimize" value="on"/>
@@ -17,9 +18,13 @@
   <property name="jetty.app.conf" value="server.conf"/>
   <import file="projects/tools/etc/build-support.xml"/>
 
+  <!-- override the fileset for the checkclean target to ignore ${var.dir} -->
+  <fileset id="checkclean.fileset" dir="${basedir}">
+    <exclude name="${var.dir}/**"/>
+  </fileset>
+
   <!-- declare the properties files. -->
   <property name="props.list" value="server.properties,deployment.properties"/>
-  <property name="optprops.list"  value="build.properties"/>
 
   <!-- declare the files from bin needed in the package -->
   <property name="bin.list1"  value="bangjava,bangserver,bangtool,mysql,process_stats"/>
@@ -36,6 +41,7 @@
     <file name="${extlib.dir}/commons-codec.jar"/>
     <file name="${extlib.dir}/commons-collections.jar"/>
     <file name="${extlib.dir}/commons-digester.jar"/>
+    <file name="${extlib.dir}/commons-httpclient.jar"/>
     <file name="${extlib.dir}/commons-io.jar"/>
     <file name="${extlib.dir}/commons-lang.jar"/>
     <file name="${extlib.dir}/commons-logging.jar"/>
@@ -46,6 +52,8 @@
     <file name="${extlib.dir}/mail.jar"/>
     <file name="${extlib.dir}/mysql-connector-java-3.1.12-bin.jar"/>
     <file name="${extlib.dir}/proguard.jar"/>
+    <file name="${extlib.dir}/s3lib.jar"/>
+    <file name="${extlib.dir}/s3upload.jar"/>
     <file name="${extlib.dir}/servlet-2.3.jar"/>
     <file name="${extlib.dir}/underwire.jar"/>
     <file name="${extlib.dir}/velocity-1.5-dev.jar"/>
@@ -75,10 +83,12 @@
   <!-- prepares the application directories -->
   <target name="prepare" depends="copydistlibs,copydistprops,lists">
     <mkdir dir="${deploy.dir}"/>
+    <mkdir dir="${deploy.dir}/tmp"/>
     <mkdir dir="${deploy.dir}/docs"/>
     <mkdir dir="${deploy.dir}/lib"/>
     <mkdir dir="${deploy.dir}/classes"/>
     <mkdir dir="${deploy.dir}/rsrc"/>
+    <mkdir dir="${var.dir}"/>
 
     <!-- copy global static resources -->
     <copy todir="${deploy.dir}/rsrc">
@@ -397,9 +407,8 @@
     <ant dir="projects/installers" target="clean" inheritAll="false"/>
     <ant dir="projects/pseditor" target="clean" inheritAll="false"/>
 
-    <!-- TODO when the applet is NWO remove these lines -->
-    <delete file="pages/incl/launch_open.html"/>
-    <delete file="pages/client/getdown-retro-pro.jar"/>
+    <!-- TODO: temp until we copy these files someplace else  -->
+    <delete><fileset dir="etc" includes="bang-client-*.dwb.in"/></delete>
 
     <!-- if we're generating packages, revert any modified model.properties files to -->
     <!-- avoid checkclean freakout -->
@@ -507,17 +516,26 @@
 
   <!-- builds the development client getdown distribution -->
   <target name="devclient" depends="copydistprops">
+    <!-- for consistency with the prod client, we'll set the version, which is always 0 -->
+    <property name="version" value="0"/>
+    <!-- be extra safe and remove any old build.properties -->
+    <delete file="${basedir}/${deploy.dir}/build.properties"/>
+    <propertyfile file="${basedir}/${deploy.dir}/build.properties">
+      <entry key="version" value="${version}"/>
+      <entry key="config_version" value="${version}"/>
+    </propertyfile>
     <echo message="Generating Proguard config file for devclient..."/>
     <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro">
       <arg line="etc/bang-client.pro.in"/>
-      <arg line="version=0"/>
+      <arg line="version=${version}"/>
       <arg line="apply_mapping=#"/>
       <arg line="apply_file=#"/>
     </exec>
 
     <!-- copy the getdown.txt file into the right place -->
-    <mkdir dir="${deploy.dir}/client/pages/devclient"/>
-    <copy file="etc/getdown.txt" tofile="${deploy.dir}/client/pages/devclient/getdown.txt"
+    <property name="client.base" value="${deploy.dir}/client/pages/devclient"/>
+    <mkdir dir="${client.base}"/>
+    <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt"
           overwrite="true" encoding="UTF-8">
       <filterset>
         <filter token="appbase_line" value="appbase = ${root_url}/devclient"/>
@@ -527,14 +545,13 @@
     </copy>
 
     <antcall target="baseclient">
-      <param name="client_dir" value="${deploy.dir}/client/pages/devclient"/>
+      <param name="client_dir" value="${client.base}"/>
     </antcall>
     <delete file="etc/bang-client.pro"/>
 
     <!-- make our Proguard mapping file accessible to Hemiptera -->
-    <!-- TODO when the prod client is also NWO, change -printmapping in .pro to output to dist -->
     <mkdir dir="${deploy.dir}/hemiptera-map"/>
-    <move file="etc/proguard/0.map" todir="${deploy.dir}/hemiptera-map"/>
+    <move file="etc/proguard/${version}.map" todir="${deploy.dir}/hemiptera-map"/>
 
     <!-- generate some game metadata summary pages -->
     <property name="pages.out" value="${basedir}/${deploy.dir}/client/pages"/>
@@ -563,9 +580,18 @@
 
   <!-- builds the production client getdown distribution -->
   <target name="client" depends="copydistprops">
+    <exec executable="${basedir}/projects/tools/bin/buildstamp" outputproperty="version"
+          failonerror="true">
+    </exec>
+    <!-- be extra safe and remove any old build.properties -->
+    <delete file="${basedir}/${deploy.dir}/build.properties"/>
+    <propertyfile file="${basedir}/${deploy.dir}/build.properties">
+      <entry key="version" value="${version}"/>
+      <entry key="config_version" value="${version}"/>
+    </propertyfile>
     <exec executable="bin/getversion" outputproperty="latest_version" failonerror="true">
       <arg line="client"/>
-      <arg line="${root_url}"/>
+      <arg line="${download_root_url}"/>
     </exec>
     <echo message="Previous version used for renaming: ${latest_version}"/>
     <echo message="Generating Proguard config file for ${version}..."/>
@@ -577,32 +603,89 @@
     </exec>
 
     <!-- copy the getdown.txt file into the right place -->
-    <mkdir dir="${web_dir}/client/${version}"/>
-    <copy file="etc/getdown.txt" tofile="${web_dir}/client/${version}/getdown.txt.tmp"
+    <property name="client.base" value="${deploy.dir}/client/pages/client/${version}"/>
+    <mkdir dir="${client.base}"/>
+    <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt.tmp"
           overwrite="true" encoding="UTF-8">
       <filterset>
-        <filter token="appbase_line" value="appbase = ${root_url}/client/%VERSION%"/>
+        <filter token="appbase_line" value="appbase = ${download_root_url}/client/%VERSION%"/>
         <filter token="version_line" value="version = ${version}"/>
         <filter token="auxgroups_line" value="auxgroups = indian_post"/>
       </filterset>
     </copy>
-    <!-- do some temporary fiddling to nix boom_town and bounties from production -->
-    <exec executable="egrep" output="${web_dir}/client/${version}/getdown.txt">
+    <!-- do some temporary fiddling to nix boom_town from production -->
+    <exec executable="egrep" output="${client.base}/getdown.txt">
       <arg line="-v"/>
       <arg line="boom_town"/>
-      <arg line="${web_dir}/client/${version}/getdown.txt.tmp"/>
+      <arg line="${client.base}/getdown.txt.tmp"/>
     </exec>
     <!-- delete the temporary file -->
-    <delete file="${web_dir}/client/${version}/getdown.txt.tmp"/>
+    <delete file="${client.base}/getdown.txt.tmp"/>
 
     <antcall target="baseclient">
-      <param name="client_dir" value="${web_dir}/client/${version}"/>
+      <param name="client_dir" value="${client.base}"/>
     </antcall>
     <delete file="etc/bang-client.pro"/>
+
+    <!-- copy the just build client into var/ where it can be used for future diffing -->
+    <copy todir="${var.dir}">
+      <fileset dir="${deploy.dir}/client/pages/client" includes="${version}/**"/>
+    </copy>
+
+    <!-- create the getdown diff files -->
+    <copy todir="${deploy.dir}/lib" file="${java.home}/lib/javaws.jar"/>
+    <for param="dir">
+      <path>
+        <dirset dir="${var.dir}" includes="*"/>
+      </path>
+      <sequential>
+        <basename property="patch.version" file="@{dir}"/>
+        <if><not><equals arg1="${patch.version}" arg2="${version}"/></not>
+        <then>
+          <java classpathref="tool.classpath" failonerror="true" fork="true"
+                classname="com.threerings.getdown.tools.Differ">
+             <arg value="${client.base}"/>
+             <arg value="@{dir}"/>
+          </java>
+        </then></if>
+        <var name="patch.version" unset="true"/>
+        <var name="patch.already.present" unset="true"/>
+      </sequential>
+    </for>
+
+    <!-- make our Proguard mapping file accessible to Hemiptera -->
+    <mkdir dir="${deploy.dir}/hemiptera-map"/>
+    <!-- commit the proguard map file -->
+    <copy file="etc/proguard/${version}.map" todir="${deploy.dir}/hemiptera-map"/>
+    <exec executable="svn">
+      <arg value="commit"/>
+      <arg value="-m"/>
+      <arg value="New proguard mapping file for version ${version}."/>
+      <arg value="etc/proguard/${version}.map"/>
+    </exec>
+
+    <!-- if enabled, upload the client to S3 -->
+    <if><equals arg1="${client_s3enable}" arg2="true"/><then>
+        <property name="s3upload" value="${deploy.dir}/tmp/s3upload"/>
+        <delete dir="${s3upload}"/>
+        <copy todir="${s3upload}/bang">
+          <fileset dir="${deploy.dir}/client/pages" includes="client/${version}/**"/>
+        </copy>
+        <echo>Uploading the client to S3</echo>
+        <taskdef name="s3upload" classname="com.threerings.ant.S3Upload"
+                 classpathref="tool.classpath"/>
+        <s3upload awsAuthId="${client_s3id}" awsAuthKey="${client_s3key}"
+                  awsBucket="${client_s3bucket}">
+            <fileset dir="${s3upload}" includes="bang/**"/>
+        </s3upload>
+    </then></if>
   </target>
 
   <!-- signs and install the Getdown applet jar file -->
   <target name="applet" depends="prepare">
+    <property name="client.base" value="${deploy.dir}/client/pages"/>
+    <mkdir dir="${client.base}/incl"/>
+    <mkdir dir="${client.base}/client"/>
     <property file="${cert_dir}/certificate.properties"/>
 
     <!-- sanity check to avoid confusion if someone tries to call this directly -->
@@ -611,9 +694,9 @@
     </fail>
 
     <!-- copy the applet jar file into place and sign it -->
-    <copy file="projects/tools/lib/java/getdown-retro-pro.jar" todir="${web_dir}/client/"/>
+    <copy file="projects/tools/lib/java/getdown-retro-pro.jar" todir="${client.base}/client"/>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
-      <fileset dir="${web_dir}/client" includes="getdown-retro-pro.jar"/>
+      <fileset dir="${client.base}/client" includes="getdown-retro-pro.jar"/>
     </signjar>
 
     <!-- generate our signed applet tags -->
@@ -627,7 +710,7 @@
     <appsign keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}"
              keypass="${sign.keypass}" appbase="${root_url}/${client_dir}" appname="${client_ident}"
              imgpath="/client/background.png" file="pages/incl/launch_open.html.in"
-             tofile="pages/incl/launch_open.html"/>
+             tofile="${client.base}/incl/launch_open.html"/>
   </target>
 
   <!-- a target for rebuilding everything -->
@@ -770,15 +853,27 @@
 
   <!-- rebuilds all subprojects and the whole top-level distribution -->
   <target name="distall" depends="prepare,distjme,distprojects,dist,distwebapps,mdist">
-    <!-- copy native libraries into ${deploy.dir}/lib -->
+    <!-- copy native narya libraries into ${deploy.dir}/lib -->
     <copy todir="${deploy.dir}/lib">
       <fileset dir="projects/narya/${deploy.dir}/lib" includes="**/libsignal.so"/>
       <fileset dir="lib/" includes="**/*.so"/>
       <fileset dir="lib/" includes="**/*.jnilib"/>
       <fileset dir="lib/" includes="**/*.dylib"/>
     </copy>
+  </target>
 
-    <!-- if we're packaging, build the distributable client and installers -->
+  <!-- rebuilds everything and extra bits for packaging -->
+  <target name="distpkg" depends="distall">
+    <if><equals arg1="${build.docs}" arg2="true"/><then>
+      <antcall target="javadoc"/>
+    </then></if>
+
+    <!-- only build the pseditor for the devel builds -->
+    <if><equals arg1="${props.dist}" arg2="devel"/><then>
+      <ant dir="projects/pseditor" target="proguard" inheritAll="false"/>
+    </then></if>
+
+    <!-- build the distributable client and installers -->
     <if><equals arg1="${props.dist}" arg2="devel"/>
       <then>
         <antcall target="devclient"/>
@@ -792,14 +887,7 @@
         <antcall target="applet"><param name="client_dir" value="client"/></antcall>
       </then>
     </elseif></if>
-  </target>
 
-  <!-- rebuilds everything and extra bits for packaging -->
-  <target name="distpkg" depends="distall">
-    <if><equals arg1="${build.docs}" arg2="true"/><then>
-      <antcall target="javadoc"/>
-    </then></if>
-    <ant dir="projects/pseditor" target="proguard" inheritAll="false"/>
     <!-- if we're generating a package, commit any changes to compmap.txt -->
     <if><isset property="props.dist"/><then>
       <property name="comp.map" value="${basedir}/rsrc/avatars/compmap.txt"/>
@@ -835,16 +923,46 @@
     <antcall target="prepare-extra">
       <param name="extra.type" value="installer"/>
     </antcall>
-    <antcall target="prepare-extra">
-      <param name="extra.type" value="pseditor"/>
-    </antcall>
+
+    <!-- only package the pseditor for the devel builds -->
+    <if><equals arg1="${props.dist}" arg2="devel"/><then>
+      <antcall target="prepare-extra">
+        <param name="extra.type" value="pseditor"/>
+      </antcall>
+    </then></if>
+
+    <property file="${basedir}/${deploy.dir}/build.properties"/>
+    <fail message="version, which comes from build.properties, must be set.">
+       <condition><not><isset property="version"/></not></condition>
+    </fail>
     <antcall target="prepare-extra">
       <param name="extra.type" value="client"/>
+      <param name="pkg.name.override" value="bang-client-${version}"/>
     </antcall>
+    <!-- the production client package needs to update the client/getdown.txt symlink -->
+    <antcall target="maintainer-scripts">
+      <param name="install.type" value="client"/>
+      <param name="client.version" value="${version}"/>
+      <param name="pkg.name" value="bang-client"/>
+    </antcall>
+    <!-- the production dwb file needs the version number appended -->
+    <!-- also setup the bang-client-current package -->
+    <!-- TODO don't do this inside of etc/ -->
+    <if><equals arg1="${props.dist}" arg2="production"/><then>
+      <copy file="etc/bang-client.dwb.in" tofile="etc/bang-client-${version}.dwb.in"/>
+      <mkdir dir="${destroot}/bang-client-current"/>
+      <copy file="etc/bang-client-current.dwb.in.in" tofile="etc/bang-client-current.dwb.in">
+        <filterset>
+          <filter token="CLIENTVERSION" value="${version}"/>
+        </filterset>
+      </copy>
+    </then></if>
+
     <antcall target="prepare-extra">
       <param name="extra.type" value="hemiptera-map"/>
       <param name="prefix.app" value="${prefix}/threerings/etc/proguard/${app.name}"/>
     </antcall>
+
     <if><equals arg1="${build.docs}" arg2="true"/><then>
       <antcall target="prepare-docs"/>
     </then></if>
@@ -878,9 +996,14 @@
     </copy>
   </target>
 
-  <!-- prepare the generated installer or client bits to be packaged -->
+  <!-- common target to build certain packages, such as the client and installers -->
   <target name="prepare-extra">
-    <var name="pkg.name" value="bang-${extra.type}"/>
+    <!-- if pkg.name was already supplied, use that -->
+    <if><isset property="pkg.name.override"/><then>
+      <var name="pkg.name" value="${pkg.name.override}"/>
+    </then><else>
+      <var name="pkg.name" value="bang-${extra.type}"/>
+    </else></if>
     <var name="destroot.pkg" value="${destroot}/${pkg.name}"/>
     <var name="pkg.base" value="${destroot.pkg}/${prefix.app}"/>
     <echo level="info">Installing ${deploy.dir}/${extra.type}/ into ${destroot.pkg}...</echo>

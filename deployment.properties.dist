@@ -11,6 +11,10 @@ root_url = http://localhost
 web_dir = pages
 
 #
+# The base URL for downloading the production client.
+# download_root_url = http://s3download.banghowdy.com/bang
+
+#
 # The standard ports on which the server listens for client connections. These
 # may be overridden on a server by server basis below.
 
@@ -33,6 +37,14 @@ bug_submit_url = http://www.banghowdy.com/hemiptera/submit.xhtml
 new_account_url = http://www.banghowdy.com/register/register.wm
 server_status_url = http://www.banghowdy.com/status.html
 billing_url = https://billing.banghowdy.com/billing/checkpw.wm?susername=USERNAME&spassword=PASSWORD&from=select_type.wm
+
+#
+# S3 client upload configuration
+
+# client_s3enable = true
+# client_s3bucket = s3download.banghowdy.com
+# client_s3id = AWS ID
+# client_s3key = SECRET KEY
 
 #
 # Specifies the locale for this deployment. This is used to ensure that the
