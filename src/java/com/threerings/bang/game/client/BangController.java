@@ -478,20 +478,17 @@ public class BangController extends GameController
     {
         _view.view.clearPlacingCard();
         if (_bangobj.cards.get(cardId) == null) {
-            log.warning("Requested to activate expired card " +
-                        "[id=" + cardId + "].");
+            log.warning("Requested to activate expired card [id=" + cardId + "].");
         } else {
             BangService.ConfirmListener cl = new BangService.ConfirmListener() {
                 public void requestProcessed () {
                     postEvent(TutorialCodes.CARD_PLAYED);
                 }
                 public void requestFailed (String reason) {
-                    _ctx.getChatDirector().displayFeedback(
-                        GameCodes.GAME_MSGS, reason);
+                    _ctx.getChatDirector().displayFeedback(GameCodes.GAME_MSGS, reason);
                 }
             };
-            _bangobj.service.playCard(
-                _ctx.getClient(), cardId, target, cl);
+            _bangobj.service.playCard(_ctx.getClient(), cardId, target, cl);
         }
     }
 
