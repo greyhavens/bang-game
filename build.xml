@@ -880,7 +880,9 @@
         <ant dir="projects/installers" target="devclient"/>
         <antcall target="applet"><param name="client_dir" value="devclient"/></antcall>
       </then>
-    <elseif><equals arg1="${props.dist}" arg2="production"/>
+    <elseif>
+      <or><equals arg1="${props.dist}" arg2="production"/>
+      <equals arg1="${props.dist}" arg2="test"/></or>
       <then>
         <antcall target="client"/>
         <ant dir="projects/installers" target="client"/>
@@ -948,7 +950,9 @@
     <!-- the production dwb file needs the version number appended -->
     <!-- also setup the bang-client-current package -->
     <!-- TODO don't do this inside of etc/ -->
-    <if><equals arg1="${props.dist}" arg2="production"/><then>
+    <if><or><equals arg1="${props.dist}" arg2="production"/>
+        <equals arg1="${props.dist}" arg2="test"/></or>
+      <then>
       <copy file="etc/bang-client.dwb.in" tofile="etc/bang-client-${version}.dwb.in"/>
       <mkdir dir="${destroot}/bang-client-current"/>
       <copy file="etc/bang-client-current.dwb.in.in" tofile="etc/bang-client-current.dwb.in">
