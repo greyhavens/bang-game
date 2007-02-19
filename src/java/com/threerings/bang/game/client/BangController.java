@@ -330,7 +330,7 @@ public class BangController extends GameController
      */
     public void handleSelectNextUnit (Object source)
     {
-        if (_bangobj == null || !_bangobj.isActivePlayer(_pidx) || 
+        if (_bangobj == null || !_bangobj.isActivePlayer(_pidx) ||
                 !_bangobj.isInteractivePlay()) {
             return;
         }
@@ -526,14 +526,20 @@ public class BangController extends GameController
             _config.type != BangConfig.Type.TUTORIAL && _config.type != BangConfig.Type.PRACTICE) {
             storeStats();
 
-        // generate the winner's victory pose so it will be cached when we get around to showing
-        // the game over window
-        } else if (event.getName().equals(BangObject.AWARDS) && 
-                _config.type == BangConfig.Type.SALOON) {
-            int pidx = _bangobj.awards[0].pidx;
-            if (_bangobj.playerInfo[pidx].victory != null) {
-                AvatarView.getImage(_ctx, _bangobj.playerInfo[pidx].victory, 
-                        new ResultListener.NOOP<BufferedImage>());
+        } else if (event.getName().equals(BangObject.AWARDS)) {
+            // generate the winner's victory pose so it will be cached when we get around to showing
+            // the game over window
+            if (_config.type == BangConfig.Type.SALOON) {
+                int pidx = _bangobj.awards[0].pidx;
+                if (_bangobj.playerInfo[pidx].victory != null) {
+                    AvatarView.getImage(_ctx, _bangobj.playerInfo[pidx].victory,
+                            new ResultListener.NOOP<BufferedImage>());
+                }
+
+            // for bounties, we need to wait until we get the awards before advancing our post
+            // game multex
+            } else if (_config.type == BangConfig.Type.BOUNTY) {
+                _postRoundMultex.satisfied(Multex.CONDITION_TWO);
             }
 
         // regenerate our color lookup when the teams change
@@ -781,7 +787,9 @@ public class BangController extends GameController
         // both post-round conditions have been met
         _statsView = _bangobj.scenario.getStatsView(_ctx);
         _statsView.init(BangController.this, _bangobj, true);
-        _postRoundMultex.satisfied(Multex.CONDITION_TWO);
+        if (_config.type == BangConfig.Type.SALOON) {
+            _postRoundMultex.satisfied(Multex.CONDITION_TWO);
+        }
     }
 
     /**
