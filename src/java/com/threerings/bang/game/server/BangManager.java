@@ -419,10 +419,18 @@ public class BangManager extends GameManager
             throw new InvocationException(INTERNAL_ERROR);
         }
 
+        // network lag can result in repeat playCard() requests but the card will be missing for
+        // the second and subsequent requests; acknowledge the request but do nothing
         PlayerObject user = (PlayerObject)caller;
         Card card = _bangobj.cards.get(cardId);
+        if (card == null) {
+            log.info("Acking dup play card request [who=" + user.who() + ", sid=" + cardId + "].");
+            listener.requestProcessed();
+            return;
+        }
+
         int pidx = getPlayerIndex(user.getVisibleName());
-        if (card == null || card.owner != pidx || !isActivePlayer(pidx)) {
+        if (card.owner != pidx || !isActivePlayer(pidx)) {
             log.warning("Rejecting invalid card request [who=" + user.who() + ", sid=" + cardId +
                         ", card=" + card + "].");
             throw new InvocationException(INTERNAL_ERROR);
