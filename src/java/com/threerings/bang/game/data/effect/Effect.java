@@ -216,21 +216,21 @@ public abstract class Effect extends SimpleStreamableObject
         // report that the target was killed
         reportKill(obs, target, shooterIdx);
 
-        // if we have a shooter and we're on the server, record the kill
-        if (shooterIdx != -1 && bangobj.getManager().isManager(bangobj) &&
-                target instanceof Unit) {
-            if (shooter != null && target.owner >= 0) {
-                shooter.didKill();
-                if (shooter instanceof Unit) {
-                    bangobj.stats[shooterIdx].maxStat(
-                            Stat.Type.CONSEC_KILLS, ((Unit)shooter).consecKills);
+        // if we're on the server, record the kill
+        if (bangobj.getManager().isManager(bangobj) && target instanceof Unit) {
+            if (shooterIdx != -1) {
+                if (shooter != null && target.owner >= 0) {
+                    shooter.didKill();
+                    if (shooter instanceof Unit) {
+                        bangobj.stats[shooterIdx].maxStat(
+                                Stat.Type.CONSEC_KILLS, ((Unit)shooter).consecKills);
+                    }
                 }
+                // record the kill statistics
+                bangobj.stats[shooterIdx].incrementStat(Stat.Type.UNITS_KILLED, 1);
             }
-            // record the kill statistics
-            bangobj.stats[shooterIdx].incrementStat(Stat.Type.UNITS_KILLED, 1);
             if (target.owner != -1) {
-                bangobj.stats[target.owner].incrementStat(
-                    Stat.Type.UNITS_LOST, 1);
+                bangobj.stats[target.owner].incrementStat(Stat.Type.UNITS_LOST, 1);
             }
         }
 
