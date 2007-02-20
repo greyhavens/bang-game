@@ -273,9 +273,11 @@ public class BangView extends BWindow
         chat.didLeavePlace(plobj);
 
         // remove our displays
-        for (int ii = 0; ii < _pswins.length; ii++) {
-            if (_pswins[ii].isAdded()) {
-                _ctx.getRootNode().removeWindow(_pswins[ii]);
+        if (_pswins != null) {
+            for (int ii = 0; ii < _pswins.length; ii++) {
+                if (_pswins[ii].isAdded()) {
+                    _ctx.getRootNode().removeWindow(_pswins[ii]);
+                }
             }
         }
         if (ustatus != null && ustatus.isAdded()) {

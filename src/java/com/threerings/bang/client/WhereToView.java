@@ -3,6 +3,8 @@
 
 package com.threerings.bang.client;
 
+import java.util.ArrayList;
+
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BContainer;
@@ -151,8 +153,24 @@ public class WhereToView extends BDecoratedWindow
             PlayerService psvc = (PlayerService)
                 _ctx.getClient().requireService(PlayerService.class);
             ReportingListener rl = new ReportingListener(
-                _ctx, BangCodes.BANG_MSGS, "m.start_tut_failed");
+                _ctx, BangCodes.BANG_MSGS, "m.start_tut_failed") {
+                public void requestFailed (String cause) {
+                    super.requestFailed(cause);
+                    enableButtons(true);
+                }
+            };
             psvc.playTutorial(_ctx.getClient(), action, rl);
+            enableButtons(false);
+        }
+    }
+
+    /**
+     * Helper function to turn on/off tutorial buttons.
+     */
+    protected void enableButtons (boolean enabled)
+    {
+        for (BButton button : _enabledButtons) {
+            button.setEnabled(enabled);
         }
     }
 
@@ -192,6 +210,7 @@ public class WhereToView extends BDecoratedWindow
         BButton play = new BButton(_msgs.get(btext), this, tid);
         play.setStyleClass("alt_button");
         box.add(play);
+        _enabledButtons.add(play);
 
         if (unplayed) {
             // practice and labels after the first unplayed tutorial is greyed out
@@ -202,6 +221,9 @@ public class WhereToView extends BDecoratedWindow
             BButton practice = new BButton(_msgs.get("m.tut_practice"), this, tutorials[idx+1]);
             practice.setStyleClass("alt_button");
             practice.setEnabled(!unplayed);
+            if (!unplayed) {
+                _enabledButtons.add(practice);
+            }
             box.add(practice);
         } else {
             box.add(new BLabel(""));
@@ -213,6 +235,7 @@ public class WhereToView extends BDecoratedWindow
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected BCheckBox _nowhere;
+    protected ArrayList<BButton> _enabledButtons = new ArrayList<BButton>();
 
     protected static final String[] BLDGS = { "office", "saloon" };
 }
