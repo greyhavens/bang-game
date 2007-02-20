@@ -67,7 +67,7 @@ public interface GangPeerProvider extends InvocationProvider
     /**
      * Handles a {@link GangPeerService#setAvatar} request.
      */
-    public void setAvatar (ClientObject caller, AvatarInfo arg1);
+    public void setAvatar (ClientObject caller, int arg1, AvatarInfo arg2);
 
     /**
      * Handles a {@link GangPeerService#setStatement} request.

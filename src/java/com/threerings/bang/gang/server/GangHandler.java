@@ -11,6 +11,7 @@ import com.samskivert.jdbc.RepositoryUnit;
 
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.Interval;
+import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.ResultListenerList;
 import com.samskivert.util.Tuple;
@@ -324,7 +325,7 @@ public class GangHandler
         }
 
         // if they're the senior leader, start tracking their avatar
-        updateAvatarUpdater(user);
+        updateAvatar(user);
     }
 
     // documentation inherited from interface SetListener
@@ -333,8 +334,11 @@ public class GangHandler
         if (!event.getName().equals(GangObject.MEMBERS)) {
             return;
         }
+        // consider auto-promoting
+        maybeAutoPromote();
+
         // make sure we're tracking the right avatar
-        updateAvatarUpdater(null);
+        updateAvatar(null);
 
         // clear the user's gang fields and purge his looks if he's online
         Handle handle = (Handle)event.getKey();
@@ -361,8 +365,11 @@ public class GangHandler
         if (!event.getName().equals(GangObject.MEMBERS)) {
             return;
         }
+        // consider auto-promoting
+        maybeAutoPromote();
+
         // make sure we're tracking the right avatar
-        updateAvatarUpdater(null);
+        updateAvatar(null);
 
         // update the user's gang fields if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
@@ -429,7 +436,7 @@ public class GangHandler
     }
 
     // documentation inherited from interface GangPeerProvider
-    public void setAvatar (ClientObject caller, AvatarInfo info)
+    public void setAvatar (ClientObject caller, int playerId, AvatarInfo info)
     {
         // make sure it comes from this server or a peer
         try {
@@ -438,8 +445,12 @@ public class GangHandler
             return;
         }
 
-        // set it immediately
-        _gangobj.setAvatar(info);
+        // if it matches the senior leader, set it immediately
+        GangMemberEntry leader = _gangobj.getSeniorLeader();
+        if (leader != null && leader.playerId == playerId) {
+            _gangobj.setAvatar(info);
+            _avatarId = playerId;
+        }
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -642,46 +653,43 @@ public class GangHandler
         // make sure they can remove
         final GangMemberEntry entry = verifyCanChange(handle, target);
 
-        // determine whether to delete the gang
-        boolean delete = (_gangobj.members.size() == 1);
+        // delete the gang if they're the last member
+        final boolean delete = (_gangobj.members.size() == 1);
 
-        // gangs cannot be left without a leader; if we are removing the last leader, we must
-        // promote the most senior non-leader.  otherwise, if the most senior leader leaves,
-        // we must note the next most senior leader in order to update their avatar
-        GangMemberEntry senior = null;
-        if (entry.rank == LEADER_RANK && handle == null && !delete) {
-            boolean leaderless = true;
-            GangMemberEntry msenior = null, lsenior = null;
-            for (GangMemberEntry member : _gangobj.members) {
-                if (member == entry) {
-                    continue;
-                } else if (member.rank == LEADER_RANK &&
-                    (lsenior == null || member.joined < lsenior.joined)) {
-                    lsenior = member;
-                } else if (msenior == null || member.joined < msenior.joined) {
-                    msenior = member;
+        // post to the database
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent () throws PersistenceException {
+                deleteFromGang(entry.playerId);
+                if (delete) {
+                    BangServer.gangrepo.deleteGang(_gangId);
+                } else {
+                    BangServer.gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
+                        MessageBundle.tcompose("m.left_entry", entry.handle) :
+                        MessageBundle.tcompose("m.expelled_entry", handle, entry.handle));
                 }
             }
-            if (lsenior == null) {
-                final GangMemberEntry fsenior = msenior;
-                changeMemberRank(null, null, msenior.handle, LEADER_RANK,
-                    new InvocationService.ConfirmListener() {
-                        public void requestProcessed () {
-                            continueRemovingFromGang(handle, entry, fsenior, false, listener);
-                        }
-                        public void requestFailed (String cause) {
-                            listener.requestFailed(cause);
-                        }
-                    });
-                return;
 
-            } else if (entry == _gangobj.getSeniorLeader()) {
-                senior = lsenior;
+            public void handleSuccess () {
+                _gangobj.startTransaction();
+                try {
+                    _gangobj.removeFromMembers(entry.handle);
+                } finally {
+                    _gangobj.commitTransaction();
+                }
+                // if deleting, remove from Hideout directory and shut down immediately
+                if (delete) {
+                    BangServer.hideoutmgr.removeGang(_gangobj.name);
+                    shutdown();
+                } else {
+                    maybeScheduleUnload();
+                }
+                listener.requestProcessed();
             }
-        }
-
-        // continue the process
-        continueRemovingFromGang(handle, entry, senior, delete, listener);
+            public String getFailureMessage () {
+                return "Failed to remove member from gang [gang=" + this + ", handle=" +
+                    handle + ", entry=" + entry + ", delete=" + delete + "].";
+            }
+        });
     }
 
     // documentation inherited from interface GangPeerProvider
@@ -1017,6 +1025,14 @@ public class GangHandler
         };
         _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
 
+        // and the one to update activity states
+        _actival = new Interval(BangServer.omgr) {
+            public void expired () {
+                updateActivity();
+            }
+        };
+        _actival.schedule(1000L, ACTIVITY_INTERVAL);
+
         // create the interval to unload the gang
         _unloadval = new Interval(BangServer.omgr) {
             public void expired () {
@@ -1030,6 +1046,88 @@ public class GangHandler
     }
 
     /**
+     * Updates the members' active states, which may change the senior leader or trigger an
+     * auto-promotion.
+     */
+    protected void updateActivity ()
+    {
+        // find out who's inactive
+        ArrayList<GangMemberEntry> updates = new ArrayList<GangMemberEntry>();
+        for (GangMemberEntry entry : _gangobj.members) {
+            boolean oactive = entry.wasActive;
+            entry.updateWasActive();
+            if (entry.wasActive != oactive) {
+                updates.add(entry);
+            }
+        }
+        if (updates.isEmpty()) {
+            return;
+        }
+
+        // update in the dobj
+        _gangobj.startTransaction();
+        try {
+            for (GangMemberEntry entry : updates) {
+                _gangobj.updateMembers(entry);
+            }
+        } finally {
+            _gangobj.commitTransaction();
+        }
+
+        // check for auto-promotions, avatar updates
+        maybeAutoPromote();
+        updateAvatar(null);
+    }
+
+    /**
+     * If there are no active leaders, promotes the most senior active member.
+     */
+    protected void maybeAutoPromote ()
+    {
+        // stop if we are not the master or are already auto-promoting
+        if (_client != null || _promoting) {
+            return;
+        }
+
+        // find the senior active member, breaking if we find an active leader
+        GangMemberEntry senior = null;
+        for (GangMemberEntry entry : _gangobj.members) {
+            if (!entry.isActive()) {
+                continue;
+            }
+            if (entry.rank == LEADER_RANK) {
+                return;
+            } else if (senior == null || entry.joined < senior.joined) {
+                senior = entry;
+            }
+        }
+        if (senior == null) {
+            // if there's no senior member to auto-promote, we will end up promoting the
+            // first one who logs on (unless it's a leader)
+            return;
+        }
+
+        // perform the auto-promotion
+        final Handle handle = senior.handle;
+        _promoting = true;
+        try {
+            changeMemberRank(null, null, handle, LEADER_RANK,
+                new InvocationService.ConfirmListener() {
+                    public void requestProcessed () {
+                        log.info("Automatically promoted senior member due to lack of active " +
+                            "leaders [gang=" + this + ", member=" + handle + "].");
+                        _promoting = false;
+                    }
+                    public void requestFailed (String cause) {
+                        _promoting = false;
+                    }
+                });
+        } catch (InvocationException e) {
+            _promoting = false;
+        }
+    }
+
+    /**
      * Called when a player logs in or out of a town server.
      */
     protected void playerLocationChanged (Name name, int townIndex)
@@ -1039,6 +1137,7 @@ public class GangHandler
             return;
         }
         if ((entry.townIdx = (byte)townIndex) == -1) {
+            entry.wasActive = true;
             entry.lastSession = System.currentTimeMillis();
         }
         _gangobj.updateMembers(entry);
@@ -1189,6 +1288,7 @@ public class GangHandler
     protected void shutdown ()
     {
         _rankval.cancel();
+        _actival.cancel();
         _unloadval.cancel();
 
         BangServer.removePlayerObserver(this);
@@ -1203,27 +1303,48 @@ public class GangHandler
     }
 
     /**
-     * Updates the object used to track the leader's avatar.
+     * Updates the senior leader's avatar, tracking it over time if he's online.
      *
      * @param player if non-null, a candidate player object in the process of resolution.
      */
-    protected void updateAvatarUpdater (PlayerObject player)
+    protected void updateAvatar (PlayerObject player)
     {
-        GangMemberEntry leader = _gangobj.getSeniorLeader();
+        final GangMemberEntry leader = _gangobj.getSeniorLeader();
         PlayerObject user = (leader == null) ? null :
             ((player != null && player.playerId == leader.playerId) ?
                 player : BangServer.lookupPlayer(leader.playerId));
         if (user != null) {
-            if (_avupdater == null || _avupdater.getPlayerId() != user.playerId) {
+            if (_avupdater == null || _avatarId != user.playerId) {
                 if (_avupdater != null) {
                     _avupdater.remove();
                 }
                 (_avupdater = new AvatarUpdater(this)).add(user);
+                _avatarId = user.playerId;
             }
-        } else if (_avupdater != null) {
+            return;
+        }
+        if (_avupdater != null) {
             _avupdater.remove();
             _avupdater = null;
         }
+        if (_client != null || leader == null || _avatarId == leader.playerId ||
+            BangServer.peermgr.locateRemotePlayer(leader.handle) != null) {
+            return;
+        }
+        _avatarId = leader.playerId;
+        BangServer.invoker.postUnit(new RepositoryUnit() {
+            public void invokePersist () throws PersistenceException {
+                _avatar = BangServer.lookrepo.loadSnapshot(leader.playerId);
+            }
+            public void handleSuccess () {
+                _gangobj.setAvatar(_avatar);
+            }
+            public void handleFailure (Exception cause) {
+                log.warning("Failed to load senior leader avatar [gang=" + this +
+                    ", leader=" + leader + ", error=" + cause + "].");
+            }
+            protected AvatarInfo _avatar;
+        });
     }
 
     /**
@@ -1269,56 +1390,6 @@ public class GangHandler
         Tuple<BangClientInfo, Integer> result =
             BangServer.peermgr.locateRemotePlayer(entry.handle);
         entry.townIdx = (result == null) ? -1 : result.right.byteValue();
-    }
-
-    /**
-     * Continues the process of removing a member from a gang, perhaps after having promoted a
-     * player to avoid leaving a gang leaderless.
-     */
-    protected void continueRemovingFromGang (
-        final Handle handle, final GangMemberEntry entry, final GangMemberEntry senior,
-        final boolean delete, final InvocationService.ConfirmListener listener)
-    {
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
-            public void invokePersistent () throws PersistenceException {
-                deleteFromGang(entry.playerId);
-                if (delete) {
-                    BangServer.gangrepo.deleteGang(_gangId);
-                } else {
-                    if (senior != null) {
-                        _avatar = BangServer.lookrepo.loadSnapshot(senior.playerId);
-                    }
-                    BangServer.gangrepo.insertHistoryEntry(_gangId, (handle == null) ?
-                        MessageBundle.tcompose("m.left_entry", entry.handle) :
-                        MessageBundle.tcompose("m.expelled_entry", handle, entry.handle));
-                }
-            }
-
-            public void handleSuccess () {
-                _gangobj.startTransaction();
-                try {
-                    if (_avatar != null) {
-                        _gangobj.setAvatar(_avatar);
-                    }
-                    _gangobj.removeFromMembers(entry.handle);
-                } finally {
-                    _gangobj.commitTransaction();
-                }
-                // if deleting, remove from Hideout directory and shut down immediately
-                if (delete) {
-                    BangServer.hideoutmgr.removeGang(_gangobj.name);
-                    shutdown();
-                } else {
-                    maybeScheduleUnload();
-                }
-                listener.requestProcessed();
-            }
-            public String getFailureMessage () {
-                return "Failed to remove member from gang [gang=" + this + ", handle=" +
-                    handle + ", entry=" + entry + ", delete=" + delete + "].";
-            }
-            protected AvatarInfo _avatar;
-        });
     }
 
     /**
@@ -1435,8 +1506,14 @@ public class GangHandler
     /** The gang object, when resolved. */
     protected GangObject _gangobj;
 
+    /** The player id of the avatar set in the gang object. */
+    protected int _avatarId;
+
     /** The interval that refreshes the list of top-ranked members. */
     protected Interval _rankval;
+
+    /** The interval that refreshes members' active states. */
+    protected Interval _actival;
 
     /** The interval that starts the unloading process. */
     protected Interval _unloadval;
@@ -1447,11 +1524,17 @@ public class GangHandler
     /** Keeps the gang's senior leader avatar up-to-date. */
     protected AvatarUpdater _avupdater;
 
+    /** Set when auto-promoting to keep us from doing it more than once. */
+    protected boolean _promoting;
+
     /** The frequency with which we update the top-ranked member lists. */
     protected static final long RANK_REFRESH_INTERVAL = 60 * 60 * 1000L;
 
     /** The size of the top-ranked member lists. */
     protected static final int TOP_RANKED_LIST_SIZE = 10;
+
+    /** The frequency with which we update members' active states. */
+    protected static final long ACTIVITY_INTERVAL = 3 * 60 * 60 * 1000L;
 
     /** In order to prevent rapid loading and unloading, we wait this long after the last gang
      * member has logged off of the cluster to unload the gang. */

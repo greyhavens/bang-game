@@ -126,10 +126,10 @@ public class GangPeerMarshaller extends InvocationMarshaller
     public static final int SET_AVATAR = 9;
 
     // from interface GangPeerService
-    public void setAvatar (Client arg1, AvatarInfo arg2)
+    public void setAvatar (Client arg1, int arg2, AvatarInfo arg3)
     {
         sendRequest(arg1, SET_AVATAR, new Object[] {
-            arg2
+            Integer.valueOf(arg2), arg3
         });
     }
 

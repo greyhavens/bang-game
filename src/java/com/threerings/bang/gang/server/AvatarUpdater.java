@@ -37,11 +37,6 @@ public class AvatarUpdater extends SetAdapter
         _player = null;
     }
 
-    public int getPlayerId ()
-    {
-        return (_player == null) ? -1 : _player.playerId;
-    }
-
     @Override // documentation inherited
     public void entryUpdated (EntryUpdatedEvent event)
     {
@@ -64,7 +59,7 @@ public class AvatarUpdater extends SetAdapter
     {
         Look look = _player.getLook(Look.Pose.WANTED_POSTER);
         _handler.getPeerProvider().setAvatar(
-            null, (look == null) ? null : look.getAvatar(_player));
+            null, _player.playerId, (look == null) ? null : look.getAvatar(_player));
     }
 
     protected GangHandler _handler;

@@ -124,16 +124,6 @@ public class GangRepository extends JORARepository
                 GangOutfitRecord rec = recs.get(ii);
                 grec.outfit[ii] = new OutfitArticle(rec.article, rec.zations);
             }
-
-            // load the avatar for the most senior member
-            GangMemberEntry senior = null;
-            for (GangMemberEntry entry : grec.members) {
-                if (entry.rank == GangCodes.LEADER_RANK &&
-                    (senior == null || entry.rank < senior.rank)) {
-                    senior = entry;
-                }
-            }
-            grec.avatar = BangServer.lookrepo.loadSnapshot(senior.playerId);
         }
         return grec;
     }

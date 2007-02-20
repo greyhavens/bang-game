@@ -139,13 +139,14 @@ public class GangObject extends DObject
     }
 
     /**
-     * Returns the {@link GangMemberEntry} corresponding to the most senior leader of the gang.
+     * Returns the {@link GangMemberEntry} corresponding to the most senior active leader of the
+     * gang.
      */
     public GangMemberEntry getSeniorLeader ()
     {
         GangMemberEntry senior = null;
         for (GangMemberEntry entry : members) {
-            if (entry.rank == GangCodes.LEADER_RANK &&
+            if (entry.rank == GangCodes.LEADER_RANK && entry.isActive() &&
                 (senior == null || entry.joined < senior.joined)) {
                 senior = entry;
             }

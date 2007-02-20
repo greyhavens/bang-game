@@ -100,7 +100,7 @@ public class GangPeerDispatcher extends InvocationDispatcher
         case GangPeerMarshaller.SET_AVATAR:
             ((GangPeerProvider)provider).setAvatar(
                 source,
-                (AvatarInfo)args[0]
+                ((Integer)args[0]).intValue(), (AvatarInfo)args[1]
             );
             return;
 

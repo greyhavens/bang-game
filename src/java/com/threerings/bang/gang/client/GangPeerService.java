@@ -25,7 +25,7 @@ public interface GangPeerService extends InvocationService
     /**
      * Sets the avatar of the gang's senior leader.
      */
-    public void setAvatar (Client client, AvatarInfo info);
+    public void setAvatar (Client client, int playerId, AvatarInfo info);
 
     /**
      * Invites a user into the gang.
