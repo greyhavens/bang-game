@@ -44,7 +44,7 @@ import static com.threerings.bang.Log.log;
 public class FolkCell extends BContainer
     implements Comparable<FolkCell>
 {
-    public FolkCell (BangContext ctx, Handle handle, boolean isPardner)
+    public FolkCell (BangContext ctx, Handle handle, boolean isPardner, boolean isFriend)
     {
         super(GroupLayout.makeHoriz(GroupLayout.LEFT));
         setPreferredSize(new Dimension(200, 18));
@@ -53,6 +53,8 @@ public class FolkCell extends BContainer
         _chat = _ctx.getBangClient().getPardnerChatView();
         _handle = handle;
         _isPardner = isPardner;
+        _isFriend = isFriend;
+        _isSelf = _ctx.getUserObject().handle.equals(handle);
 
         add(new BLabel(_handle.toString(), "folk_label"));
         if (_isPardner) {
@@ -80,10 +82,10 @@ public class FolkCell extends BContainer
     public int compareTo (FolkCell cell)
     {
         if (_isPardner && !cell._isPardner) {
-            return 1;
+            return -1;
         }
         if (cell._isPardner && !_isPardner) {
-            return -1;
+            return 1;
         }
         return _handle.compareTo(cell._handle);
     }
@@ -136,34 +138,33 @@ public class FolkCell extends BContainer
             addListener(this);
             setLayer(BangUI.POPUP_MENU_LAYER);
 
-            MessageBundle bangMsgs =
-                _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
-            MessageBundle saloonMsgs =
-                _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
+            MessageBundle bangMsgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
+            MessageBundle saloonMsgs = _ctx.getMessageManager().getBundle(SaloonCodes.SALOON_MSGS);
 
             // add their name as a non-menu item
             String title = "@=u(" + handle.toString() + ")";
             add(new BLabel(title, "popupmenu_title"));
 
-            addMenuItem(new BMenuItem(saloonMsgs.get("m.folk_chat"), "chat"));
+            if (!_isSelf) {
+                addMenuItem(new BMenuItem(saloonMsgs.get("m.folk_chat"), "chat"));
+            }
 
             // add an item for viewing their wanted poster
-            addMenuItem(new BMenuItem(bangMsgs.get("m.pm_view_poster"),
-                                      "view_poster"));
+            addMenuItem(new BMenuItem(bangMsgs.get("m.pm_view_poster"), "view_poster"));
 
             // add an item for muting/unmuting
-            String mute = _ctx.getMuteDirector().isMuted(handle) ?
-                "unmute" : "mute";
-            addMenuItem(new BMenuItem(bangMsgs.get("m.pm_" + mute), mute));
+            if (!_isSelf) {
+                String mute = _ctx.getMuteDirector().isMuted(handle) ? "unmute" : "mute";
+                addMenuItem(new BMenuItem(bangMsgs.get("m.pm_" + mute), mute));
+            }
 
-            if (!_isPardner) {
+            if (_isFriend) {
                 // add an item for removing them from the list
-                addMenuItem(new BMenuItem(saloonMsgs.get("m.folk_remove"),
-                                          "remove"));
+                addMenuItem(new BMenuItem(saloonMsgs.get("m.folk_remove"), "remove"));
+            }
+            if (!_isPardner && !_isSelf) {
                 // add an item for inviting them to be our pardner
-                addMenuItem(new BMenuItem(
-                                bangMsgs.get("m.pm_invite_pardner"),
-                                "invite_pardner"));
+                addMenuItem(new BMenuItem(bangMsgs.get("m.pm_invite_pardner"), "invite_pardner"));
             }
         }
 
@@ -226,4 +227,10 @@ public class FolkCell extends BContainer
 
     /** Whether or not this cell's player is our pardner */
     protected boolean _isPardner;
+
+    /** Whether or not this cell's player is our friend */
+    protected boolean _isFriend;
+
+    /** Whether or not this cell's player is ourself */
+    protected boolean _isSelf;
 }

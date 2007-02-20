@@ -14,6 +14,7 @@ import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
 
 import com.threerings.crowd.data.OccupantInfo;
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.ElementUpdateListener;
@@ -29,24 +30,24 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.saloon.data.SaloonCodes;
-import com.threerings.bang.saloon.data.SaloonObject;
 import com.threerings.bang.util.BangContext;
 
 import static com.threerings.bang.Log.log;
 
 /**
- * Displays what friendly folks are present, and lets us chat with them.
+ * Displays what folks are present, and lets us chat with them.
  */
 public class FolkView extends BContainer
     implements SetListener, AttributeChangeListener, ElementUpdateListener
 {
-    public FolkView (BangContext ctx, SaloonObject salobj)
+    public FolkView (BangContext ctx, PlaceObject pobj, boolean ffOnly)
     {
         super(new BorderLayout());
 
         _ctx = ctx;
-        _salobj = salobj;
+        _pobj = pobj;
         _user = ctx.getUserObject();
+        _ffOnly = ffOnly;
 
         TableLayout listLayout = new TableLayout(2, 2, 10);
         listLayout.setEqualRows(true);
@@ -65,17 +66,18 @@ public class FolkView extends BContainer
         if (PlayerObject.PARDNERS.equals(eae.getName())) {
             PardnerEntry entry = (PardnerEntry) eae.getEntry();
             // if our new pardner is here with us, add to display
-            if (_salobj.getOccupantInfo((Handle) entry.getKey()) != null) {
-                insertCell(new FolkCell(_ctx, entry.handle, true));
+            if (_pobj.getOccupantInfo((Handle) entry.getKey()) != null) {
+                insertCell(new FolkCell(_ctx, entry.handle, true, false));
             }
 
-        } else if (SaloonObject.OCCUPANT_INFO.equals(eae.getName())) {
+        } else if (PlaceObject.OCCUPANT_INFO.equals(eae.getName())) {
             BangOccupantInfo info = (BangOccupantInfo) eae.getEntry();
             // if the new occupant is a friend of pardner, add to display
             boolean pard = _user.pardners.containsKey(info.username);
-            if (pard || _user.isFriend(info.playerId)) {
+            boolean ff = _user.isFriend(info.playerId);
+            if (pard || !_ffOnly || ff) {
                 Handle handle = (Handle)info.username;
-                insertCell(new FolkCell(_ctx, handle, pard));
+                insertCell(new FolkCell(_ctx, handle, pard, ff));
             }
         }
     }
@@ -91,7 +93,7 @@ public class FolkView extends BContainer
                 recomputeList();
             }
 
-        } else if (SaloonObject.OCCUPANT_INFO.equals(ere.getName())) {
+        } else if (PlaceObject.OCCUPANT_INFO.equals(ere.getName())) {
             FolkCell cell = _folks.get(
                 ((BangOccupantInfo) ere.getOldEntry()).username);
             if (cell != null) {
@@ -130,7 +132,7 @@ public class FolkView extends BContainer
         // register as a listener for friends and pardners updates
         _user.addListener(this);
         // register as a listener for saloon occupant updates
-        _salobj.addListener(this);
+        _pobj.addListener(this);
 
         // fill the list with initial data
         recomputeList();
@@ -143,7 +145,7 @@ public class FolkView extends BContainer
 
         // clear out our listeners
         _user.removeListener(this);
-        _salobj.removeListener(this);
+        _pobj.removeListener(this);
     }
 
     /**
@@ -155,21 +157,21 @@ public class FolkView extends BContainer
         _folks.clear();
         for (PardnerEntry entry : _user.pardners) {
             // list any pardner who is in our saloon
-            if (_salobj.getOccupantInfo(entry.handle) != null) {
-                insertCell(new FolkCell(_ctx, entry.handle, true));
+            if (_pobj.getOccupantInfo(entry.handle) != null) {
+                insertCell(new FolkCell(_ctx, entry.handle, true, false));
             }
         }
-        for (OccupantInfo info : _salobj.occupantInfo) {
+        for (OccupantInfo info : _pobj.occupantInfo) {
             // if they're our friend but not yet listed, do list them
-            if (_user.isFriend(((BangOccupantInfo) info).playerId) &&
-                !_folks.containsKey(info.username)) {
+            boolean ff = _user.isFriend(((BangOccupantInfo) info).playerId);
+            if ((!_ffOnly || ff) &&  !_folks.containsKey(info.username)) {
                 Handle handle = (Handle)info.username;
-                insertCell(new FolkCell(_ctx, handle, false));
+                insertCell(new FolkCell(_ctx, handle, false, ff));
             }
         }
 
-        // if we added folks, great, we're done
-        if (_folkList.getComponentCount() > 0) {
+        // if we added folks or this is not ff only, great, we're done
+        if (_folkList.getComponentCount() > 0 || !_ffOnly) {
             return;
         }
 
@@ -209,7 +211,7 @@ public class FolkView extends BContainer
         }
         for (int ii = 0; ii < _folkList.getComponentCount(); ii ++) {
             FolkCell other = (FolkCell) _folkList.getComponent(ii);
-            if (cell.compareTo(other) < 0) {
+            if (cell.compareTo(other) > 0) {
                 continue;
             }
             _folkList.add(ii, cell);
@@ -228,8 +230,8 @@ public class FolkView extends BContainer
     /** A reference to our context */
     protected BangContext _ctx;
 
-    /** A reference to the saloon we're in */
-    protected SaloonObject _salobj;
+    /** A reference to the place we're in */
+    protected PlaceObject _pobj;
 
     /** A reference to our player object */
     protected PlayerObject _user;
@@ -237,7 +239,9 @@ public class FolkView extends BContainer
     /** The table containing the actual FolkCell components */
     protected BContainer _folkList;
 
+    /** Are we showing only friendly folks? */
+    protected boolean _ffOnly;
+
     /** Maps handles of displayed people to their display cells */
-    protected HashMap<Handle, FolkCell> _folks =
-        new HashMap<Handle, FolkCell>();
+    protected HashMap<Handle, FolkCell> _folks = new HashMap<Handle, FolkCell>();
 }

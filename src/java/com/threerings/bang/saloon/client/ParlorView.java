@@ -4,10 +4,12 @@
 package com.threerings.bang.saloon.client;
 
 import com.jmex.bui.BButton;
+import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.icon.ImageIcon;
+import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
@@ -54,8 +56,10 @@ public class ParlorView extends ShopView
 
         add(_config = new ParlorConfigView(_ctx),
             new Rectangle(95, 119, 407, 130));
-        add(_chat = new PlaceChatView(ctx, _msgs.get("m.parlor_chat")),
-            new Rectangle(552, 78, 445, 551));
+        _ccont = new BContainer(GroupLayout.makeVStretch());
+        _ccont.add(_chat = new PlaceChatView(ctx, _msgs.get("m.parlor_chat")));
+        add(_ccont, new Rectangle(552, 78, 445, 551));
+
 
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
         _status.setStyleClass("shop_status");
@@ -131,7 +135,6 @@ public class ParlorView extends ShopView
     public void willEnterPlace (PlaceObject plobj)
     {
         _parobj = (ParlorObject)plobj;
-        _parobj.addListener(_occlist);
 
         _gconfig.willEnterPlace(_parobj);
         _config.willEnterPlace(_parobj);
@@ -143,21 +146,7 @@ public class ParlorView extends ShopView
             clearMatchView();
         }
 
-        // if there are people in the parlor, report who they are
-        StringBuffer occs = new StringBuffer();
-        for (OccupantInfo info : _parobj.occupantInfo) {
-            if (_ctx.getUserObject().handle.equals(info.username)) {
-                continue;
-            }
-            if (occs.length() > 0) {
-                occs.append(", ");
-            }
-            occs.append(info.username);
-        }
-        if (occs.length() > 0) {
-            String msg = MessageBundle.tcompose("m.parlor_occs", occs);
-            _chat.displayInfo(SaloonCodes.SALOON_MSGS, msg);
-        }
+        _ccont.add(0, new FolkView(_ctx, plobj, false), GroupLayout.FIXED);
     }
 
     @Override // documentation inherited
@@ -170,7 +159,6 @@ public class ParlorView extends ShopView
         _chat.shutdown();
 
         if (_parobj != null) {
-            _parobj.removeListener(_occlist);
             _parobj = null;
         }
     }
@@ -181,30 +169,11 @@ public class ParlorView extends ShopView
         return new Point(22, 554);
     }
 
-    /** Listens for occupant additions and removals. */
-    protected SetAdapter _occlist = new SetAdapter() {
-        public void entryAdded (EntryAddedEvent event) {
-            if (event.getName().equals(ParlorObject.OCCUPANT_INFO)) {
-                OccupantInfo info = (OccupantInfo)event.getEntry();
-                reportOccupant("m.occ_entered", info.username);
-            }
-        }
-        public void entryRemoved (EntryRemovedEvent event) {
-            if (event.getName().equals(ParlorObject.OCCUPANT_INFO)) {
-                OccupantInfo info = (OccupantInfo)event.getOldEntry();
-                reportOccupant("m.occ_left", info.username);
-            }
-        }
-        protected void reportOccupant (String msg, Name who) {
-            msg = MessageBundle.tcompose(msg, who);
-            _chat.displayInfo(SaloonCodes.SALOON_MSGS, msg);
-        }
-    };
-
     protected ParlorObject _parobj;
     protected ParlorController _ctrl;
     protected StatusLabel _status;
     protected PlaceChatView _chat;
+    protected BContainer _ccont;
 
     protected ParlorGameConfigView _gconfig;
     protected ParlorConfigView _config;
