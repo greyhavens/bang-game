@@ -60,8 +60,15 @@ public class BountyGameOverView extends SteelWindow
         _user = user;
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
+        // get the player index this way since we may be a watcher
+        int pidx = 0;
+        for (int ii = 0; ii < _bangobj.playerInfo.length; ii++) {
+            if (_bangobj.playerInfo[ii].playerId != -1) {
+                pidx = ii;
+                break;
+            }
+        }
         // locate our award
-        int pidx = _bangobj.getPlayerIndex(_user.getVisibleName());
         for (Award award : _bangobj.awards) {
             if (pidx == award.pidx) {
                 _award = award;
@@ -220,7 +227,8 @@ public class BountyGameOverView extends SteelWindow
         vert.add(new BLabel(_msgs.get(completed ? "m.bover_next_all_complete" :
                                       "m.bover_next_" + result), "bounty_title"));
 
-        boolean buttoned = false;
+        boolean buttoned = !(_bctx != null && _bangobj.isActivePlayer(_bangobj.getPlayerIndex(
+                    _bctx.getUserObject().getVisibleName())));
         BContainer games = new BContainer(new TableLayout(2, 2, 20));
         for (BountyConfig.GameInfo game : _bounty.games) {
             String key = _bounty.getStatKey(game.ident);

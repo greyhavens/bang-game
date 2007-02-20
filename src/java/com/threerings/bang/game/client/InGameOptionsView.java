@@ -73,10 +73,12 @@ public class InGameOptionsView extends BDecoratedWindow
         tabs.addTab(msgs.get("t.general"), cont);
 
         BContainer box = GroupLayout.makeHBox(GroupLayout.CENTER);
-        if (config.type == BangConfig.Type.BOUNTY) {
+        if (config.type == BangConfig.Type.BOUNTY &&
+                bangobj.isActivePlayer(bangobj.getPlayerIndex(
+                        ctx.getUserObject().getVisibleName()))) {
             box.add(new BButton(msgs.get("m.restart"), this, "restart"));
         }
-        if (config.type != BangConfig.Type.TUTORIAL && 
+        if (config.type != BangConfig.Type.TUTORIAL &&
                 config.duration != BangConfig.Duration.PRACTICE) {
             box.add(new BButton(
                         msgs.get("m.to_" + _ctx.getBangClient().getPriorLocationIdent()),
@@ -105,7 +107,7 @@ public class InGameOptionsView extends BDecoratedWindow
 
         } else if ("dismiss".equals(action)) {
             _ctx.getBangClient().clearPopup(this, true);
-        
+
         } else if ("restart".equals(action)) {
             final BButton restart = (BButton)event.getSource();
             restart.setEnabled(false);

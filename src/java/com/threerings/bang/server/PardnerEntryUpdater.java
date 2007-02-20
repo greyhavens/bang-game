@@ -173,8 +173,8 @@ public class PardnerEntryUpdater extends SetAdapter
                     entry.status = PardnerEntry.IN_BOUNTY;
                 } else {
                     entry.status = PardnerEntry.IN_GAME;
-                    entry.gameOid = plobj.getOid();
                 }
+                entry.gameOid = plobj.getOid();
             } else if (plobj instanceof SaloonObject) {
                 entry.status = PardnerEntry.IN_SALOON;
             } else {
