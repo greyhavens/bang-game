@@ -654,7 +654,6 @@
           </java>
         </then></if>
         <var name="patch.version" unset="true"/>
-        <var name="patch.already.present" unset="true"/>
       </sequential>
     </for>
 
