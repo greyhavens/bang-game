@@ -55,10 +55,10 @@ default_locale = en
 #
 # These are used by the installer and game launcher.
 
-client_ident = client
-client_title = Bang! Howdy
-editor_title = Bang! Howdy Editor
-viewer_title = Bang! Howdy Model Viewer
+client_ident = bang_local
+client_title = Bang! Howdy (Local)
+editor_title = Bang! Howdy Editor (Local)
+viewer_title = Bang! Howdy Model Viewer (Local)
 
 #
 # The directory where we find our signing certificate

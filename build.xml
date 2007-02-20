@@ -534,12 +534,12 @@
     </exec>
 
     <!-- copy the getdown.txt file into the right place -->
-    <property name="client.base" value="${deploy.dir}/client/pages/devclient"/>
+    <property name="client.base" value="${deploy.dir}/client/pages/client"/>
     <mkdir dir="${client.base}"/>
     <copy file="etc/getdown.txt" tofile="${client.base}/getdown.txt"
           overwrite="true" encoding="UTF-8">
       <filterset>
-        <filter token="appbase_line" value="appbase = ${root_url}/devclient"/>
+        <filter token="appbase_line" value="appbase = ${root_url}/client"/>
         <filter token="version_line" value=""/>
         <filter token="auxgroups_line" value="auxgroups = indian_post, boom_town"/>
       </filterset>
@@ -700,11 +700,6 @@
     <mkdir dir="${client.base}/client"/>
     <property file="${cert_dir}/certificate.properties"/>
 
-    <!-- sanity check to avoid confusion if someone tries to call this directly -->
-    <fail message="client_dir property must be specified: ant -Dclient_dir=devclient applet">
-      <condition><not><isset property="client_dir"/></not></condition>
-    </fail>
-
     <!-- copy the applet jar file into place and sign it -->
     <copy file="projects/tools/lib/java/getdown-retro-pro.jar" todir="${client.base}/client"/>
     <signjar keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}">
@@ -720,7 +715,7 @@
       </classpath>
     </taskdef>
     <appsign keystore="${sign.keystore}" alias="${sign.alias}" storepass="${sign.storepass}"
-             keypass="${sign.keypass}" appbase="${root_url}/${client_dir}" appname="${client_ident}"
+             keypass="${sign.keypass}" appbase="${root_url}/client" appname="${client_ident}"
              imgpath="/client/background.png" file="pages/incl/launch_open.html.in"
              tofile="${client.base}/incl/launch_open.html"/>
   </target>
@@ -889,8 +884,8 @@
     <if><equals arg1="${props.dist}" arg2="devel"/>
       <then>
         <antcall target="devclient"/>
-        <ant dir="projects/installers" target="devclient"/>
-        <antcall target="applet"><param name="client_dir" value="devclient"/></antcall>
+        <ant dir="projects/installers" target="client"/>
+        <antcall target="applet"/>
       </then>
     <elseif>
       <or><equals arg1="${props.dist}" arg2="production"/>
@@ -898,7 +893,7 @@
       <then>
         <antcall target="client"/>
         <ant dir="projects/installers" target="client"/>
-        <antcall target="applet"><param name="client_dir" value="client"/></antcall>
+        <antcall target="applet"/>
       </then>
     </elseif></if>
 
