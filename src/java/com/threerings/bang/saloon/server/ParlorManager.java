@@ -379,6 +379,8 @@ public class ParlorManager extends PlaceManager
             if (user == null) {
                 log.warning("Zoiks! Missing player for parlor match [game=" + _parobj.game +
                             ", oid=" + _parobj.playerOids[ii] + "].");
+                // clear our now non-existant player from the match
+                clearPlayer(_parobj.playerOids[ii]);
                 return; // abandon ship
             }
             config.players[ii] = user.handle;
