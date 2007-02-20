@@ -958,16 +958,20 @@
       <param name="pkg.name" value="bang-client"/>
     </antcall>
     <!-- append the version number to the package name. for dev this will always be 0 -->
-    <!-- also setup the bang-client-current package -->
+    <!-- also setup the bang-client-current dwb file -->
     <copy file="etc/bang-client.dwb.in.in"
           tofile="${deploy.dir}/tmp/bang-client-${version}.dwb.in"/>
-    <mkdir dir="${destroot}/bang-client-current"/>
     <copy file="etc/bang-client-current.dwb.in.in"
           tofile="${deploy.dir}/tmp/bang-client-current.dwb.in">
       <filterset>
         <filter token="CLIENTVERSION" value="${version}"/>
       </filterset>
     </copy>
+
+    <!-- prepare the metapackages -->
+    <antcall target="prepare-meta">
+      <param name="pkg.names" value="bang-client-current,bang-game-server,bang-web-server"/>
+    </antcall>
 
     <antcall target="prepare-extra">
       <param name="extra.type" value="hemiptera-map"/>

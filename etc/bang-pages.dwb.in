@@ -14,7 +14,7 @@
 
     # Maintainer Scripts
     # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
-    PreInstall      @SCRIPTPATH@/bang-pages-preinst
+    # PreInstall      @SCRIPTPATH@/bang-pages-preinst
     # PostInstall     @SCRIPTPATH@/pages-postinst
     # PreUninstall    path/to/preuninstall/script
     # PostUninstall   @SCRIPTPATH@/pages-postrm

@@ -1,0 +1,19 @@
+# bang-web-server.dwb vi:ts=4:sw=4:expandtab:
+# Bang Web Server Meta Dweeb Configuration File
+
+<Package>
+    Name        bang-web-server
+    Version     @VERSION@
+    Maintainer  Bang Developers <bang-dev@threerings.net>
+    Section     pages
+    Architecture    all
+    Description A meta package that depends on packages needed for a Bang web server
+
+    # Maintainer Scripts
+    # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
+    PreInstall      @SCRIPTPATH@/bang-web-server-preinst
+
+    Depends     bang-pages
+    Depends     bang-client-current
+    Depends     office-webapp
+</Package>

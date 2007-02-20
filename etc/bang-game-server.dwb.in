@@ -1,0 +1,19 @@
+# bang-game-server.dwb vi:ts=4:sw=4:expandtab:
+# Bang Game Server Meta Dweeb Configuration File
+
+<Package>
+    Name        bang-game-server
+    Version     @VERSION@
+    Maintainer  Bang Developers <bang-dev@threerings.net>
+    Section     meta
+    Architecture    all
+    Description A meta package that depends on packages needed for a Bang game server
+
+    # Maintainer Scripts
+    # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
+    PreInstall      @SCRIPTPATH@/bang-game-server-preinst
+
+    Depends     bang-server
+    Depends     bang-pages
+    Depends     bang-client-current
+</Package>
