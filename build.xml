@@ -812,6 +812,7 @@
         <exclude name="rsrc/effects/**"/>
         <exclude name="rsrc/extras/**"/>
         <exclude name="rsrc/props/**"/>
+        <exclude name="rsrc/sounds/**"/>
         <exclude name="rsrc/units/**"/>
       </fileset>
     </jar>
