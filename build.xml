@@ -682,7 +682,7 @@
     </then></if>
 
     <!-- if enabled, upload the client to S3 -->
-    <if><equals arg1="${client_s3enable}" arg2="true"/><then>
+    <if><istrue value="${client_s3enable}"/><then>
         <property name="s3upload" value="${deploy.dir}/tmp/s3upload"/>
         <delete dir="${s3upload}"/>
         <copy todir="${s3upload}/bang">
@@ -877,7 +877,7 @@
 
   <!-- rebuilds everything and extra bits for packaging -->
   <target name="distpkg" depends="distall">
-    <if><equals arg1="${build.docs}" arg2="true"/><then>
+    <if><istrue value="${build.docs}"/><then>
       <antcall target="javadoc"/>
     </then></if>
 
@@ -976,7 +976,7 @@
       <param name="prefix.app" value="${prefix}/threerings/etc/proguard/${app.name}"/>
     </antcall>
 
-    <if><equals arg1="${build.docs}" arg2="true"/><then>
+    <if><istrue value="${build.docs}"/><then>
       <antcall target="prepare-docs"/>
     </then></if>
   </target>
