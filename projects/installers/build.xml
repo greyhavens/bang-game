@@ -1,5 +1,5 @@
 <!-- project build configuration -->
-<project name="Bang Installers" default="devclient" basedir=".">
+<project name="Bang Installers" default="client" basedir=".">
 
   <!-- load up our configuration information -->
   <property name="base.dir" value="${basedir}/../.."/>
@@ -12,40 +12,25 @@
     <mkdir dir="${deploy.dir}"/>
   </target>
 
-  <!-- builds and installs the dev installers -->
-  <target name="devclient" depends="prepare">
-    <exec dir="${default_locale}" executable="makensis" failonerror="true">
-      <arg line="-V2"/>
-      <arg line="dev-installer.nsi"/>
-    </exec>
-    <ant target="devclient" dir="linux" antfile="build.xml" inheritAll="no"/>
-    <copy todir="${install.dir}/devclient/">
-      <fileset dir="${deploy.dir}" includes="dev-install.exe"/>
-      <fileset dir="${deploy.dir}" includes="dev-install.bin"/>
-      <fileset dir="${default_locale}" includes="dev-install.dmg"/>
-    </copy>
-  </target>
-
-  <!-- builds and installs the test installers -->
-  <target name="tclient" depends="prepare">
-    <exec dir="${default_locale}" executable="makensis" failonerror="true">
-      <arg line="-V2"/>
-      <arg line="test-installer.nsi"/>
-    </exec>
-    <ant target="tclient" dir="linux" antfile="build.xml" inheritAll="no"/>
-    <copy todir="${install.dir}/aclient/">
-      <fileset dir="${deploy.dir}" includes="test-install.exe"/>
-      <fileset dir="${deploy.dir}" includes="test-install.bin"/>
-      <fileset dir="${default_locale}" includes="test-install.dmg"/>
-    </copy>
+  <target name="nsis">
   </target>
 
   <!-- builds and installs the production installers -->
   <target name="client" depends="prepare">
-    <exec dir="${default_locale}" executable="makensis" failonerror="true">
+    <copy tofile="${deploy.dir}/bang-installer.nsi" overwrite="true" encoding="UTF-8">
+      <fileset dir="${default_locale}" includes="bang-installer.nsi.in"/>
+      <filterset>
+        <filter token="client_ident" value="${client_ident}"/>
+        <filter token="client_title" value="${client_title}"/>
+        <filter token="root_url" value="${root_url}"/>
+      </filterset>
+    </copy>
+
+    <exec dir="${deploy.dir}" executable="makensis" failonerror="true">
       <arg line="-V2"/>
       <arg line="bang-installer.nsi"/>
     </exec>
+
     <ant target="client" dir="linux" antfile="build.xml" inheritAll="no"/>
     <copy todir="${install.dir}/client/">
       <fileset dir="${deploy.dir}" includes="bang-install.exe"/>

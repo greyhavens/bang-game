@@ -8,7 +8,7 @@
   <property file="${base.dir}/dist/deployment.properties"/>
 
   <!-- creates an install -->
-  <target name="instbuild">
+  <target name="client">
     <mkdir dir="${temp.dir}"/>
 
     <copy todir="${temp.dir}">
@@ -24,14 +24,14 @@
     </copy>
 
     <echo file="${temp.dir}/getdown.txt"
-          message="appbase = ${root_url}/${bclient_ident}/${line.separator}"/>
+          message="appbase = ${root_url}/${client_ident}/${line.separator}"/>
 
     <copy todir="${temp.dir}" overwrite="true" encoding="UTF-8">
       <fileset dir="." includes="finish_install.sh"/>
       <filterset>
-        <filter token="client_ident" value="${bclient_ident}"/>
-        <filter token="client_title" value="${bclient_title}"/>
-        <filter token="editor_title" value="${beditor_title}"/>
+        <filter token="client_ident" value="${client_ident}"/>
+        <filter token="client_title" value="${client_title}"/>
+        <filter token="editor_title" value="${editor_title}"/>
       </filterset>
     </copy>
 
@@ -44,39 +44,12 @@
 
     <exec executable="makeself" failonerror="true">
       <arg line="${temp.dir}"/>
-      <arg line="../${deploy.dir}/${installer.name}"/>
-      <arg line="${bclient_ident}"/>
+      <arg line="../${deploy.dir}/bang-install.bin"/>
+      <arg line="${client_ident}"/>
       <arg line="./finish_install.sh"/>
       <arg line="$0"/>
     </exec>
 
     <delete dir="${temp.dir}"/>
   </target>
-
-  <!-- creates the devclient installer -->
-  <target name="devprops">
-    <property name="bclient_ident" value="devclient"/>
-    <property name="bclient_title" value="${client_title}"/>
-    <property name="beditor_title" value="${editor_title}"/>
-    <property name="installer.name" value="dev-install.bin"/>
-  </target>
-  <target name="devclient" depends="devprops,instbuild"/>
-
-  <!-- creates the test client installer -->
-  <target name="tprops">
-    <property name="bclient_ident" value="${client_ident}"/>
-    <property name="bclient_title" value="${client_title}"/>
-    <property name="beditor_title" value="${editor_title}"/>
-    <property name="installer.name" value="test-install.bin"/>
-  </target>
-  <target name="tclient" depends="tprops,instbuild"/>
-
-  <!-- creates the main client installer -->
-  <target name="props">
-    <property name="bclient_ident" value="${client_ident}"/>
-    <property name="bclient_title" value="${client_title}"/>
-    <property name="beditor_title" value="${editor_title}"/>
-    <property name="installer.name" value="bang-install.bin"/>
-  </target>
-  <target name="client" depends="props,instbuild"/>
 </project>

@@ -1,15 +1,15 @@
 ;
 ; $Id$
 ;
-; Bang! Howdy Dev Installer for Windows x86
+; Bang! Howdy Installer for Windows x86
 
   !define LOCALE "en"
-  !define DEPLOYMENT "devclient"
-  !define NAME "Bang! Howdy (Dev)"
-  !define INSTALL_DIR "Bang Howdy Dev"
-  !define HOST "http://download.earth.threerings.net/bang"
+  !define DEPLOYMENT "@client_ident@"
+  !define NAME "@client_title@"
+  !define INSTALL_DIR "@client_ident@"
+  !define HOST "@root_url@"
   !ifndef OUTFILENAME
-    !define OUTFILENAME "..\dist\dev-install.exe"
+    !define OUTFILENAME "bang-install.exe"
   !endif
 
   ; comment this out to enable the code that automatically downloads
