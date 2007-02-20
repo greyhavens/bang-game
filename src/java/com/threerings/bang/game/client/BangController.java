@@ -154,7 +154,10 @@ public class BangController extends GameController
         // dialogue and the game is reported as ready to go
         _startRoundMultex = new Multex(new Runnable() {
             public void run () {
-                roundDidStart();
+                // we could be gone by this point
+                if (_bangobj != null) {
+                    roundDidStart();
+                }
             }
         }, 2);
 
@@ -165,7 +168,10 @@ public class BangController extends GameController
         // we'll use this one at the end of the game
         _postRoundMultex = new Multex(new Runnable() {
             public void run () {
-                displayStatsView();
+                // we could be gone by this point
+                if (_bangobj != null) {
+                    displayStatsView();
+                }
             }
         }, 2);
 
