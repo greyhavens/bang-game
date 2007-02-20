@@ -23,6 +23,11 @@
     <exclude name="${var.dir}/**"/>
   </fileset>
 
+  <!-- force the hemiptera-map package to install in production even if building testing -->
+  <if><equals arg1="${props.dist}" arg2="test"/><then>
+    <property name="${app.name}-hemiptera-map.apt.dist" value="${production.apt.dist}"/>
+  </then></if>
+
   <!-- declare the properties files. -->
   <property name="props.list" value="server.properties,deployment.properties"/>
 
@@ -629,7 +634,7 @@
     </antcall>
     <delete file="etc/bang-client.pro"/>
 
-    <!-- copy the just build client into var/ where it can be used for future diffing -->
+    <!-- copy the just built client into var/ where it can be used for future diffing -->
     <copy todir="${var.dir}">
       <fileset dir="${deploy.dir}/client/pages/client" includes="${version}/**"/>
     </copy>
