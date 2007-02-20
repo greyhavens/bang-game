@@ -22,21 +22,24 @@ public class GangRecord
     /** The name of the gang. */
     public String name;
 
+    /** The normalized name of the gang (used to avoid name collisions). */
+    public String normalized;
+
     /** The date upon which the gang was founded. */
     public Timestamp founded;
 
     /** The gang's statement. */
     public String statement;
-    
+
     /** The gang's home page. */
     public String url;
-    
+
     /** The gang's accumulated notoriety points. */
     public int notoriety;
 
     /** The last time notoriety points were added. */
     public Timestamp lastPlayed;
-    
+
     /** The amount of scrip in the gang's coffers. */
     public int scrip;
 
@@ -45,10 +48,10 @@ public class GangRecord
 
     /** The number of coins in the gang's coffers. */
     public transient int coins;
-    
+
     /** The currently configured gang outfit. */
     public transient OutfitArticle[] outfit;
-        
+
     /** The members of the gang. */
     public transient ArrayList<GangMemberEntry> members;
 
@@ -56,9 +59,10 @@ public class GangRecord
     public transient AvatarInfo avatar;
 
     /** Used when creating new gangs. */
-    public GangRecord (String name)
+    public GangRecord (Handle name)
     {
-        this.name = name;
+        this.name = name.toString();
+        normalized = name.getNormal();
         statement = "";
         url = "";
         outfit = new OutfitArticle[0];
@@ -85,9 +89,9 @@ public class GangRecord
     /** Returns the name used to identity the gang's entry in the coin database. */
     public String getCoinAccount ()
     {
-        return "{" + name + "}"; 
+        return "{" + name + "}";
     }
-    
+
     /** Returns a string representation of this instance. */
     public String toString ()
     {

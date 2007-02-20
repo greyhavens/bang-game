@@ -65,8 +65,8 @@ public class GangRepository extends JORARepository
         super(conprov, GANG_DB_IDENT);
         _gangIdMask = _gtable.getFieldMask();
         _gangIdMask.setModified("gangId");
-        _nameMask = _gtable.getFieldMask();
-        _nameMask.setModified("name");
+        _normalizedMask = _gtable.getFieldMask();
+        _normalizedMask.setModified("normalized");
         _playerIdMask = _mtable.getFieldMask();
         _playerIdMask.setModified("playerId");
     }
@@ -140,7 +140,7 @@ public class GangRepository extends JORARepository
         throws PersistenceException
     {
         // make sure a gang with the specified name doesn't already exist
-        if (loadByExample(_gtable, gang, _nameMask) != null) {
+        if (loadByExample(_gtable, gang, _normalizedMask) != null) {
             return false;
         }
         if (gang.founded == null) {
@@ -546,6 +546,7 @@ public class GangRepository extends JORARepository
         JDBCUtil.createTableIfMissing(conn, "GANGS", new String[] {
             "GANG_ID INTEGER NOT NULL AUTO_INCREMENT",
             "NAME VARCHAR(64) NOT NULL",
+            "NORMALIZED VARCHAR(64) NOT NULL UNIQUE",
             "FOUNDED DATETIME NOT NULL",
             "STATEMENT TEXT NOT NULL",
             "URL VARCHAR(255) NOT NULL",
@@ -554,19 +555,19 @@ public class GangRepository extends JORARepository
             "SCRIP INTEGER NOT NULL",
             "BRAND BLOB",
             "PRIMARY KEY (GANG_ID)",
-            "UNIQUE (NAME)",
         }, "");
 
-        // TEMP: add the statement and url columns, drop outfit and coins, add last played
-        JDBCUtil.addColumn(conn, "GANGS", "STATEMENT", "TEXT NOT NULL", "FOUNDED");
-        JDBCUtil.addColumn(conn, "GANGS", "URL", "VARCHAR(255) NOT NULL", "STATEMENT");
-        JDBCUtil.dropColumn(conn, "GANGS", "OUTFIT");
-        JDBCUtil.dropColumn(conn, "GANGS", "COINS");
-        if (!JDBCUtil.tableContainsColumn(conn, "GANGS", "LAST_PLAYED")) {
-            JDBCUtil.addColumn(conn, "GANGS", "LAST_PLAYED", "DATETIME NOT NULL", "NOTORIETY");
+        // TEMP: add the normalized name column
+        if (!JDBCUtil.tableContainsColumn(conn, "GANGS", "NORMALIZED")) {
+            JDBCUtil.addColumn(conn, "GANGS", "NORMALIZED", "VARCHAR(64) NOT NULL UNIQUE", "NAME");
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("update GANGS set LAST_PLAYED = NOW()");
-            stmt.close();
+            try {
+                // NOTE: all collisions must be removed by hand before this is run or it will fail
+                stmt.executeUpdate(
+                    "update GANGS set NORMALIZED = LOWER(REPLACE(NAME, \" \", \"\"))");
+            } finally {
+                stmt.close();
+            }
         }
         // END TEMP
 
@@ -622,5 +623,5 @@ public class GangRepository extends JORARepository
     protected Table<GangMemberRecord> _mtable;
     protected Table<GangHistoryRecord> _htable;
     protected Table<GangOutfitRecord> _otable;
-    protected FieldMask _gangIdMask, _nameMask, _playerIdMask;
+    protected FieldMask _gangIdMask, _normalizedMask, _playerIdMask;
 }

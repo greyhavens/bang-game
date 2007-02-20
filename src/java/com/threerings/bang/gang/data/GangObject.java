@@ -105,7 +105,7 @@ public class GangObject extends DObject
     /** The currently configured gang outfit. */
     public OutfitArticle[] outfit;
 
-    /** Contains a {@link GangMemberInfo} for each member of this gang. */
+    /** Contains a {@link GangMemberEntry} for each member of this gang. */
     public DSet<GangMemberEntry> members = new DSet<GangMemberEntry>();
 
     /** Contains info on the top-ranked members by various criterion. */

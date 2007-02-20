@@ -275,7 +275,7 @@ public class GangManager
                 listener.requestFailed(cause);
             }
 
-            protected GangRecord _grec = new GangRecord(name.toString());
+            protected GangRecord _grec = new GangRecord(name);
             protected GangMemberRecord _mrec;
         }.start();
     }
