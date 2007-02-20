@@ -214,7 +214,8 @@
     <copy todir="${deploy.dir}/rsrc">
       <fileset dir="rsrc" includes="**/*.ogg"/>
     </copy>
-    <exec executable="find" dir="${deploy.dir}" output="${deploy.dir}/rsrc/sounds.txt">
+    <exec executable="find" dir="${deploy.dir}" output="${deploy.dir}/rsrc/sounds.txt"
+          failonerror="true">
       <arg value="rsrc"/>
       <arg value="-name"/>
       <arg value="*.ogg"/>
@@ -232,7 +233,7 @@
 
   <!-- enumerates all of our units, props, etc. into master lists -->
   <target name="lists">
-    <exec executable="${basedir}/bin/update_lists"/>
+    <exec executable="${basedir}/bin/update_lists" failonerror="true"/>
   </target>
 
   <!-- builds bundles for a specific town -->
@@ -573,7 +574,7 @@
           fork="true" classname="com.threerings.bang.bounty.tools.SummarizeBounties">
        <arg value="frontier_town"/>
     </java>
-    <exec executable="${basedir}/bin/update_board_summary">
+    <exec executable="${basedir}/bin/update_board_summary" failonerror="true">
       <arg value="${pages.out}/boards.html"/>
     </exec>
   </target>
@@ -599,7 +600,7 @@
     <property name="latest_version" value="2007021616"/>
     <echo message="Previous version used for renaming: ${latest_version}"/>
     <echo message="Generating Proguard config file for ${version}..."/>
-    <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro">
+    <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro" failonerror="true">
       <arg line="etc/bang-client.pro.in"/>
       <arg line="version=${version}"/>
       <arg line="apply_mapping=-applymapping"/>
@@ -618,7 +619,7 @@
       </filterset>
     </copy>
     <!-- do some temporary fiddling to nix boom_town from production -->
-    <exec executable="egrep" output="${client.base}/getdown.txt">
+    <exec executable="egrep" output="${client.base}/getdown.txt" failonerror="true">
       <arg line="-v"/>
       <arg line="boom_town"/>
       <arg line="${client.base}/getdown.txt.tmp"/>
