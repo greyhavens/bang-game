@@ -350,7 +350,7 @@
     <component cclass="male/hat_back" name="tlingit_headress"/>
   </article>
 
- <article name="male_fur_wrap" townId="indian_post" slot="hat" scrip="3000" coins="2" colors="clothes_p,clothes_s">
+ <article name="male_fur_wrap" townId="indian_post" slot="hat" scrip="3000" coins="2" colors="clothes_p,clothes_t">
     <component cclass="male/hat" name="fur"/>
     <component cclass="male/hat_back" name="fur"/>
   </article>
