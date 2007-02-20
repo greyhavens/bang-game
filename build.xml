@@ -661,11 +661,11 @@
     <mkdir dir="${deploy.dir}/hemiptera-map"/>
     <copy file="etc/proguard/${version}.map" todir="${deploy.dir}/hemiptera-map"/>
     <!-- commit the proguard map file -->
-    <exec executable="svn">
+    <exec executable="svn" failonerror="true">
       <arg value="add"/>
       <arg value="etc/proguard/${version}.map"/>
     </exec>
-    <exec executable="svn">
+    <exec executable="svn" failonerror="true">
       <arg value="commit"/>
       <arg value="-m"/>
       <arg value="New proguard mapping file for version ${version}."/>
