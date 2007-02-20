@@ -959,7 +959,7 @@
     </antcall>
     <!-- append the version number to the package name. for dev this will always be 0 -->
     <!-- also setup the bang-client-current package -->
-    <copy file="etc/bang-client.dwb.in"
+    <copy file="etc/bang-client.dwb.in.in"
           tofile="${deploy.dir}/tmp/bang-client-${version}.dwb.in"/>
     <mkdir dir="${destroot}/bang-client-current"/>
     <copy file="etc/bang-client-current.dwb.in.in"
