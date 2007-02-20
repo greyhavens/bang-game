@@ -365,7 +365,7 @@ public class UnitSprite extends MobileSprite
             _fire = null;
             ExplosionViz eviz = new ExplosionViz(true);
             eviz.init((BangContext)_ctx, (BangBoardView)_view, _piece, null);
-            eviz.display(this);
+            eviz.display();
         }
     }
 

@@ -38,16 +38,16 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class RepairViz extends ParticleEffectViz
 {
     @Override // documentation inherited
-    public void display (PieceSprite target)
+    public void display ()
     {
         // start up the glow effect
         if (_glow != null) {
-            _glow.activate(target);
+            _glow.activate(getTargetSprite());
         }
         
         // and the swirl effect
-        displayParticles(target, _swirls[0].particles, true);
-        displayParticles(target, _swirls[1].particles, true);
+        displayParticles(_swirls[0].particles, true);
+        displayParticles(_swirls[1].particles, true);
     }
     
     @Override // documentation inherited

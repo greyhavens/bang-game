@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import com.jmex.bui.util.Point;
+
 import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntListUtil;
@@ -437,6 +439,84 @@ public class BangObject extends GameObject
         }
         return null;
     }
+
+
+    public enum Direction { UP, DOWN, LEFT, RIGHT };
+
+    /**
+     * Returns the first available targetable piece in a direction from the specified
+     * coordinates and elevation, or null if no targetable piece exists
+     */
+    public Object getFirstAvailableTarget (
+        short x, short y, int dir)
+    {
+        int e = board.getHeightfieldElevation(x, y);
+
+        // iterate to edge
+        while (true)
+        {
+            // find next tile
+            switch (dir) {
+                case Piece.NORTH:
+                    --y;
+                    break;
+                case Piece.SOUTH:
+                    ++y;
+                    break;
+                case Piece.EAST:
+                    ++x;
+                    break;
+                case Piece.WEST:
+                    --x;
+                    break;
+            }
+
+            if (!board.getPlayableArea().contains(x, y)) {
+                break;
+            }
+
+            int hfelev = board.getHeightfieldElevation(x, y);
+            if (hfelev > e) {
+                break; // terrain is in the way
+            }
+
+            for (Piece p : pieces) {
+                if (p.x == x && p.y == y) {
+                    if (p.isTargetable()) {
+                        return p;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            if (!board.isPenetrable(x, y)) {
+                break; // non-penetrable prop is in the way
+            }
+
+            // find next tile
+            boolean canCross = true;
+            switch (dir) {
+                case Piece.NORTH:
+                    canCross = board.canCrossSide(x, y, x, y-1);
+                    break;
+                case Piece.SOUTH:
+                    canCross = board.canCrossSide(x, y, x, y+1);
+                    break;
+                case Piece.EAST:
+                    canCross = board.canCrossSide(x, y, x+1, y);
+                    break;
+                case Piece.WEST:
+                    canCross = board.canCrossSide(x, y, x-1, y);
+                    break;
+            }
+            if (!canCross) {
+                break;
+            }
+        }
+        return new Point(x,y);
+    }
+
 
     /**
      * Returns the average number of live units per player.

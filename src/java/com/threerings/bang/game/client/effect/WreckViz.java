@@ -49,20 +49,20 @@ public class WreckViz extends ParticleEffectViz
     }
 
     @Override // documentation inherited
-    public void display (PieceSprite target)
+    public void display ()
     {
         // set up and add the steam cloud
         if (_steamcloud != null) {
-            displayParticles(target, _steamcloud, true);
+            displayParticles(_steamcloud, true);
         }
 
         // and the wreckage
         if (_wreckage != null) {
-            String[] wtypes = ((ActiveSprite)target).getWreckageTypes();
+            String[] wtypes = ((ActiveSprite)getTargetSprite()).getWreckageTypes();
             if (wtypes != null && wtypes.length > 0) {
                 for (int i = 0; i < _wreckage.length; i++) {
                     _wreckage[i].bind(RandomUtil.pickRandom(wtypes));
-                    target.attachChild(_wreckage[i]);
+                    getTargetSprite().attachChild(_wreckage[i]);
                     _wreckage[i].updateRenderState();
                 }
             }
@@ -70,7 +70,7 @@ public class WreckViz extends ParticleEffectViz
 
         // display the wrapped effect viz
         if (_wrapviz != null) {
-            _wrapviz.display(target);
+            _wrapviz.display();
 
         } else {
             effectDisplayed();

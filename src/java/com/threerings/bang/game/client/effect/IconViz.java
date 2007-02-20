@@ -104,10 +104,10 @@ public class IconViz extends EffectViz
     }
     
     @Override // documentation inherited
-    public void display (PieceSprite target)
+    public void display ()
     {
-        if (target != null) {
-            target.attachChild(_billboard);
+        if (getTargetSprite() != null) {
+            getTargetSprite().attachChild(_billboard);
         } else {
             // wrap the billboard in a container node for ease of
             // transformation

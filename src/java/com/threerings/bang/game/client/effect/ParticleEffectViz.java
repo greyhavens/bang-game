@@ -4,6 +4,7 @@
 package com.threerings.bang.game.client.effect;
 
 import com.jme.math.Vector3f;
+import com.jme.math.Quaternion;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jmex.effects.particles.ParticleMesh;
@@ -25,8 +26,19 @@ public abstract class ParticleEffectViz extends EffectViz
      * @param position whether or not to place the particle system at the
      * center of the target
      */
-    protected void displayParticles (
-        PieceSprite target, ParticleMesh particles, boolean position)
+    protected void displayParticles (ParticleMesh particles, boolean position)
+    {
+        displayParticles(getLocalTranslation(), particles, position);
+    }
+
+    /**
+     * Displays a particle system for this effect at a location.
+     *
+     * @param position whether or not to place the particle system at the
+     * center of the target
+     */
+     protected void displayParticles (
+        final Vector3f localTranslation, ParticleMesh particles, boolean position)
     {
         // we may be reusing this particle system so remove it from its
         // previous parent
@@ -34,10 +46,10 @@ public abstract class ParticleEffectViz extends EffectViz
         if (parent != null) {
             parent.detachChild(particles);
         }
-        
+
         // position and fire up the particle system
         if (position) {
-            Vector3f spos = target.getLocalTranslation();
+            Vector3f spos = localTranslation;
             particles.setLocalTranslation(
                 new Vector3f(spos.x, spos.y, spos.z + TILE_SIZE/2));
         }
@@ -46,24 +58,34 @@ public abstract class ParticleEffectViz extends EffectViz
         particles.updateGeometricState(0f, true);
         particles.forceRespawn();
     }
-    
+
     /**
      * Displays a particle effect on the specified target.
      */
-    protected void displayEffect (String name, final PieceSprite target)
+    protected void displayEffect (String name)
+    {
+        displayEffect(name, getLocalTranslation(), (_target != null) ?
+            getTargetSprite().getLocalRotation() : new Quaternion());
+    }
+
+    /**
+     * Displays a particle effect on the specified location and orientation.
+     */
+    protected void displayEffect (String name,
+        final Vector3f localTranslation, final Quaternion localRotation)
     {
         ParticlePool.getParticles(name,
             new ResultAttacher<Spatial>(_view.getPieceNode()) {
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
                 Vector3f trans = result.getLocalTranslation();
-                target.getLocalRotation().multLocal(
+                localRotation.multLocal(
                     trans.set(0f, 0f, TILE_SIZE/2));
-                trans.addLocal(target.getLocalTranslation());
+                trans.addLocal(localTranslation);
             }
         });
     }
-    
+
     /**
      * Removes a particle system from the view.
      */

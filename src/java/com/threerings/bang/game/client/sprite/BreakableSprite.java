@@ -70,7 +70,7 @@ import com.threerings.bang.client.util.ResultAttacher;
                 ParticleUtil.stopAndRemove(_smoke);
                 _smoke = null;
                 ArrayList<Spatial> children = getChildren();
-                for (Spatial child : children){
+                for (Spatial child : children) {
                     if (!(child instanceof WreckViz.Wreckage))
                     {
                         child.setCullMode(Spatial.CULL_ALWAYS);

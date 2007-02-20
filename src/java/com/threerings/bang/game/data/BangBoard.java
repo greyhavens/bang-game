@@ -1173,14 +1173,23 @@ public class BangBoard extends SimpleStreamableObject
             MAX_OCCUPIABLE_HEIGHT_DELTA) {
             return false;
         }
-
-        int dir = (sx == dx) ? (dy > sy ? NORTH : SOUTH) : (dx < sx ? EAST : WEST);
+        return canCrossSide(sx, sy, dx, dy);
+    }
+    
+    /**
+     * Returns true if a unit can move between these two tiles based on direction.
+     */
+    public boolean canCrossSide (int sx, int sy, int dx, int dy)
+    {
         // the source direction is the opposite of the destination
+        int dir = (sx == dx) ? (dy > sy ? NORTH : SOUTH) : (dx < sx ? EAST : WEST);
+        
+        // the side is not crossible
         int sdir = (dir + 2) % 4;
         return (((_dstate[dy*_width+dx] & (ENTER_NORTH << dir)) == 0) &&
                 ((_dstate[sy*_width+sx] & (EXIT_NORTH << sdir)) == 0));
-
     }
+    
 
     /**
      * Returns true if the specified coordinate is both unoccupied by any other piece and
@@ -1237,6 +1246,18 @@ public class BangBoard extends SimpleStreamableObject
         }
         byte tstate = _tstate[y*_width+x];
         return tstate <= O_PROP && (_tstate[y*_width+x] & TARGETABLE_FLAG) == 0;
+    }
+
+    /**
+     * Returns true if the specified coordinate is penatrable
+     */
+    public boolean isPenetrable (int x, int y)
+    {
+        if (!_playarea.contains(x, y)) {
+            return false;
+        }
+        byte btstate = _btstate[y*_width + x];
+        return !(btstate <= O_PROP && (btstate & PENETRABLE_FLAG) != 0);
     }
 
     /**
@@ -1503,8 +1524,7 @@ public class BangBoard extends SimpleStreamableObject
                 return false; // terrain is in the way
             }
             if (hfelev + getPieceElevation(ix, iy) > ee) {
-                byte btstate = _btstate[iy*_width + ix];
-                if (btstate <= O_PROP && (btstate & PENETRABLE_FLAG) != 0) {
+                if (!isPenetrable(ix, iy)) {
                     return false; // non-penetrable prop is in the way
                 }
             }

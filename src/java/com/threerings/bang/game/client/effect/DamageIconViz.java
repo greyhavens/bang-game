@@ -82,12 +82,6 @@ public class DamageIconViz extends IconViz
         if (target == null) {
             return;
         }
-        PieceSprite sprite = view.getPieceSprite(target);
-        if (sprite == null) {
-            log.warning("Missing sprite for damage effect " +
-                    "[target=" + target + ", effect=" + effect + "].");
-            return;
-        }
         DamageIconViz diviz = null;
         if (effect instanceof MoveShootEffect) {
             effect = ((MoveShootEffect)effect).shotEffect;
@@ -102,7 +96,7 @@ public class DamageIconViz extends IconViz
 
         if (diviz != null) {
             diviz.init(ctx, view, target, null);
-            diviz.display(sprite);
+            diviz.display();
         }
     }
     
@@ -178,16 +172,16 @@ public class DamageIconViz extends IconViz
     }
 
     @Override // documentation inherited
-    public void display (PieceSprite target)
+    public void display ()
     {
         // Calculate the y offset based on the number of damage readouts
         // already on this sprite
-        _pieceSprite = target;
-        int gap = target.damageAttach();
-        attached = true;
-        _yOffset = gap * DAMAGE_SIZE * 1.1f;
-        
-        super.display(target);
+        if (getTargetSprite() != null) {
+            int gap = getTargetSprite().damageAttach();
+            attached = true;
+            _yOffset = gap * DAMAGE_SIZE * 1.1f;
+        }
+        super.display();
     }
 
     @Override // documentation inherited
@@ -215,7 +209,9 @@ public class DamageIconViz extends IconViz
     {
         _dmgTState.deleteAll();
         if (attached) {
-            _pieceSprite.damageDetach();
+            if (getTargetSprite() != null) {
+                getTargetSprite().damageDetach();
+            }
             attached = false;
         }
     }
@@ -224,7 +220,9 @@ public class DamageIconViz extends IconViz
     protected void billboardFade ()
     {
         if (attached) {
-            _pieceSprite.damageDetach();
+            if (getTargetSprite() != null) {
+                getTargetSprite().damageDetach();
+            }
             attached = false;
         }
     }
@@ -267,9 +265,6 @@ public class DamageIconViz extends IconViz
 
     /** The damage indicator texture state. */
     protected TextureState _dmgTState;
-
-    /** Reference to our target PieceSprite. */
-    protected PieceSprite _pieceSprite;
 
     /** The yoffset used when multiple damage icons are applied. */
     protected float _yOffset = 0;

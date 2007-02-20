@@ -307,7 +307,7 @@ public class EffectHandler extends BoardView.BoardAction
         IconViz iviz = IconViz.createIconViz(piece, effect);
         if (iviz != null) {
             iviz.init(_ctx, _view, piece, null);
-            iviz.display(sprite);
+            iviz.display();
         }
 
         // perhaps display a generic particle effect
@@ -319,7 +319,7 @@ public class EffectHandler extends BoardView.BoardAction
         // perhaps play a sound to go with our visual effect
         String soundPath = getSoundPath(effect);
         if (soundPath != null) {
-            new PlaySoundViz(_sounds, soundPath).display(sprite);
+            new PlaySoundViz(_sounds, soundPath).display();
         }
 
         // report the effect to the view who will report it to the tutorial
@@ -458,14 +458,14 @@ public class EffectHandler extends BoardView.BoardAction
                 }
                 iviz = IconViz.createCardViz(card);
                 iviz.init(_ctx, _view, piece, null);
-                iviz.display(sprite);
+                iviz.display();
                 return;
 
             case VS_AREA:
                 int[] coords = (int[])target;
                 iviz = IconViz.createCardViz(card);
                 iviz.init(_ctx, _view, coords[0], coords[1], null);
-                iviz.display(null);
+                iviz.display();
                 return;
 
             case VS_PLAYER:
@@ -512,7 +512,7 @@ public class EffectHandler extends BoardView.BoardAction
                 maybeComplete(penderId);
             }
         });
-        viz.display(sprite);
+        viz.display();
     }
 
     /**

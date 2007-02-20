@@ -19,7 +19,7 @@ public class PlaySoundViz extends EffectViz
     }
 
     @Override // documentation inherited
-    public void display (PieceSprite target)
+    public void display ()
     {
         // TODO: set the location of the sound
         _sound.play(true);
