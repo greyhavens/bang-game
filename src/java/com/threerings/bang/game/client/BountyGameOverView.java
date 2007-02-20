@@ -9,6 +9,7 @@ import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Dimension;
@@ -245,7 +246,15 @@ public class BountyGameOverView extends SteelWindow
             _contents.add(new BLabel(quote.text, "bounty_quote"));
         }
         if (completed) {
-            _contents.add(new AwardView(_ctx, _bangobj, _gconfig, _user, _award));
+            if (_award.cashEarned > 0) {
+                _contents.add(new AwardView(_ctx, _bangobj, _gconfig, _user, _award));
+            } else {
+                BContainer acont = new BContainer(new BorderLayout());
+                acont.setStyleClass("endgame_border");
+                acont.add(new BLabel(_msgs.get("m.bover_already_completed"), "endgame_text"),
+                        BorderLayout.CENTER);
+                _contents.add(acont);
+            }
         }
 
         _buttons.removeAll();
