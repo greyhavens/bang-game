@@ -963,7 +963,7 @@
           tofile="${deploy.dir}/tmp/bang-client-${version}.dwb.in"/>
     <mkdir dir="${destroot}/bang-client-current"/>
     <copy file="etc/bang-client-current.dwb.in.in"
-          tofile="${deploy.dir}/tmp/etc/bang-client-current.dwb.in">
+          tofile="${deploy.dir}/tmp/bang-client-current.dwb.in">
       <filterset>
         <filter token="CLIENTVERSION" value="${version}"/>
       </filterset>
