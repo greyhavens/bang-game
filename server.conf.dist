@@ -22,9 +22,6 @@ LOGLEVEL=info
 # The node name for this server instance. frontier_town, indian_post etc.
 NODE=frontier_town
 
-# The user as which we run Jetty
-JETTY_USER=bang
-
 # These is passed to the various JVMs
 SERVER_MEMORY=384M
 TOOL_MEMORY=384M
