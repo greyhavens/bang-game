@@ -58,15 +58,6 @@ public class RocketEffect extends Effect
         baseDamage = damage;
     }
 
-    public RocketEffect (Piece shooter, Point p, int damage)
-    {
-        this.shooter = shooter;
-        targetId = -1;
-        xcoords = append(xcoords, (short)p.x);
-        ycoords = append(ycoords, (short)p.y);
-        baseDamage = damage;
-    }
-
     /** Constructor used when unserializing. */
     public RocketEffect ()
     {

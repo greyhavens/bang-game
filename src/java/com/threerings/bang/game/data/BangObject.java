@@ -440,46 +440,34 @@ public class BangObject extends GameObject
         return null;
     }
 
-
-    public enum Direction { UP, DOWN, LEFT, RIGHT };
-
     /**
-     * Returns the first available targetable piece in a direction from the specified
-     * coordinates and elevation, or null if no targetable piece exists
+     * Returns the first available targetable piece in a direction from the specified coordinates
+     * and elevation, or a dummy piece with id -1 and coordinates at the last tile reachable by the
+     * projectile in its search for a target in the specified direction.
      */
-    public Object getFirstAvailableTarget (
-        short x, short y, int dir)
+    public Piece getFirstAvailableTarget (int x, int y, int dir)
     {
-        int e = board.getHeightfieldElevation(x, y);
+        int startElev = board.getHeightfieldElevation(x, y);
 
-        // iterate to edge
-        while (true)
-        {
-            // find next tile
-            switch (dir) {
-                case Piece.NORTH:
-                    --y;
-                    break;
-                case Piece.SOUTH:
-                    ++y;
-                    break;
-                case Piece.EAST:
-                    ++x;
-                    break;
-                case Piece.WEST:
-                    --x;
-                    break;
-            }
-
-            if (!board.getPlayableArea().contains(x, y)) {
+        do {
+            // check that we can cross into the next tile
+            int nx = x + Piece.DX[dir], ny = y + Piece.DY[dir];
+            if (!board.canCrossSide(x, y, nx, ny)) {
                 break;
             }
 
-            int hfelev = board.getHeightfieldElevation(x, y);
-            if (hfelev > e) {
-                break; // terrain is in the way
+            // move to this tile and continue
+            x = nx;
+            y = ny;
+
+            // make sure we haven't moved off of the board and that ensure that terrain does not
+            // block our path
+            if (!board.getPlayableArea().contains(x, y) ||
+                board.getHeightfieldElevation(x, y) > startElev) {
+                break;
             }
 
+            // look for a targetable piece at this tile
             for (Piece p : pieces) {
                 if (p.x == x && p.y == y) {
                     if (p.isTargetable()) {
@@ -490,33 +478,15 @@ public class BangObject extends GameObject
                 }
             }
 
-            if (!board.isPenetrable(x, y)) {
-                break; // non-penetrable prop is in the way
-            }
+            // stop if a non-penetrable prop is in the way
+        } while (!board.isPenetrable(x, y));
 
-            // find next tile
-            boolean canCross = true;
-            switch (dir) {
-                case Piece.NORTH:
-                    canCross = board.canCrossSide(x, y, x, y-1);
-                    break;
-                case Piece.SOUTH:
-                    canCross = board.canCrossSide(x, y, x, y+1);
-                    break;
-                case Piece.EAST:
-                    canCross = board.canCrossSide(x, y, x+1, y);
-                    break;
-                case Piece.WEST:
-                    canCross = board.canCrossSide(x, y, x-1, y);
-                    break;
-            }
-            if (!canCross) {
-                break;
-            }
-        }
-        return new Point(x,y);
+        Unit dummy = new Unit();
+        dummy.pieceId = -1;
+        dummy.x = (short)x;
+        dummy.y = (short)y;
+        return dummy;
     }
-
 
     /**
      * Returns the average number of live units per player.

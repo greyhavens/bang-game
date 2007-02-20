@@ -31,8 +31,7 @@ public class Fireworks extends Breakable
     }
 
     @Override // documentation inherited
-    public ArrayList<Effect> tick (
-            short tick, BangObject bangobj, Piece[] pieces)
+    public ArrayList<Effect> tick (short tick, BangObject bangobj, Piece[] pieces)
     {
         if (damage > 1) {
             ArrayList<Effect> effects = new ArrayList<Effect>();
@@ -50,12 +49,8 @@ public class Fireworks extends Breakable
                 // shoot in a random direction
                 //int dir = RandomUtil.getInt(Piece.DIRECTIONS.length);
                 for (int dir : Piece.DIRECTIONS) {
-                    Object obj = bangobj.getFirstAvailableTarget(x, y, dir);
-                    if (obj instanceof Piece) {
-                        effects.add(new RocketEffect(this, (Piece)obj, 60));
-                    } else if (obj instanceof Point) {
-                        effects.add(new RocketEffect(this, (Point)obj, 60));
-                    }
+                    Piece piece = bangobj.getFirstAvailableTarget(x, y, dir);
+                    effects.add(new RocketEffect(this, piece, 60));
                 }
             } else if (_count > 0) {
                 effects.add(new UpdateEffect(this));
