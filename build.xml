@@ -590,14 +590,11 @@
       <entry key="version" value="${version}"/>
       <entry key="config_version" value="${version}"/>
     </propertyfile>
-    <!--
     <exec executable="${basedir}/bin/getversion" outputproperty="latest_version"
           failonerror="true">
       <arg line="client"/>
       <arg line="${download_root_url}"/>
     </exec>
-    -->
-    <property name="latest_version" value="2007021616"/>
     <echo message="Previous version used for renaming: ${latest_version}"/>
     <echo message="Generating Proguard config file for ${version}..."/>
     <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro" failonerror="true">
@@ -657,20 +654,27 @@
       </sequential>
     </for>
 
-    <!-- make our Proguard mapping file accessible to Hemiptera -->
+    <!-- make all our Proguard mapping file accessible to Hemiptera -->
     <mkdir dir="${deploy.dir}/hemiptera-map"/>
-    <copy file="etc/proguard/${version}.map" todir="${deploy.dir}/hemiptera-map"/>
+    <copy todir="${deploy.dir}/hemiptera-map">
+      <fileset dir="etc/proguard" includes="??????????.map"/>
+    </copy>
     <!-- commit the proguard map file -->
-    <exec executable="svn" failonerror="true">
-      <arg value="add"/>
-      <arg value="etc/proguard/${version}.map"/>
-    </exec>
-    <exec executable="svn" failonerror="true">
-      <arg value="commit"/>
-      <arg value="-m"/>
-      <arg value="New proguard mapping file for version ${version}."/>
-      <arg value="etc/proguard/${version}.map"/>
-    </exec>
+    <if>
+      <or><equals arg1="${props.dist}" arg2="production"/>
+      <equals arg1="${props.dist}" arg2="test"/></or>
+    <then>
+      <exec executable="svn" failonerror="true">
+        <arg value="add"/>
+        <arg value="etc/proguard/${version}.map"/>
+      </exec>
+      <exec executable="svn" failonerror="true">
+        <arg value="commit"/>
+        <arg value="-m"/>
+        <arg value="New proguard mapping file for version ${version}."/>
+        <arg value="etc/proguard/${version}.map"/>
+      </exec>
+    </then></if>
 
     <!-- if enabled, upload the client to S3 -->
     <if><equals arg1="${client_s3enable}" arg2="true"/><then>
