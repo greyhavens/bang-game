@@ -413,9 +413,6 @@
     <ant dir="projects/installers" target="clean" inheritAll="false"/>
     <ant dir="projects/pseditor" target="clean" inheritAll="false"/>
 
-    <!-- TODO: temp until we copy these files someplace else  -->
-    <delete><fileset dir="etc" includes="bang-client-*.dwb.in"/></delete>
-
     <!-- if we're generating packages, revert any modified model.properties files to -->
     <!-- avoid checkclean freakout -->
     <if><isset property="props.dist"/><then>
@@ -962,10 +959,11 @@
     </antcall>
     <!-- append the version number to the package name. for dev this will always be 0 -->
     <!-- also setup the bang-client-current package -->
-    <!-- TODO don't do this inside of etc/ -->
-    <copy file="etc/bang-client.dwb.in" tofile="etc/bang-client-${version}.dwb.in"/>
+    <copy file="etc/bang-client.dwb.in"
+          tofile="${deploy.dir}/tmp/bang-client-${version}.dwb.in"/>
     <mkdir dir="${destroot}/bang-client-current"/>
-    <copy file="etc/bang-client-current.dwb.in.in" tofile="etc/bang-client-current.dwb.in">
+    <copy file="etc/bang-client-current.dwb.in.in"
+          tofile="${deploy.dir}/tmp/etc/bang-client-current.dwb.in">
       <filterset>
         <filter token="CLIENTVERSION" value="${version}"/>
       </filterset>
