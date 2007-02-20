@@ -19,6 +19,7 @@
     # data/downloads is written to for temp downloads
     <Permissions>
         Path        @PREFIX@/log
+        Path        @PREFIX@/logs
         Path        @PREFIX@/run
         Path        @PREFIX@/data/downloads
         User        @APPUSER@
