@@ -9,8 +9,9 @@
     Architecture    all
     Description Web pages for rumbling in the Wild West.
 
-    # bang-pages depends on the installers
+    # bang-pages depends on the installers and the blawg
     Depends     bang-installer
+    Depends     bang-blog-pages
 
     # Maintainer Scripts
     # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
