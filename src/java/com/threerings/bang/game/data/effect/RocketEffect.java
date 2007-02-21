@@ -4,10 +4,11 @@
 package com.threerings.bang.game.data.effect;
 
 import com.jmex.bui.util.Point;
-
+import com.threerings.util.StreamablePoint;
 import com.threerings.bang.util.RenderUtil;
 
 import com.samskivert.util.ArrayUtil;
+import com.samskivert.util.ArrayIntSet;
 import com.samskivert.util.IntIntMap;
 
 import com.threerings.bang.game.client.RocketHandler;
@@ -21,46 +22,33 @@ import static com.threerings.bang.Log.log;
 /**
  * Communicates that a ballistic shot was fired from one piece to another.
  */
-public class RocketEffect extends Effect
+public class RocketEffect extends AreaEffect
 {
-    /** Types of projectile trajectories. */
-    public enum Trajectory { FLAT, HIGH_ARC };
-
     /** The shooter. */
     public Piece shooter;
 
-    /** The piece id of the target. */
-    public int targetId;
-
-    /** The new total damage to assign to the target. */
-    public int newDamage;
-
-    /** Ammount of damage being applied. */
+    /** Amount of damage being applied. */
     public int baseDamage;
 
     /** The x coordinates of the path this shot takes before finally
      * arriving at its target (not including the starting coordinate). */
-    public short[] xcoords;
+    public short[] xcoords = new short[0];
 
     /** The y coordinates of the path this shot takes before finally
      * arriving at its target (not including the starting coordinate). */
-    public short[] ycoords;
+    public short[] ycoords = new short[0];
 
-    /** A secondary effect to apply before the shot. */
-    public Effect[] preShotEffects = Piece.NO_EFFECTS;
-
-    public RocketEffect (Piece shooter, Piece target, int damage)
-    {
-        this.shooter = shooter;
-        targetId = target.pieceId;
-        xcoords = append(xcoords, target.x);
-        ycoords = append(ycoords, target.y);
-        baseDamage = damage;
-    }
+    public StreamablePoint[] affectedPoints = new StreamablePoint[0];
 
     /** Constructor used when unserializing. */
     public RocketEffect ()
     {
+    }
+
+    public RocketEffect (Piece shooter, int damage)
+    {
+        this.shooter = shooter;
+        baseDamage = damage;
     }
 
     @Override // documentation inherited
@@ -77,84 +65,44 @@ public class RocketEffect extends Effect
         return "units/frontier_town/artillery/shell";
     }
 
-    /**
-     * Returns the type of trajectory that should be followed by the shot.
-     */
-    public Trajectory getTrajectory ()
-    {
-        return Trajectory.FLAT;
-    }
-
-    @Override // documentation inherited
-    public int[] getAffectedPieces ()
-    {
-        int[] pieces = (targetId == -1) ? new int[] { shooter.pieceId } : new int[] { shooter.pieceId, targetId };
-        for (Effect effect : preShotEffects) {
-            pieces = concatenate(pieces, effect.getAffectedPieces());
-        }
-        return pieces;
-    }
-
     @Override // documentation inherited
     public void prepare (BangObject bangobj, IntIntMap dammap)
     {
-        if (targetId == -1) { // we were deflected into la la land, no problem
-            return;
-        }
+        ArrayIntSet affected = new ArrayIntSet();
 
-        Piece target = bangobj.pieces.get(targetId);
-        if (target != null) {
-            // award a 20 damage point (2 game point) bonus for a kill
-            int bonus = (newDamage == 100) ? 20 : 0;
-            dammap.increment(target.owner, newDamage - target.damage + bonus);
-            if (newDamage == 100) {
-                Effect effect = target.willDie(bangobj, shooter.pieceId);
-                if (effect != null) {
-                    preShotEffects = ArrayUtil.append(preShotEffects, effect);
-                }
+        // shoot in a random direction
+        //int dir = RandomUtil.getInt(Piece.DIRECTIONS.length);
+        for (int dir : Piece.DIRECTIONS) {
+            Object obj = bangobj.getFirstAvailableTarget(shooter.x, shooter.y, dir);
+            if (obj instanceof Piece) {
+                Piece target = (Piece)obj;
+                affected.add(target.pieceId);
+                short tx = target.x;
+                short ty = target.y;
+                xcoords = ArrayUtil.append(xcoords, tx);
+                ycoords = ArrayUtil.append(ycoords, ty);
+            } else if (obj instanceof Point) {
+                Point p = (Point)obj;
+                affectedPoints = ArrayUtil.append(affectedPoints, new StreamablePoint(p.x, p.y));
+                xcoords = ArrayUtil.append(xcoords, (short)p.x);
+                ycoords = ArrayUtil.append(ycoords, (short)p.y);
             }
-            for (Effect effect : preShotEffects) {
-                effect.prepare(bangobj, dammap);
-            }
-        } else {
-            log.warning("Shot effect missing target [id=" + targetId + "].");
         }
+        pieces = affected.toIntArray();
     }
 
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
-        // apply any secondary pre-shot effect
-        for (Effect effect : preShotEffects) {
-            effect.apply(bangobj, obs);
-        }
-
-        if (targetId == -1) {
-            log.warning("Missing shot target " + this + ".");
-            return false;
-        }
-
-        Piece target = bangobj.pieces.get(targetId);
-        if (target == null) {
-            log.warning("Missing shot target " + this + ".");
-            return false;
-        }
-
-        // finally do the damage
-        return damage(bangobj, obs, shooter.owner, shooter, target, newDamage, "exploded");
+        return true;
     }
 
-    /** Helper function for setting targets. */
-    protected short[] append (short[] array, short value)
+
+    @Override // documentation inherited
+    public void apply (
+        BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
     {
-        short[] narray;
-        if (array == null) {
-            narray = new short[] { value };
-        } else {
-            narray = new short[array.length+1];
-            System.arraycopy(array, 0, narray, 0, array.length);
-            narray[array.length] = value;
-        }
-        return narray;
+        // finally do the damage
+        damage(bangobj, obs, shooter.owner, shooter, piece, baseDamage, "exploded");
     }
 }

@@ -3,6 +3,8 @@
 
 package com.threerings.bang.game.client;
 
+import java.util.HashMap;
+
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -70,14 +72,10 @@ public class RocketHandler extends EffectHandler
             // abandon ship, we're screwed
             return false;
         }
-        if (_shot.targetId != -1) {
-            _target = _bangobj.pieces.get(_shot.targetId);
-            if (_target == null) {
-                log.warning("Missing target? [shot=" + _shot + "].");
-            }
-        }
 
+        _applying = true;
         fireShot();
+        _applying = false;
 
         // now determine whether or not anything remained pending
         return !isCompleted();
@@ -131,45 +129,12 @@ public class RocketHandler extends EffectHandler
         return new PathParams(velvec, duration);
     }
 
-    /**
-     * Determines whether our shot has followed all the segments it needs to,
-     * in which case false is returned. Otherwise the next shot segment is
-     * started and true is returned.
-     */
-    protected boolean fireNextSegment ()
-    {
-        if (_sidx == _shot.xcoords.length-1) {
-            return false;
-        } else {
-            _sidx++;
-            fireShot();
-            return true;
-        }
-    }
-
     protected void fireShot ()
     {
-        if (_sidx == 0) {
-            // pre-apply the shot effect which may update the shooter
-            //_shot.preapply(_bangobj, this);
-
-            // animate the shooter if this is not collateral damage (in which
-            // case the main shot will trigger their shooting animation)
-            /*if (_shot.type != ShotEffect.COLLATERAL_DAMAGE) {
-                PieceSprite ssprite = _view.getPieceSprite(_shot.shooter);
-                // on the first shot, we animate the shooter
-                if (ssprite instanceof MobileSprite) {
-                    animateShooter((MobileSprite)ssprite);
-                }
-            }*/
-
-            // now fire the shot animation
+        // now fire the shot animations
+        for (int sidx = 0; sidx < _shot.xcoords.length; ++sidx) {
             fireShot(_shot.shooter.x, _shot.shooter.y,
-                     _shot.xcoords[_sidx], _shot.ycoords[_sidx]);
-
-        } else {
-            fireShot(_shot.xcoords[_sidx-1], _shot.ycoords[_sidx-1],
-                     _shot.xcoords[_sidx], _shot.ycoords[_sidx]);
+                     _shot.xcoords[sidx], _shot.ycoords[sidx]);
         }
     }
 
@@ -180,7 +145,7 @@ public class RocketHandler extends EffectHandler
         // point one half tile above the ground
         Vector3f start = null;
         FireworksSprite usprite = (FireworksSprite)_view.getTargetableSprite(_shot.shooter);
-        if (_sidx == 0 && usprite != null) {
+        if (usprite != null) {
             Spatial src = usprite.getRocketSource();
             if (src != null) {
                 start = new Vector3f(src.getWorldTranslation());
@@ -198,58 +163,46 @@ public class RocketHandler extends EffectHandler
         PathParams pparams;
         Vector3f gravity;
         RocketEffect bshot = (RocketEffect)_shot;
-        if (bshot.getTrajectory() == RocketEffect.Trajectory.FLAT) {
-            Vector3f velocity = end.subtract(start);
-            float length = velocity.length();
-            pparams = new PathParams(
-                velocity.normalizeLocal().mult(FLAT_TRAJECTORY_SPEED),
-                length / FLAT_TRAJECTORY_SPEED);
-            gravity = Vector3f.ZERO;
-        } else { // RocketEffect.Trajectory.HIGH_ARC
-            pparams = computePathParams(start, end);
-            gravity = GRAVITY_VECTOR;
-        }
+        Vector3f velocity = end.subtract(start);
+        float length = velocity.length();
+        pparams = new PathParams(
+            velocity.normalizeLocal().mult(FLAT_TRAJECTORY_SPEED),
+            length / FLAT_TRAJECTORY_SPEED);
+        gravity = Vector3f.ZERO;
 
-        _ssprite = new ShotSprite(_ctx, bshot.getShotType(),
+        final ShotSprite ssprite = new ShotSprite(_ctx, bshot.getShotType(),
             (usprite == null) ? null : usprite.getColorizations());
 
-        _penderId = notePender();
-        _ssprite.setLocalTranslation(start);
-        _ssprite.addObserver(this);
-        _view.addSprite(_ssprite);
+        ssprite.setLocalTranslation(start);
+        ssprite.addObserver(this);
+        _view.addSprite(ssprite);
+        _penderIds.put(ssprite, notePender());
 
         // for sprites deflecting the shot to another coordinate, run the
         // blocking animation just before the end of the path
         //final MobileSprite dsprite = getDeflectorSprite();
         //final float btime = pparams.duration - (dsprite == null ?
         //    0f : getActionDuration(dsprite, "blocking") * 0.5f);
-        final float delay = (_sidx == 0 && usprite != null) ?
+        final float delay = (usprite != null) ?
             usprite.getRocketDelay() : 0f;
-        _ssprite.setCullMode(Spatial.CULL_ALWAYS);
-        _ssprite.move(new OrientingBallisticPath(_ssprite,
+        ssprite.setCullMode(Spatial.CULL_ALWAYS);
+        ssprite.move(new OrientingBallisticPath(ssprite,
             new Vector3f(1, 0, 0), start, pparams.velocity, gravity,
             pparams.duration) {
             public void update (float time) {
                 if ((_daccum += time) < delay) {
                     return;
                 }
-                _ssprite.setCullMode(Spatial.CULL_DYNAMIC);
+                ssprite.setCullMode(Spatial.CULL_DYNAMIC);
                 super.update(time);
-                /*if (dsprite != null && !_blocking && _accum >= btime) {
-                    _deflectSound.play(false);
-                    queueAction(dsprite, "blocking");
-                    _blocking = true;
-                }*/
             }
             float _daccum;
             boolean _blocking;
         });
 
-        if (_sidx == 0) {
-            // play the launch sound if we have one
-            if (_launchSound != null) {
-                _launchSound.play(false);
-            }
+        // play the launch sound if we have one
+        if (_launchSound != null) {
+            _launchSound.play(false);
         }
     }
 
@@ -258,64 +211,39 @@ public class RocketHandler extends EffectHandler
     {
         Vector3f spriteTranslation = sprite.getLocalTranslation();
         sprite.removeObserver(this);
-        _view.removeSprite(sprite);
+        final int penderId = _penderIds.get(sprite);
+        
+        EffectViz viz = new ExplosionViz();
+        viz.init(_ctx, _view, spriteTranslation, new EffectViz.Observer() {
+            public void effectDisplayed () {
+                maybeComplete(penderId);
+            }
+        });
+        viz.display();
 
-        // make a note of our pender id because fireNextSegment() may result in
-        // a new call to fireShot() which will overwrite _penderId, but we want
-        // to wait until we're all done firing the next shot before allowing
-        // this action to finish
-        int penderId = _penderId;
-        if (!fireNextSegment()) {
-            //if (_target != null) {
-                //playSounds(_bangSounds, true);
-            //}
+        // apply the effect and complete our handling if that did not
+        // result in anything that needs waiting for
+        //Piece target = _bangobj.pieces.get(_shot.pieces[penderId]);
+        //((RocketEffect)_effect).apply(_bangobj, this, penderId, target, 0);
 
-            EffectViz viz = new ExplosionViz();
-            viz.init(_ctx, _view, spriteTranslation, new EffectViz.Observer() {
-                public void effectDisplayed () {
-                    //sprite.updated(_target, _tick);
-                    maybeComplete(_penderId);
-                }
-            });
-            viz.display();
-
-            // apply the effect and complete our handling if that did not
-            // result in anything that needs waiting for
-            apply(_effect);
-        }
         maybeComplete(penderId);
+        _view.removeSprite(sprite);        
     }
 
     // documentation inherited from interface PathObserver
     public void pathCancelled (Sprite sprite, Path path)
     {
         sprite.removeObserver(this);
-        _view.removeSprite(sprite);
+        final int penderId = _penderIds.get(sprite);
 
         // apply the effect and complete our handling if that did not
         // result in anything that needs waiting for
-        apply(_effect);
-        maybeComplete(_penderId);
-    }
+        //Piece target = _bangobj.pieces.get(_shot.pieces[penderId]);
+        //((RocketEffect)_effect).apply(_bangobj, this, penderId, target, 0);
 
-    /**
-     * Returns the sprite that is deflecting the shot at this stage, or
-     * <code>null</code> for none.
-     */
-    /*protected MobileSprite getDeflectorSprite ()
-    {
-        if (_shot.deflectorIds != null && _sidx < _shot.deflectorIds.length) {
-            //int pieceId = _shot.deflectorIds[_sidx];
-            Piece piece = _bangobj.pieces.get(pieceId);
-            if (piece != null) {
-                return _view.getUnitSprite(piece);
-            } else {
-                log.warning("Missing shot deflector [pieceId=" + pieceId +
-                    "].");
-            }
-        }
-        return null;
-    }*/
+        maybeComplete(penderId);
+        _view.removeSprite(sprite);
+    }
 
     /**
      * Returns the duration of the sprite's action, or zero if the sprite has
@@ -328,12 +256,11 @@ public class RocketHandler extends EffectHandler
     }
 
     protected RocketEffect _shot;
-    protected Piece _target;
-    protected int _sidx;
-    protected int _penderId;
-    protected ShotSprite _ssprite;
-    protected Sound _launchSound, _deflectSound;
+    protected Sound _launchSound;
 
     /** The speed (u/s) at which to fire projectiles with flat trajectories. */
     protected static final float FLAT_TRAJECTORY_SPEED = 50f;
+    
+    protected HashMap<Sprite, Integer> _penderIds =
+        new HashMap<Sprite,Integer>();
 }

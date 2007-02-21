@@ -45,13 +45,7 @@ public class Fireworks extends Breakable
 
             if (_count == 0) {
                 effects.add(new DamageEffect(this, 100));
-
-                // shoot in a random direction
-                //int dir = RandomUtil.getInt(Piece.DIRECTIONS.length);
-                for (int dir : Piece.DIRECTIONS) {
-                    Piece piece = bangobj.getFirstAvailableTarget(x, y, dir);
-                    effects.add(new RocketEffect(this, piece, 60));
-                }
+                effects.add(new RocketEffect(this, 60));
             } else if (_count > 0) {
                 effects.add(new UpdateEffect(this));
             }

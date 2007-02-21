@@ -21,11 +21,10 @@ import static com.threerings.bang.Log.log;
  * A base class for an effect that affects all pieces in a particular
  * area.
  */
-public abstract class AreaEffect extends Effect
+public abstract class AreaEffect extends MultipleTargetEffect
 {
     public int radius;
     public short x, y;
-    public int[] pieces;
 
     public AreaEffect ()
     {
@@ -51,26 +50,7 @@ public abstract class AreaEffect extends Effect
         }
         pieces = affected.toIntArray();
     }
-
-    @Override // documentation inherited
-    public boolean isApplicable ()
-    {
-        return (pieces.length > 0);
-    }
-
-    @Override // documentation inherited
-    public int[] getAffectedPieces ()
-    {
-        return pieces;
-    }
-
-    @Override // documentation inherited
-    public Rectangle[] getBounds (BangObject bangobj)
-    {
-        return new Rectangle[] { new Rectangle(x - radius, y - radius, 
-                radius * 2 + 1, radius * 2 + 1) };
-    }
-
+    
     @Override // documentation inherited
     public boolean apply (BangObject bangobj, Observer obs)
     {
@@ -88,18 +68,10 @@ public abstract class AreaEffect extends Effect
         return success;
     }
 
-    /**
-     * Indicates whether or not we should affect this piece, assuming it is in
-     * range.
-     */
-    protected boolean isPieceAffected (Piece piece)
+    @Override // documentation inherited
+    public Rectangle[] getBounds (BangObject bangobj)
     {
-        return piece.isAlive() && piece.isTargetable();
+        return new Rectangle[] { new Rectangle(x - radius, y - radius, 
+                radius * 2 + 1, radius * 2 + 1) };
     }
-
-    /**
-     * Called for every piece to be affected by {@link #apply}.
-     */
-    protected abstract void apply (BangObject bangobj, Observer obs,
-                                   int pidx, Piece piece, int dist);
 }

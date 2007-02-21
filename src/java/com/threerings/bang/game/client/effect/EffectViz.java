@@ -107,17 +107,17 @@ public abstract class EffectViz
     /**
      * Sets the target's local translation
      */
-    public Vector3f getLocalTranslation()
+    public final Vector3f getLocalTranslation()
     {
         if (_target != null) {
-            return getTargetSprite().getLocalTranslation();
+            return (Vector3f)getTargetSprite().getLocalTranslation().clone();
         } else if (_coords != null) {
             float tx = (_coords.x + 0.5f) * TILE_SIZE,
                 ty = (_coords.y + 0.5f) * TILE_SIZE,
                 tz = _view.getTerrainNode().getHeightfieldHeight(tx, ty);
             return new Vector3f(tx, ty, tz);
         } else {
-            return _pos;
+            return (Vector3f)_pos.clone();
         }
     }
 
