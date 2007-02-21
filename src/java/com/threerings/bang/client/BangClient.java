@@ -432,7 +432,7 @@ public class BangClient extends BasicClient
         }
 
         // if requested, recommend a lower detail level
-        if (_suggestLowerDetail && displayLowerDetailSuggestion()) {
+        if (_suggestLowerDetail && suggestLowerDetail()) {
             return true;
         }
 
@@ -953,13 +953,14 @@ public class BangClient extends BasicClient
      * Pops up a dialog suggesting a lower level of graphical detail to the
      * user, or saves the suggestion until it can be displayed.
      */
-    public void suggestLowerDetail ()
+    public boolean suggestLowerDetail ()
     {
         if (canDisplayPopup(MainView.Type.DETAIL_SUGGESTION)) {
-            displayLowerDetailSuggestion();
+            return displayLowerDetailSuggestion();
         } else {
             _suggestLowerDetail = true;
         }
+        return false;
     }
 
     /**
