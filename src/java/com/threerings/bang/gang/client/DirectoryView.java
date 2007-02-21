@@ -9,6 +9,7 @@ import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BToggleButton;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.BEvent;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
@@ -16,6 +17,7 @@ import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.NameFactory;
 
@@ -33,9 +35,9 @@ public class DirectoryView extends BContainer
         super(GroupLayout.makeVStretch());
         _ctx = ctx;
         _hideoutobj = hideoutobj;
-        
+
         setStyleClass("directory_view");
-        
+
         // add the letter buttons
         GroupLayout glay = GroupLayout.makeHoriz(GroupLayout.CENTER);
         glay.setGap(0);
@@ -56,7 +58,7 @@ public class DirectoryView extends BContainer
             bcont.add(_lbuttons[ii]);
         }
         add(bcont, GroupLayout.FIXED);
-        
+
         // add the group entry container
         glay = GroupLayout.makeVert(GroupLayout.TOP);
         glay.setOffAxisJustification(GroupLayout.LEFT);
@@ -89,7 +91,7 @@ public class DirectoryView extends BContainer
         showPage(_pidx);
         _hideoutobj.addListener(_dirlist);
     }
-    
+
     @Override // documentation inherited
     protected void wasRemoved ()
     {
@@ -103,25 +105,31 @@ public class DirectoryView extends BContainer
         button.setSelected(true);
         String lstr = button.getAction();
         button.setText(lstr.toUpperCase());
-        
+
         _pidx = pidx;
         _gcont.removeAll();
         for (GangEntry gang : _hideoutobj.gangs) {
-            String nstr = gang.name.toString();
+            final Handle name = gang.name;
+            String nstr = name.toString();
             if (nstr.toLowerCase().startsWith(lstr)) {
-                _gcont.add(new BLabel(nstr, "directory_entry"));
+                _gcont.add(new BLabel(nstr, "directory_entry") {
+                    public boolean dispatchEvent (BEvent event) {
+                        return super.dispatchEvent(event) ||
+                            GangPopupMenu.checkPopup(_ctx, getWindow(), event, name);
+                    }
+                });
             }
         }
     }
-    
-    protected BangContext _ctx;    
+
+    protected BangContext _ctx;
     protected HideoutObject _hideoutobj;
-    
+
     protected BToggleButton[] _lbuttons;
     protected BContainer _gcont;
-    
+
     protected int _pidx;
-    
+
     /** Refresh the page when entries are added to or removed from it. */
     protected SetAdapter _dirlist = new SetAdapter() {
         public void entryAdded (EntryAddedEvent event) {
