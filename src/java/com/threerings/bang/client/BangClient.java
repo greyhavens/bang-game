@@ -323,6 +323,9 @@ public class BangClient extends BasicClient
         File oldgd = new File(localDataDir("getdown-pro-old.jar"));
         LaunchUtil.upgradeGetdown(oldgd, curgd, newgd);
 
+        // initialize their detail level
+        initDetailLevel();
+
         // listen for logon
         _client.addClientObserver(this);
 
@@ -960,6 +963,39 @@ public class BangClient extends BasicClient
     }
 
     /**
+     * Initialize the clients detail level if a preference isn't already set.
+     */
+    protected void initDetailLevel ()
+    {
+        if (BangPrefs.isDetailSet()) {
+            return;
+        }
+        String renderer = GL11.glGetString(GL11.GL_RENDERER);
+        if (renderer == null) {
+            return;
+        }
+
+        for (String prefix : LOW_DETAIL) {
+            if (renderer.startsWith(prefix)) {
+                log.info("Setting default detail level to low [renderer=" + renderer + "].");
+                BangPrefs.updateDetailLevel(BangPrefs.DetailLevel.LOW);
+                return;
+            }
+        }
+
+        for (String prefix : MEDIUM_DETAIL) {
+            if (renderer.startsWith(prefix)) {
+                log.info("Setting default detail level to medium [renderer=" + renderer + "].");
+                BangPrefs.updateDetailLevel(BangPrefs.DetailLevel.MEDIUM);
+                return;
+            }
+        }
+
+        log.info("Setting default detail level to high [renderer=" + renderer + "].");
+        BangPrefs.updateDetailLevel(BangPrefs.DetailLevel.HIGH);
+    }
+
+    /**
      * Called when the client log's off with a message.
      */
     protected void showLogOffMessage (String msg)
@@ -1399,4 +1435,14 @@ public class BangClient extends BasicClient
 
     /** The default logoff message. */
     protected static final String DEFAULT_LOGOFF_MESSAGE = "logoff";
+
+    /** Renderer prefixes that default to low detail. */
+    protected static final String[] LOW_DETAIL = {
+        "Intel", "GeForce4 MX", "VIA", "Radeon 7", "GeForce FX 52", "P8M"
+    };
+
+    /** Renderer prefixes that default to medium detail. */
+    protected static final String[] MEDIUM_DETAIL = {
+        "GeForce FX 55", "Radeon 8", "GeForce4 Ti", "RADEON XPRESS 200", "RADEON XPRESS Series"
+    };
 }

@@ -75,7 +75,7 @@ public class BangPrefs
         props.set("FULLSCREEN", String.valueOf(fullscreen));
         props.set("RENDERER", "LWJGL");
 
-        log.info("Display " + (safeMode ? "in safe mode: " : "mode: ") + 
+        log.info("Display " + (safeMode ? "in safe mode: " : "mode: ") +
                  props.getWidth() + "x" + props.getHeight() +
                  "x" + props.getDepth() + " " + props.getFreq() + "Hz " +
                  "(current: " + Display.getDisplayMode() + ").");
@@ -116,6 +116,14 @@ public class BangPrefs
     {
         return Enum.valueOf(DetailLevel.class,
             config.getValue("detail_level", "HIGH"));
+    }
+
+    /**
+     * Returns true if a detail level is set.
+     */
+    public static boolean isDetailSet ()
+    {
+        return config.getValue("detail_level", (String)null) != null;
     }
 
     /**
