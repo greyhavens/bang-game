@@ -30,14 +30,7 @@ public class RocketEffect extends AreaEffect
     /** Amount of damage being applied. */
     public int baseDamage;
 
-    /** The x coordinates of the path this shot takes before finally
-     * arriving at its target (not including the starting coordinate). */
-    public short[] xcoords = new short[0];
-
-    /** The y coordinates of the path this shot takes before finally
-     * arriving at its target (not including the starting coordinate). */
-    public short[] ycoords = new short[0];
-
+    /** Extra targeted areas. */
     public StreamablePoint[] affectedPoints = new StreamablePoint[0];
 
     /** Constructor used when unserializing. */
@@ -73,19 +66,12 @@ public class RocketEffect extends AreaEffect
         // shoot in a random direction
         //int dir = RandomUtil.getInt(Piece.DIRECTIONS.length);
         for (int dir : Piece.DIRECTIONS) {
-            Object obj = bangobj.getFirstAvailableTarget(shooter.x, shooter.y, dir);
-            if (obj instanceof Piece) {
-                Piece target = (Piece)obj;
-                affected.add(target.pieceId);
-                short tx = target.x;
-                short ty = target.y;
-                xcoords = ArrayUtil.append(xcoords, tx);
-                ycoords = ArrayUtil.append(ycoords, ty);
-            } else if (obj instanceof Point) {
-                Point p = (Point)obj;
-                affectedPoints = ArrayUtil.append(affectedPoints, new StreamablePoint(p.x, p.y));
-                xcoords = ArrayUtil.append(xcoords, (short)p.x);
-                ycoords = ArrayUtil.append(ycoords, (short)p.y);
+            Piece piece = bangobj.getFirstAvailableTarget(shooter.x, shooter.y, dir);
+            if (piece.pieceId != -1) {
+                affected.add(piece.pieceId);
+            } else {
+                affectedPoints = ArrayUtil.append(affectedPoints,
+                    new StreamablePoint(piece.x, piece.y));
             }
         }
         pieces = affected.toIntArray();

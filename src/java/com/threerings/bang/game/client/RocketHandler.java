@@ -10,6 +10,8 @@ import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
 
+import com.threerings.util.StreamablePoint;
+
 import com.threerings.jme.model.Model;
 import com.threerings.jme.sprite.BallisticPath;
 import com.threerings.jme.sprite.OrientingBallisticPath;
@@ -20,16 +22,20 @@ import com.threerings.jme.sprite.Sprite;
 import com.threerings.openal.Sound;
 import com.threerings.openal.SoundGroup;
 
+import com.threerings.bang.game.client.sprite.PieceSprite;
 import com.threerings.bang.game.client.sprite.MobileSprite;
 import com.threerings.bang.game.client.sprite.ShotSprite;
 import com.threerings.bang.game.client.sprite.FireworksSprite;
 import com.threerings.bang.game.client.effect.EffectViz;
 import com.threerings.bang.game.client.effect.ExplosionViz;
-import com.threerings.bang.game.data.BangBoard;
+import com.threerings.bang.game.client.BangBoardView;
+import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.effect.RocketEffect;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
 import com.threerings.bang.util.SoundUtil;
+import com.threerings.bang.util.BangContext;
+
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
@@ -41,8 +47,70 @@ import static com.threerings.bang.game.client.BallisticShotHandler.*;
  * animates the fired shot.
  */
 public class RocketHandler extends EffectHandler
-    implements PathObserver
 {
+    public class RocketPathObserver
+        implements PathObserver
+    { 
+        RocketPathObserver(RocketHandler handler, Piece target, int penderId,
+            BangContext ctx, BangBoardView view, BangObject bangobj, RocketEffect effect)
+        {
+            _handler = handler;
+            _target = target;
+            _penderId = penderId;
+            _ctx = ctx;
+            _view = view;
+            _bangobj = bangobj;
+            _effect = effect;
+        }
+        
+        // documentation inherited from interface PathObserver
+        public void pathCompleted (Sprite sprite, Path path)
+        {
+            Vector3f spriteTranslation = sprite.getLocalTranslation();
+            sprite.removeObserver(this);
+        
+            // apply the effect and complete our handling if that did not
+            // result in anything that needs waiting for
+            if (_target != null) {
+                _effect.apply(_bangobj, _handler, 0, _target, 0);
+            } else {
+                EffectViz viz = new ExplosionViz();
+                viz.init(_ctx, _view, spriteTranslation, new EffectViz.Observer() {
+                    public void effectDisplayed () {
+                        maybeComplete(_penderId);
+                    }
+                });
+                viz.display();
+            }
+
+            maybeComplete(_penderId);
+            _view.removeSprite(sprite);
+        }
+
+        // documentation inherited from interface PathObserver
+        public void pathCancelled (Sprite sprite, Path path)
+        {
+            sprite.removeObserver(this);
+
+            // apply the effect and complete our handling if that did not
+            // result in anything that needs waiting for
+            if (_target != null) {
+                _effect.apply(_bangobj, _handler, 0, _target, 0);
+            }
+
+            maybeComplete(_penderId);
+            _view.removeSprite(sprite);
+        }
+        
+        protected RocketHandler _handler;
+        protected Piece _target;
+        protected int _penderId;
+        protected BangContext _ctx;
+        protected BangBoardView _view;
+        protected BangObject _bangobj;
+        protected RocketEffect _effect;
+    }
+    
     @Override // documentation inherited
     public boolean execute ()
     {
@@ -63,15 +131,23 @@ public class RocketHandler extends EffectHandler
 
     protected void fireShot ()
     {
-        // now fire the shot animations
-        for (int sidx = 0; sidx < _shot.xcoords.length; ++sidx) {
-            fireShot(_shot.shooter.x, _shot.shooter.y,
-                     _shot.xcoords[sidx], _shot.ycoords[sidx]);
+        // now fire the shot animations at pieces
+        for (int piece : _shot.pieces) {
+            Piece target = _bangobj.pieces.get(piece);
+            fireShot(_shot.shooter, target.x, target.y, target);
+        }
+
+        // now fire the shot animations at non-pentrable tiles
+        for (StreamablePoint point : _shot.affectedPoints) {
+            fireShot(_shot.shooter, point.x, point.y, null);
         }
     }
 
-    protected void fireShot (int sx, int sy, int tx, int ty)
+    protected void fireShot (Piece shooter, int tx, int ty, Piece target)
     {
+        int sx = shooter.x;
+        int sy = shooter.y;
+        
         // if the shooter sprite has a node configured as a ballistic
         // shot source, use its translation; otherwise, just use a
         // point one half tile above the ground
@@ -106,15 +182,9 @@ public class RocketHandler extends EffectHandler
             (usprite == null) ? null : usprite.getColorizations());
 
         ssprite.setLocalTranslation(start);
-        ssprite.addObserver(this);
+        ssprite.addObserver(new RocketPathObserver(this, target, notePender(), _ctx, _view, _bangobj, (RocketEffect)_effect));
         _view.addSprite(ssprite);
-        _penderIds.put(ssprite, notePender());
 
-        // for sprites deflecting the shot to another coordinate, run the
-        // blocking animation just before the end of the path
-        //final MobileSprite dsprite = getDeflectorSprite();
-        //final float btime = pparams.duration - (dsprite == null ?
-        //    0f : getActionDuration(dsprite, "blocking") * 0.5f);
         final float delay = (usprite != null) ?
             usprite.getRocketDelay() : 0f;
         ssprite.setCullMode(Spatial.CULL_ALWAYS);
@@ -138,45 +208,6 @@ public class RocketHandler extends EffectHandler
         }
     }
 
-    // documentation inherited from interface PathObserver
-    public void pathCompleted (Sprite sprite, Path path)
-    {
-        Vector3f spriteTranslation = sprite.getLocalTranslation();
-        sprite.removeObserver(this);
-        final int penderId = _penderIds.get(sprite);
-        
-        EffectViz viz = new ExplosionViz();
-        viz.init(_ctx, _view, spriteTranslation, new EffectViz.Observer() {
-            public void effectDisplayed () {
-                maybeComplete(penderId);
-            }
-        });
-        viz.display();
-
-        // apply the effect and complete our handling if that did not
-        // result in anything that needs waiting for
-        //Piece target = _bangobj.pieces.get(_shot.pieces[penderId]);
-        //((RocketEffect)_effect).apply(_bangobj, this, penderId, target, 0);
-
-        maybeComplete(penderId);
-        _view.removeSprite(sprite);        
-    }
-
-    // documentation inherited from interface PathObserver
-    public void pathCancelled (Sprite sprite, Path path)
-    {
-        sprite.removeObserver(this);
-        final int penderId = _penderIds.get(sprite);
-
-        // apply the effect and complete our handling if that did not
-        // result in anything that needs waiting for
-        //Piece target = _bangobj.pieces.get(_shot.pieces[penderId]);
-        //((RocketEffect)_effect).apply(_bangobj, this, penderId, target, 0);
-
-        maybeComplete(penderId);
-        _view.removeSprite(sprite);
-    }
-
     /**
      * Returns the duration of the sprite's action, or zero if the sprite has
      * no such action.
@@ -189,6 +220,4 @@ public class RocketHandler extends EffectHandler
 
     protected RocketEffect _shot;
     protected Sound _launchSound;
-    protected HashMap<Sprite, Integer> _penderIds =
-        new HashMap<Sprite,Integer>();
 }
