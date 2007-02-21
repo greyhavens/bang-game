@@ -592,14 +592,11 @@
       <entry key="version" value="${version}"/>
       <entry key="config_version" value="${version}"/>
     </propertyfile>
-<!--
     <exec executable="${basedir}/bin/getversion" outputproperty="latest_version"
           failonerror="true">
       <arg line="client"/>
       <arg line="${download_root_url}"/>
     </exec>
--->
-    <property name="latest_version" value="2007021616"/>
     <echo message="Previous version used for renaming: ${latest_version}"/>
     <echo message="Generating Proguard config file for ${version}..."/>
     <exec executable="${nartool.path}/configpp" output="etc/bang-client.pro" failonerror="true">
