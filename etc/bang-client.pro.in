@@ -16,7 +16,7 @@
 -injars ../dist/lib/nenya-openal.jar(!META-INF/*,!**/tools/**)
 -injars ../dist/lib/vilya-parlor.jar(!META-INF/*,!**/tools/**,!**/persist/**,!**/ezgame/**)
 -injars ../dist/lib/samskivert.jar(
-  com/samskivert/Log.class,**/io/**,**/net/**,**/swing/**,**/util/**,**/xml/**,
+  com/samskivert/Log.class,**/io/**,**/net/**,**/swing/**,**/text/**,**/util/**,**/xml/**,
   **/servlet/user/Password.class,**/servlet/user/UserUtil.class)
 -injars ../dist/lib/jme.jar(!META-INF/*)
 -injars ../dist/lib/jme-effects.jar(!META-INF/*)
