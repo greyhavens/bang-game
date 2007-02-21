@@ -38,6 +38,8 @@ import com.threerings.bang.game.data.BangConfig;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.Criterion;
 import com.threerings.bang.game.data.GameCodes;
+import com.threerings.bang.game.data.piece.Piece;
+import com.threerings.bang.game.data.piece.Unit;
 
 /**
  * Displays the results of a Bounty game.
@@ -61,16 +63,16 @@ public class BountyGameOverView extends SteelWindow
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
         // get the player index this way since we may be a watcher
-        int pidx = 0;
+        _pidx = 0;
         for (int ii = 0; ii < _bangobj.playerInfo.length; ii++) {
             if (_bangobj.playerInfo[ii].playerId != -1) {
-                pidx = ii;
+                _pidx = ii;
                 break;
             }
         }
         // locate our award
         for (Award award : _bangobj.awards) {
-            if (pidx == award.pidx) {
+            if (_pidx == award.pidx) {
                 _award = award;
                 break;
             }
@@ -179,6 +181,24 @@ public class BountyGameOverView extends SteelWindow
                 style = "bover_failed_result";
             }
             _stats.add(new BLabel(_msgs.get("m.bover_" + result), style));
+            setRowVisible(++row, !animate);
+        }
+
+        // special handling for no respawn
+        if (_gconfig.respawnUnits == false) {
+            int survived = 0;
+            for (Piece p : _bangobj.pieces) {
+                if (p instanceof Unit && p.isAlive() && p.owner == _pidx) {
+                    survived++;
+                }
+            }
+            _stats.add(new BLabel(_msgs.xlate(_msgs.compose(
+                "m.at_least_descrip", "m.bover_units_survived", _msgs.taint("1"))), "bover_crit"));
+            _stats.add(new BLabel("" + survived, "bover_rcrit"));
+            _stats.add(new BLabel(_msgs.get("m.bover_equals"), "bover_result"));
+            _stats.add(new BLabel(_msgs.get("m.bover_" + (survived > 0 ? "complete" : "failed")),
+                (survived > 0 ? "bover_result" : "bover_failed_result")));
+            _failed++;
             setRowVisible(++row, !animate);
         }
 
@@ -334,6 +354,7 @@ public class BountyGameOverView extends SteelWindow
     protected BContainer _stats;
     protected BLabel _overall;
     protected int _failed;
+    protected int _pidx;
 
     protected static final int COLS = 4;
     protected static final long PRE_ANIM_DELAY = 1000L;

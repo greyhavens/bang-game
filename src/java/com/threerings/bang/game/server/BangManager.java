@@ -1776,8 +1776,15 @@ public class BangManager extends GameManager
                 // the player must survive a no-respawn game
                 if (_bconfig.respawnUnits == false) {
                     failed++;
+                    int pidx = 0;
+                    for (int ii = 0; ii < _bangobj.playerInfo.length; ii++) {
+                        if (_bangobj.playerInfo[ii].playerId != -1) {
+                            pidx = ii;
+                            break;
+                        }
+                    }
                     for (Piece p : _bangobj.getPieceArray()) {
-                        if (p instanceof Unit && p.isAlive() && ((Unit)p).owner == 0) {
+                        if (p instanceof Unit && p.isAlive() && p.owner == pidx) {
                             failed--;
                             break;
                         }
