@@ -254,7 +254,7 @@ Section "Install" InstStuff
   !else
     ; Create our bootstrap getdown.txt file
     FileOpen $9 "$INSTDIR\getdown.txt" "w"
-    FileWrite $9 "appbase = ${HOST}/${DEPLOYMENT}$\r$\n"
+    FileWrite $9 "appbase = ${HOST}/client$\r$\n"
     FileClose $9
   !endif
 

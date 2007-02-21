@@ -4,7 +4,6 @@
 ; Bang! Howdy Installer for Windows x86
 
   !define LOCALE "en"
-  !define DEPLOYMENT "@client_ident@"
   !define NAME "@client_title@"
   !define INSTALL_DIR "@client_ident@"
   !define HOST "@root_url@"
