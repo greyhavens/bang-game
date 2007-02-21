@@ -22,6 +22,8 @@ import com.threerings.util.Name;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.AttributeChangeListener;
+import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -83,9 +85,17 @@ import static com.threerings.bang.Log.*;
  * Manages a single gang from resolution to destruction.
  */
 public class GangHandler
-    implements PlayerObserver, RemotePlayerObserver, SetListener, ObjectDeathListener,
-        SpeakerValidator, GangPeerProvider, GangCodes
+    implements PlayerObserver, RemotePlayerObserver, AttributeChangeListener, SetListener,
+        ObjectDeathListener, SpeakerValidator, GangPeerProvider, GangCodes
 {
+    /**
+     * Returns the rank corresponding to the supplied notoriety level.
+     */
+    public static byte getNotorietyRank (int notoriety)
+    {
+        return (byte)BangServer.ratingmgr.getRank(NOTORIETY_IDENT, notoriety);
+    }
+
     /**
      * Creates the handler and starts the process of resolving the specified gang.
      */
@@ -262,36 +272,51 @@ public class GangHandler
         playerLocationChanged(info.visibleName, -1);
     }
 
+    // documentation inherited from interface AttributeChangeListener
+    public void attributeChanged (AttributeChangedEvent event)
+    {
+        String name = event.getName();
+        if (name.equals(GangObject.STATEMENT) || name.equals(GangObject.URL) ||
+            name.equals(GangObject.AVATAR) || name.equals(GangObject.NOTORIETY_RANK)) {
+            // invalidate any cached gang info
+            gangInfoChanged();
+        }
+    }
+
     // documentation inherited from interface SetListener
     public void entryAdded (EntryAddedEvent event)
     {
         if (!event.getName().equals(GangObject.MEMBERS)) {
             return;
         }
+        // invalidate any cached gang info
+        gangInfoChanged();
+
         // set the user's gang fields and remove any outstanding gang invitations (except the one
         // for this gang, which will be removed by the response handler) if he's online
         GangMemberEntry entry = (GangMemberEntry)event.getEntry();
         PlayerObject user = BangServer.lookupPlayer(entry.handle);
-        if (user != null) {
-            ArrayList<GangInvite> invites = new ArrayList<GangInvite>();
-            for (Notification note : user.notifications) {
-                if (!(note instanceof GangInvite)) {
-                    continue;
-                }
-                GangInvite invite = (GangInvite)note;
-                if (!invite.gang.equals(_gangobj.name)) {
-                    invites.add(invite);
-                }
+        if (user == null) {
+            return;
+        }
+        ArrayList<GangInvite> invites = new ArrayList<GangInvite>();
+        for (Notification note : user.notifications) {
+            if (!(note instanceof GangInvite)) {
+                continue;
             }
-            user.startTransaction();
-            try {
-                initPlayer(user, entry);
-                for (GangInvite invite : invites) {
-                    user.removeFromNotifications(invite.gang);
-                }
-            } finally {
-                user.commitTransaction();
+            GangInvite invite = (GangInvite)note;
+            if (!invite.gang.equals(_gangobj.name)) {
+                invites.add(invite);
             }
+        }
+        user.startTransaction();
+        try {
+            initPlayer(user, entry);
+            for (GangInvite invite : invites) {
+                user.removeFromNotifications(invite.gang);
+            }
+        } finally {
+            user.commitTransaction();
         }
     }
 
@@ -334,6 +359,9 @@ public class GangHandler
         if (!event.getName().equals(GangObject.MEMBERS)) {
             return;
         }
+        // invalidate any cached gang info
+        gangInfoChanged();
+
         // consider auto-promoting
         maybeAutoPromote();
 
@@ -365,6 +393,9 @@ public class GangHandler
         if (!event.getName().equals(GangObject.MEMBERS)) {
             return;
         }
+        // invalidate any cached gang info
+        gangInfoChanged();
+
         // consider auto-promoting
         maybeAutoPromote();
 
@@ -994,12 +1025,18 @@ public class GangHandler
         _gangobj.outfit = record.outfit;
         _gangobj.members = new DSet<GangMemberEntry>(record.members.iterator());
 
+        // the avatar id is that of the senior leader
+        GangMemberEntry leader = _gangobj.getSeniorLeader();
+        _avatarId = (leader == null) ? 0 : leader.playerId;
+
         // find out which members are online (and listen for updates)
         for (GangMemberEntry entry : _gangobj.members) {
             initTownIndex(entry);
         }
         BangServer.addPlayerObserver(this);
-        BangServer.peermgr.addPlayerObserver(this);
+        if (BangServer.peermgr != null) {
+            BangServer.peermgr.addPlayerObserver(this);
+        }
 
         // register the service for peers
         _gangobj.gangPeerService =
@@ -1060,18 +1097,17 @@ public class GangHandler
                 updates.add(entry);
             }
         }
-        if (updates.isEmpty()) {
-            return;
-        }
 
         // update in the dobj
-        _gangobj.startTransaction();
-        try {
-            for (GangMemberEntry entry : updates) {
-                _gangobj.updateMembers(entry);
+        if (!updates.isEmpty()) {
+            _gangobj.startTransaction();
+            try {
+                for (GangMemberEntry entry : updates) {
+                    _gangobj.updateMembers(entry);
+                }
+            } finally {
+                _gangobj.commitTransaction();
             }
-        } finally {
-            _gangobj.commitTransaction();
         }
 
         // check for auto-promotions, avatar updates
@@ -1177,7 +1213,13 @@ public class GangHandler
      */
     protected void unload ()
     {
-        // attempt to drop the lock
+        // if there are no peers, shut down immediately
+        if (BangServer.peermgr == null) {
+            shutdown();
+            return;
+        }
+
+        // otherwise, attempt to drop the lock
         BangServer.peermgr.releaseLock(_releasing = new Lock("gang", _gangId),
             new ResultListener<String>() {
                 public void requestCompleted (String result) {
@@ -1254,6 +1296,7 @@ public class GangHandler
     protected void didInit ()
     {
         _gangobj.addListener(this);
+        BangServer.gangmgr.mapGang(_gangobj.name, this);
         _listeners.requestCompleted(_gangobj);
         _listeners = null;
     }
@@ -1266,7 +1309,7 @@ public class GangHandler
         log.warning("Failed to initialize gang [handler=" + this + ", error=" +
             cause + "].");
         _listeners.requestFailed(cause);
-        BangServer.gangmgr.unmapGang(_gangId);
+        BangServer.gangmgr.unmapGang(_gangId, null);
     }
 
     /**
@@ -1279,7 +1322,7 @@ public class GangHandler
         BangServer.peermgr.unproxyRemoteObject(_nodeName, _gangobj.remoteOid);
 
         log.info("Unsubscribed from gang " + this + ".");
-        BangServer.gangmgr.unmapGang(_gangId);
+        BangServer.gangmgr.unmapGang(_gangId, _gangobj.name);
     }
 
     /**
@@ -1292,14 +1335,16 @@ public class GangHandler
         _unloadval.cancel();
 
         BangServer.removePlayerObserver(this);
-        BangServer.peermgr.removePlayerObserver(this);
+        if (BangServer.peermgr != null) {
+            BangServer.peermgr.removePlayerObserver(this);
+        }
 
         BangServer.invmgr.clearDispatcher(_gangobj.gangPeerService);
         BangServer.invmgr.clearDispatcher(_gangobj.speakService);
         _gangobj.destroy();
 
         log.info("Gang shutdown " + this + ".");
-        BangServer.gangmgr.unmapGang(_gangId);
+        BangServer.gangmgr.unmapGang(_gangId, _gangobj.name);
     }
 
     /**
@@ -1328,7 +1373,8 @@ public class GangHandler
             _avupdater = null;
         }
         if (_client != null || leader == null || _avatarId == leader.playerId ||
-            BangServer.peermgr.locateRemotePlayer(leader.handle) != null) {
+            (BangServer.peermgr != null &&
+                BangServer.peermgr.locateRemotePlayer(leader.handle) != null)) {
             return;
         }
         _avatarId = leader.playerId;
@@ -1345,6 +1391,17 @@ public class GangHandler
             }
             protected AvatarInfo _avatar;
         });
+    }
+
+    /**
+     * Called any time the gang state visible on the gang info page is changed.
+     */
+    protected void gangInfoChanged ()
+    {
+        // the master server will broadcast the update to its peers
+        if (_client == null) {
+            BangServer.gangmgr.clearCachedGangInfo(_gangobj.name);
+        }
     }
 
     /**
@@ -1387,8 +1444,8 @@ public class GangHandler
             entry.townIdx = (byte)ServerConfig.townIndex;
             return;
         }
-        Tuple<BangClientInfo, Integer> result =
-            BangServer.peermgr.locateRemotePlayer(entry.handle);
+        Tuple<BangClientInfo, Integer> result = (BangServer.peermgr == null) ?
+            null : BangServer.peermgr.locateRemotePlayer(entry.handle);
         entry.townIdx = (result == null) ? -1 : result.right.byteValue();
     }
 
@@ -1456,14 +1513,6 @@ public class GangHandler
             }
         }
         return modified;
-    }
-
-    /**
-     * Returns the rank corresponding to the supplied notoriety level.
-     */
-    protected static byte getNotorietyRank (int notoriety)
-    {
-        return (byte)BangServer.ratingmgr.getRank(NOTORIETY_IDENT, notoriety);
     }
 
     /**

@@ -20,8 +20,21 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class GangMarshaller extends InvocationMarshaller
     implements GangService
 {
+    /** The method id used to dispatch {@link #getGangInfo} requests. */
+    public static final int GET_GANG_INFO = 1;
+
+    // from interface GangService
+    public void getGangInfo (Client arg1, Handle arg2, InvocationService.ResultListener arg3)
+    {
+        InvocationMarshaller.ResultMarshaller listener3 = new InvocationMarshaller.ResultMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, GET_GANG_INFO, new Object[] {
+            arg2, listener3
+        });
+    }
+
     /** The method id used to dispatch {@link #inviteMember} requests. */
-    public static final int INVITE_MEMBER = 1;
+    public static final int INVITE_MEMBER = 2;
 
     // from interface GangService
     public void inviteMember (Client arg1, Handle arg2, String arg3, InvocationService.ConfirmListener arg4)

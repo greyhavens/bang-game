@@ -43,6 +43,7 @@ import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutObject;
 import com.threerings.bang.gang.data.HideoutCodes;
+import com.threerings.bang.gang.util.GangUtil;
 
 import static com.threerings.bang.Log.*;
 
@@ -203,19 +204,10 @@ public class RosterView extends BContainer
 
     protected void updateMembers (boolean leaders)
     {
-        // sort leaders by seniority, members by notoriety
-        ArrayList<GangMemberEntry> entries = new ArrayList<GangMemberEntry>();
-        for (GangMemberEntry entry : _gangobj.members) {
-            if ((entry.rank == LEADER_RANK) == leaders) {
-                entries.add(entry);
-            }
-        }
-        QuickSort.sort(entries, leaders ? LEADER_COMP : MEMBER_COMP);
-
-        // add them in order
+        // add them in sorted order
         BContainer cont = (leaders ? _lcont : _mcont);
         cont.removeAll();
-        for (GangMemberEntry entry : entries) {
+        for (GangMemberEntry entry : GangUtil.getSortedMembers(_gangobj.members, leaders)) {
             addMemberEntry(cont, entry);
         }
     }
@@ -329,27 +321,4 @@ public class RosterView extends BContainer
 
     protected BContainer _bcont, _lcont, _mcont;
     protected LeaderView _lview;
-
-    /** Sorts active members before inactive, then by decreasing seniority. */
-    protected static final Comparator<GangMemberEntry> LEADER_COMP =
-        new Comparator<GangMemberEntry>() {
-            public int compare (GangMemberEntry m1, GangMemberEntry m2) {
-                if (m1.isActive() != m2.isActive()) {
-                    return (m1.isActive() ? -1 : +1);
-                }
-                long diff = m1.joined - m2.joined;
-                return (diff == 0) ? 0 : (diff < 0 ? -1 : +1);
-            }
-        };
-
-    /** Sorts active members before inactive, then by decreasing notoriety. */
-    protected static final Comparator<GangMemberEntry> MEMBER_COMP =
-        new Comparator<GangMemberEntry>() {
-            public int compare (GangMemberEntry m1, GangMemberEntry m2) {
-                if (m1.isActive() != m2.isActive()) {
-                    return (m1.isActive() ? -1 : +1);
-                }
-                return m2.notoriety - m1.notoriety;
-            }
-        };
 }

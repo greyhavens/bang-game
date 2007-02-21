@@ -39,6 +39,13 @@ public class GangDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case GangMarshaller.GET_GANG_INFO:
+            ((GangProvider)provider).getGangInfo(
+                source,
+                (Handle)args[0], (InvocationService.ResultListener)args[1]
+            );
+            return;
+
         case GangMarshaller.INVITE_MEMBER:
             ((GangProvider)provider).inviteMember(
                 source,

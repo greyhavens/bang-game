@@ -17,6 +17,12 @@ import com.threerings.presents.server.InvocationProvider;
 public interface GangProvider extends InvocationProvider
 {
     /**
+     * Handles a {@link GangService#getGangInfo} request.
+     */
+    public void getGangInfo (ClientObject caller, Handle arg1, InvocationService.ResultListener arg2)
+        throws InvocationException;
+
+    /**
      * Handles a {@link GangService#inviteMember} request.
      */
     public void inviteMember (ClientObject caller, Handle arg1, String arg2, InvocationService.ConfirmListener arg3)

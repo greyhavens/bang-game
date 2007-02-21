@@ -16,6 +16,8 @@ import com.threerings.bang.data.Handle;
 import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.saloon.data.TopRankedList;
 
+import com.threerings.bang.gang.util.GangUtil;
+
 /**
  * Contains data concerning a single gang.
  */
@@ -144,14 +146,7 @@ public class GangObject extends DObject
      */
     public GangMemberEntry getSeniorLeader ()
     {
-        GangMemberEntry senior = null;
-        for (GangMemberEntry entry : members) {
-            if (entry.rank == GangCodes.LEADER_RANK && entry.isActive() &&
-                (senior == null || entry.joined < senior.joined)) {
-                senior = entry;
-            }
-        }
-        return senior;
+        return GangUtil.getSeniorLeader(members);
     }
 
     // documentation inherited from interface SpeakObject

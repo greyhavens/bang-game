@@ -3,50 +3,35 @@
 
 package com.threerings.bang.gang.server;
 
+import java.lang.ref.SoftReference;
+
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 
 import com.samskivert.io.PersistenceException;
 
 import com.samskivert.jdbc.ConnectionProvider;
 import com.samskivert.jdbc.RepositoryListenerUnit;
-import com.samskivert.jdbc.RepositoryUnit;
 
-import com.samskivert.util.ArrayIntSet;
-import com.samskivert.util.Collections;
 import com.samskivert.util.HashIntMap;
-import com.samskivert.util.IntMap;
-import com.samskivert.util.Interval;
-import com.samskivert.util.Invoker;
 import com.samskivert.util.ResultListener;
+import com.samskivert.util.SoftCache;
+
+import com.threerings.io.Streamable;
 
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
-import com.threerings.presents.dobj.AttributeChangeListener;
-import com.threerings.presents.dobj.AttributeChangedEvent;
-import com.threerings.presents.dobj.DObject;
-import com.threerings.presents.dobj.DSet;
-import com.threerings.presents.dobj.ElementUpdateListener;
-import com.threerings.presents.dobj.ElementUpdatedEvent;
-import com.threerings.presents.dobj.EntryUpdatedEvent;
-import com.threerings.presents.dobj.SetAdapter;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
-import com.threerings.crowd.chat.data.SpeakMarshaller;
-import com.threerings.crowd.chat.server.SpeakDispatcher;
-import com.threerings.crowd.chat.server.SpeakProvider;
+import com.threerings.presents.peer.server.PeerManager;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
-import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
-import com.threerings.bang.data.Item;
-import com.threerings.bang.data.Notification;
-import com.threerings.bang.data.PardnerEntry;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.server.BangServer;
@@ -54,24 +39,19 @@ import com.threerings.bang.server.persist.FinancialAction;
 import com.threerings.bang.server.persist.PlayerRecord;
 
 import com.threerings.bang.avatar.data.Look;
-import com.threerings.bang.avatar.util.ArticleCatalog;
-
-import com.threerings.bang.saloon.server.SaloonManager;
 
 import com.threerings.bang.gang.client.GangService;
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangEntry;
+import com.threerings.bang.gang.data.GangInfo;
 import com.threerings.bang.gang.data.GangInvite;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
-import com.threerings.bang.gang.data.HistoryEntry;
-import com.threerings.bang.gang.data.OutfitArticle;
-import com.threerings.bang.gang.server.persist.GangFinancialAction;
 import com.threerings.bang.gang.server.persist.GangInviteRecord;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
-import com.threerings.bang.gang.server.persist.GangOutfitRecord;
 import com.threerings.bang.gang.server.persist.GangRecord;
 import com.threerings.bang.gang.server.persist.GangRepository;
+import com.threerings.bang.gang.util.GangUtil;
 
 import static com.threerings.bang.Log.*;
 
@@ -91,6 +71,16 @@ public class GangManager
 
         // register ourselves as the provider of the (bootstrap) GangService
         BangServer.invmgr.registerDispatcher(new GangDispatcher(this), GLOBAL_GROUP);
+
+        // listen for gang info cache updates
+        if (BangServer.peermgr != null) {
+            BangServer.peermgr.addStaleCacheObserver(GANG_INFO_CACHE,
+                new PeerManager.StaleCacheObserver() {
+                    public void changedCacheData (Streamable data) {
+                        _infoCache.remove((Handle)data);
+                    }
+                });
+        }
     }
 
     /**
@@ -162,9 +152,80 @@ public class GangManager
         }
     }
 
+    /**
+     * Clears any cached gang info for the named gang (both on this server and on any peers).
+     */
+    public void clearCachedGangInfo (Handle name)
+    {
+        _infoCache.remove(name);
+        if (BangServer.peermgr != null) {
+            BangServer.peermgr.broadcastStaleCacheData(GANG_INFO_CACHE, name);
+        }
+    }
+
     // documentation inherited from GangProvider
-    public void inviteMember (ClientObject caller, final Handle handle, final String message,
-                              final GangService.ConfirmListener listener)
+    public void getGangInfo (
+        ClientObject caller, final Handle name, final GangService.ResultListener listener)
+        throws InvocationException
+    {
+        // first look in the cache
+        GangInfo info = _infoCache.get(name);
+        if (info != null) {
+            listener.requestProcessed(info);
+            return;
+        }
+
+        // see if the gang is loaded and initialized
+        GangHandler handler = _names.get(name);
+        if (handler != null) {
+            GangObject gangobj = handler.getGangObject();
+            info = new GangInfo();
+            info.name = gangobj.name;
+            info.founded = gangobj.founded;
+            info.statement = gangobj.statement;
+            info.url = gangobj.url;
+            info.avatar = gangobj.avatar;
+            info.leaders = getSortedMembers(gangobj.members, true);
+            info.members = getSortedMembers(gangobj.members, false);
+            info.rankings.put(NOTORIETY_IDENT, (int)gangobj.notorietyRank);
+
+            _infoCache.put(info.name, info);
+            listener.requestProcessed(info);
+            return;
+        }
+
+        // otherwise, we must hit the database
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                _grec = _gangrepo.loadGang(name);
+            }
+            public void handleSuccess () {
+                GangInfo info = new GangInfo();
+                info.name = _grec.getName();
+                info.founded = _grec.founded.getTime();
+                info.statement = _grec.statement;
+                info.url = _grec.url;
+                info.avatar = _grec.avatar;
+                info.leaders = getSortedMembers(_grec.members, true);
+                info.members = getSortedMembers(_grec.members, false);
+                info.rankings.put(NOTORIETY_IDENT,
+                    (int)GangHandler.getNotorietyRank(_grec.notoriety));
+
+                _infoCache.put(info.name, info);
+                listener.requestProcessed(info);
+            }
+            public String getFailureMessage () {
+                return "Failed to load gang info [name=" + name + "].";
+            }
+            protected GangRecord _grec;
+        });
+    }
+
+    // documentation inherited from GangProvider
+    public void inviteMember (
+        ClientObject caller, final Handle handle, final String message,
+        final GangService.ConfirmListener listener)
         throws InvocationException
     {
         // make sure it's not the player himself
@@ -334,11 +395,22 @@ public class GangManager
     }
 
     /**
+     * Maps a gang by its name (once we know it).
+     */
+    protected void mapGang (Handle name, GangHandler gang)
+    {
+        _names.put(name, gang);
+    }
+
+    /**
      * Removes a gang from our mapping after it has been shut down.
      */
-    protected void unmapGang (int gangId)
+    protected void unmapGang (int gangId, Handle name)
     {
         _gangs.remove(gangId);
+        if (name != null) {
+            _names.remove(name);
+        }
     }
 
     /**
@@ -349,9 +421,34 @@ public class GangManager
         return (rank == RECRUITER_RANK) ? MEMBER_RANK : rank;
     }
 
+    /**
+     * Creates a member info array containing the leaders or normal members extracted from the
+     * given collection, sorted by the criteria defined in {@link GangUtil}.
+     */
+    protected static GangInfo.Member[] getSortedMembers (
+        Iterable<GangMemberEntry> members, boolean leaders)
+    {
+        ArrayList<GangMemberEntry> entries = GangUtil.getSortedMembers(members, leaders);
+        GangInfo.Member[] info = new GangInfo.Member[entries.size()];
+        for (int ii = 0; ii < info.length; ii++) {
+            GangMemberEntry entry = entries.get(ii);
+            info[ii] = new GangInfo.Member(entry.handle, entry.isActive());
+        }
+        return info;
+    }
+
     /** The persistent store for gang data. */
     protected GangRepository _gangrepo;
 
     /** Maps gang ids to currently loaded gang objects. */
     protected HashIntMap<GangHandler> _gangs = new HashIntMap<GangHandler>();
+
+    /** Maps gang names to initialized gangs. */
+    protected HashMap<Handle, GangHandler> _names = new HashMap<Handle, GangHandler>();
+
+    /** A light-weight cache of soft {@link GangInfo} references. */
+    protected SoftCache<Handle, GangInfo> _infoCache = new SoftCache<Handle, GangInfo>();
+
+    /** The name of our gang info cache. */
+    protected static final String GANG_INFO_CACHE = "gangInfoCache";
 }

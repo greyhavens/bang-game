@@ -35,11 +35,13 @@ import com.threerings.bang.server.persist.PlayerRecord;
 
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangEntry;
+import com.threerings.bang.gang.data.GangInfo;
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HistoryEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.data.TopRankedGangList;
+import com.threerings.bang.gang.util.GangUtil;
 
 import static com.threerings.bang.Log.*;
 
@@ -124,6 +126,30 @@ public class GangRepository extends JORARepository
                 GangOutfitRecord rec = recs.get(ii);
                 grec.outfit[ii] = new OutfitArticle(rec.article, rec.zations);
             }
+
+            // load the senior leader's avatar
+            GangMemberEntry leader = GangUtil.getSeniorLeader(grec.members);
+            grec.avatar = (leader == null) ?
+                null : BangServer.lookrepo.loadSnapshot(leader.playerId);
+        }
+        return grec;
+    }
+
+    /**
+     * Loads up the gang record associated with the specified name.  Returns null if no matching
+     * record could be found.  This methods loads only the necessary information to populate a
+     * {@link GangInfo} object.
+     */
+    public GangRecord loadGang (Handle name)
+        throws PersistenceException
+    {
+        GangRecord grec = loadByExample(_gtable, new GangRecord(name), _normalizedMask);
+        if (grec != null) {
+            // load members and avatar, skip coins and outfit
+            grec.members = loadGangMembers(grec.gangId);
+            GangMemberEntry leader = GangUtil.getSeniorLeader(grec.members);
+            grec.avatar = (leader == null) ?
+                null : BangServer.lookrepo.loadSnapshot(leader.playerId);
         }
         return grec;
     }
