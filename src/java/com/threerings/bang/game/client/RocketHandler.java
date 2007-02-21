@@ -33,6 +33,8 @@ import com.threerings.bang.util.SoundUtil;
 
 import static com.threerings.bang.Log.log;
 import static com.threerings.bang.client.BangMetrics.*;
+import static com.threerings.bang.game.client.BallisticShotHandler.*;
+
 
 /**
  * Waits for all sprites involved in a shot to stop moving and then
@@ -41,28 +43,6 @@ import static com.threerings.bang.client.BangMetrics.*;
 public class RocketHandler extends EffectHandler
     implements PathObserver
 {
-    /** The acceleration due to gravity. */
-    protected static final float GRAVITY = 20 * BallisticPath.G;
-
-    /** The gravity vector used for path acceleration. */
-    public static final Vector3f GRAVITY_VECTOR = new Vector3f(0, 0, GRAVITY);
-
-    /** Contains generated ballistic path parameters. */
-    public static class PathParams
-    {
-        /** The initial velocity. */
-        public Vector3f velocity;
-
-        /** The flight duration. */
-        public float duration;
-
-        public PathParams (Vector3f velocity, float duration)
-        {
-            this.velocity = velocity;
-            this.duration = duration;
-        }
-    }
-
     @Override // documentation inherited
     public boolean execute ()
     {
@@ -79,54 +59,6 @@ public class RocketHandler extends EffectHandler
 
         // now determine whether or not anything remained pending
         return !isCompleted();
-    }
-
-    /**
-     * Computes and returns ballistic path parameters for a path that starts
-     * and ends at the specified points.
-     */
-    public static PathParams computePathParams (Vector3f start, Vector3f end)
-    {
-        Vector3f velvec = end.subtract(start);
-        float edelta = velvec.z;
-        velvec.z = 0f;
-        float distance = velvec.length();
-
-        float minAngle = (distance < FastMath.FLT_EPSILON) ?
-            FastMath.HALF_PI : FastMath.atan(edelta / distance);
-        float angle = Math.max(3*FastMath.PI/8, FastMath.PI/4 + minAngle/2);
-        float duration, velocity;
-        if (distance < FastMath.FLT_EPSILON) {
-            if (edelta < 0f) { // just let it drop
-                duration = FastMath.sqrt(2f * edelta / GRAVITY);
-                velvec.set(0f, 0f, 0f);
-            } else { // velocity reaches zero at target height
-                duration = FastMath.sqrt(-2f * edelta / GRAVITY);
-                velocity = -GRAVITY * duration;
-                velvec.set(0f, 0f, velocity);
-            }
-            return new PathParams(velvec, duration);
-
-        } else {
-            duration = FastMath.sqrt(
-                2 * (edelta - distance * FastMath.tan(angle)) / GRAVITY);
-            velocity = distance / (duration * FastMath.cos(angle));
-        }
-
-        // normalize the velocity vector and scale it to the velocity
-        velvec.normalizeLocal();
-        velvec.multLocal(velocity);
-
-        // rotate the velocity vector up by the computed angle (around
-        // the axis made by crossing the velocity vector with the up
-        // vector)
-        Vector3f axis = velvec.cross(UP);
-        axis.normalizeLocal();
-        Quaternion rot = new Quaternion();
-        rot.fromAngleAxis(angle, axis);
-        rot.multLocal(velvec);
-
-        return new PathParams(velvec, duration);
     }
 
     protected void fireShot ()
@@ -257,10 +189,6 @@ public class RocketHandler extends EffectHandler
 
     protected RocketEffect _shot;
     protected Sound _launchSound;
-
-    /** The speed (u/s) at which to fire projectiles with flat trajectories. */
-    protected static final float FLAT_TRAJECTORY_SPEED = 50f;
-    
     protected HashMap<Sprite, Integer> _penderIds =
         new HashMap<Sprite,Integer>();
 }

@@ -478,8 +478,8 @@ public class BangObject extends GameObject
                 }
             }
 
-            // stop if a non-penetrable prop is in the way
-        } while (!board.isPenetrable(x, y));
+        // stop if a non-penetrable prop is in the way
+        } while (board.isPenetrable(x, y));
 
         Unit dummy = new Unit();
         dummy.pieceId = -1;
