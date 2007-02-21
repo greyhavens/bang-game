@@ -585,7 +585,7 @@ public class GangRepository extends JORARepository
 
         // TEMP: add the normalized name column
         if (!JDBCUtil.tableContainsColumn(conn, "GANGS", "NORMALIZED")) {
-            JDBCUtil.addColumn(conn, "GANGS", "NORMALIZED", "VARCHAR(64) NOT NULL UNIQUE", "NAME");
+            JDBCUtil.addColumn(conn, "GANGS", "NORMALIZED", "VARCHAR(64) UNIQUE", "NAME");
             Statement stmt = conn.createStatement();
             try {
                 // NOTE: all collisions must be removed by hand before this is run or it will fail
@@ -594,6 +594,7 @@ public class GangRepository extends JORARepository
             } finally {
                 stmt.close();
             }
+            JDBCUtil.changeColumn(conn, "GANGS", "NORMALIZED", "VARCHAR(64) NOT NULL UNIQUE");
         }
         // END TEMP
 
