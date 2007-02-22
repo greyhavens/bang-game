@@ -58,7 +58,7 @@ public abstract class Card extends SimpleStreamableObject
     {
         if (bangobj != null && bangobj.scenario instanceof TutorialInfo) {
             // we always return missile cards in the tutorial
-            return "missile";
+            return new Missile().getType();
 
         } else {
             // if in a game, retrieve the player's point factor
@@ -102,7 +102,9 @@ public abstract class Card extends SimpleStreamableObject
                 }
             }
 
-            return wcards[RandomUtil.getWeightedIndex(weights)].getType();
+            // if we eliminated all possible cards, fall back to half_repair
+            int cidx = RandomUtil.getWeightedIndex(weights);
+            return (cidx >= 0) ? wcards[cidx].getType() : new HalfRepair().getType();
         }
     }
 
