@@ -33,8 +33,7 @@ public class Thunderbird extends Unit
     @Override // documentation inherited
     public boolean targetInRange (int nx, int ny, int tx, int ty)
     {
-        return (getMoveDistance() >= 
-            getDistance(tx, ty) + getDistance(nx, ny, tx, ty)) &&
+        return (getMoveDistance() >= getDistance(tx, ty) + getDistance(nx, ny, tx, ty)) &&
             _attacks.contains(tx, ty);
     }
 
@@ -45,15 +44,13 @@ public class Thunderbird extends Unit
     }
 
     @Override // documentation inherited
-    public boolean checkLineOfSight (
-            BangBoard board, int tx, int ty, Piece target)
+    public boolean checkLineOfSight (BangBoard board, int tx, int ty, Piece target)
     {
         return _attacks.contains(target.x, target.y);
     }
 
     @Override // documentation inherited
-    public void computeMoves (
-            BangBoard board, PointSet moves, PointSet attacks)
+    public void computeMoves (BangBoard board, PointSet moves, PointSet attacks)
     {
         _attacks.clear();
         board.computeMoves(this, moves, _attacks);
@@ -63,11 +60,11 @@ public class Thunderbird extends Unit
     }
 
     @Override // documentation inherited
-    public Point computeShotLocation (BangBoard board, Piece target, 
-            PointSet moveSet, boolean any, PointSet preferredSet)
+    public Point computeShotLocation (BangBoard board, Piece target, PointSet moveSet, boolean any,
+                                      PointSet preferredSet)
     {
-        // check if they are attackable
-        if (!_attacks.contains(target.x, target.y)) {
+        // check that they are attackable
+        if (target == null || !_attacks.contains(target.x, target.y)) {
             return null;
         }
         
@@ -80,8 +77,7 @@ public class Thunderbird extends Unit
         if (moveSet.contains(x, y)) {
             if (tdist <= remain) {
                 spot = new Point(x, y);
-                if (preferredSet.isEmpty() || 
-                        preferredSet.contains(x, y) || any) {
+                if (preferredSet.isEmpty() || preferredSet.contains(x, y) || any) {
                     return spot;
                 }
                 tmove = 0;
@@ -125,8 +121,8 @@ public class Thunderbird extends Unit
         Rectangle playarea = board.getPlayableArea();
         for (int xx = x1; xx <= x2; xx++) {
             for (int yy = y1; yy <= y2; yy++) {
-                if (!playarea.contains(xx, yy) || getDistance(xx, yy) + 
-                        getDistance(xx, yy, dx, dy) > move) {
+                if (!playarea.contains(xx, yy) ||
+                    getDistance(xx, yy) + getDistance(xx, yy, dx, dy) > move) {
                     continue;
                 }
                 ps.add(xx, yy);
@@ -136,8 +132,7 @@ public class Thunderbird extends Unit
     }
 
     @Override // documentation inherited
-    public MoveEffect generateMoveEffect (
-            BangObject bangobj, int nx, int ny, Piece target)
+    public MoveEffect generateMoveEffect (BangObject bangobj, int nx, int ny, Piece target)
     {
         if (target == null) {
             return super.generateMoveEffect(bangobj, nx, ny, target);
