@@ -66,11 +66,10 @@ public abstract class Card extends SimpleStreamableObject
 
             // select the card based on a weighted random choice
             Card[] wcards = _wcards.get(townId);
-            int[] oweights = _weights.get(townId), weights = oweights;
+            int[] weights = _weights.get(townId).clone();
 
             // clone the weights and adjust them based on the point factor
             if (pointFactor < 1f || pointFactor > 1.25f) {
-                weights = weights.clone();
                 if (pointFactor < 1) {
                     // for players at a disadvantage, add a constant value to all weights which
                     // will reduce the rarity variance
