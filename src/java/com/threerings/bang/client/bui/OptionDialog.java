@@ -82,7 +82,7 @@ public class OptionDialog extends BDecoratedWindow
                                           String[] buttons, ResponseReceiver receiver)
     {
         OptionDialog dialog = new OptionDialog(ctx, bundle, text, buttons, receiver);
-        ctx.getBangClient().displayPopup(dialog, true, 400);
+        ctx.getBangClient().displayPopup(dialog, true, 400, true);
     }
 
     /**
@@ -102,7 +102,7 @@ public class OptionDialog extends BDecoratedWindow
     {
         OptionDialog dialog = new OptionDialog(ctx, bundle, text, buttons, receiver);
         dialog.setRequiresString(width, defaultValue);
-        ctx.getBangClient().displayPopup(dialog, true, 400);
+        ctx.getBangClient().displayPopup(dialog, true, 400, true);
     }
 
     // documentation inherited from interface ActionListener

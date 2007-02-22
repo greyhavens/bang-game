@@ -53,11 +53,13 @@ public class FolkView extends BContainer
         listLayout.setEqualRows(true);
         _folkList = new BContainer(listLayout);
         BScrollPane scrolly = new BScrollPane(_folkList);
-        scrolly.setStyleClass("folk_list_box");
+        if (ffOnly) {
+            scrolly.setStyleClass("folk_list_box");
+            // we don't want to grow beyond the size of our background image
+            setPreferredSize(new Dimension(434, 137));
+        }
         add(scrolly, BorderLayout.CENTER);
 
-        // we don't want to grow beyond the size of our background image
-        setPreferredSize(new Dimension(434, 137));
     }
 
     // from interface SetListener

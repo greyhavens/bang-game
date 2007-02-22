@@ -520,13 +520,22 @@ public class BangClient extends BasicClient
      */
     public void displayPopup (BWindow popup, boolean animate, int twidth)
     {
+        displayPopup(popup, animate, twidth, false);
+    }
+
+    /**
+     * Like {@link #displayPopup(BWindow,boolean)} but allows the specification
+     * of a desired width for the popup.
+     */
+    public void displayPopup (BWindow popup, boolean animate, int twidth, boolean topLayer)
+    {
         if (popup == null) {
             log.warning("Some naughty boy tried to display a null popup.");
             Thread.dumpStack();
             return;
         }
 
-        _ctx.getRootNode().addWindow(popup);
+        _ctx.getRootNode().addWindow(popup, topLayer);
         _popups.add(popup);
 
         if (animate) {

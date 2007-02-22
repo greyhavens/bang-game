@@ -21,6 +21,7 @@ import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.BEvent;
 import com.jmex.bui.event.MouseEvent;
+import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.icon.SubimageIcon;
 import com.jmex.bui.layout.BorderLayout;
 import com.jmex.bui.layout.GroupLayout;
@@ -169,11 +170,12 @@ public class ParlorGameConfigView extends BContainer
         main.add(scenbox);
 
         // create our "Create" button
-        BContainer buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
+        _buttons = GroupLayout.makeHBox(GroupLayout.CENTER);
         _create = new BButton(_msgs.get("m.create"), this, "create");
         _create.setStyleClass("big_button");
-        buttons.add(_create);
-        add(buttons, BorderLayout.SOUTH);
+        _ownerIcon = new BLabel(new ImageIcon(_ctx.loadImage("ui/saloon/only_parlor_owner.png")));
+        _buttons.add(_create);
+        add(_buttons, BorderLayout.SOUTH);
     }
 
     public void willEnterPlace (ParlorObject parobj)
@@ -268,6 +270,13 @@ public class ParlorGameConfigView extends BContainer
             _scens[ii].setEnabled(canCreate);
         }
         _create.setEnabled(canCreate);
+        if (canCreate) {
+            _buttons.removeAll();
+            _buttons.add(_create);
+        } else {
+            _buttons.removeAll();
+            _buttons.add(_ownerIcon);
+        }
         _updatingDisplay = false;
     }
 
@@ -435,6 +444,8 @@ public class ParlorGameConfigView extends BContainer
     protected String[] _scenIds;
     protected BCheckBox[] _scens;
     protected BButton _create;
+    protected BContainer _buttons;
+    protected BLabel _ownerIcon;
 
     protected boolean _updatingDisplay = false;
 

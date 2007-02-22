@@ -54,11 +54,9 @@ public class ParlorView extends ShopView
         add(new BButton(_msgs.get("m.to_saloon"), this, "to_saloon"),
             new Point(870, 25));
 
-        add(_config = new ParlorConfigView(_ctx),
-            new Rectangle(95, 119, 407, 130));
-        _ccont = new BContainer(GroupLayout.makeVStretch());
-        _ccont.add(_chat = new PlaceChatView(ctx, _msgs.get("m.parlor_chat")));
-        add(_ccont, new Rectangle(552, 78, 445, 551));
+        add(_config = new ParlorConfigIcons(_ctx), new Point(450, 263));
+        add(_chat = new PlaceChatView(ctx, _msgs.get("m.parlor_chat")),
+            new Rectangle(552, 78, 445, 551));
 
 
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
@@ -74,6 +72,10 @@ public class ParlorView extends ShopView
 
         // create our config view, but we'll add it later
         _gconfig = new ParlorGameConfigView(_ctx, _status);
+
+        // allow the parlor owner to change the settings
+        add(_settings = new BButton(_msgs.get("m.settings"), this, "settings"), new Point(340, 81));
+        _settings.setVisible(false);
     }
 
     /**
@@ -128,6 +130,9 @@ public class ParlorView extends ShopView
             BangBootstrapData bbd = (BangBootstrapData)
                 _ctx.getClient().getBootstrapData();
             _ctx.getLocationDirector().moveTo(bbd.saloonOid);
+
+        } else if ("settings".equals(event.getAction())) {
+            _ctx.getBangClient().displayPopup(new ParlorConfigView(_ctx, _parobj), true);
         }
     }
 
@@ -146,7 +151,12 @@ public class ParlorView extends ShopView
             clearMatchView();
         }
 
-        _ccont.add(0, new FolkView(_ctx, plobj, false), GroupLayout.FIXED);
+        add(new BLabel(_msgs.get("m.parlor_name", _parobj.info.creator), "parlor_label"),
+                new Point(165, 263));
+        add(new FolkView(_ctx, plobj, false), new Rectangle(95, 119, 407, 130));
+        if (_ctx.getUserObject().handle.equals(_parobj.info.creator)) {
+            _settings.setVisible(true);
+        }
     }
 
     @Override // documentation inherited
@@ -174,8 +184,9 @@ public class ParlorView extends ShopView
     protected StatusLabel _status;
     protected PlaceChatView _chat;
     protected BContainer _ccont;
+    protected BButton _settings;
 
     protected ParlorGameConfigView _gconfig;
-    protected ParlorConfigView _config;
+    protected ParlorConfigIcons _config;
     protected ParlorMatchView _mview;
 }
