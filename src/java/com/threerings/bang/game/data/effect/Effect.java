@@ -187,7 +187,7 @@ public abstract class Effect extends SimpleStreamableObject
         }
 
         // effect the actual damage
-//         log.info("Damaging " + target + " -> " + newDamage + ".");
+        //log.info("Damaging " + target + " -> " + newDamage + ".");
         target.wasDamaged(newDamage);
         boolean alive = target.isAlive();
         if (!alive) {

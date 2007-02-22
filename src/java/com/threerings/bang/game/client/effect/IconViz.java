@@ -81,7 +81,7 @@ public class IconViz extends EffectViz
     @Override // documentation inherited
     protected void didInit ()
     {
-        _zOffset = (_target != null ? _target.getHeight() : 1f) * TILE_SIZE;
+        _zOffset = (_sprite.getPiece() != null ? _sprite.getPiece().getHeight() : 1f) * TILE_SIZE;
         createBillboard();
         if (_ipath != null) {
             if (_card) {
@@ -94,8 +94,8 @@ public class IconViz extends EffectViz
                 ColorRGBA color = ColorRGBA.white;
                 if (_color != null) {
                     color = _color;
-                } else if (_target != null) {
-                    color = getJPieceColor(_target.owner);
+                } else if (_sprite.getPiece() != null) {
+                    color = getJPieceColor(_sprite.getPiece().owner);
                 }
                 _billboard.attachChild(IconConfig.createIcon(_ctx,
                     _ipath, ICON_SIZE, ICON_SIZE, color));
@@ -106,8 +106,8 @@ public class IconViz extends EffectViz
     @Override // documentation inherited
     public void display ()
     {
-        if (getTargetSprite() != null) {
-            getTargetSprite().attachChild(_billboard);
+        if (_sprite != null) {
+            _sprite.attachChild(_billboard);
         } else {
             // wrap the billboard in a container node for ease of
             // transformation

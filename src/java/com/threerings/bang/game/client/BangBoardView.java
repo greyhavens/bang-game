@@ -579,9 +579,12 @@ public class BangBoardView extends BoardView
         // show a question mark over the unit
         Unit unit = (Unit)_bangobj.pieces.get(unitId);
         if (unit != null) {
-            IconViz iviz = new IconViz("textures/effects/invalidated.png");
-            iviz.init(_ctx, this, unit, null);
-            iviz.display();
+            PieceSprite sprite = getPieceSprite(unit);
+            if (sprite != null) {
+                IconViz iviz = new IconViz("textures/effects/invalidated.png");
+                iviz.init(_ctx, this, sprite, null);
+                iviz.display();
+            }
         }
     }
 

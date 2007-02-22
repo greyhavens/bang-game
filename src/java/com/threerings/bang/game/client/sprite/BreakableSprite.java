@@ -19,7 +19,7 @@ import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.BangBoard;
 import com.threerings.bang.game.data.piece.Piece;
 import com.threerings.bang.game.data.piece.Unit;
-import com.threerings.bang.game.data.piece.CounterInterface;
+//import com.threerings.bang.game.data.piece.CounterInterface;
 import com.threerings.bang.game.client.BoardView;
 import com.threerings.bang.game.client.sprite.TargetableActiveSprite;
 import com.threerings.bang.client.util.ResultAttacher;
@@ -31,11 +31,12 @@ import com.threerings.bang.client.util.ResultAttacher;
  */
  public class BreakableSprite extends TargetableActiveSprite
  {
-     public GenericCounterNode counter;
+     //public GenericCounterNode counter;
 
      public BreakableSprite (String type, String name)
      {
          super(type, name);
+         _showStatus = false;
      }
 
      public void init (
@@ -43,9 +44,9 @@ import com.threerings.bang.client.util.ResultAttacher;
          SoundGroup sounds, Piece piece, short tick)
      {
          super.init(ctx, view, board, sounds, piece, tick);
-         counter = new GenericCounterNode();
-         counter.createGeometry((CounterInterface)piece, ctx);
-         attachChild(counter);
+         //counter = new GenericCounterNode();
+         //counter.createGeometry((CounterInterface)piece, ctx);
+         //attachChild(counter);
      }
 
      @Override // documentation inherited
@@ -55,9 +56,9 @@ import com.threerings.bang.client.util.ResultAttacher;
          _target.updated(piece, tick);
 
         if (_piece.isAlive()) {
-            counter.updateCount((CounterInterface)piece);
+            //counter.updateCount((CounterInterface)piece);
             if (_smoke == null) {
-                _ctx.loadParticles("frontier_town/fire", new ResultAttacher<Spatial>(this) {
+                _ctx.loadParticles(getSmokeEffect(), new ResultAttacher<Spatial>(this) {
                     public void requestCompleted (Spatial result) {
                         super.requestCompleted(result);
                         _smoke = result;
@@ -88,6 +89,11 @@ import com.threerings.bang.client.util.ResultAttacher;
          queueAction(REMOVED);
          return true;
      };
+
+     protected String getSmokeEffect()
+     {
+         return "frontier_town/fire";
+     }
 
      protected Spatial _smoke;
  }

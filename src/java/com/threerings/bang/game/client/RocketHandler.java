@@ -74,7 +74,7 @@ public class RocketHandler extends EffectHandler
             if (_target != null) {
                 _effect.apply(_bangobj, _handler, 0, _target, 0);
             } else {
-                EffectViz viz = new ExplosionViz();
+                EffectViz viz = new ExplosionViz("boom_town/fireworks/fireworks_explosion", false);
                 viz.init(_ctx, _view, spriteTranslation, new EffectViz.Observer() {
                     public void effectDisplayed () {
                         maybeComplete(_penderId);
@@ -95,7 +95,7 @@ public class RocketHandler extends EffectHandler
             // apply the effect and complete our handling if that did not
             // result in anything that needs waiting for
             if (_target != null) {
-                _effect.apply(_bangobj, _handler, 0, _target, 0);
+                _effect.apply(_bangobj, _handler, -1, _target, 0);
             }
 
             maybeComplete(_penderId);

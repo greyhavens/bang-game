@@ -42,7 +42,7 @@ public class RepairViz extends ParticleEffectViz
     {
         // start up the glow effect
         if (_glow != null) {
-            _glow.activate(getTargetSprite());
+            _glow.activate(_sprite);
         }
         
         // and the swirl effect

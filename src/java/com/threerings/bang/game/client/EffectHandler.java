@@ -195,7 +195,12 @@ public class EffectHandler extends BoardView.BoardAction
             wasDamaged = true;
         } else if (effect.equals(ShotEffect.EXPLODED)) {
             wasDamaged = true;
+            System.out.println("effect "+effect);
+            
             effviz = new ExplosionViz();
+        } else if (effect.equals(ShotEffect.ROCKET_BURST)) {
+            wasDamaged = true;
+            effviz = new ExplosionViz("boom_town/fireworks/fireworks_explosion", false);
         } else if ((_effect instanceof RepairEffect &&
             RepairEffect.isRepairEffect(effect)) ||
                 effect.equals(NuggetEffect.NUGGET_ADDED)) {
@@ -306,8 +311,10 @@ public class EffectHandler extends BoardView.BoardAction
         // perhaps show an icon animation indicating what happened
         IconViz iviz = IconViz.createIconViz(piece, effect);
         if (iviz != null) {
-            iviz.init(_ctx, _view, piece, null);
-            iviz.display();
+            if (sprite != null) {
+                iviz.init(_ctx, _view, sprite, null);
+                iviz.display();
+            }
         }
 
         // perhaps display a generic particle effect
@@ -455,10 +462,11 @@ public class EffectHandler extends BoardView.BoardAction
                     log.warning("Missing sprite for card played effect " +
                         "[effect=" + _effect + ", piece=" + piece + "].");
                     return;
+                } else {
+                    iviz = IconViz.createCardViz(card);
+                    iviz.init(_ctx, _view, sprite, null);
+                    iviz.display();
                 }
-                iviz = IconViz.createCardViz(card);
-                iviz.init(_ctx, _view, piece, null);
-                iviz.display();
                 return;
 
             case VS_AREA:
@@ -506,12 +514,14 @@ public class EffectHandler extends BoardView.BoardAction
             log.info("Queueing effect " + this +
                      " [viz=" + viz + ", pid=" + penderId + "].");
         }
-        viz.init(_ctx, _view, piece, new EffectViz.Observer() {
-            public void effectDisplayed () {
-                sprite.updated(piece, _tick);
-                maybeComplete(penderId);
-            }
-        });
+        if (sprite != null) {
+            viz.init(_ctx, _view, sprite, new EffectViz.Observer() {
+                public void effectDisplayed () {
+                    sprite.updated(piece, _tick);
+                    maybeComplete(penderId);
+                }
+            });
+        }
         viz.display();
     }
 

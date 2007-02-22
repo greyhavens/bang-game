@@ -28,12 +28,13 @@ public abstract class EffectViz
      * Initializes this effect and prepares it for display on the specified
      * piece.
      */
-    public void init (BangContext ctx, BangBoardView view, Piece target,
+    public void init (BangContext ctx, BangBoardView view, PieceSprite sprite,
                       Observer obs)
     {
         _ctx = ctx;
         _view = view;
-        _target = target;
+        _sprite = sprite;
+        _pos = sprite.getLocalTranslation();
         _observer = obs;
         didInit();
     }
@@ -47,7 +48,6 @@ public abstract class EffectViz
     {
         _ctx = ctx;
         _view = view;
-        _coords = new Point(x, y);
         float tx = (x + 0.5f) * TILE_SIZE,
             ty = (y + 0.5f) * TILE_SIZE,
             tz = _view.getTerrainNode().getHeightfieldHeight(tx, ty);
@@ -60,12 +60,12 @@ public abstract class EffectViz
      * Initializes this effect and prepares it for display at the specified
      * tile coordinates.
      */
-    public void init (BangContext ctx, BangBoardView view, Vector3f localTranslation,
+    public void init (BangContext ctx, BangBoardView view, Vector3f pos,
                       Observer obs)
     {
         _ctx = ctx;
         _view = view;
-        _pos = localTranslation;
+        _pos = pos;
         _observer = obs;
         didInit();
     }
@@ -96,35 +96,17 @@ public abstract class EffectViz
     }
 
     /**
-     * Gets the target's piece sprite.
-     */
-    protected PieceSprite getTargetSprite()
-    {
-        return (_target != null) ? _view.getPieceSprite(_target) : null;
-    }
-
-
-    /**
      * Sets the target's local translation
      */
-    public final Vector3f getLocalTranslation()
+    public Vector3f getPosition()
     {
-        if (_target != null) {
-            return (Vector3f)getTargetSprite().getLocalTranslation().clone();
-        } else if (_coords != null) {
-            float tx = (_coords.x + 0.5f) * TILE_SIZE,
-                ty = (_coords.y + 0.5f) * TILE_SIZE,
-                tz = _view.getTerrainNode().getHeightfieldHeight(tx, ty);
-            return new Vector3f(tx, ty, tz);
-        } else {
-            return (Vector3f)_pos.clone();
-        }
+        return _pos;
     }
 
     protected BangContext _ctx;
     protected BangBoardView _view;
     protected Point _coords;
     protected Vector3f _pos;
-    protected Piece _target;
+    protected PieceSprite _sprite;
     protected Observer _observer;
 }

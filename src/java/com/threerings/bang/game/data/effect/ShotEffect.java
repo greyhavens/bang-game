@@ -31,7 +31,10 @@ public class ShotEffect extends Effect
 
     /** Indicates that the target was damaged by a ballistic shot. */
     public static final String EXPLODED = "exploded";
-
+    
+    /** Indicates that the target was damaged by a ballistic shot. */
+    public static final String ROCKET_BURST = "rocket_burst";
+    
     /** We also rotate the shooter, thereby affecting it. */
     public static final String ROTATED = "rotated";
 

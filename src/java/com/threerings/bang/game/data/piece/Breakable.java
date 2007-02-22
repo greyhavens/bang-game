@@ -37,8 +37,8 @@ public class Breakable extends Prop
     @Override // documentation inherited
     public Effect willDie (BangObject bangobj, int shooterId)
     {
-        if (!isExploding) {
-            isExploding = true;
+        if (!_isExploding) {
+            _isExploding = true;
             return new ExplodeEffect(this, 60, 1);
         } else {
             return null;
@@ -61,7 +61,7 @@ public class Breakable extends Prop
     public ArrayList<Effect> tick (
             short tick, BangObject bangobj, Piece[] pieces)
     {
-        if (damage > 1) {
+        if (_wasDamaged) {
             ArrayList<Effect> effects = new ArrayList<Effect>();
 
             if (_count == -1) {
@@ -94,6 +94,13 @@ public class Breakable extends Prop
         return new BreakableSprite("props", "boom_town/breakables/exploding_barrel");
     }
 
-    protected boolean isExploding = false;
+    @Override // documentation inherited
+    public void wasDamaged (int newDamage) {
+        super.wasDamaged(newDamage);
+        _wasDamaged = true;
+    }
+
+    protected boolean _wasDamaged = false;
+    protected boolean _isExploding = false;
     protected int _count = -1;
 }

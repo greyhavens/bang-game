@@ -78,17 +78,10 @@ public class RocketEffect extends AreaEffect
     }
 
     @Override // documentation inherited
-    public boolean apply (BangObject bangobj, Observer obs)
-    {
-        return true;
-    }
-
-
-    @Override // documentation inherited
     public void apply (
         BangObject bangobj, Observer obs, int pidx, Piece piece, int dist)
     {
         // finally do the damage
-        damage(bangobj, obs, shooter.owner, shooter, piece, baseDamage, "exploded");
+        damage(bangobj, obs, shooter.owner, shooter, piece, baseDamage, "rocket_burst");
     }
 }

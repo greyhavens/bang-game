@@ -95,8 +95,12 @@ public class DamageIconViz extends IconViz
         }
 
         if (diviz != null) {
-            diviz.init(ctx, view, target, null);
-            diviz.display();
+            PieceSprite sprite = view.getPieceSprite(target);
+            if (sprite != null) {
+                diviz.init(ctx, view, sprite, null);
+                diviz.display();
+            }
+
         }
     }
     
@@ -176,8 +180,8 @@ public class DamageIconViz extends IconViz
     {
         // Calculate the y offset based on the number of damage readouts
         // already on this sprite
-        if (getTargetSprite() != null) {
-            int gap = getTargetSprite().damageAttach();
+        if (_sprite != null) {
+            int gap = _sprite.damageAttach();
             attached = true;
             _yOffset = gap * DAMAGE_SIZE * 1.1f;
         }
@@ -209,8 +213,8 @@ public class DamageIconViz extends IconViz
     {
         _dmgTState.deleteAll();
         if (attached) {
-            if (getTargetSprite() != null) {
-                getTargetSprite().damageDetach();
+            if (_sprite != null) {
+                _sprite.damageDetach();
             }
             attached = false;
         }
@@ -220,8 +224,8 @@ public class DamageIconViz extends IconViz
     protected void billboardFade ()
     {
         if (attached) {
-            if (getTargetSprite() != null) {
-                getTargetSprite().damageDetach();
+            if (_sprite != null) {
+                _sprite.damageDetach();
             }
             attached = false;
         }

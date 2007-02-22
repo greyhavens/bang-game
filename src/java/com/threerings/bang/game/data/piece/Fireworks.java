@@ -27,13 +27,15 @@ public class Fireworks extends Breakable
     @Override // documentation inherited
     public Effect willDie (BangObject bangobj, int shooterId)
     {
+        // don't do explosion effect
         return null;
     }
-
+    
+    
     @Override // documentation inherited
     public ArrayList<Effect> tick (short tick, BangObject bangobj, Piece[] pieces)
     {
-        if (damage > 1) {
+        if (_wasDamaged) {
             ArrayList<Effect> effects = new ArrayList<Effect>();
 
             if (_count == -1) {
@@ -42,13 +44,13 @@ public class Fireworks extends Breakable
             } else {
                 _count -= 1;
             }
-
             if (_count == 0) {
                 effects.add(new DamageEffect(this, 100));
                 effects.add(new RocketEffect(this, 60));
             } else if (_count > 0) {
                 effects.add(new UpdateEffect(this));
             }
+
             return effects;
         }
 

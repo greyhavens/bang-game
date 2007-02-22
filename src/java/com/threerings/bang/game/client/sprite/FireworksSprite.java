@@ -57,6 +57,11 @@ public class FireworksSprite extends BreakableSprite
                 _rocketSource : null;
     }
 
+    protected String getSmokeEffect()
+    {
+        return "boom_town/fireworks/sparks";
+    }
+
     protected float _rocketDelay;
     protected Spatial _rocketSource;
 }

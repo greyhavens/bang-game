@@ -39,12 +39,14 @@ public class WreckViz extends ParticleEffectViz
     }
 
     @Override // documentation inherited
-    public void init (BangContext ctx, BangBoardView view, Piece target,
+    public void init (BangContext ctx, BangBoardView view, PieceSprite sprite,
                       Observer obs)
     {
-        super.init(ctx, view, target, obs);
-        if (_wrapviz != null) {
-            _wrapviz.init(ctx, view, target, obs);
+        if (sprite != null) {
+            super.init(ctx, view, sprite, obs);
+            if (_wrapviz != null) {
+                _wrapviz.init(ctx, view, sprite, obs);
+            }
         }
     }
 
@@ -58,11 +60,11 @@ public class WreckViz extends ParticleEffectViz
 
         // and the wreckage
         if (_wreckage != null) {
-            String[] wtypes = ((ActiveSprite)getTargetSprite()).getWreckageTypes();
+            String[] wtypes = ((ActiveSprite)_sprite).getWreckageTypes();
             if (wtypes != null && wtypes.length > 0) {
                 for (int i = 0; i < _wreckage.length; i++) {
                     _wreckage[i].bind(RandomUtil.pickRandom(wtypes));
-                    getTargetSprite().attachChild(_wreckage[i]);
+                    _sprite.attachChild(_wreckage[i]);
                     _wreckage[i].updateRenderState();
                 }
             }

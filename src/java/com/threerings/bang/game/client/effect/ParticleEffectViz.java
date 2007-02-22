@@ -28,7 +28,7 @@ public abstract class ParticleEffectViz extends EffectViz
      */
     protected void displayParticles (ParticleMesh particles, boolean position)
     {
-        displayParticles(getLocalTranslation(), particles, position);
+        displayParticles(getPosition(), particles, position);
     }
 
     /**
@@ -38,7 +38,7 @@ public abstract class ParticleEffectViz extends EffectViz
      * center of the target
      */
      protected void displayParticles (
-        final Vector3f localTranslation, ParticleMesh particles, boolean position)
+        final Vector3f pos, ParticleMesh particles, boolean position)
     {
         // we may be reusing this particle system so remove it from its
         // previous parent
@@ -49,7 +49,7 @@ public abstract class ParticleEffectViz extends EffectViz
 
         // position and fire up the particle system
         if (position) {
-            Vector3f spos = localTranslation;
+            Vector3f spos = pos;
             particles.setLocalTranslation(
                 new Vector3f(spos.x, spos.y, spos.z + TILE_SIZE/2));
         }
@@ -64,16 +64,17 @@ public abstract class ParticleEffectViz extends EffectViz
      */
     protected void displayEffect (String name)
     {
-        displayEffect(name, getLocalTranslation(), (_target != null) ?
-            getTargetSprite().getLocalRotation() : new Quaternion());
+        displayEffect(name, getPosition(), (_sprite != null) ?
+            _sprite.getLocalRotation() : new Quaternion());
     }
 
     /**
      * Displays a particle effect on the specified location and orientation.
      */
     protected void displayEffect (String name,
-        final Vector3f localTranslation, final Quaternion localRotation)
+        Vector3f pos, final Quaternion localRotation)
     {
+        final Vector3f newpos = (Vector3f)pos.clone();
         ParticlePool.getParticles(name,
             new ResultAttacher<Spatial>(_view.getPieceNode()) {
             public void requestCompleted (Spatial result) {
@@ -81,7 +82,7 @@ public abstract class ParticleEffectViz extends EffectViz
                 Vector3f trans = result.getLocalTranslation();
                 localRotation.multLocal(
                     trans.set(0f, 0f, TILE_SIZE/2));
-                trans.addLocal(localTranslation);
+                trans.addLocal(newpos);
             }
         });
     }

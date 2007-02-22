@@ -363,9 +363,12 @@ public class UnitSprite extends MobileSprite
         if (_fire != null) {
             ParticleUtil.stopAndRemove(_fire);
             _fire = null;
-            ExplosionViz eviz = new ExplosionViz(true);
-            eviz.init((BangContext)_ctx, (BangBoardView)_view, _piece, null);
-            eviz.display();
+            ExplosionViz eviz = new ExplosionViz(null, true);
+            PieceSprite sprite = _view.getPieceSprite(_piece);
+            if (sprite != null) {
+                eviz.init((BangContext)_ctx, (BangBoardView)_view, sprite, null);
+                eviz.display();
+            }
         }
     }
 

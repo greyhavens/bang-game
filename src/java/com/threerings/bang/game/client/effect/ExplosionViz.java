@@ -36,8 +36,11 @@ public class ExplosionViz extends ParticleEffectViz
     {
     }
 
-    public ExplosionViz (boolean showDustRing)
+    public ExplosionViz (String particleEffect, boolean showDustRing)
     {
+        if (particleEffect != null) {
+            _particleEffect = particleEffect;
+        }
         _showDustRing = showDustRing;
     }
 
@@ -45,14 +48,14 @@ public class ExplosionViz extends ParticleEffectViz
     public void display ()
     {
         // set up and add the dust ring
-        if ( _target != null &&
-            (!_target.isAirborne() || _showDustRing) &&
+        if ( _sprite.getPiece() != null &&
+            (!_sprite.getPiece().isAirborne() || _showDustRing) &&
             BangPrefs.isHighDetail()) {
-            getTargetSprite().displayDustRing();
+            _sprite.displayDustRing();
         }
 
         // add the explosion effect
-        displayEffect("frontier_town/explosion");
+        displayEffect(_particleEffect);
 
         // and the streamers
         if (_streamers != null) {
@@ -63,8 +66,8 @@ public class ExplosionViz extends ParticleEffectViz
 
         // and the light
         if (BangPrefs.isMediumDetail()) {
-            Vector3f location = getLocalTranslation();
-            location.z += TILE_SIZE/2;
+            Vector3f location = new Vector3f(getPosition().x, getPosition().y, getPosition().z + TILE_SIZE/2);
+            //location.z += TILE_SIZE/2;
             _view.createLightFlash(location, LIGHT_FLASH_COLOR,
                 LIGHT_FLASH_DURATION);
         }
@@ -132,6 +135,8 @@ public class ExplosionViz extends ParticleEffectViz
         /** The age of this streamer in seconds. */
         protected float _age;
     }
+    
+    protected String _particleEffect = "frontier_town/explosion";
 
     /** If true, show the dust ring even for airborne units. */
     protected boolean _showDustRing;

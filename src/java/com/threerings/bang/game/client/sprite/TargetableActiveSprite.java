@@ -57,10 +57,13 @@ public class TargetableActiveSprite extends ActiveSprite
 
         _tlight = _view.getTerrainNode().createHighlight(
             _piece.x, _piece.y, false, false);
-        attachHighlight(_status = new PieceStatus(_ctx, _tlight));
+        if (_showStatus) {
+            attachHighlight(_status = new PieceStatus(_ctx, _tlight));
+        }
         updateStatus();
         attachChild(_target = new PieceTarget(_piece, _ctx));
     }
 
+    protected boolean _showStatus = true;
     protected PieceTarget _target;
 }
