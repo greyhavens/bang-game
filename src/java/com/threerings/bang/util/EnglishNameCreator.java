@@ -175,7 +175,6 @@ public class EnglishNameCreator extends NameCreator
         "Butch",
         "Casey",
         "Chance",
-        "Christ",
         "Clancey",
         "Clay",
         "Dave",
