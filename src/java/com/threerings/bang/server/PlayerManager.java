@@ -155,7 +155,7 @@ public class PlayerManager
         // invoker unit, it is not routed through the dobjmgr
         new Interval() {
             public void expired () {
-                BangServer.invoker.postUnit(new Invoker.Unit() {
+                BangServer.invoker.postUnit(new Invoker.Unit("purgeDownloadLinks") {
                     public boolean invoke () {
                         purgeDownloadLinks();
                         return false;
@@ -353,7 +353,7 @@ public class PlayerManager
         bsitem.setGivenName(name);
 
         // stick the new item in the database and in their inventory
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        BangServer.invoker.postUnit(new PersistingUnit("pickFirstBigShot", listener) {
             public void invokePersistent () throws PersistenceException {
                 BangServer.itemrepo.insertItem(bsitem);
             }
@@ -389,7 +389,7 @@ public class PlayerManager
         }
 
         // store the invite in the db and send it
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        BangServer.invoker.postUnit(new PersistingUnit("invitePardner", listener) {
             public void invokePersistent () throws PersistenceException {
                 _error = _pardrepo.addPardners(inviter.playerId, handle, message);
             }
@@ -456,7 +456,7 @@ public class PlayerManager
         }
 
         // remove from database and notify affected party on success
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        BangServer.invoker.postUnit(new PersistingUnit("removePardner", listener) {
             public void invokePersistent () throws PersistenceException {
                 _pardrepo.removePardners(player.playerId, handle);
             }
@@ -630,7 +630,7 @@ public class PlayerManager
         }
 
         // otherwise, we need to hit some repositories
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        BangServer.invoker.postUnit(new PersistingUnit("getPosterInfo", listener) {
             public void invokePersistent() throws PersistenceException {
                 // first map handle to player id
                 PlayerRecord player = _playrepo.loadByHandle(handle);
@@ -687,7 +687,7 @@ public class PlayerManager
         poster.badge4 = badgeIds[3];
 
         // then store it in the database
-        BangServer.invoker.postUnit(new PersistingUnit(cl) {
+        BangServer.invoker.postUnit(new PersistingUnit("updatePosterInfo", cl) {
             public void invokePersistent() throws PersistenceException {
                 _postrepo.storePoster(poster);
                 _posterCache.remove(user.handle);
@@ -736,7 +736,7 @@ public class PlayerManager
             return;
         }
 
-        BangServer.invoker.postUnit(new PersistingUnit(cl) {
+        BangServer.invoker.postUnit(new PersistingUnit("noteFolk", cl) {
             public void invokePersistent() throws PersistenceException {
                 _playrepo.registerOpinion(user.playerId, folkId, opinion);
             }
@@ -787,7 +787,7 @@ public class PlayerManager
         }
 
         // now finish the job on the invoker thread
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        BangServer.invoker.postUnit(new PersistingUnit("registerComplaint", listener) {
             public void invokePersistent() throws PersistenceException {
                 // if the target is unset, look that up
                 if (event.target == null) {
@@ -823,7 +823,7 @@ public class PlayerManager
         }
 
         // create a temporary symlink in the data/download directory for use in downloading
-        BangServer.invoker.postUnit(new Invoker.Unit() {
+        BangServer.invoker.postUnit(new Invoker.Unit("createDownloadSymlink") {
             public boolean invoke () {
                 _ident = createDownloadSymlink(song);
                 return true;
@@ -862,7 +862,7 @@ public class PlayerManager
 
         // remove it from their inventory immediately, then from the database
         user.removeFromInventory(item.getKey());
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        BangServer.invoker.postUnit(new PersistingUnit("destroyItem", listener) {
             public void invokePersistent ()
                 throws PersistenceException {
                 BangServer.itemrepo.deleteItem(item, "trashed");
@@ -1058,7 +1058,7 @@ public class PlayerManager
         final boolean accept, final InvocationService.ConfirmListener listener)
     {
         // update the database
-        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+        BangServer.invoker.postUnit(new PersistingUnit("handleInviteResponse", listener) {
             public void invokePersistent ()
                 throws PersistenceException {
                 if (accept) {
