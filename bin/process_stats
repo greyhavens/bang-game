@@ -134,11 +134,27 @@ if ($dry_run) {
     system_warn("mv *.png *.dat $statsdir");
 }
 
-# finally send the stats email
+my $host = `hostname`;
+chomp($host);
+
+# send the stats email
 if (!$dry_run) {
-    my $host = `hostname`;
-    chomp($host);
     send_mail($stats_email, $stats_email,
               "$host: Bang nightly stats", "/tmp/bangstats.tmp");
     unlink("/tmp/bangstats.tmp");
+}
+
+# report music purchases over the last five days
+if ($node eq "frontier_town") {
+    my $query = "select DATE(TIME) as SUMDATE, -SUM(COINS) from COIN_HISTORY " .
+        "where TIME >= DATE_SUB(CURDATE(), INTERVAL 5 DAY) and TYPE = 109 group by SUMDATE;";
+    my $cmd = "$root/bin/mysql bang -e '$query'";
+    if ($dry_run) {
+        print("$cmd\n");
+    } else {
+        system_warn("$cmd > /tmp/songstats.tmp");
+        send_mail($stats_email, $stats_email + ",nick\@somatone.com,kane\@somatone.com",
+                  "$host: Bang song downloads", "/tmp/songstats.tmp");
+    }
+    unlink("/tmp/songstats.tmp");
 }
