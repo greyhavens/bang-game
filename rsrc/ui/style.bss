@@ -2271,7 +2271,7 @@ bigshot_portrait {
 // Post-game view
 
 bover_contents {
-  padding: 30;
+  padding: 0 30 15 30;
 }
 
 bover_header {
@@ -2292,7 +2292,7 @@ bover_crit {
 
 bover_rcrit {
   parent: "bover_crit";
-  text-align: right;
+  text-align: center;
 }
 
 bover_game {
