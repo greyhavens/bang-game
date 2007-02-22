@@ -39,14 +39,11 @@ public class WreckViz extends ParticleEffectViz
     }
 
     @Override // documentation inherited
-    public void init (BangContext ctx, BangBoardView view, PieceSprite sprite,
-                      Observer obs)
+    public void init (BangContext ctx, BangBoardView view, PieceSprite sprite, Observer obs)
     {
-        if (sprite != null) {
-            super.init(ctx, view, sprite, obs);
-            if (_wrapviz != null) {
-                _wrapviz.init(ctx, view, sprite, obs);
-            }
+        super.init(ctx, view, sprite, obs);
+        if (_wrapviz != null) {
+            _wrapviz.init(ctx, view, sprite, obs);
         }
     }
 

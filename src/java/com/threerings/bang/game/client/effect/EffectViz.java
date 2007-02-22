@@ -28,8 +28,7 @@ public abstract class EffectViz
      * Initializes this effect and prepares it for display on the specified
      * piece.
      */
-    public void init (BangContext ctx, BangBoardView view, PieceSprite sprite,
-                      Observer obs)
+    public void init (BangContext ctx, BangBoardView view, PieceSprite sprite, Observer obs)
     {
         _ctx = ctx;
         _view = view;
@@ -43,8 +42,7 @@ public abstract class EffectViz
      * Initializes this effect and prepares it for display at the specified
      * tile coordinates.
      */
-    public void init (BangContext ctx, BangBoardView view, int x, int y,
-                      Observer obs)
+    public void init (BangContext ctx, BangBoardView view, int x, int y, Observer obs)
     {
         _ctx = ctx;
         _view = view;
@@ -60,8 +58,7 @@ public abstract class EffectViz
      * Initializes this effect and prepares it for display at the specified
      * tile coordinates.
      */
-    public void init (BangContext ctx, BangBoardView view, Vector3f pos,
-                      Observer obs)
+    public void init (BangContext ctx, BangBoardView view, Vector3f pos, Observer obs)
     {
         _ctx = ctx;
         _view = view;

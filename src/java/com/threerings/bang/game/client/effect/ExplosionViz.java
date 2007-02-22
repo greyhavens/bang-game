@@ -67,7 +67,6 @@ public class ExplosionViz extends ParticleEffectViz
         // and the light
         if (BangPrefs.isMediumDetail()) {
             Vector3f location = new Vector3f(getPosition().x, getPosition().y, getPosition().z + TILE_SIZE/2);
-            //location.z += TILE_SIZE/2;
             _view.createLightFlash(location, LIGHT_FLASH_COLOR,
                 LIGHT_FLASH_DURATION);
         }
@@ -136,6 +135,7 @@ public class ExplosionViz extends ParticleEffectViz
         protected float _age;
     }
     
+    /** The explosion particle effect used by this visualization. */
     protected String _particleEffect = "frontier_town/explosion";
 
     /** If true, show the dust ring even for airborne units. */

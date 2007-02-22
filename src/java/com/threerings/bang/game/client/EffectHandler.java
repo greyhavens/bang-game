@@ -307,9 +307,9 @@ public class EffectHandler extends BoardView.BoardAction
         }
 
         // perhaps show an icon animation indicating what happened
-        IconViz iviz = IconViz.createIconViz(piece, effect);
-        if (iviz != null) {
-            if (sprite != null) {
+        if (sprite != null) {
+            IconViz iviz = IconViz.createIconViz(piece, effect);
+            if (iviz != null) {
                 iviz.init(_ctx, _view, sprite, null);
                 iviz.display();
             }
@@ -519,8 +519,8 @@ public class EffectHandler extends BoardView.BoardAction
                     maybeComplete(penderId);
                 }
             });
+            viz.display();
         }
-        viz.display();
     }
 
     /**

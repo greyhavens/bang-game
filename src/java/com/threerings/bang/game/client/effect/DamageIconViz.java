@@ -82,6 +82,12 @@ public class DamageIconViz extends IconViz
         if (target == null) {
             return;
         }
+        
+        PieceSprite sprite = view.getPieceSprite(target);
+        if (sprite == null) {
+            return;
+        }
+        
         DamageIconViz diviz = null;
         if (effect instanceof MoveShootEffect) {
             effect = ((MoveShootEffect)effect).shotEffect;
@@ -95,12 +101,8 @@ public class DamageIconViz extends IconViz
         }
 
         if (diviz != null) {
-            PieceSprite sprite = view.getPieceSprite(target);
-            if (sprite != null) {
-                diviz.init(ctx, view, sprite, null);
-                diviz.display();
-            }
-
+            diviz.init(ctx, view, sprite, null);
+            diviz.display();
         }
     }
     

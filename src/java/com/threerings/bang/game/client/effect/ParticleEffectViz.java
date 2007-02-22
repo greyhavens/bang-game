@@ -49,9 +49,7 @@ public abstract class ParticleEffectViz extends EffectViz
 
         // position and fire up the particle system
         if (position) {
-            Vector3f spos = pos;
-            particles.setLocalTranslation(
-                new Vector3f(spos.x, spos.y, spos.z + TILE_SIZE/2));
+            particles.setLocalTranslation(new Vector3f(pos.x, pos.y, pos.z + TILE_SIZE/2));
         }
         _view.getPieceNode().attachChild(particles);
         particles.updateRenderState();
@@ -72,17 +70,15 @@ public abstract class ParticleEffectViz extends EffectViz
      * Displays a particle effect on the specified location and orientation.
      */
     protected void displayEffect (String name,
-        Vector3f pos, final Quaternion localRotation)
+        final Vector3f pos, final Quaternion localRotation)
     {
-        final Vector3f newpos = (Vector3f)pos.clone();
         ParticlePool.getParticles(name,
             new ResultAttacher<Spatial>(_view.getPieceNode()) {
             public void requestCompleted (Spatial result) {
                 super.requestCompleted(result);
                 Vector3f trans = result.getLocalTranslation();
-                localRotation.multLocal(
-                    trans.set(0f, 0f, TILE_SIZE/2));
-                trans.addLocal(newpos);
+                localRotation.multLocal(trans.set(0f, 0f, TILE_SIZE/2));
+                trans.addLocal(pos);
             }
         });
     }

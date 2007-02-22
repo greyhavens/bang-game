@@ -41,7 +41,7 @@ public class RepairViz extends ParticleEffectViz
     public void display ()
     {
         // start up the glow effect
-        if (_glow != null) {
+        if (_glow != null && _sprite != null) {
             _glow.activate(_sprite);
         }
         
