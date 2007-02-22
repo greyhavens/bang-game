@@ -82,7 +82,7 @@ public class StatsView extends SteelWindow
 
         _ctrl = ctrl;
         _bobj = bangobj;
-
+        _animate = animate;
         _msgs = _ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
 
         if (_ctx instanceof BangContext) {
@@ -130,7 +130,7 @@ public class StatsView extends SteelWindow
             _closeBtn.setEnabled(false);
             _bctx.getBangClient().clearPopup(this, true);
             _bctx.getBangClient().displayPopup(
-                    new GameOverView(_bctx, _ctrl, _bobj), true);
+                    new GameOverView(_bctx, _ctrl, _bobj, _animate), true);
         } else if (action.equals("next_round")) {
             startNextRound();
         } else if (action.equals("forward")) {
@@ -206,7 +206,7 @@ public class StatsView extends SteelWindow
         // calculate the total scenario points for each player
         _scenPoints = new int[_bobj.players.length];
         _objectives = new int[_bobj.players.length];
-        
+
         int objSum;
         for (int ii = 0; ii < _scenPoints.length; ii++) {
             _scenPoints[ii] = (_secStatType == null) ? 0 :
@@ -228,7 +228,7 @@ public class StatsView extends SteelWindow
         }
         return count;
     }
-    
+
     /**
      * Gets the total primary objective points earned by the specified
      * player.
@@ -242,7 +242,7 @@ public class StatsView extends SteelWindow
         }
         return points;
     }
-    
+
     /**
      * Sets the primary contents.
      */
@@ -275,7 +275,7 @@ public class StatsView extends SteelWindow
         }
         return stats[pidx].getIntStat(type);
     }
-    
+
     /**
      * Show, and possibly animated, the total game objectives met by
      * the players.
@@ -494,7 +494,7 @@ public class StatsView extends SteelWindow
         }
         return showed;
     }
-    
+
     /**
      * Show and possibly animate the game points.
      */
@@ -852,6 +852,9 @@ public class StatsView extends SteelWindow
     /** Counter for animation steps. */
     protected int _showing;
 
+    /** If we're in animation mode. */
+    protected boolean _animate;
+
     /** Which page is currently displayed.*/
     protected int _page = 0;
 
@@ -873,7 +876,7 @@ public class StatsView extends SteelWindow
 
     /** The width of the secondary objective icon, points, and plus sign. */
     protected static final int SECONDARY_OBJECTIVE_WIDTH = 120;
-    
+
     protected static final Stat.Type[] BASE_STAT_TYPES = {
         // Global Stats
         Stat.Type.DAMAGE_DEALT, Stat.Type.UNITS_KILLED,

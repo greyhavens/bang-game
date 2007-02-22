@@ -152,19 +152,21 @@ public class BountyGameOverView extends SteelWindow
     {
         _header.setText(_msgs.get("m.bover_dtitle", _bounty.getGame(_gameId).name));
         _contents.removeAll();
-        _contents.setLayoutManager(GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(25));
+        _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(40));
+        BContainer cont = new BContainer(GroupLayout.makeHoriz(GroupLayout.CENTER).setGap(15));
+        _contents.add(cont);
 
         AvatarView aview = new AvatarView(_ctx, 4, false, true);
         aview.setHandle((Handle)_bangobj.players[0]);
         aview.setAvatar(_bangobj.playerInfo[0].avatar);
-        _contents.add(aview);
+        cont.add(aview);
 
-        BContainer right = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER).setGap(25));
-        right.add(_stats = new BContainer(new TableLayout(COLS, 30, 20)));
-        _contents.add(right);
+        BContainer right = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER).setGap(15));
+        right.add(_stats = new BContainer(new TableLayout(COLS, 20, 20)));
+        cont.add(right);
 
         _stats.add(new BLabel(_msgs.get("m.bover_head_crit"), "bover_header"));
-        _stats.add(new BLabel(_msgs.get("m.bover_head_got"), "bover_smallheader"));
+        _stats.add(new BLabel(_msgs.get("m.bover_head_got"), "bover_header"));
         _stats.add(new BLabel("", "bover_header"));
         _stats.add(new BLabel(_msgs.get("m.bover_head_result"), "bover_header"));
 
@@ -204,7 +206,7 @@ public class BountyGameOverView extends SteelWindow
 
         String result = (_failed > 0) ? "failed" : "complete";
         result = _msgs.get("m.bover_game_" + result, _bounty.getGame(_gameId).name);
-        right.add(_overall = new BLabel(result, "bover_overall"));
+        _contents.add(_overall = new BLabel(result, "bover_overall"), GroupLayout.FIXED);
         _overall.setAlpha(animate ? 0f : 1f);
 
         _buttons.removeAll();
@@ -225,7 +227,8 @@ public class BountyGameOverView extends SteelWindow
 
         _header.setText(_msgs.get("m.bover_rtitle", _bounty.title));
         _contents.removeAll();
-        _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(35));
+        _contents.setLayoutManager(
+                GroupLayout.makeVert(GroupLayout.CENTER).setGap(completed ? 15 : 25));
 
         BountyConfig.GameInfo info = _bounty.getGame(_gameId);
         String result = gfailed ? "failed" : "complete";
@@ -271,11 +274,14 @@ public class BountyGameOverView extends SteelWindow
         _contents.add(horiz);
 
         if (!StringUtil.isBlank(quote.text)) {
-            _contents.add(new BLabel(quote.text, "bounty_quote"));
+            BContainer qcont = new BContainer(GroupLayout.makeVert(GroupLayout.CENTER).setGap(0));
+            qcont.setPreferredSize(new Dimension(600, -1));
+            qcont.add(new BLabel(quote.text, "bounty_quote"));
+            _contents.add(qcont);
         }
         if (completed) {
             if (_award.cashEarned > 0) {
-                _contents.add(new AwardView(_ctx, _bangobj, _gconfig, _user, _award));
+                _contents.add(new AwardView(_ctx, _bangobj, _gconfig, _user, _award, playMusic));
             } else {
                 BContainer acont = new BContainer(new BorderLayout());
                 acont.setStyleClass("endgame_border");

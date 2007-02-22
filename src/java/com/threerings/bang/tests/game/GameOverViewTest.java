@@ -88,6 +88,6 @@ public class GameOverViewTest extends TestApp
             bangobj.playerInfo[ii].avatar = BangAI.getAvatar(RandomUtil.getInt(100) > 50);
         }
 
-        return new GameOverView(_ctx, null, bconfig, bangobj, user);
+        return new GameOverView(_ctx, null, bconfig, bangobj, user, true);
     }
 }

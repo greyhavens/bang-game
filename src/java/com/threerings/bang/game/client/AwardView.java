@@ -40,15 +40,15 @@ import com.threerings.bang.game.data.scenario.ScenarioInfo;
  */
 public class AwardView extends BContainer
 {
-    public AwardView (BasicContext ctx, BangObject bangobj, BangConfig bconfig, 
-                      final PlayerObject user, Award award)
+    public AwardView (BasicContext ctx, BangObject bangobj, BangConfig bconfig,
+                      final PlayerObject user, Award award, boolean animate)
     {
         super(GroupLayout.makeHoriz(GroupLayout.CENTER).
               setGap(25).setOffAxisPolicy(GroupLayout.STRETCH));
 
         MessageBundle msgs = ctx.getMessageManager().getBundle(GameCodes.GAME_MSGS);
         boolean isBounty = (bconfig.type == BangConfig.Type.BOUNTY);
-        boolean isCoop = 
+        boolean isCoop =
             bangobj.roundId == 1 && bangobj.scenario.getTeams() == ScenarioInfo.Teams.COOP;
 
         BContainer econt = new BContainer(new BorderLayout(0, 15));
@@ -56,7 +56,7 @@ public class AwardView extends BContainer
         add(econt);
 
         String rankstr = msgs.get("m.endgame_rank" + award.rank);
-        String txt= isBounty ?  msgs.get("m.bover_earnings") : (isCoop ? 
+        String txt= isBounty ?  msgs.get("m.bover_earnings") : (isCoop ?
                 msgs.get("m.endgame_coop_earnings") : msgs.get("m.endgame_earnings", rankstr));
         econt.add(new BLabel(txt, "endgame_title"), BorderLayout.NORTH);
 
@@ -149,7 +149,9 @@ public class AwardView extends BContainer
                     _item.add(new BLabel(txt, "endgame_reward"), BorderLayout.SOUTH);
                 }
             }
-            _item.setAlpha(0f);
+            if (animate) {
+                _item.setAlpha(0f);
+            }
             add(_item);
 
         } else if (!bconfig.rated && !isBounty) {
@@ -159,6 +161,10 @@ public class AwardView extends BContainer
             bcont.add(new BLabel(msgs.get("m.endgame_unranked"), "endgame_text"),
                       BorderLayout.CENTER);
             add(bcont);
+        }
+
+        if (!animate) {
+            return;
         }
 
         // start up an interval that will show their earnings

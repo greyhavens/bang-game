@@ -70,9 +70,9 @@ public class GameOverView extends SteelWindow
     /**
      * The constructor used by the actual game.
      */
-    public GameOverView (BangContext ctx, BangController ctrl, BangObject bangobj)
+    public GameOverView (BangContext ctx, BangController ctrl, BangObject bangobj, boolean animate)
     {
-        this(ctx, ctrl, (BangConfig)ctrl.getPlaceConfig(), bangobj, ctx.getUserObject());
+        this(ctx, ctrl, (BangConfig)ctrl.getPlaceConfig(), bangobj, ctx.getUserObject(), animate);
         _bctx = ctx;
     }
 
@@ -80,7 +80,7 @@ public class GameOverView extends SteelWindow
      * The constructor used by the test harness.
      */
     public GameOverView (BasicContext ctx, BangController ctrl, BangConfig bconfig,
-                         BangObject bangobj, PlayerObject user)
+                         BangObject bangobj, PlayerObject user, boolean animate)
     {
         super(ctx, ctx.xlate(GameCodes.GAME_MSGS, "m.endgame_title"));
         setLayer(1);
@@ -166,7 +166,7 @@ public class GameOverView extends SteelWindow
 
         // display our earnings and awarded badge (if any)
         if (award != null) {
-            _contents.add(new AwardView(_ctx, bangobj, bconfig, user, award));
+            _contents.add(new AwardView(_ctx, bangobj, bconfig, user, award, animate));
         }
 
         // add some buttons at the bottom
