@@ -835,6 +835,10 @@ public class EffectHandler extends BoardView.BoardAction
                         _view.removeSprite(sprite);
                     }
                 });
+
+            // force the sprite to reposition itself to ensure it's in the right spot
+            } else {
+                bsprite.resetLocation(_bangobj.board);
             }
         }
     }

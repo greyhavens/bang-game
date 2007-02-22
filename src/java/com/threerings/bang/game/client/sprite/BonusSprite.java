@@ -42,6 +42,14 @@ public class BonusSprite extends ActiveSprite
     }
 
     /**
+     * Force the bonus sprite into it's default position.
+     */
+    public void resetLocation (BangBoard board)
+    {
+        moveSprite(board);
+    }
+
+    /**
      * Determines whether this bonus is hidden underground.
      */
     protected boolean isHidden ()
@@ -86,7 +94,7 @@ public class BonusSprite extends ActiveSprite
         // snares and springs are taller than dead units
         return TILE_SIZE;
     }
-    
+
     @Override // documentation inherited
     protected void createGeometry ()
     {
