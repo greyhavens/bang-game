@@ -21,6 +21,7 @@
         Path        @PREFIX@/log
         Path        @PREFIX@/logs
         Path        @PREFIX@/run
+        Path        @PREFIX@/pages/stats
         Path        @PREFIX@/data/downloads
         Path        @PREFIX@/rsrc/boards
         User        @APPUSER@

@@ -1006,6 +1006,7 @@
     <antcall target="prepare-server-rcscript"/>
     <mkdir dir="${pkg.base}/run"/>
     <mkdir dir="${pkg.base}/logs"/>
+    <mkdir dir="${pkg.base}/pages/stats"/>
     <mkdir dir="${pkg.base}/data"/>
     <mkdir dir="${pkg.base}/data/downloads"/>
     <copy todir="${pkg.base}/data">
