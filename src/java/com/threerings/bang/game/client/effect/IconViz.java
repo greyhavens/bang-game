@@ -81,7 +81,7 @@ public class IconViz extends EffectViz
     @Override // documentation inherited
     protected void didInit ()
     {
-        _zOffset = (_sprite.getPiece() != null ? _sprite.getPiece().getHeight() : 1f) * TILE_SIZE;
+        _zOffset = (_sprite != null ? _sprite.getPiece().getHeight() : 1f) * TILE_SIZE;
         createBillboard();
         if (_ipath != null) {
             if (_card) {
@@ -94,7 +94,7 @@ public class IconViz extends EffectViz
                 ColorRGBA color = ColorRGBA.white;
                 if (_color != null) {
                     color = _color;
-                } else if (_sprite.getPiece() != null) {
+                } else if (_sprite != null) {
                     color = getJPieceColor(_sprite.getPiece().owner);
                 }
                 _billboard.attachChild(IconConfig.createIcon(_ctx,

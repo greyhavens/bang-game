@@ -48,7 +48,7 @@ public class ExplosionViz extends ParticleEffectViz
     public void display ()
     {
         // set up and add the dust ring
-        if ( _sprite.getPiece() != null &&
+        if (_sprite != null &&
             (!_sprite.getPiece().isAirborne() || _showDustRing) &&
             BangPrefs.isHighDetail()) {
             _sprite.displayDustRing();

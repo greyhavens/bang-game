@@ -195,8 +195,6 @@ public class EffectHandler extends BoardView.BoardAction
             wasDamaged = true;
         } else if (effect.equals(ShotEffect.EXPLODED)) {
             wasDamaged = true;
-            System.out.println("effect "+effect);
-            
             effviz = new ExplosionViz();
         } else if (effect.equals(ShotEffect.ROCKET_BURST)) {
             wasDamaged = true;
