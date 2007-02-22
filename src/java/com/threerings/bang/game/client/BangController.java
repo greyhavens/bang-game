@@ -836,7 +836,7 @@ public class BangController extends GameController
     {
         // don't update our rank until after the first tick, by which time everyone will have
         // loaded their units and we might have some points
-        if (_bangobj.points == null || _bangobj.tick < 1) {
+        if (_bangobj.points == null || _bangobj.tick < 1 || _view.pstatus == null) {
             return;
         }
 
