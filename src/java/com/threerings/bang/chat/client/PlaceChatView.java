@@ -39,7 +39,7 @@ public class PlaceChatView extends TabbedChatView
 
     public PlaceChatView (BangContext ctx, String title, boolean simple)
     {
-        this(ctx, title, simple ? new SimpleChatView(ctx, TAB_SIZE) : 
+        this(ctx, title, simple ? new SimpleChatView(ctx, TAB_SIZE) :
              new ComicChatView(ctx, TAB_SIZE, true) {
                  protected AvatarInfo getSpeakerAvatar (Handle speaker) {
                      BangOccupantInfo boi = (BangOccupantInfo)
@@ -147,7 +147,7 @@ public class PlaceChatView extends TabbedChatView
         } else if ((isShowing() || isPlaceChatViewType) && msg instanceof SystemMessage) {
             SystemMessage smsg = (SystemMessage)msg;
             if (isPlaceChatViewType || SystemMessage.FEEDBACK == smsg.attentionLevel) {
-                ((ComicChatView)_pane.getSelectedTab()).appendSystem(msg);
+                ((ChatTab)_pane.getSelectedTab()).appendSystem(msg);
                 return true;
             }
         }
