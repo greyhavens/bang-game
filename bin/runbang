@@ -120,14 +120,13 @@ echo $PROCESS_PID >$PIDFILE
 wait $PROCESS_PID
 EXIT_CODE=$?
 
-# Mail out some reports
-# cat $LOGFILE | $BANG_HOME/projects/tools/bin/sum_invokers | \
-#     $MAIL -s "$HOSTNAME: $BANG_HOME invoker summary" $LOG_EMAIL
-# cat $LOGFILE | $BANG_HOME/projects/tools/bin/lfilter | \
-#     grep -v "Invoker unit" | grep ' ! ' | cut -c 25-80 | sort | uniq -c | \
-#     sort -nr | $MAIL -s "$HOSTNAME: $BANG_HOME error summary" $LOG_EMAIL
-cat $LOGFILE | $BANG_HOME/projects/tools/bin/lfilter | \
-    $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
+# Mail out warnings from the logs
+FILTLOG=/tmp/bangfiltered.log
+cat $LOGFILE | $BANG_HOME/projects/tools/bin/lfilter > $FILTLOG
+if [ -s $FILTLOG ]; then
+    cat $FILTLOG | $MAIL -s "$HOSTNAME: $BANG_HOME filtered log" $LOG_EMAIL
+fi
+rm -f $FILTLOG
 
 # Archive the server log
 NOW=`date "+%F-%H:%M"`
