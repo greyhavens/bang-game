@@ -777,6 +777,7 @@
     <jar file="${deploy.dir}/rsrc/goods/bundle.jar" basedir="${deploy.dir}/rsrc/goods">
       <include name="**/*"/>
       <exclude name="*.jar"/>
+      <exclude name="**/*.jar"/>
     </jar>
 
     <!-- our top-level resources have all been copied into ${deploy.dir}/ -->
