@@ -22,18 +22,20 @@ import com.threerings.bang.game.client.sprite.OneArmedBanditSprite;
  * Handles some special custom behavior needed for the One Armed Jack.
  */
 public class OneArmedBandit extends Unit
-    implements CounterInterface
 {
-    // from CounterInterface
+    /*implements CounterInterface*/
+    public RandomInfluenceEffect.Kind card = RandomInfluenceEffect.Kind.NONE;
+    
+    /*// from CounterInterface
     public int getCount()
     {
-        return _kind.ordinal();
+        return card.ordinal();
     }
-
+    */
     public void wasKilled (short tick)
     {
         super.wasKilled(tick);
-        _kind = RandomInfluenceEffect.Kind.NONE;
+        card = RandomInfluenceEffect.Kind.NONE;
     }
 
     @Override // documentation inherited
@@ -41,12 +43,12 @@ public class OneArmedBandit extends Unit
     {
         // if the last order was to explode
         Effect randomEffect;
-        if (_kind == RandomInfluenceEffect.Kind.EXPLODE) {
+        if (card == RandomInfluenceEffect.Kind.EXPLODE) {
             randomEffect = new AreaDamageEffect(owner, 100, 1, x, y);
         } else {
-            _kind = RandomUtil.pickRandom(RandomInfluenceEffect.Kind.values(), RandomInfluenceEffect.Kind.NONE);
-            randomEffect = (_kind != RandomInfluenceEffect.Kind.EXPLODE) ?
-                new RandomInfluenceEffect(this.pieceId, _kind) : null;
+            card = RandomUtil.pickRandom(RandomInfluenceEffect.Kind.values(), RandomInfluenceEffect.Kind.NONE);
+            randomEffect = (card != RandomInfluenceEffect.Kind.EXPLODE) ?
+                new RandomInfluenceEffect(this.pieceId, card) : null;
         }
 
         Effect[] effects = super.maybeGeneratePostOrderEffects();
@@ -64,6 +66,4 @@ public class OneArmedBandit extends Unit
     {
         return new OneArmedBanditSprite(_config.type);
     }
-
-    RandomInfluenceEffect.Kind _kind = RandomInfluenceEffect.Kind.NONE;
 }

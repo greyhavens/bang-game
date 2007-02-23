@@ -179,7 +179,7 @@ public class IconConfig
     /**
      * Configures an icon with its various states and such.
      */
-    protected static void configureIcon (Quad icon, TextureState tstate)
+    public static void configureIcon (Quad icon, TextureState tstate)
     {
         icon.setRenderState(tstate);
         icon.setRenderState(RenderUtil.blendAlpha);
