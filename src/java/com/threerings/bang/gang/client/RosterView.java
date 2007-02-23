@@ -250,69 +250,6 @@ public class RosterView extends BContainer
         protected AvatarIcon _aicon;
     }
 
-    protected class AvatarIcon extends ImageIcon
-        implements ResultListener<BImage>
-    {
-        public AvatarIcon (BangContext ctx)
-        {
-            super(ctx.loadImage("ui/hideout/leader_frame.png"));
-        }
-
-        public void setAvatar (AvatarInfo avatar)
-        {
-            if (avatar.equals(_avatar)) {
-                return;
-            }
-            AvatarView.getImage(_ctx, _avatar = avatar, 65, 82, false, this);
-        }
-
-        public void requestCompleted (BImage result)
-        {
-            if (_aimg != null && _added) {
-                _aimg.release();
-            }
-            _aimg = result;
-            if (_added) {
-                _aimg.reference();
-            }
-        }
-
-        public void requestFailed (Exception cause)
-        {
-            log.warning("Failed to retrieve avatar image for leader [cause=" + cause + "].");
-        }
-
-        public void wasAdded ()
-        {
-            super.wasAdded();
-            if (_aimg != null) {
-                _aimg.reference();
-            }
-            _added = true;
-        }
-
-        public void wasRemoved ()
-        {
-            super.wasRemoved();
-            if (_aimg != null) {
-                _aimg.release();
-            }
-            _added = false;
-        }
-
-        public void render (Renderer r, int x, int y, float alpha)
-        {
-            super.render(r, x, y, alpha);
-            if (_aimg != null) {
-                _aimg.render(r, x+3, y+3, alpha);
-            }
-        }
-
-        protected AvatarInfo _avatar;
-        protected BImage _aimg;
-        protected boolean _added;
-    }
-
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected HideoutObject _hideoutobj;

@@ -2067,6 +2067,45 @@ gang_rank_view {
   padding: 5 5;
 }
 
+// Gang info dialog styles
+
+gang_info_dialog {
+  parent: "popupwindow";
+  padding: 10 5;
+}
+
+gang_info_view {
+  background: image "ui/ganginfo/background.png" centerxy;
+  padding: 12 20;
+}
+
+gang_info_title {
+  font: "Old Town" bold 48;
+  color: #4C2602;
+}
+
+gang_info_founded {
+  font: "Dom Casual" plain 16;
+  color: #4C2602;
+}
+
+gang_info_notoriety {
+  font: "Dom Casual" plain 28;
+  color: #4C2602;
+}
+
+gang_info_statement {
+  font: "Helvetica" plain 12;
+  color: #4C2602;
+  padding: 5 150;
+  text-align: center;
+}
+
+gang_info_leader_view {
+  parent: "leader_view";
+  padding: 17 0 0 0;
+}
+
 //
 // Sheriff's Office styles
 

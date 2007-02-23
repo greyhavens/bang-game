@@ -5,8 +5,6 @@ package com.threerings.bang.gang.data;
 
 import com.threerings.io.SimpleStreamableObject;
 
-import com.threerings.util.StreamableHashMap;
-
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
 
@@ -41,6 +39,9 @@ public class GangInfo extends SimpleStreamableObject
     /** The day on which this gang was founded. */
     public long founded;
 
+    /** The gang's notoriety rank. */
+    public byte notorietyRank;
+
     /** The gang's statement. */
     public String statement;
 
@@ -55,7 +56,4 @@ public class GangInfo extends SimpleStreamableObject
 
     /** The presorted normal members of the gang. */
     public Member[] members;
-
-    /** The gang's ranking by various criteria. */
-    public StreamableHashMap<String, Integer> rankings = new StreamableHashMap<String, Integer>();
 }

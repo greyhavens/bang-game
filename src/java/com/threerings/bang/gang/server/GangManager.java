@@ -182,12 +182,12 @@ public class GangManager
             info = new GangInfo();
             info.name = gangobj.name;
             info.founded = gangobj.founded;
+            info.notorietyRank = gangobj.notorietyRank;
             info.statement = gangobj.statement;
             info.url = gangobj.url;
             info.avatar = gangobj.avatar;
             info.leaders = getSortedMembers(gangobj.members, true);
             info.members = getSortedMembers(gangobj.members, false);
-            info.rankings.put(NOTORIETY_IDENT, (int)gangobj.notorietyRank);
 
             _infoCache.put(info.name, info);
             listener.requestProcessed(info);
@@ -204,13 +204,12 @@ public class GangManager
                 GangInfo info = new GangInfo();
                 info.name = _grec.getName();
                 info.founded = _grec.founded.getTime();
+                info.notorietyRank = GangHandler.getNotorietyRank(_grec.notoriety);
                 info.statement = _grec.statement;
                 info.url = _grec.url;
                 info.avatar = _grec.avatar;
                 info.leaders = getSortedMembers(_grec.members, true);
                 info.members = getSortedMembers(_grec.members, false);
-                info.rankings.put(NOTORIETY_IDENT,
-                    (int)GangHandler.getNotorietyRank(_grec.notoriety));
 
                 _infoCache.put(info.name, info);
                 listener.requestProcessed(info);
