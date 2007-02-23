@@ -18,11 +18,11 @@ use GrindUtil;
 # add /usr/local/bin to the path for FreeBSD
 $ENV{'PATH'} = $ENV{'PATH'} . ":/usr/local/bin";
 
-my $usage = "Usage: $0 [--dryrun] node [year month day (ie. 2006 05 06)]\n";
+my $usage = "Usage: $0 [--dryrun] [--node node] [year month day (ie. 2006 05 06)]\n";
 
 my $dry_run;
-GetOptions("dryrun" => \$dry_run);
-my $node = shift or die $usage;
+my $node;
+GetOptions("dryrun" => \$dry_run, "node" => \$node);
 
 # read in some server properties
 my %sconf;
@@ -34,6 +34,8 @@ while (<CONF>) {
     }
 }
 my $stats_email = $sconf{"STATS_EMAIL"};
+$node = $sconf{"NODE"} unless (defined $node);
+die "Unable to determine node from server.conf\n" unless (defined $node);
 
 # if they specified a date, use it
 my $year = shift;
