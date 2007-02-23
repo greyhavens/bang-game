@@ -142,9 +142,9 @@ public class HomesteadDelegate extends ScenarioDelegate
     }
 
     @Override // from ScenarioDelegate
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
-        super.tick(bangobj, tick);
+        boolean validate = super.tick(bangobj, tick);
 
         int[] points = new int[bangobj.players.length];
         for (Homestead stead : _steads) {
@@ -156,6 +156,8 @@ public class HomesteadDelegate extends ScenarioDelegate
             bangobj.stats[ii].incrementStat(Stat.Type.STEAD_POINTS, points[ii]);
             bangobj.grantPoints(ii, points[ii]);
         }
+
+        return validate;
     }
 
     @Override // from Scenario

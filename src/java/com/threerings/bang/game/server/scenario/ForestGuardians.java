@@ -132,13 +132,13 @@ public class ForestGuardians extends Scenario
     }
 
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
-        super.tick(bangobj, tick);
+        boolean validate = super.tick(bangobj, tick);
 
         if (tick < _nextWaveTick) {
             // don't do anything until the wave has started
-            return;
+            return validate;
 
         } else if (tick == _nextWaveTick) {
             startNextWave(bangobj);
@@ -154,6 +154,8 @@ public class ForestGuardians extends Scenario
                 break;
             }
         }
+
+        return validate;
     }
 
     @Override // documentation inherited
@@ -200,7 +202,7 @@ public class ForestGuardians extends Scenario
 //         }
 
         _payouts = new int[bangobj.players.length];
-        Arrays.fill(_payouts, 
+        Arrays.fill(_payouts,
                 (maxPoints > 0 ? 60 + (95 - 60) * treePoints / maxPoints : 0));
 
         int[] points = bangobj.perRoundPoints[bangobj.roundId-1];

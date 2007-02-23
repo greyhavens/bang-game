@@ -51,9 +51,12 @@ public class ScenarioDelegate
 
     /**
      * Called at the start of every game tick. See {@link Scenario#tick}.
+     *
+     * @return true if we should re-validate advance orders
      */
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
+        return false;
     }
 
     /**

@@ -120,14 +120,15 @@ public class Tutorial extends Scenario
     }
 
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
-        super.tick(bangobj, tick);
+        boolean validate = super.tick(bangobj, tick);
 
         // if we're ready to deploy the wendigo, do so
         if (_wendigoTick == tick) {
             _wendel.deployWendigo(bangobj, tick);
             _wendigoTick = -1;
+            validate = true;
         }
 
         // end the scenario if we've reached the last action
@@ -141,6 +142,7 @@ public class Tutorial extends Scenario
                     Stat.Type.TUTORIALS_COMPLETED, _config.ident);
             }
         }
+        return validate;
     }
 
     @Override // documentation inherited

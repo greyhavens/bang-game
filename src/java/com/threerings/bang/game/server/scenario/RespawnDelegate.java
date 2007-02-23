@@ -73,8 +73,9 @@ public class RespawnDelegate extends ScenarioDelegate
     }
 
     @Override // from ScenarioDelegate
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
+        boolean validate = false;
         // respawn new pieces
         while (_respawn && _respawns.size() > 0) {
             if (_respawns.peek().getRespawnTick() > tick) {
@@ -113,6 +114,7 @@ public class RespawnDelegate extends ScenarioDelegate
             // then position it and add it back at its new location
             unit.position(bspot.x, bspot.y);
             _bangmgr.addPiece(unit, AddPieceEffect.RESPAWNED);
+            validate = true;
 
             if (freeIronPlate) {
                 IronPlateEffect effect = new IronPlateEffect();
@@ -121,6 +123,8 @@ public class RespawnDelegate extends ScenarioDelegate
                 _bangmgr.deployEffect(-1, effect);
             }
         }
+
+        return validate;
     }
 
     @Override // from ScenarioDelegate

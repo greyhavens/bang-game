@@ -176,19 +176,23 @@ public abstract class Scenario
      * If the scenario wishes to end the game early, it should set {@link
      * BangObject#lastTick} to the tick on which the game should end (if it is
      * set to the current tick the game will be ended when this call returns).
+     *
+     * @return true if any advance orders will need to be re-validated
      */
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
+        boolean validate = false;
         // allow our delegates to participate
         for (ScenarioDelegate delegate : _delegates) {
             try {
-                delegate.tick(bangobj, tick);
+                validate = delegate.tick(bangobj, tick) || validate;
             } catch (Exception e) {
                 log.log(Level.WARNING, "Delegate choked on tick " +
                         "[game=" + _bangmgr.where() + ", tick=" + tick +
                         ", delegate=" + delegate + "].", e);
             }
         }
+        return validate;
     }
 
     /**
@@ -517,7 +521,7 @@ public abstract class Scenario
         Bonus drop = Bonus.createBonus(BonusConfig.getConfig(bonusName));
         Point spot = bangobj.board.getOccupiableSpot(x, y, 0, 3, null);
         if (spot == null) {
-            log.info("Unable to drop bonus for lack of spot [x=" + x + 
+            log.info("Unable to drop bonus for lack of spot [x=" + x +
                     ", y=" + y + "].");
             return null;
         }

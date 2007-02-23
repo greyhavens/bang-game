@@ -1575,7 +1575,9 @@ public class BangManager extends GameManager
         }
 
         // tick the scenario which will do all the standard processing
-        _scenario.tick(_bangobj, tick);
+        if (_scenario.tick(_bangobj, tick)) {
+            validateOrders();
+        }
 
         // If this is a bounty game without respawns, the game could end early
         if (shouldEndBountyGame()) {

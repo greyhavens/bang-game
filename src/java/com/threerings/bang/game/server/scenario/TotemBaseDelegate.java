@@ -38,9 +38,9 @@ public class TotemBaseDelegate extends CounterDelegate
     }
 
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
-        super.tick(bangobj, tick);
+        boolean validate = super.tick(bangobj, tick);
 
         boolean alive = false;
         for (TotemBase base : _bases) {
@@ -50,6 +50,7 @@ public class TotemBaseDelegate extends CounterDelegate
             bangobj.setLastTick(tick);
         }
         _picker = null;
+        return validate;
     }
 
     @Override // documentation inherited

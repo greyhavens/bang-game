@@ -23,7 +23,7 @@ import com.threerings.bang.game.util.PieceSet;
 import com.threerings.presents.server.InvocationException;
 
 /**
- * Handles the server side operation of practive scenarios.
+ * Handles the server side operation of practice scenarios.
  */
 public class Practice extends Scenario
 {
@@ -47,7 +47,7 @@ public class Practice extends Scenario
         for (int ii = 0; ii < units.length; ii++) {
             units[ii] = Unit.getUnit(bconfig.getScenario(0));
         }
-        
+
         for (int ii = 0; ii < bangobj.players.length; ii++) {
             if (!_bangmgr.isAI(ii)) {
                 _bangmgr.initAndPrepareUnits(units, ii);
@@ -83,19 +83,6 @@ public class Practice extends Scenario
             piece.lastActed = bangobj.tick;
         }
         super.pieceWasKilled(bangobj, piece, shooter);
-    }
-
-    @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
-    {
-        super.tick(bangobj, tick);
-
-        // end the scenario if all the units on one side are dead
-        for (int ii = 0; ii < bangobj.pdata.length; ii++) {
-           if (_bangmgr.isActivePlayer(ii) && !bangobj.hasLiveUnits(ii)) {
-              bangobj.setLastTick(tick);
-           }
-        } 
     }
 
     @Override // documentation inherited

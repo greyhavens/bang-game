@@ -46,14 +46,16 @@ public class TrainDelegate extends ScenarioDelegate
         }
         _tgroups = tgroups.toArray(new TrackGroup[tgroups.size()]);
     }
-    
+
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
+        boolean validate = super.tick(bangobj, tick);
         // tick each track group separately
         for (TrackGroup tgroup : _tgroups) {
-            tgroup.tick(bangobj);
+            validate = tgroup.tick(bangobj) || validate;
         }
+        return validate;
     }
 
     /**
@@ -143,7 +145,7 @@ public class TrainDelegate extends ScenarioDelegate
         track.visited = -1;
         return maxlen;
     }
-        
+
     /** Represents a single connected group of tracks. */
     protected class TrackGroup
     {
@@ -157,27 +159,29 @@ public class TrainDelegate extends ScenarioDelegate
             _maxTrainLength = getMaxTrainLength(bangobj, terminal, terminals, idx, 1);
             _terminals = terminals.toArray(new Track[terminals.size()]);
         }
-        
+
         /**
          * Updates the trains in this group.
          */
-        public void tick (BangObject bangobj)
+        public boolean tick (BangObject bangobj)
         {
             // if there are no trains, consider creating one
             if (_trains.isEmpty()) {
                 if (Math.random() < 1f/AVG_SPAWN_TICKS) {
                     createTrain(bangobj);
+                    return true;
                 }
-                return;
+                return false;
             }
-            
+
             // advance the train by a random number of tiles
             int tiles = RandomUtil.getInt(MAX_TRAIN_TILES+1, MIN_TRAIN_TILES-1);
             for (int ii = 0; ii < tiles && !_trains.isEmpty(); ii++) {
                 advanceTrain(bangobj);
             }
+            return true;
         }
-        
+
         /**
          * Adds a new train engine to the board.
          */
@@ -185,7 +189,7 @@ public class TrainDelegate extends ScenarioDelegate
         {
             // pick a random terminal
             Track terminal = RandomUtil.pickRandom(_terminals);
-            
+
             // create the engine there
             Train train = new Train();
             train.assignPieceId(bangobj);
@@ -198,11 +202,11 @@ public class TrainDelegate extends ScenarioDelegate
             train.group = _idx;
             _bangmgr.addPiece(train);
             _trains.add((Train)bangobj.pieces.get(train.pieceId));
-            
+
             // choose a random length
             _uncreated = RandomUtil.getInt(_maxTrainLength, MIN_TRAIN_LENGTH-2);
         }
-        
+
         /**
          * Advances the train one tile.
          */
@@ -214,7 +218,7 @@ public class TrainDelegate extends ScenarioDelegate
             if (effect == null) {
                 return;
             }
-            
+
             // pump another car out, if necessary
             if ((effect.nx == Train.UNSET || effect.nx != first.nextX ||
                     effect.ny != first.nextY) && _uncreated-- > 0) {
@@ -232,7 +236,7 @@ public class TrainDelegate extends ScenarioDelegate
                 ntail.group = _idx;
                 effect.ntail = ntail;
             }
-            
+
             // deploy the effect and update the list of trains
             _bangmgr.deployEffect(-1, effect);
             if (!bangobj.pieces.contains(first)) {
@@ -242,7 +246,7 @@ public class TrainDelegate extends ScenarioDelegate
                 _trains.add((Train)bangobj.pieces.get(effect.ntail.pieceId));
             }
         }
-        
+
         /**
          * Updates the train and returns an effect if it's doing anything.
          */
@@ -280,7 +284,7 @@ public class TrainDelegate extends ScenarioDelegate
                     }
                 }
             }
-            
+
             // if the train is following a non-empty path, keep following it;
             // if it's empty, release the train from control
             if (first.path != null) {
@@ -291,7 +295,7 @@ public class TrainDelegate extends ScenarioDelegate
                 }
                 return new TrainEffect(_trains, pt.x, pt.y, blocker, push);
             }
-            
+
             // find the adjacent pieces of track, excluding the one behind, and
             // choose one randomly
             Track nnext = null, next = bangobj.getTracks().get(
@@ -321,39 +325,39 @@ public class TrainDelegate extends ScenarioDelegate
                 return new TrainEffect(_trains, nnext.x, nnext.y, blocker, push);
             }
         }
-    
+
         /** The group's index in the array. */
         protected int _idx;
-        
+
         /** The terminals in the group. */
         protected Track[] _terminals;
-        
+
         /** The maximum length of trains in this group. */
         protected int _maxTrainLength;
-        
+
         /** The currently active trains in this group. */
         protected ArrayList<Train> _trains = new ArrayList<Train>();
-        
+
         /** The number of trains remaining to create in this group. */
         protected int _uncreated;
     }
-    
+
     /** Information concerning each connected group of track and its trains. */
     protected TrackGroup[] _tgroups;
-    
+
     /** The average number of ticks to let pass before we create a train when
      * there is no train on a particular group of tracks. */
     protected static final int AVG_SPAWN_TICKS = 2;
 
     /** The minimum train length (including engine and caboose). */
     protected static final int MIN_TRAIN_LENGTH = 2;
-    
+
     /** The maximum train length, ignoring limitations imposed by track loops. */
     protected static final int MAX_MAX_TRAIN_LENGTH = 8;
-    
+
     /** The minimum number of tiles to move per tick. */
     protected static final int MIN_TRAIN_TILES = 1;
-    
+
     /** The maximum number of tiles to move per tick. */
     protected static final int MAX_TRAIN_TILES = 4;
 }

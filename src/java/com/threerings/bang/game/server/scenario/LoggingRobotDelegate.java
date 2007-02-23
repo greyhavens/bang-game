@@ -134,14 +134,16 @@ public class LoggingRobotDelegate extends ScenarioDelegate
     }
 
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
+        boolean validate = false;
+
         // update bots according to logic
         _logic.tick(bangobj.getPieceArray(), tick);
 
         // once all the trees are grown, we stop spawning robots
         if (_rate == 0f) {
-            return;
+            return validate;
         }
 
         for (int ii = 0; ii < LoggingRobot.UNIT_TYPES.length; ii++) {
@@ -157,8 +159,11 @@ public class LoggingRobotDelegate extends ScenarioDelegate
             if (nbots > 0) {
                 spawnRobots(bangobj, ii, nbots);
                 _accum[ii] -= nbots;
+                validate = true;
             }
         }
+        return validate;
+
     }
 
     @Override // documentation inherited

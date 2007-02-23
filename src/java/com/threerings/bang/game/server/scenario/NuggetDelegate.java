@@ -62,10 +62,10 @@ public class NuggetDelegate extends CounterDelegate
     }
 
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
-        super.tick(bangobj, tick);
         _picker = null;
+        return super.tick(bangobj, tick);
     }
 
     @Override // documentation inherited
@@ -94,7 +94,7 @@ public class NuggetDelegate extends CounterDelegate
 
         // deposit or withdraw a nugget as appropriate
         NuggetEffect effect = null;
-        if (!justPickedUp && counter.owner == unit.owner && 
+        if (!justPickedUp && counter.owner == unit.owner &&
                 NuggetEffect.NUGGET_BONUS.equals(unit.holding)) {
             effect = new NuggetEffect();
             effect.dropping = true;

@@ -196,10 +196,10 @@ public class CattleRustling extends Scenario
         }
 
         @Override // documentation inherited
-        public void tick (BangObject bangobj, short tick) {
+        public boolean tick (BangObject bangobj, short tick) {
             // if we have no counters, then avoid freakoutage
             if (_counters.size() == 0) {
-                return;
+                return false;
             }
 
             // update the counters with new values
@@ -217,12 +217,13 @@ public class CattleRustling extends Scenario
                 }
                 // you get points for your branded cows at each tick
                 int points = cattle * CattleRustlingInfo.POINTS_PER_BRAND;
-                bangobj.stats[counter.owner].incrementStat(Stat.Type.BRAND_POINTS, points); 
+                bangobj.stats[counter.owner].incrementStat(Stat.Type.BRAND_POINTS, points);
                 bangobj.grantPoints(counter.owner, points);
                 // update this player's current cattle rustled stats
                 bangobj.stats[counter.owner].setStat(Stat.Type.CATTLE_RUSTLED, cattle);
                 bangobj.stats[counter.owner].maxStat(Stat.Type.MOST_CATTLE, cattle);
             }
+            return false;
         }
 
         @Override // documentation inherited

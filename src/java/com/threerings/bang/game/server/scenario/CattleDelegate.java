@@ -21,9 +21,9 @@ import com.threerings.bang.game.util.PointSet;
  * Handles the behavior of cattle.
  */
 public class CattleDelegate extends ScenarioDelegate
-{    
+{
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
         // find all the cows and their locations so that we can check
         // quickly if we can move any out of the way to free
@@ -36,7 +36,7 @@ public class CattleDelegate extends ScenarioDelegate
                 _clocs.add(piece.x, piece.y);
             }
         }
-        
+
         // look for units completely penned in in order
         // to spook nearby cows
         _spooked.clear();
@@ -51,14 +51,16 @@ public class CattleDelegate extends ScenarioDelegate
                 spookHerd(bangobj, piece);
             }
         }
-        
+
         // fire off the spook effects in reverse order
         for (int ii = _spooked.size() - 1; ii >= 0; ii--) {
             Tuple<Cow, Piece> spooked = _spooked.get(ii);
             spook(bangobj, spooked.left, spooked.right, true);
         }
+
+        return !_spooked.isEmpty();
     }
-    
+
     @Override // documentation inherited
     public void pieceMoved (BangObject bangobj, Piece piece)
     {
@@ -83,7 +85,7 @@ public class CattleDelegate extends ScenarioDelegate
             }
         }
     }
-    
+
     protected void spookHerd (BangObject bangobj, Piece spooker)
     {
         // add the cows connected to the spooker to a list in order of
@@ -106,7 +108,7 @@ public class CattleDelegate extends ScenarioDelegate
             fringe = nfringe;
         };
     }
-    
+
     protected void spook (
         BangObject bangobj, Cow cow, Piece spooker, boolean herd)
     {
@@ -115,7 +117,7 @@ public class CattleDelegate extends ScenarioDelegate
             _bangmgr.queueDeployEffect(spooker.owner, effect, false);
         }
     }
-    
+
     protected PointSet _moves = new PointSet(), _clocs = new PointSet();
     protected ArrayList<Cow> _cows = new ArrayList<Cow>();
     protected ArrayList<Tuple<Cow, Piece>> _spooked =

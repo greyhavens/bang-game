@@ -105,14 +105,15 @@ public class WendigoAttack extends Scenario
     }
 
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
+        boolean validate = false;
         // if the wendigo are ready, we deploy 'em, otherwise we create them
         // which fades the board to let the players know they're coming
         if (tick>= _nextWendigo) {
             if (_wendel.wendigoReady()) {
                 _wendel.deployWendigo(bangobj, tick);
-                if (_nextWendigo + MAX_WENDIGO_TICKS + MIN_WENDIGO_TICKS + 
+                if (_nextWendigo + MAX_WENDIGO_TICKS + MIN_WENDIGO_TICKS +
                     WENDIGO_WAIT * 2 < bangobj.duration) {
                     _nextWendigo += (short)RandomUtil.getInt(
                         MAX_WENDIGO_TICKS, MIN_WENDIGO_TICKS);
@@ -120,6 +121,7 @@ public class WendigoAttack extends Scenario
                     _nextWendigo = (short)(bangobj.duration - WENDIGO_WAIT - 1);
                 }
                 _resdel.setRespawn(true);
+                validate = true;
 
             } else {
                 _wendel.prepareWendigo(bangobj, tick);
@@ -127,7 +129,7 @@ public class WendigoAttack extends Scenario
                 _resdel.setRespawn(false);
             }
         }
-        super.tick(bangobj, tick);
+        return super.tick(bangobj, tick) || validate;
     }
 
     @Override // documentation inherited

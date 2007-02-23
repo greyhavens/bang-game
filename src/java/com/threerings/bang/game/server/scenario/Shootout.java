@@ -35,9 +35,9 @@ public class Shootout extends Scenario
     }
 
     @Override // documentation inherited
-    public void tick (BangObject bangobj, short tick)
+    public boolean tick (BangObject bangobj, short tick)
     {
-        super.tick(bangobj, tick);
+        boolean validate = super.tick(bangobj, tick);
 
         // check to see whether anyone's pieces are still alive
         _havers.clear();
@@ -68,6 +68,8 @@ public class Shootout extends Scenario
             // set the last tick to now to end the round
             bangobj.setLastTick(tick);
         }
+
+        return validate;
     }
 
     /** Used to calculate winners. */
