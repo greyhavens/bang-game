@@ -9,6 +9,14 @@ HOSTNAME=`hostname`
 JARGS=""
 NODE="frontier_town"
 
+SERVER_MEMORY=384M
+if [ -f $BANG_HOME/server.conf ]; then
+    . $BANG_HOME/server.conf
+else
+    echo "Can't load $BANG_HOME/server.conf; can't run tool."
+    exit 255
+fi
+
 # parse our arguments
 while [ ! -z "$1" ]; do
     case "$1" in
@@ -22,14 +30,6 @@ while [ ! -z "$1" ]; do
     esac
     shift
 done
-
-SERVER_MEMORY=384M
-if [ -f $BANG_HOME/server.conf ]; then
-    . $BANG_HOME/server.conf
-else
-    echo "Can't load $BANG_HOME/server.conf; can't run tool."
-    exit 255
-fi
 
 CLASS=com.threerings.bang.server.BangServer
 $BANG_HOME/bin/bangjava -server -Djava.awt.headless=true -mx$SERVER_MEMORY \
