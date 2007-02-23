@@ -183,7 +183,7 @@ public class GangInfoDialog extends BWindow
 
         bottom.add(new BLabel(hmsgs.get("m.members"), "roster_title"));
         bottom.add(createLabel("underline_long"));
-        BContainer mcont = new BContainer(new TableLayout(4));
+        BContainer mcont = new BContainer(new TableLayout(3));
         mcont.setStyleClass("roster_table");
         bottom.add(mcont);
         for (GangInfo.Member member : info.members) {

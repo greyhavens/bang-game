@@ -1872,6 +1872,7 @@ roster_view {
 
 roster_pane {
   padding: 3 13 3 20;
+  size: 494 258;
 }
 
 roster_title {
