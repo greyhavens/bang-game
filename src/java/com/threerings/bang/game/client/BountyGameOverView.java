@@ -200,7 +200,9 @@ public class BountyGameOverView extends SteelWindow
             _stats.add(new BLabel(_msgs.get("m.bover_equals"), "bover_result"));
             _stats.add(new BLabel(_msgs.get("m.bover_" + (survived > 0 ? "complete" : "failed")),
                 (survived > 0 ? "bover_result" : "bover_failed_result")));
-            _failed++;
+            if (survived == 0) {
+                _failed++;
+            }
             setRowVisible(++row, !animate);
         }
 
