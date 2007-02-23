@@ -39,7 +39,7 @@ public interface GangCodes extends InvocationCodes
     public static final int FORM_GANG_COIN_COST = 5;
 
     /** The maximum number of members that a gang can have. */
-    public static final int MAX_MEMBERS = 100;
+    public static final int MAX_MEMBERS = 50;
 
     /** The amount of time that may elapse before gang members are considered to be inactive. */
     public static final long ACTIVITY_DELAY = 14L * 24 * 60 * 60 * 1000;

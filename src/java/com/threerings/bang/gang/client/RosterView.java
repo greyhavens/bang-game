@@ -216,7 +216,9 @@ public class RosterView extends BContainer
     {
         String style = "roster_entry" + (entry.isActive() ? "" : "_inactive");
         cont.add(new MemberLabel(_ctx, entry, false, _status, style));
-        cont.add(new BLabel("(" + entry.notoriety + ")", style));
+        String nstr = (_ctx.getUserObject().gangRank == LEADER_RANK && entry.notoriety > 0) ?
+            ("(" + entry.notoriety + ")") : "";
+        cont.add(new BLabel(nstr, style));
     }
 
     protected void leaveGang ()
