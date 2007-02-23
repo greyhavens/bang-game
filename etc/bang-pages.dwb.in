@@ -10,7 +10,7 @@
     Description Web pages for rumbling in the Wild West.
 
     # bang-pages depends on the installers and the blawg
-    Depends     bang-installer
+    Depends     bang-installer (= @VERSION@)
     Depends     bang-blog-pages
 
     # Maintainer Scripts
