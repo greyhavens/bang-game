@@ -47,14 +47,14 @@ public class DamageIconViz extends IconViz
      * Creates a damage icon visualitzation for the given effect,
      * and adds it to the piece sprite.
      */
-    public static void displayDamageIconViz (Piece target, Effect effect,
+    public static void displayDamageIconViz (Piece target, boolean showText, Effect effect,
         BangContext ctx, BangBoardView view)
     {
         if (target == null) {
             return;
         }
         displayDamageIconViz(target, getJPieceColor(target.owner), 
-                getDarkerPieceColor(target.owner), effect, ctx, view);
+                getDarkerPieceColor(target.owner), showText, effect, ctx, view);
     }
     
     /**
@@ -62,13 +62,13 @@ public class DamageIconViz extends IconViz
      * and adds it to the piece sprite.
      */
     public static void displayDamageIconViz (Piece target, ColorRGBA color,
-        ColorRGBA dcolor,  Effect effect, BangContext ctx, BangBoardView view)
+        ColorRGBA dcolor, boolean showText, Effect effect, BangContext ctx, BangBoardView view)
     {
         if (target == null) {
             return;
         }
         displayDamageIconViz(target, target.isAlive() ? "damaged" : "killed",
-            color, dcolor, effect.getBaseDamage(target), effect, ctx, view);
+            color, dcolor, effect.getBaseDamage(target), showText, effect, ctx, view);
     }
     
     /**
@@ -76,7 +76,7 @@ public class DamageIconViz extends IconViz
      * and adds it to the piece sprite.
      */
     public static void displayDamageIconViz (Piece target, String iname,
-        ColorRGBA color, ColorRGBA dcolor, int damage, Effect effect,
+        ColorRGBA color, ColorRGBA dcolor, int damage, boolean showText, Effect effect,
         BangContext ctx, BangBoardView view)
     {
         if (target == null) {
@@ -94,10 +94,10 @@ public class DamageIconViz extends IconViz
         }
         if (effect instanceof ShotEffect) {
             ShotEffect shot = (ShotEffect)effect;
-            diviz = new DamageIconViz(iname, damage, color, dcolor,
+            diviz = new DamageIconViz(iname, damage, color, dcolor, showText,
                 shot.attackIcons, shot.defendIcons);
         } else {
-            diviz = new DamageIconViz(iname, damage, color, dcolor);
+            diviz = new DamageIconViz(iname, damage, color, dcolor, showText);
         }
 
         if (diviz != null) {
@@ -107,17 +107,18 @@ public class DamageIconViz extends IconViz
     }
     
     protected DamageIconViz (String iname, int damage, ColorRGBA color,
-        ColorRGBA dcolor)
+        ColorRGBA dcolor, boolean showText)
     {
-        this(iname, damage, color, dcolor, null, null);
+        this(iname, damage, color, dcolor, showText, null, null);
     }
 
-    protected DamageIconViz (String iname, int damage, ColorRGBA color,
-        ColorRGBA dcolor, String[] attackIcons, String[] defendIcons)
+    protected DamageIconViz (String iname, int damage, ColorRGBA color, ColorRGBA dcolor,
+        boolean showText, String[] attackIcons, String[] defendIcons)
     {
         super("textures/effects/" + iname + ".png", color);
         _damage = damage;
         _dcolor = dcolor;
+        _showText = showText;
         _attackIcons = attackIcons;
         _defendIcons = defendIcons;
     }
@@ -131,22 +132,27 @@ public class DamageIconViz extends IconViz
         int readoutsize = 1 + 
             (_attackIcons == null ? 0 : _attackIcons.length) +
             (_defendIcons == null ? 0 : _defendIcons.length);
-        _dmgTState = _ctx.getRenderer().createTextureState();
+            
+        int readoutidx = 0;
+        float offset =  DAMAGE_SIZE * 0.58f;
         _readout = new Quad[readoutsize];
-        _dmgTState.setEnabled(true);
-        Vector2f[] tcoords = new Vector2f[4];
-        Texture tex = RenderUtil.createTextTexture(
-                _ctx, BangUI.DAMAGE_FONT, _color, _dcolor,
-                String.valueOf(_damage), tcoords, null);
-        _dmgTState.setTexture(tex);
-        float width = ICON_SIZE * tcoords[2].x / tcoords[2].y;
-        _readout[0] = IconConfig.createIcon(_dmgTState, width, ICON_SIZE);
-        _readout[0].setTextureBuffer(0, BufferUtils.createFloatBuffer(tcoords));
-        _readout[0].setDefaultColor(new ColorRGBA());
+        if (_showText) {
+            _dmgTState = _ctx.getRenderer().createTextureState();
+            _dmgTState.setEnabled(true);
+            Vector2f[] tcoords = new Vector2f[4];
+            Texture tex = RenderUtil.createTextTexture(
+                    _ctx, BangUI.DAMAGE_FONT, _color, _dcolor,
+                    String.valueOf(_damage), tcoords, null);
+            _dmgTState.setTexture(tex);
+            float width = ICON_SIZE * tcoords[2].x / tcoords[2].y;
+            _readout[0] = IconConfig.createIcon(_dmgTState, width, ICON_SIZE);
+            _readout[0].setTextureBuffer(0, BufferUtils.createFloatBuffer(tcoords));
+            _readout[0].setDefaultColor(new ColorRGBA());
+            readoutidx = 1;
+            offset += width / 2f;
+        }
 
         // Add the attack and defend icons if available
-        float offset =  DAMAGE_SIZE * 0.58f + width / 2f;
-        int readoutidx = 1;
         if (_attackIcons != null) {
             for (int ii = 0; ii < _attackIcons.length; ii++) {
                 _readout[readoutidx] = IconConfig.createIcon(_ctx,
@@ -213,7 +219,9 @@ public class DamageIconViz extends IconViz
     @Override // documentation inherited
     protected void billboardDetached ()
     {
-        _dmgTState.deleteAll();
+        if (_dmgTState != null) {
+            _dmgTState.deleteAll();
+        }
         if (attached) {
             if (_sprite != null) {
                 _sprite.damageDetach();
@@ -262,6 +270,9 @@ public class DamageIconViz extends IconViz
 
     /** The amount of damage to display. */
     protected int _damage;
+    
+    /** Show damage text. */
+    protected boolean _showText;
 
     /** Set to true when we're attached. */
     protected boolean attached;

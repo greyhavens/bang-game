@@ -54,7 +54,7 @@ public class Breakable extends Prop
     @Override // documentation inherited
     public boolean isTargetable ()
     {
-        return true;
+        return !_wasDamaged;
     }
 
     @Override // documentation inherited
@@ -96,8 +96,11 @@ public class Breakable extends Prop
 
     @Override // documentation inherited
     public void wasDamaged (int newDamage) {
-        super.wasDamaged(newDamage);
-        _wasDamaged = true;
+        if (_wasDamaged) {
+            super.wasDamaged(newDamage);
+        } else {
+            _wasDamaged = true;
+        }
     }
 
     protected boolean _wasDamaged = false;

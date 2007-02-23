@@ -75,11 +75,7 @@ public class RocketHandler extends EffectHandler
                 _effect.apply(_bangobj, _handler, 0, _target, 0);
             } else {
                 EffectViz viz = new ExplosionViz("boom_town/fireworks/fireworks_explosion", false);
-                viz.init(_ctx, _view, spriteTranslation, new EffectViz.Observer() {
-                    public void effectDisplayed () {
-                        maybeComplete(_penderId);
-                    }
-                });
+                viz.init(_ctx, _view, spriteTranslation, null);
                 viz.display();
             }
 

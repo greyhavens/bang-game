@@ -218,15 +218,19 @@ public class EffectHandler extends BoardView.BoardAction
                     tree.getPercentDamage() == 0f) ? "grew" : "repaired",
                 TreeBedSprite.STATUS_COLOR,
                 TreeBedSprite.DARKER_STATUS_COLOR, // cyan
-                -_effect.getBaseDamage(piece), _effect, _ctx, _view);
+                -_effect.getBaseDamage(piece), true, _effect, _ctx, _view);
         } else if (effect.equals(ShotEffect.DAMAGED) &&
             piece instanceof TreeBed) {
             DamageIconViz.displayDamageIconViz(piece,
                 new ColorRGBA(1f, 0f, 1f, 1f),
                 new ColorRGBA(0.5f, 0f, 0.5f, 1f), // magenta
-                _effect, _ctx, _view);
+                true, _effect, _ctx, _view);
         } else if (wasDamaged || effect.equals(ShotEffect.DUDDED)) {
-            DamageIconViz.displayDamageIconViz(piece, _effect, _ctx, _view);
+            if (piece instanceof Breakable) {
+                DamageIconViz.displayDamageIconViz(piece, false, _effect, _ctx, _view);
+            } else {
+                DamageIconViz.displayDamageIconViz(piece, true, _effect, _ctx, _view);
+            }
         }
 
         // possibly fly a totem piece off if one was destroyed
