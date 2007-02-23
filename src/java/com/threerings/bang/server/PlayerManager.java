@@ -1096,7 +1096,7 @@ public class PlayerManager
         PlayerObject invobj = BangServer.lookupPlayer(inviter);
         if (invobj != null) {
             if (accept) {
-                invobj.addToPardners(getPardnerEntry(user.handle, null));
+                invobj.addOrUpdatePardner(getPardnerEntry(user.handle, null));
                 if (full[1]) {
                     clearPardnerInvites(invobj);
                 }
@@ -1108,7 +1108,7 @@ public class PlayerManager
         // update the invitee
         if (user.isActive()) {
             if (accept) {
-                user.addToPardners(getPardnerEntry(inviter, lastSession));
+                user.addOrUpdatePardner(getPardnerEntry(inviter, lastSession));
                 if (full[0]) {
                     clearPardnerInvites(user);
                 }

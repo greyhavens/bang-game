@@ -354,6 +354,18 @@ public class PlayerObject extends BodyObject
         return count;
     }
 
+    /**
+     * Adds or updates the supplied {@link PardnerEntry} to/in our {@link #pardners} set.
+     */
+    public void addOrUpdatePardner (PardnerEntry entry)
+    {
+        if (pardners.contains(entry)) {
+            updatePardners(entry);
+        } else {
+            addToPardners(entry);
+        }
+    }
+
     // AUTO-GENERATED: METHODS START
     /**
      * Requests that the <code>playerId</code> field be set to the

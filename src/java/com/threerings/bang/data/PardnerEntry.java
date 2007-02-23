@@ -140,6 +140,12 @@ public class PardnerEntry
         }
     }
 
+    @Override // from Object
+    public String toString ()
+    {
+        return handle + " (" + status + ", " + gameOid + ")";
+    }
+
     /** For offline pardners, the date when the pardner last logged on, stored as the number of
      * days since midnight, 1/1/05 GMT. */
     protected short _lastSession;
