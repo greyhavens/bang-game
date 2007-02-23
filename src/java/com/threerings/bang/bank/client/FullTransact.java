@@ -29,6 +29,7 @@ import com.threerings.presents.dobj.MessageListener;
 import com.threerings.coin.data.CoinExOfferInfo;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.OptionDialog;
 import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.ConsolidatedOffer;
@@ -131,21 +132,19 @@ public class FullTransact extends BContainer
                 return;
             }
 
-            BankService.ResultListener cl = new BankService.ResultListener() {
-                public void requestProcessed (Object result) {
-                    _status.setStatus(_msgs.get("m.offer_posted"), true);
-                    _coins.setText("");
-                    _scrip.setText("");
-                    if (result != null) {
-                        notePostedOffer((CoinExOfferInfo)result);
-                    }
-                }
-                public void requestFailed (String reason) {
-                    _status.setStatus(_msgs.xlate(reason), true);
-                }
-            };
-            _bankobj.service.postOffer(
-                _ctx.getClient(), _ccount, _price, _buying, false, cl);
+            if (!_buying && _bankobj.buyOffers.length > 0 &&
+                    _bankobj.buyOffers[0].price > _price) {
+                OptionDialog.showConfirmDialog(_ctx, BANK_MSGS, "m.sell_warning",
+                    new OptionDialog.ResponseReceiver() {
+                        public void resultPosted (int button, Object result) {
+                            if (button == OptionDialog.OK_BUTTON) {
+                                postOffer();
+                            }
+                        }
+                    });
+            } else {
+                postOffer();
+            }
 
         } else if ("rescind".equals(event.getAction())) {
             BButton rb = (BButton)event.getSource();
@@ -162,6 +161,25 @@ public class FullTransact extends BContainer
             };
             _bankobj.service.cancelOffer(_ctx.getClient(), offer.offerId, cl);
         }
+    }
+
+    protected void postOffer ()
+    {
+        BankService.ResultListener cl = new BankService.ResultListener() {
+            public void requestProcessed (Object result) {
+                _status.setStatus(_msgs.get("m.offer_posted"), true);
+                _coins.setText("");
+                _scrip.setText("");
+                if (result != null) {
+                    notePostedOffer((CoinExOfferInfo)result);
+                }
+            }
+            public void requestFailed (String reason) {
+                _status.setStatus(_msgs.xlate(reason), true);
+            }
+        };
+        _bankobj.service.postOffer(
+            _ctx.getClient(), _ccount, _price, _buying, false, cl);
     }
 
     protected void updateOffers ()
