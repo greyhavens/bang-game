@@ -131,6 +131,7 @@ public class StatsView extends SteelWindow
             _bctx.getBangClient().clearPopup(this, true);
             _bctx.getBangClient().displayPopup(
                     new GameOverView(_bctx, _ctrl, _bobj, _animate), true);
+            _animate = false;
         } else if (action.equals("next_round")) {
             startNextRound();
         } else if (action.equals("forward")) {
