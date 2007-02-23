@@ -34,17 +34,15 @@ import static com.threerings.bang.Log.*;
 public class PardnerRepository extends SimpleRepository
 {
     /**
-     * The database identifier used when establishing a database
-     * connection. This value being <code>pardnerdb</code>.
+     * The database identifier used when establishing a database connection. This value being
+     * <code>pardnerdb</code>.
      */
     public static final String PARDNER_DB_IDENT = "pardnerdb";
 
     /**
-     * Constructs a new pardner repository with the specified connection
-     * provider.
+     * Constructs a new pardner repository with the specified connection provider.
      *
-     * @param conprov the connection provider via which we will obtain our
-     * database connection.
+     * @param conprov the connection provider via which we will obtain our database connection.
      */
     public PardnerRepository (ConnectionProvider conprov)
         throws PersistenceException
@@ -53,8 +51,8 @@ public class PardnerRepository extends SimpleRepository
     }
 
     /**
-     * Get a list of {@link PardnerRecord}s representing all pardnerships
-     * (active and proposed) involving the specified player.
+     * Get a list of {@link PardnerRecord}s representing all pardnerships (active and proposed)
+     * involving the specified player.
      */
     public ArrayList<PardnerRecord> getPardnerRecords (int playerId)
         throws PersistenceException
@@ -72,9 +70,8 @@ public class PardnerRepository extends SimpleRepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        list.add(new PardnerRecord(
-                                     new Handle(rs.getString(1)),
-                                     rs.getDate(2), rs.getString(3)));
+                        list.add(new PardnerRecord(new Handle(rs.getString(1)),
+                                                   rs.getDate(2), rs.getString(3)));
                     }
                     return null;
 
@@ -93,11 +90,10 @@ public class PardnerRepository extends SimpleRepository
      * @param handle2 the handle of the invitee.
      * @param message the invitation message.
      *
-     * @return null if the invitation was successfully added, otherwise a
-     * translatable error message indicating what went wrong.
+     * @return null if the invitation was successfully added, otherwise a translatable error
+     * message indicating what went wrong.
      */
-    public String addPardners (final int playerId1, final Name handle2,
-        final String message)
+    public String addPardners (final int playerId1, final Name handle2, final String message)
         throws PersistenceException
     {
         return executeUpdate(new Operation<String>() {
@@ -107,27 +103,23 @@ public class PardnerRepository extends SimpleRepository
                 Statement stmt = conn.createStatement();
                 try {
                     // first look up the playerId for handle2
-                    int playerId2 = BangServer.playrepo.getPlayerId(
-                        stmt, handle2);
+                    int playerId2 = BangServer.playrepo.getPlayerId(stmt, handle2);
                     if (playerId2 == -1) {
-                        return MessageBundle.tcompose(
-                            "e.no_such_player", handle2);
+                        return MessageBundle.tcompose("e.no_such_player", handle2);
                     }
 
                     // make sure they're not at their limit
                     if (getPardnerCount(stmt, playerId2) >= BangCodes.MAX_PARDNERS) {
-                        return MessageBundle.tcompose("e.too_many_pardners_them",
-                            String.valueOf(BangCodes.MAX_PARDNERS));
+                        return MessageBundle.tcompose(
+                            "e.too_many_pardners_them", String.valueOf(BangCodes.MAX_PARDNERS));
                     }
-                    
+
                     // now update the pardner relation between these two
-                    String query = "insert ignore into PARDNERS set " +
-                        "PLAYER_ID1 = " + playerId1 +
+                    String query = "insert ignore into PARDNERS set PLAYER_ID1 = " + playerId1 +
                         ", PLAYER_ID2 = " + playerId2 + ", MESSAGE = " +
                         ((message == null) ? "NULL" : JDBCUtil.escape(message));
                     if (stmt.executeUpdate(query) < 1) {
-                        return MessageBundle.tcompose(
-                            "e.already_invited", handle2);
+                        return MessageBundle.tcompose("e.already_invited", handle2);
                     }
 
                 } finally {
@@ -138,17 +130,16 @@ public class PardnerRepository extends SimpleRepository
             }
         });
     }
-    
+
     /**
-     * Confirms the status of the identified pardnership where the playerId for
-     * one is known and only the name for the other is known.
+     * Confirms the status of the identified pardnership where the playerId for one is known and
+     * only the name for the other is known.
      *
-     * @param full for each of the two players, if their pardner list has become
-     * full with this new pardnership, the corresponding entry in this array will
-     * be set to <code>true</code>.
+     * @param full for each of the two players, if their pardner list has become full with this new
+     * pardnership, the corresponding entry in this array will be set to <code>true</code>.
      *
-     * @return <code>null</code> for success, otherwise a translatable error
-     * message indicating what went wrong.
+     * @return <code>null</code> for success, otherwise a translatable error message indicating
+     * what went wrong.
      */
     public String updatePardners (final int playerId1, final Name handle2, final boolean[] full)
         throws PersistenceException
@@ -160,11 +151,9 @@ public class PardnerRepository extends SimpleRepository
                 Statement stmt = conn.createStatement();
                 try {
                     // first look up the playerId for handle2
-                    int playerId2 = BangServer.playrepo.getPlayerId(
-                        stmt, handle2);
+                    int playerId2 = BangServer.playrepo.getPlayerId(stmt, handle2);
                     if (playerId2 == -1) {
-                        log.warning("Failed to update pardners " +
-                                    "[pid=" + playerId1 +
+                        log.warning("Failed to update pardners [pid=" + playerId1 +
                                     ", pardner=" + handle2 + "]. " +
                                     handle2 + " no longer exists.");
                         return "e.player_deleted";
@@ -172,12 +161,12 @@ public class PardnerRepository extends SimpleRepository
 
                     // now update the pardner relation between these two
                     if (stmt.executeUpdate("update PARDNERS set MESSAGE = NULL" +
-                           createWhereClause(playerId1, playerId2)) < 1) {
+                                           createWhereClause(playerId1, playerId2)) < 1) {
                         return "e.invite_removed";
                     }
 
-                    // if either player has reached the pardner limit, we must
-                    // delete their pending invitations
+                    // if either player has reached the pardner limit, we must delete their pending
+                    // invitations
                     if (getPardnerCount(stmt, playerId1) >= BangCodes.MAX_PARDNERS) {
                         full[0] = true;
                         deleteInvites(stmt, playerId1);
@@ -186,7 +175,7 @@ public class PardnerRepository extends SimpleRepository
                         full[1] = true;
                         deleteInvites(stmt, playerId2);
                     }
-                    
+
                 } finally {
                     JDBCUtil.close(stmt);
                 }
@@ -197,8 +186,8 @@ public class PardnerRepository extends SimpleRepository
     }
 
     /**
-     * Remove a pardner mapping from the database where the playerId for one
-     * is known and only the name for the other is known.
+     * Remove a pardner mapping from the database where the playerId for one is known and only the
+     * name for the other is known.
      */
     public void removePardners (final int playerId1, final Name handle2)
         throws PersistenceException
@@ -210,18 +199,16 @@ public class PardnerRepository extends SimpleRepository
                 Statement stmt = conn.createStatement();
                 try {
                     // first look up the playerId for handle2
-                    int playerId2 = BangServer.playrepo.getPlayerId(
-                        stmt, handle2);
+                    int playerId2 = BangServer.playrepo.getPlayerId(stmt, handle2);
                     if (playerId2 == -1) {
-                        log.warning("Failed to delete pardners [pid=" +
-                            playerId1 + ", pardner=" + handle2 + "]. " +
-                            "Pardner no longer exists.");
+                        log.warning("Failed to delete pardners [pid=" + playerId1 +
+                                    ", pardner=" + handle2 + "]. Pardner no longer exists.");
                         return null;
                     }
 
                     // now delete any pardner relation between these two
-                    stmt.executeUpdate("delete from PARDNERS" +
-                        createWhereClause(playerId1, playerId2));
+                    stmt.executeUpdate(
+                        "delete from PARDNERS" + createWhereClause(playerId1, playerId2));
 
                 } finally {
                     JDBCUtil.close(stmt);
@@ -233,17 +220,17 @@ public class PardnerRepository extends SimpleRepository
     }
 
     /**
-     * Returns the number of active pardnerships to which the specified player
-     * belongs.
+     * Returns the number of active pardnerships to which the specified player belongs.
      */
     protected int getPardnerCount (Statement stmt, int playerId)
         throws SQLException
     {
-        ResultSet rs = stmt.executeQuery("select count(*) from PARDNERS where (PLAYER_ID1 = " +
-            playerId + " or PLAYER_ID2 = " + playerId + ") and MESSAGE is NULL");
+        ResultSet rs = stmt.executeQuery(
+            "select count(*) from PARDNERS where (PLAYER_ID1 = " + playerId +
+            " or PLAYER_ID2 = " + playerId + ") and MESSAGE is NULL");
         return (rs.next() ? rs.getInt(1) : 0);
     }
-    
+
     /**
      * Deletes all invites involving the specified player.
      */
@@ -251,18 +238,16 @@ public class PardnerRepository extends SimpleRepository
         throws SQLException
     {
         stmt.executeUpdate("delete from PARDNERS where (PLAYER_ID1 = " + playerId +
-            " or PLAYER_ID2 = " + playerId + ") and MESSAGE is not NULL");
+                           " or PLAYER_ID2 = " + playerId + ") and MESSAGE is not NULL");
     }
-    
+
     /**
-     * Creates a 'where' clause that matches the two given player ids in either
-     * order.
+     * Creates a 'where' clause that matches the two given player ids in either order.
      */
     protected String createWhereClause (int playerId1, int playerId2)
     {
-        return " where (PLAYER_ID1 = " + playerId1 + " and PLAYER_ID2 = " +
-            playerId2 + ") or (PLAYER_ID1 = " + playerId2 + " and " +
-            "PLAYER_ID2 = " + playerId1 + ")";
+        return " where (PLAYER_ID1 = " + playerId1 + " and PLAYER_ID2 = " + playerId2 + ") " +
+            "or (PLAYER_ID1 = " + playerId2 + " and PLAYER_ID2 = " + playerId1 + ")";
     }
 
     @Override // documentation inherited
@@ -280,6 +265,5 @@ public class PardnerRepository extends SimpleRepository
 
     /** Used by {@link #getPardnerRecords}. */
     protected static final String PARD_SELECT =
-        "select HANDLE, LAST_SESSION, MESSAGE from PARDNERS " +
-        "straight join PLAYERS";
+        "select HANDLE, LAST_SESSION, MESSAGE from PARDNERS straight join PLAYERS";
 }
