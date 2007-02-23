@@ -37,6 +37,7 @@ import com.threerings.presents.server.Authenticator;
 import com.threerings.presents.server.ClientFactory;
 import com.threerings.presents.server.ClientResolver;
 import com.threerings.presents.server.PresentsClient;
+import com.threerings.presents.server.PresentsDObjectMgr;
 
 import com.threerings.crowd.chat.server.ChatProvider;
 import com.threerings.crowd.data.BodyObject;
@@ -318,7 +319,7 @@ public class BangServer extends CrowdServer
         // now initialize our runtime configuration, postponing the remaining server initialization
         // until our configuration objects are available
         RuntimeConfig.init(omgr);
-        omgr.postRunnable(new Runnable () {
+        omgr.postRunnable(new PresentsDObjectMgr.LongRunnable () {
             public void run () {
                 try {
                     finishInit();
