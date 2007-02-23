@@ -102,7 +102,6 @@ public abstract class EffectViz
 
     protected BangContext _ctx;
     protected BangBoardView _view;
-    protected Point _coords;
     protected Vector3f _pos;
     protected PieceSprite _sprite;
     protected Observer _observer;
