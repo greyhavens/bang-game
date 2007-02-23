@@ -504,9 +504,9 @@ public class GangHandler
         if (_gangobj.members.containsKey(target)) {
             throw new InvocationException(MessageBundle.tcompose(
                 "e.already_member_this", target));
-        } else if (_gangobj.members.size() >= MAX_MEMBERS) {
+        } else if (_gangobj.members.size() >= _maxMembers) {
             throw new InvocationException(MessageBundle.tcompose(
-                "e.too_many_members", String.valueOf(MAX_MEMBERS)));
+                "e.too_many_members", String.valueOf(_maxMembers)));
         }
 
         // store the invitation in the database
@@ -544,7 +544,7 @@ public class GangHandler
         // update the database
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
-                _error = BangServer.gangrepo.deleteInvite(_gangId, playerId, accept);
+                _error = BangServer.gangrepo.deleteInvite(_gangId, _maxMembers, playerId, accept);
                 if (_error == null && accept) {
                     _mrec = new GangMemberRecord(playerId, _gangId, MEMBER_RANK);
                     BangServer.gangrepo.insertMember(_mrec);
@@ -1024,6 +1024,7 @@ public class GangHandler
         _gangobj.notorietyRank = getNotorietyRank(record.notoriety);
         _gangobj.outfit = record.outfit;
         _gangobj.members = new DSet<GangMemberEntry>(record.members.iterator());
+        _maxMembers = record.getMaxMembers();
 
         // the avatar id is that of the senior leader
         GangMemberEntry leader = _gangobj.getSeniorLeader();
@@ -1554,6 +1555,9 @@ public class GangHandler
 
     /** The gang object, when resolved. */
     protected GangObject _gangobj;
+
+    /** The maximum number of members this gang can have. */
+    protected int _maxMembers;
 
     /** The player id of the avatar set in the gang object. */
     protected int _avatarId;

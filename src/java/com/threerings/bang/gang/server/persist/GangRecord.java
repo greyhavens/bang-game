@@ -92,6 +92,12 @@ public class GangRecord
         return "{" + name + "}";
     }
 
+    /** Returns the maximum number of members this gang can have. */
+    public int getMaxMembers ()
+    {
+        return 50; // for now, a constant
+    }
+
     /** Returns a string representation of this instance. */
     public String toString ()
     {

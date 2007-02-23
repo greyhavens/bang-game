@@ -414,7 +414,8 @@ public class GangRepository extends JORARepository
      * @return <code>null</code> if the operation succeeded, otherwise an error message indicating
      * what went wrong.
      */
-    public String deleteInvite (final int gangId, final int playerId, final boolean accepted)
+    public String deleteInvite (
+        final int gangId, final int maxMembers, final int playerId, final boolean accepted)
         throws PersistenceException
     {
         return executeUpdate(new Operation<String>() {
@@ -436,7 +437,7 @@ public class GangRepository extends JORARepository
                     // if the gang is going to be full, remove all pending invites
                     ResultSet rs = stmt.executeQuery(
                         "select count(*) from GANG_MEMBERS where GANG_ID = " + gangId);
-                    if (rs.next() && rs.getInt(1) >= GangCodes.MAX_MEMBERS - 1) {
+                    if (rs.next() && rs.getInt(1) >= maxMembers - 1) {
                         stmt.executeUpdate("delete from GANG_INVITES where GANG_ID = " + gangId);
                     }
 
