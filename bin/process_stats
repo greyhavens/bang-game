@@ -153,7 +153,7 @@ if ($node eq "frontier_town") {
         print("$cmd\n");
     } else {
         system_warn("$cmd > /tmp/songstats.tmp");
-        send_mail($stats_email, $stats_email + ",nick\@somatone.com,kane\@somatone.com",
+        send_mail($stats_email, $stats_email . ",nick\@somatone.com,kane\@somatone.com",
                   "$host: Bang song downloads", "/tmp/songstats.tmp");
     }
     unlink("/tmp/songstats.tmp");
