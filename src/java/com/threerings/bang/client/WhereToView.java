@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BCheckBox;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.util.Dimension;
@@ -32,6 +32,7 @@ import com.threerings.bang.game.data.TutorialConfig;
 import com.threerings.bang.game.util.TutorialUtil;
 
 import com.threerings.bang.client.BangUI;
+import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.client.util.ReportingListener;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
@@ -46,7 +47,7 @@ import static com.threerings.bang.Log.log;
  * Displays a list of completed and uncompleted tutorials and allows the user to (re)play them
  * along with pointers toward the Saloon and Sheriff's Office.
  */
-public class WhereToView extends BDecoratedWindow
+public class WhereToView extends SteelWindow
     implements ActionListener
 {
     /** The width to hint when laying out this window. */
@@ -54,23 +55,23 @@ public class WhereToView extends BDecoratedWindow
 
     public WhereToView (BangContext ctx, boolean postGame)
     {
-        super(ctx.getStyleSheet(), null);
-        setStyleClass("dialog_window");
-        setLayoutManager(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.CENTER,
-                                              GroupLayout.CONSTRAIN));
-        ((GroupLayout)getLayoutManager()).setGap(25);
+        super(ctx, ctx.xlate(BangCodes.BANG_MSGS, "m.whereto_title"));
+        _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.NONE, GroupLayout.CENTER,
+                                              GroupLayout.CONSTRAIN).setGap(25));
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(BangCodes.BANG_MSGS);
         PlayerObject self = _ctx.getUserObject();
 
-        add(new BLabel(_msgs.get("m.whereto_title"), "window_title"));
-
+        _contents.setStyleClass("padded");
         BContainer horiz = new BContainer(GroupLayout.makeHStretch().setGap(25));
-        add(horiz);
+        _contents.add(horiz);
 
-        BContainer tutcol = new BContainer(GroupLayout.makeVert(GroupLayout.TOP).setGap(10));
+        BImage underline = _ctx.loadImage("ui/window/underline.png");
+        BContainer tutcol = new BContainer(
+                GroupLayout.makeVert(GroupLayout.TOP).setGap(5).setOffAxisPolicy(GroupLayout.STRETCH));
         tutcol.add(new BLabel(_msgs.get("m.whereto_tuts"), "where_title"));
+        tutcol.add(new BLabel(new ImageIcon(underline)));
         tutcol.add(new BLabel(_msgs.get("m.whereto_intro"), "where_info"));
 
         boolean enabled = true;
@@ -91,17 +92,20 @@ public class WhereToView extends BDecoratedWindow
         tutcol.add(tuts);
         horiz.add(tutcol);
 
-        BContainer bldgs = new BContainer(GroupLayout.makeVStretch().setGap(25));
+        BContainer bldgs = new BContainer(GroupLayout.makeVStretch().setGap(5));
         for (String ident : BLDGS) {
             if (bldgs.getComponentCount() > 0) {
-                bldgs.add(new Spacer(5, 0), GroupLayout.FIXED);
+                bldgs.add(new Spacer(0, 15), GroupLayout.FIXED);
             }
+            bldgs.add(new BLabel(_msgs.get("m.bldg_" + ident), "where_title"), GroupLayout.FIXED);
+            bldgs.add(new BLabel(new ImageIcon(underline)), GroupLayout.FIXED);
             BContainer brow = new BContainer(GroupLayout.makeHStretch().setGap(10));
             String spath = "ui/" + ident + "/" + _ctx.getUserObject().townId + "/shop.png";
             brow.add(new BLabel(new ImageIcon(_ctx.loadImage(spath))), GroupLayout.FIXED);
             BContainer box = new BContainer(GroupLayout.makeVStretch());
-            box.add(new BLabel(_msgs.get("m.bldg_" + ident), "where_title"), GroupLayout.FIXED);
             box.add(new BLabel(_msgs.get("m.bldg_info_" + ident), "where_info"));
+            brow.add(box);
+            bldgs.add(brow);
             BButton go = new BButton(_msgs.get("m.bldg_go"), this, "to_" + ident);
             // TEMP: disable sheriff's office in ITP
             if (BangCodes.INDIAN_POST.equals(self.townId) && ident.equals("office")) {
@@ -112,21 +116,20 @@ public class WhereToView extends BDecoratedWindow
             go.setStyleClass("alt_button");
             BContainer butrow = GroupLayout.makeHBox(GroupLayout.CENTER);
             butrow.add(go);
-            box.add(butrow, GroupLayout.FIXED);
-            brow.add(box);
-            bldgs.add(brow);
+            bldgs.add(butrow, GroupLayout.FIXED);
         }
         horiz.add(bldgs);
 
-        BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
-        ((GroupLayout)row.getLayoutManager()).setGap(25);
         if (!postGame && BangPrefs.shouldShowWhereTo(_ctx.getUserObject())) {
+            BContainer row = GroupLayout.makeHBox(GroupLayout.CENTER);
+            ((GroupLayout)row.getLayoutManager()).setGap(25);
             row.add(_nowhere = new BCheckBox(_msgs.get("m.no_whereto")));
+            _contents.add(row);
         }
+
         String dmsg = (postGame || _ctx.getBangClient().isShowingTownView()) ?
             "m.to_town" : "m.dismiss";
-        row.add(new BButton(_msgs.get(dmsg), this, postGame ? "to_town" : "dismiss"));
-        add(row);
+        _buttons.add(new BButton(_msgs.get(dmsg), this, postGame ? "to_town" : "dismiss"));
     }
 
     // from interface ActionListener

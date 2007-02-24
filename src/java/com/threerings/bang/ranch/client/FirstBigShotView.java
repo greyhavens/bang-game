@@ -5,7 +5,6 @@ package com.threerings.bang.ranch.client;
 
 import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
 import com.jmex.bui.Spacer;
@@ -25,6 +24,7 @@ import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.PlayerService;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.client.bui.SelectableIcon;
+import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.UnitConfig;
@@ -36,16 +36,15 @@ import com.threerings.bang.ranch.data.RanchCodes;
  * Displays an interface introducing the players to Big Shots and allowing them
  * to select one.
  */
-public class FirstBigShotView extends BDecoratedWindow
+public class FirstBigShotView extends SteelWindow
     implements ActionListener, IconPalette.Inspector,
                BangClient.NonClearablePopup
 {
     public FirstBigShotView (BangContext ctx)
     {
-        super(ctx.getStyleSheet(), null);
-        setStyleClass("dialog_window");
-        setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER));
-        ((GroupLayout)getLayoutManager()).setGap(15);
+        super(ctx, ctx.xlate(RanchCodes.RANCH_MSGS, "m.firstbs_title"));
+        _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(15));
+        _contents.setStyleClass("padded");
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(RanchCodes.RANCH_MSGS);
@@ -53,8 +52,7 @@ public class FirstBigShotView extends BDecoratedWindow
 
         _status = new BLabel(_msgs.get("m.firstbs_tip"), "dialog_text");
 
-        add(new BLabel(_msgs.get("m.firstbs_title"), "window_title"));
-        add(new BLabel(_msgs.get("m.firstbs_intro"), "dialog_text"));
+        _contents.add(new BLabel(_msgs.get("m.firstbs_intro"), "dialog_text"));
 
         UnitConfig[] units = new UnitConfig[RanchCodes.STARTER_BIGSHOTS.length];
         for (int ii = 0; ii < units.length; ii++) {
@@ -65,10 +63,10 @@ public class FirstBigShotView extends BDecoratedWindow
         _bigshots.setShowNavigation(false);
         _bigshots.setPaintBorder(true);
         _bigshots.setUnits(units, false);
-        add(_bigshots);
+        _contents.add(_bigshots);
 
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
-        add(ncont, GroupLayout.FIXED);
+        _contents.add(ncont, GroupLayout.FIXED);
 
         ncont.add(new BLabel(_msgs.get("m.firstbs_name"), "dialog_label"));
         ncont.add(_name = new BTextField(BigShotItem.MAX_NAME_LENGTH));
@@ -86,9 +84,9 @@ public class FirstBigShotView extends BDecoratedWindow
         ncont.add(BangUI.createDiceButton(this, "random"));
         ncont.add(new Spacer(25, 0));
 
-        add(_status);
+        _contents.add(_status);
 
-        add(_done = new BButton(_msgs.get("m.done"), this, "done"));
+        _buttons.add(_done = new BButton(_msgs.get("m.done"), this, "done"));
         _done.setEnabled(false);
     }
 
@@ -98,7 +96,7 @@ public class FirstBigShotView extends BDecoratedWindow
         String cmd = event.getAction();
         if (cmd.equals("random") && _config != null) {
             _name.setText(_config.pickRandomName());
-            
+
         } else if (cmd.equals("done")) {
             pickBigShot();
         }

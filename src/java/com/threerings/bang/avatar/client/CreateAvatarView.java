@@ -8,7 +8,6 @@ import java.util.HashSet;
 import com.jmex.bui.BButton;
 import com.jmex.bui.BComboBox;
 import com.jmex.bui.BContainer;
-import com.jmex.bui.BDecoratedWindow;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextArea;
 import com.jmex.bui.BTextField;
@@ -26,6 +25,7 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.StatusLabel;
+import com.threerings.bang.client.bui.SteelWindow;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.NameFactory;
@@ -36,32 +36,30 @@ import com.threerings.bang.avatar.data.AvatarCodes;
  * Displays an interface via which the player can create their avatar: name,
  * sex and default look.
  */
-public class CreateAvatarView extends BDecoratedWindow
+public class CreateAvatarView extends SteelWindow
     implements ActionListener, BangClient.NonClearablePopup
 {
     public CreateAvatarView (BangContext ctx)
     {
-        super(ctx.getStyleSheet(), null);
-        setStyleClass("dialog_window");
-        setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER));
-        ((GroupLayout)getLayoutManager()).setGap(15);
+        super(ctx, ctx.xlate(AvatarCodes.AVATAR_MSGS, "m.create_title"));
+        _contents.setLayoutManager(GroupLayout.makeVert(GroupLayout.CENTER).setGap(15));
 
         _ctx = ctx;
         _msgs = _ctx.getMessageManager().getBundle(AvatarCodes.AVATAR_MSGS);
 
-        add(new BLabel(_msgs.get("m.create_title"), "window_title"));
-        add(new BLabel(_msgs.get("m.create_intro"), "dialog_text"));
+        _contents.add(new BLabel(_msgs.get("m.create_intro"), "dialog_text"));
+        _contents.setStyleClass("padded");
 
         GroupLayout glay = GroupLayout.makeVert(
             GroupLayout.NONE, GroupLayout.TOP, GroupLayout.STRETCH);
         glay.setGap(15);
         BContainer inner = new BContainer(glay);
         inner.setStyleClass("fa_inner_box");
-        add(inner);
+        _contents.add(inner);
         _status = new StatusLabel(ctx);
         _status.setStyleClass("dialog_text");
-        add(_status);
-        add(_done = new BButton(_msgs.get("m.done"), this, "done"));
+        _contents.add(_status);
+        _buttons.add(_done = new BButton(_msgs.get("m.done"), this, "done"));
         _done.setEnabled(false);
 
         // this all goes in the inner box
