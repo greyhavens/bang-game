@@ -523,6 +523,10 @@ padded_box {
   padding: 5;
 }
 
+padded {
+  padding: 10 20;
+}
+
 shop_view {
   color: #3E1B00;
 }
@@ -782,10 +786,10 @@ look_upsell {
 where_title {
   parent: "label";
   font: "Old Town Wide" plain 32;
-  text-effect: outline;
+  text-effect: shadow;
   color: #FFFFFF;
   effect-color: #6C5237;
-  text-align: center;
+  text-align: left;
 }
 
 where_info {
