@@ -1,0 +1,103 @@
+#content {
+  background-image: url("../images/launch_background.jpg");
+  background-repeat: no-repeat;
+}
+
+#launchwin {
+  position: absolute;
+  top: 27px;
+  left: 102px;
+  width: 490px; 
+  height: 370px;
+}
+
+#needjava {
+  padding: 10px 20px;
+  color: #492600;
+}
+
+#needjava a {
+  color: #960000;
+}
+
+#needtitle {
+  font-size: 16px;
+  font-weight: bold;
+  font-variant: small-caps;
+}
+
+
+/* DOWNLOAD OPTION */
+
+#dloption {
+  position: absolute;
+  background-image: url("../images/link_dloption.gif");
+  background-repeat: no-repeat;
+  top: 470px;
+  left: 20px;
+  width: 541px;
+  height: 28px; 
+  text-align: center;
+}
+
+#click a {
+  	position: absolute;
+  	width: 43px;
+    height: 20px;
+    top: 256px;
+    left: 45px;
+  	text-decoration: none;
+}
+
+#click a i { 
+	visibility: hidden; 
+} 
+
+a#herelink:hover { 
+    background: url("../images/link_here.jpg") no-repeat top left;
+	width: 42px;
+    height: 23px;
+  	overflow: hidden;
+} 
+
+#account { 
+  position: absolute;
+  top: 82px;
+  left: 10px;
+  width: 540px;  
+  height: 25px;
+  text-align: center;
+}
+
+#account a {
+  color: #960000;
+}
+
+
+/* LOGOS */
+
+#threerings a {
+  	position: absolute;
+  	top: 360px;
+  	left: 20px;
+	width: 55px;
+	height: 30px;
+  	text-decoration: none;
+  }
+
+#threerings a i { 
+	visibility: hidden; 
+}
+
+#banghowdy a {
+  	position: absolute;
+  	top: 10px;
+  	left: 10px;
+	width: 80px;
+	height: 40px;
+  	text-decoration: none;
+  }
+
+#banghowdy a i { 
+	visibility: hidden; 
+}
