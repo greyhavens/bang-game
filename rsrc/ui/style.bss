@@ -1926,8 +1926,8 @@ history_desc {
 }
 
 outfit_dialog {
-  parent: "decoratedwindow";
-  padding: 15 11;
+  background: image "ui/window/border_wood.png" framexy;
+  padding: 30 22 15 22;
 }
 
 outfit_articles {
