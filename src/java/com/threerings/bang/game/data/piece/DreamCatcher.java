@@ -19,7 +19,7 @@ public class DreamCatcher extends BallisticUnit
     public boolean validTarget (
             BangObject bangobj, Piece target, boolean allowSelf)
     {
-        return (target instanceof Unit) && 
+        return (target instanceof Unit) &&
             super.validTarget(bangobj, target, allowSelf);
     }
 
@@ -31,14 +31,14 @@ public class DreamCatcher extends BallisticUnit
         // Dream Catcher's absorption attack
         return computeDamage(target);
     }
-    
+
     @Override // documentation inherited
     protected int computeDamage (Piece target)
     {
         // likewise with attack and defend modifiers
         return _config.damage;
     }
-    
+
     @Override // documentation inherited
     protected ShotEffect unitShoot (
             BangObject bangobj, Piece target, float scale)
@@ -58,7 +58,7 @@ public class DreamCatcher extends BallisticUnit
         int tickDelta = Math.max(0, Math.min(
                     bangobj.tick - target.lastActed,
                     target.getTicksPerMove()));
-        double tickRatio = 1.0 - (double)tickDelta / 
+        double tickRatio = 1.0 - (double)tickDelta /
             (double)target.getTicksPerMove();
         int move = (int)Math.ceil(tickRatio * target.getMoveDistance());
         if (target.canBePushed()) {
@@ -82,16 +82,17 @@ public class DreamCatcher extends BallisticUnit
                 shot.pushy = (short)ny;
                 shot.pushAnim = false;
             }
+
+            if (target.lastActed < bangobj.tick) {
+                shot.targetLastActed = bangobj.tick;
+            }
         } else if (move > 0) {
             shot.appendIcon("unmovable", false);
         }
 
-        if (target.lastActed < bangobj.tick) {
-            shot.targetLastActed = bangobj.tick;
-        }
         return shot;
     }
-    
+
     @Override // documentation inherited
     protected ShotEffect generateShotEffect (
             BangObject bangobj, Piece target, int damage)

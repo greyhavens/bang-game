@@ -43,8 +43,8 @@ public class DogSoldier extends Unit
         ArrayList<ShotEffect> proxShots = new ArrayList<ShotEffect>();
         ProximityShotEffect proxShot = null;
         for (Piece piece : pieces) {
-            if (piece.isTargetable() && piece.isAlive() && 
-                !piece.isSameTeam(bangobj, this) && !piece.isAirborne() && 
+            if (piece.isTargetable() && piece.isAlive() &&
+                !piece.isSameTeam(bangobj, this) && !piece.isAirborne() &&
                 getDistance(piece) == 1 && bangobj.board.canCross(x, y, piece.x, piece.y)) {
                 int damage = piece.adjustProxDefend(this, UNIT_PROXIMITY_DAMAGE);
                 if (proxShot == null) {
@@ -69,5 +69,5 @@ public class DogSoldier extends Unit
 
     /** The base amount by which dog soldiers next to units damage them with
      * their wild weapon wheeling. */
-    public static final int UNIT_PROXIMITY_DAMAGE = 5;
+    public static final int UNIT_PROXIMITY_DAMAGE = 7;
 }
