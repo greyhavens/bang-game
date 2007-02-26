@@ -196,7 +196,7 @@
   <class classId="10" name="familiar_t" source="#57AC6A" range="0.1, 0.6, 1">
     <color colorId="1" name="red" offsets="0.65, 0, 0.2"/>
   </class>
-
+  
   <!-- unit recolorations -->
   <class classId="12" name="unit" source="#0700FF" range="0.1, 0.8, 1">
     <color colorId="1" name="grey" offsets="0, -1, -0.28"/>
@@ -219,7 +219,7 @@
   </class>
 
   <!-- buckle metal recolorations -->
-  <class classId="14" name="buckle_p" source="#A29E0C" range="0.05, 0.8, 0.6">
+  <class classId="14" name="buckle" source="#A29E0C" range="0.05, 0.8, 0.6">
     <color colorId="1" name="gold" offsets="1, 0.02, 0.06"/>
     <color colorId="2" name="silver" offsets="0.41, -0.72, -0.07"/>
     <color colorId="3" name="bronze" offsets="-0.043, -0.39, -0.054"/>
@@ -233,7 +233,7 @@
   </class>
 
   <!-- buckle background1 recolorations -->
-  <class classId="15" name="buckle_s" source="#805D4A" range="0.05, 0.8, 0.6">
+  <class classId="15" name="buckle_back_1" source="#805D4A" range="0.05, 0.8, 0.6">
     <color colorId="1" name="gold" offsets="0.075, 0.53, 0.065"/>
     <color colorId="2" name="silver" offsets="-0.57, -0.075, 0.075"/>
     <color colorId="3" name="bronze" offsets="0.022, 0.04, -0.054"/>
@@ -243,17 +243,17 @@
     <color colorId="7" name="steel" offsets="1, -1, -0.12"/>
     <color colorId="8" name="copper" offsets="1, 0.38, -0.075"/>
     <color colorId="9" name="old" offsets="-0.03, -0.4, -0.2"/>
-    <color colorId="10" name="platnum" offsets="0.27, -0.78, -0.065"/>
+    <color colorId="10" name="platinum" offsets="0.27, -0.78, -0.065"/>
     <color colorId="11" name="tan" offsets="-0.95, 0.23, -0.075"/>
     <color colorId="12" name="blue" offsets="0.47, 0.22, -0.04"/>
   </class>
 
   <!-- buckle background2 recolorations -->
-  <class classId="16" name="buckle_t" source="#87A7FF" range="0.1, 0.6, 1">
+  <class classId="16" name="buckle_back_2" source="#778791" range="0.05, 0.8, 0.6">
     <color colorId="1" name="dkbrn" offsets="0.49, 0.35, -0.25"/>
-    <color colorId="2" name="leather" offsets="0.54, 0.45, -0.05"/>
+    <color colorId="2" name="leather" offsets="0.54, 0.33, -0.05"/>
     <color colorId="3" name="brown" offsets="0.54, 0.48, -0.21"/>
-    <color colorId="4" name="beige" offsets="0.57, 0.1, -0.01"/>
+    <color colorId="4" name="silver" offsets="0, -0.1, 0.045"/>
     <color colorId="5" name="pink" offsets="0.35, 0.25, 0.3"/>
     <color colorId="6" name="red" offsets="0.4, 1, -0.02"/>
     <color colorId="7" name="maroon" offsets="0.4, 1, -0.3"/>
@@ -270,9 +270,9 @@
     <color colorId="18" name="slate" offsets="0.99, -0.3, -0.35"/>
     <color colorId="19" name="violet" offsets="0.22, 0, -0.2"/>
     <color colorId="20" name="purple" offsets="0.15, 0.2, -0.25"/>
-    <color colorId="21" name="white" offsets="0, -1, 0.05"/>
-    <color colorId="22" name="grey" offsets="0, -1, -0.28"/>
-    <color colorId="23" name="black" offsets="0, -1, -0.7"/>
+    <color colorId="21" name="white" offsets="0, -1, 0.13"/>
+    <color colorId="22" name="grey" offsets="0, -1, -0.22"/>
+    <color colorId="23" name="black" offsets="0, -1, -0.39"/>
   </class>
 
 </colors>
