@@ -5,8 +5,11 @@ package com.threerings.bang.util;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+
 import java.io.File;
 import java.io.IOException;
+
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import javax.imageio.ImageIO;
@@ -37,7 +40,7 @@ public class WaveUtil
          */
         public abstract float getEnergy (Vector2f k);
     }
-    
+
     /**
      * The Phillips wave spectrum.
      */
@@ -60,7 +63,7 @@ public class WaveUtil
             _largest = windVelocity.length() / gravity;
             _windDirection = windVelocity.normalize();
         }
-        
+
         @Override // documentation inherited
         public float getEnergy (Vector2f k)
         {
@@ -73,11 +76,11 @@ public class WaveUtil
                     FastMath.sqr(kl * _smallest)) *
                 FastMath.sqr(k.dot(_windDirection) / kl);
         }
-        
+
         protected float _amplitude, _smallest, _largest;
         protected Vector2f _windDirection;
     }
-    
+
     /**
      * A dispersion model used to determine the current amplitudes for the
      * IFFT method.
@@ -89,7 +92,7 @@ public class WaveUtil
          */
         public abstract float getDispersion (Vector2f k);
     }
-    
+
     /**
      * The deep water dispersion model.
      */
@@ -104,16 +107,16 @@ public class WaveUtil
         {
             _gravity = gravity;
         }
-        
+
         @Override // documentation inherited
         public float getDispersion (Vector2f k)
         {
             return FastMath.sqrt(_gravity * k.length());
         }
-        
+
         protected float _gravity;
     }
-    
+
     /**
      * A dispersion model wrapper that quantizes a model so that it repeats
      * after a specified time period.
@@ -131,17 +134,17 @@ public class WaveUtil
             _base = base;
             _w0 = FastMath.TWO_PI / t;
         }
-        
+
         @Override // documentation inherited
         public float getDispersion (Vector2f k)
         {
             return (int)(_base.getDispersion(k) / _w0) * _w0;
         }
-        
+
         protected DispersionModel _base;
         protected float _w0;
     }
-    
+
     /**
      * Populates the supplied arrays with initial wave amplitudes to be used in
      * the IFFT method of generating surface waves.
@@ -185,7 +188,7 @@ public class WaveUtil
             }
         }
     }
-    
+
     /**
      * Given the initial wave amplitudes, computes the amplitudes at time t.
      *
@@ -199,18 +202,17 @@ public class WaveUtil
         float sizeX, float sizeY, float[][] iramps, float[][] iiamps,
         DispersionModel model, float t, float[][] ramps, float[][] iamps)
     {
-        Vector2f k = new Vector2f();
         int hnsx = numSamplesX / 2, hnsy = numSamplesY / 2, ni, nj;
         float coswkt2;
         for (int ii = 0; ii < numSamplesX; ii++) {
-            k.x = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
+            _k.x = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
                 sizeX;
             for (int jj = (ii <= hnsx) ? 0 : hnsy,
                 nn = (ii == 0 || ii > hnsx) ? hnsy : numSamplesY - 1;
                 jj <= nn; jj++) {
-                k.y = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
+                _k.y = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
                     sizeY;
-                coswkt2 = 2f * FastMath.cos(model.getDispersion(k)*t);
+                coswkt2 = 2f * FastMath.cos(model.getDispersion(_k)*t);
                 ramps[ii][jj] = iramps[ii][jj] * coswkt2;
                 iamps[ii][jj] = iiamps[ii][jj] * coswkt2;
                 if (ii != hnsx && jj != hnsy) {
@@ -222,7 +224,7 @@ public class WaveUtil
             }
         }
     }
-    
+
     /**
      * Given the current wave amplitudes, computes the vertices of the waves
      * and stores them in the provided buffer.
@@ -240,7 +242,7 @@ public class WaveUtil
     {
         // compute the ifft to get the wave heights
         ifft(ramps, iamps);
-        
+
         // set the vertices in the buffer
         Vector3f vertex = new Vector3f();
         float xstep = sizeX / numSamplesX, ystep = sizeY / numSamplesY;
@@ -252,7 +254,7 @@ public class WaveUtil
             }
         }
     }
-    
+
     /**
      * Given the current wave amplitudes, computes the vertices of the waves
      * and adds them to the provided buffer.
@@ -270,19 +272,18 @@ public class WaveUtil
     {
         // compute the ifft to get the wave heights
         ifft(ramps, iamps);
-        
+
         // add vertices to displacements in the buffer
-        Vector3f vertex = new Vector3f();
         float xstep = sizeX / numSamplesX, ystep = sizeY / numSamplesY;
         for (int ii = 0, idx = 0; ii <= numSamplesX; ii++) {
             for (int jj = 0; jj <= numSamplesY; jj++) {
-                BufferUtils.addInBuffer(vertex.set(ii * xstep, jj * ystep,
+                BufferUtils.addInBuffer(_vertex.set(ii * xstep, jj * ystep,
                         ramps[ii % numSamplesX][jj % numSamplesY]),
                     vbuf, idx++);
             }
         }
     }
-    
+
     /**
      * Given the current wave amplitudes, computes the X/Y displacements
      * of the waves and stores them in the provided buffer.
@@ -300,24 +301,23 @@ public class WaveUtil
         float choppiness, FloatBuffer vbuf)
     {
         // compute the x and y components of the displacement in separate iffts
-        Vector2f k = new Vector2f();
         int hnsx = numSamplesX / 2, hnsy = numSamplesY / 2, ni, nj;
         float rlenk;
         for (int ii = 0; ii < numSamplesX; ii++) {
-            k.x = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
+            _k.x = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
                 sizeX;
             for (int jj = (ii <= hnsx) ? 0 : hnsy,
                 nn = (ii == 0 || ii > hnsx) ? hnsy : numSamplesY - 1;
                 jj <= nn; jj++) {
-                k.y = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
+                _k.y = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
                     sizeY;
-                if ((rlenk = k.length()) != 0f) {
+                if ((rlenk = _k.length()) != 0f) {
                     rlenk = 1f / rlenk;
                 }
-                rgradx[ii][jj] = -iamps[ii][jj] * k.x * rlenk;
-                igradx[ii][jj] = ramps[ii][jj] * k.x * rlenk;
-                rgrady[ii][jj] = -iamps[ii][jj] * k.y * rlenk;
-                igrady[ii][jj] = ramps[ii][jj] * k.y * rlenk;
+                rgradx[ii][jj] = -iamps[ii][jj] * _k.x * rlenk;
+                igradx[ii][jj] = ramps[ii][jj] * _k.x * rlenk;
+                rgrady[ii][jj] = -iamps[ii][jj] * _k.y * rlenk;
+                igrady[ii][jj] = ramps[ii][jj] * _k.y * rlenk;
                 if (ii != hnsx && jj != hnsy) {
                     ni = (numSamplesX - ii) % numSamplesX;
                     nj = (numSamplesY - jj) % numSamplesY;
@@ -330,7 +330,7 @@ public class WaveUtil
         }
         ifft(rgradx, igradx);
         ifft(rgrady, igrady);
-        
+
         // combine and set in the buffer
         Vector3f displacement = new Vector3f();
         for (int ii = 0, idx = 0; ii <= numSamplesX; ii++) {
@@ -343,7 +343,7 @@ public class WaveUtil
             }
         }
     }
-    
+
     /**
      * Given the current wave amplitudes, computes the normals of the waves
      * and stores them in the provided buffer.
@@ -363,20 +363,19 @@ public class WaveUtil
         FloatBuffer nbuf)
     {
         // compute the x and y components of the gradient in separate iffts
-        Vector2f k = new Vector2f();
         int hnsx = numSamplesX / 2, hnsy = numSamplesY / 2, ni, nj;
         for (int ii = 0; ii < numSamplesX; ii++) {
-            k.x = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
+            _k.x = (FastMath.TWO_PI * (ii < hnsx ? ii : ii - numSamplesX)) /
                 sizeX;
             for (int jj = (ii <= hnsx) ? 0 : hnsy,
                 nn = (ii == 0 || ii > hnsx) ? hnsy : numSamplesY - 1;
                 jj <= nn; jj++) {
-                k.y = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
+                _k.y = (FastMath.TWO_PI * (jj < hnsy ? jj : jj - numSamplesY)) /
                     sizeY;
-                rgradx[ii][jj] = -iamps[ii][jj] * k.x;
-                igradx[ii][jj] = ramps[ii][jj] * k.x;
-                rgrady[ii][jj] = -iamps[ii][jj] * k.y;
-                igrady[ii][jj] = ramps[ii][jj] * k.y;
+                rgradx[ii][jj] = -iamps[ii][jj] * _k.x;
+                igradx[ii][jj] = ramps[ii][jj] * _k.x;
+                rgrady[ii][jj] = -iamps[ii][jj] * _k.y;
+                igrady[ii][jj] = ramps[ii][jj] * _k.y;
                 if (ii != hnsx && jj != hnsy) {
                     ni = (numSamplesX - ii) % numSamplesX;
                     nj = (numSamplesY - jj) % numSamplesY;
@@ -389,7 +388,7 @@ public class WaveUtil
         }
         ifft(rgradx, igradx);
         ifft(rgrady, igrady);
-        
+
         // combine, normalize, and set in the buffer
         Vector3f normal = new Vector3f();
         for (int ii = 0, idx = 0; ii <= numSamplesX; ii++) {
@@ -402,7 +401,7 @@ public class WaveUtil
             }
         }
     }
-    
+
     /**
      * Computes the normals using adjacent vertices.
      *
@@ -412,8 +411,6 @@ public class WaveUtil
     public static void getNormals (int numSamplesX, int numSamplesY,
         float sizeX, float sizeY, FloatBuffer vbuf, FloatBuffer nbuf)
     {
-        Vector3f left = new Vector3f(), right = new Vector3f(),
-            up = new Vector3f(), down = new Vector3f();
         int vwidth = numSamplesX + 1, vheight = numSamplesY + 1,
             lidx, uidx, idx = 0;
         float loff, uoff;
@@ -433,28 +430,72 @@ public class WaveUtil
                     uidx = jj - 1;
                     uoff = 0f;
                 }
-                BufferUtils.populateFromBuffer(down, vbuf,
+                BufferUtils.populateFromBuffer(_down, vbuf,
                     ii * vheight + jj + 1);
-                BufferUtils.populateFromBuffer(up, vbuf,
+                BufferUtils.populateFromBuffer(_up, vbuf,
                     ii * vheight + uidx);
-                up.y += uoff;
-                BufferUtils.populateFromBuffer(left, vbuf,
+                _up.y += uoff;
+                BufferUtils.populateFromBuffer(_left, vbuf,
                     lidx * vheight + jj);
-                left.x += loff;
-                BufferUtils.populateFromBuffer(right, vbuf,
+                _left.x += loff;
+                BufferUtils.populateFromBuffer(_right, vbuf,
                     (ii + 1) * vheight + jj);
-                BufferUtils.setInBuffer(down.subtractLocal(up).
-                    crossLocal(left.subtractLocal(right)).normalizeLocal(),
+                BufferUtils.setInBuffer(_down.subtractLocal(_up).
+                    crossLocal(_left.subtractLocal(_right)).normalizeLocal(),
                     nbuf, idx++);
             }
             BufferUtils.copyInternalVector3(nbuf, idx - numSamplesY, idx++);
         }
         for (int jj = 0; jj < vheight; jj++) {
             BufferUtils.copyInternalVector3(nbuf, idx - vheight*numSamplesY,
-                idx++); 
+                idx++);
         }
     }
-    
+
+    /**
+     * Computes the normals using adjacent vertices and stores them in a normal map texture.
+     *
+     * @param nmap the buffer to contain the normal map (must be of size numSamplesX by
+     * numSamplesY)
+     */
+    public static void getNormalMap (int numSamplesX, int numSamplesY,
+        float sizeX, float sizeY, FloatBuffer vbuf, ByteBuffer nmap)
+    {
+        int vwidth = numSamplesX + 1, vheight = numSamplesY + 1,
+            lidx, uidx, idx = 0;
+        float loff, uoff;
+        for (int ii = 0; ii < numSamplesX; ii++) {
+            if (ii == 0) {
+                lidx = vwidth - 2;
+                loff = -sizeX;
+            } else {
+                lidx = ii - 1;
+                loff = 0f;
+            }
+            for (int jj = 0; jj < numSamplesY; jj++) {
+                if (jj == 0) {
+                    uidx = vheight - 2;
+                    uoff = -sizeY;
+                } else {
+                    uidx = jj - 1;
+                    uoff = 0f;
+                }
+                BufferUtils.populateFromBuffer(_down, vbuf, ii * vheight + jj + 1);
+                BufferUtils.populateFromBuffer(_up, vbuf, ii * vheight + uidx);
+                _up.y += uoff;
+                BufferUtils.populateFromBuffer(_left, vbuf, lidx * vheight + jj);
+                _left.x += loff;
+                BufferUtils.populateFromBuffer(_right, vbuf, (ii + 1) * vheight + jj);
+                _down.subtractLocal(_up).crossLocal(_left.subtractLocal(_right)).normalizeLocal();
+                nmap.put((byte)((_down.x + 1f) * 127f));
+                nmap.put((byte)((_down.y + 1f) * 127f));
+                nmap.put((byte)((_down.z + 1f) * 127f));
+                nmap.put((byte)255);
+            }
+        }
+        nmap.rewind();
+    }
+
     /**
      * Performs an in-place two dimensional inverse fast Fourier transform on
      * the supplied arrays.
@@ -465,19 +506,19 @@ public class WaveUtil
         for (int ii = 0; ii < rex.length; ii++) {
             ifft(rex[ii], imx[ii]);
         }
-        
+
         // transpose and compute in the second dimension
         transpose(rex);
         transpose(imx);
         for (int ii = 0; ii < rex.length; ii++) {
             ifft(rex[ii], imx[ii]);
         }
-        
+
         // transpose back
         transpose(rex);
         transpose(imx);
     }
-    
+
     /**
      * Performs an in-place two-dimensional fast Fourier transform on the
      * supplied arrays.
@@ -488,19 +529,19 @@ public class WaveUtil
         for (int ii = 0; ii < rex.length; ii++) {
             fft(rex[ii], imx[ii]);
         }
-        
+
         // transpose and compute in the second dimension
         transpose(rex);
         transpose(imx);
         for (int ii = 0; ii < rex.length; ii++) {
             fft(rex[ii], imx[ii]);
         }
-        
+
         // transpose back
         transpose(rex);
         transpose(imx);
     }
-    
+
     /**
      * Performs an in-place inverse fast Fourier transform on the supplied
      * arrays.
@@ -512,15 +553,15 @@ public class WaveUtil
     {
         // take fft of swapped arrays
         fft(imx, rex);
-        
+
         // rescale
         float rn = 1f / rex.length;
         for (int ii = 0; ii < rex.length; ii++) {
             rex[ii] *= rn;
-            imx[ii] *= rn;   
+            imx[ii] *= rn;
         }
     }
-    
+
     /**
      * Performs an in-place fast Fourier transform on the supplied arrays.
      * Translated from BASIC source by Steven W. Smith in
@@ -535,7 +576,7 @@ public class WaveUtil
         int nm1 = rex.length - 1, nd2 = rex.length / 2,
             mm = (int)(FastMath.log(rex.length) / FastMath.log(2f));
         float tr, ti;
-        
+
         // bit reversal sorting
         for (int ii = 1, jj = nd2, kk; ii < nm1; ii++, jj += kk) {
             if (ii < jj) {
@@ -544,20 +585,20 @@ public class WaveUtil
                 rex[jj] = rex[ii];
                 imx[jj] = imx[ii];
                 rex[ii] = tr;
-                imx[ii] = ti;        
+                imx[ii] = ti;
             }
             for (kk = nd2; kk <= jj; jj -= kk, kk /= 2);
         }
-        
+
         // loop for each stage
         for (int ll = 0; ll < mm; ll++) {
             int le = 2 << ll, le2 = le / 2, ip;
             float ur = 1f, ui = 0f, sr = FastMath.cos(FastMath.PI / le2),
                 si = -FastMath.sin(FastMath.PI / le2);
-            
+
             // loop for each sub-DFT
             for (int jj = 1; jj <= le2; jj++) {
-            
+
                 // loop for each butterfly
                 for (int ii = jj - 1; ii <= nm1; ii += le) {
                     ip = ii + le2;
@@ -574,7 +615,7 @@ public class WaveUtil
             }
         }
     }
-    
+
     /**
      * Transposes the given (square) two-dimensional array in place.
      */
@@ -589,4 +630,10 @@ public class WaveUtil
             }
         }
     }
+
+    /** Temporary vectors to reuse. */
+    protected static Vector2f _k = new Vector2f();
+    protected static Vector3f _vertex = new Vector3f();
+    protected static Vector3f _left = new Vector3f(), _right = new Vector3f(),
+        _up = new Vector3f(), _down = new Vector3f();
 }

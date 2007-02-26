@@ -85,7 +85,7 @@ public class EditorBoardView extends BoardView
     public void prepareForRound (BangObject bangobj, BangConfig cfg, int pidx)
     {
         super.prepareForRound(bangobj, cfg, pidx);
-        
+
         // add a listener to update highlights for pieces
         _bangobj.addListener(new SetListener() {
             public void entryAdded (EntryAddedEvent e) {
@@ -124,7 +124,7 @@ public class EditorBoardView extends BoardView
             }
         });
     }
-    
+
     @Override // documentation inherited
     public void refreshBoard ()
     {
@@ -132,13 +132,13 @@ public class EditorBoardView extends BoardView
 
         // recenter the dolly
         _panel.tools.cameraDolly.recenter();
-        
+
         // make sure highlights are reset to new size
         _hnode.detachAllChildren();
         _highlights = null;
         _crosslights = null;
         updateHighlights();
-        
+
         // clear out the undo stack
         ((EditorController)_panel.getController()).clearEdits();
     }
@@ -168,7 +168,7 @@ public class EditorBoardView extends BoardView
     {
         _showBounds = !_showBounds;
     }
-    
+
     /**
      * Shows or hides the unoccupiable tile highlights.
      */
@@ -204,7 +204,7 @@ public class EditorBoardView extends BoardView
         _board.setElevationUnitsPerTile((byte)units);
         heightfieldChanged();
     }
-    
+
     /**
      * Commits the elevation units edit, if any.
      */
@@ -215,7 +215,7 @@ public class EditorBoardView extends BoardView
             _elevationUnitsEdit = null;
         }
     }
-    
+
     /**
      * Sets the heightfield to the contents of the specified image.
      */
@@ -223,7 +223,7 @@ public class EditorBoardView extends BoardView
     {
         // store the original heightfield state as an edit
         new HeightfieldEdit().commit();
-        
+
         // scale the image to the size of the heightfield, flip it upside down,
         // and convert it to 8-bit grayscale
         int hfwidth = _board.getHeightfieldWidth(),
@@ -319,7 +319,7 @@ public class EditorBoardView extends BoardView
         _tnode.refreshTerrain(dirty.x, dirty.y, dirty.x + dirty.width - 1,
             dirty.y + dirty.height - 1);
     }
-    
+
     /**
      * Clears the entire board to the specified terrain type.
      */
@@ -327,14 +327,14 @@ public class EditorBoardView extends BoardView
     {
         // store the original terrain as an edit
         new TerrainEdit().commit();
-        
+
         // fill 'er up!
         _board.fillTerrain((byte)terrain.code);
-        
+
         // update the terrain splats
         _tnode.refreshTerrain();
     }
-    
+
     /**
      * Commits the current terrain edit to the undo buffer.
      */
@@ -346,7 +346,7 @@ public class EditorBoardView extends BoardView
         _tedit.commit();
         _tedit = null;
     }
-    
+
     /**
      * Paints a circle of values into the heightfield, either raising/lowering
      * the values or setting them directly.
@@ -373,7 +373,7 @@ public class EditorBoardView extends BoardView
             _hfedit = new HeightfieldEdit();
         }
         _hfedit.dirty(x1, y1, x2, y2);
-        
+
         // scan over the sub-tile coordinates, setting any that fall in the
         // circle
         Vector2f vec = new Vector2f();
@@ -408,7 +408,7 @@ public class EditorBoardView extends BoardView
         _hfedit.commit();
         _hfedit = null;
     }
-    
+
     /**
      * Adds some random noise to the heightfield (just enough to create some
      * interesting texture).
@@ -417,7 +417,7 @@ public class EditorBoardView extends BoardView
     {
         // store the original heightfield state as an edit
         new HeightfieldEdit().commit();
-        
+
         int width = _board.getHeightfieldWidth(),
             height = _board.getHeightfieldHeight();
 
@@ -437,7 +437,7 @@ public class EditorBoardView extends BoardView
     {
         // store the original heightfield state as an edit
         new HeightfieldEdit().commit();
-        
+
         byte[] smoothed = new byte[_board.getHeightfield().length];
 
         int width = _board.getHeightfieldWidth(),
@@ -548,7 +548,7 @@ public class EditorBoardView extends BoardView
             _lightEdits[idx] = null;
         }
     }
-    
+
     /**
      * Sets the shadow intensity.
      *
@@ -585,7 +585,7 @@ public class EditorBoardView extends BoardView
             _shadowIntensityEdit = null;
         }
     }
-    
+
     /**
      * Sets the parameters of the board's sky.
      *
@@ -637,7 +637,7 @@ public class EditorBoardView extends BoardView
             _skyEdit = null;
         }
     }
-    
+
     /**
      * Sets the board's water parameters.
      *
@@ -692,7 +692,7 @@ public class EditorBoardView extends BoardView
             _waterEdit = null;
         }
     }
-    
+
     /**
      * Sets the board's wind parameters.
      *
@@ -734,7 +734,7 @@ public class EditorBoardView extends BoardView
             _windEdit = null;
         }
     }
-    
+
     /**
      * Sets the board's fog parameters.
      *
@@ -763,6 +763,7 @@ public class EditorBoardView extends BoardView
         }
         _board.setFogParams(color, density);
         refreshFog();
+        _wnode.refreshShader();
         refreshBackgroundColor();
     }
 
@@ -776,7 +777,7 @@ public class EditorBoardView extends BoardView
             _fogEdit = null;
         }
     }
-    
+
     /**
      * Sets the board's grid color.
      */
@@ -790,13 +791,13 @@ public class EditorBoardView extends BoardView
                     _color = color;
                 }
                 protected int _color = _board.getGridColor();
-                
+
             }.commit();
         }
         _board.setGridColor(color);
         updateGrid();
     }
-    
+
     /**
      * Creates a fresh new board.
      */
@@ -886,14 +887,14 @@ public class EditorBoardView extends BoardView
             }
         };
     }
-    
+
     @Override // documentation inherited
     protected boolean shouldShowStarter (Piece piece)
     {
         // always show everything
         return true;
     }
-    
+
     /**
      * Flood-fills the board terrain.
      */
@@ -924,7 +925,7 @@ public class EditorBoardView extends BoardView
             new Rectangle(0, 0, _board.getHeightfieldWidth(),
                 _board.getHeightfieldHeight())));
     }
-    
+
     /**
      * Sets the heightfield to the contents of the given JME height map (whose
      * size must be equal to or greater than that of the heightfield).
@@ -933,7 +934,7 @@ public class EditorBoardView extends BoardView
     {
         // store the original heightfield state as an edit
         new HeightfieldEdit().commit();
-        
+
         int width = _board.getHeightfieldWidth(),
             height = _board.getHeightfieldHeight();
         for (int y = 0; y < height; y++) {
@@ -1017,14 +1018,14 @@ public class EditorBoardView extends BoardView
                 _board.getHeight()];
         }
         _board.shadowPieces(
-                new FilterPieceIterator(_bangobj.pieces.iterator()), 
+                new FilterPieceIterator(_bangobj.pieces.iterator()),
                 x1, y1, 1 + x2 - x1,
             1 + y2 - y1);
         for (int x = x1; x <= x2; x++) {
             for (int y = y1; y <= y2; y++) {
                 if (_showHighlights) {
                     boolean isBridge = _board.isBridge(x, y);
-                    if (_highlights[x][y] != null && 
+                    if (_highlights[x][y] != null &&
                             _highlights[x][y].flatten != isBridge) {
                         if (_highlights[x][y].getParent() != null) {
                             _hnode.detachChild(_highlights[x][y]);
@@ -1053,10 +1054,10 @@ public class EditorBoardView extends BoardView
                     }
                 }
 
-                if (_showHighlights && 
+                if (_showHighlights &&
                         _board.getPlayableArea().contains(x, y)) {
                     boolean isBridge = _board.isBridge(x, y);
-                    if (_crosslights[x][y] != null && 
+                    if (_crosslights[x][y] != null &&
                             _crosslights[x][y].highlight.flatten != isBridge) {
                         if (_crosslights[x][y].getParent() != null) {
                             _hnode.detachChild(_crosslights[x][y]);
@@ -1064,7 +1065,7 @@ public class EditorBoardView extends BoardView
                         _crosslights[x][y] = null;
                     }
                     if (_crosslights[x][y] == null) {
-                        _crosslights[x][y] = new CrossStatus(_ctx, 
+                        _crosslights[x][y] = new CrossStatus(_ctx,
                             _tnode.createHighlight(x, y, isBridge, isBridge));
                         _crosslights[x][y].setDefaultColor(CROSS_COLOR);
                     }
@@ -1081,7 +1082,7 @@ public class EditorBoardView extends BoardView
             }
         }
     }
-    
+
     @Override // documentation inherited
     protected void createMarquee (String text)
     {
@@ -1116,25 +1117,25 @@ public class EditorBoardView extends BoardView
         {
             ((EditorController)_panel.getController()).addEdit(this);
         }
-        
+
         // documentation inherited from interface EditorController.Edit
         public void undo ()
         {
             swapSaved();
         }
-        
+
         // documentation inherited from interface EditorController.Edit
         public void redo ()
         {
             swapSaved();
         }
-        
+
         /**
          * Swaps the saved data with the current data.
          */
         protected abstract void swapSaved ();
     }
-    
+
     /** Superclass for heightfield and terrain edits, which work in almost
      * exactly the same way. */
     protected abstract class BufferEdit extends SwapEdit
@@ -1144,7 +1145,7 @@ public class EditorBoardView extends BoardView
             // we can choose what to throw away
             _saved = getBuffer().clone();
         }
-        
+
         /**
          * Marks the specified region of the buffer as dirty, so that it
          * will be included in the edit.
@@ -1153,7 +1154,7 @@ public class EditorBoardView extends BoardView
         {
             dirty(new Rectangle(x1, y1, 1 + x2 - x1, 1 + y2 - y1));
         }
-        
+
         /**
          * Marks the specified region of the buffer as dirty.
          */
@@ -1165,7 +1166,7 @@ public class EditorBoardView extends BoardView
                 _modified.add(drect);
             }
         }
-        
+
         @Override // documentation inherited
         public void commit ()
         {
@@ -1178,7 +1179,7 @@ public class EditorBoardView extends BoardView
                     _modified.width == _board.getHeightfieldWidth() &&
                     _modified.height == _board.getHeightfieldHeight()) {
                     _modified = null;
-                    
+
                 } else {
                     _saved = getRegion(_saved, _modified);
                 }
@@ -1194,19 +1195,19 @@ public class EditorBoardView extends BoardView
                 byte[] tmp = buf.clone();
                 System.arraycopy(_saved, 0, buf, 0, _saved.length);
                 _saved = tmp;
-                
+
             } else {
                 byte[] tmp = getRegion(buf, _modified);
                 setRegion(getBuffer(), _modified, _saved);
-                _saved = tmp; 
+                _saved = tmp;
             }
         }
-        
+
         /**
          * Returns a reference to the current contents of the buffer.
          */
         protected abstract byte[] getBuffer ();
-        
+
         /**
          * Creates and returns a new array containing the contents of the
          * specified region of the given heightfield-sized data array.
@@ -1222,7 +1223,7 @@ public class EditorBoardView extends BoardView
             }
             return region;
         }
-        
+
         /**
          * Sets the specified region of the given heightfield-sized data
          * array to the provided values.
@@ -1236,15 +1237,15 @@ public class EditorBoardView extends BoardView
                 }
             }
         }
-        
+
         /** The modified region of the buffer, or <code>null</code> if the
          * entire buffer is dirty. */
         protected Rectangle _modified;
-        
+
         /** The saved buffer data. */
         protected byte[] _saved;
     }
-    
+
     /** Represents a change to the heightfield that can be done and undone. */
     protected class HeightfieldEdit extends BufferEdit
     {
@@ -1260,14 +1261,14 @@ public class EditorBoardView extends BoardView
                     _modified.y + _modified.height - 1);
             }
         }
-        
+
         // documentation inherited
         protected byte[] getBuffer ()
         {
             return _board.getHeightfield();
-        } 
+        }
     }
-    
+
     /** Represents a change to the terrain that can be done and undone. */
     protected class TerrainEdit extends BufferEdit
     {
@@ -1283,7 +1284,7 @@ public class EditorBoardView extends BoardView
                     _modified.y + _modified.height - 1);
             }
         }
-        
+
         // documentation inherited
         protected byte[] getBuffer ()
         {
@@ -1292,7 +1293,7 @@ public class EditorBoardView extends BoardView
     }
 
     /** An iterator that filters pieces based on the scenario. */
-    protected class FilterPieceIterator 
+    protected class FilterPieceIterator
         implements Iterator<Piece>
     {
         public FilterPieceIterator (Iterator<Piece> iter) {
@@ -1306,7 +1307,7 @@ public class EditorBoardView extends BoardView
             return _piece != null;
         }
 
-        public Piece next () 
+        public Piece next ()
             throws NoSuchElementException
         {
             if (!hasNext()) {
@@ -1338,11 +1339,11 @@ public class EditorBoardView extends BoardView
         protected String _scenId;
         protected Piece _piece;
     };
-    
+
     /** The panel that contains additional interface elements with which
      * we interact. */
     protected EditorPanel _panel;
-    
+
     /** Highlights indicating which tiles are occupiable. */
     protected TerrainNode.Highlight[][] _highlights;
 
@@ -1354,14 +1355,14 @@ public class EditorBoardView extends BoardView
 
     /** Whether or not to show the bounding volumes. */
     protected boolean _showBounds;
-    
+
     /** The in-progress edits, if any. */
     protected HeightfieldEdit _hfedit;
     protected TerrainEdit _tedit;
     protected SwapEdit _elevationUnitsEdit, _shadowIntensityEdit, _skyEdit,
         _waterEdit, _windEdit, _fogEdit;
     protected SwapEdit[] _lightEdits = new SwapEdit[BangBoard.NUM_LIGHTS];
-    
+
     /** The color to use for highlights. */
     protected static final ColorRGBA HIGHLIGHT_COLOR =
         new ColorRGBA(1f, 0f, 0f, 0.25f);
