@@ -199,7 +199,7 @@ public class BangCoinExchangeManager extends CoinExchangeManager
         // make sure they have the necessary currency to begin with
         final PlayerObject player = (PlayerObject)user;
         if (player.scrip < cost) {
-            listener.requestFailed(new InvocationException(BangCodes.INSUFFICIENT_FUNDS));
+            listener.requestFailed(new InvocationException(BangCodes.E_INSUFFICIENT_FUNDS));
             return;
         }
 

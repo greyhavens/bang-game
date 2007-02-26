@@ -46,7 +46,7 @@ public abstract class FinancialAction extends Invoker.Unit
                     getCoinAccount(), _coinCost);
                 if (_coinres == -1) {
                     log.warning("Failed to reserve coins " + this + ".");
-                    fail(BangCodes.INSUFFICIENT_FUNDS);
+                    fail(BangCodes.E_INSUFFICIENT_FUNDS);
                     return true;
                 }
             }
@@ -244,7 +244,7 @@ public abstract class FinancialAction extends Invoker.Unit
         int scrip = getScrip(), coins = getCoins();
         if (scrip < _scripCost || coins < _coinCost) {
             _accountLock.remove(account); // release our lock
-            throw new InvocationException(BangCodes.INSUFFICIENT_FUNDS);
+            throw new InvocationException(BangCodes.E_INSUFFICIENT_FUNDS);
         }
         setCash(scrip - _scripCost, coins - _coinCost);
     }
