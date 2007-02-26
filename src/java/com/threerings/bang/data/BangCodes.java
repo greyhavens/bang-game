@@ -72,6 +72,11 @@ public interface BangCodes extends InvocationCodes
     public static final int NEVER_CLEAR_LAYER = 10;
 
     /** An error code reported when a financial transaction cannot complete. */
-    public static final String INSUFFICIENT_FUNDS =
+    public static final String E_INSUFFICIENT_FUNDS =
         MessageBundle.qualify(BANG_MSGS, "e.insufficient_funds");
+
+    /** An error code reported when the player in question does not exist. This message must be
+     * accompanied by the handle of the requested player as its first argument. */
+    public static final String E_NO_SUCH_PLAYER =
+        MessageBundle.qualify(BANG_MSGS, "e.no_such_player");
 }

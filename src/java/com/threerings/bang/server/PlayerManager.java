@@ -633,13 +633,13 @@ public class PlayerManager
         BangServer.invoker.postUnit(new PersistingUnit("getPosterInfo", listener) {
             public void invokePersistent() throws PersistenceException {
                 // first map handle to player id
-                PlayerRecord player = _playrepo.loadByHandle(handle);
-                if (player == null) {
-                    throw new PersistenceException("Unknown player [handle=" + handle + "]");
+                _player = _playrepo.loadByHandle(handle);
+                if (_player == null) {
+                    return;
                 }
 
                 // then fetch the poster record
-                PosterRecord poster = _postrepo.loadPoster(player.playerId);
+                PosterRecord poster = _postrepo.loadPoster(_player.playerId);
                 if (poster != null) {
                     info.statement = poster.statement;
                     info.badgeIds = new int[] {
@@ -653,21 +653,28 @@ public class PlayerManager
 
                 // for offline players, get look snapshot from repository
                 if (posterPlayer == null) {
-                    info.avatar = _lookrepo.loadSnapshot(player.playerId);
-                    info.rankings = buildRankings(_raterepo.loadRatings(player.playerId));
-                    BangServer.gangmgr.populatePosterInfo(info, player);
+                    info.avatar = _lookrepo.loadSnapshot(_player.playerId);
+                    info.rankings = buildRankings(_raterepo.loadRatings(_player.playerId));
+                    BangServer.gangmgr.populatePosterInfo(info, _player);
                 }
             }
 
             public void handleSuccess() {
-                // cache the result and return it
-                _posterCache.put(handle, new SoftReference<PosterInfo>(info));
-                listener.requestProcessed(info);
+                if (_player == null) {
+                    listener.requestFailed(
+                        MessageBundle.tcompose(BangCodes.E_NO_SUCH_PLAYER, handle));
+                } else {
+                    // cache the result and return it
+                    _posterCache.put(handle, new SoftReference<PosterInfo>(info));
+                    listener.requestProcessed(info);
+                }
             }
 
             public String getFailureMessage() {
                 return "Failed to build wanted poster data [handle=" + handle + "]";
             }
+
+            protected PlayerRecord _player;
         });
     }
 
