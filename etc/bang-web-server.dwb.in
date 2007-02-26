@@ -13,7 +13,8 @@
     # See http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
     PreInstall      @SCRIPTPATH@/bang-web-server-preinst
 
-    Depends     bang-pages (= @VERSION@)
+    Depends     bang-pages
+    Depends     bang-installer (= @VERSION@)
     Depends     bang-client-current (= @VERSION@)
     Depends     office-webapp (= @VERSION@)
 </Package>
