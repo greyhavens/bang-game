@@ -7,8 +7,8 @@
   padding:0px;
   top: 0px;
   left: 0px;
-  width: 589px;
-  height: 320px;
+  width: 670px;
+  height: 273px;
 }
 
 #bottom {
@@ -16,10 +16,10 @@
   position: absolute;
   margin: 0px;
   padding:0px;
-  top: 320px;
+  top: 273px;
   left: 0px;
-  width: 589px;
-  height: 180px;
+  width: 670px;
+  height: 147px;
   overflow: hidden;
 }
 
@@ -27,9 +27,9 @@
   position: absolute;
   margin: 0px;
   padding:0px;
-  top: 46px;
+  top: 16px;
   left: 11px;
-  width: 563px;
+  width: 645px;
   height: 100px;
   overflow: hidden;
   text-align: left;
@@ -38,10 +38,10 @@
 /* BUTTONS */
 #launch a {
   position: absolute;
-  width: 339px;
-  height: 93px;
-  top: 248px;
-  left: 121px;
+  width: 340px;
+  height: 90px;
+  top: 181px;
+  left: 160px;
   text-decoration: none;
   border: none;
 }
@@ -50,10 +50,6 @@
   visibility: hidden; 
 }
 
-a#playnow { 
-  background-image: url("../images/playbtn.jpg"); 
-  border: none;
-}
 
 a#playnow:hover { 
   background-image: url("../images/playbtn_hover.jpg"); 
@@ -64,10 +60,10 @@ a#playnow:hover {
 
 #about a {
   position: absolute;
-  width: 107px;
-  height: 15px;
-  top: 474px;
-  left: 187px;
+  width: 102px;
+  height: 13px;
+  top: 395px;
+  left: 221px;
   text-decoration: none;
 }
 
@@ -82,10 +78,10 @@ a#aboutlink:hover {
 
 #installhelp a {
   position: absolute;
-  width: 81px;
-  height: 15px;
-  top: 474px;
-  left: 307px;
+  width: 78px;
+  height: 13px;
+  top: 395px;
+  left: 341px;
   text-decoration: none;
 }
 
@@ -102,8 +98,8 @@ a#installlink:hover {
 
 #threerings a {
   	position: absolute;
-  	top: 10px;
-  	left: 510px;
+  	top: 8px;
+  	left: 585px;
 	width: 75px;
 	height: 30px;
   	text-decoration: none;
