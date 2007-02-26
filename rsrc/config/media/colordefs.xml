@@ -196,7 +196,7 @@
   <class classId="10" name="familiar_t" source="#57AC6A" range="0.1, 0.6, 1">
     <color colorId="1" name="red" offsets="0.65, 0, 0.2"/>
   </class>
-  
+
   <!-- unit recolorations -->
   <class classId="12" name="unit" source="#0700FF" range="0.1, 0.8, 1">
     <color colorId="1" name="grey" offsets="0, -1, -0.28"/>
@@ -217,11 +217,9 @@
     <color colorId="4" name="brown" offsets="-0.02, -0.15, -0.2"/>
     <color colorId="5" name="bad" offsets="-0.1, -0.1, -0.36"/>
   </class>
-</colors>
-
 
   <!-- buckle metal recolorations -->
-  <class classId="14" name="buckle" source="#A29EOC" range="0.05, 0.8, 0.6">
+  <class classId="14" name="buckle" source="#A29E0C" range="0.05, 0.8, 0.6">
     <color colorId="1" name="gold" offsets="1, 0.02, 0.06"/>
     <color colorId="2" name="silver" offsets="0.41, -0.72, -0.07"/>
     <color colorId="3" name="bronze" offsets="-0.043, -0.39, -0.054"/>
@@ -231,6 +229,6 @@
     <color colorId="7" name="steel" offsets="1, -1, -0.07"/>
     <color colorId="8" name="copper" offsets="0.94, -0.12, -0.02"/>
     <color colorId="9" name="old" offsets="-0.03, -0.4, -0.23"/>
-    <color colorId="10" name="platnum" offsets="0.27, -0.78, -0.065"/>
+    <color colorId="10" name="platinum" offsets="0.27, -0.78, -0.065"/>
   </class>
 </colors>
