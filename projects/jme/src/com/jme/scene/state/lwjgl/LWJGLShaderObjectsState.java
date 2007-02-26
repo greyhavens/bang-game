@@ -13,8 +13,8 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the distribution.
  *
- * * Neither the name of 'jMonkeyEngine' nor the names of its contributors 
- *   may be used to endorse or promote products derived from this software 
+ * * Neither the name of 'jMonkeyEngine' nor the names of its contributors
+ *   may be used to endorse or promote products derived from this software
  *   without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -59,7 +59,7 @@ import com.jme.util.ShaderUniform;
 
 /**
  * Implementation of the GL_ARB_shader_objects extension.
- * 
+ *
  * @author Thomas Hourdel
  * @author Joshua Slack (attributes and StateRecord)
  */
@@ -67,13 +67,10 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
 
     private static final long serialVersionUID = 1L;
 
-    /** OpenGL id for this program. * */
-    private int programID = -1;
-
     /**
      * Determines if the current OpenGL context supports the
      * GL_ARB_shader_objects extension.
-     * 
+     *
      * @see com.jme.scene.state.ShaderObjectsState#isSupported()
      */
     public boolean isSupported() {
@@ -81,7 +78,7 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
     }
 
     /**
-     * <code>relinkProgram</code> instructs openGL to relink the associated 
+     * <code>relinkProgram</code> instructs openGL to relink the associated
      * program.  This should be used after setting ShaderAttributes.
      */
     public void relinkProgram() {
@@ -92,15 +89,15 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
             nameBuf.put(attrib.name.getBytes());
             nameBuf.rewind();
             attrib.attributeID = x+1;
-            ARBVertexShader.glBindAttribLocationARB(programID, x+1, nameBuf);            
+            ARBVertexShader.glBindAttribLocationARB(programID, x+1, nameBuf);
         }
 
-        ARBShaderObjects.glLinkProgramARB(programID);     
+        ARBShaderObjects.glLinkProgramARB(programID);
     }
 
     /**
      * Get uniform variable location according to his string name.
-     * 
+     *
      * @param name
      *            uniform variable name
      */
@@ -111,15 +108,15 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
             nameBuf.clear();
             nameBuf.put(uniform.name.getBytes());
             nameBuf.rewind();
-            
+
             uniform.uniformID = ARBShaderObjects.glGetUniformLocationARB(programID, nameBuf);
         }
-        return uniform.uniformID; 
+        return uniform.uniformID;
     }
 
     /**
      * Load an URL and grab content into a ByteBuffer.
-     * 
+     *
      * @param url
      *            the url to load
      */
@@ -150,7 +147,7 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
             return null;
         }
     }
-    
+
     private ByteBuffer load(String data) {
         try {
             byte[] bytes = data.getBytes();
@@ -170,7 +167,7 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
 
     /**
      * Loads the shader object. Use null for an empty vertex or empty fragment shader.
-     * 
+     *
      * @see com.jme.scene.state.ShaderObjectsState#load(java.net.URL,
      *      java.net.URL)
      */
@@ -179,13 +176,13 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
         ByteBuffer fragmentByteBuffer = frag!= null ? load(frag) : null;
         load(vertexByteBuffer, fragmentByteBuffer);
     }
-    
+
     public void load(String vert, String frag) {
         ByteBuffer vertexByteBuffer = vert != null ? load(vert) : null;
         ByteBuffer fragmentByteBuffer = frag!= null ? load(frag) : null;
         load(vertexByteBuffer, fragmentByteBuffer);
     }
-    
+
     private void load(ByteBuffer vertexByteBuffer, ByteBuffer fragmentByteBuffer) {
 
         if (vertexByteBuffer == null && fragmentByteBuffer == null) {
@@ -233,7 +230,7 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
 
     /**
      * Check for program errors. If an error is detected, program exits.
-     * 
+     *
      * @param compiled
      *            the compiler state for a given shader
      * @param id
@@ -267,7 +264,7 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
      * Applies those shader objects to the current scene. Checks if the
      * GL_ARB_shader_objects extension is supported before attempting to enable
      * those objects.
-     * 
+     *
      * @see com.jme.scene.state.RenderState#apply()
      */
     public void apply() {
@@ -281,11 +278,11 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
 
             if (record.getReference() != this) {
             	record.setReference(this);
-                if (isEnabled()) { 
+                if (isEnabled()) {
                 	if (programID != -1) {
                         // Apply the shader...
                         ARBShaderObjects.glUseProgramObjectARB(programID);
-                        
+
                         // Assign attribs...
                         if (!attribs.isEmpty()) {
                             for (int x = attribs.size(); --x >= 0; ) {
@@ -385,7 +382,7 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
                                 }
                             }
                         }
-                        
+
                         // Assign uniforms...
                         if (!uniforms.isEmpty()) {
                             for (int x = uniforms.size(); --x >= 0; ) {
@@ -410,7 +407,7 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
                                 case ShaderUniform.SU_INT4:
                                     ARBShaderObjects.glUniform4iARB(
                                             getUniLoc(uniformVar),
-    
+
                                             uniformVar.vint[0], uniformVar.vint[1],
                                             uniformVar.vint[2], uniformVar.vint[3]);
                                     break;
@@ -453,7 +450,7 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
                                 case ShaderUniform.SU_MATRIX3:
                                     if (uniformVar.matrixBuffer == null)
                                         uniformVar.matrixBuffer = uniformVar.matrix3f.toFloatBuffer();
-                                    else 
+                                    else
                                         uniformVar.matrix3f.fillFloatBuffer(uniformVar.matrixBuffer);
                                     ARBShaderObjects.glUniformMatrix3ARB(
                                             getUniLoc(uniformVar),
@@ -463,7 +460,7 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
                                 case ShaderUniform.SU_MATRIX4:
                                     if (uniformVar.matrixBuffer == null)
                                         uniformVar.matrixBuffer = uniformVar.matrix4f.toFloatBuffer();
-                                    else 
+                                    else
                                         uniformVar.matrix4f.fillFloatBuffer(uniformVar.matrixBuffer);
                                     ARBShaderObjects.glUniformMatrix4ARB(
                                             getUniLoc(uniformVar),
