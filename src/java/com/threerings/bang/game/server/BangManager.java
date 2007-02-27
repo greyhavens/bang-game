@@ -1541,12 +1541,29 @@ public class BangManager extends GameManager
         // clear the set of shooters for this tick
         _shooters.clear();
 
-        // execute any advance orders; we have to operate on a snapshot of the array because the
-        // execution of one order may cause other advance orders to be cancelled and removed
+        // Execute any advance orders for this tick. Players are ordered randomly, and they will
+        // each have their first unit execute it's advance order.  This process will continue
+        // until all advance orders for this tick have been completed.
         int executed = 0;
-        AdvanceOrder[] aos = _orders.toArray(new AdvanceOrder[_orders.size()]);
-        for (AdvanceOrder order : aos) {
+        @SuppressWarnings("unchecked") ArrayList<AdvanceOrder>[] aos =
+            (ArrayList<AdvanceOrder>[]) new ArrayList[getPlayerSlots()];
+        ArrayIntSet hasOrders = new ArrayIntSet();
+        for (AdvanceOrder order : _orders) {
             if (order.unit.ticksUntilMovable(tick) <= 0) {
+                int pidx = order.unit.owner;
+                if (aos[pidx] == null) {
+                    aos[pidx] = new ArrayList<AdvanceOrder>();
+                }
+                aos[pidx].add(order);
+                hasOrders.add(pidx);
+            }
+        }
+        while (!hasOrders.isEmpty()) {
+            int[] players = hasOrders.toIntArray();
+            ArrayUtil.shuffle(players);
+            hasOrders.clear();
+            for (int pidx : players) {
+                AdvanceOrder order = aos[pidx].remove(0);
                 try {
                     executeOrder(order.unit, order.x, order.y, order.targetId, false);
                     executed++;
@@ -1554,6 +1571,9 @@ public class BangManager extends GameManager
                     reportInvalidOrder(order, ie.getMessage());
                 }
                 _orders.remove(order);
+                if (!aos[pidx].isEmpty()) {
+                    hasOrders.add(pidx);
+                }
             }
         }
 
