@@ -177,7 +177,6 @@ public class Article extends Item
     @Override // documentation inherited
     public ImageIcon createIcon (BasicContext ctx, String iconPath)
     {
-        // TODO: indicate somehow that it's a wearable gang article?
         AvatarLogic al = ctx.getAvatarLogic();
         ArticleCatalog.Article aca = al.getArticleCatalog().getArticle(_name);
         if (aca == null) {
@@ -224,10 +223,12 @@ public class Article extends Item
      */
     protected ImageIcon customizeIcon (BasicContext ctx, final ImageIcon base)
     {
-        if (!(ctx instanceof BangContext) || isWearable(((BangContext)ctx).getUserObject())) {
+        if (!(ctx instanceof BangContext) || _gangId == 0) {
             return base;
         }
-        return new ImageIcon(ctx.loadImage("ui/ranch/unit_locked.png")) {
+        boolean wearable = isWearable(((BangContext)ctx).getUserObject());
+        return new ImageIcon(ctx.loadImage(wearable ?
+            "ui/icons/gang_item.png" : "ui/ranch/unit_locked.png")) {
             public int getHeight () {
                 return base.getHeight();
             }
