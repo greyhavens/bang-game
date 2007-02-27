@@ -440,6 +440,7 @@ public class BangBoardView extends BoardView
                     startRound();
                 }
             });
+            return;
         }
 
         // drop rendering to 1 FPS while we load the models
@@ -863,7 +864,7 @@ public class BangBoardView extends BoardView
             aview.setAvatar(_bangobj.playerInfo[pidx].avatar);
             marquee.add(aview);
         }
-        marquee.add(new BLabel(_bangobj.players[pidx].toString(), 
+        marquee.add(new BLabel(_bangobj.players[pidx].toString(),
                     "player_marquee_label" + colorLookup[pidx + 1]));
         return marquee;
     }
@@ -1207,7 +1208,7 @@ public class BangBoardView extends BoardView
                     Piece p = ((PieceSprite)_hover).getPiece();
                     if (_card.isValidPiece(_bangobj, p)) {
                         log.info("Activating " + _card);
-                        if (_card.getPlacementMode() == 
+                        if (_card.getPlacementMode() ==
                                 Card.PlacementMode.VS_PIECE) {
                             target = new Integer(p.pieceId);
                         } else {
@@ -1485,7 +1486,7 @@ public class BangBoardView extends BoardView
     protected void handleRightPress (int mx, int my)
     {
         // nothing doing if the game is not in play
-        if (_bangobj == null || !_bangobj.isActivePlayer(_pidx) || 
+        if (_bangobj == null || !_bangobj.isActivePlayer(_pidx) ||
                 !_bangobj.isInteractivePlay()) {
             return;
         }
@@ -1790,14 +1791,15 @@ public class BangBoardView extends BoardView
         // already be there), and show the GO! marquee
         if (tick == 0) {
             for (PieceSprite sprite : _pieces.values()) {
-                if (sprite instanceof UnitSprite && ((UnitSprite)sprite).movingToStart &&
-                        sprite.isMoving()) {
+                if (sprite instanceof UnitSprite) {
                     UnitSprite usprite = (UnitSprite)sprite;
-                    usprite.cancelMove();
                     Piece p = usprite.getPiece();
+                    if (sprite.isMoving()) {
+                        usprite.cancelMove();
+                        log.warning("Jumped sprite to start [piece=" + p + "].");
+                    }
                     usprite.setLocation(_board, p.x, p.y);
                     usprite.snapToTerrain(false);
-                    log.warning("Jumped sprite to start [piece=" + p + "].");
                 }
             }
 
