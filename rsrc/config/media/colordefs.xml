@@ -221,32 +221,33 @@
   <!-- buckle metal recolorations -->
   <class classId="14" name="buckle" source="#A29E0C" range="0.05, 0.8, 0.6">
     <color colorId="1" name="gold" offsets="0, 0, 0"/>
-    <color colorId="1" name="old_gold" offsets="1, -0.02, -0.18"/>
-    <color colorId="2" name="silver" offsets="0.27, -0.78, -0.065"/>
-    <color colorId="3" name="bronze" offsets="-0.043, -0.39, -0.065"/>
-    <color colorId="4" name="brown" offsets="-0.02, -0.39, -0.18"/>
-    <color colorId="5" name="black" offsets="-0.02, -0.56, -0.35"/>
-    <color colorId="6" name="green" offsets="-0.95, -0.6, -0.08"/>
-    <color colorId="7" name="steel" offsets="1, -1, -0.14"/>
-    <color colorId="8" name="copper" offsets="0.94, -0.16, -0.02"/>
-    <color colorId="9" name="old" offsets="-0.03, -0.4, -0.23"/>
-    <color colorId="10" name="blue" offsets="0.39, -0.5, -0.24"/>
+    <color colorId="2" name="old_gold" offsets="1, -0.02, -0.18"/>
+    <color colorId="3" name="silver" offsets="0.27, -0.78, -0.065"/>
+    <color colorId="4" name="bronze" offsets="-0.043, -0.39, -0.065"/>
+    <color colorId="5" name="brown" offsets="-0.02, -0.39, -0.18"/>
+    <color colorId="6" name="black" offsets="-0.02, -0.56, -0.35"/>
+    <color colorId="7" name="green" offsets="-0.95, -0.6, -0.08"/>
+    <color colorId="8" name="steel" offsets="1, -1, -0.14"/>
+    <color colorId="9" name="copper" offsets="0.94, -0.16, -0.02"/>
+    <color colorId="10" name="old" offsets="-0.03, -0.4, -0.23"/>
+    <color colorId="11" name="blue" offsets="0.39, -0.5, -0.24"/>
   </class>
 
   <!-- buckle background1 recolorations -->
   <class classId="15" name="buckle_back_1" source="#805D4A" range="0.05, 0.8, 0.6">
     <color colorId="1" name="gold" offsets="0.075, 0.53, 0.065"/>
-    <color colorId="2" name="silver" offsets="-0.57, -0.075, 0.075"/>
-    <color colorId="3" name="bronze" offsets="0.022, 0.04, -0.054"/>
-    <color colorId="4" name="brown" offsets="0.02, 0.28, -0.12"/>
-    <color colorId="5" name="black" offsets="-0.1, -0.1, -0.3"/>
-    <color colorId="6" name="green" offsets="-0.87, 0.32, -0.02"/>
-    <color colorId="7" name="steel" offsets="1, -1, -0.12"/>
-    <color colorId="8" name="copper" offsets="1, 0.38, -0.075"/>
-    <color colorId="9" name="old" offsets="-0.03, -0.4, -0.2"/>
-    <color colorId="10" name="platinum" offsets="0.27, -0.78, -0.065"/>
-    <color colorId="11" name="tan" offsets="-0.95, 0.23, -0.075"/>
-    <color colorId="12" name="blue" offsets="0.47, 0.22, -0.04"/>
+    <color colorId="2" name="old_gold" offsets="0.075, 0.45, -0.15"/>
+    <color colorId="3" name="silver" offsets="-0.57, -0.075, 0.075"/>
+    <color colorId="4" name="bronze" offsets="0.022, 0.04, -0.054"/>
+    <color colorId="5" name="brown" offsets="0.02, 0.28, -0.12"/>
+    <color colorId="6" name="black" offsets="-0.1, -0.1, -0.3"/>
+    <color colorId="7" name="green" offsets="-0.87, 0.32, -0.02"/>
+    <color colorId="8" name="steel" offsets="1, -1, -0.12"/>
+    <color colorId="9" name="copper" offsets="1, 0.38, -0.075"/>
+    <color colorId="10" name="old" offsets="-0.03, -0.4, -0.2"/>
+    <color colorId="11" name="blue" offsets="0.47, 0.22, -0.04"/>
+    <color colorId="12" name="white" offsets="0.27, -0.78, -0.065"/>
+    <color colorId="13" name="tan" offsets="-0.95, 0.23, -0.075"/>
   </class>
 
   <!-- buckle background2 recolorations -->
