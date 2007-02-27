@@ -131,7 +131,7 @@ public class PlayerPopupMenu extends BPopupMenu
             }
             addMenuItem(new BMenuItem(msgs.get("m.pm_remove_pardner"), "remove_pardner"));
 
-        } else {
+        } else if (isPresent) {
             // otherwise add an item for inviting them to be our pardner
             addMenuItem(new BMenuItem(msgs.get("m.pm_invite_pardner"), "invite_pardner"));
         }
@@ -141,7 +141,7 @@ public class PlayerPopupMenu extends BPopupMenu
             addMenuItem(new BMenuItem(_ctx.xlate(BangCodes.BANG_MSGS, "m.pm_invite_member"),
                 "invite_member"));
         }
-        
+
         // add an item for muting/unmuting (always allow unmuting, only allow muting if the caller
         // indicates that we're in a context where it is appropriate)
         boolean muted = _ctx.getMuteDirector().isMuted(handle);
@@ -224,7 +224,7 @@ public class PlayerPopupMenu extends BPopupMenu
     {
         return _ctx.getUserObject().canRecruit();
     }
-    
+
     protected void removePardner ()
     {
         PlayerService psvc = ((PlayerService)_ctx.getClient().requireService(PlayerService.class));
