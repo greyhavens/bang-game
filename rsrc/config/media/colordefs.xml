@@ -224,8 +224,8 @@
     <color colorId="2" name="old_gold" offsets="1, -0.02, -0.18"/>
     <color colorId="3" name="silver" offsets="0.27, -0.78, -0.065"/>
     <color colorId="4" name="bronze" offsets="-0.043, -0.39, -0.065"/>
-    <color colorId="5" name="brown" offsets="-0.02, -0.39, -0.18"/>
-    <color colorId="6" name="black" offsets="-0.02, -0.56, -0.35"/>
+    <color colorId="5" name="rust" offsets="-0.12, -0.53, -0.15"/>
+    <color colorId="6" name="dark" offsets="-0.02, -0.56, -0.35"/>
     <color colorId="7" name="green" offsets="-0.95, -0.6, -0.08"/>
     <color colorId="8" name="steel" offsets="1, -1, -0.14"/>
     <color colorId="9" name="copper" offsets="0.94, -0.16, -0.02"/>
@@ -237,44 +237,47 @@
   <class classId="15" name="buckle_back_1" source="#805D4A" range="0.05, 0.8, 0.6">
     <color colorId="1" name="gold" offsets="0.075, 0.53, 0.065"/>
     <color colorId="2" name="old_gold" offsets="0.075, 0.45, -0.15"/>
-    <color colorId="3" name="silver" offsets="-0.57, -0.075, 0.075"/>
+    <color colorId="3" name="silver" offsets="-0.57, -0.12, 0.075"/>
     <color colorId="4" name="bronze" offsets="0.022, 0.04, -0.054"/>
-    <color colorId="5" name="brown" offsets="0.02, 0.28, -0.12"/>
-    <color colorId="6" name="black" offsets="-0.1, -0.1, -0.3"/>
-    <color colorId="7" name="green" offsets="-0.87, 0.32, -0.02"/>
-    <color colorId="8" name="steel" offsets="1, -1, -0.12"/>
-    <color colorId="9" name="copper" offsets="1, 0.38, -0.075"/>
-    <color colorId="10" name="old" offsets="-0.03, -0.4, -0.2"/>
-    <color colorId="11" name="blue" offsets="0.47, 0.22, -0.04"/>
-    <color colorId="12" name="white" offsets="0.27, -0.78, -0.065"/>
-    <color colorId="13" name="tan" offsets="-0.95, 0.23, -0.075"/>
+    <color colorId="5" name="rust" offsets="-0.05, 0.23, -0.15"/>
+    <color colorId="6" name="dark" offsets="-0.1, -0.1, -0.3"/>
+    <color colorId="7" name="greencopper" offsets="-0.87, 0.32, -0.02"/>
+    <color colorId="8" name="copper" offsets="1, 0.38, -0.075"/>
+    <color colorId="9" name="old" offsets="-0.03, -0.4, -0.2"/>
+    <color colorId="10" name="bluesteel" offsets="0.516, 0, 0"/>
+    <color colorId="11" name="white" offsets="0.27, -0.78, -0.065"/>
+    <color colorId="12" name="tan" offsets="-0.95, 0.23, -0.075"/>
   </class>
 
   <!-- buckle background2 recolorations -->
   <class classId="16" name="buckle_back_2" source="#778791" range="0.05, 0.8, 0.6">
-    <color colorId="1" name="dkbrn" offsets="0.49, 0.35, -0.25"/>
-    <color colorId="2" name="leather" offsets="0.54, 0.33, -0.05"/>
-    <color colorId="3" name="brown" offsets="0.54, 0.48, -0.21"/>
-    <color colorId="4" name="silver" offsets="0, -0.1, 0.045"/>
-    <color colorId="5" name="pink" offsets="0.35, 0.25, 0.3"/>
-    <color colorId="6" name="red" offsets="0.4, 1, -0.02"/>
-    <color colorId="7" name="maroon" offsets="0.4, 1, -0.3"/>
-    <color colorId="8" name="orange" offsets="0.5, 0.75, -0.05"/>
-    <color colorId="9" name="gold" offsets="0.59, 0.65, 0.03"/>
-    <color colorId="10" name="yellow" offsets="0.55, -0.1, 0.1"/>
-    <color colorId="11" name="moss" offsets="0.63, -0.3, -0.25"/>
-    <color colorId="12" name="lime" offsets="0.7, 0, -0.15"/>
-    <color colorId="13" name="green" offsets="0.7, 0, -0.5"/>
-    <color colorId="14" name="olive" offsets="0.7, -0.4, -0.5"/>
-    <color colorId="15" name="aqua" offsets="0.87, 0.2, -0.15"/>
-    <color colorId="16" name="blue" offsets="0, 0.1, -0.05"/>
-    <color colorId="17" name="navyBlue" offsets="0.02, 0, -0.3"/>
-    <color colorId="18" name="slate" offsets="0.99, -0.3, -0.35"/>
-    <color colorId="19" name="violet" offsets="0.22, 0, -0.2"/>
-    <color colorId="20" name="purple" offsets="0.15, 0.2, -0.25"/>
-    <color colorId="21" name="white" offsets="0, -1, 0.13"/>
-    <color colorId="22" name="grey" offsets="0, -1, -0.22"/>
-    <color colorId="23" name="black" offsets="0, -1, -0.39"/>
+    <color colorId="1" name="gold" offsets="0.58, 0.65, 0.15"/>
+    <color colorId="2" name="old_gold" offsets="0.58, 0.54, -0.075"/>
+    <color colorId="3" name="silver" offsets="0, -1, 0.054"/>
+    <color colorId="4" name="bronze" offsets="0.5, 0.48, 0.01"/>
+    <color colorId="5" name="rust" offsets="0.45, 0.32, -0.086"/>
+    <color colorId="6" name="dark" offsets="0.48, -0.01, -0.27"/>
+    <color colorId="7" name="greencopper" offsets="-0.366, 0.39, 0.065"/>
+    <color colorId="8" name="copper" offsets="1, 0.38, -0.075"/>
+    <color colorId="9" name="old" offsets="-0.03, -0.4, -0.2"/>
+    <color colorId="10" name="bluesteel" offsets="0.9, 0.01, 0.17"/>
+    <color colorId="11" name="white" offsets="0.27, -0.78, -0.065"/>
+    <color colorId="12" name="dkbrn" offsets="0.49, 0.35, -0.25"/>
+    <color colorId="13" name="leather" offsets="0.54, 0.33, -0.05"/>
+    <color colorId="14" name="brown" offsets="0.54, 0.48, -0.21"/>
+    <color colorId="15" name="pink" offsets="0.35, 0.25, 0.3"/>
+    <color colorId="16" name="red" offsets="0.4, 1, -0.02"/>
+    <color colorId="17" name="maroon" offsets="0.4, 1, -0.3"/>
+    <color colorId="18" name="orange" offsets="0.5, 0.75, -0.05"/>
+    <color colorId="19" name="yellow" offsets="0.55, -0.1, 0.1"/>
+    <color colorId="20" name="moss" offsets="0.63, -0.3, -0.25"/>
+    <color colorId="21" name="lime" offsets="0.7, 0, -0.15"/>
+    <color colorId="22" name="green" offsets="0.7, 0, -0.5"/>
+    <color colorId="23" name="olive" offsets="0.7, -0.4, -0.5"/>
+    <color colorId="24" name="aqua" offsets="0.87, 0.2, -0.15"/>
+    <color colorId="25" name="blue" offsets="0, 0.1, -0.05"/>
+    <color colorId="26" name="violet" offsets="0.22, 0, -0.2"/>
+    <color colorId="27" name="purple" offsets="0.15, 0.2, -0.25"/>
   </class>
 
 </colors>
