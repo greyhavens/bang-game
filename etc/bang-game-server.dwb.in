@@ -14,6 +14,6 @@
     PreInstall      @SCRIPTPATH@/bang-game-server-preinst
 
     Depends     bang-server (= @VERSION@)
-    Depends     bang-pages (= @VERSION@)
+    Depends     bang-pages
     Depends     bang-client-current (= @VERSION@)
 </Package>
