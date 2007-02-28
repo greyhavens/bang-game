@@ -52,7 +52,7 @@ public class Dirigible extends Unit
     {
         CrashEffect effect = null;
         if (_deathTarget != null) {
-            effect = new CrashEffect(_deathTarget, _deathTarget.adjustDefend(this, 25), pieceId);
+            effect = new CrashEffect(_deathTarget, _deathTarget.adjustDefend(this, 25), this);
         }
         return effect;
     }

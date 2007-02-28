@@ -20,10 +20,11 @@ public class CrashEffect extends DamageEffect
     {
     }
 
-    public CrashEffect (Piece piece, int damage, int crasher)
+    public CrashEffect (Piece piece, int damage, Piece crasher)
     {
         super(piece, damage);
-        crasherId = crasher;
+        crasherId = crasher.pieceId;
+        pidx = crasher.owner;
     }
 
     @Override // documentation inherited
@@ -38,13 +39,10 @@ public class CrashEffect extends DamageEffect
         Piece piece = bangobj.pieces.get(pieceId);
         if (piece == null || piece.damage >= 100) {
             pieceId = -1;
-        } else {
-            Piece crasher = bangobj.pieces.get(crasherId);
-            if (crasher != null) {
-                pidx = crasher.owner;
-            }
-            super.prepare(bangobj, dammap);
+            return;
         }
+
+        super.prepare(bangobj, dammap);
     }
 
     @Override // documentation inherited
