@@ -38,6 +38,7 @@ import com.threerings.util.StreamablePoint;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
+import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.server.PresentsClient;
@@ -1340,6 +1341,14 @@ public class BangManager extends GameManager
     public IntSet getShooters ()
     {
         return _shooters;
+    }
+
+    @Override // documentation inherited
+    public boolean isValidSpeaker (DObject speakObj, ClientObject speaker, byte mode)
+    {
+        return super.isValidSpeaker(speakObj, speaker, mode) &&
+            (_bangobj.state != BangObject.IN_PLAY ||
+             _bangobj.getPlayerIndex(((BodyObject)speaker).getVisibleName()) != -1);
     }
 
     /**
