@@ -93,4 +93,12 @@
          renderPriority="190"/>
   <class name="female/clothing_front"
          colors="skin,clothes_p,clothes_s,clothes_t" renderPriority="190"/>
+
+  <!-- buckle component classes -->
+  <class name="buckle/background" colors="buckle_back_1, buckle_back_2" mask="border"
+         renderPriority="10"/>
+  <class name="buckle/border" colors="buckle"
+         renderPriority="20"/>
+  <class name="buckle/icon" colors="buckle"
+         renderPriority="30"/>
 </classes>

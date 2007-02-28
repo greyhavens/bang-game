@@ -43,6 +43,7 @@ resource = [mac os x] native/openal.dylib
 # Our media resources
 resource = background.png
 resource = progress.png
+resource = rsrc/avatars/buckle/components.jar
 resource = rsrc/avatars/frontier_town/female/components.jar
 resource = rsrc/avatars/frontier_town/male/components.jar
 resource = rsrc/avatars/indian_post/female/components.jar

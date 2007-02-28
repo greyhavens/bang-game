@@ -13,6 +13,7 @@ import com.threerings.crowd.chat.data.SpeakObject;
 
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.saloon.data.TopRankedList;
 
@@ -104,8 +105,14 @@ public class GangObject extends DObject
     /** The gang's rank in terms of notoriety. */
     public byte notorietyRank;
 
+    /** The ids of the items comprising the currently configured buckle. */
+    public int[] buckle;
+
     /** The currently configured gang outfit. */
     public OutfitArticle[] outfit;
+
+    /** Contains all items held by the gang. */
+    public DSet<Item> inventory;
 
     /** Contains a {@link GangMemberEntry} for each member of this gang. */
     public DSet<GangMemberEntry> members = new DSet<GangMemberEntry>();

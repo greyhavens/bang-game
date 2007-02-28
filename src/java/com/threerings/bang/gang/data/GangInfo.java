@@ -6,6 +6,7 @@ package com.threerings.bang.gang.data;
 import com.threerings.io.SimpleStreamableObject;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BuckleInfo;
 import com.threerings.bang.data.Handle;
 
 /**
@@ -47,6 +48,9 @@ public class GangInfo extends SimpleStreamableObject
 
     /** The gang's URL. */
     public String url;
+
+    /** The gang's buckle. */
+    public BuckleInfo buckle;
 
     /** The gang leader's avatar. */
     public AvatarInfo avatar;

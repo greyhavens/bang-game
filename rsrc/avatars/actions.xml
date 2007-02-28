@@ -16,4 +16,18 @@
       <gapSize>0, 0</gapSize>
     </tileset>
   </action>
+
+  <!-- actions relating to the gang buckle components -->
+  <action name="static">
+    <framesPerSecond>1</framesPerSecond>
+    <origin>121,240</origin>
+    <orients>SW</orients>
+    <tileset>
+      <widths>312</widths>
+      <heights>240</heights>
+      <tileCounts>1</tileCounts>
+      <offsetPos>0, 0</offsetPos>
+      <gapSize>0, 0</gapSize>
+    </tileset>
+  </action>
 </actions>

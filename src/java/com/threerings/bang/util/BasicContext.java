@@ -53,7 +53,7 @@ public interface BasicContext extends JmeContext
     /** Returns a reference to the invoker object used to run tasks in the
      * background. */
     public Invoker getInvoker ();
-    
+
     /** Provides a mechanism for registering global key bindings. */
     public GlobalKeyManager getKeyManager ();
 
@@ -71,10 +71,10 @@ public interface BasicContext extends JmeContext
 
     /** Returns a reference to our model cache. */
     public ModelCache getModelCache ();
-    
+
     /** Returns a reference to our particle effect cache. */
     public ParticleCache getParticleCache ();
-    
+
     /** Returns a reference to our character manager. */
     public CharacterManager getCharacterManager ();
 
@@ -89,7 +89,7 @@ public interface BasicContext extends JmeContext
 
     /** Loads a particle effect asynchronously from the cache. */
     public void loadParticles (String name, ResultListener<Spatial> rl);
-    
+
     /** Loads an image from the cache. */
     public BImage loadImage (String rsrcPath);
 }

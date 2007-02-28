@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="yes"?>
+<!-- $Id$ -->
+
+<parts>
+  <!-- buckle backgrounds -->
+  <class name="background">
+    <part name="oval"/>
+  </class>
+
+  <!-- buckle borders -->
+  <class name="border">
+    <part name="rope_oval"/>
+  </class>
+
+  <!-- buckle icons -->
+  <class name="icon">
+    <part name="bull_head"/>
+    <part name="star_small"/>
+  </class>
+</parts>

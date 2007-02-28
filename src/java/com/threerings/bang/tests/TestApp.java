@@ -245,11 +245,11 @@ public abstract class TestApp extends JmeApp
         public ModelCache getModelCache () {
             return _mcache;
         }
-        
+
         public ParticleCache getParticleCache () {
             return _pcache;
         }
-        
+
         public CharacterManager getCharacterManager () {
             return _charmgr;
         }
@@ -271,7 +271,7 @@ public abstract class TestApp extends JmeApp
         public void loadParticles (String name, ResultListener<Spatial> rl) {
             _pcache.getParticles(name, rl);
         }
-        
+
         public BImage loadImage (String rsrcPath) {
             return _icache.getBImage(rsrcPath);
         }

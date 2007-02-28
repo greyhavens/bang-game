@@ -58,17 +58,6 @@ public class ItemRepository extends SimpleRepository
         throws PersistenceException
     {
         super(conprov, ITEM_DB_IDENT);
-
-        // TEMP can be removed after all servers are past v. 2007-02-15
-        BangServer.transitrepo.transition(
-            ItemRepository.class, "add_article_gang_ids",
-            new TransitionRepository.Transition() {
-                public void run ()
-                    throws PersistenceException {
-                    addArticleGangIds();
-                }
-            });
-        // /TEMP can be removed after all servers are past v. 2007-02-15
     }
 
     /**
@@ -77,9 +66,18 @@ public class ItemRepository extends SimpleRepository
     public ArrayList<Item> loadItems (final int playerId)
         throws PersistenceException
     {
+        return loadItems(playerId, false);
+    }
+
+    /**
+     * Loads the items owned by the specified player or gang.
+     */
+    public ArrayList<Item> loadItems (final int ownerId, final boolean gangOwned)
+        throws PersistenceException
+    {
         final ArrayList<Item> items = new ArrayList<Item>();
         final String query = "select ITEM_ID, ITEM_TYPE, ITEM_DATA " +
-            "from ITEMS where OWNER_ID = " + playerId;
+            "from ITEMS where GANG_OWNED = " + gangOwned + " and OWNER_ID = " + ownerId;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -90,7 +88,7 @@ public class ItemRepository extends SimpleRepository
                     while (rs.next()) {
                         items.add(decodeItem(
                                       rs.getInt(1), rs.getInt(2),
-                                      playerId, (byte[])rs.getObject(3)));
+                                      gangOwned, ownerId, (byte[])rs.getObject(3)));
                     }
                 } finally {
                     JDBCUtil.close(stmt);
@@ -101,103 +99,12 @@ public class ItemRepository extends SimpleRepository
         return items;
     }
 
-    // TEMP can be removed after all servers are past v. 2007-02-09
-    /**
-     * Remove all male headwraps from the repo and return them as a list.
-     */
-    public ArrayList<Article> purgeHeadWraps ()
-        throws PersistenceException
-    {
-        final ArrayList<Article> wraps = new ArrayList<Article>();
-        final String query = "select ITEM_ID, ITEM_TYPE, OWNER_ID, ITEM_DATA from ITEMS " +
-            "where ITEM_TYPE = " + ItemFactory.getType(Article.class) +
-            " and ITEM_DATA like \"%male_head_wrap%\"";
-        execute(new Operation<Object>() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
-                throws SQLException, PersistenceException
-            {
-                Statement stmt = conn.createStatement();
-                try {
-                    ResultSet rs = stmt.executeQuery(query);
-                    while (rs.next()) {
-                        wraps.add((Article)decodeItem(
-                            rs.getInt(1), rs.getInt(2), rs.getInt(3), (byte[])rs.getObject(4)));
-                    }
-                } finally {
-                    JDBCUtil.close(stmt);
-                }
-                return null;
-            }
-        });
-
-        for (Article wrap : wraps) {
-            deleteItem(wrap, "Purging all male head wraps");
-        }
-        return wraps;
-    }
-    // /TEMP can be removed after all servers are past v. 2007-02-09
-
-    // TEMP can be removed after all servers are past v. 2007-02-15
-    public static class OldArticle
-        implements Streamable
-    {
-        public String slot, name;
-        public int[] components;
-    }
-    public void addArticleGangIds ()
-        throws PersistenceException
-    {
-        // convert the articles one by one
-        final String query = "select ITEM_ID, OWNER_ID, ITEM_DATA from ITEMS " +
-            "where ITEM_TYPE = " + ItemFactory.getType(Article.class);
-        final int[] counts = new int[2];
-        execute(new Operation<Object>() {
-            public Object invoke (Connection conn, DatabaseLiaison liaison)
-                throws SQLException, PersistenceException
-            {
-                Statement stmt = conn.createStatement();
-                try {
-                    ResultSet rs = stmt.executeQuery(query);
-                    while (rs.next()) {
-                        int itemId = rs.getInt(1);
-                        int ownerId = rs.getInt(2);
-                        OldArticle oart = new OldArticle();
-                        ObjectInputStream oin = new ObjectInputStream(rs.getBinaryStream(3));
-                        boolean converted;
-                        try {
-                            // if there's data left over, then it has already been converted
-                            oin.readBareObject(oart);
-                            converted = (oin.available() > 0);
-                        } catch (Exception e) {
-                            throw new PersistenceException(e);
-                        }
-                        if (!converted) {
-                            Article nart = new Article(
-                                ownerId, oart.slot, oart.name, oart.components);
-                            nart.setItemId(itemId);
-                            updateItem(nart);
-                            counts[0]++;
-                        } else {
-                            counts[1]++;
-                        }
-                    }
-                } finally {
-                    JDBCUtil.close(stmt);
-                }
-                return null;
-            }
-        });
-        log.info("Added gang ids to " + counts[0] + " articles (" + counts[1] +
-            " already converted).");
-    }
-    // /TEMP can be removed after all servers are past v. 2007-02-15
-
     /**
      * Instantiates the appropriate item class and decodes the item from
      * the data.
      */
     protected Item decodeItem (
-        int itemId, int itemType, int ownerId, byte[] data)
+        int itemId, int itemType, boolean gangOwned, int ownerId, byte[] data)
         throws PersistenceException, SQLException
     {
         String errmsg = null;
@@ -215,6 +122,7 @@ public class ItemRepository extends SimpleRepository
             // create the item
             Item item = (Item)itemClass.newInstance();
             item.setItemId(itemId);
+            item.setGangOwned(gangOwned);
             item.setOwnerId(ownerId);
 
             // decode its contents from the serialized data
@@ -264,25 +172,27 @@ public class ItemRepository extends SimpleRepository
                 throws SQLException, PersistenceException
             {
                 PreparedStatement stmt = null;
-                String query = "select count(*) from ITEMS where OWNER_ID = ? " +
-                    "and ITEM_TYPE = ? and ITEM_DATA = ?";
+                String query = "select count(*) from ITEMS where GANG_OWNED = ? " +
+                    "and OWNER_ID = ? and ITEM_TYPE = ? and ITEM_DATA = ?";
                 String insert = "insert into ITEMS " +
-                    "(OWNER_ID, ITEM_TYPE, ITEM_DATA) values (?, ?, ?)";
+                    "(GANG_OWNED, OWNER_ID, ITEM_TYPE, ITEM_DATA) values (?, ?, ?, ?)";
                 try {
                     if (!item.allowsDuplicates()) {
                         stmt = conn.prepareStatement(query);
-                        stmt.setInt(1, item.getOwnerId());
-                        stmt.setInt(2, itemType);
-                        stmt.setBytes(3, itemData);
+                        stmt.setBoolean(1, item.isGangOwned());
+                        stmt.setInt(2, item.getOwnerId());
+                        stmt.setInt(3, itemType);
+                        stmt.setBytes(4, itemData);
                         ResultSet rs = stmt.executeQuery();
                         if (rs.next() && rs.getInt(1) > 0) {
                             return false;
                         }
                     }
                     stmt = conn.prepareStatement(insert);
-                    stmt.setInt(1, item.getOwnerId());
-                    stmt.setInt(2, itemType);
-                    stmt.setBytes(3, itemData);
+                    stmt.setBoolean(1, item.isGangOwned());
+                    stmt.setInt(2, item.getOwnerId());
+                    stmt.setInt(3, itemType);
+                    stmt.setBytes(4, itemData);
 
                     // do the insertion
                     JDBCUtil.checkedUpdate(stmt, 1);
@@ -292,6 +202,7 @@ public class ItemRepository extends SimpleRepository
 
                     // record the insertion
                     BangServer.itemLog("item_created id:" + item.getItemId() +
+                                       (item.isGangOwned() ? " gang_owned" : "") +
                                        " oid:" + item.getOwnerId() +
                                        " type:" + item.getClass().getName());
                     return true;
@@ -322,7 +233,7 @@ public class ItemRepository extends SimpleRepository
             {
                 PreparedStatement stmt = null;
                 String query = "insert into ITEMS " +
-                    "(OWNER_ID, ITEM_TYPE, ITEM_DATA) values (?, ?, ?)";
+                    "(GANG_OWNED, OWNER_ID, ITEM_TYPE, ITEM_DATA) values (FALSE, ?, ?, ?)";
                 try {
                     stmt = conn.prepareStatement(query);
                     stmt.setInt(2, itemType);
@@ -497,7 +408,7 @@ public class ItemRepository extends SimpleRepository
                 throws SQLException, PersistenceException
             {
                 PreparedStatement stmt = conn.prepareStatement(
-                    "select OWNER_ID from ITEMS where OWNER_ID in " +
+                    "select OWNER_ID from ITEMS where GANG_OWNED = FALSE and OWNER_ID in " +
                     StringUtil.toString(playerIds.iterator(), "(", ")") +
                     " and ITEM_TYPE = ? and (ITEM_DATA = ?" +
                     (aout == null ? ")" : " or ITEM_DATA = ?)"));
@@ -560,11 +471,16 @@ public class ItemRepository extends SimpleRepository
     {
         JDBCUtil.createTableIfMissing(conn, "ITEMS", new String[] {
             "ITEM_ID INTEGER NOT NULL AUTO_INCREMENT",
+            "GANG_OWNED BOOLEAN NOT NULL",
             "OWNER_ID INTEGER NOT NULL",
             "ITEM_TYPE INTEGER NOT NULL",
             "ITEM_DATA BLOB NOT NULL",
             "PRIMARY KEY (ITEM_ID)",
             "KEY (OWNER_ID)",
         }, "");
+
+        // TEMP: add the gang-owned column
+        JDBCUtil.addColumn(conn, "ITEMS", "GANG_OWNED", "BOOLEAN NOT NULL", "ITEM_ID");
+        // END TEMP
     }
 }

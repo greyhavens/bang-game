@@ -116,6 +116,12 @@ public class AvatarLogic
     /** The height of our avatar source images. */
     public static final int HEIGHT = 640;
 
+    /** The width of our buckle source images. */
+    public static final int BUCKLE_WIDTH = 312;
+
+    /** The height of our buckle source images. */
+    public static final int BUCKLE_HEIGHT = 240;
+
     /**
      * Returns the index in the {@link #SLOTS} array of the specified slot.
      */
@@ -214,6 +220,8 @@ public class AvatarLogic
             rsrcmgr.getResource(AspectCatalog.CONFIG_PATH));
         _artcat = (ArticleCatalog)CompiledConfig.loadConfig(
             rsrcmgr.getResource(ArticleCatalog.CONFIG_PATH));
+        _partcat = (BucklePartCatalog)CompiledConfig.loadConfig(
+            rsrcmgr.getResource(BucklePartCatalog.CONFIG_PATH));
     }
 
     /**
@@ -241,6 +249,14 @@ public class AvatarLogic
     }
 
     /**
+     * Returns the catalog that defines the various buckle parts.
+     */
+    public BucklePartCatalog getBucklePartCatalog ()
+    {
+        return _partcat;
+    }
+
+    /**
      * Decodes an avatar fingerprint into a {@link CharacterDescriptor} that can be passed to the
      * character manager.
      */
@@ -260,6 +276,27 @@ public class AvatarLogic
         Colorization[][] zations = new Colorization[clength][];
         for (int ii = 0; ii < clength; ii++) {
             int pvalue = avatar[ii+1];
+            componentIds[ii] = (pvalue & 0xFFFF);
+            zations[ii] = decodeColorizations(pvalue, null);
+        }
+
+        return new CharacterDescriptor(componentIds, zations);
+    }
+
+    /**
+     * Decodes a buckle fingerprint into a {@link CharacterDescriptor} that can be passed to the
+     * character manager.
+     */
+    public CharacterDescriptor decodeBuckle (int[] buckle)
+    {
+        // compact the array to remove unused entries
+        buckle = IntListUtil.compact(buckle);
+
+        // the elements are part colorizations and component ids composed into single integers
+        int[] componentIds = new int[buckle.length];
+        Colorization[][] zations = new Colorization[buckle.length][];
+        for (int ii = 0; ii < buckle.length; ii++) {
+            int pvalue = buckle[ii];
             componentIds[ii] = (pvalue & 0xFFFF);
             zations[ii] = decodeColorizations(pvalue, null);
         }
@@ -598,6 +635,7 @@ public class AvatarLogic
     protected ColorPository _pository;
     protected AspectCatalog _aspcat;
     protected ArticleCatalog _artcat;
+    protected BucklePartCatalog _partcat;
 
     /** Used by {@link #decodeAvatar}. */
     protected Colorization[] _globals = new Colorization[2];

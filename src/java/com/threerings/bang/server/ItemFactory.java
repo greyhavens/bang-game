@@ -10,6 +10,7 @@ import com.samskivert.util.HashIntMap;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.CardItem;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Purse;
@@ -101,7 +102,8 @@ public class ItemFactory
         registerItemClass(TrainTicket.class);
         registerItemClass(Song.class);
         registerItemClass(Star.class);
-        // end of registeration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
+        registerItemClass(BucklePart.class);
+        // end of registration (DO NOT CHANGE ORDER, SEE NOTE ABOVE)
     }
 
     /** The table mapping item types to classes. */

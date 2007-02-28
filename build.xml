@@ -350,17 +350,19 @@
               parser="com.threerings.bang.avatar.tools.xml.ArticleCatalogParser"/>
     <confcomp dest="${deploy.dir}" configdef="rsrc/avatars/aspects.xml"
               parser="com.threerings.bang.avatar.tools.xml.AspectCatalogParser"/>
+    <confcomp dest="${deploy.dir}" configdef="rsrc/avatars/buckle_parts.xml"
+              parser="com.threerings.bang.avatar.tools.xml.BucklePartCatalogParser"/>
   </target>
 
   <!-- helper task for 'avatars' -->
-  <target name="town_avatars">
+  <target name="avatar_comps">
     <taskdef name="cbundle" classpathref="classpath"
       classname="com.threerings.cast.bundle.tools.ComponentBundlerTask"/>
-    <mkdir dir="${deploy.dir}/rsrc/avatars/${town}/${gender}"/>
+    <mkdir dir="${deploy.dir}/rsrc/avatars/${comp.bundle}"/>
     <cbundle actiondef="rsrc/avatars/actions.xml" mapfile="rsrc/avatars/compmap.txt"
-             root="rsrc/avatars/${town}"
-             target="${deploy.dir}/rsrc/avatars/${town}/${gender}/components.jar">
-      <fileset dir="rsrc/avatars/${town}/${gender}">
+             root="rsrc/avatars/${comp.root}"
+             target="${deploy.dir}/rsrc/avatars/${comp.bundle}/components.jar">
+      <fileset dir="rsrc/avatars/${comp.bundle}">
         <include name="**/*.png"/>
         <exclude name="**/*_shadow.png"/>
         <exclude name="**/*_crop.png"/>
@@ -379,14 +381,19 @@
 
     <for list="${towns}" param="town"><sequential>
       <for list="male,female" param="gender"><sequential>
-        <antcall target="town_avatars">
-          <param name="town" value="@{town}"/>
-          <param name="gender" value="@{gender}"/>
+        <antcall target="avatar_comps">
+          <param name="comp.bundle" value="@{town}/@{gender}"/>
+          <param name="comp.root" value="@{town}"/>
         </antcall>
       </sequential></for>
     </sequential></for>
+
+    <antcall target="avatar_comps">
+      <param name="comp.bundle" value="buckle"/>
+      <param name="comp.root" value=""/>
+    </antcall>
   </target>
-  
+
   <!-- run the unit tests -->
   <target name="tests" depends="compile" description="Runs unit tests.">
     <taskdef name="unit" classpathref="tool.classpath"
@@ -871,6 +878,7 @@
       <fileset dir="lib/" includes="**/*.dylib"/>
     </copy>
   </target>
+
 
   <!-- rebuilds everything and extra bits for packaging -->
   <target name="distpkg" depends="distall">

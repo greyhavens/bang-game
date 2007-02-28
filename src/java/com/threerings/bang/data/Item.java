@@ -36,7 +36,15 @@ public abstract class Item
     }
 
     /**
-     * Returns the user id of the owner of this item.
+     * Checks whether or not this item is owned by a gang, as opposed to a user.
+     */
+    public boolean isGangOwned ()
+    {
+        return _gangOwned;
+    }
+
+    /**
+     * Returns the user or gang id of the owner of this item.
      */
     public int getOwnerId ()
     {
@@ -49,6 +57,14 @@ public abstract class Item
     public void setItemId (int itemId)
     {
         _itemId = itemId;
+    }
+
+    /**
+     * Called by the item repository when an item is loaded from the database.
+     */
+    public void setGangOwned (boolean gangOwned)
+    {
+        _gangOwned = gangOwned;
     }
 
     /**
@@ -110,6 +126,7 @@ public abstract class Item
     {
         if (_nondb) {
             out.writeInt(getItemId());
+            out.writeBoolean(isGangOwned());
             out.writeInt(getOwnerId());
         }
         out.defaultWriteObject();
@@ -123,6 +140,7 @@ public abstract class Item
     {
         if (_nondb) {
             _itemId = new Integer(in.readInt());
+            _gangOwned = in.readBoolean();
             _ownerId = in.readInt();
         }
         in.defaultReadObject();
@@ -240,13 +258,16 @@ public abstract class Item
     protected void toString (StringBuilder buf)
     {
         buf.append("itemId=").append(_itemId);
-        buf.append(", ownerId=").append(_ownerId);
+        buf.append(_gangOwned ? ", gangId=" : ", ownerId=").append(_ownerId);
     }
 
     /** This item's unique identifier. */
     protected transient Integer _itemId = Integer.valueOf(0);
 
-    /** The id of the user that owns this item. */
+    /** If true, the item is owned by a gang rather than a player. */
+    protected transient boolean _gangOwned;
+
+    /** The id of the user or gang that owns this item. */
     protected transient int _ownerId;
 
     /** Used when serializing this item for storage in the database. */

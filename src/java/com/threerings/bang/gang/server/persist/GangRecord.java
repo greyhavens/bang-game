@@ -3,11 +3,16 @@
 
 package com.threerings.bang.gang.server.persist;
 
+import java.nio.ByteBuffer;
+
 import java.sql.Timestamp;
+
 import java.util.ArrayList;
 
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
+
 import com.threerings.bang.gang.data.GangMemberEntry;
 import com.threerings.bang.gang.data.OutfitArticle;
 
@@ -43,11 +48,14 @@ public class GangRecord
     /** The amount of scrip in the gang's coffers. */
     public int scrip;
 
-    /** The encoded brand. */
-    public byte[] brand;
+    /** The encoded buckle (item ids of the parts used). */
+    public byte[] buckle;
 
     /** The number of coins in the gang's coffers. */
     public transient int coins;
+
+    /** The items owned by the gang. */
+    public transient ArrayList<Item> inventory;
 
     /** The currently configured gang outfit. */
     public transient OutfitArticle[] outfit;
@@ -65,6 +73,8 @@ public class GangRecord
         normalized = name.getNormal();
         statement = "";
         url = "";
+        buckle = new byte[0];
+        inventory = new ArrayList<Item>();
         outfit = new OutfitArticle[0];
         members = new ArrayList<GangMemberEntry>();
     }
@@ -90,6 +100,26 @@ public class GangRecord
     public String getCoinAccount ()
     {
         return "{" + name + "}";
+    }
+
+    /**
+     * Returns the buckle as an array of integers representing the item ids of the
+     * parts used.
+     */
+    public int[] getBuckle ()
+    {
+        int[] ibuckle = new int[buckle.length / 4];
+        ByteBuffer.wrap(buckle).asIntBuffer().get(ibuckle);
+        return ibuckle;
+    }
+
+    /**
+     * Sets the buckle field.
+     */
+    public void setBuckle (int[] ibuckle)
+    {
+        buckle = new byte[ibuckle.length * 4];
+        ByteBuffer.wrap(buckle).asIntBuffer().put(ibuckle);
     }
 
     /** Returns the maximum number of members this gang can have. */

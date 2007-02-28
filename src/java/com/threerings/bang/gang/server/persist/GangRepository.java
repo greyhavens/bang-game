@@ -71,6 +71,8 @@ public class GangRepository extends JORARepository
         _normalizedMask.setModified("normalized");
         _playerIdMask = _mtable.getFieldMask();
         _playerIdMask.setModified("playerId");
+        _buckleMask = _gtable.getFieldMask();
+        _buckleMask.setModified("buckle");
     }
 
     /**
@@ -118,6 +120,9 @@ public class GangRepository extends JORARepository
             // load the coin count
             grec.coins = BangServer.coinmgr.getCoinRepository().getCoinCount(
                 grec.getCoinAccount());
+
+            // load the gang inventory
+            grec.inventory = BangServer.itemrepo.loadItems(gangId, true);
 
             // load the outfit
             ArrayList<GangOutfitRecord> recs = loadAll(_otable, "where GANG_ID = " + gangId);
@@ -187,6 +192,19 @@ public class GangRepository extends JORARepository
     {
         checkedUpdate("update GANGS set STATEMENT = " + JDBCUtil.escape(statement) +
             ", URL = " + JDBCUtil.escape(url) + " where GANG_ID = " + gangId, 1);
+    }
+
+    /**
+     * Updates a gang's buckle.
+     */
+    public void updateBuckle (int gangId, int[] buckle)
+        throws PersistenceException
+    {
+        GangRecord grec = new GangRecord(gangId);
+        grec.setBuckle(buckle);
+        if (update(_gtable, grec, _buckleMask) != 1) {
+            throw new PersistenceException("Failed to update buckle [gangId=" + gangId + "].");
+        }
     }
 
     /**
@@ -580,11 +598,11 @@ public class GangRepository extends JORARepository
             "NOTORIETY INTEGER NOT NULL",
             "LAST_PLAYED DATETIME NOT NULL",
             "SCRIP INTEGER NOT NULL",
-            "BRAND BLOB",
+            "BUCKLE BLOB NOT NULL",
             "PRIMARY KEY (GANG_ID)",
         }, "");
 
-        // TEMP: add the normalized name column
+        // TEMP: add the normalized name column, change brand to buckle
         if (!JDBCUtil.tableContainsColumn(conn, "GANGS", "NORMALIZED")) {
             JDBCUtil.addColumn(conn, "GANGS", "NORMALIZED", "VARCHAR(64) UNIQUE", "NAME");
             Statement stmt = conn.createStatement();
@@ -595,7 +613,11 @@ public class GangRepository extends JORARepository
             } finally {
                 stmt.close();
             }
-            JDBCUtil.changeColumn(conn, "GANGS", "NORMALIZED", "VARCHAR(64) NOT NULL UNIQUE");
+            JDBCUtil.changeColumn(conn, "GANGS", "NORMALIZED",
+                "NORMALIZED VARCHAR(64) NOT NULL UNIQUE");
+        }
+        if (!JDBCUtil.tableContainsColumn(conn, "GANGS", "BUCKLE")) {
+            JDBCUtil.changeColumn(conn, "GANGS", "BRAND", "BUCKLE BLOB NOT NULL");
         }
         // END TEMP
 
@@ -651,5 +673,5 @@ public class GangRepository extends JORARepository
     protected Table<GangMemberRecord> _mtable;
     protected Table<GangHistoryRecord> _htable;
     protected Table<GangOutfitRecord> _otable;
-    protected FieldMask _gangIdMask, _normalizedMask, _playerIdMask;
+    protected FieldMask _gangIdMask, _normalizedMask, _playerIdMask, _buckleMask;
 }
