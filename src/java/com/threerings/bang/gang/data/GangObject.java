@@ -29,6 +29,9 @@ public class GangObject extends DObject
     /** The field name of the <code>gangPeerService</code> field. */
     public static final String GANG_PEER_SERVICE = "gangPeerService";
 
+    /** The field name of the <code>speakService</code> field. */
+    public static final String SPEAK_SERVICE = "speakService";
+
     /** The field name of the <code>gangId</code> field. */
     public static final String GANG_ID = "gangId";
 
@@ -59,8 +62,14 @@ public class GangObject extends DObject
     /** The field name of the <code>notorietyRank</code> field. */
     public static final String NOTORIETY_RANK = "notorietyRank";
 
+    /** The field name of the <code>buckle</code> field. */
+    public static final String BUCKLE = "buckle";
+
     /** The field name of the <code>outfit</code> field. */
     public static final String OUTFIT = "outfit";
+
+    /** The field name of the <code>inventory</code> field. */
+    public static final String INVENTORY = "inventory";
 
     /** The field name of the <code>members</code> field. */
     public static final String MEMBERS = "members";
@@ -187,6 +196,22 @@ public class GangObject extends DObject
         requestAttributeChange(
             GANG_PEER_SERVICE, value, ovalue);
         this.gangPeerService = value;
+    }
+
+    /**
+     * Requests that the <code>speakService</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setSpeakService (SpeakMarshaller value)
+    {
+        SpeakMarshaller ovalue = this.speakService;
+        requestAttributeChange(
+            SPEAK_SERVICE, value, ovalue);
+        this.speakService = value;
     }
 
     /**
@@ -350,6 +375,39 @@ public class GangObject extends DObject
     }
 
     /**
+     * Requests that the <code>buckle</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setBuckle (int[] value)
+    {
+        int[] ovalue = this.buckle;
+        requestAttributeChange(
+            BUCKLE, value, ovalue);
+        this.buckle = (value == null) ? null : (int[])value.clone();
+    }
+
+    /**
+     * Requests that the <code>index</code>th element of
+     * <code>buckle</code> field be set to the specified value.
+     * The local value will be updated immediately and an event will be
+     * propagated through the system to notify all listeners that the
+     * attribute did change. Proxied copies of this object (on clients)
+     * will apply the value change when they received the attribute
+     * changed notification.
+     */
+    public void setBuckleAt (int value, int index)
+    {
+        int ovalue = this.buckle[index];
+        requestElementUpdate(
+            BUCKLE, index, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.buckle[index] = value;
+    }
+
+    /**
      * Requests that the <code>outfit</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
@@ -380,6 +438,54 @@ public class GangObject extends DObject
         requestElementUpdate(
             OUTFIT, index, value, ovalue);
         this.outfit[index] = value;
+    }
+
+    /**
+     * Requests that the specified entry be added to the
+     * <code>inventory</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void addToInventory (Item elem)
+    {
+        requestEntryAdd(INVENTORY, inventory, elem);
+    }
+
+    /**
+     * Requests that the entry matching the supplied key be removed from
+     * the <code>inventory</code> set. The set will not change until the
+     * event is actually propagated through the system.
+     */
+    public void removeFromInventory (Comparable key)
+    {
+        requestEntryRemove(INVENTORY, inventory, key);
+    }
+
+    /**
+     * Requests that the specified entry be updated in the
+     * <code>inventory</code> set. The set will not change until the event is
+     * actually propagated through the system.
+     */
+    public void updateInventory (Item elem)
+    {
+        requestEntryUpdate(INVENTORY, inventory, elem);
+    }
+
+    /**
+     * Requests that the <code>inventory</code> field be set to the
+     * specified value. Generally one only adds, updates and removes
+     * entries of a distributed set, but certain situations call for a
+     * complete replacement of the set value. The local value will be
+     * updated immediately and an event will be propagated through the
+     * system to notify all listeners that the attribute did
+     * change. Proxied copies of this object (on clients) will apply the
+     * value change when they received the attribute changed notification.
+     */
+    public void setInventory (DSet<com.threerings.bang.data.Item> value)
+    {
+        requestAttributeChange(INVENTORY, value, this.inventory);
+        @SuppressWarnings("unchecked") DSet<com.threerings.bang.data.Item> clone =
+            (value == null) ? null : value.typedClone();
+        this.inventory = clone;
     }
 
     /**

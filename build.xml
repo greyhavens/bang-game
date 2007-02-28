@@ -879,7 +879,6 @@
     </copy>
   </target>
 
-
   <!-- rebuilds everything and extra bits for packaging -->
   <target name="distpkg" depends="distall">
     <if><istrue value="${build.docs}"/><then>
