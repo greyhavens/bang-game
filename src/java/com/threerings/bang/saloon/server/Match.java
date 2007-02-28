@@ -105,11 +105,16 @@ public class Match
             return false;
         }
 
-        // make sure we're not a foe of theirs and none of them one of ours
+        // make sure we're not a foe of theirs and none of them one of ours and that we're not
+        // somehow already in this match
         for (int i = 0; i < players.length; i ++) {
-            if (players[i] != null && (players[i].isFoe(player.playerId) ||
-                                       player.isFoe(players[i].playerId))) {
-                return false;
+            if (players[i] != null) {
+                // if we're already in this match, we can just return true at this point
+                if (players[i].playerId == player.playerId) {
+                    return true;
+                } else if (players[i].isFoe(player.playerId) || player.isFoe(players[i].playerId)) {
+                    return false;
+                }
             }
         }
 
