@@ -196,7 +196,7 @@
   <class classId="10" name="familiar_t" source="#57AC6A" range="0.1, 0.6, 1">
     <color colorId="1" name="red" offsets="0.65, 0, 0.2"/>
   </class>
-  
+
   <!-- unit recolorations -->
   <class classId="12" name="unit" source="#0700FF" range="0.1, 0.8, 1">
     <color colorId="1" name="grey" offsets="0, -1, -0.28"/>
@@ -218,8 +218,8 @@
     <color colorId="5" name="bad" offsets="-0.1, -0.1, -0.36"/>
   </class>
 
-  <!-- buckle metal recolorations -->
-  <class classId="14" name="buckle" source="#A29E0C" range="0.05, 0.8, 0.6">
+  <!-- buckle recolorations (primary because they're composed in fingerprints) -->
+  <class classId="14" name="buckle_p" source="#A29E0C" range="0.05, 0.8, 0.6">
     <color colorId="1" name="gold" offsets="0, 0, 0"/>
     <color colorId="2" name="old_gold" offsets="1, -0.02, -0.18"/>
     <color colorId="3" name="silver" offsets="0.27, -0.78, -0.065"/>
@@ -233,8 +233,8 @@
     <color colorId="11" name="blue" offsets="0.39, -0.5, -0.24"/>
   </class>
 
-  <!-- buckle background1 recolorations -->
-  <class classId="15" name="buckle_back_1" source="#805D4A" range="0.05, 0.8, 0.6">
+  <!-- primary buckle background recolorations -->
+  <class classId="15" name="buckle_back_p" source="#805D4A" range="0.05, 0.8, 0.6">
     <color colorId="1" name="gold" offsets="0.075, 0.53, 0.065"/>
     <color colorId="2" name="old_gold" offsets="0.075, 0.45, -0.15"/>
     <color colorId="3" name="silver" offsets="-0.57, -0.12, 0.075"/>
@@ -249,8 +249,8 @@
     <color colorId="12" name="tan" offsets="-0.95, 0.23, -0.075"/>
   </class>
 
-  <!-- buckle background2 recolorations -->
-  <class classId="16" name="buckle_back_2" source="#778791" range="0.05, 0.8, 0.6">
+  <!-- secondary buckle background recolorations -->
+  <class classId="16" name="buckle_back_s" source="#778791" range="0.05, 0.8, 0.6">
     <color colorId="1" name="gold" offsets="0.58, 0.65, 0.15"/>
     <color colorId="2" name="old_gold" offsets="0.58, 0.54, -0.075"/>
     <color colorId="3" name="silver" offsets="0, -1, 0.054"/>

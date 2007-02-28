@@ -95,10 +95,10 @@
          colors="skin,clothes_p,clothes_s,clothes_t" renderPriority="190"/>
 
   <!-- buckle component classes -->
-  <class name="buckle/background" colors="buckle_back_1, buckle_back_2" mask="border"
+  <class name="buckle/background" colors="buckle_s,buckle_t" mask="border"
          renderPriority="10"/>
-  <class name="buckle/border" colors="buckle"
+  <class name="buckle/border" colors="buckle_p"
          renderPriority="20"/>
-  <class name="buckle/icon" colors="buckle"
+  <class name="buckle/icon" colors="buckle_p" mask="border" translate="true"
          renderPriority="30"/>
 </classes>
