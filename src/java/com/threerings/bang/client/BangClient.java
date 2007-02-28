@@ -1137,7 +1137,7 @@ public class BangClient extends BasicClient
             FadeInOutEffect fade = new FadeInOutEffect(ColorRGBA.black, 0f, 1f, 0.5f, true) {
                 protected void fadeComplete () {
                     super.fadeComplete();
-                    _ctx.getRootNode().removeWindow(_mview);
+                    _ctx.getRootNode().removeAllWindows();
                     _viewTransition = false;
                     fadeInMainView(view);
                 }
