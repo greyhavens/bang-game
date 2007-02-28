@@ -4,17 +4,24 @@
 <parts>
   <!-- buckle backgrounds -->
   <class name="background">
+    <part name="fountain"/>
     <part name="oval"/>
+    <part name="plain"/>
+    <part name="swirls"/>
+    <part name="tris"/>
   </class>
 
   <!-- buckle borders -->
   <class name="border">
+    <part name="frill_rect"/>
     <part name="rope_oval"/>
+    <part name="rope_shape"/>
   </class>
 
   <!-- buckle icons -->
   <class name="icon">
     <part name="bull_head"/>
+    <part name="bull_skull"/>
     <part name="star_small"/>
   </class>
 </parts>
