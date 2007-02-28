@@ -273,11 +273,10 @@
     <color colorId="20" name="moss" offsets="0.63, -0.3, -0.25"/>
     <color colorId="21" name="lime" offsets="0.7, 0, -0.15"/>
     <color colorId="22" name="green" offsets="0.7, 0, -0.5"/>
-    <color colorId="23" name="olive" offsets="0.7, -0.4, -0.5"/>
-    <color colorId="24" name="aqua" offsets="0.87, 0.2, -0.15"/>
-    <color colorId="25" name="blue" offsets="0, 0.1, -0.05"/>
-    <color colorId="26" name="violet" offsets="0.22, 0, -0.2"/>
-    <color colorId="27" name="purple" offsets="0.15, 0.2, -0.25"/>
+    <color colorId="23" name="aqua" offsets="0.87, 0.2, -0.15"/>
+    <color colorId="24" name="blue" offsets="0, 0.1, -0.05"/>
+    <color colorId="25" name="violet" offsets="0.22, 0, -0.2"/>
+    <color colorId="26" name="purple" offsets="0.15, 0.2, -0.25"/>
   </class>
 
 </colors>
