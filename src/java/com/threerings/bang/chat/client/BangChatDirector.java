@@ -15,6 +15,7 @@ import com.threerings.util.Name;
 
 import com.threerings.presents.dobj.MessageEvent;
 
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.chat.client.ChatDirector;
 import com.threerings.crowd.chat.client.SpeakService;
 import com.threerings.crowd.chat.data.ChatMessage;
@@ -25,6 +26,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangContext;
+import com.threerings.bang.game.data.BangObject;
 
 /**
  * Handles custom chat bits for Bang.
@@ -178,6 +180,16 @@ public class BangChatDirector extends ChatDirector
             return "e.too_chatty";
         }
         _chatThrottle.noteOp(now);
+
+        // while a game is playing, only let the participants chat
+        PlaceObject plobj = _ctx.getLocationDirector().getPlaceObject();
+        if (plobj instanceof BangObject) {
+            BangObject bangobj = (BangObject)plobj;
+            if (bangobj.state == BangObject.IN_PLAY &&
+                    bangobj.getPlayerIndex(_ctx.getUserObject().handle) == -1) {
+                return "e.not_player";
+            }
+        }
         return null;
     }
 

@@ -14,6 +14,7 @@ import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
 
 import com.samskivert.util.Interval;
+import com.threerings.util.MessageBundle;
 import com.threerings.util.Name;
 
 import com.threerings.crowd.chat.client.ChatDirector;
@@ -21,6 +22,7 @@ import com.threerings.crowd.chat.client.ChatDisplay;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
+import com.threerings.crowd.chat.data.TellFeedbackMessage;
 import com.threerings.crowd.chat.data.UserMessage;
 import com.threerings.crowd.data.PlaceObject;
 
@@ -46,6 +48,7 @@ public class OverlayChatView extends BWindow
 
         _ctx = ctx;
         _chatdtr = (BangChatDirector)_ctx.getChatDirector();
+        _msgs = _ctx.getMessageManager().getBundle(BangCodes.CHAT_MSGS);
 
         _stamps = new long[CHAT_LINES];
         _history = new MessageLabel[CHAT_LINES];
@@ -116,7 +119,7 @@ public class OverlayChatView extends BWindow
     {
         return _input.hasFocus();
     }
-    
+
     /**
      * Instructs our chat input field to request focus.
      */
@@ -143,11 +146,12 @@ public class OverlayChatView extends BWindow
 
         if (msg instanceof UserMessage) {
             UserMessage umsg = (UserMessage) msg;
-            if (umsg.localtype == ChatCodes.USER_CHAT_TYPE) {
-                // TODO: note whisper
-                appendMessage(umsg.speaker, umsg.message);
+            if (umsg instanceof TellFeedbackMessage) {
+                appendTellFeedback(umsg.speaker, umsg.message);
+            } else if (umsg.localtype == ChatCodes.USER_CHAT_TYPE) {
+                appendMessage(umsg.speaker, umsg.message, true);
             } else {
-                appendMessage(umsg.speaker, umsg.message);
+                appendMessage(umsg.speaker, umsg.message, false);
             }
             return true;
 
@@ -173,14 +177,27 @@ public class OverlayChatView extends BWindow
         appendMessage(message, ColorRGBA.red);
     }
 
-    protected void appendMessage (Name speaker, String message)
+    protected void appendTellFeedback (Name speaker, String message)
+    {
+        ColorRGBA color = ColorRGBA.white;
+        int pidx;
+        if ((pidx = _bangobj.getPlayerIndex(_ctx.getUserObject().handle)) != -1) {
+            color = JPIECE_COLORS[colorLookup[pidx + 1]];
+        }
+        appendMessage(_msgs.xlate(_msgs.tcompose("m.told_format", speaker, message)), color);
+    }
+
+    protected void appendMessage (Name speaker, String message, boolean tell)
     {
         ColorRGBA color = ColorRGBA.white;
         int pidx;
         if ((pidx = _bangobj.getPlayerIndex(speaker)) != -1) {
             color = JPIECE_COLORS[colorLookup[pidx + 1]];
         }
-        appendMessage(speaker + ": " + message, color);
+        String msg = tell ?
+            _msgs.xlate(_msgs.tcompose("m.tell_format", speaker, message)) :
+            speaker + ": " + message;
+        appendMessage(msg, color);
     }
 
     protected void appendMessage (String text, ColorRGBA color)
@@ -248,6 +265,7 @@ public class OverlayChatView extends BWindow
     protected BangContext _ctx;
     protected BangChatDirector _chatdtr;
     protected BangObject _bangobj;
+    protected MessageBundle _msgs;
 
     protected BTextField _input;
 

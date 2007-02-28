@@ -13,12 +13,15 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.chat.data.ChatCodes;
 import com.threerings.crowd.chat.data.ChatMessage;
 import com.threerings.crowd.chat.data.SystemMessage;
 
 import com.threerings.bang.chat.data.PlayerMessage;
 import com.threerings.bang.chat.client.TabbedChatView.UserTab;
+
+import com.threerings.bang.game.data.BangObject;
 
 import com.threerings.bang.client.BangClient;
 import com.threerings.bang.client.MainView;
@@ -153,6 +156,11 @@ public class PardnerChatView extends BDecoratedWindow
             if (msg instanceof PlayerMessage &&
                 ChatCodes.USER_CHAT_TYPE.equals(msg.localtype)) {
                 PlayerMessage pmsg = (PlayerMessage)msg;
+                // let players inside a game chat to each other directly
+                PlaceObject plobj = _ctx.getLocationDirector().getPlaceObject();
+                if (plobj instanceof BangObject && plobj.getOccupantInfo(pmsg.speaker) != null) {
+                    return false;
+                }
                 Handle handle = (Handle)pmsg.speaker;
                 UserTab tab = openUserTab(handle, pmsg.avatar, false);
                 if (tab == null) {
