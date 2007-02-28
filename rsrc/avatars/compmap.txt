@@ -1,7 +1,14 @@
-531
+538
+buckle/background := fountain := 532
 buckle/background := oval := 528
+buckle/background := plain := 533
+buckle/background := swirls := 534
+buckle/background := tris := 535
+buckle/border := frill_rect := 536
 buckle/border := rope_oval := 529
+buckle/border := rope_shape := 537
 buckle/icon := bull_head := 530
+buckle/icon := bull_skull := 538
 buckle/icon := star_small := 531
 female/clothing_back := bodice := 174
 female/clothing_back := boots := 324
