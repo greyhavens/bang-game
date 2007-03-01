@@ -9,6 +9,8 @@ import com.samskivert.util.IntIntMap;
 import com.threerings.bang.game.data.BangObject;
 import com.threerings.bang.game.data.piece.Piece;
 
+import static com.threerings.bang.Log.log;
+
 /**
  * When a dirigible comes crashing down.
  */
@@ -43,6 +45,20 @@ public class CrashEffect extends DamageEffect
         }
 
         super.prepare(bangobj, dammap);
+    }
+
+    @Override // documentation inherited
+    public boolean apply (BangObject bangobj, Observer obs)
+    {
+        super.apply(bangobj, obs);
+
+        Piece piece = bangobj.pieces.get(crasherId);
+        if (piece == null) {
+            log.warning("Missing crasher for crash effect [id=" + crasherId + "].");
+            return false;
+        }
+        removeAndReport(bangobj, piece, obs);
+        return true;
     }
 
     @Override // documentation inherited

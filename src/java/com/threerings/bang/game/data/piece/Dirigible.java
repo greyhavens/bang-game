@@ -60,10 +60,6 @@ public class Dirigible extends Unit
     @Override // documentation inherited
     public boolean removeWhenDead ()
     {
-        if (_deathTarget != null) {
-            _deathTarget = null;
-            return true;
-        }
         return false;
     }
 
