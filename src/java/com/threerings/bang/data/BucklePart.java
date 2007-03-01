@@ -34,12 +34,15 @@ public class BucklePart extends Item
     /**
      * Creates a new buckle part item with the specified components.
      */
-    public BucklePart (int ownerId, String pclass, String name, int[] components)
+    public BucklePart (int gangId, String pclass, String name, int[] components)
     {
-        super(ownerId);
+        super(gangId);
         _class = pclass;
         _name = name;
         _components = components;
+
+        // buckles always belong to gangs
+        setGangOwned(true);
     }
 
     /**
@@ -84,21 +87,12 @@ public class BucklePart extends Item
     }
 
     /**
-     * Returns the part's configured layer.
-     */
-    public byte getLayer ()
-    {
-        return _layer;
-    }
-
-    /**
      * Sets the part's position.
      */
-    public void setPosition (short x, short y, byte layer)
+    public void setPosition (short x, short y)
     {
         _x = x;
         _y = y;
-        _layer = layer;
     }
 
     @Override // documentation inherited
@@ -144,11 +138,9 @@ public class BucklePart extends Item
         StringUtil.toString(buf, _components);
         buf.append(", x=").append(_x);
         buf.append(", y=").append(_y);
-        buf.append(", layer=").append(_layer);
     }
 
     protected String _class, _name;
     protected int[] _components;
     protected short _x, _y;
-    protected byte _layer;
 }

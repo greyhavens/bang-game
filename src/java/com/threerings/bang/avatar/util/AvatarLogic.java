@@ -3,6 +3,8 @@
 
 package com.threerings.bang.avatar.util;
 
+import java.awt.Point;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,8 +30,12 @@ import com.threerings.cast.NoSuchComponentException;
 
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.util.BangUtil;
+
+import com.threerings.bang.game.util.PointSet;
+import com.threerings.bang.gang.data.GangObject;
 
 import com.threerings.bang.avatar.data.AvatarCodes;
 import com.threerings.bang.avatar.data.Look;
@@ -72,6 +78,26 @@ public class AvatarLogic
         }
     }
 
+    /** Defines a class of parts for gang buckles. */
+    public static class PartClass
+    {
+        /** The name of the class. */
+        public String name;
+
+        /** Whether or not this kind of part can be omitted. */
+        public boolean optional;
+
+        /** Whether or not buckles allow multiple instances of this part. */
+        public boolean multiple;
+
+        public PartClass (String name, boolean optional, boolean multiple)
+        {
+            this.name = name;
+            this.optional = optional;
+            this.multiple = multiple;
+        }
+    }
+
     /** Defines the various aspects of an avatar's look. */
     public static final Aspect[] ASPECTS = {
         new Aspect("head", new String[] { "head" }, false, false),
@@ -93,6 +119,13 @@ public class AvatarLogic
         new Aspect("jewelry", new String[] { "jewelry" }, true, false),
         new Aspect("makeup", new String[] { "makeup" }, true, false),
         new Aspect("familiar", new String[] { "familiar" }, true, false),
+    };
+
+    /** Defines the classes of parts that define a buckle. */
+    public static final PartClass[] BUCKLE_PARTS = {
+        new PartClass("background", false, false),
+        new PartClass("border", false, false),
+        new PartClass("icon", true, true),
     };
 
     /** The colorization class for skin colors. */
@@ -175,6 +208,18 @@ public class AvatarLogic
     public static int composeZations (int primary, int secondary, int tertiary)
     {
         return (primary << 16) | (secondary << 21) | (tertiary << 26);
+    }
+
+    /**
+     * Creates a colorization mask containing the specified colors.
+     */
+    public static int composeZations (ColorRecord[] crecs)
+    {
+        int zation = 0;
+        for (ColorRecord crec : crecs) {
+            zation |= composeZation(crec.cclass.name, crec.colorId);
+        }
+        return zation;
     }
 
     /** Decodes the global skin colorization. */
@@ -289,19 +334,32 @@ public class AvatarLogic
      */
     public CharacterDescriptor decodeBuckle (int[] buckle)
     {
-        // compact the array to remove unused entries
-        buckle = IntListUtil.compact(buckle);
+        // each element consists of two integers: the first containing the component id and
+        // colorization, the second containing the encoded coordinates (if any)
+        int[] componentIds = new int[buckle.length / 2];
+        Colorization[][] zations = new Colorization[componentIds.length][];
+        Point[] xlations = new Point[componentIds.length];
 
-        // the elements are part colorizations and component ids composed into single integers
-        int[] componentIds = new int[buckle.length];
-        Colorization[][] zations = new Colorization[buckle.length][];
-        for (int ii = 0; ii < buckle.length; ii++) {
-            int pvalue = buckle[ii];
+        for (int ii = 0; ii < componentIds.length; ii++) {
+            int pvalue = buckle[ii*2];
             componentIds[ii] = (pvalue & 0xFFFF);
             zations[ii] = decodeColorizations(pvalue, null);
+            try {
+                CharacterComponent ccomp = _crepo.getComponent(componentIds[ii]);
+                if (!ccomp.componentClass.translate) {
+                    continue;
+                }
+                int cvalue = buckle[ii*2+1];
+                xlations[ii] = new Point(PointSet.decodeX(cvalue), PointSet.decodeY(cvalue));
+
+            } catch (NoSuchComponentException e) {
+                // a warning will have already been logged
+            }
         }
 
-        return new CharacterDescriptor(componentIds, zations);
+        CharacterDescriptor cdesc = new CharacterDescriptor(componentIds, zations);
+        cdesc.setTranslations(xlations);
+        return cdesc;
     }
 
     /**
@@ -570,12 +628,54 @@ public class AvatarLogic
     }
 
     /**
+     * Creates a starter gang buckle.  The returned items will need to have their ownerIds
+     * set.
+     */
+    public BucklePart[] createDefaultBuckle ()
+    {
+        // create a dummy gangobj
+        GangObject gangobj = new GangObject();
+
+        // add instances of all required parts
+        ArrayList<BucklePart> parts = new ArrayList<BucklePart>();
+        for (PartClass pclass : BUCKLE_PARTS) {
+            if (pclass.optional) {
+                continue;
+            }
+            BucklePartCatalog.Part part = _partcat.getStarter(pclass.name);
+            if (part == null) {
+                log.warning("Couldn't find starter buckle part [gang=" + gangobj.name +
+                    ", class=" + pclass.name + "].");
+                continue;
+            }
+            ColorRecord[] crecs = pickRandomColors(getColorizationClasses(part), gangobj);
+            parts.add(createBucklePart(-1, part, composeZations(crecs)));
+        }
+        return parts.toArray(new BucklePart[parts.size()]);
+    }
+
+    /**
+     * Creates a buckle part from a catalog entry and a colorization mask.
+     */
+    public BucklePart createBucklePart (int gangId, BucklePartCatalog.Part part, int zations)
+    {
+        return new BucklePart(gangId, part.pclass.name, part.name, getComponentIds(part, zations));
+    }
+
+    /**
      * Picks a set of random colors for the supplied article, limiting them to those accessible
      * by the given entity.
      */
     public ColorRecord[] pickRandomColors (ArticleCatalog.Article article, DObject entity)
     {
-        String[] cclasses = getColorizationClasses(article);
+        return pickRandomColors(getColorizationClasses(article), entity);
+    }
+
+    /**
+     * Picks random colors for each of the color classes specified.
+     */
+    public ColorRecord[] pickRandomColors (String[] cclasses, DObject entity)
+    {
         ColorRecord[] crecs = new ColorRecord[cclasses.length];
         for (int ii = 0; ii < cclasses.length; ii++) {
             crecs[ii] = ColorConstraints.pickRandomColor(_pository, cclasses[ii], entity);
@@ -610,6 +710,18 @@ public class AvatarLogic
     }
 
     /**
+     * Returns the colorization classes used by the specified part.
+     */
+    public String[] getColorizationClasses (BucklePartCatalog.Part part)
+    {
+        if (part.colors == null) {
+            ComponentClass cclass = _crepo.getComponentClass(part.pclass.getComponentClass());
+            part.colors = cclass.colors;
+        }
+        return part.colors;
+    }
+
+    /**
      * Looks up the appropriate component ids for the specified article, combines them with the
      * supplied colorizations and returns an array suitable for using in an {@link Article}
      * instance.
@@ -627,6 +739,24 @@ public class AvatarLogic
                 log.warning("Article references unknown component [article=" + article.name +
                             ", cclass=" + comp.cclass + ", name=" + comp.name + "].");
             }
+        }
+        return componentIds;
+    }
+
+    /**
+     * Looks up the component id for the specified part and combines it with the given colorization
+     * mask.
+     */
+    public int[] getComponentIds (BucklePartCatalog.Part part, int zations)
+    {
+        int[] componentIds = null;
+        String cclass = part.pclass.getComponentClass();
+        try {
+            CharacterComponent ccomp = _crepo.getComponent(cclass, part.name);
+            componentIds = new int[] { ccomp.componentId | zations };
+        } catch (NoSuchComponentException nsce) {
+            log.warning("Buckle part does not correspond to component [part=" + part.name +
+                ", cclass=" + cclass + "].");
         }
         return componentIds;
     }

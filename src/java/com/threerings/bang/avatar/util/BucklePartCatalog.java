@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.samskivert.util.RandomUtil;
+
 import static com.threerings.bang.Log.log;
 
 /**
@@ -30,15 +32,28 @@ public class BucklePartCatalog
         /** A mapping of names to the parts in this class. */
         public HashMap<String, Part> parts = new HashMap<String, Part>();
 
+        /** A list of all the starter parts for this class. */
+        public ArrayList<Part> starters = new ArrayList<Part>();
+
+        /** Returns the name of the corresponding component class. */
+        public String getComponentClass ()
+        {
+            return "buckle/" + name;
+        }
+
         /** Used when parsing part definitions. */
         public void addPart (Part part)
         {
+            part.pclass = this;
             parts.put(part.name, part);
+            if (part.starter) {
+                starters.add(part);
+            }
         }
 
         /** Increase this value when object's serialized state is impacted by a
          * class change (modification of fields, inheritance). */
-        private static final long serialVersionUID = 1;
+        private static final long serialVersionUID = 2;
     }
 
     /** Contains metadata on a particular part. */
@@ -47,9 +62,18 @@ public class BucklePartCatalog
         /** The name of this particular part. */
         public String name;
 
+        /** The colorization classes used by this part. */
+        public String[] colors;
+
+        /** Whether or not this is a starter part. */
+        public boolean starter;
+
+        /** A reference to the part class. */
+        public PartClass pclass;
+
         /** Increase this value when object's serialized state is impacted by a
          * class change (modification of fields, inheritance). */
-        private static final long serialVersionUID = 1;
+        private static final long serialVersionUID = 2;
     }
 
     /**
@@ -79,6 +103,15 @@ public class BucklePartCatalog
     {
         PartClass pcrec = _classes.get(pclass);
         return (pcrec == null) ? null : pcrec.parts.get(part);
+    }
+
+    /**
+     * Returns a random starter part for the specified class.
+     */
+    public Part getStarter (String pclass)
+    {
+        PartClass pcrec = _classes.get(pclass);
+        return (pcrec == null) ? null : RandomUtil.pickRandom(pcrec.starters);
     }
 
     /**

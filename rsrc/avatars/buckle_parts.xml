@@ -6,7 +6,7 @@
   <class name="background">
     <part name="fountain"/>
     <part name="oval"/>
-    <part name="plain"/>
+    <part name="plain" starter="true"/>
     <part name="swirls"/>
     <part name="tris"/>
   </class>
@@ -14,7 +14,7 @@
   <!-- buckle borders -->
   <class name="border">
     <part name="frill_rect"/>
-    <part name="rope_oval"/>
+    <part name="rope_oval" starter="true"/>
     <part name="rope_shape"/>
   </class>
 

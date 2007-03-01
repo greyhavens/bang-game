@@ -1024,6 +1024,7 @@ public class GangHandler
         _gangobj.notorietyRank = getNotorietyRank(record.notoriety);
         _gangobj.buckle = record.getBuckle();
         _gangobj.outfit = record.outfit;
+        _gangobj.inventory = new DSet<Item>(record.inventory);
         _gangobj.members = new DSet<GangMemberEntry>(record.members.iterator());
         _maxMembers = record.getMaxMembers();
 

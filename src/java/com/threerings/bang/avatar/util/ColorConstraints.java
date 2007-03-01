@@ -121,16 +121,16 @@ public class ColorConstraints
         public abstract boolean isMatch (PlayerObject user);
         public abstract boolean isMatch (GangObject gang);
     }
-    
+
     /** Normal colors are available to every player after having created their
-     * first avatar look and are always available to gangs. */
+     * first avatar look and to gangs after they've been given their first buckle. */
     protected static class Normal extends DoublePredicate {
         public boolean isMatch (PlayerObject user) {
             // available to anyone that has created their initial avatar
             return (user.handle != null);
         }
         public boolean isMatch (GangObject gang) {
-            return true;
+            return (gang.buckle != null);
         }
     }
 
@@ -270,5 +270,40 @@ public class ColorConstraints
             preds = new HashMap<String,Predicate<DObject>>());
         _preds.put("familiar_s", preds);
         _preds.put("familiar_t", preds);
+
+        // TODO: figure out requirements for these
+        _preds.put("buckle_p",
+            preds = new HashMap<String,Predicate<DObject>>());
+        _preds.put("buckle_back_p", preds);
+        _preds.put("buckle_back_s", preds);
+
+        preds.put("gold", new Normal());
+        preds.put("old_gold", new Normal());
+        preds.put("silver", new Normal());
+        preds.put("bronze", new Normal());
+        preds.put("rust", new Normal());
+        preds.put("dark", new Normal());
+        preds.put("green", new Starter());
+        preds.put("steel", new Starter());
+        preds.put("copper", new Normal());
+        preds.put("old", new Normal());
+        preds.put("blue", new Starter());
+        preds.put("greencopper", new Normal());
+        preds.put("bluesteel", new Normal());
+        preds.put("white", new Normal());
+        preds.put("tan", new Starter());
+        preds.put("dkbrn", new Normal());
+        preds.put("leather", new Starter());
+        preds.put("brown", new Starter());
+        preds.put("pink", new Normal());
+        preds.put("red", new Normal());
+        preds.put("maroon", new Normal());
+        preds.put("orange", new Normal());
+        preds.put("yellow", new Normal());
+        preds.put("moss", new Normal());
+        preds.put("lime", new Normal());
+        preds.put("aqua", new Normal());
+        preds.put("violet", new Normal());
+        preds.put("purple", new Normal());
     }
 }

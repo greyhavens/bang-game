@@ -31,7 +31,9 @@ import com.threerings.presents.peer.server.PeerManager;
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
+import com.threerings.bang.data.Item;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.PosterInfo;
 import com.threerings.bang.server.BangServer;
@@ -288,8 +290,14 @@ public class GangManager
                           final InvocationService.ConfirmListener listener)
         throws InvocationException
     {
+        // store the user's avatar
         Look look = user.getLook(Look.Pose.WANTED_POSTER);
         final AvatarInfo avatar = (look == null) ? null : look.getAvatar(user);
+
+        // create the buckle bits in the omgr thread
+        final BucklePart[] parts = BangServer.alogic.createDefaultBuckle();
+
+        // start up the action
         new FinancialAction(user, FORM_GANG_SCRIP_COST, FORM_GANG_COIN_COST) {
             protected int getCoinType () {
                 return CoinTransaction.GANG_CREATION;
@@ -313,6 +321,19 @@ public class GangManager
                 _grec.members.add(new GangMemberEntry(
                     user.handle, user.playerId, LEADER_RANK, _mrec.joined, 0, _mrec.joined));
                 _grec.avatar = avatar;
+
+                // set the buckle parts' owner ids before inserting them, then note their
+                // item ids for the buckle field
+                int[] bids = new int[parts.length];
+                for (int ii = 0; ii < parts.length; ii++) {
+                    BucklePart part = parts[ii];
+                    part.setOwnerId(_grec.gangId);
+                    BangServer.itemrepo.insertItem(part);
+                    _grec.inventory.add(part);
+                    bids[ii] = part.getItemId();
+                }
+                _gangrepo.updateBuckle(_grec.gangId, bids);
+                _grec.setBuckle(bids);
                 return null;
             }
             protected void rollbackPersistentAction ()
@@ -320,6 +341,9 @@ public class GangManager
                 // deleting the gang also deletes its history
                 _gangrepo.deleteGang(_grec.gangId);
                 _gangrepo.deleteMember(user.playerId);
+                for (Item item : _grec.inventory) {
+                    BangServer.itemrepo.deleteItem(item, "rollback");
+                }
             }
 
             protected void actionCompleted () {
