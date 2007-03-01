@@ -179,6 +179,14 @@ public class TabbedChatView extends BContainer
         }
 
         /**
+         * Change the user avatar.
+         */
+        public void setAvatar (AvatarInfo avatar)
+        {
+            _avatar = avatar;
+        }
+
+        /**
          * Attempts to send a tell to this tab's user.
          */
         public void requestTell (final String msg)

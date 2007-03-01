@@ -201,6 +201,8 @@ public class PardnerChatView extends BDecoratedWindow
                     _placeChat.addUserTab(handle.toString(), tab, focus);
                 }
                 _users.put(handle, tab);
+            } else {
+                tab.setAvatar(avatar);
             }
 
             // if we are delegating to a place chat, do that now
