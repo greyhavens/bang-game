@@ -147,7 +147,7 @@ if (!$dry_run) {
 }
 
 # report music purchases over the last five days
-if ($host eq "bang1") {
+if ($host eq "bang1.luna.threerings.net") {
     my $query = "select DATE(TIME) as SUMDATE, -SUM(COINS) from COIN_HISTORY " .
         "where TIME >= DATE_SUB(CURDATE(), INTERVAL 5 DAY) and TYPE = 109 group by SUMDATE;";
     my $cmd = "$root/bin/mysql bang -e '$query'";
