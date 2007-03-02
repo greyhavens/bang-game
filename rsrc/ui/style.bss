@@ -1991,13 +1991,15 @@ gang_info_design {
 }
 
 gang_info_content {
-  padding: 5 15;
-  size: 380 185;
+  padding: 5 0;
+  size: -1 185;
 }
 
 gang_title {
   font: "Old Town" bold 36;
   color: #652708;
+  size: 380 -1;
+  text-align: center;
 }
 
 gang_notoriety {

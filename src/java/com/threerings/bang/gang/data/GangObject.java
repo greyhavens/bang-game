@@ -5,8 +5,6 @@ package com.threerings.bang.gang.data;
 
 import java.net.URL;
 
-import com.samskivert.util.ArrayUtil;
-
 import com.threerings.presents.dobj.DObject;
 import com.threerings.presents.dobj.DSet;
 
@@ -15,15 +13,12 @@ import com.threerings.crowd.chat.data.SpeakObject;
 
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BuckleInfo;
-import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.saloon.data.TopRankObject;
 import com.threerings.bang.saloon.data.TopRankedList;
 
 import com.threerings.bang.gang.util.GangUtil;
-
-import static com.threerings.bang.Log.log;
 
 /**
  * Contains data concerning a single gang.
@@ -166,30 +161,9 @@ public class GangObject extends DObject
      * Using the buckle parts in the inventory and the part list in the {@link #buckle} field,
      * composes and returns the buckle fingerprint.
      */
-    public BuckleInfo getBuckle ()
+    public BuckleInfo getBuckleInfo ()
     {
-        // find the listed parts
-        BucklePart[] parts = new BucklePart[buckle.length];
-        for (int ii = 0; ii < parts.length; ii++) {
-            Item item = inventory.get(buckle[ii]);
-            if (!(item instanceof BucklePart)) {
-                log.warning("Invalid part in buckle [gang=" + name + ", item=" + item + "].");
-                return null;
-            }
-            parts[ii] = (BucklePart)item;
-        }
-
-        // put them into the print in order, with each component having an encoded component id
-        // and colorization followed by encoded coordinates
-        int[] print = new int[0], pair = new int[2];
-        for (BucklePart part : parts) {
-            pair[1] = (part.getX() << 16) | (part.getY() & 0xFFFF);
-            for (int comp : part.getComponents()) {
-                pair[0] = comp;
-                print = ArrayUtil.concatenate(print, pair);
-            }
-        }
-        return new BuckleInfo(print);
+        return GangUtil.getBuckleInfo(buckle, inventory);
     }
 
     /**

@@ -3,25 +3,17 @@
 
 package com.threerings.bang.data;
 
-import java.util.Arrays;
+import com.threerings.cast.CharacterDescriptor;
 
-import com.samskivert.util.ObjectUtil;
-import com.samskivert.util.StringUtil;
+import com.threerings.bang.avatar.util.AvatarLogic;
 
-import com.threerings.io.SimpleStreamableObject;
+import com.threerings.bang.util.BasicContext;
 
 /**
  * Contains information on an avatar: either a fingerprint or a custom image.
  */
-public class AvatarInfo extends SimpleStreamableObject
-    implements Cloneable
+public class AvatarInfo extends BaseAvatarInfo
 {
-    /** An avatar fingerprint. */
-    public int[] print;
-
-    /** The path to a custom avatar image. */
-    public String image;
-
     /** A default constructor used during unserialization. */
     public AvatarInfo ()
     {
@@ -33,47 +25,46 @@ public class AvatarInfo extends SimpleStreamableObject
         this.print = print;
     }
 
-    /**
-     * Returns true if we have either a print or a custom image.
-     */
-    public boolean isValid ()
+    // documentation inherited
+    public CharacterDescriptor decodePrint (BasicContext ctx)
     {
-        return (print != null && print.length > 0) || !StringUtil.isBlank(image);
+        return (print == null || print.length == 0) ?
+            null : ctx.getAvatarLogic().decodeAvatar(print);
+    }
+
+    // documentation inherited
+    public String getCharacterAction ()
+    {
+        return "default";
+    }
+
+    // documentation inherited
+    public int getWidth ()
+    {
+        return AvatarLogic.WIDTH;
+    }
+
+    // documentation inherited
+    public int getHeight ()
+    {
+        return AvatarLogic.HEIGHT;
+    }
+
+    // documentation inherited
+    public int getFramedWidth ()
+    {
+        return AvatarLogic.FRAMED_WIDTH;
+    }
+
+    // documentation inherited
+    public int getFramedHeight ()
+    {
+        return AvatarLogic.FRAMED_HEIGHT;
     }
 
     @Override // from Object
     public boolean equals (Object other)
     {
-        if (other instanceof AvatarInfo) {
-            AvatarInfo oinfo = (AvatarInfo)other;
-            return Arrays.equals(print, oinfo.print) && ObjectUtil.equals(image, oinfo.image);
-        } else {
-            return false;
-        }
-    }
-
-    @Override // from Object
-    public int hashCode ()
-    {
-        int hashCode = 0;
-        if (print != null) {
-            for (int value : print) {
-                hashCode ^= value;
-            }
-        }
-        if (image != null) {
-            hashCode ^= image.hashCode();
-        }
-        return hashCode;
-    }
-
-    @Override // from Object
-    public Object clone ()
-    {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException cnse) {
-            throw new RuntimeException(cnse);
-        }
+        return (other instanceof AvatarInfo && super.equals(other));
     }
 }

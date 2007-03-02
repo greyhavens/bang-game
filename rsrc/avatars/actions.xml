@@ -20,7 +20,7 @@
   <!-- actions relating to the gang buckle components -->
   <action name="static">
     <framesPerSecond>1</framesPerSecond>
-    <origin>121,240</origin>
+    <origin>156,240</origin>
     <orients>SW</orients>
     <tileset>
       <widths>312</widths>

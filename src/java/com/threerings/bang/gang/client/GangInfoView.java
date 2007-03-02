@@ -7,6 +7,7 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.BTextField;
+import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.event.TextEvent;
@@ -31,6 +32,8 @@ import com.threerings.bang.client.bui.StatusLabel;
 import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.avatar.client.BuckleView;
+
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.data.HideoutCodes;
@@ -51,34 +54,53 @@ public class GangInfoView extends BContainer
         _hideoutobj = hideoutobj;
         _gangobj = gangobj;
         _status = status;
-        
+
         GroupLayout glay = GroupLayout.makeVert(GroupLayout.TOP);
         glay.setOffAxisJustification(GroupLayout.RIGHT);
         setLayoutManager(glay);
-        
+
         add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/design_top.png")),
             "gang_info_design"));
-            
+
         glay = GroupLayout.makeHoriz(GroupLayout.CENTER);
         glay.setOffAxisJustification(GroupLayout.BOTTOM);
         BContainer mcont = new BContainer(glay);
         add(mcont);
-        
+
         BContainer tcont = new BContainer(GroupLayout.makeVert(
             GroupLayout.STRETCH, GroupLayout.TOP, GroupLayout.NONE));
+        ((GroupLayout)tcont.getLayoutManager()).setOffAxisJustification(GroupLayout.RIGHT);
         tcont.setStyleClass("gang_info_content");
         mcont.add(tcont);
         tcont.add(new BLabel(gangobj.name.toString().toUpperCase(), "gang_title"),
             GroupLayout.FIXED);
-        
+
+        BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ((GroupLayout)bcont.getLayoutManager()).setGap(0);
+        ((GroupLayout)bcont.getLayoutManager()).setOffAxisPolicy(GroupLayout.STRETCH);
+        ((GroupLayout)bcont.getLayoutManager()).setOffAxisJustification(GroupLayout.BOTTOM);
+
+        tcont.add(bcont);
+        BContainer fcont = GroupLayout.makeVBox(GroupLayout.BOTTOM);
+        fcont.add(_buckle = new BuckleView(ctx, 2), GroupLayout.FIXED);
+        fcont.add(new Spacer(1, -15));
+        _buckle.setBuckle(gangobj.getBuckleInfo());
+        bcont.add(fcont);
+
+        BContainer rcont = new BContainer(GroupLayout.makeVert(
+            GroupLayout.STRETCH, GroupLayout.TOP, GroupLayout.NONE));
+        rcont.setPreferredSize(new Dimension(300, -1));
+        bcont.add(rcont);
+        bcont.add(new Spacer(40, 1));
+
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
         String msg = "m.gang_rank_" + (gangobj.notorietyRank + 1);
         ncont.add(_ranking = new BLabel("\"" + _ctx.xlate(GangCodes.GANG_MSGS, msg) + "\"",
             "gang_notoriety"));
         ncont.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/diamond.png"))));
         ncont.add(_notoriety = new BLabel(getNotorietyText(), "gang_notoriety"));
-        tcont.add(ncont, GroupLayout.FIXED);
-        
+        rcont.add(ncont, GroupLayout.FIXED);
+
         BContainer scont = GroupLayout.makeVBox(GroupLayout.CENTER);
         scont.add(_statement = new BLabel(gangobj.statement, "gang_statement"));
         BContainer pcont = GroupLayout.makeHBox(GroupLayout.CENTER);
@@ -90,8 +112,8 @@ public class GangInfoView extends BContainer
             _edit.setStyleClass("alt_button");
         }
         scont.add(pcont);
-        tcont.add(scont);
-        
+        rcont.add(scont);
+
         BContainer ccont = GroupLayout.makeHBox(GroupLayout.CENTER);
         ccont.add(new BLabel(_msgs.get("m.coffers"), "coffer_label"));
         ccont.add(_coffers = new CofferLabel(ctx, gangobj));
@@ -99,12 +121,12 @@ public class GangInfoView extends BContainer
             ccont.add(_donate = new BButton(_msgs.get("m.donate"), this, "donate"));
             _donate.setStyleClass("alt_button");
         }
-        tcont.add(ccont, GroupLayout.FIXED);
-        
+        rcont.add(ccont, GroupLayout.FIXED);
+
         add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/design_bottom.png")),
             "gang_info_design"));
     }
-    
+
     // documentation inherited from interface ActionListener
     public void actionPerformed (ActionEvent event)
     {
@@ -124,7 +146,7 @@ public class GangInfoView extends BContainer
             _ctx.getBangClient().displayPopup(new DonateDialog(_ctx, _status), true, 400);
         }
     }
-    
+
     // documentation inherited from interface AttributeChangeListener
     public void attributeChanged (AttributeChangedEvent event)
     {
@@ -135,59 +157,61 @@ public class GangInfoView extends BContainer
             _page.setVisible(_gangobj.getURL() != null);
         } else if (name.equals(GangObject.NOTORIETY)) {
             _notoriety.setText(getNotorietyText());
+        } else if (name.equals(GangObject.BUCKLE)) {
+            _buckle.setBuckle(_gangobj.getBuckleInfo());
         }
     }
-    
+
     @Override // documentation inherited
     protected void wasAdded ()
     {
         super.wasAdded();
         _gangobj.addListener(this);
     }
-    
+
     @Override // documentation inherited
     protected void wasRemoved ()
     {
         super.wasRemoved();
         _gangobj.removeListener(this);
     }
-    
+
     protected String getNotorietyText ()
     {
         return _msgs.get("m.notoriety", Integer.toString(_gangobj.notoriety));
     }
-    
+
     protected class StatementDialog extends RequestDialog
     {
         public StatementDialog (BangContext ctx, StatusLabel status)
         {
             super(ctx, HideoutCodes.HIDEOUT_MSGS, "m.statement_tip", "m.update", "m.cancel",
                 "m.statement_updated", status);
-            
+
             BContainer scont = GroupLayout.makeHBox(GroupLayout.CENTER);
             scont.add(new BLabel(_msgs.get("m.statement")), GroupLayout.FIXED);
             scont.add(_statement = new BTextField(
                 _gangobj.statement, HideoutCodes.MAX_STATEMENT_LENGTH));
             _statement.setPreferredWidth(300);
             add(1, scont);
-            
+
             BContainer ucont = GroupLayout.makeHBox(GroupLayout.CENTER);
             ucont.add(new BLabel(_msgs.get("m.url")), GroupLayout.FIXED);
             ucont.add(_url = new BTextField(_gangobj.url, HideoutCodes.MAX_URL_LENGTH));
             _url.setPreferredWidth(300);
             add(2, ucont);
         }
-        
+
         // documentation inherited
         protected void fireRequest (Object result)
         {
             _hideoutobj.service.setStatement(
                 _ctx.getClient(), _statement.getText(), _url.getText(), this);
         }
-        
+
         protected BTextField _statement, _url;
     }
-    
+
     protected class DonateDialog extends RequestDialog
         implements TextListener
     {
@@ -195,11 +219,11 @@ public class GangInfoView extends BContainer
         {
             super(ctx, HideoutCodes.HIDEOUT_MSGS, "m.donate_tip", "m.donate", "m.cancel",
                 "m.donated", status);
-            
+
             // add the amount entry panel
             BContainer acont = GroupLayout.makeHBox(GroupLayout.CENTER);
             add(1, acont);
-            
+
             acont.add(new BLabel(BangUI.scripIcon));
             acont.add(_scrip = new BTextField(4));
             _scrip.setPreferredWidth(50);
@@ -211,7 +235,7 @@ public class GangInfoView extends BContainer
             _coins.setPreferredWidth(50);
             _coins.setDocument(new IntegerDocument(true));
             _coins.addListener(this);
-            
+
             _buttons[0].setEnabled(false);
         }
 
@@ -226,7 +250,7 @@ public class GangInfoView extends BContainer
                 _buttons[0].setEnabled(false);
             }
         }
-        
+
         // documentation inherited
         protected void fireRequest (Object result)
         {
@@ -242,18 +266,19 @@ public class GangInfoView extends BContainer
         {
             return (text.length() == 0) ? 0 : Integer.parseInt(text);
         }
-    
+
         protected BTextField _scrip, _coins;
     }
-    
+
     protected BangContext _ctx;
     protected MessageBundle _msgs;
     protected HideoutObject _hideoutobj;
     protected GangObject _gangobj;
-    
-    protected BLabel _ranking, _notoriety, _statement;   
+
+    protected BuckleView _buckle;
+    protected BLabel _ranking, _notoriety, _statement;
     protected CofferLabel _coffers;
     protected BButton _page, _edit, _donate;
-    
+
     protected StatusLabel _status;
 }

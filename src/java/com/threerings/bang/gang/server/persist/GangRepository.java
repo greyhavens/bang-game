@@ -150,8 +150,9 @@ public class GangRepository extends JORARepository
     {
         GangRecord grec = loadByExample(_gtable, new GangRecord(name), _normalizedMask);
         if (grec != null) {
-            // load members and avatar, skip coins and outfit
+            // load members, inventory, avatar; skip coins and outfit
             grec.members = loadGangMembers(grec.gangId);
+            grec.inventory = BangServer.itemrepo.loadItems(grec.gangId, true);
             GangMemberEntry leader = GangUtil.getSeniorLeader(grec.members);
             grec.avatar = (leader == null) ?
                 null : BangServer.lookrepo.loadSnapshot(leader.playerId);

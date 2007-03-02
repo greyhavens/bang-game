@@ -23,6 +23,7 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.client.InvocationService;
 import com.threerings.presents.data.ClientObject;
+import com.threerings.presents.dobj.DSet;
 import com.threerings.presents.server.InvocationException;
 import com.threerings.presents.util.PersistingUnit;
 
@@ -187,6 +188,7 @@ public class GangManager
             info.notorietyRank = gangobj.notorietyRank;
             info.statement = gangobj.statement;
             info.url = gangobj.url;
+            info.buckle = gangobj.getBuckleInfo();
             info.avatar = gangobj.avatar;
             info.leaders = getSortedMembers(gangobj.members, true);
             info.members = getSortedMembers(gangobj.members, false);
@@ -209,6 +211,8 @@ public class GangManager
                 info.notorietyRank = GangHandler.getNotorietyRank(_grec.notoriety);
                 info.statement = _grec.statement;
                 info.url = _grec.url;
+                info.buckle = GangUtil.getBuckleInfo(
+                    _grec.getBuckle(), new DSet<Item>(_grec.inventory));
                 info.avatar = _grec.avatar;
                 info.leaders = getSortedMembers(_grec.members, true);
                 info.members = getSortedMembers(_grec.members, false);

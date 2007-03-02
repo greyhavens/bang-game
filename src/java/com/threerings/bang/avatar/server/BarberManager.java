@@ -340,7 +340,7 @@ public class BarberManager extends ShopManager
                     // register the player with their handle as we were unable
                     // to do so when they logged on
                     BangServer.updatePlayer(user, ohandle);
-                    cl.requestProcessed();
+                    continueCreatingAvatar(user, look, cl);
                 }
             }
 
@@ -362,6 +362,35 @@ public class BarberManager extends ShopManager
         }
 
         user.setPosesAt(name, pose.ordinal());
+    }
+
+    /**
+     * Inserts the player's first snapshot.
+     */
+    protected void continueCreatingAvatar (
+        final PlayerObject user, final Look look, final AvatarService.ConfirmListener cl)
+    {
+        final AvatarInfo avatar = look.getAvatar(user);
+        BangServer.invoker.postUnit(new Invoker.Unit() {
+            public boolean invoke () {
+                try {
+                    BangServer.lookrepo.updateSnapshot(user.playerId, avatar.print);
+                } catch (PersistenceException pe) {
+                    log.log(Level.WARNING, "Error updating snapshot " +
+                            "[for=" + user.who() + ", look=" + look + "].", pe);
+                    _error = INTERNAL_ERROR;
+                }
+                return true;
+            }
+            public void handleResult () {
+                if (_error != null) {
+                    cl.requestFailed(_error);
+                } else {
+                    cl.requestProcessed();
+                }
+            }
+            protected String _error;
+        });
     }
 
     @Override // from ShopManager
