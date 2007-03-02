@@ -35,6 +35,8 @@ import com.threerings.bang.data.BangAuthCodes;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 
+import com.threerings.bang.avatar.client.BuckleView;
+
 import com.threerings.bang.gang.data.GangCodes;
 import com.threerings.bang.gang.data.GangInfo;
 import com.threerings.bang.gang.data.HideoutCodes;
@@ -119,20 +121,37 @@ public class GangInfoDialog extends BWindow
         _vcont.add(new BLabel(msgs.get("m.founded", date), "gang_info_founded"));
         _vcont.add(new Spacer(1, 2));
 
-        _vcont.add(new BLabel("\"" + msgs.get("m.gang_rank_" + (info.notorietyRank + 1)) + "\"",
-            "gang_info_notoriety"));
-        _vcont.add(new Spacer(1, -2));
-        _vcont.add(createLabel("underline_short"));
+        BContainer bcont = GroupLayout.makeHBox(GroupLayout.CENTER);
+        ((GroupLayout)bcont.getLayoutManager()).setOffAxisJustification(GroupLayout.TOP);
+        ((GroupLayout)bcont.getLayoutManager()).setGap(30);
+        _vcont.add(bcont);
+        BuckleView buckle = new BuckleView(_ctx, 2);
+        buckle.setBuckle(info.buckle);
+        bcont.add(buckle);
 
-        _vcont.add(new BLabel(info.statement, "gang_info_statement"));
-        _vcont.add(new Spacer(1, 5));
+        BContainer scont = GroupLayout.makeVBox(GroupLayout.TOP);
+        ((GroupLayout)scont.getLayoutManager()).setOffAxisJustification(GroupLayout.LEFT);
+        ((GroupLayout)scont.getLayoutManager()).setGap(-2);
+        bcont.add(scont);
+        bcont.add(new Spacer(55, 1));
+
+        scont.add(new BLabel("\"" + msgs.get("m.gang_rank_" + (info.notorietyRank + 1)) + "\"",
+            "gang_info_notoriety"));
+        scont.add(createLabel("underline_short"));
+
+        scont.add(new Spacer(1, 8));
+        scont.add(new BLabel(info.statement, "gang_info_statement"));
+        scont.add(new Spacer(1, 15));
 
         try {
             _url = new URL(info.url);
+            BContainer ucont = GroupLayout.makeHBox(GroupLayout.CENTER);
+            ucont.setPreferredSize(new Dimension(166, -1));
             BButton page = new BButton(hmsgs.get("m.home_page"), this, "home_page");
             page.setStyleClass("alt_button");
-            _vcont.add(page);
-            _vcont.add(new Spacer(1, 7));
+            ucont.add(page);
+            scont.add(ucont);
+            scont.add(new Spacer(1, 7));
 
         } catch (MalformedURLException e) {
             // no problem, just don't include the button
