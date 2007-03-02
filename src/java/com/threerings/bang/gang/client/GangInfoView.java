@@ -108,7 +108,7 @@ public class GangInfoView extends BContainer
         _page.setStyleClass("alt_button");
         _page.setVisible(gangobj.getURL() != null);
         if (_ctx.getUserObject().gangRank == GangCodes.LEADER_RANK) {
-            pcont.add(_edit = new BButton(_msgs.get("m.edit"), this, "edit"));
+            pcont.add(_edit = new BButton(_msgs.get("m.edit"), this, "edit_statement"));
             _edit.setStyleClass("alt_button");
         }
         scont.add(pcont);
@@ -140,8 +140,11 @@ public class GangInfoView extends BContainer
                     _status.setStatus(BangAuthCodes.AUTH_MSGS, msg, true);
                 }
             });
-        } if (action.equals("edit")) {
+        } else if (action.equals("edit_statement")) {
             _ctx.getBangClient().displayPopup(new StatementDialog(_ctx, _status), true, 400);
+        } else if (action.equals("edit_buckle")) {
+            _ctx.getBangClient().displayPopup(
+                new BuckleDialog(_ctx, _hideoutobj, _gangobj), true, 400);
         } else if (action.equals("donate")) {
             _ctx.getBangClient().displayPopup(new DonateDialog(_ctx, _status), true, 400);
         }

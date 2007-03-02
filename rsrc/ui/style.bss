@@ -2099,13 +2099,14 @@ gang_info_founded {
 gang_info_notoriety {
   font: "Dom Casual" plain 28;
   color: #4C2602;
+  size: 166 -1;
+  text-align: center;
 }
 
 gang_info_statement {
   font: "Helvetica" plain 12;
   color: #4C2602;
-  padding: 5 150;
-  text-align: center;
+  size: 270 -1;
 }
 
 gang_info_leader_view {
