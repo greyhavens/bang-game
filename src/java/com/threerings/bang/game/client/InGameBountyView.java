@@ -147,6 +147,9 @@ public class InGameBountyView extends BWindow
             }
             idx++;
         }
+        if (isAdded()) {
+            pack();
+        }
     }
 
     protected BangContext _ctx;
