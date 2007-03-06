@@ -42,7 +42,7 @@ public class BountyDetailView extends BContainer
         _claimed = ctx.loadImage("ui/office/claimed.png");
 
         add(_oview = new OutlawView(ctx, 1f), new Point(55, 272));
-        add(_reward = new BLabel("", "bounty_detail_reward"), new Point(263, 438));
+        add(_reward = new BLabel("", "bounty_detail_reward"), new Point(243, 438));
         _reward.setIcon(new ImageIcon(ctx.loadImage("ui/icons/big_scrip.png")));
         _reward.setIconTextGap(10);
         add(_title = new BLabel("", "bounty_detail_title"), new Point(203, 400));
