@@ -80,7 +80,7 @@ public class PaletteIcon extends SelectableIcon
      */
     protected Insets getTextInsets ()
     {
-        return (_small ? new Insets(2, 0, 2, 0) : new Insets(5, 10, 5, 0));
+        return (_small ? new Insets(2, 0, 2, 0) : new Insets(5, 5, 5, 0));
     }
 
     protected Label _text;
