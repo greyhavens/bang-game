@@ -405,8 +405,8 @@ public class BangView extends BWindow
      */
     protected void showConnectingWindow ()
     {
-        _connecting = new BDecoratedWindow(_ctx.getStyleSheet(), null);
-        _connecting.add(new BLabel(_ctx.xlate(GameCodes.GAME_MSGS, "m.pre_game")));
+        _connecting = new BWindow(_ctx.getStyleSheet(), GroupLayout.makeHStretch());
+        _connecting.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/pregame/waiting.png"))));
         setOverlay(_connecting);
     }
 
@@ -689,7 +689,7 @@ public class BangView extends BWindow
     protected BWindow _oview;
 
     /** The Connecting window. */
-    protected BDecoratedWindow _connecting;
+    protected BWindow _connecting;
 
     /** Keeps track of whether we've prepared or are preparing for the current round. */
     protected boolean _prepared, _preparing;
