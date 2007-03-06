@@ -53,7 +53,7 @@ public class BucklePartCatalog
 
         /** Increase this value when object's serialized state is impacted by a
          * class change (modification of fields, inheritance). */
-        private static final long serialVersionUID = 2;
+        private static final long serialVersionUID = 1;
     }
 
     /** Contains metadata on a particular part. */
@@ -73,7 +73,7 @@ public class BucklePartCatalog
 
         /** Increase this value when object's serialized state is impacted by a
          * class change (modification of fields, inheritance). */
-        private static final long serialVersionUID = 2;
+        private static final long serialVersionUID = 1;
     }
 
     /**
