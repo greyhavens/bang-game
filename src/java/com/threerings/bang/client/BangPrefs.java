@@ -283,6 +283,22 @@ public class BangPrefs
     }
 
     /**
+     * Check if we should popup our free ticket details window.
+     */
+    public static boolean shouldShowPassDetail (PlayerObject user, String townId)
+    {
+        return config.getValue(user.username + ".free_ticket." + townId, true);
+    }
+
+    /**
+     * Called when the user doesn't want to be reminded of their free ticket.
+     */
+    public static void setNoRemind (PlayerObject user, String townId)
+    {
+        config.setValue(user.username + ".free_ticket." + townId, false);
+    }
+
+    /**
      * Returns the id of the last town to which the specified user logged on. If the user has never
      * logged on, the default town (Frontier Town) will be returned.
      */

@@ -239,6 +239,27 @@ public class PlayerObject extends BodyObject
     }
 
     /**
+     * Returns true if the player holds a free ticket to the specified town.
+     */
+    public boolean holdsFreeTicket (String townId)
+    {
+        return holdsEquivalentItem(new FreeTicket(-1, BangUtil.getTownIndex(townId)));
+    }
+
+    /**
+     * Returns the free ticket if the player has it.
+     */
+    public FreeTicket getFreeTicket ()
+    {
+        for (Item item : inventory) {
+            if (item instanceof FreeTicket) {
+                return (FreeTicket)item;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Returns true if the player owns the specified Deputy Sheriff's Star.
      */
     public boolean holdsStar (int townIdx, Star.Difficulty difficulty)
@@ -259,12 +280,20 @@ public class PlayerObject extends BodyObject
      */
     public boolean holdsEquivalentItem (Item item)
     {
+        return getEquivalentItem(item) != null;
+    }
+
+    /**
+     * Returns the first instance of an item that is equivalent in content to the one specified.
+     */
+    public Item getEquivalentItem (Item item)
+    {
         for (Item oitem : inventory) {
             if (item.isEquivalent(oitem)) {
-                return true;
+                return oitem;
             }
         }
-        return false;
+        return null;
     }
 
     /**

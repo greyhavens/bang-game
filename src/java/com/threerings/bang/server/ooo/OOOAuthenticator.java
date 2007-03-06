@@ -3,6 +3,7 @@
 
 package com.threerings.bang.server.ooo;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -170,9 +171,19 @@ public class OOOAuthenticator extends BangAuthenticator
             serverTownIdx = -1;
         }
         if (serverTownIdx > 0) {
-            String townId = (prec == null || prec.townId == null) ?
-                BangCodes.FRONTIER_TOWN : prec.townId;
-            if (BangUtil.getTownIndex(townId) < serverTownIdx && !user.isAdmin()) {
+            String townId = BangCodes.FRONTIER_TOWN;
+            int townidx = BangUtil.getTownIndex(townId);
+            if (prec != null && prec.townId != null) {
+                townId = prec.townId;
+                townidx = BangUtil.getTownIndex(townId);
+                // if their nextTown timestamp hasn't expired they can access the next town
+                if (prec.nextTown != null &&
+                        prec.nextTown.compareTo(new Timestamp(System.currentTimeMillis())) > 0) {
+                    townidx++;
+                }
+            }
+
+            if (townidx < serverTownIdx && !user.isAdmin()) {
                 log.warning("Rejecting access to town server by non-ticket-holder " +
                             "[who=" + username + ", stownId=" + ServerConfig.townId +
                             ", ptownId=" + townId + "].");

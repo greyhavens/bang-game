@@ -38,6 +38,7 @@ import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
+import com.threerings.bang.data.FreeTicket;
 
 /**
  * Customizes the client resolver to use our {@link PlayerObject}.
@@ -110,9 +111,9 @@ public class BangClientResolver extends CrowdClientResolver
         // if this player started playing before the end of beta and they've played 20 ranked
         // games, give them a free permanent ticket to ITP
         int itpidx = BangUtil.getTownIndex(BangCodes.INDIAN_POST);
-        if (buser.playerId < BangCodes.BETA_PLAYER_CUTOFF &&
-            buser.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= FREE_ITP_GP_REQUIREMENT &&
-            !buser.holdsTicket(BangCodes.INDIAN_POST)) {
+        boolean holdsITPTicket = buser.holdsTicket(BangCodes.INDIAN_POST);
+        if (buser.playerId < BangCodes.BETA_PLAYER_CUTOFF && !holdsITPTicket &&
+            buser.stats.getIntStat(Stat.Type.GAMES_PLAYED) >= FREE_ITP_GP_REQUIREMENT) {
             log.info("Granting free ITP ticket to beta player [who=" + username +
                      ", handle=" + buser.handle + ", pid=" + buser.playerId +
                      ", games=" + buser.stats.getIntStat(Stat.Type.GAMES_PLAYED) + "].");
@@ -120,17 +121,31 @@ public class BangClientResolver extends CrowdClientResolver
             BangServer.itemrepo.insertItem(ticket);
             BangServer.playrepo.grantTownAccess(buser.playerId, ticket.getTownId());
             buser.addToInventory(ticket);
+            holdsITPTicket = true;
 
         // fix bug with ticket granting
-        } else if (buser.holdsTicket(BangCodes.INDIAN_POST) &&
-                   ((player.townId == null) || player.townId.equals(BangCodes.FRONTIER_TOWN))) {
+        } else if (holdsITPTicket &&
+                ((player.townId == null) || player.townId.equals(BangCodes.FRONTIER_TOWN))) {
             BangServer.playrepo.grantTownAccess(buser.playerId, BangCodes.INDIAN_POST);
+        }
+
+        // if they have an expired free ticket, remove it
+        for (Item item : items) {
+            if (!(item instanceof FreeTicket)) {
+                continue;
+            }
+            FreeTicket ticket = (FreeTicket)item;
+            if (ticket.isExpired(System.currentTimeMillis()) ||
+                    buser.holdsTicket(ticket.getTownId())) {
+                BangServer.itemrepo.deleteItem(item, "Free Ticket Expired");
+                buser.removeFromInventory(item.getKey());
+            }
         }
 
         // if we're giving out free access to ITP, give the user a temporary ITP ticket for this
         // session (if they don't already have one)
-        if (RuntimeConfig.server.freeIndianPost &&
-            !buser.holdsTicket(BangCodes.INDIAN_POST)) {
+        if (RuntimeConfig.server.freeIndianPost && !holdsITPTicket &&
+                !buser.holdsFreeTicket(BangCodes.INDIAN_POST)) {
             buser.addToInventory(new TrainTicket(buser.playerId, itpidx));
         }
 

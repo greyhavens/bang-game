@@ -49,7 +49,7 @@ public class StationView extends ShopView
 
         // and our ticket purchase display
         add(_tview = new TicketView(_ctx, status),
-            new Rectangle(838, 107, 160, 403));
+            new Rectangle(838, 107, 160, 526));
     }
 
     @Override // documentation inherited

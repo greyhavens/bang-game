@@ -9,13 +9,16 @@ import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.server.InvocationException;
+import com.threerings.presents.util.PersistingUnit;
 
 import com.threerings.crowd.data.PlaceObject;
 
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.PlayerObject;
+import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.TrainTicket;
 import com.threerings.bang.server.BangServer;
 import com.threerings.bang.server.ShopManager;
@@ -69,6 +72,75 @@ public class StationManager extends ShopManager
         new BuyTicketAction(user, ticket, listener).start();
     }
 
+    // documentation inherited from interface StationProvider
+    public void activateTicket (ClientObject caller, final StationService.ConfirmListener listener)
+        throws InvocationException
+    {
+        final PlayerObject user = requireShopEnabled(caller);
+
+        // find which ticket they wish to activate
+        FreeTicket ticket = null;
+        for (int ii = 1; ii < BangCodes.TOWN_IDS.length; ii++) {
+            if ((ticket = (FreeTicket)user.getEquivalentItem(new FreeTicket(-1, ii))) != null) {
+                break;
+            }
+        }
+
+        final FreeTicket finalTicket = ticket;
+
+        if (ticket == null) {
+            log.warning("Player tried to activate non-existant free ticket " +
+                    "[who=" + user.who() + "].");
+            throw new InvocationException(INTERNAL_ERROR);
+        }
+
+        if (ticket.isExpired(System.currentTimeMillis())) {
+            // remove the expired ticket
+            BangServer.invoker.postUnit(new PersistingUnit("activateTicket", listener) {
+                public void invokePersistent() throws PersistenceException {
+                    BangServer.itemrepo.deleteItem(finalTicket, "Free Ticket Expired");
+                }
+
+                public void handleSuccess() {
+                    user.removeFromInventory(finalTicket.getKey());
+                    listener.requestFailed(getFailureMessage());
+                }
+
+                public String getFailureMessage() {
+                    return "m.ticket_expired";
+                }
+            });
+            return;
+        }
+
+        if (ticket.isActivated()) {
+            listener.requestProcessed();
+            return;
+        }
+
+
+        // go activate the ticket
+        BangServer.invoker.postUnit(new PersistingUnit("activateTicket", listener) {
+            public void invokePersistent() throws PersistenceException {
+                // update the ticket record
+                finalTicket.activate(System.currentTimeMillis());
+                BangServer.itemrepo.updateItem(finalTicket);
+
+                // update the player record
+                BangServer.playrepo.activateNextTown(user.playerId, finalTicket.getExpire());
+            }
+
+            public void handleSuccess() {
+                user.stats.addToSetStat(Stat.Type.ACTIVATED_TICKETS, finalTicket.getTownId());
+                listener.requestProcessed();
+            }
+
+            public String getFailureMessage() {
+                return "m.ticket_activate_failed";
+            }
+        });
+    }
+
     @Override // from ShopManager
     protected String getIdent ()
     {
@@ -96,7 +168,7 @@ public class StationManager extends ShopManager
     protected static final class BuyTicketAction extends FinancialAction
     {
         public BuyTicketAction (PlayerObject user, TrainTicket ticket,
-                                StationService.ConfirmListener listener) 
+                                StationService.ConfirmListener listener)
         {
             super(user, ticket.getScripCost(), ticket.getCoinCost());
             _ticket = ticket;

@@ -104,7 +104,8 @@ public class MapView extends BContainer
                 continue;
             }
             boolean enabled = !_pendingMove &&
-                (ii == 0 || _ctx.getUserObject().holdsTicket(BangCodes.TOWN_IDS[ii]));
+                (ii == 0 || _ctx.getUserObject().holdsTicket(BangCodes.TOWN_IDS[ii]) ||
+                 _ctx.getUserObject().holdsFreeTicket(BangCodes.TOWN_IDS[ii]));
             _tbuts[ii].setEnabled(enabled);
             _towns[ii].setEnabled(enabled);
         }

@@ -9,7 +9,7 @@ import com.threerings.presents.client.InvocationService;
 import com.threerings.util.Name;
 
 /**
- * Provides Traion Station-related functionality.
+ * Provides Train Station-related functionality.
  */
 public interface StationService extends InvocationService
 {
@@ -18,4 +18,9 @@ public interface StationService extends InvocationService
      * purchased.
      */
     public void buyTicket (Client client, ConfirmListener listener);
+
+    /**
+     * Requests that a free ticket be activated.
+     */
+    public void activateTicket (Client client, ConfirmListener listener);
 }

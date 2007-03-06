@@ -38,6 +38,13 @@ public class StationDispatcher extends InvocationDispatcher
         throws InvocationException
     {
         switch (methodId) {
+        case StationMarshaller.ACTIVATE_TICKET:
+            ((StationProvider)provider).activateTicket(
+                source,
+                (InvocationService.ConfirmListener)args[0]
+            );
+            return;
+
         case StationMarshaller.BUY_TICKET:
             ((StationProvider)provider).buyTicket(
                 source,

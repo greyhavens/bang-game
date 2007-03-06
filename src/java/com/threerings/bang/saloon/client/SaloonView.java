@@ -46,7 +46,7 @@ public class SaloonView extends ShopView
 
         add(_crview = new CriterionView(ctx) {
             protected void findMatch (Criterion criterion) {
-                _ctrl.findMatch(criterion);                
+                _ctrl.findMatch(criterion);
             }
         }, CRIT_RECT);
         add(_status = new StatusLabel(ctx), new Rectangle(276, 8, 500, 54));
@@ -131,6 +131,13 @@ public class SaloonView extends ShopView
     protected Point getShopkeepNameLocation ()
     {
         return new Point(22, 554);
+    }
+
+    @Override // documentation inherited
+    protected void wasAdded ()
+    {
+        super.wasAdded();
+        _ctx.getBangClient().maybeShowPassDetails();
     }
 
     protected SaloonController _ctrl;

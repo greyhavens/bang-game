@@ -28,6 +28,7 @@ import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.util.BangContext;
 
 import com.threerings.bang.station.data.StationCodes;
+import com.threerings.bang.station.data.StationObject;
 
 /**
  * Manages the client side of the Train Station.
@@ -68,7 +69,23 @@ public class StationController extends PlaceController
     protected void takeTrain (final String townId)
     {
         _view.status.setStatus(StationCodes.STATION_MSGS, "m.taking_train", false);
-        connectToTown(townId, _ctx.getUserObject().townId);
+
+        // if we have a ticket, just go
+        if (BangCodes.FRONTIER_TOWN.equals(townId) || _ctx.getUserObject().holdsTicket(townId)) {
+            connectToTown(townId, _ctx.getUserObject().townId);
+            return;
+        }
+
+        // otherwise we'll have to first activate our free ticket
+        ((StationObject)_plobj).service.activateTicket(
+            _ctx.getClient(), new StationService.ConfirmListener() {
+                public void requestProcessed () {
+                    connectToTown(townId, _ctx.getUserObject().townId);
+                }
+                public void requestFailed (String reason) {
+                    _view.status.setStatus(StationCodes.STATION_MSGS, reason, true);
+                }
+            });
     }
 
     protected void connectToTown (final String townId, final String oldTownId)

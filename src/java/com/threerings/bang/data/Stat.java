@@ -106,6 +106,10 @@ public abstract class Stat
         BOUNTIES_COMPLETED(new ShortStringSetStat(), false, false),
         BOUNTY_GAMES_COMPLETED(new ShortStringSetStat(), false, false),
 
+        // free ticket related stats
+        FREE_TICKETS(new ShortStringSetStat(), false, false),
+        ACTIVATED_TICKETS(new ShortStringSetStat(), false, false),
+
         // stats that are meant to by mysterious
         MYSTERY_ONE(new IntStat(), false, false, false, true), // high noon logon
         MYSTERY_TWO(new IntStat(), false, false, false, true), // christmas morning game

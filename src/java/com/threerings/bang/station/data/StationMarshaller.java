@@ -19,8 +19,21 @@ import com.threerings.presents.dobj.InvocationResponseEvent;
 public class StationMarshaller extends InvocationMarshaller
     implements StationService
 {
+    /** The method id used to dispatch {@link #activateTicket} requests. */
+    public static final int ACTIVATE_TICKET = 1;
+
+    // from interface StationService
+    public void activateTicket (Client arg1, InvocationService.ConfirmListener arg2)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener2 = new InvocationMarshaller.ConfirmMarshaller();
+        listener2.listener = arg2;
+        sendRequest(arg1, ACTIVATE_TICKET, new Object[] {
+            listener2
+        });
+    }
+
     /** The method id used to dispatch {@link #buyTicket} requests. */
-    public static final int BUY_TICKET = 1;
+    public static final int BUY_TICKET = 2;
 
     // from interface StationService
     public void buyTicket (Client arg1, InvocationService.ConfirmListener arg2)

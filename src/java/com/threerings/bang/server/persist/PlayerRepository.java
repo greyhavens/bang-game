@@ -217,6 +217,17 @@ public class PlayerRepository extends JORARepository
     }
 
     /**
+     * Updates the specified player's record to reflect the timestamp up until they can freely
+     * access the next town.
+     */
+    public void activateNextTown (int playerId, Timestamp time)
+        throws PersistenceException
+    {
+        checkedUpdate(
+                "update PLAYERS set NEXT_TOWN = '" + time + "' where PLAYER_ID = " + playerId, 1);
+    }
+
+    /**
      * Mimics the disabling of deleted players by renaming them to an invalid value that we do in
      * our user management system. This is triggered by us receiving a player action indicating
      * that the player was deleted.
@@ -351,6 +362,7 @@ public class PlayerRepository extends JORARepository
             "VICTORY_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "WANTED_LOOK VARCHAR(" + Look.MAX_NAME_LENGTH + ") NOT NULL",
             "TOWN_ID VARCHAR(64) NOT NULL",
+            "NEXT_TOWN DATETIME DEFAULT NULL",
             "CREATED DATETIME NOT NULL",
             "SESSIONS INTEGER NOT NULL",
             "SESSION_MINUTES INTEGER NOT NULL",
@@ -389,6 +401,12 @@ public class PlayerRepository extends JORARepository
             }
         }
         // END TEMP
+
+        // TEMP: add next town timestamp column
+        if (!JDBCUtil.tableContainsColumn(conn, "PLAYERS", "NEXT_TOWN")) {
+            JDBCUtil.addColumn(conn, "PLAYERS", "NEXT_TOWN", "DATETIME DEFAULT NULL", "TOWN_ID");
+        }
+        // ENT TEMP
     }
 
     @Override // documentation inherited

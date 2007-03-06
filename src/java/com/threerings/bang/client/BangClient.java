@@ -69,6 +69,7 @@ import com.threerings.admin.data.AdminCodes;
 import com.threerings.bang.avatar.client.CreateAvatarView;
 import com.threerings.bang.ranch.client.FirstBigShotView;
 import com.threerings.bang.ranch.data.RanchObject;
+import com.threerings.bang.station.client.PassDetailsView;
 
 import com.threerings.bang.chat.client.BangChatDirector;
 import com.threerings.bang.chat.client.PardnerChatView;
@@ -93,6 +94,7 @@ import com.threerings.bang.data.BangAuthResponseData;
 import com.threerings.bang.data.BangBootstrapData;
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.BangCredentials;
+import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Notification;
 import com.threerings.bang.data.PlayerObject;
@@ -444,8 +446,13 @@ public class BangClient extends BasicClient
             }
         }
 
+        // if they've got a free ticket, potentially show it
+        if (maybeShowPassDetails()) {
+            return true;
+        }
+
         // show them the Where To view if they haven't turned it off
-        if (!skipWhereTo && BangPrefs.shouldShowWhereTo(_ctx.getUserObject())) {
+        if (!skipWhereTo && BangPrefs.shouldShowWhereTo(user)) {
             displayPopup(new WhereToView(_ctx, false), true, WhereToView.WIDTH_HINT);
             return true;
         }
@@ -614,6 +621,21 @@ public class BangClient extends BasicClient
     public PardnerChatView getPardnerChatView ()
     {
         return _pcview;
+    }
+
+    /**
+     * See if we should display the Free Ticket window.
+     */
+    public boolean maybeShowPassDetails ()
+    {
+        FreeTicket ticket = null;
+        PlayerObject user = _ctx.getUserObject();
+        if (!PassDetailsView.wasShown() && (ticket = user.getFreeTicket()) != null &&
+                !ticket.isActivated() && BangPrefs.shouldShowPassDetail(user, ticket.getTownId())) {
+            displayPopup(new PassDetailsView(_ctx, ticket, false), true);
+            return true;
+        }
+        return false;
     }
 
     /**

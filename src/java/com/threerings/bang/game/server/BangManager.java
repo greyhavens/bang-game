@@ -114,6 +114,7 @@ import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.Tutorial;
 
 import static com.threerings.bang.Log.log;
+import com.threerings.bang.data.FreeTicket;
 
 /**
  * Handles the server-side of the game.
@@ -1858,6 +1859,7 @@ public class BangManager extends GameManager
 
         // these will track awarded cash and badges
         Award[] awards = new Award[getPlayerSlots()];
+        _tickets = new FreeTicket[getPlayerSlots()];
 
         // record various statistics
         for (int ii = 0; ii < awards.length; ii++) {
@@ -2508,6 +2510,12 @@ public class BangManager extends GameManager
             // determine whether this player qualifies for a new badge
             award.item = Badge.checkQualifies(user);
 
+            // determine whether this player qualifies for a free ticket
+            _tickets[pidx] = FreeTicket.checkQualifies(user, ServerConfig.townIndex);
+            if (_tickets[pidx] != null) {
+                user.stats.addToSetStat(Stat.Type.FREE_TICKETS, _tickets[pidx].getTownId());
+            }
+
         } finally {
             user.commitTransaction();
         }
@@ -2637,6 +2645,15 @@ public class BangManager extends GameManager
                         }
                     }
 
+                    // grant them their ticket
+                    if (_tickets[pidx] != null) {
+                        try {
+                            BangServer.itemrepo.insertItem(_tickets[pidx]);
+                        } catch (PersistenceException pe) {
+                            log.log(Level.WARNING, "Failed to store ticket " + _tickets[pidx], pe);
+                        }
+                    }
+
                     // update their ratings
                     if (prec.nratings.size() > 0) {
                         ArrayList<Rating> ratings = new ArrayList<Rating>(prec.nratings.values());
@@ -2665,6 +2682,9 @@ public class BangManager extends GameManager
                     }
                     if (awards[ii].item != null) {
                         player.addToInventory(awards[ii].item);
+                    }
+                    if (_tickets[pidx] != null) {
+                        player.addToInventory(_tickets[pidx]);
                     }
                     for (Rating rating : _precords[pidx].nratings.values()) {
                         if (player.ratings.containsKey(rating.scenario)) {
@@ -3065,6 +3085,9 @@ public class BangManager extends GameManager
 
     /** Used at the end of the game to rank the players. */
     protected RankRecord[] _ranks;
+
+    /** Used to give players free tickets if they've earned them. */
+    protected FreeTicket[] _tickets;
 
     /** Implements our gameplay scenario. */
     protected Scenario _scenario;

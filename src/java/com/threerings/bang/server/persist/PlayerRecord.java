@@ -48,6 +48,9 @@ public class PlayerRecord
     /** The id of the furthest town to which this player has access. */
     public String townId;
 
+    /** The time at which the player loses access to the next town. */
+    public Timestamp nextTown;
+
     /** The time at which this player was created (when they first starting
      * playing  this particular game). */
     public Timestamp created;
