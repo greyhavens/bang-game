@@ -22,6 +22,7 @@ import com.jme.image.Texture;
 import com.jme.math.Vector3f;
 import com.jme.renderer.ColorRGBA;
 import com.jme.renderer.Renderer;
+import com.jme.scene.shape.Quad;
 import com.jme.scene.state.MaterialState;
 import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
@@ -282,6 +283,7 @@ public class TownView extends BWindow
         public TownBoardView (BangContext ctx)
         {
             super(ctx, false);
+            _bctx = ctx;
             addListener(this);
             addListener(new MouseAdapter() {
                 public void mousePressed (MouseEvent me) {
@@ -425,6 +427,12 @@ public class TownView extends BWindow
         protected boolean shouldShowGrid ()
         {
             return false;
+        }
+
+        @Override // documentation inherited
+        protected Quad createMarqueeQuad (String text)
+        {
+            return _bctx.loadImage("ui/town/" + _bctx.getUserObject().townId + ".png");
         }
 
         @Override // documentation inherited
@@ -598,6 +606,8 @@ public class TownView extends BWindow
             _poptex.setMipmapState(Texture.MM_LINEAR_LINEAR);
             return oldTextureId;
         }
+
+        protected BangContext _bctx;
 
         protected MaterialState _hstate;
         protected PieceSprite _hsprite;

@@ -153,7 +153,7 @@ public class BoardView extends BComponent
 
         /** Returns true if this action can be executed, false if it operates
          * on a piece that is currently involved in another action. */
-        public boolean canExecute (ArrayIntSet penders, 
+        public boolean canExecute (ArrayIntSet penders,
                 HashSet<Rectangle> boundset, LinkedList<Integer> syncQueue)
         {
             if (!syncQueue.isEmpty() && actionId > syncQueue.getFirst()) {
@@ -220,7 +220,7 @@ public class BoardView extends BComponent
         _node.setRenderState(_lstate);
         _node.setLightCombineMode(LightState.REPLACE);
         _node.setNormalsMode(Spatial.NM_GL_NORMALIZE_PROVIDED);
-        
+
         // default states
         MaterialState mstate = _ctx.getRenderer().createMaterialState();
         mstate.getDiffuse().set(ColorRGBA.white);
@@ -252,7 +252,7 @@ public class BoardView extends BComponent
         // create the shared wind influence
         _wind = new SimpleParticleInfluenceFactory.BasicWind(
             0f, new Vector3f(), true, false);
-        
+
         // the children of this node will have special tile textures
         bnode.attachChild(_texnode = new Node("texturehighlights"));
         _texnode.setRenderQueueMode(Renderer.QUEUE_TRANSPARENT);
@@ -301,7 +301,7 @@ public class BoardView extends BComponent
         // this is used to indicate you hovering over a movement goal
         _goalhovstate = RenderUtil.createTextureState(
             ctx, "textures/ustatus/movement_goal_hover.png");
-            
+
         // create a sound group that we'll use for all in-game sounds
         _sounds = ctx.getSoundManager().createGroup(
             BangUI.clipprov, GAME_SOURCE_COUNT);
@@ -372,7 +372,7 @@ public class BoardView extends BComponent
         refreshFog();
         refreshBackgroundColor();
         refreshWindInfluence();
-        
+
         // create the board geometry
         if (_snode != null) {
             _snode.createBoardSky(_board);
@@ -425,7 +425,7 @@ public class BoardView extends BComponent
             }
         });
     }
-    
+
     /**
      * Shows or hides the tile grid.
      */
@@ -513,7 +513,7 @@ public class BoardView extends BComponent
     {
         return _board.getShadowIntensity();
     }
-    
+
     /**
      * Returns the intensity of the dynamic shadows on the board, which depends
      * on the total light and the board's configured shadow intensity.
@@ -572,7 +572,7 @@ public class BoardView extends BComponent
             result.addLocal(_color.multLocal(
                 Math.max(0, -normal.dot(_lights[ii].getDirection()))));
         }
-        
+
         // get the color of the predominant terrain and multiply it by the
         // light
         int tx = (int)(location.x / TILE_SIZE),
@@ -583,7 +583,7 @@ public class BoardView extends BComponent
         result.set(result.r * dcolor.r, result.g * dcolor.g,
             result.b * dcolor.b, dcolor.a);
     }
-    
+
     /**
      * Adds the board's wind influence to all particle systems under the
      * given node.
@@ -596,7 +596,7 @@ public class BoardView extends BComponent
             }
         }.traverse(spatial);
     }
-    
+
     /**
      * Creates a brief flash of light at the specified location with the
      * given color and duration.
@@ -671,7 +671,7 @@ public class BoardView extends BComponent
     {
         return _pnode;
     }
-    
+
     /**
      * Adds a sprite to the active view.
      */
@@ -888,7 +888,7 @@ public class BoardView extends BComponent
             updateHighlightHover();
         }
     }
-    
+
     /**
      * Determines whether the given sprite can be hovered over.
      */
@@ -904,7 +904,7 @@ public class BoardView extends BComponent
     {
         return false;
     }
-    
+
     /**
      * Given a mouse event, returns the point at which a ray cast from the
      * eye through the mouse pointer intersects the ground.
@@ -969,7 +969,7 @@ public class BoardView extends BComponent
 
         // restore the black background color
         _ctx.getRenderer().setBackgroundColor(ColorRGBA.black);
-        
+
         // let the child nodes know that they need to clean up any textures
         // they've created
         if (_snode != null) {
@@ -1001,7 +1001,7 @@ public class BoardView extends BComponent
     {
         return new Node("pieces");
     }
-    
+
     /**
      * Checks whether or not we should show the sky node (i.e., whether the
      * player will ever see the sky).
@@ -1010,7 +1010,7 @@ public class BoardView extends BComponent
     {
         return true;
     }
-    
+
     /**
      * Returns whether or not we should show the grid by default.
      */
@@ -1026,7 +1026,7 @@ public class BoardView extends BComponent
     protected boolean shouldShowStarter (Piece piece)
     {
         // some markers don't like being seen
-        if (!PieceSprite.isEditorMode() && piece instanceof Marker && 
+        if (!PieceSprite.isEditorMode() && piece instanceof Marker &&
                 !((Marker)piece).addSprite()) {
             return false;
         }
@@ -1043,7 +1043,7 @@ public class BoardView extends BComponent
         return BangPrefs.isMediumDetail() ?
             ((piece.pieceId & 0x01) == 0) : false;
     }
-    
+
     /**
      * Updates the tile grid over the entire board.
      */
@@ -1162,7 +1162,7 @@ public class BoardView extends BComponent
         fstate.setColor(RenderUtil.createColorRGBA(_board.getFogColor()));
         fstate.setDensity(density);
     }
-    
+
     /**
      * Refreshes the background color based on the horizon color and fog
      * parameters.
@@ -1173,7 +1173,7 @@ public class BoardView extends BComponent
             _board.getFogColor() : _board.getSkyHorizonColor();
         _ctx.getRenderer().setBackgroundColor(RenderUtil.createColorRGBA(bg));
     }
-    
+
     /**
      * Refreshes the shared wind influence according to the board's wind
      * parameters.
@@ -1201,7 +1201,7 @@ public class BoardView extends BComponent
         }
         return true;
     }
-    
+
     /**
      * Processes all ready actions in the action queue.
      */
@@ -1342,8 +1342,7 @@ public class BoardView extends BComponent
         clearMarquee(0);
 
         // create the marquee, center it and display it
-        _marquee = RenderUtil.createTextQuad(_ctx, BangUI.MARQUEE_FONT, 
-                ColorRGBA.white, ColorRGBA.black, text);
+        _marquee = createMarqueeQuad(text);
         _marquee.setLocalTranslation(
             new Vector3f(_ctx.getRenderer().getWidth()/2f,
                          _ctx.getRenderer().getHeight()/2f, 0));
@@ -1351,6 +1350,16 @@ public class BoardView extends BComponent
         _marquee.setZOrder(-2);
         _ctx.getInterface().attachChild(_marquee);
     }
+
+    /**
+     * Generates the marquee quad.
+     */
+    protected Quad createMarqueeQuad (String text)
+    {
+        return RenderUtil.createTextQuad(_ctx, BangUI.MARQUEE_FONT,
+                ColorRGBA.white, ColorRGBA.black, text);
+    }
+
 
     /**
      * Clears our marquee display.
@@ -1492,7 +1501,7 @@ public class BoardView extends BComponent
                 tdist = sdist;
             }
         }
-        
+
         // if nothing intersected the ray, look for a piece that intersects
         // the mouse's coordinates on the terrain
         if (hit == null || thit == null) {
@@ -1511,7 +1520,7 @@ public class BoardView extends BComponent
                 }
             }
         }
-        
+
         if (hit != _hover || thit != _thover) {
             hoverSpritesChanged(hit, thit);
         }
@@ -1525,14 +1534,14 @@ public class BoardView extends BComponent
     protected void updateHighlightHover ()
     {
         TerrainNode.Highlight hover = null;
-        
+
         // if hovering over a piece that has a highlight underneath it,
         // use that highlight
         if (_hover != null && _hover instanceof PieceSprite) {
             Piece piece = ((PieceSprite)_hover).getPiece();
             hover = _htiles.get(piece.getCoord());
         }
-        
+
         // try picking against the highlight tile geometry (this is only
         // for floating tiles)
         if (hover == null) {
@@ -1541,7 +1550,7 @@ public class BoardView extends BComponent
             _pick.clear();
             _hnode.findPick(new Ray(camloc, _worldMouse), _pick);
             float dist = Float.MAX_VALUE;
-            
+
             for (int ii = 0; ii < _pick.getNumber(); ii++) {
                 PickData pdata = _pick.getPickData(ii);
                 if (notReallyAHit(pdata)) {
@@ -1560,15 +1569,15 @@ public class BoardView extends BComponent
                 if (hdist < dist) {
                     hover = highlight;
                     dist = hdist;
-                }            
+                }
             }
         }
-        
+
         // look for a draped highlight at the terrain mouse coordinates
         if (hover == null) {
             hover = _htiles.get(Piece.coord(_mouse.x, _mouse.y));
         }
-        
+
         // note the switch, if there is one
         if (hover != _highlightHover) {
             hoverHighlightChanged(hover);
@@ -1630,7 +1639,7 @@ public class BoardView extends BComponent
     {
         highlightTiles(set, null, highlightColor, tstate, flatten, false);
     }
-    
+
     /** Creates geometry to highlight the supplied set of tiles. */
     protected void highlightTiles (
         PointSet set, PointSet goals, ColorRGBA highlightColor,
@@ -1638,7 +1647,7 @@ public class BoardView extends BComponent
     {
         ColorRGBA hoverHighlightColor =
             highlightColor.add(HOVER_HIGHLIGHT_COLOR);
-            
+
         for (int ii = 0, ll = set.size(); ii < ll; ii++) {
             int tx = set.getX(ii), ty = set.getY(ii);
             TerrainNode.Highlight highlight =
@@ -1672,7 +1681,7 @@ public class BoardView extends BComponent
         }
         return throbber;
     }
-    
+
     /**
      * Updates the throbbing colors used in the highlights.
      */
@@ -1684,10 +1693,10 @@ public class BoardView extends BComponent
             me.getValue().a = FastMath.LERP(v, me.getKey().a, 1f);
         }
     }
-    
-    /** 
-     * Creates geometry to "target" the supplied set of tiles. 
-     * 
+
+    /**
+     * Creates geometry to "target" the supplied set of tiles.
+     *
      * @param valid: If true then render normally, if false, make them
      * semi-transparent and red.
      */
@@ -1728,7 +1737,7 @@ public class BoardView extends BComponent
         _highlights.add(highlight);
         return highlight;
     }
-    
+
     /** Clears out all highlighted tiles. */
     protected void clearHighlights ()
     {
@@ -1783,7 +1792,7 @@ public class BoardView extends BComponent
             }
         }
     }
-    
+
     /**
      * Computes light azimuth and elevation values to a direction vector.
      */
@@ -1799,7 +1808,7 @@ public class BoardView extends BComponent
             -FastMath.sin(elevation));
         return result;
     }
-    
+
     /**
      * Returns the azimuth of the given direction vector.
      */
@@ -1807,7 +1816,7 @@ public class BoardView extends BComponent
     {
         return FastMath.atan2(-direction.y, -direction.x);
     }
-    
+
     /**
      * Returns the elevation of the given direction vector.
      */
@@ -1815,7 +1824,7 @@ public class BoardView extends BComponent
     {
         return FastMath.asin(-direction.z);
     }
-    
+
     /** Used to queue up piece createion so that the piece shows up on the
      * board in the right sequence with all other board actions. */
     protected class PieceCreatedAction extends BoardAction
@@ -1829,7 +1838,7 @@ public class BoardView extends BComponent
             this.pieceIds = new int[] { piece.pieceId };
             this.waiterIds = new int[0];
             this.moveIds = new int[0];
-            this.bounds = new Rectangle[] { 
+            this.bounds = new Rectangle[] {
                 new Rectangle(piece.x, piece.y, 1, 1) };
         }
 
@@ -1885,7 +1894,7 @@ public class BoardView extends BComponent
             this.pieceIds = new int[] { piece.pieceId };
             this.waiterIds = new int[0];
             this.moveIds = new int[0];
-            this.bounds = new Rectangle[] { 
+            this.bounds = new Rectangle[] {
                 new Rectangle(piece.x, piece.y, 1, 1) };
         }
 
@@ -1931,7 +1940,7 @@ public class BoardView extends BComponent
         public boolean canExecute (ArrayIntSet penders,
                 HashSet<Rectangle> boundset, LinkedList<Integer> syncQueue)
         {
-            return (penders.isEmpty() && boundset.isEmpty() && 
+            return (penders.isEmpty() && boundset.isEmpty() &&
                     syncQueue.isEmpty());
         }
 
@@ -1943,8 +1952,8 @@ public class BoardView extends BComponent
             Collections.sort(_cpieces, pc);
             Collections.sort(_spieces, pc);
             boolean errors = false;
-            Iterator<Piece> citer = _cpieces.iterator(), 
-                    siter = _spieces.iterator(); 
+            Iterator<Piece> citer = _cpieces.iterator(),
+                    siter = _spieces.iterator();
             Piece cpiece = null, spiece = null;
             if (citer.hasNext()) {
                 cpiece = citer.next();
@@ -1966,7 +1975,7 @@ public class BoardView extends BComponent
                         spiece = null;
                     }
                 } else if (comp < 0) {
-                    log.warning("Client has extra piece [piece=" + 
+                    log.warning("Client has extra piece [piece=" +
                             cpiece + "].");
                     errors = true;
                     if (citer.hasNext()) {
@@ -2097,7 +2106,7 @@ public class BoardView extends BComponent
      * occupying those tiles. */
     protected HashIntMap<TerrainNode.Highlight> _htiles =
         new HashIntMap<TerrainNode.Highlight>();
-        
+
     /** The tile coordinates of the highlight tile that the mouse is
      * hovering over or (-1, -1). */
     protected Point _high = new Point(-1, -1);
@@ -2110,7 +2119,7 @@ public class BoardView extends BComponent
 
     /** Used to load all in-game sounds. */
     protected SoundGroup _sounds;
-    
+
     protected HashMap<Integer,PieceSprite> _pieces =
         new HashMap<Integer,PieceSprite>();
 
@@ -2131,7 +2140,7 @@ public class BoardView extends BComponent
     /** Maps normal colors to their intensity-throbbing equivalents. */
     protected HashMap<ColorRGBA, ColorRGBA> _throbbers =
         new HashMap<ColorRGBA, ColorRGBA>();
-        
+
     /** Temporary result variables. */
     protected ColorRGBA _color = new ColorRGBA();
 
@@ -2140,10 +2149,10 @@ public class BoardView extends BComponent
 
     protected LinkedList<Integer> _syncQueue = new LinkedList<Integer>();
     protected ArrayList<SyncAction> _syncActions = new ArrayList<SyncAction>();
-    
+
     /** Used when intersecting the ground. */
     protected static final Vector3f _groundNormal = new Vector3f(0, 0, 1);
-    
+
     protected static final ColorRGBA DARK =
         new ColorRGBA(0.3f, 0.3f, 0.3f, 1.0f);
     protected static final ColorRGBA LIGHT =
@@ -2165,7 +2174,7 @@ public class BoardView extends BComponent
 
     /** The time in milliseconds that it takes to complete one throb cycle. */
     protected static final long THROB_PERIOD = 1000L;
-    
+
     /** The number of simultaneous sound "sources" available to the game. */
     protected static final int GAME_SOURCE_COUNT = 10;
 
