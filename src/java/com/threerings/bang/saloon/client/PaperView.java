@@ -66,7 +66,9 @@ public class PaperView extends BContainer
         BangHTMLView help = new BangHTMLView();
         help.setStyleClass("news_help");
         help.setContents(_msgs.get("m.saloon_help"));
-        _folks.add(_chat = new PlaceChatView(_ctx, _msgs.get("m.saloon_info"), help) {
+        BScrollPane helpscroll = new BScrollPane(help);
+        helpscroll.setShowScrollbarAlways(false);
+        _folks.add(_chat = new PlaceChatView(_ctx, _msgs.get("m.saloon_info"), helpscroll) {
             protected boolean displayTabs () {
                 displayPage(1);
                 return true;
