@@ -91,7 +91,9 @@
 }
 
 # this should be included because it implements Serializable, but somehow is not
--keep public class com.threerings.bang.avatar.util.BucklePartCatalog
+-keep public class com.threerings.bang.avatar.util.BucklePartCatalog {
+    *;
+}
 
 -keep public class com.threerings.bang.client.BangApp {
     public static void main (java.lang.String[]);
