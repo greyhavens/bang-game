@@ -46,6 +46,7 @@ import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.Invoker;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.jme.camera.CameraPath;
 import com.threerings.jme.camera.PanPath;
@@ -73,6 +74,7 @@ import com.threerings.bang.game.data.piece.Viewpoint;
 import com.threerings.bang.game.util.BoardFile;
 
 import com.threerings.bang.data.BangBootstrapData;
+import com.threerings.bang.data.PropConfig;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BangUtil;
 import com.threerings.bang.util.RenderUtil;
@@ -418,9 +420,16 @@ public class TownView extends BWindow
         @Override // documentation inherited
         protected boolean shouldShowStarter (Piece piece)
         {
-            String type = (piece instanceof Prop) ? ((Prop)piece).getType() : "";
-            return super.shouldShowStarter(piece) || _commands.containsKey(type) ||
-                type.indexOf("pop_sign") != -1;
+            if (!(piece instanceof Prop)) {
+                return super.shouldShowStarter(piece);
+            }
+            // keep bridges and fences, even if they're outside the board
+            Prop prop = (Prop)piece;
+            String type = prop.getType();
+            PropConfig config = PropConfig.getConfig(type);
+            return super.shouldShowStarter(prop) || _commands.containsKey(type) ||
+                type.indexOf("pop_sign") != -1 || !StringUtil.isBlank(config.blockDir) ||
+                (config.passable && config.passElev > 0f);
         }
 
         @Override // documentation inherited
