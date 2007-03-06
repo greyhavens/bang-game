@@ -555,6 +555,13 @@ price_label {
   color: #FFFFFF;
 }
 
+free_label {
+  font: "Dom Casual" plain 18;
+  text-align: center;
+  padding: 0 0 0 10;
+  color: #FFFFFF;
+}
+
 wallet_name {
   font: "Dom Casual" plain 15;
   color: #F2DC00;
@@ -1779,7 +1786,7 @@ station_map {
 
 ticket_info {
   parent: "label";
-  padding: 5 8;
+  padding: 5 0 5 10;
   font: "Dom Casual" plain 18;
   color: #766300;
   text-align: center;
