@@ -58,6 +58,11 @@ public class SongDownloadView extends BDecoratedWindow
 
     public SongDownloadView (BangContext ctx, String song)
     {
+        this(ctx, song, false);
+    }
+
+    public SongDownloadView (BangContext ctx, String song, boolean force)
+    {
         super(ctx.getStyleSheet(), ctx.xlate(StoreCodes.STORE_MSGS, "m.download_title"));
         ((GroupLayout)getLayoutManager()).setGap(15);
         setStyleClass("dialog_window");
@@ -78,7 +83,7 @@ public class SongDownloadView extends BDecoratedWindow
         add(buttons, GroupLayout.FIXED);
 
         // if the song is already downloaded, switch straight to copy mode
-        if (songDownloaded(song)) {
+        if (!force && songDownloaded(song)) {
             setCopyMode();
 
         } else {

@@ -113,8 +113,9 @@ public class ItemIcon extends PaletteIcon
 
         } else if ("download_song".equals(cmd) || "copy_song".equals(cmd)) {
             ctx.getBangClient().displayPopup(
-                new SongDownloadView(ctx, ((Song)_item).getSong()), true,
-                SongDownloadView.PREF_WIDTH);
+                new SongDownloadView(
+                    ctx, ((Song)_item).getSong(), "download_song".equals(cmd)),
+                    true, SongDownloadView.PREF_WIDTH);
         }
     }
 
@@ -156,6 +157,7 @@ public class ItemIcon extends PaletteIcon
             if (SongDownloadView.songDownloaded(((Song)_item).getSong())) {
                 menu.addMenuItem(createItem("copy_song"));
                 menu.addMenuItem(createItem("play_song"));
+                menu.addMenuItem(createItem("download_song"));
             } else {
                 menu.addMenuItem(createItem("download_song"));
             }
