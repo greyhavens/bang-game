@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.image.Image;
@@ -41,9 +42,11 @@ import com.jme.scene.shape.Quad;
 import com.jme.scene.state.GLSLShaderObjectsState;
 import com.jme.scene.state.LightState;
 import com.jme.scene.state.MaterialState;
+import com.jme.scene.state.RenderState;
 import com.jme.scene.state.TextureState;
 import com.jme.scene.state.ZBufferState;
 import com.jme.scene.state.lwjgl.LWJGLTextureState;
+import com.jme.scene.state.lwjgl.records.TextureStateRecord;
 import com.jme.util.TextureManager;
 import com.jme.util.geom.BufferUtils;
 import com.jme.util.geom.Debugger;
@@ -95,6 +98,12 @@ public class WaterNode extends Node
                 public void apply () {
                     super.apply();
                     if (needsRefresh() && _nmap != null) {
+                        TextureStateRecord rec = (TextureStateRecord)_ctx.getDisplay().
+                            getCurrentContext().getStateRecord(RenderState.RS_TEXTURE);
+                        if (rec.currentUnit != 0) {
+                            GL13.glActiveTexture(GL13.GL_TEXTURE0);
+                            rec.currentUnit = 0;
+                        }
                         GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, 0, 0,
                             WAVE_MAP_SIZE, WAVE_MAP_SIZE,
                             GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, _nmap);
