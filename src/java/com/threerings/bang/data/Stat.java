@@ -201,6 +201,16 @@ public abstract class Stat
     }
 
     /**
+     * Dumps the stat type to code mappings to stdout.
+     */
+    public static void main (String[] args)
+    {
+        for (Type type : Type.values()) {
+            System.out.println(type + " = " + type.code());
+        }
+    }
+
+    /**
      * Maps a {@link Type}'s code code back to a {@link Type} instance.
      */
     public static Type getType (int code)

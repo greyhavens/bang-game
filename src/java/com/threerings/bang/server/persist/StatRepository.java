@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,24 +43,22 @@ public class StatRepository extends SimpleRepository
     public interface Processor
     {
         /**
-         * Called on every stat matching the criterion supplied to {@link
-         * #processStats}. <em>Note:</em> do not retain a reference to the
-         * supplied {@link Stat} instance as its contents will be overwritten
-         * prior to each call to process.
+         * Called on every stat matching the criterion supplied to {@link #processStats}.
+         * <em>Note:</em> do not retain a reference to the supplied {@link Stat} instance as its
+         * contents will be overwritten prior to each call to process.
          */
-        public void process (int playerId, String accountName,
-                             String handle, Stat stat);
+        public void process (int playerId, String accountName, String handle,
+                             Timestamp created, int sessionMinutes, Stat stat);
     }
 
     /**
-     * The database identifier used when establishing a database
-     * connection. This value being <code>statdb</code>.
+     * The database identifier used when establishing a database connection. This value being
+     * <code>statdb</code>.
      */
     public static final String STAT_DB_IDENT = "statdb";
 
     /**
-     * Constructs a new statistics repository with the specified
-     * connection provider.
+     * Constructs a new statistics repository with the specified connection provider.
      *
      * @param conprov the connection provider via which we will obtain our
      * database connection.
@@ -80,8 +79,7 @@ public class StatRepository extends SimpleRepository
         throws PersistenceException
     {
         final ArrayList<Stat> stats = new ArrayList<Stat>();
-        final String query = "select STAT_CODE, STAT_DATA " +
-            "from STATS where PLAYER_ID = " + playerId;
+        final String query = "select STAT_CODE, STAT_DATA from STATS where PLAYER_ID = " + playerId;
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -106,9 +104,8 @@ public class StatRepository extends SimpleRepository
     }
 
     /**
-     * Writes out any of the stats in the supplied array that have been
-     * modified since they were first loaded. Exceptions that occur while
-     * writing the stats will be caught and logged.
+     * Writes out any of the stats in the supplied array that have been modified since they were
+     * first loaded. Exceptions that occur while writing the stats will be caught and logged.
      */
     public void writeModified (int playerId, Stat[] stats)
     {
@@ -119,8 +116,7 @@ public class StatRepository extends SimpleRepository
                     updateStat(playerId, stats[ii]);
                 }
             } catch (Exception e) {
-                log.log(Level.WARNING, "Error flushing modified stat " +
-                        "[stat=" + stats[ii] + "].", e);
+                log.log(Level.WARNING, "Error flushing modified stat [stat=" + stats[ii] + "].", e);
             }
         }
     }
@@ -139,9 +135,8 @@ public class StatRepository extends SimpleRepository
             } catch (PersistenceException pe) {
                 log.log(Level.WARNING, "Failed to assign code [type=" + type +
                         ", value=" + value + "].", pe);
-                // at this point the database is probably totally hosed, so we
-                // can just punt here, and assume that this value will never be
-                // persisted
+                // at this point the database is probably totally hosed, so we can just punt here,
+                // and assume that this value will never be persisted
                 code = -1;
             }
             mapStringCode(type, value, code);
@@ -183,24 +178,20 @@ public class StatRepository extends SimpleRepository
     }
 
     /**
-     * Invokes the supplied processor on every stat in the database of the
-     * specified type.
+     * Invokes the supplied processor on every stat in the database of the specified type.
      *
-     * <p><em>Note:</em> the stats database will inevitable be extremely large
-     * (one row for every paying player and one for non-payers less than six
-     * months old; millions of rows if the game is at all successful). Don't
-     * call this method willy nilly and the summarized results should be cached
-     * for at least 12 hours. (Stats don't change that frequently in the
-     * aggregate.)
+     * <p><em>Note:</em> the stats database will inevitable be extremely large (one row for every
+     * paying player and one for non-payers less than six months old; millions of rows if the game
+     * is at all successful). Don't call this method willy nilly and the summarized results should
+     * be cached for at least 12 hours. (Stats don't change that frequently in the aggregate.)
      */
     public void processStats (final Processor processor, Stat.Type type)
         throws PersistenceException
     {
         final Stat stat = type.newStat();
-        final String query = "select STATS.PLAYER_ID, ACCOUNT_NAME, HANDLE, " +
-            "STAT_DATA from STATS, PLAYERS " +
-            "where PLAYERS.PLAYER_ID = STATS.PLAYER_ID " +
-            "and STAT_CODE = " + type.code();
+        final String query = "select STATS.PLAYER_ID, ACCOUNT_NAME, HANDLE, CREATED, " +
+            "SESSION_MINUTES, STAT_DATA from STATS, PLAYERS " +
+            "where PLAYERS.PLAYER_ID = STATS.PLAYER_ID and STAT_CODE = " + type.code();
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
                 throws SQLException, PersistenceException
@@ -209,9 +200,9 @@ public class StatRepository extends SimpleRepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        if (decodeStat(stat, (byte[])rs.getObject(4)) != null) {
-                            processor.process(rs.getInt(1), rs.getString(2),
-                                              rs.getString(3), stat);
+                        if (decodeStat(stat, (byte[])rs.getObject(6)) != null) {
+                            processor.process(rs.getInt(1), rs.getString(2), rs.getString(3),
+                                              rs.getTimestamp(4), rs.getInt(5), stat);
                         }
                     }
                 } finally {
@@ -223,23 +214,20 @@ public class StatRepository extends SimpleRepository
     }
 
     /**
-     * Instantiates the appropriate stat class and decodes the stat from
-     * the data.
+     * Instantiates the appropriate stat class and decodes the stat from the data.
      */
     protected Stat decodeStat (int statCode, byte[] data)
     {
         Stat.Type type = Stat.getType(statCode);
         if (type == null) {
-            log.warning("Unable to decode stat, unknown type " +
-                        "[code=" + statCode + "].");
+            log.warning("Unable to decode stat, unknown type [code=" + statCode + "].");
             return null;
         }
         return decodeStat(type.newStat(), data);
     }
 
     /**
-     * Instantiates the appropriate stat class and decodes the stat from
-     * the data.
+     * Instantiates the appropriate stat class and decodes the stat from the data.
      */
     protected Stat decodeStat (Stat stat, byte[] data)
     {
@@ -261,21 +249,18 @@ public class StatRepository extends SimpleRepository
             errmsg = "Unable to decode stat";
         }
 
-        log.log(Level.WARNING,
-                errmsg + " [type=" + stat.getType() + "]", error);
+        log.log(Level.WARNING, errmsg + " [type=" + stat.getType() + "]", error);
         return null;
     }
 
     /**
-     * Updates the specified stat in the database, inserting it if
-     * necessary.
+     * Updates the specified stat in the database, inserting it if necessary.
      */
     protected void updateStat (int playerId, final Stat stat)
         throws PersistenceException
     {
         final String uquery = "update STATS set STAT_DATA = ?" +
-            " where PLAYER_ID = " + playerId +
-            " and STAT_CODE = " + stat.getCode();
+            " where PLAYER_ID = " + playerId + " and STAT_CODE = " + stat.getCode();
         final String iquery = "insert into STATS (PLAYER_ID, STAT_CODE, " +
             "STAT_DATA) values (" + playerId + ", " + stat.getCode() + ", ?)";
         final ByteArrayOutInputStream out = new ByteArrayOutInputStream();
@@ -297,8 +282,7 @@ public class StatRepository extends SimpleRepository
                     if (stmt.executeUpdate() == 0) {
                         JDBCUtil.close(stmt);
                         stmt = conn.prepareStatement(iquery);
-                        stmt.setBinaryStream(
-                            1, out.getInputStream(), out.size());
+                        stmt.setBinaryStream(1, out.getInputStream(), out.size());
                         JDBCUtil.checkedUpdate(stmt, 1);
                     }
                     return null;
@@ -310,8 +294,7 @@ public class StatRepository extends SimpleRepository
     }
 
     /** Helper function for {@link #getStringCode}. */
-    protected Integer assignStringCode (
-        final Stat.Type type, final String value)
+    protected Integer assignStringCode (final Stat.Type type, final String value)
         throws PersistenceException
     {
         return executeUpdate(new Operation<Integer>() {
@@ -329,33 +312,29 @@ public class StatRepository extends SimpleRepository
                         return code;
 
                     } catch (SQLException sqe) {
-                        // if this is not a duplicate row exception, something
-                        // is booched and we just fail
+                        // if this is not a duplicate row exception, something is booched and we
+                        // just fail
                         if (!liaison.isDuplicateRowException(sqe)) {
                             throw sqe;
                         }
 
-                        // if it is a duplicate row exception, possibly someone
-                        // inserted our value before we could, in which case we
-                        // can just look up the new mapping
+                        // if it is a duplicate row exception, possibly someone inserted our value
+                        // before we could, in which case we can just look up the new mapping
                         int code = getCurrentCode(conn, type, value);
                         if (code != -1) {
-                            log.info("Value collision assigning string " +
-                                     "code [type=" + type +
+                            log.info("Value collision assigning string code [type=" + type +
                                      ", value=" + value + "].");
                             return code;
                         }
 
-                        // otherwise someone used the code we were trying to
-                        // use and we just need to loop around and get the next
-                        // highest code
-                        log.info("Code collision assigning string code " +
-                                 "[type=" + type + ", value=" + value + "].");
+                        // otherwise someone used the code we were trying to use and we just need
+                        // to loop around and get the next highest code
+                        log.info("Code collision assigning string code [type=" + type +
+                                 ", value=" + value + "].");
                     }
                 }
-                throw new SQLException(
-                    "Unable to assign code after 10 attempts " +
-                    "[type=" + type + ", value=" + value + "]");
+                throw new SQLException("Unable to assign code after 10 attempts " +
+                                       "[type=" + type + ", value=" + value + "]");
             }
         });
     }
@@ -364,16 +343,15 @@ public class StatRepository extends SimpleRepository
     protected int getNextCode (Connection conn, Stat.Type type)
         throws SQLException
     {
-        return getCode(conn, "select MAX(CODE)+1 from STRING_CODES " +
-                       "where STAT_CODE = " + type.code());
+        return getCode(conn, "select MAX(CODE)+1 from STRING_CODES where STAT_CODE = " +
+                       type.code());
     }
 
     /** Helper function for {@link #assignStringCode}. */
     protected int getCurrentCode (Connection conn, Stat.Type type, String value)
         throws SQLException
     {
-        return getCode(conn, "select CODE from STRING_CODES " +
-                       "where STAT_CODE = " + type.code() +
+        return getCode(conn, "select CODE from STRING_CODES where STAT_CODE = " + type.code() +
                        " and VALUE = " + JDBCUtil.escape(value));
     }
 
@@ -395,21 +373,18 @@ public class StatRepository extends SimpleRepository
     }
 
     /** Helper function for {@link #assignStringCode}. */
-    protected void insertStringCode (
-        Connection conn, Stat.Type type, String value, int code)
+    protected void insertStringCode (Connection conn, Stat.Type type, String value, int code)
         throws SQLException
     {
-        String query = "insert into STRING_CODES (STAT_CODE, VALUE, CODE) " +
-            "values(" + type.code() + ", " + JDBCUtil.escape(value) + ", " +
-            code + ")";
+        String query = "insert into STRING_CODES (STAT_CODE, VALUE, CODE) values(" + type.code() +
+            ", " + JDBCUtil.escape(value) + ", " + code + ")";
         Statement stmt = conn.createStatement();
         try {
             int mods = stmt.executeUpdate(query);
             if (mods != 1) {
-                throw new SQLException(
-                    "Insertion failed to modify one row [type=" + type +
-                    ", value=" + value + ", code=" + code +
-                    ", mods=" + mods + "]");
+                throw new SQLException("Insertion failed to modify one row [type=" + type +
+                                       ", value=" + value + ", code=" + code +
+                                       ", mods=" + mods + "]");
             }
         } finally {
             JDBCUtil.close(stmt);
@@ -420,8 +395,7 @@ public class StatRepository extends SimpleRepository
     protected void loadStringCodes (Stat.Type type)
         throws PersistenceException
     {
-        final String query = "select STAT_CODE, VALUE, CODE " +
-            "from STRING_CODES " +
+        final String query = "select STAT_CODE, VALUE, CODE from STRING_CODES " +
             ((type == null) ? "" : (" where STAT_CODE = " + type.code()));
         execute(new Operation<Object>() {
             public Object invoke (Connection conn, DatabaseLiaison liaison)
@@ -431,8 +405,7 @@ public class StatRepository extends SimpleRepository
                 try {
                     ResultSet rs = stmt.executeQuery(query);
                     while (rs.next()) {
-                        mapStringCode(Stat.getType(rs.getInt(1)),
-                                      rs.getString(2), rs.getInt(3));
+                        mapStringCode(Stat.getType(rs.getInt(1)), rs.getString(2), rs.getInt(3));
                     }
                 } finally {
                     JDBCUtil.close(stmt);

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.web.logic;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
@@ -52,8 +53,8 @@ public class player_stats extends AdminLogic
             new ComparableArrayList<StatRecord>();
         final Percentiler tiler = new Percentiler();
         StatRepository.Processor proc = new StatRepository.Processor() {
-            public void process (int playerId, String accountName,
-                                 String handle, Stat stat) {
+            public void process (int playerId, String accountName, String handle,
+                                 Timestamp created, int sessionMinutes, Stat stat) {
                 StatRecord record = new StatRecord();
                 record.playerId = playerId;
                 record.accountName = accountName;
