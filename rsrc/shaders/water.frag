@@ -26,7 +26,7 @@ varying vec3 eyeVector, halfVector;
  */
 void main ()
 {
-    vec3 norm = normalize(texture2D(normalMap, gl_TexCoord[0]).xyz - vec3(0.5, 0.5, 0.5)),
+    vec3 norm = normalize(texture2D(normalMap, gl_TexCoord[0].st).xyz - vec3(0.5, 0.5, 0.5)),
         eye = normalize(eyeVector),
         halfVec = normalize(halfVector);
 
