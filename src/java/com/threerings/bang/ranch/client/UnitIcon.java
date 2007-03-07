@@ -52,7 +52,7 @@ public class UnitIcon extends PaletteIcon
             setLocked(ctx, locked);
             if (locked) {
                 setEnabled(!disableUnavail);
-                setTooltipText(getTooltipText() + BADGE_SEP + 
+                setTooltipText(getTooltipText() + BADGE_SEP +
                     ctx.xlate(BangCodes.UNITS_MSGS,
                         _config.getName() + "_badge"));
             }
@@ -114,12 +114,6 @@ public class UnitIcon extends PaletteIcon
         if (_lock != null) {
             _lock.release();
         }
-    }
-
-    @Override // documentation inherited
-    protected Insets getTextInsets ()
-    {
-        return new Insets(5, 5, 5, 0);
     }
 
     @Override // documentation inherited

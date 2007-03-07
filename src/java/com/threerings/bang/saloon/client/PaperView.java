@@ -64,9 +64,10 @@ public class PaperView extends BContainer
         // this container will display the friendly folks UI
         _folks = new BContainer(GroupLayout.makeVStretch());
         BangHTMLView help = new BangHTMLView();
-        help.setStyleClass("news_help");
         help.setContents(_msgs.get("m.saloon_help"));
+        help.setStyleClass("news_help");
         BScrollPane helpscroll = new BScrollPane(help);
+        helpscroll.setStyleClass("news_scroll");
         helpscroll.setShowScrollbarAlways(false);
         _folks.add(_chat = new PlaceChatView(_ctx, _msgs.get("m.saloon_info"), helpscroll) {
             protected boolean displayTabs () {
