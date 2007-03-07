@@ -9,7 +9,6 @@ import com.jmex.bui.BScrollPane;
 import com.jmex.bui.BToggleButton;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.event.BEvent;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
@@ -17,6 +16,7 @@ import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.SetAdapter;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.NameFactory;
@@ -112,12 +112,7 @@ public class DirectoryView extends BContainer
             final Handle name = gang.name;
             String nstr = name.toString();
             if (nstr.toLowerCase().startsWith(lstr)) {
-                _gcont.add(new BLabel(nstr, "directory_entry") {
-                    public boolean dispatchEvent (BEvent event) {
-                        return super.dispatchEvent(event) ||
-                            GangPopupMenu.checkPopup(_ctx, getWindow(), event, name);
-                    }
-                });
+                _gcont.add(BangUI.createGangLabel(name, nstr, "directory_entry"));
             }
         }
     }

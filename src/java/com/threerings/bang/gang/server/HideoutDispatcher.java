@@ -3,6 +3,7 @@
 
 package com.threerings.bang.gang.server;
 
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.bang.gang.data.HideoutMarshaller;
@@ -108,6 +109,13 @@ public class HideoutDispatcher extends InvocationDispatcher
             ((HideoutProvider)provider).leaveMatch(
                 source,
                 ((Integer)args[0]).intValue()
+            );
+            return;
+
+        case HideoutMarshaller.SET_BUCKLE:
+            ((HideoutProvider)provider).setBuckle(
+                source,
+                (BucklePart[])args[0], (InvocationService.ConfirmListener)args[1]
             );
             return;
 

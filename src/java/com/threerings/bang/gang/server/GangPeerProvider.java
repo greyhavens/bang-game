@@ -4,6 +4,7 @@
 package com.threerings.bang.gang.server;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.GangPeerService;
 import com.threerings.bang.gang.data.OutfitArticle;
@@ -68,6 +69,12 @@ public interface GangPeerProvider extends InvocationProvider
      * Handles a {@link GangPeerService#setAvatar} request.
      */
     public void setAvatar (ClientObject caller, int arg1, AvatarInfo arg2);
+
+    /**
+     * Handles a {@link GangPeerService#setBuckle} request.
+     */
+    public void setBuckle (ClientObject caller, Handle arg1, BucklePart[] arg2, InvocationService.ConfirmListener arg3)
+        throws InvocationException;
 
     /**
      * Handles a {@link GangPeerService#setStatement} request.

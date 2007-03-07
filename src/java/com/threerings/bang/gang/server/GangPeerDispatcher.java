@@ -4,6 +4,7 @@
 package com.threerings.bang.gang.server;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.GangPeerService;
 import com.threerings.bang.gang.data.GangPeerMarshaller;
@@ -101,6 +102,13 @@ public class GangPeerDispatcher extends InvocationDispatcher
             ((GangPeerProvider)provider).setAvatar(
                 source,
                 ((Integer)args[0]).intValue(), (AvatarInfo)args[1]
+            );
+            return;
+
+        case GangPeerMarshaller.SET_BUCKLE:
+            ((GangPeerProvider)provider).setBuckle(
+                source,
+                (Handle)args[0], (BucklePart[])args[1], (InvocationService.ConfirmListener)args[2]
             );
             return;
 

@@ -4,6 +4,7 @@
 package com.threerings.bang.gang.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.samskivert.io.PersistenceException;
 
@@ -14,6 +15,7 @@ import com.samskivert.util.Interval;
 import com.samskivert.util.ObjectUtil;
 import com.samskivert.util.ResultListener;
 import com.samskivert.util.ResultListenerList;
+import com.samskivert.util.StringUtil;
 import com.samskivert.util.Tuple;
 
 import com.threerings.util.MessageBundle;
@@ -51,6 +53,7 @@ import com.threerings.coin.server.persist.CoinTransaction;
 import com.threerings.bang.data.Article;
 import com.threerings.bang.data.AvatarInfo;
 import com.threerings.bang.data.BangClientInfo;
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
@@ -606,6 +609,96 @@ public class GangHandler
                 try {
                     _gangobj.setStatement(statement);
                     _gangobj.setUrl(url);
+                } finally {
+                    _gangobj.commitTransaction();
+                }
+                listener.requestProcessed();
+            }
+        });
+    }
+
+    // documentation inherited from interface GangPeerProvider
+    public void setBuckle (
+        ClientObject caller, Handle handle, final BucklePart[] parts,
+        final InvocationService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure it comes from this server or a peer
+        verifyLocalOrPeer(caller);
+
+        // make sure it comes from a leader
+        verifyIsLeader(handle);
+
+        // verify and count all of the parts, clear out the ones that haven't changed
+        final int[] partIds = new int[parts.length];
+        int[] ccounts = new int[AvatarLogic.BUCKLE_PARTS.length];
+        boolean changed = false;
+        for (int ii = 0; ii < parts.length; ii++) {
+            BucklePart opart = parts[ii];
+            int itemId = opart.getItemId();
+            Item item = _gangobj.inventory.get(itemId);
+            if (!opart.isEquivalent(item)) {
+                log.warning("Invalid part for buckle [gang=" + this + ", handle=" + handle +
+                    ", opart=" + opart + ", npart=" + item + "].");
+                throw new InvocationException(INTERNAL_ERROR);
+            }
+            partIds[ii] = itemId;
+            ccounts[AvatarLogic.getPartIndex(opart.getPartClass())]++;
+            BucklePart npart = (BucklePart)item;
+            if (npart.getX() == opart.getX() && npart.getY() == opart.getY()) {
+                parts[ii] = null;
+            } else if (Math.abs(npart.getX()) > AvatarLogic.BUCKLE_WIDTH / 2 ||
+                    Math.abs(npart.getY()) > AvatarLogic.BUCKLE_HEIGHT / 2) {
+                log.warning("Invalid buckle part coordinates [gang=" + this + ", handle=" +
+                    handle + ", part=" + npart + "].");
+                throw new InvocationException(INTERNAL_ERROR);
+            } else {
+                changed = true;
+            }
+        }
+        if (!changed && Arrays.equals(partIds, _gangobj.buckle)) {
+            // nothing changed, so we're finished
+            listener.requestProcessed();
+            return;
+        }
+
+        // verify that the part counts match the limits
+        for (int ii = 0; ii < ccounts.length; ii++) {
+            AvatarLogic.PartClass pclass = AvatarLogic.BUCKLE_PARTS[ii];
+            if (!pclass.isOptional() && ccounts[ii] < 1) {
+                log.warning("Buckle missing required part [gang=" + this + ", handle=" + handle +
+                    ", parts=" + StringUtil.toString(parts) + ", pclass=" + pclass.name + "].");
+                throw new InvocationException(INTERNAL_ERROR);
+            }
+            int max = (pclass.isMultiple() ? _gangobj.getMaxBuckleIcons() : 1);
+            if (ccounts[ii] > max) {
+                log.warning("Buckle has more than allowed number of parts [gang=" + this +
+                    ", handle=" + handle + ", parts=" + StringUtil.toString(parts) + ", pclass=" +
+                    pclass.name + ", max=" + max + "].");
+                throw new InvocationException(INTERNAL_ERROR);
+            }
+        }
+
+        // post the updates to the database
+        BangServer.invoker.postUnit(new PersistingUnit(listener) {
+            public void invokePersistent ()
+                throws PersistenceException {
+                for (BucklePart part : parts) {
+                    if (part != null) {
+                        BangServer.itemrepo.updateItem(part);
+                    }
+                }
+                BangServer.gangrepo.updateBuckle(_gangId, partIds);
+            }
+            public void handleSuccess () {
+                _gangobj.startTransaction();
+                try {
+                    for (BucklePart part : parts) {
+                        if (part != null) {
+                            _gangobj.updateInventory(part);
+                        }
+                    }
+                    _gangobj.setBuckle(partIds);
                 } finally {
                     _gangobj.commitTransaction();
                 }

@@ -1936,57 +1936,6 @@ history_desc {
   size: 325 -1;
 }
 
-outfit_dialog {
-  background: image "ui/window/border_wood.png" framexy;
-  padding: 30 22 15 22;
-}
-
-outfit_articles {
-  background: image "ui/window/border_ornate_darker.png" framexy;
-  padding: 8;
-}
-
-outfit_scroll {
-  font: "Dom Casual" plain 14;
-  color: #442801;
-  background: image "ui/hideout/short_scroll.png" centerxy;
-  text-align: center;
-  vertical-align: top;
-}
-
-outfit_avatar_left {
-  padding: 0 5 0 0;
-}
-
-outfit_tabs_left {
-  background: image "ui/hideout/outfit_tabs_left_back.png" centerxy;
-}
-
-outfit_avatar_right {
-  padding: 0 0 0 5;
-}
-
-outfit_tabs_right {
-  background: image "ui/hideout/outfit_tabs_right_back.png" centerxy;
-}
-
-outfit_item {
-  background: image "ui/hideout/outfit_article_background.png" centerxy;
-  text-align: center;
-}
-
-outfit_controls {
-   padding: 30 5 5 20;
-}
-
-outfit_total_price {
-  font: "Old Town" bold 27;
-  text-align: center;
-  text-effect: outline;
-  color: #FFFFFF;
-  effect-color: #6C5237;
-}
-
 play_view {
   background: image "ui/hideout/fields_play.png" centerxy;
   padding: 0 5 3 0;
@@ -2083,6 +2032,123 @@ gang_chat {
 
 gang_rank_view {
   padding: 5 5;
+}
+
+// Gang buckle dialog styles
+
+buckle_dialog {
+  background: image "ui/window/border_wood.png" framexy;
+  padding: 30 30 15 50;
+}
+
+buckle_tabs {
+  background: image "ui/hideout/buckle_tabs.png" centery;
+}
+
+buckle_palette {
+  background: image "ui/hideout/buckle_palette_background.png" tilexy;
+}
+
+buckle_heading {
+  font: "Old Town" bold 27;
+  color: #FFFFFF;
+  text-effect: outline;
+  effect-color: #6C5237;
+}
+
+buckle_label {
+  font: "Dom Casual" plain 16;
+  color: #FFFFFF;
+  padding: 0 5 1 5;
+}
+
+buckle_tip {
+  font: "Dialog" plain 14;
+  color: #EACE86;
+  text-align: center;
+  padding: 15 0;
+}
+
+small_arrow_button {
+  parent: "alt_button";
+  padding: 0 5;
+}
+small_arrow_button:hover {
+  parent: "alt_button:hover";
+}
+small_arrow_button:down {
+  parent: "alt_button:down";
+  padding: 2 6 0 4;
+}
+
+buckle_preview {
+  background: image "ui/hideout/buckle_frame.png" centerxy;
+}
+buckle_preview_label {
+  font: "Dom Casual" plain 14;
+  color: #442801;
+  text-align: center;
+}
+
+buckle_palette_icon {
+  parent: "palette_icon";
+  padding: 0 0;
+}
+buckle_palette_icon:selected {
+  parent: "palette_icon:selected";
+}
+
+// Gang outfit dialog styles
+
+outfit_dialog {
+  background: image "ui/window/border_wood.png" framexy;
+  padding: 30 22 15 22;
+}
+
+outfit_articles {
+  background: image "ui/window/border_ornate_darker.png" framexy;
+  padding: 8;
+}
+
+outfit_scroll {
+  font: "Dom Casual" plain 14;
+  color: #442801;
+  background: image "ui/hideout/short_scroll.png" centerxy;
+  text-align: center;
+  vertical-align: top;
+}
+
+outfit_avatar_left {
+  padding: 0 5 0 0;
+}
+
+outfit_tabs_left {
+  background: image "ui/hideout/outfit_tabs_left_back.png" centerxy;
+}
+
+outfit_avatar_right {
+  padding: 0 0 0 5;
+}
+
+outfit_tabs_right {
+  background: image "ui/hideout/outfit_tabs_right_back.png" centerxy;
+}
+
+outfit_item {
+  background: image "ui/hideout/outfit_article_background.png" centerxy;
+  text-align: center;
+}
+
+outfit_controls {
+   padding: 30 5 5 20;
+}
+
+outfit_total_price {
+  font: "Old Town" bold 27;
+  text-align: center;
+  text-effect: outline;
+  color: #FFFFFF;
+  effect-color: #6C5237;
 }
 
 // Gang info dialog styles

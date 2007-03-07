@@ -44,6 +44,7 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.BStyleSheet;
 import com.jmex.bui.BToggleButton;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.BEvent;
 import com.jmex.bui.icon.BIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
@@ -60,10 +61,14 @@ import com.threerings.openal.SoundGroup;
 
 import com.threerings.util.MessageBundle;
 
+import com.threerings.bang.gang.client.GangPopupMenu;
+
 import com.threerings.bang.data.BangCodes;
 import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.UnitConfig;
 import com.threerings.bang.util.BangUtil;
+import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 import com.threerings.bang.util.SoundUtil;
 
@@ -480,6 +485,22 @@ public class BangUI
             label.setTooltipText(msgs.get(tipkey));
         }
         return label;
+    }
+
+    /**
+     * Creates a label that, if clicked, will bring up the gang pop-up menu.
+     */
+    public static BLabel createGangLabel (final Handle name, String text, String style)
+    {
+        if (!(_ctx instanceof BangContext)) {
+            return new BLabel(text, style);
+        }
+        return new BLabel(text, style) {
+            public boolean dispatchEvent (BEvent event) {
+                return super.dispatchEvent(event) ||
+                    GangPopupMenu.checkPopup((BangContext)_ctx, getWindow(), event, name);
+            }
+        };
     }
 
     /**

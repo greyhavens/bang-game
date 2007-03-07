@@ -167,6 +167,14 @@ public class GangObject extends DObject
     }
 
     /**
+     * Returns the maximum number of icons that can be used in the buckle.
+     */
+    public int getMaxBuckleIcons ()
+    {
+        return GangCodes.BASE_MAX_BUCKLE_ICONS;
+    }
+
+    /**
      * Returns the {@link GangMemberEntry} corresponding to the most senior active leader of the
      * gang.
      */

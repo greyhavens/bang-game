@@ -6,6 +6,7 @@ package com.threerings.bang.gang.client;
 import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.util.NameCreator;
 
@@ -29,30 +30,39 @@ public interface HideoutService extends InvocationService
      */
     public void formGang (
         Client client, Handle root, String suffix, ConfirmListener listener);
-    
+
     /**
      * Requests to leave the current gang.
      */
     public void leaveGang (Client client, ConfirmListener listener);
-    
+
     /**
      * Requests to set the gang's statement and URL.
      */
     public void setStatement (
         Client client, String statement, String url, ConfirmListener listener);
-    
+
+    /**
+     * Requests to reconfigure the gang's buckle.
+     *
+     * @param parts the parts to use in the buckle, in order, with any necessary
+     * state changes
+     */
+    public void setBuckle (
+        Client client, BucklePart[] parts, ConfirmListener listener);
+
     /**
      * Requests to contribute scrip and/or coins to the gang's coffers.
      */
     public void addToCoffers (
         Client client, int scrip, int coins, ConfirmListener listener);
-    
+
     /**
      * Requests to expel a member from the gang.
      */
     public void expelMember (
         Client client, Handle handle, ConfirmListener listener);
-    
+
     /**
      * Requests to promote or demote a gang member.
      */
@@ -64,9 +74,9 @@ public interface HideoutService extends InvocationService
      *
      * @param offset the offset at which to start
      * @param listener a listener to notify with the array of {@link HistoryEntry}s
-     */    
+     */
     public void getHistoryEntries (Client client, int offset, ResultListener listener);
-    
+
     /**
      * Requests that a game be located meeting the specified criterion.
      */
@@ -76,14 +86,14 @@ public interface HideoutService extends InvocationService
      * Requests that we leave our currently pending match.
      */
     public void leaveMatch (Client client, int matchOid);
-    
+
     /**
      * Requests a price quote for the specified gang outfit.  The listener will receive an integer
      * array containing the scrip and coin cost to buy the specified articles for every member who
      * doesn't already own them.
      */
     public void getOutfitQuote (Client client, OutfitArticle[] outfit, ResultListener listener);
-    
+
     /**
      * Purchases gang outfits for all members who don't already own them.  The listener will
      * receive an integer array containing the number of members who received articles and the

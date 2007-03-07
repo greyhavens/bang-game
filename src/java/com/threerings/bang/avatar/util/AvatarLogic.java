@@ -84,17 +84,26 @@ public class AvatarLogic
         /** The name of the class. */
         public String name;
 
-        /** Whether or not this kind of part can be omitted. */
-        public boolean optional;
+        /** For mandatory, singular elements, the index in the item array.  For
+         * optional, multiple elements, -1. */
+        public int idx;
 
-        /** Whether or not buckles allow multiple instances of this part. */
-        public boolean multiple;
-
-        public PartClass (String name, boolean optional, boolean multiple)
+        public PartClass (String name, int idx)
         {
             this.name = name;
-            this.optional = optional;
-            this.multiple = multiple;
+            this.idx = idx;
+        }
+
+        /** Checks whether or not this part can be omitted. */
+        public boolean isOptional ()
+        {
+            return (idx == -1);
+        }
+
+        /** Checks whether or not buckles can contain multiple instances of this part. */
+        public boolean isMultiple ()
+        {
+            return (idx == -1);
         }
     }
 
@@ -123,9 +132,9 @@ public class AvatarLogic
 
     /** Defines the classes of parts that define a buckle. */
     public static final PartClass[] BUCKLE_PARTS = {
-        new PartClass("background", false, false),
-        new PartClass("border", false, false),
-        new PartClass("icon", true, true),
+        new PartClass("background", 0),
+        new PartClass("border", 1),
+        new PartClass("icon", -1),
     };
 
     /** The colorization class for skin colors. */
@@ -162,6 +171,19 @@ public class AvatarLogic
     {
         for (int ii = 0; ii < SLOTS.length; ii++) {
             if (SLOTS[ii].name.equals(slot)) {
+                return ii;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Returns the index in the {@link #BUCKLE_PARTS} array of the specified part class.
+     */
+    public static int getPartIndex (String pclass)
+    {
+        for (int ii = 0; ii < BUCKLE_PARTS.length; ii++) {
+            if (BUCKLE_PARTS[ii].name.equals(pclass)) {
                 return ii;
             }
         }
@@ -639,7 +661,7 @@ public class AvatarLogic
         // add instances of all required parts
         ArrayList<BucklePart> parts = new ArrayList<BucklePart>();
         for (PartClass pclass : BUCKLE_PARTS) {
-            if (pclass.optional) {
+            if (pclass.isOptional()) {
                 continue;
             }
             BucklePartCatalog.Part part = _partcat.getStarter(pclass.name);

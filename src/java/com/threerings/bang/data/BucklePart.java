@@ -5,18 +5,16 @@ package com.threerings.bang.data;
 
 import java.util.Arrays;
 
+import com.jmex.bui.BImage;
 import com.jmex.bui.icon.ImageIcon;
 
 import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
-import com.threerings.media.image.Colorization;
-import com.threerings.media.image.ImageUtil;
-
+import com.threerings.bang.avatar.client.BuckleView;
 import com.threerings.bang.avatar.data.AvatarCodes;
 
 import com.threerings.bang.data.PlayerObject;
-import com.threerings.bang.util.BangContext;
 import com.threerings.bang.util.BasicContext;
 
 import static com.threerings.bang.Log.log;
@@ -110,13 +108,13 @@ public class BucklePart extends Item
     @Override // documentation inherited
     public String getIconPath ()
     {
-        return null;
+        return null; // we get the icon from the component repository
     }
 
     @Override // documentation inherited
     public ImageIcon createIcon (BasicContext ctx, String iconPath)
     {
-        return null;
+        return new ImageIcon(new BImage(BuckleView.getPartIcon(ctx, this)));
     }
 
     @Override // documentation inherited
@@ -124,7 +122,8 @@ public class BucklePart extends Item
     {
         BucklePart opart;
         return super.isEquivalent(other) &&
-            (opart = (BucklePart)other)._name.equals(_name) &&
+            (opart = (BucklePart)other)._class.equals(_class) &&
+            opart._name.equals(_name) &&
             Arrays.equals(opart._components, _components);
     }
 

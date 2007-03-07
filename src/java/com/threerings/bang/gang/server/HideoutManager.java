@@ -20,6 +20,7 @@ import com.threerings.crowd.data.PlaceObject;
 import com.threerings.crowd.server.PlaceManager;
 
 import com.threerings.bang.data.BangNodeObject;
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.server.BangServer;
@@ -163,6 +164,19 @@ public class HideoutManager extends MatchHostManager
         // pass it off to the gang handler
         BangServer.gangmgr.requireGangPeerProvider(user.gangId).setStatement(
             null, user.handle, statement, url, listener);
+    }
+
+    // documentation inherited from HideoutProvider
+    public void setBuckle (ClientObject caller, BucklePart[] parts,
+                           HideoutService.ConfirmListener listener)
+        throws InvocationException
+    {
+        // make sure they have access
+        PlayerObject user = requireShopEnabled(caller);
+
+        // pass it off to the gang handler
+        BangServer.gangmgr.requireGangPeerProvider(user.gangId).setBuckle(
+            null, user.handle, parts, listener);
     }
 
     // documentation inherited from interface HideoutProvider

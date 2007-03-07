@@ -43,4 +43,7 @@ public interface GangCodes extends InvocationCodes
 
     /** The amount of time that must elapse before members can contribute to the gang's coffers. */
     public static final long DONATION_DELAY = 7L * 24 * 60 * 60 * 1000;
+
+    /** The starting number of icons gangs can have on their buckles. */
+    public static final int BASE_MAX_BUCKLE_ICONS = 3;
 }

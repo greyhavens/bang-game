@@ -7,6 +7,7 @@ import com.threerings.presents.client.Client;
 import com.threerings.presents.client.InvocationService;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 
 import com.threerings.bang.gang.data.OutfitArticle;
@@ -50,6 +51,12 @@ public interface GangPeerService extends InvocationService
      */
     public void setStatement (
         Client client, Handle handle, String statement, String url, ConfirmListener listener);
+
+    /**
+     * Sets the gang's buckle.
+     */
+    public void setBuckle (
+        Client client, Handle handle, BucklePart[] parts, ConfirmListener listener);
 
     /**
      * Adds to the gang's coffers.

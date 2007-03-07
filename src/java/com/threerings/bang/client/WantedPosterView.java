@@ -16,7 +16,6 @@ import com.jmex.bui.BWindow;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
-import com.jmex.bui.event.BEvent;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.layout.BLayoutManager;
@@ -33,9 +32,9 @@ import com.threerings.util.MessageBundle;
 import com.threerings.bang.avatar.client.AvatarView;
 import com.threerings.bang.game.data.GameCodes;
 import com.threerings.bang.game.data.scenario.ScenarioInfo;
-import com.threerings.bang.gang.client.GangPopupMenu;
 import com.threerings.bang.gang.data.GangCodes;
 
+import com.threerings.bang.client.BangUI;
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BangCodes;
@@ -207,12 +206,7 @@ public class WantedPosterView extends BContainer
                     MessageBundle.qualify(
                         GangCodes.GANG_MSGS, GangCodes.XLATE_RANKS[_poster.rank]),
                     MessageBundle.taint(_poster.gang)));
-            box.add(new BLabel(gang, "poster_gang") {
-                public boolean dispatchEvent (BEvent event) {
-                    return super.dispatchEvent(event) ||
-                        GangPopupMenu.checkPopup(_ctx, getWindow(), event, _poster.gang);
-                }
-            });
+            box.add(BangUI.createGangLabel(_poster.gang, gang, "poster_gang"));
         }
 
         return box;

@@ -279,6 +279,25 @@ public abstract class BaseAvatarView extends BLabel
         BufferUtils.setInBuffer(_tcoord, tbuf, idx2);
     }
 
+    /**
+     * Renders the given frames to an image with the specified dimensions.
+     */
+    protected static BufferedImage renderFrame (
+        BasicContext ctx, ActionFrames af, int width, int height)
+    {
+        MultiFrameImage mfi = af.getFrames(0);
+        int ox = af.getXOrigin(0, 0), oy = af.getYOrigin(0, 0);
+        BufferedImage image = ctx.getImageManager().createImage(
+            width, height, Transparency.BITMASK);
+        Graphics2D gfx = (Graphics2D)image.createGraphics();
+        try {
+            mfi.paintFrame(gfx, 0, width/2-ox, height-oy);
+        } finally {
+            gfx.dispose();
+        }
+        return image;
+    }
+
     /** Handles composition of avatars on the invoker thread. */
     protected static class AvatarResolver extends Invoker.Unit
     {
@@ -308,16 +327,7 @@ public abstract class BaseAvatarView extends BLabel
             }
 
             // composite the myriad components and render them into an image
-            MultiFrameImage mfi = af.getFrames(0);
-            int ox = af.getXOrigin(0, 0), oy = af.getYOrigin(0, 0),
-                width = _avatar.getWidth(), height = _avatar.getHeight();
-            _image = _ctx.getImageManager().createImage(width, height, Transparency.BITMASK);
-            Graphics2D gfx = (Graphics2D)_image.createGraphics();
-            try {
-                mfi.paintFrame(gfx, 0, width/2-ox, height-oy);
-            } finally {
-                gfx.dispose();
-            }
+            _image = renderFrame(_ctx, af, _avatar.getWidth(), _avatar.getHeight());
 
             // TODO: cache composited avatars on disk
             return true;

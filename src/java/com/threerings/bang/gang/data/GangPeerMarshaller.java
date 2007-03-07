@@ -4,6 +4,7 @@
 package com.threerings.bang.gang.data;
 
 import com.threerings.bang.data.AvatarInfo;
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.GangPeerService;
 import com.threerings.bang.gang.data.OutfitArticle;
@@ -133,8 +134,21 @@ public class GangPeerMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #setBuckle} requests. */
+    public static final int SET_BUCKLE = 10;
+
+    // from interface GangPeerService
+    public void setBuckle (Client arg1, Handle arg2, BucklePart[] arg3, InvocationService.ConfirmListener arg4)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener4 = new InvocationMarshaller.ConfirmMarshaller();
+        listener4.listener = arg4;
+        sendRequest(arg1, SET_BUCKLE, new Object[] {
+            arg2, arg3, listener4
+        });
+    }
+
     /** The method id used to dispatch {@link #setStatement} requests. */
-    public static final int SET_STATEMENT = 10;
+    public static final int SET_STATEMENT = 11;
 
     // from interface GangPeerService
     public void setStatement (Client arg1, Handle arg2, String arg3, String arg4, InvocationService.ConfirmListener arg5)

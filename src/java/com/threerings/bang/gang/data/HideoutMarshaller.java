@@ -3,6 +3,7 @@
 
 package com.threerings.bang.gang.data;
 
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.bang.gang.data.OutfitArticle;
@@ -150,8 +151,21 @@ public class HideoutMarshaller extends InvocationMarshaller
         });
     }
 
+    /** The method id used to dispatch {@link #setBuckle} requests. */
+    public static final int SET_BUCKLE = 11;
+
+    // from interface HideoutService
+    public void setBuckle (Client arg1, BucklePart[] arg2, InvocationService.ConfirmListener arg3)
+    {
+        InvocationMarshaller.ConfirmMarshaller listener3 = new InvocationMarshaller.ConfirmMarshaller();
+        listener3.listener = arg3;
+        sendRequest(arg1, SET_BUCKLE, new Object[] {
+            arg2, listener3
+        });
+    }
+
     /** The method id used to dispatch {@link #setStatement} requests. */
-    public static final int SET_STATEMENT = 11;
+    public static final int SET_STATEMENT = 12;
 
     // from interface HideoutService
     public void setStatement (Client arg1, String arg2, String arg3, InvocationService.ConfirmListener arg4)

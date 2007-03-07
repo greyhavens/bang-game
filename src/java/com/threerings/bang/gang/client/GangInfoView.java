@@ -82,9 +82,10 @@ public class GangInfoView extends BContainer
 
         tcont.add(bcont);
         BContainer fcont = GroupLayout.makeVBox(GroupLayout.BOTTOM);
-        fcont.add(_buckle = new BuckleView(ctx, 2), GroupLayout.FIXED);
-        fcont.add(new Spacer(1, -15));
+        ((GroupLayout)fcont.getLayoutManager()).setOffAxisJustification(GroupLayout.RIGHT);
+        fcont.add(_buckle = new BuckleView(ctx, 2));
         _buckle.setBuckle(gangobj.getBuckleInfo());
+        fcont.add(new Spacer(1, -15));
         bcont.add(fcont);
 
         BContainer rcont = new BContainer(GroupLayout.makeVert(
@@ -108,8 +109,12 @@ public class GangInfoView extends BContainer
         _page.setStyleClass("alt_button");
         _page.setVisible(gangobj.getURL() != null);
         if (_ctx.getUserObject().gangRank == GangCodes.LEADER_RANK) {
-            pcont.add(_edit = new BButton(_msgs.get("m.edit"), this, "edit_statement"));
-            _edit.setStyleClass("alt_button");
+            BButton edit = new BButton(_msgs.get("m.edit"), this, "edit_statement");
+            edit.setStyleClass("alt_button");
+            pcont.add(edit);
+            edit = new BButton(_msgs.get("m.buckle"), this, "edit_buckle");
+            edit.setStyleClass("alt_button");
+            pcont.add(edit);
         }
         scont.add(pcont);
         rcont.add(scont);
@@ -118,8 +123,9 @@ public class GangInfoView extends BContainer
         ccont.add(new BLabel(_msgs.get("m.coffers"), "coffer_label"));
         ccont.add(_coffers = new CofferLabel(ctx, gangobj));
         if (_ctx.getUserObject().canDonate()) {
-            ccont.add(_donate = new BButton(_msgs.get("m.donate"), this, "donate"));
-            _donate.setStyleClass("alt_button");
+            BButton donate = new BButton(_msgs.get("m.donate"), this, "donate");
+            donate.setStyleClass("alt_button");
+            ccont.add(donate);
         }
         rcont.add(ccont, GroupLayout.FIXED);
 
@@ -281,7 +287,7 @@ public class GangInfoView extends BContainer
     protected BuckleView _buckle;
     protected BLabel _ranking, _notoriety, _statement;
     protected CofferLabel _coffers;
-    protected BButton _page, _edit, _donate;
+    protected BButton _page;
 
     protected StatusLabel _status;
 }

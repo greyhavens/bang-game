@@ -62,7 +62,7 @@ public class GangUtil
      * Forms and returns a buckle fingerprint based on the ordered list of buckle part ids and
      * the item set supplied.
      */
-    public static BuckleInfo getBuckleInfo (int[] partIds, DSet<Item> items)
+    public static <T extends Item> BuckleInfo getBuckleInfo (int[] partIds, DSet<T> items)
     {
         // make sure it exists
         if (partIds == null || partIds.length == 0) {

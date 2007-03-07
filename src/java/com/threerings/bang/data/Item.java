@@ -194,7 +194,7 @@ public abstract class Item
     public boolean isEquivalent (Item other)
     {
         // must be of the exact same class
-        return (getClass() == other.getClass());
+        return (other != null && getClass() == other.getClass());
     }
 
     /**

@@ -3,6 +3,7 @@
 
 package com.threerings.bang.gang.server;
 
+import com.threerings.bang.data.BucklePart;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.gang.client.HideoutService;
 import com.threerings.bang.gang.data.OutfitArticle;
@@ -76,6 +77,12 @@ public interface HideoutProvider extends InvocationProvider
      * Handles a {@link HideoutService#leaveMatch} request.
      */
     public void leaveMatch (ClientObject caller, int arg1);
+
+    /**
+     * Handles a {@link HideoutService#setBuckle} request.
+     */
+    public void setBuckle (ClientObject caller, BucklePart[] arg1, InvocationService.ConfirmListener arg2)
+        throws InvocationException;
 
     /**
      * Handles a {@link HideoutService#setStatement} request.
