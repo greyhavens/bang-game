@@ -1642,6 +1642,10 @@ news_help {
   padding: 5 30 0 15;
 }
 
+news_scroll {
+  padding: 0 0 15 0;
+}
+
 news_buttons {
   padding: 0 35 5 0;
 }
