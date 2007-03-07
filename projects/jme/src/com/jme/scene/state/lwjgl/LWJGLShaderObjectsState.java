@@ -151,7 +151,6 @@ public class LWJGLShaderObjectsState extends GLSLShaderObjectsState {
     private ByteBuffer load(String data) {
         try {
             byte[] bytes = data.getBytes();
-            System.out.println("bytes length " + bytes.length);
             ByteBuffer program = BufferUtils.createByteBuffer(bytes.length);
             program.put(bytes);
             program.rewind();
