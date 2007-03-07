@@ -319,7 +319,7 @@ public class TownView extends BWindow
             BangObject bangobj = new BangObject();
             // we only want to configure the board name the first time we're shown as it will
             // trigger a marquee being displayed with the town name
-            bangobj.marquee = _presented.contains(townId) ? null : MessageBundle.taint(bfile.name);
+            bangobj.marquee = townId.equals(_presented) ? null : MessageBundle.taint(bfile.name);
             bangobj.board = bfile.board;
             bangobj.pieces = new ModifiableDSet<Piece>(bfile.pieces);
             prepareForRound(bangobj, null, 0);
@@ -333,8 +333,8 @@ public class TownView extends BWindow
             // if this is the first time this town is being shown, do our aerial sweep, otherwise
             // just go right to the main view
             String townId = _bctx.getUserObject().townId;
-            String view = _presented.contains(townId) ? "main" : "aerial";
-            _presented.add(townId);
+            String view = townId.equals(_presented) ? "main" : "aerial";
+            _presented = townId;
 
             Viewpoint vp = getViewpoint(view);
             if (vp != null) {
@@ -661,7 +661,8 @@ public class TownView extends BWindow
     protected HashMap<String, String> _commands = new HashMap<String, String>();
 
     /** Used to ensure that we only "present" each town once per session. */
-    protected static HashSet<String> _presented = new HashSet<String>();
+    //protected static HashSet<String> _presented = new HashSet<String>();
+    protected static String _presented;
 
     protected static final Color[] TOWN_COLORS = {
         Color.white, // frontier_town
