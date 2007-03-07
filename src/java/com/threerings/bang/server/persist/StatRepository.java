@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,7 +49,7 @@ public class StatRepository extends SimpleRepository
          * contents will be overwritten prior to each call to process.
          */
         public void process (int playerId, String accountName, String handle,
-                             Timestamp created, int sessionMinutes, Stat stat);
+                             Date created, int sessionMinutes, Stat stat);
     }
 
     /**
@@ -202,7 +203,7 @@ public class StatRepository extends SimpleRepository
                     while (rs.next()) {
                         if (decodeStat(stat, (byte[])rs.getObject(6)) != null) {
                             processor.process(rs.getInt(1), rs.getString(2), rs.getString(3),
-                                              rs.getTimestamp(4), rs.getInt(5), stat);
+                                              rs.getDate(4), rs.getInt(5), stat);
                         }
                     }
                 } finally {
