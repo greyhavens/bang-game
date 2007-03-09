@@ -3,7 +3,9 @@
 
 package com.threerings.bang.avatar.client;
 
-import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 import com.jmex.bui.util.Dimension;
@@ -29,7 +31,19 @@ import static com.threerings.bang.Log.log;
  */
 public class BuckleView extends BaseAvatarView
 {
-    public static Image getPartIcon (BasicContext ctx, BucklePart part)
+    /**
+     * Gets the icon image for the given part.
+     */
+    public static BufferedImage getPartIcon (BasicContext ctx, BucklePart part)
+    {
+        return getPartIcon(ctx, part, null);
+    }
+
+    /**
+     * Gets the icon image for the given part, populating the supplied {@link Rectangle} with its
+     * trimmed bounds.
+     */
+    public static BufferedImage getPartIcon (BasicContext ctx, BucklePart part, Rectangle tbounds)
     {
         int iwidth = AvatarLogic.BUCKLE_WIDTH / 2, iheight = AvatarLogic.BUCKLE_HEIGHT / 2;
         int fqComponentId = part.getComponents()[0],
@@ -48,6 +62,9 @@ public class BuckleView extends BaseAvatarView
                 ", component=" + ccomp + "].");
             return ImageUtil.createErrorImage(iwidth, iheight);
         }
+        if (tbounds != null) {
+            af.getFrames(0).getTrimmedBounds(0, tbounds);
+        }
         AvatarLogic al = ctx.getAvatarLogic();
         BucklePartCatalog.Part cpart = al.getBucklePartCatalog().getPart(
             part.getPartClass(), part.getPartName());
@@ -61,11 +78,8 @@ public class BuckleView extends BaseAvatarView
         if (zations != null) {
             af = af.cloneColorized(zations);
         }
-        if (part.getX() != 0 || part.getY() != 0) {
-            af = af.cloneTranslated(part.getX(), part.getY());
-        }
-        return renderFrame(ctx, af, AvatarLogic.BUCKLE_WIDTH,
-            AvatarLogic.BUCKLE_HEIGHT).getScaledInstance(iwidth, iheight, Image.SCALE_SMOOTH);
+        return HALVE_OP.filter(renderFrame(
+            ctx, af, AvatarLogic.BUCKLE_WIDTH, AvatarLogic.BUCKLE_HEIGHT), null);
     }
 
     /**
@@ -88,4 +102,7 @@ public class BuckleView extends BaseAvatarView
     {
         setAvatar(buckle);
     }
+
+    protected static final AffineTransformOp HALVE_OP = new AffineTransformOp(
+        AffineTransform.getScaleInstance(0.5, 0.5), AffineTransformOp.TYPE_BILINEAR);
 }

@@ -99,6 +99,6 @@
          renderPriority="10"/>
   <class name="buckle/border" colors="buckle_p"
          renderPriority="20"/>
-  <class name="buckle/icon" colors="buckle_p" mask="buckle/border" translate="true"
+  <class name="buckle/icon" colors="buckle_p" translate="true"
          renderPriority="30"/>
 </classes>

@@ -3,15 +3,24 @@
 
 package com.threerings.bang.gang.client;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+
 import java.util.ArrayList;
 
+import com.jme.renderer.Renderer;
+
 import com.jmex.bui.BButton;
+import com.jmex.bui.BComponent;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BDecoratedWindow;
+import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
+import com.jmex.bui.event.BEvent;
+import com.jmex.bui.event.MouseEvent;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.AbsoluteLayout;
 import com.jmex.bui.layout.BorderLayout;
@@ -21,8 +30,11 @@ import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
 import com.samskivert.util.ArrayUtil;
+import com.samskivert.util.HashIntMap;
 import com.samskivert.util.IntListUtil;
+import com.samskivert.util.Interval;
 
+import com.threerings.media.image.ImageUtil;
 import com.threerings.presents.dobj.DSet;
 
 import com.threerings.util.MessageBundle;
@@ -76,10 +88,8 @@ public class BuckleDialog extends BDecoratedWindow
         ccont.add(new BLabel(_msgs.get("m.buckle_preview"), "buckle_heading"), GroupLayout.FIXED);
         ccont.add(_preview = new BucklePreview(), GroupLayout.FIXED);
 
-        ccont.add(_controls = new BContainer(GroupLayout.makeVStretch()));
-        _controls.setPreferredSize(new Dimension(240, 230));
-
-        _icontrols = GroupLayout.makeVBox(GroupLayout.CENTER);
+        ccont.add(_icontrols = GroupLayout.makeVBox(GroupLayout.CENTER));
+        _icontrols.setPreferredSize(new Dimension(240, 230));
         _icontrols.add(new Spacer(1, 10));
         _icontrols.add(new BLabel(_msgs.get("m.icon_editor"), "buckle_heading"));
         _icontrols.add(new Spacer(1, 4));
@@ -90,22 +100,21 @@ public class BuckleDialog extends BDecoratedWindow
 
         BContainer lcont = GroupLayout.makeVBox(GroupLayout.TOP);
         ((GroupLayout)lcont.getLayoutManager()).setOffAxisPolicy(GroupLayout.EQUALIZE);
-        lcont.add(createAltButton("raise"));
-        lcont.add(createAltButton("lower"));
+        lcont.add(_raise = createAltButton("raise"));
+        lcont.add(_lower = createAltButton("lower"));
         lcont.add(createAltButton("remove"));
         bcont.add(lcont);
 
         BContainer rcont = new BContainer(new BorderLayout());
-        rcont.add(createArrowButton("up"), BorderLayout.NORTH);
-        rcont.add(createArrowButton("down"), BorderLayout.SOUTH);
-        rcont.add(createArrowButton("right"), BorderLayout.EAST);
-        rcont.add(createArrowButton("left"), BorderLayout.WEST);
+        rcont.add(createArrowButton("up", 0, -4), BorderLayout.NORTH);
+        rcont.add(createArrowButton("down", 0, +4), BorderLayout.SOUTH);
+        rcont.add(createArrowButton("right", +4, 0), BorderLayout.EAST);
+        rcont.add(createArrowButton("left", -4, 0), BorderLayout.WEST);
         rcont.add(new BLabel(_msgs.get("m.move"), "buckle_label"), BorderLayout.CENTER);
         bcont.add(rcont);
 
         _icontrols.add(new BLabel(_msgs.get("m.icon_tip"), "buckle_tip"));
-
-        _controls.add(_icontrols);
+        _icontrols.setEnabled(false);
 
         ccont.add(new RequestButton(ctx, HIDEOUT_MSGS, "m.commit", _status) {
             public void fireRequest () {
@@ -162,12 +171,19 @@ public class BuckleDialog extends BDecoratedWindow
     {
         String action = event.getAction();
         if (action.equals("up")) {
+            moveSelectedIcon(0, -2);
         } else if (action.equals("down")) {
+            moveSelectedIcon(0, +2);
         } else if (action.equals("left")) {
+            moveSelectedIcon(-2, 0);
         } else if (action.equals("right")) {
+            moveSelectedIcon(+2, 0);
         } else if (action.equals("raise")) {
+            swapSelectedIcon(_selidx + 1);
         } else if (action.equals("lower")) {
+            swapSelectedIcon(_selidx - 1);
         } else if (action.equals("remove")) {
+            _iicons.get(_buckle[_selidx]).setSelected(false);
         } else if (action.equals("dismiss")) {
             _ctx.getBangClient().clearPopup(this, true);
         }
@@ -179,27 +195,59 @@ public class BuckleDialog extends BDecoratedWindow
         int partId = ((ItemIcon)icon).getItem().getItemId(),
             pidx = IntListUtil.indexOf(_buckle, partId);
         if (selected && pidx == -1) {
+            // append or set and update preview
             if (_pcrec.isMultiple()) {
                 _buckle = ArrayUtil.append(_buckle, partId);
             } else {
                 _buckle[_pcrec.idx] = partId;
             }
+            _preview.update();
+
         } else if (!selected && _pcrec.isMultiple() && pidx != -1) {
+            // remove and deselect or adjust selection index
             _buckle = ArrayUtil.splice(_buckle, pidx, 1);
-        } else {
-            return;
+            if (_selidx == pidx) {
+                setSelectedIcon(-1);
+            } else {
+                if (pidx < _selidx) {
+                    _selidx--;
+                }
+                _preview.update();
+            }
         }
-        _preview.update();
     }
 
     /**
      * Creates a button to move in one of the four cardinal directions, wrapped in a container to
      * keep it from being stretched out.
      */
-    protected BContainer createArrowButton (String action)
+    protected BContainer createArrowButton (String action, final int dx, final int dy)
     {
-        BButton arrow = new BButton(new ImageIcon(
-            _ctx.loadImage("ui/icons/small_" + action + "_arrow.png")), this, action);
+        String pref = "ui/icons/small_" + action + "_arrow";
+        final ImageIcon eicon = new ImageIcon(_ctx.loadImage(pref + ".png"));
+        final ImageIcon dicon = new ImageIcon(_ctx.loadImage(pref + "_disable.png"));
+
+        BButton arrow = new BButton(eicon, this, action) {
+            protected void stateDidChange () {
+                super.stateDidChange();
+                setIcon(_enabled ? eicon : dicon);
+                // schedule an interval to move it repeatedly on extended press
+                if (_armed && _pressed) {
+                    _interval.schedule(INITIAL_ARROW_DELAY, REPEAT_ARROW_DELAY);
+                } else {
+                    _interval.cancel();
+                }
+            }
+            protected void wasRemoved () {
+                super.wasRemoved();
+                _interval.cancel(); // make sure the interval isn't running anymore
+            }
+            protected Interval _interval = new Interval(_ctx.getClient().getRunQueue()) {
+                public void expired () {
+                    moveSelectedIcon(dx, dy);
+                }
+            };
+        };
         arrow.setStyleClass("small_arrow_button");
         BContainer cont = GroupLayout.makeHBox(GroupLayout.CENTER);
         cont.add(arrow);
@@ -229,8 +277,12 @@ public class BuckleDialog extends BDecoratedWindow
             }
         }
 
+        // update the number of icons selectable
+        _palette.setSelectable(_pcrec.isMultiple() ? _gangobj.getMaxBuckleIcons() : 1);
+
         // add icons for the parts of that class
         _palette.clear();
+        _iicons.clear();
         for (BucklePart part : _parts) {
             if (!part.getPartClass().equals(pclass)) {
                 continue;
@@ -247,14 +299,58 @@ public class BuckleDialog extends BDecoratedWindow
             };
             iicon.setStyleClass("buckle_palette_icon");
             _palette.addIcon(iicon);
+            _iicons.put(part.getItemId(), iicon);
             if (IntListUtil.contains(_buckle, part.getItemId())) {
                 iicon.setSelected(true);
             }
         }
+    }
 
-        // update the number of icons selectable
-        _palette.setSelectable(_pcrec.isMultiple() ? _gangobj.getMaxBuckleIcons() : 1);
-        _icontrols.setVisible(_pcrec.isMultiple());
+    /**
+     * Moves the selected icon by the given amount.
+     */
+    protected void moveSelectedIcon (int dx, int dy)
+    {
+        BucklePart part = _parts.get(_buckle[_selidx]);
+        part.setPosition(
+            (short)Math.min(Math.max(part.getX() + dx, _sxmin), _sxmax),
+            (short)Math.min(Math.max(part.getY() + dy, _symin), _symax));
+    }
+
+    /**
+     * Swaps the selected icon with the one at the specified index.
+     */
+    protected void swapSelectedIcon (int oidx)
+    {
+        int tmp = _buckle[_selidx];
+        _buckle[_selidx] = _buckle[oidx];
+        _buckle[oidx] = tmp;
+        _selidx = oidx;
+        _preview.update();
+        updateLayerButtons();
+    }
+
+    /**
+     * Selects one of the icons in the buckle by its index in the part list.
+     */
+    protected void setSelectedIcon (int idx)
+    {
+        if (_selidx == idx) {
+            return;
+        }
+        _selidx = idx;
+        _preview.update();
+        _icontrols.setEnabled(_selidx != -1);
+        updateLayerButtons();
+    }
+
+    /**
+     * Updates the enabled states of the buttons that raise or lower the selected icon.
+     */
+    protected void updateLayerButtons ()
+    {
+        _raise.setEnabled(_selidx != -1 && _selidx < _buckle.length - 1);
+        _lower.setEnabled(_selidx > 2);
     }
 
     /** Displays the buckle being configured. */
@@ -265,10 +361,35 @@ public class BuckleDialog extends BDecoratedWindow
             super(new AbsoluteLayout(true));
             setStyleClass("buckle_preview");
 
-            Point bloc = new Point(32, 20);
-            add(_bottom = new BuckleView(_ctx, 2), bloc);
-            add(_top = new BuckleView(_ctx, 2), bloc);
-            update();
+            Rectangle brect = new Rectangle(
+                32, 20, BUCKLE_ICON_SIZE.width, BUCKLE_ICON_SIZE.height);
+            add(_base = new BuckleView(_ctx, 2), brect);
+            add(new BComponent() {
+                public boolean dispatchEvent (BEvent event) {
+                    if (!(event instanceof MouseEvent) ||
+                        ((MouseEvent)event).getType() != MouseEvent.MOUSE_PRESSED) {
+                        return super.dispatchEvent(event);
+                    }
+                    // (de)select the first icon that passes the hit test
+                    MouseEvent mevent = (MouseEvent)event;
+                    int rx = mevent.getX() - getAbsoluteX(),
+                        ry = BUCKLE_ICON_SIZE.height - (mevent.getY() - getAbsoluteY());
+                    for (int ii = _buckle.length - 1; ii >= 2; ii--) {
+                        if (_icons.get(_buckle[ii]).hitTest(rx, ry)) {
+                            setSelectedIcon(_selidx == ii ? -1 : ii);
+                            return true;
+                        }
+                    }
+                    setSelectedIcon(-1);
+                    return true;
+                }
+                protected void renderComponent (Renderer renderer) {
+                    // render the icons in order
+                    for (int ii = 2; ii < _buckle.length; ii++) {
+                        _icons.get(_buckle[ii]).render(renderer);
+                    }
+                }
+            }, brect);
 
             String msg = MessageBundle.compose("m.buckle_type",
                 "m.buckle_icons." + _gangobj.getMaxBuckleIcons());
@@ -278,10 +399,94 @@ public class BuckleDialog extends BDecoratedWindow
 
         public void update ()
         {
-            _bottom.setBuckle(GangUtil.getBuckleInfo(_buckle, _parts));
+            // the base displays the background and border
+            _base.setBuckle(GangUtil.getBuckleInfo(ArrayUtil.splice(_buckle, 2), _parts));
+
+            // the rest are icons
+            for (int ii = 2; ii < _buckle.length; ii++) {
+                int partId = _buckle[ii];
+                PreviewIcon icon = _icons.get(partId);
+                if (icon == null) {
+                    _icons.put(partId, icon = new PreviewIcon(_parts.get(partId)));
+                }
+                icon.setSelected(_selidx == ii);
+            }
         }
 
-        BuckleView _bottom, _top;
+        @Override // documentation inherited
+        protected void wasRemoved ()
+        {
+            super.wasRemoved();
+            for (PreviewIcon icon : _icons.values()) {
+                icon.release();
+            }
+            _icons.clear();
+        }
+
+        protected BuckleView _base;
+        protected HashIntMap<PreviewIcon> _icons = new HashIntMap<PreviewIcon>();
+    }
+
+    /** Displays a highlighted icon. */
+    protected class PreviewIcon
+    {
+        public PreviewIcon (BucklePart part)
+        {
+            _part = part;
+            _bimg = BuckleView.getPartIcon(_ctx, _part, _tbounds);
+            _uimg = new BImage(_bimg);
+            _uimg.reference();
+        }
+
+        public void setSelected (boolean selected)
+        {
+            if (selected == _selected) {
+                return;
+            }
+            getImage().release();
+            _selected = selected;
+            if (_selected) {
+                // create the traced image if necessary and compute the extents to which we can move
+                // the icon
+                if (_simg == null) {
+                    _simg = new BImage(ImageUtil.createTracedImage(
+                        _ctx.getImageManager(), _bimg, Color.WHITE, 2, 1f, 0.5f));
+                }
+                _sxmin = -_tbounds.x;
+                _sxmax = AvatarLogic.BUCKLE_WIDTH - (_tbounds.x + _tbounds.width);
+                _symin = -_tbounds.y;
+                _symax = AvatarLogic.BUCKLE_HEIGHT - (_tbounds.y + _tbounds.height);
+            }
+            getImage().reference();
+        }
+
+        public void render (Renderer renderer)
+        {
+            getImage().render(renderer, _part.getX()/2, -_part.getY()/2, 1f);
+        }
+
+        public boolean hitTest (int x, int y)
+        {
+            int ix = x - _part.getX()/2, iy = y - _part.getY()/2;
+            return (ix >= 0 && iy >= 0 && ix < BUCKLE_ICON_SIZE.width &&
+                iy < BUCKLE_ICON_SIZE.height) ? ImageUtil.hitTest(_bimg, ix, iy) : false;
+        }
+
+        public void release ()
+        {
+            getImage().release();
+        }
+
+        protected BImage getImage ()
+        {
+            return (_selected ? _simg : _uimg);
+        }
+
+        protected BucklePart _part;
+        protected boolean _selected;
+        protected BufferedImage _bimg;
+        protected java.awt.Rectangle _tbounds = new java.awt.Rectangle();
+        protected BImage _uimg, _simg;
     }
 
     protected BangContext _ctx;
@@ -291,13 +496,23 @@ public class BuckleDialog extends BDecoratedWindow
 
     protected DSet<BucklePart> _parts;
     protected int[] _buckle;
+    protected int _selidx = -1;
+    protected int _sxmin, _sxmax, _symin, _symax;
 
     protected BucklePreview _preview;
-    protected BContainer _controls, _icontrols;
+    protected BContainer _icontrols;
+    protected BButton _raise, _lower;
     protected IconPalette _palette;
     protected StatusLabel _status;
 
+    protected HashIntMap<ItemIcon> _iicons = new HashIntMap<ItemIcon>();
     protected AvatarLogic.PartClass _pcrec;
+
+    /** The initial delay in milliseconds before arrow movements start repeating. */
+    protected static final long INITIAL_ARROW_DELAY = 500L;
+
+    /** The delay between repeated arrow movements. */
+    protected static final long REPEAT_ARROW_DELAY = 25L;
 
     protected static final String[] TABS = { "icon", "border", "background" };
     protected static final Dimension BUCKLE_ICON_SIZE =

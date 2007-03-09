@@ -2073,6 +2073,9 @@ small_arrow_button {
   parent: "alt_button";
   padding: 0 5;
 }
+small_arrow_button:disabled {
+  parent: "alt_button:disabled";
+}
 small_arrow_button:hover {
   parent: "alt_button:hover";
 }
