@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
-<!-- declares the libraries needed to build threerings -->
+<!-- declares the libraries needed to build the pseditor -->
 <project name="library-dependencies">
-  <fileset dir="${libs.dir}" id="pseditor.libs">
-    <include name="jme.jar"/>
-    <include name="jme-awt.jar"/>
-    <include name="jme-effects.jar"/>
-    <include name="jme-gamestates.jar"/>
-    <include name="jme-scene.jar"/>
-    <include name="lwjgl.jar"/>
-    <include name="proguard.jar"/>
-  </fileset>
+  <filelist dir="${libs.dir}" id="pseditor.libs">
+    <file name="jme.jar"/>
+    <file name="jme-awt.jar"/>
+    <file name="jme-effects.jar"/>
+    <file name="jme-gamestates.jar"/>
+    <file name="jme-scene.jar"/>
+    <file name="lwjgl.jar"/>
+    <file name="proguard.jar"/>
+  </filelist>
 </project>

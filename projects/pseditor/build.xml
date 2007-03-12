@@ -5,7 +5,7 @@
   <property name="app.name" value="pseditor"/>
 
   <!-- things you probably don't want to change -->
-  <property name="base.dir"     value="../.."/>
+  <property name="base.dir"     value="${basedir}/../.."/>
   <property name="src.dir"      value="src/java"/>
   <property name="deploy.dir"   value="dist"/>
   <property name="dist.jar"     value="${app.name}.jar"/>
@@ -17,6 +17,9 @@
   <!-- import some targets to enumerate library dependencies -->
   <property name="libs.dir" value="${base.dir}/${deploy.dir}/lib"/>
   <import file="libs-incl.xml"/>
+
+  <!-- helpful build targets -->
+  <import file="${base.dir}/projects/tools/etc/build-support.xml"/>
 
   <!-- declare our classpath -->
   <path id="classpath">
@@ -34,9 +37,11 @@
     <copy todir="${deploy.dir}/classes">
       <fileset dir="rsrc" includes="**/*"/>
     </copy>
-    <copy todir="${deploy.dir}/lib" flatten="true">
-      <fileset refid="${app.name}.libs"/>
-    </copy>
+    <antcall target="copyfilelist">
+      <param name="filelist.id" value="${app.name}.libs"/>
+      <param name="dest.dir" value="${deploy.dir}/lib"/>
+      <param name="flatten" value="true"/>
+    </antcall>
   </target>
 
   <!-- cleans out the installed application -->
