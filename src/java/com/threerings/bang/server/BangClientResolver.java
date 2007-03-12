@@ -17,16 +17,15 @@ import com.threerings.crowd.server.CrowdClientResolver;
 import com.threerings.presents.data.ClientObject;
 import com.threerings.presents.dobj.DSet;
 
+import com.threerings.bang.gang.data.GangObject;
 import com.threerings.bang.gang.server.persist.GangInviteRecord;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
-import com.threerings.bang.server.persist.FolkRecord;
-import com.threerings.bang.server.persist.PardnerRecord;
-import com.threerings.bang.server.persist.PlayerRecord;
 
 import com.threerings.bang.admin.server.RuntimeConfig;
 import com.threerings.bang.avatar.data.Look;
-import com.threerings.bang.gang.data.GangObject;
+
 import com.threerings.bang.data.BangCodes;
+import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.Handle;
 import com.threerings.bang.data.Item;
 import com.threerings.bang.data.Notification;
@@ -35,10 +34,12 @@ import com.threerings.bang.data.Rating;
 import com.threerings.bang.data.Stat;
 import com.threerings.bang.data.StatSet;
 import com.threerings.bang.data.TrainTicket;
+import com.threerings.bang.server.persist.FolkRecord;
+import com.threerings.bang.server.persist.PardnerRecord;
+import com.threerings.bang.server.persist.PlayerRecord;
 import com.threerings.bang.util.BangUtil;
 
 import static com.threerings.bang.Log.log;
-import com.threerings.bang.data.FreeTicket;
 
 /**
  * Customizes the client resolver to use our {@link PlayerObject}.

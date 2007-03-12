@@ -59,6 +59,7 @@ import com.threerings.bang.data.Article;
 import com.threerings.bang.data.Badge;
 import com.threerings.bang.data.BigShotItem;
 import com.threerings.bang.data.CardItem;
+import com.threerings.bang.data.FreeTicket;
 import com.threerings.bang.data.PlayerObject;
 import com.threerings.bang.data.Purse;
 import com.threerings.bang.data.Rating;
@@ -114,7 +115,6 @@ import com.threerings.bang.game.server.scenario.Scenario;
 import com.threerings.bang.game.server.scenario.Tutorial;
 
 import static com.threerings.bang.Log.log;
-import com.threerings.bang.data.FreeTicket;
 
 /**
  * Handles the server-side of the game.
