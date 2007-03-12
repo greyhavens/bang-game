@@ -271,12 +271,6 @@ public class ForestGuardians extends Scenario
      */
     protected void endWave (BangObject bangobj, short tick)
     {
-        // if there isn't time to start another wave, end the game
-        if (bangobj.lastTick - tick < MIN_WAVE_TICKS) {
-            bangobj.setLastTick(tick);
-            return;
-        }
-
         // clear all advance orders
         _bangmgr.clearOrders();
 
@@ -298,6 +292,12 @@ public class ForestGuardians extends Scenario
             }
             bangobj.stats[ii].incrementStat(Stat.Type.WAVE_POINTS, points);
             bangobj.grantPoints(ii, points);
+        }
+
+        // if there isn't time to start another wave, end the game
+        if (bangobj.lastTick - tick < MIN_WAVE_TICKS) {
+            bangobj.setLastTick(tick);
+            return;
         }
 
         // if at least half the trees were saved, increase the difficulty level
