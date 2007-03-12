@@ -123,6 +123,7 @@ public class OptionDialog extends BDecoratedWindow
         String[] buttons, ResponseReceiver receiver)
     {
         super(ctx.getStyleSheet(), null);
+        ((GroupLayout)getLayoutManager()).setGap(20);
         setModal(true);
         _ctx = ctx;
         _receiver = receiver;
