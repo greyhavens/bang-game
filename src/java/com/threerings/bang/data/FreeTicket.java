@@ -23,7 +23,6 @@ public class FreeTicket extends Item
      */
     public static FreeTicket checkQualifies (PlayerObject user, int townIdx)
     {
-        return null;
         townIdx++;
 
         // for now we're only giving out free ITP tickets
