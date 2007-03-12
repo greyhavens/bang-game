@@ -81,7 +81,7 @@ public class PassDetailsView extends SteelWindow
     {
         super.wasAdded();
         _contents.setBackground(BComponent.DEFAULT, new ImageBackground(ImageBackground.CENTER_XY,
-                    _ctx.loadImage("ui/station/pass_details_" + _ticket.getTownId() + ".png")));
+                    _ctx.loadImage("ui/station/pass_details_" + _ticket.getTownId() + ".jpg")));
         _shown = true;
     }
 
