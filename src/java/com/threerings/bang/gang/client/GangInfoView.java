@@ -95,11 +95,9 @@ public class GangInfoView extends BContainer
         bcont.add(new Spacer(40, 1));
 
         BContainer ncont = GroupLayout.makeHBox(GroupLayout.CENTER);
-        String msg = "m.gang_rank_" + (gangobj.notorietyRank + 1);
+        String msg = "m.notoriety." + gangobj.notoriety;
         ncont.add(_ranking = new BLabel("\"" + _ctx.xlate(GangCodes.GANG_MSGS, msg) + "\"",
             "gang_notoriety"));
-        ncont.add(new BLabel(new ImageIcon(_ctx.loadImage("ui/hideout/diamond.png"))));
-        ncont.add(_notoriety = new BLabel(getNotorietyText(), "gang_notoriety"));
         rcont.add(ncont, GroupLayout.FIXED);
 
         BContainer scont = GroupLayout.makeVBox(GroupLayout.CENTER);
@@ -164,8 +162,6 @@ public class GangInfoView extends BContainer
             _statement.setText(_gangobj.statement);
         } else if (name.equals(GangObject.URL)) {
             _page.setVisible(_gangobj.getURL() != null);
-        } else if (name.equals(GangObject.NOTORIETY)) {
-            _notoriety.setText(getNotorietyText());
         } else if (name.equals(GangObject.BUCKLE)) {
             _buckle.setBuckle(_gangobj.getBuckleInfo());
         }
@@ -183,11 +179,6 @@ public class GangInfoView extends BContainer
     {
         super.wasRemoved();
         _gangobj.removeListener(this);
-    }
-
-    protected String getNotorietyText ()
-    {
-        return _msgs.get("m.notoriety", Integer.toString(_gangobj.notoriety));
     }
 
     protected class StatementDialog extends RequestDialog
@@ -285,7 +276,7 @@ public class GangInfoView extends BContainer
     protected GangObject _gangobj;
 
     protected BuckleView _buckle;
-    protected BLabel _ranking, _notoriety, _statement;
+    protected BLabel _ranking, _statement;
     protected CofferLabel _coffers;
     protected BButton _page;
 

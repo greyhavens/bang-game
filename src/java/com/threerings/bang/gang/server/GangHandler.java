@@ -81,6 +81,7 @@ import com.threerings.bang.gang.data.OutfitArticle;
 import com.threerings.bang.gang.server.persist.GangFinancialAction;
 import com.threerings.bang.gang.server.persist.GangMemberRecord;
 import com.threerings.bang.gang.server.persist.GangRecord;
+import com.threerings.bang.gang.util.GangUtil;
 
 import static com.threerings.bang.Log.*;
 
@@ -91,14 +92,6 @@ public class GangHandler
     implements PlayerObserver, RemotePlayerObserver, AttributeChangeListener, SetListener,
         ObjectDeathListener, SpeakerValidator, GangPeerProvider, GangCodes
 {
-    /**
-     * Returns the rank corresponding to the supplied notoriety level.
-     */
-    public static byte getNotorietyRank (int notoriety)
-    {
-        return (byte)BangServer.ratingmgr.getRank(NOTORIETY_IDENT, notoriety);
-    }
-
     /**
      * Creates the handler and starts the process of resolving the specified gang.
      */
@@ -280,7 +273,7 @@ public class GangHandler
     {
         String name = event.getName();
         if (name.equals(GangObject.STATEMENT) || name.equals(GangObject.URL) ||
-            name.equals(GangObject.AVATAR) || name.equals(GangObject.NOTORIETY_RANK)) {
+            name.equals(GangObject.AVATAR) || name.equals(GangObject.NOTORIETY)) {
             // invalidate any cached gang info
             gangInfoChanged();
         }
@@ -441,19 +434,25 @@ public class GangHandler
             return;
         }
 
+        // grant an ace for each notoriety point
+        final int aces = points;
+
         // update the database
         final GangMemberEntry entry = member;
         BangServer.invoker.postUnit(new RepositoryUnit() {
             public void invokePersist ()
                 throws PersistenceException {
+                // grant an ace for each notoriety point
+                BangServer.gangrepo.grantAces(_gangId, aces);
                 BangServer.gangrepo.addNotoriety(_gangId, entry.playerId, points);
             }
             public void handleSuccess () {
                 GangMemberEntry member = _gangobj.members.get(handle);
                 _gangobj.startTransaction();
                 try {
-                    _gangobj.setNotoriety(_gangobj.notoriety + points);
-                    _gangobj.setNotorietyRank(getNotorietyRank(_gangobj.notoriety));
+                    _gangobj.setAces(_gangobj.aces + aces);
+                    _gangobj.setNotoriety(GangUtil.getNotorietyLevel(
+                        _gangobj.getWeightClass(), (_notoriety += points)));
                     if (member != null) {
                         member.notoriety += points;
                         _gangobj.updateMembers(member);
@@ -504,12 +503,13 @@ public class GangHandler
         }
 
         // make sure they're not already a member and that we're not at our limit
+        int maxMembers = MEMBER_LIMITS[_gangobj.getWeightClass()];
         if (_gangobj.members.containsKey(target)) {
             throw new InvocationException(MessageBundle.tcompose(
                 "e.already_member_this", target));
-        } else if (_gangobj.members.size() >= _maxMembers) {
+        } else if (_gangobj.members.size() >= maxMembers) {
             throw new InvocationException(MessageBundle.tcompose(
-                "e.too_many_members", String.valueOf(_maxMembers)));
+                "e.too_many_members", String.valueOf(maxMembers)));
         }
 
         // store the invitation in the database
@@ -545,9 +545,10 @@ public class GangHandler
         verifyLocalOrPeer(caller);
 
         // update the database
+        final int maxMembers = MEMBER_LIMITS[_gangobj.getWeightClass()];
         BangServer.invoker.postUnit(new PersistingUnit(listener) {
             public void invokePersistent () throws PersistenceException {
-                _error = BangServer.gangrepo.deleteInvite(_gangId, _maxMembers, playerId, accept);
+                _error = BangServer.gangrepo.deleteInvite(_gangId, maxMembers, playerId, accept);
                 if (_error == null && accept) {
                     _mrec = new GangMemberRecord(playerId, _gangId, MEMBER_RANK);
                     BangServer.gangrepo.insertMember(_mrec);
@@ -949,7 +950,7 @@ public class GangHandler
         final InvocationService.ResultListener listener)
         throws InvocationException
     {
-        new GangFinancialAction(_gangobj, admin, scripCost, coinCost) {
+        new GangFinancialAction(_gangobj, admin, scripCost, coinCost, 0) {
             protected int getCoinType () {
                 return CoinTransaction.GANG_OUTFIT_PURCHASE;
             }
@@ -1113,13 +1114,14 @@ public class GangHandler
         _gangobj.avatar = record.avatar;
         _gangobj.scrip = record.scrip;
         _gangobj.coins = record.coins;
-        _gangobj.notoriety = record.notoriety;
-        _gangobj.notorietyRank = getNotorietyRank(record.notoriety);
+        _gangobj.aces = record.aces;
         _gangobj.buckle = record.getBuckle();
         _gangobj.outfit = record.outfit;
         _gangobj.inventory = new DSet<Item>(record.inventory);
         _gangobj.members = new DSet<GangMemberEntry>(record.members.iterator());
-        _maxMembers = record.getMaxMembers();
+
+        _notoriety = record.notoriety;
+        _gangobj.notoriety = GangUtil.getNotorietyLevel(_gangobj.getWeightClass(), _notoriety);
 
         // the avatar id is that of the senior leader
         GangMemberEntry leader = _gangobj.getSeniorLeader();
@@ -1153,7 +1155,6 @@ public class GangHandler
                 SaloonManager.refreshTopRanked(_gangobj,
                     "GANG_MEMBERS", "RATINGS.PLAYER_ID = GANG_MEMBERS.PLAYER_ID and " +
                     "GANG_MEMBERS.GANG_ID = " + _gangId, TOP_RANKED_LIST_SIZE);
-                _gangobj.setNotorietyRank(getNotorietyRank(_gangobj.notoriety));
             }
         };
         _rankval.schedule(1000L, RANK_REFRESH_INTERVAL);
@@ -1651,8 +1652,8 @@ public class GangHandler
     /** The gang object, when resolved. */
     protected GangObject _gangobj;
 
-    /** The maximum number of members this gang can have. */
-    protected int _maxMembers;
+    /** The gang's raw notoriety. */
+    protected int _notoriety;
 
     /** The player id of the avatar set in the gang object. */
     protected int _avatarId;

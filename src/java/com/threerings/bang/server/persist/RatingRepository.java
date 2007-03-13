@@ -67,25 +67,25 @@ public class RatingRepository extends SimpleRepository
     {
         public String scenario;
         public int players;
-        
+
         public TrackerKey (String scenario, int players)
         {
             this.scenario = scenario;
             this.players = players;
         }
-        
+
         public int hashCode ()
         {
             return scenario.hashCode() + players;
         }
-        
+
         public boolean equals (Object other)
         {
             TrackerKey okey = (TrackerKey)other;
             return scenario.equals(okey.scenario) && players == okey.players;
         }
     }
-    
+
     /**
      * The database identifier used when establishing a database
      * connection. This value being <code>ratingdb</code>.
@@ -278,7 +278,7 @@ public class RatingRepository extends SimpleRepository
 
     /**
      * Calculate the ranks for each scenario handled by this server;
-     * let the Frontier Town server handle the Overall pseudoscenario. 
+     * let the Frontier Town server handle the Overall pseudoscenario.
      */
     public void calculateRanks ()
         throws PersistenceException
@@ -289,10 +289,9 @@ public class RatingRepository extends SimpleRepository
         }
         if (BangCodes.FRONTIER_TOWN.equals(ServerConfig.townId)) {
             calculateRanks(ScenarioInfo.OVERALL_IDENT);
-            calculateRanks(GangCodes.NOTORIETY_IDENT);
         }
     }
-    
+
     /**
      * Scans RATINGS for the given rating type and calculates which rating is
      * is required to reach which rank. Each ranks corresponds to a certain
@@ -309,12 +308,9 @@ public class RatingRepository extends SimpleRepository
     public Metrics calculateRanks (final String type)
         throws PersistenceException
     {
-        // notoriety comes from the gang database, scenarios from RATINGS
-        final String what = type.equals(GangCodes.NOTORIETY_IDENT) ?
-            ("NOTORIETY from GANGS where LAST_PLAYED > " + STALE_DATE) :
-            ("RATING from RATINGS where SCENARIO = " + JDBCUtil.escape(type) +
-                " and LAST_PLAYED > " + STALE_DATE);
-            
+        final String what = "RATING from RATINGS where SCENARIO = " + JDBCUtil.escape(type) +
+                            " and LAST_PLAYED > " + STALE_DATE;
+
         // sort each row for this type into a histogram
         final SparseHistogram histo = new SparseHistogram();
         execute(new Operation<Void>() {
@@ -378,7 +374,7 @@ public class RatingRepository extends SimpleRepository
                     clear.setString(1, type);
                     clear.execute();
                     JDBCUtil.close(clear);
-                    
+
                     // then fill it
                     insert = conn.prepareStatement(
                         "insert into RANKS " +
@@ -501,7 +497,7 @@ public class RatingRepository extends SimpleRepository
             }
         });
     }
-    
+
     @Override // documentation inherited
     protected void migrateSchema (Connection conn, DatabaseLiaison liaison)
         throws SQLException, PersistenceException
@@ -559,9 +555,7 @@ public class RatingRepository extends SimpleRepository
         public void generateReport (PrintStream stream)
         {
             String name;
-            if (GangCodes.NOTORIETY_IDENT.equals(type)) {
-                name = "NOTORIETY";
-            } else if (ScenarioInfo.OVERALL_IDENT.equals(type)) {
+            if (ScenarioInfo.OVERALL_IDENT.equals(type)) {
                 name = "OVERALL";
             } else {
                 name = ScenarioInfo.getScenarioInfo(type).getName();

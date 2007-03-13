@@ -185,7 +185,8 @@ public class GangManager
             info = new GangInfo();
             info.name = gangobj.name;
             info.founded = gangobj.founded;
-            info.notorietyRank = gangobj.notorietyRank;
+            info.weightClass = gangobj.getWeightClass();
+            info.notoriety = gangobj.notoriety;
             info.statement = gangobj.statement;
             info.url = gangobj.url;
             info.buckle = gangobj.getBuckleInfo();
@@ -208,7 +209,8 @@ public class GangManager
                 GangInfo info = new GangInfo();
                 info.name = _grec.getName();
                 info.founded = _grec.founded.getTime();
-                info.notorietyRank = GangHandler.getNotorietyRank(_grec.notoriety);
+                info.weightClass = GangUtil.getWeightClass(_grec.inventory);
+                info.notoriety = GangUtil.getNotorietyLevel(info.weightClass, _grec.notoriety);
                 info.statement = _grec.statement;
                 info.url = _grec.url;
                 info.buckle = GangUtil.getBuckleInfo(

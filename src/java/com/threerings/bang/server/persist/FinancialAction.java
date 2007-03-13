@@ -51,10 +51,10 @@ public abstract class FinancialAction extends Invoker.Unit
                 }
             }
 
-            if (_scripCost > 0) {
-                // then deduct the in-game cash
-                spendScrip(_scripCost);
-                _scripSpent = true;
+            if (shouldSpendCash()) {
+                // spend the in-game cash
+                spendCash();
+                _cashSpent = true;
             }
 
             // then do our persistent business
@@ -89,7 +89,7 @@ public abstract class FinancialAction extends Invoker.Unit
         try {
             if (_failmsg != null) {
                 // return the scrip and coins to the actor
-                setCash(getScrip() + _scripCost, getCoins() + _coinCost);
+                returnCost();
                 actionFailed(_failmsg);
             } else {
                 actionCompleted();
@@ -208,11 +208,11 @@ public abstract class FinancialAction extends Invoker.Unit
             }
         }
 
-        if (_scripSpent) {
+        if (_cashSpent) {
             try {
-                grantScrip(_scripCost);
+                grantCash();
             } catch (PersistenceException pe) {
-                log.log(Level.WARNING, "Failed to return scrip " + this, pe);
+                log.log(Level.WARNING, "Failed to return cash " + this, pe);
             }
         }
 
@@ -241,42 +241,11 @@ public abstract class FinancialAction extends Invoker.Unit
         _accountLock.put(account, ntype);
 
         // check and immediately deduct the necessary funds
-        int scrip = getScrip(), coins = getCoins();
-        if (scrip < _scripCost || coins < _coinCost) {
+        if (!checkSufficientFunds()) {
             _accountLock.remove(account); // release our lock
             throw new InvocationException(BangCodes.E_INSUFFICIENT_FUNDS);
         }
-        setCash(scrip - _scripCost, coins - _coinCost);
-    }
-
-    /**
-     * Returns the amount of scrip held by the actor as reported in the dobj.
-     */
-    protected int getScrip ()
-    {
-        return _user.scrip;
-    }
-
-    /**
-     * Returns the number of coins held by the actor as reported in the dobj.
-     */
-    protected int getCoins ()
-    {
-        return _user.coins;
-    }
-
-    /**
-     * Updates the actor's cash in hand in the dobj.
-     */
-    protected void setCash (int scrip, int coins)
-    {
-        _user.startTransaction();
-        try {
-            _user.setScrip(scrip);
-            _user.setCoins(coins);
-        } finally {
-            _user.commitTransaction();
-        }
+        deductCost();
     }
 
     /**
@@ -288,12 +257,65 @@ public abstract class FinancialAction extends Invoker.Unit
     }
 
     /**
-     * Updates the database to spend the actor's scrip.
+     * Checks whether the account has sufficient funds to complete the transaction.
      */
-    protected void spendScrip (int scrip)
+    protected boolean checkSufficientFunds ()
+    {
+        return (_user.scrip >= _scripCost && _user.coins >= _coinCost);
+    }
+
+    /**
+     * Deducts the cost of the transaction from the fields in the dobj.
+     */
+    protected void deductCost ()
+    {
+        _user.startTransaction();
+        try {
+            _user.setScrip(_user.scrip - _scripCost);
+            _user.setCoins(_user.coins - _coinCost);
+        } finally {
+            _user.commitTransaction();
+        }
+    }
+
+    /**
+     * Returns the cost of the transaction to the fields in the dobj.
+     */
+    protected void returnCost ()
+    {
+        _user.startTransaction();
+        try {
+            _user.setScrip(_user.scrip + _scripCost);
+            _user.setCoins(_user.coins + _coinCost);
+        } finally {
+            _user.commitTransaction();
+        }
+    }
+
+    /**
+     * Checks whether we are spending non-coin currency.
+     */
+    protected boolean shouldSpendCash ()
+    {
+        return (_scripCost > 0);
+    }
+
+    /**
+     * Updates the database to spend the actor's non-coin currency.
+     */
+    protected void spendCash ()
         throws PersistenceException
     {
-        BangServer.playrepo.spendScrip(_user.playerId, scrip);
+        BangServer.playrepo.spendScrip(_user.playerId, _scripCost);
+    }
+
+    /**
+     * Updates the database to grant the cost in non-coin currency to the actor.
+     */
+    protected void grantCash ()
+        throws PersistenceException
+    {
+        BangServer.playrepo.grantScrip(_user.playerId, _scripCost);
     }
 
     /**
@@ -306,15 +328,6 @@ public abstract class FinancialAction extends Invoker.Unit
             reservationId, getCoinType(), getCoinDescrip());
     }
 
-    /**
-     * Updates the database to grant scrip to the actor.
-     */
-    protected void grantScrip (int scrip)
-        throws PersistenceException
-    {
-        BangServer.playrepo.grantScrip(_user.playerId, scrip);
-    }
-
     protected void toString (StringBuffer buf)
     {
         buf.append("type=").append(getClass().getName());
@@ -325,7 +338,7 @@ public abstract class FinancialAction extends Invoker.Unit
 
     protected PlayerObject _user;
     protected int _scripCost, _coinCost;
-    protected boolean _scripSpent, _actionTaken;
+    protected boolean _cashSpent, _actionTaken;
     protected String _failmsg;
     protected int _coinres = -1;
 

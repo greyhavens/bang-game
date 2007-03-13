@@ -47,17 +47,19 @@ public abstract class PeerFinancialAction extends FinancialAction
     }
 
     @Override // documentation inherited
-    protected void spendScrip (int scrip)
+    protected void spendCash ()
         throws PersistenceException
     {
-        BangServer.playrepo.spendScrip(_playerId, scrip);
+        BangServer.playrepo.spendScrip(_playerId, _scripCost);
     }
 
-    @Override // documentation inherited
-    protected void grantScrip (int scrip)
+    /**
+     * Updates the database to grant the cost in non-coin currency to the actor.
+     */
+    protected void grantCash ()
         throws PersistenceException
     {
-        BangServer.playrepo.grantScrip(_playerId, scrip);
+        BangServer.playrepo.grantScrip(_playerId, _scripCost);
     }
 
     @Override // documentation inherited

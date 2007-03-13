@@ -48,6 +48,9 @@ public class GangRecord
     /** The amount of scrip in the gang's coffers. */
     public int scrip;
 
+    /** The number of aces in the gang's coffers. */
+    public int aces;
+
     /** The encoded buckle (item ids of the parts used). */
     public byte[] buckle;
 

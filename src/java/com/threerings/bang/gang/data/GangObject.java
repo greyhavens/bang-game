@@ -57,11 +57,11 @@ public class GangObject extends DObject
     /** The field name of the <code>coins</code> field. */
     public static final String COINS = "coins";
 
+    /** The field name of the <code>aces</code> field. */
+    public static final String ACES = "aces";
+
     /** The field name of the <code>notoriety</code> field. */
     public static final String NOTORIETY = "notoriety";
-
-    /** The field name of the <code>notorietyRank</code> field. */
-    public static final String NOTORIETY_RANK = "notorietyRank";
 
     /** The field name of the <code>buckle</code> field. */
     public static final String BUCKLE = "buckle";
@@ -109,11 +109,11 @@ public class GangObject extends DObject
     /** The number of coins in the gang's coffers. */
     public int coins;
 
-    /** The gang's total notoriety. */
-    public int notoriety;
+    /** The number of gang aces available to spend. */
+    public int aces;
 
     /** The gang's rank in terms of notoriety. */
-    public byte notorietyRank;
+    public byte notoriety;
 
     /** The ids of the items comprising the currently configured buckle. */
     public int[] buckle;
@@ -164,6 +164,16 @@ public class GangObject extends DObject
     public BuckleInfo getBuckleInfo ()
     {
         return GangUtil.getBuckleInfo(buckle, inventory);
+    }
+
+    /**
+     * Returns the index of the gang's weight class, which is determined by the upgrades in the
+     * inventory (if any).  The weight class determines the maximum number of members and the
+     * notoriety cutoffs.
+     */
+    public byte getWeightClass ()
+    {
+        return GangUtil.getWeightClass(inventory);
     }
 
     /**
@@ -361,6 +371,22 @@ public class GangObject extends DObject
     }
 
     /**
+     * Requests that the <code>aces</code> field be set to the
+     * specified value. The local value will be updated immediately and an
+     * event will be propagated through the system to notify all listeners
+     * that the attribute did change. Proxied copies of this object (on
+     * clients) will apply the value change when they received the
+     * attribute changed notification.
+     */
+    public void setAces (int value)
+    {
+        int ovalue = this.aces;
+        requestAttributeChange(
+            ACES, Integer.valueOf(value), Integer.valueOf(ovalue));
+        this.aces = value;
+    }
+
+    /**
      * Requests that the <code>notoriety</code> field be set to the
      * specified value. The local value will be updated immediately and an
      * event will be propagated through the system to notify all listeners
@@ -368,28 +394,12 @@ public class GangObject extends DObject
      * clients) will apply the value change when they received the
      * attribute changed notification.
      */
-    public void setNotoriety (int value)
+    public void setNotoriety (byte value)
     {
-        int ovalue = this.notoriety;
+        byte ovalue = this.notoriety;
         requestAttributeChange(
-            NOTORIETY, Integer.valueOf(value), Integer.valueOf(ovalue));
+            NOTORIETY, Byte.valueOf(value), Byte.valueOf(ovalue));
         this.notoriety = value;
-    }
-
-    /**
-     * Requests that the <code>notorietyRank</code> field be set to the
-     * specified value. The local value will be updated immediately and an
-     * event will be propagated through the system to notify all listeners
-     * that the attribute did change. Proxied copies of this object (on
-     * clients) will apply the value change when they received the
-     * attribute changed notification.
-     */
-    public void setNotorietyRank (byte value)
-    {
-        byte ovalue = this.notorietyRank;
-        requestAttributeChange(
-            NOTORIETY_RANK, Byte.valueOf(value), Byte.valueOf(ovalue));
-        this.notorietyRank = value;
     }
 
     /**

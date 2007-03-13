@@ -135,7 +135,7 @@ public class GangInfoDialog extends BWindow
         bcont.add(scont);
         bcont.add(new Spacer(55, 1));
 
-        scont.add(new BLabel("\"" + msgs.get("m.gang_rank_" + (info.notorietyRank + 1)) + "\"",
+        scont.add(new BLabel("\"" + msgs.get("m.notoriety." + info.notoriety) + "\"",
             "gang_info_notoriety"));
         scont.add(createLabel("underline_short"));
 

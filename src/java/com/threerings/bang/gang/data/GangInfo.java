@@ -40,8 +40,11 @@ public class GangInfo extends SimpleStreamableObject
     /** The day on which this gang was founded. */
     public long founded;
 
-    /** The gang's notoriety rank. */
-    public byte notorietyRank;
+    /** The gang's weight class. */
+    public byte weightClass;
+
+    /** The gang's notoriety level. */
+    public byte notoriety;
 
     /** The gang's statement. */
     public String statement;

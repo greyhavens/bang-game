@@ -13,9 +13,6 @@ public interface GangCodes extends InvocationCodes
     /** The message bundle identifier for our translation messages. */
     public static final String GANG_MSGS = "gang";
 
-    /** The rating type identifier used for gang notoriety. */
-    public static final String NOTORIETY_IDENT = "no";
-
     /** Gang rank constant. */
     public static final byte MEMBER_RANK = 0;
 
@@ -46,4 +43,18 @@ public interface GangCodes extends InvocationCodes
 
     /** The starting number of icons gangs can have on their buckles. */
     public static final int BASE_MAX_BUCKLE_ICONS = 3;
+
+    /** The number of gang weight classes. */
+    public static final int WEIGHT_CLASS_COUNT = 5;
+
+    /** The maximum number of members for each of the weight classes. */
+    public static final int[] MEMBER_LIMITS = { 20, 50, 100, 200, Integer.MAX_VALUE };
+
+    /** Notoriety level cutoffs for each of the weight classes. */
+    public static final int[][] NOTORIETY_LEVELS = {
+        { 130, 520, 1560, 3640, 6240, 9360 },
+        { 325, 1300, 3900, 9100, 15600, 23400 },
+        { 650, 2600, 7800, 18200, 31200, 46800 },
+        { 1300, 5200, 15600, 36400, 62400, 93600 },
+        { 2600, 10400, 31200, 72800, 124800, 187200 } };
 }

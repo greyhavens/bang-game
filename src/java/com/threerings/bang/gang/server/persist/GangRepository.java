@@ -244,6 +244,26 @@ public class GangRepository extends JORARepository
     }
 
     /**
+     * Adds aces to the gang's coffers.
+     */
+    public void grantAces (int gangId, int aces)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANGS set ACES = ACES + " + aces +
+                      " where GANG_ID = " + gangId, 1);
+    }
+
+    /**
+     * Subtracts aces from the gang's coffers.
+     */
+    public void spendAces (int gangId, int aces)
+        throws PersistenceException
+    {
+        checkedUpdate("update GANGS set ACES = ACES - " + aces +
+                      " where GANG_ID = " + gangId, 1);
+    }
+
+    /**
      * Adds notoriety points to the gang and user records.
      */
     public void addNotoriety (int gangId, int playerId, int points)
@@ -599,11 +619,12 @@ public class GangRepository extends JORARepository
             "NOTORIETY INTEGER NOT NULL",
             "LAST_PLAYED DATETIME NOT NULL",
             "SCRIP INTEGER NOT NULL",
+            "ACES INTEGER NOT NULL",
             "BUCKLE BLOB NOT NULL",
             "PRIMARY KEY (GANG_ID)",
         }, "");
 
-        // TEMP: add the normalized name column, change brand to buckle
+        // TEMP: add the normalized name column, aces column, change brand to buckle
         if (!JDBCUtil.tableContainsColumn(conn, "GANGS", "NORMALIZED")) {
             JDBCUtil.addColumn(conn, "GANGS", "NORMALIZED", "VARCHAR(64) UNIQUE", "NAME");
             Statement stmt = conn.createStatement();
@@ -620,6 +641,7 @@ public class GangRepository extends JORARepository
         if (!JDBCUtil.tableContainsColumn(conn, "GANGS", "BUCKLE")) {
             JDBCUtil.changeColumn(conn, "GANGS", "BRAND", "BUCKLE BLOB NOT NULL");
         }
+        JDBCUtil.addColumn(conn, "GANGS", "ACES", "INTEGER NOT NULL", "SCRIP");
         // END TEMP
 
         JDBCUtil.createTableIfMissing(conn, "GANG_MEMBERS", new String[] {

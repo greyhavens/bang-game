@@ -26,6 +26,30 @@ import static com.threerings.bang.Log.log;
 public class GangUtil
 {
     /**
+     * Determines a gang's weight class by running through its inventory looking for
+     * upgrades.
+     */
+    public static byte getWeightClass (Iterable<Item> inventory)
+    {
+        // no upgrades yet
+        return (byte)0;
+    }
+
+    /**
+     * Given a gang's weight class and raw notoriety, returns its notoriety level.
+     */
+    public static byte getNotorietyLevel (int wclass, int notoriety)
+    {
+        int[] cutoffs = GangCodes.NOTORIETY_LEVELS[wclass];
+        for (byte ii = 0; ii < cutoffs.length; ii++) {
+            if (notoriety < cutoffs[ii]) {
+                return ii;
+            }
+        }
+        return (byte)cutoffs.length;
+    }
+
+    /**
      * Returns the senior active leader among the described gang members, or <code>null</code> if
      * there aren't any active leaders.
      */
