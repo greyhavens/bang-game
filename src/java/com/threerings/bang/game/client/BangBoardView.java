@@ -365,6 +365,9 @@ public class BangBoardView extends BoardView
         // keep track of our shift down state
         _shiftDown = (e.getModifiers() & InputEvent.SHIFT_DOWN_MASK) != 0;
 
+        // update our mouse coordinates
+        updateHoverState(e);
+
         switch (_downButton = e.getButton()) {
         case MouseEvent.BUTTON2:
             handleRightPress(e.getX(), e.getY());

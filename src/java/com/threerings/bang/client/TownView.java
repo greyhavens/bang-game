@@ -289,6 +289,7 @@ public class TownView extends BWindow
             addListener(this);
             addListener(new MouseAdapter() {
                 public void mousePressed (MouseEvent me) {
+                    updateHoverState(me);
                     if (_hsprite != null) {
                         enterBuilding(((Prop)_hsprite.getPiece()).getType());
                         // clear out the hover sprite so that we don't booch it if we double click
