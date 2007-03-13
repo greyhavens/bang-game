@@ -70,8 +70,11 @@ public class PassDetailsView extends SteelWindow
         if (action.equals("use_now")) {
             BangBootstrapData bbd = (BangBootstrapData)_ctx.getClient().getBootstrapData();
             _ctx.getLocationDirector().moveTo(bbd.stationOid);
+            return;
+        }
 
-        } else if (action.equals("never")) {
+        _ctx.getChatDirector().displayFeedback(StationCodes.STATION_MSGS, "m.to_station");
+        if (action.equals("never")) {
             BangPrefs.setNoRemind(_ctx.getUserObject(), _ticket.getTownId());
         }
     }
