@@ -6,6 +6,7 @@ package com.threerings.bang.data;
 import java.io.IOException;
 
 import com.samskivert.util.HashIntMap;
+import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.io.ObjectInputStream;
@@ -124,7 +125,8 @@ public abstract class Stat
 
         /** Returns the translation key used by this stat. */
         public String key () {
-            return MessageBundle.qualify(BangCodes.STATS_MSGS, "m.stat_" + name().toLowerCase());
+            return MessageBundle.qualify(BangCodes.STATS_MSGS,
+                    "m.stat_" + StringUtil.toUSLowerCase(name()));
         }
 
         /** Returns the unique code for this stat which is a function of
@@ -288,7 +290,7 @@ public abstract class Stat
      */
     public String toString ()
     {
-        StringBuffer buf = new StringBuffer(_type.name().toLowerCase());
+        StringBuffer buf = new StringBuffer(StringUtil.toUSLowerCase(_type.name()));
         buf.append("=");
         buf.append(valueToString());
         return buf.toString();

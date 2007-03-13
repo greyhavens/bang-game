@@ -1140,8 +1140,8 @@ public class BangClient extends BasicClient
             }
         };
         String text = MessageBundle.compose(
-            "m.detail_suggest", "m.detail_" + current.toString().toLowerCase(),
-            "m.detail_" + lower.toString().toLowerCase());
+            "m.detail_suggest", "m.detail_" + StringUtil.toUSLowerCase(current.toString()),
+            "m.detail_" + StringUtil.toUSLowerCase(lower.toString()));
         OptionDialog.showConfirmDialog(_ctx, "options", text, new String[] {
             "m.detail_yes", "m.detail_no", "m.detail_dontask" }, rr);
         return true;

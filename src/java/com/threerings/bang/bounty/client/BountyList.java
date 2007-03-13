@@ -10,6 +10,8 @@ import com.jmex.bui.BLabel;
 import com.jmex.bui.Spacer;
 import com.jmex.bui.layout.GroupLayout;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.bang.client.bui.IconPalette;
 import com.threerings.util.MessageBundle;
 import com.threerings.bang.data.PlayerObject;
@@ -72,14 +74,14 @@ public class BountyList extends BContainer
         // configure the tip based on what they've unlocked and completed
         String tip;
         if (completed == bounties.size()) {
-            tip = "all_complete_" + type.toString().toLowerCase();
+            tip = "all_complete_" + StringUtil.toUSLowerCase(type.toString());
             tip = MessageBundle.compose(tip, "m." + user.townId);
         } else if (unlocked + completed == bounties.size()) {
             tip = "all_unlocked";
         } else if (firstUnavail != null) {
-            tip = firstUnavail.toString().toLowerCase();
+            tip = StringUtil.toUSLowerCase(firstUnavail.toString());
         } else {
-            tip = type.toString().toLowerCase();
+            tip = StringUtil.toUSLowerCase(type.toString());
         }
         _tip.setText(_ctx.xlate(OfficeCodes.OFFICE_MSGS, "m.tip_" + tip));
     }

@@ -17,6 +17,7 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
 import com.samskivert.util.ComparableArrayList;
+import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -254,7 +255,8 @@ public class ParlorList extends BContainer
             this.info = info;
             _occs.setText(String.valueOf(info.occupants));
             if (info.type != ParlorInfo.Type.NORMAL) {
-                String ipath = "ui/saloon/" + info.type.toString().toLowerCase() + ".png";
+                String ipath =
+                    "ui/saloon/" + StringUtil.toUSLowerCase(info.type.toString()) + ".png";
                 _icon.setIcon(new ImageIcon(_ctx.loadImage(ipath)));
             } else {
                 _icon.setIcon(new BlankIcon(16, 16));

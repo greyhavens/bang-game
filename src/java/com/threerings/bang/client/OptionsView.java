@@ -30,6 +30,7 @@ import com.jmex.bui.util.Dimension;
 
 import com.samskivert.util.CollectionUtil;
 import com.samskivert.util.RunAnywhere;
+import com.samskivert.util.StringUtil;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
@@ -152,8 +153,7 @@ public class OptionsView extends BDecoratedWindow
             top.add(chatmode);
             BComboBox.Item selitem = null;
             for (CurseFilter.Mode mode : CurseFilter.Mode.values()) {
-                String label = _msgs.get(
-                    "m.cfm_" + mode.toString().toLowerCase());
+                String label = _msgs.get("m.cfm_" + StringUtil.toUSLowerCase(mode.toString()));
                 BComboBox.Item item = new BComboBox.Item(mode, label);
                 chatmode.addItem(item);
                 if (mode.equals(BangPrefs.getChatFilterMode())) {
@@ -262,7 +262,7 @@ public class OptionsView extends BDecoratedWindow
 
     protected String getDetailText (BangPrefs.DetailLevel level)
     {
-        return _msgs.get("m.detail_" + level.name().toLowerCase());
+        return _msgs.get("m.detail_" + StringUtil.toUSLowerCase(level.name()));
     }
 
     protected void refreshDisplayModes ()

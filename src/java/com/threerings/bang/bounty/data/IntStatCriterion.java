@@ -11,6 +11,8 @@ import com.jme.util.export.JMEExporter;
 import com.jme.util.export.JMEImporter;
 import com.jme.util.export.OutputCapsule;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.Stat;
@@ -38,8 +40,9 @@ public class IntStatCriterion extends Criterion
     // from Criterion
     public String getDescription ()
     {
-        return MessageBundle.compose("m." + condition.toString().toLowerCase() + "_descrip",
-                                     stat.key(), MessageBundle.taint(String.valueOf(value)));
+        return MessageBundle.compose(
+                "m." + StringUtil.toUSLowerCase(condition.toString()) + "_descrip",
+                stat.key(), MessageBundle.taint(String.valueOf(value)));
     }
 
     // from Criterion

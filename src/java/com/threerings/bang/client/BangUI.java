@@ -53,6 +53,8 @@ import com.jmex.bui.text.BTextFactory;
 
 import com.jmex.sound.openAL.objects.util.OggInputStream;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.jme.util.ImageCache;
 import com.threerings.openal.Clip;
 import com.threerings.openal.ClipProvider;
@@ -238,7 +240,8 @@ public class BangUI
 
         // preload our feedback sounds
         for (FeedbackSound ident : FeedbackSound.values()) {
-            _sgroup.preloadClip("sounds/feedback/" + ident.toString().toLowerCase() + ".ogg");
+            _sgroup.preloadClip(
+                    "sounds/feedback/" + StringUtil.toUSLowerCase(ident.toString()) + ".ogg");
         }
     }
 
@@ -352,7 +355,8 @@ public class BangUI
     {
         Sound sound = _sounds.get(ident);
         if (sound == null) {
-            sound = _sgroup.getSound("sounds/feedback/" + ident.toString().toLowerCase() + ".ogg");
+            sound = _sgroup.getSound(
+                    "sounds/feedback/" + StringUtil.toUSLowerCase(ident.toString()) + ".ogg");
             _sounds.put(ident, sound);
         }
         if (sound != null) {

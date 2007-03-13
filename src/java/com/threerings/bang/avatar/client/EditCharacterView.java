@@ -17,6 +17,7 @@ import com.jmex.bui.layout.TableLayout;
 import com.jmex.bui.util.Point;
 import com.jmex.bui.util.Rectangle;
 
+import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.BangUI;
@@ -52,7 +53,7 @@ public class EditCharacterView extends BContainer
         PlayerObject user = ctx.getUserObject();
         BContainer poses = new BContainer(new TableLayout(2, 5, 5));
         for (Look.Pose pose : Look.Pose.values()) {
-            String pname = pose.toString().toLowerCase();
+            String pname = StringUtil.toUSLowerCase(pose.toString());
             poses.add(new BLabel(_msgs.get("m.pose_" + pname), "right_label"));
             final LookComboBox looks = new LookComboBox(ctx);
             looks.selectLook(user.getLook(pose));

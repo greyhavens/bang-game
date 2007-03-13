@@ -56,10 +56,10 @@ public class UnitConfig
 
     /** The unit model (usually the same as the unit type). */
     public String model;
-    
+
     /** The model variant, where <code>null</code> is the default. */
     public String variant;
-    
+
     /** The modality of this unit: {@link Mode#GROUND}, {@link Mode#AIR} or
      * {@link Mode#RANGE}. */
     public Mode mode;
@@ -135,7 +135,7 @@ public class UnitConfig
     /** Whether or not this unit is male for purposes of random Big Shot name
      * generation. */
     public boolean male;
-    
+
     /** Returns a translatable name for the specified unit type. */
     public static String getName (String type)
     {
@@ -283,7 +283,7 @@ public class UnitConfig
         return RandomUtil.pickRandom(ncreator.getBigShotPrefixes(male)) +
             " " + RandomUtil.pickRandom(ncreator.getHandleRoots(male));
     }
-    
+
     /** Returns a string representation of this instance. */
     public String toString ()
     {
@@ -316,24 +316,21 @@ public class UnitConfig
         config.moveSound = props.getProperty("move_sound");
         config.badgeCode = BangUtil.getIntProperty(type, props, "badge", 0);
 
-        String modestr =
-            BangUtil.requireProperty(type, props, "mode").toUpperCase();
+        String modestr = StringUtil.toUSUpperCase(BangUtil.requireProperty(type, props, "mode"));
         try {
             config.mode = Enum.valueOf(Mode.class, modestr);
         } catch (Exception e) {
             log.warning("Invalid mode specified [type=" + type +
                         ", mode=" + modestr + "].");
         }
-        String makestr =
-            BangUtil.requireProperty(type, props, "make").toUpperCase();
+        String makestr = StringUtil.toUSUpperCase(BangUtil.requireProperty(type, props, "make"));
         try {
             config.make = Enum.valueOf(Make.class, makestr);
         } catch (Exception e) {
             log.warning("Invalid make specified [type=" + type +
                         ", make=" + makestr + "].");
         }
-        String rankstr =
-            BangUtil.requireProperty(type, props, "rank").toUpperCase();
+        String rankstr = StringUtil.toUSUpperCase(BangUtil.requireProperty(type, props, "rank"));
         try {
             config.rank = Enum.valueOf(Rank.class, rankstr);
         } catch (Exception e) {
@@ -367,14 +364,14 @@ public class UnitConfig
 
         int idx = 0;
         for (Mode mode : Mode.values()) {
-            String key = mode.toString().toLowerCase();
+            String key = StringUtil.toUSLowerCase(mode.toString());
             config.damageAdjust[mode.ordinal()] = BangUtil.getIntProperty(
                 type, props, "damage." + key, 0);
             config.defenseAdjust[mode.ordinal()] = BangUtil.getIntProperty(
                 type, props, "defense." + key, 0);
         }
         for (Make make : Make.values()) {
-            String key = make.toString().toLowerCase();
+            String key = StringUtil.toUSLowerCase(make.toString());
             config.damageAdjust[MODE_COUNT + make.ordinal()] =
                 BangUtil.getIntProperty(type, props, "damage." + key, 0);
             config.defenseAdjust[MODE_COUNT + make.ordinal()] =
@@ -382,7 +379,7 @@ public class UnitConfig
         }
 
         for (TerrainConfig.Category tcat : TerrainConfig.Category.values()) {
-            String key = tcat.toString().toLowerCase();
+            String key = StringUtil.toUSLowerCase(tcat.toString());
             config.movementAdjust[tcat.ordinal()] =
                 BangUtil.getIntProperty(type, props, "movement." + key, 0);
         }

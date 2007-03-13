@@ -261,7 +261,7 @@ public class BountyConfig extends SimpleStreamableObject
      */
     public String getGamePath (String game)
     {
-        return "bounties/" + townId + "/" + type.toString().toLowerCase() + "/" +
+        return "bounties/" + townId + "/" + StringUtil.toUSLowerCase(type.toString()) + "/" +
             ident + "/" + game + ".game";
     }
 
@@ -298,10 +298,10 @@ public class BountyConfig extends SimpleStreamableObject
         }
 
         // don't let a malformed avatarInfo sneak through
-        if (oppai.avatar != null && oppai.avatar.image == null && 
+        if (oppai.avatar != null && oppai.avatar.image == null &&
                 (oppai.avatar.print == null || oppai.avatar.print.length == 0)) {
             oppai.avatar = null;
-            log.warning("Malformed avatar [bounty=" + ident + ", game=" + game + 
+            log.warning("Malformed avatar [bounty=" + ident + ", game=" + game +
                         ", index=" + index + "].");
         }
 
@@ -357,7 +357,7 @@ public class BountyConfig extends SimpleStreamableObject
         String[] bits = which.split("/");
         BountyConfig config = new BountyConfig();
         config.townId = bits[0];
-        config.type = Type.valueOf(bits[1].toUpperCase());
+        config.type = Type.valueOf(StringUtil.toUSUpperCase(bits[1]));
         config.ident = bits[2] + "/" + bits[3];
 
         // parse the various bounty properties

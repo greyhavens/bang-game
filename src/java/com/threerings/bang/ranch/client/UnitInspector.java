@@ -17,6 +17,8 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.util.Dimension;
 import com.jmex.bui.util.Point;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.client.MoneyLabel;
@@ -150,9 +152,9 @@ public class UnitInspector extends BContainer
             _msgs.get("m.special_power") + "\n" +
             _umsgs.xlate(config.getName() + "_power");
         _udetails.setText(details);
-        _umake.setText(_umsgs.get("m." + config.make.toString().toLowerCase()));
+        _umake.setText(_umsgs.get("m." + StringUtil.toUSLowerCase(config.make.toString())));
         _umake.setIcon(_abonus.getBonusIcon(config.make));
-        _umode.setText(_umsgs.get("m." + config.mode.toString().toLowerCase()));
+        _umode.setText(_umsgs.get("m." + StringUtil.toUSLowerCase(config.mode.toString())));
         _umode.setIcon(_abonus.getBonusIcon(config.mode));
         _umove.setText("" + config.moveDistance);
         _ufire.setText(config.getDisplayFireDistance());
@@ -165,8 +167,8 @@ public class UnitInspector extends BContainer
         _uview.setUnit(config);
 
         // Big Shots have some additional user interface bits
-        boolean showRecruit = false, 
-                showCustomize = false, 
+        boolean showRecruit = false,
+                showCustomize = false,
                 showPractice = false;
         if (config.rank == UnitConfig.Rank.BIGSHOT) {
             if (_itemId == -1) {

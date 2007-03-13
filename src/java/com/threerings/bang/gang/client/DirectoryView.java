@@ -12,6 +12,8 @@ import com.jmex.bui.event.ActionListener;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.util.Dimension;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.presents.dobj.EntryAddedEvent;
 import com.threerings.presents.dobj.EntryRemovedEvent;
 import com.threerings.presents.dobj.SetAdapter;
@@ -78,7 +80,7 @@ public class DirectoryView extends BContainer
                 pidx = ii;
             } else if (button != src && button.isSelected()) {
                 button.setSelected(false);
-                button.setText(button.getText().toLowerCase());
+                button.setText(StringUtil.toUSLowerCase(button.getText()));
             }
         }
         showPage(pidx);
@@ -104,14 +106,14 @@ public class DirectoryView extends BContainer
         BToggleButton button = _lbuttons[pidx];
         button.setSelected(true);
         String lstr = button.getAction();
-        button.setText(lstr.toUpperCase());
+        button.setText(StringUtil.toUSUpperCase(lstr));
 
         _pidx = pidx;
         _gcont.removeAll();
         for (GangEntry gang : _hideoutobj.gangs) {
             final Handle name = gang.name;
             String nstr = name.toString();
-            if (nstr.toLowerCase().startsWith(lstr)) {
+            if (StringUtil.toUSLowerCase(nstr).startsWith(lstr)) {
                 _gcont.add(BangUI.createGangLabel(name, nstr, "directory_entry"));
             }
         }
@@ -139,7 +141,7 @@ public class DirectoryView extends BContainer
         }
         protected boolean isOnCurrentPage (Comparable key) {
             String lstr = _lbuttons[_pidx].getAction();
-            return key.toString().toLowerCase().startsWith(lstr);
+            return StringUtil.toUSLowerCase(key.toString()).startsWith(lstr);
         }
     };
 }

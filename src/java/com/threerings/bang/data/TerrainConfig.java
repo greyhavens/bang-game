@@ -98,13 +98,13 @@ public class TerrainConfig
         config.type = type;
         config.code = code;
         config.category = Enum.valueOf(Category.class,
-            props.getProperty("category", "normal").toUpperCase());
+            StringUtil.toUSUpperCase(props.getProperty("category", "normal")));
         config.traversalCost = BangUtil.getIntProperty(type, props,
             "traversal", BangBoard.BASE_TRAVERSAL);
         config.scale = BangUtil.getFloatProperty(type, props, "scale", 1f);
         config.lowDetail = BangUtil.getBooleanProperty(
                 type, props, "low_detail", true);
-        
+
         // the default dust color is that of dirt
         float[] dcolor = StringUtil.parseFloatArray(
             props.getProperty("dust_color", "0.54, 0.45, 0.26, 0.8"));

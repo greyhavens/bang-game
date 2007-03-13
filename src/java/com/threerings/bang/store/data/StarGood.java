@@ -3,6 +3,8 @@
 
 package com.threerings.bang.store.data;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.coin.server.persist.CoinTransaction;
 
 import com.threerings.bang.data.BangCodes;
@@ -26,7 +28,8 @@ public class StarGood extends Good
      */
     public StarGood (int townIdx, Star.Difficulty difficulty)
     {
-        super("star_" + BangCodes.TOWN_IDS[townIdx] + "_" + difficulty.toString().toLowerCase(),
+        super("star_" + BangCodes.TOWN_IDS[townIdx] + "_" +
+                StringUtil.toUSLowerCase(difficulty.toString()),
               difficulty.ordinal() * SCRIP_COST, COIN_COST);
         _townIdx = townIdx;
         _difficulty = difficulty;

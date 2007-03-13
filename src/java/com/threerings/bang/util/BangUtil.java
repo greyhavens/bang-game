@@ -273,7 +273,7 @@ public class BangUtil
         if (value != null) {
             @SuppressWarnings("unchecked") Class<T> etype = (Class<T>)defval.getClass();
             try {
-                evalue = Enum.valueOf(etype, value.toUpperCase());
+                evalue = Enum.valueOf(etype, StringUtil.toUSUpperCase(value));
             } catch (Exception e) {
                 log.warning("Invalid enum config [type=" + type + ", key=" + key +
                             ", value=" + value + "].");

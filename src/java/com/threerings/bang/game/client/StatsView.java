@@ -31,6 +31,7 @@ import com.jmex.bui.util.Point;
 
 import com.samskivert.util.HashIntMap;
 import com.samskivert.util.Interval;
+import com.samskivert.util.StringUtil;
 
 import com.threerings.media.image.Colorization;
 import com.threerings.presents.client.InvocationService;
@@ -185,7 +186,7 @@ public class StatsView extends SteelWindow
             }
             for (int jj = 0; jj < _objectiveIcons[ii].length; jj++) {
                 String path = "ui/postgame/icons/" +
-                    _statTypes[jj].toString().toLowerCase() + ".png";
+                    StringUtil.toUSLowerCase(_statTypes[jj].toString()) + ".png";
                 _objectiveIcons[ii][jj] = new ImageIcon(_recolor ?
                     _ctx.getImageCache().createColorizedBImage(
                         path, zations, true) :
@@ -199,7 +200,7 @@ public class StatsView extends SteelWindow
 
         if (_bobj.scenario.getSecondaryObjective() != null) {
             _secStatType = _bobj.scenario.getSecondaryObjective();
-            String sobj = _secStatType.toString().toLowerCase();
+            String sobj = StringUtil.toUSLowerCase(_secStatType.toString());
             _secIcon = new ImageIcon(
                 _ctx.loadImage("ui/postgame/icons/" + sobj + ".png"));
         }
@@ -736,7 +737,7 @@ public class StatsView extends SteelWindow
         for (Iterator<Stat.Type> iter = statTypes.iterator();
                 iter.hasNext(); ) {
             Stat.Type type = iter.next();
-            String key = "m.header_" + type.name().toLowerCase();
+            String key = "m.header_" + StringUtil.toUSLowerCase(type.name());
             BLabel header = new BLabel(_msgs.get(key), "endgame_smallheader") {
                 protected Dimension computePreferredSize (
                         int hhint, int vhint) {

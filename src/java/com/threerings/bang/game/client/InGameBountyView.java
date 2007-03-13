@@ -15,6 +15,8 @@ import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.presents.dobj.AttributeChangeListener;
 import com.threerings.presents.dobj.AttributeChangedEvent;
 import com.threerings.presents.dobj.EntryAddedEvent;
@@ -124,7 +126,8 @@ public class InGameBountyView extends BWindow
             msg.replaceAll("#6C421B", colors[1]);
             _descrip[idx].setText(msg);
 
-            msg = _ctx.xlate(GameCodes.GAME_MSGS, ("m.bounty_state_" + state).toLowerCase());
+            msg = _ctx.xlate(GameCodes.GAME_MSGS,
+                    StringUtil.toUSLowerCase("m.bounty_state_" + state));
             _state[idx].setText("@=" + colors[1] + "(" + msg + ")");
 
             switch (state) {

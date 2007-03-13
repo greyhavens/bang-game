@@ -9,6 +9,8 @@ import com.jmex.bui.icon.BlankIcon;
 import com.jmex.bui.icon.ImageIcon;
 import com.jmex.bui.layout.GroupLayout;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.bang.util.BangContext;
 import com.threerings.bang.saloon.data.ParlorInfo;
 import com.threerings.bang.saloon.data.ParlorObject;
@@ -84,7 +86,7 @@ public class ParlorConfigIcons extends BContainer
     {
         ParlorInfo info = _parobj.info;
         if (info.type != ParlorInfo.Type.NORMAL) {
-            String ipath = "ui/saloon/" + info.type.toString().toLowerCase() + ".png";
+            String ipath = "ui/saloon/" + StringUtil.toUSLowerCase(info.type.toString()) + ".png";
             _icon.setIcon(new ImageIcon(_ctx.loadImage(ipath)));
         } else {
             _icon.setIcon(new BlankIcon(16, 16));

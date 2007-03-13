@@ -3,6 +3,7 @@
 
 package com.threerings.bang.data;
 
+import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 /**
@@ -19,7 +20,7 @@ public class Star extends Item
     public static String getName (Difficulty difficulty)
     {
         return MessageBundle.qualify(
-            BangCodes.GOODS_MSGS, "m.star_" + difficulty.toString().toLowerCase());
+            BangCodes.GOODS_MSGS, "m.star_" + StringUtil.toUSLowerCase(difficulty.toString()));
     }
 
     /**
@@ -44,7 +45,7 @@ public class Star extends Item
     public static String getIconPath (int townIdx, Difficulty difficulty)
     {
         return "goods/" + BangCodes.TOWN_IDS[townIdx] + "/stars/" +
-            difficulty.toString().toLowerCase() + ".png";
+            StringUtil.toUSLowerCase(difficulty.toString()) + ".png";
     }
 
     /**

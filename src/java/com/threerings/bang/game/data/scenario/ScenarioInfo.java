@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 import com.samskivert.util.IntListUtil;
 import com.samskivert.util.RandomUtil;
+import com.samskivert.util.StringUtil;
 import com.threerings.io.Streamable;
 import com.threerings.util.MessageBundle;
 
@@ -250,7 +251,7 @@ public abstract class ScenarioInfo
      */
     public String getObjectiveCode ()
     {
-        return getObjectives()[0].toString().toLowerCase();
+        return StringUtil.toUSLowerCase(getObjectives()[0].toString());
     }
 
     /**

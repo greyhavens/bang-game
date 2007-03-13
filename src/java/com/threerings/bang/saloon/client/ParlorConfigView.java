@@ -21,6 +21,7 @@ import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
 import com.samskivert.util.Interval;
+import com.samskivert.util.StringUtil;
 import com.threerings.util.MessageBundle;
 
 import com.threerings.presents.dobj.AttributeChangeListener;
@@ -136,7 +137,7 @@ public class ParlorConfigView extends BDecoratedWindow
     {
         ArrayList<BComboBox.Item> types = new ArrayList<BComboBox.Item>();
         for (ParlorInfo.Type type : ParlorInfo.Type.values()) {
-            String msg = "m.pt_" + type.toString().toLowerCase();
+            String msg = "m.pt_" + StringUtil.toUSLowerCase(type.toString());
             types.add(new BComboBox.Item(type, ctx.xlate(SaloonCodes.SALOON_MSGS, msg)));
         }
         return types;

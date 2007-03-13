@@ -128,7 +128,7 @@ public class BountyGameEditor extends BDecoratedWindow
         BContainer ctpanel = new BContainer(new TableLayout(2, 5, 5));
         ArrayList<BComboBox.Item> types = new ArrayList<BComboBox.Item>();
         for (CriterionEditor.Type type : CriterionEditor.Type.values()) {
-            String msg = "m.type_" + type.toString().toLowerCase();
+            String msg = "m.type_" + StringUtil.toUSLowerCase(type.toString());
             types.add(new BComboBox.Item(type, _msgs.get(msg)));
         }
         row = addRow(ctpanel, "m.add_criterion");

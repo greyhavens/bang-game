@@ -18,6 +18,8 @@ import com.jmex.bui.icon.SubimageIcon;
 import com.jmex.bui.layout.GroupLayout;
 import com.jmex.bui.layout.TableLayout;
 
+import com.samskivert.util.StringUtil;
+
 import com.threerings.util.MessageBundle;
 
 import com.threerings.bang.data.BangCodes;
@@ -165,15 +167,15 @@ public class UnitBonus extends BContainer
         BContainer bonus = new BContainer(layout);
 
         String firstPart = null;
-        String sMethod = method.toString().toLowerCase();
+        String sMethod = StringUtil.toUSLowerCase(method.toString());
         if (BonusIcons.NA.equals(effect)) {
             firstPart = _msgs.get("m.na." + sMethod);
         } else {
             firstPart = _msgs.xlate(MessageBundle.compose("m.versus",
-                    "m." + sMethod, "m." + effect.toString().toLowerCase()));
+                    "m." + sMethod, "m." + StringUtil.toUSLowerCase(effect.toString())));
         }
         String tip = _msgs.xlate(MessageBundle.tcompose("m.units", firstPart,
-                        _umsgs.get("m." + type.toString().toLowerCase())));
+                        _umsgs.get("m." + StringUtil.toUSLowerCase(type.toString()))));
         if (text) {
             bonus.add(bonusIconLabel(method, tip));
         }
@@ -260,7 +262,7 @@ public class UnitBonus extends BContainer
     protected int _gap;
     protected MessageBundle _msgs, _umsgs;
     protected boolean _addTip, _smallMode;
-    protected static BIcon[][] _bonusIcons = new BIcon[][] { 
+    protected static BIcon[][] _bonusIcons = new BIcon[][] {
         new BIcon[BonusIcons.values().length],
         new BIcon[BonusIcons.values().length]
     };
