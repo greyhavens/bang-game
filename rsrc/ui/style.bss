@@ -2008,6 +2008,18 @@ menu_directory:selected {
   background: image "ui/hideout/menu_directory_selected.png" centerxy;
 }
 
+compact_button {
+  parent: "button";
+  padding: 0 23;
+}
+compact_button:hover {
+  parent: "button:hover";
+}
+compact_button:down {
+  parent: "button:down";
+  padding: 2 24 0 22;
+}
+
 hideout_members {
   background: image "ui/hideout/fields_members_in_hideout.png" centerxy;
   size: 434 148;

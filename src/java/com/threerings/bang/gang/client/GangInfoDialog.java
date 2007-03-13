@@ -85,6 +85,7 @@ public class GangInfoDialog extends BWindow
 
         ((GroupLayout)getLayoutManager()).setGap(-2);
         setStyleClass("gang_info_dialog");
+        setModal(true);
 
         _vcont = GroupLayout.makeVBox(GroupLayout.TOP);
         ((GroupLayout)_vcont.getLayoutManager()).setGap(0);

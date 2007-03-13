@@ -13,6 +13,8 @@ import com.jmex.bui.BButton;
 import com.jmex.bui.BContainer;
 import com.jmex.bui.BImage;
 import com.jmex.bui.BLabel;
+import com.jmex.bui.BMenuItem;
+import com.jmex.bui.BPopupMenu;
 import com.jmex.bui.BScrollPane;
 import com.jmex.bui.event.ActionEvent;
 import com.jmex.bui.event.ActionListener;
@@ -107,13 +109,20 @@ public class RosterView extends BContainer
     public void actionPerformed (ActionEvent event)
     {
         String action = event.getAction();
-        if (action.equals("history")) {
-            _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), false, 500);
-        } else if (action.equals("outfit")) {
+        if (action.equals("options")) {
+            displayOptionsMenu();
+        } else if (action.equals("edit_buckle")) {
+            _ctx.getBangClient().displayPopup(
+                new BuckleDialog(_ctx, _hideoutobj, _gangobj), true, 500);
+        } else if (action.equals("purchase_outfits")) {
             _ctx.getBangClient().displayPopup(
                 new OutfitDialog(_ctx, _hideoutobj, _gangobj), true, 500);
+        } else if (action.equals("purchase_items")) {
+
         } else if (action.equals("invite")) {
             _ctx.getBangClient().displayPopup(new InviteMemberDialog(_ctx, _status), true, 400);
+        } else if (action.equals("history")) {
+            _ctx.getBangClient().displayPopup(new HistoryDialog(_ctx, _hideoutobj), false, 500);
         } else if (action.equals("leave")) {
             leaveGang();
         }
@@ -178,14 +187,21 @@ public class RosterView extends BContainer
         _gangobj.addListener(this);
 
         // populate the button panel
-        _bcont.add(new BButton(_msgs.get("m.history"), this, "history"));
         if (_ctx.getUserObject().gangRank == LEADER_RANK) {
-            _bcont.add(new BButton(_msgs.get("m.outfit"), this, "outfit"));
+            _bcont.add(_options = createCompactButton("options"));
         }
         if (_ctx.getUserObject().canRecruit()) {
-            _bcont.add(new BButton(_msgs.get("m.invite"), this, "invite"));
+            _bcont.add(createCompactButton("invite"));
         }
-        _bcont.add(new BButton(_msgs.get("m.leave"), this, "leave"));
+        _bcont.add(createCompactButton("history"));
+        _bcont.add(createCompactButton("leave"));
+    }
+
+    protected BButton createCompactButton (String action)
+    {
+        BButton button = new BButton(_msgs.get("m." + action), this, action);
+        button.setStyleClass("compact_button");
+        return button;
     }
 
     @Override // documentation inherited
@@ -194,6 +210,17 @@ public class RosterView extends BContainer
         super.wasRemoved();
         _gangobj.removeListener(this);
         _bcont.removeAll();
+    }
+
+    protected void displayOptionsMenu ()
+    {
+        BPopupMenu menu = new BPopupMenu(getWindow(), false);
+        menu.addMenuItem(new BMenuItem(_msgs.get("m.edit_buckle"), "edit_buckle"));
+        menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_outfits"), "purchase_outfits"));
+        menu.addMenuItem(new BMenuItem(_msgs.get("m.purchase_items"), "purchase_items"));
+        menu.addListener(this);
+
+        menu.popup(_options.getAbsoluteX(), _options.getAbsoluteY() + _options.getHeight(), true);
     }
 
     protected void updateMembers ()
@@ -260,4 +287,6 @@ public class RosterView extends BContainer
 
     protected BContainer _bcont, _lcont, _mcont;
     protected LeaderView _lview;
+
+    protected BButton _options;
 }

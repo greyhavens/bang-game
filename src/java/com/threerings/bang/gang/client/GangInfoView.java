@@ -113,9 +113,6 @@ public class GangInfoView extends BContainer
             BButton edit = new BButton(_msgs.get("m.edit"), this, "edit_statement");
             edit.setStyleClass("alt_button");
             pcont.add(edit);
-            edit = new BButton(_msgs.get("m.buckle"), this, "edit_buckle");
-            edit.setStyleClass("alt_button");
-            pcont.add(edit);
         }
         scont.add(pcont);
         rcont.add(scont);
@@ -149,9 +146,6 @@ public class GangInfoView extends BContainer
             });
         } else if (action.equals("edit_statement")) {
             _ctx.getBangClient().displayPopup(new StatementDialog(_ctx, _status), true, 400);
-        } else if (action.equals("edit_buckle")) {
-            _ctx.getBangClient().displayPopup(
-                new BuckleDialog(_ctx, _hideoutobj, _gangobj), true, 400);
         } else if (action.equals("donate")) {
             _ctx.getBangClient().displayPopup(new DonateDialog(_ctx, _status), true, 400);
         }
